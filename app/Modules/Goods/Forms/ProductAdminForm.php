@@ -4,6 +4,7 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Editor\Fields\EditorField;
+use Modules\Goods\Admin\ProductOptionsAdmin;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\ListViewField;
@@ -33,7 +34,7 @@ class ProductAdminForm extends ModelForm
         return [
             'Product details' => [
                 'product',
-                'fulldescr',
+//                'fulldescr',
             ],
             'Product options' => [
                 'product_options'
@@ -53,9 +54,10 @@ class ProductAdminForm extends ModelForm
             'product_options' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionsAdmin::class,
-                'defaultOrder' => [
+                'listTemplate' => 'admin/list/_list.tpl'
+                /*'defaultOrder' => [
                     'class'
-                ]
+                ]*/
             ],
         ];
     }
