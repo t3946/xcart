@@ -24,7 +24,7 @@
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         <a href="{$catalogs.admin}/modules.php" class="VertMenuItems">{$lng.lbl_modules}</a>
     {/if}
-    
+
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         {if $active_modules.Multiple_Storefronts}
             <a href="{$catalogs.admin}/multiple_storefronts.php"

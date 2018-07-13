@@ -269,7 +269,7 @@
 <table>
 
 <tr>
-<td valign="top"><b>{$lng.lbl_options}:</b></td> 
+<td valign="top"><b>{$lng.lbl_options}:</b></td>
 <td>{include file="modules/Product_Options/display_options.tpl" options=$product.product_options options_txt=$product.product_options_txt force_product_options_txt=$product.force_product_options_txt}</td>
 </tr>
 

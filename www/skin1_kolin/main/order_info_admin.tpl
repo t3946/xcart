@@ -644,7 +644,7 @@ function check_r_fields(){
           {foreach from=$item.options key=optionid item=option_values}
 
               <option value="{$optionid}"
-                  {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$item.class] === $option_values.option_name}
+                  {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$item.classtext] === $option_values.option_name}
                     selected="selected"
                   {/if}
                 >{$option_values.option_name}</option>

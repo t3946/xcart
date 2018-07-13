@@ -842,7 +842,7 @@ if ($REQUEST_METHOD == "POST") {
                             if (($opt_model = OptionModel::objects()->get(['classid' => $option]))
                                 && $o_value_model = OptionValueModel::objects()->get(['optionid' => $value]))
                             {
-                                $p_op[$opt_model->class] = $o_value_model->option_name;
+                                $p_op[$opt_model->classtext] = $o_value_model->option_name;
                             }
                         }
                         $order_detail_model->product_options = $p_op;

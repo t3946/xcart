@@ -180,6 +180,17 @@ $remove: (
       @include breakpoint(560 up) {
         justify-content: space-between;
       }
+
+      .options {
+
+        .title-selected {
+          font-weight: 700;
+          padding-bottom: rem-calc(5);
+        }
+        .value {
+
+        }
+      }
     }
 
     .quantity-extended {

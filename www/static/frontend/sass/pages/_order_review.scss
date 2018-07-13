@@ -189,6 +189,24 @@
                 color: #3b3b3b;
               }
             }
+
+            .item-name {
+              display: inline-block;
+            }
+
+            .item-data {
+              font-size: rem-calc(13);
+              text-align: left;
+              padding-top: rem-calc(5);
+
+              .title-selected {
+                font-weight: 700;
+              }
+
+              .value {
+                color: #4a4949;
+              }
+            }
           }
         }
 

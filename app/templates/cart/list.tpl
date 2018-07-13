@@ -103,9 +103,16 @@
                                         </div>
                                     </div>
 
-                                    {foreach $position->data as $name => $value}
-                                        <p>{$name}: {$value}</p>
-                                    {/foreach}
+                                    {if $position->data}
+                                        <div class="options">
+                                            <div class="title-selected">Selected options:</div>
+                                            {foreach $position->data as $name => $value}
+                                                <div class="value">
+                                                    <span class="name">{$name}</span>: {$value}
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                    {/if}
 
                                 </div>
 
