@@ -78,12 +78,12 @@ abstract class ListViewAdmin extends Admin
                 }
             } else {
                 if (!$request->getIsAjax()) {
-                    Xcart::app()->flash->error('Пожалуйста, исправьте ошибки');
+                    Xcart::app()->flash->error('Please, fix errors');
                 }
             }
         }
 
-        $this->setBreadcrumbs(($pk)? 'Редактировать' : 'Создать');
+        $this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,

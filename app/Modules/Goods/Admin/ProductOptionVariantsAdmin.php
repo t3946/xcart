@@ -4,11 +4,14 @@ namespace Modules\Goods\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
+use Modules\Goods\Forms\ProductOptionVariantsAdminForm;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Form\ModelForm;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
+    public $ownerField = 'option_id';
+
     public function getModel()
     {
         return new ProductOptionVariantModel();
@@ -19,6 +22,11 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
      */
     public function getForm()
     {
-        // TODO: Implement getForm() method.
+        return new ProductOptionVariantsAdminForm();
+    }
+
+    public static function getItemName()
+    {
+        return 'Variant';
     }
 }
