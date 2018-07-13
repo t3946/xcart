@@ -68,15 +68,17 @@ class PromoController extends AbstractCatalogController
 
     public function actionFeatured(): void
     {
+        $this->qs = $this->getQS()
+            ->distinct()
+            ->filter([
+                'images__image_path__isnull' => false,
+                'featured__product_order__isnull' => false,
+            ])
+            ->order(['?']);
+
         if ($this->getRequest()->getIsAjax() && !$this->getRequest()->get->has('page'))
         {
-            $this->renderSliderData($this->getQS()
-                ->distinct()
-                ->filter([
-                    'images__image_path__isnull' => false,
-                    'featured__product_order__isnull' => false,
-                ])
-                ->order(['?']));
+            $this->renderSliderData($this->qs);
         }
 
         $bread = new Breadcrumbs();
