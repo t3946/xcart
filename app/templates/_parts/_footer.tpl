@@ -160,7 +160,7 @@
                                 <li class="confidence">
                                     <span id="siteseal"></span>
 
-                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/google.png" alt="Google Trusted Store icon">
+                                    <span id="g_review" style="width:130px"></span>
 
                                     <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
                                         <img class="lazy-img bbb-logo show-for-large" data-src="/static/frontend/dist/images/icons/confidence/ab-seal-horizontal1.svg" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
