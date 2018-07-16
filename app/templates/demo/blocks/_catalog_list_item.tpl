@@ -139,16 +139,18 @@
                                 </div>
                             {/if}
 
-                                {if $item->mult_order_quantity == 'Y'}
-                                    <div class="multiply-quantity icon info padding">
-                                    Order in multiples of {$item->min_amount} items
-                                </div>
-                                {/if}
+                                {if $item->min_amount > 1}
+                                    {if $item->mult_order_quantity == 'Y'}
+                                        <div class="multiply-quantity icon info padding">
+                                        Order in multiples of {$item->min_amount} items
+                                        </div>
+                                    {/if}
 
-                                {if $item->min_amount >= $item->avail}
-                                    <div class="last-items icon info">
-                                    Order at least {$item->avail} items
-                                </div>
+                                    {if $item->min_amount >= $item->avail}
+                                        <div class="last-items icon info">
+                                        Order at least {$item->avail} items
+                                        </div>
+                                    {/if}
                                 {/if}
                         </div>
 
