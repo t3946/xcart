@@ -52,11 +52,11 @@
   }
 
   &__img_zoom {
-    z-index: 3;
+    z-index: 2;
     overflow: hidden;
 
     img {
-      z-index: 2;
+      z-index: 1;
       transform:scale(.9);
       transition: all .5s ease-in-out;
     }
