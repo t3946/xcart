@@ -138,7 +138,11 @@ footer {
       line-height: rem-calc(50);
 
       span {
-        margin-right: rem-calc(10);
+        margin-right: rem-calc(7);
+
+      &#bbb{
+        margin-left: rem-calc(7);
+      }
 
         img {
 
@@ -324,7 +328,7 @@ footer {
 
     img {
       min-width: 131px;
-      margin-right: -8px;
+      margin-right: 33px;
     }
   }
 }
