@@ -166,6 +166,9 @@
 <script>
     {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
     {if $google_review}
+    window.___gcfg = {
+        lang: 'en_US'
+    };
     var g_id = '{$google_review}';
     {ignore}
     window.renderBadge = function() {
