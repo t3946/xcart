@@ -162,24 +162,6 @@
 {get_assets:raw type='css'}
 {get_assets:raw type='js'}
 
-<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
-<script>
-    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-    {if $google_review}
-    window.___gcfg = {
-        lang: 'en_US'
-    };
-    var g_id = '{$google_review}';
-    {ignore}
-    window.renderBadge = function() {
-        var ratingBadgeContainer = document.getElementById("g_review");
-        window.gapi.load('ratingbadge', function() {
-            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
-        });
-    };
-    {/ignore}
-    {/if}
-</script>
 
 <script>
     (function(){
@@ -279,6 +261,27 @@
                         d.addEventListener("DOMContentLoaded", f, false);
                     } else { f(); }
                 })(document, window, "yandex_metrika_callbacks2");
+                {/if}
+
+                {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+                {if $google_review}
+                window.___gcfg = {
+                    lang: 'en_US'
+                };
+                var g_id = '{$google_review}';
+                {ignore}
+                window.renderBadge = function() {
+                    var ratingBadgeContainer = document.getElementById("g_review");
+                    window.gapi.load('ratingbadge', function() {
+                        window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
+                    });
+                };
+                {/ignore}
+
+                var gr = document.createElement('script');
+                gr.type = 'text/javascript';
+                gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
+                var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
                 {/if}
 
             },6000);
