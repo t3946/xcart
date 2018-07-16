@@ -140,9 +140,9 @@ footer {
       span {
         margin-right: rem-calc(7);
 
-      &#bbb{
-        margin-left: rem-calc(7);
-      }
+        &#bbb{
+          margin-left: rem-calc(7);
+        }
 
         img {
 
@@ -151,6 +151,23 @@ footer {
             border-radius: rem-calc(8);
           }
         }
+
+        &#siteseal {
+          overflow: hidden;
+
+          img {
+            background-color: #FFF;
+            border-radius: 5px;
+          }
+        }
+
+        #g_review {
+          max-height: rem-calc(45);
+          margin-top: rem-calc(5) !important;
+          overflow: hidden;
+          border-radius: rem-calc(5);
+        }
+
       }
     }
 
@@ -322,12 +339,5 @@ footer {
     }
   }
 
-  #siteseal {
-    overflow: hidden;
 
-    img {
-      background-color: #FFF;
-      border-radius: 5px;
-    }
-  }
 }
