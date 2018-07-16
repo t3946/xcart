@@ -166,7 +166,6 @@
                                         <img class="lazy-img bbb-logo show-for-large" data-src="/static/frontend/dist/images/icons/confidence/ab-seal-horizontal1.svg" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
                                     </a>
 
-                                    <img class="lazy-img show-for-large" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/trustwave.png" alt="TrustWave icon">
                                 </li>
 
                             </ul>

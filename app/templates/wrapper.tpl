@@ -162,6 +162,22 @@
 {get_assets:raw type='css'}
 {get_assets:raw type='js'}
 
+<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
+<script>
+    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+    {if $google_review}
+    var g_id = '{$google_review}';
+    {ignore}
+    window.renderBadge = function() {
+        var ratingBadgeContainer = document.createElement("div");
+        document.body.appendChild(ratingBadgeContainer);
+        window.gapi.load('ratingbadge', function() {
+            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id});
+        });
+    };
+    {/ignore}
+    {/if}
+</script>
 
 <script>
     (function(){
