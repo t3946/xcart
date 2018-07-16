@@ -135,12 +135,17 @@ footer {
     .confidence {
       display: flex;
       align-content: center;
+      line-height: rem-calc(50);
 
-      img {
-        margin-right: rem-calc(20);
+      span {
+        margin-right: rem-calc(10);
 
-        &.bbb-logo{
-          width:100px;
+        img {
+
+          &.bbb-logo {
+            background-color: white;
+            border-radius: rem-calc(8);
+          }
         }
       }
     }
@@ -319,7 +324,7 @@ footer {
 
     img {
       min-width: 131px;
-      margin-right: -8px;
+      margin-right: rem-calc(10);
     }
   }
 }

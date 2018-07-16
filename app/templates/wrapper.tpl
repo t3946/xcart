@@ -165,7 +165,7 @@
 <script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
 <script>
     {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-    {if $google_review && 1!=1}
+    {if $google_review}
     var g_id = '{$google_review}';
     {ignore}
     window.renderBadge = function() {
