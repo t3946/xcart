@@ -144,11 +144,9 @@
                                         <div class="multiply-quantity icon info padding">
                                         Order in multiples of {$item->min_amount} items
                                         </div>
-                                    {/if}
-
-                                    {if $item->min_amount >= $item->avail}
+                                    {else}
                                         <div class="last-items icon info">
-                                        Order at least {$item->avail} items
+                                            Order at least {$item->min_amount} items
                                         </div>
                                     {/if}
                                 {/if}
