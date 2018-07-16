@@ -158,13 +158,13 @@
                                     Shop with Confidence
                                 </li>
                                 <li class="confidence">
-                                    <span id="g_review"></span>
-
                                     <span id="bbb">
                                         <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
                                             <img class="lazy-img bbb-logo show-for-large" data-src="https://seal-london.bbb.org/logo/erhzbum/s3-stores-1054268.png" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
                                         </a>
                                     </span>
+
+                                    <span id="g_review"></span>
 
                                     <span id="siteseal"></span>
 

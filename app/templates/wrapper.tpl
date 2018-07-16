@@ -264,7 +264,7 @@
                 {/if}
 
                 {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-                {if $google_review}
+                {if $google_review && 1!=1}
                 window.___gcfg = {
                     lang: 'en_US'
                 };
