@@ -148,7 +148,7 @@
             }
 
             &.sku {
-              color: #28862f;
+              color: $forest_green;
             }
 
             &.picture {
@@ -260,7 +260,7 @@
       .sum-info {
         font-size: rem-calc(13);
         line-height: rem-calc(37);
-        color: #28862f;
+        color: $forest_green;
         text-align: right;
 
         @include breakpoint(sm) {
@@ -341,7 +341,7 @@
       }
 
       &.total-shipping {
-        color: #28862f;
+        color: $forest_green;
       }
       &.grand-total {
         color: #9a1524;

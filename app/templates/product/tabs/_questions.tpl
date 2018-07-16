@@ -12,7 +12,7 @@
             {/if}
             <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
             <div class="row">
-                <div class="column small-12">
+                <div class="column no-padding small-12">
 
                     {raw $form->render()}
 
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="row align-center">
-                <div class="column small-12">
+                <div class="column no-padding small-12">
                     <div class="buttons text-center">
                         <button type="submit" class="button yellow-white waves waves-orange waves-effect">
                             {t 'Submit question' dict='order'}

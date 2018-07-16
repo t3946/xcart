@@ -37,7 +37,8 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
      * @var array
      */
     protected $fieldsSettings = [
-        'fieldTemplate' => 'forms/field/default/custom/field_custom.tpl',
+        'fieldTemplate' => 'forms/field/default/custom/field.tpl',
+        'fieldTemplate' => 'forms/field/default/custom/field.tpl',
         'errorsTemplate' => 'forms/field/default/custom/errors.tpl'
     ];
 

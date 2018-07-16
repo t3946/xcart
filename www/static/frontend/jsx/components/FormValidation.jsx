@@ -3,6 +3,10 @@ import formValidate from 'validate.js/validate';
 
 class FormValidation {
 
+    /**
+     * Construct form
+     * @param name
+     */
     constructor(name) {
 
         this.name = name;
@@ -13,6 +17,10 @@ class FormValidation {
         this._bind();
     }
 
+    /**
+     * Bind events to fields
+     * @private
+     */
     _bind() {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
         for (let i = 0; i < this.inputs.length; ++i) {
@@ -21,6 +29,10 @@ class FormValidation {
         }
     }
 
+    /**
+     * Process the change event
+     * @param event
+     */
     processChange(event){
 
         console.log(event);
@@ -38,6 +50,11 @@ class FormValidation {
         this.showError(inputElement, currentError[0]);
     }
 
+    /**
+     * Show input errors
+     * @param element
+     * @param text
+     */
     showError(element, text){
         let field = element.closest('.form-field');
         let errors = field.querySelectorAll('.errors');
@@ -53,8 +70,11 @@ class FormValidation {
         }
     }
 
-    removeError(element){
-        let field = element.closest('.form-field');
+    /**
+     * Remove input errors
+     * @param element
+     */
+    removeError(element, field){
         let errors = field.querySelectorAll('.errors');
 
         this.itemRemoveError(element);
@@ -68,13 +88,17 @@ class FormValidation {
         }
     }
 
+    /**
+     * If input was successfully
+     * @param element
+     */
     success(element){
         let field = element.closest('.form-field');
         this.itemAddSuccess(element);
 
         if(!field.classList.contains('compound-field')){
             console.log(field, field.classList);
-            this.removeError(element);
+            this.removeError(element, field);
             this.itemAddSuccess(field);
             console.log('!compound-field success');
             return;
@@ -88,25 +112,40 @@ class FormValidation {
             }
         }
 
-        this.removeError(element);
+        this.removeError(element, field);
         this.itemAddSuccess(field);
         console.log('compound-field success');
     }
 
+    /**
+     * Add success identifier to field
+     * @param item
+     */
     itemAddSuccess(item){
-        item.classList.remove('hasError');
+        item.classList.remove('invalid');
         item.classList.add('success');
     }
 
+    /**
+     * Add error identifier to field
+     * @param item
+     */
     itemAddError(item){
         item.classList.remove('success');
-        item.classList.add('hasError');
+        item.classList.add('invalid');
     }
 
+    /**
+     * Remove error identifier from field
+     * @param item
+     */
     itemRemoveError(item){
-        item.classList.remove('hasError');
+        item.classList.remove('invalid');
     }
 
+    /**
+     * Destruct form validator
+     */
     destructor(){
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);

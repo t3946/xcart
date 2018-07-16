@@ -23,6 +23,7 @@ abstract class Field implements IValidateField
 {
     use Accessors, Configurator, ValidateField, RenderTrait;
 
+    public $showErrorsClass = 'show';
     /**
      * Field, that extends current field
      * @var string
@@ -306,6 +307,9 @@ abstract class Field implements IValidateField
         if ($this->hasErrors()) {
             $classes[] = $this->invalidClass;
         }
+        if(!empty($classes)){
+            $classes[] = $this->showErrorsClass;
+        }
 
         return implode(' ', $classes);
     }
@@ -473,6 +477,7 @@ abstract class Field implements IValidateField
             'value' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
             'type' => $this->getType(),
+            'extended' => $this->extend
         ]);
     }
 

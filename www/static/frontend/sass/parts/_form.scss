@@ -1,0 +1,608 @@
+@import "./form/compound_field";
+@import "./form/show_errors";
+
+form {
+  label {
+    .required {
+      color: red;
+    }
+
+    &.required {
+      &:after {
+        color: red;
+        content: '*';
+        padding-left: .5em;
+
+        @include breakpoint(large) {
+          position: absolute;
+          right: rem-calc(-10);
+          top: 0;
+        }
+      }
+    }
+  }
+}
+
+.default-form {
+
+  h1 {
+    margin-bottom: 0;
+    text-align: center;
+
+    @include breakpoint(medium up) {
+      margin-bottom: .9em;
+    }
+  }
+
+  /* show label only on desktop */
+  .desktop-label {
+    display: none;
+
+    @include breakpoint(large up) {
+      display: block;
+      font-size: rem-calc(20);
+      font-weight: bold;
+    }
+  }
+
+  /* sets when user tried to submit form */
+
+  .tried_to_submit {
+
+    input[required]:invalid,
+    textarea[required]:invalid,
+    select[required]:invalid {
+      border: 1px solid red;
+
+      &:focus {
+        border: 1px solid #ff8d91;
+      }
+    }
+
+  }
+
+  /* all input styles */
+
+  input, textarea, select{
+
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid #aaaaaa;
+    padding: 0 .625rem;
+    font-size: 1em;
+    line-height: 1.875rem;
+    height: 1.875rem;
+    vertical-align: middle;
+
+    @include breakpoint(sm up) {
+      font-size: rem-calc(20);
+      line-height: rem-calc(46);
+      height: rem-calc(46);
+    }
+    @include breakpoint(medium up) {
+      max-width: 20rem;
+      font-size: rem-calc(18);
+      line-height: rem-calc(40);
+      height: rem-calc(40);
+    }
+    @include breakpoint(large up) {
+      max-width: 15.9375rem;
+      font-size: rem-calc(14);
+      line-height: rem-calc(22);
+      height: rem-calc(22);
+    }
+
+    &::placeholder {
+      font-style: italic;
+      color: $grey_96;
+    }
+
+    &:focus {
+      border: 1px solid #ff8d91;
+    }
+
+    &.invalid {
+      border: 1px solid red;
+
+      &:focus {
+        border: 1px solid #ff8d91;
+      }
+    }
+
+    &.invalid {
+      border: 1px solid red;
+    }
+
+    @include breakpoint(sm down) {
+      &.success {
+        border: 1px solid $forest_green;
+      }
+    }
+  }
+
+  .input-block {
+    width: 100%;
+
+    @include breakpoint(medium up) {
+      max-width: 20rem;
+    }
+    @include breakpoint(large up) {
+      max-width: 15.9375rem;
+    }
+  }
+
+  /**
+  @TODO: For fucking chrome
+   */
+  input[type=radio] {
+    display: block;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
+
+
+  /* special styles for textarea */
+
+  textarea {
+    resize: vertical;
+    min-height: 7em;
+    height: 7em;
+    max-height: 14em;
+  }
+
+  /* special styles for select */
+
+  select {
+
+    appearance: none;
+    background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
+
+    &:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 #000;
+    }
+
+    /* prevent <option>s from becoming transparent as well */
+    option:not(:checked) {
+      color: black;
+    }
+
+    @include breakpoint(large up) {
+      background-size: .625rem;
+
+      option {
+        background-color: white;
+        color: black;
+
+        &:hover {
+          background-color: #edf0f2;
+        }
+
+      }
+    }
+
+  }
+
+  @include breakpoint(large up) {
+
+    #ContactUsForm_subject_line,
+    #ContactUsForm_messsage {
+      max-width: 32.9375rem;
+    }
+
+  }
+
+  /* page comments text styles */
+
+  .page-info-text {
+
+    text-align: center;
+    font-size: rem-calc(14);
+    color: #4a4949;
+    line-height: 100%;
+    margin-bottom: 1.875rem;
+
+    @include breakpoint(medium up) {
+      margin-bottom: 1em;
+    }
+
+    @include breakpoint(large up) {
+      text-align: left;
+      font-size: rem-calc(12);
+      padding: 0;
+    }
+
+    .required {
+      font-size: rem-calc(22);
+
+      @include breakpoint(large up) {
+        font-size: rem-calc(14);
+      }
+
+      &:after {
+        content: '*';
+        display: inline;
+        vertical-align: top;
+        color: #ff0000;
+        position: static;
+      }
+    }
+  }
+
+  /* page labels text styles */
+
+  .form-field {
+
+    .show-success,
+    .show-error {
+      display: none;
+      width: 1rem;
+      height: 1rem;
+      vertical-align: top;
+      margin: rem-calc(11) 0 0 rem-calc(8);
+    }
+
+    .show-success {
+      background: url('../images/icons/forms/checkmark_accepted.svg');
+    }
+    .show-error {
+      background: url('../images/icons/forms/error.svg');
+    }
+
+    @include breakpoint(medium) {
+      &.success {
+        .show-success {
+          display: block;
+        }
+        .show-error {
+          display: none;
+        }
+      }
+
+      &.invalid {
+        .show-success {
+          display: none;
+        }
+        .show-error {
+          display: block;
+        }
+      }
+    }
+
+
+    @include getFormErrorsStyle();
+
+    .field-row {
+
+      margin-bottom: 1.25rem;
+      //padding: 0 .625rem;
+
+      @include breakpoint(medium up) {
+        display: flex;
+      }
+      @include breakpoint(large up) {
+        margin-bottom: .625rem;
+      }
+
+      .field-title {
+        line-height: 110%;
+        margin-bottom: .33rem;
+
+        @include breakpoint(medium up) {
+          text-align: right;
+          width: 50%;
+          padding-right: .5625rem;
+        }
+
+        @include breakpoint(large up) {
+          height: 1.5rem;
+        }
+
+        label {
+          font-size: rem-calc(17);
+          font-weight: bold;
+
+          @include breakpoint(sm up) {
+            font-size: rem-calc(20);
+          }
+          @include breakpoint(medium up) {
+            font-size: rem-calc(18);
+            font-weight: normal;
+          }
+          @include breakpoint(large up) {
+            font-size: rem-calc(14);
+          }
+
+          &.required:after {
+
+            content: '*';
+            display: inline;
+            vertical-align: top;
+            color: #ff0000;
+            position: static;
+
+          }
+
+        }
+
+        .comment,
+        .hint {
+          font-size: rem-calc(11);
+          color: #777777;
+
+          @include breakpoint(sm up) {
+            font-size: rem-calc(14);
+          }
+          @include breakpoint(medium up) {
+            font-size: rem-calc(14);
+          }
+          @include breakpoint(large up) {
+            font-size: rem-calc(12);
+            line-height: 105%;
+          }
+        }
+      }
+
+      .field {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        @include breakpoint(medium up) {
+          width: 50%;
+        }
+        @include breakpoint(large up) {
+          font-size: rem-calc(14);
+        }
+      }
+    }
+  }
+
+  /* styles for button */
+  .button-row {
+    text-align: center;
+
+    .submit-button {
+      display: inline-block;
+      font-weight: bold;
+      line-height: 100%;
+      background-color: $dark_yellow;
+      border-radius: 4px;
+      padding: 1em 2.25rem;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+  }
+
+  .hr-position {
+    .hr {
+      border-bottom: 1px solid #bbbbbb;
+      margin-top: 40px;
+    }
+  }
+
+  /* styles for tabs */
+
+  .tabs-container {
+    margin-top: 44px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+
+    .tabs-title-container {
+      width: 100px;
+
+      ul {
+        width: 6.25rem;
+        border: 0 !important;
+
+        .tabs-title {
+          background-color: #e7eaeb;
+          border-top: 1px solid #b2b8bc;
+          border-bottom: 1px solid #b2b8bc;
+          border-left: 1px solid #b2b8bc;
+          text-decoration: none;
+          margin-top: .25rem;
+
+          &:first-child {
+            margin-top: 0;
+          }
+
+          a {
+            color: #505050;
+            padding: 1rem 1.75rem;
+            font-size: 1rem;
+
+            span {
+              border-bottom: 1px dashed #505050;
+            }
+
+            &:hover {
+              background-color: #e7eaeb;
+              color: #505050;
+              text-decoration: none;
+            }
+          }
+
+        }
+
+        .is-active {
+          background-color: #fff;
+          border-top: 2px solid #c2c2c2;
+          border-bottom: 2px solid #c2c2c2;
+          border-left: 2px solid #c2c2c2;
+          position: relative;
+
+          a {
+            color: #000;
+            background-color: #fff;
+            text-decoration: none;
+
+            span {
+              border: 0;
+            }
+
+            &:hover {
+              background-color: #fff;
+              color: #000;
+              text-decoration: none;
+            }
+          }
+
+          &:after {
+            content: "";
+            display: block;
+            height: 100%;
+            width: 2px;
+            background-color: #fff;
+            top: 0;
+            right: -2px;
+            position: absolute;
+          }
+        }
+      }
+    }
+
+    .tabs-content-container {
+      width: calc(100% - 6.25rem);
+      border: 2px solid #c2c2c2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      .tabs-content {
+        width: 100%;
+        border: 0;
+
+        .tabs-panel {
+          align-items: center;
+          .tab-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            hyphens: auto;
+          }
+
+          .title {
+            padding-right: .5rem;
+          }
+        }
+        #Email {
+          .title {
+            display: none;
+          }
+        }
+
+      }
+    }
+  }
+
+  @include breakpoint(medium up) {
+
+    .tabs-container {
+      width: 43rem;
+      .tabs-title-container {
+        ul .tabs-title {
+          a {
+            font-size: rem-calc(18);
+          }
+        }
+      }
+
+      .tabs-content-container .tabs-content {
+        font-size: rem-calc(20);
+        #Email {
+          .title {
+            padding-right: 1.875rem;
+            display: inline;
+          }
+        }
+      }
+
+    }
+
+  }
+
+  @include breakpoint(large up) {
+
+    .tabs-container {
+      width: 757px;
+
+      .tabs-title-container {
+        ul .tabs-title {
+          a {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .tabs-content-container .tabs-content {
+        font-size: 1rem;
+      }
+    }
+
+  }
+
+  input[type=radio] {
+    & + label {
+      line-height: rem-calc(38);
+      background-color: #f4f4f4;
+
+      &:before {
+        content: '';
+        display: inline-block;
+        margin-right: rem-calc(5);
+        width: rem-calc(17);
+        height: rem-calc(17);
+        vertical-align: middle;
+        background: url('../images/icons/inputs/radio_unchecked.png') center center no-repeat;
+        background-origin: content-box;
+      }
+
+      &:nth-child(2n) {
+        background-color: $white;
+      }
+
+      &:nth-last-child(1) {
+        background-color: #f4f4f4;
+      }
+    }
+
+    &:checked + label {
+      &:before {
+        background-image: url('../images/icons/inputs/radio_cheched.png');
+      }
+    }
+  }
+
+  @include getCompoundFieldStyle();
+
+  h1 {
+    text-align: center;
+    //margin-bottom: rem-calc(40);
+
+    @include breakpoint(medium) {
+      margin-bottom: rem-calc(50);
+    }
+    @include breakpoint(large) {
+      margin-bottom: rem-calc(30);
+    }
+    &.no-margin-bottom {
+      margin-bottom: 0;
+    }
+  }
+  h2 {
+    line-height: 110%;
+    text-align: center;
+    margin: 1rem 0;
+
+    @include breakpoint(large) {
+      line-height: inherit;
+      text-align: left;
+    }
+  }
+
+}

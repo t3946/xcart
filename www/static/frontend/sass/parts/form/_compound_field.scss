@@ -1,0 +1,98 @@
+
+@mixin getCompoundFieldStyle() {
+
+
+
+    .compound-input .input-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+      input[data-extended] {
+        min-width: 1%;
+        flex-grow: 1;
+
+        @include breakpoint(large) {
+          width: rem-calc(147);
+        }
+      }
+
+      .compound-field-container {
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        label {
+          padding: 0 rem-calc(10);
+          display: inline;
+          align-self: center;
+
+          @include breakpoint(large) {
+            align-self: auto;
+          }
+        }
+
+        input {
+          width: rem-calc(72);
+        }
+
+      }
+
+      @include breakpoint(large) {
+        //display: block;
+
+        .compound-field-container {
+          //
+          //display: inline-block;
+        }
+      }
+    }
+
+    @include breakpoint(large) {
+      .compound-field-container {
+        padding-left: rem-calc(30);
+
+        label {
+          padding-right: rem-calc(5);
+
+          i {
+            color: #777;
+          }
+        }
+      }
+    }
+
+    .compound-field-container input {
+      width: rem-calc(72);
+    }
+
+    //.buttons {
+    //  margin: rem-calc(10) 0;
+    //}
+    //
+
+  //.text-block {
+  //  //margin-top: rem-calc(18);
+  //
+  //  @include breakpoint(large) {
+  //    margin: 0;
+  //    line-height: rem-calc(38);
+  //  }
+  //}
+  //
+  //.multiline {
+  //  vertical-align: baseline;
+  //  line-height: 1;
+  //}
+
+  //.hr {
+  //  display: none;
+  //
+  //  @include breakpoint(large) {
+  //    display: block;
+  //  }
+  //}
+
+
+}

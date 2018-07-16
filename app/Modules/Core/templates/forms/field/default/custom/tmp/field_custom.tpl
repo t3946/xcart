@@ -10,13 +10,14 @@
                     {raw $hint}
                 </div>
             </div>
-            <div class="small-12 large-6 columns">
+            <div class="small-12 large-6 columns input-fields">
                 {raw $input}
 
                 <span class="show-for-large">
-                    <div class="show-success"></div>
-                    <div class="show-error"></div>
+                    <span class="show-success"></span>
+                    <span class="show-error"></span>
                     {raw $errors}
+                    {*<span class="errors-content">{raw $errors}</span>*}
                 </span>
             </div>
         </div>
