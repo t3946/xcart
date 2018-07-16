@@ -90,7 +90,7 @@ GROUP BY p.productid
 order by FIELD(p.pfrom, 'F', 'O', 'B', 'R') asc
 SQL;
 
-$sfids = func_query_column("select storefrontid as sfid from xcart_storefronts");
+$sfids = func_query_column("select storefrontid as sfid from xcart_storefronts where storefrontid != 75");
 $sfids[] = 0;
 $values = [];
 
