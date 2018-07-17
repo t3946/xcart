@@ -5,6 +5,7 @@ namespace Modules\Goods\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
 class OptionNewModel extends Model
@@ -19,7 +20,12 @@ class OptionNewModel extends Model
     public static  function getFields()
     {
         return [
-            'id' => AutoField::class
+            'id' => AutoField::class,
+            'variants' => [
+                'class' => HasManyField::class,
+                'modelClass' => OptionVariantModel::class,
+                'link' => ['id' => 'option_id'],
+            ]
         ];
     }
 

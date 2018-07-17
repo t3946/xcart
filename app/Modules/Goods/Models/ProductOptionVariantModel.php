@@ -23,10 +23,17 @@ class ProductOptionVariantModel extends Model
             'id' => [
                 'class' => AutoField::class,
             ],
-            'variant' => [
+            'option' => [
                 'field' => 'option_id',
                 'class' => ForeignField::class,
-                'modelClass' => OptionVariant::class,
+                'modelClass' => OptionNewModel::class,
+                'link' => ['option_id' => 'id'],
+                'required' => true,
+            ],
+            'variant' => [
+                'field' => 'variant_id',
+                'class' => ForeignField::class,
+                'modelClass' => OptionVariantModel::class,
                 'link' => ['variant_id' => 'id'],
                 'required' => true,
             ]

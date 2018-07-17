@@ -4,6 +4,7 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Goods\Admin\ProductOptionVariantsAdmin;
+use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -12,25 +13,29 @@ use Xcart\App\Form\ModelForm;
 
 class ProductOptionsAdminForm extends ModelForm
 {
-    public $exclude = [
-        'product'
-    ];
+    public $exclude = ['product'];
+
     public function getFields()
     {
-        return [
+        $f =  [
+
             'option' => [
-                'class' => DropDownField::class,
-                'choices' => [],
-                'label' => 'Option'
+                'class' => DropDownField::className(),
+                'choices' => function() {return [OptionNewModel::objects()->get(['id' => $this->getInstance()->getField('option')->getValue()])];},
+                'html' => [
+                    'disabled' => 'disabled',
+                ],
             ],
             'variants' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionVariantsAdmin::class,
+                'listTemplate' => 'admin/list/_list.tpl'
                 /*'defaultOrder' => [
                     'class'
                 ]*/
             ],
         ];
+        return $f;
     }
 
     public function getModel()
