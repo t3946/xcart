@@ -18,7 +18,7 @@
     }
 
     &.show {
-      display: block;
+      display: block !important;
     }
 
     li {
@@ -54,12 +54,12 @@
       //display: inline-block;
       padding: rem-calc(3) rem-calc(12);
       border-width: rem-calc(2);
-      margin-bottom: 0;
+      margin-bottom: rem-calc(2);
       margin-left: rem-calc(20);
       margin-top: rem-calc(-10);
 
       &.show {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       &:after {

@@ -15,10 +15,12 @@ use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CompoundField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
+use Xcart\App\Validation\PhoneExtValidator;
 
 class ProductQuestionForm extends FrontendModelForm
 {
@@ -78,12 +80,15 @@ class ProductQuestionForm extends FrontendModelForm
                 'extend' => 'phone_ext'
             ],
             'phone_ext' => [
-                'class' => NumberField::class,
+                'class' => CharField::class,
                 'label' => 'ext',
                 'html' => [
                     'class' => 'phone_ext',
                 ],
-                'extends' => true
+                'extends' => true,
+                'validators' => [
+                    new PhoneExtValidator(),
+                ],
             ],
             'question' => [
                 'class' => TextField::class,

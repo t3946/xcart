@@ -105,9 +105,12 @@ class FormValidation {
         }
 
         let inputs = field.querySelectorAll("input, textarea, select");
+
         for (let i = 0; i < inputs.length; ++i) {
             let inputElement = inputs.item(i);
-            if(!inputElement.classList.contains('success')){
+            //required success
+            if( ( inputElement.classList.contains('required') && !inputElement.classList.contains('success') )
+            || ( !inputElement.classList.contains('required') && inputElement.classList.contains('invalid') )){
                 return;
             }
         }

@@ -34,6 +34,9 @@ abstract class Field implements IValidateField
      */
     public $fieldType = 'input_text';
 
+    /**
+     * @var string
+     */
     public $showErrorsClass = 'show';
     /**
      * Field, that extends current field
@@ -308,7 +311,7 @@ abstract class Field implements IValidateField
         return array_replace($this->_attributes, $t);
     }
 
-    public function getCommonClasses()
+    public function getCommonClasses($defClasses = [])
     {
 
         $errors = [];
@@ -326,6 +329,7 @@ abstract class Field implements IValidateField
         }
 
         $classes = array_merge([], $errors);
+        $classes = array_merge($classes, $defClasses);
 
         if ($this->filledOutSuccessfully()){
             $classes[] = $this->successClass;
@@ -351,12 +355,13 @@ abstract class Field implements IValidateField
     }
 
     /**
+     * @param array $classes
      * @return array
      */
-    public function getAttributesCommon()
+    public function getAttributesCommon($classes = [])
     {
         return [
-            'class' => $this->getCommonClasses()
+            'class' => $this->getCommonClasses($classes)
         ];
     }
 
@@ -367,9 +372,12 @@ abstract class Field implements IValidateField
         return $attributes;
     }
 
-    public function getAttributesErrors()
+    public function getAttributesErrors($hasErrors = false)
     {
-        $attributes = $this->getAttributesCommon();
+        if($this->hasErrors() || $hasErrors){
+            $classes = ['show'];
+        }
+        $attributes = $this->getAttributesCommon($classes);
         $attributes = $this->extendAttribute($attributes, 'class', $this->errorsClass);
         return $attributes;
     }
@@ -402,9 +410,9 @@ abstract class Field implements IValidateField
     /**
      * Builds HTML attributes of errors
      */
-    public function buildAttributesErrors()
+    public function buildAttributesErrors($hasErrors = false)
     {
-        $attributes = $this->getAttributesErrors();
+        $attributes = $this->getAttributesErrors($hasErrors);
         return $this->buildAttributes($attributes);
     }
 
@@ -507,13 +515,14 @@ abstract class Field implements IValidateField
         ]);
     }
 
-    public function renderErrors()
+    public function renderErrors($errors = null)
     {
         return $this->innerRender($this->errorsTemplate, [
             'field' => $this,
-            'html' => $this->buildAttributesErrors(),
+            'html' => $this->buildAttributesErrors(!empty($errors)),
             'id' => $this->getHtmlId(),
-            'errors' => $this->getErrors()
+            'errors' => !empty($errors) ? $errors : $this->getErrors()
+            //'errors' => $this->getErrors()
         ]);
     }
 
@@ -544,7 +553,8 @@ abstract class Field implements IValidateField
             'input' => $this->renderInput(),
             'errors' => $this->renderErrors(),
             'hint' => $this->renderHint(),
-            'ext' => $fieldExtension
+            'ext' => $fieldExtension,
+            'field' => $this
         ]);
     }
 

@@ -1,5 +1,7 @@
+{set $allErrors = array_merge($field->getErrors(), $ext->getErrors())}
 <div class="hide-for-large mobile-errors-content">
-    {raw $errors}
+    {*{raw $errors}*}
+    {raw $field->renderErrors($allErrors)}
 </div>
 <div class="field-row">
     <div class="field-title">
@@ -20,7 +22,8 @@
                 <span class="show-error"></span>
             </div>
             <div class="show-for-large large-errors-content">
-                {raw $errors}
+                {*{raw $errors}*}
+                {raw $field->renderErrors($allErrors)}
             </div>
     </div>
 </div>

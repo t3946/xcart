@@ -60930,9 +60930,11 @@ var FormValidation = function () {
         }
 
         var inputs = field.querySelectorAll("input, textarea, select");
+
         for (var i = 0; i < inputs.length; ++i) {
             var inputElement = inputs.item(i);
-            if (!inputElement.classList.contains('success')) {
+
+            if (inputElement.classList.contains('required') && !inputElement.classList.contains('success') || !inputElement.classList.contains('required') && inputElement.classList.contains('invalid')) {
                 return;
             }
         }
