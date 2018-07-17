@@ -1,3 +1,3 @@
-<span id="{$id}_hint" {raw $html} class="hint">
+<div id="{$id}_hint" {raw $html} class="hint">
     {raw $hint}
-</span>
+</div>

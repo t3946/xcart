@@ -243,6 +243,10 @@ form {
       height: 1rem;
       vertical-align: top;
       margin: rem-calc(11) 0 0 rem-calc(8);
+
+      @include breakpoint(large) {
+        margin-top: rem-calc(2);
+      }
     }
 
     .show-success {

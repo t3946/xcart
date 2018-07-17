@@ -12,6 +12,7 @@ class CheckboxField extends CharField
     public $fieldTemplate = 'forms/field/checkbox/field.tpl';
     public $inputsListTemplate = 'forms/field/checkbox/inputs_list.tpl';
     public $fieldListTemplate = 'forms/field/checkbox/field_list.tpl';
+    public $fieldType = 'checkbox';
 
     public $type = "checkbox";
 

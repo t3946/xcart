@@ -38,8 +38,9 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
      */
     protected $fieldsSettings = [
         'fieldTemplate' => 'forms/field/default/custom/field.tpl',
-        'fieldTemplate' => 'forms/field/default/custom/field.tpl',
-        'errorsTemplate' => 'forms/field/default/custom/errors.tpl'
+        'errorsTemplate' => 'forms/field/default/custom/errors.tpl',
+        'hintTemplate' => 'forms/field/default/custom/hint.tpl',
+        'labelTemplate' => 'forms/field/default/custom/label.tpl',
     ];
 
     /**
@@ -48,6 +49,19 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
      */
     protected $fieldsCompoundSettings = [
         'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl'
+    ];
+
+    /**
+     *
+     * @var array
+     */
+    protected $classFieldSettings = [
+        'Xcart\App\Form\Fields\CharField' => [
+            'inputTemplate' => 'forms/field/default/custom/input.tpl',
+        ],
+        'Xcart\App\Form\Fields\NumberField' => [
+            'inputTemplate' => 'forms/field/default/custom/input.tpl',
+        ]
     ];
 
     /**
@@ -74,6 +88,7 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
     public function onBeforeCreateField(&$name, &$config)
     {
         $tmpConfig = array_merge([], $config);
+
         if (empty($config['extend'])) {
             // Render default field
             $tmpConfig = array_merge($this->fieldsSettings, $tmpConfig);
@@ -81,7 +96,18 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
             // Render compound field
             $tmpConfig = array_merge($this->fieldsSettings, $this->fieldsCompoundSettings, $tmpConfig);
         }
+
+        foreach ($this->classFieldSettings as $class => $settings) {
+            if($tmpConfig['class'] == $class) {
+                $tmpConfig = array_merge($this->classFieldSettings[$class], $tmpConfig);
+            }
+        }
+
         $config = array_merge($config, $tmpConfig);
+
+//        var_dump($name);
+//        var_dump($config['class']);
+//        var_dump($config['inputTemplate']);
     }
 
     /**

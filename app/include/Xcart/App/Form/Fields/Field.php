@@ -23,6 +23,17 @@ abstract class Field implements IValidateField
 {
     use Accessors, Configurator, ValidateField, RenderTrait;
 
+
+    /**
+     * @var string
+     */
+    public $successClass = 'success';
+
+    /**
+     * @var string
+     */
+    public $fieldType = 'input_text';
+
     public $showErrorsClass = 'show';
     /**
      * Field, that extends current field
@@ -299,19 +310,33 @@ abstract class Field implements IValidateField
 
     public function getCommonClasses()
     {
-        $classes = [];
+
+        $errors = [];
+
         if ($this->required) {
-            $classes[] = $this->requiredClass;
+            $errors[] = $this->requiredClass;
         }
 
         if ($this->hasErrors()) {
-            $classes[] = $this->invalidClass;
+            $errors[] = $this->invalidClass;
         }
+
         if(!empty($classes)){
-            $classes[] = $this->showErrorsClass;
+            $errors[] = $this->showErrorsClass;
+        }
+
+        $classes = array_merge([], $errors);
+
+        if ($this->filledOutSuccessfully()){
+            $classes[] = $this->successClass;
         }
 
         return implode(' ', $classes);
+    }
+
+    public function filledOutSuccessfully()
+    {
+        return !empty($this->value) && !$this->hasErrors();
     }
 
     /**
@@ -467,7 +492,7 @@ abstract class Field implements IValidateField
         return $this->getValue();
     }
 
-    public function renderInput()
+    public function renderInput( )
     {
         return $this->innerRender($this->inputTemplate, [
             'field' => $this,
@@ -477,7 +502,8 @@ abstract class Field implements IValidateField
             'value' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
             'type' => $this->getType(),
-            'extended' => $this->extend
+            'extended' => $this->extend,
+            'extends' => $this->extends
         ]);
     }
 
