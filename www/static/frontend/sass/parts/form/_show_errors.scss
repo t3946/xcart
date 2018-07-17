@@ -6,10 +6,12 @@
     position: relative;
     list-style: none;
     background-color: #ffebeb;
-    border: 1px solid #ed1c24;
-    padding: rem-calc(11);
+    border: 1px solid #ee2a31;
+    padding: rem-calc(8) .625rem;
     margin: 0;
     margin-bottom: rem-calc(10);
+    font-size: 1rem;
+    line-height: rem-calc(20);
 
     @include breakpoint(medium up) {
       max-width: 20rem;

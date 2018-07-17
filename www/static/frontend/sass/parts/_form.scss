@@ -4,14 +4,14 @@
 form {
   label {
     .required {
-      color: red;
+      color: #ff2626;
     }
 
     &.required {
       &:after {
-        color: red;
+        color: #ff2626;
         content: '*';
-        padding-left: .5em;
+        //padding-left: .5em;
 
         @include breakpoint(large) {
           position: absolute;
@@ -52,7 +52,7 @@ form {
     input[required]:invalid,
     textarea[required]:invalid,
     select[required]:invalid {
-      border: 1px solid red;
+      border: 1px solid #ee2a31;
 
       &:focus {
         border: 1px solid #ff8d91;
@@ -69,10 +69,11 @@ form {
     box-shadow: none;
     border: 1px solid #aaaaaa;
     padding: 0 .625rem;
-    font-size: 1em;
-    line-height: 1.875rem;
-    height: 1.875rem;
+    font-size: rem-calc(17);
+    line-height: rem-calc(38);
+    height: rem-calc(38);
     vertical-align: middle;
+    color: #272727;
 
     @include breakpoint(sm up) {
       font-size: rem-calc(20);
@@ -102,7 +103,7 @@ form {
     }
 
     &.invalid {
-      border: 1px solid red;
+      border: 1px solid #ee2a31;
 
       &:focus {
         border: 1px solid #ff8d91;
@@ -110,7 +111,7 @@ form {
     }
 
     &.invalid {
-      border: 1px solid red;
+      border: 1px solid #ee2a31;
     }
 
     @include breakpoint(sm down) {
@@ -151,6 +152,8 @@ form {
     min-height: 7em;
     height: 7em;
     max-height: 14em;
+    line-height: 110%;
+    padding: 10px .625rem;
   }
 
   /* special styles for select */
@@ -253,6 +256,8 @@ form {
       background: url('../images/icons/forms/checkmark_accepted.svg');
     }
     .show-error {
+      width: rem-calc(13);
+      height: rem-calc(13);
       background: url('../images/icons/forms/error.svg');
     }
 
@@ -281,7 +286,7 @@ form {
 
     .field-row {
 
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       //padding: 0 .625rem;
 
       @include breakpoint(medium up) {
@@ -334,7 +339,7 @@ form {
 
         .comment,
         .hint {
-          font-size: rem-calc(11);
+          font-size: rem-calc(12);
           color: #777777;
 
           @include breakpoint(sm up) {
