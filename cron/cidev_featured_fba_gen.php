@@ -116,7 +116,7 @@ foreach ( $sfids as $sfid)
 
 if (!empty($values))
 {
-    Connection::getInstance()->executeQuery("truncate xcart_featured_products");
+    Connection::getInstance()->executeQuery("delete from xcart_featured_products where storefrontid != 75");
 
     foreach (array_chunk($values, 100) as $c_values)
     {
