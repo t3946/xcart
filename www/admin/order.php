@@ -68,8 +68,6 @@ if ($orderid && is_numeric($orderid)) {
 if (!$order_model || in_array($order_model->cb_status, [
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4
     ], true)) {
     if (!in_array($login, ['elenak', 'michaelch'])) {
         Xcart::app()->request->redirect('/admin/');
