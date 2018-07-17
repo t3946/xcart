@@ -134,14 +134,16 @@ class PromoController extends AbstractCatalogController
             $products->limit(20)->cache(10);
         }
 
-        $sProducts = '';
-        foreach ($products as $product) {
-            $sProducts .= $this->render($view, ['item' => $product]);
-        }
+        if ($products) {
+            $sProducts = '';
+            foreach ($products as $product) {
+                $sProducts .= $this->render($view, ['item' => $product]);
+            }
 
-        $this->jsonResponse([
-            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
-        ]);
+            $this->jsonResponse([
+                'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+            ]);
+        }
 
         die();
     }
