@@ -550,7 +550,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendDescription()
     {
-        return $this->descr ?: $this->seo_fulldescr ?: $this->fulldescr;
+        return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
     }
 
     public function getPrices()

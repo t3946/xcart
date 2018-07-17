@@ -138,21 +138,28 @@
                     </div>
                 </div>
 
-                {if !$model->isGroupRoot()}
-                <div class="prices">
-                    {include "product/price/_table_prices.tpl" model=$model}
+                {if $model->descr}
+                    <div class="highlights show-for-ml">
+                        <div class="h2 title">Product Highlights</div>
+                        {raw $model->descr}
+                    </div>
+                {/if}
 
-                    {if $model->isGroupChild()}
-                        {set $parent = $model->parent}
-                        {if $parent}
-                            <div class="link__group_root">
-                                <a href="{$parent->getAbsoluteUrl()}">
-                                    Full {$parent->getFrontendName()} product line
-                                </a>
-                            </div>
+                {if !$model->isGroupRoot()}
+                    <div class="prices">
+                        {include "product/price/_table_prices.tpl" model=$model}
+
+                        {if $model->isGroupChild()}
+                            {set $parent = $model->parent}
+                            {if $parent}
+                                <div class="link__group_root">
+                                    <a href="{$parent->getAbsoluteUrl()}">
+                                        Full {$parent->getFrontendName()} product line
+                                    </a>
+                                </div>
+                            {/if}
                         {/if}
-                    {/if}
-                </div>
+                    </div>
                 {else}
                     <div class="full_line__group_root buttons">
                         {ignore}
