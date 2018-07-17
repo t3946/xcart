@@ -6,6 +6,7 @@ use Mindy\QueryBuilder\Expression;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\SearchStatsModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -121,6 +122,16 @@ class SearchController extends AbstractCatalogController
             ]);
             die();
         }
+
+        (new SearchStatsModel(
+            [
+                'search_phrase' => $this->q,
+                'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                'customer_id' => Xcart::app()->request->session->getId()
+            ]
+        ))->save();
+
+
 
         $this->view_internal($this->q);
     }
