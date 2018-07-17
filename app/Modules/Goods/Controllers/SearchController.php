@@ -127,7 +127,8 @@ class SearchController extends AbstractCatalogController
             [
                 'search_phrase' => $this->q,
                 'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
-                'customer_id' => Xcart::app()->request->session->getId()
+                'customer_id' => Xcart::app()->request->session->getId(),
+                'hits' => (int) $this->searched,
             ]
         ))->save();
 
