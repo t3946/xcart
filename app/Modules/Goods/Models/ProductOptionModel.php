@@ -31,6 +31,13 @@ class ProductOptionModel extends Model
                 'link' => ['product_id' => 'productid'],
                 'required' => true,
             ],
+            'option' => [
+                'field' => 'option_id',
+                'class' => ForeignField::class,
+                'modelClass' => OptionNewModel::class,
+                'link' => ['option_id' => 'id'],
+                'required' => true,
+            ],
             'variants' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductOptionVariantModel::class,
@@ -41,6 +48,6 @@ class ProductOptionModel extends Model
 
     public function __toString(): string
     {
-        return (string) $this->name;
+        return (string) $this->option->name;
     }
 }

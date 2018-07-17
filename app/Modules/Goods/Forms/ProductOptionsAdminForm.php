@@ -6,6 +6,7 @@ namespace Modules\Goods\Forms;
 use Modules\Goods\Admin\ProductOptionVariantsAdmin;
 use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\ModelForm;
 
@@ -17,9 +18,10 @@ class ProductOptionsAdminForm extends ModelForm
     public function getFields()
     {
         return [
-            'name' => [
-                'class' => CharField::class,
-                'required' => true,
+            'option' => [
+                'class' => DropDownField::class,
+                'choices' => [],
+                'label' => 'Option'
             ],
             'variants' => [
                 'class' => ListViewField::class,
