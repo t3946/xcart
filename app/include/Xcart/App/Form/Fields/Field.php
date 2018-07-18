@@ -33,6 +33,10 @@ abstract class Field implements IValidateField
      * @var string
      */
     public $fieldType = 'input_text';
+    /**
+     * @var bool
+     */
+    public $userClear = false;
 
     /**
      * @var string

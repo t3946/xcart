@@ -10,6 +10,7 @@ namespace Modules\Core\Forms;
 
 
 use Modules\Core\Behaviours\ClientValidationBehavior;
+use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use RuntimeException;
 use Xcart\App\Form\DecoratedModelForm;
@@ -40,10 +41,16 @@ class FrontendModelForm extends DecoratedModelForm
     {
         return [
             'validation' => [
-                'class' => ClientValidationBehavior::class
+                'class' => ClientValidationBehavior::class,
+                'enabled' => true
+            ],
+            'clear' => [
+                'class' => FormClearInputBehavior::class,
+                'enabled' => true
             ],
             'decor' => [
-                'class' => FrontendFormDisplayBehavior::class
+                'class' => FrontendFormDisplayBehavior::class,
+                'enabled' => true
             ],
         ];
     }

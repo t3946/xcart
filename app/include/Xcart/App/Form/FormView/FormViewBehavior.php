@@ -39,7 +39,7 @@ class FormViewBehavior extends BaseBehavior
     /**
      * @var bool
      */
-    public $enabled = true;
+    public $enabled = false;
 
 
     /**

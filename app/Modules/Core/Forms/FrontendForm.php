@@ -10,6 +10,7 @@ namespace Modules\Core\Forms;
 
 
 use Modules\Core\Behaviours\ClientValidationBehavior;
+use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Traits\RenderTrait;
@@ -32,10 +33,16 @@ class FrontendForm extends BaseForm
     {
         return [
             'validation' => [
-                'class' => ClientValidationBehavior::class
+                'class' => ClientValidationBehavior::class,
+                'enabled' => true
+            ],
+            'clear' => [
+                'class' => FormClearInputBehavior::class,
+                'enabled' => true
             ],
             'decor' => [
-                'class' => FrontendFormDisplayBehavior::class
+                'class' => FrontendFormDisplayBehavior::class,
+                'enabled' => true
             ],
         ];
     }

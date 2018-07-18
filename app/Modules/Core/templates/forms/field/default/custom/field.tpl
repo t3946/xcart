@@ -7,7 +7,9 @@
         {raw $hint}
     </div>
     <div class="field">
-        {raw $input}
+        <div class="input-container" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
+            {raw $input}
+        </div>
         <div class="show-for-medium input-info">
             <span class="show-success"></span>
             <span class="show-error"></span>

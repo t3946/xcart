@@ -1,5 +1,6 @@
 @import "./form/compound_field";
 @import "./form/show_errors";
+@import "./form/clear_input";
 
 
 $field-width-small: 100%;
@@ -66,10 +67,29 @@ form {
   }
 
   /* all input styles */
+  .input-container,
+  .input-block {
+    width: $field-width-small;
+    font-size: rem-calc(17);
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(20);
+    }
+
+    @include breakpoint(medium) {
+      max-width: $field-width-medium;
+      font-size: rem-calc(18);
+    }
+
+    @include breakpoint(large) {
+      max-width: $field-width-large;
+      font-size: rem-calc(14);
+    }
+  }
 
   input, textarea, select {
 
-    width: $field-width-small;
+    width: 100%;
     box-shadow: none;
     border: 1px solid #aaaaaa;
     padding: 0 .625rem;
@@ -86,7 +106,6 @@ form {
     }
 
     @include breakpoint(medium up) {
-      max-width: $field-width-medium;
       font-size: rem-calc(18);
       line-height: rem-calc(40);
       height: rem-calc(40);
@@ -127,24 +146,6 @@ form {
     }
   }
 
-  .input-block {
-    width: $field-width-small;
-    font-size: rem-calc(17);
-
-    @include breakpoint(sm) {
-      font-size: rem-calc(20);
-    }
-
-    @include breakpoint(medium) {
-      max-width: $field-width-medium;
-      font-size: rem-calc(18);
-    }
-
-    @include breakpoint(large) {
-      max-width: $field-width-large;
-      font-size: rem-calc(14);
-    }
-  }
 
   /**
   @TODO: For fucking chrome
@@ -659,5 +660,7 @@ form {
       text-align: left;
     }
   }
+
+  @include getClearInputStyles();
 
 }

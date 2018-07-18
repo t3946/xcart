@@ -60815,18 +60815,31 @@ var _FormValidation = __webpack_require__(103);
 
 var _FormValidation2 = _interopRequireDefault(_FormValidation);
 
+var _ClearFormFields = __webpack_require__(184);
+
+var _ClearFormFields2 = _interopRequireDefault(_ClearFormFields);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _documentReady2.default)(function () {
-
     if (typeof document.formConstraints !== 'undefined') {
-        for (var name in document.formConstraints) {
-            (0, _FormValidation2.default)(name);
+        for (var _name in document.formConstraints) {
+            (0, _FormValidation2.default)(_name);
         }
     }
 
     document.addEventListener('form.client.validation', function (event) {
         (0, _FormValidation2.default)(event.detail);
+    }, false);
+
+    if (typeof document.formClearFields !== 'undefined') {
+        for (var _name2 in document.formClearFields) {
+            (0, _ClearFormFields2.default)(_name2);
+        }
+    }
+
+    document.addEventListener('form.client.fields.clear', function (event) {
+        (0, _ClearFormFields2.default)(name);
     }, false);
 });
 
@@ -75448,6 +75461,51 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 184 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ClearFormFields = function () {
+    function ClearFormFields(name) {
+        _classCallCheck(this, ClearFormFields);
+
+        this.name = name;
+        this.constraints = document.formConstraints[name];
+
+        var formSelector = '#' + name;
+        this.form = document.querySelector(formSelector);
+        this._bind();
+    }
+
+    ClearFormFields.prototype._bind = function _bind() {
+        this.inputs = this.form.querySelectorAll('input-container[data-clear]');
+        for (var i = 0; i < this.inputs.length; ++i) {
+            var inputContainer = this.inputs.item(i);
+            var closeButton = document.createElement('a').classList.add('clear-input');
+            inputContainer.append(closeButton);
+        }
+    };
+
+    return ClearFormFields;
+}();
+
+exports.default = function (name) {
+    new ClearFormFields(name);
+};
 
 /***/ })
 /******/ ]);
