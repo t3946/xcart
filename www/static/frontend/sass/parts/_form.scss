@@ -1,6 +1,11 @@
 @import "./form/compound_field";
 @import "./form/show_errors";
 
+
+$field-width-small: 100%;
+$field-width-medium: 20rem;
+$field-width-large: rem-calc(295);
+
 form {
   label {
     .required {
@@ -62,9 +67,9 @@ form {
 
   /* all input styles */
 
-  input, textarea, select{
+  input, textarea, select {
 
-    width: 100%;
+    width: $field-width-small;
     box-shadow: none;
     border: 1px solid #aaaaaa;
     padding: 0 .625rem;
@@ -81,14 +86,14 @@ form {
     }
 
     @include breakpoint(medium up) {
-      max-width: 20rem;
+      max-width: $field-width-medium;
       font-size: rem-calc(18);
       line-height: rem-calc(40);
       height: rem-calc(40);
     }
 
     @include breakpoint(large up) {
-      max-width: 15.9375rem;
+      max-width: $field-width-large;
       font-size: rem-calc(14);
       line-height: rem-calc(24);
       height: rem-calc(24);
@@ -123,7 +128,7 @@ form {
   }
 
   .input-block {
-    width: 100%;
+    width: $field-width-small;
     font-size: rem-calc(17);
 
     @include breakpoint(sm) {
@@ -131,11 +136,13 @@ form {
     }
 
     @include breakpoint(medium) {
-      max-width: 20rem;
+      max-width: $field-width-medium;
       font-size: rem-calc(18);
     }
+
     @include breakpoint(large) {
-      max-width: 15.9375rem;
+      max-width: $field-width-large;
+      font-size: rem-calc(14);
     }
   }
 
@@ -161,6 +168,10 @@ form {
     max-height: 14em;
     line-height: 110% !important;
     padding: rem-calc(10) .625rem;
+
+    @include breakpoint(large) {
+      padding: rem-calc(2) .625rem;
+    }
   }
 
   /* special styles for select */
@@ -250,6 +261,10 @@ form {
         width: rem-calc(30);
       }
 
+      @include breakpoint(large){
+        width: rem-calc(25);
+      }
+
       .show-success,
       .show-error {
         display: none;
@@ -266,13 +281,23 @@ form {
       .show-success {
         width: rem-calc(22);
         height: rem-calc(22);
-        background: url('../images/icons/forms/checkmark_accepted.svg');
+        background: url('../images/icons/forms/checkmark_accepted.svg') 0 0 no-repeat;
+
+        @include breakpoint(large) {
+          width: rem-calc(16);
+          height: rem-calc(16);
+        }
       }
       .show-error {
         width: rem-calc(20);
         height: rem-calc(20);
-        background: url('../images/icons/forms/error.svg');
+        background: url('../images/icons/forms/error.svg') 0 0 no-repeat;
         margin-left: rem-calc(9);
+
+        @include breakpoint(large) {
+          width: rem-calc(15);
+          height: rem-calc(15);
+        }
       }
     }
 
@@ -327,6 +352,7 @@ form {
 
         @include breakpoint(large up) {
           height: 1.5rem;
+          padding-top: 1px;
         }
 
         label {
