@@ -81,9 +81,9 @@ $remove: (
       .not-avail-thumb {
         height: 100%;
         width: 100%;
-        display: inherit;
-        align-items: inherit;
-        justify-content: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: #efefef;
         color: #a6a6a6;
 
