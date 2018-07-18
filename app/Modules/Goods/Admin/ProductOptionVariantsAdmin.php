@@ -10,7 +10,7 @@ use Xcart\App\Form\ModelForm;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'option_id';
+    public $ownerField = 'product_option';
 
     public function getModel()
     {

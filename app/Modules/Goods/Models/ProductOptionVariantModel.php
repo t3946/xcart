@@ -23,11 +23,11 @@ class ProductOptionVariantModel extends Model
             'id' => [
                 'class' => AutoField::class,
             ],
-            'option' => [
-                'field' => 'option_id',
+            'product_option' => [
+                'field' => 'product_option_id',
                 'class' => ForeignField::class,
-                'modelClass' => OptionNewModel::class,
-                'link' => ['option_id' => 'id'],
+                'modelClass' => ProductOptionModel::class,
+                'link' => ['product_option_id' => 'id'],
                 'required' => true,
             ],
             'variant' => [
@@ -42,6 +42,6 @@ class ProductOptionVariantModel extends Model
 
     public function __toString(): string
     {
-        return (string )$this->variant->name;
+        return (string) $this->variant ? $this->variant->name : '';
     }
 }

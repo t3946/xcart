@@ -41,7 +41,7 @@ class ProductOptionModel extends Model
             'variants' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductOptionVariantModel::class,
-                'link' => ['id' => 'option_id'],
+                'link' => ['id' => 'product_option_id'],
             ],
         ];
     }

@@ -21,9 +21,14 @@ class ProductOptionsAdminForm extends ModelForm
 
             'option' => [
                 'class' => DropDownField::className(),
-                'choices' => function() {return [OptionNewModel::objects()->get(['id' => $this->getInstance()->getField('option')->getValue()])];},
+                /*'choices' => function() {
+                        if ($oid = $this->getInstance()->getField('option')->getValue()) {
+                            return [OptionNewModel::objects()->get(['id' => $oid])];
+                        }
+                        return OptionNewModel::objects()->all();
+                    },*/
                 'html' => [
-                    'disabled' => 'disabled',
+//                    'disabled' => 'disabled',
                 ],
             ],
             'variants' => [
