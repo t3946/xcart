@@ -58,7 +58,6 @@ form {
         border: 1px solid #ff8d91;
       }
     }
-
   }
 
   /* all input styles */
@@ -80,17 +79,19 @@ form {
       line-height: rem-calc(46);
       height: rem-calc(46);
     }
+
     @include breakpoint(medium up) {
       max-width: 20rem;
       font-size: rem-calc(18);
       line-height: rem-calc(40);
       height: rem-calc(40);
     }
+
     @include breakpoint(large up) {
       max-width: 15.9375rem;
       font-size: rem-calc(14);
-      line-height: rem-calc(22);
-      height: rem-calc(22);
+      line-height: rem-calc(24);
+      height: rem-calc(24);
     }
 
     &::placeholder {
@@ -123,11 +124,17 @@ form {
 
   .input-block {
     width: 100%;
+    font-size: rem-calc(17);
 
-    @include breakpoint(medium up) {
-      max-width: 20rem;
+    @include breakpoint(sm) {
+      font-size: rem-calc(20);
     }
-    @include breakpoint(large up) {
+
+    @include breakpoint(medium) {
+      max-width: 20rem;
+      font-size: rem-calc(18);
+    }
+    @include breakpoint(large) {
       max-width: 15.9375rem;
     }
   }
@@ -152,12 +159,11 @@ form {
     min-height: 7em;
     height: 7em;
     max-height: 14em;
-    line-height: 110%;
-    padding: 10px .625rem;
+    line-height: 110% !important;
+    padding: rem-calc(10) .625rem;
   }
 
   /* special styles for select */
-
   select {
 
     appearance: none;
@@ -229,7 +235,7 @@ form {
         content: '*';
         display: inline;
         vertical-align: top;
-        color: #ff0000;
+        color: #ff2626;
         position: static;
       }
     }
@@ -239,27 +245,38 @@ form {
 
   .form-field {
 
-    .show-success,
-    .show-error {
-      display: none;
-      width: 1rem;
-      height: 1rem;
-      vertical-align: top;
-      margin: rem-calc(11) 0 0 rem-calc(8);
+    .input-info {
+      @include breakpoint(medium){
+        width: rem-calc(30);
+      }
 
-      @include breakpoint(large) {
-        margin-top: rem-calc(2);
+      .show-success,
+      .show-error {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        vertical-align: top;
+        margin: rem-calc(11) 0 0 rem-calc(8);
+
+        @include breakpoint(large) {
+          margin-top: rem-calc(2);
+        }
+      }
+
+      .show-success {
+        width: rem-calc(22);
+        height: rem-calc(22);
+        background: url('../images/icons/forms/checkmark_accepted.svg');
+      }
+      .show-error {
+        width: rem-calc(20);
+        height: rem-calc(20);
+        background: url('../images/icons/forms/error.svg');
+        margin-left: rem-calc(9);
       }
     }
 
-    .show-success {
-      background: url('../images/icons/forms/checkmark_accepted.svg');
-    }
-    .show-error {
-      width: rem-calc(13);
-      height: rem-calc(13);
-      background: url('../images/icons/forms/error.svg');
-    }
+
 
     @include breakpoint(medium) {
       &.success {
@@ -292,6 +309,7 @@ form {
       @include breakpoint(medium up) {
         display: flex;
       }
+
       @include breakpoint(large up) {
         margin-bottom: .625rem;
       }
@@ -304,6 +322,7 @@ form {
           text-align: right;
           width: 50%;
           padding-right: .5625rem;
+          padding-top: rem-calc(11);
         }
 
         @include breakpoint(large up) {
@@ -317,22 +336,22 @@ form {
           @include breakpoint(sm up) {
             font-size: rem-calc(20);
           }
+
           @include breakpoint(medium up) {
             font-size: rem-calc(18);
             font-weight: normal;
           }
+
           @include breakpoint(large up) {
             font-size: rem-calc(14);
           }
 
           &.required:after {
-
             content: '*';
             display: inline;
             vertical-align: top;
             color: #ff0000;
             position: static;
-
           }
 
         }
@@ -603,6 +622,7 @@ form {
       margin-bottom: 0;
     }
   }
+
   h2 {
     line-height: 110%;
     text-align: center;
