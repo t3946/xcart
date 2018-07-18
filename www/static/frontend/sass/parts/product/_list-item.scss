@@ -35,6 +35,12 @@
       margin-bottom: 20px;
     }
 
+    &.minimal {
+      .not-avail-thumb {
+        font-size: rem-calc(11);
+      }
+    }
+
 
     .image_container {
       position: relative;
