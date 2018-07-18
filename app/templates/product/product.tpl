@@ -92,39 +92,45 @@
                     {else}
                         {set $images = $model->images->order(['orderby'])->all()}
                     {/if}
-                    <datalist>
-                        {foreach $images as $image}
-                            {if $image}
-                                <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                        data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                        data-id="{$image->imageid}"
-                                        type="image">
-                                </option>
-                            {/if}
-                        {/foreach}
-                        {if $videos}
-                            {foreach $videos as $video}
-                                <option value="{$video->video}"
-                                        data-thumb=""
-                                        data-id="{$video->id}"
-                                        type="video">
-
-                                </option>
+                    {if $images}
+                        <datalist>
+                            {foreach $images as $image}
+                                {if $image}
+                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                            data-id="{$image->imageid}"
+                                            type="image">
+                                    </option>
+                                {/if}
                             {/foreach}
-                        {/if}
+                            {if $videos}
+                                {foreach $videos as $video}
+                                    <option value="{$video->video}"
+                                            data-thumb=""
+                                            data-id="{$video->id}"
+                                            type="video">
 
-                        {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
-                                {*type="video"*}
-                                {*data-thumb=""*}
-                                {*data-id="{$video->id}"*}
-                        {*></option>*}
-                        {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                        {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                        {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                        {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                        {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
+                                    </option>
+                                {/foreach}
+                            {/if}
 
-                    </datalist>
+                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
+                                    {*type="video"*}
+                                    {*data-thumb=""*}
+                                    {*data-id="{$video->id}"*}
+                            {*></option>*}
+                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
+                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
+                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
+                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
+                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
+
+                        </datalist>
+                    {else}
+                        <div class="not-avail-thumb">
+                            <p>Image not available</p>
+                        </div>
+                    {/if}
 
                 </div>
             </div>

@@ -87,6 +87,25 @@
               max-width: 50%;
             }
           }
+
+          .not-avail-thumb {
+            height: 100%;
+            width: 100%;
+            display: inherit;
+            align-items: inherit;
+            justify-content: inherit;
+            background-color: #efefef;
+            color: #a6a6a6;
+
+            p {
+              margin: 0;
+            }
+
+          }
+        }
+
+        &:hover {
+          text-decoration: none;
         }
       }
 
