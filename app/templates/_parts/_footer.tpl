@@ -188,7 +188,7 @@
                 </ul>
             </div>
             <div class="column small-12 medium-7 medium-order-1 copyright">
-                Copyright © 2005-{date_add()|date:"Y"} S3 Stores Holdings, Inc. All Rights Reserved.
+                Copyright © 2005-{date_add()|date:"Y"} {$gConfig.holding_company_name} All Rights Reserved.
             </div>
         </div>
     </div>
