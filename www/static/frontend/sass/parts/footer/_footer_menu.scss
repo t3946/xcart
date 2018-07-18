@@ -240,6 +240,14 @@ footer {
       @include breakpoint(large) {
         margin-top: 12px;
       }
+
+      .purchase-order {
+        margin-right: rem-calc(62);
+
+        @include breakpoint(large) {
+          margin-right: rem-calc(85);
+        }
+      }
     }
 
     .confirmations {

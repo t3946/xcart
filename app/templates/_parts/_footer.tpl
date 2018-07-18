@@ -145,7 +145,7 @@
                                 </li>
                                 <li class="fraud-orders">
                                     <a href="/ecomerce-fraud">Combating eCommerce Fraud</a>
-                                    <a href="/purchase-orders">Purchase Orders</a>
+                                    <a class="purchase-order" href="/purchase-orders">Purchase Orders</a>
                                 </li>
                             </ul>
 
