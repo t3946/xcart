@@ -34,6 +34,28 @@
                         {include 'checkout/_form_row.tpl' field=$shippingForm->getField('state')}
                         {include 'checkout/_form_row.tpl' field=$shippingForm->getField('city')}
 
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="hr"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns small-12">
+                    <div class="contact-options">
+                        <h2 class="title">{t 'Contact Information' dict='order'}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="columns small-12 ">
+                    <div class="contact-information">
+
+                        {include 'checkout/_form_row.tpl' field=$contactForm->getField('firstname')}
+
                         <div class="row form-row compound-field">
 
                             <div class="column hide-for-large small-12 large-2 large-order-2">
@@ -74,7 +96,6 @@
                         </div>
 
                         {include 'checkout/_form_row.tpl' field=$contactForm->getField('email')}
-
                     </div>
                 </div>
             </div>
