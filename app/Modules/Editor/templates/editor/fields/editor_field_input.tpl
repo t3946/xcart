@@ -3,6 +3,7 @@
 <script>
     tinymce.init({
         selector: '#{$id}',
+        readonly: {$field->readonly ?: 'false'},
 //        language: 'ru',
         plugins: [
             'advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor',

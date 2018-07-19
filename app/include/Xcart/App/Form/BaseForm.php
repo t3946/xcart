@@ -769,4 +769,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
         return $data;
     }
+
+    public function getBottomUrls(): array
+    {
+        return [];
+    }
 }

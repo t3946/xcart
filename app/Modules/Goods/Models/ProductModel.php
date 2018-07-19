@@ -244,6 +244,9 @@ class ProductModel extends Model implements ICartItem
                 'autoNow' => true,
                 'autoNowAdd' => true,
             ],
+            'eta_date_mm_dd_yyyy' => [
+                'class' => UnixTimestampField::class,
+            ],
             'category_main' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductCategoriesModel::class,
@@ -345,6 +348,11 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => 0,
             ],
+            'prevent_search_indexing_this_product_page' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false,
+            ]
         ];
     }
 
@@ -452,6 +460,11 @@ class ProductModel extends Model implements ICartItem
         }
 
         return false;
+    }
+
+    public function getDistributorUrl()
+    {
+        return ;
     }
 
     public function getAmpAbsoluteUrl($full = false)

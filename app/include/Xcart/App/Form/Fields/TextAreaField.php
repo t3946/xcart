@@ -9,4 +9,6 @@ namespace Xcart\App\Form\Fields;
 class TextAreaField extends Field
 {
     public $inputTemplate = 'forms/field/textarea/input.tpl';
+
+    public $readonly = false;
 }

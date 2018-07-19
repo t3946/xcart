@@ -50,6 +50,11 @@ class DistributorModel extends Model
                 'modelClass' => ShippingRateModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
+            'feed_fields' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorFeedFieldModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
             'reduce_extra_margin' => [
                 'class' => BooleanCharField::class,
             ],
@@ -104,5 +109,10 @@ class DistributorModel extends Model
         }
 
         return 0;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->manufacturer;
     }
 }

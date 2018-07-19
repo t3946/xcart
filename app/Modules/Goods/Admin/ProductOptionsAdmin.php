@@ -54,7 +54,7 @@ class ProductOptionsAdmin extends ListViewAdmin
 
     public function getItemProperty(Model $item, $property)
     {
-        return nl2br(implode(";\n", $item->variants->all()));
+        return nl2br(implode("\n", $item->variants->all()));
     }
 
 }
