@@ -23,17 +23,8 @@
                 <div class="head">
                     <div class="nop"></div>
 
-                    <h1>{t 'Shopping Cart' dict='cart'}</h1>
+                    <h2>{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
 
-                    <div class="need-help">
-                        <div class="multiline">
-                            <span class="color--orange">
-                                Got a question ?
-                            </span>
-                            Call us 1-800-929-2431 and provide shopping cart reference
-                            <span class="color--black"> # {$.app->cart->getCartNumber()}</span>
-                        </div>
-                    </div>
                 </div>
                 {/if}
             </div>

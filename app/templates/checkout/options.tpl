@@ -43,11 +43,6 @@
 {block 'content'}
     <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
         <section class="checkout-options">
-            <div class="row show-for-large">
-                <div class="columns small-12">
-                    <h1 class="no-margin-bottom">{t 'Shipping & Payment Options' dict='order'}</h1>
-                </div>
-            </div>
             <div class="row">
                 <div class="columns large-4 show-for-large">
                     <div class="options">

@@ -3,11 +3,6 @@
 {block 'content'}
     <form data-abide action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">
         <section class="checkout-shipping">
-            <div class="row show-for-large">
-                <div class="columns small-12">
-                    <h1>{t 'Shipping Cart' dict='order'}</h1>
-                </div>
-            </div>
             <div class="row">
                 <div class="columns small-12 large-6">
                     <div class="options">

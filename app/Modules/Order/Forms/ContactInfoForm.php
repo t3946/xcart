@@ -19,7 +19,7 @@ class ContactInfoForm extends BaseForm
             'firstname' => [
                 'class' => CharField::class,
                 'label' => 'Full name',
-                'required' => false,
+                'required' => true,
                 'hint' => 'First and last name of the order contact person',
                 'html' => [
                     'placeholder' => 'Albert H. Einstein'
