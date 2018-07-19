@@ -15,10 +15,13 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\BillingAddressForm;
-use Modules\Order\Forms\ContactInfoForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
 use Modules\Order\Forms\PurchasingManagerForm;
+
+use Modules\Order\Forms\ContactInfoForm;
 use Modules\Order\Forms\ShippingAddressForm;
+
+use Modules\Order\Forms\ShippingForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
@@ -70,23 +73,25 @@ class CheckoutController extends FrontendController
 
         /** @var Application $app */
         $app = Xcart::app();
-        $user = $app->user;
+//        $user = $app->user;
         $cart = $app->cart;
         $shipping = null;
-        $shippingForm = new ShippingAddressForm();
-        $contactForm = new ContactInfoForm();
+//        $shippingForm = new ShippingAddressForm();
+//        $contactForm = new ContactInfoForm();
+        $shippingForm = new ShippingForm();
 
         if ($app->request->getIsPost()) {
             $shippingForm->populate($app->request->post);
-            $contactForm->populate($app->request->post);
+            //$contactForm->populate($app->request->post);
 
-            if ($shippingForm->isValid() && $contactForm->isValid()) {
+            if ($shippingForm->isValid()) {// && $contactForm->isValid()
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-                $order->setAttributes($shippingForm->getAttributes());
+//                $order->setAttributes($shippingForm->getAttributes());
+                $order->setAttributes($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]);
 
 //                if ($user && $user->id) {
 //                    [$address] = AddressModel::objects()->getOrCreate([
@@ -104,7 +109,7 @@ class CheckoutController extends FrontendController
 //                    $address->save();
 //                }
 
-                $order->setAttributes(array_merge($contactForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
+//                $order->setAttributes(array_merge($contactForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
 
                 if ($order->save()) {
                     if ($is_created) {
@@ -119,7 +124,7 @@ class CheckoutController extends FrontendController
 
         if (!$app->request->getIsPost() && $order) {
             $shippingForm->setAttributes($order->getAttributes());
-            $contactForm->setAttributes($order->getAttributes());
+           // $contactForm->setAttributes($order->getAttributes());
         }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
@@ -129,7 +134,7 @@ class CheckoutController extends FrontendController
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'shippingForm' => $shippingForm,
-            'contactForm' => $contactForm,
+           // 'contactForm' => $contactForm,
         ]);
     }
 

@@ -449,7 +449,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         ]);
     }
 
-    public function renderBegin($template = null)
+    public function renderBegin($params = [], $template = null)
     {
         $prefix = BaseForm::getFormIdentifier();
         $this->onBeforeRenderBegin($prefix, $template);
@@ -462,10 +462,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
             return '';
         }
 
-        return $this->renderInternal($template, [
+        return $this->renderInternal($template, array_merge([
             'form' => $this,
             'prefix' => $prefix
-        ]);
+        ], $params));
     }
 
     public function renderEnd($template = null)

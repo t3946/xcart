@@ -1,7 +1,13 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    <form data-abide action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">
+    {set $fieldsets = $shippingForm->getFieldsets()}
+    {*<form action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">*}
+        {raw $shippingForm->renderBegin([
+            'action' => $.app->router->url('checkout:shipping'),
+            'method' => 'POST',
+            'class' => 'checkout-shipping-form'
+        ])}
         <section class="checkout-shipping">
             <div class="row">
                 <div class="columns small-12 large-6">
@@ -17,19 +23,16 @@
             </div>
             <div class="row">
                 <div class="columns small-12">
-                    <div class="registration">
+                    {*<div class="registration">*}
 
+                        {set $sieldsetShipping = $fieldsets['shipping']}
 
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('firstname')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('company')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('address')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('address_2')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('country')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('zipcode')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('state')}
-                        {include 'checkout/_form_row.tpl' field=$shippingForm->getField('city')}
+                        {foreach $sieldsetShipping as $fieldName}
+                            {set $field = $shippingForm->getField($fieldName)}
+                            {raw $field->render()}
+                        {/foreach}
 
-                    </div>
+                    {*</div>*}
                 </div>
             </div>
             <div class="row">
@@ -47,51 +50,16 @@
 
             <div class="row">
                 <div class="columns small-12 ">
-                    <div class="contact-information">
+                    {*<div class="registration">*}
 
-                        {include 'checkout/_form_row.tpl' field=$contactForm->getField('firstname')}
+                        {set $sieldsetContact = $fieldsets['contact']}
 
-                        <div class="row form-row compound-field">
+                        {foreach $sieldsetContact as $fieldName}
+                            {set $field = $shippingForm->getField($fieldName)}
+                            {raw $field->render()}
+                        {/foreach}
 
-                            <div class="column hide-for-large small-12 large-2 large-order-2">
-                                {$contactForm->getField('phone')->renderErrors()}
-                            </div>
-
-                            <div class="column small-12 large-order-1">
-                                <div class="row">
-                                    <div class="small-12 large-6 columns large-text-right text-block">
-                                        {if $contactForm->getField('phone')->hint}
-                                            <div class="multiline">
-                                                {$contactForm->getField('phone')->renderLabel()}
-
-                                                <span class="hint">
-                                                    {$contactForm->getField('phone')->renderHint()}
-                                                </span>
-                                            </div>
-                                        {else}
-                                            {$contactForm->getField('phone')->renderLabel()}
-                                        {/if}
-                                    </div>
-                                    <div class="small-12 large-6 columns phone--container">
-                                        {$contactForm->getField('phone')->renderInput()}
-                                        <span class="phone_ext--container">
-                                            <label class="display-inline hide-for-medium">X</label>
-                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
-
-                                            {$contactForm->getField('phone_ext')->renderInput()}
-                                        </span>
-
-                                        <span class="show-for-large">
-                                            {$contactForm->getField('phone')->renderErrors()}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        {include 'checkout/_form_row.tpl' field=$contactForm->getField('email')}
-                    </div>
+                    {*</div>*}
                 </div>
             </div>
 
@@ -101,31 +69,6 @@
                 </div>
             </div>
 
-            {*<div class="row">
-                <div class="columns small-12 medium-6">
-                    <div class="subscription-options">
-                        <h2 class="title">{t 'Newsletter' dict='order'}</h2>
-                    </div>
-                </div>
-                <div class="columns small-12 medium-6">
-                    <div class="subscription-information">
-                        <div class="row">
-                            <div class="small-12 medium-6 columns">
-                                <div>{t 'Artist Supply Source' dict='order'}</div>
-                                <div><i>{t 'Specials on art supplies!' dict='order'}</i></div>
-                            </div>
-                            <div class="small-12 medium-6 columns">
-                                <input type="checkbox" name="mailchimp_subscription[3ffb82f7e0]"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <div class="hr"></div>
-                </div>
-            </div>*}
             <div class="row">
                 <div class="columns small-12">
                     <div class="subscription-options">
@@ -136,6 +79,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="buttons text-center">
@@ -145,6 +89,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="submit-notes text-center hint">
@@ -154,5 +99,6 @@
             </div>
 
         </section>
-    </form>
+    {*</form>*}
+    {raw $shippingForm->renderEnd()}
 {/block}

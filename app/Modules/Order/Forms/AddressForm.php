@@ -137,18 +137,20 @@ abstract class AddressForm extends BaseForm
     public function setAttributes(array $data)
     {
         $t_data = [];
-        $len = $this->replacement ? \strlen($this->replacement) : 0;
-
-        foreach ($data as $key=>$val)
-        {
-            if ($len && strpos($key, $this->replacement) === 0) {
-                $key = substr($key, $len);
-            }
-
-            if (\is_string($val)) {
-                $t_data[$key] = trim($val);
-            }
-        }
+        //
+//        $len = $this->replacement ? \strlen($this->replacement) : 0;
+//
+//        foreach ($data as $key=>$val)
+//        {
+//            if ($len && strpos($key, $this->replacement) === 0) {
+//                $key = substr($key, $len);
+//            }
+//
+//            if (\is_string($val)) {
+//                $t_data[$key] = trim($val);
+//            }
+//        }
+        //
 
         if (strpos($data['address'], "\n")) {
             $t = explode("\n", $t_data['address']);
@@ -186,7 +188,7 @@ abstract class AddressForm extends BaseForm
                 $data['country'] = $cModel->code;
             }
         }
-		
+
 		if ($data['state'] && $data['country']) {
             /** @var StateModel $sModel */
             if ($sModel =  StateModel::objects()->get(['state' => $data['state'], 'country_code' =>  $data['country']])) {
@@ -199,13 +201,15 @@ abstract class AddressForm extends BaseForm
             unset($data['address_2']);
         }
 
-        if ($this->replacement) {
-            $t_data = [];
-            foreach ($data as $key => $val) {
-                $t_data[$this->replacement . $key] = $val;
-            }
-            $data = $t_data;
-        }
+        //
+//        if ($this->replacement) {
+//            $t_data = [];
+//            foreach ($data as $key => $val) {
+//                $t_data[$this->replacement . $key] = $val;
+//            }
+//            $data = $t_data;
+//        }
+        //
 
         return $data;
     }
