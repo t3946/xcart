@@ -35,7 +35,7 @@ class ProductAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['productid','productcode','(string)'];
+        return ['productid','productcode','(string)', 'forsale'];
     }
 
     public function getAvailableListColumns()
@@ -55,6 +55,11 @@ class ProductAdmin extends Admin
                 'title' => 'PRODUCT',
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'product'
+            ],
+            'forsale' => [
+                'title' => 'FORSALE',
+                'template' => $this->columnDefaultTemplate,
+                'order' => 'forsale'
             ],
         ];
     }

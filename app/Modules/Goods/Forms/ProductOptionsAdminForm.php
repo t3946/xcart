@@ -17,16 +17,10 @@ class ProductOptionsAdminForm extends ModelForm
 
     public function getFields()
     {
-        $f =  [
+        return  [
 
             'option' => [
                 'class' => DropDownField::className(),
-                /*'choices' => function() {
-                        if ($oid = $this->getInstance()->getField('option')->getValue()) {
-                            return [OptionNewModel::objects()->get(['id' => $oid])];
-                        }
-                        return OptionNewModel::objects()->all();
-                    },*/
                 'html' => [
 //                    'disabled' => 'disabled',
                 ],
@@ -35,12 +29,8 @@ class ProductOptionsAdminForm extends ModelForm
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionVariantsAdmin::class,
                 'listTemplate' => 'admin/list/_list.tpl'
-                /*'defaultOrder' => [
-                    'class'
-                ]*/
             ],
         ];
-        return $f;
     }
 
     public function getModel()

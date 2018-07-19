@@ -352,6 +352,11 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
+            ],
+            'mult_order_quantity' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false,
             ]
         ];
     }
@@ -587,7 +592,7 @@ class ProductModel extends Model implements ICartItem
         $tq = $quantity;
         $min = $this->min_amount;
 
-        if ($this->mult_order_quantity == 'Y' && $min > 1) {
+        if ($this->mult_order_quantity && $min > 1) {
             $tq = ceil($tq / $min) * $min;
         }
         else if ($tq < $min) {

@@ -77,6 +77,12 @@ class ProductAdminForm extends ModelForm
                 'new_map_price',
                 'map_price'
             ],
+            'Inventory' => [
+                'r_avail',
+                'low_avail_limit',
+                'min_amount',
+                'mult_order_quantity'
+            ],
             'Product options' => [
                 'product_options'
             ],
@@ -165,18 +171,20 @@ class ProductAdminForm extends ModelForm
             ],
             'distributor' => [
                 'class' => Select2Field::class,
-                'choices' => $distributor ? [$distributor->manufacturerid => (string) $distributor]: [],
+                'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('distributor'),
             ],
             'brand' => [
                 'class' => Select2Field::class,
-                'choices' => $brand ? [$brand->brandid => (string) $brand] : [],
+                'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('brand'),
             ],
             'category' => [
                 'class' => Select2Field::class,
                 'value' => $category ? $category->categoryid : null,
-                'choices' => $category ? [$category->categoryid => (string) implode('/', array_map(function($a){return $a['name'];}, $category->getBreadcrumbs()->get()))] : [],
+                'choices' => $category ? [$category->categoryid => (string)implode('/', array_map(function ($a) {
+                    return $a['name'];
+                }, $category->getBreadcrumbs()->get()))] : [],
                 'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('category'),
                 'label' => 'Main category'
             ],
@@ -212,6 +220,30 @@ class ProductAdminForm extends ModelForm
             'cost_to_us' => [
                 'class' => CharField::class,
                 'label' => 'Cost to us (US$)'
+            ],
+            'new_map_price' => [
+                'class' => CharField::class,
+                'label' => 'MAP price (US$)'
+            ],
+            'map_price' => [
+                'class' => CharField::class,
+                'label' => 'Bridge price (US$)'
+            ],
+            'r_avail' => [
+                'class' => CharField::class,
+                'label' => 'Quantity in stock (items) (real)'
+            ],
+            'low_avail_limit' => [
+                'class' => CharField::class,
+                'label' => 'Low limit in stock'
+            ],
+            'min_amount' => [
+                'class' => CharField::class,
+                'label' => 'Minimum order quantity'
+            ],
+            'mult_order_quantity' => [
+                'class' => CheckboxField::class,
+                'label' => 'Multiple order quantity'
             ],
         ];
     }

@@ -3,6 +3,7 @@
 namespace Modules\Goods;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\OptionAdmin;
 use Modules\Goods\Admin\ProductAdmin;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
@@ -59,22 +60,32 @@ class GoodsModule extends Module
         $items = [[
             'icon' => 'fa fa-list',
             'name' => 'Products',
-            'route' => $router->url('admin:list',[
+            'route' => $router->url('admin:list', [
                 'module' => static::getModuleName(),
                 'admin' => ProductAdmin::classNameShort()
             ]),
-        ], [
-            'icon' => 'fa fa-object-group',
-            'name' => 'Group products',
-            'route' => $router->url('product:group_products'),
-            'items' => ($user && $user->getIsSuperuser()) ? [
+            'items' => [
                 [
-                    'icon' => 'fa fa-pencil-square-o',
-                    'name' => 'Grouping products',
-                    'route' => $router->url('product:group_list'),
+                    'icon' => 'fa',
+                    'name' => 'Options',
+                    'route' => $router->url('admin:list', [
+                        'module' => static::getModuleName(),
+                        'admin' => OptionAdmin::classNameShort()
+                    ]),
                 ],
-            ] : false,
-        ]];
+                [
+                    'icon' => 'fa fa-object-group',
+                    'name' => 'Group products',
+                    'route' => $router->url('product:group_products'),
+                    'items' => ($user && $user->getIsSuperuser()) ? [
+                        [
+                            'icon' => 'fa fa-pencil-square-o',
+                            'name' => 'Grouping products',
+                            'route' => $router->url('product:group_list'),
+                        ],
+                    ] : false,
+                ]]]
+        ];
 
         return $items;
     }
