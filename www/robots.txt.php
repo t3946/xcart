@@ -86,7 +86,7 @@ Disallow: ?*file=
 Disallow: ?*path=
 Disallow: ?*mode=
 Disallow: ?*f_mode=
-Sitemap: http://%s/sitemap.xml
+Sitemap: https://%s/sitemap.xml
 
 User-agent: *%s
 Disallow: /admin/
@@ -110,8 +110,7 @@ Disallow: ?*file=
 Disallow: ?*path=
 Disallow: ?*mode=
 Disallow: ?*f_mode=
-Sitemap: http://%s/sitemap.xml
-Crawl-delay: 15
+Sitemap: https://%s/sitemap.xml
 Host: %s
 ROBOTS;
 

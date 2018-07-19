@@ -145,7 +145,7 @@
                                 </li>
                                 <li class="fraud-orders">
                                     <a href="/ecomerce-fraud">Combating eCommerce Fraud</a>
-                                    <a href="/purchase-orders">Purchase Orders</a>
+                                    <a class="purchase-order" href="/purchase-orders">Purchase Orders</a>
                                 </li>
                             </ul>
 
@@ -158,15 +158,16 @@
                                     Shop with Confidence
                                 </li>
                                 <li class="confidence">
+                                    <span id="bbb">
+                                        <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
+                                            <img class="lazy-img bbb-logo show-for-large" data-src="https://seal-london.bbb.org/logo/erhzbum/s3-stores-1054268.png" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
+                                        </a>
+                                    </span>
+
+                                    <span id="g_review"></span>
+
                                     <span id="siteseal"></span>
 
-                                    <img class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/google.png" alt="Google Trusted Store icon">
-
-                                    <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
-                                        <img class="lazy-img bbb-logo show-for-large" data-src="/static/frontend/dist/images/icons/confidence/ab-seal-horizontal1.svg" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
-                                    </a>
-
-                                    <img class="lazy-img show-for-large" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/confidence/trustwave.png" alt="TrustWave icon">
                                 </li>
 
                             </ul>
@@ -187,7 +188,7 @@
                 </ul>
             </div>
             <div class="column small-12 medium-7 medium-order-1 copyright">
-                Copyright © 2005-{date_add()|date:"Y"} S3 Stores Holdings, Inc. All Rights Reserved.
+                Copyright © 2005-{date_add()|date:"Y"} {$gConfig.holding_company_name} All Rights Reserved.
             </div>
         </div>
     </div>

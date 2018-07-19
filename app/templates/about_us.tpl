@@ -55,7 +55,7 @@
         <div class="row w1280">
             <div class="column large-12">
                 <div class="content ">
-                    <div class="large-2column">
+                    <div class="">
                         {raw $model->content}
                     </div>
 

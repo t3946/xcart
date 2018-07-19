@@ -2,6 +2,7 @@
 
 use Modules\Order\Models\OrderModel;
 use Modules\Goods\Models\VerificationStatusModel;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\Order;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
@@ -15,7 +16,7 @@ $aOrders = OrderModel::objects()
         ]
     )->exclude(
         [
-            'cb_status__in' => ['A', 'D']
+            'cb_status__in' => ['A', 'D', OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,]
         ]
     )->all();
 

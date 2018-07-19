@@ -68,15 +68,15 @@ class PromoController extends AbstractCatalogController
 
     public function actionFeatured(): void
     {
+        $this->qs = $this->getQS()
+            ->filter([
+                'featured__product_order__isnull' => false,
+            ])
+            ->order(['?']);
+
         if ($this->getRequest()->getIsAjax() && !$this->getRequest()->get->has('page'))
         {
-            $this->renderSliderData($this->getQS()
-                ->distinct()
-                ->filter([
-                    'images__image_path__isnull' => false,
-                    'featured__product_order__isnull' => false,
-                ])
-                ->order(['?']));
+            $this->renderSliderData($this->qs);
         }
 
         $bread = new Breadcrumbs();
@@ -134,14 +134,17 @@ class PromoController extends AbstractCatalogController
             $products->limit(20)->cache(10);
         }
 
+
         $sProducts = '';
         foreach ($products as $product) {
             $sProducts .= $this->render($view, ['item' => $product]);
         }
 
-        $this->jsonResponse([
-            'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
-        ]);
+        if ($sProducts) {
+            $this->jsonResponse([
+                'html' => "<div class='product-items tile-view' itemtype='http://schema.org/OfferCatalog'>{$sProducts}</div>",
+            ]);
+        }
 
         die();
     }

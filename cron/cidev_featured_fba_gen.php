@@ -90,7 +90,7 @@ GROUP BY p.productid
 order by FIELD(p.pfrom, 'F', 'O', 'B', 'R') asc
 SQL;
 
-$sfids = func_query_column("select storefrontid as sfid from xcart_storefronts");
+$sfids = func_query_column("select storefrontid as sfid from xcart_storefronts where storefrontid != 75");
 $sfids[] = 0;
 $values = [];
 
@@ -116,7 +116,7 @@ foreach ( $sfids as $sfid)
 
 if (!empty($values))
 {
-    Connection::getInstance()->executeQuery("truncate xcart_featured_products");
+    Connection::getInstance()->executeQuery("delete from xcart_featured_products where storefrontid != 75");
 
     foreach (array_chunk($values, 100) as $c_values)
     {

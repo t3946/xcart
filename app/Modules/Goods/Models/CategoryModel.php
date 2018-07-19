@@ -143,7 +143,8 @@ class CategoryModel extends TreeModel
             }
         }
         else {
-            return Xcart::app()->router->url('catalog:view', ['id' => $this->pk, 'slug' => $this->createSlug($this->category)]);
+            $slug = $this->createSlug($this->category);
+            return Xcart::app()->router->url('catalog:view', ['id' => $this->pk, 'slug' => empty($slug) ? $this->pk : $slug]);
         }
 
 

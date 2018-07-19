@@ -135,13 +135,39 @@ footer {
     .confidence {
       display: flex;
       align-content: center;
+      line-height: rem-calc(50);
 
-      img {
-        margin-right: rem-calc(20);
+      span {
+        margin-right: rem-calc(7);
 
-        &.bbb-logo{
-          width:100px;
+        &#bbb{
+          margin-left: rem-calc(7);
         }
+
+        img {
+
+          &.bbb-logo {
+            background-color: #FFF;
+            border-radius: rem-calc(8);
+          }
+        }
+
+        &#siteseal {
+          overflow: hidden;
+
+          img {
+            background-color: #FFF;
+            border-radius: 5px;
+          }
+        }
+
+        &#g_review {
+          max-height: rem-calc(45);
+          margin-top: rem-calc(5) !important;
+          overflow: hidden;
+          border-radius: rem-calc(5);
+        }
+
       }
     }
 
@@ -213,6 +239,14 @@ footer {
 
       @include breakpoint(large) {
         margin-top: 12px;
+      }
+
+      .purchase-order {
+        margin-right: rem-calc(62);
+
+        @include breakpoint(large) {
+          margin-right: rem-calc(85);
+        }
       }
     }
 
@@ -305,6 +339,7 @@ footer {
       li {
         display: inline-block;
         color: #d0eeff;
+        margin-right: rem-calc(7);
 
         a {
           color: inherit;
@@ -312,4 +347,6 @@ footer {
       }
     }
   }
+
+
 }

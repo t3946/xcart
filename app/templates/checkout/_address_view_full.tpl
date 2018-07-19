@@ -31,7 +31,7 @@
 
 <div class="row align-center button-row">
     <div class="columns small-12">
-        <a href="{url $uri}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+        <a href="{url $uri}?modify=1#billing-address" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
     </div>
 </div>
 
