@@ -21,264 +21,264 @@
     }
   }
 
-  /* sets when user tried to submit form */
-
-  .tried_to_submit {
-
-    input[required]:invalid,
-    textarea[required]:invalid,
-    select[required]:invalid {
-      border: 1px solid red;
-
-      &:focus {
-        border: 1px solid #ff8d91;
-      }
-    }
-
-  }
-
-  /* all input styles */
-
-  input, textarea, select {
-
-    width: 100%;
-    box-shadow: none;
-    border: 1px solid #aaaaaa;
-    padding: 0 .625rem;
-    font-size: 1em;
-    line-height: 1.875rem;
-    height: 1.875rem;
-    vertical-align: middle;
-
-    @include breakpoint(sm up) {
-      font-size: rem-calc(20);
-      line-height: rem-calc(46);
-      height: rem-calc(46);
-    }
-    @include breakpoint(medium up) {
-      max-width: 20rem;
-      font-size: rem-calc(18);
-      line-height: rem-calc(40);
-      height: rem-calc(40);
-    }
-    @include breakpoint(large up) {
-      max-width: 15.9375rem;
-      font-size: rem-calc(14);
-      line-height: rem-calc(22);
-      height: rem-calc(22);
-    }
-
-    &::placeholder {
-      font-style: italic;
-      color: $grey_96;
-    }
-
-    &:focus {
-      border: 1px solid #ff8d91;
-    }
-
-    &.invalid {
-      border: 1px solid red;
-
-      &:focus {
-        border: 1px solid #ff8d91;
-      }
-    }
-  }
-
-  /* special styles for textarea */
-
-  textarea {
-    resize: vertical;
-    min-height: 7em;
-    height: 7em;
-    max-height: 14em;
-  }
-
-  /* special styles for select */
-
-  select {
-
-    appearance: none;
-    background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
-
-    &:-moz-focusring {
-      color: transparent;
-      text-shadow: 0 0 0 #000;
-    }
-
-    /* prevent <option>s from becoming transparent as well */
-    option:not(:checked) {
-      color: black;
-    }
-
-    @include breakpoint(large up) {
-      background-size: .625rem;
-
-      option {
-        background-color: white;
-        color: black;
-
-        &:hover {
-          background-color: #edf0f2;
-        }
-
-      }
-    }
-
-  }
-
-  @include breakpoint(large up) {
-
-    #ContactUsForm_subject_line,
-    #ContactUsForm_messsage {
-      max-width: 32.9375rem;
-    }
-
-  }
-
-  /* page comments text styles */
-
-  .page-info-text {
-
-    text-align: center;
-    font-size: rem-calc(14);
-    color: #4a4949;
-    line-height: 100%;
-    margin-bottom: 1.875rem;
-
-    @include breakpoint(medium up) {
-      margin-bottom: 1em;
-    }
-
-    @include breakpoint(large up) {
-      text-align: left;
-      font-size: rem-calc(12);
-      padding: 0;
-    }
-
-    .required {
-      font-size: rem-calc(22);
-
-      @include breakpoint(large up) {
-        font-size: rem-calc(14);
-      }
-
-      &:after {
-        content: '*';
-        display: inline;
-        vertical-align: top;
-        color: #ff0000;
-        position: static;
-      }
-    }
-  }
-
-  /* page labels text styles */
-
-  .form-field {
-
-    margin-bottom: 1.25rem;
-    padding: 0 .625rem;
-
-    @include breakpoint(medium up) {
-      display: flex;
-    }
-    @include breakpoint(large up) {
-      margin-bottom: .625rem;
-    }
-
-    .field-title {
-      line-height: 110%;
-      margin-bottom: .33rem;
-
-      @include breakpoint(medium up) {
-        text-align: right;
-        width: 50%;
-        padding-right: .5625rem;
-      }
-
-      @include breakpoint(large up) {
-        height: 1.5rem;
-      }
-
-      label {
-        font-size: rem-calc(17);
-        font-weight: bold;
-
-        @include breakpoint(sm up) {
-          font-size: rem-calc(20);
-        }
-        @include breakpoint(medium up) {
-          font-size: rem-calc(18);
-          font-weight: normal;
-        }
-        @include breakpoint(large up) {
-          font-size: rem-calc(14);
-        }
-
-        &.required:after {
-
-          content: '*';
-          display: inline;
-          vertical-align: top;
-          color: #ff0000;
-          position: static;
-
-        }
-
-      }
-
-      .comment,
-      .hint {
-        font-size: rem-calc(11);
-        color: #777777;
-
-        @include breakpoint(sm up) {
-          font-size: rem-calc(14);
-        }
-        @include breakpoint(medium up) {
-          font-size: rem-calc(14);
-        }
-        @include breakpoint(large up) {
-          font-size: rem-calc(12);
-          line-height: 105%;
-        }
-      }
-    }
-
-    .field {
-      @include breakpoint(medium up) {
-        width: 50%;
-      }
-      @include breakpoint(large up) {
-        font-size: rem-calc(14);
-      }
-    }
-  }
-
-  /* styles for button */
-  .button-row {
-    text-align: center;
-
-    .submit-button {
-      display: inline-block;
-      font-weight: bold;
-      line-height: 100%;
-      background-color: $dark_yellow;
-      border-radius: 4px;
-      padding: 1em 2.25rem;
-      cursor: pointer;
-      margin-top: 1em;
-    }
-  }
-
-  .hr-position {
-    .hr {
-      border-bottom: 1px solid #bbbbbb;
-      margin-top: 40px;
-    }
-  }
+  ///* sets when user tried to submit form */
+  //
+  //.tried_to_submit {
+  //
+  //  input[required]:invalid,
+  //  textarea[required]:invalid,
+  //  select[required]:invalid {
+  //    border: 1px solid red;
+  //
+  //    &:focus {
+  //      border: 1px solid #ff8d91;
+  //    }
+  //  }
+  //
+  //}
+  //
+  ///* all input styles */
+  //
+  //input, textarea, select {
+  //
+  //  width: 100%;
+  //  box-shadow: none;
+  //  border: 1px solid #aaaaaa;
+  //  padding: 0 .625rem;
+  //  font-size: 1em;
+  //  line-height: 1.875rem;
+  //  height: 1.875rem;
+  //  vertical-align: middle;
+  //
+  //  @include breakpoint(sm up) {
+  //    font-size: rem-calc(20);
+  //    line-height: rem-calc(46);
+  //    height: rem-calc(46);
+  //  }
+  //  @include breakpoint(medium up) {
+  //    max-width: 20rem;
+  //    font-size: rem-calc(18);
+  //    line-height: rem-calc(40);
+  //    height: rem-calc(40);
+  //  }
+  //  @include breakpoint(large up) {
+  //    max-width: 15.9375rem;
+  //    font-size: rem-calc(14);
+  //    line-height: rem-calc(22);
+  //    height: rem-calc(22);
+  //  }
+  //
+  //  &::placeholder {
+  //    font-style: italic;
+  //    color: $grey_96;
+  //  }
+  //
+  //  &:focus {
+  //    border: 1px solid #ff8d91;
+  //  }
+  //
+  //  &.invalid {
+  //    border: 1px solid red;
+  //
+  //    &:focus {
+  //      border: 1px solid #ff8d91;
+  //    }
+  //  }
+  //}
+  //
+  ///* special styles for textarea */
+  //
+  //textarea {
+  //  resize: vertical;
+  //  min-height: 7em;
+  //  height: 7em;
+  //  max-height: 14em;
+  //}
+  //
+  ///* special styles for select */
+  //
+  //select {
+  //
+  //  appearance: none;
+  //  background: url('../images/select_str.png') calc(100% - .625rem) center no-repeat;
+  //
+  //  &:-moz-focusring {
+  //    color: transparent;
+  //    text-shadow: 0 0 0 #000;
+  //  }
+  //
+  //  /* prevent <option>s from becoming transparent as well */
+  //  option:not(:checked) {
+  //    color: black;
+  //  }
+  //
+  //  @include breakpoint(large up) {
+  //    background-size: .625rem;
+  //
+  //    option {
+  //      background-color: white;
+  //      color: black;
+  //
+  //      &:hover {
+  //        background-color: #edf0f2;
+  //      }
+  //
+  //    }
+  //  }
+  //
+  //}
+  //
+  //@include breakpoint(large up) {
+  //
+  //  #ContactUsForm_subject_line,
+  //  #ContactUsForm_messsage {
+  //    max-width: 32.9375rem;
+  //  }
+  //
+  //}
+  //
+  ///* page comments text styles */
+  //
+  //.page-info-text {
+  //
+  //  text-align: center;
+  //  font-size: rem-calc(14);
+  //  color: #4a4949;
+  //  line-height: 100%;
+  //  margin-bottom: 1.875rem;
+  //
+  //  @include breakpoint(medium up) {
+  //    margin-bottom: 1em;
+  //  }
+  //
+  //  @include breakpoint(large up) {
+  //    text-align: left;
+  //    font-size: rem-calc(12);
+  //    padding: 0;
+  //  }
+  //
+  //  .required {
+  //    font-size: rem-calc(22);
+  //
+  //    @include breakpoint(large up) {
+  //      font-size: rem-calc(14);
+  //    }
+  //
+  //    &:after {
+  //      content: '*';
+  //      display: inline;
+  //      vertical-align: top;
+  //      color: #ff0000;
+  //      position: static;
+  //    }
+  //  }
+  //}
+  //
+  ///* page labels text styles */
+  //
+  //.form-field {
+  //
+  //  margin-bottom: 1.25rem;
+  //  padding: 0 .625rem;
+  //
+  //  @include breakpoint(medium up) {
+  //    display: flex;
+  //  }
+  //  @include breakpoint(large up) {
+  //    margin-bottom: .625rem;
+  //  }
+  //
+  //  .field-title {
+  //    line-height: 110%;
+  //    margin-bottom: .33rem;
+  //
+  //    @include breakpoint(medium up) {
+  //      text-align: right;
+  //      width: 50%;
+  //      padding-right: .5625rem;
+  //    }
+  //
+  //    @include breakpoint(large up) {
+  //      height: 1.5rem;
+  //    }
+  //
+  //    label {
+  //      font-size: rem-calc(17);
+  //      font-weight: bold;
+  //
+  //      @include breakpoint(sm up) {
+  //        font-size: rem-calc(20);
+  //      }
+  //      @include breakpoint(medium up) {
+  //        font-size: rem-calc(18);
+  //        font-weight: normal;
+  //      }
+  //      @include breakpoint(large up) {
+  //        font-size: rem-calc(14);
+  //      }
+  //
+  //      &.required:after {
+  //
+  //        content: '*';
+  //        display: inline;
+  //        vertical-align: top;
+  //        color: #ff0000;
+  //        position: static;
+  //
+  //      }
+  //
+  //    }
+  //
+  //    .comment,
+  //    .hint {
+  //      font-size: rem-calc(11);
+  //      color: #777777;
+  //
+  //      @include breakpoint(sm up) {
+  //        font-size: rem-calc(14);
+  //      }
+  //      @include breakpoint(medium up) {
+  //        font-size: rem-calc(14);
+  //      }
+  //      @include breakpoint(large up) {
+  //        font-size: rem-calc(12);
+  //        line-height: 105%;
+  //      }
+  //    }
+  //  }
+  //
+  //  .field {
+  //    @include breakpoint(medium up) {
+  //      width: 50%;
+  //    }
+  //    @include breakpoint(large up) {
+  //      font-size: rem-calc(14);
+  //    }
+  //  }
+  //}
+  //
+  ///* styles for button */
+  //.button-row {
+  //  text-align: center;
+  //
+  //  .submit-button {
+  //    display: inline-block;
+  //    font-weight: bold;
+  //    line-height: 100%;
+  //    background-color: $dark_yellow;
+  //    border-radius: 4px;
+  //    padding: 1em 2.25rem;
+  //    cursor: pointer;
+  //    margin-top: 1em;
+  //  }
+  //}
+  //
+  //.hr-position {
+  //  .hr {
+  //    border-bottom: 1px solid #bbbbbb;
+  //    margin-top: 40px;
+  //  }
+  //}
 
   /* styles for tabs */
 

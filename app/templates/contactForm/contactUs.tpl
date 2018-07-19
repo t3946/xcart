@@ -10,7 +10,7 @@
             <div class="page-info-text column small-12 large-6">The fields marked with <span class="required"></span> are mandatory</div>
         </div>
 
-        <div class="contact-form">
+        <div class="contact-form default-form">
             <form action="" method="post">
                 {raw $form->render()}
                 <div class="row">

@@ -23,9 +23,10 @@ class FormValidation {
      */
     _bind() {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
+        this.processChange = this.processChange.bind(this);
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);
-            inputElement.addEventListener('change', this.processChange.bind(this));
+            inputElement.addEventListener('blur', this.processChange);
         }
     }
 
@@ -35,7 +36,7 @@ class FormValidation {
      */
     processChange(event){
 
-        console.log(event);
+        //console.log(event);
 
         let inputElement = event.target;
         let inputElementName = inputElement.getAttribute('name');
@@ -97,10 +98,10 @@ class FormValidation {
         this.itemAddSuccess(element);
 
         if(!field.classList.contains('compound-field')){
-            console.log(field, field.classList);
+            //console.log(field, field.classList);
             this.removeError(element, field);
             this.itemAddSuccess(field);
-            console.log('!compound-field success');
+            //console.log('!compound-field success');
             return;
         }
 
@@ -117,7 +118,7 @@ class FormValidation {
 
         this.removeError(element, field);
         this.itemAddSuccess(field);
-        console.log('compound-field success');
+        //console.log('compound-field success');
     }
 
     /**
@@ -152,7 +153,7 @@ class FormValidation {
     destructor(){
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);
-            inputElement.removeEventListener('change', this.processChange.bind(this));
+            inputElement.removeEventListener('blur', this.processChange);
         }
     }
 }

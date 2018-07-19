@@ -15,6 +15,7 @@
 namespace Modules\Main\Forms;
 
 
+use Modules\Core\Forms\FrontendForm;
 use Modules\Main\MainModule;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
@@ -26,7 +27,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
 
-class ContactUsForm extends BaseForm
+class ContactUsForm extends FrontendForm
 {
     /**
      * @var string email, куда отправить письмо
@@ -49,8 +50,8 @@ class ContactUsForm extends BaseForm
                 'html' => [
                     'placeholder' => MainModule::t('Albert H. Einstein'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+               // 'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+               // 'labelTemplate' => 'forms/field/default/label_optional.tpl'
 
             ],
             'company_name' => [
@@ -59,14 +60,14 @@ class ContactUsForm extends BaseForm
                 'html' => [
                     'placeholder' => MainModule::t('Eureka Inc.'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+               // 'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+               // 'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'zip_postal_code' => [
                 'class' => NumberField::class,
                 'label' => MainModule::t('Your zip/postal code'),
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+               // 'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'phone_number' => [
                 'class' => CharField::class,
@@ -76,8 +77,8 @@ class ContactUsForm extends BaseForm
                 'html' => [
                     'placeholder' => '(609) 734-8000',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+               // 'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'email' => [
                 'class' => CharField::class,
@@ -92,8 +93,8 @@ class ContactUsForm extends BaseForm
                 'html' => [
                     'placeholder' => 'albert.einstein@gmail.com',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+              //  'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'department' => [
                 'class' => DropDownField::class,
@@ -101,8 +102,8 @@ class ContactUsForm extends BaseForm
                 'choices' => $this->getDepartments(),
                 'hint' => MainModule::t('Your message will be routed to this department'),
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+               // 'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'product_sku' => [
                 'class' => CharField::class,
@@ -112,8 +113,8 @@ class ContactUsForm extends BaseForm
                 'html' => [
                     'placeholder' => MainModule::t('EDR-T-A63127 or AR-54321'),
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+              //  'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'subject_line' => [
                 'class' => CharField::class,
@@ -129,8 +130,8 @@ class ContactUsForm extends BaseForm
                 'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+              //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+              //  'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
         ];
     }

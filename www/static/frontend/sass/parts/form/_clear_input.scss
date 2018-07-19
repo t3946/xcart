@@ -4,6 +4,7 @@
     position:relative;
 
     &[data-clear] {
+
       .clear-input {
         display: none;
         position: absolute;
@@ -25,21 +26,24 @@
           height: rem-calc(20);
           margin-top: rem-calc(-10);
         }
-
-        &.active{
-          display: block;
-        }
       }
 
-      @include breakpoint(ml down){
+      &.hasClose {
 
-        input {
-          padding-right: rem-calc(25);
+        @include breakpoint(ml down){
 
-          @include breakpoint(sm){
-            padding-right: rem-calc(28);
+          .clear-input {
+            display: block;
           }
 
+          input {
+            padding-right: rem-calc(25);
+
+            @include breakpoint(sm){
+              padding-right: rem-calc(28);
+            }
+
+          }
         }
       }
 

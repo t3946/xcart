@@ -16,16 +16,21 @@ documentReady(() => {
     }, false);
 
 
+
+
     // init clear fields
     if (typeof document.formClearFields !== 'undefined') {
+
         for (let name in document.formClearFields) {
             clearFormFields(name);
         }
     }
 
     document.addEventListener('form.client.fields.clear', function (event) {
-        clearFormFields(name);
+        clearFormFields(event.detail);
     }, false);
+
+
 
 
 });

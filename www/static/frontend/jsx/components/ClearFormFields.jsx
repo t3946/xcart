@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 class ClearFormFields {
 
     /**
@@ -13,6 +11,7 @@ class ClearFormFields {
 
         let formSelector = '#' + name;
         this.form = document.querySelector(formSelector);
+        this.closeButtons = [];
         this._bind();
     }
 
@@ -21,141 +20,72 @@ class ClearFormFields {
      * @private
      */
     _bind() {
-        this.inputs = this.form.querySelectorAll('input-container[data-clear]');
+        this.inputs = this.form.querySelectorAll('.input-container[data-clear]');
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputContainer = this.inputs.item(i);
-            let closeButton = document.createElement('a').classList.add('clear-input');
+            let closeButton = document.createElement('a');
+            let input = inputContainer.querySelector('input');
+            closeButton.classList.add('clear-input');
             inputContainer.append(closeButton);
-            //inputElement.addEventListener('change', this.processChange.bind(this));
+
+
+            this.clearFieldListener = this.clearField.bind(this, input);
+            this.processChange = this.processChange.bind(this);
+            closeButton.addEventListener('click', this.clearFieldListener);
+            input.addEventListener('keyup', this.processChange);
+
+            this.closeButtons.push({
+                'input': input,
+                'button': closeButton
+            });
         }
     }
 
-    // /**
-    //  * Process the change event
-    //  * @param event
-    //  */
-    // processChange(event){
-    //
-    //     console.log(event);
-    //
-    //     let inputElement = event.target;
-    //     let inputElementName = inputElement.getAttribute('name');
-    //     let errors = formValidate(this.form, this.constraints) || {};
-    //     let currentError = errors[inputElementName];
-    //
-    //     if(typeof currentError === 'undefined' || currentError.length <= 0) {
-    //         this.success(inputElement);
-    //         return;
-    //     }
-    //
-    //     this.showError(inputElement, currentError[0]);
-    // }
-    //
-    // /**
-    //  * Show input errors
-    //  * @param element
-    //  * @param text
-    //  */
-    // showError(element, text){
-    //     let field = element.closest('.form-field');
-    //     let errors = field.querySelectorAll('.errors');
-    //
-    //     this.itemAddError(element);
-    //     this.itemAddError(field);
-    //
-    //     for (let i = 0; i < errors.length; ++i) {
-    //         let oneErrorPlace = errors.item(i);
-    //         let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
-    //         oneErrorPlaceText.textContent = text;
-    //         oneErrorPlace.classList.add('show');
-    //     }
-    // }
-    //
-    // /**
-    //  * Remove input errors
-    //  * @param element
-    //  */
-    // removeError(element, field){
-    //     let errors = field.querySelectorAll('.errors');
-    //
-    //     this.itemRemoveError(element);
-    //     this.itemRemoveError(field);
-    //
-    //     for (let i = 0; i < errors.length; ++i) {
-    //         let oneErrorPlace = errors.item(i);
-    //         let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
-    //         oneErrorPlaceText.textContent = '';
-    //         oneErrorPlace.classList.remove('show');
-    //     }
-    // }
-    //
-    // /**
-    //  * If input was successfully
-    //  * @param element
-    //  */
-    // success(element){
-    //     let field = element.closest('.form-field');
-    //     this.itemAddSuccess(element);
-    //
-    //     if(!field.classList.contains('compound-field')){
-    //         console.log(field, field.classList);
-    //         this.removeError(element, field);
-    //         this.itemAddSuccess(field);
-    //         console.log('!compound-field success');
-    //         return;
-    //     }
-    //
-    //     let inputs = field.querySelectorAll("input, textarea, select");
-    //
-    //     for (let i = 0; i < inputs.length; ++i) {
-    //         let inputElement = inputs.item(i);
-    //         //required success
-    //         if( ( inputElement.classList.contains('required') && !inputElement.classList.contains('success') )
-    //             || ( !inputElement.classList.contains('required') && inputElement.classList.contains('invalid') )){
-    //             return;
-    //         }
-    //     }
-    //
-    //     this.removeError(element, field);
-    //     this.itemAddSuccess(field);
-    //     console.log('compound-field success');
-    // }
-    //
-    // /**
-    //  * Add success identifier to field
-    //  * @param item
-    //  */
-    // itemAddSuccess(item){
-    //     item.classList.remove('invalid');
-    //     item.classList.add('success');
-    // }
-    //
-    // /**
-    //  * Add error identifier to field
-    //  * @param item
-    //  */
-    // itemAddError(item){
-    //     item.classList.remove('success');
-    //     item.classList.add('invalid');
-    // }
-    //
-    // /**
-    //  * Remove error identifier from field
-    //  * @param item
-    //  */
-    // itemRemoveError(item){
-    //     item.classList.remove('invalid');
-    // }
-    //
-    // /**
-    //  * Destruct form validator
-    //  */
-    // destructor(){
-    //     for (let i = 0; i < this.inputs.length; ++i) {
-    //         let inputElement = this.inputs.item(i);
-    //         inputElement.removeEventListener('change', this.processChange.bind(this));
-    //     }
-    // }
+    /**
+     * Process the click on clear button event
+     * @param event
+     */
+    clearField(input, event){
+
+         let closeElement = event.target;
+         let wrapper = closeElement.closest('.input-container');
+
+         input.value = '';
+         input.focus();
+         wrapper.classList.remove('hasClose');
+    }
+
+
+    /**
+     * Process the input change event
+     * @param event
+     */
+    processChange(event){
+
+         let inputElement = event.target;
+         let wrapper = inputElement.closest('.input-container');
+         if(inputElement.value !== '') {
+             wrapper.classList.add('hasClose');
+         } else {
+             wrapper.classList.remove('hasClose');
+         }
+
+    }
+
+
+    /**
+     * Destruct clear form
+     */
+    destructor(){
+        for (let i = 0; i < this.closeButtons.length; ++i) {
+            let info = this.closeButtons.item(i);
+            info['button'].removeEventListener('click', this.clearFieldListener);
+            info['input'].removeEventListener('keyup', this.processChange);
+            info['button'].remove();
+        }
+
+        this.closeButtons = [];
+    }
 }
 
 export default (name) => {

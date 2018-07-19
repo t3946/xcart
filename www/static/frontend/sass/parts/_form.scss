@@ -31,25 +31,25 @@ form {
 
 .default-form {
 
-  h1 {
-    margin-bottom: 0;
-    text-align: center;
-
-    @include breakpoint(medium up) {
-      margin-bottom: .9em;
-    }
-  }
+  //h1 {
+  //  margin-bottom: 0;
+  //  text-align: center;
+  //
+  //  @include breakpoint(medium up) {
+  //    margin-bottom: .9em;
+  //  }
+  //}
 
   /* show label only on desktop */
-  .desktop-label {
-    display: none;
-
-    @include breakpoint(large up) {
-      display: block;
-      font-size: rem-calc(20);
-      font-weight: bold;
-    }
-  }
+  //.desktop-label {
+  //  display: none;
+  //
+  //  @include breakpoint(large up) {
+  //    display: block;
+  //    font-size: rem-calc(20);
+  //    font-weight: bold;
+  //  }
+  //}
 
   /* sets when user tried to submit form */
 
