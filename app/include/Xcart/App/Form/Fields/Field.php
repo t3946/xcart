@@ -25,6 +25,11 @@ abstract class Field implements IValidateField
 
 
     /**
+     * Input wrapper additional class
+     * @var string
+     */
+    public $className = '';
+    /**
      * @var string
      */
     public $successClass = 'success';

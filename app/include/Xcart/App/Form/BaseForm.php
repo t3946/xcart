@@ -177,7 +177,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @param $defaultTemplateType
      */
     public function onBeforeGetTemplate(&$templates, &$defaultTemplateType): void
-    {
+    { //var_dump('base');
     }
 
     /**

@@ -137,8 +137,8 @@
   //
   //}
   //
-  ///* page comments text styles */
-  //
+  /* page comments text styles */
+
   //.page-info-text {
   //
   //  text-align: center;
@@ -273,12 +273,12 @@
   //  }
   //}
   //
-  //.hr-position {
-  //  .hr {
-  //    border-bottom: 1px solid #bbbbbb;
-  //    margin-top: 40px;
-  //  }
-  //}
+  .hr-position {
+    .hr {
+      border-bottom: 1px solid #bbbbbb;
+      margin-top: 40px;
+    }
+  }
 
   /* styles for tabs */
 
@@ -289,7 +289,7 @@
     margin-right: auto;
 
     .tabs-title-container {
-      width: 100px;
+      width: rem-calc(100);
 
       ul {
         width: 6.25rem;

@@ -9,13 +9,13 @@
     </div>
     <div class="field compound-input">
             <div class="input-block">
-                <div class="input-container" {if $field->userClear}data-clear="true"{/if}>
+                <div class="input-container {$field->className}" {if $field->userClear}data-clear="true"{/if}>
                     {raw $input}
                 </div>
                 <div class="compound-field-container">
                     <label class="display-inline hide-for-medium">X</label>
                     <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
-                    <div class="input-container" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
+                    <div class="input-container {$field->className}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                         {raw $ext->renderInput()}
                     </div>
                 </div>

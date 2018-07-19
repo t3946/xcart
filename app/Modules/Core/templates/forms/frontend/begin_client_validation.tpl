@@ -1,2 +1,2 @@
 {set $constraints = 'constraints'~$prefix}
-<form class="submit_form frontend_form" action="" novalidate="" id="{$prefix}" data-constraints="{$constraints}">
+<form class="submit_form frontend_form" action="post" novalidate="" id="{$prefix}" data-constraints="{$constraints}">

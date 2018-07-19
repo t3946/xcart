@@ -12,10 +12,10 @@ namespace Modules\Core\Forms;
 use Modules\Core\Behaviours\ClientValidationBehavior;
 use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
-use Xcart\App\Form\BaseForm;
+use Xcart\App\Form\DecoratedForm;
 use Xcart\App\Traits\RenderTrait;
 
-class FrontendForm extends BaseForm
+class FrontendForm extends DecoratedForm
 {
     use RenderTrait;
 

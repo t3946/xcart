@@ -1,1 +1,1 @@
-<form class="submit_form frontend_form" action="" novalidate="" id="{$prefix}">
+<form class="submit_form frontend_form" action="post" novalidate="" id="{$prefix}">

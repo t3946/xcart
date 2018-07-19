@@ -123,13 +123,15 @@ class ContactUsForm extends FrontendForm
                 'html' => [
                     'placeholder' => 'Is gravitation responsible for people falling in love?',
                 ],
-                'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
-                'labelTemplate' => 'forms/field/default/label_optional.tpl'
+                'className' => 'wide'
+               // 'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
+                //'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],
             'messsage' => [
                 'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
+                'className' => 'wide'
               //  'fieldTemplate' => 'forms/field/default/field_hint_top.tpl',
               //  'labelTemplate' => 'forms/field/default/label_optional.tpl'
             ],

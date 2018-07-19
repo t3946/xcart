@@ -1,1 +1,1 @@
-<form class="submit_form" action="" >
+<form class="submit_form" action="post" >

@@ -209,9 +209,13 @@ form {
 
   @include breakpoint(large up) {
 
-    #ContactUsForm_subject_line,
-    #ContactUsForm_messsage {
+    .input-container.wide {
       max-width: 32.9375rem;
+
+      input,
+      textarea {
+        max-width: 100%;
+      }
     }
 
   }
@@ -398,6 +402,13 @@ form {
             font-size: rem-calc(12);
             line-height: 105%;
           }
+        }
+
+        .hint {
+          @include breakpoint(medium) {
+            height: 0;
+          }
+
         }
       }
 
