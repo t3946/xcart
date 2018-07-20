@@ -15,6 +15,7 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\BillingAddressForm;
+use Modules\Order\Forms\BillingForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
 use Modules\Order\Forms\PurchasingManagerForm;
 
@@ -76,45 +77,28 @@ class CheckoutController extends FrontendController
 //        $user = $app->user;
         $cart = $app->cart;
         $shipping = null;
-//        $shippingForm = new ShippingAddressForm();
-//        $contactForm = new ContactInfoForm();
         $shippingForm = new ShippingForm();
 
         if ($app->request->getIsPost()) {
             $shippingForm->populate($app->request->post);
-            //$contactForm->populate($app->request->post);
+
+//            dd($shippingForm);
 
             if ($shippingForm->isValid()) {// && $contactForm->isValid()
+
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
-//                $order->setAttributes($shippingForm->getAttributes());
-                $order->setAttributes($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]);
-
-//                if ($user && $user->id) {
-//                    [$address] = AddressModel::objects()->getOrCreate([
-//                        'user_id' => $user->id,
-//                        'full_name' => $shipping['s_firstname'],
-//                        'company' => $shipping['s_company'],
-//                        'address' => $shipping['s_address'],
-//                        'address_2' => $shipping['s_address_2'],
-//                        'country' => $shipping['s_country'],
-//                        'zip' => $shipping['s_zipcode'],
-//                        'state' => $s_state,
-//                        'city' => $shipping['s_city'],
-//                        'phone' => $phone
-//                    ]);
-//                    $address->save();
-//                }
-
-//                $order->setAttributes(array_merge($contactForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
+                $order->setAttributes(array_merge($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
 
                 if ($order->save()) {
+
                     if ($is_created) {
                         $app->event->trigger('order:created', ['model' => $order]);
                     }
+
                     $this->redirect('checkout:options');
                 }
             }
@@ -134,7 +118,6 @@ class CheckoutController extends FrontendController
         $this->display('checkout/shipping.tpl', [
             'order' => $order,
             'shippingForm' => $shippingForm,
-           // 'contactForm' => $contactForm,
         ]);
     }
 
@@ -226,12 +209,12 @@ class CheckoutController extends FrontendController
 
         /** @var Application $app */
         $app = Xcart::app();
-        $user = $app->user;
+        //$user = $app->user;
         $site = $app->getModule('Sites')->getSite();
         $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
         $errors = [];
-        $billingForm = new BillingAddressForm();
+        $billingForm = new BillingForm();
 
         $order = $this->getOrder();
 

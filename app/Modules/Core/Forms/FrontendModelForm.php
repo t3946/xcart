@@ -17,11 +17,13 @@ use Xcart\App\Form\DecoratedModelForm;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Traits\RenderTrait;
 
-class FrontendModelForm extends DecoratedModelForm
+abstract class FrontendModelForm extends DecoratedModelForm
 {
     use RenderTrait;
 
     protected $userFields = [];
+
+    public $include = [];
 
     public function init(){
         parent::init();
@@ -74,5 +76,27 @@ class FrontendModelForm extends DecoratedModelForm
             }
         }
         return $this;
+    }
+
+    /**
+     * Initialize fields
+     */
+    public function initFields()
+    {
+        $fields = $this->getFields();
+        $includeFields = array_merge($this->userFields, $this->include);
+        foreach ($fields as $name => $config) {
+            if (\in_array($name, $this->getExclude(), true)
+                || !\in_array($name, $includeFields, true)) {
+                continue;
+            }
+
+            if (!\is_array($config)) {
+                $config = ['class' => $config];
+            }
+
+            $this->_fields[$name] = $this->createField($name, $config);
+            //dd($includeFields);
+        }
     }
 }

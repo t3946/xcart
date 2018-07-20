@@ -41,7 +41,12 @@
 {/block}
 
 {block 'content'}
-    <form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">
+    {*<form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">*}
+        {raw $billingForm->renderBegin([
+        'action' => $.app->router->url('checkout:options'),
+        'method' => 'POST',
+        'class' => 'checkout-options-form'
+        ])}
         <section class="checkout-options">
             <div class="row">
                 <div class="columns large-4 show-for-large">
@@ -199,14 +204,7 @@
             <div class="row">
                 <div class="columns small-12 large-10 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
 
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('firstname')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('company')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('address')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('address_2')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('country')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('zipcode')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('state')}
-                    {include 'checkout/_form_row.tpl' field=$billingForm->getField('city')}
+                    {raw $billingForm->render()}
 
                 </div>
                 <div class="columns large-2 show-for-large"></div>
@@ -231,5 +229,5 @@
             </div>
 
         </section>
-    </form>
+    {raw $billingForm->renderEnd()}
 {/block}

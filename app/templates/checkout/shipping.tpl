@@ -1,14 +1,13 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    {*{set $fieldsets = $shippingForm->getFieldsets()}*}
-    {set $fieldsets = $shippingForm->renderFieldsets()}
-    {*<form action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">*}
         {raw $shippingForm->renderBegin([
             'action' => $.app->router->url('checkout:shipping'),
             'method' => 'POST',
             'class' => 'checkout-shipping-form'
         ])}
+        {set $fieldsets =  $shippingForm->createFieldsets()}
+
         <section class="checkout-shipping">
             <div class="row">
                 <div class="columns small-12 large-6">
@@ -24,16 +23,9 @@
             </div>
             <div class="row">
                 <div class="columns small-12">
-                    {*<div class="registration">*}
-
-                        {set $sieldsetShipping = $fieldsets['shipping']}
-
-                        {foreach $sieldsetShipping as $fieldName}
-                            {set $field = $shippingForm->getField($fieldName)}
+                        {foreach $fieldsets['shipping'] as $field}
                             {raw $field->render()}
                         {/foreach}
-
-                    {*</div>*}
                 </div>
             </div>
             <div class="row">
@@ -51,16 +43,9 @@
 
             <div class="row">
                 <div class="columns small-12 ">
-                    {*<div class="registration">*}
-
-                        {set $sieldsetContact = $fieldsets['contact']}
-
-                        {foreach $sieldsetContact as $fieldName}
-                            {set $field = $shippingForm->getField($fieldName)}
+                        {foreach $fieldsets['contact'] as $field}
                             {raw $field->render()}
                         {/foreach}
-
-                    {*</div>*}
                 </div>
             </div>
 
@@ -100,6 +85,5 @@
             </div>
 
         </section>
-    {*</form>*}
     {raw $shippingForm->renderEnd()}
 {/block}

@@ -157,7 +157,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function onBeforeCreateField(&$name, &$config): void
     {
-        //var_dump('base onBeforeCreateField');
+
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @param $defaultTemplateType
      */
     public function onBeforeGetTemplate(&$templates, &$defaultTemplateType): void
-    { //var_dump('base');
+    {
     }
 
     /**
@@ -449,7 +449,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         ]);
     }
 
-    public function renderFieldsets($template = null, array $fields = [], $extra = null)
+    public function createFieldsets($template = null, array $fields = [], $extra = null)
     {
         if (!$template) {
             $template = $this->getTemplateFromType();
@@ -457,12 +457,24 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
         $fields = $fields ?: $this->getRenderFields();
         $this->onBeforeRender($fields);
-        /// !!!!!
-        return $this->setRenderFields($fields)->renderInternal($template, [
-            'form' => $this,
-            'fields' => $fields,
-            'inlines' => $this->renderInlines($extra)
-        ]);
+
+        $this->setRenderFields($fields);
+
+        $fieldSets = $this->getFieldsets();
+
+        $objFieldSets = [];
+        foreach ($fieldSets as $fieldSetName => $oneFieldSet) {
+
+            $objFieldSets[$fieldSetName] = [];
+
+            foreach ($oneFieldSet as $fieldName) {
+                if(in_array($fieldName, $this->_renderFields,true)) {
+                    $objFieldSets[$fieldSetName][] = $this->getField($fieldName);
+                }
+            }
+        }
+
+        return $objFieldSets;
     }
 
     public function renderBegin($params = [], $template = null)
@@ -600,10 +612,11 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function getRenderFields()
     {
-        if (!$this->_renderFields) {
-            $this->setRenderFields(array_keys($this->getFieldsInit()));
-        }
 
+        if (!$this->_renderFields) {
+            $fields = array_keys($this->getFieldsInit());
+            $this->setRenderFields($fields);
+        }
         return $this->_renderFields;
     }
 

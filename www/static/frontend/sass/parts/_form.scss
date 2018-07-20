@@ -107,6 +107,17 @@ form {
     height: rem-calc(38);
     vertical-align: middle;
     color: #272727;
+    appearance: none;
+    box-sizing: border-box;
+    background: #fefefe;
+    border-radius: 0;
+
+
+    //border: 1px solid #aaa;
+    //line-height: 2.125rem;
+    //padding: 0 .625rem;
+    //margin: .375rem 0;
+
 
     @include breakpoint(sm up) {
       font-size: rem-calc(20);

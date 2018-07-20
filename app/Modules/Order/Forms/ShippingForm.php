@@ -11,24 +11,32 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendModelForm;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Traits\AddressAttributesReplacement;
 use Xcart\App\Form\Fields\SpaceField;
 
 class ShippingForm extends FrontendModelForm
 {
+    use AddressAttributesReplacement;
 
     private $_shippingFields;
     private $_contactFields;
 
+    public $replacement = 's_';
 
-    public function init()
+    public $include = ['cb_status'];
+
+
+    public function __construct(array $config = [])
     {
-        parent::init();
         $shippingForm = new ShippingAddressForm();
         $contactForm = new ContactInfoForm();
 
         $this->_shippingFields = $shippingForm->getFields();
         $this->_contactFields = $contactForm->getFields();
+
+        parent::__construct($config);
     }
+
 
     public function getModel()
     {

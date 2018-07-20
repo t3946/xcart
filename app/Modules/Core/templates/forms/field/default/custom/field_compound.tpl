@@ -11,9 +11,7 @@
                 {raw $hint}
             </div>
         {else}
-            {*<div class="single-line">*}
-                {raw $label}
-            {*</div>*}
+            {raw $label}
         {/if}
     </div>
     <div class="field compound-input">
