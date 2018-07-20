@@ -97,9 +97,16 @@ class ProductAdmin extends Admin
         ];
     }
 
-
     public static function getName()
     {
         return 'Products';
+    }
+
+    public function getListItemActions()
+    {
+        return [
+            'update',
+            'view',
+        ];
     }
 }

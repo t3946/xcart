@@ -11,6 +11,7 @@ use Xcart\App\Form\ModelForm;
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
     public $ownerField = 'product_option';
+    public $sort = 'position';
 
     public function getModel()
     {
@@ -28,5 +29,26 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
     public static function getItemName()
     {
         return 'Variant';
+    }
+
+    public function getListColumns()
+    {
+        return ['(string)'];
+    }
+
+    public function getAvailableListColumns()
+    {
+        return [
+            '(string)' => [
+                'title' => 'VARIANT',
+                'template' => $this->columnDefaultTemplate,
+                'order' => 'position'
+            ]
+        ];
+    }
+
+    public function getCanSort($qs)
+    {
+        return true;
     }
 }

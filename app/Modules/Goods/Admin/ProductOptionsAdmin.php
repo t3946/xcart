@@ -5,6 +5,7 @@ namespace Modules\Goods\Admin;
 
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Goods\Forms\ProductOptionsAdminForm;
+use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
@@ -12,6 +13,7 @@ use Xcart\App\Orm\Model;
 class ProductOptionsAdmin extends ListViewAdmin
 {
     public $ownerField = 'product';
+    public $sort = 'position';
 
     public function getExcludedColumns()
     {
@@ -47,14 +49,33 @@ class ProductOptionsAdmin extends ListViewAdmin
             'var' => [
                 'title' => 'VARIANTS',
                 'template' => $this->columnDefaultTemplate,
-                'order' => 'id'
+                'order' => 'position'
             ]
         ]);
     }
 
     public function getItemProperty(Model $item, $property)
     {
-        return nl2br(implode("\n", $item->variants->all()));
+        return nl2br(implode("\n", $item->variants->order(['position'])->all()));
+    }
+
+    public function getSuggestionColumns()
+    {
+        return [
+            'option' => [
+                'class' => OptionNewModel::class,
+                'columns' => [
+                    'title', 'pk'
+                ],
+                'filter' => [
+                ]
+            ],
+        ];
+    }
+
+    public function getCanSort($qs)
+    {
+        return true;
     }
 
 }

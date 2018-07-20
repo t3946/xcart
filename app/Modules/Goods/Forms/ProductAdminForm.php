@@ -141,10 +141,8 @@ class ProductAdminForm extends ModelForm
             'product_options' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionsAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl'
-                /*'defaultOrder' => [
-                    'class'
-                ]*/
+                'listTemplate' => 'admin/list/_list.tpl',
+                'defaultOrder' => 'position'
             ],
             'amazon_enabled' => [
                 'class' => CheckboxField::class,

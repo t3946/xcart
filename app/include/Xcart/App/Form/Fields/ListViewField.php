@@ -75,6 +75,8 @@ class ListViewField extends Field
         $admin = new $this->adminClass();
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
         $admin->ownerField = $this->getName();
+        $qs = $admin->getQuerySet();
+        $qs = $admin->fixSort($qs);
 //        $admin->innerRender = true;
 //        $admin->all();
 
@@ -86,7 +88,8 @@ class ListViewField extends Field
             'objects' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
             'columns' => $admin->buildListColumns(),
-            'admin' => $admin
+            'admin' => $admin,
+            'canSort' => $admin->getCanSort($qs)
         ]);
     }
 }

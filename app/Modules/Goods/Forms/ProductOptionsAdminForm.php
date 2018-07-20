@@ -3,6 +3,7 @@
 namespace Modules\Goods\Forms;
 
 
+use Modules\Goods\Admin\ProductOptionsAdmin;
 use Modules\Goods\Admin\ProductOptionVariantsAdmin;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductOptionModel;
@@ -21,7 +22,8 @@ class ProductOptionsAdminForm extends ModelForm
         return  [
 
             'option' => [
-                'class' => Select2Field::class,
+                'class' => DropDownField::class,
+//                'ajaxUrl' => (new ProductOptionsAdmin)->getSuggestionUrl('option'),
                 'html' => [
 //                    'disabled' => 'disabled',
                 ],
@@ -29,7 +31,8 @@ class ProductOptionsAdminForm extends ModelForm
             'variants' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionVariantsAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl'
+                'listTemplate' => 'admin/list/_list.tpl',
+                'defaultOrder' => 'position'
             ],
         ];
     }
