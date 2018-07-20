@@ -22,7 +22,7 @@ class OptionNewModel extends Model
     {
         return [
             'id' => AutoField::class,
-            'name' => [
+            'title' => [
                 'class' => CharField::class
             ],
             'variants' => [
@@ -35,6 +35,6 @@ class OptionNewModel extends Model
 
     public function __toString(): string
     {
-        return (string) $this->name;
+        return (string) $this->title;
     }
 }

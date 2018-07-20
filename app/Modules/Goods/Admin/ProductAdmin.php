@@ -97,14 +97,6 @@ class ProductAdmin extends Admin
         ];
     }
 
-    public function getBottomLinks()
-    {
-        return [
-            [
-                'url' => $this->getIn
-            ]
-        ];
-    }
 
     public static function getName()
     {

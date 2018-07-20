@@ -9,6 +9,7 @@ use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
 class ProductOptionsAdminForm extends ModelForm
@@ -20,7 +21,7 @@ class ProductOptionsAdminForm extends ModelForm
         return  [
 
             'option' => [
-                'class' => DropDownField::className(),
+                'class' => Select2Field::class,
                 'html' => [
 //                    'disabled' => 'disabled',
                 ],

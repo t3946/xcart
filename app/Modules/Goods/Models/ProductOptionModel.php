@@ -48,6 +48,6 @@ class ProductOptionModel extends Model
 
     public function __toString(): string
     {
-        return (string) $this->option->name;
+        return (string) $this->option->title;
     }
 }

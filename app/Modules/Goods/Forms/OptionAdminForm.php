@@ -5,13 +5,13 @@ namespace Modules\Goods\Forms;
 
 use Modules\Goods\Admin\OptionVariantsAdmin;
 use Modules\Goods\Models\OptionNewModel;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Fields\CharField;
 
 class OptionAdminForm extends ModelForm
 {
-    //public $exclude = ['name'];
 
     public function getModel()
     {
@@ -21,9 +21,15 @@ class OptionAdminForm extends ModelForm
     public function getFields()
     {
         return [
-            'title' => [
-                'class' => CharField::class,
-                'value' => 'Test'
+
+            'type' => [
+                'class' => DropDownField::class,
+                'choices' => [
+                    'color' => 'Color',
+                    'select' => 'Select Box',
+                    'radio' => 'Radio Box',
+                ],
+                'required' => true,
             ],
             'variants' => [
                 'class' => ListViewField::class,
