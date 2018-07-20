@@ -31,6 +31,11 @@ class FormClearInputBehavior extends FormViewBehavior
     private $_jsEvent = 'form.client.fields.clear';
 
     /**
+     * @var string
+     */
+    private $_js = '';
+
+    /**
      * Execute before form begin render
      * @param $prefix
      * @param $template
@@ -49,7 +54,7 @@ class FormClearInputBehavior extends FormViewBehavior
     public function onBeforeRender(&$fields): void
     {
         $prefix = $this->owner->getFormIdentifier();
-        $this->_addFormsListToPage($prefix);
+        $this->_js = $this->_createClearInputFormsScript($prefix);
     }
 
     /**
@@ -66,6 +71,17 @@ class FormClearInputBehavior extends FormViewBehavior
                 'json' => $params,
             ];
         }
+    }
+
+    /**
+     * Execute before form end render
+     * (new settings must override old)
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderEnd(&$prefix, &$template): void
+    {
+        echo $this->_js;
     }
 
     /**
@@ -109,15 +125,15 @@ class FormClearInputBehavior extends FormViewBehavior
     }
 
     /**
-     * Echo js script for the form client validation
+     * Create js script for the form client validation
      * @param $prefix
      * @param $js
+     * @return string
      */
-    private function _addFormsListToPage($prefix)
+    private function _createClearInputFormsScript($prefix)
     {
         $js = $this->_createFormsList($prefix);
-        //var_dump($js);
-        echo "<script>{$js}</script>";
+        return "<script>{$js}</script>";
     }
 
 }

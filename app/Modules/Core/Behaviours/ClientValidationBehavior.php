@@ -33,6 +33,11 @@ class ClientValidationBehavior extends FormViewBehavior
     private $_jsEvent = 'form.client.validation';
 
     /**
+     * @var string
+     */
+    private $_js = '';
+
+    /**
      * Execute before form begin render
      * @param $prefix
      * @param $template
@@ -60,7 +65,18 @@ class ClientValidationBehavior extends FormViewBehavior
         }
 
         $prefix = $this->owner->getFormIdentifier();
-        $this->_addClientValidationToPage($prefix, $js);
+        $this->_js = $this->_createClienValidationScript($prefix, $js);
+    }
+
+    /**
+     * Execute before form end render
+     * (new settings must override old)
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderEnd(&$prefix, &$template): void
+    {
+        echo $this->_js;
     }
 
     /**
@@ -97,16 +113,11 @@ class ClientValidationBehavior extends FormViewBehavior
      */
     private function _wrapClientValidationConditions($prefix, $js)
     {
-        //$js = $this->_createJsCommand($prefix, $js);
-
-
         $jsScript = $this->_renderCreateConstraints();
 
         $jsScript .= "document.formConstraints.{$prefix} = {{$js}};";
 
         $jsScript .= $this->_renderFormCreatedEvent($prefix);
-
-        //return "(() => {document.constraints{$prefix} = {{$js}};{$triggerEvent}})();";
 
          return $this->_wrapInJsClosure($jsScript);
     }
@@ -134,32 +145,16 @@ class ClientValidationBehavior extends FormViewBehavior
         return  "(() => {{$js}})();";
     }
 
-//    private function _createJsCommand($prefix, $js)
-//    {
-//
-//    }
-
-
-
-
-
     /**
-     * Echo js script for the form client validation
+     * Create js script for the form client validation
      * @param $prefix
      * @param $js
+     * @return string
      */
-    private function _addClientValidationToPage($prefix, $js)
+    private function _createClienValidationScript($prefix, $js)
     {
         $js = $this->_wrapClientValidationConditions($prefix, $js);
-        //var_dump($js);
-//        AssetsLibrary::addAsset([
-//            'type' => 'js',
-//            'position' => 'head',
-//            'key' => 'form_validation_rule' . $prefix
-//        ], $js);
-        echo "<script>{$js}</script>";
-
-
+        return "<script>{$js}</script>";
     }
 
 }

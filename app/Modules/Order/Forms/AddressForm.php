@@ -38,7 +38,7 @@ abstract class AddressForm extends BaseForm
 
             'company' => [
                 'class' => CharField::class,
-                'label' => 'Company <span class="hint">(optional)</span>',
+                'label' => 'Company',
                 'hint' => 'Fill in if shipping to a corporate or university address',
                 'html' => [
                     'placeholder' => 'Eureka Inc.'
@@ -57,7 +57,7 @@ abstract class AddressForm extends BaseForm
 
             'address_2' => [
                 'class' => CharField::class,
-                'label' => 'Address (line 2) <span class="hint">(optional)</span>',
+                'label' => 'Address (line 2)',
                 'hint' => 'Apartment, suite, floor, etc.',
                 'html' => [
                     'placeholder' => 'Apt 1'

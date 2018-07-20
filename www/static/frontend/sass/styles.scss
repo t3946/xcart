@@ -58,6 +58,8 @@
 @import 'parts/checkout_review_form';
 @import 'parts/ajax_calculate_shipping_form';
 
+
+
 @import 'pages/error';
 @import 'pages/page404';
 @import 'pages/category';
@@ -76,3 +78,4 @@
 @import 'pages/order_review';
 @import 'pages/order_confirmation';
 @import 'pages/checkout_options_form';
+@import "pages/checkout_shipping";

@@ -7,6 +7,9 @@ $field-width-small: 100%;
 $field-width-medium: 20rem;
 $field-width-large: rem-calc(295);
 
+$field-height-medium: rem-calc(40);
+$field-height-large: rem-calc(24);
+
 form {
   label {
     .required {
@@ -52,6 +55,12 @@ form {
   //}
 
   /* sets when user tried to submit form */
+
+  .mandatory {
+    .required {
+      color: red;
+    }
+  }
 
   .tried_to_submit {
 
@@ -107,15 +116,15 @@ form {
 
     @include breakpoint(medium up) {
       font-size: rem-calc(18);
-      line-height: rem-calc(40);
-      height: rem-calc(40);
+      line-height: $field-height-medium;
+      height: $field-height-medium;
     }
 
     @include breakpoint(large up) {
       max-width: $field-width-large;
       font-size: rem-calc(14);
-      line-height: rem-calc(24);
-      height: rem-calc(24);
+      line-height: $field-height-large;
+      height: $field-height-large;
     }
 
     &::placeholder {
@@ -338,10 +347,11 @@ form {
 
       @include breakpoint(medium up) {
         display: flex;
+        margin-bottom: rem-calc(22);
       }
 
       @include breakpoint(large up) {
-        margin-bottom: .625rem;
+        margin-bottom: rem-calc(12);
       }
 
       .field-title {
@@ -352,12 +362,12 @@ form {
           text-align: right;
           width: 50%;
           padding-right: .5625rem;
-          padding-top: rem-calc(11);
+          margin-bottom: 0;
+          line-height: $field-height-medium;
         }
 
         @include breakpoint(large up) {
-          height: 1.5rem;
-          padding-top: 1px;
+          line-height: $field-height-large;
         }
 
         label {
@@ -387,6 +397,10 @@ form {
 
         }
 
+        .multiline {
+          line-height: 1;
+        }
+
         .comment,
         .hint {
           font-size: rem-calc(12);
@@ -406,7 +420,12 @@ form {
 
         .hint {
           @include breakpoint(medium) {
-            height: 0;
+            //line-height: 50%;
+
+            .hint-text{
+              display: inline-block;
+              width: 21rem;
+            }
           }
 
         }
@@ -419,9 +438,20 @@ form {
 
         @include breakpoint(medium up) {
           width: 50%;
+          //height: rem-calc(40);
         }
         @include breakpoint(large up) {
           font-size: rem-calc(14);
+          //height: rem-calc(24);
+        }
+
+        .compound-field-container {
+          @include breakpoint(medium up) {
+            height: $field-height-medium;
+          }
+          @include breakpoint(large up) {
+            height: $field-height-large;
+          }
         }
       }
     }

@@ -511,6 +511,7 @@ abstract class Field implements IValidateField
 
     public function renderInput( )
     {
+
         return $this->innerRender($this->inputTemplate, [
             'field' => $this,
 //            'html' => $this->getHtmlAttributes(),
@@ -553,6 +554,10 @@ abstract class Field implements IValidateField
             'id' => $this->getHtmlId(),
             'hint' => $this->hint
         ]);
+    }
+
+    public function hasHint(){
+        return !empty($this->hint);
     }
 
     public function render($fieldExtension = null)

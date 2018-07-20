@@ -1,11 +1,20 @@
-{set $allErrors = array_merge($field->getErrors(), $ext->getErrors())}
+{set $allErrors = array_merge($field->getErrors(), $fieldExt->getErrors())}
+{set $hasHint = $field->hasHint()}
 <div class="hide-for-large mobile-errors-content">
     {raw $field->renderErrors($allErrors)}
 </div>
 <div class="field-row">
     <div class="field-title">
-        {raw $label}
-        {raw $hint}
+        {if $hasHint}
+            <div class="multiline">
+                {raw $label}
+                {raw $hint}
+            </div>
+        {else}
+            {*<div class="single-line">*}
+                {raw $label}
+            {*</div>*}
+        {/if}
     </div>
     <div class="field compound-input">
             <div class="input-block">
@@ -16,7 +25,7 @@
                     <label class="display-inline hide-for-medium">X</label>
                     <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
                     <div class="input-container {$field->className}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
-                        {raw $ext->renderInput()}
+                        {raw $fieldExt->renderInput()}
                     </div>
                 </div>
             </div>

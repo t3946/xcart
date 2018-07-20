@@ -1,0 +1,18 @@
+.checkout-shipping {
+
+  .mandatory {
+    @include breakpoint(large) {
+      margin-top: 2em;
+    }
+  }
+
+  .submit-notes {
+    display: block;
+    font-size: rem-calc(14);
+    max-width: initial;
+  }
+
+  .subscription-options {
+    margin-bottom: 2rem;
+  }
+}

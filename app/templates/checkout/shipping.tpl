@@ -1,7 +1,8 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    {set $fieldsets = $shippingForm->getFieldsets()}
+    {*{set $fieldsets = $shippingForm->getFieldsets()}*}
+    {set $fieldsets = $shippingForm->renderFieldsets()}
     {*<form action="{url 'checkout:shipping'}" method="POST" class="checkout-shipping-form">*}
         {raw $shippingForm->renderBegin([
             'action' => $.app->router->url('checkout:shipping'),

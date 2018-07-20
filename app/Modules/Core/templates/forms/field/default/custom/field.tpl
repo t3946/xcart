@@ -1,10 +1,19 @@
+{set $hasHint = $field->hasHint()}
 <div class="hide-for-large mobile-errors-content">
     {raw $errors}
 </div>
 <div class="field-row">
     <div class="field-title">
-        {raw $label}
-        {raw $hint}
+        {if $hasHint}
+            <div class="multiline">
+                {raw $label}
+                {raw $hint}
+            </div>
+        {else}
+            {*<div class="single-line">*}
+                {raw $label}
+            {*</div>*}
+        {/if}
     </div>
     <div class="field">
         <div class="input-container {$field->className}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>

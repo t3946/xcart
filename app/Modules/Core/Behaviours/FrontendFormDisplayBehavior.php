@@ -37,18 +37,10 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
      * @var array
      */
     protected $fieldsSettings = [
-        'fieldTemplate' => 'forms/field/default/custom/field.tpl',
+        'fieldTemplate' => 'forms/field/default/custom/one_field.tpl',
         'errorsTemplate' => 'forms/field/default/custom/errors.tpl',
         'hintTemplate' => 'forms/field/default/custom/hint.tpl',
         'labelTemplate' => 'forms/field/default/custom/label.tpl',
-    ];
-
-    /**
-     * Default params for compound fields
-     * @var array
-     */
-    protected $fieldsCompoundSettings = [
-        'fieldTemplate' => 'forms/field/default/custom/field_compound.tpl'
     ];
 
     /**
@@ -89,13 +81,8 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
     {
         $tmpConfig = array_merge([], $config);
 
-        if (empty($config['extend'])) {
-            // Render default field
-            $tmpConfig = array_merge($this->fieldsSettings, $tmpConfig);
-        } else {
-            // Render compound field
-            $tmpConfig = array_merge($this->fieldsSettings, $this->fieldsCompoundSettings, $tmpConfig);
-        }
+        // Render field
+        $tmpConfig = array_merge($this->fieldsSettings, $tmpConfig);
 
         foreach ($this->classFieldSettings as $class => $settings) {
             if($tmpConfig['class'] == $class) {
@@ -104,10 +91,6 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
         }
 
         $config = array_merge($config, $tmpConfig);
-
-//        var_dump($name);
-//        var_dump($config['class']);
-//        var_dump($config['inputTemplate']);
     }
 
     /**

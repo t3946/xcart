@@ -38,6 +38,7 @@ class ContactInfoForm extends BaseForm
                     'placeholder' => '(609) 924-8399',
                     'class' => 'phone'
                 ],
+                'extend' => 'phone_ext',
             ],
 
             'phone_ext' => [
@@ -45,7 +46,8 @@ class ContactInfoForm extends BaseForm
                 'label' => 'ext',
                 'html' => [
                     'class' => 'phone_ext',
-                ]
+                ],
+                'extends' => true,
             ],
 
             'email' => [
