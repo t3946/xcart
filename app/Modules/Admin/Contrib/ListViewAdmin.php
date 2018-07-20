@@ -72,8 +72,13 @@ abstract class ListViewAdmin extends Admin
                         $request->redirect($this->getUpdateUrl($model->pk));
                     }
                     else {
-                        echo $this->render('admin/popup_close.tpl');
-                        Xcart::app()->end();
+                        if (isset($_POST['popup'])) {
+                            echo $this->render('admin/popup_close.tpl');
+                            Xcart::app()->end();
+                        }
+                        if ($next == 'save') {
+                            $request->redirect($this->getAllUrl());
+                        }
                     }
                 }
             } else {

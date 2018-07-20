@@ -10,7 +10,7 @@ use Xcart\App\Form\ModelForm;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'product_option';
+    public $ownerField = 'product_option_id';
     public $sort = 'position';
 
     public function getModel()
@@ -50,5 +50,15 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
     public function getCanSort($qs)
     {
         return true;
+    }
+
+    public function getAllUrl()
+    {
+        return (new ProductOptionsAdmin)->getUpdateUrl($this->ownerPk);
+    }
+
+    public function getBreadcrumbs()
+    {
+        return [];
     }
 }

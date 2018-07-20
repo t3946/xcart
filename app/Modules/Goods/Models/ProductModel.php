@@ -296,8 +296,8 @@ class ProductModel extends Model implements ICartItem
             ],
             'options' => [
                 'class' => HasManyField::class,
-                'modelClass' => OptionModel::class,
-                'link' => ['productid' => 'productid']
+                'modelClass' => ProductOptionModel::class,
+                'link' => ['productid' => 'product_id']
             ],
             'product_options' => [
                 'class' => HasManyField::class,

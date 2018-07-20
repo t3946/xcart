@@ -1,11 +1,13 @@
-{set $options = $model->options->filter(['avail' => 'Y'])->order(['orderby'])}
+{set $options = $model->options->filter(['active' => true])->order(['position'])}
 {if $options}
     {foreach $options as $option}
-        {$option->classtext}
-        <select class="product-options" data-id="{$option->classtext}">
-            {foreach $option->values as $value}
-                <option value="{$value->option_name}">{$value->option_name}</option>
-            {/foreach}
-        </select>
+        <div class="option">
+            {$option->option}
+            <select class="product-options" data-id="{$option->option}">
+                {foreach $option->variants as $variant}
+                    <option value="{$variant->variant}">{$variant->variant}</option>
+                {/foreach}
+            </select>
+            </div>
     {/foreach}
 {/if}

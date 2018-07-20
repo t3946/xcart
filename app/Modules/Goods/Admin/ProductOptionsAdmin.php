@@ -12,7 +12,7 @@ use Xcart\App\Orm\Model;
 
 class ProductOptionsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'product';
+    public $ownerField = 'product_id';
     public $sort = 'position';
 
     public function getExcludedColumns()
@@ -76,6 +76,11 @@ class ProductOptionsAdmin extends ListViewAdmin
     public function getCanSort($qs)
     {
         return true;
+    }
+
+    public function getAllUrl()
+    {
+        return (new ProductAdmin)->getUpdateUrl($this->ownerPk);
     }
 
 }
