@@ -16,10 +16,10 @@ class PageAdmin extends NestedAdmin
 {
     public $linkColumn = 'name';
 
-    public function getListColumns()
-    {
-        return ['name'];
-    }
+//    public function getListColumns()
+//    {
+//        return ['name'];
+//    }
 
     public function getSearchColumns()
     {
