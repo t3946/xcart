@@ -46,11 +46,9 @@ class PageController extends FrontendController
         $filter['sites__through__storefront_id'] = $site_model->storefrontid;
 
         /** @var Page $model */
-        $model = Page::objects()
+        if (!$model = Page::objects()
                      ->published()
-                     ->get($filter);
-
-        if (!$model){
+                     ->get($filter) ){
             unset($filter['sites__through__storefront_id']);
             /** @var Page $model */
             $model = Page::objects()
