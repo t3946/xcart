@@ -173,4 +173,16 @@ class OrderTransactionHelper
         }
         return $result ;
     }
+
+    public static function getRefunded($models)
+    {
+        return round(array_sum(array_map(function ($model) {
+            /** @var OrderTransactionModel $model */
+            $value = 0;
+            if ($model->type === OrderTransactionModel::TYPE_REFUND && OrderTransactionModel::STATUS_COMPLETED === $model->transaction_status) {
+                $value = $model->transaction_amount;
+            }
+            return $value;
+        }, $models)), 2);
+    }
 }
