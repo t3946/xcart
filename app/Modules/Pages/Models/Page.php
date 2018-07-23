@@ -55,8 +55,8 @@ class Page extends TreeModel
                 'verboseName' => PagesModule::t('Name')
             ],
             'url' => [
-                'class' => AutoSlugField::className(),
-                'source' => 'name',
+                'class' => CharField::className(),
+                'required' => true,
                 'verboseName' => PagesModule::t('Url'),
             ],
             'content' => [
