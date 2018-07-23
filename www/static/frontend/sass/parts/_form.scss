@@ -307,6 +307,71 @@ form {
     }
   }
 
+  //label {
+  //  position: relative;
+  //  display: block;
+  //
+  //  font: {
+  //    size: rem-calc(17);
+  //    weight: 700;
+  //  }
+  //
+  //  @include breakpoint(large) {
+  //    font: {
+  //      size: rem-calc(14);
+  //      weight: normal;
+  //    }
+  //  }
+  //
+  //  .required {
+  //
+  //    @include breakpoint(large) {
+  //      position: absolute;
+  //      right: rem-calc(-10);
+  //      top: 0;
+  //    }
+  //  }
+  //
+  //  .comment {
+  //    color: #777;
+  //    font-size: .75rem;
+  //  }
+  //
+  //}
+
+  input[type=radio] {
+    & + label {
+      line-height: rem-calc(38);
+      background-color: #f4f4f4;
+
+      &:before {
+        content: '';
+        display: inline-block;
+        margin-right: rem-calc(5);
+        width: rem-calc(17);
+        height: rem-calc(17);
+        vertical-align: middle;
+        background: url('../images/icons/inputs/radio_unchecked.png') center center no-repeat;
+        background-origin: content-box;
+        vertical-align: middle;
+      }
+
+      &:nth-child(2n) {
+        background-color: $white;
+      }
+
+      &:nth-last-child(1) {
+        background-color: #f4f4f4;
+      }
+    }
+
+    &:checked + label {
+      &:before {
+        background-image: url('../images/icons/inputs/radio_cheched.png');
+      }
+    }
+  }
+
   /* special styles for select */
   select {
 
