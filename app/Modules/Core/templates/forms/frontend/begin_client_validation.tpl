@@ -4,4 +4,5 @@
       method="{if $method}{$method}{else}POST{/if}"
       novalidate=""
       id="{$prefix}"
-      data-constraints="{$constraints}">
+      data-constraints="{$constraints}"
+      {if $enctype}enctype="{$enctype}"{/if}>

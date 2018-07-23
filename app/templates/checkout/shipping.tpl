@@ -10,12 +10,12 @@
 
         <section class="checkout-shipping">
             <div class="row">
-                <div class="columns small-12 large-6">
+                <div class="columns small-12 large-6 large-collapse-right show-for-large">
                     <div class="options">
                         <h2 class="title" >{t 'Shipping Address' dict='order'}</h2>
                     </div>
                 </div>
-                <div class="small-12  large-6 columns text-center large-text-left">
+                <div class="small-12  large-6 columns text-center large-text-left large-collapse-left">
                     <div class="mandatory">
                         {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
                     </div>
@@ -28,7 +28,7 @@
                         {/foreach}
                 </div>
             </div>
-            <div class="row">
+            <div class="row show-for-large">
                 <div class="small-12 columns">
                     <div class="hr"></div>
                 </div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row show-for-large">
                 <div class="small-12 columns">
                     <div class="hr"></div>
                 </div>
@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="columns small-12">
                     <div class="subscription-options">
-                        <h2 class="title">{t 'Privacy Policy' dict='order'}</h2>
+                        <h5 class="title">{t 'Privacy Policy' dict='order'}</h5>
                         <div class="private-claim">
                             {t 'All your private data is confidential. We will never sell, exchange or market it in any way.' dict='order'}
                         </div>

@@ -2,4 +2,5 @@
       action="{if $action}{$action}{/if}"
       method="{if $method}{$method}{else}POST{/if}"
       novalidate=""
-      id="{$prefix}">
+      id="{$prefix}"
+      {if $enctype}enctype="{$enctype}"{/if}>

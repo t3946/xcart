@@ -98,7 +98,6 @@ form {
         size: rem-calc(14);
         weight: normal;
       }
-    ;
     }
 
     .required {
@@ -228,6 +227,7 @@ form {
     .show-success {
         background: url('../images/icons/forms/checkmark_accepted.svg');
     }
+
     .show-error {
       background: url('../images/icons/forms/error.svg');
     }
@@ -379,7 +379,7 @@ form {
   }
 
   .subscription-options {
-    margin-bottom: 2rem;
+    margin-bottom: rem-calc(22);
   }
 }
 

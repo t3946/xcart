@@ -5,7 +5,7 @@
     <div class="column small-12 large-order-1">
         <div class="row">
             <div class="small-12 large-6 columns large-text-right text-block">
-                <div class="multiline">
+                <div class="medium-multiline">
                     {raw $label}
                     {raw $hint}
                 </div>

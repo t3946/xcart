@@ -6,7 +6,7 @@
 <div class="field-row">
     <div class="field-title">
         {if $hasHint}
-            <div class="multiline">
+            <div class="medium-multiline">
                 {raw $label}
                 {raw $hint}
             </div>

@@ -75,7 +75,6 @@ class CheckoutController extends FrontendController
 
         /** @var Application $app */
         $app = Xcart::app();
-//        $user = $app->user;
         $cart = $app->cart;
         $shipping = null;
         $shippingForm = new ShippingForm();
@@ -83,10 +82,7 @@ class CheckoutController extends FrontendController
         if ($app->request->getIsPost()) {
             $shippingForm->populate($app->request->post);
 
-//            dd($shippingForm);
-
-            if ($shippingForm->isValid()) {// && $contactForm->isValid()
-
+            if ($shippingForm->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrCreate([
                     'cart_number' => $cart->getCartNumber(),
@@ -99,7 +95,6 @@ class CheckoutController extends FrontendController
                     if ($is_created) {
                         $app->event->trigger('order:created', ['model' => $order]);
                     }
-
                     $this->redirect('checkout:options');
                 }
             }
@@ -109,7 +104,6 @@ class CheckoutController extends FrontendController
 
         if (!$app->request->getIsPost() && $order) {
             $shippingForm->setAttributes($order->getAttributes());
-           // $contactForm->setAttributes($order->getAttributes());
         }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
