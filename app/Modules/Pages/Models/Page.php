@@ -126,7 +126,7 @@ class Page extends TreeModel
             ],
 
             'sites' => [
-                'class' => HasManyField::class,
+                'class' => ManyToManyField::class,
                 'modelClass' => SiteModel::class,
                 'through' => PagesStorefrontLink::class,
                 'verboseName' => PagesModule::t('Sites'),
