@@ -37,11 +37,11 @@ class NumberValidator extends Validator
 
     public function jsValidateParams()
     {
+
         return [
-            'format' => [
-                'pattern' => "^\d*$",
-                'flags' => "im",
-                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
+            'numericality' => [
+                'onlyInteger' => true,
+                'notValid' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ]
         ];
     }

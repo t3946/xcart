@@ -15,4 +15,12 @@ abstract class DecoratedForm extends Form
 {
     use FormBehaviourRenderTrait;
 
+    public function __construct(array $config = [])
+    {
+        $this->beforeConstruct();
+        parent::__construct($config);
+    }
+
+    abstract protected function beforeConstruct();
+
 }

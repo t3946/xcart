@@ -14,4 +14,12 @@ use Xcart\App\Form\Traits\FormBehaviourRenderTrait;
 abstract class DecoratedModelForm extends ModelForm
 {
     use FormBehaviourRenderTrait;
+
+    public function __construct(array $config = [])
+    {
+        $this->beforeConstruct();
+        parent::__construct($config);
+    }
+
+    abstract protected function beforeConstruct();
 }

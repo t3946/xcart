@@ -1,6 +1,13 @@
 {extends "checkout/base.tpl"}
 {block 'content'}
-    <form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">
+    {*<form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">*}
+    {raw $checkoutReviewForm->renderBegin([
+    'action' => $.app->router->url('checkout:review'),
+    'method' => 'POST',
+    'class' => 'checkout-review-form',
+    'enctype' => 'multipart/form-data'
+    ])}
+    {set $fieldsets =  $checkoutReviewForm->createFieldsets()}
         {if $order->payment_method == 'Purchase Order'}
             {set $extra = $order->extra_model}
             <section class="checkout-po">
@@ -18,8 +25,10 @@
                                 </div>
                             </div>
                         </div>
-                        {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('po_number')}
-                        {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('organization_name')}
+
+                        {foreach $fieldsets['order_details'] as $field}
+                            {raw $field->render()}
+                        {/foreach}
                     </div>
                 </div>
                 <div class="row">
@@ -34,47 +43,9 @@
                         </div>
                     </div>
                     <div class="columns">
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('firstname')}
-                        <div class="row form-row compound-field">
-
-                            <div class="column hide-for-large small-12 large-2 large-order-2">
-                                {$purchasingManagerForm->getField('phone')->renderErrors()}
-                            </div>
-
-                            <div class="column small-12 large-order-1">
-                                <div class="row">
-                                    <div class="small-12 large-6 columns large-text-right text-block">
-                                        {if $field->hint}
-                                            <div class="multiline">
-                                                {$purchasingManagerForm->getField('phone')->renderLabel()}
-
-                                                <span class="hint">
-                                                    {$purchasingManagerForm->getField('phone')->renderHint()}
-                                                </span>
-                                            </div>
-                                        {else}
-                                            {$purchasingManagerForm->getField('phone')->renderLabel()}
-                                        {/if}
-                                    </div>
-                                    <div class="small-12 large-6 columns phone--container">
-                                        {$purchasingManagerForm->getField('phone')->renderInput()}
-                                        <span class="phone_ext--container">
-                                            <label class="display-inline hide-for-medium">X</label>
-                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
-
-                                            {$purchasingManagerForm->getField('phone_ext')->renderInput()}
-                                        </span>
-
-                                        <span class="show-for-large">
-                                            {$purchasingManagerForm->getField('phone')->renderErrors()}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('fax')}
-                        {include 'checkout/_form_row.tpl' field=$purchasingManagerForm->getField('email')}
+                        {foreach $fieldsets['purchasing_manager'] as $field}
+                            {raw $field->render()}
+                        {/foreach}
                     </div>
                 </div>
                 <div class="row">
@@ -89,48 +60,9 @@
                         </div>
                     </div>
                     <div class="columns">
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('firstname')}
-                        <div class="row form-row compound-field">
-
-                            <div class="column hide-for-large small-12 large-2 large-order-2">
-                                {$accountsPayableForm->getField('phone')->renderErrors()}
-                            </div>
-
-                            <div class="column small-12 large-order-1">
-                                <div class="row">
-                                    <div class="small-12 large-6 columns large-text-right text-block">
-                                        {if $accountsPayableForm->getField('phone')->hint}
-                                            <div class="multiline">
-                                                {$accountsPayableForm->getField('phone')->renderLabel()}
-
-                                                <span class="hint">
-                                                    {$accountsPayableForm->getField('phone')->renderHint()}
-                                                </span>
-                                            </div>
-                                        {else}
-                                            {$accountsPayableForm->getField('phone')->renderLabel()}
-                                        {/if}
-                                    </div>
-                                    <div class="small-12 large-6 columns phone--container">
-                                        {$accountsPayableForm->getField('phone')->renderInput()}
-                                        <span class="phone_ext--container">
-                                            <label class="display-inline hide-for-medium">X</label>
-                                            <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
-
-                                            {$accountsPayableForm->getField('phone_ext')->renderInput()}
-                                        </span>
-
-                                        <span class="show-for-large">
-                                            {$accountsPayableForm->getField('phone')->renderErrors()}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('fax')}
-                        {include 'checkout/_form_row.tpl' field=$accountsPayableForm->getField('email')}
-                        {include 'checkout/_form_row.tpl' field=$orderDetailsForm->getField('purchase_order_file')}
+                        {foreach $fieldsets['accounts_payable'] as $field}
+                            {raw $field->render()}
+                        {/foreach}
                     </div>
                 </div>
             </section>
@@ -140,13 +72,10 @@
 
         <section class="customer-notes">
             <div class="row align-center">
-                <div class="columns  small-12 medium-3 large-3">
-                    <h2>{t 'Customer notes' dict='order'}</h2>
-                </div>
-                <div class="columns small-12 medium-6 large-9">
-                    <textarea name="customer_notes" placeholder="{t 'Put your order related instructions here' dict='order'}">
-                        {$order->customer_notes}
-                    </textarea>
+                <div class="columns  small-12">
+                    {foreach $fieldsets['notes'] as $field}
+                        {raw $field->render()}
+                    {/foreach}
                 </div>
             </div>
 
@@ -171,5 +100,6 @@
             </div>
         </section>
 
-    </form>
+    {*</form>*}
+    {raw $checkoutReviewForm->renderEnd()}
 {/block}

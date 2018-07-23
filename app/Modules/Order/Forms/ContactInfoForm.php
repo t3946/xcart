@@ -2,14 +2,16 @@
 
 namespace Modules\Order\Forms;
 
+use Modules\Core\Forms\FrontendForm;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Validation\EmailValidator;
+use Xcart\App\Validation\PhoneExtValidator;
 
-class ContactInfoForm extends BaseForm
+class ContactInfoForm extends FrontendForm
 {
     public $replacement;
 
@@ -42,12 +44,15 @@ class ContactInfoForm extends BaseForm
             ],
 
             'phone_ext' => [
-                'class' => NumberField::class,
+                'class' => CharField::class,
                 'label' => 'ext',
                 'html' => [
                     'class' => 'phone_ext',
                 ],
                 'extends' => true,
+                'validators' => [
+                    new PhoneExtValidator(),
+                ],
             ],
 
             'email' => [
@@ -95,5 +100,26 @@ class ContactInfoForm extends BaseForm
         }
 
         return parent::setAttributes($t_data);
+    }
+
+    public function renamedFields()
+    {
+        $fields = $this->getFields();
+
+        if ($this->replacement) {
+            $newFields = [];
+            $replace = $this->replacement;
+            foreach ($fields as $fieldName => $fieldInfo) {
+
+                if(isset($fieldInfo['extend']) && isset($this->replacement[$fieldInfo['extend']])){
+                    $fieldInfo['extend'] = $this->replacement[$fieldInfo['extend']];
+                }
+                $newFields[$replace[$fieldName]] = $fieldInfo;
+            }
+
+            $fields = $newFields;
+        }
+
+        return $fields;
     }
 }

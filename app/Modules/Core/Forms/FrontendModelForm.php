@@ -14,7 +14,6 @@ use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use RuntimeException;
 use Xcart\App\Form\DecoratedModelForm;
-use Xcart\App\Form\ModelForm;
 use Xcart\App\Traits\RenderTrait;
 
 abstract class FrontendModelForm extends DecoratedModelForm
@@ -98,5 +97,10 @@ abstract class FrontendModelForm extends DecoratedModelForm
             $this->_fields[$name] = $this->createField($name, $config);
             //dd($includeFields);
         }
+    }
+
+    protected function beforeConstruct()
+    {
+        // Implement beforeConstruct() method.
     }
 }

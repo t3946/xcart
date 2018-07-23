@@ -24,15 +24,10 @@ class BillingForm extends FrontendModelForm
 
     //public $include = ['cb_status'];
 
-
-    public function __construct(array $config = [])
+    protected function beforeConstruct()
     {
         $billingForm = new BillingAddressForm();
-
         $this->_billingFields = $billingForm->getFields();
-
-
-        parent::__construct($config);
     }
 
 

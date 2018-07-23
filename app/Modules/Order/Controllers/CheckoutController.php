@@ -16,6 +16,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\BillingForm;
+use Modules\Order\Forms\CheckoutReviewForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
 use Modules\Order\Forms\PurchasingManagerForm;
 
@@ -378,32 +379,33 @@ class CheckoutController extends FrontendController
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
 
-        $orderDetailsForm = new PurchaseOrderDetailsForm();
-        $purchasingManagerForm = new PurchasingManagerForm();
-        $accountsPayableForm = new AccountsPayableForm();
+//        $orderDetailsForm = new PurchaseOrderDetailsForm();
+//        $purchasingManagerForm = new PurchasingManagerForm();
+//        $accountsPayableForm = new AccountsPayableForm();
+
+        $checkoutReviewForm = new CheckoutReviewForm();
 
         if ($app->request->getIsPost()) {
 
-            $orderDetailsForm->populate($app->request->post);
-            $purchasingManagerForm->populate($app->request->post);
-            $accountsPayableForm->populate($app->request->post);
+//            $orderDetailsForm->populate($app->request->post);
+//            $purchasingManagerForm->populate($app->request->post);
+//            $accountsPayableForm->populate($app->request->post);
 
-            if ($app->request->post->has('customer_notes')) {
-                $order->setAttributes([
-                    'customer_notes' => trim($app->request->post->get('customer_notes')),
-                ]);
-            }
 
-            if ($order->payment_method != 'Purchase Order' || ($orderDetailsForm->isValid() && $purchasingManagerForm->isValid() && $accountsPayableForm->isValid())) {
+            $checkoutReviewForm->populate($app->request->post);
+
+//            if ($app->request->post->has('customer_notes')) {
+//                $order->setAttributes([
+//                    'customer_notes' => trim($checkoutReviewForm->getField('customer_notes')->getValue()),
+//                ]);
+//            }
+
+            if ($order->payment_method != 'Purchase Order' || $checkoutReviewForm->isValid()) {
 
                 if ($order->payment_method == 'Purchase Order') {
                     /** @var OrderModel $extra */
                     [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
-                    $extra->purchase_order = array_merge(
-                        $orderDetailsForm->getAttributes(),
-                        $purchasingManagerForm->getAttributes(),
-                        $accountsPayableForm->getAttributes()
-                    );
+                    $extra->purchase_order = $checkoutReviewForm->getAttributes();
                     $extra->save();
 
                     if ($_FILES) {
@@ -418,7 +420,7 @@ class CheckoutController extends FrontendController
 
                         $po_model = new PurchaseOrderModel([
                             'login' => Xcart::app()->user->login,
-                            'PO_number' => $orderDetailsForm->getField('po_number')->getValue(),
+                            'PO_number' => $checkoutReviewForm->getField('po_number')->getValue(),
                             'storefront_id' => $site->storefrontid,
                             'received_by' => 'website'
                         ]);
@@ -465,9 +467,10 @@ class CheckoutController extends FrontendController
         if (!$app->request->getIsPost() && $order) {
             /** @var OrderExtraModel $extra */
             $extra = $order->extra_model;
-            $orderDetailsForm->setAttributes($extra->purchase_order ?? []);
-            $purchasingManagerForm->setAttributes($extra->purchase_order ?? []);
-            $accountsPayableForm->setAttributes($extra->purchase_order ?? []);
+//            $orderDetailsForm->setAttributes($extra->purchase_order ?? []);
+//            $purchasingManagerForm->setAttributes($extra->purchase_order ?? []);
+//            $accountsPayableForm->setAttributes($extra->purchase_order ?? []);
+            $checkoutReviewForm->setAttributes($extra->purchase_order ?? []);
         }
 
 
@@ -475,9 +478,10 @@ class CheckoutController extends FrontendController
             'order' => $order,
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
-            'orderDetailsForm' => $orderDetailsForm,
-            'purchasingManagerForm' => $purchasingManagerForm,
-            'accountsPayableForm' => $accountsPayableForm
+//            'orderDetailsForm' => $orderDetailsForm,
+//            'purchasingManagerForm' => $purchasingManagerForm,
+//            'accountsPayableForm' => $accountsPayableForm
+            'checkoutReviewForm' => $checkoutReviewForm
         ]);
     }
 

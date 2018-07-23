@@ -161,3 +161,69 @@ class FormValidation {
 export default (name) => {
     new FormValidation(name);
 }
+
+//
+// (() => {
+//     if (typeof document.formConstraints === 'undefined') {
+//         document.formConstraints = {};
+//     }
+//     document.formConstraints.CheckoutReviewForm4 = {
+//         "CheckoutReviewForm[po_number]": {"presence": {"message": "^Cannot be empty"}},
+//         "CheckoutReviewForm[organization_name]": {"presence": {"message": "^Cannot be empty"}},
+//         "CheckoutReviewForm[name_of_purchaser]": {"presence": {"message": "^Cannot be empty"}},
+//         "CheckoutReviewForm[purchase_manager_phone]": {
+//             "format": {
+//                 "pattern": "^\\+?[-()\\d\\s]*$",
+//                 "flags": "im",
+//                 "message": "^Is not a valid phone"
+//             }, "presence": {"message": "^Cannot be empty"}
+//         },
+//         "CheckoutReviewForm[purchase_manager_phone_ext]": {
+//             "format": {
+//                 "pattern": "^\\d*$",
+//                 "flags": "im",
+//                 "message": "^Must be numeric"
+//             }
+//         },
+//         "CheckoutReviewForm[purchase_manager_email]": {
+//             "presence": {"message": "^Is not a valid email address"},
+//             "email": {"message": "^Is not a valid email address"},
+//             "length": {"maximum": 320, "wrongLength": "^Is not a valid email address"}
+//         },
+//         "CheckoutReviewForm[purchase_manager_fax]": {
+//             "format": {
+//                 "pattern": "^\\+?[-()\\d\\s]*$",
+//                 "flags": "im",
+//                 "message": "^Is not a valid phone"
+//             }
+//         },
+//         "CheckoutReviewForm[accounts_payable_full_name]": {"presence": {"message": "^Cannot be empty"}},
+//         "CheckoutReviewForm[accounts_payable_phone]": {
+//             "format": {
+//                 "pattern": "^\\+?[-()\\d\\s]*$",
+//                 "flags": "im",
+//                 "message": "^Is not a valid phone"
+//             }, "presence": {"message": "^Cannot be empty"}
+//         },
+//         "CheckoutReviewForm[accounts_payable_phone_ext]": {
+//             "format": {
+//                 "pattern": "^\\d*$",
+//                 "flags": "im",
+//                 "message": "^Must be numeric"
+//             }
+//         },
+//         "CheckoutReviewForm[accounts_payable_email]": {
+//             "presence": {"message": "^Is not a valid email address"},
+//             "email": {"message": "^Is not a valid email address"},
+//             "length": {"maximum": 320, "wrongLength": "^Is not a valid email address"}
+//         },
+//         "CheckoutReviewForm[accounts_payable_fax]": {
+//             "format": {
+//                 "pattern": "^\\+?[-()\\d\\s]*$",
+//                 "flags": "im",
+//                 "message": "^Is not a valid phone"
+//             }
+//         },
+//     };
+//     document.dispatchEvent(new CustomEvent('form.client.validation', {detail: 'CheckoutReviewForm4'}));
+// })();

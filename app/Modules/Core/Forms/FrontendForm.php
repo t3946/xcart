@@ -15,7 +15,7 @@ use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use Xcart\App\Form\DecoratedForm;
 use Xcart\App\Traits\RenderTrait;
 
-class FrontendForm extends DecoratedForm
+abstract class FrontendForm extends DecoratedForm
 {
     use RenderTrait;
 
@@ -45,5 +45,10 @@ class FrontendForm extends DecoratedForm
                 'enabled' => true
             ],
         ];
+    }
+
+    protected function beforeConstruct()
+    {
+        // Implement beforeConstruct() method.
     }
 }

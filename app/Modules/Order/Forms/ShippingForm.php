@@ -26,15 +26,13 @@ class ShippingForm extends FrontendModelForm
     public $include = ['cb_status'];
 
 
-    public function __construct(array $config = [])
+    protected function beforeConstruct()
     {
         $shippingForm = new ShippingAddressForm();
         $contactForm = new ContactInfoForm();
 
         $this->_shippingFields = $shippingForm->getFields();
         $this->_contactFields = $contactForm->getFields();
-
-        parent::__construct($config);
     }
 
 

@@ -62,7 +62,7 @@ abstract class Field implements IValidateField
      * Enabled HTML5 validation
      * @var bool
      */
-    public $typeEnabled = false;
+    public $typeEnabled = true;
 
     /**
      * Params to generate client validation
@@ -492,7 +492,7 @@ abstract class Field implements IValidateField
 
     public function getType()
     {
-        return ($this->typeEnabled && $this->type) ?: 'text';
+        return ($this->typeEnabled && $this->type) ? $this->type : 'text';
     }
 
     /**
