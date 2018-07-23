@@ -57,7 +57,6 @@ class Page extends TreeModel
                 'class' => AutoSlugField::className(),
                 'source' => 'name',
                 'verboseName' => PagesModule::t('Url'),
-                'unique' => true
             ],
             'content' => [
                 'class' => TextField::className(),
