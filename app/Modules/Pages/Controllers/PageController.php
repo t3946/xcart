@@ -42,21 +42,25 @@ class PageController extends FrontendController
         else {
             $filter['url'] = ltrim($url, '/');
         }
-        
-        $filter[] = new QOr(['sites__through__storefront_id' => $site_model->storefrontid, 'sites__through__storefront_id__isnull' => true]);
+
+        $filter['sites__through__storefront_id'] = $site_model->storefrontid;
 
         /** @var Page $model */
-        $model = Page::objects()
-            ->published()
-            ->get($filter);
+        if (!$model = Page::objects()->published()->get($filter) ){
+
+            unset($filter['sites__through__storefront_id']);
+            $filter['sites__through__storefront_id__isnull'] = true;
+            /** @var Page $model */
+            $model = Page::objects()
+                         ->published()
+                         ->get($filter);
+        }
+
 
         if ($model === null) {
             $this->error(404);
         }
 
-        if (!$model->sites->filter(['storefrontid' => $site_model->storefrontid])->get() && $model->sites->all()){
-            $this->error(404);
-        }
 
         // Remove duplicate of index page
         if ($model->is_index && !empty($url)) {
