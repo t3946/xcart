@@ -124,6 +124,13 @@ class Page extends TreeModel
                 ],
                 'verboseName' => PagesModule::t("Sorting")
             ],
+
+            'sites' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => PagesStorefrontLink::class,
+                'verboseName' => PagesModule::t('Sites'),
+            ],
 //            'sites' => [
 //                'class' => ManyToManyField::className(),
 //                'modelClass' => SiteModel::className(),

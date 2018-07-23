@@ -2,8 +2,10 @@
 
 namespace Modules\Pages\Controllers;
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Meta\Types\MetaType;
 use Modules\Pages\Models\Page;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -29,12 +31,30 @@ class PageController extends FrontendController
 
     public function actionView($url = null)
     {
+        /** @var SiteModel $site_model */
+        $site_model = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = [];
+
+        if (empty($url)){
+            $filter['is_index'] = true;
+        }
+        else {
+            $filter['url'] = ltrim($url, '/');
+        }
+
+        $filter[] = new QOr(['sites__through__storefront_id' => $site_model->storefrontid, 'sites__through__storefront_id__isnull' => true]);
+
         /** @var Page $model */
         $model = Page::objects()
             ->published()
-            ->get(empty($url) ? ['is_index' => true] : ['url' => ltrim($url, '/')]);
+            ->get($filter);
 
         if ($model === null) {
+            $this->error(404);
+        }
+
+        if (!$model->sites->filter(['storefrontid' => $site_model->storefrontid])->get() && $model->sites->all()){
             $this->error(404);
         }
 
