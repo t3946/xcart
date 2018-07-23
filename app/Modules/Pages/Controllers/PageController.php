@@ -42,19 +42,13 @@ class PageController extends FrontendController
         else {
             $filter['url'] = ltrim($url, '/');
         }
-
-        $filter['sites__through__storefront_id'] = $site_model->storefrontid;
+        
+        $filter[] = new QOr(['sites__through__storefront_id' => $site_model->storefrontid, 'sites__through__storefront_id__isnull' => true]);
 
         /** @var Page $model */
-        if (!$model = Page::objects()
-                     ->published()
-                     ->get($filter) ){
-            unset($filter['sites__through__storefront_id']);
-            /** @var Page $model */
-            $model = Page::objects()
-                         ->published()
-                         ->get($filter);
-        }
+        $model = Page::objects()
+            ->published()
+            ->get($filter);
 
         if ($model === null) {
             $this->error(404);
