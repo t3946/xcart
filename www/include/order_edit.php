@@ -338,7 +338,7 @@ if ($REQUEST_METHOD == "POST")
                     continue;
                 }
 
-                if ($groups[$tmp_manufacturerid]["cb_status"] == "P" || $groups[$tmp_manufacturerid]["cb_status"] == "3" || $groups[$tmp_manufacturerid]["cb_status"] == "V" || $groups[$tmp_manufacturerid]["cb_status"] == "H" || $groups[$tmp_manufacturerid]["cb_status"] == "R") {
+                if (\in_array($groups[$tmp_manufacturerid]["cb_status"], ['P', '3', 'V', 'H', 'R'])) {
 
                     if ($v["price"] != $cart_tmp["products"][$k]["price"]) {
                         $v["price"] = $cart_tmp["products"][$k]["price"];
@@ -468,7 +468,7 @@ if ($REQUEST_METHOD == "POST")
                     }
                 }
 
-                if ($v["cb_status"] == "P" || $v["cb_status"] == "3" || $v["cb_status"] == "V" || $v["cb_status"] == "H" || $v["cb_status"] == "R") {
+                if (\in_array($v["cb_status"], ['P', '3', 'V', 'H', 'R'])) {
                     if (
                         ($order["shipping_groups"][$m_id]["shipping_cost"]["net"] != $v["shipping_cost_net"])
                         && ((strpos($v["shipping_cost_net"], "r")) === false
