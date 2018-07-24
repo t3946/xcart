@@ -613,7 +613,7 @@ class ProductModel extends Model implements ICartItem
             'sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite(),
             new QOr([
                 ['group_root__isnull' => true],
-                ['group_root__productid' => 'productid']
+                ['productid' => new Expression('group_root')],
             ])
         ]);
     }
