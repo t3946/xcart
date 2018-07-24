@@ -98,7 +98,7 @@ class MetaExtHelper
             $instance->setBaseCode($base_code);
             $instance->setParams($controller->getMetaTemplateParams());
             $instance->getNoIndexFlag($controller);
-            $instance->setCanonical($controller->getCanonical());
+            $instance->setCanonical($canonical ?? $controller->getCanonical());
 
             if ($instance->compose()) {
                 echo $instance->render();
@@ -153,6 +153,9 @@ class MetaExtHelper
                 'description' => $meta->description,
                 'keywords' => $meta->keywords,
                 'advanced' => $this->_advanced,
+                'canonical' => $this->canonical,
+                'noIndex' => $this->noIndex,
+
             ];
 
             return true;
