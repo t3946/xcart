@@ -9,17 +9,28 @@
   }
   .customer-notes {
 
-    padding-top: 1.2rem;
-    padding-bottom: rem-calc(8);
-
-
-    .field-title {
-      padding-bottom: .8rem;
-
-      .comment {
-        display: none;
-      }
-    }
+    //padding-top: 1.2rem;
+    //padding-bottom: rem-calc(8);
+    //
+    //
+    //.field-title {
+    //  padding-bottom: .8rem;
+    //
+    //  .comment {
+    //    display: none;
+    //  }
+    //}
+    //
+    //@include breakpoint(medium){
+    //  .field-row {
+    //    .field-title {
+    //      width: 34%;
+    //    }
+    //    .field{
+    //      width: 66%;
+    //    }
+    //  }
+    //}
 
     //@include breakpoint(medium) {
     //  margin: 1rem 0 1.5rem 0;

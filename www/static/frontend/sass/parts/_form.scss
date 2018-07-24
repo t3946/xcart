@@ -142,9 +142,8 @@ form {
   }
 
   .submit {
-      //width: rem-calc(198);
+      text-align: center;
       width: 100%;
-      max-width: rem-calc(340);
       height: rem-calc(56);
       line-height: rem-calc(54);
       font-size: rem-calc(25) !important;
@@ -164,16 +163,21 @@ form {
     //}
 
     @include breakpoint(sm) {
+      width: auto;
       height: rem-calc(65);
       line-height: rem-calc(63);
       font-size: rem-calc(30);
+      min-width: rem-calc(340);
+      max-width: 100%;
     }
 
     @include breakpoint(medium) {
+      padding: 0 rem-calc(38);
       height: rem-calc(58);
       line-height: rem-calc(56);
       font-size: rem-calc(25);
-      width: rem-calc(240);
+      //width: rem-calc(240);
+      min-width: rem-calc(240);
 
       &:after {
         width: rem-calc(19);
@@ -651,6 +655,71 @@ form {
           }
         }
       }
+    }
+  }
+
+  /** special styles for customer notes */
+  .customer-notes {
+    .form-field {
+
+      padding-top: 1.2rem;
+      padding-bottom: rem-calc(8);
+
+      .field-title {
+        padding-bottom: .8rem;
+
+        .comment {
+          display: none;
+        }
+      }
+
+      @include breakpoint(medium) {
+        .field-row {
+          .field-title {
+            width: 35%;
+            text-align: left;
+
+            label{
+              font-size: rem-calc(22);
+              font-weight: bold;
+            }
+          }
+          .field {
+            width: 65%;
+
+            .input-container {
+              max-width: rem-calc(395);
+
+              textarea {
+                max-width: 100%;
+              }
+            }
+          }
+        }
+      }
+
+      @include breakpoint(large) {
+
+        padding-top: rem-calc(24);
+        padding-bottom: rem-calc(40);
+
+        .field-row {
+
+          width: rem-calc(984);
+          margin: 0 auto;
+
+          .field-title {
+            width: rem-calc(192);
+          }
+          .field {
+
+            .input-container {
+              max-width: rem-calc(610);
+            }
+          }
+        }
+      }
+
     }
   }
 

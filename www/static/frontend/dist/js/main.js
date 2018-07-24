@@ -60890,6 +60890,13 @@ var FormValidation = function () {
 
         var inputElement = event.target;
         var inputElementName = inputElement.getAttribute('name');
+        var currentRules = this.constraints[inputElementName];
+
+        if (typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined' && inputElement.value === '') {
+            this.clearAllClasses(inputElement);
+            return;
+        }
+
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};
         var currentError = errors[inputElementName];
 
@@ -60928,6 +60935,15 @@ var FormValidation = function () {
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove('show');
         }
+    };
+
+    FormValidation.prototype.clearAllClasses = function clearAllClasses(element) {
+        var field = element.closest('.form-field');
+
+        element.classList.remove('success');
+        field.classList.remove('success');
+
+        this.removeError(element, field);
     };
 
     FormValidation.prototype.success = function success(element) {
