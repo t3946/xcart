@@ -617,7 +617,7 @@ function check_r_fields(){
       </a>
     {/if}
 {* --------------------- *}
-    {if $product.orig_product_classes ne ""}
+    {if $product.oProduct->options->count()}
 
       {assign var="refunded_option_found" value="N"}
       {if $order.refund_groups[$m_id].products ne ""}
@@ -630,34 +630,24 @@ function check_r_fields(){
         {/foreach}
       {/if}
 
-
-      {foreach from=$product.orig_product_classes item=item key=key}
-        {if $item.avail}
-          <br /> {$item.classtext}
-          <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-              <option>No options selected</option>
-
-              {if (isset($product.extra_data.product_options[$item.classid].option_name) && !$product.extra_data.product_options[$item.classid].optionid|array_key_exists:$item.options)}
-                  <option value="{$product.extra_data.product_options[$item.classid].optionid}" selected="selected">{$product.extra_data.product_options[$item.classid].option_name}</option>
-              {/if}
-
-          {foreach from=$item.options key=optionid item=option_values}
-
-              <option value="{$optionid}"
-                  {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$item.classtext] === $option_values.option_name}
-                    selected="selected"
-                  {/if}
-                >{$option_values.option_name}</option>
-
-          {/foreach}
-          </select>
-        {elseif $item.is_modifier eq "T"}
-          <br /> {$item.classtext}
-          <input type="text" name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} value="{$product.product_options[$item.classid].option_name}">
-        {elseif $product.product_options_txt ne ""}
-          <br />Options: {$product.product_options_txt}
-        {/if}
-      {/foreach}
+        {foreach from=$product.oProduct->options item=option key=key}
+            {if $option->active}
+                <br/>
+                {assign var="p_option" value=$option->option->title}
+                {$p_option}
+                <select name="items[{$product.itemid}][classid_optionid][{$option->id}]"
+                        {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+                    <option>No options selected</option>
+                    {foreach from=$option->variants item=variant}
+                        <option value="{$variant->id}"
+                                {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option] === $variant->variant->name}
+                                    selected="selected"
+                                {/if}
+                        >{$variant}</option>
+                    {/foreach}
+                </select>
+            {/if}
+        {/foreach}
     {/if}
 {* --------------------- *}
   </td>

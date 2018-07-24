@@ -31,6 +31,10 @@
  * \*****************************************************************************/
 
 use Modules\Goods\Models\OptionModel;
+use Modules\Goods\Models\OptionNewModel;
+use Modules\Goods\Models\OptionVariantModel;
+use Modules\Goods\Models\ProductOptionModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
@@ -839,10 +843,10 @@ if ($REQUEST_METHOD == "POST") {
 
                     if ($v['classid_optionid'] && \is_array($v['classid_optionid'])) {
                         foreach ($v['classid_optionid'] as $option => $value) {
-                            if (($opt_model = OptionModel::objects()->get(['classid' => $option]))
-                                && $o_value_model = OptionValueModel::objects()->get(['optionid' => $value]))
+                            if (($opt_model = ProductOptionModel::objects()->get(['id' => $option]))
+                                && $o_value_model = ProductOptionVariantModel::objects()->get(['id' => $value]))
                             {
-                                $p_op[$opt_model->classtext] = $o_value_model->option_name;
+                                $p_op[$opt_model->option->title] = $o_value_model->variant->name;
                             }
                         }
                         $order_detail_model->product_options = $p_op;
