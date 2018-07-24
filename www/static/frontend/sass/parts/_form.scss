@@ -60,7 +60,7 @@ form {
     padding-top: rem-calc(30);
   }
 
-  .checkout-shipping {
+  //.checkout-shipping {
 
     //.mandatory {
     //  @include breakpoint(large) {
@@ -95,7 +95,7 @@ form {
       }
 
     }
-  }
+  //}
 
   .info_sended_data {
     .address-view {
@@ -174,6 +174,11 @@ form {
       line-height: rem-calc(56);
       font-size: rem-calc(25);
       width: rem-calc(240);
+
+      &:after {
+        width: rem-calc(19);
+        height: rem-calc(19);
+      }
     }
 
   }
@@ -616,7 +621,7 @@ form {
 
             .hint-text {
               display: inline-block;
-              width: 21rem;
+              max-width: 21rem;
             }
           }
 
@@ -881,12 +886,24 @@ form {
     &.no-margin-bottom {
       margin-bottom: 0;
     }
+
+    &.title-margin-small {
+      margin-bottom: rem-calc(10);
+    }
   }
 
   h2 {
     line-height: 110%;
     text-align: center;
     margin: 1rem 0 rem-calc(22);
+
+    &.top-title {
+      margin-bottom: rem-calc(5);
+    }
+
+    &.margin-bottom-default {
+      margin-bottom: 1rem;
+    }
 
     @include breakpoint(sm) {
       font-size: rem-calc(26);

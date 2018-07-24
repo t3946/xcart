@@ -131,13 +131,13 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row show-for-large">
                 <div class="small-12 columns">
                     <div class="hr"></div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row payment-methods-container">
                 <div class="columns large-4 show-for-large"></div>
                 <div class="columns large-8">
                     <div class="row">
@@ -167,11 +167,11 @@
                     {/if}
                 </div>
             </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <div class="hr"></div>
-                </div>
-            </div>
+            {*<div class="row show-for-large">*}
+                {*<div class="small-12 columns">*}
+                    {*<div class="hr"></div>*}
+                {*</div>*}
+            {*</div>*}
             <div class="row">
                 <div class="columns large-4 show-for-large"></div>
                 <div id="billing-address" class="columns large-8 billing_same_shipping">
@@ -202,31 +202,40 @@
             </div>
 
             <div class="row">
-                <div class="columns small-12 large-10 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
-
-                    {raw $billingForm->render()}
-
-                </div>
-                <div class="columns large-2 show-for-large"></div>
-            </div>
-
-            <div class="row">
-                <div class="column small-12 align-center text-center">
-                    <div class="buttons">
-                        <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                            {t 'Continue' dict='order'}
-                        </button>
+                <div class="columns large-4 show-for-large"></div>
+                <div class="columns small-12 large-8 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
+                    <div class="billing_address_form_container">
+                        {raw $billingForm->render()}
                     </div>
                 </div>
+                {*<div class="columns large-2 show-for-large"></div>*}
             </div>
 
-            <div class="row">
-                <div class="column small-12 align-center text-center">
-                    <div class="submit-notes hint">
-                        {t 'Continue to the order review page' dict='order'}
+            <div class="row billing-form-submit">
+                <div class="columns large-4 show-for-large"></div>
+                <div class="columns small-12 large-8">
+                    <div class="row">
+                        <div class="column small-12 align-center">
+                            <div class="buttons">
+                                <button type="submit" class="button submit yellow waves waves-orange waves-effect">
+                                    {t 'Continue' dict='order'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="column small-12 align-center">
+                            <div class="submit-notes hint">
+                                {t 'Continue to the order review page' dict='order'}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
+
 
         </section>
     {raw $billingForm->renderEnd()}

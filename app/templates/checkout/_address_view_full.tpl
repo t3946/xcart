@@ -1,4 +1,4 @@
-<h2 class="title">{$header}</h2>
+<h2 class="title margin-bottom-default">{$header}</h2>
 
 <div class="row full-name">
     <div class="columns info-title small-6">{t 'Full name:' dict='order'}</div>
@@ -30,7 +30,7 @@
 </div>
 
 <div class="row align-center button-row">
-    <div class="columns small-12">
+    <div class="columns small-12 text-left">
         <a href="{url $uri}?modify=1#billing-address" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
     </div>
 </div>

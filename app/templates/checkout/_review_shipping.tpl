@@ -1,13 +1,13 @@
 <div class="row align-center show-for-large">
     <div class="columns small-12">
-        <h1 class="text-center">{$header}</h1>
+        <h1 class="text-center title-margin-small">{$header}</h1>
     </div>
 </div>
 <div class="row info-row contact-info">
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Contact information' dict='order'}</h2>
+                <h2 class="margin-bottom-default">{t 'Contact information' dict='order'}</h2>
             </div>
         </div>
         <div class="row full-name">
@@ -41,7 +41,7 @@
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Delivery methods' dict='order'}</h2>
+                <h2 class="margin-bottom-default">{t 'Delivery methods' dict='order'}</h2>
             </div>
         </div>
         {foreach $order->groups as $group}
@@ -65,7 +65,7 @@
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Payment method' dict='order'}</h2>
+                <h2 class="margin-bottom-default">{t 'Payment method' dict='order'}</h2>
             </div>
         </div>
         <div class="row payment-method info-row">
