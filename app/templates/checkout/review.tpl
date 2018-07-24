@@ -1,15 +1,14 @@
 {extends "checkout/base.tpl"}
 {block 'content'}
-    {*<form data-abide action="{url 'checkout:review'}" method="POST" class="checkout-review-form" enctype= "multipart/form-data">*}
+
     {raw $checkoutReviewForm->renderBegin([
-    'action' => $.app->router->url('checkout:review'),
-    'method' => 'POST',
-    'class' => 'checkout-review-form',
-    'enctype' => 'multipart/form-data'
+        'action' => $.app->router->url('checkout:review'),
+        'method' => 'POST',
+        'class' => 'checkout-review-form',
+        'enctype' => 'multipart/form-data'
     ])}
     {set $fieldsets =  $checkoutReviewForm->createFieldsets()}
-        {if $order->payment_method == 'Purchase Order'}
-            {set $extra = $order->extra_model}
+        {if $showAllForm}
             <section class="checkout-po">
                 <div class="row">
                     <div class="columns small-12">
@@ -78,14 +77,12 @@
                     {/foreach}
                 </div>
             </div>
-
         </section>
 
         <section class="submit-order">
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="buttons text-center">
-                        {*<button type="submit" class="button yellow waves waves-orange waves-effect submit-order-button">*}
                         <button type="submit" class="button submit yellow waves waves-orange waves-effect">
                             {t 'Submit order' dict='order'}
                         </button>
@@ -95,13 +92,10 @@
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="submit-notes text-center submit-order-comment">
-                    {*<div class="button submit yellow waves waves-orange waves-effect">*}
                         {t 'Submit your order and get transferred to a credit card payment system.' dict='order'}
                     </div>
                 </div>
             </div>
         </section>
-
-    {*</form>*}
     {raw $checkoutReviewForm->renderEnd()}
 {/block}

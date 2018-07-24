@@ -228,7 +228,7 @@ form {
     border: 1px solid #aaaaaa;
     padding: 0 .625rem;
     font-size: rem-calc(17);
-    line-height: rem-calc(38);
+    line-height: rem-calc(36);
     height: rem-calc(38);
     vertical-align: middle;
     color: #272727;
@@ -244,20 +244,20 @@ form {
 
     @include breakpoint(sm up) {
       font-size: rem-calc(20);
-      line-height: rem-calc(46);
+      line-height: rem-calc(44);
       height: rem-calc(46);
     }
 
     @include breakpoint(medium up) {
       font-size: rem-calc(18);
-      line-height: $field-height-medium;
+      line-height: rem-calc(38);
       height: $field-height-medium;
     }
 
     @include breakpoint(large up) {
       max-width: $field-width-large;
       font-size: rem-calc(14);
-      line-height: $field-height-large;
+      line-height: rem-calc(22);
       height: $field-height-large;
     }
 
@@ -287,6 +287,11 @@ form {
         border: 1px solid $forest_green;
       }
     }
+  }
+
+  input[type=file]{
+    height: auto;
+    font-size: rem-calc(14);
   }
 
   /**

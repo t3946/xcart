@@ -36,7 +36,9 @@ class FormValidation {
      */
     processChange(event){
 
-        //console.log(event);
+        if(event.explicitOriginalTarget !== null && event.explicitOriginalTarget.classList.contains('clear-input')){
+            return;
+        }
 
         let inputElement = event.target;
         let inputElementName = inputElement.getAttribute('name');

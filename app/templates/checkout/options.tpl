@@ -71,12 +71,14 @@
                                 </h3>
                             </div>
                         </div>
+                        {*{$shipping|dd}*}
                         {if $shipping}
                             <div class="row">
                                 <div class="columns small-12">
                                     <div class="shipping-methods methods-table">
                                         {foreach $shipping as $quote first=$first}
                                             {set $shipping_model = $quote->shipping}
+                                            {if $shipping_model}
                                             <div class="methods-row">
 
                                                 <div class="methods-cell delivery-item-label">
@@ -98,6 +100,7 @@
 
                                             </div>
                                             <div class="methods-row-space"></div>
+                                            {/if}
                                         {/foreach}
                                     </div>
                                 </div>

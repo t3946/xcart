@@ -31,8 +31,8 @@ class ClearFormFields {
 
             this.clearFieldListener = this.clearField.bind(this, input);
             this.processChange = this.processChange.bind(this);
-            closeButton.addEventListener('click', this.clearFieldListener);
-            input.addEventListener('keyup', this.processChange);
+            closeButton.addEventListener('click', this.clearFieldListener, {'passive': false});
+            input.addEventListener('keyup', this.processChange, {'passive': false});
 
             this.closeButtons.push({
                 'input': input,
@@ -47,12 +47,17 @@ class ClearFormFields {
      */
     clearField(input, event){
 
-         let closeElement = event.target;
+       // event.stopPropagation();
+       // event.preventDefault();
+
+        let closeElement = event.target;
          let wrapper = closeElement.closest('.input-container');
 
          input.value = '';
          input.focus();
          wrapper.classList.remove('hasClose');
+
+       //  return false;
     }
 
 
@@ -62,7 +67,10 @@ class ClearFormFields {
      */
     processChange(event){
 
-         let inputElement = event.target;
+        //event.stopPropagation();
+        //event.preventDefault();
+
+        let inputElement = event.target;
          let wrapper = inputElement.closest('.input-container');
          if(inputElement.value !== '') {
              wrapper.classList.add('hasClose');
@@ -70,6 +78,7 @@ class ClearFormFields {
              wrapper.classList.remove('hasClose');
          }
 
+        //return false;
     }
 
 
@@ -79,8 +88,8 @@ class ClearFormFields {
     destructor(){
         for (let i = 0; i < this.closeButtons.length; ++i) {
             let info = this.closeButtons.item(i);
-            info['button'].removeEventListener('click', this.clearFieldListener);
-            info['input'].removeEventListener('keyup', this.processChange);
+            info['button'].removeEventListener('click', this.clearFieldListener, {'passive': false});
+            info['input'].removeEventListener('keyup', this.processChange, {'passive': false});//, {'passive': false}
             info['button'].remove();
         }
 

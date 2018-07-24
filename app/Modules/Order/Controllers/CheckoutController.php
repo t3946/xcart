@@ -17,6 +17,7 @@ use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\BillingAddressForm;
 use Modules\Order\Forms\BillingForm;
 use Modules\Order\Forms\CheckoutReviewForm;
+use Modules\Order\Forms\CustomerNotesForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
 use Modules\Order\Forms\PurchasingManagerForm;
 
@@ -366,87 +367,92 @@ class CheckoutController extends FrontendController
     public function actionReview(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_ORDER_REVIEW);
+        $order = $this->getOrder();
+        $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
+
+        if ($order->payment_method == 'Purchase Order') {
+            $this->purchaseOrderReview($order);
+        } else {
+            $this->defaultReview($order);
+        }
+    }
+
+    /**
+     * Review purchase order
+     * @param $order
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    private function purchaseOrderReview($order)
+    {
 
         /** @var Application $app */
         $app = Xcart::app();
-        $order = $this->getOrder();
-
-        $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3);
-
-//        $orderDetailsForm = new PurchaseOrderDetailsForm();
-//        $purchasingManagerForm = new PurchasingManagerForm();
-//        $accountsPayableForm = new AccountsPayableForm();
-
         $checkoutReviewForm = new CheckoutReviewForm();
 
         if ($app->request->getIsPost()) {
 
-//            $orderDetailsForm->populate($app->request->post);
-//            $purchasingManagerForm->populate($app->request->post);
-//            $accountsPayableForm->populate($app->request->post);
-
-
             $checkoutReviewForm->populate($app->request->post);
+            $customerNote = $checkoutReviewForm->getField('customer_notes')->getValue();
 
-//            if ($app->request->post->has('customer_notes')) {
-//                $order->setAttributes([
-//                    'customer_notes' => trim($checkoutReviewForm->getField('customer_notes')->getValue()),
-//                ]);
-//            }
+            if (!empty($customerNote)) {
+                $order->setAttributes([
+                    'customer_notes' => trim($checkoutReviewForm->getField('customer_notes')->getValue()),
+                ]);
+            }
 
-            if ($order->payment_method != 'Purchase Order' || $checkoutReviewForm->isValid()) {
+            if ($checkoutReviewForm->isValid()) {
 
-                if ($order->payment_method == 'Purchase Order') {
-                    /** @var OrderModel $extra */
-                    [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
-                    $extra->purchase_order = $checkoutReviewForm->getAttributes();
-                    $extra->save();
+                /** @var OrderModel $extra */
+                [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
+                $extra->purchase_order = $checkoutReviewForm->getAttributes();
+                $extra->save();
 
-                    if ($_FILES) {
-                        $files = PrepareData::fixFiles($_FILES)['PurchaseOrderDetailsForm'] ?? null;
-                    }
+                if ($_FILES) {
+                    $files = PrepareData::fixFiles($_FILES)['PurchaseOrderDetailsForm'] ?? null;
+                }
 
-                    if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
-                        $original_file = $files['purchase_order_file']['name'];
+                if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
+                    $original_file = $files['purchase_order_file']['name'];
 
-                        /** @var SiteModel $site */
-                        $site = Xcart::app()->getModule('Sites')->getSite();
+                    /** @var SiteModel $site */
+                    $site = Xcart::app()->getModule('Sites')->getSite();
 
-                        $po_model = new PurchaseOrderModel([
-                            'login' => Xcart::app()->user->login,
-                            'PO_number' => $checkoutReviewForm->getField('po_number')->getValue(),
-                            'storefront_id' => $site->storefrontid,
-                            'received_by' => 'website'
-                        ]);
+                    $po_model = new PurchaseOrderModel([
+                        'login' => Xcart::app()->user->login,
+                        'PO_number' => $checkoutReviewForm->getField('po_number')->getValue(),
+                        'storefront_id' => $site->storefrontid,
+                        'received_by' => 'website'
+                    ]);
 
-                        try {
-                            $ext = pathinfo($original_file)['extension'];
-                            if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $files['purchase_order_file']['tmp_name'], $ext)) {
-                                $po_model->setAttributes([
-                                    'status' => 'uploaded',
-                                    'order_id' => $order->orderid,
-                                    'file_name' => "{$po_model->PO_number}.{$ext}",
-                                    'original_po_file' => $original_file,
-                                ]);
-                                $order->orig_po = $site->getAbsoluteUrl() . sprintf('/files/purchase_orders/%s', $original_file);
-                                $order->po_number = $po_model->PO_number;
-                            }
-                            $po_model->status = 'entered';
-                            $po_model->save();
-                            $message = sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})");
-                        } catch (\Exception $ex) {
-                            $message = $ex->getMessage();
-                        } finally {
-                            (new LogModel([
-                                'resource_type' => 'purchase_orders',
-                                'resource_id' => $po_model->po_id,
-                                'type' => 'C',
-                                'login' => $app->user->login,
-                                'log' => $message
-                            ]))->save();
+                    try {
+                        $ext = pathinfo($original_file)['extension'];
+                        if (PurchaseOrderHelper::uploadPurchaseOrder($po_model, $files['purchase_order_file']['tmp_name'], $ext)) {
+                            $po_model->setAttributes([
+                                'status' => 'uploaded',
+                                'order_id' => $order->orderid,
+                                'file_name' => "{$po_model->PO_number}.{$ext}",
+                                'original_po_file' => $original_file,
+                            ]);
+                            $order->orig_po = $site->getAbsoluteUrl() . sprintf('/files/purchase_orders/%s', $original_file);
+                            $order->po_number = $po_model->PO_number;
                         }
+                        $po_model->status = 'entered';
+                        $po_model->save();
+                        $message = sprintf('PO# %s has been successfully entered', "{$order->getOrderNumber()} ({$po_model->original_po_file})");
+                    } catch (\Exception $ex) {
+                        $message = $ex->getMessage();
+                    } finally {
+                        (new LogModel([
+                            'resource_type' => 'purchase_orders',
+                            'resource_id' => $po_model->po_id,
+                            'type' => 'C',
+                            'login' => $app->user->login,
+                            'log' => $message
+                        ]))->save();
                     }
                 }
+
 
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
                 $order->date = time();
@@ -461,21 +467,57 @@ class CheckoutController extends FrontendController
         if (!$app->request->getIsPost() && $order) {
             /** @var OrderExtraModel $extra */
             $extra = $order->extra_model;
-//            $orderDetailsForm->setAttributes($extra->purchase_order ?? []);
-//            $purchasingManagerForm->setAttributes($extra->purchase_order ?? []);
-//            $accountsPayableForm->setAttributes($extra->purchase_order ?? []);
             $checkoutReviewForm->setAttributes($extra->purchase_order ?? []);
         }
-
 
         $this->display('checkout/review.tpl', [
             'order' => $order,
             'shipping_address' => $shipping_address,
             'billing_address' => $billing_address,
-//            'orderDetailsForm' => $orderDetailsForm,
-//            'purchasingManagerForm' => $purchasingManagerForm,
-//            'accountsPayableForm' => $accountsPayableForm
-            'checkoutReviewForm' => $checkoutReviewForm
+            'checkoutReviewForm' => $checkoutReviewForm,
+            'showAllForm' => true
+        ]);
+    }
+
+    /**
+     * Review default order
+     * @param $order
+     */
+    private function defaultReview($order)
+    {
+
+        /** @var Application $app */
+        $app = Xcart::app();
+        $customerNotesForm = new CustomerNotesForm();
+
+        if ($app->request->getIsPost()) {
+
+            $customerNotesForm->populate($app->request->post);
+            $customerNote = $customerNotesForm->getField('customer_notes')->getValue();
+            //dd($customerNote);
+
+            if (!empty($customerNote)) {
+
+                $order->setAttributes([
+                    'customer_notes' => trim($customerNotesForm->getField('customer_notes')->getValue()),
+                ]);
+            }
+
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
+            $order->date = time();
+            $order->save();
+
+            $this->redirect('checkout:payment');
+        }
+
+        [$shippingAddress, $billingAddress] = $order->getAddressInfo();
+
+        $this->display('checkout/review.tpl', [
+            'order' => $order,
+            'shipping_address' => $shippingAddress,
+            'billing_address' => $billingAddress,
+            'checkoutReviewForm' => $customerNotesForm,
+            'showAllForm' => false
         ]);
     }
 
