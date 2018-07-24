@@ -3850,13 +3850,22 @@ function func_get_refund_groups($orderid, $sfid)
             {
                 foreach ($v as $pid => $product)
                 {
+                    $o_d = OrderDetailModel::objects()->get(['itemid' => $pid]);
+
                     $product['storefrontid']             = $sfid;
                     $products[$mid][$pid]['itemid']      = $pid;
                     $products[$mid][$pid]['links']       = func_get_product_link_sf($product['productid'], $product['storefrontid']);
-                    $products[$mid][$pid]['extra_data']  = unserialize($product['extra_data']);
-                    $products[$mid][$pid]['product']     = $products[$mid][$pid]['extra_data']['product'];
-                    $products[$mid][$pid]['productcode'] = $products[$mid][$pid]['extra_data']['productcode'];
-                    $products[$mid][$pid]['price']       = $products[$mid][$pid]['extra_data']['price'];
+                    $products[$mid][$pid]['oProduct']    = ProductModel::objects()->get(['productid' => $product['productid']]);
+
+                    if ($o_d) {
+                        $products[$mid][$pid]['product']     = $o_d->product;
+                        $products[$mid][$pid]['productcode'] = $o_d->productcode;
+                        $products[$mid][$pid]['price']       = $o_d->price;
+                        $products[$mid][$pid]['oOrderDetail'] = $o_d;
+                    }
+
+                    $products[$mid][$pid]['subtotal'] += $products[$mid][$pid]['ref_price'] * $product['ref_qty'];
+
                     $products[$mid][$pid]['fee']         = func_calculate_fee($products[$mid][$pid]['price'], $product['ref_price']);
                 }
             }

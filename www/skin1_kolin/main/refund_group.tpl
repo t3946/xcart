@@ -33,7 +33,6 @@ vim: set ts=2 sw=2 sts=2 et:
   </td>
   <td>&nbsp;</td>
 </tr>
-
 {foreach from=$order.refund_groups[$mid].products item=product key=prod_num}
 <tr class="refund-distr-values-line{cycle values=", TableSubHead" name="cycle_`$mid`"}">
   <td class="refund-prod-title">
@@ -42,32 +41,26 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {* --------------------- *}
 
-{if $order.shipping_groups.$mid.products ne ""}
- {foreach from=$order.shipping_groups.$mid.products item=product_main key=key_main}
+    {if $product.oProduct->options->count()}
 
-    {if $product_main.orig_product_classes ne "" && $product_main.itemid eq $product.itemid}
-      {foreach from=$product_main.orig_product_classes item=item key=key_s}
-        {if $item.options ne ""}
-          <br /> {$item.classtext}
-          <select name="items[{$product_main.itemid}][classid_optionid][{$item.classid}]" disabled="disabled">
-          {foreach from=$item.options key=optionid item=option_values}
-          {assign var="tmp_optionid_key" value=`$option_values.classid`}
-          {assign var="tmp_optionid" value=`$product_main.product_options[$tmp_optionid_key].optionid`}
-            <option value="{$optionid}"
-              {if $tmp_optionid eq $optionid}
-                selected="selected"
-              {/if}
-            >{$option_values.option_name}</option>
-          {/foreach}
+      {foreach from=$product.oProduct->options item=option key=key}
+        {if $option->active}
+          <br/>
+          {assign var="p_option" value=$option->option->title}
+          {$p_option}
+          <select name="items[{$product.itemid}][classid_optionid][{$option->id}]">
+            <option>No options selected</option>
+            {foreach from=$option->variants item=variant}
+              <option value="{$variant->id}"
+                      {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option] === $variant->variant->name}
+                        selected="selected"
+                      {/if}
+              >{$variant}</option>
+            {/foreach}
           </select>
-        {elseif $product_main.product_options_txt ne ""}
-          <br />Options: {$product_main.product_options_txt}
         {/if}
       {/foreach}
     {/if}
-
- {/foreach}
-{/if}
 {* --------------------- *}
 
   </td>
@@ -112,7 +105,7 @@ vim: set ts=2 sw=2 sts=2 et:
   </td>
 *}
   <td align="right" nowrap="nowrap">
-    {if $product.extra_data.display_subtotal ne 0}({/if}{include file="currency2.tpl" value=$product.extra_data.display_subtotal}{if $product.extra_data.display_subtotal ne 0}){/if}
+    {if $product.subtotal > 0}({/if}{include file="currency2.tpl" value=$product.subtotal}{if $product.subtotal > 0}){/if}
   </td>
   <td align="center">
     {if !$static}
