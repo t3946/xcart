@@ -60892,9 +60892,11 @@ var FormValidation = function () {
         var inputElementName = inputElement.getAttribute('name');
         var currentRules = this.constraints[inputElementName];
 
-        if (typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined' && inputElement.value === '') {
-            this.clearAllClasses(inputElement);
-            return;
+        if (typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined') {
+            if (inputElement.value === '') {
+                this.clearAllClasses(inputElement);
+                return;
+            }
         }
 
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};

@@ -42,10 +42,11 @@ class FormValidation {
         let inputElementName = inputElement.getAttribute('name');
         let currentRules = this.constraints[inputElementName];
 
-        if(typeof currentRules === 'undefined' ||
-            (typeof currentRules.presence === 'undefined' && inputElement.value === '')){
-            this.clearAllClasses(inputElement);
-            return;
+        if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
+            if(inputElement.value === '') {
+                this.clearAllClasses(inputElement);
+                return;
+            }
         }
 
         let errors = formValidate(this.form, this.constraints) || {};
