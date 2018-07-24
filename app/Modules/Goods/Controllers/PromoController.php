@@ -31,7 +31,6 @@ class PromoController extends AbstractCatalogController
             'model' => Xcart::app()->getModule('Sites')->getSite(),
         ]);
 
-        $this->qs->filter(['avail__gt' => 10]);
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
             'title' => 'Bestsellers',

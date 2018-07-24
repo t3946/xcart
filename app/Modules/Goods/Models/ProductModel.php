@@ -633,10 +633,10 @@ class ProductModel extends Model implements ICartItem
     {
         return static::objects($instance)->filter([
             'forsale' => 'Y',
-            'sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite(),
+            'sites__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
             new QOr([
                 ['group_root__isnull' => true],
-                ['group_root__productid' => 'productid']
+                ['productid' => new Expression('group_root')],
             ])
         ]);
     }
