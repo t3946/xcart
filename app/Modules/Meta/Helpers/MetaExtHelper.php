@@ -140,7 +140,6 @@ class MetaExtHelper
             new QOr([
                 new QAnd(['url' => $connections->quote($url),  'site_code' => $site->code]),
                 new QAnd(['url' => $path, 'site_code' => $site->code]),
-                new QAnd(['url' => $path, 'site_id__isnull' => true]),
             ])
         ])
             ->order(['-site_id', '-url'])
