@@ -98,7 +98,7 @@ class MetaExtHelper
             $instance->setBaseCode($base_code);
             $instance->setParams($controller->getMetaTemplateParams());
             $instance->getNoIndexFlag($controller);
-            $instance->setCanonical($canonical ?? $controller->getCanonical());
+            $instance->setCanonical($controller->getCanonical());
 
             if ($instance->compose()) {
                 echo $instance->render();
