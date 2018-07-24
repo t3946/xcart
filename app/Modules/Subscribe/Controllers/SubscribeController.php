@@ -19,8 +19,6 @@ class SubscribeController extends FrontendController
         /** @var SiteModel $site_model */
         $site_model = Xcart::app()->getModule('Sites')->getSite();
 
-        Xcart::app()->flash->success("Confirmation email was sent. Please check your inbox.");
-
         $sfid = $site_model->storefrontid;
 
         $email = $request->get->get('subscribe')['email'];
@@ -31,15 +29,16 @@ class SubscribeController extends FrontendController
 
         if ($email_validator->validate($email)) {
 
-            if (!(SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]))) {
-                (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
+            $subscriber = SubscriberModel::objects()->get(['email' => $email, 'sfid' => $sfid]);
 
-//                echo Xcart::app()->mail::renderTemplate(
-//                    'subscribe_mail.tpl',
-//                    [
-//                        'key' => $nonce,
-//                    ]
-//                );
+            if ($subscriber && $subscriber->subscribe) {
+                Xcart::app()->flash->success('You have already subscribed');
+                $this->redirect('/');
+            }
+
+            if (!$subscriber) {
+                (new SubscriberModel(['email' => $email, 'sfid' => $sfid, 'nonce' => $nonce]))->save();
+            }
 
             Xcart::app()->mail->template(
                 $email,
@@ -50,7 +49,9 @@ class SubscribeController extends FrontendController
                     'role' => $sfid,
                 ]
             );
-            }
+            Xcart::app()->flash->success('Confirmation email was sent. Please check your inbox.');
+        } else {
+            Xcart::app()->flash->success('Your email address is invalid. Please enter a valid address.');
         }
 
         $this->redirect('/');
@@ -62,27 +63,29 @@ class SubscribeController extends FrontendController
         $nonce = $request->post->get('hide');
         $sfid = $request->post->get('role');
 
-        if (!$sub_model = SubscriberModel::objects()->get(['nonce' => $nonce])){
-            /** @var SiteModel $site_model */
-            $site_model = SiteModel::objects()->get(['storefrontid' => $sfid]);
+        if ($nonce) {
+            if ($sub_model = SubscriberModel::objects()->get(['nonce' => $nonce])) {
 
-            Xcart::app()->flash->success("You have already subscribed");
+                $sub_model->subscribe = true;
+                $sub_model->nonce = '';
+                $sub_model->update(['subscribe', 'nonce']);
 
-            $this->redirect($site_model->getAbsoluteUrl());
+                /** @var SiteModel $site_model */
+                $site_model = SiteModel::objects()->get(['storefrontid' => $sub_model->sfid]);
+
+                Xcart::app()->flash->success("Thank you! Subscription confirmed");
+
+                $this->redirect($site_model->getAbsoluteUrl());
+            } else {
+                /** @var SiteModel $site_model */
+                if ($sfid !== null && $site_model = SiteModel::objects()->get(['storefrontid' => $sfid])) {
+
+                    Xcart::app()->flash->success("You have already subscribed");
+
+                    $this->redirect($site_model->getAbsoluteUrl());
+                }
+            }
         }
-
-
-        $sub_model = SubscriberModel::objects()->get(['nonce' => $nonce]);
-        $sub_model->subscribe = true;
-        $sub_model->nonce = '';
-        $sub_model->update(['subscribe', 'nonce']);
-
-        /** @var SiteModel $site_model */
-        $site_model = SiteModel::objects()->get(['storefrontid' => $sub_model->sfid]);
-
-        Xcart::app()->flash->success("Thank you! Subscription confirmed");
-
-        $this->redirect($site_model->getAbsoluteUrl());
 
     }
 

@@ -12,7 +12,7 @@ class InfoBlockAdmin extends Admin
 {
     public function getSearchColumns()
     {
-        return ['name', 'key'];
+        return ['name', 'tag'];
     }
 
     public function getForm()

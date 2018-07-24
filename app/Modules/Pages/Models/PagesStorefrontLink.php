@@ -13,7 +13,6 @@ class PagesStorefrontLink extends Model
     {
         return [
 
-            'id' => AutoField::class,
             'page' => [
                 'field' => 'page_id',
                 'class' => ForeignField::className(),

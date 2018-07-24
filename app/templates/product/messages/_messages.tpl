@@ -15,12 +15,12 @@
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
         {/if}
 
-        {if $model->mult_order_quantity == 'Y' && $model->min_amount > 1}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "multiply-quantity" text="Order in multiples of {$model->min_amount} items"}
-        {/if}
-
-        {if $model->min_amount >= $model->avail}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "last-items" text="Order at least {$model->avail} items"}
+        {if $model->min_amount > 1}
+            {if $model->mult_order_quantity == 'Y'}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "multiply-quantity" text="Order in multiples of {$model->min_amount} items"}
+            {else}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "last-items" text="Order at least {$model->min_amount} items"}
+            {/if}
         {/if}
 
     {else}

@@ -19,17 +19,28 @@
                     {$title}
                 </h1>
 
-                {*{if $model->description}*}
-                {*<section class="description show-for-medium">*}
-                    {*<div class="row">*}
-                        {*<div class="columns large-10">*}
-                            {*<article class="content must-show-less" data-text-more="Read more" data-text-less="Read less" itemprop="description">*}
-                                {*{raw $model->description}*}
-                            {*</article>*}
-                        {*</div>*}
-                    {*</div>*}
-                {*</section>*}
-                {*{/if}*}
+                {set $site = $.app->getModule('Sites')->getSite()}
+                {set $description = $.fetch_info_block('bestsellers', null, ['sfcode' => $site->code])}
+
+                {if $description}
+                <div class="description show-for-medium">
+                    <div class="row">
+                        <div class="columns large-10 must-show-less">
+                            <div class="relative">
+                                <article class="content must-show-less" itemprop="description">
+                                    {$description}
+                                </article>
+                                <div class="gradient collapse-gradient"></div>
+                            </div>
+
+                            {ignore}
+                                <a class="show_more" onclick="$(this).hide().siblings('.show_less').show().end().siblings('.relative').find('article.must-show-less').addClass('full').end().find('.gradient').removeClass('gradient')">Read more</a>
+                                <a class="show_less" onclick="$(this).hide().siblings('.show_more').show().end().siblings('.relative').find('article.must-show-less').removeClass('full').end().find('.collapse-gradient').addClass('gradient')">Read less</a>
+                            {/ignore}
+                        </div>
+                    </div>
+                </div>
+                {/if}
 
             </div>
         </div>

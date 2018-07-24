@@ -24,17 +24,17 @@ class PagesForm extends ModelForm
     {
         return [
             PagesModule::t('Main information') => [
-                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published'
+                'name', 'url', 'parent', 'is_index', 'no_index', 'is_published',
             ],
             PagesModule::t('Content') => [
-                'content_short', 'content'
+                'content_short', 'content',
             ],
             PagesModule::t('Additional') => [
-                'published_at', 'file', 'sites'
+                'published_at', 'file', 'sites',
             ],
             PagesModule::t('Display settings') => [
-                'view', 'view_children', 'sorting'
-            ]
+                'view', 'view_children', 'sorting',
+            ],
         ];
     }
 
@@ -46,28 +46,28 @@ class PagesForm extends ModelForm
             'is_published' => CheckboxField::className(),
             'content_short' => [
                 'class' => TextAreaField::className(),
-                'label' => PagesModule::t('Short content')
+                'label' => PagesModule::t('Short content'),
             ],
             'content' => [
                 'class' => EditorField::className(),
-                'label' => PagesModule::t('Content')
+                'label' => PagesModule::t('Content'),
             ],
             'view' => [
                 'class' => DropDownField::className(),
                 'choices' => Page::getViews(),
-                'label' => PagesModule::t('View')
+                'label' => PagesModule::t('View'),
             ],
             'view_children' => [
                 'class' => DropDownField::className(),
                 'choices' => Page::getViews(),
 //                'hint' => PagesModule::t('View for children pages'),
-                'label' => PagesModule::t('View children')
+                'label' => PagesModule::t('View children'),
             ],
             'published_at' => [
                 'class' => DateTimeField::className(),
                 'html' => [
                     'readonly' => 'readonly',
-                ]
+                ],
             ],
             'file' => ImageField::className(),
 //            'published_at' => DateTimeField::className()
@@ -75,11 +75,17 @@ class PagesForm extends ModelForm
                 'class' => DropDownField::className(),
                 'multiple' => true,
                 'choices' => function() {
-                    return ['' => ''] + array_filter(SiteModel::objects()->all(),
-                        function($model){
-                            /** @var SiteModel $model */
-                            return $model->isWork();
-                        });
+                    $models = SiteModel::objects()->all();
+                    $mass = [];
+                    $mass[''] = '';
+                    /** @var SiteModel $model */
+                    foreach ($models as $model) {
+                        if ($model->isWork()) {
+                            $mass[ $model->storefrontid ] = $model;
+                        }
+                    }
+
+                    return $mass;
                 },
             ],
         ];
@@ -88,7 +94,7 @@ class PagesForm extends ModelForm
     public function getInlines()
     {
         return [
-            ['meta' => MetaInlineForm::className()]
+            ['meta' => MetaInlineForm::className()],
         ];
     }
 

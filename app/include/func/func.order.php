@@ -145,7 +145,7 @@ function func_get_group_totals($group_products, $group_shipping)
             $result['pst'] += price_format($product['extra_data']['taxes']['PST']['tax_value']);
         }
 
-        $result['gross'] += $product['display_subtotal'];
+        $result['gross'] = $result['net'] + $result['gst'] + $result['pst'];
 
         if (!empty($product['discounted_price'])) {
             $result['coupon_discount'] += (($product['price'] * $product['amount']) - $product['discounted_price']);

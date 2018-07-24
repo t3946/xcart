@@ -77,6 +77,21 @@ $remove: (
         //max-width: rem-calc(100);
         max-width: 100%;
       }
+
+      .not-avail-thumb {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #efefef;
+        color: #a6a6a6;
+        min-height: rem-calc(85);
+
+        p {
+          margin: 0;
+        }
+      }
     }
 
     .name {

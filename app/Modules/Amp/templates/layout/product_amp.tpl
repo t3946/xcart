@@ -10,6 +10,7 @@
         {/if}
         {block 'seo'}
                 <title>{if $model->title_tag} {$model->title_tag} {else} {$model->getFrontendName()} {/if}</title>
+                <meta name="description" content="{if $model->seo_meta_descr} {$model->seo_meta_descr} {else} Buy {$model->getFrontendName()|escape|strip} online at {$site->getFrontendName()}. {$category->category|escape|strip} at cheap prices. Sale up to 50% {/if}" />
         {/block}
 
 {block 'head'}

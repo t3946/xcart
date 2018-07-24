@@ -54,7 +54,7 @@
 
             <div class="tabs-panel tab-{$tab.code}" id="{$tab.code}">
                 <div class="tab-s3 tab-content">
-                    <h2>{$tab.name}</h2>
+                    <div class="h2">{$tab.name}</div>
                     <div class="content">
                         {raw $tab.content}
                     </div>

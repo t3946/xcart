@@ -224,7 +224,7 @@
                 po.defer = true;
                 var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://') + 1)) : '';
                 var location = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
-                po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r=' + referrer + '&l=' + location;
+                po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(hide_offline)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r=' + referrer + '&l=' + location;
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
             }, 10000);
@@ -261,6 +261,27 @@
                         d.addEventListener("DOMContentLoaded", f, false);
                     } else { f(); }
                 })(document, window, "yandex_metrika_callbacks2");
+                {/if}
+
+                {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+                {if $google_review && 1!=1}
+                window.___gcfg = {
+                    lang: 'en_US'
+                };
+                var g_id = '{$google_review}';
+                {ignore}
+                window.renderBadge = function() {
+                    var ratingBadgeContainer = document.getElementById("g_review");
+                    window.gapi.load('ratingbadge', function() {
+                        window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
+                    });
+                };
+                {/ignore}
+
+                var gr = document.createElement('script');
+                gr.type = 'text/javascript';
+                gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
+                var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
                 {/if}
 
             },6000);

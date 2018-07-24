@@ -12,5 +12,7 @@
          itemscope
          itemprop="image">
 {else}
-    <img src="//via.placeholder.com/200x200/efefef/a6a6a6/?text=No+image" alt="Image not available">
+    <div class="not-avail-thumb">
+        <p>Image not available</p>
+    </div>
 {/if}

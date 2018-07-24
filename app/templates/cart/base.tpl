@@ -92,12 +92,10 @@
                                 <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
                                     {if !$item.url || $breadcrumbs->getActive() == $key}
                                         <span class="step-link">
-                                            <span class="step-number">{$key+1}</span>
                                             <span class="step-label">{$item['label']}</span>
                                         </span>
                                     {else}
                                         <a href="{$item['url']}" class="step-link" rel="nofollow">
-                                            <span class="step-number">{$key+1}</span>
                                             <span class="step-label">{$item['label']}</span>
                                         </a>
                                     {/if}

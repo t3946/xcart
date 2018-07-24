@@ -186,7 +186,8 @@
                     <div class="cart_buttons">
                         <a class="button waves waves-orange yellow-white see-other" href="{$item->getAbsoluteUrl()}">
                             <span class="text">
-                                See {$item->getFrontendChilds()->count()} product variation
+                                {set $pv = $item->getFrontendChilds()->count()}
+                                See {$pv} product variation{if $pv > 1}s{/if}
                             </span>
                         </a>
                     </div>

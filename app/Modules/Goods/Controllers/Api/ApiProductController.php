@@ -56,10 +56,17 @@ class ApiProductController extends Controller
                 && ShippingHelper::isUSAContiguous($state_model))
             {
                 if ($free_ship_q = ShippingHelper::getQtyForFreeShipping($model, $state_model, $geo_ip->postalCode)) {
+
+                    if ($free_ship_q > 1) {
+                        $free_text = "Buy {$free_ship_q} items for Free Shipping";
+                    } else {
+                        $free_text = 'Free Shipping for US';
+                    }
+
                     $result['shipping']['free_shipping'] = $this->render('product/messages/_p_label.tpl',
                         [
                             'cls' => 'fill free-shipping',
-                            'text' => "Buy {$free_ship_q} item".($free_ship_q > 1 ? 's' : '') .' for Free Shipping'
+                            'text' => $free_text
                         ]
                     );
                 }

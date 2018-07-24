@@ -7,6 +7,7 @@ use Modules\Admin\Contrib\NestedAdmin;
 use Modules\Pages\Forms\PagesForm;
 use Modules\Pages\Models\Page;
 use Modules\Pages\PagesModule;
+use Xcart\App\Orm\Model;
 
 /**
  * Class PageAdmin
@@ -16,10 +17,10 @@ class PageAdmin extends NestedAdmin
 {
     public $linkColumn = 'name';
 
-    public function getListColumns()
-    {
-        return ['name'];
-    }
+//    public function getListColumns()
+//    {
+//        return ['name'];
+//    }
 
     public function getSearchColumns()
     {
@@ -39,6 +40,16 @@ class PageAdmin extends NestedAdmin
     public static function getName()
     {
         return PagesModule::t('Pages');
+    }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        if ($property === 'sites') {
+            return nl2br(implode("\n", $item->sites->all()));
+        }
+
+        return parent::getItemProperty($item, $property);
+
     }
 
 //    public function getNames($model = null)
