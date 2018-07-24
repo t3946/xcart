@@ -10,7 +10,7 @@ class PromotionalProductsHelper
 {
     public static function getProductOfTheDay() :? ProductModel
     {
-        $qs = self::getBestsellersSQ();
+        $qs = self::getProductsOfTheDaySQ();
         if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
             return $product;
         }
@@ -19,11 +19,27 @@ class PromotionalProductsHelper
     }
 
 
-    public static function getBestsellersSQ(): \Xcart\App\Orm\Manager
+    public static function getProductsOfTheDaySQ(): \Xcart\App\Orm\Manager
     {
         $qs = ProductModel::showed();
 
         if ($arr = self::getStaticProductsOfTheDay(
+            Xcart::app()->getModule('Sites')->getSite()))
+        {
+            $qs->filter(['pk__in' => $arr]);
+        }
+        else {
+            $qs->limit(20)->order(['?']);
+        }
+
+        return $qs;
+    }
+
+    public static function getBestsellersSQ(): \Xcart\App\Orm\Manager
+    {
+        $qs = ProductModel::showed();
+
+        if ($arr = self::getStaticProductsBestsellers(
             Xcart::app()->getModule('Sites')->getSite()))
         {
             $qs->filter(['pk__in' => $arr]);
