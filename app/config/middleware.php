@@ -34,4 +34,7 @@ return [
     'ExpireHeaders' => [
         'class' => '\Modules\User\Middleware\ExpireHeadersMiddleware'
     ],
+    'MetaMiddleware' => [
+        'class' => '\Modules\Meta\Middleware\MetaMiddleware'
+    ],
 ];
