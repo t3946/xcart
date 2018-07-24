@@ -7,6 +7,7 @@ use Modules\Meta\Forms\MetaForm;
 use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Model;
 
 class MetaAdmin extends Admin
 {
@@ -22,6 +23,16 @@ class MetaAdmin extends Admin
             $columns[] = 'site';
         }
         return $columns;
+    }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        if ($property === 'site') {
+            return nl2br($item->site->code);
+        }
+
+        return parent::getItemProperty($item, $property);
+
     }
 
     public function getModel()
