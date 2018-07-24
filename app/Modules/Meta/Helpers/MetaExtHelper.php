@@ -138,8 +138,8 @@ class MetaExtHelper
         /** @var Meta $meta */
         $meta = Meta::objects()->filter([
             new QOr([
-                new QAnd(['url' => $connections->quote($url),  'site_id' => $site->pk]),
-                new QAnd(['url' => $path, 'site_id' => $site->pk]),
+                new QAnd(['url' => $connections->quote($url),  'site_code' => $site->code]),
+                new QAnd(['url' => $path, 'site_code' => $site->code]),
                 new QAnd(['url' => $path, 'site_id__isnull' => true]),
             ])
         ])
