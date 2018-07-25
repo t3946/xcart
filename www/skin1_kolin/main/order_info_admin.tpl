@@ -603,13 +603,13 @@ function check_r_fields(){
 
 {assign var="GROUP_cost_to_us" value="0"}
 
-{foreach from=$v.products item=product key=prod_num}
+{foreach from=$v.products item=product key=prod_num name=order_detail}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
     {if $product.coupon_discount > 0}
         <i class="m icon discount float__left margin__first_image"></i>
     {/if}
-    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.oProduct->getFrontendName()}</a>
+    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
