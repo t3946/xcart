@@ -32,6 +32,7 @@ class ShippingForm extends FrontendModelForm
         $contactForm = new ContactInfoForm();
 
         $this->_shippingFields = $shippingForm->getFields();
+        $this->_shippingFields[$shippingForm->replacement.'firstname']['html']['data-duplicate'] = $this->getName().'_firstname';
         $this->_contactFields = $contactForm->getFields();
     }
 

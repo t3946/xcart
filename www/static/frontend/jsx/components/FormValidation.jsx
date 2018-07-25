@@ -162,8 +162,8 @@ class FormValidation {
      */
     dispatchSuccess(item){
         let detail = {
-            'value' : item.value,
-            'callback' : this.success
+            'value' : item.querySelector('input').value,
+            'callback' : this.success.bind(this)
         };
         let event = new CustomEvent('form_validation.success', { 'detail': detail });
         item.dispatchEvent(event);

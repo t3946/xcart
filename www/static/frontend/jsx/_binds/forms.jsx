@@ -31,6 +31,18 @@ documentReady(() => {
     }, false);
 
 
+    let f_fields = document.querySelectorAll('.form-field');
 
-
+    for (let i = 0; f_fields.length > i; ++i) {
+        f_fields[i].addEventListener('form_validation.success', function(event){
+            let d_id = event.target.querySelector('input').dataset.duplicate || null;
+            if (d_id && d_id.length) {
+                let fname = document.getElementById(d_id);
+                if (!fname.value.length) {
+                    fname.value = event.detail.value;
+                    event.detail.callback(fname);
+                }
+            }
+        });
+    }
 });
