@@ -60959,6 +60959,7 @@ var FormValidation = function () {
         if (!field.classList.contains('compound-field')) {
             this.removeError(element, field);
             this.itemAddSuccess(field);
+            this.dispatchSuccess(field);
 
             return;
         }
@@ -60975,11 +60976,15 @@ var FormValidation = function () {
 
         this.removeError(element, field);
         this.itemAddSuccess(field);
+        this.dispatchSuccess(field);
     };
 
     FormValidation.prototype.itemAddSuccess = function itemAddSuccess(item) {
         item.classList.remove('invalid');
         item.classList.add('success');
+    };
+
+    FormValidation.prototype.dispatchSuccess = function dispatchSuccess(item) {
         var detail = {
             'value': item.value,
             'callback': this.success

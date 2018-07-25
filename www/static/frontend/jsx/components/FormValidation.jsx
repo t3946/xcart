@@ -125,6 +125,7 @@ class FormValidation {
             //console.log(field, field.classList);
             this.removeError(element, field);
             this.itemAddSuccess(field);
+            this.dispatchSuccess(field);
             //console.log('!compound-field success');
             return;
         }
@@ -142,6 +143,7 @@ class FormValidation {
 
         this.removeError(element, field);
         this.itemAddSuccess(field);
+        this.dispatchSuccess(field);
         //console.log('compound-field success');
     }
 
@@ -152,6 +154,13 @@ class FormValidation {
     itemAddSuccess(item){
         item.classList.remove('invalid');
         item.classList.add('success');
+    }
+
+    /**
+     * Dispatch event form_validation.success if field is valid
+     * @param item
+     */
+    dispatchSuccess(item){
         let detail = {
             'value' : item.value,
             'callback' : this.success
