@@ -4,10 +4,8 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\Validation\PhoneValidator;
-use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
-use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Validation\EmailValidator;
 use Xcart\App\Validation\PhoneExtValidator;
 

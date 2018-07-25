@@ -13,7 +13,7 @@ use Xcart\App\Behaviours\Interfaces\IBehavior;
 use Xcart\App\Form\FormView\FormViewBehavior;
 use Xcart\App\Helpers\Creator;
 
-trait BehaviorsTrait
+trait MixinTrait
 {
 
     /**

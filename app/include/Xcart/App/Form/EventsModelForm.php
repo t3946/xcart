@@ -11,7 +11,7 @@ namespace Xcart\App\Form;
 
 use Xcart\App\Form\Traits\FormBehaviourRenderTrait;
 
-abstract class DecoratedModelForm extends ModelForm
+abstract class EventsModelForm extends ModelForm
 {
     use FormBehaviourRenderTrait;
 

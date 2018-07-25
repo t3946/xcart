@@ -8,13 +8,11 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use RuntimeException;
-use Xcart\App\Behaviours\Traits\BehaviorsTrait;
+use Xcart\App\Behaviours\Traits\MixinTrait;
 use Xcart\App\Behaviours\Interfaces\IObjectBehavior;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Traits\Configurator;
 use Xcart\App\Traits\RenderTrait;
 use Xcart\App\Validation\Interfaces\IValidateObject;
@@ -29,7 +27,7 @@ use Xcart\App\Validation\Traits\ValidateObject;
  */
 abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject, IObjectBehavior
 {
-    use Accessors, Configurator, ValidateObject, RenderTrait, BehaviorsTrait;
+    use Accessors, Configurator, ValidateObject, RenderTrait, MixinTrait;
 
     /**
      * @var array

@@ -13,10 +13,10 @@ use Modules\Core\Behaviours\ClientValidationBehavior;
 use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Core\Behaviours\FrontendFormDisplayBehavior;
 use RuntimeException;
-use Xcart\App\Form\DecoratedModelForm;
+use Xcart\App\Form\EventsModelForm;
 use Xcart\App\Traits\RenderTrait;
 
-abstract class FrontendModelForm extends DecoratedModelForm
+abstract class FrontendModelForm extends EventsModelForm
 {
     use RenderTrait;
 
