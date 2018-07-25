@@ -20,18 +20,18 @@ trait AddressAttributesReplacement
 
         foreach ($data as $key=>$val)
         {
-
             if (\is_string($val)) {
                 $t_data[$key] = trim($val);
             }
         }
+
         if (strpos($data[$this->replacement . 'address'], "\n")) {
             $t = explode("\n", $t_data[$this->replacement . 'address']);
             $t_data[$this->replacement . 'address'] = $t[0];
             $t_data[$this->replacement . 'address_2'] = $t[1];
         }
 
-        if ($t_data['state'] && $t_data['country']) {
+        if ($t_data[$this->replacement . 'state'] && $t_data[$this->replacement . 'country']) {
             /** @var StateModel $sModel */
             if ($sModel =  StateModel::objects()->get([
                 'code' => $t_data[$this->replacement . 'state'],
