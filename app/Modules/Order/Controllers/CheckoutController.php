@@ -409,7 +409,7 @@ class CheckoutController extends FrontendController
                 $extra->save();
 
                 if ($_FILES) {
-                    $files = PrepareData::fixFiles($_FILES)['PurchaseOrderDetailsForm'] ?? null;
+                    $files = PrepareData::fixFiles($_FILES)['CheckoutReviewForm'] ?? $_FILES['CheckoutReviewForm'];
                 }
 
                 if (!empty($files['purchase_order_file']) && $files['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
@@ -465,9 +465,14 @@ class CheckoutController extends FrontendController
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
         if (!$app->request->getIsPost() && $order) {
-            /** @var OrderExtraModel $extra */
-            $extra = $order->extra_model;
-            $checkoutReviewForm->setAttributes($extra->purchase_order ?? []);
+            $purchase_manager = [
+                'name_of_purchaser' => $order->firstname,
+                'purchase_manager_phone' => $order->phone,
+                'phone_ext' => $order->phone_ext,
+                'purchase_manager_email' => $order->email,
+                'purchase_manager_fax' => $order->fax,
+            ];
+            $checkoutReviewForm->setAttributes(array_merge($purchase_manager, $order->extra_model->purchase_order ?? []));
         }
 
         $this->display('checkout/review.tpl', [
