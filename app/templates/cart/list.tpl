@@ -135,7 +135,11 @@
                             </div>
 
                             <div class="table-column remove">
-                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide" onclick="loader.load(this)"></a>
+                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide" onclick="loader.load(this)">
+                                    <object type="image/svg+xml" data="/static/frontend/dist/images/icons/cart/icons-delete.svg" >
+                                        X
+                                    </object>
+                                </a>
                             </div>
 
                         </div>

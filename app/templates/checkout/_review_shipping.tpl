@@ -7,7 +7,7 @@
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2 class="margin-bottom-default">{t 'Contact information' dict='order'}</h2>
+                <h2 class="">{t 'Contact information' dict='order'}</h2>
             </div>
         </div>
         <div class="row full-name">
@@ -41,7 +41,7 @@
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2 class="margin-bottom-default">{t 'Delivery methods' dict='order'}</h2>
+                <h2 class="">{t 'Delivery methods' dict='order'}</h2>
             </div>
         </div>
         {foreach $order->groups as $group}
@@ -58,14 +58,14 @@
         {/foreach}
         <div class="row align-center">
             <div class="columns small-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' dict='order'}</a>
             </div>
         </div>
     </div>
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2 class="margin-bottom-default">{t 'Payment method' dict='order'}</h2>
+                <h2 class="">{t 'Payment method' dict='order'}</h2>
             </div>
         </div>
         <div class="row payment-method info-row">
@@ -76,7 +76,7 @@
         </div>
         <div class="row align-center">
             <div class="columns small-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' dict='order'}</a>
             </div>
         </div>
     </div>

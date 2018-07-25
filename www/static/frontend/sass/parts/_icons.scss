@@ -13,11 +13,29 @@
   }
 
   &.cart_remove {
-    &:after {
-      width: rem-calc(18);
-      height: rem-calc(22);
-      background-image: url('../images/icons/cart/remove.svg');
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+
+    object{
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      vertical-align: middle;
     }
+
+    //&:after {
+    //  width: rem-calc(15);
+    //  height: rem-calc(15);
+    //  background: url('../images/icons/cart/icons-delete.svg') 0 0 no-repeat;
+    //  display: inline-block;
+    //  position: relative;
+    //}
   }
 
   &.retailTrust {
