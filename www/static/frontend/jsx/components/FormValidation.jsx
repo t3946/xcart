@@ -152,6 +152,12 @@ class FormValidation {
     itemAddSuccess(item){
         item.classList.remove('invalid');
         item.classList.add('success');
+        let detail = {
+            'value' : item.value,
+            'callback' : this.success
+        };
+        let event = new CustomEvent('form_validation.success', { 'detail': detail });
+        item.dispatchEvent(event);
     }
 
     /**

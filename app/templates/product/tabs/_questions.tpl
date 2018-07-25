@@ -16,7 +16,7 @@
                     {raw $form->render()}
                 </div>
             </div>
-            <div class="row align-center">
+            <div class="row align-center submit-button-container">
                 <div class="column no-padding small-12">
                     <div class="buttons text-center">
                         <button type="submit" class="button yellow-white waves waves-orange waves-effect">
