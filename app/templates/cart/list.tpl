@@ -60,9 +60,9 @@
                             {t 'Extended'  dict='cart'}
                         </div>
 
-                        <div class="table-column remove">
-                            {t 'Remove'  dict='cart'}
-                        </div>
+                        {*<div class="table-column remove">*}
+                            {*{t 'Remove'  dict='cart'}*}
+                        {*</div>*}
                     </div>
                     <div class="table-body">
                         {foreach $items as $key=>$position}
@@ -100,11 +100,31 @@
 
                                 </div>
 
+                                <div class="close-wide-screen show-for-large">
+                                    <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                        <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
+                                            <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
+                                            <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
+                                        </svg>
+                                    </a>
+                                </div>
+
+
+
                                 <div class="table-column price show-for-large format_price">
                                     US$ <span class="price" var-price>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
+                                    <div class="close-wide-screen show-for-medium hide-for-large">
+                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                            <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
+                                                <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
+                                                <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+
                                     <div class="table-column quantity">
                                         <div class="inline-block">
                                             <div class="quantity-group">
@@ -131,14 +151,14 @@
                                         </span>
                                     </div>
                                 </div>
-
                             </div>
 
-                            <div class="table-column remove">
-                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide" onclick="loader.load(this)">
-                                    <object type="image/svg+xml" data="/static/frontend/dist/images/icons/cart/icons-delete.svg" >
-                                        X
-                                    </object>
+                            <div class="table-column remove hide-for-medium">
+                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                    <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
+                                        <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
+                                        <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
+                                    </svg>
                                 </a>
                             </div>
 

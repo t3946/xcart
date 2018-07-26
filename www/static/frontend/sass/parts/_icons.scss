@@ -13,29 +13,41 @@
   }
 
   &.cart_remove {
-    border: 1px solid #bfbfbf;
-    border-radius: 3px;
     width: 30px;
     height: 30px;
-    line-height: 28px;
     display: inline-block;
     position: relative;
-    text-align: center;
 
-    object{
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      vertical-align: middle;
+    .delete_icon_container{
+      display: block;
+      border-radius: 3px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #db2828;
+      .delete_icon {
+        fill: #db2828;
+      }
+
+      @include breakpoint(large) {
+        border: 1px solid #bfbfbf;
+        .delete_icon {
+          fill: #bfbfbf;
+        }
+      }
+
     }
 
-    //&:after {
-    //  width: rem-calc(15);
-    //  height: rem-calc(15);
-    //  background: url('../images/icons/cart/icons-delete.svg') 0 0 no-repeat;
-    //  display: inline-block;
-    //  position: relative;
-    //}
+    @include breakpoint(large) {
+      &:hover{
+
+        .delete_icon_container{
+          border: 1px solid #db2828;
+          .delete_icon {
+            fill: #db2828;
+          }
+        }
+      }
+    }
   }
 
   &.retailTrust {
