@@ -666,6 +666,15 @@ $remove: (
         }
       }
     }
+
+    .head {
+      h2 {
+
+        &.cart-number {
+          font-size: rem-calc(24);
+        }
+      }
+    }
   }
 
   .button {

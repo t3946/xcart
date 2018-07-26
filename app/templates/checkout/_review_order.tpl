@@ -70,10 +70,15 @@
                     {/foreach}
                 </div>
                 <div class="group-info order-table-row">
-                    {if $order_group->shippingModel}
+                    {set $shippingModel = $order_group->shippingModel}
+                    {if $shippingModel}
                         <div class="sum-info shipping">
                                 <span class="sum-info-label">
-                                    {t 'Shipping by' dict='order'} {$order_group->shippingModel->getFrontendName()}:
+                                    {if $shippingModel->is_free_shipping}
+                                        {$shippingModel->getFrontendName()}:
+                                    {else}
+                                        {t 'Shipping by' dict='order'} {$shippingModel->getFrontendName()}:
+                                    {/if}
                                     {* не должно быть пробела! *}
                                 </span><span class="sum">
                                     US$ <span class="price">{$order_group->shipping_gross|number_format:2}</span>

@@ -387,6 +387,7 @@
     line-height: rem-calc(19);
     margin-top: rem-calc(13);
     margin-bottom: .5rem;
+    border-bottom: 1px solid #e1e1e1;
 
     @include breakpoint(sm) {
       font-size: rem-calc(20);

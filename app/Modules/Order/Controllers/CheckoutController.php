@@ -123,7 +123,14 @@ class CheckoutController extends FrontendController
     public function actionAutoCompleteCountry(): void
     {
         if ($search = Xcart::app()->request->get->get('search')) {
-            $countries = CountryModel::objects()->filter(['name__contains' => $search])->limit(10)->order([new Expression("FIELD(code, 'US', 'CA') DESC, code")])->valuesList(['name', 'code'], false);
+
+            $filter = ['name__contains' => $search];
+
+            if (array_key_exists($search, CountryModel::$codes)) {
+                $filter = ['code' => CountryModel::$codes[$search]];
+            }
+
+            $countries = CountryModel::objects()->filter($filter)->limit(10)->order([new Expression("FIELD(code, 'US', 'CA') DESC, code")])->valuesList(['name', 'code'], false);
         }
 
         $this->jsonResponse($countries ?? []);
