@@ -386,6 +386,7 @@
     text-align: left;
     line-height: 19px;
     margin-top: 13px;
+    border-bottom: 1px solid #e1e1e1;
 
     @include breakpoint(sm) {
       font-size: 20px;

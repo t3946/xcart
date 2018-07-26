@@ -129,9 +129,7 @@
     {get_assets:raw type='js' position='head'}
 
     {block 'css_preload'}
-        <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" onload="var url = parseUrl(this.href);
-              window.app.assets.css[url.document].loaded = true;
-              document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));">
+        {insert '_parts/_css_preload.tpl'}
     {/block}
 
 </head>
