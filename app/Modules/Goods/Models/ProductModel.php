@@ -184,6 +184,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductVideosModel::class,
                 'link' => ['productid' => 'product_id'],
             ],
+            'files' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductFileModel::class,
+                'link' => ['productid' => 'productid'],
+            ],
 
             'descr' => [
                 'class' => CharField::class,

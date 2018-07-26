@@ -33,6 +33,16 @@
                     }
                 {/if}
 
+                {set $files = $model->files->all()}
+                {if $files}
+                    {foreach $files as $file}
+                        {include 'product/tabs/__option.tpl'
+                            title=$file->description
+                            value="<div class='row'><div style='line-height: 5em;'><img src='{$file->getFormatIconUrl()}'></img></div><div class='columns small-9 end'><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
+                        }
+                    {/foreach}
+                {/if}
+
             </div>
         </div>
 
