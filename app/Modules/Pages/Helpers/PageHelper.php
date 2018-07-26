@@ -50,7 +50,6 @@ class PageHelper
         }
 
         $members[4]['post'] = "Connoisseur of <br>beauty and aesthetics";
-        $members[7]['post'] = "The person who’s given <br>nicknames for others :)";
 
         return ['content' => $content, 'members' => $members];
     }
