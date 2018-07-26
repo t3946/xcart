@@ -4,6 +4,7 @@ namespace Modules\Pages\Controllers;
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Meta\Types\MetaType;
+use Modules\Pages\Helpers\PageHelper;
 use Modules\Pages\Models\Page;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -99,7 +100,8 @@ class PageController extends FrontendController
         return $this->render($this->getView($model), [
             'model' => $model,
             'pager' => $pager,
-            'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread)
+            'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread),
+            'helper' => new PageHelper(),
         ]);
     }
 }
