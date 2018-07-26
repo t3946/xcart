@@ -45,7 +45,7 @@ class PageHelper
             preg_match($regexp_2, $name, $matches_2);
 
             $members[$key]['post'] = trim($matches_2[1]);
-            $members[$key]['photo'] = str_replace('/', '\\',$model->getField('photo')->getUrl());
+            $members[$key]['photo'] = $model->getField('photo')->getUrl();
             $members[$key]['name'] = trim($matches[1][0]);
         }
 
