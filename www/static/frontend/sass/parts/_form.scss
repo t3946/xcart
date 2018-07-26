@@ -56,9 +56,9 @@ form {
   /* sets when user tried to submit form */
 
 
-  @include breakpoint(large) {
-    padding-top: rem-calc(30);
-  }
+  //@include breakpoint(large) {
+  //  padding-top: rem-calc(30);
+  //}
 
   //.checkout-shipping {
 
@@ -159,7 +159,7 @@ form {
         background-origin: content-box;
         background-size: contain;
         display: inline-block;
-        margin-left: rem-calc(3);
+        margin-left: rem-calc(11);
         content: '';
         background: url("../images/icons/cart/arrow_right_checkout.svg") no-repeat;
       }
