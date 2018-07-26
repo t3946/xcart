@@ -23,7 +23,7 @@
                 <div class="head">
                     <div class="nop"></div>
 
-                    <h2>{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
+                    <h2 class="cart-number">{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
 
                 </div>
                 {/if}
