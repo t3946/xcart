@@ -48,6 +48,10 @@
         &.checkout-review-title {
           display: none !important;
         }
+        &.shipping-review-title {
+          text-align: center;
+
+        }
       }
 
       @include breakpoint(large) {
@@ -63,6 +67,7 @@
             right: 1.25rem;
             left: 1.25rem;
           }
+          text-align: center;
 
         }
       }
