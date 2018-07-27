@@ -166,6 +166,10 @@
               font-size: rem-calc(18);
               line-height: rem-calc(21);
               min-height: rem-calc(63);
+
+              &.price-info {
+                text-align: right;
+              }
             }
 
             @include breakpoint(large) {
@@ -175,6 +179,11 @@
               padding: rem-calc(14) .625rem;
               text-align: center;
               min-height: auto;
+
+              &.extended {
+                text-align: right;
+                padding-right: rem-calc(20);
+              }
             }
 
             &.sku {
@@ -230,6 +239,11 @@
             text-align: center;
             line-height: 100%;
             padding: rem-calc(14) .5rem;
+
+            &.extended {
+              text-align: right;
+              padding-right: rem-calc(20);
+            }
           }
         }
       }
@@ -322,13 +336,14 @@
           display: inline-block;
           padding-left: .625rem;
           @include breakpoint(medium) {
-            text-align: left;
-            min-width: 17.1939%;
+            //text-align: left;
+            //min-width: 17.1939%;
             padding: 0 .625rem;
           }
           @include breakpoint(large) {
-            min-width: 14.6774%;
-            text-align: center;
+            //min-width: 14.6774%;
+            //text-align: right;
+            padding-right: rem-calc(20);
           }
 
           &.underline {
@@ -388,13 +403,14 @@
         padding-left: .625rem;
 
         @include breakpoint(medium) {
-          text-align: left;
-          min-width: 17.1939%;
+          //text-align: left;
+          //min-width: 17.1939%;
           padding: 0 .625rem;
         }
         @include breakpoint(large) {
-          min-width: 14.6774%;
-          text-align: center;
+          //min-width: 14.6774%;
+          //text-align: center;
+          padding-right: rem-calc(20);
         }
       }
     }
