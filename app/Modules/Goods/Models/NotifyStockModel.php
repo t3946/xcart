@@ -29,6 +29,12 @@ class NotifyStockModel extends Model
                 'link' => ['productid' => 'productid'],
             ],
 
+            'first_name' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => false,
+            ],
+
             'email' => [
                 'class' => CharField::class,
                 'null' => false,
