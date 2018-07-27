@@ -102,10 +102,7 @@
 
                                 <div class="close-wide-screen show-for-large">
                                     <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
-                                        <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
-                                            <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
-                                            <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
-                                        </svg>
+                                        {include 'cart/_close_icon.tpl'}
                                     </a>
                                 </div>
 
@@ -118,10 +115,7 @@
                                 <div class="table-wrapper quantity-extended">
                                     <div class="close-wide-screen show-for-medium hide-for-large">
                                         <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
-                                            <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
-                                                <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
-                                                <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
-                                            </svg>
+                                            {include 'cart/_close_icon.tpl'}
                                         </a>
                                     </div>
 
@@ -155,10 +149,7 @@
 
                             <div class="table-column remove hide-for-medium">
                                 <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
-                                    <svg class="delete_icon_container" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
-                                        <rect class="delete_icon" width="2" height="16" transform="translate(20.3137 8) rotate(45)"/>
-                                        <rect class="delete_icon" width="2" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
-                                    </svg>
+                                    {include 'cart/_close_icon.tpl'}
                                 </a>
                             </div>
 

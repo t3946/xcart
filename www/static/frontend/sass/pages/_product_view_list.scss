@@ -1,0 +1,130 @@
+.product-group-container {
+
+  /** ширина таблицы */
+  $table-width: (
+          small: rem-calc(299),
+          sm: rem-calc(350),
+          medium: rem-calc(728),
+          ml: rem-calc(898),
+          large: rem-calc(725),
+  );
+
+  /** минимальная ширина колонки с изображением товара */
+  $image-column-min-width: (
+          small: rem-calc(44),
+          sm: rem-calc(53)
+  );
+
+  /** максимальная ширина колонки с изображением товара */
+  $image-column-max-width: (
+          small: rem-calc(53),
+  );
+
+  /** минимальная ширина колонки с количеством товара */
+  $quantity-column-min-width: (
+          small: rem-calc(53),
+          sm: rem-calc(62),
+          medium: rem-calc(89),
+          large: rem-calc(62),
+  );
+
+  /** максимальная ширина колонки с количеством товара */
+  $quantity-column-max-width: (
+          small: rem-calc(62),
+          sm: rem-calc(89),
+          ml: rem-calc(62),
+  );
+
+  /** ширина колонки с изображением товара в процентах */
+  $image-column-percents: (
+          small: 14.716%,
+          sm: 15.143%,
+          medium: 7.28%,
+          ml: 5.902%,
+          large: 7.31%,
+  );
+
+  /** ширина колонки с количеством товара в процентах */
+  $quantity-column-percents: (
+          small: 17.725%,
+          sm: 17.714%,
+          medium: 12.225%,
+          ml: 9.911%,
+          large: 8.552%,
+  );
+
+  /** ширина колонки с названиями товара в процентах */
+  $title-column-percents: (
+          small: 67.559%,
+          sm: 67.143%,
+          medium: 80.495%,
+          ml: 84.187%,
+          large: 84.138%,
+  );
+
+  .table-product-group {
+    display: table;
+    width:100%;
+
+    .table-row {
+      display: table-row;
+
+      .table-cell {
+        display: table-cell;
+
+        &.image {
+          text-align: right;
+
+          @each $breakpoint, $percents in $image-column-percents {
+            @include breakpoint($breakpoint up) {
+              width: $percents;
+            }
+          }
+
+          @each $breakpoint, $min-width in $image-column-min-width {
+            @include breakpoint($breakpoint up) {
+              min-width: $min-width;
+            }
+          }
+
+          @each $breakpoint, $max-width in $image-column-max-width {
+            @include breakpoint($breakpoint up) {
+              max-width: $max-width;
+            }
+          }
+
+        }
+
+        &.quantity {
+          @each $breakpoint, $percents in $quantity-column-percents {
+            @include breakpoint($breakpoint up) {
+              width: $percents;
+            }
+          }
+
+          @each $breakpoint, $min-width in $quantity-column-min-width {
+            @include breakpoint($breakpoint up) {
+              min-width: $min-width;
+            }
+          }
+
+          @each $breakpoint, $max-width in $quantity-column-max-width {
+            @include breakpoint($breakpoint up) {
+              max-width: $max-width;
+            }
+          }
+        }
+
+        &.title {
+          @each $breakpoint, $percents in $title-column-percents {
+            @include breakpoint($breakpoint up) {
+              width: $percents;
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+}
