@@ -50,10 +50,12 @@
         background-color: #dfe5e8;
       }
 
+      &.checkout-review-title {
+        display: none !important;
+      }
+
       @include breakpoint(medium) {
-        &.checkout-review-title {
-          display: none !important;
-        }
+
         &.shipping-review-title {
           text-align: center;
 
