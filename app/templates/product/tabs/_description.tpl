@@ -36,10 +36,12 @@
                 {set $files = $model->files->all()}
                 {if $files}
                     {foreach $files as $file}
-                        {include 'product/tabs/__option.tpl'
-                            title=$file->description
-                            value="<div class='row align-middle'><div class='columns shrink'><img src='{$file->getFormatIconUrl()}'></img></div><div class='columns '><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
-                        }
+                        {if $file->isFileExists()}
+                            {include 'product/tabs/__option.tpl'
+                                title=$file->description
+                                value="<div class='row align-middle'><div class='columns shrink'><img src='{$file->getFormatIconUrl()}'></img></div><div class='columns '><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
+                            }
+                        {/if}
                     {/foreach}
                 {/if}
 

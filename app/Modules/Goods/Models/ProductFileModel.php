@@ -51,6 +51,17 @@ class ProductFileModel extends Model
 
     }
 
+    public function isFileExists() :bool
+    {
+        $path = Paths::get('www') . "/{$this->getAbsoluteUrl()}";
+        if (file_exists($path)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public function getFormatIconUrl() :string
     {
         $file_path = Paths::get('www') . "/static/frontend/dist/images/icons/file_format/{$this->getFileFormat()}.svg";
