@@ -1,71 +1,60 @@
 .checkout-review-form {
 
   .checkout-po{
-    padding-bottom: rem-calc(24);
+    padding-bottom: rem-calc(10);
+    margin-top: 1rem;
 
     @include breakpoint(medium) {
       padding-bottom: rem-calc(10);
     }
   }
-  .customer-notes {
 
-    //padding-top: 1.2rem;
-    //padding-bottom: rem-calc(8);
-    //
-    //
-    //.field-title {
-    //  padding-bottom: .8rem;
-    //
-    //  .comment {
-    //    display: none;
-    //  }
-    //}
-    //
-    //@include breakpoint(medium){
-    //  .field-row {
-    //    .field-title {
-    //      width: 34%;
-    //    }
-    //    .field{
-    //      width: 66%;
-    //    }
-    //  }
-    //}
-
-    //@include breakpoint(medium) {
-    //  margin: 1rem 0 1.5rem 0;
-    //}
-    //
-    //h2 {
-    //  text-align: left;
-    //  font-size: rem-calc(17);
-    //  margin: .5rem 0;
-    //
-    //  @include breakpoint(sm) {
-    //    font-size: rem-calc(20);
-    //  }
-    //
-    //}
-    //
-    //textarea {
-    //  height: rem-calc(90);
-    //
-    //  @include breakpoint(large) {
-    //    width: 80%;
-    //    max-width: 80%;
-    //  }
-    //}
-
+  .additional-button-mobile {
+    margin-bottom: rem-calc(26);
   }
 
-  .submit-order-button {
-    //width: 100%;
-    //font-size: rem-calc(25);
-    //height: 2.5em;
-    //
-    //@include breakpoint(medium) {
-    //  width: auto;
-    //  padding: 0 rem-calc(40);
-    //}
+  .column-with-button{
+    position: relative;
+
+    .additional-button-large{
+      height: rem-calc(58);
+      line-height: rem-calc(56);
+      border-radius: 4px;
+      padding: 0 rem-calc(34) 0 rem-calc(42);
+      position: absolute;
+      top: 0;
+      right: .625rem;
+      font-size: rem-calc(25);
+      width: auto;
+      min-width: auto;
+
+      .long-label{
+        display: none;
+      }
+
+      @include breakpoint(large) {
+
+        height: rem-calc(50);
+        line-height: rem-calc(48);
+        padding: 0 rem-calc(20) 0 rem-calc(24);
+        font-size: rem-calc(18);
+        right: 1.25rem;
+
+        .long-label{
+          display: inline;
+        }
+        .short-label{
+          display: none;
+        }
+
+        &:after {
+          width: rem-calc(14);
+          height: rem-calc(14);
+        }
+      }
+
+    }
   }
+
+
 }

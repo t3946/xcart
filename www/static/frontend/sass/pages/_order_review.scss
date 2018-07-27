@@ -131,10 +131,11 @@
       @include breakpoint(medium) {
         font-size: rem-calc(20);
         line-height: 100%;
+        margin-top: rem-calc(38);
       }
       @include breakpoint(large) {
         font-size: rem-calc(18);
-        margin: rem-calc(20) 0;
+        margin: rem-calc(24) 0 rem-calc(20);
       }
     }
 

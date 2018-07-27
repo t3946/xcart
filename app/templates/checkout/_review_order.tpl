@@ -1,6 +1,12 @@
 <div class="row align-center show-for-medium">
-    <div class="column">
+    <div class="column column-with-button">
         <h1 class="text-center">{$header}</h1>
+
+        <button type="submit" class="button submit yellow waves waves-orange waves-effect show-for-medium additional-button-large">
+            <span class="short-label">{t 'Submit' dict='order'}</span>
+            <span class="long-label">{t 'Submit order' dict='order'}</span>
+        </button>
+
     </div>
 </div>
 <div class="row">

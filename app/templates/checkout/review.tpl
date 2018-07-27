@@ -67,6 +67,16 @@
             </section>
         {/if}
 
+        <div class="row align-center hide-for-medium additional-button-mobile">
+            <div class="column small-12">
+                <div class="buttons text-center">
+                    <button type="submit" class="button submit yellow waves waves-orange waves-effect">
+                        {t 'Submit order' dict='order'}
+                    </button>
+                </div>
+            </div>
+        </div>
+
         {include "checkout/_review_info.tpl" order = $order}
 
         <section class="customer-notes">
