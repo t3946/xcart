@@ -1,8 +1,10 @@
 <div class="option">
     <div class="title">{$title}</div>
     <div class="value" >
-        <span class="multiline">
-            {$value}
-        </span>
+        {if ($bool)}
+            <span class="multiline" style="vertical-align: bottom">{$value}</span>
+        {else}
+            <span class="multiline">{$value}</span>
+        {/if}
     </div>
 </div>

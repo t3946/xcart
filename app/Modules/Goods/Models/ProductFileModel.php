@@ -62,4 +62,14 @@ class ProductFileModel extends Model
         }
         //   "/static/frontend/dist/images/icons/file_fromat/{$this->>getFileFormat()}.svg";
     }
+
+    public function isNeedBottomAlign() :bool
+    {
+        if (strlen($this->description) > 20){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

@@ -39,6 +39,7 @@
                         {include 'product/tabs/__option.tpl'
                             title=$file->description
                             value="<div class='row align-middle'><div class='columns shrink'><img src='{$file->getFormatIconUrl()}'></img></div><div class='columns '><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
+                            bool=$file->isNeedBottomAlign()
                         }
                     {/foreach}
                 {/if}
