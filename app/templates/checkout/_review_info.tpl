@@ -1,6 +1,6 @@
 <ul class="accordion order-review-info-tabs" data-accordion  data-allow-all-closed="true">
 
-    <li class="accordion-item" data-accordion-item>
+    <li class="accordion-item is-active" data-accordion-item>
         <a href="#" class="accordion-title checkout-review-title">{t 'Product ordered' dict='order'}</a>
         <div class="accordion-content checkout-review-container" data-tab-content>
             <section class="checkout-review">
