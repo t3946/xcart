@@ -73,14 +73,14 @@
                     {set $shippingModel = $order_group->shippingModel}
                     {if $shippingModel}
                         <div class="sum-info shipping">
-                                <span class="sum-info-label">
+                                <span class="sum-info-label underline">
                                     {if $shippingModel->is_free_shipping}
                                         {$shippingModel->getFrontendName()}:
                                     {else}
                                         {t 'Shipping by' dict='order'} {$shippingModel->getFrontendName()}:
                                     {/if}
                                     {* не должно быть пробела! *}
-                                </span><span class="sum">
+                                </span><span class="sum underline">
                                     US$ <span class="price">{$order_group->shipping_gross|number_format:2}</span>
                                 </span>
                         </div>

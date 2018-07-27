@@ -1,5 +1,9 @@
 .checkout-shipping {
 
+  @include breakpoint(large) {
+    margin-top: 1rem;
+  }
+
   .mandatory {
     @include breakpoint(large) {
       margin-top: 2em;
