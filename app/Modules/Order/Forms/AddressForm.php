@@ -45,7 +45,7 @@ abstract class AddressForm extends FrontendForm
                 'class' => CharField::class,
                 'label' => 'Address',
                 'required' => true,
-                'hint' => 'Street address please, we don\'t ship to P . O . boxes',
+                'hint' => 'Street address please, we don\'t ship to P.O. boxes',
                 'html' => [
                     'placeholder' => '112 Mercer Street',
                 ],
