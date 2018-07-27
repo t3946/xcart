@@ -43,14 +43,9 @@
   display: none;
   position: absolute;
   min-width: rem-calc(345);
-  //height: rem-calc(420);
   background: $white;
   z-index: 100;
-
-  //right: rem-calc(-20);
   right: 0;
-  //border: 1px solid #0e2431;
-  //border-top: none;
   padding-bottom: rem-calc(58);
 
   .product-list {
@@ -186,7 +181,7 @@
       text-transform: uppercase;
 
       &:after {
-        margin-left: .3125rem;
+        margin-left: rem-calc(10);
         content: "";
         background: url('../images/icons/cart/arrow_right_checkout.svg') 0 0 no-repeat;
         width: 15px;

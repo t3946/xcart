@@ -345,7 +345,6 @@ $remove: (
 
       @include breakpoint(large up) {
         font-size: rem-calc(16);
-        padding-right: 24px;
       }
 
       .table-row {
@@ -364,6 +363,9 @@ $remove: (
         .extended_remove {
           @include breakpoint(sm down) {
             font-size: 1.08em;
+          }
+          @include breakpoint(large) {
+            padding-right: 24px;
           }
         }
       }
@@ -508,7 +510,6 @@ $remove: (
   .head {
     text-align: center;
     min-height: 2.5em;
-    //padding-top: 3rem;
     clear: both;
     overflow: hidden;
 
@@ -669,20 +670,16 @@ $remove: (
 
     .head {
       h2 {
-
         &.cart-number {
           font-size: rem-calc(24);
+          text-align: center;
         }
       }
     }
   }
 
   .button {
-    //line-height: 2;
-    //min-height: rem-calc(38);
-    //padding: 0 rem-calc(10);
     text-transform: uppercase;
-    //font-size: rem-calc(18);
     font-weight: 700;
   }
 }

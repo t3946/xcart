@@ -10,7 +10,7 @@
     </li>
 
     <li class="accordion-item shipping-review" data-accordion-item>
-        <a href="#" class="accordion-title shipping-review-title">{t 'Shipping and Billing Address' dict='order'}</a>
+        <a href="#" class="accordion-title shipping-review-title">{t 'Shipping and Billing Information' dict='order'}</a>
         <div class="accordion-content shipping-review-container" data-tab-content>
             <section class="shipping-review" data-tab-content>
                 {include "checkout/_review_shipping.tpl" order = $order }

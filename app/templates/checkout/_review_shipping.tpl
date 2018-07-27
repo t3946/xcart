@@ -32,11 +32,11 @@
         {include "checkout/_address_view_full.tpl" info=$billing_address uri='checkout:options' header=$.t('Billing Address','order')}
     </div>
 </div>
-<div class="row">
-    <div class="small-12 columns">
-        <div class="hr-info"></div>
-    </div>
-</div>
+{*<div class="row">*}
+    {*<div class="small-12 columns">*}
+        {*<div class="hr-info"></div>*}
+    {*</div>*}
+{*</div>*}
 <div class="row delivery">
     <div class="columns small-12 large-6">
         <div class="row">

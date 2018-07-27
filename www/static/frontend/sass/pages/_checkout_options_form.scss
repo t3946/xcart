@@ -299,7 +299,10 @@
 
       .billing_address_form_container {
         margin-left: -50%;
-        margin-right: 50%;
+        //margin-right: 50%;
+        .field-row .field {
+          width: 100%;
+        }
       }
     }
   }
