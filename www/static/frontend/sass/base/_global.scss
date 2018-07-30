@@ -155,4 +155,14 @@
   }
 }
 
+a.dashed {
+  text-decoration: none;
+  &:hover {
+    color: #055a93;
+    span {
+      border-bottom: 1px dashed #055a93;
+    }
+  }
+}
+
 
