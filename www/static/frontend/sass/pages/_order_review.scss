@@ -111,7 +111,17 @@
 
 }
 
+
 .checkout-review {
+
+  @include breakpoint(medium) {
+    margin-top: .7rem;
+  }
+
+  @include breakpoint(large) {
+    margin-top: 1.7rem;
+  }
+
 
   h1 {
     margin: 0 !important;

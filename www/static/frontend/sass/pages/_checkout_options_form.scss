@@ -5,6 +5,10 @@
   $large-font-size: rem-calc(14);
   margin-top: 1rem;
 
+  .product-group-shipping {
+    padding-bottom: rem-calc(34);
+  }
+
   .payment-methods-container{
 
       //margin-top: rem-calc(10);
@@ -13,7 +17,7 @@
       //}
 
     @include breakpoint(large) {
-     // margin-top: 2rem;
+      margin-top: 2rem;
 
       h2 {
         margin-bottom: rem-calc(12);
@@ -23,12 +27,24 @@
 
   h3 {
     font-size: rem-calc(15);
+    margin-bottom: rem-calc(15);
     font-weight: bold;
     line-height: rem-calc(22);
     text-align: center;
 
+    @include breakpoint(sm) {
+      font-size: rem-calc(18);
+      margin-bottom: rem-calc(20);
+    }
+
+    @include breakpoint(medium) {
+      font-size: rem-calc(20);
+    }
+
     @include breakpoint(large) {
       text-align: left;
+      font-size: rem-calc(15);
+      margin-bottom: rem-calc(12);
     }
   }
 

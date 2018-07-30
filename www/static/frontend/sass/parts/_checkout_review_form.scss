@@ -11,6 +11,15 @@
 
   .additional-button-mobile {
     margin-bottom: rem-calc(26);
+
+    @include breakpoint(small only) {
+        margin-top: rem-calc(15);
+        margin-bottom: rem-calc(15);
+    }
+    @include breakpoint(sm only) {
+      margin-top: rem-calc(20);
+      margin-bottom: rem-calc(20);
+    }
   }
 
   .column-with-button{

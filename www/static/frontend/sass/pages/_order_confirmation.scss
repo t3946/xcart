@@ -6,31 +6,31 @@
 
 
 ///Users/anna/git/xcart/www/static/frontend/images/logos/s3stores_logo.svg
-#content-wrapper12{
-  //background: url("../../demo_images/templates/large_Payment.jpg") 50% -1065px no-repeat;
-  background: url("../../demo_images/templates/small_Payment (Purchas order).jpg") 50% 3px no-repeat;
-
-  @include breakpoint(sm){
-    background: url("../../demo_images/templates/sm_Payment (Purchas order).jpg") 50% -2px no-repeat;
-  }
-  @include breakpoint(medium){
-    //746
-   // background: url("../../demo_images/templates/medium_Payment.jpg") 50% -16px no-repeat;
-    //background: url("../../demo_images/templates/medium_Payment.jpg") 50% -30px no-repeat;
-    background: url("../../demo_images/templates/medium_Payment.jpg") 50% -26px no-repeat;
-  }
-  @include breakpoint(ml){
-    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% -13px no-repeat;
-    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% 4px no-repeat;
-    background: url("../../demo_images/templates/ml_Payment.jpg") 50% -51px no-repeat;
-    padding: 0 10px;
-  }
-  @include breakpoint(large){
-    background: url("../../demo_images/templates/large_Payment.jpg") 50% -20px no-repeat;
-    padding: 0;
-    //1279
-  }
-}
+//#content-wrapper12{
+//  //background: url("../../demo_images/templates/large_Payment.jpg") 50% -1065px no-repeat;
+//  background: url("../../demo_images/templates/small_Payment (Purchas order).jpg") 50% 3px no-repeat;
+//
+//  @include breakpoint(sm){
+//    background: url("../../demo_images/templates/sm_Payment (Purchas order).jpg") 50% -2px no-repeat;
+//  }
+//  @include breakpoint(medium){
+//    //746
+//   // background: url("../../demo_images/templates/medium_Payment.jpg") 50% -16px no-repeat;
+//    //background: url("../../demo_images/templates/medium_Payment.jpg") 50% -30px no-repeat;
+//    background: url("../../demo_images/templates/medium_Payment.jpg") 50% -26px no-repeat;
+//  }
+//  @include breakpoint(ml){
+//    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% -13px no-repeat;
+//    //background: url("../../demo_images/templates/ml_Payment.jpg") 50% 4px no-repeat;
+//    background: url("../../demo_images/templates/ml_Payment.jpg") 50% -51px no-repeat;
+//    padding: 0 10px;
+//  }
+//  @include breakpoint(large){
+//    background: url("../../demo_images/templates/large_Payment.jpg") 50% -20px no-repeat;
+//    padding: 0;
+//    //1279
+//  }
+//}
 
 .order-confirmation-breadcrumbs{
 
@@ -368,7 +368,7 @@
     }
 
     .order-review .price-info {
-    width: auto;
+      width: auto;
     }
   }
 
