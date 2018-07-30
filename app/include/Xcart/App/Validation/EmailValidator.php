@@ -45,7 +45,7 @@ class EmailValidator extends Validator
      */
     public $required = true;
 
-    private $message = 'Is not a valid email address';
+    private $message = 'Email address is invalid';
 
     public function __construct($required = true)
     {
