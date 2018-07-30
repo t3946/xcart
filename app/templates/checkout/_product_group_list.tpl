@@ -1,20 +1,21 @@
-<div class="product-group-container">
-    <div class="table-product-group">
-        {foreach $items as $key=>$position}
-            <div class="table-row">
-                <div class="table-cell image">
-                    {include 'catalog/parts/_item_image.tpl' model=$position->object}
+<div id="product-group-{$gi}" class="product-group-container" data-toggler=".show">
+    <div class="table-product-wrapper">
+        <div class="table-product-group">
+            {foreach $items as $key=>$position}
+                <div class="table-row">
+                    <div class="table-cell image">
+                        {include 'catalog/parts/_item_image.tpl' model=$position->object}
+                    </div>
+                    <div class="table-cell quantity">
+                        {$position->quantity}
+                    </div>
+                    <div class="table-cell title">
+                        {$position->object}
+                    </div>
                 </div>
-                <div class="table-cell quantity">
-                    {$position->quantity}
-                </div>
-                <div class="table-cell title">
-                    {$position->object}
-                </div>
-            </div>
-        {/foreach}
-    </div>
-    <a class="table-product-group-close-line">
+            {/foreach}
+        </div>
+        <a class="table-product-group-close-line" data-toggle="product-group-{$gi}">
         <span class="label-hide-items">
             <span class="up-icon-text">Hide items</span>
             <span class="up-icon">
@@ -23,5 +24,6 @@
                 </svg>
             </span>
         </span>
-    </a>
+        </a>
+    </div>
 </div>

@@ -94,191 +94,217 @@
           large: rem-calc(28),
   );
 
-  @include breakpoint(medium) {
-    border: 2px solid #c2c2c2;
+
+  height: 0;
+  visibility: hidden;
+
+
+  &.show {
+    height: auto;
+    visibility: visible;
   }
 
-  .table-product-group {
-    display: table;
-    width: 100%;
-    color: #5c5c5c;
-    border: {
-      top: 1px solid #dbdbdb;
-      bottom: 1px solid #dbdbdb;
-    };
 
-    @each $breakpoint, $size in $table-font-size {
-      @include breakpoint($breakpoint up) {
-        font-size: $size;
-      }
+  .table-product-wrapper {
+    @include breakpoint(medium) {
+      border: 2px solid #c2c2c2;
+      margin-bottom: rem-calc(20);
     }
 
-    @each $breakpoint, $size in $table-vertical-padding {
-      @include breakpoint($breakpoint up) {
-        padding-top: $size;
-        @if $breakpoint == 'small' or $breakpoint == 'sm' {
-            padding-bottom: $size;
+    .table-product-group {
+      display: table;
+      width: 100%;
+      color: #5c5c5c;
+      border: {
+        top: 1px solid #dbdbdb;
+        bottom: 1px solid #dbdbdb;
+      };
+
+      @each $breakpoint, $size in $table-font-size {
+        @include breakpoint($breakpoint up) {
+          font-size: $size;
         }
       }
-    }
 
-    @include breakpoint(medium) {
-      border: 0;
-      padding: {
-        right: rem-calc(8);
-        left: rem-calc(8);
-        bottom: 0;
-      }
-    }
-
-    .table-row {
-      display: table-row;
-
-      .table-cell {
-        display: table-cell;
-        vertical-align: middle;
-
-        @each $breakpoint, $size in $table-vertical-padding {
-          @include breakpoint($breakpoint up) {
+      @each $breakpoint, $size in $table-vertical-padding {
+        @include breakpoint($breakpoint up) {
+          @if $breakpoint == 'small' or $breakpoint == 'sm' {
             padding: {
               top: $size;
               bottom: $size;
             };
+          } @else {
+            padding: {
+              top: 0;
+              bottom: 0;
+            };
           }
         }
-
-        @include breakpoint(medium) {
-          border-bottom: 1px solid #e1e1e1;
-        }
-
-        &.image {
-          text-align: right;
-
-          @include breakpoint(sm) {
-            padding-left: rem-calc(9);
-          }
-
-          @each $breakpoint, $percents in $image-column-percents {
-            @include breakpoint($breakpoint up) {
-              width: $percents;
-            }
-          }
-
-          @each $breakpoint, $min-width in $image-column-min-width {
-            @include breakpoint($breakpoint up) {
-              min-width: $min-width;
-            }
-          }
-
-          @each $breakpoint, $max-width in $image-column-max-width {
-            @include breakpoint($breakpoint up) {
-              max-width: $max-width;
-            }
-          }
-
-          img {
-            max-width: rem-calc(44);
-          }
-
-        }
-
-        &.quantity {
-
-          text-align: center;
-          padding: {
-            right: 1rem;
-            left: 1rem;
-          };
-
-          @each $breakpoint, $percents in $quantity-column-percents {
-            @include breakpoint($breakpoint up) {
-              width: $percents;
-            }
-          }
-
-          @each $breakpoint, $min-width in $quantity-column-min-width {
-            @include breakpoint($breakpoint up) {
-              min-width: $min-width;
-            }
-          }
-
-          @each $breakpoint, $max-width in $quantity-column-max-width {
-            @include breakpoint($breakpoint up) {
-              max-width: $max-width;
-            }
-          }
-        }
-
-        &.title {
-          @each $breakpoint, $percents in $title-column-percents {
-            @include breakpoint($breakpoint up) {
-              width: $percents;
-            }
-          }
-        }
-
       }
 
-      //&:first-child {
-      //  .table-cell {
-      //    @include breakpoint(medium) {
-      //      border-top: 0;
-      //    }
-      //  }
-      //}
-    }
-
-  }
-
-  .table-product-group-close-line {
-    color: #055a93;
-    text-align: center;
-    cursor: pointer;
-    display: block;
-    text-decoration: none;
-
-    @each $breakpoint, $size in $hide-font-size {
-      @include breakpoint($breakpoint up) {
-        font-size: $size;
+      @include breakpoint(medium) {
+        border: 0;
+        padding: {
+          right: rem-calc(8);
+          left: rem-calc(8);
+        }
       }
-    }
-    @each $breakpoint, $height in $hide-height {
-      @include breakpoint($breakpoint up) {
-        height: $height;
-        line-height: $height - rem-calc(2);
+
+      .table-row {
+        display: table-row;
+
+        .table-cell {
+          display: table-cell;
+          vertical-align: middle;
+
+          @each $breakpoint, $size in $table-vertical-padding {
+            @include breakpoint($breakpoint up) {
+              padding: {
+                top: $size;
+                bottom: $size;
+              };
+            }
+          }
+
+          @include breakpoint(medium) {
+            border-bottom: 1px solid #e1e1e1;
+          }
+
+          @include breakpoint(large) {
+            border-bottom: 2px solid #e1e1e1;
+          }
+
+          &.image {
+            text-align: right;
+
+            @include breakpoint(sm) {
+              padding-left: rem-calc(9);
+            }
+
+            @each $breakpoint, $percents in $image-column-percents {
+              @include breakpoint($breakpoint up) {
+                width: $percents;
+              }
+            }
+
+            @each $breakpoint, $min-width in $image-column-min-width {
+              @include breakpoint($breakpoint up) {
+                min-width: $min-width;
+              }
+            }
+
+            @each $breakpoint, $max-width in $image-column-max-width {
+              @include breakpoint($breakpoint up) {
+                max-width: $max-width;
+              }
+            }
+
+            img {
+              max-width: rem-calc(44);
+              min-width: rem-calc(44);
+            }
+
+          }
+
+          &.quantity {
+
+            text-align: center;
+            padding: {
+              right: 1rem;
+              left: 1rem;
+            };
+
+            @each $breakpoint, $percents in $quantity-column-percents {
+              @include breakpoint($breakpoint up) {
+                width: $percents;
+              }
+            }
+
+            @each $breakpoint, $min-width in $quantity-column-min-width {
+              @include breakpoint($breakpoint up) {
+                min-width: $min-width;
+              }
+            }
+
+            @each $breakpoint, $max-width in $quantity-column-max-width {
+              @include breakpoint($breakpoint up) {
+                max-width: $max-width;
+              }
+            }
+          }
+
+          &.title {
+            @each $breakpoint, $percents in $title-column-percents {
+              @include breakpoint($breakpoint up) {
+                width: $percents;
+              }
+            }
+          }
+
+        }
+
+        //&:first-child {
+        //  .table-cell {
+        //    @include breakpoint(medium) {
+        //      border-top: 0;
+        //    }
+        //  }
+        //}
       }
+
     }
 
-    &:hover {
-      .up-icon-text {
-        border-bottom: 1px dashed #055a93;
+    .table-product-group-close-line {
+      color: #055a93;
+      text-align: center;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+
+      @each $breakpoint, $size in $hide-font-size {
+        @include breakpoint($breakpoint up) {
+          font-size: $size;
+        }
       }
-    }
+      @each $breakpoint, $height in $hide-height {
+        @include breakpoint($breakpoint up) {
+          height: $height;
+          line-height: $height - rem-calc(2);
+        }
+      }
 
-    .label-hide-items {
-      line-height: 100%;
-      display: inline-block;
+      &:hover {
+        .up-icon-text {
+          border-bottom: 1px dashed #055a93;
+        }
+      }
 
-      .up-icon {
+      .label-hide-items {
+        line-height: 100%;
         display: inline-block;
-        width: rem-calc(7);
-        height: rem-calc(7);
-        vertical-align: middle;
-        position: relative;
 
-        .triangle-up {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          top: 0;
-          left: 0;
+        .up-icon {
+          display: inline-block;
+          width: rem-calc(7);
+          height: rem-calc(7);
+          vertical-align: middle;
+          position: relative;
 
-          .triangle-up-path {
-            fill: #055a93;
+          .triangle-up {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            .triangle-up-path {
+              fill: #055a93;
+            }
           }
-        }
 
+        }
       }
     }
   }
+
 }
