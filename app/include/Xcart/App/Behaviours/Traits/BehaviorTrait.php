@@ -13,13 +13,13 @@ use Xcart\App\Behaviours\Interfaces\IBehavior;
 use Xcart\App\Form\FormView\FormViewBehavior;
 use Xcart\App\Helpers\Creator;
 
-trait MixinTrait
+trait BehaviorTrait
 {
 
     /**
      * @var array
      */
-    protected $_behaviours = [];
+    protected $_behaviors = [];
 
     /**
      * @param $name
@@ -32,7 +32,7 @@ trait MixinTrait
         }
 
         $behavior->setOwner($this);
-        $this->_behaviours[$name] = $behavior;
+        $this->_behaviors[$name] = $behavior;
 
     }
 
@@ -41,7 +41,7 @@ trait MixinTrait
      */
     public function detachBehavior($name): void
     {
-        unset($this->_behaviours[$name]);
+        unset($this->_behaviors[$name]);
     }
 
     /**
@@ -50,10 +50,10 @@ trait MixinTrait
      */
     public function getBehavior($name): FormViewBehavior
     {
-        if (!isset($this->_behaviours[$name])) {
+        if (!isset($this->_behaviors[$name])) {
             return null;
         }
-        return $this->_behaviours[$name];
+        return $this->_behaviors[$name];
     }
 
     /**
@@ -62,7 +62,7 @@ trait MixinTrait
      */
     public function hasBehavior($name): bool
     {
-        if (isset($this->_behaviours[$name])) {
+        if (isset($this->_behaviors[$name])) {
             return true;
         }
         return false;
@@ -73,7 +73,7 @@ trait MixinTrait
      */
     public function hasAnyBehavior(): bool
     {
-        return !empty($this->_behaviours);
+        return !empty($this->_behaviors);
     }
 
     /**
@@ -81,7 +81,7 @@ trait MixinTrait
      */
     public function getAllBehaviors(): array
     {
-        return $this->_behaviours;
+        return $this->_behaviors;
     }
 
     /**
@@ -95,29 +95,11 @@ trait MixinTrait
         }
 
         foreach ($this->behaviours() as $name => $behaviorItem) {
-            $this->_behaviours[$name] = Creator::createObject(array_merge([
+            $this->_behaviors[$name] = Creator::createObject(array_merge([
                 'name' => $name,
                 'owner' => $this
             ], $behaviorItem));
         }
-    }
-
-    public function __call($method, $parameters)
-    {
-        //var_dump('call');
-       // var_dump($method);
-        foreach ($this->_behaviours as $name => $behaviour) {
-            if (method_exists($behaviour, $method)) {
-                return call_user_func_array([$behaviour, $method], $parameters);
-            }
-        }
-    }
-
-    public static function __callStatic($method, $parameters)
-    {
-        //var_dump('callStatic');
-        ///var_dump($method);
-        //exit;
     }
 
     /**
@@ -127,6 +109,5 @@ trait MixinTrait
     {
         return [];
     }
-
 
 }

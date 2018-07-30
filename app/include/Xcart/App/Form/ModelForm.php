@@ -17,7 +17,7 @@ use Xcart\App\Translate\Translate;
  * Class ModelForm
  * @package Mindy\Form
  */
-class ModelForm extends BaseForm
+class ModelForm extends MixinBaseForm
 {
     public $ormClass = '\Xcart\App\Orm\Model';
     /**

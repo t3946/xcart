@@ -8,7 +8,6 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use RuntimeException;
-use Xcart\App\Behaviours\Traits\MixinTrait;
 use Xcart\App\Behaviours\Interfaces\IObjectBehavior;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
@@ -27,7 +26,7 @@ use Xcart\App\Validation\Traits\ValidateObject;
  */
 abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject, IObjectBehavior
 {
-    use Accessors, Configurator, ValidateObject, RenderTrait, MixinTrait;
+    use Accessors, Configurator, ValidateObject, RenderTrait;
 
     /**
      * @var array
