@@ -68,10 +68,15 @@
                         <div class="product-group-shipping">
                             <div class="row">
                                 <div class="columns small-12">
+
                                     <h3 class="shipped-from">
-                                        {t 'Delivery methods for' dict='order'} <a class="dashed" data-toggle="product-group-{$gi}"><span>{t 'the items' dict='order'}</span></a>
+                                        {t 'Delivery methods for' dict='order'}
+                                        <a class="dashed" data-toggle="product-group-{$gi}">
+                                            <span>{t 'the items' dict='order'}</span>
+                                        </a>
                                         {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                                     </h3>
+
                                     {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}
                                 </div>
                             </div>

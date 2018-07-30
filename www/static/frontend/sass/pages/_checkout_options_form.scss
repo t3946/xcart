@@ -5,16 +5,19 @@
   $large-font-size: rem-calc(14);
   margin-top: 1rem;
 
+  .checkout-options {
+    @include breakpoint(large) {
+      h2 {
+        margin-bottom: rem-calc(12);
+      }
+    }
+  }
+
   .product-group-shipping {
     padding-bottom: rem-calc(34);
   }
 
   .payment-methods-container{
-
-      //margin-top: rem-calc(10);
-      //@include breakpoint(medium) {
-      //  margin-top: rem-calc(20);
-      //}
 
     @include breakpoint(large) {
       margin-top: 2rem;
