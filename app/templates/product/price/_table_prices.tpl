@@ -45,5 +45,9 @@
     <div class="mmodal-hide">
         <div class="select-quantity"></div>
     </div>
+
+    <div class="mmodal-hide">
+        <div class="notify_stock"></div>
+    </div>
 </div>
 

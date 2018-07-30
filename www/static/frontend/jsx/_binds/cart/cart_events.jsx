@@ -10,7 +10,7 @@ import sendAnalytics from "../../utils/sendAnalytics";
 import {h, render} from 'preact';
 import SelectNumberItems from "../../components/SelectNumberItems";
 
-(()=>{
+(()=> {
     let $minicart = $('.minicart');
     let minicartTimeout, timerIsStarted = false;
 
@@ -23,7 +23,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         }
         else {
             hideAll();
-            if(timerIsStarted){
+            if (timerIsStarted) {
                 clearTimeout(minicartTimeout);
                 timerIsStarted = false;
             }
@@ -40,7 +40,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
     });
 
-    let unsubscribeApp = storeApp.subscribe(()=>{
+    let unsubscribeApp = storeApp.subscribe(() => {
         let state = storeApp.getState();
 
         if (state.frontend.header.active !== 'cart') {
@@ -64,21 +64,22 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     };
 
     $(document)
-        .on('click','.cart_add .add', (e) =>{
+        .on('click', '.cart_add .add', (e) => {
             e.preventDefault();
 
             let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
             buttonAnimation.start();
 
             let product = e.target.closest('[data-product]');
-            if ( product )
-            {
+            if (product) {
                 let data = [{
                     id: product.dataset.product,
-                    quantity: product.dataset.quantity  || 1
+                    quantity: product.dataset.quantity || 1
                 }];
 
-                cartAdd(data, ()=>{ productItemResetState(product); });
+                cartAdd(data, () => {
+                    productItemResetState(product);
+                });
                 window.sendAnalytics.addToCart(product);
             }
 
@@ -90,7 +91,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 .closest('[data-product-group]')
                 .find('[data-product]');
 
-            if ( products.length ) {
+            if (products.length) {
                 let data = [];
 
                 for (let i = 0, len = products.length; i < len; i++) {
@@ -102,7 +103,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     }
                 }
 
-                cartAdd(data, ()=>{
+                cartAdd(data, () => {
                     for (let i = 0; i < products.length; ++i) {
                         productItemResetState(products[i]);
                     }
@@ -123,7 +124,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
                 mc_count.innerHTML = qNew;
 
-                (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
+                (new CountUp('desktop-cart-quantity', qPrev, qNew, 0, 1, {useEasing: true})).start();
             }
         })
         .on('mouseenter', '.minicart.enabled', (e) => {
@@ -131,7 +132,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             e.preventDefault();
             e.stopPropagation();
 
-            if(timerIsStarted){
+            if (timerIsStarted) {
                 clearTimeout(minicartTimeout);
                 timerIsStarted = false;
             }
@@ -151,7 +152,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             if ($minicart.hasClass('active')) {
 
-                 minicartTimeout = setTimeout(() => {
+                minicartTimeout = setTimeout(() => {
 
                     $minicart.removeClass('active');
                     hideAll();
@@ -161,7 +162,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 timerIsStarted = true;
             }
         })
-        .on('click','.cart_add .number-button', (event) => {
+        .on('click', '.cart_add .number-button', (event) => {
 
             event.preventDefault();
             event.stopPropagation();
@@ -198,6 +199,61 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     window, window.firstChild);
             }
 
+
+        })
+
+        .on('click', '.number-button', (event) => {
+
+            let cartContainer = document.querySelector('.notify_stock');
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let wina = document.createElement('div');
+            let wWrapper = document.createElement('div');
+
+            wina.setAttribute('id', 'notify_get');
+            wWrapper.style.position = 'absolute';
+            wWrapper.style.left = '-9999px';
+            wWrapper.style.right = '-9999px';
+            wWrapper.style.display = 'none';
+
+            wWrapper.appendChild(wina);
+            cartContainer.appendChild(wWrapper);
+
+            let product_id = event.target.closest('.product-page').dataset.product;
+
+            $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
+
+                $(wina).html(html).mmodal({
+                    'width': 750,
+                    'onSubmit': function () {
+                        $.ajax({
+                            url: '/notify/post/',
+                            method: 'POST',
+                            data: $('.mmodal_notify_stock form').serialize()
+
+                        }).done(function(result) {
+
+                            if(result.type && result.type == 'json') {
+
+                                let json = result.result;
+                                for (let key in json) {
+                                    html += '<div class="row align-center"><div class="name columns small-4">' + key
+                                        + '</div><div class="value columns small-2">' + json[key] + '</div></div>';
+                                }
+                                $('.mmodal-content .ajax-calculate-shipping-form').html(html);
+                            } else {
+                                $('.mmodal-content .ajax-calculate-shipping-form').html(result);
+                            }
+
+                        });
+                    }
+                });
+
+            });
+
+            // alert("Call to our cs for info");
         });
 
 

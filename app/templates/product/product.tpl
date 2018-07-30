@@ -155,6 +155,12 @@
                     <div class="prices">
                         {include "product/price/_table_prices.tpl" model=$model}
 
+                        {if $model->isOutOfStock()}
+                            <a class="button number-button grey-border">
+                                <span>Notify me when product is in stock</span>
+                            </a>
+                        {/if}
+
                         {if $model->isGroupChild()}
                             {set $parent = $model->parent}
                             {if $parent}
