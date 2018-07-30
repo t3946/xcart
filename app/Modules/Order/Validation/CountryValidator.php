@@ -19,8 +19,8 @@ class CountryValidator extends Validator
         if(!empty($value)) {
 
             $filter = ['name' => $value];
-            if (array_key_exists($value, CountryModel::$codes)) {
-                $filter = ['code' => CountryModel::$codes[$value]];
+            if (array_key_exists(strtoupper($value), CountryModel::$codes)) {
+                $filter = ['code' => CountryModel::$codes[strtoupper($value)]];
             }
 
             if (!CountryModel::objects()->get($filter)) {

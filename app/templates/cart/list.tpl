@@ -170,7 +170,7 @@
                                     {$warehouse->m_city},
                                     {$warehouse->m_state},
                                     {$warehouse->m_country}
-                                    warehouse subtotal:
+                                    <b>warehouse subtotal</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
                                     US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>

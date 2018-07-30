@@ -283,6 +283,8 @@ $remove: (
     .extended_remove {
       width: auto;
       margin-left: rem-calc(15);
+      font-size: rem-calc(16);
+      font-weight: 700;
 
 
       //@include breakpoint(large up) {
