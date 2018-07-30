@@ -10,4 +10,9 @@ class SubscribeHelper
         return md5($email.$code);
     }
 
+    public static function sendMessage($data = [])
+    {
+
+    }
+
 }
