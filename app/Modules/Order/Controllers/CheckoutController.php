@@ -126,8 +126,8 @@ class CheckoutController extends FrontendController
 
             $filter = ['name__contains' => $search];
 
-            if (array_key_exists($search, CountryModel::$codes)) {
-                $filter = ['code' => CountryModel::$codes[$search]];
+            if (array_key_exists(strtoupper($search), CountryModel::$codes)) {
+                $filter = ['code' => CountryModel::$codes[strtoupper($search)]];
             }
 
             $countries = CountryModel::objects()->filter($filter)->limit(10)->order([new Expression("FIELD(code, 'US', 'CA') DESC, code")])->valuesList(['name', 'code'], false);
