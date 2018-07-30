@@ -64,62 +64,64 @@
                         {set $warehouse = $.get_warehouse($gi)}
                         {set $shipping  = $.get_shipping($gi, $order, $group) }
                         {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
-                        <div class="row">
-                            <div class="columns small-12">
-                                <h3 class="shipped-from">
-                                    {t 'Delivery methods for' dict='order'} <a class="dashed" data-toggle="product-group-{$gi}"><span>{t 'the items' dict='order'}</span></a>
-                                    {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
-                                </h3>
-                                {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}
-                            </div>
-                        </div>
-                        {*{$shipping|dd}*}
-                        {if $shipping}
+
+                        <div class="product-group-shipping">
                             <div class="row">
                                 <div class="columns small-12">
-                                    <div class="shipping-methods methods-table">
-                                        {foreach $shipping as $quote first=$first}
-                                            {set $shipping_model = $quote->shipping}
-                                            {if $shipping_model}
-                                            <div class="methods-row">
+                                    <h3 class="shipped-from">
+                                        {t 'Delivery methods for' dict='order'} <a class="dashed" data-toggle="product-group-{$gi}"><span>{t 'the items' dict='order'}</span></a>
+                                        {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                                    </h3>
+                                    {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}
+                                </div>
+                            </div>
 
-                                                <div class="methods-cell delivery-item-label">
-                                                    <input {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
-                                                           id="shipping_{$quote->rateid}" type="radio"
-                                                           name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+                            {if $shipping}
+                                <div class="row">
+                                    <div class="columns small-12">
+                                        <div class="shipping-methods methods-table">
+                                            {foreach $shipping as $quote first=$first}
+                                                {set $shipping_model = $quote->shipping}
+                                                {if $shipping_model}
+                                                    <div class="methods-row">
 
-                                                    <label class="methods-label" for="shipping_{$quote->rateid}">
+                                                        <div class="methods-cell delivery-item-label">
+                                                            <input {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
+                                                                   id="shipping_{$quote->rateid}" type="radio"
+                                                                   name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
+
+                                                            <label class="methods-label" for="shipping_{$quote->rateid}">
                                                         <span class="methods-text">
                                                             <span class="name">{$shipping_model->getFrontendName()}</span>
                                                             <span class="comment">{$shipping_model->shipping_time}</span>
                                                         </span>
-                                                    </label>
-                                                </div>
+                                                            </label>
+                                                        </div>
 
-                                                <div class="methods-cell delivery-item-price">
-                                                    <span class="cost">US$ {$quote->getShippingCharge()|number_format:2}</span>
-                                                </div>
+                                                        <div class="methods-cell delivery-item-price">
+                                                            <span class="cost">US$ {$quote->getShippingCharge()|number_format:2}</span>
+                                                        </div>
 
-                                            </div>
-                                            <div class="methods-row-space"></div>
-                                            {/if}
-                                        {/foreach}
+                                                    </div>
+                                                    <div class="methods-row-space"></div>
+                                                {/if}
+                                            {/foreach}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                        {else}
-                            {add $phone_order_only = true}
-                            <div class="row">
-                                <div class="columns small-12">
-                                    <div class="no-quotes">
-                                        The UPS server could not provide us with a shipping quote.
-                                        When placing the order, please choose "Phone Ordering" as your payment method.
-                                        We will determine an accurate shipping charge manually and send you an updated invoice.
+                            {else}
+                                {add $phone_order_only = true}
+                                <div class="row">
+                                    <div class="columns small-12">
+                                        <div class="no-quotes">
+                                            The UPS server could not provide us with a shipping quote.
+                                            When placing the order, please choose "Phone Ordering" as your payment method.
+                                            We will determine an accurate shipping charge manually and send you an updated invoice.
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {/if}
+                            {/if}
+                        </div>
                     {/foreach}
                     {if $order->isCanadianShipping()}
                         <div class="row">
