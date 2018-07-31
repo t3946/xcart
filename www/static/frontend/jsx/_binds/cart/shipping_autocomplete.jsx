@@ -48,6 +48,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputCountry.setAttribute('data-code', code);
+                            throwJsChangeEvent(inputCountry);
                         }
                     });
                 }
@@ -81,6 +82,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             inputCity.value = item.getAttribute('data-city');
                             inputState.value = item.getAttribute('data-state-name');
 
+                            throwJsChangeEvent(inputZipCode);
                             throwJsChangeEvent(inputCity);
                             throwJsChangeEvent(inputState);
 
@@ -112,6 +114,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputState.setAttribute('data-code', code);
+                            throwJsChangeEvent(inputState);
 
                         }
                     });
@@ -138,6 +141,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         },
                         onSelect: function (e, term, item) {
                             e.preventDefault();
+                            throwJsChangeEvent(inputCity);
                         }
                     });
                 }
