@@ -11,5 +11,5 @@ namespace Xcart\App\Validation;
 
 class PhoneExtValidator extends NumberValidator
 {
-    public $message = "Phone extension must be numeric";
+    public $message = "Phone extension is invalid";
 }

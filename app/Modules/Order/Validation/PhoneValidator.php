@@ -8,7 +8,7 @@ use Xcart\App\Validation\Validator;
 
 class PhoneValidator extends Validator
 {
-    private $message = 'Is not a valid phone';
+    private $message = 'Phone number is invalid';
 
     public function validate($value)
     {
