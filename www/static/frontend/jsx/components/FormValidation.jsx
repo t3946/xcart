@@ -36,7 +36,10 @@ class FormValidation {
      */
     processChange(event){
 
-        if(event.explicitOriginalTarget !== null && event.explicitOriginalTarget.classList.contains('clear-input')){
+        //console.log(event);
+        if(event.explicitOriginalTarget !== null
+            && typeof event.explicitOriginalTarget !== 'undefined'
+            && event.explicitOriginalTarget.classList.contains('clear-input')){
             return;
         }
 

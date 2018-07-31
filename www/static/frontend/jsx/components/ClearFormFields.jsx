@@ -26,13 +26,14 @@ class ClearFormFields {
             let closeButton = document.createElement('a');
             let input = inputContainer.querySelector('input');
             closeButton.classList.add('clear-input');
+            //closeButton.setAttribute("pseudo", "-webkit-search-cancel-button");
             inputContainer.append(closeButton);
 
 
             this.clearFieldListener = this.clearField.bind(this, input);
             this.processChange = this.processChange.bind(this);
-            closeButton.addEventListener('click', this.clearFieldListener, {'passive': false});
-            input.addEventListener('keyup', this.processChange, {'passive': false});
+            closeButton.addEventListener('click', this.clearFieldListener, {'passive': true});
+            input.addEventListener('keyup', this.processChange, {'passive': true});
 
             this.closeButtons.push({
                 'input': input,
@@ -47,8 +48,9 @@ class ClearFormFields {
      */
     clearField(input, event){
 
-       // event.stopPropagation();
-       // event.preventDefault();
+        // event.stopPropagation();
+        // event.stopImmediatePropagation();
+        // event.preventDefault();
 
         let closeElement = event.target;
          let wrapper = closeElement.closest('.input-container');
@@ -57,7 +59,7 @@ class ClearFormFields {
          input.focus();
          wrapper.classList.remove('hasClose');
 
-       //  return false;
+         //return false;
     }
 
 
@@ -88,8 +90,8 @@ class ClearFormFields {
     destructor(){
         for (let i = 0; i < this.closeButtons.length; ++i) {
             let info = this.closeButtons.item(i);
-            info['button'].removeEventListener('click', this.clearFieldListener, {'passive': false});
-            info['input'].removeEventListener('keyup', this.processChange, {'passive': false});//, {'passive': false}
+            info['button'].removeEventListener('click', this.clearFieldListener, {'passive': true});
+            info['input'].removeEventListener('keyup', this.processChange, {'passive': true});//, {'passive': false}
             info['button'].remove();
         }
 
