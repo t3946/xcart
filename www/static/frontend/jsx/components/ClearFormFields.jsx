@@ -32,8 +32,10 @@ class ClearFormFields {
 
             this.clearFieldListener = this.clearField.bind(this, input);
             this.processChange = this.processChange.bind(this);
+            this.processJsChange = this.processJsChange.bind(this);
             closeButton.addEventListener('click', this.clearFieldListener, {'passive': true});
             input.addEventListener('keyup', this.processChange, {'passive': true});
+            input.addEventListener('js.change.event', this.processJsChange, {'passive': true});
 
             this.closeButtons.push({
                 'input': input,
@@ -48,18 +50,13 @@ class ClearFormFields {
      */
     clearField(input, event){
 
-        // event.stopPropagation();
-        // event.stopImmediatePropagation();
-        // event.preventDefault();
-
         let closeElement = event.target;
-         let wrapper = closeElement.closest('.input-container');
+        let wrapper = closeElement.closest('.input-container');
 
          input.value = '';
          input.focus();
          wrapper.classList.remove('hasClose');
 
-         //return false;
     }
 
 
@@ -69,20 +66,21 @@ class ClearFormFields {
      */
     processChange(event){
 
-        //event.stopPropagation();
-        //event.preventDefault();
-
-        let inputElement = event.target;
-         let wrapper = inputElement.closest('.input-container');
-         if(inputElement.value !== '') {
-             wrapper.classList.add('hasClose');
-         } else {
-             wrapper.classList.remove('hasClose');
-         }
-
-        //return false;
+        this.showHideClose(event.target);
     }
 
+    processJsChange(event){
+        this.showHideClose(event.detail.element);
+    }
+
+    showHideClose(inputElement){
+        let wrapper = inputElement.closest('.input-container');
+        if(inputElement.value !== '') {
+            wrapper.classList.add('hasClose');
+        } else {
+            wrapper.classList.remove('hasClose');
+        }
+    }
 
     /**
      * Destruct clear form
@@ -92,6 +90,7 @@ class ClearFormFields {
             let info = this.closeButtons.item(i);
             info['button'].removeEventListener('click', this.clearFieldListener, {'passive': true});
             info['input'].removeEventListener('keyup', this.processChange, {'passive': true});//, {'passive': false}
+            info['input'].removeEventListener('js.change.event', this.processJsChange, {'passive': true});
             info['button'].remove();
         }
 
