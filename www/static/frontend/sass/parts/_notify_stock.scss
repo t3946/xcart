@@ -1,3 +1,15 @@
-.mmodal_notify_stock{
-  text-align: center;
+.mmodal_notify_stock {
+
+  button {
+    text-transform: uppercase;
+  }
+
+  p, button, form label {
+    font-weight: bold !important;
+  }
+
+  h2 {
+    text-align: center !important;;
+  }
+
 }

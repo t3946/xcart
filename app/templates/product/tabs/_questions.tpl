@@ -7,9 +7,9 @@
             We'll do our best to get back to you within 24 hours.
                 S3 Stores, Inc. customer care team</div>
         </div>
-        {else}
+    {else}
         {raw $form->renderBegin()}
-            {/if}
+    {/if}
             <input type="hidden" value="{$productId}" name="{$form->classNameShort()}[productid]">
             <div class="row">
                 <div class="column no-padding small-12">

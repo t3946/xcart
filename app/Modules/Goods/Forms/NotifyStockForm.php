@@ -2,15 +2,16 @@
 
 namespace Modules\Goods\Forms;
 
+use Modules\Core\Forms\FrontendModelForm;
 use Modules\Goods\Models\NotifyStockModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\HiddenField;
-use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
-class NotifyStockForm extends ModelForm
+class NotifyStockForm extends FrontendModelForm
 {
     public $exclude  = ['site', 'sent', 'date'];
 
@@ -37,7 +38,7 @@ class NotifyStockForm extends ModelForm
             ],
 
             'email' => [
-                'class' => CharField::class,
+                'class' => EmailField::class,
                 'label' => 'Your email',
                 'html' => [
                     'placeholder' => 'albert.einstein@gmail.com'
