@@ -24,7 +24,7 @@ use Xcart\App\Validation\Traits\ValidateObject;
  * @method string asUl(array $renderFields = [])
  * @method string asTable(array $renderFields = [])
  */
-abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject, IObjectBehavior
+abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IValidateObject
 {
     use Accessors, Configurator, ValidateObject, RenderTrait;
 
