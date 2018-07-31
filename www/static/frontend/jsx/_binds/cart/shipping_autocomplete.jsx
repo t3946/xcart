@@ -4,6 +4,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
     var createAutoComplete = function(){
 
         function throwJsChangeEvent(element){
+            //console.log('throwJsChangeEvent');
             let detail = {
                 'element' : element
             };
