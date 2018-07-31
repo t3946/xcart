@@ -17,7 +17,7 @@ use Xcart\App\Translate\Translate;
  * Class ModelForm
  * @package Mindy\Form
  */
-class ModelForm extends BaseForm
+class ModelForm extends MixinBaseForm
 {
     public $ormClass = '\Xcart\App\Orm\Model';
     /**
@@ -69,7 +69,6 @@ class ModelForm extends BaseForm
             $this->populateFromInstance($instance);
         }
 
-
         foreach ($fields as $name => $config) {
             if (isset($this->_fields[$name]) || in_array($name, $this->getExclude())) {
                 continue;
@@ -79,11 +78,13 @@ class ModelForm extends BaseForm
                 $config = ['class' => $config];
             }
 
-            $this->_fields[$name] = Creator::createObject(array_merge([
-                'name' => $name,
-                'form' => $this,
-                'prefix' => $prefix
-            ], is_array($config) ? $config : ['class' => $config]));
+//            $this->_fields[$name] = Creator::createObject(array_merge([
+//                'name' => $name,
+//                'form' => $this,
+//                'prefix' => $prefix
+//            ], is_array($config) ? $config : ['class' => $config]));
+
+            $this->_fields[$name] = $this->createField($name, (is_array($config) ? $config : ['class' => $config]));
 
             if ($instance && $instance->hasField($name)) {
                 if ($instance->getField($name)->editable) {

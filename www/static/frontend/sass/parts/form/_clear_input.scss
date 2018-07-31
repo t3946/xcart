@@ -1,0 +1,52 @@
+
+@mixin getClearInputStyles() {
+  .input-container {
+    position:relative;
+
+    &[data-clear] {
+
+      .clear-input {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: rem-calc(6);
+        width: rem-calc(18);
+        height: rem-calc(18);
+        margin-top: rem-calc(-9);
+        background: url('../images/icons/forms/remove.svg') 0 0 no-repeat;
+        cursor: pointer;
+
+        @include breakpoint(large) {
+          display: none;
+        }
+
+        @include breakpoint(sm) {
+          right: rem-calc(8);
+          width: rem-calc(20);
+          height: rem-calc(20);
+          margin-top: rem-calc(-10);
+        }
+      }
+
+      &.hasClose {
+
+        @include breakpoint(ml down){
+
+          .clear-input {
+            display: block;
+          }
+
+          input {
+            padding-right: rem-calc(25);
+
+            @include breakpoint(sm){
+              padding-right: rem-calc(28);
+            }
+
+          }
+        }
+      }
+
+    }
+  }
+}

@@ -35,7 +35,6 @@ export default class MiniCart extends Component
     handleRemove(e, key, item)
     {
         e.preventDefault();
-
         this.context.store.dispatch({type:'PUSH', action: 'DEL', data: {items:[key]}});
     }
 
@@ -43,7 +42,6 @@ export default class MiniCart extends Component
     {
         let val = e.target.value;
 
-        // e.preventDefault();
         clearTimeout(this.timers.change);
 
         if (val && val > 0) {
@@ -126,7 +124,7 @@ export default class MiniCart extends Component
             </div>
             <div className="buttons">
                 <a href="/cart/" className="button yellow waves waves-orange">
-                    View cart
+                    Checkout
                 </a>
             </div>
         </div>);

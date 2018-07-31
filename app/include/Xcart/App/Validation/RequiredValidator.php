@@ -32,5 +32,14 @@ class RequiredValidator extends Validator
 
         return $this->hasErrors() === false;
     }
+
+    public function jsValidateParams()
+    {
+        return [
+            'presence' => [
+                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
+            ],
+        ];
+    }
 }
 

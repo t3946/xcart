@@ -27,6 +27,7 @@ class DropDownField extends Field
      * @var string
      */
     public $inputTemplate = 'forms/field/dropdown/input.tpl';
+    public $fieldType = 'dropdown';
     /**
      * @var bool
      */

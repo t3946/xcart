@@ -9,20 +9,27 @@
 namespace Modules\Goods\Forms;
 
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\Forms\FrontendModelForm;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
-use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CompoundField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
-use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
+use Xcart\App\Validation\PhoneExtValidator;
 
-class ProductQuestionForm extends ModelForm
+class ProductQuestionForm extends FrontendModelForm
 {
+
+
+    public $exclude = [
+        'productid'
+    ];
+
 
     /**
      * @return ProductQuestionModel
@@ -70,13 +77,18 @@ class ProductQuestionForm extends ModelForm
                 'validators' => [
                     new PhoneValidator(),
                 ],
+                'extend' => 'phone_ext'
             ],
             'phone_ext' => [
-                'class' => NumberField::class,
+                'class' => CharField::class,
                 'label' => 'ext',
                 'html' => [
                     'class' => 'phone_ext',
-                ]
+                ],
+                'extends' => true,
+                'validators' => [
+                    new PhoneExtValidator(),
+                ],
             ],
             'question' => [
                 'class' => TextField::class,
