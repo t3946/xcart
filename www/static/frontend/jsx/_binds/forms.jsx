@@ -7,13 +7,13 @@ function createDuplicatedFields(fields){
     for (let fieldName in fields) {
         let fieldObj = fields[fieldName];
         fieldObj.element.addEventListener('form_validation.success', function(event){
-            let duplicateId = event.target.dataset.duplicate || null;
+            let duplicateId = event.detail.field.element.dataset.duplicate || null;
             if (duplicateId && duplicateId.length) {
                 let duplicateElement = document.getElementById(duplicateId);
                 let dElementName = duplicateElement.getAttribute('name');
                 let dFieldObj = fields[dElementName];
                 if (!duplicateElement.value.length) {
-                    duplicateElement.value = event.detail.value;
+                    duplicateElement.value = event.detail.field.element.value;
                     dFieldObj.success();
                 }
             }

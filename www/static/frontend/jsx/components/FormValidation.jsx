@@ -46,6 +46,7 @@ class FormValidation {
 
         if(event.explicitOriginalTarget !== null
             && typeof event.explicitOriginalTarget !== 'undefined'
+            && typeof event.explicitOriginalTarget.classList !== 'undefined'
             && event.explicitOriginalTarget.classList.contains('clear-input')){
             return;
         }
