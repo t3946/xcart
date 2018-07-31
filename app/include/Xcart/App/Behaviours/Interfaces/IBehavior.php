@@ -16,4 +16,10 @@ interface IBehavior
      * @return mixed
      */
     public function init();
+
+    public function canGetProperty($name, $checkVars = true);
+
+    public function canSetProperty($name, $checkVars = true);
+
+    public function hasMethod($name);
 }

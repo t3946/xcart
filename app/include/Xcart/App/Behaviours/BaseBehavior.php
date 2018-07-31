@@ -27,7 +27,7 @@ class BaseBehavior implements IBehavior
      */
     public function init()
     {
-        // Implement init() method.
+        //parent::init();
     }
 
     public function canGetProperty($name, $checkVars = true)

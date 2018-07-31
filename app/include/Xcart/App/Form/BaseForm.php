@@ -135,7 +135,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 //        $this->initInlines();
 //        $this->setRenderFields(array_keys($this->getFieldsInit()));
         self::$countForm++;
-        $this->applyDefaultBehaviors();
     }
 
     /**

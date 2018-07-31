@@ -9,11 +9,18 @@
 namespace Xcart\App\Form;
 
 
+use Xcart\App\Behaviours\Interfaces\IBehavior;
 use Xcart\App\Behaviours\Traits\BehaviorTrait;
 
 class MixinBaseForm extends BaseForm
 {
     use BehaviorTrait;
+
+    public function init()
+    {
+        parent::init();
+        $this->applyDefaultBehaviors();
+    }
 
     public function ensureBehaviors()
     {
@@ -30,6 +37,7 @@ class MixinBaseForm extends BaseForm
 
         $this->ensureBehaviors();
         foreach ($this->_behaviors as $behavior) {
+            /** @var $behavior IBehavior */
             if ($behavior->canGetProperty($name)) {
                 return $behavior->$name;
             }
@@ -47,6 +55,7 @@ class MixinBaseForm extends BaseForm
         $this->ensureBehaviors();
 
         foreach ($this->_behaviors as $behavior) {
+            /** @var $behavior IBehavior */
             if ($behavior->canSetProperty($name)) {
                 $behavior->$name = $value;
                 return;
@@ -65,6 +74,7 @@ class MixinBaseForm extends BaseForm
         // behavior property
         $this->ensureBehaviors();
         foreach ($this->_behaviors as $behavior) {
+            /** @var $behavior IBehavior */
             if ($behavior->canGetProperty($name)) {
                 return $behavior->$name !== null;
             }
@@ -82,6 +92,7 @@ class MixinBaseForm extends BaseForm
         // behavior property
         $this->ensureBehaviors();
         foreach ($this->_behaviors as $behavior) {
+            /** @var $behavior IBehavior */
             if ($behavior->canSetProperty($name)) {
                 $behavior->$name = null;
                 return;
@@ -93,9 +104,10 @@ class MixinBaseForm extends BaseForm
     public function __call($method, $parameters)
     {
         $this->ensureBehaviors();
-        foreach ($this->_behaviors as $name => $behaviour) {
-            if (method_exists($behaviour, $method)) {
-                return call_user_func_array([$behaviour, $method], $parameters);
+        foreach ($this->_behaviors as $name => $behavior) {
+            /** @var $behavior IBehavior */
+            if ($behavior->hasMethod($method)) {
+                return call_user_func_array([$behavior, $method], $parameters);
             }
         }
     }
