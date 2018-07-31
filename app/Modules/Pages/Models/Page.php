@@ -13,6 +13,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TextField;
@@ -54,10 +55,9 @@ class Page extends TreeModel
                 'verboseName' => PagesModule::t('Name')
             ],
             'url' => [
-                'class' => AutoSlugField::className(),
-                'source' => 'name',
+                'class' => CharField::className(),
+                'required' => true,
                 'verboseName' => PagesModule::t('Url'),
-                'unique' => true
             ],
             'content' => [
                 'class' => TextField::className(),
@@ -123,6 +123,13 @@ class Page extends TreeModel
                     '-lft' => PagesModule::t('Position DESC'),
                 ],
                 'verboseName' => PagesModule::t("Sorting")
+            ],
+
+            'sites' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => PagesStorefrontLink::class,
+                'verboseName' => PagesModule::t('Sites'),
             ],
 //            'sites' => [
 //                'class' => ManyToManyField::className(),

@@ -3,7 +3,9 @@ namespace Xcart;
 
 use Modules\Core\Models\StateModel;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Helpers\ShippingHelper;
+use Modules\User\Models\UserModel;
 
 class OrderGroup extends Data
 {
@@ -1251,8 +1253,19 @@ class OrderGroup extends Data
             foreach ($aOrderDetails as $oOrderDetail) {
                 $oCart->addObjectToCart(new \Xcart\CartElement($oOrderDetail->getOrderDetailProduct(), $oOrderDetail->getAmount()));
             }
-            $aShippingRates = (new Shipping())->getShippingRates($this->getOrderInstance()->getCustomerEntity(), $this->getManufacturerEntity(), $oCart);
+            $customer = new UserModel();
 
+            /** @var OrderModel $order */
+            if ($order = OrderModel::objects()->get(['orderid' => $this->orderid])) {
+                $customer->setAttributes(
+                    [
+                        's_zipcode' => $order->s_zipcode,
+                        's_country'=> $order->s_country,
+                        's_state' => $order->s_state
+                    ]
+                );
+                $aShippingRates = (new Shipping())->getShippingRates($customer, $this->getManufacturerEntity(), $oCart);
+            }
         }
         return $aShippingRates;
     }

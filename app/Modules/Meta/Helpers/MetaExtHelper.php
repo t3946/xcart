@@ -138,9 +138,8 @@ class MetaExtHelper
         /** @var Meta $meta */
         $meta = Meta::objects()->filter([
             new QOr([
-                new QAnd(['url' => $connections->quote($url),  'site_id' => $site->pk]),
-                new QAnd(['url' => $path, 'site_id' => $site->pk]),
-                new QAnd(['url' => $path, 'site_id__isnull' => true]),
+                new QAnd(['url' => $connections->quote($url),  'site_code' => $site->code]),
+                new QAnd(['url' => $path, 'site_code' => $site->code]),
             ])
         ])
             ->order(['-site_id', '-url'])
@@ -154,6 +153,9 @@ class MetaExtHelper
                 'description' => $meta->description,
                 'keywords' => $meta->keywords,
                 'advanced' => $this->_advanced,
+                'canonical' => $this->canonical,
+                'noIndex' => $this->noIndex,
+
             ];
 
             return true;

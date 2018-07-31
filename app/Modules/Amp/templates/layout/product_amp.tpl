@@ -9,7 +9,8 @@
         <link rel="icon" href="{$favicon}" type="image/x-icon">
         {/if}
         {block 'seo'}
-                <title>{if $model->title_tag} {$model->title_tag} {else} {$model->getFrontendName()} {/if}</title>
+                <title>{if $model->title_tag} {$model->title_tag|escape} {else} {$model->getFrontendName()|escape} {/if}</title>
+                <meta name="description" content="{if $model->seo_meta_descr} {$model->seo_meta_descr|escape} {else} Buy {$model->getFrontendName()|escape|strip} online at {$site->getFrontendName()}. {$category->category|escape|strip} at cheap prices. Sale up to 50% {/if}" />
         {/block}
 
 {block 'head'}

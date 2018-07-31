@@ -29,7 +29,7 @@ class InfoBlock extends Model
                 'class' => TextField::className(),
                 'label' => 'Текст'
             ],
-            'key' => [
+            'tag' => [
                 'class' => CharField::className(),
                 'label' => 'Ключ (для разработчика)',
                 'null' => true

@@ -31,7 +31,7 @@ class OrderStore extends BaseStore
 
     public function getTotal()
     {
-        if (is_null($this->total)) {
+        if ($this->total === null) {
             $refund = 0;
 
             /** @var OrderGroupModel $group */
@@ -48,7 +48,7 @@ class OrderStore extends BaseStore
 
     public function getCapturedAvail()
     {
-        if (is_null($this->capturedAvail)) {
+        if ($this->capturedAvail === null) {
             $this->capturedAvail = OrderTransactionHelper::getCaptured($this->transactions);
         }
         return $this->capturedAvail;
@@ -58,11 +58,20 @@ class OrderStore extends BaseStore
 
     public function getAuthorizeAvail()
     {
-        if (is_null($this->authorizeAvail)) {
+        if ($this->authorizeAvail === null) {
             $this->authorizeAvail = OrderTransactionHelper::getAuthorized($this->transactions);
         }
 
         return $this->authorizeAvail;
+    }
+
+    private $refunded = null;
+    public function getRefunded()
+    {
+        if ($this->refunded === null) {
+            $this->refunded = OrderTransactionHelper::getRefunded($this->transactions);
+        }
+        return $this->refunded;
     }
 
     public function getAmountDeficit()
@@ -72,7 +81,7 @@ class OrderStore extends BaseStore
 
     public function getAmountToCapture()
     {
-        return max($this->getAuthorizeAvail(), 0);
+        return max($this->getAuthorizeAvail() - $this->getRefunded(), 0);
     }
 
     public function getAskFromCx()
@@ -84,7 +93,7 @@ class OrderStore extends BaseStore
 
     public function getAdditionalCaptureAmount()
     {
-        if (is_null($this->additionalCaptureAmount)) {
+        if ($this->additionalCaptureAmount === null) {
             $this->additionalCaptureAmount = OrderTransactionHelper::getAuthorized($this->transactions, true);
         }
 

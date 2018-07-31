@@ -48,12 +48,12 @@ class Meta extends Model
         $onSite = Xcart::app()->getModule('Meta')->onSite;
         if ($onSite) {
             $fields['site'] = [
-                'field' => 'site_id',
+                'field' => 'site_code',
                 'class' => ForeignField::className(),
                 'sqlType' => Type::STRING,
                 'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
                 'verboseName' => SitesModule::t('Site'),
-                'link' => ['site_id' => 'id'],
+                'link' => ['site_code' => 'code'],
                 'required' => false,
                 'null' => true
             ];

@@ -5,7 +5,7 @@ use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
-use Xcart\Connection;
+use Modules\Sites\Models\SiteModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 define("CIDEV_CRON_START", "CRON");
@@ -32,18 +32,6 @@ define('EXTRA_LOG', 'N');
 
 set_time_limit(0);
 
-//if ($config[LOG_CATEGORY] == "Y") {
-//    func_backprocess_log('incremental feeds', 'Already launched');
-//    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-//    $oMail->to = 'team@s3stores.com';
-//    $oMail->from = 'team@s3stores.com';
-//    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
-//    $oMail->body = LOG_CATEGORY . ' already launched';
-//    $oMail->sendEmail();
-//    if (!isset($argv) || (isset($argv) && !in_array('--force-flag', $argv))) {
-//        die("Already launched"); // ################################
-//    }
-//}
 
 $xcart_states_US = func_query_param(/** @lang MySQL */
     <<<SQL
@@ -52,9 +40,6 @@ LEFT JOIN xcart_geo_litecity_location ON country = country_code AND postalCode =
  WHERE base_state_zipcode!='' AND country_code=:co GROUP BY stateid
 SQL
     , ['co' => 'US']);
-
-//db_query_param(/** @lang MySQL */
-//    "REPLACE xcart_config SET value='Y', name=:name", ['name' => LOG_CATEGORY]);
 
 $started_at = time();
 
@@ -77,34 +62,23 @@ if ($start_time->format('G') == "0") {
 }
 
 
-$cidev_storefronts = $storefronts;
-ksort($cidev_storefronts);
+UpdatedProductModel::objects()->delete(['mask' => 0]);
 
-UpdatedProductModel::objects()->delete(
-    [
-        'mask' => 0
-    ]
-);
-
-if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
-
-    foreach ($cidev_storefronts as $storefrontid => $sf_info) {
-        $cidev_storefronts[$storefrontid] = func_get_storefront_info($storefrontid);
-    }
-    $cidev_storefronts[0] = func_get_storefront_info(0);
+/** @var SiteModel[] $sites */
+if ($sites = SiteModel::objects()->order(['storefrontid'])->all()) {
 
     $amazon_inventory_batch_count = $amazon_products_batch_count = 0;
     $ainventory = $aproducts = [];
     $BingMerchantID = $BingCatalogID = '';
 
-    foreach ($cidev_storefronts as $storefrontid => $sf_info) {
+    foreach ($sites as $site) {
 
         $cnt = 0;
 
-        print("\n " . strftime("%X") . " --- storefront: " . $storefrontid . " --- \n");
+        print("\n " . strftime("%X") . " --- storefront: {$site->storefrontid} --- \n");
 
         /** @var StoreFrontMarketPlace[] $aExternalMarketPlaces */
-        $aExternalMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
+        $aExternalMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($site->storefrontid);
 
         $defaultMask = 0;
         foreach ($aExternalMarketPlaces as $market) {
@@ -123,7 +97,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                 ])
             ->filter(
                 [
-                    'product__sites__storefrontid' => $storefrontid,
+                    'product__sites__storefrontid' => $site->storefrontid,
                     'type__lte' => 2
                 ])
             ->group(['resourceid'])
@@ -133,7 +107,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             /** @var UpdatedProductModel $new */
             foreach ($doubles as $double) {
                 UpdatedProductModel::objects()->delete(['resourceid' => $double->resourceid, 'type__in' => $double->getFromQueryAttribute('gtype')]);
-                list($new) = UpdatedProductModel::objects()->getOrNew(['resourceid' => $double->resourceid, 'type' => $double->getFromQueryAttribute('utype')]);
+                [$new] = UpdatedProductModel::objects()->getOrNew(['resourceid' => $double->resourceid, 'type' => $double->getFromQueryAttribute('utype')]);
 
                 $or_mask = array_reduce(
                     explode(',', $double->getFromQueryAttribute('gmask')),
@@ -159,11 +133,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
         /** @var UpdatedProductModel[] $queues */
         if ($queues = UpdatedProductModel::objects()
             ->select(['*', 'product__forsale', 'utype' => new Expression('GROUP_CONCAT(type ORDER BY type)')])
-            ->filter(
-                [
-                    'product__sites__storefrontid' => $storefrontid,
-                    'type__lte' => 2
-                ])
+            ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type__lte' => 2])
             ->group(['resourceid'])
             ->order(['-utype', '-product__forsale'])
             ->limit(3000)
@@ -172,21 +142,14 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             $timeout = 60 * 20;
             $storefront_time_start = time();
 
-            $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
-            func_backprocess_log("incremental feeds", $log_text);
+            func_backprocess_log("incremental feeds", "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
 
             foreach ($queues as $queue_o) {
 
                 /** @var UpdatedProductModel $queue */
-                if ($queue = UpdatedProductModel::objects()
-                    ->get(
-                        [
-                            'resourceid' => $queue_o->resourceid,
-                            'type' => $queue_o->type
-                        ])
-                ) {
+                if ($queue = UpdatedProductModel::objects()->get(['resourceid' => $queue_o->resourceid, 'type' => $queue_o->type])) {
 
-                    if (is_null($queue->mask)) {
+                    if ($queue->mask === null) {
                         $queue->mask = $defaultMask;
                         if ($queue->mask === 0) {
                             UpdatedProductModel::objects()->delete(['resourceid' => $queue->resourceid, 'type' => $queue->type]);
@@ -196,7 +159,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                     }
 
                     if ((time() - $storefront_time_start) > $timeout) {
-                        func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$storefrontid} ...");
+                        func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$site->storefrontid} ...");
                         break;
                     }
 
@@ -217,11 +180,11 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
                         $googleOneRow = null;
 
                         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                            if (is_null($googleOneRow)) {
+                            if ($googleOneRow === null) {
                                 $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, $queue, EXTRA_LOG);
                             }
 
-                            if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                            if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() === 'Y') {
                                 if (!($oExternalMarketPlace->addProductToBatch($queue, $googleOneRow, EXTRA_LOG))) {
 
                                 }
@@ -258,32 +221,17 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)) {
             }
         }
 
-        print ("processed: " . $cnt . " items !!>\n");
+        print ("processed: {$cnt} items !!>\n");
 
         if ($cnt > 0) {
-
-            $log_text = "processed: " . $cnt . " items";
-            func_backprocess_log("incremental feeds", $log_text);
+            func_backprocess_log("incremental feeds", "processed: {$cnt} items");
         }
     }
 
-    UpdatedProductModel::objects()->delete(
-        [
-            'type' => 3,
-            'time_stamp__lte' => $started_at
-        ]
-    );
-
-    UpdatedProductModel::objects()->delete(
-        [
-            'mask' => 0
-        ]
-    );
+    UpdatedProductModel::objects()->delete(['type' => 3, 'time_stamp__lte' => $started_at]);
+    UpdatedProductModel::objects()->delete(['mask' => 0]);
 
 }
-
-//db_query_param(/** @lang MySQL */
-//    "UPDATE xcart_config SET value='N' WHERE name=:name", ['name' => LOG_CATEGORY]);
 
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
