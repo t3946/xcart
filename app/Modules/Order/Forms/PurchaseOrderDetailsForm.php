@@ -9,12 +9,13 @@
 namespace Modules\Order\Forms;
 
 
+use Modules\Core\Forms\FrontendForm;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\FileField;
 use Xcart\App\Form\Fields\NumberField;
 
-class PurchaseOrderDetailsForm extends BaseForm
+class PurchaseOrderDetailsForm extends FrontendForm
 {
     public function getFields(): array
     {

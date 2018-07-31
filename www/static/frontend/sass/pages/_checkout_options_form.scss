@@ -3,19 +3,61 @@
 
   $medium-font-size: rem-calc(20);
   $large-font-size: rem-calc(14);
+  margin-top: 1rem;
+
+  .checkout-options {
+    @include breakpoint(large) {
+      h2 {
+        margin-bottom: rem-calc(12);
+      }
+    }
+  }
+
+  .product-group-shipping {
+    padding-bottom: rem-calc(34);
+  }
+
+  .payment-methods-container{
+
+    @include breakpoint(large) {
+      margin-top: 2rem;
+
+      h2 {
+        margin-bottom: rem-calc(12);
+      }
+    }
+  }
 
   h3 {
     font-size: rem-calc(15);
+    margin-bottom: rem-calc(15);
     font-weight: bold;
     line-height: rem-calc(22);
     text-align: center;
 
+    @include breakpoint(sm) {
+      font-size: rem-calc(18);
+      margin-bottom: rem-calc(20);
+    }
+
+    @include breakpoint(medium) {
+      font-size: rem-calc(20);
+    }
+
     @include breakpoint(large) {
       text-align: left;
+      font-size: rem-calc(15);
+      margin-bottom: rem-calc(12);
     }
   }
 
   .billing_same_shipping {
+    margin-bottom: rem-calc(25);
+
+    @include breakpoint(large) {
+      margin-top: 2rem;
+    }
+
     label {
       background-color: transparent !important;
       padding-left: .5625rem;
@@ -31,9 +73,11 @@
 
     .methods-text {
       display: inline-block;
+      vertical-align: middle;
 
       .name {
         font-size: rem-calc(14);
+        font-weight: bold;
 
         @include breakpoint(sm) {
           font-size: rem-calc(17);
@@ -91,7 +135,8 @@
 
       .methods-cell {
         display: table-cell;
-        vertical-align: top;
+        //vertical-align: top;
+        vertical-align: middle;
       }
     }
 
@@ -105,6 +150,7 @@
     .methods-row {
 
       .delivery-item-label {
+        line-height: 1;
         text-align: left;
         padding: rem-calc(9) 0 rem-calc(9) rem-calc(9);
 
@@ -207,6 +253,7 @@
             display: inline-block;
             padding-left: rem-calc(5);
             white-space: normal;
+            font-weight: bold;
 
             @include breakpoint(large) {
               width: calc(100% - 2.1875rem);
@@ -259,11 +306,29 @@
   }
 
   .billing_address_form{
-    @include breakpoint(large){
-      padding-top: 2rem;
-      padding-bottom: 1rem;
-    }
 
+    margin-bottom: rem-calc(23);
+
+    @include breakpoint(large){
+      //padding-top: 2rem;
+      padding-bottom: 1rem;
+
+      .billing_address_form_container {
+        margin-left: -50%;
+        //margin-right: 50%;
+        .field-row .field {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .billing-form-submit {
+    text-align: center;
+
+    @include breakpoint(large) {
+      text-align: left;
+    }
   }
 
 }

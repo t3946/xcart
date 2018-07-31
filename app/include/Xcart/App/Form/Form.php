@@ -8,7 +8,7 @@ use Xcart\App\Traits\RenderTrait;
  * Class Form
  * @package Mindy\Form
  */
-class Form extends BaseForm
+class Form extends MixinBaseForm
 {
     use RenderTrait;
 

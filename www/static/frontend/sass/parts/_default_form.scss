@@ -1,4 +1,4 @@
-@import "./form/phone_ext";
+//@import "./form/phone_ext";
 
 form {
   label {
@@ -15,7 +15,7 @@ form {
         @include breakpoint(large) {
           position: absolute;
           right: rem-calc(-10);
-          top:0;
+          top: 0;
         }
       }
     }
@@ -42,7 +42,7 @@ form {
       border: 1px solid #ff8d91;
     }
 
-    &::placeholder{
+    &::placeholder {
       font-style: italic;
       color: $grey_96;
     }
@@ -53,6 +53,15 @@ form {
       width: rem-calc(295);
     }
 
+    &.hasError {
+      border: 1px solid red;
+    }
+
+    @include breakpoint(ml down) {
+      &.success {
+        border: 1px solid $forest_green;
+      }
+    }
   }
 
   /**
@@ -88,7 +97,7 @@ form {
       font: {
         size: rem-calc(14);
         weight: normal;
-      };
+      }
     }
 
     .required {
@@ -96,7 +105,7 @@ form {
       @include breakpoint(large) {
         position: absolute;
         right: rem-calc(-10);
-        top:0;
+        top: 0;
       }
     }
 
@@ -105,11 +114,10 @@ form {
       font-size: .75rem;
     }
 
-
   }
 
   input[type=radio] {
-    &  + label {
+    & + label {
       line-height: rem-calc(38);
       background-color: #f4f4f4;
 
@@ -150,7 +158,7 @@ form {
     @include breakpoint(large) {
       margin-bottom: rem-calc(30);
     }
-    &.no-margin-bottom{
+    &.no-margin-bottom {
       margin-bottom: 0;
     }
   }
@@ -166,7 +174,7 @@ form {
   }
 
   .mandatory {
-    .required{
+    .required {
       color: red;
     }
   }
@@ -189,7 +197,7 @@ form {
     width: rem-calc(198);
     height: rem-calc(58);
     //line-height: rem-calc(58);
-    font-size: rem-calc(20) !important;
+    font-size: rem-calc(20);
     font-weight: 700;
     text-transform: uppercase;
 
@@ -200,11 +208,50 @@ form {
       background-size: contain;
       display: inline-block;
       margin-left: rem-calc(3);
-      content:'';
+      content: '';
       background: url("../images/icons/cart/arrow_right_checkout.svg") no-repeat;
     }
   }
 
+  .form-field {
+
+    .show-success,
+    .show-error {
+      display: none;
+      width: 1rem;
+      height: 1rem;
+      vertical-align: top;
+      margin: rem-calc(11) 0 0 rem-calc(8);
+    }
+
+    .show-success {
+        background: url('../images/icons/forms/checkmark_accepted.svg');
+    }
+
+    .show-error {
+      background: url('../images/icons/forms/error.svg');
+    }
+
+    @include breakpoint(large) {
+      &.success {
+        .show-success {
+          display: block;
+        }
+        .show-error {
+          display: none;
+        }
+      }
+
+      &.hasError {
+        .show-success {
+          display: none;
+        }
+        .show-error {
+          display: block;
+        }
+      }
+    }
+  }
 
   .form-row {
     margin-top: rem-calc(20);
@@ -221,6 +268,12 @@ form {
       }
     }
 
+    .input-fields{
+      white-space: nowrap;
+      text-overflow: clip;
+      overflow: hidden;
+      //padding-right: 0;
+    }
 
     .errors {
       display: block;
@@ -231,6 +284,10 @@ form {
       padding: rem-calc(11);
       margin: 0;
       margin-bottom: rem-calc(10);
+
+      &.show {
+        display: block !important;
+      }
 
       li {
         text-align: center;
@@ -268,6 +325,10 @@ form {
         margin-bottom: 0;
         margin-left: rem-calc(20);
 
+        &.show {
+          display: inline-block !important;
+        }
+
         &:after {
           left: 0;
           bottom: calc(50% - 10px);
@@ -299,9 +360,8 @@ form {
   }
 }
 
-
 .cart_shipping-page {
-  @include getPhoneExtStyle();
+  //@include getPhoneExtStyle();
 }
 
 .checkout-shipping {
@@ -319,11 +379,9 @@ form {
   }
 
   .subscription-options {
-    margin-bottom: 2rem;
+    margin-bottom: rem-calc(22);
   }
 }
-
-
 
 .info_sended_data {
   .title {

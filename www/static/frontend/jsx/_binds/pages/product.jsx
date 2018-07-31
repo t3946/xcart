@@ -36,6 +36,8 @@ import documentReady from "../../utils/documentReady";
                     'success': (html) => {
                         if (html) {
                             questionsContainer.html(html);
+                            let formConstructedEvent = new CustomEvent('form.constructed', { detail: {} });
+                            document.dispatchEvent(formConstructedEvent);
                         }
                     }
                 });

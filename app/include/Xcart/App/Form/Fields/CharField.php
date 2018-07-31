@@ -10,6 +10,9 @@ use Xcart\App\Exceptions\Exception;
  */
 class CharField extends Field
 {
+
+    public $userClear = true;
+
     public function getValue()
     {
         $value = parent::getValue();

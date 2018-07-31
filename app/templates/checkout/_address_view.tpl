@@ -14,7 +14,7 @@
 
     <div class="row align-center">
         <div class="columns small-12">
-            <a href="{url $uri}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+            <a href="{url $uri}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' dict='order'}</a>
         </div>
     </div>
 </div>
