@@ -204,60 +204,48 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
         .on('click', '.number-button', (event) => {
 
-            let cartContainer = document.querySelector('.notify_stock');
+            let notifyContainer = document.querySelector('.notify_stock');
 
             event.preventDefault();
             event.stopPropagation();
 
-            let wina = document.createElement('div');
-            let wWrapper = document.createElement('div');
+            let notify_win = document.createElement('div');
+            let notify_Wrapper = document.createElement('div');
 
-            wina.setAttribute('id', 'notify_get');
-            wWrapper.style.position = 'absolute';
-            wWrapper.style.left = '-9999px';
-            wWrapper.style.right = '-9999px';
-            wWrapper.style.display = 'none';
+            notify_win.setAttribute('id', 'notify_get');
+            notify_Wrapper.style.position = 'absolute';
+            notify_Wrapper.style.left = '-9999px';
+            notify_Wrapper.style.right = '-9999px';
+            notify_Wrapper.style.display = 'none';
 
-            wWrapper.appendChild(wina);
-            cartContainer.appendChild(wWrapper);
+            notify_Wrapper.appendChild(notify_win);
+            notifyContainer.appendChild(notify_Wrapper);
 
             let product_id = event.target.closest('.product-page').dataset.product;
 
             $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
 
-                $(wina).html(html).mmodal({
+                $(notify_win).html(html).mmodal({
                     'width': 750,
                     'onSubmit': function () {
+                        let $self = this;
                         $.ajax({
                             url: '/notify/post/',
                             method: 'POST',
                             data: $('.mmodal_notify_stock form').serialize()
 
                         }).done(function(result) {
-
-                            if(result.type && result.type == 'json') {
-
-                                let json = result.result;
-                                for (let key in json) {
-                                    html += '<div class="row align-center"><div class="name columns small-4">' + key
-                                        + '</div><div class="value columns small-2">' + json[key] + '</div></div>';
-                                }
-                                $('.mmodal-content .ajax-calculate-shipping-form').html(html);
-                            } else {
-                                $('.mmodal-content .ajax-calculate-shipping-form').html(result);
-                            }
-
+                                Object.keys(result).forEach(function(key, id){
+                                    window.window.addFlashMessage(result[key], key, false, 5);
+                                });
+                            $self.close();
                         });
                     }
                 });
 
             });
 
-            // alert("Call to our cs for info");
         });
-
-
-
 
 
 })();

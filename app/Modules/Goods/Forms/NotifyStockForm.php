@@ -5,9 +5,7 @@ namespace Modules\Goods\Forms;
 use Modules\Goods\Models\NotifyStockModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\HiddenField;
-use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
@@ -48,11 +46,6 @@ class NotifyStockForm extends ModelForm
                 'validators' => [
                     new EmailValidator(),
                 ],
-            ],
-
-            'is_subscribe' => [
-                'class' => CheckboxField::class,
-                'required' => false,
             ],
 
         ];

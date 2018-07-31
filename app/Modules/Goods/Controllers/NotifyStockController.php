@@ -3,10 +3,9 @@
 namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Forms\NotifyStockForm;
-use Modules\Sites\Models\SiteModel;
+use Modules\Goods\Models\NotifyStockModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Validation\EmailValidator;
 
 class NotifyStockController extends FrontendController
 {
@@ -14,22 +13,32 @@ class NotifyStockController extends FrontendController
     {
         $request = $this->getRequest();
 
+        $flash_data = [];
 
         $form = new NotifyStockForm();
 
         $form->populate($request->post);
 
         if (!$form->isValid()) {
-//            Xcart::app()->flash->error('The data is not valid');
-            $this->refresh();
+            $flash_data['error'] = ['The data is not correct'];
         }
         else {
-            $form->save();
-dd($form->save());
-//            Xcart::app()->flash->error('Still wait for email when product is get stock status');
-            $this->refresh();
+
+            if ($model = NotifyStockModel::objects()->get([
+                                                            'email' => $request->post->get('NotifyStockForm')['email'],
+                                                            'productid' => $request->post->get('NotifyStockForm')['product'],
+                                                            'first_name' => $request->post->get('NotifyStockForm')['first_name'],
+                                                            'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                                                            'sent' => false,
+                                                          ])){
+                $flash_data['error'] = ['You already signed up for this notification'];
+            } else {
+                $form->save();
+                $flash_data['success'] = ['Thank you! You will be notified when the product is in stock.'];
+            }
         }
 
+        $this->jsonResponse($flash_data);
     }
 
     public function getTpl()
