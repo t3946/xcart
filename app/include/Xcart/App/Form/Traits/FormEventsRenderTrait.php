@@ -10,7 +10,7 @@ namespace Xcart\App\Form\Traits;
 
 use Xcart\App\Form\FormView\FormViewBehavior;
 
-trait FormBehaviourRenderTrait
+trait FormEventsRenderTrait
 {
 
     /**

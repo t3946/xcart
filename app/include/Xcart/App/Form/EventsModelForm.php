@@ -9,11 +9,11 @@
 namespace Xcart\App\Form;
 
 
-use Xcart\App\Form\Traits\FormBehaviourRenderTrait;
+use Xcart\App\Form\Traits\FormEventsRenderTrait;
 
 abstract class EventsModelForm extends ModelForm
 {
-    use FormBehaviourRenderTrait;
+    use FormEventsRenderTrait;
 
     public function __construct(array $config = [])
     {
