@@ -48,7 +48,13 @@ class FormValidation {
             && typeof event.explicitOriginalTarget !== 'undefined'
             && typeof event.explicitOriginalTarget.classList !== 'undefined'
             && event.explicitOriginalTarget.classList.contains('clear-input')){
-            return;
+
+            let clearContainer = event.explicitOriginalTarget.closest('.input-container');
+            let eventContainer = event.target.closest('.input-container');
+
+            if(clearContainer === eventContainer){
+                return;
+            }
         }
 
         this.checkForm(event.target);
