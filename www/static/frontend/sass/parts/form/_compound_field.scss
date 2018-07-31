@@ -1,0 +1,46 @@
+
+@mixin getCompoundFieldStyle() {
+
+    .compound-input .input-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+      input[data-extended] {
+        min-width: 1%;
+        flex-grow: 1;
+      }
+
+      .compound-field-container {
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        label {
+          padding: 0 rem-calc(5);
+          display: inline;
+          align-self: center;
+          font-weight: bold;
+
+          @include breakpoint(medium) {
+            font-weight: normal;
+            padding: 0 rem-calc(12);
+          }
+
+          @include breakpoint(large) {
+            align-self: auto;
+            padding: 0 rem-calc(14) 0 rem-calc(40);
+          }
+        }
+
+        input {
+          width: rem-calc(72);
+        }
+      }
+    }
+
+    .compound-field-container input {
+      width: rem-calc(72);
+    }
+}

@@ -19,6 +19,7 @@ class CountryModel extends Model
 
     public static $codes = [
         'United States' => 'US',
+        'USA' => 'US',
         'Canada' => 'CA',
     ];
 

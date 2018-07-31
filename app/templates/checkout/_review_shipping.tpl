@@ -1,13 +1,13 @@
 <div class="row align-center show-for-large">
     <div class="columns small-12">
-        <h1 class="text-center">{$header}</h1>
+        <h1 class="text-center title-margin-small">{$header}</h1>
     </div>
 </div>
 <div class="row info-row contact-info">
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Contact information' dict='order'}</h2>
+                <h2 class="">{t 'Contact information' dict='order'}</h2>
             </div>
         </div>
         <div class="row full-name">
@@ -32,16 +32,16 @@
         {include "checkout/_address_view_full.tpl" info=$billing_address uri='checkout:options' header=$.t('Billing Address','order')}
     </div>
 </div>
-<div class="row">
-    <div class="small-12 columns">
-        <div class="hr-info"></div>
-    </div>
-</div>
+{*<div class="row">*}
+    {*<div class="small-12 columns">*}
+        {*<div class="hr-info"></div>*}
+    {*</div>*}
+{*</div>*}
 <div class="row delivery">
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Delivery methods' dict='order'}</h2>
+                <h2 class="">{t 'Delivery methods' dict='order'}</h2>
             </div>
         </div>
         {foreach $order->groups as $group}
@@ -58,14 +58,14 @@
         {/foreach}
         <div class="row align-center">
             <div class="columns small-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' dict='order'}</a>
             </div>
         </div>
     </div>
     <div class="columns small-12 large-6">
         <div class="row">
             <div class="columns">
-                <h2>{t 'Payment method' dict='order'}</h2>
+                <h2 class="">{t 'Payment method' dict='order'}</h2>
             </div>
         </div>
         <div class="row payment-method info-row">
@@ -76,7 +76,7 @@
         </div>
         <div class="row align-center">
             <div class="columns small-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect">{t 'Modify' dict='order'}</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' dict='order'}</a>
             </div>
         </div>
     </div>

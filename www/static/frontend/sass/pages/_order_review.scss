@@ -5,7 +5,25 @@
       border-bottom: 1px solid #cbcbcb;
     }
     &:first-child:not(.is-active) > .accordion-title {
-      border-bottom: 0;
+      //border-bottom: 0;
+    }
+
+    &.shipping-review {
+      @include breakpoint(large) {
+        max-width: 80rem;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+        margin: {
+          right: auto;
+          left: auto;
+        }
+        padding: {
+          right: rem-calc(48);
+          left: rem-calc(48);
+        }
+      }
     }
 
     .accordion-title {
@@ -14,6 +32,7 @@
         right: 0;
         bottom: 1px solid #cbcbcb;
         left: 0;
+
       }
       background-color: #f5f5f5;
       text-decoration: none;
@@ -31,14 +50,30 @@
         background-color: #dfe5e8;
       }
 
+      &.checkout-review-title {
+        display: none !important;
+      }
+
       @include breakpoint(medium) {
-        &.checkout-review-title {
-          display: none !important;
+
+        &.shipping-review-title {
+          text-align: center;
+
         }
       }
+
       @include breakpoint(large) {
+        border: {
+          right: 1px solid #cbcbcb;
+          left: 1px solid #cbcbcb;
+        }
+
         &.shipping-review-title {
-          display: none !important;
+          //display: none !important;
+          width: 100%;
+          text-align: center;
+          margin: 0 1.25rem;
+
         }
       }
 
@@ -59,7 +94,7 @@
       }
       @include breakpoint(large) {
         &.shipping-review-container {
-          display: block !important;
+          width:100%;
         }
       }
 
@@ -76,7 +111,17 @@
 
 }
 
+
 .checkout-review {
+
+  @include breakpoint(medium) {
+    margin-top: .7rem;
+  }
+
+  @include breakpoint(large) {
+    margin-top: 1.7rem;
+  }
+
 
   h1 {
     margin: 0 !important;
@@ -98,10 +143,11 @@
       @include breakpoint(medium) {
         font-size: rem-calc(20);
         line-height: 100%;
+        margin-top: rem-calc(38);
       }
       @include breakpoint(large) {
         font-size: rem-calc(18);
-        margin: rem-calc(20) 0;
+        margin: rem-calc(24) 0 rem-calc(20);
       }
     }
 
@@ -136,6 +182,10 @@
               font-size: rem-calc(18);
               line-height: rem-calc(21);
               min-height: rem-calc(63);
+
+              &.price-info {
+                text-align: right;
+              }
             }
 
             @include breakpoint(large) {
@@ -145,10 +195,15 @@
               padding: rem-calc(14) .625rem;
               text-align: center;
               min-height: auto;
+
+              &.extended {
+                text-align: right;
+                padding-right: rem-calc(20);
+              }
             }
 
             &.sku {
-              color: #28862f;
+              color: $forest_green;
             }
 
             &.picture {
@@ -218,6 +273,11 @@
             text-align: center;
             line-height: 100%;
             padding: rem-calc(14) .5rem;
+
+            &.extended {
+              text-align: right;
+              padding-right: rem-calc(20);
+            }
           }
         }
       }
@@ -278,7 +338,7 @@
       .sum-info {
         font-size: rem-calc(13);
         line-height: rem-calc(37);
-        color: #28862f;
+        color: $forest_green;
         text-align: right;
 
         @include breakpoint(sm) {
@@ -310,13 +370,14 @@
           display: inline-block;
           padding-left: .625rem;
           @include breakpoint(medium) {
-            text-align: left;
-            min-width: 17.1939%;
+            //text-align: left;
+            //min-width: 17.1939%;
             padding: 0 .625rem;
           }
           @include breakpoint(large) {
-            min-width: 14.6774%;
-            text-align: center;
+            //min-width: 14.6774%;
+            //text-align: right;
+            padding-right: rem-calc(20);
           }
 
           &.underline {
@@ -359,7 +420,7 @@
       }
 
       &.total-shipping {
-        color: #28862f;
+        color: $forest_green;
       }
       &.grand-total {
         color: #9a1524;
@@ -376,13 +437,14 @@
         padding-left: .625rem;
 
         @include breakpoint(medium) {
-          text-align: left;
-          min-width: 17.1939%;
+          //text-align: left;
+          //min-width: 17.1939%;
           padding: 0 .625rem;
         }
         @include breakpoint(large) {
-          min-width: 14.6774%;
-          text-align: center;
+          //min-width: 14.6774%;
+          //text-align: center;
+          padding-right: rem-calc(20);
         }
       }
     }
@@ -400,27 +462,32 @@
   //background: url("../../demo_images/templates/small_Order review (Shipping & Billing address).jpg") 50% -1310px no-repeat;
 
   h2 {
-    font-size: 17px;
+    font-size: rem-calc(17);
     text-align: left;
-    line-height: 19px;
-    margin-top: 13px;
+    line-height: rem-calc(19);
+    margin-top: rem-calc(13);
+    margin-bottom: .5rem;
+    border-bottom: 1px solid #e1e1e1;
 
     @include breakpoint(sm) {
-      font-size: 20px;
-      line-height: 24px;
-      margin-top: 22px;
+      font-size: rem-calc(20);
+      line-height: rem-calc(24);
+      margin-top: rem-calc(22);
+      margin-bottom: .5rem
     }
 
     @include breakpoint(medium) {
       font-size: 22px;
       line-height: 26px;
       margin-top: 20px;
+      margin-bottom: .5rem
     }
 
     @include breakpoint(large) {
-      font-size: 20px;
+      font-size: 18px;
       line-height: 24px;
-      margin-top: 22px;
+      margin-top: 5px;
+      margin-bottom: 15px;
     }
   }
 
@@ -442,9 +509,15 @@
     }
 
     @include breakpoint(large) {
-      font-size: 15px;
+      font-size: 14px;
       line-height: 22px;
       margin-bottom: 10px;
+      //max-width: 984px;
+      //
+      //.columns {
+      //  padding-right: 0;
+      //  padding-left:0;
+      //}
     }
 
     &.address {
@@ -464,34 +537,22 @@
 
   .hr-info{
     border-bottom: 1px solid #e1e1e1;
-    margin-top: 14px;
+    margin-top: 9px;
   }
 
-  .button{
-    border: 1px solid $dark_yellow;
-    line-height: 1.9;
-    min-height: 1.9rem;
-    padding: 0 1.35rem;
-    font-size: rem-calc(15);
-    border-radius: 3px;
-
-    @include breakpoint(sm) {
-      font-size: rem-calc(17);
-      line-height: 2;
-      min-height: 2rem;
+  @include breakpoint(large) {
+    .delivery {
+      margin-top: 15px;
+      margin-bottom: 10px;
+      //max-width: 984px;
+      //
+      //.columns {
+      //  padding-right: 0;
+      //  padding-left:0;
+      //}
     }
-
-    @include breakpoint(medium) {
-      font-size: rem-calc(20);
-      line-height: 2;
-      min-height: 2rem;
-    }
-
-    @include breakpoint(large) {
-      font-size: rem-calc(17);
-      line-height: 2;
-      min-height: 2rem;
-    }
-
   }
+
+
+
 }

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import ScreenSize from "../utils/ScreenSize";
 import { actionMedia } from '../redusers/appHeadReduser';
 
-export default class ResizeMonitor {
+class ResizeMonitor {
 
     constructor() {
 
@@ -43,5 +43,16 @@ export default class ResizeMonitor {
     destructor() {
         this.screen.destructor();
     }
+}
+
+var resizeMonitorExample;
+
+export default function() {
+    if(resizeMonitorExample) {
+        return resizeMonitorExample;
+    }
+
+    resizeMonitorExample = new ResizeMonitor();
+    return resizeMonitorExample;
 }
 

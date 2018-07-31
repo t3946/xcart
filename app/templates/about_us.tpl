@@ -100,7 +100,7 @@
 
                             <div class="columns small-12 medium-3 counting">
                                 <div class="count">
-                                    11
+                                    13
                                 </div>
                                 <div class="title">
                                     Working years

@@ -6,22 +6,56 @@ $image: (
 $name: rem-calc(555);
 $price: rem-calc(160);
 $quantity: rem-calc(177);
-$x: rem-calc(53);
+$x: rem-calc(35);
 $extended: (
         small: auto,
         medium: rem-calc(103),
+        //medium: 7rem,
         ml: rem-calc(192),
+        //ml: 7rem,
         large: rem-calc(123),
 );
 $remove: (
         small: rem-calc(42),
+        //medium: rem-calc(84),
         medium: rem-calc(84),
+        //ml: rem-calc(72),
         ml: rem-calc(72),
         large: rem-calc(107),
 );
 
+.default-form .cart-page input {
+  line-height: 1.15;
+  line-height: 1.15;
+  height:auto;
+}
 
 .cart-page {
+
+  h2{
+    margin-top: 20px;
+    margin-bottom: 0;
+    line-height: normal;
+
+    @include breakpoint(sm) {
+      margin-top: 29px;
+      margin-bottom: 0;
+    }
+
+    @include breakpoint(medium) {
+      margin-top: 40px;
+      margin-bottom: 0;
+
+    }
+
+    @include breakpoint(large) {
+      margin-top: 0;
+      margin-bottom: 0;
+
+    }
+
+  }
+
   .table {
     width: 100%;
 
@@ -97,7 +131,21 @@ $remove: (
     .name {
       flex-grow: 1;
       flex-shrink: 1;
+
+      .title {
+        padding-right: 30px;
+        a {
+          color: #000000;
+        }
+      }
     }
+
+    .close-wide-screen {
+      display: flex;
+      align-items: center;
+      padding:0 20px 0 10px;
+    }
+
 
     .price {
       width: $price;
@@ -107,6 +155,10 @@ $remove: (
     .x {
       width: $x;
       text-align: center;
+
+      @include breakpoint(medium) {
+        padding-right: 11px;
+      }
 
       @include breakpoint(large up) {
         flex-shrink: 1;
@@ -130,7 +182,7 @@ $remove: (
         width: $quantity;
       }
 
-      @include breakpoint(560 down) {
+      @include breakpoint(sm down) {
         width: auto;
         //width: rem-calc(135);
 
@@ -148,7 +200,7 @@ $remove: (
 
     .extended {
       width: auto;
-      text-align: left;
+
 
       @include breakpoint(sm down) {
         font-weight: 700;
@@ -159,12 +211,17 @@ $remove: (
           width: $val;
         }
       }
+
+      @include breakpoint(large) {
+        text-align: right;
+        padding-right: 24px;
+      }
     }
 
     .remove {
       text-align: center;
 
-      @include breakpoint(560 down) {
+      @include breakpoint(sm down) {
         align-self: flex-start;
 
         .icon:after {
@@ -186,13 +243,13 @@ $remove: (
       flex-shrink: 1;
       padding-left: rem-calc(20);
 
-      @include breakpoint(560 down) {
+      @include breakpoint(sm down) {
         flex-direction: column;
         align-items: flex-start;
         padding-left: rem-calc(16);
       }
 
-      @include breakpoint(560 up) {
+      @include breakpoint(medium up) {
         justify-content: space-between;
       }
 
@@ -212,13 +269,10 @@ $remove: (
       @include breakpoint(sm down) {
         width: 100%;
         flex-shrink: 1;
-      }
-
-      @include breakpoint(560 down) {
         padding-top: rem-calc(10);
       }
 
-      @include breakpoint(560 up) {
+      @include breakpoint(medium up) {
         justify-content: flex-end;
       }
 
@@ -226,6 +280,7 @@ $remove: (
         @if is-number($val) {
           @include breakpoint($key up) {
             width: $quantity + $x + $val;
+            max-width: $quantity + $x + $val;
           }
         }
       }
@@ -238,22 +293,36 @@ $remove: (
 
     .extended_remove {
       width: auto;
+      margin-left: rem-calc(15);
+      font-size: rem-calc(16);
+      font-weight: 700;
 
-      @include breakpoint(sm down) {
-        min-width: rem-calc(100);
-      }
 
-      @include breakpoint(medium up) {
-        text-align: left !important;
-      }
+      //@include breakpoint(large up) {
+      //  padding-right: 24px;
+      //}
 
-      @each $key, $val in array_merge_sum($remove, $extended) {
-        @if is-number($val) {
-          @include breakpoint($key up) {
-            width: $val;
-          }
-        }
-      }
+      //@include breakpoint(sm down) {
+      //  min-width: rem-calc(100);
+      //}
+
+      //@include breakpoint(medium up) {
+      //  text-align: left !important;
+      //}
+
+      //@each $key, $val in array_merge_sum($remove, $extended) {
+      //  @if is-number($val) {
+      //    @include breakpoint($key up) {
+      //      width: $val;
+      //    }
+      //  }
+      //}
+
+      //@each $key, $val in $extended {
+      //  @include breakpoint($key up) {
+      //    min-width: $val;
+      //  }
+      //}
     }
   }
 
@@ -262,8 +331,22 @@ $remove: (
     .shipped_from {
       padding: rem-calc(22) 0;
       text-align: center;
-      font-size: rem-calc(18);
+      font-size: rem-calc(15);
       font-weight: 700;
+
+      @include breakpoint(sm) {
+        font-size: rem-calc(18);
+      }
+
+      @include breakpoint(medium) {
+        font-size: rem-calc(20);
+        padding: rem-calc(34) 0 rem-calc(24);
+      }
+
+      @include breakpoint(large) {
+        font-size: rem-calc(18);
+        padding: rem-calc(30) 0 rem-calc(22);
+      }
     }
 
     .warehouse_subtotal {
@@ -293,6 +376,9 @@ $remove: (
         .extended_remove {
           @include breakpoint(sm down) {
             font-size: 1.08em;
+          }
+          @include breakpoint(large) {
+            padding-right: 24px;
           }
         }
       }
@@ -337,24 +423,33 @@ $remove: (
     }
 
     @include breakpoint(large up) {
-      font-size: rem-calc(20)
+      font-size: rem-calc(20);
+      padding-right: 24px;
     }
 
     .subtotal {
       margin-left: rem-calc(15);
 
-      @include breakpoint(large up) {
-        margin-left: rem-calc(5);
-      }
+      //@include breakpoint(large up) {
+      //  margin-left: rem-calc(5);
+      //}
 
       //display: inline-block;
-      @each $key, $val in array_merge_sum($remove, $extended) {
-        @if is-number($val) {
-          @include breakpoint($key up) {
-            width: $val;
-          }
-        }
-      }
+      //@each $key, $val in array_merge_sum($remove, $extended) {
+      //  @if is-number($val) {
+      //    @include breakpoint($key up) {
+      //      width: $val;
+      //    }
+      //  }
+      //}
+
+      //@each $key, $val in $extended {
+      //  @include breakpoint($key up) {
+      //    width: $val;
+      //  }
+      //}
+
+
     }
 
   }
@@ -371,10 +466,11 @@ $remove: (
 
     .memo {
       padding-top: rem-calc(20);
-      flex: 1 1 auto;
+      //flex: 1 1 auto;
       @include breakpoint(large up) {
         padding-top: 0;
         order: 0;
+
       }
     }
 
@@ -427,7 +523,8 @@ $remove: (
   .head {
     text-align: center;
     min-height: 2.5em;
-    padding-top: 3rem;
+    clear: both;
+    overflow: hidden;
 
     .nop {
       display: none;
@@ -453,6 +550,7 @@ $remove: (
       align-content: center;
       align-items: center;
       flex-direction: row;
+      clear: none;
 
       .nop {
         display: block;
@@ -471,6 +569,11 @@ $remove: (
   .bottom_line,
   .head_line {
     min-height: 2.5em;
+    margin-top: 23px;
+
+    @include breakpoint(sm) {
+      margin-top: 29px;
+    }
 
     &:after {
       content: '';
@@ -483,13 +586,52 @@ $remove: (
       display: inline-block;
 
       a {
+
+        height: 38px;
+        line-height: 34px;
+        padding: 0 10px;
+        font-size: 14px;
+
+        @include breakpoint(sm) {
+          height: 45px;
+          line-height: 41px;
+          font-size: 18px;
+        }
+
+        @include breakpoint(medium) {
+          height: 50px;
+          line-height: 46px;
+          font-size: 20px;
+          padding: 0 40px;
+        }
+
+        @include breakpoint(large) {
+          font-size: 18px;
+          padding: 0 34px;
+        }
+
         &:before,
         &:after {
-          width: rem-calc(14);
+          width: rem-calc(13);
           height: rem-calc(13);
           background-origin: content-box;
           background-size: contain;
           display: inline-block;
+          vertical-align: middle;
+          margin-top: -2px;
+
+          @include breakpoint(sm) {
+            width: rem-calc(14);
+            height: rem-calc(14);
+          }
+
+          @include breakpoint(medium) {
+            width: rem-calc(13);
+            height: rem-calc(13);
+          }
+          @include breakpoint(large) {
+            margin-top: -3px;
+          }
         }
       }
     }
@@ -499,9 +641,19 @@ $remove: (
 
       a {
         &:before {
-          padding-right: rem-calc(5);
+          margin-right: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_left_shop_more.svg");
+          background: url("../images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
+
+          @include breakpoint(sm) {
+            margin-right: rem-calc(16);
+          }
+          @include breakpoint(medium) {
+            margin-right: rem-calc(17);
+          }
+          @include breakpoint(large) {
+            margin-right: rem-calc(18);
+          }
         }
       }
     }
@@ -512,20 +664,35 @@ $remove: (
 
       a {
         &:after {
-          padding-left: rem-calc(5);
+          margin-left: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_right_checkout.svg");
+          background: url("../images/icons/cart/arrow_right_checkout.svg") 0 0 no-repeat;
+
+          @include breakpoint(sm) {
+            margin-left: rem-calc(16);
+          }
+          @include breakpoint(medium) {
+            margin-left: rem-calc(17);
+          }
+          @include breakpoint(large) {
+            margin-left: rem-calc(18);
+          }
+        }
+      }
+    }
+
+    .head {
+      h2 {
+        &.cart-number {
+          font-size: rem-calc(24);
+          text-align: center;
         }
       }
     }
   }
 
   .button {
-    line-height: 2;
-    min-height: rem-calc(38);
-    padding: 0 rem-calc(10);
     text-transform: uppercase;
-    font-size: rem-calc(18);
     font-weight: 700;
   }
 }

@@ -97,12 +97,6 @@ class DefaultController extends AbstractCatalogController
 
     public function getQS($data)
     {
-        /** @var \Modules\Sites\SitesModule $siteModule */
-        $siteModule = Xcart::app()->getModule('Sites');
-        return ProductModel::objects()->filter([
-            'forsale' => 'Y',
-            'brand__brandid' => $data->brandid,
-            'sites__storefrontid' => $siteModule->getSite()->storefrontid
-        ]);
+        return parent::getQS()->filter(['brand__brandid' => $data->brandid]);
     }
 }

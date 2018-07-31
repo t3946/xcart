@@ -1,40 +1,69 @@
 .checkout-review-form {
-  .customer-notes {
+
+  .checkout-po{
+    padding-bottom: rem-calc(10);
+    margin-top: 1rem;
 
     @include breakpoint(medium) {
-      margin: 1rem 0 1.5rem 0;
+      padding-bottom: rem-calc(10);
     }
+  }
 
-    h2 {
-      text-align: left;
-      font-size: rem-calc(17);
-      margin: .5rem 0;
+  .additional-button-mobile {
+    margin-bottom: rem-calc(26);
 
-      @include breakpoint(sm) {
-        font-size: rem-calc(20);
+    @include breakpoint(small only) {
+        margin-top: rem-calc(15);
+        margin-bottom: rem-calc(15);
+    }
+    @include breakpoint(sm only) {
+      margin-top: rem-calc(20);
+      margin-bottom: rem-calc(20);
+    }
+  }
+
+  .column-with-button{
+    position: relative;
+
+    .additional-button-large{
+      height: rem-calc(58);
+      line-height: rem-calc(56);
+      border-radius: 4px;
+      padding: 0 rem-calc(34) 0 rem-calc(42);
+      position: absolute;
+      top: 0;
+      right: .625rem;
+      font-size: rem-calc(25);
+      width: auto;
+      min-width: auto;
+
+      .long-label{
+        display: none;
       }
-
-    }
-
-    textarea {
-      height: rem-calc(90);
 
       @include breakpoint(large) {
-        width: 80%;
-        max-width: 80%;
+
+        height: rem-calc(50);
+        line-height: rem-calc(48);
+        padding: 0 rem-calc(20) 0 rem-calc(24);
+        font-size: rem-calc(18);
+        right: 1.25rem;
+
+        .long-label{
+          display: inline;
+        }
+        .short-label{
+          display: none;
+        }
+
+        &:after {
+          width: rem-calc(14);
+          height: rem-calc(14);
+        }
       }
-    }
 
-  }
-
-  .submit-order-button {
-    width: 100%;
-    font-size: rem-calc(25);
-    height: 2.5em;
-
-    @include breakpoint(medium) {
-      width: auto;
-      padding: 0 rem-calc(40);
     }
   }
+
+
 }
