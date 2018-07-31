@@ -3,6 +3,14 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
 
     var createAutoComplete = function(){
 
+        function throwJsChangeEvent(element){
+            let detail = {
+                'element' : element
+            };
+            let event = new CustomEvent('js.change.event', { detail: detail });
+            element.dispatchEvent(event);
+        }
+
         function createAutoComplete(containerSelector){
 
             let selectorPrefix = containerSelector ? containerSelector + ' .auto-complete' : '.auto-complete';
@@ -68,8 +76,13 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         },
                         onSelect: function (e, term, item) {
                             e.preventDefault();
+
                             inputCity.value = item.getAttribute('data-city');
                             inputState.value = item.getAttribute('data-state-name');
+
+                            throwJsChangeEvent(inputCity);
+                            throwJsChangeEvent(inputState);
+
                             inputState.setAttribute('data-code', item.getAttribute('data-state'));
                         }
                     });
