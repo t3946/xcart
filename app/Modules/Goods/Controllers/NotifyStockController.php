@@ -49,7 +49,7 @@ class NotifyStockController extends FrontendController
 
         $form->getField('product')->setValue($request->get->get('product_id'));
 
-        $this->display('/product/parts/_notify_stock.tpl', ['form' => $form]);
+        $this->display('/product/parts/_notify_stock.tpl', ['form' => $form, 'productid' => $request->get->get('product_id')]);
     }
 
 }

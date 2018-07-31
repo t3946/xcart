@@ -156,7 +156,7 @@
                         {include "product/price/_table_prices.tpl" model=$model}
 
                         {if $model->isOutOfStock()}
-                            <a class="button number-button grey-border">
+                            <a class="notify-me grey-border">
                                 <span>Notify me when product is in stock</span>
                             </a>
                         {/if}

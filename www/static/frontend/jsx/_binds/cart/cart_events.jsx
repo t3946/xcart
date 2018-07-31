@@ -202,30 +202,35 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
         })
 
-        .on('click', '.number-button', (event) => {
-
-            let notifyContainer = document.querySelector('.notify_stock');
+        .on('click', '.notify-me', (event) => {
 
             event.preventDefault();
             event.stopPropagation();
 
-            let notify_win = document.createElement('div');
-            let notify_Wrapper = document.createElement('div');
+            let notify_win = document.getElementById('notify_get');
 
-            notify_win.setAttribute('id', 'notify_get');
-            notify_Wrapper.style.position = 'absolute';
-            notify_Wrapper.style.left = '-9999px';
-            notify_Wrapper.style.right = '-9999px';
-            notify_Wrapper.style.display = 'none';
+            if (notify_win === null) {
 
-            notify_Wrapper.appendChild(notify_win);
-            notifyContainer.appendChild(notify_Wrapper);
+                let notifyContainer = document.querySelector('.notify_stock');
+
+                notify_win = document.createElement('div');
+                let notify_Wrapper = document.createElement('div');
+
+                notify_win.setAttribute('id', 'notify_get');
+                notify_Wrapper.style.position = 'absolute';
+                notify_Wrapper.style.left = '-9999px';
+                notify_Wrapper.style.right = '-9999px';
+                notify_Wrapper.style.display = 'none';
+
+                notify_Wrapper.appendChild(notify_win);
+                notifyContainer.appendChild(notify_Wrapper);
+            }
 
             let product_id = event.target.closest('.product-page').dataset.product;
 
             $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
 
-                $(notify_win).html(html).mmodal({
+                $(notify_win).mmodal({
                     'width': 750,
                     'onSubmit': function () {
                         let $self = this;
@@ -240,6 +245,13 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                                 });
                             $self.close();
                         });
+                    },
+                    'onAfterOpen': function() {
+                        let evnt = new CustomEvent('sliders_show');
+                        document.dispatchEvent(evnt);
+                    },
+                    'onBeforeOpen': function () {
+                        this.setContent(html);
                     }
                 });
 
