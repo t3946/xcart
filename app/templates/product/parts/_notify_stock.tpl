@@ -12,6 +12,9 @@
             'method' => 'POST',
             'class' => 'checkout-options-form',
             ])}
+
+        {*<input type="hidden" value="{$productid}" name="NotifyStockForm[product]">*}
+
             <div class="row">
                 <div class="column no-padding small-12">
                     {raw $form->render()}

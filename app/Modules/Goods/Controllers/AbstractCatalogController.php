@@ -49,7 +49,7 @@ abstract class AbstractCatalogController extends FrontendController
 
          $qs->filter([
             'forsale' => 'Y',
-            'sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite(),
+            'sites__through__sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
             new QOr([
                 ['group_root__isnull' => true],
                 ['group_root__raw' => " = `{$ta}`.`productid`"]

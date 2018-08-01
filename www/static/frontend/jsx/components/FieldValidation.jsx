@@ -87,7 +87,7 @@ class FieldValidation {
             }
         }
 
-        this.removeError(element);
+        this.removeError(this.element);
         this.itemAddSuccess();
         this.dispatchSuccess();
     }
