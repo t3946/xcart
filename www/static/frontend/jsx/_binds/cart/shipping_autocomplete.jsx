@@ -3,6 +3,15 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
 
     var createAutoComplete = function(){
 
+        function throwJsChangeEvent(element){
+            //console.log('throwJsChangeEvent');
+            let detail = {
+                'element' : element
+            };
+            let event = new CustomEvent('js.change.event', { detail: detail });
+            element.dispatchEvent(event);
+        }
+
         function createAutoComplete(containerSelector){
 
             let selectorPrefix = containerSelector ? containerSelector + ' .auto-complete' : '.auto-complete';
@@ -39,6 +48,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputCountry.setAttribute('data-code', code);
+                            throwJsChangeEvent(inputCountry);
                         }
                     });
                 }
@@ -68,8 +78,14 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         },
                         onSelect: function (e, term, item) {
                             e.preventDefault();
+
                             inputCity.value = item.getAttribute('data-city');
                             inputState.value = item.getAttribute('data-state-name');
+
+                            throwJsChangeEvent(inputZipCode);
+                            throwJsChangeEvent(inputCity);
+                            throwJsChangeEvent(inputState);
+
                             inputState.setAttribute('data-code', item.getAttribute('data-state'));
                         }
                     });
@@ -98,6 +114,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputState.setAttribute('data-code', code);
+                            throwJsChangeEvent(inputState);
 
                         }
                     });
@@ -124,6 +141,7 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         },
                         onSelect: function (e, term, item) {
                             e.preventDefault();
+                            throwJsChangeEvent(inputCity);
                         }
                     });
                 }
