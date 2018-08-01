@@ -31,7 +31,7 @@ class NotifyStockController extends FrontendController
                                                             'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
                                                             'sent' => false,
                                                           ])){
-                $flash_data['error'] = ['You already signed up for this notification'];
+                $flash_data['success'] = ['You already signed up for this notification'];
             } else {
                 $form->save();
                 $flash_data['success'] = ['Thank you! You will be notified when the product is in stock.'];

@@ -231,7 +231,8 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
 
                 $(notify_win).mmodal({
-                    'width': 750,
+                    'windowClass': 'notifySelector',
+                    'setWidth': false,
                     'onSubmit': function () {
                         let $self = this;
                         $.ajax({

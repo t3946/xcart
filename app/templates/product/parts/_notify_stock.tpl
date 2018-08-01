@@ -5,15 +5,13 @@
         <h2>Stock Notification</h2>
 
         <p>Email notification will be sent to your email address when the product is in stock.<br>
-        The fields marked with <span style="color: #ff0000;">*</span> are mandatory</p>
+            <span class="notice-notify-me">The fields marked with <span style="color: #ff0000;">*</span> are mandatory</span></p>
 
             {raw $form->renderBegin([
             'action' => $.app->router->url('catalog:notify_stock'),
             'method' => 'POST',
             'class' => 'checkout-options-form',
             ])}
-
-        {*<input type="hidden" value="{$productid}" name="NotifyStockForm[product]">*}
 
             <div class="row">
                 <div class="column no-padding small-12">
