@@ -17,12 +17,19 @@ class ProductOptionVariantsAdminForm extends ModelForm
 {
     public function getFields()
     {
-        $choices = [];
-        if (($p_option = $this->getInstance()->getField('product_option')->getValue()) && $po_model = ProductOptionModel::objects()->get(['pk' => $p_option])) {
-           foreach ($vars = $po_model->option->variants->order(['position', 'name'])->all() as $var) {
-               $choices[$var->id] = (string) $var;
+        $variantChoices = [];
+        if (($p_option = $this->getInstance()->getField('product_option')->getValue())
+            && $po_model = ProductOptionModel::objects()->get(['pk' => $p_option])) {
+
+            foreach ($vars = $po_model->option->variants->filter(['product_variants__id__isnull' => true])->order(['position', 'name'])->all() as $var) {
+               $variantChoices[$var->id] = (string) $var;
            }
        }
+
+       if (!$variantChoices) {
+           $variantChoices = ['No variants avail'];
+       }
+
         return [
             'product_option' => [
                 'class' => DropDownField::class,
@@ -30,10 +37,11 @@ class ProductOptionVariantsAdminForm extends ModelForm
                 'html' => [
                 //    'disabled' => 'disabled',
                 ],
+                'label' => 'Option'
             ],
             'variant' => [
                 'class' => DropDownField::class,
-                'choices' => $choices
+                'choices' => $variantChoices
             ]
         ];
     }

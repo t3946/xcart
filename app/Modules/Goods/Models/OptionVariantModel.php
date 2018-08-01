@@ -5,6 +5,7 @@ namespace Modules\Goods\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
 class OptionVariantModel extends Model
@@ -26,6 +27,11 @@ class OptionVariantModel extends Model
                 'link' => ['option_id' => 'id'],
                 'required' => true,
             ],
+            'product_variants' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductOptionVariantModel::class,
+                'link' => ['id' => 'variant_id'],
+            ]
         ];
     }
 
