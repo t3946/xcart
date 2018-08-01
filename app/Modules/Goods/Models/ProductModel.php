@@ -674,4 +674,12 @@ class ProductModel extends Model implements ICartItem
         }
         return $fExtraMarginValue;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options->filter(['active' => true])->order(['position']);
+    }
 }

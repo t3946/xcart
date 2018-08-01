@@ -9,7 +9,7 @@
 namespace Modules\Core\Fields;
 
 
-class FrontendColorField
+class FrontendColorField extends FrontendVariationSelect
 {
 
 }

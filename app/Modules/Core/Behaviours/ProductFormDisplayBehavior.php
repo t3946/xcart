@@ -17,15 +17,15 @@ class ProductFormDisplayBehavior extends FrontendFormDisplayBehavior
      * Default template
      * @var string
      */
-    protected $defaultTemplateType = 'product';
+   // protected $defaultTemplateType = 'product';
 
     /**
      * Additional templates
      * @var array
      */
-    protected $templates = [
-        'product' => 'forms/product/fields.tpl'
-    ];
+//    protected $templates = [
+//        'product' => 'forms/product/fields.tpl'
+//    ];
 
     /**
      * Default params for all fields

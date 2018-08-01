@@ -1,0 +1,84 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: anna
+ * Date: 01.08.2018
+ * Time: 15:48
+ */
+
+namespace Modules\Goods\Helpers;
+
+
+use Modules\Goods\Forms\FieldColorForm;
+use Modules\Goods\Forms\FieldRadioForm;
+use Modules\Goods\Forms\FieldSelectForm;
+
+class CreateProductPageFormHelper
+{
+    /**
+     * @var array
+     */
+    private $_formFields = [
+        'color' => FieldColorForm::class,
+        'radio' => FieldRadioForm::class,
+        'select' => FieldSelectForm::class,
+    ];
+
+    private $_form = null;
+
+
+    /**
+     * CreateProductPageFormHelper constructor.
+     * @param $options
+     */
+    public function __construct($options)
+    {
+        if (empty($options)) {
+            return;
+        }
+
+        $resultObject = null;
+
+        foreach ($options as $option) {
+
+            $class = $this->_formFields[$option->option->type];
+            $title = $option->option->title;
+            $variants = [];
+
+            foreach ($option->variants as $oneVariant) {
+                $key = !empty($oneVariant->variant->value) ? $oneVariant->variant->value : $oneVariant->variant->name;
+                $variants[$key] = $oneVariant->variant->name;
+            }
+
+            $params = [
+                'title' => $title,
+                'variants' => $variants,
+            ];
+
+            $resultObject = $this->create($class, $params, $resultObject);
+        }
+
+        $this->_form = $resultObject;
+
+    }
+
+    public function getForm()
+    {
+        return $this->_form;
+    }
+
+    /**
+     * @param $class
+     * @param $params
+     * @param null $subClass
+     * @return mixed
+     */
+    private function create($class, $params, $subClass = null)
+    {
+        if(empty($class)) {
+            return $subClass;
+        }
+        //var_dump($class);
+        return new $class($params, $subClass);
+    }
+}

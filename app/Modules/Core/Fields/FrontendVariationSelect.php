@@ -9,7 +9,9 @@
 namespace Modules\Core\Fields;
 
 
-class FrontendVariationSelect
+use Xcart\App\Form\Fields\DropDownField;
+
+class FrontendVariationSelect extends DropDownField
 {
 
 }

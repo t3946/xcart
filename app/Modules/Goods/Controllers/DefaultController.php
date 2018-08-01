@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Modules\Goods\Forms\ProductQuestionForm;
+use Modules\Goods\Helpers\CreateProductPageFormHelper;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
@@ -79,6 +80,7 @@ class DefaultController extends FrontendController
      */
     private function view_internal($model = null): void
     {
+
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -109,8 +111,11 @@ class DefaultController extends FrontendController
             'site' => $site
         ]);
 
+        $productPageForm = new CreateProductPageFormHelper($model->getOptions());
+
         $params = [
             'model' => $model,
+            'form' => $productPageForm->getForm(),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
             'category' => $category,

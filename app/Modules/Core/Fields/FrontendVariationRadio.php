@@ -9,7 +9,9 @@
 namespace Modules\Core\Fields;
 
 
-class FrontendVariationRadio
+use Xcart\App\Form\Fields\RadioField;
+
+class FrontendVariationRadio extends RadioField
 {
 
 }
