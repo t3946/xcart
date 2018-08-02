@@ -1,8 +1,26 @@
 
+.groupped-products {
+  .products_state_line {
+    .page_count {
+      font-size: rem-calc(14);
+      color: #5c5c5c;
+
+      &:before {
+        content: "(";
+      }
+      &:after {
+        content: ")";
+      }
+    }
+  }
+}
+
 .products_state_line {
   font-weight: 500;
   height: rem-calc(60);
   line-height: rem-calc(60);
+  padding-left: rem-calc(5);
+  padding-right: rem-calc(5);
 
   @include breakpoint(large up) {
     background-color: #ebebeb;
@@ -14,6 +32,13 @@
     //background-color: #ebebeb;
     height: rem-calc(45);
     line-height: rem-calc(45);
+  }
+
+  .line-title {
+    float:left;
+    margin-right: rem-calc(7);
+    font-weight: 700;
+    font-size: rem-calc(18);
   }
 
   .action_group {

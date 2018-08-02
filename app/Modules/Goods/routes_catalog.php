@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Goods\Controllers\Api\ApiProductController;
+use Modules\Goods\Controllers\NotifyStockController;
 use Modules\Goods\Controllers\SearchController;
 use Modules\Goods\Controllers\CategoryController;
 use Modules\Goods\Controllers\DefaultController;
@@ -32,6 +33,16 @@ return [
         'route' => '/product/api/{i:id}/',
         'target' => [ApiProductController::class, 'getProductInfo'],
         'name' => 'get_product_info'
+    ],
+    [
+        'route' => '/notify/post/',
+        'target' => [NotifyStockController::class, 'getCustomerClaim'],
+        'name' => 'notify_stock'
+    ],
+    [
+        'route' => '/notify/get/',
+        'target' => [NotifyStockController::class, 'getTpl'],
+        'name' => 'tpl'
     ],
 
 

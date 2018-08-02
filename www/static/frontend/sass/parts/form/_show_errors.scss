@@ -1,0 +1,99 @@
+@mixin getFormErrorsStyle() {
+
+  .errors {
+    display: none;
+    position: relative;
+    list-style: none;
+    background-color: #ffebeb;
+    border: 1px solid #ee2a31;
+    padding: rem-calc(8) .625rem;
+    margin: 0 0 rem-calc(19);
+    font-size: 1rem;
+    line-height: rem-calc(20);
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(18);
+      line-height: rem-calc(22);
+      padding: rem-calc(11) .625rem;
+    }
+
+    @include breakpoint(medium) {
+      max-width: 20rem;
+      margin: 0 rem-calc(30) rem-calc(20) 50%;
+      padding: rem-calc(8) .625rem;
+    }
+
+    @include breakpoint(large) {
+      font-size: rem-calc(14);
+      margin-right: 0;
+    }
+
+    &.show {
+      display: block !important;
+    }
+
+    li {
+      text-align: center;
+
+      &:nth-last-child(1) {
+        &:after {
+          content: '';
+          position: absolute;
+          background-color: #ffebeb;
+          left: calc(50% - 10px);
+          border: 1px solid #ed1c24;
+          transform: rotate(63deg) skewX(36deg);
+
+          width: rem-calc(12);
+          height: rem-calc(9);
+          bottom: rem-calc(-5);
+        }
+      }
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      background-color: #ffebeb;
+      width: rem-calc(12);
+      height: rem-calc(12);
+      left: calc(50% - 11px);
+      bottom: 0;
+    }
+
+    @include breakpoint(large) {
+      padding: rem-calc(3) rem-calc(12);
+      border-width: rem-calc(2);
+      margin-bottom: rem-calc(2);
+      margin-left: rem-calc(20);
+      margin-top: rem-calc(-10);
+
+      &.show {
+        display: inline-block !important;
+      }
+
+      &:after {
+        left: 0;
+        top: rem-calc(5);
+        width: rem-calc(12);
+        height: rem-calc(20);
+      }
+
+      li {
+        text-align: left;
+
+        &:nth-last-child(1) {
+          &:after {
+            border-width: rem-calc(2);
+            transform: rotate(-31deg) skewX(29deg);
+            width: rem-calc(15);
+            height: rem-calc(13);
+            left: rem-calc(-8);
+            top: rem-calc(7);
+          }
+        }
+      }
+    }
+
+  }
+}

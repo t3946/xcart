@@ -7,7 +7,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\OneToOneField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
@@ -24,7 +24,8 @@ class NotifyStockModel extends Model
             'id' => AutoField::class,
 
             'product' => [
-                'class' => OneToOneField::class,
+                'field' => 'productid',
+                'class' => ForeignField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
             ],
@@ -53,9 +54,10 @@ class NotifyStockModel extends Model
             ],
 
             'site' => [
-                'class' => OneToOneField::class,
+                'field' => 'storefrontid',
+                'class' => ForeignField::class,
                 'modelClass' => SiteModel::class,
-                'link' => ['storefrontid' => 'storefrontid']
+                'link' => ['storefrontid' => 'storefrontid'],
             ],
         ];
     }

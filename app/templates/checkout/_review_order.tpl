@@ -1,6 +1,12 @@
-<div class="row align-center show-for-medium">
-    <div class="column">
+<div class="row align-center">
+    <div class="column column-with-button">
         <h1 class="text-center">{$header}</h1>
+
+        <button type="submit" class="button submit yellow waves waves-orange waves-effect show-for-medium additional-button-large">
+            <span class="short-label">{t 'Submit' dict='order'}</span>
+            <span class="long-label">{t 'Submit order' dict='order'}</span>
+        </button>
+
     </div>
 </div>
 <div class="row">
@@ -70,12 +76,17 @@
                     {/foreach}
                 </div>
                 <div class="group-info order-table-row">
-                    {if $order_group->shippingModel}
+                    {set $shippingModel = $order_group->shippingModel}
+                    {if $shippingModel}
                         <div class="sum-info shipping">
-                                <span class="sum-info-label">
-                                    {t 'Shipping by' dict='order'} {$order_group->shippingModel->getFrontendName()}:
+                                <span class="sum-info-label underline">
+                                    {if $shippingModel->is_free_shipping}
+                                        {$shippingModel->getFrontendName()}:
+                                    {else}
+                                        {t 'Shipping by' dict='order'} {$shippingModel->getFrontendName()}:
+                                    {/if}
                                     {* не должно быть пробела! *}
-                                </span><span class="sum">
+                                </span><span class="sum underline">
                                     US$ <span class="price">{$order_group->shipping_gross|number_format:2}</span>
                                 </span>
                         </div>

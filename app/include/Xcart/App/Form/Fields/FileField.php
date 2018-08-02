@@ -25,6 +25,7 @@ class FileField extends Field
      * @var string
      */
     public $inputTemplate = 'forms/field/file/input.tpl';
+    public $fieldType = 'file';
     /**
      * @var null
      */

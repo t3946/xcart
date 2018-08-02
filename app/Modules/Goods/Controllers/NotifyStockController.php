@@ -2,8 +2,10 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Forms\NotifyStockForm;
+use Modules\Goods\Models\NotifyStockModel;
 use Xcart\App\Controller\FrontendController;
-use Xcart\App\Validation\EmailValidator;
+use Xcart\App\Main\Xcart;
 
 class NotifyStockController extends FrontendController
 {
@@ -11,16 +13,43 @@ class NotifyStockController extends FrontendController
     {
         $request = $this->getRequest();
 
-        $email_validator = new EmailValidator();
+        $flash_data = [];
 
-        $email = $request->post->get('email');
+        $form = new NotifyStockForm();
 
-        if (!$email || trim($email) == '' || !$email_validator->validate($email)){
-            /** TODO Доработать условие */
+        $form->populate($request->post);
+
+        if (!$form->isValid()) {
+            $flash_data['error'] = ['The data is not correct'];
         }
         else {
-            /** TODO Тоже придумать что-нибудь */
+
+            if ($model = NotifyStockModel::objects()->get([
+                                                            'email' => $request->post->get('NotifyStockForm')['email'],
+                                                            'productid' => $request->post->get('NotifyStockForm')['product'],
+                                                            'first_name' => $request->post->get('NotifyStockForm')['first_name'],
+                                                            'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                                                            'sent' => false,
+                                                          ])){
+                $flash_data['success'] = ['You already signed up for this notification'];
+            } else {
+                $form->save();
+                $flash_data['success'] = ['Thank you! You will be notified when the product is in stock.'];
+            }
         }
+
+        $this->jsonResponse($flash_data);
+    }
+
+    public function getTpl()
+    {
+        $request = $this->getRequest();
+
+        $form = new NotifyStockForm();
+
+        $form->getField('product')->setValue($request->get->get('product_id'));
+
+        $this->display('/product/parts/_notify_stock.tpl', ['form' => $form, 'productid' => $request->get->get('product_id')]);
     }
 
 }

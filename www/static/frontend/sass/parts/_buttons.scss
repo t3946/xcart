@@ -38,6 +38,42 @@
     }
   }
 
+  &.small {
+
+    line-height: rem-calc(28);
+    min-height: rem-calc(30);
+    padding: 0 rem-calc(22);
+    font-size: rem-calc(15);
+    border-width: 1px;
+    border-radius: 3px;
+
+    @include breakpoint(sm) {
+      font-size: rem-calc(17);
+      line-height: rem-calc(33);
+      min-height: rem-calc(35);
+      padding: 0 rem-calc(28);
+    }
+
+    @include breakpoint(medium) {
+      font-size: rem-calc(20);
+      line-height: rem-calc(38);
+      min-height: rem-calc(40);
+      padding: 0 rem-calc(33);
+    }
+
+    @include breakpoint(large){
+      font-size: rem-calc(12);
+      min-height: rem-calc(25);
+      line-height: rem-calc(23);
+      padding: 0 rem-calc(20);
+    }
+
+  }
+
+  &.yellow-border {
+    border-color: #ffb400;
+  }
+
   &.default-style{
     line-height: rem-calc(40);
     padding: 0 rem-calc(36);

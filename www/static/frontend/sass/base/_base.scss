@@ -81,6 +81,7 @@ input {
 
 .non-us-disclaimer.checkbox-container{
   margin-top: 1rem;
+  position: relative;
 
   @include breakpoint(medium){
     margin-left: rem-calc(10);
@@ -109,6 +110,7 @@ input {
         border: 1px solid #d4d4d4;
         position: absolute;
         top: 0;
+        cursor: pointer;
         left: rem-calc(8);
         @include breakpoint(large){
           left: rem-calc(5);

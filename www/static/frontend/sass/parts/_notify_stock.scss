@@ -1,0 +1,56 @@
+.mmodal_notify_stock {
+
+  button {
+    text-transform: uppercase;
+    height: rem-calc(40);
+    width: rem-calc(130) !important;
+  }
+
+  p, button, form label {
+    font-weight: bold !important;
+  }
+
+  @include breakpoint(sm) {
+    label {
+      font-size: rem-calc(17) !important;
+    }
+  }
+
+  @include breakpoint(medium) {
+    label {
+      font-size: rem-calc(18) !important;
+    }
+  }
+
+  @include breakpoint(large) {
+    label {
+      font-size: rem-calc(17) !important;
+    }
+  }
+
+  h2 {
+    text-align: center !important;
+  }
+  //
+  //.form-field:nth-child(1) {
+  //  display: none;
+  //}
+
+}
+
+.notify-me-stock {
+
+  @include breakpoint(sm down) {
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    border-bottom: 1px dashed #075b94
+  }
+
+  span {
+    font-size: rem-calc(16);
+  }
+
+}

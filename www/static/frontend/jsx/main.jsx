@@ -5,7 +5,7 @@ import '_head';
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 
-import ResizeMonitor from "./components/ResizeMonitor";
+import createResizeMonitor from "./components/ResizeMonitor";
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
 import CategoryViewType from "./components/CategoryViewType";
@@ -22,7 +22,7 @@ import documentReady from "./utils/documentReady";
 
 (function(){
     documentReady(()=>{
-        new ResizeMonitor();
+        createResizeMonitor();
         new Search();
         //new LazyImageLoad();
         new CategoryViewType();
@@ -123,21 +123,48 @@ import documentReady from "./utils/documentReady";
         // var font = new FontFaceObserver('Lato', {
         //     weight: 100
         // });
-        var font = new FontFaceObserver('Lato');
+        // var font = new FontFaceObserver('Lato');
+        //
+        // let fontNormal = new FontFaceObserver('Lato', {
+        //     weight: 400,
+        // });
+        //
+        // let fontBold = new FontFaceObserver('Lato', {
+        //     weight: 700,
+        // });
 
         window.surfMetaRegister();
         $(document).trigger('app.start');
 
         window.sendAnalytics.pageview();
 
-        font.load().then(function () {
-            let event = new CustomEvent('font.loaded', { detail: true });
-            document.font = true;
-            document.dispatchEvent(event);
-        }, function () {
-            let event = new CustomEvent('font.loaded', { detail: false });
-            document.dispatchEvent(event);
-        });
+        // font.load().then(function () {
+        //     let event = new CustomEvent('font.loaded', { detail: true });
+        //     document.font = true;
+        //     document.dispatchEvent(event);
+        // }, function () {
+        //     let event = new CustomEvent('font.loaded', { detail: false });
+        //     document.dispatchEvent(event);
+        // });
+
+        Promise.all([
+            (new FontFaceObserver("Lato", {
+                style: "normal",
+                weight: 400
+            })).load(),
+            (new FontFaceObserver("Lato", {
+                style: "normal",
+                weight: 700
+            })).load(),
+        ]).then(function () {
+                let event = new CustomEvent('font.loaded', {detail: true});
+                document.font = true;
+                document.dispatchEvent(event);
+            },
+            function () {
+                let event = new CustomEvent('font.loaded', { detail: false });
+                document.dispatchEvent(event);
+            });
 
 
 
