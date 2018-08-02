@@ -111,7 +111,7 @@ class ContactUsForm extends FrontendForm
                 ],
                 'className' => 'wide'
             ],
-            'messsage' => [
+            'q_messsage' => [
                 'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
