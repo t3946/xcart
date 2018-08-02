@@ -317,7 +317,7 @@ if ($sExtraLog=='Y')
 
 
 	$mpn = $productModel->getMPN();
-	$product['custom_label_3'] = number_format($productModel->cost_to_us, 2, '.', '');
+	//$product['custom_label_3'] = number_format($productModel->cost_to_us, 2, '.', '');
 
 	# Define "compatible with"
 	$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");
