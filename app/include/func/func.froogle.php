@@ -54,28 +54,24 @@ function GetGooglePrice($fproduct){
 }
 
 function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N", $withShipping = true){
-	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS,
-    $storefrontid, $current_storefront;
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS;
 
     $productModel = null;
 
     $start_time = round(microtime(true) * 1000);
 
-    if ($storefrontid != "") {
-        $use_storefrontid = $storefrontid;
-    } else {
-        if (isset($current_storefront)) {
-            $use_storefrontid = $current_storefront; // froogle.php
-        }
-    }
-
-if ($sExtraLog=='Y')
-	echo 'Storefrontid: ' . $use_storefrontid;
-
     if ($productid)  {
         /** @var ProductModel $productModel */
         $productModel = ProductModel::objects()->get(['productid' => $productid]);
     }
+
+    $use_storefrontid = $productModel->sites->limit(1)->get()->storefrontid;
+
+
+if ($sExtraLog=='Y')
+	echo 'Storefrontid: ' . $use_storefrontid;
+
+
 
     if (!$productModel) {
 //		$row = "title\tdescription\tlink\tadwords_redirect\tadwords_grouping\tadwords_labels\timage link\tadditional image link\tid\tprice\tpayment accepted\tpayment notes\tquantity\tweight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tmodel number\tgtin\tcompatible with\tonline only\tshipping\tavailability\tmultipack\tgoogle product category\n";
