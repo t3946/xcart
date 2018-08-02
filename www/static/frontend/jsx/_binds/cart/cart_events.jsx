@@ -241,9 +241,9 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                             data: $('.mmodal_notify_stock form').serialize()
 
                         }).done(function(result) {
-                                Object.keys(result).forEach(function(key, id){
-                                    window.window.addFlashMessage(result[key], key, false, 5);
-                                });
+                            Object.keys(result).forEach(function(key, id){
+                                window.window.addFlashMessage(result[key], key, false, 5);
+                            });
                             $self.close();
                         });
                     },

@@ -126,41 +126,4 @@ body {
       width: rem-calc(480);
     }
   }
-
-  &.notifySelector{
-
-    span.notice-notify-me {
-      color: #4a4949;
-    }
-
-    width: rem-calc(300);
-    p {
-      font-size: rem-calc(12);
-    }
-
-    div.field-title {
-      text-align: left;
-    }
-
-    @include breakpoint(sm) {
-      width: rem-calc(350);
-    }
-
-    @include breakpoint(medium) {
-      width: rem-calc(600);
-
-      p {
-        font-size: rem-calc(16);
-      }
-    }
-
-    @include breakpoint(large) {
-      width: rem-calc(750);
-
-      p {
-        font-size: rem-calc(14);
-      }
-    }
-
-  }
 }
