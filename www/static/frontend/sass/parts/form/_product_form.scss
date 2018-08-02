@@ -1,21 +1,127 @@
 @mixin getProductFormStyles() {
+
+  $button-height: rem-calc(48);
+  $button-padding-right: rem-calc(27);
+  $button-padding-left: 1rem;
+
+  $cell-padding-top: rem-calc(11);
+  $title-padding-right: rem-calc(18);
+
+  $radio-diameter: rem-calc(20);
+
   .product-form {
 
     .fields-wrapper {
       display: table;
-      width: 100%;
+
+      @include breakpoint(large) {
+        min-width: rem-calc(380);
+      }
 
       .form-field {
         display: table-row;
 
         .field-title {
           display: table-cell;
+          padding: $cell-padding-top $title-padding-right $cell-padding-top 0;
         }
 
         .field {
           display: table-cell;
+          padding: $cell-padding-top 0;
+
+          @include breakpoint(large) {
+            width: rem-calc(302);
+          }
         }
       }
     }
+
+    .select-visible-button{
+      width: 100%;
+      height: $button-height;
+      line-height: $button-height - rem-calc(2);
+      padding: 0 $button-padding-right 0 $button-padding-left;
+      white-space: nowrap;
+
+      span{
+        white-space: nowrap;
+      }
+
+    }
+
+    .input-container{
+
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      width: 100%;
+      align-items: center;
+
+
+      .radio-container {
+        width: 49%;
+        padding: rem-calc(5) 1rem;
+        display: inline-block;
+        align-items: center;
+
+
+        input[type="radio"] {
+          position: absolute;
+          z-index: -1;
+          top: -9999px;
+          left: -9999px;
+          opacity: 0;
+
+          & + label {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            //flex-shrink: 2;
+
+            &::before {
+              content: '';
+              display: inline-block;
+              width: $radio-diameter;
+              height: $radio-diameter;
+              min-width: $radio-diameter;
+              border-radius: 50%;
+              border: 1px solid #b6b6b6;
+              background-color: #ffffff;
+            }
+
+            &:hover{
+              &::before {
+                @include addBlueShadow();
+              }
+            }
+
+            span {
+              display: inline-block;
+              padding-left: 1rem;
+              hyphens: auto;
+            }
+
+          }
+
+          &:checked + label {
+            &::before {
+              //background: $product_page_blue_color url('') 0 0 no-repeat;
+              border-color: $product_page_blue_color;
+              //background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle cx='15' cy='15' r='10' /></svg>")  0 0 no-repeat;
+              background: $product_page_blue_color url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 25' width='21' height='21'><polygon style='fill:white;' points='22.186,10.52 14.054,18.652 9.814,14.411 8.4,15.825 14.054,21.48 23.6,11.934'/></svg>")  -4px -4px no-repeat;
+            }
+            &:hover{
+              &::before {
+                box-shadow: none;
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+
   }
 }

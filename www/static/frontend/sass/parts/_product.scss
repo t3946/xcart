@@ -15,12 +15,9 @@ $default_qg_lheight: #{$default_qg_height - 1};
 
   .btn {
     flex: 0 0 rem-calc(22);
-
-    //vertical-align: top;
     color: black;
     text-align: center;
     background-color: #fff0ca;
-    //display: inline-block;
     height: $default_qg_height;
     min-width: 1.4em;
     line-height: $default_qg_lheight;
@@ -47,8 +44,6 @@ $default_qg_lheight: #{$default_qg_height - 1};
   input {
     flex: 10 0;
     vertical-align: top;
-    //height: $default_qg_height;
-    //line-height: $default_qg_lheight;
     border: none;
     padding: 0;
     outline: none;
@@ -92,7 +87,6 @@ $default_qg_lheight: #{$default_qg_height - 1};
       display: inline-block;
       width: rem-calc(35);
       height: rem-calc(27);
-      //background: url("../dist/images/icons/add_to_cart.svg") center center no-repeat;
       background-size: 90%;
       vertical-align: text-bottom;
     }
@@ -101,7 +95,6 @@ $default_qg_lheight: #{$default_qg_height - 1};
   .button {
     line-height: rem-calc(46);
     height: rem-calc(46);
-    //border: 2px solid $dark-yellow;
   }
 
   .wait-button{
@@ -169,28 +162,9 @@ $default_qg_lheight: #{$default_qg_height - 1};
     padding-right: rem-calc(20);
     padding-left: rem-calc(20);
 
-    .number {
-
-      &:after {
-        content: url("../../dist/images/icons/arrow_down.svg");
-        display: inline-block;
-        width: rem-calc(13);
-        height: rem-calc(8);
-        vertical-align: middle;
-        margin-top: -50px;
-        margin-left: .25rem;
-      }
-    }
-
     &:hover {
       text-decoration: none;
     }
-  }
-
-  .grey-border {
-    border: 1px solid #b4b4b4;
-    font-size: rem-calc(18);
-    color: #515151;
   }
 }
 
@@ -201,7 +175,6 @@ $default_qg_lheight: #{$default_qg_height - 1};
     padding-right: rem-calc(24);
   }
   .price-section {
-    //max-width: 375px;
     margin-bottom: rem-calc(22);
   }
 

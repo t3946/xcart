@@ -43,7 +43,7 @@ class RadioField extends CharField
             foreach ($this->choices as $value => $labelStr) {
                 $label = strtr("<label for='{for}'>{label}</label>", [
                     '{for}' => $this->getHtmlId() . '_' . $i,
-                    '{label}' => $labelStr
+                    '{label}' => '<span>' . $labelStr . '</span>'
                 ]);
 
                 $checked = false;
