@@ -57,4 +57,8 @@ abstract class DecoratedProductForm extends ProductForm
      * @return array
      */
     abstract protected function fields(): array;
+
+    protected function createTitle(){
+        return $this->title . ':';
+    }
 }

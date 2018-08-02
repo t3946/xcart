@@ -153,9 +153,7 @@
 
                 {if !$model->isGroupRoot()}
                 <div class="prices">
-
-                    {include "product/parts/_options.tpl" form=$form}
-                    {include "product/price/_table_prices.tpl" model=$model}
+                    {include "product/price/_table_prices.tpl" model=$model form=$form}
 
                     {if $model->isGroupChild()}
                         {set $parent = $model->parent}

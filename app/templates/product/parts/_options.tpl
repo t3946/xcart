@@ -13,6 +13,7 @@
 {*{/if}*}
 {*{dd($form->getFields())}*}
 {*'action' => $.app->router->url('checkout:options'),*}
+{if $form}
 <div class="product-form">
     {raw $form->renderBegin([
     'action' => '',
@@ -22,3 +23,4 @@
     {raw $form->render()}
     {raw $form->renderEnd()}
 </div>
+{/if}

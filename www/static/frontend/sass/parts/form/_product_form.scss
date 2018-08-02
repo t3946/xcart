@@ -1,0 +1,21 @@
+@mixin getProductFormStyles() {
+  .product-form {
+
+    .fields-wrapper {
+      display: table;
+      width: 100%;
+
+      .form-field {
+        display: table-row;
+
+        .field-title {
+          display: table-cell;
+        }
+
+        .field {
+          display: table-cell;
+        }
+      }
+    }
+  }
+}

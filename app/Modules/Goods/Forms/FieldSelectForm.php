@@ -10,6 +10,7 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Core\Fields\FrontendVariationSelect;
+use Xcart\App\Form\Fields\DropDownField;
 
 class FieldSelectForm extends DecoratedProductForm
 {
@@ -22,11 +23,22 @@ class FieldSelectForm extends DecoratedProductForm
     {
         return [
             'sizes' => [
-                'class' => FrontendVariationSelect::class,
-                'label' => $this->title,
-                'choices' => $this->variants,
+//                'class' => FrontendVariationSelect::class,
+                'class' => DropDownField::class,
+                'label' => $this->createTitle(),
+                'choices' => $this->addFirstBlankOption(),
                 'required' => true,
+                'disabled' => [''],
+                'selected' => ['']
             ]
         ];
+    }
+
+    protected function createPlaceholder(){
+        return 'Choose a ' . lcfirst($this->title);
+    }
+
+    protected function addFirstBlankOption(){
+        return array_merge(['' => $this->createPlaceholder()], $this->variants);
     }
 }

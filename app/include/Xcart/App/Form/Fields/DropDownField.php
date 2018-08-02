@@ -40,6 +40,7 @@ class DropDownField extends Field
      * @var array
      */
     public $disabled = [];
+    public $selected =[];
 
     public function getCommonData()
     {

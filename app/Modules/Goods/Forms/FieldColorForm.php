@@ -10,8 +10,9 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Core\Fields\FrontendColorField;
+use Xcart\App\Form\Fields\DropDownField;
 
-class FieldColorForm extends DecoratedProductForm
+class FieldColorForm extends FieldSelectForm
 {
 
     public $type = 'color';
@@ -22,10 +23,13 @@ class FieldColorForm extends DecoratedProductForm
     {
         return [
             'color' => [
-                'class' => FrontendColorField::class,
-                'label' => $this->title,
-                'choices' => $this->variants,
+                'class' => DropDownField::class,
+//                'class' => FrontendColorField::class,
+                'label' => $this->createTitle(),
+                'choices' => $this->addFirstBlankOption(),
                 'required' => true,
+                'disabled' => [''],
+                'selected' => ['']
             ]
         ];
     }

@@ -10,6 +10,7 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Core\Fields\FrontendVariationRadio;
+use Xcart\App\Form\Fields\RadioField;
 
 class FieldRadioForm extends DecoratedProductForm
 {
@@ -22,8 +23,9 @@ class FieldRadioForm extends DecoratedProductForm
     {
         return [
             'name' => [
-                'class' => FrontendVariationRadio::class,
-                'label' => $this->title,
+                'class' => RadioField::class,
+//                'class' => FrontendVariationRadio::class,
+                'label' => $this->createTitle(),
                 'choices' => $this->variants,
                 'required' => true,
             ]

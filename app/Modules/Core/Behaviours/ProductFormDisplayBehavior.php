@@ -9,23 +9,27 @@
 namespace Modules\Core\Behaviours;
 
 
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\RadioField;
 use Xcart\App\Form\FormView\FormViewBehavior;
 
 class ProductFormDisplayBehavior extends FrontendFormDisplayBehavior
 {
+
+
     /**
      * Default template
      * @var string
      */
-   // protected $defaultTemplateType = 'product';
+    protected $defaultTemplateType = 'product';
 
     /**
      * Additional templates
      * @var array
      */
-//    protected $templates = [
-//        'product' => 'forms/product/fields.tpl'
-//    ];
+    protected $templates = [
+        'product' => 'forms/frontend/wrapped_fields.tpl'
+    ];
 
     /**
      * Default params for all fields
@@ -34,7 +38,6 @@ class ProductFormDisplayBehavior extends FrontendFormDisplayBehavior
     protected $fieldsSettings = [
         'fieldTemplate' => 'forms/field/default/product/one_field.tpl',
         'errorsTemplate' => 'forms/field/default/product/errors.tpl',
-        'hintTemplate' => 'forms/field/default/product/hint.tpl',
         'labelTemplate' => 'forms/field/default/product/label.tpl',
     ];
 
@@ -43,11 +46,12 @@ class ProductFormDisplayBehavior extends FrontendFormDisplayBehavior
      * @var array
      */
     protected $classFieldSettings = [
-        'Xcart\App\Form\Fields\CharField' => [
-            'inputTemplate' => 'forms/field/default/product/input.tpl',
+        RadioField::class => [
+            'templateWithChoices' => 'forms/field/default/product/radio.tpl',
+            'templateWithoutChoices' => 'forms/field/default/product/radio.tpl',
         ],
-        'Xcart\App\Form\Fields\NumberField' => [
-            'inputTemplate' => 'forms/field/default/product/input.tpl',
+        DropDownField::class => [
+            'inputTemplate' => 'forms/field/dropdown/product/input.tpl'
         ]
     ];
 }

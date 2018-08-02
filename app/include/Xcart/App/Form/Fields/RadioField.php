@@ -10,20 +10,29 @@ class RadioField extends CharField
 {
     public $template = "<input type='{type}' id='{id}' value='{value}' name='{name}'{html}/>";
 
+    public $templateWithChoices = 'forms/field/default/radio_choices.tpl';
+    public $templateWithoutChoices = 'forms/field/default/radio_no_choices.tpl';
+
     public $type = "radio";
 
     public function render()
     {
-        $label = $this->renderLabel();
-        $input = $this->renderInput();
-        $hint = $this->hint ? $this->renderHint() : '';
-        $errors = $this->renderErrors();
 
-        if (empty($this->choices)) {
-            return implode("\n", [$input, $label, $hint, $errors]);
-        } else {
-            return implode("\n", [$label, $input, $hint, $errors]);
-        }
+        $template = empty($this->choices) ? $this->templateWithoutChoices : $this->templateWithChoices;
+
+        return $this->innerRender($template, [
+            'input' => $this->renderInput(),
+            'label' => $this->renderLabel(),
+            'hint' => $this->hintToTemplate(),
+            'errors' => $this->renderErrors(),
+            'field' => $this,
+            'name' => $this->getHtmlName(),
+        ]);
+
+    }
+
+    private function hintToTemplate(){
+        return $this->hint ? $this->renderHint() : '';
     }
 
     public function renderInput()
