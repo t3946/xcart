@@ -17,6 +17,7 @@ namespace Modules\Main\Forms;
 
 use Modules\Core\Forms\FrontendForm;
 use Modules\Main\MainModule;
+use Modules\Main\Validation\ProductOrOrderValidator;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -100,6 +101,9 @@ class ContactUsForm extends FrontendForm
                 'hint' => MainModule::t('SKU of product you are interested in or your order #'),
                 'html' => [
                     'placeholder' => MainModule::t('EDR-T-A63127 or AR-54321'),
+                ],
+                'validators' => [
+                    new ProductOrOrderValidator()
                 ],
             ],
             'subject_line' => [

@@ -32,28 +32,14 @@ class ContactFormController extends FrontendController
         $bread->add('Contact us', $request->getAbsoluteUrl());
 
         $form = new ContactUsForm();
-        if ($this->getRequest()->getIsPost() && $form->populate($_POST)) {
+        if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
+            Xcart::app()->flash->add('Your message has been successfully sent');
+            $this->refresh();
+        } else {
+            if (in_array('SKU or Order # not found', $form->getErrors('product_sku'))) {
+                Xcart::app()->flash->error('Wrong SKU or Order #, please call us at 1-800-929-2431');
+            }
 
-            if (!empty($_POST['ContactUsForm[company_name_full]'])) {
-                $errors = [
-                    400 => 'Bad Request',
-                    402 => 'Payment Required',
-                    404 => 'Not Found',
-                    406 => 'Not Acceptable',
-                    410 => 'Gone',
-                    418 => 'I\'m a teapot',
-                    429 => 'Too Many Requests ',
-                    434 => 'Requested host unavailable',
-                    451 => 'Unavailable For Legal Reasons',
-                    500 => 'Internal Server Error',
-                    503 => 'Service Unavailable ',
-                ];
-                $this->redirect('main:contact_us_form', [], array_rand($errors));
-            }
-            if ($form->isValid()) {
-                Xcart::app()->flash->add('Your message has been successfully sent');
-                $this->refresh();
-            }
         }
         ($this->getBreadcrumbs());
         $this->display('contactForm/contactUs.tpl', [
