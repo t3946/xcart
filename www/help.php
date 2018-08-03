@@ -39,7 +39,7 @@ use Xcart\App\Main\Xcart;
 
 require "./auth.php";
 
-Xcart::app()->request->redirect('/', [], 301);
+Xcart::app()->request->redirect('main:contact_us_form', [], 301);
 
 require $xcart_dir."/include/categories.php";
 
