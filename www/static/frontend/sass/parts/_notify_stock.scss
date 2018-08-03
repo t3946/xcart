@@ -2,6 +2,7 @@
   .mmodal-content {
     .title_container {
       text-align: left;
+      color: #0a0a0a;
 
       @include breakpoint(ml down){
         background-color: #f1f1f1;
@@ -30,9 +31,22 @@
           font-size: rem-calc(14);
         }
 
-        @include breakpoint(large) {
-          font-size: rem-calc(17);
+        @include breakpoint(medium) {
+          font-size: rem-calc(16);
         }
+
+        @include breakpoint(large) {
+          font-size: rem-calc(14);
+        }
+      }
+
+      span.notice-notify-me {
+        color: #929292;
+
+        @include breakpoint(medium){
+          color: #0a0a0a;
+        }
+
       }
 
     }
