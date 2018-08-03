@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import {h, render, Component} from "preact";
+import CustomSelectOptions from './CustomSelectOptions';
+import selectOption from './selectOption';
 
 class CustomSelectField {
     constructor(button, win) {
@@ -15,7 +18,20 @@ class CustomSelectField {
     }
 
     openOptions(){
-        //this.win
+
+        let selectId = this.button.dataset.select;
+        let select = document.getElementById(selectId);
+        let options = select.getElementsByTagName('option');
+        let items = _.map(options, selectOption);
+
+        $(this.win).mmodal({
+            'windowClass': 'selector-options',
+            'setWidth': false,
+            'onBeforeOpen': function(container){
+                render(<CustomSelectOptions items={items} />,
+                    container, container.firstChild);
+            }
+        });
     }
 
     destructor(){

@@ -1,4 +1,4 @@
-import customSelectField from "./CustomSelectField";
+import customSelectField from "./custom_select/CustomSelectField";
 
 class CreateSelectFields {
     constructor(name) {
@@ -29,17 +29,18 @@ class CreateSelectFields {
 
         let selects = this.form.querySelectorAll('.select-visible-button');
 
-        for (let i = 0; i < selects.length; ++i) {
-            this.selectsObj.push(customSelectField(this.selects.item(i), optionsContainer));
+        for (let oneSelect of selects) {
+            this.selectsObj.push(customSelectField(oneSelect, optionsContainer));
         }
     }
 
 
 
     destructor(){
-        for (let i = 0; i < this.selects.length; ++i) {
-            this.selectsObj[i].destructor();
+        for (let oneSelectsObj of this.selectsObj) {
+            oneSelectsObj.destructor();
         }
+
         this.selectsObj = [];
     }
 }

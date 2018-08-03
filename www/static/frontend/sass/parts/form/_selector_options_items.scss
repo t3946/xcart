@@ -1,0 +1,58 @@
+@mixin getSelectorOptionsItemsStyles() {
+
+  $buttons-height: rem-calc(48);
+
+  .selector-options-items{
+    //.quantity-radio-group {
+      margin: 0 auto;
+      width: rem-calc(260);
+
+      @include breakpoint(sm) {
+        width: rem-calc(300)
+      }
+      @include breakpoint(medium) {
+        width: rem-calc(428)
+      }
+
+      input[type="radio"] {
+        display: none;
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+
+        & + label {
+          display: block;
+          width: 100%;
+          line-height: $buttons-height - 2px;
+          height: $buttons-height;
+          border: 1px solid #aaaaaa;
+          font-size: rem-calc(18);
+          color: #4a4949;
+          cursor: pointer;
+          border-radius: rem-calc(6);
+          margin-bottom: rem-calc(5);
+          position: relative;
+          text-align: left;
+        }
+
+        &:checked + label {
+          font-weight: bold;
+          color: $white;
+          background-color: $forest_green;
+          border-color: $forest_green;
+
+          &:after {
+            content: url("../../dist/images/icons/white_check_mark.svg");
+            display: block;
+            position: absolute;
+            top: rem-calc(4);
+            right: rem-calc(13);
+            width: rem-calc(22);
+            height: rem-calc(23);
+          }
+        }
+      }
+
+    //}
+  }
+}

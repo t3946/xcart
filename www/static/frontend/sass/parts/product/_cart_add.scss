@@ -1,0 +1,108 @@
+@mixin getCartAddStyle() {
+  .cart_add {
+    width: 100%;
+    display: flex;
+
+    @include breakpoint(ml) {
+      max-width: rem-calc(380);
+    }
+
+    .add {
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: rem-calc(42);
+      height: rem-calc(42);
+      font: {
+        size: rem-calc(18);
+        weight: 900;
+      }
+
+      &:before {
+        content: url("../../dist/images/icons/add_to_cart.svg");
+        display: inline-block;
+        width: rem-calc(35);
+        height: rem-calc(27);
+        background-size: 90%;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .button {
+      line-height: rem-calc(46);
+      height: rem-calc(46);
+    }
+
+    .wait-button{
+      position: relative;
+      overflow: hidden;
+
+      .wait-text {
+        display: none;
+        text-transform: uppercase;
+      }
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 300%;
+        height: 100%;
+        top: 0;
+        left: -50%;
+        z-index: 2;
+        background: repeating-linear-gradient(
+                        135deg,
+                        $white,
+                        $white 12px,
+                        $grey_e2 12px,
+                        $grey_e2 24px
+        );
+        visibility: hidden;
+        transition: left 1.2s linear;
+      }
+
+      &.wait {
+        border: 2px solid $dark_orange;
+        background: $white;
+        cursor: default;
+        pointer-events: none;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        &:before {
+          display: none;
+        }
+
+        &.loading{
+          &:after {
+            left: 0;
+            visibility: visible;
+          }
+        }
+
+        .text {
+          display: none;
+        }
+
+        .wait-text {
+          display: inline;
+        }
+      }
+    }
+
+    .number-button {
+      margin-right: .5rem;
+      padding-right: rem-calc(20);
+      padding-left: rem-calc(20);
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}

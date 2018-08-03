@@ -1,5 +1,6 @@
 @import "./form/default_form";
 @import "./form/product_form";
+@import "./form/selector_options_items";
 
 $field-width-small: 100%;
 $field-width-medium: 20rem;
@@ -32,3 +33,4 @@ form {
 
 @include getDefaultFormStyles();
 @include getProductFormStyles();
+@include getSelectorOptionsItemsStyles();

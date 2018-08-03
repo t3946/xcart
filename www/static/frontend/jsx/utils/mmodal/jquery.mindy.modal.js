@@ -255,7 +255,7 @@
             var $body = $('body'),
                 before = $body.outerWidth();
 
-            this.options.onBeforeOpen();
+            this.options.onBeforeOpen.call(this, this.$content[0]);
 
             this.$bg.show();
             if(this.options.windowClass !== 'undefined') {
