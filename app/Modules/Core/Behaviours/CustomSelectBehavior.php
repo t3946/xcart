@@ -2,21 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: anna
- * Date: 18.07.2018
- * Time: 16:54
+ * Date: 03.08.2018
+ * Time: 11:45
  */
 
 namespace Modules\Core\Behaviours;
 
 
-class FormClearInputBehavior extends FormJsEventBehavior
+class CustomSelectBehavior extends FormJsEventBehavior
 {
 
     /**
      * @var array
      */
-    protected $jsEvent = 'form.client.fields.clear';
-    protected $jsObjName = 'formClearFields';
+    protected $jsEvent = 'form.client.fields.custom_select';
+    protected $jsObjName = 'formCustomSelect';
 
 
     protected function createJsFieldsConditions(&$fields): string

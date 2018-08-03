@@ -25,6 +25,7 @@ class CreateProductPageFormHelper
     ];
 
     private $_form = null;
+    private $_prefix = 'ProductFieldsGroupForm';
 
 
     /**
@@ -59,6 +60,7 @@ class CreateProductPageFormHelper
         }
 
         $this->_form = $resultObject;
+        $this->_form->setPrefix($this->_prefix);
 
     }
 
@@ -78,7 +80,6 @@ class CreateProductPageFormHelper
         if(empty($class)) {
             return $subClass;
         }
-        //var_dump($class);
         return new $class($params, $subClass);
     }
 }

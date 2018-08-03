@@ -14,7 +14,7 @@ use Xcart\App\Behaviours\BaseBehavior;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Helpers\Creator;
 
-class FormViewBehavior extends BaseBehavior
+abstract class FormViewBehavior extends BaseBehavior
 {
     /**
      * @var array

@@ -163,14 +163,14 @@ a.dashed {
   }
 }
 
-@mixin addBlueShadow(){
+%add-blue-shadow {
   text-decoration: none;
   box-shadow: 0 0 4px 0 $product_page_blue_color_shadow;
 }
 
 .hover-blue{
   &:hover{
-    @include addBlueShadow();
+    @extend %add-blue-shadow;
   }
 }
 

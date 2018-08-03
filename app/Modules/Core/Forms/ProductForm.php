@@ -10,6 +10,7 @@ namespace Modules\Core\Forms;
 
 
 use Modules\Core\Behaviours\ClientValidationBehavior;
+use Modules\Core\Behaviours\CustomSelectBehavior;
 use Modules\Core\Behaviours\ProductFormDisplayBehavior;
 
 abstract class ProductForm extends FrontendForm
@@ -24,6 +25,10 @@ abstract class ProductForm extends FrontendForm
         return [
             'validation' => [
                 'class' => ClientValidationBehavior::class,
+                'enabled' => true
+            ],
+            'select_customization' => [
+                'class' => CustomSelectBehavior::class,
                 'enabled' => true
             ],
             'decor' => [

@@ -1,6 +1,7 @@
 import documentReady from "../utils/documentReady";
 import formValidation from "../components/FormValidation";
 import clearFormFields from "../components/ClearFormFields";
+import initSelectFields from "../components/CreateSelectFields";
 
 function createDuplicatedFields(fields){
 
@@ -36,9 +37,6 @@ documentReady(() => {
         createDuplicatedFields(form.fields);
     }, false);
 
-
-
-
     // init clear fields
     if (typeof document.formClearFields !== 'undefined') {
 
@@ -50,4 +48,17 @@ documentReady(() => {
     document.addEventListener('form.client.fields.clear', function (event) {
         clearFormFields(event.detail);
     }, false);
+
+    // init select fields customization
+    if (typeof document.formCustomSelect !== 'undefined') {
+
+        for (let name in document.formCustomSelect) {
+            initSelectFields(name);
+        }
+    }
+
+    document.addEventListener('form.client.fields.custom_select', function (event) {
+        initSelectFields(event.detail);
+    }, false);
+
 });

@@ -92,7 +92,7 @@
 
             &:hover{
               &::before {
-                @include addBlueShadow();
+                @extend %add-blue-shadow;
               }
             }
 
@@ -106,11 +106,10 @@
 
           &:checked + label {
             &::before {
-              //background: $product_page_blue_color url('') 0 0 no-repeat;
               border-color: $product_page_blue_color;
-              //background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle cx='15' cy='15' r='10' /></svg>")  0 0 no-repeat;
               background: $product_page_blue_color url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 25' width='21' height='21'><polygon style='fill:white;' points='22.186,10.52 14.054,18.652 9.814,14.411 8.4,15.825 14.054,21.48 23.6,11.934'/></svg>")  -4px -4px no-repeat;
             }
+
             &:hover{
               &::before {
                 box-shadow: none;

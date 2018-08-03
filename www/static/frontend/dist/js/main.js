@@ -60840,6 +60840,10 @@ var _ClearFormFields = __webpack_require__(105);
 
 var _ClearFormFields2 = _interopRequireDefault(_ClearFormFields);
 
+var _CreateSelectFields = __webpack_require__(186);
+
+var _CreateSelectFields2 = _interopRequireDefault(_CreateSelectFields);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createDuplicatedFields(fields) {
@@ -60883,6 +60887,17 @@ function createDuplicatedFields(fields) {
 
     document.addEventListener('form.client.fields.clear', function (event) {
         (0, _ClearFormFields2.default)(event.detail);
+    }, false);
+
+    if (typeof document.formCustomSelect !== 'undefined') {
+
+        for (var _name2 in document.formCustomSelect) {
+            (0, _CreateSelectFields2.default)(_name2);
+        }
+    }
+
+    document.addEventListener('form.client.fields.custom_select', function (event) {
+        (0, _CreateSelectFields2.default)(event.detail);
     }, false);
 });
 
@@ -61123,7 +61138,7 @@ var ClearFormFields = function () {
         _classCallCheck(this, ClearFormFields);
 
         this.name = name;
-        this.constraints = document.formConstraints[name];
+
 
         var formSelector = '#' + name;
         this.form = document.querySelector(formSelector);
@@ -62977,11 +62992,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ProductImageSlider = function (_Component) {
-    _inherits(ProductImageSlider, _Component);
+var SelectNumberItems = function (_Component) {
+    _inherits(SelectNumberItems, _Component);
 
-    function ProductImageSlider(props) {
-        _classCallCheck(this, ProductImageSlider);
+    function SelectNumberItems(props) {
+        _classCallCheck(this, SelectNumberItems);
 
         var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
@@ -62997,7 +63012,7 @@ var ProductImageSlider = function (_Component) {
         return _this;
     }
 
-    ProductImageSlider.prototype.initState = function initState(quantity) {
+    SelectNumberItems.prototype.initState = function initState(quantity) {
 
         this.state = {
             'active': 'quantity' + quantity,
@@ -63006,7 +63021,7 @@ var ProductImageSlider = function (_Component) {
         };
     };
 
-    ProductImageSlider.prototype.newState = function newState(quantity) {
+    SelectNumberItems.prototype.newState = function newState(quantity) {
 
         if (quantity >= this.props.min && quantity <= this.props.max) {
 
@@ -63029,7 +63044,7 @@ var ProductImageSlider = function (_Component) {
         }
     };
 
-    ProductImageSlider.prototype.renderNumberItem = function renderNumberItem(index) {
+    SelectNumberItems.prototype.renderNumberItem = function renderNumberItem(index) {
         var _this2 = this;
 
         var id = 'quantity' + index;
@@ -63048,7 +63063,7 @@ var ProductImageSlider = function (_Component) {
         );
     };
 
-    ProductImageSlider.prototype.renderNumbersSelector = function renderNumbersSelector(number) {
+    SelectNumberItems.prototype.renderNumbersSelector = function renderNumbersSelector(number) {
 
         var fields = [];
         var quantity = this.props.min;
@@ -63066,7 +63081,7 @@ var ProductImageSlider = function (_Component) {
         );
     };
 
-    ProductImageSlider.prototype.renderButton = function renderButton() {
+    SelectNumberItems.prototype.renderButton = function renderButton() {
         var _this3 = this;
 
         if (this.props.max - this.maxButtonValue < this.props.step) {
@@ -63089,7 +63104,7 @@ var ProductImageSlider = function (_Component) {
         );
     };
 
-    ProductImageSlider.prototype.renderRadioGroup = function renderRadioGroup(number) {
+    SelectNumberItems.prototype.renderRadioGroup = function renderRadioGroup(number) {
         return (0, _preact.h)(
             'div',
             null,
@@ -63111,33 +63126,33 @@ var ProductImageSlider = function (_Component) {
         );
     };
 
-    ProductImageSlider.prototype.changeWindow = function changeWindow() {
+    SelectNumberItems.prototype.changeWindow = function changeWindow() {
         var state = this.state;
         state.userValue = true;
         this.setState(state);
     };
 
-    ProductImageSlider.prototype.getUserQuantity = function getUserQuantity() {
+    SelectNumberItems.prototype.getUserQuantity = function getUserQuantity() {
         var userEntered = parseInt(this.inputEl.value, 10);
         this.newState(userEntered);
     };
 
-    ProductImageSlider.prototype.setFocus = function setFocus() {
+    SelectNumberItems.prototype.setFocus = function setFocus() {
         if (this.state.userValue) {
             this.inputEl.focus();
             this.inputEl.select();
         }
     };
 
-    ProductImageSlider.prototype.componentDidUpdate = function componentDidUpdate() {
+    SelectNumberItems.prototype.componentDidUpdate = function componentDidUpdate() {
         this.setFocus();
     };
 
-    ProductImageSlider.prototype.componentDidMount = function componentDidMount() {
+    SelectNumberItems.prototype.componentDidMount = function componentDidMount() {
         this.setFocus();
     };
 
-    ProductImageSlider.prototype.renderInputText = function renderInputText() {
+    SelectNumberItems.prototype.renderInputText = function renderInputText() {
         var _this4 = this;
 
         var value = this.state.quantity && this.state.quantity > this.maxButtonValue ? this.state.quantity : this.maxButtonValue + this.props.step;
@@ -63184,7 +63199,7 @@ var ProductImageSlider = function (_Component) {
         );
     };
 
-    ProductImageSlider.prototype.render = function render(props, state) {
+    SelectNumberItems.prototype.render = function render(props, state) {
 
         if (state.userValue) {
             return this.renderInputText();
@@ -63193,10 +63208,10 @@ var ProductImageSlider = function (_Component) {
         }
     };
 
-    return ProductImageSlider;
+    return SelectNumberItems;
 }(_preact.Component);
 
-exports.default = ProductImageSlider;
+exports.default = SelectNumberItems;
 
 /***/ }),
 /* 128 */
@@ -75684,6 +75699,118 @@ exports.default = isTouch;
 function isTouch() {
     return window.whatInput.ask('loose') === 'touch' || window.whatInput.ask() === 'touch';
 }
+
+/***/ }),
+/* 186 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _CustomSelectField = __webpack_require__(187);
+
+var _CustomSelectField2 = _interopRequireDefault(_CustomSelectField);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CreateSelectFields = function () {
+    function CreateSelectFields(name) {
+        _classCallCheck(this, CreateSelectFields);
+
+        var formSelector = '#' + name;
+
+        this.name = name;
+        this.form = document.querySelector(formSelector);
+
+        if (this.form === null) {
+            return;
+        }
+
+        var hideWrapper = document.createElement('div');
+        var optionsContainer = document.createElement('div');
+
+        hideWrapper.classList.add('mmodal-hide');
+        optionsContainer.classList.add('options-container');
+
+        hideWrapper.appendChild(optionsContainer);
+        this.form.appendChild(hideWrapper);
+        this.selectsObj = [];
+
+        this._bind(optionsContainer);
+    }
+
+    CreateSelectFields.prototype._bind = function _bind(optionsContainer) {
+
+        var selects = this.form.querySelectorAll('.select-visible-button');
+
+        for (var i = 0; i < selects.length; ++i) {
+            this.selectsObj.push((0, _CustomSelectField2.default)(this.selects.item(i), optionsContainer));
+        }
+    };
+
+    CreateSelectFields.prototype.destructor = function destructor() {
+        for (var i = 0; i < this.selects.length; ++i) {
+            this.selectsObj[i].destructor();
+        }
+        this.selectsObj = [];
+    };
+
+    return CreateSelectFields;
+}();
+
+exports.default = function (name) {
+    return new CreateSelectFields(name);
+};
+
+/***/ }),
+/* 187 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CustomSelectField = function () {
+    function CustomSelectField(button, win) {
+        _classCallCheck(this, CustomSelectField);
+
+        this.win = win;
+        this.button = button;
+        this.processButtonClick = this.processButtonClick.bind(this);
+        this.button.addEventListener('click', this.processButtonClick, { 'passive': true });
+    }
+
+    CustomSelectField.prototype.processButtonClick = function processButtonClick(event) {
+        if (!this.win.classList.contains('opened')) {
+            this.openOptions();
+        }
+    };
+
+    CustomSelectField.prototype.openOptions = function openOptions() {};
+
+    CustomSelectField.prototype.destructor = function destructor() {
+        this.button.removeEventListener('click', this.processButtonClick, { 'passive': true });
+    };
+
+    return CustomSelectField;
+}();
+
+exports.default = function (button, win) {
+    return new CustomSelectField(button, win);
+};
 
 /***/ })
 /******/ ]);
