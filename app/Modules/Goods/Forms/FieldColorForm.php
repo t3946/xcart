@@ -29,7 +29,11 @@ class FieldColorForm extends FieldSelectForm
                 'choices' => $this->addFirstBlankOption(),
                 'required' => true,
                 'disabled' => [''],
-                'selected' => ['']
+                'selected' => [''],
+//                'className' => $this->type
+                'html' => [
+                    'class' => $this->type
+                ]
             ]
         ];
     }

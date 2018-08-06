@@ -1,6 +1,8 @@
 @mixin getSelectorOptionsItemsStyles() {
 
   $buttons-height: rem-calc(48);
+  $radio-diameter: rem-calc(20);
+  $color-height: rem-calc(36);
 
   .selector-options-items{
     //.quantity-radio-group {
@@ -10,6 +12,7 @@
       @include breakpoint(sm) {
         width: rem-calc(300)
       }
+
       @include breakpoint(medium) {
         width: rem-calc(428)
       }
@@ -21,38 +24,61 @@
         left: -9999px;
 
         & + label {
-          display: block;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           width: 100%;
-          line-height: $buttons-height - 2px;
+          line-height: $buttons-height - rem-calc(2);
           height: $buttons-height;
           border: 1px solid #aaaaaa;
           font-size: rem-calc(18);
           color: #4a4949;
           cursor: pointer;
           border-radius: rem-calc(6);
-          margin-bottom: rem-calc(5);
+          margin-bottom: rem-calc(8);
           position: relative;
           text-align: left;
+          padding: 0 1rem;
+
+          &:after {
+            content: '';
+            display: inline-block;
+            width: $radio-diameter;
+            height: $radio-diameter;
+            min-width: $radio-diameter;
+            border-radius: 50%;
+            border: 1px solid #b6b6b6;
+            background-color: #ffffff;
+          }
+
+          &:hover{
+            &:after {
+              text-decoration: none;
+              box-shadow: inset 0 0 8px 0 $product_page_blue_color_shadow;
+            }
+          }
+
+          .color-text{
+            height: $color-height;
+            line-height: $color-height;
+
+            .color-icon{
+              display: inline-block;
+              width: $color-height;
+              height: $color-height;
+              min-width: $radio-diameter;
+              border: 1px solid #b6b6b6;
+            }
+          }
         }
 
         &:checked + label {
-          font-weight: bold;
-          color: $white;
-          background-color: $forest_green;
-          border-color: $forest_green;
 
           &:after {
-            content: url("../../dist/images/icons/white_check_mark.svg");
-            display: block;
-            position: absolute;
-            top: rem-calc(4);
-            right: rem-calc(13);
-            width: rem-calc(22);
-            height: rem-calc(23);
+            border-color: $product_page_blue_color;
+            background: $product_page_blue_color url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 25' width='21' height='21'><polygon style='fill:white;' points='22.186,10.52 14.054,18.652 9.814,14.411 8.4,15.825 14.054,21.48 23.6,11.934'/></svg>")  -4px -4px no-repeat;
           }
         }
       }
-
-    //}
   }
 }
