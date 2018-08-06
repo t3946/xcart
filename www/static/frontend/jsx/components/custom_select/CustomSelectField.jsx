@@ -24,7 +24,7 @@ class CustomSelectField {
         let select = document.getElementById(selectId);
         let isColor = select.classList.contains('color');
         let options = select.getElementsByTagName('option');
-        let items = _.map(options, selectOption);
+        let items = _.map(options, (el) => selectOption(this.button, el));
 
         $(this.win).mmodal({
             'windowClass': 'selector-options',

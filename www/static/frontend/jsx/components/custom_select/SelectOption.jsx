@@ -1,15 +1,20 @@
 import _ from 'lodash';
 
 class SelectOption {
-    constructor(element) {
+    constructor(button, element) {
         this.element = element;
         this.value = element.value;
         this.text = element.text;
+        this.button = button;
     }
 
-    setActive(){
+    setActive(element){
+        //console.log(html);
         $(this.element).siblings().removeAttr('selected');
         this.element.setAttribute('selected', 'selected');
+        element = element || document.createTextNode(this.text);
+        this.button.innerHTML = ""
+        this.button.append(element);
     }
 
     isActive(){
@@ -21,6 +26,6 @@ class SelectOption {
     }
 }
 
-export default (element) => {
-    return new SelectOption(element);
+export default (button, element) => {
+    return new SelectOption(button, element);
 }

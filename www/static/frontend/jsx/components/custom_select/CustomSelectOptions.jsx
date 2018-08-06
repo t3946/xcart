@@ -16,7 +16,7 @@ export default class CustomSelectOptions extends Component {
             let checked = item.isActive();
             return (<div>
                 <input id={id} name="custom_select_options" value={item.value} type="radio" checked={checked}/>
-                <label className="hover-blue" for={id} data-value={item.value} onClick={() => { item.setActive(); }}>{item.text}</label>
+                <label className="hover-blue" for={id} data-value={item.value} onClick={() => { item.setActive();}}>{item.text}</label>
             </div>);
         } else {
             this.title = item.text;
