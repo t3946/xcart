@@ -1,5 +1,11 @@
 .mmodal-container {
   .mmodal-content {
+
+    .title-section {
+      color: #0a0a0a;
+      text-transform: capitalize;
+    }
+
     .title_container {
       text-align: left;
       color: #0a0a0a;
@@ -47,6 +53,19 @@
           color: #0a0a0a;
         }
 
+      }
+
+      form {
+        @include breakpoint(large){
+          
+          .field-row .field-title{
+            width: 30%;
+          }
+
+          div.field {
+            width: 70%;
+          }
+        }
       }
 
     }
