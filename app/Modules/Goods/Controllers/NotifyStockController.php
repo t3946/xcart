@@ -25,11 +25,11 @@ class NotifyStockController extends FrontendController
         else {
 
             if ($model = NotifyStockModel::objects()->get([
-                                                            'email' => $request->post->get('NotifyStockForm')['email'],
-                                                            'productid' => $request->post->get('NotifyStockForm')['product'],
-                                                            'first_name' => $request->post->get('NotifyStockForm')['first_name'],
-                                                            'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
-                                                            'sent' => false,
+                                                              'email' => $request->post->get('NotifyStockForm')['email'],
+                                                              'productid' => $request->post->get('NotifyStockForm')['product'],
+                                                              'first_name' => $request->post->get('NotifyStockForm')['first_name'],
+                                                              'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
+                                                              'sent' => false,
                                                           ])){
                 $flash_data['success'] = ['You already signed up for this notification'];
             } else {
