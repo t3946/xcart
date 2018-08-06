@@ -107,7 +107,7 @@ export default class MiniCart extends Component
                     </div>
 
                     <div className="actions">
-                        <a href="#" className="icon cart_remove text-hide" onClick={(e)=>{ this.handleRemove(e, key, item); }} title="Remove"></a>
+                        <a href="#" className="icon cart_remove" onClick={(e)=>{ this.handleRemove(e, key, item); }} title="Remove"></a>
                     </div>
                 </div>
             ));
