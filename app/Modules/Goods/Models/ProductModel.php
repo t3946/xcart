@@ -680,6 +680,6 @@ class ProductModel extends Model implements ICartItem
      */
     public function getOptions()
     {
-        return $this->options->filter(['active' => true])->order(['position']);
+        return $this->options->filter(['active' => true])->order(['position'])->all();
     }
 }

@@ -26,9 +26,17 @@ class FormValidation {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
         this.processChange = this.processChange.bind(this);
         this.processJsChange = this.processJsChange.bind(this);
+        this.checkAllForm = this.checkAllForm.bind(this);
+
+        this.form.addEventListener('submit', this.checkAllForm);
+        this.form.addEventListener('js.submit.event', this.checkAllForm);
 
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);
+            let type = inputElement.getAttribute('type');
+            if(type === 'hidden') {
+                continue;
+            }
             let field = fieldValidation(inputElement);
             let inputElementName = inputElement.getAttribute('name');
             this.fields[inputElementName] = field;
@@ -58,7 +66,6 @@ class FormValidation {
         }
 
         this.checkForm(event.target);
-
     }
 
     processJsChange(event){
@@ -89,6 +96,31 @@ class FormValidation {
         field.showError(currentError[0]);
     }
 
+    checkAllForm(){
+
+        let errors = formValidate(this.form, this.constraints) || {};
+        let hasErrors = false;
+
+        for (let inputElementName in this.fields) {
+            //console.log(this.fields);
+            let field = this.fields[inputElementName];
+            let currentError = errors[inputElementName];
+            field.clearAllClasses();
+
+            if(typeof currentError === 'undefined' || currentError.length <= 0) {
+                field.success();
+                continue;
+            }
+
+            field.showError(currentError[0]);
+            hasErrors = true;
+
+        }
+        if(hasErrors) {
+            return false;
+        }
+    }
+
 
     /**
      * Destruct form validator
@@ -99,6 +131,10 @@ class FormValidation {
             inputElement.removeEventListener('blur', this.processChange);
             inputElement.removeEventListener('js.change.event', this.processJsChange);
         }
+
+        this.form.removeEventListener('submit', this.checkAllForm);
+        this.form.removeEventListener('js.submit.event', this.checkAllForm);
+
         this.fields = {};
     }
 }

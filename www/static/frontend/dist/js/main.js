@@ -60956,14 +60956,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function createDuplicatedFields(fields) {
 
     for (var fieldName in fields) {
+
         var fieldObj = fields[fieldName];
+
         fieldObj.element.addEventListener('form_validation.success', function (event) {
+
             var duplicateId = event.detail.field.element.dataset.duplicate || null;
+
             if (duplicateId && duplicateId.length) {
+
                 var duplicateElement = document.getElementById(duplicateId);
                 var dElementName = duplicateElement.getAttribute('name');
                 var dFieldObj = fields[dElementName];
+
                 if (!duplicateElement.value.length) {
+
                     duplicateElement.value = event.detail.field.element.value;
                     dFieldObj.success();
                 }
@@ -61046,9 +61053,17 @@ var FormValidation = function () {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
         this.processChange = this.processChange.bind(this);
         this.processJsChange = this.processJsChange.bind(this);
+        this.checkAllForm = this.checkAllForm.bind(this);
+
+        this.form.addEventListener('submit', this.checkAllForm);
+        this.form.addEventListener('js.submit.event', this.checkAllForm);
 
         for (var i = 0; i < this.inputs.length; ++i) {
             var inputElement = this.inputs.item(i);
+            var type = inputElement.getAttribute('type');
+            if (type === 'hidden') {
+                continue;
+            }
             var field = (0, _FieldValidation2.default)(inputElement);
             var inputElementName = inputElement.getAttribute('name');
             this.fields[inputElementName] = field;
@@ -61101,12 +61116,40 @@ var FormValidation = function () {
         field.showError(currentError[0]);
     };
 
+    FormValidation.prototype.checkAllForm = function checkAllForm() {
+
+        var errors = (0, _validate2.default)(this.form, this.constraints) || {};
+        var hasErrors = false;
+
+        for (var inputElementName in this.fields) {
+            console.log(this.fields);
+            var field = this.fields[inputElementName];
+            var currentError = errors[inputElementName];
+            field.clearAllClasses();
+
+            if (typeof currentError === 'undefined' || currentError.length <= 0) {
+                field.success();
+                continue;
+            }
+
+            field.showError(currentError[0]);
+            hasErrors = true;
+        }
+        if (hasErrors) {
+            return false;
+        }
+    };
+
     FormValidation.prototype.destructor = function destructor() {
         for (var i = 0; i < this.inputs.length; ++i) {
             var inputElement = this.inputs.item(i);
             inputElement.removeEventListener('blur', this.processChange);
             inputElement.removeEventListener('js.change.event', this.processJsChange);
         }
+
+        this.form.removeEventListener('submit', this.checkAllForm);
+        this.form.removeEventListener('js.submit.event', this.checkAllForm);
+
         this.fields = {};
     };
 
@@ -61146,6 +61189,7 @@ var FieldValidation = function () {
         for (var i = 0; i < errors.length; ++i) {
             var oneErrorPlace = errors.item(i);
             var oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = text;
             oneErrorPlace.classList.add('show');
         }
@@ -61162,14 +61206,22 @@ var FieldValidation = function () {
         for (var i = 0; i < errors.length; ++i) {
             var oneErrorPlace = errors.item(i);
             var oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove('show');
         }
     };
 
-    FieldValidation.prototype.clearAllClasses = function clearAllClasses() {
-        this.element.classList.remove('success');
-        this.field.classList.remove('success');
+    FieldValidation.prototype.clearAllClasses = function clearAllClasses(field, element) {
+        console.log(this.field);
+        console.log(this.element);
+
+        field = field || this.field;
+        element = element || this.element;
+
+        element.classList.remove('success');
+        field.classList.remove('success');
+
         this.removeError();
     };
 
@@ -63334,7 +63386,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DURATION_PRELOAD = 500;
-var DURATION_SHOW_INFO = 3000;
+var DURATION_SHOW_INFO = 500;
 
 var AnimateWaitButton = function () {
     function AnimateWaitButton(identifier) {

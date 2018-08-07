@@ -47,8 +47,12 @@ class CreateProductPageFormHelper
             $variants = [];
 
             foreach ($option->variants as $oneVariant) {
-                $key = !empty($oneVariant->variant->value) ? $oneVariant->variant->value : $oneVariant->variant->name;
-                $variants[$key] = $oneVariant->variant->name;
+                if(empty($oneVariant->variant->value)){
+                    continue;
+                }
+                $key = trim($oneVariant->variant->value);
+                $text = !empty($oneVariant->variant->name) ? $oneVariant->variant->name : $oneVariant->variant->value;
+                $variants[$key] = $text;
             }
 
             $params = [

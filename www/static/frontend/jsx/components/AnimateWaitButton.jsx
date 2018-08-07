@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const DURATION_PRELOAD = 500;
-const DURATION_SHOW_INFO = 3000;
+const DURATION_SHOW_INFO = 500;
 
 class AnimateWaitButton {
 

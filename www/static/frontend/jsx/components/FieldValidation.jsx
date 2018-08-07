@@ -25,6 +25,7 @@ class FieldValidation {
         for (let i = 0; i < errors.length; ++i) {
             let oneErrorPlace = errors.item(i);
             let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = text;
             oneErrorPlace.classList.add('show');
         }
@@ -45,6 +46,7 @@ class FieldValidation {
         for (let i = 0; i < errors.length; ++i) {
             let oneErrorPlace = errors.item(i);
             let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove('show');
         }
@@ -54,9 +56,16 @@ class FieldValidation {
      * Clear all classes
      * @param element
      */
-    clearAllClasses() {
-        this.element.classList.remove('success');
-        this.field.classList.remove('success');
+    clearAllClasses(field, element) {
+        console.log(this.field);
+        console.log(this.element);
+
+        field = field || this.field;
+        element = element || this.element;
+
+        element.classList.remove('success');
+        field.classList.remove('success');
+
         this.removeError();
     }
 
