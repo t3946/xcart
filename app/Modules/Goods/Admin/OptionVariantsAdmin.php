@@ -59,6 +59,6 @@ class OptionVariantsAdmin extends ListViewAdmin
 
     public function getAllUrl()
     {
-        return (new OptionAdmin)->getUpdateUrl($this->ownerPk);
+        return (new OptionAdmin)->getUpdateUrl($this->ownerPk->id);
     }
 }

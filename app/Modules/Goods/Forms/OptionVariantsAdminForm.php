@@ -39,4 +39,11 @@ class OptionVariantsAdminForm extends ModelForm
             ],
         ],$v_arr);
     }
+
+    public function beforeInstanceSave($instance)
+    {
+        if (\in_array($instance->option->type, ['select', 'radio'])) {
+            $instance->value = $instance->name;
+        }
+    }
 }
