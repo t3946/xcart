@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import {h, render, Component} from "preact";
 import CustomSelectOptions from './CustomSelectOptions';
-import selectOption from './selectOption';
 import CustomColorOptions from "./CustomColorOptions";
+import selectOption from './selectOption';
 
 class CustomSelectField {
     constructor(button, win) {
@@ -28,17 +28,14 @@ class CustomSelectField {
 
         $(this.win).mmodal({
             'windowClass': 'selector-options',
-            'setWidth': false,//CustomColorOptions
-            'onBeforeOpen': function(container){
+            'setWidth': false,
+            'onBeforeOpen': container => {
                 if(isColor) {
-                    render(<CustomColorOptions items={items} />,
-                        container, container.firstChild);
+                    render(<CustomColorOptions items={items} />, container, container.firstChild);
                     return;
                 }
 
-                render(<CustomSelectOptions items={items} />,
-                    container, container.firstChild);
-
+                render(<CustomSelectOptions items={items} />, container, container.firstChild);
             }
         });
     }

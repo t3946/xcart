@@ -2,6 +2,7 @@ import {h, Component, render} from 'preact';
 import _ from 'lodash';
 
 export default class CustomSelectOptions extends Component {
+
     constructor(props) {
         super(props);
         if (props.items === null) {
@@ -9,14 +10,15 @@ export default class CustomSelectOptions extends Component {
         }
     }
 
-
     renderOneItem(item) {
         if(!item.isDisabled()) {
             let id = 'select' + item.value;
             let checked = item.isActive();
-            return (<div>
-                <input id={id} name="custom_select_options" value={item.value} type="radio" checked={checked}/>
-                <label className="hover-blue" for={id} data-value={item.value} onClick={() => { item.setActive();}}>{item.text}</label>
+            return (<div className="selector-button">
+                <input id={id} className="selector-button__radio" name="custom_select_options" value={item.value} type="radio" checked={checked}/>
+                <label className="hover-blue selector-button__label" for={id} data-value={item.value} onClick={() => { item.setActive();}}>
+                    {item.text}
+                </label>
             </div>);
         } else {
             this.title = item.text;

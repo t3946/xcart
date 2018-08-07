@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {h, render, Component} from "preact";
 
 class SelectOption {
     constructor(button, element) {
@@ -9,12 +10,17 @@ class SelectOption {
     }
 
     setActive(element){
-        //console.log(html);
+        element = element || null;
         $(this.element).siblings().removeAttr('selected');
         this.element.setAttribute('selected', 'selected');
-        element = element || document.createTextNode(this.text);
-        this.button.innerHTML = ""
-        this.button.append(element);
+
+        if(element == null) {
+            this.button.innerHTML = this.text;
+            return;
+        }
+
+        this.button.innerHTML = '';
+        render(element, this.button, this.button.firstChild);
     }
 
     isActive(){

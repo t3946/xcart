@@ -44,7 +44,7 @@
       padding: 0 $button-padding-right 0 $button-padding-left;
       white-space: nowrap;
 
-      span{
+      span {
         white-space: nowrap;
       }
 
@@ -58,13 +58,11 @@
       width: 100%;
       align-items: center;
 
-
       .radio-container {
         width: 49%;
         padding: rem-calc(5) 1rem;
         display: inline-block;
         align-items: center;
-
 
         input[type="radio"] {
           position: absolute;
