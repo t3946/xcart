@@ -1,17 +1,15 @@
-$color-height: rem-calc(36);
 
-%add-blue-shadow {
-  text-decoration: none;
-  box-shadow: 0 0 4px 0 $product_page_blue_color_shadow;
-}
 
-%color-icon {
-  .color-info{
+
+@mixin style-color-icon() {
+  $color-height: rem-calc(36);
+
+  .selector-button__label__color{
     line-height: 100%;
     display: flex;
     align-items: center;
 
-    .color-icon{
+    &__icon{
       display: inline-block;
       width: $color-height;
       height: $color-height;
@@ -19,7 +17,7 @@ $color-height: rem-calc(36);
       border: 1px solid #b6b6b6;
     }
 
-    .color-text{
+    &__text{
       display: inline-block;
       padding-left: 1rem;
     }
@@ -189,6 +187,12 @@ a.dashed {
       background: url("../../dist/images/icons/arrow_down.svg") 0 0 no-repeat;
     }
   }
+}
+
+
+%add-blue-shadow {
+  text-decoration: none;
+  box-shadow: 0 0 4px 0 $product_page_blue_color_shadow;
 }
 
 .hover-blue{

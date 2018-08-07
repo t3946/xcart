@@ -8,6 +8,18 @@ export default class CustomSelectOptions extends Component {
         if (props.items === null) {
             return;
         }
+        this.close = props.callback;
+
+        this.state = {
+            'changed': false
+        };
+    }
+
+    changeActive(item){
+        item.setActive();
+        this.setState({
+            'changed': true
+        });
     }
 
     renderOneItem(item) {
@@ -16,7 +28,8 @@ export default class CustomSelectOptions extends Component {
             let checked = item.isActive();
             return (<div className="selector-button">
                 <input id={id} className="selector-button__radio" name="custom_select_options" value={item.value} type="radio" checked={checked}/>
-                <label className="hover-blue selector-button__label" for={id} data-value={item.value} onClick={() => { item.setActive();}}>
+                <label className="hover-blue selector-button__label" for={id} data-value={item.value}
+                       onClick={() => { this.changeActive(item); }}>
                     {item.text}
                 </label>
             </div>);
@@ -25,7 +38,14 @@ export default class CustomSelectOptions extends Component {
         }
     }
 
+    componentDidUpdate(){
+        if(this.state.changed) {
+            setTimeout(() => { this.close(); }, 300);
+        }
+    }
+
     render(props, state) {
+        console.log('render');
         let self = this;
         let options = _.map(props.items, this.renderOneItem.bind(self));
         return (<div>

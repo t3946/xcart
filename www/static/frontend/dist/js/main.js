@@ -32389,21 +32389,36 @@ var CustomSelectOptions = function (_Component) {
         if (props.items === null) {
             return _possibleConstructorReturn(_this);
         }
+        _this.close = props.callback;
+
+        _this.state = {
+            'changed': false
+        };
         return _this;
     }
 
+    CustomSelectOptions.prototype.changeActive = function changeActive(item) {
+        item.setActive();
+        this.setState({
+            'changed': true
+        });
+    };
+
     CustomSelectOptions.prototype.renderOneItem = function renderOneItem(item) {
+        var _this2 = this;
+
         if (!item.isDisabled()) {
             var id = 'select' + item.value;
             var checked = item.isActive();
             return (0, _preact.h)(
                 'div',
-                null,
-                (0, _preact.h)('input', { id: id, name: 'custom_select_options', value: item.value, type: 'radio', checked: checked }),
+                { className: 'selector-button' },
+                (0, _preact.h)('input', { id: id, className: 'selector-button__radio', name: 'custom_select_options', value: item.value, type: 'radio', checked: checked }),
                 (0, _preact.h)(
                     'label',
-                    { className: 'hover-blue', 'for': id, 'data-value': item.value, onClick: function onClick() {
-                            item.setActive();
+                    { className: 'hover-blue selector-button__label', 'for': id, 'data-value': item.value,
+                        onClick: function onClick() {
+                            _this2.changeActive(item);
                         } },
                     item.text
                 )
@@ -32413,7 +32428,18 @@ var CustomSelectOptions = function (_Component) {
         }
     };
 
+    CustomSelectOptions.prototype.componentDidUpdate = function componentDidUpdate() {
+        var _this3 = this;
+
+        if (this.state.changed) {
+            setTimeout(function () {
+                _this3.close();
+            }, 300);
+        }
+    };
+
     CustomSelectOptions.prototype.render = function render(props, state) {
+        console.log('render');
         var self = this;
         var options = _lodash2.default.map(props.items, this.renderOneItem.bind(self));
         return (0, _preact.h)(
@@ -60083,10 +60109,9 @@ exports.default = FilterPriceSlider;
                 onAfterClose: $.noop,
                 onSubmit: 'default'
             };
+
             this.locked = true;
-
             this.$element = element instanceof Object ? element : $(element);
-
             this.options = $.extend(defaultOptions, options);
 
             if (this.$element.is("a")) {
@@ -61411,13 +61436,13 @@ var _CustomSelectOptions = __webpack_require__(38);
 
 var _CustomSelectOptions2 = _interopRequireDefault(_CustomSelectOptions);
 
-var _selectOption = __webpack_require__(109);
-
-var _selectOption2 = _interopRequireDefault(_selectOption);
-
-var _CustomColorOptions = __webpack_require__(110);
+var _CustomColorOptions = __webpack_require__(109);
 
 var _CustomColorOptions2 = _interopRequireDefault(_CustomColorOptions);
+
+var _selectOption = __webpack_require__(110);
+
+var _selectOption2 = _interopRequireDefault(_selectOption);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61454,12 +61479,13 @@ var CustomSelectField = function () {
             'windowClass': 'selector-options',
             'setWidth': false,
             'onBeforeOpen': function onBeforeOpen(container) {
+
                 if (isColor) {
-                    (0, _preact.render)((0, _preact.h)(_CustomColorOptions2.default, { items: items }), container, container.firstChild);
+                    (0, _preact.render)((0, _preact.h)(_CustomColorOptions2.default, { items: items, callback: this.close.bind(this) }), container, container.firstChild);
                     return;
                 }
 
-                (0, _preact.render)((0, _preact.h)(_CustomSelectOptions2.default, { items: items }), container, container.firstChild);
+                (0, _preact.render)((0, _preact.h)(_CustomSelectOptions2.default, { items: items, callback: this.close.bind(this) }), container, container.firstChild);
             }
         });
     };
@@ -61478,57 +61504,6 @@ exports.default = function (button, win) {
 
 /***/ }),
 /* 109 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-exports.__esModule = true;
-
-var _lodash = __webpack_require__(1);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SelectOption = function () {
-    function SelectOption(button, element) {
-        _classCallCheck(this, SelectOption);
-
-        this.element = element;
-        this.value = element.value;
-        this.text = element.text;
-        this.button = button;
-    }
-
-    SelectOption.prototype.setActive = function setActive(element) {
-        $(this.element).siblings().removeAttr('selected');
-        this.element.setAttribute('selected', 'selected');
-        element = element || document.createTextNode(this.text);
-        this.button.innerHTML = "";
-        this.button.append(element);
-    };
-
-    SelectOption.prototype.isActive = function isActive() {
-        return this.element.hasAttribute('selected');
-    };
-
-    SelectOption.prototype.isDisabled = function isDisabled() {
-        return this.element.hasAttribute('disabled') || this.element.hasAttribute('hidden');
-    };
-
-    return SelectOption;
-}();
-
-exports.default = function (button, element) {
-    return new SelectOption(button, element);
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61567,29 +61542,42 @@ var CustomColorOptions = function (_CustomSelectOptions) {
         var style = "background-color:" + item.value + ";";
         return (0, _preact.h)(
             'span',
-            { className: 'color-info' },
-            (0, _preact.h)('span', { className: 'color-icon', style: style }),
+            { className: 'selector-button__label__color' },
+            (0, _preact.h)('span', { className: 'selector-button__label__color__icon', style: style }),
             (0, _preact.h)(
                 'span',
-                { className: 'color-text' },
+                { className: 'selector-button__label__color__text' },
                 item.text
             )
         );
     };
 
+    CustomColorOptions.prototype.changeActive = function changeActive(item) {
+
+        var content = this.renderTextWithIcon(item);
+        item.setActive(content);
+        this.setState({
+            'changed': true
+        });
+    };
+
     CustomColorOptions.prototype.renderOneItem = function renderOneItem(item) {
+        var _this2 = this;
+
         if (!item.isDisabled()) {
             var id = 'select' + item.value;
             var checked = item.isActive();
             var content = this.renderTextWithIcon(item);
+
             return (0, _preact.h)(
                 'div',
-                null,
-                (0, _preact.h)('input', { id: id, name: 'custom_select_options', value: item.value, type: 'radio', checked: checked }),
+                { className: 'selector-button' },
+                (0, _preact.h)('input', { id: id, className: 'selector-button__radio', name: 'custom_select_options', value: item.value, type: 'radio', checked: checked }),
                 (0, _preact.h)(
                     'label',
-                    { className: 'hover-blue color', 'for': id, 'data-value': item.value, onClick: function onClick() {
-                            item.setActive(content);
+                    { className: 'hover-blue color selector-button__label', 'for': id, 'data-value': item.value,
+                        onClick: function onClick() {
+                            _this2.changeActive(item);
                         } },
                     content
                 )
@@ -61603,6 +61591,65 @@ var CustomColorOptions = function (_CustomSelectOptions) {
 }(_CustomSelectOptions3.default);
 
 exports.default = CustomColorOptions;
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+exports.__esModule = true;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _preact = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SelectOption = function () {
+    function SelectOption(button, element) {
+        _classCallCheck(this, SelectOption);
+
+        this.element = element;
+        this.value = element.value;
+        this.text = element.text;
+        this.button = button;
+    }
+
+    SelectOption.prototype.setActive = function setActive(element) {
+        element = element || null;
+        $(this.element).siblings().removeAttr('selected');
+        this.element.setAttribute('selected', 'selected');
+
+        if (element == null) {
+            this.button.innerHTML = this.text;
+            return;
+        }
+
+        this.button.innerHTML = '';
+        (0, _preact.render)(element, this.button, this.button.firstChild);
+    };
+
+    SelectOption.prototype.isActive = function isActive() {
+        return this.element.hasAttribute('selected');
+    };
+
+    SelectOption.prototype.isDisabled = function isDisabled() {
+        return this.element.hasAttribute('disabled') || this.element.hasAttribute('hidden');
+    };
+
+    return SelectOption;
+}();
+
+exports.default = function (button, element) {
+    return new SelectOption(button, element);
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 111 */

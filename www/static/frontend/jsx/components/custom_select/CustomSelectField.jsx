@@ -29,13 +29,16 @@ class CustomSelectField {
         $(this.win).mmodal({
             'windowClass': 'selector-options',
             'setWidth': false,
-            'onBeforeOpen': container => {
+            'onBeforeOpen': function(container) {
+
                 if(isColor) {
-                    render(<CustomColorOptions items={items} />, container, container.firstChild);
+                    render(<CustomColorOptions items={items} callback={this.close.bind(this)} />, container,
+                        container.firstChild);
                     return;
                 }
 
-                render(<CustomSelectOptions items={items} />, container, container.firstChild);
+                render(<CustomSelectOptions items={items} callback={this.close.bind(this)} />, container,
+                    container.firstChild);
             }
         });
     }

@@ -43,6 +43,7 @@
       line-height: $button-height - rem-calc(2);
       padding: 0 $button-padding-right 0 $button-padding-left;
       white-space: nowrap;
+      @include style-color-icon();
 
       span {
         white-space: nowrap;
