@@ -34,7 +34,12 @@
 # $Id: retrieve_orders.php,v 1.0 2010/10/08 12:39:57 kate Exp $
 #
 
+use Xcart\App\Main\Xcart;
+
 require './auth.php';
+
+Xcart::app()->request->redirect('/retrieve-orders', [], 301);
+
 require $xcart_dir . '/include/categories.php';
 
 if ($active_modules['Brands']) {
