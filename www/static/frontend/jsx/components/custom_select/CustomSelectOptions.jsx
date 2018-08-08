@@ -16,6 +16,7 @@ export default class CustomSelectOptions extends Component {
     }
 
     changeActive(item){
+
         item.setActive();
         this.setState({
             'changed': true
@@ -45,7 +46,7 @@ export default class CustomSelectOptions extends Component {
     }
 
     render(props, state) {
-        console.log('render');
+
         let self = this;
         let options = _.map(props.items, this.renderOneItem.bind(self));
         return (<div>

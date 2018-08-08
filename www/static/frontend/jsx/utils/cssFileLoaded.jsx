@@ -2,7 +2,6 @@ export default function cssFileLoaded(filename, callback)
 {
     if (window.app.assets.css[filename].loaded && document.font) {
         callback();
-        //console.log('now');
     }
     else {
 
@@ -15,7 +14,6 @@ export default function cssFileLoaded(filename, callback)
                 document.removeEventListener('cssLoad', checkCss);
                 document.removeEventListener('font.loaded', checkFont);
                 callback();
-                //console.log('loaded');
             }
         };
 

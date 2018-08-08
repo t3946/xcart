@@ -21,6 +21,7 @@
       .form-field {
         display: table-row;
 
+
         .field-title {
           display: table-cell;
           padding: $cell-padding-top $title-padding-right $cell-padding-top 0;
@@ -32,6 +33,35 @@
 
           @include breakpoint(large) {
             width: rem-calc(302);
+          }
+        }
+
+        &.invalid{
+          .field{
+            padding-bottom: 0;
+          }
+        }
+
+        .errors-content {
+          .errors {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            color: #e7191b;
+            margin-left: 1rem;
+            font-size: rem-calc(12);
+
+            li{
+              &:before {
+                content: '*';
+                display: inline;
+              }
+            }
+
+
+            &.show {
+              display: block !important;
+            }
           }
         }
       }

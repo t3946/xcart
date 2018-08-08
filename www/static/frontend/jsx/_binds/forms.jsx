@@ -29,6 +29,14 @@ function createDuplicatedFields(fields){
     }
 }
 
+function rememberCreatedFormValidator(name, form){
+
+    if(typeof document.formValidators === 'undefined'){
+        document.formValidators = {};
+    }
+    document.formValidators[name] = form;
+}
+
 documentReady(() => {
 
     // init form client validation
@@ -36,12 +44,14 @@ documentReady(() => {
         for (let name in document.formConstraints) {
             let form = formValidation(name);
             createDuplicatedFields(form.fields);
+            rememberCreatedFormValidator(name, form);
         }
     }
 
     document.addEventListener('form.client.validation', function (event) {
         let form = formValidation(event.detail);
         createDuplicatedFields(form.fields);
+        rememberCreatedFormValidator(event.detail, form);
     }, false);
 
     // init clear fields

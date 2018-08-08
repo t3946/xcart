@@ -13,6 +13,8 @@ class SelectOption {
         element = element || null;
         $(this.element).siblings().removeAttr('selected');
         this.element.setAttribute('selected', 'selected');
+        let select = this.element.closest('select');
+        select.value = this.value;
 
         if(element == null) {
             this.button.innerHTML = this.text;

@@ -66,10 +66,7 @@ import LazyLoad from "vanilla-lazyload";
         callback_set: function(el){el.classList.remove('lazy-img')}
     });
 
-    console.log(formValidate);
-
     window.d = (...arg) => {
-        //console.log(...arg);
     };
 
     window.surfMetaRegister = () => {

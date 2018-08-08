@@ -32398,6 +32398,7 @@ var CustomSelectOptions = function (_Component) {
     }
 
     CustomSelectOptions.prototype.changeActive = function changeActive(item) {
+
         item.setActive();
         this.setState({
             'changed': true
@@ -32439,7 +32440,7 @@ var CustomSelectOptions = function (_Component) {
     };
 
     CustomSelectOptions.prototype.render = function render(props, state) {
-        console.log('render');
+
         var self = this;
         var options = _lodash2.default.map(props.items, this.renderOneItem.bind(self));
         return (0, _preact.h)(
@@ -44502,8 +44503,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             el.classList.remove('lazy-img');
         }
     });
-
-    console.log(_validate2.default);
 
     window.d = function () {};
 
@@ -60979,17 +60978,27 @@ function createDuplicatedFields(fields) {
     }
 }
 
+function rememberCreatedFormValidator(name, form) {
+
+    if (typeof document.formValidators === 'undefined') {
+        document.formValidators = {};
+    }
+    document.formValidators[name] = form;
+}
+
 (0, _documentReady2.default)(function () {
     if (typeof document.formConstraints !== 'undefined') {
         for (var name in document.formConstraints) {
             var form = (0, _FormValidation2.default)(name);
             createDuplicatedFields(form.fields);
+            rememberCreatedFormValidator(name, form);
         }
     }
 
     document.addEventListener('form.client.validation', function (event) {
         var form = (0, _FormValidation2.default)(event.detail);
         createDuplicatedFields(form.fields);
+        rememberCreatedFormValidator(event.detail, form);
     }, false);
 
     if (typeof document.formClearFields !== 'undefined') {
@@ -61047,23 +61056,25 @@ var FormValidation = function () {
         this.form = document.querySelector(formSelector);
         this.fields = {};
         this._bind();
+        this.hasErrors = false;
     }
 
     FormValidation.prototype._bind = function _bind() {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
         this.processChange = this.processChange.bind(this);
         this.processJsChange = this.processJsChange.bind(this);
-        this.checkAllForm = this.checkAllForm.bind(this);
+        this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
-        this.form.addEventListener('submit', this.checkAllForm);
-        this.form.addEventListener('js.submit.event', this.checkAllForm);
+        this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (var i = 0; i < this.inputs.length; ++i) {
             var inputElement = this.inputs.item(i);
             var type = inputElement.getAttribute('type');
+
             if (type === 'hidden') {
                 continue;
             }
+
             var field = (0, _FieldValidation2.default)(inputElement);
             var inputElementName = inputElement.getAttribute('name');
             this.fields[inputElementName] = field;
@@ -61116,28 +61127,35 @@ var FormValidation = function () {
         field.showError(currentError[0]);
     };
 
-    FormValidation.prototype.checkAllForm = function checkAllForm(event) {
+    FormValidation.prototype.validateOnSubmit = function validateOnSubmit(event) {
+
+        this.checkAllForm();
+        if (this.hasErrors) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    };
+
+    FormValidation.prototype.checkAllForm = function checkAllForm() {
 
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};
-        var hasErrors = false;
+        this.hasErrors = false;
 
+        console.log(errors);
         for (var inputElementName in this.fields) {
             var field = this.fields[inputElementName];
             var currentError = errors[inputElementName];
+
             field.clearAllClasses();
 
             if (typeof currentError === 'undefined' || currentError.length <= 0) {
                 field.success();
+
                 continue;
             }
 
             field.showError(currentError[0]);
-            hasErrors = true;
-        }
-
-        if (hasErrors) {
-            event.preventDefault();
-            event.stopPropagation();
+            this.hasErrors = true;
         }
     };
 
@@ -61148,9 +61166,7 @@ var FormValidation = function () {
             inputElement.removeEventListener('js.change.event', this.processJsChange);
         }
 
-        this.form.removeEventListener('submit', this.checkAllForm);
-        this.form.removeEventListener('js.submit.event', this.checkAllForm);
-
+        this.form.removeEventListener('submit', this.validateOnSubmit);
         this.fields = {};
     };
 
@@ -61184,6 +61200,7 @@ var FieldValidation = function () {
     FieldValidation.prototype.showError = function showError(text) {
 
         var errors = this.field.querySelectorAll('.errors');
+
         this.itemAddError(this.element);
         this.itemAddError(this.field);
 
@@ -61214,9 +61231,6 @@ var FieldValidation = function () {
     };
 
     FieldValidation.prototype.clearAllClasses = function clearAllClasses(field, element) {
-        console.log(this.field);
-        console.log(this.element);
-
         field = field || this.field;
         element = element || this.element;
 
@@ -61507,6 +61521,13 @@ var CustomSelectField = function () {
 
         this.win = win;
         this.button = button;
+
+        var selectId = this.button.dataset.select;
+
+        this.select = document.getElementById(selectId);
+        this.isColor = this.select.classList.contains('color');
+
+        this.select.value = '';
         this.processButtonClick = this.processButtonClick.bind(this);
         this.button.addEventListener('click', this.processButtonClick, { 'passive': true });
     }
@@ -61520,20 +61541,18 @@ var CustomSelectField = function () {
     CustomSelectField.prototype.openOptions = function openOptions() {
         var _this = this;
 
-        var selectId = this.button.dataset.select;
-        var select = document.getElementById(selectId);
-        var isColor = select.classList.contains('color');
-        var options = select.getElementsByTagName('option');
+        var options = this.select.getElementsByTagName('option');
         var items = _lodash2.default.map(options, function (el) {
             return (0, _selectOption2.default)(_this.button, el);
         });
+        var self = this;
 
         $(this.win).mmodal({
             'windowClass': 'selector-options',
             'setWidth': false,
             'onBeforeOpen': function onBeforeOpen(container) {
 
-                if (isColor) {
+                if (self.isColor) {
                     (0, _preact.render)((0, _preact.h)(_CustomColorOptions2.default, { items: items, callback: this.close.bind(this) }), container, container.firstChild);
                     return;
                 }
@@ -61678,6 +61697,8 @@ var SelectOption = function () {
         element = element || null;
         $(this.element).siblings().removeAttr('selected');
         this.element.setAttribute('selected', 'selected');
+        var select = this.element.closest('select');
+        select.value = this.value;
 
         if (element == null) {
             this.button.innerHTML = this.text;
@@ -61919,19 +61940,55 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         product.dataset.quantity = val;
     };
 
+    function getOptionNameFromString(nameString) {
+
+        var nameStringParts = nameString.split('[');
+        var lastPart = nameStringParts.length - 1;
+        var lastPartString = nameStringParts[lastPart];
+        return lastPartString.substring(0, lastPartString.length - 1);
+    }
+
     $(document).on('click', '.cart_add .add', function (e) {
         e.preventDefault();
 
         var buttonAnimation = (0, _AnimateWaitButton2.default)(e.target.closest('.wait-button'));
-        buttonAnimation.start();
-
         var product = e.target.closest('[data-product]');
+
         if (product) {
+
+            var infoFormId = e.target.closest('.cart_add').getAttribute('data-form-id');
+            var form = document.getElementById(infoFormId);
+
+            if (typeof document.formValidators !== 'undefined' && document.formValidators[infoFormId] !== 'undefined') {
+
+                var formValidate = document.formValidators[infoFormId];
+                formValidate.checkAllForm();
+
+                if (formValidate.hasErrors) {
+                    return false;
+                }
+            }
+
             var opt = [];
 
-            $('select.product-options', product).each(function () {
-                opt.push({ 'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val() });
-            });
+            var values = $(form).serializeArray();
+            for (var _iterator = values, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+                var _ref;
+
+                if (_isArray) {
+                    if (_i >= _iterator.length) break;
+                    _ref = _iterator[_i++];
+                } else {
+                    _i = _iterator.next();
+                    if (_i.done) break;
+                    _ref = _i.value;
+                }
+
+                var oneValue = _ref;
+
+                var name = getOptionNameFromString(oneValue.name);
+                opt.push({ 'o_id': name, 'ov_id': oneValue.value });
+            }
 
             var data = [{
                 id: product.dataset.product,
@@ -61939,11 +61996,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 options: opt
             }];
 
-            var infoFormId = e.target.getAttribute('data-form-id');
-            var infoForm = document.getElementById(infoFormId);
-            var submitEvent = new CustomEvent('js.submit.event', { detail: {} });
-            infoForm.dispatchEvent(submitEvent);
-
+            buttonAnimation.start();
             (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState(product);
             });
@@ -61967,8 +62020,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
 
             (0, _appCartRediser.cartAdd)(data, function () {
-                for (var _i = 0; _i < products.length; ++_i) {
-                    productItemResetState(products[_i]);
+                for (var _i2 = 0; _i2 < products.length; ++_i2) {
+                    productItemResetState(products[_i2]);
                 }
             });
         }
@@ -71289,7 +71342,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             $('#questions').on('submit', 'form', function (event) {
                 event.preventDefault();
-                console.log('submit!!!!');
 
                 $.ajax('/product-question/', {
                     'method': 'POST',

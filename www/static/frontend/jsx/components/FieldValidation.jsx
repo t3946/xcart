@@ -19,6 +19,7 @@ class FieldValidation {
     showError(text){
 
         let errors = this.field.querySelectorAll('.errors');
+        //console.log(errors);
         this.itemAddError(this.element);
         this.itemAddError(this.field);
 
@@ -57,9 +58,6 @@ class FieldValidation {
      * @param element
      */
     clearAllClasses(field, element) {
-        console.log(this.field);
-        console.log(this.element);
-
         field = field || this.field;
         element = element || this.element;
 

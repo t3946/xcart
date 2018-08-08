@@ -63,21 +63,49 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         // });
     };
 
+    function getOptionNameFromString(nameString){
+
+        let nameStringParts = nameString.split('[');
+        let lastPart = nameStringParts.length - 1;
+        let lastPartString = nameStringParts[lastPart];
+        return lastPartString.substring(0, lastPartString.length - 1);
+    }
+
     $(document)
         .on('click','.cart_add .add', (e) =>{
             e.preventDefault();
 
             let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
-            buttonAnimation.start();
-
             let product = e.target.closest('[data-product]');
+
             if ( product )
             {
+
+                let infoFormId = e.target.closest('.cart_add').getAttribute('data-form-id');
+                let form = document.getElementById(infoFormId);
+
+                if(typeof document.formValidators !== 'undefined'
+                    && document.formValidators[infoFormId] !== 'undefined'){
+
+                    let formValidate = document.formValidators[infoFormId];
+                    formValidate.checkAllForm();
+
+                   // console.log(formValidate.hasErrors);
+                    if(formValidate.hasErrors) {
+                        return false;
+                    }
+                }
+
                 let opt = [];
 
-                $('select.product-options', product).each(function(){
-                    opt.push({'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val()});
-                });
+                // $('select.product-options', product).each(function(){
+                //     opt.push({'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val()});
+                // });
+                let values = $(form).serializeArray();
+                for (let oneValue of values) {
+                    let name = getOptionNameFromString(oneValue.name);
+                    opt.push({'o_id': name, 'ov_id': oneValue.value});
+                }
 
                 let data = [{
                     id: product.dataset.product,
@@ -85,11 +113,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     options: opt
                 }];
 
-                let infoFormId = e.target.getAttribute('data-form-id');
-                let infoForm = document.getElementById(infoFormId);
-                let submitEvent = new CustomEvent('js.submit.event', { detail:{} });
-                infoForm.dispatchEvent(submitEvent);
-
+                buttonAnimation.start();
                 cartAdd(data, ()=>{ productItemResetState(product); });
                 window.sendAnalytics.addToCart(product);
             }
