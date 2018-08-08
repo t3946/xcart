@@ -27,7 +27,7 @@
                         {include "product/parts/_options.tpl" form=$form}
                         <div class="cart_add add-product">
                             {include "product/parts/_number_button.tpl"}
-                            <a class="add button yellow wait-button">
+                            <a class="add button yellow wait-button"  data-form-id="{$form->getFormId()}">
                                 <span class="text">
                                     Add to cart
                                 </span>

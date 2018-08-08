@@ -473,9 +473,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         return $objFieldSets;
     }
 
+    public function getFormId(){
+        return BaseForm::getFormIdentifier();
+    }
+
     public function renderBegin($params = [], $template = null)
     {
-        $prefix = BaseForm::getFormIdentifier();
+        $prefix = $this->getFormId();
         $this->onBeforeRenderBegin($prefix, $template);
 
         if (!$template) {

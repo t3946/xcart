@@ -85,6 +85,11 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     options: opt
                 }];
 
+                let infoFormId = e.target.getAttribute('data-form-id');
+                let infoForm = document.getElementById(infoFormId);
+                let submitEvent = new CustomEvent('js.submit.event', { detail:{} });
+                infoForm.dispatchEvent(submitEvent);
+
                 cartAdd(data, ()=>{ productItemResetState(product); });
                 window.sendAnalytics.addToCart(product);
             }

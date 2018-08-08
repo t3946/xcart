@@ -61116,13 +61116,12 @@ var FormValidation = function () {
         field.showError(currentError[0]);
     };
 
-    FormValidation.prototype.checkAllForm = function checkAllForm() {
+    FormValidation.prototype.checkAllForm = function checkAllForm(event) {
 
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};
         var hasErrors = false;
 
         for (var inputElementName in this.fields) {
-            console.log(this.fields);
             var field = this.fields[inputElementName];
             var currentError = errors[inputElementName];
             field.clearAllClasses();
@@ -61135,8 +61134,10 @@ var FormValidation = function () {
             field.showError(currentError[0]);
             hasErrors = true;
         }
+
         if (hasErrors) {
-            return false;
+            event.preventDefault();
+            event.stopPropagation();
         }
     };
 
@@ -61937,6 +61938,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 quantity: product.dataset.quantity || 1,
                 options: opt
             }];
+
+            var infoFormId = e.target.getAttribute('data-form-id');
+            var infoForm = document.getElementById(infoFormId);
+            var submitEvent = new CustomEvent('js.submit.event', { detail: {} });
+            infoForm.dispatchEvent(submitEvent);
 
             (0, _appCartRediser.cartAdd)(data, function () {
                 productItemResetState(product);
@@ -71283,6 +71289,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             $('#questions').on('submit', 'form', function (event) {
                 event.preventDefault();
+                console.log('submit!!!!');
 
                 $.ajax('/product-question/', {
                     'method': 'POST',

@@ -46,6 +46,7 @@ import documentReady from "../../utils/documentReady";
 
             $('#questions').on('submit', 'form', (event) => {
                 event.preventDefault();
+                console.log('submit!!!!');
 
                 $.ajax('/product-question/', {
                     'method': 'POST',

@@ -96,7 +96,7 @@ class FormValidation {
         field.showError(currentError[0]);
     }
 
-    checkAllForm(){
+    checkAllForm(event){
 
         let errors = formValidate(this.form, this.constraints) || {};
         let hasErrors = false;
@@ -114,10 +114,11 @@ class FormValidation {
 
             field.showError(currentError[0]);
             hasErrors = true;
-
         }
+        //console.log(hasErrors);
         if(hasErrors) {
-            return false;
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 
