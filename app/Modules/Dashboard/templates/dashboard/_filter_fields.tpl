@@ -272,9 +272,10 @@
                 </div>
 
                 <div class="columns large-6">
-                    <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
-                        {foreach $form_data.order.distributor as $value}
-                            <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    <select name="search[order][distributor][]" id="o_distributor" class="big" multiple>
+
+                        {foreach $distributors as $distributor}
+                            <option value="{raw $distributor.manufacturerid}" {if $form_data.form_data.order.distributor && $distributor.manufacturerid in list $form_data.form_data.order.distributor}selected{/if}>{raw $distributor.manufacturer}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -657,7 +658,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_operator">Operator:</label>
+                    <label for="o_operator">Operator(s) who worked on order(s):</label>
                 </div>
 
                 <div class="columns large-6">
@@ -680,7 +681,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_submit_operator">Submit operator:</label>
+                    <label for="o_submit_operator">Phone order entry operator:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -703,7 +704,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_features">Order features:</label>
+                    <label for="o_features">Miscellaneous order options:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -815,7 +816,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_rs">Reconciliation status:</label>
+                    <label for="o_rs">Invoices reconciliation status:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -843,7 +844,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="og_all_dx_all">Has Dx invoices:</label>
+                    <label for="og_all_dx_all">Dx invoices present:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -854,23 +855,19 @@
                         </div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="Y" id="og_all_dx_y" {if $form_data.order.all_dx == 'Y'}checked{/if}>
-                            <label for="og_all_dx_y" title="Присутствует во всех группах">Always present</label>
+                            <label for="og_all_dx_y" title="Присутствует во всех группах">For all Dx</label>
                         </div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="N" id="og_all_dx_n" {if $form_data.order.all_dx == 'N'}checked{/if}>
-                            <label for="og_all_dx_n" title="Присутствует в одной или всех группах">Sometimes present</label>
+                            <label for="og_all_dx_n" title="Присутствует в одной или всех группах">For some Dx</label>
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="columns large-2 padding-small">&nbsp;</div>
                         <div class="columns large-5 padding-small">
-                            <input name="search[order][all_dx]" type="radio" value="NA" id="og_all_dx_na" {if $form_data.order.all_dx == 'NA'}checked{/if}>
-                            <label for="og_all_dx_na" title="Отсутствует в одной или всех группах">Sometimes absent</label>
-                        </div>
-                        <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="AN" id="og_all_dx_an" {if $form_data.order.all_dx == 'AN'}checked{/if}>
-                            <label for="og_all_dx_an" title="Отсутствует во всех группах">Always absent</label>
+                            <label for="og_all_dx_an" title="Отсутствует во всех группах">For none</label>
                         </div>
                     </div>
                 </div>
