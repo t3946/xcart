@@ -50,6 +50,7 @@ documentReady(() => {
 
     document.addEventListener('form.client.validation', function (event) {
         let form = formValidation(event.detail);
+        console.log(event.detail);
         createDuplicatedFields(form.fields);
         rememberCreatedFormValidator(event.detail, form);
     }, false);

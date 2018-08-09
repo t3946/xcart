@@ -29,6 +29,7 @@ class FormValidation {
         this.processJsChange = this.processJsChange.bind(this);
         this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
+        console.log('init',this.form);
         this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (let i = 0; i < this.inputs.length; ++i) {
@@ -99,8 +100,9 @@ class FormValidation {
     }
 
     validateOnSubmit(event){
-
+        event.preventDefault();
         this.checkAllForm();
+
         if(this.hasErrors) {
             event.preventDefault();
             event.stopPropagation();
@@ -112,7 +114,7 @@ class FormValidation {
         let errors = formValidate(this.form, this.constraints) || {};
         this.hasErrors = false;
 
-        console.log(errors);
+        //console.log(errors);
         for (let inputElementName in this.fields) {
            // console.log(inputElementName);
             let field = this.fields[inputElementName];
