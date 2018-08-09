@@ -420,7 +420,7 @@
                 </div>
             </div>
         </li>
-        <li>
+        {*<li>
             <div class="row">
                 <div class="columns large-4">
                     <label for="og_has_payment_processor_all">Payment processor:</label>
@@ -435,7 +435,7 @@
                     <label for="og_has_payment_processor_n">Empty</label>
                 </div>
             </div>
-        </li>
+        </li>*}
 
         <li>
             <div class="row">
