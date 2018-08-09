@@ -24,8 +24,10 @@
             {if !$model->isOutOfStock()}
                 <div class="row">
                     <div class="columns small-12">
+                        {if $form}
                         {include "product/parts/_options.tpl" form=$form}
-                        <div class="cart_add add-product" data-form-id="{$form->getFormId()}">
+                        {/if}
+                        <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {include "product/parts/_number_button.tpl"}
                             <a class="add button yellow wait-button">
                                 <span class="text">
