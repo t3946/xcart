@@ -10,12 +10,12 @@
 
         $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({ allowClear: true,
             closeOnSelect: false,
-            placeholder: 'Select options'
+            placeholder: 'Click to select'
         });
 
         $('.admin select[data-ajax-from]').select2({
             allowClear: true,
-            placeholder: 'Start typing for hint',
+            placeholder: 'Click to type and select',
             tags: true,
             closeOnSelect: false,
             minimumInputLength: 3,

@@ -34,7 +34,7 @@
                 </div>
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][date]" id="nod" {if $form_data.not.order.date}checked{/if}>
-                    <label for="nod">Not selected</label>
+                    <label for="nod">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -53,7 +53,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][total]" id="not" {if $form_data.not.order.total}checked{/if}>
-                    <label for="not">Not</label>
+                    <label for="not">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][name]" id="ncn" {if $form_data.not.customer.name}checked{/if}>
-                    <label for="ncn">Not</label>
+                    <label for="ncn">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -94,7 +94,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][phone]" id="ncp" {if $form_data.not.customer.phone}checked{/if}>
-                    <label for="ncp">Not</label>
+                    <label for="ncp">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -115,7 +115,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][email]" id="nce" {if $form_data.not.customer.email}checked{/if}>
-                    <label for="nce">Not</label>
+                    <label for="nce">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -124,18 +124,19 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="c_company">Search in address:</label>
+                    <label for="c_company">Search in:</label>
                 </div>
 
                 <div class="columns large-6">
-                    <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="" {if $form_data.customer.in_address == 'both' or !$form_data.customer.in_address}checked{/if}>
-                    <label for="c_in_address_both">Both</label>
+                    <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping" {if $form_data.customer.in_address == 'shipping' or !$form_data.customer.in_address}checked{/if}>
+                    <label for="c_in_address_shipping">Shipping address</label>
 
                     <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing" {if $form_data.customer.in_address == 'billing'}checked{/if}>
-                    <label for="c_in_address_billig">Billing</label>
+                    <label for="c_in_address_billig">Billing address</label>
 
-                    <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping" {if $form_data.customer.in_address == 'shipping'}checked{/if}>
-                    <label for="c_in_address_shipping">Shipping</label>
+                    <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="" {if $form_data.customer.in_address == 'both'}checked{/if}>
+                    <label for="c_in_address_both">Both addresses</label>
+
                 </div>
             </div>
         </li>
@@ -156,7 +157,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][company]" id="ncc" {if $form_data.not.customer.company}checked{/if}>
-                    <label for="ncc">Not</label>
+                    <label for="ncc">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -164,7 +165,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="c_street">Street/Home (address):</label>
+                    <label for="c_street">Street address:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -177,7 +178,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][address]" id="nca" {if $form_data.not.customer.address}checked{/if}>
-                    <label for="nca">Not</label>
+                    <label for="nca">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -198,7 +199,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][city]" id="ncc2" {if $form_data.not.customer.city}checked{/if}>
-                    <label for="ncc2">Not</label>
+                    <label for="ncc2">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -219,7 +220,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][state]" id="ncs" {if $form_data.not.customer.state}checked{/if}>
-                    <label for="ncs">Not</label>
+                    <label for="ncs">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -241,7 +242,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][country]" id="ncc3" {if $form_data.not.customer.country}checked{/if}>
-                    <label for="ncc3">Not</label>
+                    <label for="ncc3">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -259,7 +260,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][customer][zip_code]" id="ncz" {if $form_data.not.customer.zip_code}checked{/if}>
-                    <label for="ncz">Not</label>
+                    <label for="ncz">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -280,7 +281,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][distributor]" id="nod" {if $form_data.not.order.distributor}checked{/if}>
-                    <label for="nod">Not</label>
+                    <label for="nod">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -291,7 +292,7 @@
 
 <fieldset class="{if $full_expanded}expanded-force{/if} collapsible" rel="3">
     <legend>
-        Advanced - Product in order
+        Products ordered
     </legend>
     <ul class="ul-main">
         <li>
@@ -305,7 +306,7 @@
                 </div>
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][product][name]" id="npn" {if $form_data.not.product.name}checked{/if}>
-                    <label for="npn">Not selected</label>
+                    <label for="npn">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -322,7 +323,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][product][sku]" id="nps" {if $form_data.not.product.sku}checked{/if}>
-                    <label for="nps">Not selected</label>
+                    <label for="nps">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -339,7 +340,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][product][id]" id="npi" {if $form_data.not.product.id}checked{/if}>
-                    <label for="npi">Not selected</label>
+                    <label for="npi">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -347,7 +348,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="p_qs">Question status:</label>
+                    <label for="p_qs">Product question status:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -362,7 +363,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][product][question_status]" id="npq" {if $form_data.not.product.question_status}checked{/if}>
-                    <label for="npq">Not</label>
+                    <label for="npq">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -371,9 +372,53 @@
 
 <fieldset class="{if $full_expanded}expanded-force{/if} collapsible"  rel="2">
     <legend>
-        Advanced - Payment \ Shipping
+        Order processing status
     </legend>
     <ul class="ul-main">
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_fraud">Fraud check status:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select name="search[order][fraud_status][]" id="o_fraud" class="big" multiple>
+                        {foreach $fraud_statuses as $status}
+                            <option value="{$status.code}" {if $form_data.order.fraud_status && $status.code in list $form_data.order.fraud_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][fraud_status]" id="nopfs" {if $form_data.not.order.fraud_status}checked{/if}>
+                    <label for="nopfs">Invert selection</label>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="p_vs">Product verification status:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select name="search[order][vn_status][]" id="p_vs" class="big" multiple>
+                        {foreach $order_statuses.PV as $status}
+                            <option value="{$status.code}" {if $form_data.order.vn_status && $status.code in list $form_data.order.vn_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][vn_status]" id="novs" {if $form_data.not.order.vn_status}checked{/if}>
+                    <label for="novs">Invert selection</label>
+                </div>
+            </div>
+        </li>
         <li>
             <div class="row">
                 <div class="columns large-4">
@@ -409,7 +454,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][payment_processor]" id="nopp" {if $form_data.not.order.payment_processor}checked{/if}>
-                    <label for="nopp">Not</label>
+                    <label for="nopp">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -432,7 +477,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][payment_method]" id="nopm" {if $form_data.not.order.payment_method}checked{/if}>
-                    <label for="nopm">Not</label>
+                    <label for="nopm">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -457,7 +502,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][delivery_method]" id="nodm" {if $form_data.not.order.delivery_method}checked{/if}>
-                    <label for="nodm">Not</label>
+                    <label for="nodm">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -480,7 +525,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][c2b_status]" id="nocb" {if $form_data.not.order.c2b_status}checked{/if}>
-                    <label for="nocb">Not</label>
+                    <label for="nocb">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -503,7 +548,30 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][d2c_status]" id="nodc" {if $form_data.not.order.d2c_status}checked{/if}>
-                    <label for="nodc">Not</label>
+                    <label for="nodc">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_po">PO status:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select type="text" name="search[order][po_status][]" id="o_po" class="big" multiple>
+                        {foreach $po_statuses as $code => $name}
+                            <option value="{$code}" {if $form_data.order.po_status && $code in list $form_data.order.po_status}selected{/if}>
+                                {$name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][po_status]" id="nopos" {if $form_data.not.order.po_status}checked{/if}>
+                    <label for="nopos">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -526,57 +594,15 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][po_transit_status]" id="nopots" {if $form_data.not.order.po_transit_status}checked{/if}>
-                    <label for="nopots">Not</label>
+                    <label for="nopots">Invert selection</label>
                 </div>
             </div>
         </li>
 
 
-        <li>
-            <div class="row">
-                <div class="columns large-4">
-                    <label for="o_po">PO status:</label>
-                </div>
 
-                <div class="columns large-6">
-                    <select type="text" name="search[order][po_status][]" id="o_po" class="big" multiple>
-                        {foreach $po_statuses as $code => $name}
-                            <option value="{$code}" {if $form_data.order.po_status && $code in list $form_data.order.po_status}selected{/if}>
-                                {$name}
-                            </option>
-                        {/foreach}
-                    </select>
-                </div>
 
-                <div class="columns large-2 not">
-                    <input type="checkbox" value="1" name="search[not][order][po_status]" id="nopos" {if $form_data.not.order.po_status}checked{/if}>
-                    <label for="nopos">Not</label>
-                </div>
-            </div>
-        </li>
 
-        <li>
-            <div class="row">
-                <div class="columns large-4">
-                    <label for="o_fraud">Fraud check status:</label>
-                </div>
-
-                <div class="columns large-6">
-                    <select name="search[order][fraud_status][]" id="o_fraud" class="big" multiple>
-                        {foreach $fraud_statuses as $status}
-                            <option value="{$status.code}" {if $form_data.order.fraud_status && $status.code in list $form_data.order.fraud_status}selected{/if}>
-                                {$status.name}
-                            </option>
-                        {/foreach}
-                    </select>
-                </div>
-
-                <div class="columns large-2 not">
-                    <input type="checkbox" value="1" name="search[not][order][fraud_status]" id="nopfs" {if $form_data.not.order.fraud_status}checked{/if}>
-                    <label for="nopfs">Not</label>
-                </div>
-            </div>
-        </li>
     </ul>
 </fieldset>
 
@@ -600,7 +626,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][id]" id="noi" {if $form_data.not.order.id}checked{/if}>
-                    <label for="noi">Not selected</label>
+                    <label for="noi">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -623,7 +649,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][storefront]" id="nosf" {if $form_data.not.order.sf}checked{/if}>
-                    <label for="nosf">Not selected</label>
+                    <label for="nosf">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -646,7 +672,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][operator]" id="noo" {if $form_data.not.order.operator}checked{/if}>
-                    <label for="noo">Not</label>
+                    <label for="noo">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -669,7 +695,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][submit_operator]" id="noo" {if $form_data.not.order.submit_operator}checked{/if}>
-                    <label for="noo">Not</label>
+                    <label for="noo">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -692,7 +718,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][features]" id="nf" {if $form_data.not.features}checked{/if}>
-                    <label for="nf">Not selected</label>
+                    <label for="nf">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -713,7 +739,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][source]" id="nos" {if $form_data.not.order.source}checked{/if}>
-                    <label for="nos">Not selected</label>
+                    <label for="nos">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -721,30 +747,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="p_vs">Verification status:</label>
-                </div>
-
-                <div class="columns large-6">
-                    <select name="search[order][vn_status][]" id="p_vs" class="big" multiple>
-                        {foreach $order_statuses.PV as $status}
-                            <option value="{$status.code}" {if $form_data.order.vn_status && $status.code in list $form_data.order.vn_status}selected{/if}>
-                                {$status.name}
-                            </option>
-                        {/foreach}
-                    </select>
-                </div>
-
-                <div class="columns large-2 not">
-                    <input type="checkbox" value="1" name="search[not][order][vn_status]" id="novs" {if $form_data.not.order.vn_status}checked{/if}>
-                    <label for="novs">Not</label>
-                </div>
-            </div>
-        </li>
-
-        <li>
-            <div class="row">
-                <div class="columns large-4">
-                    <label for="o_tag">Attention tag:</label>
+                    <label for="o_tag">Attention tags:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -759,7 +762,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][tag]" id="notag" {if $form_data.not.order.tag}checked{/if}>
-                    <label for="notag">Not</label>
+                    <label for="notag">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -767,7 +770,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_ts">Transaction status:</label>
+                    <label for="o_ts">Transaction status (obsolete):</label>
                 </div>
 
                 <div class="columns large-6">
@@ -782,7 +785,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][transaction_status]" id="nots" {if $form_data.not.order.transaction_status}checked{/if}>
-                    <label for="nots">Not</label>
+                    <label for="nots">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -804,7 +807,7 @@
 
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][transaction_payment_method]" id="notm" {if $form_data.not.order.transaction_payment_method}checked{/if}>
-                    <label for="notm">Not</label>
+                    <label for="notm">Invert selection</label>
                 </div>
             </div>
         </li>
@@ -877,7 +880,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="og_has_memo_all">Has credit memos:</label>
+                    <label for="og_has_memo_all">Dx credit memos present:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -886,7 +889,7 @@
                     <input name="search[order][has_memo]" type="radio" value="Y" id="og_has_memo_y" {if $form_data.order.has_memo == 'Y'}checked{/if}>
                     <label for="og_has_memo_y">Yes</label>
                     <input name="search[order][has_memo]" type="radio" value="N" id="og_has_memo_n" {if $form_data.order.has_memo == 'N'}checked{/if}>
-                    <label for="og_has_memo_n">Not</label>
+                    <label for="og_has_memo_n">No</label>
                 </div>
             </div>
         </li>
@@ -894,7 +897,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="og_has_invoice_cx_all">Has payment invoices sent to Cx:</label>
+                    <label for="og_has_invoice_cx_all">Unpaid order invoice was sent to Cx:</label>
                 </div>
 
                 <div class="columns large-6">
@@ -903,7 +906,7 @@
                     <input name="search[order][has_icx]" type="radio" value="Y" id="og_has_invoice_cx_y" {if $form_data.order.has_icx == 'Y'}checked{/if}>
                     <label for="og_has_invoice_cx_y">Yes</label>
                     <input name="search[order][has_icx]" type="radio" value="N" id="og_has_invoice_cx_n" {if $form_data.order.has_icx == 'N'}checked{/if}>
-                    <label for="og_has_invoice_cx_n">Not</label>
+                    <label for="og_has_invoice_cx_n">No</label>
                 </div>
             </div>
         </li>
