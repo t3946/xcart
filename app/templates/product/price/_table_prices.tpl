@@ -44,9 +44,22 @@
         </div>
     </div>
 
+    {if $model->isOutOfStock()}
+        <div class="notify-me-stock">
+
+            <a class="notify-me grey-border">
+                <span>Notify me when product is in stock</span>
+            </a>
+
+        </div>
+    {/if}
 
     <div class="mmodal-hide">
         <div class="select-quantity"></div>
+    </div>
+
+    <div class="mmodal-hide">
+        <div class="notify_stock"></div>
     </div>
 </div>
 

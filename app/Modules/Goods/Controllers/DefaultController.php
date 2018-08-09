@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Forms\NotifyStockForm;
 use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\CreateProductPageFormHelper;
 use Modules\Goods\Helpers\ProductHelper;
@@ -167,7 +168,9 @@ class DefaultController extends FrontendController
             }
         }
 
-
+        if ($model->isOutOfStock()){
+            $params['notify_form'] = new NotifyStockForm();
+        }
 
         if ($model->isGroupChild()) {
             if ($parent = $model->parent) {

@@ -10,7 +10,7 @@ import sendAnalytics from "../../utils/sendAnalytics";
 import {h, render} from 'preact';
 import SelectNumberItems from "../../components/SelectNumberItems";
 
-(()=>{
+(()=> {
     let $minicart = $('.minicart');
     let minicartTimeout, timerIsStarted = false;
 
@@ -23,7 +23,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         }
         else {
             hideAll();
-            if(timerIsStarted){
+            if (timerIsStarted) {
                 clearTimeout(minicartTimeout);
                 timerIsStarted = false;
             }
@@ -40,7 +40,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
     });
 
-    let unsubscribeApp = storeApp.subscribe(()=>{
+    let unsubscribeApp = storeApp.subscribe(() => {
         let state = storeApp.getState();
 
         if (state.frontend.header.active !== 'cart') {
@@ -72,7 +72,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     }
 
     $(document)
-        .on('click','.cart_add .add', (e) =>{
+        .on('click', '.cart_add .add', (e) => {
             e.preventDefault();
 
             let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
@@ -126,7 +126,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 .closest('[data-product-group]')
                 .find('[data-product]');
 
-            if ( products.length ) {
+            if (products.length) {
                 let data = [];
 
                 for (let i = 0, len = products.length; i < len; i++) {
@@ -138,7 +138,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     }
                 }
 
-                cartAdd(data, ()=>{
+                cartAdd(data, () => {
                     for (let i = 0; i < products.length; ++i) {
                         productItemResetState(products[i]);
                     }
@@ -159,7 +159,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
                 mc_count.innerHTML = qNew;
 
-                (new CountUp('desktop-cart-quantity', qPrev, qNew,0, 1, {useEasing: true})).start();
+                (new CountUp('desktop-cart-quantity', qPrev, qNew, 0, 1, {useEasing: true})).start();
             }
         })
         .on('mouseenter', '.minicart.enabled', (e) => {
@@ -167,7 +167,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             e.preventDefault();
             e.stopPropagation();
 
-            if(timerIsStarted){
+            if (timerIsStarted) {
                 clearTimeout(minicartTimeout);
                 timerIsStarted = false;
             }
@@ -187,7 +187,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             if ($minicart.hasClass('active')) {
 
-                 minicartTimeout = setTimeout(() => {
+                minicartTimeout = setTimeout(() => {
 
                     $minicart.removeClass('active');
                     hideAll();
@@ -197,7 +197,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 timerIsStarted = true;
             }
         })
-        .on('click','.cart_add .number-button', (event) => {
+        .on('click', '.cart_add .number-button', (event) => {
 
             event.preventDefault();
             event.stopPropagation();
@@ -234,10 +234,66 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                     window, window.firstChild);
             }
 
+
+        })
+
+        .on('click', '.notify-me', (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let notify_win = document.getElementById('notify_get');
+
+            if (notify_win === null) {
+
+                let notifyContainer = document.querySelector('.notify_stock');
+
+                notify_win = document.createElement('div');
+                let notify_Wrapper = document.createElement('div');
+
+                notify_win.setAttribute('id', 'notify_get');
+                notify_Wrapper.style.position = 'absolute';
+                notify_Wrapper.style.left = '-9999px';
+                notify_Wrapper.style.right = '-9999px';
+                notify_Wrapper.style.display = 'none';
+
+                notify_Wrapper.appendChild(notify_win);
+                notifyContainer.appendChild(notify_Wrapper);
+            }
+
+            let product_id = event.target.closest('.product-page').dataset.product;
+
+            $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
+
+                $(notify_win).mmodal({
+                    'windowClass': 'notifySelector',
+                    'setWidth': false,
+                    'onSubmit': function () {
+                        let $self = this;
+                        $.ajax({
+                            url: '/notify/post/',
+                            method: 'POST',
+                            data: $('.mmodal_notify_stock form').serialize()
+
+                        }).done(function(result) {
+                            Object.keys(result).forEach(function(key, id){
+                                window.window.addFlashMessage(result[key], key, false, 5);
+                            });
+                            $self.close();
+                        });
+                    },
+                    'onAfterOpen': function() {
+                        let evnt = new CustomEvent('sliders_show');
+                        document.dispatchEvent(evnt);
+                    },
+                    'onBeforeOpen': function () {
+                        this.setContent(html);
+                    }
+                });
+
+            });
+
         });
-
-
-
 
 
 })();

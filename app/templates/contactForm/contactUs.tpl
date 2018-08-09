@@ -16,6 +16,9 @@
                 <div class="column small-12">
                     {raw $form->renderBegin()}
                         {raw $form->render()}
+                        <div style="text-indent: -9999px;">
+                            <input name="ContactUsForm[company_name_full]" type="text" />
+                        </div>
                         <div class="row">
                             <div class="column button-row">
                                 <button class="button submit-button" type="submit" value="Submit">SUBMIT</button>

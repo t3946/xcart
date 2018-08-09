@@ -34,8 +34,12 @@
 # $Id: get_product_file.php,v 1.0 2010/11/08 14:59:13 kate Exp $
 #
 
+use Xcart\App\Main\Xcart;
+
 require './top.inc.php';
 require './init.php';
+
+Xcart::app()->request->redirect('/', [], 301);
 
 x_load('backoffice','files');
 

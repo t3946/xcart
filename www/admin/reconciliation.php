@@ -350,7 +350,8 @@ if ($tab == "rules"){
 
 }
 
-$search_data  = $search_data ?: [];
+$search_data = $search_data ?: [];
+$search_data = \is_array($search_data) ? $search_data : [];
 
 if ($REQUEST_METHOD == "POST") {
 

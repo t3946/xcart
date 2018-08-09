@@ -153,8 +153,10 @@
           &:after {
             vertical-align: top;
             margin-top: 3px;
+            width: rem-calc(18);
+            height: rem-calc(22);
+            background-image: url('../images/icons/cart/remove.svg');
           }
-
         }
       }
     }

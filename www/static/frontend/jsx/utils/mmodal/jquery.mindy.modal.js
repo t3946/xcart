@@ -69,9 +69,10 @@
                 onAfterClose: $.noop,
                 onSubmit: 'default'
             };
-
             this.locked = true;
+
             this.$element = element instanceof Object ? element : $(element);
+
             this.options = $.extend(defaultOptions, options);
 
             if (this.$element.is("a")) {

@@ -169,6 +169,7 @@ class ReportsController extends PrototypeAdminController
                 SearchHelper::getFormAndListData(),
                 ReportsHelper::getFormAndListData(),
                 [
+                    'edit' => true,
                     'model' => $model,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
                 ]
