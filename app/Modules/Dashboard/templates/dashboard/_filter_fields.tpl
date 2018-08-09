@@ -616,11 +616,12 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_id">Order #:</label>
+                    <label for="o_id">Order #s:</label>
                 </div>
 
                 <div class="columns large-6">
-                    <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
+                    From
+                    <input style="width: 124px;" type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
                     <span>to</span>
                     <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
                 </div>
