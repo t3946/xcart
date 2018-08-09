@@ -16,6 +16,7 @@ class FieldSelectForm extends DecoratedProductForm
 {
 
     public $type = 'select';
+
     /**
      * @return array
      */
@@ -28,17 +29,26 @@ class FieldSelectForm extends DecoratedProductForm
                 'label' => $this->createTitle(),
                 'choices' => $this->addFirstBlankOption(),
                 'required' => true,
+                'requiredMessage' => $this->createRequiredMessage(),
                 'disabled' => [''],
                 'selected' => ['']
             ]
         ];
     }
 
-    protected function createPlaceholder(){
+    /**
+     * @return string
+     */
+    protected function createPlaceholder(): string
+    {
         return 'Choose a ' . lcfirst($this->title);
     }
 
-    protected function addFirstBlankOption(){
+    /**
+     * @return string
+     */
+    protected function addFirstBlankOption(): array
+    {
         return array_merge(['' => $this->createPlaceholder()], $this->variants);
     }
 }

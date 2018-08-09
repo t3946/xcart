@@ -24,6 +24,7 @@ abstract class Field implements IValidateField
     use Accessors, Configurator, ValidateField, RenderTrait;
 
 
+    public $requiredMessage = '';
     /**
      * Input wrapper additional class
      * @var string
@@ -184,7 +185,7 @@ abstract class Field implements IValidateField
     public function init()
     {
         if ($this->required) {
-            $this->validators[] = new RequiredValidator();
+            $this->validators[] = new RequiredValidator($this->requiredMessage);
         }
         foreach ($this->validators as $validator) {
             if (is_subclass_of($validator, $this->_validatorClass)) {

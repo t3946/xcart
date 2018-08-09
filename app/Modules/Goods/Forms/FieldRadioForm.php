@@ -28,6 +28,7 @@ class FieldRadioForm extends DecoratedProductForm
                 'label' => $this->createTitle(),
                 'choices' => $this->variants,
                 'required' => true,
+                'requiredMessage' => $this->createRequiredMessage(),
             ]
         ];
     }

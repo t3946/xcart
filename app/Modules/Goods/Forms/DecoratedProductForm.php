@@ -61,4 +61,12 @@ abstract class DecoratedProductForm extends ProductForm
     protected function createTitle(){
         return $this->title . ':';
     }
+
+    /**
+     * @return string
+     */
+    protected function createRequiredMessage(): string
+    {
+        return 'Please choose ' . lcfirst($this->title);
+    }
 }

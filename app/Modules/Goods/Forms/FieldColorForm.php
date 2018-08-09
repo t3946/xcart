@@ -27,6 +27,7 @@ class FieldColorForm extends FieldSelectForm
 //                'class' => FrontendColorField::class,
                 'label' => $this->createTitle(),
                 'choices' => $this->addFirstBlankOption(),
+                'requiredMessage' => $this->createRequiredMessage(),
                 'required' => true,
                 'disabled' => [''],
                 'selected' => [''],
