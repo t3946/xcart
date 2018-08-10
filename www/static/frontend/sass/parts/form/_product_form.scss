@@ -1,3 +1,4 @@
+@import '../../mixins/global_mixins';
 @mixin getProductFormStyles() {
 
   $button-height: rem-calc(48);

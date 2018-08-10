@@ -1,3 +1,4 @@
+@import '../../mixins/global_mixins';
 @mixin getSelectorOptionsItemsStyles() {
 
   $buttons-height: rem-calc(48);
@@ -9,11 +10,11 @@
       width: rem-calc(260);
 
       @include breakpoint(sm) {
-        width: rem-calc(300)
+        width: rem-calc(300);
       }
 
       @include breakpoint(medium) {
-        width: rem-calc(428)
+        width: rem-calc(428);
       }
 
       .selector-button {
