@@ -71,9 +71,9 @@ class OrderSearchStore extends BaseStore
     public static function getReconciliationStatuses()
     {
         return [
-            'F' => 'Full reconciled',
-            'FP' => 'Full or Partial reconciled',
-            'P' => 'Partial reconciled',
+            'F' => 'Fully reconciled',
+            'FP' => 'Fully or partially reconciled',
+            'P' => 'Partially reconciled',
             'N' => 'Not reconciled',
         ];
     }

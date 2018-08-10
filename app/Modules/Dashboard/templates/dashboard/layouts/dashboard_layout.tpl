@@ -62,7 +62,16 @@
                     }
                     return { results: { } };
                 }
-            }
+            },
+            "language": {
+                "inputTooShort": function(args){
+                    var remainingChars = args.minimum - args.input.length;
+
+                    var message = 'Type at least ' + remainingChars + ' letters';
+
+                    return message;
+                }
+            },
         });
     })();
 </script>

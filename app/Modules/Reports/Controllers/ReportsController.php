@@ -60,6 +60,7 @@ class ReportsController extends PrototypeAdminController
                         'model'         => $model,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
                         'reports' => $reports,
+                        'report_mode' => true,
                     ]
                 )
             );
