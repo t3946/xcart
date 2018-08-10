@@ -254,9 +254,10 @@
               text-align: left;
               padding-top: rem-calc(5);
 
-              .title-selected {
-                font-weight: 700;
-              }
+              @include style-color-cart-icon();
+              //.title-selected {
+              //  font-weight: 700;
+              //}
 
               .value {
                 color: #4a4949;

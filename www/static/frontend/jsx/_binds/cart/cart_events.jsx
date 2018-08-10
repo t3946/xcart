@@ -63,13 +63,13 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         // });
     };
 
-    function getOptionNameFromString(nameString){
-
-        let nameStringParts = nameString.split('[');
-        let lastPart = nameStringParts.length - 1;
-        let lastPartString = nameStringParts[lastPart];
-        return lastPartString.substring(0, lastPartString.length - 1);
-    }
+    // function getOptionNameFromString(nameString){
+    //
+    //     let nameStringParts = nameString.split('[');
+    //     let lastPart = nameStringParts.length - 1;
+    //     let lastPartString = nameStringParts[lastPart];
+    //     return lastPartString.substring(0, lastPartString.length - 1);
+    // }
 
     $(document)
         .on('click', '.cart_add .add', (e) => {
@@ -103,8 +103,11 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 // });
                 let values = $(form).serializeArray();
                 for (let oneValue of values) {
-                    let name = getOptionNameFromString(oneValue.name);
-                    opt.push({'o_id': name, 'ov_id': oneValue.value});
+                    //let name = getOptionNameFromString(oneValue.name);
+                    let valueParts = oneValue.value.split('_');
+                    let identifiersParts = valueParts[0].split('-');
+                    //console.log(identifiersParts);
+                    opt.push({'optionId': identifiersParts[0], 'variantId': identifiersParts[1]});
                 }
 
                 let data = [{

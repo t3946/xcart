@@ -261,9 +261,11 @@
               font-size: 90%;
               margin-top: .5rem;
 
-              &__selected {
-                font-weight: bold;
-              }
+              @include style-color-cart-icon();
+
+              //.title-selected {
+              //  font-weight: bold;
+              //}
             }
           }
 

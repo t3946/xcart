@@ -261,14 +261,7 @@ $remove: (
       }
 
       .options {
-
-        .title-selected {
-          font-weight: 700;
-          padding-bottom: rem-calc(5);
-        }
-        .value {
-
-        }
+        @include style-color-cart-icon();
       }
     }
 

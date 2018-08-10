@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+
 class ProductOptionVariantModel extends Model
 {
     use AutoMetaTrait;
@@ -43,5 +44,12 @@ class ProductOptionVariantModel extends Model
     public function __toString(): string
     {
         return (string) $this->variant ? $this->variant->name : '';
+    }
+
+    public function findItem($productOptionId, $variantId){
+        return $this->getObjects()->get([
+            'product_option_id' => $productOptionId,
+            'variant_id' => $variantId
+        ]);
     }
 }

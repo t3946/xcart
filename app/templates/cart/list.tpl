@@ -22,9 +22,7 @@
                 {if !$cartEmpty}
                 <div class="head">
                     <div class="nop"></div>
-
                     <h2 class="cart-number">{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
-
                 </div>
                 {/if}
             </div>
@@ -96,12 +94,7 @@
 
                                     {if $position->data}
                                         <div class="options">
-                                            <div class="title-selected">Selected options:</div>
-                                            {foreach $position->data as $name => $value}
-                                                <div class="value">
-                                                    <span class="name">{$name}</span>: {$value}
-                                                </div>
-                                            {/foreach}
+                                            {include '_parts/_options.tpl' options=$position->data}
                                         </div>
                                     {/if}
 

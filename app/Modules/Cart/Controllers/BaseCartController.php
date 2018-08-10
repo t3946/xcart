@@ -3,6 +3,9 @@
 namespace Modules\Cart\Controllers;
 
 use Modules\Cart\CartModule;
+use Modules\Goods\Models\OptionNewModel;
+use Modules\Goods\Models\OptionVariantModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
@@ -111,6 +114,7 @@ abstract class BaseCartController extends FrontendController
             'items' => $cart->getItems(),
             'total' => $cart->getTotal(),
             'quantity' => $cart->getQuantity(),
+            //'modelOptionVariant' => new ProductOptionVariantModel(),
         ]);
     }
 

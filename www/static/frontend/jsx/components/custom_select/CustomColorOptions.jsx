@@ -5,7 +5,10 @@ import CustomSelectOptions from "./CustomSelectOptions";
 export default class CustomColorOptions extends CustomSelectOptions {
 
     renderTextWithIcon(item){
-        let style = "background-color:" + item.value + ";";
+        //console.log(item.value);
+        let valueParts = item.value.split('_');
+        //console.log(valueParts);
+        let style = "background-color:" + valueParts[1] + ";";
         return (
             <span className="selector-button__label__color">
                  <span className="selector-button__label__color__icon" style={style} />

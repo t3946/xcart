@@ -50,7 +50,12 @@ class CreateProductPageFormHelper
                 if(empty($oneVariant->variant->value)){
                     continue;
                 }
-                $key = trim($oneVariant->variant->value);
+
+                $key = $oneVariant->product_option_id . '-' . $oneVariant->variant_id;
+                if($option->option->type == 'color') {
+                    $key = $key . '_' . trim($oneVariant->variant->value);
+                }
+
                 $text = !empty($oneVariant->variant->name) ? $oneVariant->variant->name : $oneVariant->variant->value;
                 $variants[$key] = $text;
             }

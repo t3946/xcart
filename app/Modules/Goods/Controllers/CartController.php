@@ -46,6 +46,9 @@ class CartController extends BaseCartController
         $this->actionProductsGet();
     }
 
+    /**
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function actionProductsAdd(): void
     {
         if ($items = $this->getRequest()->post->get('items', [])) {
@@ -54,7 +57,10 @@ class CartController extends BaseCartController
 
                 if ($item['options']) {
                     foreach ($item['options'] as $option) {
-                        $data[$option['o_id']] = $option['ov_id'];
+                        //$data[$option['o_id']] = $option['ov_id'];
+                        $optionId = (int)$option['optionId'];
+                        $variantId = (int)$option['variantId'];
+                        $data[$optionId] = $variantId;
                     }
                 }
 

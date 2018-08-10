@@ -16,14 +16,7 @@
                         <span class="title__name">{$position->object}</span>
                         {if $position->data}
                             <div class="title__options">
-                                <div class="title__options__selected">Selected options:</div>
-                                {foreach $position->data as $name => $value}
-                                    <div class="title__options__selected__value">
-                                        <span class="title__options__selected__value__name">
-                                            {$name}
-                                        </span>: {$value}
-                                    </div>
-                                {/foreach}
+                                {include '_parts/_options.tpl' options=$position->data}
                             </div>
                         {/if}
                     </div>
