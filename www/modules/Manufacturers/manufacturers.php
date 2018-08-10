@@ -1223,4 +1223,8 @@ $ca_statuses = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE a
 $smarty->assign('ca_statuses', $ca_statuses);
 
 
+$now_time = time();
+$time_for_request = urlencode(date('m/d/Y', $now_time - 6 * 30 * 24 * 60* 60) . " - " . date('m/d/Y', $now_time));
+$smarty->assign('time_for_request', $time_for_request);
+
 ?>

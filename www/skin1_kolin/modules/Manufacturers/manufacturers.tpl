@@ -396,6 +396,16 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 </tr>
 
 <tr>
+    <td class="FormButton">
+        View orders for 6 months
+    </td>
+    <td>&nbsp;</td>
+    <td>
+        <a href="{$xcartApp->router->url('dashboard:search')}?search[order][distributor][]={$manufacturer.manufacturerid}&search[order][date]={$time_for_request}" style="width:50%" target="_blank">Search</a>
+    </td>
+</tr>
+
+<tr>
 	<td class="FormButton">Logo</td>
 	<td>&nbsp;</td>
 	{if $manufacturer.is_image eq 'Y'}{assign var="no_delete" value=""}{else}{assign var="no_delete" value="Y"}{/if}
