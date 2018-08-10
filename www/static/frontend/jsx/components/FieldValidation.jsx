@@ -71,15 +71,18 @@ class FieldValidation {
      * If input was successfully
      * @param element
      */
-    success(){
+    success(dispatch = true){
 
         this.itemAddSuccess(this.element);
 
+        //console.log('compound', this.field.classList.contains('compound-field'));
         if(!this.field.classList.contains('compound-field')){
 
             this.removeError();
             this.itemAddSuccess(this.field);
-            this.dispatchSuccess();
+            if(dispatch){
+                this.dispatchSuccess();
+            }
             return;
         }
 
@@ -95,8 +98,11 @@ class FieldValidation {
         }
 
         this.removeError(this.element);
-        this.itemAddSuccess();
-        this.dispatchSuccess();
+        this.itemAddSuccess(this.field);
+        if(dispatch){
+            this.dispatchSuccess();
+        }
+
     }
 
     /**

@@ -100,8 +100,9 @@ class FormValidation {
     }
 
     validateOnSubmit(event){
-        event.preventDefault();
+        //event.preventDefault();
         this.checkAllForm();
+        //console.log(this.hasErrors);
 
         if(this.hasErrors) {
             event.preventDefault();
@@ -123,7 +124,8 @@ class FormValidation {
             field.clearAllClasses();
             //console.log(inputElementName,'currentError',currentError);
             if(typeof currentError === 'undefined' || currentError.length <= 0) {
-                field.success();
+                console.log(field);
+                field.success(false);
                 //console.log('continue');
                 continue;
             }

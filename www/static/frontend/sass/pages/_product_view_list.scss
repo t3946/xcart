@@ -256,6 +256,15 @@
                 width: $percents;
               }
             }
+
+            .title__options {
+              font-size: 90%;
+              margin-top: .5rem;
+
+              &__selected {
+                font-weight: bold;
+              }
+            }
           }
 
         }
@@ -288,6 +297,7 @@
           border-bottom: 1px dashed #055a93;
         }
       }
+
 
       .label-hide-items {
         line-height: 100%;

@@ -1,6 +1,7 @@
 
 <div id="product-group-{$gi}" class="product-group-container" data-toggler=".show">
 {*<div id="product-group-{$gi}" class="product-group-container show" data-toggler=".show" data-animate="hinge-in-from-top spin-out">*}
+
     <div class="table-product-wrapper">
         <div class="table-product-group">
             {foreach $items as $key=>$position}
@@ -12,7 +13,19 @@
                         {$position->quantity}
                     </div>
                     <div class="table-cell title">
-                        {$position->object}
+                        <span class="title__name">{$position->object}</span>
+                        {if $position->data}
+                            <div class="title__options">
+                                <div class="title__options__selected">Selected options:</div>
+                                {foreach $position->data as $name => $value}
+                                    <div class="title__options__selected__value">
+                                        <span class="title__options__selected__value__name">
+                                            {$name}
+                                        </span>: {$value}
+                                    </div>
+                                {/foreach}
+                            </div>
+                        {/if}
                     </div>
                 </div>
             {/foreach}
