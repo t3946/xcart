@@ -104,6 +104,7 @@ class FormValidation {
 
     validateOnSubmit(event){
         //event.preventDefault();
+        this.hasErrors = false;
         this.checkAllForm();
         //console.log(this.hasErrors);
 

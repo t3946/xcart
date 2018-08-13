@@ -47,9 +47,10 @@
 {block 'content'}
     {*<form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">*}
         {raw $billingForm->renderBegin([
-        'action' => $.app->router->url('checkout:options'),
-        'method' => 'POST',
-        'class' => 'checkout-options-form'
+            'action' => $.app->router->url('checkout:options'),
+            'method' => 'POST',
+            'class' => 'checkout-options-form',
+            'validate' => 'false'
         ])}
         <section class="checkout-options">
             <div class="row">
@@ -250,9 +251,6 @@
 
                 </div>
             </div>
-
-
-
         </section>
     {raw $billingForm->renderEnd()}
 {/block}
