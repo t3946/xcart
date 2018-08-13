@@ -24,9 +24,11 @@ class CartController extends BaseCartController
 
     public function actionProductsDel(): void
     {
+
         $cart = $this->getCart();
 
         if ($items = $this->getRequest()->post->get('items', [])) {
+
             foreach ( $items as $item) {
                 $cart->removeByKey($item);
             }

@@ -60108,9 +60108,10 @@ exports.default = FilterPriceSlider;
                 onAfterClose: $.noop,
                 onSubmit: 'default'
             };
-
             this.locked = true;
+
             this.$element = element instanceof Object ? element : $(element);
+
             this.options = $.extend(defaultOptions, options);
 
             if (this.$element.is("a")) {
@@ -60997,6 +60998,7 @@ function rememberCreatedFormValidator(name, form) {
 
     document.addEventListener('form.client.validation', function (event) {
         var form = (0, _FormValidation2.default)(event.detail);
+        console.log(event.detail);
         createDuplicatedFields(form.fields);
         rememberCreatedFormValidator(event.detail, form);
     }, false);
@@ -61065,6 +61067,7 @@ var FormValidation = function () {
         this.processJsChange = this.processJsChange.bind(this);
         this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
+        console.log('init', this.form);
         this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (var i = 0; i < this.inputs.length; ++i) {
@@ -61128,8 +61131,9 @@ var FormValidation = function () {
     };
 
     FormValidation.prototype.validateOnSubmit = function validateOnSubmit(event) {
-
         this.checkAllForm();
+
+
         if (this.hasErrors) {
             event.preventDefault();
             event.stopPropagation();
@@ -61141,7 +61145,6 @@ var FormValidation = function () {
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};
         this.hasErrors = false;
 
-        console.log(errors);
         for (var inputElementName in this.fields) {
             var field = this.fields[inputElementName];
             var currentError = errors[inputElementName];
@@ -61149,7 +61152,8 @@ var FormValidation = function () {
             field.clearAllClasses();
 
             if (typeof currentError === 'undefined' || currentError.length <= 0) {
-                field.success();
+                console.log(field);
+                field.success(false);
 
                 continue;
             }
@@ -61241,6 +61245,8 @@ var FieldValidation = function () {
     };
 
     FieldValidation.prototype.success = function success() {
+        var dispatch = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
 
         this.itemAddSuccess(this.element);
 
@@ -61248,7 +61254,9 @@ var FieldValidation = function () {
 
             this.removeError();
             this.itemAddSuccess(this.field);
-            this.dispatchSuccess();
+            if (dispatch) {
+                this.dispatchSuccess();
+            }
             return;
         }
 
@@ -61263,8 +61271,10 @@ var FieldValidation = function () {
         }
 
         this.removeError(this.element);
-        this.itemAddSuccess();
-        this.dispatchSuccess();
+        this.itemAddSuccess(this.field);
+        if (dispatch) {
+            this.dispatchSuccess();
+        }
     };
 
     FieldValidation.prototype.dispatchSuccess = function dispatchSuccess() {
@@ -61611,7 +61621,9 @@ var CustomColorOptions = function (_CustomSelectOptions) {
     }
 
     CustomColorOptions.prototype.renderTextWithIcon = function renderTextWithIcon(item) {
-        var style = "background-color:" + item.value + ";";
+        var valueParts = item.value.split('_');
+
+        var style = "background-color:" + valueParts[1] + ";";
         return (0, _preact.h)(
             'span',
             { className: 'selector-button__label__color' },
@@ -61940,14 +61952,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         product.dataset.quantity = val;
     };
 
-    function getOptionNameFromString(nameString) {
-
-        var nameStringParts = nameString.split('[');
-        var lastPart = nameStringParts.length - 1;
-        var lastPartString = nameStringParts[lastPart];
-        return lastPartString.substring(0, lastPartString.length - 1);
-    }
-
     $(document).on('click', '.cart_add .add', function (e) {
         e.preventDefault();
 
@@ -61986,8 +61990,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
                 var oneValue = _ref;
 
-                var name = getOptionNameFromString(oneValue.name);
-                opt.push({ 'o_id': name, 'ov_id': oneValue.value });
+                var valueParts = oneValue.value.split('_');
+                var identifiersParts = valueParts[0].split('-');
+
+                opt.push({ 'optionId': identifiersParts[0], 'variantId': identifiersParts[1] });
             }
 
             var data = [{
@@ -62107,6 +62113,74 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             (0, _preact.render)((0, _preact.h)(_SelectNumberItems2.default, { number: number, quantity: quantity, max: max, min: min, step: step }), _window, _window.firstChild);
         }
+    }).on('click', '.notify-me', function (event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var notify_win = document.getElementById('notify_get');
+
+        if (notify_win === null) {
+
+            var notifyContainer = document.querySelector('.notify_stock');
+
+            notify_win = document.createElement('div');
+            var notify_Wrapper = document.createElement('div');
+
+            notify_win.setAttribute('id', 'notify_get');
+            notify_Wrapper.style.position = 'absolute';
+            notify_Wrapper.style.left = '-9999px';
+            notify_Wrapper.style.right = '-9999px';
+            notify_Wrapper.style.display = 'none';
+
+            notify_Wrapper.appendChild(notify_win);
+            notifyContainer.appendChild(notify_Wrapper);
+        }
+
+        var product_id = event.target.closest('.product-page').dataset.product;
+
+        $.ajax({ url: '/notify/get/', method: 'GET', data: { product_id: product_id } }).done(function (html) {
+
+            var submitForm = null;
+            $(notify_win).mmodal({
+                'windowClass': 'notifySelector',
+                'setWidth': false,
+                'onBeforeOpen': function onBeforeOpen(container) {
+                    this.setContent(html);
+                    submitForm = container.getElementsByTagName('form')[0];
+                },
+                'onAfterOpen': function onAfterOpen() {
+                    var evnt = new CustomEvent('sliders_show');
+                    document.dispatchEvent(evnt);
+                },
+                'onSubmit': function onSubmit() {
+                    var $self = this;
+                    var id = submitForm.getAttribute('id');
+
+                    if (typeof document.formValidators !== 'undefined' && typeof document.formValidators[id] !== 'undefined') {
+
+                        var formValidator = document.formValidators[id];
+                        formValidator.checkAllForm();
+
+                        if (formValidator.hasErrors) {
+                            return false;
+                        }
+                    }
+
+                    $.ajax({
+                        url: '/notify/post/',
+                        method: 'POST',
+                        data: $('.mmodal_notify_stock form').serialize()
+
+                    }).done(function (result) {
+                        Object.keys(result).forEach(function (key, id) {
+                            window.window.addFlashMessage(result[key], key, false, 5);
+                        });
+                        $self.close();
+                    });
+                }
+            });
+        });
     });
 })();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
@@ -66112,7 +66186,7 @@ var MiniCart = function (_Component) {
                     (0, _preact.h)(
                         'div',
                         { className: 'actions' },
-                        (0, _preact.h)('a', { href: '#', className: 'icon cart_remove text-hide', onClick: function onClick(e) {
+                        (0, _preact.h)('a', { href: '#', className: 'icon cart_remove', onClick: function onClick(e) {
                                 _this3.handleRemove(e, key, item);
                             }, title: 'Remove' })
                     )
