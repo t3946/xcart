@@ -5,13 +5,17 @@
         var bill_addres_el = document.querySelector(".billing_address_form");
         var elements = bill_addres_el.querySelectorAll("input.required, select.required");
 
+        let form = document.querySelector('.checkout-options-form');
+
         function hideForm() {
             bill_addres_el.classList.add("hide");
+            form.setAttribute('data-validate', 'false');
             removeRequired();
         }
 
         function showForm() {
             bill_addres_el.classList.remove("hide");
+            form.setAttribute('data-validate', 'true');
             addRequired();
         }
         

@@ -61067,7 +61067,6 @@ var FormValidation = function () {
         this.processJsChange = this.processJsChange.bind(this);
         this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
-        console.log('init', this.form);
         this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (var i = 0; i < this.inputs.length; ++i) {
@@ -61108,6 +61107,9 @@ var FormValidation = function () {
 
     FormValidation.prototype.checkForm = function checkForm(inputElement) {
 
+        if (this.form.getAttribute('data-validate') !== 'true') {
+            return;
+        }
         var inputElementName = inputElement.getAttribute('name');
         var currentRules = this.constraints[inputElementName];
         var field = this.fields[inputElementName];
@@ -61134,7 +61136,7 @@ var FormValidation = function () {
         this.checkAllForm();
 
 
-        if (this.hasErrors) {
+        if (typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -61142,10 +61144,14 @@ var FormValidation = function () {
 
     FormValidation.prototype.checkAllForm = function checkAllForm() {
 
+        if (this.form.getAttribute('data-validate') !== 'true') {
+            return;
+        }
         var errors = (0, _validate2.default)(this.form, this.constraints) || {};
         this.hasErrors = false;
 
         for (var inputElementName in this.fields) {
+
             var field = this.fields[inputElementName];
             var currentError = errors[inputElementName];
             var currentRules = this.constraints[inputElementName];
@@ -61178,12 +61184,9 @@ var FormValidation = function () {
             field.clearAllClasses();
 
             if (typeof currentError === 'undefined' || currentError.length <= 0) {
-                console.log(field);
                 field.success(false);
-
                 continue;
             }
-
             field.showError(currentError[0]);
             this.hasErrors = true;
         }

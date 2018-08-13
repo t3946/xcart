@@ -5,4 +5,4 @@
       novalidate=""
       id="{$prefix}"
       data-constraints="{$constraints}"
-      {if $enctype}enctype="{$enctype}"{/if}>
+      {if $enctype}enctype="{$enctype}"{/if} data-validate="true">

@@ -29,7 +29,7 @@ class FormValidation {
         this.processJsChange = this.processJsChange.bind(this);
         this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
-        console.log('init',this.form);
+        //console.log('init',this.form);
         this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (let i = 0; i < this.inputs.length; ++i) {
@@ -77,6 +77,9 @@ class FormValidation {
 
     checkForm(inputElement){
 
+        if(this.form.getAttribute('data-validate') !== 'true'){
+            return;
+        }
         let inputElementName = inputElement.getAttribute('name');
         let currentRules = this.constraints[inputElementName];
         let field = this.fields[inputElementName];
@@ -104,7 +107,7 @@ class FormValidation {
         this.checkAllForm();
         //console.log(this.hasErrors);
 
-        if(this.hasErrors) {
+        if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -112,6 +115,9 @@ class FormValidation {
 
     checkAllForm(){
 
+        if(this.form.getAttribute('data-validate') !== 'true'){
+            return;
+        }
         let errors = formValidate(this.form, this.constraints) || {};
         this.hasErrors = false;
 
