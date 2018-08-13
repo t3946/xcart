@@ -54,7 +54,14 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
 
     public function getAllUrl()
     {
-        return (new ProductOptionsAdmin)->getUpdateUrl($this->ownerPk);
+        if ($this->ownerPk->id) {
+            return (new ProductOptionsAdmin)->getUpdateUrl($this->ownerPk->id);
+        }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return (new ProductOptionsAdmin)->getUpdateUrl($this->ownerPk);
+        }
+
+        return parent::getAllUrl();
     }
 
     public function getBreadcrumbs()
