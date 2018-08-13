@@ -115,18 +115,13 @@ class FormValidation {
         let errors = formValidate(this.form, this.constraints) || {};
         this.hasErrors = false;
 
-        //console.log(errors);
         for (let inputElementName in this.fields) {
-           // console.log(inputElementName);
+
             let field = this.fields[inputElementName];
             let currentError = errors[inputElementName];
             let currentRules = this.constraints[inputElementName];
 
-            //console.log(field);
-
             if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
-
-                //console.log(field);
 
                 if(field.element.value === '') {
                     if(!field.field.classList.contains('compound-field')) {
@@ -152,15 +147,11 @@ class FormValidation {
             }
 
             field.clearAllClasses();
-            //console.log(inputElementName,'currentError',currentError);
+
             if(typeof currentError === 'undefined' || currentError.length <= 0) {
-                console.log(field);
                 field.success(false);
-                //console.log('continue');
                 continue;
             }
-            //console.log('currentError',currentError);
-            //console.log('field',field);
             field.showError(currentError[0]);
             this.hasErrors = true;
         }
