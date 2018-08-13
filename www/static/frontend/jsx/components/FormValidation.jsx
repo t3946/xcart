@@ -120,6 +120,36 @@ class FormValidation {
            // console.log(inputElementName);
             let field = this.fields[inputElementName];
             let currentError = errors[inputElementName];
+            let currentRules = this.constraints[inputElementName];
+
+            //console.log(field);
+
+            if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
+
+                //console.log(field);
+
+                if(field.element.value === '') {
+                    if(!field.field.classList.contains('compound-field')) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+
+                    let hasNoValue = true;
+                    this.inputs = this.form.querySelectorAll('input, textarea, select');
+                    for (let i = 0; i < this.inputs.length; ++i) {
+
+                        let inputElement = this.inputs.item(i);
+                        if(inputElement.value !== '') {
+                            hasNoValue = false;
+                        }
+                    }
+
+                    if(hasNoValue && !(field.field.classList.contains('invalid') || field.field.classList.contains('success'))) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+                }
+            }
 
             field.clearAllClasses();
             //console.log(inputElementName,'currentError',currentError);

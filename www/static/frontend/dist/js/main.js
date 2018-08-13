@@ -61148,6 +61148,32 @@ var FormValidation = function () {
         for (var inputElementName in this.fields) {
             var field = this.fields[inputElementName];
             var currentError = errors[inputElementName];
+            var currentRules = this.constraints[inputElementName];
+
+            if (typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined') {
+
+                if (field.element.value === '') {
+                    if (!field.field.classList.contains('compound-field')) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+
+                    var hasNoValue = true;
+                    this.inputs = this.form.querySelectorAll('input, textarea, select');
+                    for (var i = 0; i < this.inputs.length; ++i) {
+
+                        var inputElement = this.inputs.item(i);
+                        if (inputElement.value !== '') {
+                            hasNoValue = false;
+                        }
+                    }
+
+                    if (hasNoValue && !(field.field.classList.contains('invalid') || field.field.classList.contains('success'))) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+                }
+            }
 
             field.clearAllClasses();
 
