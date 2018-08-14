@@ -28785,7 +28785,10 @@ var ACTIONS = {
         }
 
         if (url) {
+
             (0, _ajax2.default)(url, { method: 'POST', data: action.data }).then(function (data) {
+                console.log('544545544554');
+                console.log(action.data);
                 store.dispatch({ type: 'SET', data: data });
 
                 if (typeof action.callback === 'function') {
@@ -61133,6 +61136,7 @@ var FormValidation = function () {
     };
 
     FormValidation.prototype.validateOnSubmit = function validateOnSubmit(event) {
+        this.hasErrors = false;
         this.checkAllForm();
 
 
@@ -66163,6 +66167,49 @@ var MiniCart = function (_Component) {
         );
     };
 
+    MiniCart.prototype.renderOptions = function renderOptions(options) {
+        if (options.length <= 0) {
+            return;
+        }
+
+        return _lodash2.default.map(options, function (oneOption) {
+
+            if (oneOption.type === 'color') {
+                var colorStyle = 'background-color:' + oneOption.value + ';';
+                return (0, _preact.h)(
+                    'span',
+                    null,
+                    (0, _preact.h)(
+                        'span',
+                        null,
+                        oneOption.title
+                    ),
+                    (0, _preact.h)('span', { style: colorStyle }),
+                    (0, _preact.h)(
+                        'span',
+                        null,
+                        oneOption.name
+                    )
+                );
+            }
+
+            return (0, _preact.h)(
+                'span',
+                null,
+                (0, _preact.h)(
+                    'span',
+                    null,
+                    oneOption.title
+                ),
+                (0, _preact.h)(
+                    'span',
+                    null,
+                    oneOption.name
+                )
+            );
+        });
+    };
+
     MiniCart.prototype.renderProducts = function renderProducts() {
         var _this3 = this;
 
@@ -66186,7 +66233,8 @@ var MiniCart = function (_Component) {
                             (0, _preact.h)(
                                 'a',
                                 { href: item.href },
-                                item.name
+                                item.name,
+                                _this3.renderOptions(item.options)
                             )
                         ),
                         (0, _preact.h)(

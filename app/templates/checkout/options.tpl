@@ -101,10 +101,10 @@
                                                                    name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
 
                                                             <label class="methods-label" for="shipping_{$quote->rateid}">
-                                                        <span class="methods-text">
-                                                            <span class="name">{$shipping_model->getFrontendName()}</span>
-                                                            <span class="comment">{$shipping_model->shipping_time}</span>
-                                                        </span>
+                                                                <span class="methods-text">
+                                                                    <span class="name">{$shipping_model->getFrontendName()}</span>
+                                                                    <span class="comment">{$shipping_model->shipping_time}</span>
+                                                                </span>
                                                             </label>
                                                         </div>
 

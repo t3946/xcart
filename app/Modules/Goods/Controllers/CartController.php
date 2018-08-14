@@ -6,6 +6,7 @@ use Modules\Cart\CartModule;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Controllers\BaseCartController;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Forms\CountShippingForm;
 use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Models\ShippingModel;
@@ -113,8 +114,34 @@ class CartController extends BaseCartController
             'quantity' => $cart->getQuantity(),
             'items' => $this->getCartProductsArray(),
             'groups' => $this->getCartGroupsArray(),
+          //  'options' => $this->getOptions(),
         ];
     }
+
+//    public function getOptions(){
+//        $cart = $this->getCart();
+//       // $group = $cart->getItemsGroupedBy();
+//       // dd($cart_items);
+//
+//        $items = [];
+//
+//        //if (!$cart_items) {
+//            $cart_items = $cart->getItems();
+//       // }
+//
+//        if ($cart_items) {
+//            foreach ($cart_items as $key => $item) {
+//                $items[$key] = $this->getProductStructure($item, $key);
+//            }
+//        }
+//        var_dump($items); exit;
+//        //$items = $group['items'];
+////        foreach ($group as $g){
+////            foreach ($g['items'] as $item){
+////                var_dump($item->data);
+////            }
+////        }
+//    }
 
     public function getCartGroupsArray($with_items = false): array
     {
@@ -163,6 +190,21 @@ class CartController extends BaseCartController
 //        $discount = $item->getPrice() - $extended;
         $discount = $item->getDiscountSum();
 
+        $options = [];
+        $data = $item->data;
+        if(!empty($data)) {
+            $modelOptionVariant = new ProductOptionVariantModel();
+            foreach ($data as $productOptionId => $variantId){
+                $optionItem = $modelOptionVariant->findItem($productOptionId, $variantId);
+                $options[] = [
+                    'title' => $optionItem->product_option->option->title,
+                    'type' => $optionItem->product_option->option->type,
+                    'name' => $optionItem->variant->name,
+                    'value' => $optionItem->variant->value
+                ];
+            }
+        }
+
         return [
             'key' => $key,
             'image' => $image,
@@ -175,6 +217,7 @@ class CartController extends BaseCartController
             'quantity' => $item->getQuantity(),
             'discount' => $discount,
             'avail' => $product->avail,
+            'options' => $options
         ];
     }
 
