@@ -634,9 +634,13 @@
 
 {if !$static}
 
-{*
-<input type="submit" value="{$lng.lbl_apply_changes|escape}" {if ($order.amazonorderid ne "" && $order.amazon_fulfillment_channel ne "AFN") || $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
-*}
+{if in_array($order.fraud_status, array('E', 'R'))}
+    <div style="color:red;">
+            Links to Spokeo can be seen ONLY for <b>Need an expert</b> and <b>Under review</b> Fraud check status.
+    </div>
+    <br />
+{/if}
+
 <input type="submit" value="{$lng.lbl_apply_changes|escape}" {if $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
 {if $current_membership_flag ne 'FS'}
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -651,10 +655,3 @@
 *}
 
 </form>
-
-{*<img src="/skin1_kolin/images/spacer_black.gif" height="2" width="100%" >*}
-
-{*<form action="{$identity_check_url}" target="_blank">*}
-    {*<input type="hidden" name="order_id" value="{$oOrder->orderid}">*}
-    {*<input type="submit" value="Click here for identity check">*}
-{*</form>*}
