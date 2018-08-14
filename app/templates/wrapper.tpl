@@ -272,7 +272,7 @@
                 s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
 
-            },3000);
+            },5100);
         });
 
     })();
