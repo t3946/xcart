@@ -271,6 +271,10 @@
                 po.src = '//assets.pinterest.com/js/pinit.js';
                 s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
+                var pints = document.getElementById('pinterest-bookmark');
+                if (pints) {
+                    pints.style.display='block';
+                }
 
             },5100);
         });
