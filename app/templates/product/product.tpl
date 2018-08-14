@@ -94,7 +94,11 @@
                         {/if}
                         {if $images}
                             <noscript>
-                                <img src="//cdn.{$site->getBaseDomain()}{$images[0]->getUrl()}" alt="{$model->getFrontendName()|escape}"/>
+                                {foreach $images as $image}
+                                    {if $image}
+                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="{$model->getFrontendName()|escape}"/>
+                                    {/if}
+                                {/foreach}
                             </noscript>
                             <datalist>
                                 {foreach $images as $image}
