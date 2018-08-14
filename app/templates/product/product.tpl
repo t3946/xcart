@@ -93,6 +93,9 @@
                             {set $images = $model->images->order(['orderby'])->all()}
                         {/if}
                         {if $images}
+                            <noscript>
+                                <img src="//cdn.{$site->getBaseDomain()}{$images[0]->getUrl()}" alt="{$model->getFrontendName()}"/>
+                            </noscript>
                             <datalist>
                                 {foreach $images as $image}
                                     {if $image}
