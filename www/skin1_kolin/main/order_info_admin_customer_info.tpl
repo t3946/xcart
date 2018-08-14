@@ -634,7 +634,7 @@
 
 {if !$static}
 
-{if in_array($order.fraud_status, array('E', 'R'))}
+{if !in_array($order.fraud_status, array('E', 'R'))}
     <div style="color:red;">
             Links to Spokeo can be seen ONLY for <b>Need an expert</b> and <b>Under review</b> Fraud check status.
     </div>
