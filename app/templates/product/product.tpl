@@ -136,6 +136,9 @@
                         {/if}
 
                     </div>
+                    <div class="pinterest-bookmark">
+                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_round_red_32.png" /></a>
+                    </div>
                 </div>
                 <div class="column small-12 ml-5 large-5 block__title_price">
 
