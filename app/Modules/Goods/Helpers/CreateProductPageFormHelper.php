@@ -40,7 +40,8 @@ class CreateProductPageFormHelper
 
         $resultObject = null;
 
-        foreach ($options as $option) {
+        foreach ($options as $key1=>$option) {
+
 
             $class = $this->_formFields[$option->option->type];
             $title = $option->option->title;
@@ -65,7 +66,9 @@ class CreateProductPageFormHelper
                 'variants' => $variants,
             ];
 
-            $resultObject = $this->create($class, $params, $resultObject);
+
+
+            $resultObject = $this->create($class, $title, $params, $resultObject);
         }
 
         $this->_form = $resultObject;
@@ -80,15 +83,16 @@ class CreateProductPageFormHelper
 
     /**
      * @param $class
+     * @param $fieldName
      * @param $params
      * @param null $subClass
      * @return mixed
      */
-    private function create($class, $params, $subClass = null)
+    private function create($class, $fieldName, $params, $subClass = null)
     {
         if(empty($class)) {
             return $subClass;
         }
-        return new $class($params, $subClass);
+        return new $class($params, $fieldName, $subClass);
     }
 }

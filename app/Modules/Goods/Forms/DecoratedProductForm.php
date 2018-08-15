@@ -18,6 +18,7 @@ abstract class DecoratedProductForm extends ProductForm
     public $variants = [];
     public $type = '';
     public $title = '';
+    protected $fieldName;
     /**
      * @var array
      */
@@ -26,10 +27,12 @@ abstract class DecoratedProductForm extends ProductForm
     /**
      * DecoratedProductForm constructor.
      * @param array $config
+     * @param string $name
      * @param null $formToExtend
      */
-    public function __construct(array $config = [], $formToExtend = null)
+    public function __construct(array $config = [], $name = '', $formToExtend = null)
     {
+        $this->fieldName = $name;
         $this->beforeConstruct($formToExtend);
         parent::__construct($config);
     }

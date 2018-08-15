@@ -16,13 +16,14 @@ class FieldColorForm extends FieldSelectForm
 {
 
     public $type = 'color';
+    protected $fieldName = 'color';
     /**
      * @return array
      */
     protected function fields(): array
     {
         return [
-            'color' => [
+            $this->fieldName => [
                 'class' => DropDownField::class,
 //                'class' => FrontendColorField::class,
                 'label' => $this->createTitle(),

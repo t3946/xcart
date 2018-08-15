@@ -16,13 +16,14 @@ class FieldRadioForm extends DecoratedProductForm
 {
 
     public $type = 'radio';
+    protected $fieldName = 'name';
     /**
      * @return array
      */
     protected function fields(): array
     {
         return [
-            'name' => [
+            $this->fieldName => [
                 'class' => RadioField::class,
 //                'class' => FrontendVariationRadio::class,
                 'label' => $this->createTitle(),

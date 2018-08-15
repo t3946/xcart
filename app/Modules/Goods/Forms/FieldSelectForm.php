@@ -16,6 +16,7 @@ class FieldSelectForm extends DecoratedProductForm
 {
 
     public $type = 'select';
+    protected $fieldName = 'select';
 
     /**
      * @return array
@@ -23,8 +24,7 @@ class FieldSelectForm extends DecoratedProductForm
     protected function fields(): array
     {
         return [
-            'sizes' => [
-//                'class' => FrontendVariationSelect::class,
+            $this->fieldName => [
                 'class' => DropDownField::class,
                 'label' => $this->createTitle(),
                 'choices' => $this->addFirstBlankOption(),
