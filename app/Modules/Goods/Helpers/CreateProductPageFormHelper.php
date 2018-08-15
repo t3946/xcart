@@ -66,7 +66,7 @@ class CreateProductPageFormHelper
                 'variants' => $variants,
             ];
 
-            $resultObject = $this->create($class, $title, $params, $resultObject);
+            $resultObject = $this->create($class, htmlspecialchars($title), $params, $resultObject);
         }
 
         $this->_form = $resultObject;
