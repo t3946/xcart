@@ -18,6 +18,10 @@ class FieldValidation {
      */
     showError(text){
 
+        if(this.field === null) {
+            return;
+        }
+
         let errors = this.field.querySelectorAll('.errors');
         //console.log(errors);
         this.itemAddError(this.element);
@@ -37,6 +41,11 @@ class FieldValidation {
      * @param element
      */
     removeError(element){
+
+        if(this.field === null) {
+            return;
+        }
+
         let errors = this.field.querySelectorAll('.errors');
         // for compound field
         element = element || this.element;
@@ -61,6 +70,10 @@ class FieldValidation {
         field = field || this.field;
         element = element || this.element;
 
+        if(field === null || typeof field === 'undefined') {
+            return;
+        }
+
         element.classList.remove('success');
         field.classList.remove('success');
 
@@ -72,6 +85,10 @@ class FieldValidation {
      * @param element
      */
     success(dispatch = true){
+
+        if(this.field === null) {
+            return;
+        }
 
         this.itemAddSuccess(this.element);
 

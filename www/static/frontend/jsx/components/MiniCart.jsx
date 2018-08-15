@@ -86,16 +86,16 @@ export default class MiniCart extends Component
 
             if(oneOption.type === 'color'){
                 let colorStyle = 'background-color:' + oneOption.value + ';';
-                return(<span>
-                    <span>{oneOption.title}</span>
-                    <span style={colorStyle} />
-                    <span>{oneOption.name}</span>
+                return(<span className="product-option">
+                    <span className="product-option__title">{oneOption.title}:</span>
+                    <span className="product-option__color" style={colorStyle} />
+                    <span className="product-option__name">{oneOption.name}</span>
                 </span>);
             }
 
-            return(<span>
-                    <span>{oneOption.title}</span>
-                    <span>{oneOption.name}</span>
+            return(<span className="product-option">
+                    <span className="product-option__title">{oneOption.title}:</span>
+                    <span className="product-option__name">{oneOption.name}</span>
                 </span>);
 
         });
@@ -114,8 +114,8 @@ export default class MiniCart extends Component
                     <div className="name-quantity">
                         <div className="name">
                             <a href={item.href}>
-                                {item.name}
-                                {this.renderOptions(item.options)}
+                                <span className="name-text">{item.name}</span>
+                                <span className="name-options">{this.renderOptions(item.options)}</span>
                             </a>
                         </div>
 

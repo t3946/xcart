@@ -61236,6 +61236,10 @@ var FieldValidation = function () {
 
     FieldValidation.prototype.showError = function showError(text) {
 
+        if (this.field === null) {
+            return;
+        }
+
         var errors = this.field.querySelectorAll('.errors');
 
         this.itemAddError(this.element);
@@ -61251,6 +61255,11 @@ var FieldValidation = function () {
     };
 
     FieldValidation.prototype.removeError = function removeError(element) {
+
+        if (this.field === null) {
+            return;
+        }
+
         var errors = this.field.querySelectorAll('.errors');
 
         element = element || this.element;
@@ -61271,6 +61280,10 @@ var FieldValidation = function () {
         field = field || this.field;
         element = element || this.element;
 
+        if (field === null || typeof field === 'undefined') {
+            return;
+        }
+
         element.classList.remove('success');
         field.classList.remove('success');
 
@@ -61280,6 +61293,10 @@ var FieldValidation = function () {
     FieldValidation.prototype.success = function success() {
         var dispatch = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
+
+        if (this.field === null) {
+            return;
+        }
 
         this.itemAddSuccess(this.element);
 
@@ -66178,16 +66195,17 @@ var MiniCart = function (_Component) {
                 var colorStyle = 'background-color:' + oneOption.value + ';';
                 return (0, _preact.h)(
                     'span',
-                    null,
+                    { className: 'product-option' },
                     (0, _preact.h)(
                         'span',
-                        null,
-                        oneOption.title
+                        { className: 'product-option__title' },
+                        oneOption.title,
+                        ':'
                     ),
-                    (0, _preact.h)('span', { style: colorStyle }),
+                    (0, _preact.h)('span', { className: 'product-option__color', style: colorStyle }),
                     (0, _preact.h)(
                         'span',
-                        null,
+                        { className: 'product-option__name' },
                         oneOption.name
                     )
                 );
@@ -66195,15 +66213,16 @@ var MiniCart = function (_Component) {
 
             return (0, _preact.h)(
                 'span',
-                null,
+                { className: 'product-option' },
                 (0, _preact.h)(
                     'span',
-                    null,
-                    oneOption.title
+                    { className: 'product-option__title' },
+                    oneOption.title,
+                    ':'
                 ),
                 (0, _preact.h)(
                     'span',
-                    null,
+                    { className: 'product-option__name' },
                     oneOption.name
                 )
             );
@@ -66233,8 +66252,16 @@ var MiniCart = function (_Component) {
                             (0, _preact.h)(
                                 'a',
                                 { href: item.href },
-                                item.name,
-                                _this3.renderOptions(item.options)
+                                (0, _preact.h)(
+                                    'span',
+                                    { className: 'name-text' },
+                                    item.name
+                                ),
+                                (0, _preact.h)(
+                                    'span',
+                                    { className: 'name-options' },
+                                    _this3.renderOptions(item.options)
+                                )
                             )
                         ),
                         (0, _preact.h)(
