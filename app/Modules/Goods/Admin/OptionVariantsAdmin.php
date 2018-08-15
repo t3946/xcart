@@ -62,6 +62,9 @@ class OptionVariantsAdmin extends ListViewAdmin
         if ($this->ownerPk->id) {
             return (new OptionAdmin)->getUpdateUrl($this->ownerPk->id);
         }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return (new OptionAdmin)->getUpdateUrl($this->ownerPk);
+        }
 
         return parent::getAllUrl();
 

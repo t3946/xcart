@@ -844,7 +844,7 @@ if ($REQUEST_METHOD == "POST") {
                             if (($opt_model = ProductOptionModel::objects()->get(['id' => $option]))
                                 && $o_value_model = ProductOptionVariantModel::objects()->get(['id' => $value]))
                             {
-                                $p_op[$opt_model->option->title] = $o_value_model->variant->name;
+                                $p_op[$opt_model->id] = $o_value_model->variant_id;
                             }
                         }
                         $order_detail_model->product_options = $p_op;
