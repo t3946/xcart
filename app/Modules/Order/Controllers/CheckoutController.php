@@ -85,7 +85,7 @@ class CheckoutController extends FrontendController
 
             if ($shippingForm->isValid()) {
 
-                [$order, $is_created] = OrderModel::objects()->getOrCreate([
+                [$order, $is_created] = OrderModel::objects()->getOrNew([
                     'cart_number' => $cart->getCartNumber(),
                 ]);
 
@@ -93,9 +93,54 @@ class CheckoutController extends FrontendController
 
                 if ($order->save()) {
 
+                    if ($cart_groups = $cart->getItemsGroupedBy()) {
+                        $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
+
+                        foreach ($cart_groups as $g => $cart_group)
+                        {
+                            /** @var OrderGroupModel $group */
+                            [$group, $gis_created] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+
+                            $group->setAttributes([
+                                'shippingid' => null,
+                                'shipping' => '',
+                                'cb_status' => $order->cb_status,
+                            ]);
+
+                            $group->save();
+
+                            if (!$gis_created) {
+                                OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+                            }
+                            /** @var CartItem $item */
+                            foreach ($cart_group['items'] as $item)
+                            {
+                                /** @var ProductModel $product */
+                                $product = $item->getObject();
+                                $detail = new OrderDetailModel([
+                                    'orderid' => $group->orderid,
+                                    'productid' => $product->productid,
+                                    'order_group_id' => $group->order_group_id,
+                                    'price' => $product->getPrice($item->getQuantity()),
+                                    'amount' => $item->getQuantity(),
+                                    'productcode' => $product->productcode,
+                                    'product' => $product->getFrontendName(),
+                                    'provider' => $product->provider,
+                                    'original_provider' => $product->original_provider,
+                                    'item_cost_to_us' => $product->cost_to_us,
+                                ]);
+                                $detail->save();
+                            }
+                        }
+
+                    } else {
+                        $order->groups->delete();
+                    }
+
                     if ($is_created) {
                         $app->event->trigger('order:created', ['model' => $order]);
                     }
+
                     $this->redirect('checkout:options');
                 }
             }
