@@ -633,14 +633,14 @@ function check_r_fields(){
         {foreach from=$product.oProduct->options item=option key=key}
             {if $option->active}
                 <br/>
-                {assign var="p_option" value=$option->option->title}
+                {assign var="p_option" value=$option->option->id}
                 {$p_option}
                 <select name="items[{$product.itemid}][classid_optionid][{$option->id}]"
                         {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
                     <option>No options selected</option>
                     {foreach from=$option->variants item=variant}
                         <option value="{$variant->id}"
-                                {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option] === $variant->variant->name}
+                                {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option] === $variant->variant->id}
                                     selected="selected"
                                 {/if}
                         >{$variant}</option>
