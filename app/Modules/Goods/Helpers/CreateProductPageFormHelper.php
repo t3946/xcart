@@ -40,14 +40,14 @@ class CreateProductPageFormHelper
 
         $resultObject = null;
 
-        foreach ($options as $key1=>$option) {
-
+        foreach ($options as $option) {
 
             $class = $this->_formFields[$option->option->type];
             $title = $option->option->title;
             $variants = [];
 
             foreach ($option->variants as $oneVariant) {
+
                 if(empty($oneVariant->variant->value)){
                     continue;
                 }
@@ -65,8 +65,6 @@ class CreateProductPageFormHelper
                 'title' => $title,
                 'variants' => $variants,
             ];
-
-
 
             $resultObject = $this->create($class, $title, $params, $resultObject);
         }
