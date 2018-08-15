@@ -427,4 +427,9 @@ class OrderModel extends Model
 
         return $result;
     }
+
+    public function getOrderHash()
+    {
+        return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
+    }
 }

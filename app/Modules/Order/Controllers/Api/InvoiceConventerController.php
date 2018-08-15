@@ -44,11 +44,12 @@ class InvoiceConventerController extends Controller
         if ($order_model = OrderModel::objects()->get(['orderid' => $request->get->get('orderid')])) {
 
             $slug = $request->get->get('p');
+            $mode = $request->get->get('mode');
 
             $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
 
             if ($slug == $hash) {
-                echo OrderInvoiceHelper::getInvoiceHtml($order_model);
+                echo OrderInvoiceHelper::getInvoiceHtml($order_model, 'mail/invoice.tpl', $mode);
             }
         }
         $this->redirect(404);
