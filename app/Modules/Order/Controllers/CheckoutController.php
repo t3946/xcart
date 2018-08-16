@@ -85,9 +85,7 @@ class CheckoutController extends FrontendController
 
             if ($shippingForm->isValid()) {
 
-                [$order, $is_created] = OrderModel::objects()->getOrNew([
-                    'cart_number' => $cart->getCartNumber(),
-                ]);
+                [$order, $is_created] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
 
                 $order->setAttributes(array_merge($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
 
