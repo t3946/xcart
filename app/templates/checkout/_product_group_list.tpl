@@ -1,6 +1,7 @@
 
 <div id="product-group-{$gi}" class="product-group-container" data-toggler=".show">
 {*<div id="product-group-{$gi}" class="product-group-container show" data-toggler=".show" data-animate="hinge-in-from-top spin-out">*}
+
     <div class="table-product-wrapper">
         <div class="table-product-group">
             {foreach $items as $key=>$position}
@@ -12,7 +13,12 @@
                         {$position->quantity}
                     </div>
                     <div class="table-cell title">
-                        {$position->object}
+                        <span class="title__name">{$position->object}</span>
+                        {if $position->data}
+                            <div class="title__options">
+                                {include '_parts/_options.tpl' options=$position->data}
+                            </div>
+                        {/if}
                     </div>
                 </div>
             {/foreach}

@@ -358,16 +358,7 @@
                 <td align="center">{$product->productcode}</td>
                 <td>
                     <span style="font-size: 11px"><a href="https:{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
-                    {if $order_detail->product_options}
-                        <table>
-                            <tr>
-                                <td valign="top"><b>Options:</b></td>
-                                <td>
-                                    {*{include file="modules/Product_Options/display_options.tpl" options=$product.product_options options_txt=$product.product_options_txt force_product_options_txt=$product.force_product_options_txt}*}
-                                </td>
-                            </tr>
-                        </table>
-                    {/if}
+                    {include "mail/_parts/_product_options.tpl"}
                 </td>
                 <td align="center" nowrap="nowrap">US$ {$order_detail->price|number_format:2}</td>
                 <td align="center">{$order_detail->amount}</td>

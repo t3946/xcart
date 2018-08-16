@@ -40,7 +40,7 @@ return [
         'name' => 'list'
     ],
     [
-        'route' => '/delete/{a:key}',
+        'route' => '/delete/{slug:key}',
         'target' => [CartController::class, 'actionDelete'],
         'name' => 'delete'
     ],

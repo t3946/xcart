@@ -1,12 +1,11 @@
 {extends "mail/invoice_template.tpl"}
 
-
-
-
 {block 'message'}
-    <p/>
-    {set $message = $order->notification->email_body}
-    {$message|replace:"{{c-fullname}}":$order->firstname}
+    {if $mode!=='print'}
+        <p/>
+        {set $message = $order->notification->email_body}
+        {$message|replace:"{{c-fullname}}":$order->firstname}
+        {/if}
 {/block}
 
 {block 'content'}
@@ -331,18 +330,20 @@
 {/block}
 
 {block 'signature'}
-    {add $site = $.getSite}
-    {add $config = $site->getGlobalConfig()}
-    {add $site_config  = $site->getConfig()}
+    {if $mode!=='print'}
+        {add $site = $.getSite}
+        {add $config = $site->getGlobalConfig()}
+        {add $site_config  = $site->getConfig()}
 
-    <hr size="1" noshade="noshade" />
-    Thank you for choosing S3 Stores!
-    <p>
-        <font size="2">
-            {$site_config.company_name}, a division of {$config.operating_company_name}<br/>
-            Phone: {$config.company_phone}<br/>
-            Fax: {$config.company_fax}<br/>
-            URL: <a href="{$site->getAbsoluteUrl()}" target=_new>{$site->getAbsoluteUrl()}</a>
-        </font>
-    </p>
+        <hr size="1" noshade="noshade" />
+        Thank you for choosing S3 Stores!
+        <p>
+            <font size="2">
+                {$site_config.company_name}, a division of {$config.operating_company_name}<br/>
+                Phone: {$config.company_phone}<br/>
+                Fax: {$config.company_fax}<br/>
+                URL: <a href="{$site->getAbsoluteUrl()}" target=_new>{$site->getAbsoluteUrl()}</a>
+            </font>
+        </p>
+    {/if}
 {/block}

@@ -7,7 +7,7 @@ class ClearFormFields {
     constructor(name) {
 
         this.name = name;
-        this.constraints = document.formConstraints[name];
+        //this.constraints = document.formConstraints[name];
 
         let formSelector = '#' + name;
         this.form = document.querySelector(formSelector);

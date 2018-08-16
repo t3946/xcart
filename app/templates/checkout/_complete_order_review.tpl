@@ -47,6 +47,7 @@
                                 <div class="order-table-cell product-info">
                                     <div class="item-name">
                                         {$item->product}
+                                        {include "checkout/_parts/_options.tpl" item=$item}
                                     </div>
                                     <div class="price-info hide-for-large">
                                         {set $extended = $item->amount * $item->price}

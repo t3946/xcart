@@ -1,3 +1,4 @@
+@import '../mixins/global_mixins';
 .product-group-container {
 
   /** ширина таблицы */
@@ -256,6 +257,17 @@
                 width: $percents;
               }
             }
+
+            .title__options {
+              font-size: 90%;
+              margin-top: .5rem;
+
+              @include style-color-cart-icon();
+
+              //.title-selected {
+              //  font-weight: bold;
+              //}
+            }
           }
 
         }
@@ -288,6 +300,7 @@
           border-bottom: 1px dashed #055a93;
         }
       }
+
 
       .label-hide-items {
         line-height: 100%;

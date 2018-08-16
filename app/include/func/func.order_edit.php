@@ -519,39 +519,6 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 continue;
             }
 
-            if (!empty($active_modules['Product_Options'])) {
-
-                $options = [];
-
-                if (isset($product["keep_options"]) && $product["keep_options"] == "Y") {
-
-                    # Keep original options choice
-                    $options                    = $product["extra_data"]["product_options"];
-                    $options_alt                = $product["extra_data"]["product_options_alt"];
-                    $product["product_options"] = isset($options_alt[$config['default_admin_language']]) ? $options_alt[$config['default_admin_language']] : "";
-                }
-                else {
-
-                    # Save selected options
-                    if (is_array($product["product_options"])) {
-                        foreach ($product["product_options"] as $k => $v) {
-                            $options[intval($v["classid"])] = ($v['is_modifier'] == 'T') ? $v["option_name"] : $v["optionid"];
-                        }
-                    }
-
-                    if ($all_languages && is_array($all_languages) && count($all_languages) > 1 && !empty($active_modules['Product_Options'])) {
-                        foreach ($all_languages as $lng) {
-                            $options_alt[$lng["code"]] = func_serialize_options($options, false, $lng["code"]);
-                        }
-                    }
-
-                    $product["product_options"] = func_serialize_options($options);
-                }
-            }
-            else {
-
-                $product["product_options"] = "";
-            }
 
             if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P") {
 
@@ -574,7 +541,6 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 "itemid"          => $product['itemid'],
                 "orderid"         => $cart['orderid'],
                 "productid"       => $product['productid'],
-                "product_options" => $product["product_options"],
                 "amount"          => $product['amount'],
                 'back'            => $product['back'],
                 "price"           => $product['price'],

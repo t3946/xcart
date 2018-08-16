@@ -18,13 +18,19 @@ class FieldValidation {
      */
     showError(text){
 
+        if(this.field === null) {
+            return;
+        }
+
         let errors = this.field.querySelectorAll('.errors');
+        //console.log(errors);
         this.itemAddError(this.element);
         this.itemAddError(this.field);
 
         for (let i = 0; i < errors.length; ++i) {
             let oneErrorPlace = errors.item(i);
             let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = text;
             oneErrorPlace.classList.add('show');
         }
@@ -35,6 +41,11 @@ class FieldValidation {
      * @param element
      */
     removeError(element){
+
+        if(this.field === null) {
+            return;
+        }
+
         let errors = this.field.querySelectorAll('.errors');
         // for compound field
         element = element || this.element;
@@ -45,6 +56,7 @@ class FieldValidation {
         for (let i = 0; i < errors.length; ++i) {
             let oneErrorPlace = errors.item(i);
             let oneErrorPlaceText = oneErrorPlace.querySelector('.error-text');
+
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove('show');
         }
@@ -54,9 +66,17 @@ class FieldValidation {
      * Clear all classes
      * @param element
      */
-    clearAllClasses() {
-        this.element.classList.remove('success');
-        this.field.classList.remove('success');
+    clearAllClasses(field, element) {
+        field = field || this.field;
+        element = element || this.element;
+
+        if(field === null || typeof field === 'undefined') {
+            return;
+        }
+
+        element.classList.remove('success');
+        field.classList.remove('success');
+
         this.removeError();
     }
 
@@ -64,15 +84,22 @@ class FieldValidation {
      * If input was successfully
      * @param element
      */
-    success(){
+    success(dispatch = true){
+
+        if(this.field === null) {
+            return;
+        }
 
         this.itemAddSuccess(this.element);
 
+        //console.log('compound', this.field.classList.contains('compound-field'));
         if(!this.field.classList.contains('compound-field')){
 
             this.removeError();
             this.itemAddSuccess(this.field);
-            this.dispatchSuccess();
+            if(dispatch){
+                this.dispatchSuccess();
+            }
             return;
         }
 
@@ -88,8 +115,11 @@ class FieldValidation {
         }
 
         this.removeError(this.element);
-        this.itemAddSuccess();
-        this.dispatchSuccess();
+        this.itemAddSuccess(this.field);
+        if(dispatch){
+            this.dispatchSuccess();
+        }
+
     }
 
     /**

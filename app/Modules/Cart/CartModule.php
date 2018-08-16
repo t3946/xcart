@@ -7,6 +7,7 @@ use Modules\Cart\Admin\CouponKitAdmin;
 use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Cart\Models\CouponKitModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 use Modules\Cart\Components\Cart;
@@ -54,6 +55,10 @@ class CartModule extends Module
 
         $tpl->addAccessorCallback('getCartBreadcrumbs', function () {
             return static::$_stagesOfOrdering;
+        });
+
+        $tpl->addAccessorCallback('getProductOptionVariantModel', function () {
+            return new ProductOptionVariantModel();
         });
     }
 

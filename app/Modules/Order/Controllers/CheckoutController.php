@@ -331,6 +331,7 @@ class CheckoutController extends FrontendController
                             'provider' => $product->provider,
                             'original_provider' => $product->original_provider,
                             'item_cost_to_us' => $product->cost_to_us,
+                            'product_options' => $item->data ?? null
                         ]);
                         $detail->save();
                     }

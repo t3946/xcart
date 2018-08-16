@@ -17,7 +17,7 @@ class RequiredValidator extends Validator
 
     public function __construct($message = null)
     {
-        if ($message !== null) {
+        if (!empty($message)) {
             $this->message = $message;
         }
     }

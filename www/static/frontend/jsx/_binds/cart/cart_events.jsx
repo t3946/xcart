@@ -14,6 +14,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     let $minicart = $('.minicart');
     let minicartTimeout, timerIsStarted = false;
 
+    // инициализировать корзину в верхней части окна
     let checkEnableMinicart = () => {
         // let state = storeApp.getState();
         let stateCart = storeCart.getState();
@@ -35,6 +36,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
     checkEnableMinicart();
 
+    // переинициализировать корзину в верхней части окна при изменении глобального состояния
     let unsubscribeCart = storeCart.subscribe(() => {
         checkEnableMinicart();
 
@@ -63,23 +65,62 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         // });
     };
 
+    // function getOptionNameFromString(nameString){
+    //
+    //     let nameStringParts = nameString.split('[');
+    //     let lastPart = nameStringParts.length - 1;
+    //     let lastPartString = nameStringParts[lastPart];
+    //     return lastPartString.substring(0, lastPartString.length - 1);
+    // }
+
     $(document)
+        // добавить товар в корзину
         .on('click', '.cart_add .add', (e) => {
             e.preventDefault();
 
             let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
-            buttonAnimation.start();
-
             let product = e.target.closest('[data-product]');
-            if (product) {
+
+            if ( product )
+            {
+
+                let infoFormId = e.target.closest('.cart_add').getAttribute('data-form-id');
+                let form = document.getElementById(infoFormId);
+
+                if(typeof document.formValidators !== 'undefined'
+                    && document.formValidators[infoFormId] !== 'undefined'){
+
+                    let formValidate = document.formValidators[infoFormId];
+                    formValidate.checkAllForm();
+
+                   // console.log(formValidate.hasErrors);
+                    if(formValidate.hasErrors) {
+                        return false;
+                    }
+                }
+
+                let opt = [];
+
+                // $('select.product-options', product).each(function(){
+                //     opt.push({'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val()});
+                // });
+                let values = $(form).serializeArray();
+                for (let oneValue of values) {
+                    //let name = getOptionNameFromString(oneValue.name);
+                    let valueParts = oneValue.value.split('_');
+                    let identifiersParts = valueParts[0].split('-');
+                    //console.log(identifiersParts);
+                    opt.push({'optionId': identifiersParts[0], 'variantId': identifiersParts[1]});
+                }
+
                 let data = [{
                     id: product.dataset.product,
-                    quantity: product.dataset.quantity || 1
+                    quantity: product.dataset.quantity  || 1,
+                    options: opt
                 }];
 
-                cartAdd(data, () => {
-                    productItemResetState(product);
-                });
+                buttonAnimation.start();
+                cartAdd(data, ()=>{ productItemResetState(product); });
                 window.sendAnalytics.addToCart(product);
             }
 
@@ -110,6 +151,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 });
             }
         })
+        // Изменение колличества товара в корзине в верхней части окна
         .on('update.cart.store', (e, data) => {
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
@@ -127,6 +169,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 (new CountUp('desktop-cart-quantity', qPrev, qNew, 0, 1, {useEasing: true})).start();
             }
         })
+        // Раскрыть корзину в верхней части окна
         .on('mouseenter', '.minicart.enabled', (e) => {
 
             e.preventDefault();
@@ -145,6 +188,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             }
 
         })
+        // Закрыть корзину в верхней части окна
         .on('mouseleave', '.minicart.enabled', (e) => {
 
             e.preventDefault();
@@ -162,6 +206,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 timerIsStarted = true;
             }
         })
+        // Выбор количества товара
         .on('click', '.cart_add .number-button', (event) => {
 
             event.preventDefault();
@@ -173,28 +218,35 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             if (selectQuantity && product) {
 
+                // Открытие всплывающего окна
                 $(selectQuantity).mmodal({
                     'windowClass': 'quantitySelector',
                     'setWidth': false
                 });
 
+                // Всплывающее окно
                 let window = $('.mmodal-content .select-quantity').get(0);
                 let number = parseInt(target.dataset.number, 10);
                 let max = parseInt(target.dataset.max, 10);
                 let min = parseInt(target.dataset.min, 10);
                 let step = parseInt(target.dataset.step, 10);
                 let quantity = product.dataset.quantity || min;
+
+                // Во всплывающем окне изменилось колличество товара
                 let changeQuantity = e => {
 
                     let quantity = parseInt(e.detail.quantity, 10);
                     product.dataset.quantity = quantity;
                     target.innerHTML = quantity;
+                    // Закрыть окно
                     $(document).data('mmodal').close();
                     document.removeEventListener('component.select_number_items.change', changeQuantity);
                 };
 
+                // Во всплывающем окне изменилось колличество товара
                 document.addEventListener('component.select_number_items.change', changeQuantity);
 
+                // Создание контента всплывающего окна
                 render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,
                     window, window.firstChild);
             }
@@ -230,11 +282,33 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             $.ajax({url: '/notify/get/', method: 'GET', data:{product_id: product_id}}).done(function(html) {
 
+                let submitForm = null;
                 $(notify_win).mmodal({
                     'windowClass': 'notifySelector',
                     'setWidth': false,
+                    'onBeforeOpen': function (container) {
+                        this.setContent(html);
+                        submitForm = container.getElementsByTagName('form')[0];
+                    },
+                    'onAfterOpen': function() {
+                        let evnt = new CustomEvent('sliders_show');
+                        document.dispatchEvent(evnt);
+                    },
                     'onSubmit': function () {
                         let $self = this;
+                        let id = submitForm.getAttribute('id');
+
+                        if(typeof document.formValidators !== 'undefined'
+                            && typeof document.formValidators[id] !== 'undefined'){
+
+                            let formValidator = document.formValidators[id];
+                            formValidator.checkAllForm();
+
+                            if(formValidator.hasErrors){
+                                return false;
+                            }
+                        }
+
                         $.ajax({
                             url: '/notify/post/',
                             method: 'POST',
@@ -247,13 +321,6 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                             $self.close();
                         });
                     },
-                    'onAfterOpen': function() {
-                        let evnt = new CustomEvent('sliders_show');
-                        document.dispatchEvent(evnt);
-                    },
-                    'onBeforeOpen': function () {
-                        this.setContent(html);
-                    }
                 });
 
             });

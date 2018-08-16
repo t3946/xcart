@@ -8,6 +8,8 @@
 
 namespace Modules\Core\Behaviours;
 
+use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\FormView\FormViewBehavior;
 
 class FrontendFormDisplayBehavior extends FormViewBehavior
@@ -48,10 +50,10 @@ class FrontendFormDisplayBehavior extends FormViewBehavior
      * @var array
      */
     protected $classFieldSettings = [
-        'Xcart\App\Form\Fields\CharField' => [
+        CharField::class => [
             'inputTemplate' => 'forms/field/default/custom/input.tpl',
         ],
-        'Xcart\App\Form\Fields\NumberField' => [
+        NumberField::class => [
             'inputTemplate' => 'forms/field/default/custom/input.tpl',
         ]
     ];

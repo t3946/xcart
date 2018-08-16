@@ -30,7 +30,13 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Goods\Models\OptionModel;
+use Modules\Goods\Models\OptionNewModel;
+use Modules\Goods\Models\OptionVariantModel;
+use Modules\Goods\Models\ProductOptionModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
@@ -825,62 +831,19 @@ if ($REQUEST_METHOD == "POST") {
 
         if (!empty($items) && is_array($items) && !empty($orderid)) {
             foreach ($items as $k => $v) {
-                if (!empty($v["productid"])) {
-                    $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$v[productid]'");
+                if ($order_detail_model = OrderDetailModel::objects()->get(['itemid' => $k])) {
+                    $p_op = [];
 
-                    if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])) {
-                        $log                           = "";
-                        $options_for_diff              = [];
-                        $order_details_product_options = "";
-
-                        foreach ($v["classid_optionid"] as $classid => $optionid) {
-                            $class       = func_query_first_cell("SELECT class FROM $sql_tbl[classes] WHERE classid='$classid'");
-                            $option_name = func_query_first_cell("SELECT option_name FROM $sql_tbl[class_options] WHERE classid='$classid' AND optionid='$optionid'");
-                            $option_line = $class . ": " . $option_name;
-                            $order_details_product_options .= $option_line . "\r\n";
-                            $options_for_diff[] = $option_line;
-                            $log .= $option_line . "<br />";
-                        }
-
-                        $order_details_product_options = addslashes($order_details_product_options);
-
-                        $extra_data = func_query_first_cell("SELECT extra_data FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$v[productid]'");
-                        $extra_data = unserialize($extra_data);
-
-                        $current_options_for_diff = [];
-
-                        if (!empty($extra_data["product_options"]) && is_array($extra_data["product_options"])) {
-                            $log = "<B>" . $product_code . "</B><br /><B>Before:</B><br />" . $log . "<B>Now:</B><br />";
-
-                            foreach ($extra_data["product_options"] as $classid => $option) {
-                                $optionid = is_array($option) ? $option['optionid'] : $option;
-                                $class       = func_query_first_cell("SELECT class FROM $sql_tbl[classes] WHERE classid='$classid'");
-                                $option_name = func_query_first_cell("SELECT option_name FROM $sql_tbl[class_options] WHERE classid='$classid' AND optionid='$optionid'");
-                                $option_line = $class . ": " . $option_name;
-                                $log .= $option_line . "\r\n";
-                                $current_options_for_diff[] = $option_line;
+                    if ($v['classid_optionid'] && \is_array($v['classid_optionid'])) {
+                        foreach ($v['classid_optionid'] as $option => $value) {
+                            if (($opt_model = ProductOptionModel::objects()->get(['id' => $option]))
+                                && $o_value_model = ProductOptionVariantModel::objects()->get(['id' => $value]))
+                            {
+                                $p_op[$opt_model->id] = $o_value_model->variant_id;
                             }
                         }
-
-                        $options_diff = array_diff($options_for_diff, $current_options_for_diff);
-
-                        if (!empty($options_diff)) {
-                            func_log_order($orderid, 'X', $log, $login);
-                        }
-
-                        if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])){
-                            foreach ($v["classid_optionid"] as $class_id => $option_id) {
-                                if ($optionModel = OptionValueModel::objects()->get(['optionid' => $option_id])) {
-                                    $v["classid_optionid"][$class_id] = $optionModel->getAttributes();
-                                }
-                            }
-                        }
-
-                        $extra_data["product_options"] = $v["classid_optionid"];
-
-                        $extra_data = addslashes(serialize($extra_data));
-
-                        db_query("UPDATE $sql_tbl[order_details] SET product_options='$order_details_product_options', extra_data='$extra_data' WHERE orderid='$orderid' AND productid='$v[productid]' AND itemid='$k'");
+                        $order_detail_model->product_options = $p_op;
+                        $order_detail_model->save();
                     }
                 }
             }

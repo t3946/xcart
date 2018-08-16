@@ -16,6 +16,7 @@ class FormValidation {
         this.form = document.querySelector(formSelector);
         this.fields = {};
         this._bind();
+        this.hasErrors = false;
     }
 
     /**
@@ -26,9 +27,19 @@ class FormValidation {
         this.inputs = this.form.querySelectorAll('input, textarea, select');
         this.processChange = this.processChange.bind(this);
         this.processJsChange = this.processJsChange.bind(this);
+        this.validateOnSubmit = this.validateOnSubmit.bind(this);
+
+        //console.log('init',this.form);
+        this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);
+            let type = inputElement.getAttribute('type');
+
+            if(type === 'hidden') {
+                continue;
+            }
+
             let field = fieldValidation(inputElement);
             let inputElementName = inputElement.getAttribute('name');
             this.fields[inputElementName] = field;
@@ -58,7 +69,6 @@ class FormValidation {
         }
 
         this.checkForm(event.target);
-
     }
 
     processJsChange(event){
@@ -67,6 +77,9 @@ class FormValidation {
 
     checkForm(inputElement){
 
+        if(this.form.getAttribute('data-validate') !== 'true'){
+            return;
+        }
         let inputElementName = inputElement.getAttribute('name');
         let currentRules = this.constraints[inputElementName];
         let field = this.fields[inputElementName];
@@ -89,6 +102,68 @@ class FormValidation {
         field.showError(currentError[0]);
     }
 
+    validateOnSubmit(event){
+        //event.preventDefault();
+        this.hasErrors = false;
+        this.checkAllForm();
+        //console.log(this.hasErrors);
+
+        if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    checkAllForm(){
+
+        if(this.form.getAttribute('data-validate') !== 'true'){
+            return;
+        }
+        let errors = formValidate(this.form, this.constraints) || {};
+        this.hasErrors = false;
+
+        for (let inputElementName in this.fields) {
+
+            let field = this.fields[inputElementName];
+            let currentError = errors[inputElementName];
+            let currentRules = this.constraints[inputElementName];
+
+            if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
+
+                if(field.element.value === '') {
+                    if(!field.field.classList.contains('compound-field')) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+
+                    let hasNoValue = true;
+                    this.inputs = this.form.querySelectorAll('input, textarea, select');
+                    for (let i = 0; i < this.inputs.length; ++i) {
+
+                        let inputElement = this.inputs.item(i);
+                        if(inputElement.value !== '') {
+                            hasNoValue = false;
+                        }
+                    }
+
+                    if(hasNoValue && !(field.field.classList.contains('invalid') || field.field.classList.contains('success'))) {
+                        field.clearAllClasses();
+                        continue;
+                    }
+                }
+            }
+
+            field.clearAllClasses();
+
+            if(typeof currentError === 'undefined' || currentError.length <= 0) {
+                field.success(false);
+                continue;
+            }
+            field.showError(currentError[0]);
+            this.hasErrors = true;
+        }
+    }
+
 
     /**
      * Destruct form validator
@@ -99,6 +174,8 @@ class FormValidation {
             inputElement.removeEventListener('blur', this.processChange);
             inputElement.removeEventListener('js.change.event', this.processJsChange);
         }
+
+        this.form.removeEventListener('submit', this.validateOnSubmit);
         this.fields = {};
     }
 }

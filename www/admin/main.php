@@ -34,6 +34,9 @@
 # $Id: main.php,v 1.14.2.1 2006/11/08 06:25:41 max Exp $
 #
 
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: error_message.php?permission_denied"); die("Access denied"); }
 
 x_session_register("previous_login_date");
@@ -185,35 +188,20 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
 
 }
 
-#
-# Get the last order information
-#
-$last_order = func_query_first('SELECT orderid, order_prefix, cb_status, dc_status, bd_status,'
-    . ' total, title, firstname, lastname, date'
-    . " FROM $sql_tbl[orders] WHERE cb_status NOT IN ('S1','S2','S3','S4') ORDER BY date DESC LIMIT 1");
-
-if (!empty($last_order)) {
-	# Get products ordered in the last order
-	$last_order_products = func_query("SELECT productid, product_options, price, amount FROM $sql_tbl[order_details] WHERE orderid='$last_order[orderid]'");
-	if (is_array($last_order_products)) {
-		foreach ($last_order_products as $k=>$v) {
-			$last_order["products"][] = func_array_merge(func_query_first("SELECT * FROM $sql_tbl[products] WHERE productid='$v[productid]'"), $v);
-		}
-	}
-	# Get gift certificates ordered in the last order
-	$last_order["giftcerts"] = func_query("SELECT gcid, amount FROM $sql_tbl[giftcerts] WHERE orderid='$last_order[orderid]'");
-
-	$last_order['date'] += $config["General"]["timezone_offset"];
-
-#
-##
-###
-	$last_order['cb_status'] = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid='$last_order[orderid]'");
-###
-##
-#
-}
-
+$lastOrderModel = OrderModel::objects()
+    ->exclude(
+        [
+            'cb_status__in' =>
+                [
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                ]
+        ])
+    ->order(['-date'])
+    ->limit(1)
+    ->get();
 
 if (!x_session_is_registered("hide_security_warning")) {
 	$smarty->assign("current_passwords_security", func_check_default_passwords($login));
@@ -236,6 +224,6 @@ $smarty->assign("max_top_sellers", $max_top_sellers);
 $smarty->assign("top_sellers", $top_sellers);
 $smarty->assign("top_categories", $top_categories);
 
-$smarty->assign("last_order", $last_order);
+$smarty->assign("last_order_model", $lastOrderModel);
 
 ?>

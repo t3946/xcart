@@ -103,27 +103,32 @@ body {
   display: none;
 }
 
+%mmodal-select-options-width {
+  width: rem-calc(300);
 
+  @include breakpoint(sm) {
+    width: rem-calc(350);
+  }
 
-//body .mmodal-modal-bg .mmodal-container {
-//  .mmodal-close {
-//    text-indent: 0 !important;
-//    width: rem-calc(20) !important;
-//    height: rem-calc(20) !important;
-//    background-image: none !important;
-//    top: rem-calc(12) !important;
-//    right: rem-calc(12) !important;
-//  }
-//}
+  @include breakpoint(medium) {
+    width: rem-calc(480);
+  }
+}
+
 .mmodal-container {
   &.quantitySelector{
-    width: rem-calc(300);
+    @extend %mmodal-select-options-width;
+  }
 
-    @include breakpoint(sm) {
-      width: rem-calc(350);
-    }
-    @include breakpoint(medium) {
-      width: rem-calc(480);
-    }
+  &.selector-options{
+    @extend %mmodal-select-options-width;
+  }
+
+  .title {
+    font-size: rem-calc(24);
+    line-height: rem-calc(32);
+    padding-bottom: rem-calc(20);
+    font-weight: bold;
+    text-align: center;
   }
 }

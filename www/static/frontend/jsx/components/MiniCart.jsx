@@ -76,6 +76,31 @@ export default class MiniCart extends Component
         );
     }
 
+    renderOptions(options)
+    {
+        if(options.length <= 0) {
+            return;
+        }
+
+        return _.map(options, (oneOption) => {
+
+            if(oneOption.type === 'color'){
+                let colorStyle = 'background-color:' + oneOption.value + ';';
+                return(<span className="product-option">
+                    <span className="product-option__title">{oneOption.title}:</span>
+                    <span className="product-option__color" style={colorStyle} />
+                    <span className="product-option__name">{oneOption.name}</span>
+                </span>);
+            }
+
+            return(<span className="product-option">
+                    <span className="product-option__title">{oneOption.title}:</span>
+                    <span className="product-option__name">{oneOption.name}</span>
+                </span>);
+
+        });
+    }
+
     renderProducts()
     {
         if (this.state.cart.items) {
@@ -89,7 +114,8 @@ export default class MiniCart extends Component
                     <div className="name-quantity">
                         <div className="name">
                             <a href={item.href}>
-                                {item.name}
+                                <span className="name-text">{item.name}</span>
+                                <span className="name-options">{this.renderOptions(item.options)}</span>
                             </a>
                         </div>
 

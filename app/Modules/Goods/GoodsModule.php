@@ -1,7 +1,10 @@
 <?php
+
 namespace Modules\Goods;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\OptionAdmin;
+use Modules\Goods\Admin\ProductAdmin;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 use Xcart\App\Traits\RenderTrait;
@@ -14,31 +17,29 @@ class GoodsModule extends Module
     {
         $template = Xcart::app()->template->getRenderer();
 
-        $template->addAccessorSmart('get_warehouse', self::class. '::getWarehouse', $template::ACCESSOR_CALL);
+        $template->addAccessorSmart('get_warehouse', self::class . '::getWarehouse', $template::ACCESSOR_CALL);
 
-        $template->addBlockFunction('p_label', function($params, $html)
-        {
+        $template->addBlockFunction('p_label', function ($params, $html) {
 
             $params['text'] = $html;
 
             return self::renderTemplate('product/messages/_p_label.tpl', $params);
         });
 
-        $template->addModifier('createByLine', function($name, $date, $manager = false) : string
-        {
+        $template->addModifier('createByLine', function ($name, $date, $manager = false): string {
 
-            if(empty($name)){
+            if (empty($name)) {
                 return '';
             }
 
-            if(!$manager) {
+            if (!$manager) {
                 $byLine = 'asked by ' . $name;
             } else {
                 $byLine = 'answered by ' . $name . ' (Staff)';
             }
 
-            if(!empty($date)){
-                $byLine .=  ' on ' . static::createTextDate($date);
+            if (!empty($date)) {
+                $byLine .= ' on ' . static::createTextDate($date);
             }
 
             return $byLine;
@@ -58,17 +59,33 @@ class GoodsModule extends Module
 
         $items = [[
             'icon' => 'fa fa-list',
-            'name' => 'Group products',
-            'route' => $router->url('product:group_products'),
-        ]];
-
-        if ($user && $user->getIsSuperuser()) {
-            $items[] = [
-                'icon' => 'fa fa-object-group',
-                'name' => 'Grouping products',
-                'route' => $router->url('product:group_list'),
-            ];
-        }
+            'name' => 'Products',
+            'route' => $router->url('admin:list', [
+                'module' => static::getModuleName(),
+                'admin' => ProductAdmin::classNameShort()
+            ]),
+            'items' => [
+                [
+                    'icon' => 'fa',
+                    'name' => 'Options',
+                    'route' => $router->url('admin:list', [
+                        'module' => static::getModuleName(),
+                        'admin' => OptionAdmin::classNameShort()
+                    ]),
+                ],
+                [
+                    'icon' => 'fa fa-object-group',
+                    'name' => 'Group products',
+                    'route' => $router->url('product:group_products'),
+                    'items' => ($user && $user->getIsSuperuser()) ? [
+                        [
+                            'icon' => 'fa fa-pencil-square-o',
+                            'name' => 'Grouping products',
+                            'route' => $router->url('product:group_list'),
+                        ],
+                    ] : false,
+                ]]]
+        ];
 
         return $items;
     }
@@ -78,7 +95,7 @@ class GoodsModule extends Module
      * @param $date integer timestump
      * @return string
      */
-    private static function createTextDate($date):string
+    private static function createTextDate($date): string
     {
         $dateTimeObj = (new \DateTime())->setTimestamp($date);
         return $dateTimeObj->format('M d, Y');

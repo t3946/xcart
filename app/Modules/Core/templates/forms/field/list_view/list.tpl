@@ -4,7 +4,7 @@
         <div class="top-buttons-block left">
             <a href="{$admin->getCreateUrl()}" class="button round upper pad ajax">
                 <span class="text">
-                    Создать
+                    Add
                 </span>
                 <i class="icon-plus"></i>
             </a>

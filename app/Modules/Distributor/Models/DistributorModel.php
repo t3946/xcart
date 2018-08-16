@@ -54,6 +54,11 @@ class DistributorModel extends Model
                 'modelClass' => ShippingRateModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
+            'feed_fields' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorFeedFieldModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
             'reduce_extra_margin' => [
                 'class' => BooleanCharField::class,
             ],

@@ -1,3 +1,4 @@
+@import '../mixins/global_mixins';
 $image: (
         small: rem-calc(70),
         medium: rem-calc(83),
@@ -258,6 +259,10 @@ $remove: (
 
       @include breakpoint(medium up) {
         justify-content: space-between;
+      }
+
+      .options {
+        @include style-color-cart-icon();
       }
     }
 

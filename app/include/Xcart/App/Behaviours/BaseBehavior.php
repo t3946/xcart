@@ -13,7 +13,7 @@ namespace Xcart\App\Behaviours;
 
 use Xcart\App\Behaviours\Interfaces\IBehavior;
 
-class BaseBehavior implements IBehavior
+abstract class BaseBehavior implements IBehavior
 {
     public $owner;
 

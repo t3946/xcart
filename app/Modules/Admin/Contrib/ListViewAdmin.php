@@ -72,18 +72,23 @@ abstract class ListViewAdmin extends Admin
                         $request->redirect($this->getUpdateUrl($model->pk));
                     }
                     else {
-                        echo $this->render('admin/popup_close.tpl');
-                        Xcart::app()->end();
+                        if (isset($_POST['popup'])) {
+                            echo $this->render('admin/popup_close.tpl');
+                            Xcart::app()->end();
+                        }
+                        if ($next == 'save') {
+                            $request->redirect($this->getAllUrl());
+                        }
                     }
                 }
             } else {
                 if (!$request->getIsAjax()) {
-                    Xcart::app()->flash->error('Пожалуйста, исправьте ошибки');
+                    Xcart::app()->flash->error('Please, fix errors');
                 }
             }
         }
 
-        $this->setBreadcrumbs(($pk)? 'Редактировать' : 'Создать');
+        $this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,

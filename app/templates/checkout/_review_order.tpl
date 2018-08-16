@@ -54,6 +54,7 @@
                             <div class="order-table-cell product-info">
                                 <div class="item-name">
                                     {$item->product}
+                                    {include "checkout/_parts/_options.tpl" item=$item}
                                 </div>
                                 <div class="price-info hide-for-medium">
                                     US$ <span class="price">{$item->price|number_format:2}</span>

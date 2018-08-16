@@ -5,13 +5,17 @@
         var bill_addres_el = document.querySelector(".billing_address_form");
         var elements = bill_addres_el.querySelectorAll("input.required, select.required");
 
+        let form = document.querySelector('.checkout-options-form');
+
         function hideForm() {
             bill_addres_el.classList.add("hide");
+            form.setAttribute('data-validate', 'false');
             removeRequired();
         }
 
         function showForm() {
             bill_addres_el.classList.remove("hide");
+            form.setAttribute('data-validate', 'true');
             addRequired();
         }
         
@@ -43,9 +47,10 @@
 {block 'content'}
     {*<form data-abide action="{url 'checkout:options'}" method="POST" class="checkout-options-form">*}
         {raw $billingForm->renderBegin([
-        'action' => $.app->router->url('checkout:options'),
-        'method' => 'POST',
-        'class' => 'checkout-options-form'
+            'action' => $.app->router->url('checkout:options'),
+            'method' => 'POST',
+            'class' => 'checkout-options-form',
+            'validate' => 'false'
         ])}
         <section class="checkout-options">
             <div class="row">
@@ -96,10 +101,10 @@
                                                                    name="shipping_rates[{$gi}]" value="{$quote->rateid}"/>
 
                                                             <label class="methods-label" for="shipping_{$quote->rateid}">
-                                                        <span class="methods-text">
-                                                            <span class="name">{$shipping_model->getFrontendName()}</span>
-                                                            <span class="comment">{$shipping_model->shipping_time}</span>
-                                                        </span>
+                                                                <span class="methods-text">
+                                                                    <span class="name">{$shipping_model->getFrontendName()}</span>
+                                                                    <span class="comment">{$shipping_model->shipping_time}</span>
+                                                                </span>
                                                             </label>
                                                         </div>
 
@@ -246,9 +251,6 @@
 
                 </div>
             </div>
-
-
-
         </section>
     {raw $billingForm->renderEnd()}
 {/block}
