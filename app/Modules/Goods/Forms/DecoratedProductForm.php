@@ -70,6 +70,6 @@ abstract class DecoratedProductForm extends ProductForm
      */
     protected function createRequiredMessage(): string
     {
-        return 'Please choose ' . lcfirst($this->title);
+        return 'Please choose ' . $this->title;
     }
 }
