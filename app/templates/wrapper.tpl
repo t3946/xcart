@@ -218,55 +218,65 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 
                 {if $config.cidev_yandex_code_number}
-                (function (d, w, c) {
-                    (w[c] = w[c] || []).push(function() {
-                        try {
-                            w.yaCounter49453150 = new Ya.Metrika2({
-                                id:{$config.cidev_yandex_code_number},
-                                clickmap:true,
-                                trackLinks:true,
-                                accurateTrackBounce:true,
-                                webvisor:true,
-                                trackHash:true
-                            });
-                        } catch(e) { }
-                    });
+                    (function (d, w, c) {
+                        (w[c] = w[c] || []).push(function() {
+                            try {
+                                w.yaCounter49453150 = new Ya.Metrika2({
+                                    id:{$config.cidev_yandex_code_number},
+                                    clickmap:true,
+                                    trackLinks:true,
+                                    accurateTrackBounce:true,
+                                    webvisor:true,
+                                    trackHash:true
+                                });
+                            } catch(e) { }
+                        });
 
-                    var n = d.getElementsByTagName("script")[0],
-                        s = d.createElement("script"),
-                        f = function () { n.parentNode.insertBefore(s, n); };
-                    s.type = "text/javascript";
-                    s.async = true;
-                    s.src = "https://mc.yandex.ru/metrika/tag.js";
+                        var n = d.getElementsByTagName("script")[0],
+                            s = d.createElement("script"),
+                            f = function () { n.parentNode.insertBefore(s, n); };
+                        s.type = "text/javascript";
+                        s.async = true;
+                        s.src = "https://mc.yandex.ru/metrika/tag.js";
 
-                    if (w.opera == "[object Opera]") {
-                        d.addEventListener("DOMContentLoaded", f, false);
-                    } else { f(); }
-                })(document, window, "yandex_metrika_callbacks2");
+                        if (w.opera == "[object Opera]") {
+                            d.addEventListener("DOMContentLoaded", f, false);
+                        } else { f(); }
+                    })(document, window, "yandex_metrika_callbacks2");
+                    {/if}
+
+                    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+                    {if $google_review && 1!=1}
+                    window.___gcfg = {
+                        lang: 'en_US'
+                    };
+                    var g_id = '{$google_review}';
+                    {ignore}
+                    window.renderBadge = function() {
+                        var ratingBadgeContainer = document.getElementById("g_review");
+                        window.gapi.load('ratingbadge', function() {
+                            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
+                        });
+                    };
+                    {/ignore}
+
+                    var gr = document.createElement('script');
+                    gr.type = 'text/javascript';
+                    gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
+                    var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
                 {/if}
 
-                {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-                {if $google_review && 1!=1}
-                window.___gcfg = {
-                    lang: 'en_US'
-                };
-                var g_id = '{$google_review}';
-                {ignore}
-                window.renderBadge = function() {
-                    var ratingBadgeContainer = document.getElementById("g_review");
-                    window.gapi.load('ratingbadge', function() {
-                        window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
-                    });
-                };
-                {/ignore}
+                po = document.createElement('script');
+                po.type = 'text/javascript';
+                po.src = '//assets.pinterest.com/js/pinit.js';
+                s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(po, s);
+                var pints = document.getElementById('pinterest-bookmark');
+                if (pints) {
+                    pints.style.display='block';
+                }
 
-                var gr = document.createElement('script');
-                gr.type = 'text/javascript';
-                gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
-                var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
-                {/if}
-
-            },6000);
+            },5100);
         });
 
     })();

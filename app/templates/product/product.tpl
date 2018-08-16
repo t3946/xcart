@@ -85,30 +85,37 @@
                     {if $model->isGroupRoot()}
                         {set $images = []}
 
-                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
-                        {foreach $childrens as $child}
-                            {set $images[] = $child->preview->order(['orderby'])->limit(1)->get()}
-                        {/foreach}
-                    {else}
-                        {set $images = $model->images->order(['orderby'])->all()}
-                    {/if}
-                    {if $images}
-                        <datalist>
-                            {foreach $images as $image}
-                                {if $image}
-                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                            data-id="{$image->imageid}"
-                                            type="image">
-                                    </option>
-                                {/if}
+                            {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
+                            {foreach $childrens as $child}
+                                {set $images[] = $child->preview->order(['orderby'])->limit(1)->get()}
                             {/foreach}
-                            {if $videos}
-                                {foreach $videos as $video}
-                                    <option value="{$video->video}"
-                                            data-thumb=""
-                                            data-id="{$video->id}"
-                                            type="video">
+                        {else}
+                            {set $images = $model->images->order(['orderby'])->all()}
+                        {/if}
+                        {if $images}
+                            <noscript>
+                                {foreach $images as $image}
+                                    {if $image}
+                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="{$model->getFrontendName()|escape}"/>
+                                    {/if}
+                                {/foreach}
+                            </noscript>
+                            <datalist>
+                                {foreach $images as $image}
+                                    {if $image}
+                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                                data-id="{$image->imageid}"
+                                                type="image">
+                                        </option>
+                                    {/if}
+                                {/foreach}
+                                {if $videos}
+                                    {foreach $videos as $video}
+                                        <option value="{$video->video}"
+                                                data-thumb=""
+                                                data-id="{$video->id}"
+                                                type="video">
 
                                     </option>
                                 {/foreach}
@@ -132,9 +139,12 @@
                         </div>
                     {/if}
 
+                    </div>
+                    <div class="pinterest-bookmark" id="pinterest-bookmark">
+                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_round_red_32.png" /></a>
+                    </div>
                 </div>
-            </div>
-            <div class="column small-12 ml-5 large-5 block__title_price">
+                <div class="column small-12 ml-5 large-5 block__title_price">
 
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">

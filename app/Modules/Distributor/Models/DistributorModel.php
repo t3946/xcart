@@ -9,6 +9,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
@@ -44,6 +45,9 @@ class DistributorModel extends Model
         return [
             'manufacturerid' => [
                 'class' => AutoField::className()
+            ],
+            'manufacturer' => [
+                'class' => CharField::class
             ],
             'shipping_rates' => [
                 'class' => HasManyField::className(),
@@ -111,8 +115,8 @@ class DistributorModel extends Model
         return 0;
     }
 
-    public function __toString(): string
+    public function __toString()
     {
-        return (string) $this->manufacturer;
+        return (string)$this->manufacturer;
     }
 }

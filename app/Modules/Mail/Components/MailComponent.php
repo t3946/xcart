@@ -31,6 +31,7 @@ class MailComponent
                 $this->subject = str_replace($key, $sRule, $this->subject);
             }
         }
+        $this->subject = stripslashes($this->subject);
     }
 
     private function eol2br($content)
@@ -68,7 +69,7 @@ class MailComponent
                 $this->body = str_replace($key, $sRule, $this->body);
             }
         }
-        $this->body = $this->eol2br($this->body);
+        $this->body = $this->eol2br(stripslashes($this->body));
     }
 
     /**

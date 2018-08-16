@@ -1,6 +1,12 @@
 <fieldset class="expanded-force" rel="5">
     <legend>Report options</legend>
     <ul class="ul-main">
+
+        {include "dashboard/parts/_order_date.tpl"}
+        {include "dashboard/parts/_order_sales_channel.tpl"}
+        {include "dashboard/parts/_order_storefront.tpl"}
+        {include "dashboard/parts/_order_distributor.tpl"}
+
         <li>
             <div class="row">
                 <div class="columns large-4">
@@ -131,4 +137,5 @@
             </div>
         </li>
     </ul>
+    <input type="submit" value="Generate HTML report" />
 </fieldset>

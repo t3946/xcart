@@ -44,6 +44,7 @@ class ReportsController extends PrototypeAdminController
                     'reports' => $reports,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                     'form_collapse' => $form_collapse,
+                    'report_mode' => true,
                 ])
         );
     }
@@ -60,6 +61,7 @@ class ReportsController extends PrototypeAdminController
                         'model'         => $model,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
                         'reports' => $reports,
+                        'report_mode' => true,
                     ]
                 )
             );
