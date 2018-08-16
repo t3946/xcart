@@ -14,6 +14,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     let $minicart = $('.minicart');
     let minicartTimeout, timerIsStarted = false;
 
+    // инициализировать корзину в верхней части окна
     let checkEnableMinicart = () => {
         // let state = storeApp.getState();
         let stateCart = storeCart.getState();
@@ -35,6 +36,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
     checkEnableMinicart();
 
+    // переинициализировать корзину в верхней части окна при изменении глобального состояния
     let unsubscribeCart = storeCart.subscribe(() => {
         checkEnableMinicart();
 
@@ -72,6 +74,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     // }
 
     $(document)
+        // добавить товар в корзину
         .on('click', '.cart_add .add', (e) => {
             e.preventDefault();
 
@@ -148,6 +151,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 });
             }
         })
+        // Изменение колличества товара в корзине в верхней части окна
         .on('update.cart.store', (e, data) => {
             let qNew = data.state.cart.quantity;
             let qPrev = data.prevState.cart.quantity;
@@ -165,6 +169,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 (new CountUp('desktop-cart-quantity', qPrev, qNew, 0, 1, {useEasing: true})).start();
             }
         })
+        // Раскрыть корзину в верхней части окна
         .on('mouseenter', '.minicart.enabled', (e) => {
 
             e.preventDefault();
@@ -183,6 +188,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
             }
 
         })
+        // Закрыть корзину в верхней части окна
         .on('mouseleave', '.minicart.enabled', (e) => {
 
             e.preventDefault();
@@ -200,6 +206,7 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 timerIsStarted = true;
             }
         })
+        // Выбор количества товара
         .on('click', '.cart_add .number-button', (event) => {
 
             event.preventDefault();
@@ -211,28 +218,35 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             if (selectQuantity && product) {
 
+                // Открытие всплывающего окна
                 $(selectQuantity).mmodal({
                     'windowClass': 'quantitySelector',
                     'setWidth': false
                 });
 
+                // Всплывающее окно
                 let window = $('.mmodal-content .select-quantity').get(0);
                 let number = parseInt(target.dataset.number, 10);
                 let max = parseInt(target.dataset.max, 10);
                 let min = parseInt(target.dataset.min, 10);
                 let step = parseInt(target.dataset.step, 10);
                 let quantity = product.dataset.quantity || min;
+
+                // Во всплывающем окне изменилось колличество товара
                 let changeQuantity = e => {
 
                     let quantity = parseInt(e.detail.quantity, 10);
                     product.dataset.quantity = quantity;
                     target.innerHTML = quantity;
+                    // Закрыть окно
                     $(document).data('mmodal').close();
                     document.removeEventListener('component.select_number_items.change', changeQuantity);
                 };
 
+                // Во всплывающем окне изменилось колличество товара
                 document.addEventListener('component.select_number_items.change', changeQuantity);
 
+                // Создание контента всплывающего окна
                 render(<SelectNumberItems number={number} quantity={quantity} max={max} min={min} step={step}/>,
                     window, window.firstChild);
             }

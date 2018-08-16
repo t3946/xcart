@@ -5,6 +5,10 @@ import {h, render, Component} from "preact";
 export default class SelectNumberItems extends Component {
 
 
+    /**
+     * Инициализация вплывающего окна для выбора колличества товара
+     * @param props
+     */
     constructor(props) {
         super(props);
 
@@ -19,6 +23,10 @@ export default class SelectNumberItems extends Component {
         this.initState(props.quantity || props.min);
     }
 
+    /**
+     * Установка начального состояния
+     * @param quantity
+     */
     initState(quantity) {
 
         this.state = {
@@ -28,6 +36,10 @@ export default class SelectNumberItems extends Component {
         };
     }
 
+    /**
+     * Установка нового состояния
+     * @param quantity
+     */
     newState(quantity) {
 
         if (quantity >= this.props.min && quantity <= this.props.max) {
@@ -39,6 +51,7 @@ export default class SelectNumberItems extends Component {
             let detail = {
                 quantity: quantity
             };
+            // Событие сообщает странице о том что во всплывающем окне изменилось количество товара
             let event = new CustomEvent('component.select_number_items.change', {detail: detail});
 
             this.setState({
@@ -51,6 +64,11 @@ export default class SelectNumberItems extends Component {
         }
     }
 
+    /**
+     * Вывод 1 кнопки с колличеством товара
+     * @param index
+     * @returns {*}
+     */
     renderNumberItem(index) {
         let id = 'quantity' + index;
         return (
@@ -64,6 +82,11 @@ export default class SelectNumberItems extends Component {
         );
     }
 
+    /**
+     * Вывод набора кнопок с заданными значениями для колличества товара
+     * @param number
+     * @returns {*}
+     */
     renderNumbersSelector(number) {
 
         let fields = [];
@@ -81,6 +104,10 @@ export default class SelectNumberItems extends Component {
         );
     }
 
+    /**
+     * Вывод на экран кнопкиб которая вызывает окно для ввода произвольного колличества товара
+     * @returns {*}
+     */
     renderButton() {
         if (this.props.max - this.maxButtonValue < this.props.step) {
             return;
@@ -96,6 +123,11 @@ export default class SelectNumberItems extends Component {
         );
     }
 
+    /**
+     * Вывод на экран окна с кнопками для выбора колличества товара
+     * @param number
+     * @returns {*}
+     */
     renderRadioGroup(number) {
         return (
             <div>
@@ -112,17 +144,26 @@ export default class SelectNumberItems extends Component {
         );
     }
 
+    /**
+     * Сменить окно с кнопками на окно для ввода произвольного колличества товара
+     */
     changeWindow() {
         let state = this.state;
         state.userValue = true;
         this.setState(state);
     }
 
+    /**
+     * Получить колличество товара, введенное пользователем
+     */
     getUserQuantity() {
         let userEntered = parseInt(this.inputEl.value, 10);
         this.newState(userEntered);
     }
 
+    /**
+     * Установить фокус на поле ввода произвольного колличества товара
+     */
     setFocus() {
         if (this.state.userValue) {
             this.inputEl.focus();
@@ -138,6 +179,10 @@ export default class SelectNumberItems extends Component {
         this.setFocus();
     }
 
+    /**
+     * Вывод на экран окна для ввода произвольного колличества товара
+     * @returns {*}
+     */
     renderInputText() {
 
         let value = (this.state.quantity && this.state.quantity > this.maxButtonValue) ? this.state.quantity : (this.maxButtonValue + this.props.step);
@@ -172,8 +217,10 @@ export default class SelectNumberItems extends Component {
     render(props, state) {
 
         if (state.userValue) {
+            // Ввод произвольного колличества товара
             return this.renderInputText();
         } else {
+            // Выбор колличества товара из списка
             return this.renderRadioGroup(this.props.number);
         }
 
