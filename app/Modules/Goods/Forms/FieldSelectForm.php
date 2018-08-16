@@ -41,7 +41,7 @@ class FieldSelectForm extends DecoratedProductForm
      */
     protected function createPlaceholder(): string
     {
-        return 'Choose a ' . lcfirst($this->title);
+        return 'Choose a ' . $this->title;
     }
 
     /**

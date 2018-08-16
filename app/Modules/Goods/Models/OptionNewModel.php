@@ -29,6 +29,11 @@ class OptionNewModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => OptionVariantModel::class,
                 'link' => ['id' => 'option_id'],
+            ],
+            'product_options' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductOptionModel::class,
+                'link' => ['id' => 'option_id'],
             ]
         ];
     }
