@@ -109,9 +109,8 @@ class CheckoutController extends FrontendController
 
                             $group->save();
 
-                            if (!$gis_created) {
-                                OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
-                            }
+                            OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+
                             /** @var CartItem $item */
                             foreach ($cart_group['items'] as $item)
                             {
@@ -282,11 +281,7 @@ class CheckoutController extends FrontendController
                 foreach ($cart_groups as $g => $cart_group)
                 {
                     /** @var OrderGroupModel $group */
-                    [$group, $is_created] = OrderGroupModel::objects()->getOrCreate(['manufacturerid' => $g, 'orderid' => $order->orderid]);
-
-                    if (!$is_created) {
-                        OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
-                    }
+                    [$group, $is_created] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
 
                     $group->setAttributes(['shippingid' => null, 'shipping' => '']);
 
@@ -319,6 +314,8 @@ class CheckoutController extends FrontendController
                     $group->total_net += $charge;
 
                     $group->save();
+
+                    OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
 
                     /** @var CartItem $item */
                     foreach ($cart_group['items'] as $item)
