@@ -19,7 +19,7 @@
      itemprop="itemListElement">
 
         <div class="image_container container">
-            <a href="{$item->getAbsoluteUrl()}" title="{$item.product}" class="link">
+            <a href="{$item->getAbsoluteUrl()}" title="{$item->getFrontendName()|escape}" class="link">
 
 
                 {if $item->isGroupRoot()}
