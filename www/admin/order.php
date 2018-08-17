@@ -71,13 +71,8 @@ $smarty->assign("po_issued_to_arr", $po_issued_to_arr);
 if ($orderid && is_numeric($orderid)) {
     $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
 }
-if (!$order_model || in_array($order_model->cb_status, [
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
-        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-    ], true)) {
-    if (!in_array($login, ['elenak', 'michaelch'])) {
-        Xcart::app()->request->redirect('/admin/');
-    }
+if (!$order_model) {
+   Xcart::app()->request->redirect('/admin/');
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == "unlock_order")

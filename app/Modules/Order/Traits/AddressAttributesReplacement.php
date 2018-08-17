@@ -61,8 +61,15 @@ trait AddressAttributesReplacement
         $data = parent::getAttributes();
 
         if ($data[$this->replacement . 'country']) {
+
+            $filter = ['name' => $data[$this->replacement . 'country']];
+
+            if (array_key_exists(strtoupper($data[$this->replacement . 'country']), CountryModel::$codes)) {
+                $filter = ['code' => CountryModel::$codes[strtoupper($data[$this->replacement . 'country'])]];
+            }
+
             /** @var CountryModel $cModel */
-            if ($cModel =  CountryModel::objects()->get(['name' => $data[$this->replacement . 'country']])) {
+            if ($cModel =  CountryModel::objects()->get($filter)) {
                 $data[$this->replacement . 'country'] = $cModel->code;
             }
         }
