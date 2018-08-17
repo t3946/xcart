@@ -2,7 +2,10 @@
   .cart_add {
     width: 100%;
     display: flex;
-    margin-top: 1rem;
+
+    &.add-product {
+      margin-top: 1rem;
+    }
 
     @include breakpoint(ml) {
       max-width: rem-calc(380);
