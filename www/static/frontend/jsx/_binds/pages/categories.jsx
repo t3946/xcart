@@ -4,6 +4,9 @@ import documentReady from "../../utils/documentReady";
 (function () {
     documentReady(() => {
 
+        // высота меню
+        const MENU_HEIGHT = 50;
+
         let buttons = $('.all-departments-menu-container').css('overflow', 'hidden');
         let sections = $('.sections');
         let container = buttons.parent().css('height', 'auto');
@@ -21,7 +24,7 @@ import documentReady from "../../utils/documentReady";
         }
 
         function scrollToSection(sectionId) {
-            $('html,body').stop().animate({scrollTop: $(sectionId).offset().top}, scrollDuration);
+            $('html,body').stop().animate({scrollTop: $(sectionId).offset().top - MENU_HEIGHT}, scrollDuration);
         }
 
         container.css({
