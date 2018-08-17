@@ -337,7 +337,7 @@ class OrderHelper
     public static function OrderStepsReset($cart_number): void
     {
         if ($order = OrderModel::objects()->get(['cart_number' => $cart_number])) {
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2;
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1;
             $order->save();
         }
     }

@@ -276,64 +276,41 @@ class CheckoutController extends FrontendController
 
                 $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
 
-                foreach ($cart_groups as $g => $cart_group)
-                {
+                foreach ($cart_groups as $g => $cart_group) {
                     /** @var OrderGroupModel $group */
-                    [$group, $is_created] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+                    if ($group = OrderGroupModel::objects()->get(['manufacturerid' => $g, 'orderid' => $order->orderid])) {
 
-                    $group->setAttributes(['shippingid' => null, 'shipping' => '']);
+                        $group->setAttributes(['shippingid' => null, 'shipping' => '']);
 
-                    /** @var ShippingRateModel $rate */
-                    if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
-                        $charge = 0;
+                        /** @var ShippingRateModel $rate */
+                        if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
+                            $charge = 0;
 
-                        /** @var ShippingRateModel[] $shipping_rates */
-                        if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
-                            $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
-                            $group->setAttributes([
-                                'shippingid' => $shipping_rates[$rate->rateid]->shippingid,
-                                'shipping' => $shipping_rates[$rate->rateid]->shipping->getFrontendName(),
-                            ]);
+                            /** @var ShippingRateModel[] $shipping_rates */
+                            if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
+                                $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
+                                $group->setAttributes([
+                                    'shippingid' => $shipping_rates[$rate->rateid]->shippingid,
+                                    'shipping' => $shipping_rates[$rate->rateid]->shipping->getFrontendName(),
+                                ]);
+                            }
                         }
-                    }
 
-                    $group->setAttributes([
-                        'shipping_gross' => $charge,
-                        'shipping_net' => $charge,
-                        'total_gross' => $cart_group['subtotal'],
-                        'total_net' => $cart_group['subtotal'],
-                        'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
-                    ]);
-
-                    $order->subtotal += $group->total_gross;
-                    $order->shipping_cost += $charge;
-
-                    $group->total_gross += $charge;
-                    $group->total_net += $charge;
-
-                    $group->save();
-
-                    OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
-
-                    /** @var CartItem $item */
-                    foreach ($cart_group['items'] as $item)
-                    {
-                        /** @var ProductModel $product */
-                        $product = $item->getObject();
-                        $detail = new OrderDetailModel([
-                            'orderid' => $group->orderid,
-                            'productid' => $product->productid,
-                            'order_group_id' => $group->order_group_id,
-                            'price' => $product->getPrice($item->getQuantity()),
-                            'amount' => $item->getQuantity(),
-                            'productcode' => $product->productcode,
-                            'product' => $product->getFrontendName(),
-                            'provider' => $product->provider,
-                            'original_provider' => $product->original_provider,
-                            'item_cost_to_us' => $product->cost_to_us,
-                            'product_options' => $item->data ?? null
+                        $group->setAttributes([
+                            'shipping_gross' => $charge,
+                            'shipping_net' => $charge,
+                            'total_gross' => $cart_group['subtotal'],
+                            'total_net' => $cart_group['subtotal'],
+                            'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                         ]);
-                        $detail->save();
+
+                        $order->subtotal += $group->total_gross;
+                        $order->shipping_cost += $charge;
+
+                        $group->total_gross += $charge;
+                        $group->total_net += $charge;
+
+                        $group->save();
                     }
                 }
 
