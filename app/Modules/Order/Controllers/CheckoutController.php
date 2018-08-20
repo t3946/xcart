@@ -87,6 +87,8 @@ class CheckoutController extends FrontendController
 
                 [$order, $is_created] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
 
+                $order->subtotal = 0;
+
                 $order->setAttributes(array_merge($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
 
                 if ($order->save()) {
@@ -103,7 +105,11 @@ class CheckoutController extends FrontendController
                                 'shippingid' => null,
                                 'shipping' => '',
                                 'cb_status' => $order->cb_status,
+                                'total_gross' => $cart_group['subtotal'],
+                                'total_net' => $cart_group['subtotal'],
                             ]);
+                            $order->subtotal += $group->total_gross;
+                            $order->total = $order->subtotal;
 
                             $group->save();
 
@@ -133,6 +139,8 @@ class CheckoutController extends FrontendController
                     } else {
                         $order->groups->delete();
                     }
+
+                    $order->save();
 
                     if ($is_created) {
                         $app->event->trigger('order:created', ['model' => $order]);
