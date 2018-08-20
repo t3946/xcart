@@ -9,7 +9,7 @@
 
         <ol class="breadcrumb-list no-bullet slidee" itemscope itemtype="http://schema.org/BreadcrumbList" itemprop="breadcrumb">
             <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
+                <a itemscope itemtype="http://schema.org/Thing" itemprop="item" id="{$site->getAbsoluteUrl()}" href="/">
                 <span itemprop="name">
                     {$.getSiteConfig->company_name->value}
                 </span>
@@ -26,7 +26,7 @@
                         </span>
                         </a>
                     {else}
-                        <span itemscope itemtype="http://schema.org/Thing" itemprop="item">
+                        <span itemscope itemtype="http://schema.org/Thing" itemprop="item" id="{$item.url}">
                         <span itemprop="name">
                             {$item.name}
                         </span>

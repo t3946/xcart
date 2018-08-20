@@ -534,10 +534,10 @@ class ProductModel extends Model implements ICartItem
         if ($this->isGroupChild()) {
             /** @var static $parent */
             $parent = $this->parent;
-            $bread->add($parent->getFrontendName(), $parent->getAbsoluteUrl());
+            $bread->add($parent->getFrontendName(), 'https:'.$parent->getAbsoluteUrl(true));
         }
 
-        $bread->add($this->getFrontendName(), $this->getAbsoluteUrl());
+        $bread->add($this->getFrontendName(), 'https:'.$this->getAbsoluteUrl(true));
 
         return $bread;
     }
