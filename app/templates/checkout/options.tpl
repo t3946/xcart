@@ -192,7 +192,7 @@
             <div class="row">
                 <div class="columns large-4 show-for-large"></div>
                 <div id="billing-address" class="columns large-8 billing_same_shipping">
-                    {set $billing_diff = $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
+                    {set $billing_diff = $.app->request->post->get('billing_same') === '0' || $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
                     <div class="row">
                         <div class="columns small-12">
                             <h2>{t 'Is Billing Address the same as Shipping Address?' dict='order'}</h2>
