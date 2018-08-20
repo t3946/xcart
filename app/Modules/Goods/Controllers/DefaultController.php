@@ -2,7 +2,9 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Forms\NotifyStockForm;
 use Modules\Goods\Forms\ProductQuestionForm;
+use Modules\Goods\Helpers\CreateProductPageFormHelper;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\TabDataHelper;
@@ -79,6 +81,7 @@ class DefaultController extends FrontendController
      */
     private function view_internal($model = null): void
     {
+
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -88,7 +91,10 @@ class DefaultController extends FrontendController
 
         if (!$model->isForSale()) {
             if ($mv_category = $model->getMainCategory()) {
-                if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter(['avail' => 'Y', 'product_count__gt' => 0])->limit(1)->get()) {
+                if ($mv_category = $mv_category->getObjects()->ancestors(true)->filter([
+                    'avail' => 'Y',
+                    'product_count__gt' => 0
+                ])->limit(1)->get()) {
                     Xcart::app()->request->redirect($mv_category->getAbsoluteUrl());
                 }
             }
@@ -109,8 +115,11 @@ class DefaultController extends FrontendController
             'site' => $site
         ]);
 
+        $productPageForm = new CreateProductPageFormHelper($model->getOptions());
+
         $params = [
             'model' => $model,
+            'form' => $productPageForm->getForm(),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
             'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
             'category' => $category,
@@ -159,7 +168,9 @@ class DefaultController extends FrontendController
             }
         }
 
-
+        if ($model->isOutOfStock()){
+            $params['notify_form'] = new NotifyStockForm();
+        }
 
         if ($model->isGroupChild()) {
             if ($parent = $model->parent) {

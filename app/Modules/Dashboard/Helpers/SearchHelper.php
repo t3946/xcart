@@ -6,6 +6,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
@@ -31,7 +32,7 @@ class SearchHelper
             $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
             $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
             $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
-            $domains          = SiteModel::objects()->all();
+            $domains          = SiteModel::objects()->order(['domain'])->all();
 
             $order_statuses = [];
             foreach ($raw_statuses as $status) {
@@ -55,6 +56,7 @@ class SearchHelper
                 'attention_tags'       => $attention_tags,
                 'shipping_methods'     => $shipping_methods,
                 'payment_methods'      => $payment_methods,
+                'distributors'         => DistributorModel::objects()->order(['manufacturer'])->valuesList(['manufacturerid', 'manufacturer']),
                 'po_statuses'          => POPipeline::getPOStatuses(),
                 'features'             => OrderSearchStore::getFeatures(),
                 'sources'              => OrderSearchStore::getSources(),

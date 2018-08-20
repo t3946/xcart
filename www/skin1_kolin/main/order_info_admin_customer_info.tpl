@@ -108,7 +108,9 @@
   <td nowrap="nowrap"><b>{$lng.lbl_first_name}:</b></td>
   <td width="100%" nowrap="nowrap">{if !$static}<input type="text" name="customer_info[firstname]" value="{$customer.firstname}" style="width: 55%; {if $order.po_details && $customer.firstname|lower eq 'unknown'}background-color: #F4CCCC;{/if}" />{else}{$customer.firstname}{/if}
 &nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a>
-&nbsp;<a target="_blank" href="http://www.spokeo.com/search?q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Spokeo FN</a>
+&nbsp;{if in_array($order.fraud_status, array('E','R'))}
+    <a target="_blank" href="http://www.spokeo.com/search?q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Spokeo FN</a>
+ {/if}
   </td>
 </tr>
 {/if}
@@ -143,8 +145,10 @@
           {/if}
           <br>
           <a target="_blank" href="https://www.google.com/#q={$google_phone}" style="color: #1F08F8;">Google #</a>
+          {if in_array($order.fraud_status, array('E', 'R'))}
           &shy;
           <a target="_blank" href="http://www.spokeo.com/search?q={$google_phone}" style="color: #1F08F8;">Spokeo #</a>
+          {/if}
       </td>
     </tr>
 
@@ -168,7 +172,9 @@
   <td width="100%" nowrap="nowrap">
   {if !$static}<input type="text" name="customer_info[email]" value="{$customer.email}" style="width: 55%; {if $order.po_details && $customer.email|lower eq 'unknown@unknown.com'}background-color: #F4CCCC;{/if}" />{else}{$customer.email}{/if}
 &nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google @</a>
-&nbsp;<a target="_blank" href="http://www.spokeo.com/email-search/search?e={$customer.email}" style="color: #1F08F8;">Spokeo @</a>
+ {if in_array($order.fraud_status, array('E', 'R'))}
+&nbsp;  <a target="_blank" href="http://www.spokeo.com/email-search/search?e={$customer.email}" style="color: #1F08F8;">Spokeo @</a>
+ {/if}
 &nbsp;<a target="_blank" href="{$userinfo_site}" style="color: #1F08F8;">WS</a>
  </td>
 </tr>
@@ -397,9 +403,18 @@
 <br />
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 <tr>
-  <td width="47%" height="25"><b>{$lng.lbl_shipping_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;<a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_shipping_address}" style="color: #1F08F8;">Spokeo this address</a></td>
+  <td width="47%" height="25"><b>{$lng.lbl_shipping_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
+      {if in_array($order.fraud_status, array('E', 'R'))}
+      <a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_shipping_address}" style="color: #1F08F8;">Spokeo this address</a>
+      {/if}
+  </td>
+
   <td width="5%">&nbsp;</td>
-  <td width="47%" height="25"><b>{$lng.lbl_billing_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_billing_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;<a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_billing_address}" style="color: #1F08F8;">Spokeo this address</a></td>
+  <td width="47%" height="25"><b>{$lng.lbl_billing_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_billing_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
+      {if in_array($order.fraud_status, array('E', 'R'))}
+        <a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_billing_address}" style="color: #1F08F8;">Spokeo this address</a>
+      {/if}
+  </td>
 </tr>
 <tr>
   <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
@@ -619,9 +634,13 @@
 
 {if !$static}
 
-{*
-<input type="submit" value="{$lng.lbl_apply_changes|escape}" {if ($order.amazonorderid ne "" && $order.amazon_fulfillment_channel ne "AFN") || $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
-*}
+{if !in_array($order.fraud_status, array('E', 'R'))}
+    <div style="color:red;">
+            Links to Spokeo can be seen ONLY for <b>Need an expert</b> and <b>Under review</b> Fraud check status.
+    </div>
+    <br />
+{/if}
+
 <input type="submit" value="{$lng.lbl_apply_changes|escape}" {if $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
 {if $current_membership_flag ne 'FS'}
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -636,10 +655,3 @@
 *}
 
 </form>
-
-{*<img src="/skin1_kolin/images/spacer_black.gif" height="2" width="100%" >*}
-
-{*<form action="{$identity_check_url}" target="_blank">*}
-    {*<input type="hidden" name="order_id" value="{$oOrder->orderid}">*}
-    {*<input type="submit" value="Click here for identity check">*}
-{*</form>*}

@@ -6,7 +6,7 @@
         <div class="top-buttons-block left">
             <a href="{$admin->getCreateUrl()}" class="button round upper pad">
                 <span class="text">
-                    Создать
+                    Add
                 </span>
                 <i class="icon-plus"></i>
             </a>
@@ -104,11 +104,13 @@
                 </tbody>
             </table>
             <div class="list-footer clearfix">
-                <div class="list-footer-block v-align right total">
-                    <div>
-                        Всего записей: {$pagination->getTotal()}
+                {if $pagination}
+                    <div class="list-footer-block v-align right total">
+                        <div>
+                            Всего записей: {$pagination->getTotal()}
+                        </div>
                     </div>
-                </div>
+                {/if}
 
                 <div class="list-footer-block v-align left group">
                     <div>
@@ -156,9 +158,11 @@
                 </div>
             </div>
 
-            <div class="pagination-block">
-                {raw $pagination->render($admin->listPaginationTemplate)}
-            </div>
+            {if $pagination}
+                <div class="pagination-block">
+                    {raw $pagination->render($admin->listPaginationTemplate)}
+                </div>
+            {/if}
         </div>
     </div>
 </div>

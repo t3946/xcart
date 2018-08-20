@@ -85,30 +85,37 @@
                     {if $model->isGroupRoot()}
                         {set $images = []}
 
-                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
-                        {foreach $childrens as $child}
-                            {set $images[] = $child->preview->order(['orderby'])->limit(1)->get()}
-                        {/foreach}
-                    {else}
-                        {set $images = $model->images->order(['orderby'])->all()}
-                    {/if}
-                    {if $images}
-                        <datalist>
-                            {foreach $images as $image}
-                                {if $image}
-                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                            data-id="{$image->imageid}"
-                                            type="image">
-                                    </option>
-                                {/if}
+                            {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
+                            {foreach $childrens as $child}
+                                {set $images[] = $child->preview->order(['orderby'])->limit(1)->get()}
                             {/foreach}
-                            {if $videos}
-                                {foreach $videos as $video}
-                                    <option value="{$video->video}"
-                                            data-thumb=""
-                                            data-id="{$video->id}"
-                                            type="video">
+                        {else}
+                            {set $images = $model->images->order(['orderby'])->all()}
+                        {/if}
+                        {if $images}
+                            <noscript>
+                                {foreach $images as $image}
+                                    {if $image}
+                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="{$model->getFrontendName()|escape}"/>
+                                    {/if}
+                                {/foreach}
+                            </noscript>
+                            <datalist>
+                                {foreach $images as $image}
+                                    {if $image}
+                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                                data-id="{$image->imageid}"
+                                                type="image">
+                                        </option>
+                                    {/if}
+                                {/foreach}
+                                {if $videos}
+                                    {foreach $videos as $video}
+                                        <option value="{$video->video}"
+                                                data-thumb=""
+                                                data-id="{$video->id}"
+                                                type="video">
 
                                     </option>
                                 {/foreach}
@@ -132,9 +139,12 @@
                         </div>
                     {/if}
 
+                    </div>
+                    <div class="pinterest-bookmark" id="pinterest-bookmark">
+                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_round_red_32.png" /></a>
+                    </div>
                 </div>
-            </div>
-            <div class="column small-12 ml-5 large-5 block__title_price">
+                <div class="column small-12 ml-5 large-5 block__title_price">
 
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">
@@ -151,33 +161,33 @@
                     </div>
                 {/if}
 
-                {if !$model->isGroupRoot()}
-                    <div class="prices">
-                        {include "product/price/_table_prices.tpl" model=$model}
+                    {if !$model->isGroupRoot()}
+                        <div class="prices">
+                            {include "product/price/_table_prices.tpl" model=$model form=$form}
 
-                        {if $model->isGroupChild()}
-                            {set $parent = $model->parent}
-                            {if $parent}
-                                <div class="link__group_root">
-                                    <a href="{$parent->getAbsoluteUrl()}">
-                                        Full {$parent->getFrontendName()} product line
-                                    </a>
-                                </div>
+                            {if $model->isGroupChild()}
+                                {set $parent = $model->parent}
+                                {if $parent}
+                                    <div class="link__group_root">
+                                        <a href="{$parent->getAbsoluteUrl()}">
+                                            Full {$parent->getFrontendName()} product line
+                                        </a>
+                                    </div>
+                                {/if}
                             {/if}
-                        {/if}
-                    </div>
-                {else}
-                    <div class="full_line__group_root buttons">
-                        {ignore}
-                            <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"
-                               class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
-                            <div class="info">Click here to see full product line</div>
-                        {/ignore}
-                    </div>
-                {/if}
+                        </div>
+                    {else}
+                        <div class="full_line__group_root buttons">
+                            {ignore}
+                                <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"
+                                   class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
+                                <div class="info">Click here to see full product line</div>
+                            {/ignore}
+                        </div>
+                    {/if}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
 
     {include 'product/_tabs.tpl' model=$model}

@@ -1,0 +1,36 @@
+@import "./form/default_form";
+@import "./form/product_form";
+@import "./form/selector_options_items";
+
+$field-width-small: 100%;
+$field-width-medium: 20rem;
+$field-width-large: rem-calc(295);
+
+$field-height-medium: rem-calc(40);
+$field-height-large: rem-calc(24);
+
+form {
+  label {
+    .required {
+      color: #ff2626;
+    }
+
+    &.required {
+      &:after {
+        color: #ff2626;
+        content: '*';
+        //padding-left: .5em;
+
+        @include breakpoint(large) {
+          position: absolute;
+          right: rem-calc(-10);
+          top: 0;
+        }
+      }
+    }
+  }
+}
+
+@include getDefaultFormStyles();
+@include getProductFormStyles();
+@include getSelectorOptionsItemsStyles();

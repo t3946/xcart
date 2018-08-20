@@ -129,9 +129,7 @@
     {get_assets:raw type='js' position='head'}
 
     {block 'css_preload'}
-        <link rel="stylesheet" href="/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" onload="var url = parseUrl(this.href);
-              window.app.assets.css[url.document].loaded = true;
-              document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));">
+        {insert '_parts/_css_preload.tpl'}
     {/block}
 
 </head>
@@ -208,25 +206,9 @@
             createJsElement("/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
 
             setTimeout(function() {
-
-                window.LHCChatOptions = {
-                    opt: {
-                        'widget_height': 540,
-                        'widget_width': 300,
-                        'popup_height': 520,
-                        'popup_width': 500,
-                        'domain': '{$site->domain}'
-                    }
-                };
-
-                var po = document.createElement('script');
-                po.async = true;
-                po.defer = true;
-                var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://') + 1)) : '';
-                var location = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
-                po.src = '//livechat.s3stores.com/index.php/chat/getstatus/(click)/internal/(position)/bottom_left/(ma)/br/(check_operator_messages)/true/(hide_offline)/true/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/2?r=' + referrer + '&l=' + location;
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(po, s);
+                {ignore}
+                (function(){ var widget_id = 'jamrvwO7Hx';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+                {/ignore}
             }, 10000);
 
             setTimeout(function() {
@@ -236,55 +218,65 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 
                 {if $config.cidev_yandex_code_number}
-                (function (d, w, c) {
-                    (w[c] = w[c] || []).push(function() {
-                        try {
-                            w.yaCounter49453150 = new Ya.Metrika2({
-                                id:{$config.cidev_yandex_code_number},
-                                clickmap:true,
-                                trackLinks:true,
-                                accurateTrackBounce:true,
-                                webvisor:true,
-                                trackHash:true
-                            });
-                        } catch(e) { }
-                    });
+                    (function (d, w, c) {
+                        (w[c] = w[c] || []).push(function() {
+                            try {
+                                w.yaCounter49453150 = new Ya.Metrika2({
+                                    id:{$config.cidev_yandex_code_number},
+                                    clickmap:true,
+                                    trackLinks:true,
+                                    accurateTrackBounce:true,
+                                    webvisor:true,
+                                    trackHash:true
+                                });
+                            } catch(e) { }
+                        });
 
-                    var n = d.getElementsByTagName("script")[0],
-                        s = d.createElement("script"),
-                        f = function () { n.parentNode.insertBefore(s, n); };
-                    s.type = "text/javascript";
-                    s.async = true;
-                    s.src = "https://mc.yandex.ru/metrika/tag.js";
+                        var n = d.getElementsByTagName("script")[0],
+                            s = d.createElement("script"),
+                            f = function () { n.parentNode.insertBefore(s, n); };
+                        s.type = "text/javascript";
+                        s.async = true;
+                        s.src = "https://mc.yandex.ru/metrika/tag.js";
 
-                    if (w.opera == "[object Opera]") {
-                        d.addEventListener("DOMContentLoaded", f, false);
-                    } else { f(); }
-                })(document, window, "yandex_metrika_callbacks2");
+                        if (w.opera == "[object Opera]") {
+                            d.addEventListener("DOMContentLoaded", f, false);
+                        } else { f(); }
+                    })(document, window, "yandex_metrika_callbacks2");
+                    {/if}
+
+                    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
+                    {if $google_review && 1!=1}
+                    window.___gcfg = {
+                        lang: 'en_US'
+                    };
+                    var g_id = '{$google_review}';
+                    {ignore}
+                    window.renderBadge = function() {
+                        var ratingBadgeContainer = document.getElementById("g_review");
+                        window.gapi.load('ratingbadge', function() {
+                            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
+                        });
+                    };
+                    {/ignore}
+
+                    var gr = document.createElement('script');
+                    gr.type = 'text/javascript';
+                    gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
+                    var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
                 {/if}
 
-                {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-                {if $google_review && 1!=1}
-                window.___gcfg = {
-                    lang: 'en_US'
-                };
-                var g_id = '{$google_review}';
-                {ignore}
-                window.renderBadge = function() {
-                    var ratingBadgeContainer = document.getElementById("g_review");
-                    window.gapi.load('ratingbadge', function() {
-                        window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
-                    });
-                };
-                {/ignore}
+                po = document.createElement('script');
+                po.type = 'text/javascript';
+                po.src = '//assets.pinterest.com/js/pinit.js';
+                s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(po, s);
+                var pints = document.getElementById('pinterest-bookmark');
+                if (pints) {
+                    pints.style.display='block';
+                }
 
-                var gr = document.createElement('script');
-                gr.type = 'text/javascript';
-                gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
-                var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
-                {/if}
-
-            },6000);
+            },5100);
         });
 
     })();
@@ -295,5 +287,6 @@
 {render_flash:raw template='base/_flash.tpl'}
 
 <div id="containerUpDown" class="show-for-large"></div>
+
 </body>
 </html>

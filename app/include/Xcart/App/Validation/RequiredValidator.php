@@ -17,7 +17,7 @@ class RequiredValidator extends Validator
 
     public function __construct($message = null)
     {
-        if ($message !== null) {
+        if (!empty($message)) {
             $this->message = $message;
         }
     }
@@ -31,6 +31,15 @@ class RequiredValidator extends Validator
         }
 
         return $this->hasErrors() === false;
+    }
+
+    public function jsValidateParams()
+    {
+        return [
+            'presence' => [
+                'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
+            ],
+        ];
     }
 }
 

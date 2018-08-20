@@ -13,18 +13,29 @@ use Xcart\App\Orm\Model;
  * Class PageAdmin
  * @package Modules\Pages
  */
-class PageAdmin extends NestedAdmin
+class PageAdmin extends Admin
 {
-    public $linkColumn = 'name';
+//    public $linkColumn = 'name';
 
-//    public function getListColumns()
-//    {
-//        return ['name'];
-//    }
+    public function getListColumns()
+    {
+        return [];
+    }
 
     public function getSearchColumns()
     {
         return ['name'];
+    }
+
+    public function getAvailableListColumns()
+    {
+        return [
+            'id' => [
+                'title' => 'ID',
+                'template' => $this->columnDefaultTemplate,
+                'order' => 'id'
+            ],
+        ];
     }
 
     public function getForm()

@@ -1,0 +1,126 @@
+.mmodal-container {
+  .mmodal-content {
+
+    .title-section {
+      color: #0a0a0a;
+      text-transform: capitalize;
+    }
+
+    .title_container {
+      text-align: left;
+      color: #0a0a0a;
+
+      @include breakpoint(ml down){
+        background-color: #f1f1f1;
+      }
+    }
+
+    .mmodal_notify_stock {
+
+      border-bottom: 2px solid #e8e8e8;
+      padding-bottom: rem-calc(40);
+
+      button {
+        text-transform: uppercase;
+        height: rem-calc(40);
+        font-weight: 700;
+        font-size: rem-calc(18);
+      }
+
+      .h1 {
+        text-align: center;
+        font-weight: 700;
+      }
+
+      p {
+        @include breakpoint(small) {
+          font-size: rem-calc(14);
+        }
+
+        @include breakpoint(medium) {
+          font-size: rem-calc(16);
+        }
+
+        @include breakpoint(large) {
+          font-size: rem-calc(14);
+        }
+      }
+
+      span.notice-notify-me {
+        color: #929292;
+
+        @include breakpoint(medium){
+          color: #0a0a0a;
+        }
+
+      }
+
+      form {
+        @include breakpoint(large){
+          
+          .field-row .field-title{
+            width: 30%;
+          }
+
+          div.field {
+            width: 70%;
+          }
+        }
+      }
+
+    }
+
+
+  }
+
+  &.notifySelector{
+
+    width: rem-calc(300);
+    p {
+      font-size: rem-calc(12);
+    }
+
+    div.field-title {
+      text-align: left;
+    }
+
+    @include breakpoint(sm) {
+      width: rem-calc(350);
+    }
+
+    @include breakpoint(medium) {
+      width: rem-calc(600);
+
+      p {
+        font-size: rem-calc(16);
+      }
+    }
+
+    @include breakpoint(large) {
+      width: rem-calc(750);
+
+      p {
+        font-size: rem-calc(14);
+      }
+    }
+
+  }
+
+}
+
+.notify-me-stock {
+
+  @include breakpoint(sm down) {
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    border-bottom: 1px dashed #075b94
+  }
+
+  span {
+    font-size: rem-calc(16);
+  }
+
+}

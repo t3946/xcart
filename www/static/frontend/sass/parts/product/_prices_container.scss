@@ -1,0 +1,42 @@
+@mixin getPricesContainerStyle() {
+  .prices__container {
+
+    @include breakpoint(medium only) {
+      padding-left: rem-calc(24);
+      padding-right: rem-calc(24);
+    }
+    .price-section {
+      margin-bottom: rem-calc(22);
+    }
+
+    .price-info-block {
+      font-size: rem-calc(14);
+      line-height: rem-calc(33);
+      color: #505050;
+      white-space: nowrap;
+
+      @include breakpoint(medium) {
+        font-size: rem-calc(18);
+      }
+
+      .price {
+        padding: 0;
+      }
+
+      .orig-info-text {
+        text-decoration: line-through;
+      }
+
+      .price-value-text {
+        font-size: rem-calc(22);
+        font-weight: bold;
+        color: $black;
+
+        @include breakpoint(medium) {
+          font-size: rem-calc(30);
+          margin-bottom: rem-calc(14);
+        }
+      }
+    }
+  }
+}

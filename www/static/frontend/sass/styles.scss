@@ -12,6 +12,7 @@
 @import 'mixins/array_maps';
 @import 'mixins/menu';
 @import 'mixins/bem';
+@import 'mixins/global_mixins';
 
 
 //@import 'mixins/bootstrap_mixins';
@@ -31,10 +32,11 @@
 
 
 @import 'parts/header';
+@import 'parts/form';
 @import 'parts/footer';
 @import 'parts/up_down_buttons';
 
-@import 'parts/default_form';
+//@import 'parts/default_form';
 @import 'parts/icons';
 @import 'parts/fe_pager';
 @import 'parts/img_notavail';
@@ -56,6 +58,9 @@
 @import 'parts/autocomplete';
 @import 'parts/checkout_review_form';
 @import 'parts/ajax_calculate_shipping_form';
+@import 'parts/_notify_stock';
+
+
 
 @import 'pages/error';
 @import 'pages/page404';
@@ -75,3 +80,5 @@
 @import 'pages/order_review';
 @import 'pages/order_confirmation';
 @import 'pages/checkout_options_form';
+@import "pages/checkout_shipping";
+@import "pages/product_view_list";

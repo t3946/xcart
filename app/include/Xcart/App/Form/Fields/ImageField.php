@@ -16,6 +16,7 @@ class ImageField extends FileField
      * @var string
      */
     public $inputTemplate = 'forms/field/image/input.tpl';
+    public $fieldType = 'image';
 
     public function getSizeImage()
     {

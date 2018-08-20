@@ -202,74 +202,55 @@
 <br /><br />
 
 <div align="right">{include file="buttons/button.tpl" button_title="Customer Care dashboard" href="orders.php?page_name=dashboard" title="Customer Care dashboard"}</div>
-
-{if $last_order}
-<br /><br />
-
-{include file="main/subheader.tpl" title=$lng.lbl_last_order}
-
-<table cellpadding="3" cellspacing="1" width="100%">
-
-<tr>
-<td>&nbsp;&nbsp;</td>
-<td>
-<table cellpadding="3" cellspacing="1">
-
-<tr>
-<td class="FormButton">{$lng.lbl_order_id}:</td>
-<td>{$last_order.order_prefix}{$last_order.orderid}</td>
-</tr>
-
-<tr>
-<td class="FormButton">{$lng.lbl_order_date}:</td>
-<td>{$last_order.date|date_format:$config.Appearance.datetime_format}</td>
-</tr>
-
-<tr>
-<td class="FormButton">{$lng.lbl_order_status}:</td>
-<td>{include file="main/order_status.tpl" status=$last_order.cb_status mode="static"}</td>
-</tr>
-
-<tr>
-<td class="FormButton">{$lng.lbl_customer}:</td>
-<td>{$last_order.title} {$last_order.firstname} {$last_order.lastname}</td>
-</tr>
-
-<tr>
-<td class="FormButton" valign="top">{$lng.lbl_ordered}:</td>
-<td>
-{if $last_order.products}
-{section name=product loop=$last_order.products}
-<b>{$last_order.products[product].product|truncate:"30":"..."}</b>
-[{$lng.lbl_price}: {include file="currency.tpl" value=$last_order.products[product].price}, {$lng.lbl_quantity}: {$last_order.products[product].amount}]
-{if $last_order.products[product].product_options}
-<br />
-{$lng.lbl_options}: {$last_order.products[product].product_options|replace:"\n":"; "}
-{/if}
-<br />
-{/section}
-{/if}
-{if $last_order.giftcerts}
-{section name=gc loop=$last_order.giftcerts}
-<b>{$lng.lbl_gift_certificate} #{$last_order.giftcerts[gc].gcid}</b>
-[{$lng.lbl_price}: {include file="currency.tpl" value=$last_order.giftcerts[gc].amount}]
-<br />
-{/section}
-{/if}
-</td>
-</tr>
-
-</table>
-</td>
-</tr>
-
-</table>
-
-<br />
-
-<div align="right">{include file="buttons/button.tpl" button_title=$lng.lbl_order_details_label href="order.php?orderid=`$last_order.orderid`" title=$lng.lbl_order_details_label}</div>
-
-{/if}
+    {if $last_order_model}
+        <br/>
+        <br/>
+        {include file="main/subheader.tpl" title=$lng.lbl_last_order}
+        <table cellpadding="3" cellspacing="1" width="100%">
+            <tr>
+                <td>&nbsp;&nbsp;</td>
+                <td>
+                    <table cellpadding="3" cellspacing="1">
+                        <tr>
+                            <td class="FormButton">{$lng.lbl_order_id}:</td>
+                            <td>{$last_order_model->getOrderNumber()}</td>
+                        </tr>
+                        <tr>
+                            <td class="FormButton">{$lng.lbl_order_date}:</td>
+                            <td>{$last_order_model->date|date_format:$config.Appearance.datetime_format}</td>
+                        </tr>
+                        <tr>
+                            <td class="FormButton">{$lng.lbl_order_status}:</td>
+                            <td>{$last_order_model->cb_status_model}</td>
+                        </tr>
+                        <tr>
+                            <td class="FormButton">{$lng.lbl_customer}:</td>
+                            <td>{$last_order_model->title} {$last_order_model->firstname} {$last_order_model->lastname}</td>
+                        </tr>
+                        <tr>
+                            <td class="FormButton" valign="top">{$lng.lbl_ordered}:</td>
+                            <td>
+                                {foreach from=$last_order_model->detail_models item=detail}
+                                    <b>{$detail->product|truncate:"30":"..."}</b>
+                                    [{$lng.lbl_price}: {include file="currency.tpl" value=$detail->price}, {$lng.lbl_quantity}: {$detail->amount}]
+                                    {if $detail->product_options}
+                                        <br/>
+                                        {$lng.lbl_options}:
+                                        {foreach from=$detail->product_options item=option key=option_name}
+                                            {$option_name}: {$option};
+                                        {/foreach}
+                                    {/if}
+                                    <br/>
+                                {/foreach}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <div align="right">{include file="buttons/button.tpl" button_title=$lng.lbl_order_details_label href=$last_order_model->getAdminUrl() title=$lng.lbl_order_details_label}</div>
+    {/if}
 
 
 

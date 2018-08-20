@@ -1,7 +1,8 @@
 @import "product/tabs";
-@import "../parts/form/phone_ext";
+//@import "../parts/form/phone_ext";
 @import "../parts/form/button_def_styles";
 @import "../parts/product/questions";
+@import "product/options";
 //
 //@import "product/price_table";
 
@@ -13,7 +14,7 @@
 
     .send-question {
 
-      @include getPhoneExtStyle();
+     // @include getPhoneExtStyle();
       @include getButtonDefStyle();
     }
 
@@ -123,5 +124,12 @@
     .h2 {
       font-weight: 700;
     }
+  }
+
+  .pinterest-bookmark {
+    position: relative;
+    top: rem-calc(-64);
+    float: right;
+    display: none;
   }
 }

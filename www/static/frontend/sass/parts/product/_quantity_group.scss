@@ -1,0 +1,58 @@
+@mixin getQuantityGroupStyle() {
+  .quantity-group {
+    border: $default_qg_border;
+    word-spacing: 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    max-width: rem-calc(126);
+
+    .btn {
+      flex: 0 0 rem-calc(22);
+      color: black;
+      text-align: center;
+      background-color: #fff0ca;
+      height: $default_qg_height;
+      min-width: 1.4em;
+      line-height: $default_qg_lheight;
+      cursor: pointer;
+
+      @include breakpoint(large up) {
+        height: rem-calc(28);
+        line-height: rem-calc(27);
+      }
+
+      &.active {
+        background-color: #ffe296;
+      }
+
+      &.inc {
+        border-left: $default_qg_border;
+      }
+
+      &.dec {
+        border-right: $default_qg_border;
+      }
+    }
+
+    input {
+      flex: 10 0;
+      vertical-align: top;
+      border: none;
+      padding: 0;
+      outline: none;
+      text-align: center;
+      width: 3em;
+      max-width: 5em;
+      margin: 0;
+      min-width: 2em;
+
+      @include breakpoint(large up) {
+
+        height: rem-calc(28);
+        line-height: rem-calc(27);
+      }
+    }
+  }
+}

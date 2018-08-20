@@ -2,8 +2,8 @@
 
 namespace Xcart\App\Form\Fields;
 
+
 use Exception;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\ModelForm;
@@ -13,6 +13,7 @@ use Xcart\App\Traits\RenderTrait;
 use Xcart\App\Validation\Interfaces\IValidateField;
 use Xcart\App\Validation\RequiredValidator;
 use Xcart\App\Validation\Traits\ValidateField;
+use Xcart\App\Yii\CMap;
 
 /**
  * Class Field
@@ -21,6 +22,54 @@ use Xcart\App\Validation\Traits\ValidateField;
 abstract class Field implements IValidateField
 {
     use Accessors, Configurator, ValidateField, RenderTrait;
+
+
+    public $requiredMessage = '';
+    /**
+     * Input wrapper additional class
+     * @var string
+     */
+    public $className = '';
+    /**
+     * @var string
+     */
+    public $successClass = 'success';
+
+    /**
+     * @var string
+     */
+    public $fieldType = 'input_text';
+    /**
+     * @var bool
+     */
+    public $userClear = false;
+
+    /**
+     * @var string
+     */
+    public $showErrorsClass = 'show';
+    /**
+     * Field, that extends current field
+     * @var string
+     */
+    public $extend = '';
+    /**
+     * Field, that extend enother field
+     * @var bool
+     */
+    public $extends = false;
+
+    /**
+     * Enabled HTML5 validation
+     * @var bool
+     */
+    public $typeEnabled = true;
+
+    /**
+     * Params to generate client validation
+     * @var array
+     */
+    public $clientValidationParams = [];
 
     /**
      * @var bool Технические аттрибуты для inline моделей
@@ -130,10 +179,13 @@ abstract class Field implements IValidateField
      */
     private $_prefix;
 
+    /**
+     *
+     */
     public function init()
     {
-        if (!($this->getForm() instanceof ModelForm) && $this->required) {
-            $this->validators[] = new RequiredValidator();
+        if ($this->required) {
+            $this->validators[] = new RequiredValidator($this->requiredMessage);
         }
         foreach ($this->validators as $validator) {
             if (is_subclass_of($validator, $this->_validatorClass)) {
@@ -143,6 +195,23 @@ abstract class Field implements IValidateField
         }
     }
 
+    /**
+     * @return string
+     */
+    public function createClientValidationConfig()
+    {
+        $params = [];
+
+        foreach ($this->validators as $validator) {
+            $params = CMap::mergeArray($params, $validator->jsValidateParams());
+        }
+        $params = CMap::mergeArray($params, $this->clientValidationParams);
+        return !empty($params) ? json_encode($params) : '';
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         try {
@@ -252,18 +321,36 @@ abstract class Field implements IValidateField
         return array_replace($this->_attributes, $t);
     }
 
-    public function getCommonClasses()
+    public function getCommonClasses($defClasses = [])
     {
-        $classes = [];
+
+        $errors = [];
+
         if ($this->required) {
-            $classes[] = $this->requiredClass;
+            $errors[] = $this->requiredClass;
         }
 
         if ($this->hasErrors()) {
-            $classes[] = $this->invalidClass;
+            $errors[] = $this->invalidClass;
+        }
+
+        if(!empty($classes)){
+            $errors[] = $this->showErrorsClass;
+        }
+
+        $classes = array_merge([], $errors);
+        $classes = array_merge($classes, $defClasses);
+
+        if ($this->filledOutSuccessfully()){
+            $classes[] = $this->successClass;
         }
 
         return implode(' ', $classes);
+    }
+
+    public function filledOutSuccessfully()
+    {
+        return !empty($this->value) && !$this->hasErrors();
     }
 
     /**
@@ -278,12 +365,13 @@ abstract class Field implements IValidateField
     }
 
     /**
+     * @param array $classes
      * @return array
      */
-    public function getAttributesCommon()
+    public function getAttributesCommon($classes = [])
     {
         return [
-            'class' => $this->getCommonClasses()
+            'class' => $this->getCommonClasses($classes)
         ];
     }
 
@@ -294,9 +382,12 @@ abstract class Field implements IValidateField
         return $attributes;
     }
 
-    public function getAttributesErrors()
+    public function getAttributesErrors($hasErrors = false)
     {
-        $attributes = $this->getAttributesCommon();
+        if($this->hasErrors() || $hasErrors){
+            $classes = ['show'];
+        }
+        $attributes = $this->getAttributesCommon($classes);
         $attributes = $this->extendAttribute($attributes, 'class', $this->errorsClass);
         return $attributes;
     }
@@ -329,9 +420,9 @@ abstract class Field implements IValidateField
     /**
      * Builds HTML attributes of errors
      */
-    public function buildAttributesErrors()
+    public function buildAttributesErrors($hasErrors = false)
     {
-        $attributes = $this->getAttributesErrors();
+        $attributes = $this->getAttributesErrors($hasErrors);
         return $this->buildAttributes($attributes);
     }
 
@@ -402,7 +493,7 @@ abstract class Field implements IValidateField
 
     public function getType()
     {
-        return $this->type ?: 'text';
+        return ($this->typeEnabled && $this->type) ? $this->type : 'text';
     }
 
     /**
@@ -419,8 +510,9 @@ abstract class Field implements IValidateField
         return $this->getValue();
     }
 
-    public function renderInput()
+    public function renderInput( )
     {
+
         return $this->innerRender($this->inputTemplate, [
             'field' => $this,
 //            'html' => $this->getHtmlAttributes(),
@@ -429,16 +521,19 @@ abstract class Field implements IValidateField
             'value' => $this->getRenderValue(),
             'name' => $this->getHtmlName(),
             'type' => $this->getType(),
+            'extended' => $this->extend,
+            'extends' => $this->extends
         ]);
     }
 
-    public function renderErrors()
+    public function renderErrors($errors = null)
     {
         return $this->innerRender($this->errorsTemplate, [
             'field' => $this,
-            'html' => $this->buildAttributesErrors(),
+            'html' => $this->buildAttributesErrors(!empty($errors)),
             'id' => $this->getHtmlId(),
-            'errors' => $this->getErrors()
+            'errors' => !empty($errors) ? $errors : $this->getErrors()
+            //'errors' => $this->getErrors()
         ]);
     }
 
@@ -462,13 +557,19 @@ abstract class Field implements IValidateField
         ]);
     }
 
-    public function render()
+    public function hasHint(){
+        return !empty($this->hint);
+    }
+
+    public function render($fieldExtension = null)
     {
         return $this->innerRender($this->fieldTemplate, [
             'label' => $this->renderLabel(),
             'input' => $this->renderInput(),
             'errors' => $this->renderErrors(),
-            'hint' => $this->renderHint()
+            'hint' => $this->renderHint(),
+            'ext' => $fieldExtension,
+            'field' => $this
         ]);
     }
 

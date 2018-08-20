@@ -27,6 +27,7 @@ class DropDownField extends Field
      * @var string
      */
     public $inputTemplate = 'forms/field/dropdown/input.tpl';
+    public $fieldType = 'dropdown';
     /**
      * @var bool
      */
@@ -39,6 +40,7 @@ class DropDownField extends Field
      * @var array
      */
     public $disabled = [];
+    public $selected =[];
 
     public function getCommonData()
     {

@@ -16,8 +16,16 @@ class CountryValidator extends Validator
      */
     public function validate($value)
     {
-        if (empty($value) || !CountryModel::objects()->get(['name' => $value])) {
-            $this->addError(Translate::getInstance()->t('validation', 'Is not a valid country', []));
+        if(!empty($value)) {
+
+            $filter = ['name' => $value];
+            if (array_key_exists(strtoupper($value), CountryModel::$codes)) {
+                $filter = ['code' => CountryModel::$codes[strtoupper($value)]];
+            }
+
+            if (!CountryModel::objects()->get($filter)) {
+                $this->addError(Translate::getInstance()->t('validation', 'Is not a valid country', []));
+            }
         }
 
         return $this->hasErrors() === false;

@@ -28,8 +28,16 @@
                 </div>
 
                 <div class="links">
+                    {if $form->getBottomUrls()}
+                        {foreach $form->getBottomUrls() as $url}
+                            <a target="_blank" href="{$url['url']}">
+                                <i class="icon-watch_on_site"></i>
+                                <span class="text">{$url['anchor']}</span>
+                            </a>
+                        {/foreach}
+                    {/if}
                     {if $model->pk && $.php.method_exists($model, 'getAbsoluteUrl')}
-                        <a href="{$model->getAbsoluteUrl()}">
+                        <a target="_blank" href="{$model->getAbsoluteUrl()}">
                             <i class="icon-watch_on_site"></i>
                             <span class="text">
                                 {t 'Show on site'}

@@ -22,18 +22,7 @@
                 {if !$cartEmpty}
                 <div class="head">
                     <div class="nop"></div>
-
-                    <h1>{t 'Shopping Cart' dict='cart'}</h1>
-
-                    <div class="need-help">
-                        <div class="multiline">
-                            <span class="color--orange">
-                                Got a question ?
-                            </span>
-                            Call us 1-800-929-2431 and provide shopping cart reference
-                            <span class="color--black"> # {$.app->cart->getCartNumber()}</span>
-                        </div>
-                    </div>
+                    <h2 class="cart-number">{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
                 </div>
                 {/if}
             </div>
@@ -69,9 +58,9 @@
                             {t 'Extended'  dict='cart'}
                         </div>
 
-                        <div class="table-column remove">
-                            {t 'Remove'  dict='cart'}
-                        </div>
+                        {*<div class="table-column remove">*}
+                            {*{t 'Remove'  dict='cart'}*}
+                        {*</div>*}
                     </div>
                     <div class="table-body">
                         {foreach $items as $key=>$position}
@@ -103,17 +92,33 @@
                                         </div>
                                     </div>
 
-                                    {foreach $position->data as $name => $value}
-                                        <p>{$name}: {$value}</p>
-                                    {/foreach}
+                                    {if $position->data}
+                                        <div class="options">
+                                            {include '_parts/_options.tpl' options=$position->data}
+                                        </div>
+                                    {/if}
 
                                 </div>
+
+                                <div class="close-wide-screen show-for-large">
+                                    <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                        {include 'cart/_close_icon.tpl'}
+                                    </a>
+                                </div>
+
+
 
                                 <div class="table-column price show-for-large format_price">
                                     US$ <span class="price" var-price>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
+                                    <div class="close-wide-screen show-for-medium hide-for-large">
+                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                            {include 'cart/_close_icon.tpl'}
+                                        </a>
+                                    </div>
+
                                     <div class="table-column quantity">
                                         <div class="inline-block">
                                             <div class="quantity-group">
@@ -140,11 +145,12 @@
                                         </span>
                                     </div>
                                 </div>
-
                             </div>
 
-                            <div class="table-column remove">
-                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove text-hide" onclick="loader.load(this)"></a>
+                            <div class="table-column remove hide-for-medium">
+                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                    {include 'cart/_close_icon.tpl'}
+                                </a>
                             </div>
 
                         </div>
@@ -164,7 +170,7 @@
                                     {$warehouse->m_city},
                                     {$warehouse->m_state},
                                     {$warehouse->m_country}
-                                    warehouse subtotal:
+                                    <b>warehouse subtotal</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
                                     US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>

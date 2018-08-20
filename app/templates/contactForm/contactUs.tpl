@@ -5,20 +5,28 @@
     <div class="contact-form default-content-page">
 
         <h1>Contact Us</h1>
-        <div class="row">
-            <div class="desktop-label column small-12 large-6">Web Form (recommended)</div>
-            <div class="page-info-text column small-12 large-6">The fields marked with <span class="required"></span> are mandatory</div>
-        </div>
 
-        <div class="contact-form">
-            <form action="" method="post">
-                {raw $form->render()}
-                <div class="row">
-                    <div class="column button-row">
-                        <button class="button submit-button" type="submit" value="Submit">SUBMIT</button>
-                    </div>
+
+        <div class="contact-form default-form">
+            <div class="row">
+                <div class="desktop-label column small-12 large-6">Web Form (recommended)</div>
+                <div class="page-info-text column small-12 large-6">The fields marked with <span class="required"></span> are mandatory</div>
+            </div>
+            <div class="row">
+                <div class="column small-12">
+                    {raw $form->renderBegin()}
+                        {raw $form->render()}
+                        <div style="text-indent: -9999px;">
+                            <input name="ContactUsForm[company_name_full]" type="text" />
+                        </div>
+                        <div class="row">
+                            <div class="column button-row">
+                                <button class="button submit-button" type="submit" value="Submit">SUBMIT</button>
+                            </div>
+                        </div>
+                    {raw $form->renderEnd()}
                 </div>
-            </form>
+            </div>
         </div>
 
 

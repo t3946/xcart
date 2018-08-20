@@ -43,14 +43,16 @@
 <tr>
 <td align="center">{if $type eq 'A' || $type eq 'P'}<a href="{if $provider_notification eq 'Y'}{$product.links.provider}{else}{$product.links.admin}{/if}">{$product.productcode}</a>{else}{$product.productcode}{/if}</td>
 <td><font style="FONT-SIZE: 11px"><a href="{$product.links.customer}">{$product.oProduct->getFrontendName()}</a></font>
-{if $product.product_options ne '' && $active_modules.Product_Options}
+{if $product.oOrderDetail->product_options && $active_modules.Product_Options}
 <table>
-
-<tr>
-<td valign="top"><b>{$lng.lbl_options}:</b></td> 
-<td>{include file="modules/Product_Options/display_options.tpl" options=$product.product_options options_txt=$product.product_options_txt force_product_options_txt=$product.force_product_options_txt}</td>
-</tr>
-
+    <tr>
+        <td valign="top"><b>{$lng.lbl_options}:</b></td>
+        <td>
+            {foreach from=$product.oOrderDetail->product_options item=p_option key=option_name}
+                {$option_name}: {$p_option} <br/>
+            {/foreach}
+        </td>
+    </tr>
 </table>
 {/if}
 {if $active_modules.Egoods and $product.download_key and ($order.cb_status eq "P" or $order.dc_status eq "C")}

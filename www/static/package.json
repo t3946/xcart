@@ -70,6 +70,7 @@
     "redux-thunk": "^2.2.0",
     "simplebar": "^2.6.1",
     "sly": "git+https://github.com/tsukasa-mixer/sly.git",
+    "validate.js": "^0.12.0",
     "vanilla-lazyload": "^8.7.1",
     "whatwg-fetch": "^2.0.4"
   }

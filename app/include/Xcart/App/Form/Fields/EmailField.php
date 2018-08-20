@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Form\Fields;
 
+use Xcart\App\Translate\Translate;
 use Xcart\App\Validation\EmailValidator;
 
 /**

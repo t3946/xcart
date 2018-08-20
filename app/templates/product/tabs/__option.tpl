@@ -1,8 +1,6 @@
 <div class="option">
-    <div class="title">{$title}</div>
+    <div class="title" style="vertical-align: middle">{$title}</div>
     <div class="value">
-        <span class="multiline">
-            {$value}
-        </span>
+            <span>{$value}</span>
     </div>
 </div>

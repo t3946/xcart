@@ -790,6 +790,10 @@ abstract class Admin
 
         $form->setInstance($model);
 
+        if ((string) $model !== '') {
+            $this->setBreadcrumbs((string) $model);
+        }
+
         $request = Xcart::app()->request;
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
@@ -813,12 +817,12 @@ abstract class Admin
             }
             else {
                 if (!$request->getIsAjax()) {
-                    Xcart::app()->flash->error('Пожалуйста, исправьте ошибки');
+                    Xcart::app()->flash->error('Please, fix errors');
                 }
             }
         }
 
-        $this->setBreadcrumbs(($pk)? 'Редактировать' : 'Создать');
+        //$this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,

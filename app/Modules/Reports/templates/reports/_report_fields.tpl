@@ -1,7 +1,12 @@
 <fieldset class="expanded-force" rel="5">
     <legend>Report options</legend>
     <ul class="ul-main">
-        {include 'reports/admin/_reports_block_edit.tpl'}
+
+        {include "dashboard/parts/_order_date.tpl"}
+        {include "dashboard/parts/_order_sales_channel.tpl"}
+        {include "dashboard/parts/_order_storefront.tpl"}
+        {include "dashboard/parts/_order_distributor.tpl"}
+
         <li>
             <div class="row">
                 <div class="columns large-4">
@@ -65,7 +70,7 @@
                 </div>
             </div>
         </li>
-        <li>
+        <li {if !$edit}style="display: none"{/if}>
             <div class="row">
                 <div class="columns large-4">
                     <label>Group settings:</label>
@@ -92,7 +97,7 @@
                 </div>
             </div>
         </li>
-        <li>
+        <li {if !$edit}style="display: none"{/if}>
             <div class="row">
                 <div class="columns large-4">
                     <label>Aggregate settings:</label>
@@ -122,7 +127,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label>Report comment:</label>
+                    <label>Report comments:</label>
                 </div>
                 <div class="columns large-8">
                     <div class="columns large-12">
@@ -132,4 +137,5 @@
             </div>
         </li>
     </ul>
+    <input type="submit" value="Generate HTML report" />
 </fieldset>

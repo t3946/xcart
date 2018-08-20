@@ -5,7 +5,6 @@ namespace Modules\Subscribe\Controllers;
 use Modules\Sites\Models\SiteModel;
 use Modules\Subscribe\Helpers\SubscribeHelper;
 use Modules\Subscribe\Models\SubscriberModel;
-use Modules\Subscribe\SubscribeModule;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;

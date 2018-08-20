@@ -603,13 +603,13 @@ function check_r_fields(){
 
 {assign var="GROUP_cost_to_us" value="0"}
 
-{foreach from=$v.products item=product key=prod_num}
+{foreach from=$v.products item=product key=prod_num name=order_detail}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
     {if $product.coupon_discount > 0}
         <i class="m icon discount float__left margin__first_image"></i>
     {/if}
-    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.oProduct->getFrontendName()}</a>
+    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
@@ -617,7 +617,7 @@ function check_r_fields(){
       </a>
     {/if}
 {* --------------------- *}
-    {if $product.orig_product_classes ne ""}
+    {if $product.oProduct->options->count()}
 
       {assign var="refunded_option_found" value="N"}
       {if $order.refund_groups[$m_id].products ne ""}
@@ -630,34 +630,26 @@ function check_r_fields(){
         {/foreach}
       {/if}
 
-
-      {foreach from=$product.orig_product_classes item=item key=key}
-        {if $item.options ne "" && $item.avail}
-          <br /> {$item.classtext}
-          <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-              {if (isset($product.extra_data.product_options[$item.classid].option_name) && !$product.extra_data.product_options[$item.classid].optionid|array_key_exists:$item.options)}
-                  <option value="{$product.extra_data.product_options[$item.classid].optionid}" selected="selected">{$product.extra_data.product_options[$item.classid].option_name}</option>
-              {/if}
-          {foreach from=$item.options key=optionid item=option_values}
-              {assign var="tmp_optionid_key" value=`$option_values.classid`}
-              {if $product.product_options[$tmp_optionid_key]}
-                  {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
-              {/if}
-                <option value="{$optionid}"
-                  {if $tmp_optionid eq $optionid}
-                    selected="selected"
-                  {/if}
-                >{$option_values.option_name}</option>
-
-          {/foreach}
-          </select>
-        {elseif $item.is_modifier eq "T"}
-          <br /> {$item.classtext}
-          <input type="text" name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} value="{$product.product_options[$item.classid].option_name}">
-        {elseif $product.product_options_txt ne ""}
-          <br />Options: {$product.product_options_txt}
-        {/if}
-      {/foreach}
+        {foreach from=$product.oProduct->options item=option key=key}
+            {if $option->active}
+                <br/>
+                {assign var="p_option" value=$option->option->title}
+                {assign var="p_option_id" value=$option->id}
+                {$p_option}
+                <select name="items[{$product.itemid}][classid_optionid][{$p_option_id}]"
+                        {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+                    <option>No options selected</option>
+                    {foreach from=$option->variants item=variant}
+                        {$product.oOrderDetail->product_options[$p_option_id]}
+                        <option value="{$variant->id}"
+                                {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option_id] == $variant->variant_id}
+                                    selected="selected"
+                                {/if}
+                        >{$variant}</option>
+                    {/foreach}
+                </select>
+            {/if}
+        {/foreach}
     {/if}
 {* --------------------- *}
   </td>

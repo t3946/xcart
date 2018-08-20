@@ -8,11 +8,10 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use RuntimeException;
+use Xcart\App\Behaviours\Interfaces\IObjectBehavior;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Traits\Configurator;
 use Xcart\App\Traits\RenderTrait;
 use Xcart\App\Validation\Interfaces\IValidateObject;
@@ -29,6 +28,9 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 {
     use Accessors, Configurator, ValidateObject, RenderTrait;
 
+    /**
+     * @var array
+     */
     public $templates = [
         'default' => 'forms/default.tpl',
         'block' => 'core/form/block.tpl',
@@ -36,31 +38,51 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         'ul' => 'forms/ul.tpl',
     ];
 
+    /**
+     * @var string
+     */
+    public $formBeginTemplate = 'forms/begin.tpl';
+
+    /**
+     * @var string
+     */
+    public $formEndTemplate = 'forms/end.tpl';
+
+    /**
+     * @var int
+     */
     public $max = PHP_INT_MAX;
+
     /**
      * @var string
      */
     public $link;
+
     /**
      * @var string
      */
     public $defaultTemplateType = 'default';
+
     /**
      * @var array
      */
     public $exclude = [];
+
     /**
      * @var array
      */
     private $_extraExclude = [];
+
     /**
      * @var string
      */
     private $_prefix;
+
     /**
      * @var int
      */
     private $_id;
+
     /**
      * @var array
      */
@@ -70,79 +92,177 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @var array BaseForm[]
      */
     private $_inlines = [];
+
     /**
      * @var array
      */
     private $_inlineClasses = [];
+
     /**
      * @var \Xcart\App\Form\Fields\Field[]
      */
     protected $_fields = null;
+
     /**
      * @var array
      */
     protected $_renderFields = null;
+
     /**
      * @var bool
      */
     protected $_saveInlineFailed = false;
+
     /**
      * @var array BaseForm[]
      */
     private $_inlinesCreate = [];
+
     /**
      * @var array BaseForm[]
      */
     private $_inlinesDelete = [];
+
     /**
      * @var BaseForm|ModelForm
      */
     private $_parentForm;
 
-//    public function init()
-//    {
+
+    public function init()
+    {
 //        $this->initFields();
 //        $this->initInlines();
 //        $this->setRenderFields(array_keys($this->getFieldsInit()));
-//    }
+        self::$countForm++;
+    }
+
+    /**
+     * Count number of forms
+     * @var int
+     */
+    private static $countForm = 0;
+
+
+    /**
+     * Execute before form field creation
+     * (new settings must override old)
+     * @param $name
+     * @param $config
+     * @return mixed
+     */
+    public function onBeforeCreateField(&$name, &$config): void
+    {
+
+    }
+
+    /**
+     * Execute after form field is created
+     * (new settings must override old)
+     * @param $field
+     * @return mixed
+     */
+    public function onAfterCreateField(&$field): void
+    {
+    }
+
+    /**
+     * Execute before choose form template
+     * (new settings must override old)
+     * @param $templates
+     * @param $defaultTemplateType
+     */
+    public function onBeforeGetTemplate(&$templates, &$defaultTemplateType): void
+    {
+    }
+
+    /**
+     * Execute before form render
+     * (new settings must override old)
+     * @param $fields
+     */
+    public function onBeforeRender(&$fields): void
+    {
+    }
+
+    /**
+     * Execute before form begin render
+     * (new settings must override old)
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderBegin(&$prefix, &$template): void
+    {
+    }
+
+    /**
+     * Execute before form end render
+     * (new settings must override old)
+     * @param $prefix
+     * @param $template
+     */
+    public function onBeforeRenderEnd(&$prefix, &$template): void
+    {
+    }
+
+    /**
+     * Returned number of the form
+     */
+    public static function getFormCounter(): int
+    {
+        return self::$countForm;
+    }
 
     /**
      * @param array $value
      * @return array
      */
-    public function setExclude(array $value)
+    public function setExclude(array $value): void
     {
         $this->exclude = $value;
     }
 
     /**
+     * Returned string identifier of the form
+     * @return string
+     */
+    public function getFormIdentifier(): string
+    {
+        return static::classNameShort() . static::getFormCounter();
+    }
+
+    /**
+     * Set extra exclude field
      * @param array $value
      * @return array
      */
-    public function setExtraExclude(array $value)
+    public function setExtraExclude(array $value): void
     {
         $this->_extraExclude = $value;
     }
 
     /**
+     * Returned all excluded fields
      * @return array
      */
-    public function getExclude()
+    public function getExclude(): array
     {
         return array_merge($this->_extraExclude, $this->exclude);
     }
 
     /**
+     * Sets form prefix
      * @param $prefix
-     * @return array
+     * @return void
      */
-    public function setPrefix($prefix)
+    public function setPrefix($prefix): void
     {
         $this->_prefix = $prefix;
     }
 
     /**
-     * @return array
+     * Returned form prefix
+     * @return string
      */
     public function getPrefix()
     {
@@ -219,7 +339,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      */
     public function initFields()
     {
-        $prefix = $this->getPrefix();
         $fields = $this->getFields();
         foreach ($fields as $name => $config) {
             if (\in_array($name, $this->getExclude(), true)) {
@@ -230,14 +349,32 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
                 $config = ['class' => $config];
             }
 
-            $this->_fields[$name] = Creator::createObject(array_merge([
-                  'name' => $name,
-                  'form' => $this,
-                  'prefix' => $prefix,
-            ], $config));
+            $this->_fields[$name] = $this->createField($name, $config);
         }
     }
 
+    public function createField($name, $config)
+    {
+
+        $this->onBeforeCreateField($name, $config);
+
+        $newField = Creator::createObject(array_merge([
+            'name' => $name,
+            'form' => $this,
+            'prefix' => $this->getPrefix(),
+        ], $config));
+
+        $this->onAfterCreateField($newField);
+
+        return $newField;
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     * @return mixed|void
+     * @throws Exception
+     */
     public function __call($name, $arguments)
     {
         $type = strtolower(ltrim($name, 'as'));
@@ -257,7 +394,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
 
     public function __toString()
     {
-        $template = $this->getTemplateFromType($this->defaultTemplateType);
+        $template = $this->getTemplateFromType();
         try {
             return (string)$this->render($template);
         } catch (Exception $e) {
@@ -265,13 +402,23 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         }
     }
 
-    public function getTemplateFromType($type)
+    public function getTemplateFromType($type = '')
     {
-        if (array_key_exists($type, $this->templates)) {
-            $template = $this->templates[$type];
+        $defaultTemplate = $this->defaultTemplateType;
+        $templatesArray = array_merge([], $this->templates);
+
+        $this->onBeforeGetTemplate($templatesArray, $defaultTemplate);
+
+        if(empty($type)) {
+            $type = $defaultTemplate;
+        }
+
+        if (array_key_exists($type, $templatesArray)) {
+            $template = $templatesArray[$type];
         } else {
             throw new Exception("Template type {$type} not found");
         }
+
         return $template;
     }
 
@@ -280,17 +427,91 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
      * @param array $fields
      * @param null|int $extra count of the extra inline forms for render
      * @return string
+     * @throws Exception
      */
     public function render($template = null, array $fields = [], $extra = null)
     {
         if (!$template) {
-            $template = $this->getTemplateFromType($this->defaultTemplateType);
+            $template = $this->getTemplateFromType();
         }
+
+        $fields = $fields ?: $this->getRenderFields();
+        $this->onBeforeRender($fields);
 
         return $this->setRenderFields($fields)->renderInternal($template, [
             'form' => $this,
-            'fields' => $fields ?: $this->getRenderFields(),
+            'fields' => $fields,
             'inlines' => $this->renderInlines($extra)
+        ]);
+    }
+
+    public function createFieldsets($template = null, array $fields = [], $extra = null)
+    {
+        if (!$template) {
+            $template = $this->getTemplateFromType();
+        }
+
+        $fields = $fields ?: $this->getRenderFields();
+        $this->onBeforeRender($fields);
+
+        $this->setRenderFields($fields);
+
+        $fieldSets = $this->getFieldsets();
+
+        $objFieldSets = [];
+        foreach ($fieldSets as $fieldSetName => $oneFieldSet) {
+
+            $objFieldSets[$fieldSetName] = [];
+
+            foreach ($oneFieldSet as $fieldName) {
+                if(in_array($fieldName, $this->_renderFields,true)) {
+                    $objFieldSets[$fieldSetName][] = $this->getField($fieldName);
+                }
+            }
+        }
+
+        return $objFieldSets;
+    }
+
+    public function getFormId(){
+        return BaseForm::getFormIdentifier();
+    }
+
+    public function renderBegin($params = [], $template = null)
+    {
+        $prefix = $this->getFormId();
+        $this->onBeforeRenderBegin($prefix, $template);
+
+        if (!$template) {
+            $template = $this->formBeginTemplate;
+        }
+
+        if(empty($template)){
+            return '';
+        }
+
+        return $this->renderInternal($template, array_merge([
+            'form' => $this,
+            'prefix' => $prefix
+        ], $params));
+    }
+
+    public function renderEnd($template = null)
+    {
+        $prefix = BaseForm::getFormIdentifier();
+        $this->onBeforeRenderEnd($prefix, $template);
+
+        if (!$template) {
+            $template = $this->formEndTemplate;
+        }
+
+        if(empty($template)){
+            return '';
+        }
+
+        return $this->renderInternal($template, [
+            'form' => $this,
+            'identifier' => $prefix
         ]);
     }
 
@@ -329,6 +550,13 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         return self::renderTemplate($template, $params);
     }
 
+    /**
+     * @param $templateType
+     * @param array $fields
+     * @param null $extra
+     * @return string
+     * @throws Exception
+     */
     public function renderType($templateType, array $fields = [], $extra = null)
     {
         $template = $this->getTemplateFromType($templateType);
@@ -378,12 +606,17 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         return $this;
     }
 
+    public function renderClientValidation(){
+        return [];
+    }
+
     public function getRenderFields()
     {
-        if (!$this->_renderFields) {
-            $this->setRenderFields(array_keys($this->getFieldsInit()));
-        }
 
+        if (!$this->_renderFields) {
+            $fields = array_keys($this->getFieldsInit());
+            $this->setRenderFields($fields);
+        }
         return $this->_renderFields;
     }
 
@@ -536,6 +769,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         return $attributes;
     }
 
+    /**
+     * Event, triggered after the owner model had saved
+     * @param $owner
+     */
     public function afterOwnerSave($owner)
     {
     }
@@ -768,5 +1005,10 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
             $data[$this->getField($name)->getHtmlName()] = $errors;
         }
         return $data;
+    }
+
+    public function getBottomUrls(): array
+    {
+        return [];
     }
 }

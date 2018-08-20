@@ -35,6 +35,14 @@ abstract class Validator
      */
     abstract public function validate($value);
 
+    /**
+     *
+     */
+    public function jsValidateParams()
+    {
+        return [];
+    }
+
     protected function addError($error)
     {
         $this->_errors[] = $error;

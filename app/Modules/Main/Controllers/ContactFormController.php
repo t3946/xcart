@@ -35,6 +35,11 @@ class ContactFormController extends FrontendController
         if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
             Xcart::app()->flash->add('Your message has been successfully sent');
             $this->refresh();
+        } else {
+            if (in_array('SKU or Order # not found', $form->getErrors('product_sku'))) {
+                Xcart::app()->flash->error('Wrong SKU or Order #, please call us at 1-800-929-2431');
+            }
+
         }
         ($this->getBreadcrumbs());
         $this->display('contactForm/contactUs.tpl', [

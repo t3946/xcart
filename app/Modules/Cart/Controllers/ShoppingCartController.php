@@ -75,7 +75,7 @@ class ShoppingCartController extends BackendController
 
         $pager = new Pagination($qs,['pageSize' => 25], new QuerySetDataSource());
 
-        $pageTitle = "Call records";
+        $pageTitle = "Shopping Cart";
 
         $form = new ShoppingCartForm();
 

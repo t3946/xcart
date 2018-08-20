@@ -184,6 +184,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductVideosModel::class,
                 'link' => ['productid' => 'product_id'],
             ],
+            'files' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductFileModel::class,
+                'link' => ['productid' => 'productid'],
+            ],
 
             'descr' => [
                 'class' => CharField::class,
@@ -244,6 +249,9 @@ class ProductModel extends Model implements ICartItem
                 'autoNow' => true,
                 'autoNowAdd' => true,
             ],
+            'eta_date_mm_dd_yyyy' => [
+                'class' => UnixTimestampField::class,
+            ],
             'category_main' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductCategoriesModel::class,
@@ -293,8 +301,13 @@ class ProductModel extends Model implements ICartItem
             ],
             'options' => [
                 'class' => HasManyField::class,
-                'modelClass' => OptionModel::class,
-                'link' => ['productid' => 'productid']
+                'modelClass' => ProductOptionModel::class,
+                'link' => ['productid' => 'product_id']
+            ],
+            'product_options' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductOptionModel::class,
+                'link' => ['productid' => 'product_id']
             ],
             'cost_to_us' => [
                 'class' => DecimalField::class,
@@ -340,6 +353,16 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => 0,
             ],
+            'prevent_search_indexing_this_product_page' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'mult_order_quantity' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false,
+            ]
         ];
     }
 
@@ -447,6 +470,11 @@ class ProductModel extends Model implements ICartItem
         }
 
         return false;
+    }
+
+    public function getDistributorUrl()
+    {
+        return ;
     }
 
     public function getAmpAbsoluteUrl($full = false)
@@ -569,7 +597,7 @@ class ProductModel extends Model implements ICartItem
         $tq = $quantity;
         $min = $this->min_amount;
 
-        if ($this->mult_order_quantity == 'Y' && $min > 1) {
+        if ($this->mult_order_quantity && $min > 1) {
             $tq = ceil($tq / $min) * $min;
         }
         else if ($tq < $min) {
@@ -645,5 +673,13 @@ class ProductModel extends Model implements ICartItem
 
         }
         return $fExtraMarginValue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options->filter(['active' => true])->order(['position'])->all();
     }
 }
