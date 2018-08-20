@@ -20,7 +20,7 @@
             {foreach $breadcrumbs->get() as $item index=$index last=$last}
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     {if !$last && $item.url}
-                        <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="{$item.url}">
+                        <a itemscope itemtype="http://schema.org/Thing" itemprop="item" id="{$item.url}" href="{$item.url}">
                         <span itemprop="name">
                             {$item.name}
                         </span>
