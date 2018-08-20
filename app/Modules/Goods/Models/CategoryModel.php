@@ -127,7 +127,7 @@ class CategoryModel extends TreeModel
         {
             /** @var self $model */
             foreach ($parents as $model) {
-                $bread->add($model->category, $model->getAbsoluteUrl(true));
+                $bread->add($model->category, 'https:'.$model->getAbsoluteUrl(true));
             }
         }
 
