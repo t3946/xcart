@@ -34,7 +34,7 @@ class CategoryController extends AbstractCatalogController
         $this->preView(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
 
-    public function preView(CategoryModel $model)
+    public function preView(CategoryModel $model = null)
     {
         if (!$model) {
             $this->redirect('catalog:list', [], 301);
