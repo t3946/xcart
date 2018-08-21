@@ -34,10 +34,16 @@ class CategoryController extends AbstractCatalogController
         $this->preView(CategoryModel::objects()->filter(['productcode' => $sku])->get());
     }
 
-    public function preView($model)
+    public function preView(CategoryModel $model)
     {
         if (!$model) {
             $this->redirect('catalog:list', [], 301);
+        }
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        if ($model->storefrontid != $site->storefrontid) {
+            $this->redirect($model->getAbsoluteUrl(true), [], 301);
         }
 
         /** @var \Modules\Sites\Models\SiteModel $site */
