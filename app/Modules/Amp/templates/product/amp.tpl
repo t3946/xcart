@@ -91,11 +91,6 @@
 
             {else}
                 {if !$model->isOutOfStock()}
-                <form method="get" action="/cart.php" target="_top">
-                    <input type="hidden" name="amount" value="1">
-                    <input type="hidden" name="mode" value="add">
-                    <input type="hidden" name="productid" value="{$model->productid}">
-                    <input type="hidden" name="relocate_to_cart" value="Yes">
 
                     <div class="options price">
                         <h6 id="sku">SKU:
@@ -117,14 +112,13 @@
                              2. The available sizes for the selected SKU haven’t been fetched yet
                         -->
 
-                        <button id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
+                        <a href="{url 'cart:add' uniqueId=$model->productid}" id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
                             Add to cart
-                        </button>
+                        </a>
 
                     </div>
 
 
-                </form>
                 {else}
                     <div class="similar">
                         <div class="options price">

@@ -5,7 +5,7 @@ use Modules\Goods\Controllers\CartController;
 return [
     /** PRODUCT CART */
     [
-        'route' => '/add/product-{slug:key}',
+        'route' => '/add/product-{slug:uniqueId}',
         'target' => [CartController::class, 'actionAdd'],
         'name' => 'add'
     ],
