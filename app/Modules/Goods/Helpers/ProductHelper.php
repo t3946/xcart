@@ -80,18 +80,15 @@ class ProductHelper
     {
         global $product_files_dir;
 
-        $productFileModel = null;
-
         $fileName = file_get_filename_curl($filePath);
         if (empty($fileName)) {
             $fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf');
         }
 
-        if (!$fileName) return $productFileModel;
-
+        if (!$fileName) return null;
         $param = ['filename' => $fileName, 'productid' => $product_id];
-        $productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get();
-        if (!$productFileModel) {
+
+        if (!($productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get())) {
             $fileData = file_get_contents_curl($filePath);
             if (!empty($fileData)) {
                 $path = $product_files_dir . '/' . $product_id;
@@ -100,10 +97,7 @@ class ProductHelper
                 }
                 if ($fileSize = file_put_contents($path . "/" . $fileName, $fileData)) {
                     $productFileModel = new ProductFileModel($param);
-                    $productFileModel->setAttributes([
-                                                         'description' => $fileDesc,
-                                                         'filesize' => $fileSize
-                                                     ]);
+                    $productFileModel->setAttributes(['description' => $fileDesc,'filesize' => $fileSize]);
                 }
             }
         }
