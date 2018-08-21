@@ -76,14 +76,19 @@ class ProductHelper
      * @param $product_id
      * @return ProductFileModel|null
      */
-    public static function uploadProductFile($fileDesc, $filePath, $product_id): ?ProductFileModel
+    public static function uploadProductFile($fileDesc, $filePath, $product_id):? ProductFileModel
     {
         global $product_files_dir;
+
+        $productFileModel = null;
 
         $fileName = file_get_filename_curl($filePath);
         if (empty($fileName)) {
             $fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf');
         }
+
+        if (!$fileName) return $productFileModel;
+
         $param = ['filename' => $fileName, 'productid' => $product_id];
         $productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get();
         if (!$productFileModel) {
