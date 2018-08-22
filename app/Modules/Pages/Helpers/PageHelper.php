@@ -7,7 +7,7 @@ use Modules\Main\Models\EmployeesModel;
 class PageHelper
 {
 
-    static public function getTeamMember($name = ''): object
+    static public function getTeamMember($name = ''):? object
     {
 
         return EmployeesModel::objects()->get(['name' => $name]);
