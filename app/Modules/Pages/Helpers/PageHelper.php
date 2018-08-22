@@ -10,7 +10,7 @@ class PageHelper
     static public function getTeamMember($name = ''):? object
     {
 
-        return EmployeesModel::objects()->get(['name' => $name]);
+        return EmployeesModel::objects()->get(['id' => $name]);
     }
 
     static public function getClearContent($content = ''): array
