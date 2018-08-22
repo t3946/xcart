@@ -212,22 +212,22 @@ trait MetaTrait
     {
         switch ($type) {
             case MetaType::PRODUCT :
-                if ($model->prevent_search_indexing_this_product_page == 'Y'
-                    || $model->brand->prevent_search_indexing_of_all_brand_products == 'Y'
-                    || $model->getMainCategory()->getObjects()->ancestors()->filter(['prevent_index_products' => 'Y'])->limit(1)->get()
+                if ($model->prevent_search_indexing_this_product_page === 'Y'
+                    || $model->brand->prevent_search_indexing_of_all_brand_products === 'Y'
+                    || (($m_cat = $model->getMainCategory()) && $m_cat->getObjects()->ancestors()->filter(['prevent_index_products' => 'Y'])->limit(1)->get())
                 ) {
                     $this->noIndex = true;
                 }
                 break;
 
             case MetaType::CATEGORY :
-                if ($model->prevent_index_category_page == 'Y') {
+                if ($model->prevent_index_category_page === 'Y') {
                     $this->noIndex = true;
                 }
                 break;
 
             case MetaType::BRAND :
-                if ($model->prevent_search_indexing_brand_page == 'Y') {
+                if ($model->prevent_search_indexing_brand_page === 'Y') {
                     $this->noIndex = true;
                 }
                 break;
