@@ -40,13 +40,14 @@ class PageHelper
                 continue;
             }
             /** @var EmployeesModel $model */
-            $model = self::getTeamMember($matches[1][1]);
+            if ($model = self::getTeamMember($matches[1][1])) {
 
-            preg_match($regexp_2, $name, $matches_2);
+                preg_match($regexp_2, $name, $matches_2);
 
-            $members[$key]['post'] = trim($matches_2[1]);
-            $members[$key]['photo'] = $model->getField('photo')->getUrl();
-            $members[$key]['name'] = trim($matches[1][0]);
+                $members[$key]['post'] = trim($matches_2[1]);
+                $members[$key]['photo'] = $model->getField('photo')->getUrl();
+                $members[$key]['name'] = trim($matches[1][0]);
+            }
         }
 
         $members[4]['post'] = "Connoisseur of <br>beauty and aesthetics";
