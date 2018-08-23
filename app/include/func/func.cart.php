@@ -456,8 +456,8 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 			$return ['shipping_costs'] = $result['shipping_costs'];
 			$return ['display_shipping_costs'] = $result['display_shipping_costs'];
 			$return ['shipping_taxes'] = $result['shipping_taxes'];
-			$return ["total_cost"] += $result ["total_cost"];
-			$return ["shipping_cost"] += $result ["shipping_cost"];
+			$return ["total_cost"] += $result ["subtotal"];
+			//$return ["shipping_cost"] += $result ["shipping_cost"];
 			$return ["display_shipping_cost"] += $result ["display_shipping_cost"];
 			$return ["tax_cost"] += $result ["tax_cost"];
 			$return ["discount"] += $result ["discount"];
@@ -494,6 +494,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 
 			$key ++;
 		}
+
 
 		if (!empty($cart["giftcerts"])) {
 			$_products = array ();
@@ -645,6 +646,8 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 		}
 	}
 	$return['whole_taxes'] = $result['whole_taxes'];
+
+    $return ["shipping_cost"] = array_sum($return ["shipping_costs"]);
 
 	return $return;
 }

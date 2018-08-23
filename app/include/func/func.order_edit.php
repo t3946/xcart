@@ -238,7 +238,7 @@ function func_oe_recalculate_totals($cart)
 
     $cart = func_array_merge($cart, func_calculate($cart, $cart["products"], $cart["userinfo"]["login"], $cart["userinfo"]["usertype"], $cart["paymentid"]));
 
-    $cart["total"] = $cart["total_cost"];
+    $cart["total"] = $cart["total_cost"] + $cart["shipping_cost"] - $cart["coupon_discount"];
 
     $cart["applied_taxes"] = $cart["taxes"];
 
