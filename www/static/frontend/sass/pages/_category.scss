@@ -22,6 +22,10 @@ $padding_container: rem-calc(18);
     .content {
       height: #{6 * $global-lineheight}em; //3 row * line-height
 
+      @include breakpoint(sm down) {
+        height: #{2 * $global-lineheight}em; //1 row * line-height
+      }
+
       table {
         border-collapse: collapse;
 
