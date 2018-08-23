@@ -21,6 +21,21 @@ $padding_container: rem-calc(18);
   .description {
     .content {
       height: #{6 * $global-lineheight}em; //3 row * line-height
+
+      table {
+        border-collapse: collapse;
+
+        tr {
+          td {
+            border: solid rem-calc(1);
+            padding: rem-calc(3);
+
+            p {
+              margin:0;
+            }
+          }
+        }
+      }
     }
     .relative{
       position: relative;
