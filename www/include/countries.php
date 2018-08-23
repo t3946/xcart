@@ -43,28 +43,12 @@ $lng_customer = $config['default_customer_language'];
 $lng_admin = $config['default_admin_language'];
 $query =
 "SELECT
-IF (L1.value IS NOT NULL, L1.value,
-	IF (L2.value IS NOT NULL, L2.value, L3.value)
-) AS country,
+$sql_tbl[countries].name AS country,
 $sql_tbl[countries].code as country_code,
 $sql_tbl[countries].display_states,
 $sql_tbl[countries].region
 FROM
 	$sql_tbl[countries]
-	LEFT JOIN $sql_tbl[languages] L1 ON
-		L1.name = CONCAT('country_',$sql_tbl[countries].code)
-		AND
-		L1.code = '$shop_language'
-
-	LEFT JOIN $sql_tbl[languages] L2 ON
-		L2.name = CONCAT('country_',$sql_tbl[countries].code)
-		AND
-		L2.code = '$lng_customer'
-
-	LEFT JOIN $sql_tbl[languages] L3 ON
-		L3.name = CONCAT('country_',$sql_tbl[countries].code)
-		AND
-		L3.code = '$lng_admin'
 WHERE
 	$sql_tbl[countries].active='Y'
 ORDER BY country";

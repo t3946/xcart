@@ -112,7 +112,7 @@
                              2. The available sizes for the selected SKU haven’t been fetched yet
                         -->
 
-                        <a href="{url 'cart:add' uniqueId=$model->productid}" id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
+                        <a rel="nofollow" href="{url 'cart:add' uniqueId=$model->productid}" id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
                             Add to cart
                         </a>
 
