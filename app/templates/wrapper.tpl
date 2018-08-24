@@ -21,7 +21,6 @@
 
     <link rel="preconnect" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}">
     <link rel="preconnect" href="https://www.google-analytics.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
 
 
     <link rel="preload" href="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
