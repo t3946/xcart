@@ -91,33 +91,35 @@
 
             {else}
                 {if !$model->isOutOfStock()}
+                    <form action="{url 'cart:add' uniqueId=$model->productid}" method="get">
+                        <div class="options price">
+                            <h6 id="sku">SKU:
+                                <span>{$model->productcode}<span>
+                            </h6>
+                        </div>
+                            <p><b>In Stock</b></p>
+                        <div class="options price">
+                            <h6><b>PRICE:</b>
+                                <!-- Display the price of the selected shirt in the selected size if available.
+                                     Otherwise, display the placeholder text '---'. -->
+                                <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b><span>
+                            </h6>
+                        </div>
 
-                    <div class="options price">
-                        <h6 id="sku">SKU:
-                            <span>{$model->productcode}<span>
-                        </h6>
-                    </div>
-                        <p><b>In Stock</b></p>
-                    <div class="options price">
-                        <h6><b>PRICE:</b>
-                            <!-- Display the price of the selected shirt in the selected size if available.
-                                 Otherwise, display the placeholder text '---'. -->
-                            <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b><span>
-                        </h6>
-                    </div>
+                        <div class="options purchase">
+                            <!-- Disable the “ADD TO CART” button when:
+                                 1. There is no selected size, OR
+                                 2. The available sizes for the selected SKU haven’t been fetched yet
+                            -->
 
-                    <div class="options purchase">
-                        <!-- Disable the “ADD TO CART” button when:
-                             1. There is no selected size, OR
-                             2. The available sizes for the selected SKU haven’t been fetched yet
-                        -->
+                                <button id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
+                                    Add to cart
+                                </button>
 
-                        <a rel="nofollow" href="{url 'cart:add' uniqueId=$model->productid}" id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
-                            Add to cart
-                        </a>
 
-                    </div>
 
+                        </div>
+                    </form>
 
                 {else}
                     <div class="similar">
