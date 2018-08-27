@@ -91,7 +91,7 @@
 
             {else}
                 {if !$model->isOutOfStock()}
-                    <form action="{url 'cart:add' uniqueId=$model->productid}" method="get">
+                    <form action="{url 'cart:add' uniqueId=$model->productid}" method="get" target="_top">
                         <div class="options price">
                             <h6 id="sku">SKU:
                                 <span>{$model->productcode}<span>
