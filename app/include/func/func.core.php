@@ -2369,7 +2369,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'daily',
             'priority'      => '1.0',
             'url_pattern'   => '',
-            'items_query'   => "%s SELECT IF((SELECT value FROM $sql_tbl[config] WHERE name = 'xseo_xmlmap_use_root') = 'Y','$GLOBALS[http_location]','home.php') as url, '%s' as date",
+            'items_query'   => "%s SELECT IF((SELECT value FROM $sql_tbl[config] WHERE name = 'xseo_xmlmap_use_root') = 'Y','$GLOBALS[https_location]','') as url, '%s' as date",
             'multilanguage' => false,
         ],
         6 => [
