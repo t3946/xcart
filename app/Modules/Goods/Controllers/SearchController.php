@@ -132,9 +132,7 @@ class SearchController extends AbstractCatalogController
             ]
         ))->save();
 
-
-
-        $this->view_internal($this->q);
+        $this->view_internal("search?q={$this->q}");
     }
 
 
@@ -145,7 +143,8 @@ class SearchController extends AbstractCatalogController
             'searched' => $this->searched,
             'q_original' => $this->q_original,
             'q' => $this->q,
-            'analytics_source' => 'search'
+            'analytics_source' => 'search',
+            'model' => $this->q
         ];
     }
 
@@ -221,7 +220,7 @@ class SearchController extends AbstractCatalogController
     public function getBreadcrumbsFromData($data)
     {
         $bread = new Breadcrumbs();
-        $bread->add('Search: '. strip_tags($data));
+        $bread->add('Search: '. strip_tags($this->q));
 
         return $bread;
     }
