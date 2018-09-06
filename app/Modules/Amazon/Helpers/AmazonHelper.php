@@ -684,9 +684,9 @@ class AmazonHelper
                 }
                 if (!empty($aOffers)) {
                     array_multisort(
-                        array_map(function ($a) {
+                        /*array_map(function ($a) {
                             return $a['lp_FulfillmentChannel'];
-                        }, $aOffers), SORT_ASC,
+                        }, $aOffers), SORT_ASC,*/
                         array_map(function ($a) {
                             return $a['lp_LandedPrice'];
                         }, $aOffers), SORT_ASC,
