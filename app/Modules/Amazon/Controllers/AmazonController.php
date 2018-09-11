@@ -87,6 +87,17 @@ class AmazonController extends PrototypeAdminController
                 $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
                 if ($aProducts) {
                     foreach ($aProducts as $aProduct) {
+
+                        //Можно обнулить количество к закупу, если у дистрибьютора в стоке меньше или равно 5, так как такой товар скоро обнулится на складе у дистрибьютора и отправлен не будет. Кроме CTI & ECS
+                        if (!\in_array($aProduct['manufacturerid'], [523, 9])) {
+                            if ($aProduct['restocking_qty'] <= 5) {
+                                $aProduct['restocking_qty'] = 0;
+                            }
+                            if (!($aProduct['items_sold_last_1m_of_stock'] > 0)) {
+                                $aProduct['restocking_qty'] = 0;
+                            }
+                        }
+
                         $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $batch->batch_id]));
                         $modelData->save();
                     }
