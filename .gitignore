@@ -21,7 +21,7 @@ composer.lock
 /www/files/
 /www/product_files/
 /.idea/
-/www/verificator/cookies
+/www/verificator/cookies/*
 /www/include/system/
 node_modules
 bower_components
