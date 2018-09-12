@@ -254,6 +254,11 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 ->processReportReservedInventory();
             $oAmazonProduct->groupAmazonFBAProducts();
             break;
+        case 'recommendations' :
+            $client = $amzPool->getRecommendationClientPack();
+            $recommendations = $client->callGetListRecommendations();
+            $recommendations_result = $recommendations->getListRecommendationsResult();
+            break;
     }
 
 //    Xcart\Config::model(['name' => $log])->setValue('N')->_update();
