@@ -42,6 +42,7 @@ LEFT JOIN xcart_products_disabled_marketplaces DM2 ON DM2.resource_id = p.brandi
 LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufacturerid and DM3.resource_type = 'D' and DM3.marketplace_id = 3
 WHERE p.amazon_enabled = 'Y' 
 AND af.amazon_fba_restricted = 'N'
+AND p.forsale = 'Y'
 AND DM.marketplace_id IS NULL
 AND DM2.marketplace_id IS NULL
 AND DM3.marketplace_id IS NULL
