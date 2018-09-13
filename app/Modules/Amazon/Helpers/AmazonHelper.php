@@ -533,9 +533,15 @@ class AmazonHelper
                 if ($oAmazonFbaProductModelOld) {
                     $oAmazonFbaProductModel = new AmazonFbaProductModel();
                     $oAmazonFbaProductModel->setAttributes($oAmazonFbaProductModelOld->getAttributes());
-                    $oAmazonFbaProductModel->id = null;
-                    $oAmazonFbaProductModel->buybox_out = 0;
-                    $oAmazonFbaProductModel->buybox_in = 0;
+                    $oAmazonFbaProductModel->setAttributes([
+                        'id' => null,
+                        'buybox_out' => 0,
+                        'buybox_in' => 0,
+                        'reserved_qty' => 0,
+                        'reserved_customerorders' => 0,
+                        'reserved_fc_transfers' => 0,
+                        'reserved_fc_processing' => 0
+                    ]);
                 }
             }
         }
