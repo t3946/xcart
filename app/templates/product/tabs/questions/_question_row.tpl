@@ -12,7 +12,7 @@
             title = 'BEST ANSWER'
             short = 'A'
             text = $row->answer
-            byLine = $row->user->firstname|createByLine:$row->answered_date:true}
+            byLine = $row->user->getShortSurname()|createByLine:$row->answered_date:true}
         </div>
     {/if}
 </div>

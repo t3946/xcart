@@ -16,6 +16,7 @@ use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CompoundField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\TextField;
 use Xcart\App\Main\Xcart;
@@ -26,9 +27,9 @@ class ProductQuestionForm extends FrontendModelForm
 {
 
 
-    public $exclude = [
+    /*public $exclude = [
         'productid'
-    ];
+    ];*/
 
 
     /**
@@ -44,7 +45,7 @@ class ProductQuestionForm extends FrontendModelForm
     {
         return [
             'productid' => [
-                'class' => NumberField::class,
+                'class' => HiddenField::class,
                 'required' => true,
             ],
             'firstname' => [

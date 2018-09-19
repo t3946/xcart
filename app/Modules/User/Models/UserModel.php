@@ -102,4 +102,15 @@ class UserModel extends Model
     {
         return "/admin/user_modify.php?user={$this->login}&usertype={$this->usertype}";
     }
+
+    public function getShortSurname():? string
+    {
+        if ($name = explode(' ', $this->firstname)) {
+            $length = \count($name)-1;
+            $last_name = (string) $name[$length];
+            $name[$length] = $last_name[0];
+            return implode(' ', $name);
+        }
+        return null;
+    }
 }

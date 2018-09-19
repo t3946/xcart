@@ -28,6 +28,7 @@ class DefaultController extends FrontendController
     {
         $productId = (int)Xcart::app()->request->get['productId'];
         $form = new ProductQuestionForm();
+        $form->setAttributes(['productid' => $productId]);
 
         if($this->getRequest()->getIsPost()){
 
