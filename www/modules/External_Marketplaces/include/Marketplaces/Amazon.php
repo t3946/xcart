@@ -68,7 +68,8 @@ class Amazon extends StoreFrontMarketPlace
                         'quantity' => ($prevent_selling == 'MFN') ? 0 : $product->getAmazonQuantity(),
                         'latency' => $product->distributor->amazon_leadtime_to_ship,
                         'price' => $price,
-                        'min_price' => $min_price
+                        'min_price' => $min_price,
+                        'max_price' => $price
                     ];
                 }
 
