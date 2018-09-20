@@ -1,5 +1,6 @@
 import formValidate from 'validate.js/validate';
 import fieldValidation from "./FieldValidation";
+import isMedia from "../utils/isMedia";
 
 class FormValidation {
 
@@ -15,6 +16,7 @@ class FormValidation {
         let formSelector = '#' + name;
         this.form = document.querySelector(formSelector);
         this.fields = {};
+        this.errors = [];
         this._bind();
         this.hasErrors = false;
     }
@@ -102,6 +104,16 @@ class FormValidation {
         field.showError(currentError[0]);
     }
 
+    scrollToFirstError() {
+        if (this.errors.length) {
+            let field = this.errors.shift();
+            if (!isMedia('large')) {
+                field.field.scrollIntoView();
+                field.element.focus();
+            }
+        }
+    }
+
     validateOnSubmit(event){
         //event.preventDefault();
         this.hasErrors = false;
@@ -111,6 +123,7 @@ class FormValidation {
         if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             event.preventDefault();
             event.stopPropagation();
+            this.scrollToFirstError();
         }
     }
 
@@ -121,6 +134,7 @@ class FormValidation {
         }
         let errors = formValidate(this.form, this.constraints) || {};
         this.hasErrors = false;
+        this.errors = [];
 
         for (let inputElementName in this.fields) {
 
@@ -160,6 +174,7 @@ class FormValidation {
                 continue;
             }
             field.showError(currentError[0]);
+            this.errors.push(field);
             this.hasErrors = true;
         }
     }
