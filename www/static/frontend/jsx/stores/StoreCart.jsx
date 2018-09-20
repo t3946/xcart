@@ -79,8 +79,6 @@ let ACTIONS = {
 
             ajax(url, {method:'POST', data: action.data})
                 .then(data => {
-                    console.log('544545544554');
-                    console.log(action.data);
                     store.dispatch({type:'SET', data: data});
 
                     if (typeof action.callback === 'function') {

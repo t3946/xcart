@@ -1,3 +1,4 @@
+import isMedia from "../utils/isMedia";
 
 class FieldValidation {
     /**
@@ -33,6 +34,10 @@ class FieldValidation {
 
             oneErrorPlaceText.textContent = text;
             oneErrorPlace.classList.add('show');
+            if (i === 0 && !isMedia('large')) {
+                this.field.scrollIntoView();
+                this.element.focus();
+            }
         }
     }
 
