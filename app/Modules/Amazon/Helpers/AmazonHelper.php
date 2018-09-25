@@ -649,7 +649,7 @@ class AmazonHelper
                             }
                         }
                         if (!empty($AllOfferListingsConsidered)) {
-                            switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
+                            switch ($AllOfferListingsConsidered->item(0)->nodeValue) {
                                 case 'True':
                                     $Offer['lp_AllOfferListingsConsidered'] = 'Y';
                                     break;
