@@ -167,7 +167,12 @@ class AmazonFbaFeedHelper
                         [
                             '@attributes' => ['currency' => 'USD'],
                             '@value' => floatval($message['min_price'])
-                        ]
+                        ],
+                    'MaximumSellerAllowedPrice' =>
+                        [
+                            '@attributes' => ['currency' => 'USD'],
+                            '@value' => floatval($message['max_price'])
+                        ],
                 ]
             ]];
         }

@@ -9,6 +9,12 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property integer mask
+ * @property string type
+ * @property integer resourceid
+ * @property ProductModel product
+ */
 class UpdatedProductModel extends Model
 {
     use AutoMetaTrait;

@@ -22,21 +22,12 @@ class Bing extends StoreFrontMarketPlace
             $this->iProductsBatchCount++;
             $result = true;
         } else {
-            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
-                [
-                    'resourceid' => $queue->resourceid,
-                    'type' => $queue->type
-                ]);
-            if ($queue_n) {
-                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
-                $queue_n->save();
-            }
-
+            $this->skipProduct($queue);
         }
         return $result;
     }
 
-    public function checkMarketplaceRestrictions($queue)
+    public function checkMarketplaceRestrictions($queue): bool
     {
         $bResult = parent::checkMarketplaceRestrictions($queue);
 

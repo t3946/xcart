@@ -30,13 +30,13 @@ abstract class StoreFrontMarketPlace extends Data
      * @param string $sExtraLog
      * @return mixed
      */
-    abstract public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N");
+    abstract public function addProductToBatch($queue, $googleOneRow = '', $sExtraLog = 'N');
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
 
-    public function checkMarketplaceRestrictions($queue)
+    public function checkMarketplaceRestrictions($queue): bool
     {
-        return (intval($this->getExternalMarketPlaceEntity()->mask) & intval($queue->mask)) !== 0;
+        return ((int)$this->getExternalMarketPlaceEntity()->mask & (int)$queue->mask) !== 0;
     }
 
     private function fetchExternalMarketPlace()
@@ -246,6 +246,19 @@ abstract class StoreFrontMarketPlace extends Data
             }
         }
         $this->setProductsBatchCount(0)->setProducts([]);
+    }
+    public function skipProduct(UpdatedProductModel $queue): void
+    {
+        /** @var UpdatedProductModel $queue_n */
+        [$queue_n] = UpdatedProductModel::objects()->getOrNew(
+            [
+                'resourceid' => $queue->resourceid,
+                'type' => $queue->type
+            ]);
+        if ($queue_n) {
+            $queue_n->mask &= ~(int)$this->getExternalMarketPlaceEntity()->mask;
+            $queue_n->save();
+        }
     }
 
 }

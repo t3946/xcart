@@ -11,25 +11,17 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {
-    public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch($queue, $googleOneRow = '', $sExtraLog = "N")
     {
-        $result = false;
         if ($this->checkMarketplaceRestrictions($queue)) {
-            if ($queue->type == "2" || $queue->type == "1,2" || $queue->type == "1") {
+            if ($queue->type == "2" || $queue->type === "1,2" || $queue->type == "1") {
                 $this->aInventory[] = ['queue' => $queue];
                 $this->iInventoryBatchCount++;
                 $result = true;
             }
         } else {
-            list($queue_n) = UpdatedProductModel::objects()->getOrNew(
-                [
-                    'resourceid' => $queue->resourceid,
-                    'type' => $queue->type
-                ]);
-            if ($queue_n) {
-                $queue_n->mask &= ~intval($this->getExternalMarketPlaceEntity()->mask);
-                $queue_n->save();
-            }
+            $this->skipProduct($queue);
+            $result = false;
         }
         return $result;
     }
@@ -154,7 +146,7 @@ class Amazon extends StoreFrontMarketPlace
         return true;
     }
 
-    public function checkMarketplaceRestrictions($queue)
+    public function checkMarketplaceRestrictions($queue): bool
     {
         $bResult = parent::checkMarketplaceRestrictions($queue);
 
