@@ -43,7 +43,7 @@ class OrderInvoiceHelper
                         [
                             'from' => [$cs_email => $order->firstname],
                             'reply_to' => [$order->email => $order->firstname],
-                            'bcc' => ['igor@s3stores.com' => '', 'romann@s3stores.com' => ''],
+                            'bcc' => ['romann@s3stores.com' => ''],
                             'headers' => [
                                 'X-Xcart-Label' => 'order-status-init'
                             ]

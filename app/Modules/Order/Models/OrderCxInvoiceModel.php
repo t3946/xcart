@@ -13,10 +13,10 @@ class OrderCxInvoiceModel extends Model
 {
     use AutoMetaTrait;
 
-    const STATUS_PAID = 'PAID';
-    const STATUS_SENT = 'SENT';
-    const STATUS_CANCELLED = 'CANCELLED';
-    const STATUS_REFUNDED = 'REFUNDED';
+    public const STATUS_PAID = 'PAID';
+    public const STATUS_SENT = 'SENT';
+    public const STATUS_CANCELLED = 'CANCELLED';
+    public const STATUS_REFUNDED = 'REFUNDED';
 
 
     public static function tableName()
@@ -51,5 +51,10 @@ class OrderCxInvoiceModel extends Model
             ]
 
         ];
+    }
+
+    public function __toString()
+    {
+        return "{$this->order->getOrderNumber()}-{$this->invoice_order_number}";
     }
 }

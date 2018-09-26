@@ -129,10 +129,11 @@ class OrderTransactionHelper
         return round(array_sum(array_map(function ($model) use ($isAdditional) {
             /** @var OrderTransactionModel $model */
             $value = 0;
-            if ($model->type == OrderTransactionModel::TYPE_AUTHORIZATION && !in_array($model->transaction_status,
+            if ($model->type === OrderTransactionModel::TYPE_AUTHORIZATION && !\in_array($model->transaction_status,
                     [
                         OrderTransactionModel::STATUS_FAILED,
                         OrderTransactionModel::STATUS_VOIDED,
+                        OrderTransactionModel::STATUS_DECLINED,
                     ]
                 ))
             {

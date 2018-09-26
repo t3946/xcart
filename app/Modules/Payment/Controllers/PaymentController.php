@@ -9,9 +9,12 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderCxInvoiceModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Stores\OrderStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
@@ -37,7 +40,7 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
             $order->save();
 
-            $hash = md5($order->orderid.$order->total.$order->email);
+            $hash = md5($order->orderid . $order->total . $order->email);
 
             try {
 
@@ -61,13 +64,13 @@ class PaymentController extends Controller
                     ];
 
                     $transaction = new OrderTransactionModel(array_merge(
-                        OrderTransactionHelper::prepareOrderTransaction($gw, $params),
-                        [
-                            'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                            'orderid' => $order->orderid,
-                            'type' => $params['mode'],
-                            'paymentid' => $order->paymentid,
-                        ])
+                            OrderTransactionHelper::prepareOrderTransaction($gw, $params),
+                            [
+                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                'orderid' => $order->orderid,
+                                'type' => $params['mode'],
+                                'paymentid' => $order->paymentid,
+                            ])
                     );
                     $transaction->save();
 
@@ -150,7 +153,7 @@ class PaymentController extends Controller
     public function endpoint($gateway): void
     {
         if ($app = Xcart::app()) {
-            $params = $order = null;
+            $params = $order = $order_id = null;
 
             $config = GlobalConfig::getInstance();
 
@@ -170,57 +173,105 @@ class PaymentController extends Controller
                 }
             }
 
-            if (!$params) {
+            if (!$params && $app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
 
-                if ($app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
+                switch ($app->request->request->get('txn_type')) {
+                    case 'invoice_payment':
+                        if ($app->request->request->has('invoice')
+                            && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_order_number' => $app->request->request->get('invoice')])) {
+                            $order_id = $invoice->orderid;
+                        }
 
-                    $txn_data = ['transaction_id' => $app->request->request->get('txn_id')];
+                        break;
+                    case 'web_accept':
+                        if ($app->request->request->has('custom')) {
+                            $order_id = (int)$app->request->request->get('custom');
+                        }
+                        break;
+                    case 'new_case':
+                        if (($txn = OrderTransactionModel::objects()->limit(1)->get(['transaction_id' => $app->request->request->get('txn_id')]))
+                            && $order = $txn->order) {
+                            $order_id = $txn->order->orderid;
+                        }
+                        break;
+                }
 
-                    if ($app->request->request->has('custom') && (int) $order_id = $app->request->request->get('custom')) {
-                        /** @var OrderModel $order */
-                        $order = OrderModel::objects()->get(['orderid' => $order_id]);
-                        $txn_data['orderid'] = $order->orderid;
-                    }
+                /** @var OrderModel $order */
+                if ($order_id && $order = OrderModel::objects()->get(['orderid' => $order_id])) {
+                    $txn_data = [
+                        'transaction_id' => $app->request->request->get('txn_id'),
+                        'orderid' => $order->orderid
+                    ];
 
-                    /** @var OrderTransactionModel $txn */
                     [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
+                }
 
-                    switch ($app->request->request->get('txn_type')) {
-                        case 'new_case':
+                switch ($app->request->request->get('txn_type')) {
+                    case 'new_case':
 
-                            if ($order = $txn->order) {
-                                OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
+                        if ($order) {
+                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
+                        }
+
+                        break;
+                    case 'web_accept':
+
+                        /** @var OrderTransactionModel $txn */
+                        if ($order && \in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
+                            $txn->setAttributes([
+                                'orderid' => $order->orderid,
+                                'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                'transaction_amount' => $app->request->request->get('payment_gross'),
+                                'login' => $order->login,
+                                'paymentid' => $order->paymentid,
+                            ]);
+
+                            $txn->save();
+
+                            $txn->transaction_response = $app->request->request->all();
+                            $txn->save();
+
+                            if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
+
+                                $app->event->trigger('order:paid', ['model' => $order]);
                             }
+                        }
 
-                            break;
-                        case 'web_accept':
+                        break;
+                    case 'invoice_payment':
+                        if ($invoice && $order && $app->request->request->get('payment_status') === 'Completed') {
+                            $txn->setAttributes([
+                                'orderid' => $order->orderid,
+                                'type' => OrderTransactionModel::TYPE_CAPTURE,
+                                'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
+                                'transaction_amount' => $app->request->request->get('payment_gross'),
+                                'login' => $order->login,
+                                'paymentid' => $order->paymentid,
+                            ]);
 
-                            if (\in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
-                                if ($order) {
-                                    $txn->setAttributes([
-                                        'orderid' => $order->orderid,
-                                        'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
-                                        'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                                        'transaction_amount' => $app->request->request->get('payment_gross'),
-                                        'login' => $order->login,
-                                        'paymentid' => $order->paymentid,
-                                    ]);
+                            $txn->save();
 
-                                    $txn->save();
+                            $txn->transaction_response = $app->request->request->all();
+                            $txn->save();
 
-                                    $txn->transaction_response = $app->request->request->all();
-                                    $txn->save();
+                            $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
+                            $invoice->save();
 
-                                    if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
+                            (new OrderLogModel([
+                                'orderid' => $order->orderid,
+                                'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                                'log' => "Cx Invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
+                            ])
+                            )->save();
 
-                                        $app->event->trigger('order:paid', ['model' => $order]);
-
-                                    }
-                                }
+                            if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() ===  0) {
+                                $app->event->trigger('order:paid', ['model' => $order]);
+                            } else {
+                                OrderTagEventHelper::orderTagEvent(37, $order->orderid);
                             }
-
-                            break;
-                    }
+                        }
+                        break;
                 }
             }
 
