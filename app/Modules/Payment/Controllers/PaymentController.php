@@ -261,7 +261,7 @@ class PaymentController extends Controller
                             (new OrderLogModel([
                                 'orderid' => $order->orderid,
                                 'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                                'log' => "Cx Invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
+                                'log' => "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
                             ])
                             )->save();
 

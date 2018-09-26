@@ -18,6 +18,8 @@ $OTRS_passphrase = func_query_first("SELECT * FROM $sql_tbl[otrs_options]");
 $otrs_query_arr["querytype"] = "new_mail_notification";
 $otrs_query_arr["queryparameters"]["ordernumber"] = "AR-39878";
 $otrs_query = json_encode($otrs_query_arr);
+$passphrase = $OTRS_passphrase["OTRS_passphrase"];
+$REQUEST_METHOD = 'POST';
 ###
 ##
 #
@@ -41,5 +43,3 @@ if ($REQUEST_METHOD == "POST" && !empty($passphrase) && $passphrase == $OTRS_pas
                 }
 	}
 }
-
-?>

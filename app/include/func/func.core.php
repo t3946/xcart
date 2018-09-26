@@ -2816,6 +2816,8 @@ function func_new_mail_notification($v_arr)
 {
     global $sql_tbl;
 
+    Xcart\App\Main\Xcart::app()->logger->info("OTRS notifications", $v_arr ?: $_REQUEST ?: [], 'otrs');
+
     if (!empty($v_arr["OrderLink"]) || !empty($v_arr["AmazonOrderLink"])) {
 
         if (!empty($v_arr["OrderLink"])) {
