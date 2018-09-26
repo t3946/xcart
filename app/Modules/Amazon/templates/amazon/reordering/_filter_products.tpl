@@ -64,6 +64,21 @@
     <li>
         <div class="row">
             <div class="columns large-4">
+                <label for="o_distributor">Distributors:</label>
+            </div>
+            <div class="columns large-6">
+                <select name="filter[distributor][]" id="o_distributor" class="big select2" multiple>
+
+                    {foreach $distributors as $distributor}
+                        <option value="{raw $distributor.manufacturerid}" {if $filter_data.distributor && $distributor.manufacturerid in list $filter_data.distributor}selected{/if}>{raw $distributor.manufacturer}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </li>
+    <li>
+        <div class="row">
+            <div class="columns large-4">
                 <input type="submit" value="Filter">
                 <input type="submit" name="filter[reset]" value="Reset">
             </div>

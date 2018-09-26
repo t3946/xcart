@@ -8,8 +8,11 @@ use Modules\Amazon\Models\AmazonReorderBatchDataModel;
 use Modules\Amazon\Models\AmazonReorderBatchModel;
 use Modules\Amazon\Stores\AmazonStore;
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
 class AmazonController extends PrototypeAdminController
 {
@@ -36,12 +39,13 @@ class AmazonController extends PrototypeAdminController
             }
         }
 
-        $batches = AmazonReorderBatchModel::objects()->all();
+        $pager = new Pagination( AmazonReorderBatchModel::objects()->order(['-batch_id'])->getQuerySet(), ['pageSize' => 50], new QuerySetDataSource());
 
         echo $this->renderInternal('amazon/index.tpl',
             [
                 'errors' => $errors,
-                'batches' => $batches
+                'batches' => $pager->paginate(),
+                'pager' => $pager,
             ]
         );
     }
@@ -135,10 +139,11 @@ class AmazonController extends PrototypeAdminController
 
             echo $this->renderInternal('amazon/batch.tpl',
                 [
+                    'distributors' => $amazonStore->getDistributors(),
                     'batch_id' => $id,
                     'batch_model' => $batch,
                     'amazon_products' => $amazonStore->getAmazonBatchData(),
-                    'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter'])
+                    'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter']),
                 ]
             );
         }

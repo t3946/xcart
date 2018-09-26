@@ -12,6 +12,7 @@ use Xcart\Connection;
 class AmazonStore extends BaseStore
 {
     private $qs = null;
+    private $batch_id;
 
     public function __construct($data)
     {
@@ -60,8 +61,13 @@ class AmazonStore extends BaseStore
             if (!empty($data['items_sold_last_1m_of_stock'])) {
                 $filter['items_sold_last_1m_of_stock__gt'] = 0;
             }
+
+            if ($data['distributor']) {
+                $filter['manufacturerid__in'] = $data['distributor'];
+            }
         }
         if (!empty($data['batch_id'])) {
+            $this->batch_id = $data['batch_id'];
             $filter['batch_id'] = $data['batch_id'];
         }
         $qs->filter($filter);
@@ -111,6 +117,21 @@ class AmazonStore extends BaseStore
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
             )->fetchAll(\PDO::FETCH_GROUP);
+    }
+
+    public function getDistributors():array
+    {
+        if ($this->batch_id) {
+            $qs = AmazonReorderBatchDataModel::objects()
+                ->filter(['batch_id' => $this->batch_id])
+                ->group(['manufacturerid'])
+                ->order(['distributor__manufacturer']);
+
+            foreach ($qs->all() as $model) {
+                $res[] = $model->distributor;
+            }
+        }
+        return $res ?? [];
     }
 
 }

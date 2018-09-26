@@ -50,10 +50,16 @@
     {parent}
     <script type="text/javascript">
         (function(){
+            $('.select2').select2({ allowClear: true,
+                closeOnSelect: false,
+                placeholder: 'Click to select'
+            });
+
+
             {if $batch_model}
                 var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
                 var url_restocking_batch_processing_check = '{url 'amazon:batch_processing_check'}';
-                var url_batch_redirect = '{url 'amazon:batch' id=$batch_id}';
+                var url_batch_redirect = '{url 'amazon:batch' id=$batch_id}'+'?filter[restocking_qty][from]=1';
                 {if $batch_model->status == 'processing'}
                     $.get(url_restocking_batch_processing, {
                         batch_id: {$batch_id}
