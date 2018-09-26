@@ -83,19 +83,21 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
             if ( product )
             {
+                let form = null;
 
                 let infoFormId = e.target.closest('.cart_add').getAttribute('data-form-id');
-                let form = document.getElementById(infoFormId);
+                if (infoFormId) {
+                    form = document.getElementById(infoFormId);
 
-                if(typeof document.formValidators !== 'undefined'
-                    && document.formValidators[infoFormId] !== 'undefined'){
+                    if (typeof document.formValidators !== 'undefined'
+                        && document.formValidators[infoFormId] !== 'undefined') {
 
-                    let formValidate = document.formValidators[infoFormId];
-                    formValidate.checkAllForm();
+                        let formValidate = document.formValidators[infoFormId];
+                        formValidate.checkAllForm();
 
-                   // console.log(formValidate.hasErrors);
-                    if(formValidate.hasErrors) {
-                        return false;
+                        if (formValidate.hasErrors) {
+                            return false;
+                        }
                     }
                 }
 
