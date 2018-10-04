@@ -69,9 +69,18 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                     if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
                         if ($amz->sleep_cp) {
                             $amz->sleep_cp--;
-                            $amz->save(['sleep_cp']);
                         }
+
+                        if ($a->amazon_verified === 'Y') {
+                            $amz->sleep_cp = 0;
+                        } else if (!$amz->sleep_cp) {
+                            $amz->sleep_cp = 48;
+                            return true;
+                        }
+
+                        $amz->save(['sleep_cp']);
                         return !$amz->sleep_cp;
+
                     }
                     return true;
                 });
@@ -119,8 +128,16 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                         if($a->amazon_fields && ($amz = $a->amazon_fields->limit(1)->get())) {
                             if ($amz->sleep_mp) {
                                 $amz->sleep_mp--;
-                                $amz->save(['sleep_mp']);
                             }
+
+                            if ($a->amazon_verified === 'Y') {
+                                $amz->sleep_mp = 0;
+                            } else if (!$amz->sleep_mp) {
+                                $amz->sleep_mp = 48;
+                                return true;
+                            }
+
+                            $amz->save(['sleep_mp']);
                             return !$amz->sleep_mp;
                         }
                         return true;
