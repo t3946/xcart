@@ -50,7 +50,8 @@ class Amazon extends StoreFrontMarketPlace
                         'sku' => $product->productcode,
                         'channel' => 'AFN',
                         'price' => $price,
-                        'min_price' => $min_price
+                        'min_price' => $min_price,
+                        'max_price' => $price
                     ];
 
                 } else {
