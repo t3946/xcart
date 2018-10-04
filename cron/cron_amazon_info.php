@@ -61,6 +61,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
             while ($aProductsBatch = ProductModel::objects()
                 ->filter(['forsale' => 'Y', 'amazon_enabled' => 'Y'])
+                ->order(['-amazon_verified'])
                 ->paginate($i++, $max_products)
                 ->all())
             {
