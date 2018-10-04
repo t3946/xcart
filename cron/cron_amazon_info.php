@@ -75,6 +75,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                             $amz->sleep_cp = 0;
                         } else if (!$amz->sleep_cp) {
                             $amz->sleep_cp = 48;
+                            $amz->save(['sleep_cp']);
                             return true;
                         }
 
@@ -134,6 +135,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                                 $amz->sleep_mp = 0;
                             } else if (!$amz->sleep_mp) {
                                 $amz->sleep_mp = 48;
+                                $amz->save(['sleep_mp']);
                                 return true;
                             }
 
