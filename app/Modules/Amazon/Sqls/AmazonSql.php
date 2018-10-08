@@ -43,6 +43,7 @@ LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufa
 WHERE p.amazon_enabled = 'Y' 
 AND (af.amazon_fba_restricted = 'N' OR af.amazon_fba_restricted IS NULL) 
 AND p.forsale = 'Y'
+AND p.amazon_fba = 'Y'
 AND DM.marketplace_id IS NULL
 AND DM2.marketplace_id IS NULL
 AND DM3.marketplace_id IS NULL
