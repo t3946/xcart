@@ -33,7 +33,7 @@ amazon.restocking_get_reorder_quantity(p.productid, :tau, :tau_m, :day_reorder, 
 amazon.restocking_get_average_daily_sales_amazon() as ads_a,
 amazon.restocking_get_average_daily_sales_xcart() as ads_x
 FROM xcart_products as p
-INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
+LEFT JOIN xcart_products_amz_fields af ON p.productid = af.productid
 INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
 INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
 INNER JOIN xcart_storefronts_external_marketplaces EM ON EM.storefront_id = sf.sfid AND EM.marketplace_id = 3
@@ -41,7 +41,7 @@ LEFT JOIN xcart_products_disabled_marketplaces DM ON DM.resource_id = p.producti
 LEFT JOIN xcart_products_disabled_marketplaces DM2 ON DM2.resource_id = p.brandid and DM2.resource_type = 'B' and DM2.marketplace_id = 3
 LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufacturerid and DM3.resource_type = 'D' and DM3.marketplace_id = 3
 WHERE p.amazon_enabled = 'Y' 
-AND af.amazon_fba_restricted = 'N'
+AND (af.amazon_fba_restricted = 'N' OR af.amazon_fba_restricted IS NULL) 
 AND p.forsale = 'Y'
 AND DM.marketplace_id IS NULL
 AND DM2.marketplace_id IS NULL
