@@ -91,6 +91,15 @@ class DistributorModel extends Model
                 ])->count() > 0;
     }
 
+    public function hasCanadaShippingZone(): bool
+    {
+        return ShippingRateModel::objects()
+                ->filter([
+                    'manufacturerid' => $this->manufacturerid,
+                    'zoneid' => 12
+                ])->count() > 0;
+    }
+
     public function getDistributorTime(): DateTime
     {
         return (new DateTime())->setTimestamp(time() - $this->d_server_min_distributor_time * 60 * 60);

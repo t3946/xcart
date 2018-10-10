@@ -186,6 +186,11 @@
                             The minimum order amount for this product line is US$ {$warehouse->getMinimalAmount()}
                         {/p_label}
                         {/if}
+                        {if !$warehouse->hasCanadaShippingZone()}
+                            {p_label cls="err fill last-items"}
+                                This product line can only be shipped to a US address.
+                            {/p_label}
+                        {/if}
                     </div>
                 </div>
                 {/foreach}
