@@ -54,6 +54,8 @@ foreach ($aShipments as $shipment) {
             $d2a_status = OrderStatusModel::ORDER_DA_STATUS_PENDING_ORDER_ENTRY;
             break;
         case AmazonListInboundShipment::SHIPMENT_STATUS_CANCELLED:
+        case AmazonListInboundShipment::SHIPMENT_STATUS_DELETED:
+        case AmazonListInboundShipment::SHIPMENT_STATUS_ERROR:
             $d2a_status = OrderStatusModel::ORDER_DA_STATUS_NOT_SHIPPED;
             break;
         default:
