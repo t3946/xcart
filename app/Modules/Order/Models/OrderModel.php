@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
+use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
@@ -17,6 +18,7 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
@@ -87,6 +89,12 @@ class OrderModel extends Model
             'extra_model' => [
                 'class' => OneToOneField::class,
                 'modelClass' => OrderExtraModel::class,
+                'link' => ['orderid' => 'order_id'],
+                'null' => true,
+            ],
+            'fba_shipment' => [
+                'class' => HasToOneField::class,
+                'modelClass' => AmazonListInboundShipment::class,
                 'link' => ['orderid' => 'order_id'],
                 'null' => true,
             ],

@@ -63,7 +63,7 @@ foreach ($aShipments as $shipment) {
 
     $order->setAttributes([
         'order_prefix' => 'FB-',
-        's_address' => $warehouse->address,
+        's_address' => "{$warehouse->address}\n({$shipment->destination_fulfillment_center_id})",
         's_city' => $warehouse->city,
         's_state' => $warehouse->state_model->code,
         's_country' => $warehouse->country_model->code,
@@ -97,6 +97,7 @@ foreach ($aShipments as $shipment) {
                 [$groups[$product->manufacturerid], $is_new] = OrderGroupModel::objects()->getOrNew(['orderid' => $order->orderid, 'manufacturerid' => $product->manufacturerid]);
                 $groups[$product->manufacturerid]->bd_status = $order->bd_status;
                 $groups[$product->manufacturerid]->d2a_status = $order->d2a_status;
+                $groups[$product->manufacturerid]->total_gross = $groups[$product->manufacturerid]->total_net = 0;
 
                 if ($is_new) {
                     $groups[$product->manufacturerid]->save();

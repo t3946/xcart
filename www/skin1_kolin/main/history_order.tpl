@@ -611,6 +611,9 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 	{if $order.amazonorderid ne ""}
 <a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID={$order.amazonorderid}" target="_blank">Amazon order # {$order.amazonorderid}</a><br />
 	{/if}
+       {if $oOrder->order_type == 'FB' && $oOrder->fba_shipment}
+        <a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$oOrder->fba_shipment->shipment_id}" target="_blank">Amazon FBA Shipment # {$oOrder->fba_shipment->shipment_name}</a><br />
+    {/if}
 
 	{if $checks_deposited_order ne ""}
                 <table cellspacing="0" cellpadding="0" border="0">
