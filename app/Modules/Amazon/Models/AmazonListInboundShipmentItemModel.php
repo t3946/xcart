@@ -2,9 +2,10 @@
 
 namespace Modules\Amazon\Models;
 
+use Doctrine\DBAL\Types\Type;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 class AmazonListInboundShipmentItemModel extends Model
@@ -19,17 +20,20 @@ class AmazonListInboundShipmentItemModel extends Model
     public static function getFields()
     {
         return [
-            'productid' => [
-                'class' => IntField::className(),
+            'product' => [
+                'field' => 'productid',
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'primary' => true,
                 'null' => false,
-                'default' => 0
             ],
-            'shipment_id' => [
-                'class' => CharField::className(),
+            'shipment' => [
+                'field' => 'shipment_id',
+                'class' => ForeignField::class,
+                'classModel' => AmazonListInboundShipment::class,
                 'primary' => true,
                 'null' => false,
-                'default' => 0
+                'sqlType' => Type::STRING,
             ]
         ];
     }

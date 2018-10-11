@@ -89,7 +89,11 @@ class CheckoutController extends FrontendController
 
                 $order->subtotal = 0;
 
-                $order->setAttributes(array_merge($shippingForm->getAttributes(), ['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2]));
+                $order->setAttributes(array_merge($shippingForm->getAttributes(), [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                ]));
 
                 if ($order->save()) {
 
@@ -105,6 +109,8 @@ class CheckoutController extends FrontendController
                                 'shippingid' => null,
                                 'shipping' => '',
                                 'cb_status' => $order->cb_status,
+                                'dc_status' => $order->dc_status,
+                                'bd_status' => $order->bd_status,
                                 'total_gross' => $cart_group['subtotal'],
                                 'total_net' => $cart_group['subtotal'],
                             ]);

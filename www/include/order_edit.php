@@ -576,13 +576,19 @@ if ($REQUEST_METHOD == "POST")
                     $order["shipping_groups"][$m_id]["real_shipping_method"] = $v["real_shipping_method"];
                 }
 
-                if (!in_array($v['dc_status'], ['C', 'S']) && $user_account['flag'] == 'FS') {
+                if ($user_account['flag'] === 'FS' && !\in_array($v['dc_status'], ['C', 'S'])) {
                     $v['dc_status'] = 'C';
                 }
 
                 $order['shipping_groups'][$m_id]['cb_status'] = $v['cb_status'];
                 $order['shipping_groups'][$m_id]['dc_status'] = $v['dc_status'];
                 $order['shipping_groups'][$m_id]['bd_status'] = $v['bd_status'];
+
+                $order['shipping_groups'][$m_id]['d2a_status'] = $v['d2a_status'];
+                $order['shipping_groups'][$m_id]['c2a_status'] = $v['c2a_status'];
+                $order['shipping_groups'][$m_id]['a2c_status'] = $v['a2c_status'];
+                $order['shipping_groups'][$m_id]['a2b_status'] = $v['a2b_status'];
+
                 $order['shipping_groups'][$m_id]['po_status'] = $v['po_status'];
 
                 if (empty($order["shipping_groups"][$m_id]["tracking"])) {

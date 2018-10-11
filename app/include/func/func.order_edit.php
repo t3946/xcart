@@ -752,6 +752,10 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                         $last_status_change = $v[$status_column];
                     }
                 }
+                $query_data['c2a_status'] = $v['c2a_status'];
+                $query_data['a2c_status'] = $v['a2c_status'];
+                $query_data['a2b_status'] = $v['a2b_status'];
+                $query_data['d2a_status'] = $v['d2a_status'];
 
                 // Update D2C dispatched time
                 if ($old_statuses['dc_status'] != 'C' && $v['dc_status'] == 'C' && empty($v['dc_dispatched_time'])) {

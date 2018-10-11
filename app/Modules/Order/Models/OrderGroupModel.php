@@ -22,6 +22,7 @@ use Xcart\OrderGroup;
  * @property float total_gross
  * @property int orderid
  * @property int order_group_id
+ * @property float total_net
  */
 class OrderGroupModel extends Model
 {
@@ -64,21 +65,28 @@ class OrderGroupModel extends Model
                 'null' => false,
             ],
             'cb_status_model' => [
-                'class' => ForeignField::className(),
+                'class' => ForeignField::class,
                 'field' => 'cb_status',
                 'sqlType' => Type::STRING,
-                'modelClass' => OrderStatusModel::className(),
+                'modelClass' => OrderStatusModel::class,
                 'link' => ['cb_status' => 'code'],
-                'null' => false,
-                'default' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3
+                'null' => true,
             ],
             'dc_status_model' => [
-                'class' => ForeignField::className(),
+                'class' => ForeignField::class,
                 'field' => 'dc_status',
                 'sqlType' => Type::STRING,
-                'modelClass' => OrderStatusModel::className(),
+                'modelClass' => OrderStatusModel::class,
                 'link' => ['dc_status' => 'code'],
-                'null' => false,
+                'null' => true,
+            ],
+            'bd_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'bd_status',
+                'sqlType' => Type::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['bd_status' => 'code'],
+                'null' => true,
             ],
             'payment_method' => [
                 'field' => 'acc_paymentid',

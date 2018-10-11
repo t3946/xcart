@@ -36,16 +36,18 @@ class Amazon extends StoreFrontMarketPlace
             /** @var ProductModel[] $products */
             foreach ($products as $queue) {
 
+                /** @var ProductModel $product */
                 $product = $queue['queue']->product;
 
                 $price = $product->getAmazonPrice();
-                $zero_price = $product->getZeroPrice();
-                $min_price = ($price < $zero_price) ? max($price, 2.5) : $zero_price;
+
                 $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
                 if ($product->isAmazonFBAEnabled() &&
                     (intval($product->amazon_fba_avail) > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                     !in_array($prevent_selling, ['FBA', 'MFN'])) {
+                    $zero_price = $product->getZeroPrice();
+                    $min_price = ($price < $zero_price) ? max($price, 2.5) : $zero_price;
                     $item = [
                         'sku' => $product->productcode,
                         'channel' => 'AFN',
@@ -55,12 +57,13 @@ class Amazon extends StoreFrontMarketPlace
                     ];
 
                 } else {
+                    $min_price = $product->getMinimumAmazonPrice();
                     $item = [
                         'sku' => $product->productcode,
                         'channel' => 'MFN',
-                        'quantity' => ($prevent_selling == 'MFN') ? 0 : $product->getAmazonQuantity(),
+                        'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
                         'latency' => $product->distributor->amazon_leadtime_to_ship,
-                        'price' => $price,
+                        'price' => max($price, $min_price),
                         'min_price' => $min_price,
                         'max_price' => $price
                     ];

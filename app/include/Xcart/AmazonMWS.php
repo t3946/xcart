@@ -65,6 +65,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use SimpleXMLElement;
+use Xcart\App\Main\Xcart;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
@@ -1401,6 +1402,7 @@ SQL;
                                 $oOrder->
                                 setField('order_prefix', 'AZ-')->
                                 setField('login', 'amazon')->
+                                setField('order_type', $sFulfilmentChanel === 'AFN' ? 'FBA' : 'MFN')->
                                 setField('amazon_fulfillment_channel', $sFulfilmentChanel)->
                                 setField('total', $sOrderTotal)->
                                 setField('subtotal', $sOrderTotal)->
@@ -2192,10 +2194,8 @@ SQL;
                 }
                 if ($amazonRes->ShipmentData->member) {
                     foreach ($amazonRes->ShipmentData->member as $member) {
-                        $model = AmazonListInboundShipment::objects()->get(['shipment_id' => (string) $member->ShipmentId]);
-                        if (!$model) {
-                            $model = new AmazonListInboundShipment(['shipment_id' => (string) $member->ShipmentId]);
-                        }
+                        [$model] = AmazonListInboundShipment::objects()->getOrNew(['shipment_id' => (string) $member->ShipmentId]);
+
                         $model->setAttributes([
                             'shipment_name' => (string) $member->ShipmentName,
                             'destination_fulfillment_center_id' => (string) $member->DestinationFulfillmentCenterId,
@@ -2234,10 +2234,7 @@ SQL;
                 return $this;
             }
             if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new Logger('amazon_info');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
-                $log->debug('ListInboundItems', [$this->dom_xml_arr]);
+                Xcart::app()->logger->debug('ListInboundItems response', $this->dom_xml_arr ?: [], "amazon_{$this->sLogPrefix}");
             }
 
             if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
@@ -2248,22 +2245,19 @@ SQL;
                 }
                 if ($amazonRes->ItemData->member) {
                     foreach ($amazonRes->ItemData->member as $member) {
-                        $productModel = ProductHelper::getProductByCode((string)$member->SellerSKU);
-                        if ($productModel) {
-                            $processShippingId[] = (string)$member->ShipmentId;
+                        if ($productModel = ProductHelper::getProductByCode((string)$member->SellerSKU)) {
                             $param = [
                                 'productid' => $productModel->productid,
-                                'shipment_id' => (string)$member->ShipmentId,
+                                'shipment_id' => (string) $member->ShipmentId,
                             ];
-                            $model = AmazonListInboundShipmentItemModel::objects()->get($param);
-                            if (!$model) {
-                                $model = new AmazonListInboundShipmentItemModel($param);
-                            }
+                            /** @var AmazonListInboundShipmentItemModel $model */
+                            [$model] = AmazonListInboundShipmentItemModel::objects()->getOrNew($param);
+
                             $model->setAttributes([
-                                'seller_sku' => (string)$member->SellerSKU,
-                                'fulfillment_network_sku' => (string)$member->FulfillmentNetworkSKU,
-                                'quantity_shipped' => (integer)$member->QuantityShipped,
-                                'quantity_received' => (integer)$member->QuantityReceived
+                                'seller_sku' => (string) $member->SellerSKU,
+                                'fulfillment_network_sku' => (string) $member->FulfillmentNetworkSKU,
+                                'quantity_shipped' => (int) $member->QuantityShipped,
+                                'quantity_received' => (int) $member->QuantityReceived
                             ]);
                             if ($model->isValid()) {
                                 $model->save();

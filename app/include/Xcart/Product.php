@@ -667,7 +667,7 @@ SQL;
     public function getMinimumAmazonPrice()
     {
         $aResult = SQLBuilder::getInstance()->
-        addSelect('cidev_get_minimum_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+        addSelect('f_amazonGetPriceMFN(' . $this->getProductId() . ')', 'aprice')->
         addFromTable('products')->
         addCondition('productid=' . $this->getProductId())->
         query_first()->getQueryResult();

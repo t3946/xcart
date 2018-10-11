@@ -1129,134 +1129,168 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 </tr>
 {/if}
 
-{if $active_modules.Google_Checkout eq '' or $order.extra.goid eq ''}
-<tr style="background-color: #d9ead3;">
-  <td colspan="11">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+    {if $active_modules.Google_Checkout eq '' or $order.extra.goid eq ''}
+        <tr style="background-color: #d9ead3;">
+            <td colspan="11">
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                        {if $oOrderGroup->cb_status !== null}
+                            <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
 
-<script type="text/javascript">
-<!--
-{literal}
-  $(function() {
-    $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function(){
-      func_check_cb_statuses();
-
-//      func_check_cb_status('{/literal}{$m_id}{literal}');
-    });
-  });
-{/literal}
--->
-</script>
-
-        <b>{$lng.lbl_cust_bus_payment_status}:</b><br />
-
-        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y" || ( ($v.cb_status eq "IO" || $v.cb_status eq "O") && $allowed_to_modify_cb_status_IO_O ne "Y")}
-          <input type="hidden" name="groups[{$m_id}][cb_status]" id="groups_cb_status_{$m_id}" value="{$v.cb_status}" />
-          {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
-        {else}
-          {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
-        {/if}
-
-          {if $v.cb_status == 'I' ||$v.cb_status == 'Q' ||$v.cb_status == 'AP' ||$v.cb_status == 'N' || empty($v.cb_status)}
-              {assign var=bCanAcceptCoupon value='Y'}
-          {/if}
-
-          <br />
-<B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
-
-      </td>
-      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
-        <b>{$lng.lbl_distr_cust_shipping_status}:</b><br />
-
-{assign var="hide_dispatched_status" value=""}
-{if $order_manufacturers[$m_id].submit_to_operator eq "through_distributor_website"}
-{assign var="hide_dispatched_status" value="Y"}
-{/if}
-
-{assign var="hide_pending_availability_check_status" value="Y"}
-{if $order_manufacturers[$m_id].d_availability_must_be_checked eq "Y"}
-{assign var="hide_pending_availability_check_status" value=""}
-{/if}
+                            <script type="text/javascript">
+                                <!--
+                                {literal}
+                                $(function () {
+                                    $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function () {
+                                        func_check_cb_statuses();
 
 
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#groups_dc_status_{/literal}{$m_id}{literal}").change(function(){
-/*      func_check_dc_statuses('{/literal}{$m_id}{literal}'); */
-      func_check_dc_statuses();
-    });
-  });
-{/literal}
--->
-</script>
+                                    });
+                                });
+                                {/literal}
+                                -->
+                            </script>
+
+                            <b>{$lng.lbl_cust_bus_payment_status}:</b><br/>
+
+                            {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y" || ( ($v.cb_status eq "IO" || $v.cb_status eq "O") && $allowed_to_modify_cb_status_IO_O ne "Y")}
+                                <input type="hidden" name="groups[{$m_id}][cb_status]" id="groups_cb_status_{$m_id}"
+                                       value="{$v.cb_status}"/>
+                                {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
+                            {else}
+                                {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
+                            {/if}
+
+                            {if $v.cb_status == 'I' ||$v.cb_status == 'Q' ||$v.cb_status == 'AP' ||$v.cb_status == 'N' || empty($v.cb_status)}
+                                {assign var=bCanAcceptCoupon value='Y'}
+                            {/if}
+
+                            <br/>
+                            <B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span
+                                style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+                        </td>
+                        {elseif $oOrderGroup->c2a_status !== null}
+                            <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+
+                                <b>Customer to Amazon payment status:</b><br/>
+
+                                {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][c2a_status]" status_type="C2" extra=" id='groups_c2a_status_`$m_id`'"}
+
+                                <br/>
+                                <B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+                        {elseif $oOrderGroup->a2b_status !== null}
+                        {else}
+                            <td width="33%"></td>
+                        {/if}
+                        {if $oOrderGroup->dc_status !== null}
+                            <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+                            <b>{$lng.lbl_distr_cust_shipping_status}:</b><br/>
+
+                            {assign var="hide_dispatched_status" value=""}
+                            {if $order_manufacturers[$m_id].submit_to_operator eq "through_distributor_website"}
+                                {assign var="hide_dispatched_status" value="Y"}
+                            {/if}
+
+                            {assign var="hide_pending_availability_check_status" value="Y"}
+                            {if $order_manufacturers[$m_id].d_availability_must_be_checked eq "Y"}
+                                {assign var="hide_pending_availability_check_status" value=""}
+                            {/if}
 
 
-        {include file="main/order_status.tpl" status=$v.dc_status mode="select" name="groups[`$m_id`][dc_status]" status_type="DC" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_dc_status_`$m_id`' "}
-
-<br />
-<B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span style="color: red;">Not yet dispatched</span>{else}{$v.dc_dispatched_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
-
-<br />
-<B>Received by distributor date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}<span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
-
-
-      </td>
-      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
-{*
-        <b>{$lng.lbl_bus_distr_payment_status}:</b><br />
-
-        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
-          <input type="hidden" name="groups[{$m_id}][bd_status]" id="groups_bd_status_{$m_id}" value="{$v.bd_status}" />
-          {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD" extra=" disabled='disabled'"}
-        {else}
-          {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD"}
-        {/if}
-*}
-
-<B>Business to distributor invoice status:</B><br />
-{if $v.invoices ne ""}
-{foreach from=$v.invoices item=item_invoice key=key_invoice}
-
-I-{$key_invoice}: {$invoice_memo_statuses[$item_invoice.status]}<br />
-
-{/foreach}
-{else}
-{$invoice_memo_statuses.N}<br />
-{/if}
-
-<br />
-<B>Business to distributor credit memo status:</B><br />
-{if $v.memos ne ""}
-{foreach from=$v.memos item=item_memos key=key_memos}
-
-C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
-
-{/foreach}
-{else}
-{$invoice_memo_statuses.N}
-{/if}
+                            <script type="text/javascript" language="JavaScript 1.2">
+                                <!--
+                                {literal}
+                                  $(function() {
+                                    $("#groups_dc_status_{/literal}{$m_id}{literal}").change(function(){
+                                /*      func_check_dc_statuses('{/literal}{$m_id}{literal}'); */
+                                      func_check_dc_statuses();
+                                    });
+                                  });
+                                {/literal}
+                                -->
+                            </script>
 
 
-      </td>
-    </tr>
-    </table>
-  </td>
-</tr>
+                            {include file="main/order_status.tpl" status=$v.dc_status mode="select" name="groups[`$m_id`][dc_status]" status_type="DC" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_dc_status_`$m_id`' "}
 
-{* --- *}
-<tr id="po_status_{$m_id}_tr" {if $v.cb_status ne "O"}style="display: none;"{else}style="background-color: #B6D7A8;"{/if}>
-<td colspan="11">
-        <b>Check transit status:</b><br />
-        {include file="main/order_status.tpl" status=$v.po_status mode="select" name="groups[`$m_id`][po_status]" status_type="PO" extra=" id='groups_po_status_`$m_id`' "}
-</td>
-</tr>
-{* --- *}
+                            <br/>
+                            <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span style="color: red;">Not yet dispatched</span>{else}{$v.dc_dispatched_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
 
-{/if}
+                            <br/>
+                            <B>Received by distributor date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}
+                            <span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+
+                        </td>
+                        {/if}
+                        {if $oOrderGroup->d2a_status !== null}
+                            <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+                                <b>Distributor to Amazon shipping status:</b><br/>
+
+                                {assign var="hide_dispatched_status" value=""}
+                                {if $order_manufacturers[$m_id].submit_to_operator eq "through_distributor_website"}
+                                    {assign var="hide_dispatched_status" value="Y"}
+                                {/if}
+
+                                {assign var="hide_pending_availability_check_status" value="Y"}
+
+                                {include file="main/order_status.tpl" status=$oOrderGroup->d2a_status mode="select" name="groups[`$m_id`][d2a_status]" status_type="DA" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_d2a_status_`$m_id`' "}
+
+                                <br/>
+                                <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span style="color: red;">Not yet dispatched</span>{else}{$v.dc_dispatched_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+                                <br/>
+                                <B>Received by distributor date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}
+                                <span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+
+                            </td>
+                        {/if}
+                        {if $oOrderGroup->bd_status !== null}
+                            <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+                            <B>Business to distributor invoice status:</B><br/>
+                            {if $v.invoices ne ""}
+                                {foreach from=$v.invoices item=item_invoice key=key_invoice}
+
+                                    I-{$key_invoice}: {$invoice_memo_statuses[$item_invoice.status]}
+                                    <br/>
+                                {/foreach}
+                            {else}
+                                {$invoice_memo_statuses.N}
+                                <br/>
+                            {/if}
+
+                            <br/>
+                            <B>Business to distributor credit memo status:</B><br/>
+                            {if $v.memos ne ""}
+                                {foreach from=$v.memos item=item_memos key=key_memos}
+
+                                    C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}
+                                    <br/>
+                                {/foreach}
+                            {else}
+                                {$invoice_memo_statuses.N}
+                            {/if}
+
+
+                        </td>
+                        {/if}
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {* --- *}
+        <tr id="po_status_{$m_id}_tr" {if $v.cb_status ne "O"}style="display: none;"
+            {else}style="background-color: #B6D7A8;"{/if}>
+            <td colspan="11">
+                <b>Check transit status:</b><br/>
+                {include file="main/order_status.tpl" status=$v.po_status mode="select" name="groups[`$m_id`][po_status]" status_type="PO" extra=" id='groups_po_status_`$m_id`' "}
+            </td>
+        </tr>
+        {* --- *}
+
+    {/if}
 
   {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"}
     {if ($order.customer_notes ne "")}

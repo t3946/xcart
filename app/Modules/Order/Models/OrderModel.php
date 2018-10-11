@@ -52,10 +52,14 @@ use Xcart\Order;
  * @property string orig_po
  * @property string po_number
  * @property string firstname
+ * @property int storefrontid
  */
 class OrderModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
+
+    public const ORDER_TYPE_XCART = 'XCART';
+    public const ORDER_TYPE_FB = 'FB';
 
     public $last_activity;
     public $last_message;
@@ -150,30 +154,27 @@ class OrderModel extends Model
             ],
             'cb_status_model' => [
                 'field' => 'cb_status',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderStatusModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusModel::class,
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Type::STRING,
-                'null' => false,
-                'default' => OrderStatusModel::ORDER_STATUS_QUEUED
+                'null' => true,
             ],
             'dc_status_model' => [
                 'field' => 'dc_status',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderStatusModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusModel::class,
                 'link' => ['dc_status' => 'code'],
                 'sqlType' => Type::STRING,
-                'null' => false,
-                'default' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED
+                'null' => true,
             ],
             'bd_status_model' => [
                 'field' => 'bd_status',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderStatusModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusModel::class,
                 'link' => ['bd_status' => 'code'],
                 'sqlType' => Type::STRING,
-                'null' => false,
-                'default' => OrderStatusModel::ORDER_BD_STATUS_UNPAID
+                'null' => true,
             ],
             'fraud_status_model' => [
                 'field' => 'fraud_status',
