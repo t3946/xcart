@@ -7,12 +7,13 @@
         byLine = $row->name|createByLine:$row->date}
     </div>
     {if $row->answered_on_page == 'Y' && $row->answer}
+        {set $user_name = $row->user ? $row->user->getShortSurname() : ''}
         <div class="answer">
             {include 'product/tabs/questions/_question_item.tpl'
             title = 'BEST ANSWER'
             short = 'A'
             text = $row->answer
-            byLine = $row->user->getShortSurname()|createByLine:$row->answered_date:true}
+            byLine = $user_name|createByLine:$row->answered_date:true }
         </div>
     {/if}
 </div>
