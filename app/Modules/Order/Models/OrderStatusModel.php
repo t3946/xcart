@@ -24,6 +24,7 @@ class OrderStatusModel extends Model
     public const ORDER_STATUS_FAILED = 'F';
     public const ORDER_STATUS_PENDING_ORDER_ENTRY = 'E';
     public const ORDER_STATUS_CANCELED = 'A';
+    public const ORDER_STATUS_DECLINED = 'D';
 
     public const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
     public const ORDER_DC_STATUS_SHIPPED = 'S';

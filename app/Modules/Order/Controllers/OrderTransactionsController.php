@@ -75,7 +75,7 @@ class OrderTransactionsController extends PrototypeAdminController
             if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
                 if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
 
-                    $order_log .= $f_order = OrderModule::t("Error: First transaction in order exception");
+                    $order_log .= $f_order = OrderModule::t('Error: First transaction in order exception');
                     func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
 
                     $top_message = [
@@ -105,10 +105,10 @@ class OrderTransactionsController extends PrototypeAdminController
             $transaction_model = $store->authorize();
             $order_log .= $store->log;
 
-            if (in_array($transaction_model->transaction_status, [OrderTransactionModel::STATUS_AUTHORIZED])) {
-                list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+            if ($transaction_model->transaction_status === OrderTransactionModel::STATUS_AUTHORIZED) {
+                [$o_log, $send_notification] = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
                 if ($o_log) {
-                    $order_log .= "<br />" . $o_log;
+                    $order_log .= '<br />' . $o_log;
                 }
                 Xcart::app()->event->trigger('payment:authorize', ['model' => $orderModel, 'order_before' => $order_before, 'transaction' => $transaction_model]);
             }

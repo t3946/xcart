@@ -167,24 +167,31 @@ class OrderHelper
      *
      * @return array
      */
-    public static function changeOrderCBStatus(OrderModel $model, $status)
+    public static function changeOrderCBStatus(OrderModel $model, $status):array
     {
         $log = null;
         $send = false;
         if ($model->groups) {
             /** @var OrderGroupModel $group */
             foreach ($model->groups as $group) {
-                if (in_array($group->cb_status, ['Q', 'N', 'I'])) {
-                    if ($group->cb_status != $status) {
-                        $log = "<br/><b>" . $group->manufacturer->code . ":</b> cb_status: " . $group->cb_status_model->name
-                               . " -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                if (\in_array($group->cb_status,
+                    [
+                        OrderStatusModel::ORDER_STATUS_QUEUED,
+                        OrderStatusModel::ORDER_STATUS_UNPAID,
+                        OrderStatusModel::ORDER_STATUS_NOT_FINISHED,
+                        OrderStatusModel::ORDER_STATUS_CANCELED,
+                        OrderStatusModel::ORDER_STATUS_FAILED,
+                        OrderStatusModel::ORDER_STATUS_DECLINED,
+                    ],true)) {
+                    if ($group->cb_status !== $status) {
+                        $log = "<br/><b>{$group->manufacturer->code}:</b> cb_status: {$group->cb_status_model->name} -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
                     }
                     $send = true;
                     $group->cb_status = $status;
                     $group->save();
                 }
             }
-            if ($send && $model->cb_status != $status) {
+            if ($send && $model->cb_status !== $status) {
                 $model->cb_status = $status;
                 $model->save();
             }
