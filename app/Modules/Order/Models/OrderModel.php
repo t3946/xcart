@@ -61,6 +61,8 @@ class OrderModel extends Model
     use DataModelTrait, AutoMetaTrait;
 
     public const ORDER_TYPE_XCART = 'XCART';
+    public const ORDER_TYPE_FBA = 'FBA';
+    public const ORDER_TYPE_MFN = 'MFN';
     public const ORDER_TYPE_FB = 'FB';
 
     public $last_activity;
