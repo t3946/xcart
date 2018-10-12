@@ -1095,18 +1095,19 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                 }
 
                 foreach ($qs->all() as $ko => $vo) {
+                    $inv_a = $memo_a = [];
 
-                    $unreconciled_orders[$ko] = [
-                        'orderid' => $vo->orderid,
-                        'manufacturerid' => $vo->manufacturerid,
-                        'date' => $vo->order->date,
-                        'order_prefix' => $vo->order->order_prefix,
-                    ];
+                    $unreconciled_orders[$ko] = array_merge(
+                        $v->getAttributes(),
+                        [
+                            'date' => $vo->order->date,
+                            'order_prefix' => $vo->order->order_prefix,
+                        ]);
 
                     /** @var OrderGroupInvoiceModel[] $invoices */
                     $invoices = $vo->invoices->all();
                     foreach ($invoices as $invoice_m) {
-                        if (\in_array($invoice_m->status, ['U', 'A'], true)) {
+                        if (\in_array($invoice_m->status, ['U', 'A'], true) && $invoice_m->reconciliation_id == 0) {
                             $inv_a[$invoice_m->invoice_number] = $invoice_m->getAttributes();
                         }
                     }
@@ -1114,7 +1115,10 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                     /** @var OrderGroupMemoModel[] $memos */
                     $memos = $vo->memos->all();
                     foreach ($memos as $memo_m) {
-                        $inv_a[$memo_m->memo_number] = $memo_m->getAttributes();
+                        if (\in_array($memo_m->status, ['U', 'A'], true) && $memo_m->reconciliation_id == 0) {
+                            $memo_a[$memo_m->memo_number] = $memo_m->getAttributes();
+                        }
+
                     }
 
                     if (!empty($order_group_invoices)) {
@@ -1122,13 +1126,11 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                     }
 
                     if (!empty($order_group_memos)) {
-                        $unreconciled_orders[$ko]["order_group_memos"] = $order_group_memos;
+                        $unreconciled_orders[$ko]["order_group_memos"] = $memo_a;
                     }
 
-                    if (!$unreconciled_orders[$ko]["order_group_invoices"] && !$unreconciled_orders[$ko]["order_group_memos"]) {
-                        if (\count($invoices) > 0) {
-                            unset($unreconciled_orders[$ko]);
-                        }
+                    if (!$unreconciled_orders[$ko]["order_group_invoices"] && !$unreconciled_orders[$ko]["order_group_memos"] && \count($invoices) > 0) {
+                        unset($unreconciled_orders[$ko]);
                     }
                 }
 
