@@ -284,7 +284,7 @@ if (!empty($product_owner)) {
 
 if ($REQUEST_METHOD == "POST") {
 
-	if ($mode == "add_PQ"){
+	if ($mode === "add_PQ"){
 		db_query("INSERT INTO $sql_tbl[product_question] (productid, status, date, answered_date, answered_on_page, added_from_product_modify_page) VALUES ('$productid', '', '".time()."', '".time()."', 'Y', 'Y')");
 		func_refresh("Product_questions", "#Product_questions");
 	}
@@ -292,29 +292,31 @@ if ($REQUEST_METHOD == "POST") {
 	if ($mode == "update_PQ" && !empty($posted_data) && is_array($posted_data)){
 		
 		foreach ($posted_data as $id => $v){
-		
-			if ($v["answered_on_page_OR_question_published_on_page"] == "question_published_on_page"){
-				$v["question_published_on_page"] = "Y";
-				$v["answered_on_page"] = "Y";
-			} else {
-                                $v["question_published_on_page"] = "N";
-                                $v["answered_on_page"] = "Y";
-			}
 
-			unset($v["to_delete"]);
-			unset($v["answered_on_page_OR_question_published_on_page"]);
+            if ($v["answered_on_page_OR_question_published_on_page"] == "question_published_on_page") {
+                $v["question_published_on_page"] = "Y";
+                $v["answered_on_page"] = "Y";
+            } else {
+                $v["question_published_on_page"] = "N";
+                $v["answered_on_page"] = "Y";
+            }
 
-               		$time_arr = explode("/", $v["date"]);
-               		if (!empty($time_arr) && is_array($time_arr)){
-                       		$v["date"] = mktime(0, 0, 0, $time_arr[0], $time_arr[1], $time_arr[2]);
-               		}
+            unset($v["to_delete"]);
+            unset($v["answered_on_page_OR_question_published_on_page"]);
 
-                        $time_arr = explode("/", $v["answered_date"]);
-                        if (!empty($time_arr) && is_array($time_arr)){
-                                $v["answered_date"] = mktime(0, 0, 0, $time_arr[0], $time_arr[1], $time_arr[2]);
-                        }  
+            $time_arr = explode("/", $v["date"]);
+            if (!empty($time_arr) && is_array($time_arr)) {
+                $v["date"] = mktime(0, 0, 0, $time_arr[0], $time_arr[1], $time_arr[2]);
+            }
 
-			func_array2update("product_question", $v, "id = '$id'");
+            $time_arr = explode("/", $v["answered_date"]);
+            if (!empty($time_arr) && is_array($time_arr)) {
+                $v["answered_date"] = mktime(0, 0, 0, $time_arr[0], $time_arr[1], $time_arr[2]);
+            }
+
+            $v['name'] = $v['name'] ?: $v['firstname'];
+
+            func_array2update("product_question", $v, "id = '$id'");
 		}
 
 		func_refresh("Product_questions", "#Product_questions");
