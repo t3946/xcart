@@ -315,6 +315,38 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['group.dc_status__in' => $val], 'order.d2c_status');
             }
 
+            if (!empty($data['order']['c2a_status']) || $this->checkNot('order.c2a_status')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+
+                $val = $data['order']['c2a_status'] ?: [''];
+
+                $this->getQ(['group.c2a_status__in' => $val], 'order.c2a_status');
+            }
+
+            if (!empty($data['order']['a2c_status']) || $this->checkNot('order.a2c_status')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+
+                $val = $data['order']['a2c_status'] ?: [''];
+
+                $this->getQ(['group.a2c_status__in' => $val], 'order.a2c_status');
+            }
+
+            if (!empty($data['order']['a2b_status']) || $this->checkNot('order.a2b_status')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+
+                $val = $data['order']['a2b_status'] ?: [''];
+
+                $this->getQ(['group.a2b_status__in' => $val], 'order.a2b_status');
+            }
+
+            if (!empty($data['order']['d2a_status']) || $this->checkNot('order.d2a_status')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+
+                $val = $data['order']['d2a_status'] ?: [''];
+
+                $this->getQ(['group.d2a_status__in' => $val], 'order.d2a_status');
+            }
+
             if (!empty($data['order']['po_transit_status']) || $this->checkNot('order.po_transit_status')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
 

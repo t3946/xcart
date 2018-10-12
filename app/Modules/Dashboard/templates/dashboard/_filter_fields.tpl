@@ -507,6 +507,98 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
+                    <label for="o_c2a">C2A payment status:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select type="text" name="search[order][c2a_status][]" id="o_c2a" class="big" multiple>
+                        {foreach $order_statuses.C2 as $status}
+                            <option value="{$status.code}" {if $form_data.order.c2a_status && $status.code in list $form_data.order.c2a_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][order][c2a_status]" id="noca" {if $form_data.not.order.c2a_status}checked{/if}>
+                    <label for="noca">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_a2c">A2C shipping status:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select type="text" name="search[order][a2c_status][]" id="o_a2c" class="big" multiple>
+                        {foreach $order_statuses.AC as $status}
+                            <option value="{$status.code}" {if $form_data.order.a2c_status && $status.code in list $form_data.order.a2c_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][order][a2c_status]" id="noac" {if $form_data.not.order.a2c_status}checked{/if}>
+                    <label for="noac">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_a2b">A2B payment status:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select type="text" name="search[order][a2b_status][]" id="o_c2a" class="big" multiple>
+                        {foreach $order_statuses.AB as $status}
+                            <option value="{$status.code}" {if $form_data.order.a2b_status && $status.code in list $form_data.order.a2b_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][order][a2b_status]" id="nodc" {if $form_data.not.order.a2b_status}checked{/if}>
+                    <label for="nodc">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_d2a">D2A shipping status:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select type="text" name="search[order][d2a_status][]" id="o_d2a" class="big" multiple>
+                        {foreach $order_statuses.DA as $status}
+                            <option value="{$status.code}" {if $form_data.order.d2a_status && $status.code in list $form_data.order.d2a_status}selected{/if}>
+                                {$status.name}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][order][d2a_status]" id="noda" {if $form_data.not.order.d2a_status}checked{/if}>
+                    <label for="noda">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
                     <label for="o_po">PO status:</label>
                 </div>
 
