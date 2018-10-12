@@ -26,16 +26,7 @@ class SearchController extends PrototypeAdminController
             $form_data = [
                 'order' => [
                     'date' => SearchHelper::getDefaultSearchDate(),
-                    'c2b_status' => [
-                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
-                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
-                        OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
-                    ]
                 ],
-                'not' => ['order' => [
-                    'c2b_status' => true
-                ]]
             ];
         }
 
