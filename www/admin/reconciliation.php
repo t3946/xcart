@@ -1098,7 +1098,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                     $inv_a = $memo_a = [];
 
                     $unreconciled_orders[$ko] = array_merge(
-                        $v->getAttributes(),
+                        $vo->getAttributes(),
                         [
                             'date' => $vo->order->date,
                             'order_prefix' => $vo->order->order_prefix,
