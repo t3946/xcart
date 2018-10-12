@@ -1048,16 +1048,18 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 		    $tmp_manufacturers_search_condition = "";
 
-		    if ($search_data["reconciliation_tab_".$tab]["select_distributors"] == "from_the_list"){
-			if (!empty($search_data["reconciliation_tab_".$tab]["manufacturers"])){
-				$tmp_manufacturers_str = implode("','",$search_data["reconciliation_tab_".$tab]["manufacturers"]);
-				$tmp_manufacturers_str = "'".$tmp_manufacturers_str."'";
-			} else {
-				$tmp_manufacturers_str = "'0'";
-			}
+            if ($search_data["reconciliation_tab_" . $tab]["select_distributors"] == "from_the_list") {
+                if (!empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
+                    $tmp_manufacturers_str = implode("','", $search_data["reconciliation_tab_" . $tab]["manufacturers"]);
+                    $tmp_manufacturers_str = "'" . $tmp_manufacturers_str . "'";
+                    $filter_manufacturers = $search_data["reconciliation_tab_" . $tab]["manufacturers"];
+                } else {
+                    $tmp_manufacturers_str = "'0'";
+                }
 
-			$tmp_manufacturers_search_condition = " AND manufacturerid IN ($tmp_manufacturers_str)";
-			$search_condition .= $tmp_manufacturers_search_condition;
+                $tmp_manufacturers_search_condition = " AND manufacturerid IN ($tmp_manufacturers_str)";
+                $search_condition .= $tmp_manufacturers_search_condition;
+
 		    }
 		    else {
 			// select_distributors == "ALL"
@@ -1065,36 +1067,50 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 		    }
 
 
-		    if ($tab == "unreconciled" && $search_data["reconciliation_tab_".$tab]["show_unreconciled_invoices_and_memos"] == "Y"){
+            if ($tab === 'unreconciled' && $search_data["reconciliation_tab_" . $tab]["show_unreconciled_invoices_and_memos"] === "Y") {
 
-	                $unreconciled_order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_".$tab]["date"]["start_date"])."'";
-        	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_".$tab]["date"]["end_date"])."'";
-        	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel != 'AFN' ";
+                $qs = OrderGroupModel::objects()->getQuerySet();
+                $qs->select(['orderid','manufacturerid','date' => 'order__date', 'order_prefix' => 'order__order_prefix']);
+                $qs->filter([
+                    'order__date__gte' => $search_data["reconciliation_tab_" . $tab]["date"]["start_date"],
+                    'order__date__lte' => $search_data["reconciliation_tab_" . $tab]["date"]["end_date"],
+                    'order__order_type__isnt' => OrderModel::ORDER_TYPE_FBA,
+                    new QOr([
+                        'cb_status__in' => [
+                            OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                            OrderStatusModel::ORDER_STATUS_COMPLETED,
+                            OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
+                            OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                        ],
+                        'order__order_type' => OrderModel::ORDER_TYPE_FB
+                    ]),
+                ])->order(['-orderid']);
+                if ($filter_manufacturers && \is_array($filter_manufacturers)) {
+                    $qs->filter(['manufacturerid__in' => $filter_manufacturers]);
+                }
 
-	                $unreconciled_orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].order_prefix FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $unreconciled_order_search_condition $tmp_manufacturers_search_condition AND $sql_tbl[order_groups].cb_status IN ('O','P','3','H') ORDER BY $sql_tbl[order_groups].orderid desc");
+                $unreconciled_orders = $qs->asArray(true)->all();
+                foreach ($unreconciled_orders as $ko => $vo) {
 
-        	        if (!empty($unreconciled_orders)){
+                    $order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid={$vo['manufacturerid']} AND (status='U' || status='A') AND reconciliation_id='0'", "invoice_number", false);
+                    $order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid={$vo['manufacturerid']} AND (status='U' || status='A') AND reconciliation_id='0'", "memo_number", false);
 
-                	        foreach ($unreconciled_orders as $ko => $vo){
+                    if (!empty($order_group_invoices)) {
+                        $unreconciled_orders[$ko]["order_group_invoices"] = $order_group_invoices;
+                    }
 
-                        	        $order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND (status='U' || status='A') AND reconciliation_id='0'","invoice_number", false);
-	                                $order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND (status='U' || status='A') AND reconciliation_id='0'","memo_number", false);
+                    if (!empty($order_group_memos)) {
+                        $unreconciled_orders[$ko]["order_group_memos"] = $order_group_memos;
+                    }
 
-        	                        if (!empty($order_group_invoices)){
-                	                        $unreconciled_orders[$ko]["order_group_invoices"] = $order_group_invoices;
-                        	        }
+                    if (!$unreconciled_orders[$ko]["order_group_invoices"] && !$unreconciled_orders[$ko]["order_group_memos"]) {
+                        unset($unreconciled_orders[$ko]);
+                    }
+                }
 
-                                	if (!empty($order_group_memos)){
-                                        	$unreconciled_orders[$ko]["order_group_memos"] = $order_group_memos;
-	                                }
-        	                }
-	
-				$smarty->assign("unreconciled_orders", $unreconciled_orders);
-	                }
+                $smarty->assign("unreconciled_orders", $unreconciled_orders);
 
-		    } // if ($tab == "unreconciled")
-
-
+            }
 		}
 
 		$reconciliations = func_query("SELECT * FROM $sql_tbl[reconciliations] WHERE $search_condition ORDER BY date_csv");

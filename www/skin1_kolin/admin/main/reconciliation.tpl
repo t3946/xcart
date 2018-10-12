@@ -5,7 +5,7 @@
 {literal}
 function managedate(type, status) {
         var fields = ['StartDay','StartMonth','StartYear','EndDay','EndMonth','EndYear'];
-        
+
         for (i in fields)
                 if (document.searchform.elements[fields[i]])
                         document.searchform.elements[fields[i]].disabled = status;
@@ -375,10 +375,10 @@ to
         ($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
 
         (
-          $v.invoices_and_memos ne "" 
+          $v.invoices_and_memos ne ""
                 && (
-                        $v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format ||   
-                        $v.total_invoices_and_memos_amounts_abs|price_format eq $v.amount_csv|price_format   
+                        $v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format ||
+                        $v.total_invoices_and_memos_amounts_abs|price_format eq $v.amount_csv|price_format
                 )
         )
   }
@@ -391,11 +391,11 @@ to
 	{else}
 		{if $v.action ne "D" && $v.config_search_keyphrase_found ne "Y"}
                 <option value="R"
-{if 
-($v.action eq "R") || 
-($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format) || 
+{if
+($v.action eq "R") ||
+($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format) ||
 ($v.total_invoices_and_memos_amounts_abs|price_format eq $v.amount_csv|price_format)
-} 
+}
         selected="selected"
 {/if}
                 >Reconcile</option>
@@ -542,63 +542,71 @@ to
 	<td colspan="4"></td>
 
 
-	{if $v.order_group_invoices ne "" || $v.order_group_memos ne ""}
-<td colspan="5">
-  <table width="100%" cellpadding="0" cellspacing="0">
+      {if $v.order_group_invoices ne "" || $v.order_group_memos ne ""}
+          <td colspan="5">
+              <table width="100%" cellpadding="0" cellspacing="0">
 
- {if $v.order_group_invoices ne ""}
-   {foreach from=$v.order_group_invoices item=vo key=ko}
-   <tr>
-        <td width="90" align="center" nowrap="nowrap">
-                ({$vo.invoice_total})
-        </td>
-        <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;" href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
-        <td width="90" align="center">
-        <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
-        </td>
-        <td width="100" align="center">
-                {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-I-{$ko}
-        <br />
-        </td>
-        <td width="90" align="center">
-        {$v.date|date_format:'%d-%b-%Y'}
-        </td>
-   </tr>
-   {/foreach}
- {/if}
+                  {if $v.order_group_invoices ne ""}
+                      {foreach from=$v.order_group_invoices item=vo key=ko}
+                          <tr>
+                              <td width="90" align="center" nowrap="nowrap">
+                                  ({$vo.invoice_total})
+                              </td>
+                              <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
+                                                               href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11"
+                                                               target="_blank">{$manufacturers[$v.manufacturerid].code}</a>
+                              </td>
+                              <td width="90" align="center">
+                                  <a href="order.php?orderid={$v.orderid}"
+                                     target="_blank">{$v.order_prefix}{$v.orderid}</a><br/>
+                              </td>
+                              <td width="100" align="center">
+                                  {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-I-{$ko}
+                                  <br/>
+                              </td>
+                              <td width="90" align="center">
+                                  {$v.date|date_format:'%d-%b-%Y'}
+                              </td>
+                          </tr>
+                      {/foreach}
+                  {/if}
 
- {if $v.order_group_memos ne ""}
-   {foreach from=$v.order_group_memos item=vo key=ko}
-   <tr>
-        <td width="90" align="center" nowrap="nowrap">
-                {$vo.ref_to_us_total}
-        </td>
-        <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;" href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
-        <td width="90" align="center">
-        <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
-        </td>
-        <td width="100" align="center">
-                {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-C-{$ko}
-        <br />
-        </td>
-        <td width="90" align="center">
-        {$v.date|date_format:'%d-%b-%Y'}
-        </td>
-   </tr>
-   {/foreach}
- {/if}
+                  {if $v.order_group_memos ne ""}
+                      {foreach from=$v.order_group_memos item=vo key=ko}
+                          <tr>
+                              <td width="90" align="center" nowrap="nowrap">
+                                  {$vo.ref_to_us_total}
+                              </td>
+                              <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
+                                                               href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11"
+                                                               target="_blank">{$manufacturers[$v.manufacturerid].code}</a>
+                              </td>
+                              <td width="90" align="center">
+                                  <a href="order.php?orderid={$v.orderid}"
+                                     target="_blank">{$v.order_prefix}{$v.orderid}</a><br/>
+                              </td>
+                              <td width="100" align="center">
+                                  {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-C-{$ko}
+                                  <br/>
+                              </td>
+                              <td width="90" align="center">
+                                  {$v.date|date_format:'%d-%b-%Y'}
+                              </td>
+                          </tr>
+                      {/foreach}
+                  {/if}
 
-  </table>
-</td>
+              </table>
+          </td>
+      {else}
+          <td align="center"><B>N/A</B></td>
+          <td align="center">{$manufacturers[$v.manufacturerid].code}</td>
+          <td align="center"><a href="order.php?orderid={$v.orderid}"
+                                target="_blank">{$v.order_prefix}{$v.orderid}</a><br/></td>
+          <td align="center"><B>Not received</B></td>
+          <td align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
+      {/if}
 
-	{else}
-		<td align="center"><B>N/A</B></td>
-		<td align="center">{$manufacturers[$v.manufacturerid].code}</td>
-		<td align="center"><a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br /></td>
-		<td align="center"><B>Not received</B></td>
-		<td align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
-	{/if}
-	
 	<td></td>
 
   </tr>
@@ -989,7 +997,7 @@ function func_show_full_orders_info(id){
 
       {/if}
     {/foreach}
-	
+
 	<tr><td colspan="2"></td><td align="center"><B>{$sum_total_gross_accounting_1_2|price_format}</B></td></tr>
         </table>
   {/if}
