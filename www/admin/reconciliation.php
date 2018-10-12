@@ -1120,19 +1120,15 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                         }
                     }
 
-                    $order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid={$vo['manufacturerid']} AND (status='U' || status='A') AND reconciliation_id='0'", "invoice_number", false);
-                    $order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid={$vo['manufacturerid']} AND (status='U' || status='A') AND reconciliation_id='0'", "memo_number", false);
-
-
-                    if (!empty($order_group_invoices)) {
-                        $unreconciled_orders[$ko]["order_group_invoices"] = $order_group_invoices;
+                    if ($inv_a) {
+                        $unreconciled_orders[$ko]["order_group_invoices"] = $inv_a;
                     }
 
-                    if (!empty($order_group_memos)) {
-                        $unreconciled_orders[$ko]["order_group_memos"] = $order_group_memos;
+                    if ($memo_a) {
+                        $unreconciled_orders[$ko]["order_group_memos"] = $memo_a;
                     }
 
-                    if (!$unreconciled_orders[$ko]["order_group_invoices"] && !$unreconciled_orders[$ko]["order_group_memos"] && \count($invoices) > 0) {
+                    if (!$inv_a && !$memo_a && \count($invoices) > 0) {
                         unset($unreconciled_orders[$ko]);
                     }
                 }
