@@ -2,7 +2,11 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\Connection;
 
 x_load('backoffice','files', 'order');
