@@ -52,8 +52,8 @@
             <td class="float cost-to-us" align="center">${$product.cost_to_us|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.price|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.min_fba_price|formatprice:"":"."}</td>
-            <td class="float" align="center">${$product.lowest_price|formatprice:"":"."}</td>
-            <td class="float" align="center">${$product.buy_box_price|formatprice:"":"."}</td>
+            <td class="float {if $product.min_fba_price > $product.lowest_price}changed{/if}" {if $product.min_fba_price < $product.lowest_price}style="background-color:green;"{/if} align="center">{if $product.lowest_price}${$product.lowest_price|formatprice:"":"."}{/if}</td>
+            <td class="float {if $product.min_fba_price > $product.buy_box_price}changed{/if}" {if $product.min_fba_price < $product.buy_box_price}style="background-color:green;"{/if} align="center">{if $product.buy_box_price}${$product.buy_box_price|formatprice:"":"."}{/if}</td>
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:"":"."}{/if}</td>
             <td align="center">{$product.ads_a}</td>
             <td align="center">{$product.ads_x}</td>
