@@ -53,7 +53,7 @@
             <td class="float" align="center">${$product.price|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.min_fba_price|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.lowest_price|formatprice:"":"."}</td>
-            <td class="float" align="center">${$product.buybox_price|formatprice:"":"."}</td>
+            <td class="float" align="center">${$product.buy_box_price|formatprice:"":"."}</td>
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:"":"."}{/if}</td>
             <td align="center">{$product.ads_a}</td>
             <td align="center">{$product.ads_x}</td>
