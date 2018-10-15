@@ -3,7 +3,7 @@
        data-manufacturer-country="{$products[0].m_country}" data-manufacturer-state="{$products[0].m_state}"
        data-manufacturer-zip="{$products[0].m_zipcode}">
     <tr class="no-export">
-        <td colspan="19" align="right">
+        <td colspan="21" align="right">
             <a class="fba-button" href="#">Save to FBA</a>
         </td>
         <td align="right">
