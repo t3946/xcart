@@ -25,7 +25,10 @@
         <td title="Закупочная цена" >Cost to us</td>
         <td title="Текущая цена на Амазон (может быть MFN / AFN)">Current Amazon Price</td>
         <td title="Минимальная цена FBA со стандартной наценкой">Min FBA price</td>
+        <td title="Минимальная цена на Amazon">Min Amazon price</td>
+        <td title="Цена Buy Box">Buy Box price</td>
         <td title="Средняя цена конкурентов за последние 60 дней">AVG comp price</td>
+
         <td title="Средние продажи FBA в день">ADSa</td>
         <td title="Средние продажи XCart с доставкой через Амазон  в день">ADSx</td>
         <td title="Остатки на складе дистрибьютора">Dx stock qty</td>
@@ -49,6 +52,8 @@
             <td class="float cost-to-us" align="center">${$product.cost_to_us|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.price|formatprice:"":"."}</td>
             <td class="float" align="center">${$product.min_fba_price|formatprice:"":"."}</td>
+            <td class="float" align="center">${$product.lowest_price|formatprice:"":"."}</td>
+            <td class="float" align="center">${$product.buybox_price|formatprice:"":"."}</td>
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:"":"."}{/if}</td>
             <td align="center">{$product.ads_a}</td>
             <td align="center">{$product.ads_x}</td>
