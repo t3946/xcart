@@ -51,7 +51,7 @@
                                 <li>Mon-Fri: 9 a.m. to 5 p.m. EST</li>
                                 <li class="toll-free">Toll Free: <span class="number">1-800-929-2431</span></li>
                                 <li>Tel: (616) 259-5711</li>
-                                <li>Fax: (813) 944-4516</li>
+                                <li>Fax: 1-800-929-2835</li>
                             </ul>
 
                             <ul class="no-bullet menu-list show-for-medium-only">

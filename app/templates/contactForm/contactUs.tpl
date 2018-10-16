@@ -63,7 +63,7 @@
                             </div>
                             <div class="tabs-panel" id="Fax">
                                 <div class="tab-content">
-                                    <span>(813) 944-4516</span>
+                                    <span>1-800-929-2835</span>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Mail">

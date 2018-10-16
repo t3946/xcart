@@ -198,7 +198,7 @@
         Mon-Fri: 9 a.m. to 5 p.m. EST<br>
         Toll Free: 1-800-929-2431<br>
         Tel: (616) 259-5711<br>
-        Fax: (813) 944-4516<br>
+        Fax: 1-800-929-2835<br>
         <br><br>
 
 
