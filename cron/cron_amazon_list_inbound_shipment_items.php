@@ -84,6 +84,14 @@ foreach ($aShipments as $shipment) {
 
     if ($is_new_order) {
         echo "Create order # {$order->getOrderNumber()}\n";
+        $log_message = "<a style=\"color: #1411FF;\" href=\"https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$shipment->shipment_id}\" target=\"_blank\">Amazon FBA Shipment # {$shipment->shipment_name}</a>";
+        (new OrderLogModel([
+            'orderid' => $order->orderid,
+            'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
+            'login' => '',
+            'log' => $log_message
+        ])
+        )->save();
     }
 
     $groups = [];
