@@ -72,7 +72,7 @@ foreach ($aShipments as $shipment) {
         's_zipcode' => $warehouse->zipcode_model->zip,
         's_firstname' => 'Amazon.com',
         'firstname' => 'Amazon.com',
-        'fraud_status' => 'C',
+        'fraud_status' => 'S',
         'order_type' => OrderModel::ORDER_TYPE_FB,
         'bd_status' => $order->bd_status ?? OrderStatusModel::ORDER_BD_STATUS_UNPAID,
         'd2a_status' => $d2a_status,
