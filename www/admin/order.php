@@ -2906,17 +2906,13 @@ $tabs_key++;
 
 $smarty->assign('main_order_tabs', $main_order_tabs);
 
-$order_tabs[0]["title"]   = "Important messages";
-$order_tabs[0]["section"] = "important_messages";
+$order_tabs[0]["title"]   = "All logs and messages";
+$order_tabs[0]["section"] = "all_logs_and_messages";
 $order_tabs[0]["anchor"]  = "0";
 
 $order_tabs[1]["title"]   = "Calls" .  \Modules\PBX\Helpers\AnveoAssignCalls::addToTitleName($orderid);
 $order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
-
-$order_tabs[2]["title"]   = "All logs and messages";
-$order_tabs[2]["section"] = "all_logs_and_messages";
-$order_tabs[2]["anchor"]  = "2";
 
 $calls_log_data = \Modules\PBX\Helpers\AnveoAssignCalls::getResource($orderid);
 
