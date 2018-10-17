@@ -72,7 +72,7 @@ foreach ($aShipments as $shipment) {
         's_zipcode' => $warehouse->zipcode_model->zip,
         's_firstname' => 'Amazon.com',
         'firstname' => 'Amazon.com',
-        'fraud_status' => 'S',
+        'fraud_status' => 'C',
         'order_type' => OrderModel::ORDER_TYPE_FB,
         'bd_status' => $order->bd_status ?? OrderStatusModel::ORDER_BD_STATUS_UNPAID,
         'd2a_status' => $d2a_status,
@@ -87,7 +87,7 @@ foreach ($aShipments as $shipment) {
         $log_message = "<a style=\"color: #1411FF;\" href=\"https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$shipment->shipment_id}\" target=\"_blank\">Amazon FBA Shipment # {$shipment->shipment_name}</a>";
         (new OrderLogModel([
             'orderid' => $order->orderid,
-            'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
+            'type' => OrderLogModel::LOG_TYPE_SYSTEM,
             'login' => '',
             'log' => $log_message
         ])

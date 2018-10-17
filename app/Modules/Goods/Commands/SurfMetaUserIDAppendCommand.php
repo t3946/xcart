@@ -10,7 +10,7 @@ class SurfMetaUserIDAppendCommand extends Command
 {
     private function getSessions()
     {
-        SessionDataModel::objects()->filter(['data__contains' => 'login'])
+        SessionDataModel::objects()->filter(['data__contains' => 'login']);
     }
 
     public function handle($arguments = [])
