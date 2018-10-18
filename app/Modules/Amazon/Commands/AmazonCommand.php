@@ -81,6 +81,10 @@ class AmazonCommand extends Command
                                         $listing->myPrice = $offer->LandingPrice;
                                         $listing->is_buybox_my = false;
                                     }
+
+                                    if ($offer->is_buybox) {
+                                        $listing->buyBoxChannel = $offer->channel;
+                                    }
                                 }
                             }
                             $listing->save();
