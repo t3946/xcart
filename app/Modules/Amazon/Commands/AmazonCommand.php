@@ -70,8 +70,8 @@ class AmazonCommand extends Command
                                         'LandingPrice' => (float)$off['ListingPrice']['Amount'] + (float)$off['Shipping']['Amount'],
                                         'ListingPrice' => (float)$off['ListingPrice']['Amount'],
                                         'Shipping' => (float)$off['Shipping']['Amount'],
-                                        'country' => $off['ShipsFrom']['Country'],
-                                        'state' => $off['ShipsFrom']['State'],
+                                        'country' => $off['ShipsFrom']['Country'] ?: '',
+                                        'state' => $off['ShipsFrom']['State'] ?: '',
                                         'channel' => $off['IsFulfilledByAmazon'] === 'true' ? 'FBA' : 'MFN',
                                         'is_buybox' => $off['IsBuyBoxWinner'] === 'true'
                                     ]);
