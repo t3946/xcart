@@ -124,9 +124,13 @@
                                 <div class="row">
                                     <div class="columns small-12">
                                         <div class="no-quotes">
-                                            The UPS server could not provide us with a shipping quote.
-                                            When placing the order, please choose "Phone Ordering" as your payment method.
-                                            We will determine an accurate shipping charge manually and send you an updated invoice.
+                                            Our shipping server couldn’t provide us with an accurate shipping quote. This sometimes occurs<br/>
+                                            - when the product is oversized or somehow irregular in shape or weight<br/>
+                                            - for overseas shipments<br/>
+                                            <br/>
+                                            <b>Please go ahead and place your order.</b><br/>
+                                            We will determine an accurate shipping charge manually and send you an updated invoice.<br/>
+                                            At this point we won’t collect your payment information.
                                         </div>
                                     </div>
                                 </div>
