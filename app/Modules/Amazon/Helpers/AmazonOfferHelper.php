@@ -10,7 +10,7 @@ class AmazonOfferHelper
     public static function getLowestPrice(array $lowestPrices): array
     {
         $result = $prices = [];
-        $channel = null;
+
 
         if (!isset($lowestPrices[0]) && isset($lowestPrices['LandedPrice'])) {
             $prices[] = $lowestPrices;
@@ -20,6 +20,7 @@ class AmazonOfferHelper
 
         foreach ($prices as $lowestPrice) {
             if ($lowestPrice['@attributes']['condition'] === 'new') {
+                $channel = null;
                 if (!$result['LandedPrice'] || (float)$lowestPrice['LandedPrice']['Amount'] < (float)$result['LandedPrice']) {
 
                     if ($lowestPrice['@attributes']['fulfillmentChannel']) {
