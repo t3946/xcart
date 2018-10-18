@@ -9,6 +9,7 @@ use Modules\Amazon\ClientPack\MwsFbaOutboundClient;
 use Modules\Amazon\ClientPack\MwsFeedAndReportClient;
 use Modules\Amazon\ClientPack\MwsProductClientPackExt;
 use Modules\Amazon\ClientPack\MwsRecommendationClient;
+use Modules\Amazon\ClientPack\MwsSubscriptionsClient;
 
 class AmazonPoolStore extends MwsClientPool
 {
@@ -22,6 +23,7 @@ class AmazonPoolStore extends MwsClientPool
     protected $fbaOutboundClientPack;
     protected $fbaInventoryClientPack;
     protected $recommendationClientPack;
+    protected $subscriptionsClientPack;
 
     public function __construct()
     {
@@ -73,5 +75,10 @@ class AmazonPoolStore extends MwsClientPool
             $this->recommendationClientPack = new MwsRecommendationClient($this->config);
         }
         return $this->recommendationClientPack;
+    }
+
+    public function getSubscriptionsClientPack()
+    {
+        return $this->subscriptionsClientPack = $this->subscriptionsClientPack ?? new MwsSubscriptionsClient($this->config);
     }
 }

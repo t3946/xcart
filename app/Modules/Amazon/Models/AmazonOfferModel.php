@@ -1,0 +1,100 @@
+<?php
+
+namespace Modules\Amazon\Models;
+
+
+use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\DecimalField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Model;
+
+class AmazonOfferModel extends Model
+{
+
+    public static function tableName()
+    {
+        return 'amazon_offers';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'id' => AutoField::class,
+            'ASIN' => [
+                'class' => CharField::class,
+                'primary' => true,
+                'null' => false,
+            ],
+            'competitors' => [
+                'class' => HasManyField::class,
+                'modelClass' => AmazonOfferCompetitorsModel::class,
+                'link' => ['id' => 'offer_id']
+            ],
+            'myPrice' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'lowest_LandedPrice' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'lowest_ListingPrice' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'lowest_Shipping' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'lowest_Channel' => [
+                'class' => CharField::class,
+                'null' => true,
+            ],
+            'buybox_LandedPrice' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'buybox_ListingPrice' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'buybox_Shipping' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'buybox_Channel' => [
+                'class' => CharField::class,
+                'null' => true,
+            ],
+            'offers' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
+            'offer_change_time' => [
+                'class' => DateTimeField::class,
+            ],
+            'is_buybox_my' => [
+                'class' => BooleanField::class,
+            ],
+            'sales_rank' => [
+                'class' => IntField::class,
+                'null' => true
+            ],
+            'updated_at' => [
+                'class' => DateTimeField::class,
+                'autoNow' => true,
+            ],
+            'created_at' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ],
+
+        ];
+    }
+}
