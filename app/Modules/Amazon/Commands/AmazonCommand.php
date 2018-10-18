@@ -83,7 +83,7 @@ class AmazonCommand extends Command
                                     }
 
                                     if ($offer->is_buybox) {
-                                        $listing->buyBoxChannel = $offer->channel;
+                                        $listing->buybox_Channel = $offer->channel;
                                     }
                                 }
                             }
