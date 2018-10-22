@@ -56,7 +56,7 @@ class AmazonStore extends BaseStore
                 }
             }
             if (!empty($data['restocking_competitive_price'])) {
-                $filter[] = new QOr(['min_fba_price__lt' => new Expression(' avg_comp_price'), 'avg_comp_price' => -1]);
+                $filter[] = new QAnd([['min_fba_price__gt' => new Expression(' lowest_price')], ['min_fba_price__gt' => new Expression(' buy_box_price')]]);
             }
             if (!empty($data['items_sold_last_1m_of_stock'])) {
                 $filter['items_sold_last_1m_of_stock__gt'] = 0;

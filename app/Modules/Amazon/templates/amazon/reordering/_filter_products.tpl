@@ -42,7 +42,7 @@
     <li>
         <div class="row">
             <div class="columns large-4">
-                <label for="o_restocking_competitive_price">Items with competitive price:</label>
+                <label for="o_restocking_competitive_price">Items with not competitive price:</label>
             </div>
 
             <div class="columns large-6">
