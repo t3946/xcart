@@ -104,7 +104,7 @@
                             </div>
                             <div class="row text-item">
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
-                                <div class="column">{t '(813) 944-4516' dict='order'}</div>
+                                <div class="column">{t '1-800-929-2835' dict='order'}</div>
                             </div>
                             <div class="row text-item">
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>

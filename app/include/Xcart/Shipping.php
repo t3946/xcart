@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\UserModel;
@@ -35,31 +36,20 @@ class Shipping extends Data
 
     public static function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true)
     {
-        if (empty($aProduct)) {
-            $aProduct = Product::model(['productid' => $iProductId])->getFields();
-        }
-        if (empty($aShipping)) {
+        /** @var ProductModel $product */
+        $product = $aProduct ? new ProductModel($aProduct) : ProductModel::objects()->get(['productid' => $iProductId]);
+
+        if (!$aShipping) {
             $aShipping = self::model(['shippingid' => $iShippingId])->getFields();
         }
 
-        if (empty($aProduct["weight"]) || floatval($aProduct["weight"]) == 0) {
-            $aProduct["weight"] = "0.1";
-        }
+        $shipping_weight = (float) $product->shipping_weight * $iAmount;
+        $volume = (float) $product->shipping_dim_x * (float) $product->shipping_dim_y  * (float) $product->shipping_dim_z * $iAmount;
+        $real_weight = (float) $product->weight * $iAmount;
 
-        $real_weight = $aProduct["weight"] * $iAmount;
+        $product_weight = ($shipping_weight > 0) ? $shipping_weight : $real_weight;
 
-        if (!empty($aProduct["shipping_weight"]) && floatval($aProduct["shipping_weight"]) > 0 && $bUseShippingParametrs)
-            $real_weight = $aProduct["shipping_weight"] * $iAmount;
-
-        if (($aProduct["shipping_dim_x"] || $aProduct["shipping_dim_y"] || $aProduct["shipping_dim_z"]) && $bUseShippingParametrs)
-            $Volume = $aProduct["shipping_dim_x"] * $aProduct["shipping_dim_y"] * $aProduct["shipping_dim_z"] * $iAmount; else
-            $Volume = $aProduct["dim_x"] * $aProduct["dim_y"] * $aProduct["dim_z"] * $iAmount;
-
-        if ($Volume > $aShipping["vol_threshold"] && !empty($aShipping["dim_factor"])) {
-            $weight = max($real_weight, ($Volume / $aShipping["dim_factor"]));
-        } else {
-            $weight = $real_weight;
-        }
+        $weight = $volume > $aShipping["vol_threshold"] && $aShipping["dim_factor"] ? max($product_weight, ($volume / $aShipping["dim_factor"])) : $product_weight;
 
         return $weight;
     }

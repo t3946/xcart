@@ -43,7 +43,7 @@ class PurchaseOrderDetailsForm extends FrontendForm
                 'class' => FileField::class,
                 'label' => 'Attach original PO',
                 'required' => false,
-                'hint' => 'Alternatively fax PO to (813) 944-4516',
+                'hint' => 'Alternatively fax PO to 1-800-929-2835',
                 'types' => ['.pdf'],
             ]
         ];

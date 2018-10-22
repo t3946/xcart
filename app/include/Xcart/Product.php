@@ -676,10 +676,9 @@ SQL;
 
     public function getShippingVolume($iAmount = 1)
     {
+        $aVolume = 0;
         if (($this->getField('shipping_dim_x') || $this->getField('shipping_dim_y') || $this->getField('shipping_dim_z'))) {
             $aVolume = $this->getField('shipping_dim_x') * $this->getField('shipping_dim_y') * $this->getField('shipping_dim_z') * $iAmount;
-        } else {
-            $aVolume = $this->getField('dim_x') * $this->getField('dim_y') * $this->getField('dim_z') * $iAmount;
         }
         return $aVolume;
     }

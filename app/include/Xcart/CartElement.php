@@ -48,11 +48,12 @@ class CartElement
 
     public function getShippingWeightRatio($rate_id)
     {
-        if (!is_null($this->weightRatio)) {
+        $this->weightRatio = 1;
+        return $this->weightRatio;
+
+        if ($this->weightRatio !== null) {
             return $this->weightRatio;
         }
-
-        $weightRatio = 1;
 
         if ($productShipping = ShippingProductModel::objects()->get(
             [

@@ -80,10 +80,12 @@ class UPS extends ShippingProcessor
 
                 $shipperAddress = $shipment->getShipper()->getAddress();
                 $shipperAddress->setPostalCode($this->getManufacturer()->m_zipcode);
+                $shipperAddress->setCountryCode($this->getManufacturer()->m_country);
 
                 $address = new Address();
                 $address->setPostalCode($this->getManufacturer()->m_zipcode);
                 $address->setCountryCode($this->getManufacturer()->m_country);
+                $address->setCity($this->getManufacturer()->m_city);
 
                 $shipFrom = new ShipFrom();
                 $shipFrom->setAddress($address);
@@ -169,12 +171,14 @@ class UPS extends ShippingProcessor
                                         ($oShippingRate->getShippingId() == $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country] && empty($this->aShippingRates[$oShippingRate->getShippingId()]))
                                     ) {
                                         $weight = ceil($oShippingRate->getCartShippingWeight());
-                                        if ($weight >= self::MAX_WEIGHT_FOR_UPS_PACKAGE) {
-                                            $weight_multiplier = ($weight / self::MAX_WEIGHT_FOR_UPS_PACKAGE);
-                                        } else {
-                                            $weight_multiplier = 1;
+                                        $weight_multiplier = $weight >= self::MAX_WEIGHT_FOR_UPS_PACKAGE ? ($weight / self::MAX_WEIGHT_FOR_UPS_PACKAGE) : 1;
+
+                                        $value = $Rate->TotalCharges->MonetaryValue;
+                                        if ($Rate->TotalCharges->CurrencyCode ==='CAD') {
+                                            $value *= 0.72; //TODO multi currency support
                                         }
-                                        $oShippingRate->setShippingChargeQuote(round($Rate->TotalCharges->MonetaryValue * $weight_multiplier + $this->getAdditionalShippingFee($weight), 2));
+
+                                        $oShippingRate->setShippingChargeQuote(round($value * $weight_multiplier + $this->getAdditionalShippingFee($weight), 2));
                                         //$oShippingRate->setAdditionalShippingCharge($this->getAdditionalShippingFee($weight));
                                         $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
                                     }
