@@ -12,6 +12,7 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
@@ -64,6 +65,9 @@ class DistributorModel extends Model
             ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
+            ],
+            'dx_leadtime' => [
+                'class' => IntField::class,
             ],
         ];
     }
