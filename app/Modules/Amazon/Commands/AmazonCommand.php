@@ -79,7 +79,7 @@ class AmazonCommand extends Command
 
                                     if (AmazonOfferHelper::OUR_MERCHANT_ID === $off['SellerId']) {
                                         $listing->myPrice = $offer->LandingPrice;
-                                        $listing->is_buybox_my = false;
+                                        $listing->is_buybox_my = $offer->is_buybox;
                                     }
 
                                     if ($offer->is_buybox) {
