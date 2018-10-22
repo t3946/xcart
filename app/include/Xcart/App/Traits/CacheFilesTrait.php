@@ -133,7 +133,7 @@ trait CacheFilesTrait
             $key = serialize($key);
         }
 
-        return $this->prefix . $this->keySerialization ? md5($key) : $key;
+        return $this->keySerialization ? md5($key) : $key;
     }
 
     protected function setExpirationTime($fullPath, $timeout)

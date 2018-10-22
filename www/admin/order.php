@@ -2926,10 +2926,11 @@ $type_names = [
     "P"  => "Payment",
     "PP" => "PayPal Payment",
     "EL" => "Empty line record",
+    'CA' => 'Call',
 ];
 $smarty->assign('type_names', $type_names);
 
-$order_logs = func_query("SELECT * FROM $sql_tbl[order_logs] WHERE orderid='$orderid' ORDER BY id DESC");
+$order_logs = \Modules\Order\Helpers\OrderLogHelper::getOrderLogs($orderid);
 
 if (!empty($order_logs) && is_array($order_logs)) {
 
