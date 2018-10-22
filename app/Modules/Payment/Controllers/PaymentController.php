@@ -178,7 +178,7 @@ class PaymentController extends Controller
                 switch ($app->request->request->get('txn_type')) {
                     case 'invoice_payment':
                         if ($app->request->request->has('invoice')
-                            && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_order_number' => $app->request->request->get('invoice')])) {
+                            && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_number' => $app->request->request->get('invoice')])) {
                             $order_id = $invoice->orderid;
                         }
 
