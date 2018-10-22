@@ -1007,17 +1007,24 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
         </td>
 </tr>
     <tr>
-        <td width="20%" class="FormButton">Amazon to Cx leadtime to ship for MFN orders (days):</td>
+        <td width="20%" class="FormButton">Amazon to Cx lead time to ship for MFN orders (days):</td>
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="3" name="amazon_leadtime_to_ship" value="{$manufacturer.amazon_leadtime_to_ship}" />
         </td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Dx to Amazon leadtime (DLT) for FBA loads (days):</td>
+        <td width="20%" class="FormButton">Dx to Amazon lead time (DLT) for FBA loads (days):</td>
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="3" name="amazon_leadtime_for_fba_loads" value="{$manufacturer.amazon_leadtime_for_fba_loads}" />
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" class="FormButton">Dx to Cx lead time (days):</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+            <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}" />
         </td>
     </tr>
 <tr><td colspan="3"><hr /><td></tr>

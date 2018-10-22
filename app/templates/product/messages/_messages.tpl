@@ -1,4 +1,5 @@
 {set $class = ($fill! && $fill) ? 'fill' : '' }
+{set $dx = $model->distributor}
 
 {*{include "product/messages/_p_label.tpl" cls=$class ~ " lead-time" text=$model->lead_time_message}*}
 {*{include "product/messages/_p_label.tpl" cls=$class ~ " multiply-quantity" text="Order in multiples of {$model->min_amount} items"}*}
@@ -13,6 +14,8 @@
 
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
+        {elseif $dx->dx_leadtime}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text="Lead time for this product is "~$dx->dx_leadtime~"-"~($dx->dx_leadtime+3)~" business days"}
         {/if}
 
         {if $model->min_amount > 1}

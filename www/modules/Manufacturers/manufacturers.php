@@ -327,6 +327,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_website_search_for_sku_url" => addslashes($d_website_search_for_sku_url),
 				"amazon_leadtime_to_ship" => intval($amazon_leadtime_to_ship),
 				"amazon_leadtime_for_fba_loads" => intval($amazon_leadtime_for_fba_loads),
+				"dx_leadtime" => (int) $dx_leadtime,
 				"d_ships_to_within" => addslashes($d_ships_to_within),
 				"d_shipping_methods_usps" => addslashes($d_shipping_methods_usps),
 				"d_shipping_methods_ups" => addslashes($d_shipping_methods_ups),
