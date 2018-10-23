@@ -729,7 +729,7 @@
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
                                                                name="fields[lead_time_message]"/></td>
                 {/if}
-                <td class="FormButton" nowrap="nowrap">Lead time message:</td>
+                <td class="FormButton" nowrap="nowrap">Lead time text (overwrites Dx-level text):</td>
                 <td class="ProductDetails"><input type="text" class="InputWidth" name="lead_time_message"
                                                   id="lead_time_message" size="20" value="{$product.lead_time_message}"
                                                   {if $manufacturer_feed_fields.lead_time_message.disable eq "Y"}readonly="readonly"{/if} />

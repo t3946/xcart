@@ -15,7 +15,11 @@
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
         {elseif $dx->dx_leadtime}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text="Lead time for this product is "~$dx->dx_leadtime~"-"~($dx->dx_leadtime+3)~" business days"}
+            {if $dx->dx_leadtime === $dx->dx_leadtime_to || !$dx->dx_leadtime_to}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text="Lead time for this product is "~$dx->dx_leadtime~" business days"}
+            {else}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text="Lead time for this product is "~$dx->dx_leadtime~"-"~$dx->dx_leadtime_to~" business days"}
+            {/if}
         {/if}
 
         {if $model->min_amount > 1}

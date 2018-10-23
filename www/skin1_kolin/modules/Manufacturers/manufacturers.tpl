@@ -1021,10 +1021,12 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
         </td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Dx to Cx lead time (days):</td>
+        <td width="20%" class="FormButton">Dx to Cx lead time (business days):</td>
         <td>&nbsp;</td>
         <td width="80%">
-            <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}" />
+            from <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}" />
+            to <input type="text" size="3" name="dx_leadtime_to" value="{$manufacturer.dx_leadtime_to}" />
+
         </td>
     </tr>
 <tr><td colspan="3"><hr /><td></tr>
