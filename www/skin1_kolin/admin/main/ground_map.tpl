@@ -67,7 +67,7 @@
 <tr>
 <td>
 <iframe width="600" height="450" frameborder="1" style="border:1"
-src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.125408,-122.977192&zoom=4&origin={$v.m_zipcode},{$v.m_country_name_for_google}&destination={$order.s_zipcode},+{$order.s_countryname|replace:' ':'+'}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
+src="https://www.google.com/maps/embed/v1/directions?mode=flying&zoom=4&origin={$v.m_zipcode},{$v.m_country_name_for_google}&destination={$order.s_zipcode},+{$order.s_countryname|replace:' ':'+'}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
 </td>
 
 <td valign="top">
