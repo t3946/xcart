@@ -98,7 +98,7 @@ function func_dc_charsets() {
 function func_dc_languages($code) {
 	global $sql_tbl;
 
-	$lngs = func_query("SELECT $sql_tbl[countries].*, name as country, 'English' as language FROM $sql_tbl[countries]");
+	$lngs = func_query("SELECT $sql_tbl[countries].*, name as country, 'English' as language FROM $sql_tbl[countries] WHERE code = 'US'");
 	if (!empty($lngs)) {
 		foreach ($lngs as $k => $lng) {
 			if (is_null($lng['country'])) {
