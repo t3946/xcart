@@ -131,7 +131,8 @@ class GroupStore extends BaseStore
         $qs = BrandModel::objects()->getQuerySet();
         $ps = ProductModel::objects()->getQuerySet();
 
-        $phrase = new Expression("SUBSTRING_INDEX ({$ps->getTableAlias()}.product,' ', {$this->level})");
+        $levels = addslashes($this->level);
+        $phrase = new Expression("SUBSTRING_INDEX ({$ps->getTableAlias()}.product,' ', {$levels})");
 
         $qs->select(['*', 'count' => new Expression("count({$ps->getTableAlias()}.productid)"), 'group_phrase' => $phrase]);
 
@@ -368,8 +369,9 @@ class GroupStore extends BaseStore
      */
     private function getProductNameExpression($qs, $level)
     {
+        $group_phrase = addslashes($this->data['group_phrase']);
         return new Expression("IF ({$qs->getTableAlias()}.brand_normalized,
-                                            SUBSTRING_INDEX(CONCAT(COALESCE(product_brand_name, brand),' ',{$qs->getTableAlias()}.product), ' ', {$level}) = '{$this->data['group_phrase']}',
-                                            SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$level}) = '{$this->data['group_phrase']}')");
+                                            SUBSTRING_INDEX(CONCAT(COALESCE(product_brand_name, brand),' ',{$qs->getTableAlias()}.product), ' ', {$level}) = '{$group_phrase}',
+                                            SUBSTRING_INDEX({$qs->getTableAlias()}.product, ' ', {$level}) = '{$group_phrase}')");
     }
 }
