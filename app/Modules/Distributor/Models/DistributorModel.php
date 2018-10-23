@@ -69,6 +69,9 @@ class DistributorModel extends Model
             'dx_leadtime' => [
                 'class' => IntField::class,
             ],
+            'dx_leadtime_to' => [
+                'class' => IntField::class,
+            ],
         ];
     }
 
