@@ -98,7 +98,7 @@ function func_dc_charsets() {
 function func_dc_languages($code) {
 	global $sql_tbl;
 
-	$lngs = func_query("SELECT $sql_tbl[countries].*, lng_c.value as country, lng_l.value as language FROM $sql_tbl[languages], $sql_tbl[countries] LEFT JOIN $sql_tbl[languages] as lng_c ON lng_c.name = CONCAT('country_', $sql_tbl[countries].code) AND lng_c.code = '$code' LEFT JOIN $sql_tbl[languages] as lng_l ON lng_l.code = '$code' AND lng_l.name = CONCAT('language_', $sql_tbl[countries].code) WHERE $sql_tbl[languages].code = $sql_tbl[countries].code GROUP BY $sql_tbl[languages].code ORDER BY $sql_tbl[languages].code");
+	$lngs = func_query("SELECT $sql_tbl[countries].*, name as country, 'English' as language FROM $sql_tbl[countries]");
 	if (!empty($lngs)) {
 		foreach ($lngs as $k => $lng) {
 			if (is_null($lng['country'])) {
