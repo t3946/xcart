@@ -210,6 +210,10 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => ''
             ],
+            'ASIN' => [
+                'class' => CharField::class,
+                'null' => true,
+            ],
             'product' => [
                 'class' => CharField::class,
                 'null' => false,
