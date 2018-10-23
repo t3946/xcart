@@ -13,6 +13,8 @@ use MarketplaceWebServiceProducts_Model_CompetitivePriceType;
 use MarketplaceWebServiceProducts_Model_CompetitivePricingType;
 use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResponse;
 use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResult;
+use MarketplaceWebServiceProducts_Model_GetMyPriceForASINResponse;
+use MarketplaceWebServiceProducts_Model_GetMyPriceForASINResult;
 use MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResponse;
 use MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResult;
 use MarketplaceWebServiceProducts_Model_IdentifierType;
@@ -214,6 +216,31 @@ class AmazonProductHelper
                     $oAmazonProductModel->report_date = $iReportDate;
                     $oAmazonProductModel->productcode = $sSKU;
                     $aResult[] = $oAmazonProductModel;
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    public static function getMyPriceForASIN(MarketplaceWebServiceProducts_Model_GetMyPriceForASINResponse $cpResult): array
+    {
+        /** @var MarketplaceWebServiceProducts_Model_GetMyPriceForASINResult $r */
+        /** @var MarketplaceWebServiceProducts_Model_OffersList $offers */
+        /** @var MarketplaceWebServiceProducts_Model_OfferType[] $offer_list */
+        /** @var MarketplaceWebServiceProducts_Model_Product $p */
+
+        $aResult = [];
+
+        if ($res = $cpResult->getGetMyPriceForASINResult()) {
+            foreach ($res as $r) {
+                if ($p = $r->getProduct()) {
+                    if (($offers = $p->getOffers()) && $offer_list = $offers->getOffer()) {
+                        foreach($offer_list as $offer) {
+                            if ($offer->getSellerSKU()) {
+                                $aResult[$r->getASIN()] = $offer->getSellerSKU();
+                            }
+                        }
+                    }
                 }
             }
         }
