@@ -9,6 +9,7 @@ use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonOfferCompetitorsModel;
 use Modules\Amazon\Models\AmazonOfferModel;
 use Modules\Amazon\Stores\AmazonPoolStore;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
 use Xcart\App\Commands\Command;
 
@@ -44,6 +45,14 @@ class GetPriceForAsinCommand extends Command
             if ($diff) {
                 $log_text = 'ERROR in getPriceForASIN for ASIN\'s: ' . implode(', ', $diff) . "\n";
                 func_backprocess_log('amazon_get_price_for_asin', $log_text);
+            }
+
+            foreach ($products as $asin => $sku) {
+                /** @var ProductModel $p */
+                if (!\in_array($asin, $diff, true) && $p = ProductModel::objects()->get(['productcode' => $sku])) {
+                    $p->ASIN = $asin;
+                    $p->save();
+                }
             }
         }
 
