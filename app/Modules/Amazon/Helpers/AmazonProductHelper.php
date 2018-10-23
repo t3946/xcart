@@ -221,29 +221,4 @@ class AmazonProductHelper
         }
         return $aResult;
     }
-
-    public static function getMyPriceForASIN(MarketplaceWebServiceProducts_Model_GetMyPriceForASINResponse $cpResult): array
-    {
-        /** @var MarketplaceWebServiceProducts_Model_GetMyPriceForASINResult $r */
-        /** @var MarketplaceWebServiceProducts_Model_OffersList $offers */
-        /** @var MarketplaceWebServiceProducts_Model_OfferType[] $offer_list */
-        /** @var MarketplaceWebServiceProducts_Model_Product $p */
-
-        $aResult = [];
-
-        if ($res = $cpResult->getGetMyPriceForASINResult()) {
-            foreach ($res as $r) {
-                if ($p = $r->getProduct()) {
-                    if (($offers = $p->getOffers()) && $offer_list = $offers->getOffer()) {
-                        foreach($offer_list as $offer) {
-                            if ($offer->getSellerSKU()) {
-                                $aResult[$r->getASIN()] = $offer->getSellerSKU();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $aResult;
-    }
 }

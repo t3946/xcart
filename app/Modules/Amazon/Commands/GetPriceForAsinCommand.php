@@ -26,12 +26,18 @@ class GetPriceForAsinCommand extends Command
         $client = $amzPool->getProductClientPackExt();
 
         while ($offers = AmazonOfferModel::objects()->filter(['product__productid__isnull' => true])->paginate(++$i, 20)->all()) {
+            $products = [];
+
             $aASINs = array_values(array_map(function ($a) {
                 return $a->ASIN;
             }, $offers));
 
-            $myPricing = $client->callGetMyPriceForASIN($aASINs);
-            $products = AmazonProductHelper::getMyPriceForASIN($myPricing);
+            foreach ($client->retrieveMyPriceForASIN($aASINs) as $price) {
+                if ($price->sellerSku) {
+                    $products[$price->asin] = $price->sellerSku;
+                }
+            }
+
 
             $diff = array_diff($aASINs, array_keys($products));
 
