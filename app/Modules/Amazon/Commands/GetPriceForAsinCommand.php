@@ -33,7 +33,12 @@ class GetPriceForAsinCommand extends Command
                 return $a->ASIN;
             }, $offers));
 
-            foreach ($client->retrieveMyPriceForASIN($aASINs) as $price) {
+            if (($response = $client->retrieveMyPriceForASIN($aASINs)) === null){
+                $i--;
+                continue;
+            }
+
+            foreach ($response as $price) {
                 if ($price->sellerSku) {
                     $products[$price->asin] = $price->sellerSku;
                 }
