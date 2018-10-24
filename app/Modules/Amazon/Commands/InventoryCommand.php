@@ -83,7 +83,7 @@ class InventoryCommand extends Command
         if ($items) {
 
             $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
-            func_backprocess_log('incremental feeds', $log_text);
+            func_backprocess_log('amazon_inventory', $log_text);
 
             $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
 
@@ -106,7 +106,7 @@ class InventoryCommand extends Command
 
         $str_time = (new \DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 
-        func_backprocess_log('amazon_get_price_for_asin', $log = "Cron completed. Processing time: {$str_time}\n");
+        func_backprocess_log('amazon_inventory', $log = "Cron completed. Processing time: {$str_time}\n");
         echo $log;
     }
 }
