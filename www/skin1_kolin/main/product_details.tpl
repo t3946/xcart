@@ -727,19 +727,6 @@
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
-                                                               name="fields[lead_time_message]"/></td>
-                {/if}
-                <td class="FormButton" nowrap="nowrap">Lead time text (overwrites Dx-level text):</td>
-                <td class="ProductDetails"><input type="text" class="InputWidth" name="lead_time_message"
-                                                  id="lead_time_message" size="20" value="{$product.lead_time_message}"
-                                                  {if $manufacturer_feed_fields.lead_time_message.disable eq "Y"}readonly="readonly"{/if} />
-                </td>
-            </tr>
-
-
-            <tr>
-                {if $geid ne ''}
-                    <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
                                                                name="fields[supplier_internal_id]"/></td>
                 {/if}
                 <td class="FormButton" nowrap="nowrap">Supplier internal id:</td>
@@ -1110,31 +1097,6 @@
 
             <tr>
                 {if $geid ne ''}
-                    <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
-                    <input type="checkbox" value="Y" name="fields[shippingweight]"/>
-                {/if}</td>{/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_weight} ({$config.General.weight_symbol})</td>
-                <td class="ProductDetails">
-                    {if $product.is_variants eq 'Y'}
-                        <b>{$lng.lbl_note}:</b>
-                        {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
-                    {else}
-                        <input type="text" name="shippingweight" size="18" value="{ $product.shipping_weight|formatprice|default:$zero }"
-                                {if $product.shipping_weight_lock == "Y"}readonly="readonly" class="ch_disabled" {/if}/>
-                    {/if}
-
-                    <div class="tablebordernone"></div>
-                    <div>
-                        <label class="lock_shipping_weight_label" for="lock_shipping_weight">
-                            <input style="position: relative;top: 3px;" type="checkbox" id = "lock_shipping_weight" name="lock_shipping_weight" {if $product.shipping_weight_lock == "Y"}checked="checked"{/if}  />
-                            Locked by Product Manager</label>
-                    </div>
-
-                </td>
-            </tr>
-
-            <tr>
-                {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]"/>
                     </td>
                 {/if}
@@ -1183,6 +1145,30 @@
                 </td>
 
             </tr>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
+                        <input type="checkbox" value="Y" name="fields[shippingweight]"/>
+                    {/if}</td>{/if}
+                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_weight} ({$config.General.weight_symbol})</td>
+                    <td class="ProductDetails">
+                        {if $product.is_variants eq 'Y'}
+                            <b>{$lng.lbl_note}:</b>
+                            {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
+                        {else}
+                            <input type="text" name="shippingweight" size="18" value="{ $product.shipping_weight|formatprice|default:$zero }"
+                                   {if $product.shipping_weight_lock == "Y"}readonly="readonly" class="ch_disabled" {/if}/>
+                        {/if}
+
+                        <div class="tablebordernone"></div>
+                        <div>
+                            <label class="lock_shipping_weight_label" for="lock_shipping_weight">
+                                <input style="position: relative;top: 3px;" type="checkbox" id = "lock_shipping_weight" name="lock_shipping_weight" {if $product.shipping_weight_lock == "Y"}checked="checked"{/if}  />
+                                Locked by Product Manager</label>
+                        </div>
+
+                    </td>
+                </tr>
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]"/>
@@ -1276,8 +1262,19 @@
                                                   {if $manufacturer_feed_fields.free_ship_text.disable eq "Y"}readonly="readonly"{/if} />
                 </td>
             </tr>
-
-            <tr {if $usertype eq "P"}style="display: none;"{/if}>
+                <tr>
+                    {if $geid ne ''}
+                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
+                                                                   name="fields[lead_time_message]"/></td>
+                    {/if}
+                    <td class="FormButton" nowrap="nowrap">Lead time text (overwrites Dx-level text):</td>
+                    <td class="ProductDetails"><input type="text" class="InputWidth" name="lead_time_message"
+                                                      id="lead_time_message" size="20"
+                                                      value="{$product.lead_time_message}"
+                                                      {if $manufacturer_feed_fields.lead_time_message.disable eq "Y"}readonly="readonly"{/if} />
+                    </td>
+                </tr>
+                <tr {if $usertype eq "P"}style="display: none;"{/if}>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">&nbsp;</td>
                 {/if}

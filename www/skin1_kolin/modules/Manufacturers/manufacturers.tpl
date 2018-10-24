@@ -1007,6 +1007,15 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
         </td>
 </tr>
     <tr>
+        <td width="20%" class="FormButton">Dx to Cx lead time (business days):</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+            from <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}" />
+            to <input type="text" size="3" name="dx_leadtime_to" value="{$manufacturer.dx_leadtime_to}" />
+
+        </td>
+    </tr>
+    <tr>
         <td width="20%" class="FormButton">Amazon to Cx lead time to ship for MFN orders (days):</td>
         <td>&nbsp;</td>
         <td width="80%">
@@ -1020,15 +1029,7 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
             <input type="text" size="3" name="amazon_leadtime_for_fba_loads" value="{$manufacturer.amazon_leadtime_for_fba_loads}" />
         </td>
     </tr>
-    <tr>
-        <td width="20%" class="FormButton">Dx to Cx lead time (business days):</td>
-        <td>&nbsp;</td>
-        <td width="80%">
-            from <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}" />
-            to <input type="text" size="3" name="dx_leadtime_to" value="{$manufacturer.dx_leadtime_to}" />
 
-        </td>
-    </tr>
 <tr><td colspan="3"><hr /><td></tr>
 
 <tr>
