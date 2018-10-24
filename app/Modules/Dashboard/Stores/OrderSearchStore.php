@@ -65,6 +65,7 @@ class OrderSearchStore extends BaseStore
             'amazon_orders_only' => 'Amazon website',
             'amazon_orders_MFN'  => 'Amazon - MFN',
             'amazon_orders_FBA'  => 'Amazon - FBA',
+            'amazon_orders_FB'  => 'Amazon - FB',
         ];
     }
 
@@ -221,16 +222,19 @@ class OrderSearchStore extends BaseStore
                     switch ($source)
                     {
                         case 'xcart_orders_only': {
-                            $tmp['amazonorderid'] = ''; break;
+                            $tmp['order_type'] = 'XCART'; break;
                         }
                         case 'amazon_orders_only': {
-                            $tmp[] = new QAndNot(['amazonorderid' => '']); break;
+                            $tmp['order_type__in'] = ['MFN', 'FBA']; break;
                         }
                         case 'amazon_orders_MFN' : {
-                            $tmp['amazon_fulfillment_channel__in'][] = 'MFN'; break;
+                            $tmp['order_type__in'][] = 'MFN'; break;
                         }
                         case 'amazon_orders_FBA' : {
-                            $tmp['amazon_fulfillment_channel__in'][] = 'AFN'; break;
+                            $tmp['order_type__in'][] = 'FBA'; break;
+                        }
+                        case 'amazon_orders_FB' : {
+                            $tmp['order_type__in'][] = 'FB'; break;
                         }
                     }
                 }

@@ -105,16 +105,19 @@ class OrderReports
 
         switch ($this->sOrderSource) {
             case "xcart_orders_only" :
-                $this->oSQL->addCondition("o.amazonorderid=''");
+                $this->oSQL->addCondition("o.order_type='XCART'");
                 break;
             case "amazon_orders_only" :
-                $this->oSQL->addCondition("o.amazonorderid!=''");
+                $this->oSQL->addCondition("o.order_type IN ('MFN', 'FBA')");
                 break;
             case "amazon_orders_MFN" :
-                $this->oSQL->addCondition("o.amazon_fulfillment_channel='MFN'");
+                $this->oSQL->addCondition("o.order_type='MFN'");
                 break;
             case "amazon_orders_FBA" :
-                $this->oSQL->addCondition("o.amazon_fulfillment_channel='AFN'");
+                $this->oSQL->addCondition("o.order_type='FBA'");
+                break;
+            case "amazon_orders_FB" :
+                $this->oSQL->addCondition("o.order_type='FB'");
                 break;
         }
         if (!empty($this->aStoreForonts)) {
