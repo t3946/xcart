@@ -39,10 +39,11 @@ class InventoryCommand extends Command
 
             $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
-            $price = $product->getAmazonPrice();
+
 
             if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                 !\in_array($prevent_selling, ['FBA', 'MFN'])) {
+                $price = $product->getAmazonPrice();
 
                 $zero_price = $product->getZeroPrice();
                 $min_price = ($price < $zero_price) ? max($price, 2.5) : $zero_price;
@@ -62,9 +63,9 @@ class InventoryCommand extends Command
                     'channel' => 'MFN',
                     'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
                     'latency' => $product->distributor->amazon_leadtime_to_ship,
-                    'price' => max($price, $min_price),
+                    'price' => $min_price,
                     'min_price' => $min_price,
-                    'max_price' => $price
+                    'max_price' => $min_price
                 ];
             }
 
