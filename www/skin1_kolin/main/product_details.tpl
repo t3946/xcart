@@ -1074,7 +1074,7 @@
                     <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
                     <input type="checkbox" value="Y" name="fields[weight]"/>
                 {/if}</td>{/if}
-                <td class="FormButton" nowrap="nowrap">{$lng.lbl_weight} ({$config.General.weight_symbol})</td>
+                <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_weight} ({$config.General.weight_symbol})</td>
                 <td class="ProductDetails">
                     {if $product.is_variants eq 'Y'}
                         <b>{$lng.lbl_note}:</b>
