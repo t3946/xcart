@@ -135,12 +135,12 @@ class Amazon extends StoreFrontMarketPlace
         return $result;
     }
 
-    private function submitPriceFeed($feed)
+    public function submitPriceFeed($feed)
     {
         return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_PRICING);
     }
 
-    private function submitInventoryFeed($feed)
+    public function submitInventoryFeed($feed)
     {
         return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
