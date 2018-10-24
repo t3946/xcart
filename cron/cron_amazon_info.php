@@ -155,6 +155,16 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                         if ($filtered_products_mp && $products = AmazonProductHelper::getMyPriceForSKU($myPricing, $filtered_products_mp)) {
                             foreach ($products as $aAmazonFbaProduct) {
                                 $aAmazonFbaProduct->save();
+
+                                if ($aAmazonFbaProduct->ASIN) {
+                                    if ($pp = ProductModel::objects()->get(['productid' => $aAmazonFbaProduct->productid])) {
+                                        if (!$pp->ASIN) {
+                                            $pp->ASIN = $aAmazonFbaProduct->ASIN;
+                                            $pp->save();
+                                        }
+                                    }
+                                }
+
                                 $counter_received['MyPrice']++;
 
                                 $counter_dropped3[] = $aAmazonFbaProduct->productcode;
