@@ -47,7 +47,7 @@
             {*</div>*}
 
             {if $tab}
-                <div class="raw-content">
+                <div class="content">
                     <div class="row">
                         <div class="columns small-12">
                             {raw $tab.content}
