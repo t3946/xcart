@@ -74,10 +74,10 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&zoom=4&origin={
         <table>
 
           <tr>
-            <td width="300">
+            <td width="320">
                 <B>{* Distributor *}{$v.manufacturer} time:</B> {$v.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                 <br />
-                <B>{* Distributor *}{$v.manufacturer} phone:</B> {$v.distributor_phone}
+                <B>{* Distributor *}{$v.manufacturer} phone:</B> {$v.distributor_phone} {if $v.distributor_phone_ext}<b>ext {$v.distributor_phone_ext}</b>{/if}
             </td>
           </tr>
 

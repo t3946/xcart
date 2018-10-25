@@ -2365,9 +2365,16 @@ function func_get_order_manufacturers($orderid)
                     }
                     $mnfs[$m_id]["compose_email_to_distributor"] = $compose_email_to_distributor;
 
-                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $order_group->manufacturer->isGoodTimeToSendEmail() ? 'Y' : 'N';
+                    $manufacturer_model = $order_group->manufacturer;
 
-                    $mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
+                    $mnfs[$m_id]["good_time_to_send_email_to_distributor"] = $manufacturer_model->isGoodTimeToSendEmail() ? 'Y' : 'N';
+                    $mnfs[$m_id]["distributor_time"] = $manufacturer_model->getDistributorTime() ;
+
+                    if ($d_contacts_model = $manufacturer_model->contacts_model->filter(['phone__isnt' => ''])->order(['distributor_field_code'])->limit(1)->get()) {
+                        $mnfs[$m_id]["distributor_phone"] = $d_contacts_model->phone;
+                        $mnfs[$m_id]["distributor_phone_ext"] = $d_contacts_model->ext;
+                    }
+
 
                     $phone_normalized = preg_replace("/[^0-9]/S", "", $mnfs[$m_id]["distributor_phone"]);
 
