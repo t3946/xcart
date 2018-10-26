@@ -55,15 +55,22 @@ class FBAInventoryCommand extends Command
                         $inStockSupplyQuantity = $item->getInStockSupplyQuantity();
                         $sASIN = $item->getASIN();
                         $sFNSKU = $item->getFNSKU();
+                        if (!$item->isSetASIN()) {
+                            func_backprocess_log('amazon_fba_inventory', "ASIN not set ");
+                            echo serialize($item);
+                            continue;
+                        }
+                        if ($item->isSetASIN()) {
 
-                        /** @var AmazonOfferModel $offer */
-                        [$offer] = AmazonOfferModel::objects()->getOrNew(['ASIN' => $sASIN]);
-                        $offer->setAttributes([
-                            'fba_total_supply' => $totalSupplyQuantity,
-                            'fba_instock_supply' => $inStockSupplyQuantity,
-                            'FNSKU' => $sFNSKU,
-                        ]);
-                        $offer->save();
+                            /** @var AmazonOfferModel $offer */
+                            [$offer] = AmazonOfferModel::objects()->getOrNew(['ASIN' => $sASIN]);
+                            $offer->setAttributes([
+                                'fba_total_supply' => $totalSupplyQuantity,
+                                'fba_instock_supply' => $inStockSupplyQuantity,
+                                'FNSKU' => $sFNSKU,
+                            ]);
+                            $offer->save();
+                        }
                     }
                 }
 
