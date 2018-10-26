@@ -24,9 +24,9 @@ class AmazonCommand extends Command
             foreach ($messages as $message) {
                 $message_data = $message['NotificationMetaData'];
 
-                print_r($message_data);
-
                 $anyOfferChangedNotification = $message['NotificationPayload']['AnyOfferChangedNotification'];
+
+                print_r($anyOfferChangedNotification);
 
                 if ($message_data['NotificationType'] === 'AnyOfferChanged' && $anyOfferChangedNotification) {
 
