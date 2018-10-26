@@ -122,8 +122,8 @@ class Amazon extends StoreFrontMarketPlace
                 ->getSubmitFeedResult();
 
         } catch (\Exception $e) {
-            if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
-
+            if (method_exists($e, 'getErrorCode') && ('RequestThrottled' === $e->getErrorCode() || 'QuotaExceeded' === $e->getErrorCode())) {
+                func_backprocess_log('amazon_inventory', $e->getErrorCode());
             } else {
                 func_backprocess_log('amazon_inventory', $e->getMessage() . " - " . $e->getCode());
             }
