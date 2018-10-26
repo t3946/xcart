@@ -95,6 +95,20 @@ class AmazonOfferModel extends Model
                 'class' => IntField::class,
                 'null' => true
             ],
+            'fba_total_supply' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
+            'fba_instock_supply' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
+            'FNSKU' => [
+                'class' => CharField::class,
+                'null' => true,
+            ],
             'updated_at' => [
                 'class' => DateTimeField::class,
                 'autoNow' => true,

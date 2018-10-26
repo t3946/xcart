@@ -1,9 +1,11 @@
 <?php
 namespace Modules\Goods\Models;
 
+use Doctrine\DBAL\Types\Type;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonOfferModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\Brand\Models\BrandModel;
@@ -104,6 +106,13 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasManyField::class,
                 'modelClass' => ProductCategoriesModel::class,
                 'link' => ['productid' => 'productid'],
+            ],
+
+            'amazon_offer_model' => [
+                'class' => HasToOneField::class,
+                'modelClass' => AmazonOfferModel::class,
+                'link' => ['ASIN' => 'ASIN'],
+                'sqlType' => Type::STRING,
             ],
 
             'prices' => [
