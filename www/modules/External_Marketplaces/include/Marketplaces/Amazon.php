@@ -125,7 +125,7 @@ class Amazon extends StoreFrontMarketPlace
             if (method_exists($e, 'getErrorCode') && ('RequestThrottled' == $e->getErrorCode() || 'QuotaExceeded' == $e->getErrorCode())) {
 
             } else {
-                func_backprocess_log('incremental feeds', $e->getMessage() . " - " . $e->getCode());
+                func_backprocess_log('amazon_inventory', $e->getMessage() . " - " . $e->getCode());
             }
             $result = false;
         }
