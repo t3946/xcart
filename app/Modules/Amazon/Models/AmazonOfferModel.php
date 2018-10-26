@@ -87,6 +87,7 @@ class AmazonOfferModel extends Model
             ],
             'offer_change_time' => [
                 'class' => DateTimeField::class,
+                'autoNowAdd' => true,
             ],
             'is_buybox_my' => [
                 'class' => BooleanField::class,
