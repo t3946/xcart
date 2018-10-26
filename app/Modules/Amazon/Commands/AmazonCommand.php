@@ -26,8 +26,6 @@ class AmazonCommand extends Command
 
                 $anyOfferChangedNotification = $message['NotificationPayload']['AnyOfferChangedNotification'];
 
-                print_r($anyOfferChangedNotification);
-
                 if ($message_data['NotificationType'] === 'AnyOfferChanged' && $anyOfferChangedNotification) {
 
                     $offer_info = $anyOfferChangedNotification['OfferChangeTrigger'];
@@ -61,7 +59,10 @@ class AmazonCommand extends Command
 
                             $listing->competitors->delete();
 
-                            foreach ($anyOfferChangedNotification['Offers']['Offer'] as $off) {
+                            $offers = isset($anyOfferChangedNotification['Offers']['Offer']['SellerId'])
+                                ? [$anyOfferChangedNotification['Offers']['Offer']] : $anyOfferChangedNotification['Offers']['Offer'];
+
+                            foreach ($offers as $off) {
                                 if ($off['SubCondition'] === 'new') {
                                     $listing->offers++;
                                     /** @var AmazonOfferCompetitorsModel $offer */
