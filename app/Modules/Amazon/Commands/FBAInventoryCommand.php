@@ -42,7 +42,9 @@ class FBAInventoryCommand extends Command
             ->paginate(++$i, $max_products)
             ->all()) {
 
-            $aSKUs = array_map(function ($a) { return $a->productcode;}, $aProductsBatch);
+            $aSKUs = array_map(function ($a) {
+                return $a->productcode;
+            }, $aProductsBatch);
 
             try {
                 /** @var FBAInventoryServiceMWS_Model_ListInventorySupplyResponse $inventory */
@@ -56,21 +58,17 @@ class FBAInventoryCommand extends Command
                         $sASIN = $item->getASIN();
                         $sFNSKU = $item->getFNSKU();
                         if (!$item->isSetASIN()) {
-                            func_backprocess_log('amazon_fba_inventory', "ASIN not set ");
-                            echo serialize($item);
+                            func_backprocess_log('amazon_fba_inventory', "ASIN not set {$item->getSellerSKU()}");
                             continue;
                         }
-                        if ($item->isSetASIN()) {
-
-                            /** @var AmazonOfferModel $offer */
-                            [$offer] = AmazonOfferModel::objects()->getOrNew(['ASIN' => $sASIN]);
-                            $offer->setAttributes([
-                                'fba_total_supply' => $totalSupplyQuantity,
-                                'fba_instock_supply' => $inStockSupplyQuantity,
-                                'FNSKU' => $sFNSKU,
-                            ]);
-                            $offer->save();
-                        }
+                        /** @var AmazonOfferModel $offer */
+                        [$offer] = AmazonOfferModel::objects()->getOrNew(['ASIN' => $sASIN]);
+                        $offer->setAttributes([
+                            'fba_total_supply' => $totalSupplyQuantity,
+                            'fba_instock_supply' => $inStockSupplyQuantity,
+                            'FNSKU' => $sFNSKU,
+                        ]);
+                        $offer->save();
                     }
                 }
 
