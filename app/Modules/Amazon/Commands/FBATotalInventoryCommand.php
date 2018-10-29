@@ -30,6 +30,7 @@ class FBATotalInventoryCommand extends Command
 
         while ($aProductsBatch = ProductModel::objects()->filter([
             'amazon_enabled' => 'Y',
+            'ASIN__isnull' => false,
         ])
             ->paginate(++$i, $max_products)
             ->all()) {
