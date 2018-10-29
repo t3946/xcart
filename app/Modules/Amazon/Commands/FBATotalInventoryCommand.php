@@ -50,7 +50,6 @@ class FBATotalInventoryCommand extends Command
                         $sASIN = $item->getASIN();
                         $sFNSKU = $item->getFNSKU();
                         if (!$item->isSetASIN()) {
-                            func_backprocess_log('amazon_fba_total_inventory', "ASIN not set {$item->getSellerSKU()}");
                             continue;
                         }
                         /** @var AmazonOfferModel $offer */
@@ -61,6 +60,7 @@ class FBATotalInventoryCommand extends Command
                             'FNSKU' => $sFNSKU,
                         ]);
                         $offer->save();
+                        func_backprocess_log('amazon_fba_total_inventory', "ASIN fba stock update {$sASIN}");
                     }
                 }
 
