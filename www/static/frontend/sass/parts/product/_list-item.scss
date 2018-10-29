@@ -440,7 +440,7 @@
 
       .image_container {
         flex: 0 0 40%;
-        line-height: rem-calc(190);
+        //line-height: rem-calc(190);
 
         @include breakpoint(sm down) {
           //height: rem-calc(130);
