@@ -1,12 +1,12 @@
 <div class="order_maps-container">
     <ul>
         {foreach from=$order_manufacturers item=v key=k}
-            <li><a href="#maps-tabs-{$v.manufacturerid}">{$v.code}</a></li>
+            <li><a href="#maps-tabs-{$k}">{$v.code}</a></li>
         {/foreach}
     </ul>
 
 {foreach from=$order_manufacturers item=v key=k}
-    <div id="maps-tabs-{$v.manufacturerid}">
+    <div id="maps-tabs-{$k}">
         <table align="center" width="100%">
             <tr>
                 <td colspan="2" align="center"><h2><B>{$v.manufacturer}</B></h2></td>
