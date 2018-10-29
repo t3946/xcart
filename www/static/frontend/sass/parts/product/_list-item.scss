@@ -444,7 +444,7 @@
 
         @include breakpoint(sm down) {
           //height: rem-calc(130);
-          line-height: rem-calc(130);
+          //line-height: rem-calc(130);
         }
 
         @include breakpoint(medium up) {
