@@ -184,7 +184,7 @@
                 var table =  $(this).closest('table'),
                 rowDelim = '"\r\n"',
                 colDelim = '","',
-                plan_name = 'Excel-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
+                plan_name = 'Excel-00' + table.data('batch-id') + table.data('manufacturer-code'),
                 filename = plan_name + '.txt',
                 header = '"Amazon SKU to load'+ colDelim
                     + 'ASIN' + colDelim
@@ -216,7 +216,7 @@
                 var table =  $(this).closest('table'),
                 rowDelim = '\r\n',
                 colDelim = '\t',
-                plan_name = 'FB-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
+                plan_name = 'FB-00' + table.data('batch-id') + table.data('manufacturer-code'),
                 filename = plan_name + '.txt',
                 footer = '',
                 header = 'PlanName'+ colDelim + plan_name + rowDelim
