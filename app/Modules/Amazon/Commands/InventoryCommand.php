@@ -85,13 +85,6 @@ class InventoryCommand extends Command
             if ($client->submitInventoryFeed($feed)) {
                 $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
 
-                echo "PRICE pull\n\n";
-
-                if ($client->submitPriceFeed($feed)) {
-                    AmazonInventoryQueueModel::objects()->delete(['product_id__in' => $pids]);
-                } else {
-                    echo "Error PRICE pull\n";
-                }
             } else {
                 echo "Error INVENTORY pull\n";
             }
