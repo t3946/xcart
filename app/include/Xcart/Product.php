@@ -655,7 +655,7 @@ SQL;
     {
         if ($this->fAmazonPrice === null) {
             $aResult = SQLBuilder::getInstance()->
-            addSelect('f_amazonGetCompetitivePriceFBA(' . $this->getProductId() . ')', 'aprice')->
+            addSelect('f_amazonGetPriceFBA(' . $this->getProductId() . ')', 'aprice')->
             addFromTable('products')->
             addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
