@@ -24,7 +24,7 @@ class InventoryCommand extends Command
 
         $items = $pids = [];
 
-        foreach (AmazonInventoryQueueModel::objects()->order(['type'])->limit(30000) as $queue) {
+        foreach (AmazonInventoryQueueModel::objects()->order(['type'])->limit(60000) as $queue) {
             /** @var ProductModel $product */
             $product = $queue->product;
 
