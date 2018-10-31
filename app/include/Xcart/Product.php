@@ -644,7 +644,7 @@ SQL;
     public function getZeroPrice()
     {
         $aResult = SQLBuilder::getInstance()->
-        addSelect("cidev_get_FBA_zero_margin_price({$this->getProductId()}, 'Y')", 'zprice')->
+        addSelect("f_amazonGetMinPriceFBA({$this->getProductId()})", 'zprice')->
         addFromTable('products')->
         addCondition('productid=' . $this->getProductId())->
         query_first()->getQueryResult();
@@ -653,13 +653,13 @@ SQL;
 
     public function getAmazonPrice()
     {
-        if (is_null($this->fAmazonPrice)) {
+        if ($this->fAmazonPrice === null) {
             $aResult = SQLBuilder::getInstance()->
-            addSelect('cidev_get_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+            addSelect('f_amazonGetCompetitivePriceFBA(' . $this->getProductId() . ')', 'aprice')->
             addFromTable('products')->
             addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
-            $this->fAmazonPrice = floatval($aResult['aprice']);
+            $this->fAmazonPrice = (float) $aResult['aprice'];
         }
         return $this->fAmazonPrice;
     }

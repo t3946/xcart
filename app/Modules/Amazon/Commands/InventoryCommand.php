@@ -43,10 +43,9 @@ class InventoryCommand extends Command
 
             if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                 !\in_array($prevent_selling, ['FBA', 'MFN'])) {
-                $price = $product->getAmazonPrice();
 
-                $zero_price = $product->getZeroPrice();
-                $min_price = ($price < $zero_price) ? max($price, 2.5) : $zero_price;
+                $price = $product->getAmazonPrice();
+                $min_price = $product->getZeroPrice();
 
                 $item = [
                     'sku' => $product->productcode,
