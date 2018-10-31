@@ -5,17 +5,18 @@ namespace Modules\Amazon\Commands;
 
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
 use Modules\Amazon\Models\AmazonInventoryQueueModel;
+use Modules\Amazon\Models\AmazonPriceQueueModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Commands\Command;
 use Xcart\External_Marketplaces\Marketplaces\Amazon;
 
-class InventoryCommand extends Command
+class PriceCommand extends Command
 {
 
     public function handle($arguments = [])
     {
         $log = " * * *  Cron started  * * * \n";
-        func_backprocess_log('amazon_inventory', $log);
+        func_backprocess_log('amazon_price', $log);
         echo $log;
 
         $start_time = new \DateTime('now');
@@ -24,14 +25,13 @@ class InventoryCommand extends Command
 
         $items = $pids = [];
 
-        foreach (AmazonInventoryQueueModel::objects()->order(['type'])->limit(30000) as $queue) {
+        foreach (AmazonPriceQueueModel::objects()->order(['type'])->limit(30000) as $queue) {
             /** @var ProductModel $product */
             $product = $queue->product;
 
             $pids[] = $product->productid;
 
             $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
-
 
 
             if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
@@ -75,31 +75,24 @@ class InventoryCommand extends Command
 
         if ($items) {
 
-            $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
-            func_backprocess_log('amazon_inventory', $log_text);
+            $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as price feed';
+            func_backprocess_log('amazon_price', $log_text);
 
-            $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
+            $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
 
-            echo "INVENTORY pull\n\n";
+            echo "PRICE pull\n\n";
 
-            if ($client->submitInventoryFeed($feed)) {
-                $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
-
-                echo "PRICE pull\n\n";
-
-                if ($client->submitPriceFeed($feed)) {
-                    AmazonInventoryQueueModel::objects()->delete(['product_id__in' => $pids]);
-                } else {
-                    echo "Error PRICE pull\n";
-                }
+            if ($client->submitPriceFeed($feed)) {
+                AmazonPriceQueueModel::objects()->delete(['product_id__in' => $pids]);
             } else {
-                echo "Error INVENTORY pull\n";
+                echo "Error PRICE pull\n";
             }
+
         }
 
         $str_time = (new \DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 
-        func_backprocess_log('amazon_inventory', $log = "Cron completed. Processing time: {$str_time}\n");
+        func_backprocess_log('amazon_price', $log = "Cron completed. Processing time: {$str_time}\n");
         echo $log;
     }
 }
