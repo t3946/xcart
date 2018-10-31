@@ -29,6 +29,7 @@ class Amazon extends StoreFrontMarketPlace
     public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
     {
 
+        return true;
         $items = [];
 
         if ($products = $this->getInventory()) {
