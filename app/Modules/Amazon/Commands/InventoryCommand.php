@@ -82,10 +82,7 @@ class InventoryCommand extends Command
 
             echo "INVENTORY pull\n\n";
 
-            if ($client->submitInventoryFeed($feed)) {
-                $feed = AmazonFbaFeedHelper::encodePriceFeed($items);
-
-            } else {
+            if (!$client->submitInventoryFeed($feed)) {
                 echo "Error INVENTORY pull\n";
             }
         }
