@@ -23,22 +23,16 @@ class InventoryCommand extends Command
         $client = new Amazon();
 
         $items = $pids = [];
+        $i = 0;
 
-        foreach (AmazonInventoryQueueModel::objects()->order(['type'])->limit(30000) as $queue) {
+        while ($queue = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
             /** @var ProductModel $product */
             $product = $queue->product;
 
-            $pids[] = $product->productid;
-
             $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
-
-
 
             if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                 !\in_array($prevent_selling, ['FBA', 'MFN'])) {
-
-                $price = $product->getAmazonPrice();
-                $min_price = $product->getZeroPrice();
 
                 $item = [
                     'sku' => $product->productcode,
