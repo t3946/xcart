@@ -60,18 +60,18 @@ class InventoryCommand extends Command
                         ]
                     );
                 }
-                if ($items) {
+            }
+            if ($items) {
 
-                    $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
-                    func_backprocess_log('amazon_inventory', $log_text);
+                $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
+                func_backprocess_log('amazon_inventory', $log_text);
 
-                    $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
+                $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
 
-                    echo "INVENTORY pull\n\n";
+                echo "INVENTORY pull\n\n";
 
-                    if (!$client->submitInventoryFeed($feed)) {
-                        echo "Error INVENTORY pull\n";
-                    }
+                if (!$client->submitInventoryFeed($feed)) {
+                    echo "Error INVENTORY pull\n";
                 }
             }
         }
