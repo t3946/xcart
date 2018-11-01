@@ -30,7 +30,7 @@ class AmazonCommand extends Command
 
                     $offer_info = $anyOfferChangedNotification['OfferChangeTrigger'];
                     $offer_summary = $anyOfferChangedNotification['Summary'];
-                    $offer_change_time = \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $offer_info['TimeOfOfferChange']);
+                    $offer_change_time = \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $offer_info['TimeOfOfferChange'], new \DateTimeZone( 'UTC' ));
 
                     if ($offer_info['ItemCondition'] === 'new') {
 
