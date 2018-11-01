@@ -24,51 +24,53 @@ class InventoryCommand extends Command
 
         $i = 0;
 
-        while ($queue = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
-            /** @var ProductModel $product */
-            $product = $queue->product;
-            $items = [];
+        while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
+            foreach ($queues as $queue) {
+                /** @var ProductModel $product */
+                $product = $queue->product;
+                $items = [];
 
-            $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
+                $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
-            if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
-                !\in_array($prevent_selling, ['FBA', 'MFN'])) {
+                if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
+                    !\in_array($prevent_selling, ['FBA', 'MFN'])) {
 
-                $item = [
-                    'sku' => $product->productcode,
-                    'channel' => 'AFN',
-                ];
+                    $item = [
+                        'sku' => $product->productcode,
+                        'channel' => 'AFN',
+                    ];
 
-            } else {
-                $item = [
-                    'sku' => $product->productcode,
-                    'channel' => 'MFN',
-                    'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
-                    'latency' => $product->distributor->amazon_leadtime_to_ship,
-                ];
-            }
+                } else {
+                    $item = [
+                        'sku' => $product->productcode,
+                        'channel' => 'MFN',
+                        'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
+                        'latency' => $product->distributor->amazon_leadtime_to_ship,
+                    ];
+                }
 
-            $items[] = $item;
+                $items[] = $item;
 
-            foreach ($product->missing_products as $missing) {
-                $items[] = array_merge(
-                    $item,
-                    [
-                        'sku' => $missing->missing_productcode
-                    ]
-                );
-            }
-            if ($items) {
+                foreach ($product->missing_products as $missing) {
+                    $items[] = array_merge(
+                        $item,
+                        [
+                            'sku' => $missing->missing_productcode
+                        ]
+                    );
+                }
+                if ($items) {
 
-                $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
-                func_backprocess_log('amazon_inventory', $log_text);
+                    $log_text = 'AMZ: tried to submit ' . \count($items) . ' items as inventory feed';
+                    func_backprocess_log('amazon_inventory', $log_text);
 
-                $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
+                    $feed = AmazonFbaFeedHelper::encodeInventoryFeed($items);
 
-                echo "INVENTORY pull\n\n";
+                    echo "INVENTORY pull\n\n";
 
-                if (!$client->submitInventoryFeed($feed)) {
-                    echo "Error INVENTORY pull\n";
+                    if (!$client->submitInventoryFeed($feed)) {
+                        echo "Error INVENTORY pull\n";
+                    }
                 }
             }
         }
