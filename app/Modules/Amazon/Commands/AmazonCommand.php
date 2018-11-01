@@ -56,7 +56,9 @@ class AmazonCommand extends Command
                                 'offers' => 0
                             ]);
 
-                            $listing->save();
+                            if ($is_new) {
+                                $listing->save();
+                            }
 
                             $listing->competitors->delete();
 
