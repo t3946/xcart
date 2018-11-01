@@ -25,10 +25,11 @@ class InventoryCommand extends Command
         $i = 0;
 
         while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
+            $items = [];
             foreach ($queues as $queue) {
                 /** @var ProductModel $product */
                 $product = $queue->product;
-                $items = [];
+
 
                 $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
