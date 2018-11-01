@@ -43,21 +43,14 @@ class InventoryCommand extends Command
                 $item = [
                     'sku' => $product->productcode,
                     'channel' => 'AFN',
-                    'price' => $price,
-                    'min_price' => $min_price,
-                    'max_price' => $price
                 ];
 
             } else {
-                $min_price = $product->getMinimumAmazonPrice();
                 $item = [
                     'sku' => $product->productcode,
                     'channel' => 'MFN',
                     'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
                     'latency' => $product->distributor->amazon_leadtime_to_ship,
-                    'price' => $min_price,
-                    'min_price' => $min_price,
-                    'max_price' => $min_price
                 ];
             }
 
