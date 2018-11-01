@@ -25,11 +25,12 @@ class InventoryCommand extends Command
         $i = 0;
 
         while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
-            $items = [];
+            $items = $pids = [];
+
             foreach ($queues as $queue) {
                 /** @var ProductModel $product */
                 $product = $queue->product;
-
+                $pids[] = $product->productid;
 
                 $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
@@ -72,6 +73,8 @@ class InventoryCommand extends Command
 
                 if (!$client->submitInventoryFeed($feed)) {
                     echo "Error INVENTORY pull\n";
+                } else {
+                    AmazonInventoryQueueModel::objects()->delete(['product_id__in' => $pids]);
                 }
             }
         }
