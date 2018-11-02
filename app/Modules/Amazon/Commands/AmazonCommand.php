@@ -65,6 +65,9 @@ class AmazonCommand extends Command
                             $offers = isset($anyOfferChangedNotification['Offers']['Offer']['SellerId'])
                                 ? [$anyOfferChangedNotification['Offers']['Offer']] : $anyOfferChangedNotification['Offers']['Offer'];
 
+                            $max_offers_price = null;
+                            $found_me = false;
+
                             foreach ($offers as $off) {
                                 if ($off['SubCondition'] === 'new') {
                                     $listing->offers++;
@@ -86,13 +89,21 @@ class AmazonCommand extends Command
                                     if (AmazonOfferHelper::OUR_MERCHANT_ID === $off['SellerId']) {
                                         $listing->myPrice = $offer->LandingPrice;
                                         $listing->is_buybox_my = $offer->is_buybox;
+                                        $found_me = true;
                                     }
 
                                     if ($offer->is_buybox) {
                                         $listing->buybox_Channel = $offer->channel;
                                     }
+
+                                    $max_offers_price = $offer->LandingPrice;
                                 }
                             }
+
+                            if ($offer && !$found_me && $max_offers_price) {
+                                $listing->myPrice = $max_offers_price + 0.01;
+                            }
+
                             $listing->save();
                         }
                     }
