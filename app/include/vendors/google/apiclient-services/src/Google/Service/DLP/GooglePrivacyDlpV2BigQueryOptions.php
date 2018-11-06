@@ -20,8 +20,6 @@ class Google_Service_DLP_GooglePrivacyDlpV2BigQueryOptions extends Google_Collec
   protected $collection_key = 'identifyingFields';
   protected $identifyingFieldsType = 'Google_Service_DLP_GooglePrivacyDlpV2FieldId';
   protected $identifyingFieldsDataType = 'array';
-  public $rowsLimit;
-  public $sampleMethod;
   protected $tableReferenceType = 'Google_Service_DLP_GooglePrivacyDlpV2BigQueryTable';
   protected $tableReferenceDataType = '';
 
@@ -38,22 +36,6 @@ class Google_Service_DLP_GooglePrivacyDlpV2BigQueryOptions extends Google_Collec
   public function getIdentifyingFields()
   {
     return $this->identifyingFields;
-  }
-  public function setRowsLimit($rowsLimit)
-  {
-    $this->rowsLimit = $rowsLimit;
-  }
-  public function getRowsLimit()
-  {
-    return $this->rowsLimit;
-  }
-  public function setSampleMethod($sampleMethod)
-  {
-    $this->sampleMethod = $sampleMethod;
-  }
-  public function getSampleMethod()
-  {
-    return $this->sampleMethod;
   }
   /**
    * @param Google_Service_DLP_GooglePrivacyDlpV2BigQueryTable

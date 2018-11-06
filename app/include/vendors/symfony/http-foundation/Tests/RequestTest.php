@@ -18,12 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestTest extends TestCase
 {
-    protected function tearDown()
-    {
-        Request::setTrustedProxies(array());
-        Request::setTrustedHosts(array());
-    }
-
     public function testInitialize()
     {
         $request = new Request();
@@ -751,6 +745,8 @@ class RequestTest extends TestCase
         ));
         $port = $request->getPort();
         $this->assertEquals(80, $port, 'With only PROTO set and value is not recognized, getPort() defaults to 80.');
+
+        Request::setTrustedProxies(array());
     }
 
     /**
@@ -826,6 +822,8 @@ class RequestTest extends TestCase
         $request = $this->getRequestInstanceForClientIpTests($remoteAddr, $httpForwardedFor, $trustedProxies);
 
         $this->assertEquals($expected[0], $request->getClientIp());
+
+        Request::setTrustedProxies(array());
     }
 
     /**
@@ -836,6 +834,8 @@ class RequestTest extends TestCase
         $request = $this->getRequestInstanceForClientIpTests($remoteAddr, $httpForwardedFor, $trustedProxies);
 
         $this->assertEquals($expected, $request->getClientIps());
+
+        Request::setTrustedProxies(array());
     }
 
     /**
@@ -846,6 +846,8 @@ class RequestTest extends TestCase
         $request = $this->getRequestInstanceForClientIpsForwardedTests($remoteAddr, $httpForwarded, $trustedProxies);
 
         $this->assertEquals($expected, $request->getClientIps());
+
+        Request::setTrustedProxies(array());
     }
 
     public function getClientIpsForwardedProvider()
@@ -967,6 +969,8 @@ class RequestTest extends TestCase
         $request->initialize(array(), array(), array(), array(), array(), $server);
 
         $clientIps = $request->getClientIps();
+
+        Request::setTrustedProxies(array());
 
         $this->assertSame($expectedIps, $clientIps);
     }
@@ -1916,15 +1920,9 @@ class RequestTest extends TestCase
 
         $request->headers->set('host', 'subdomain.trusted.com');
         $this->assertEquals('subdomain.trusted.com', $request->getHost());
-    }
 
-    public function testSetTrustedHostsDoesNotBreakOnSpecialCharacters()
-    {
-        Request::setTrustedHosts(array('localhost(\.local){0,1}#,example.com', 'localhost'));
-
-        $request = Request::create('/');
-        $request->headers->set('host', 'localhost');
-        $this->assertSame('localhost', $request->getHost());
+        // reset request for following tests
+        Request::setTrustedHosts(array());
     }
 
     public function testFactory()

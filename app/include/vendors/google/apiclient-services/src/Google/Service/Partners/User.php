@@ -18,7 +18,6 @@
 class Google_Service_Partners_User extends Google_Collection
 {
   protected $collection_key = 'primaryEmails';
-  public $afaInfoShared;
   protected $availableAdwordsManagerAccountsType = 'Google_Service_Partners_AdWordsManagerAccountInfo';
   protected $availableAdwordsManagerAccountsDataType = 'array';
   protected $certificationStatusType = 'Google_Service_Partners_Certification';
@@ -37,14 +36,6 @@ class Google_Service_Partners_User extends Google_Collection
   protected $publicProfileType = 'Google_Service_Partners_PublicProfile';
   protected $publicProfileDataType = '';
 
-  public function setAfaInfoShared($afaInfoShared)
-  {
-    $this->afaInfoShared = $afaInfoShared;
-  }
-  public function getAfaInfoShared()
-  {
-    return $this->afaInfoShared;
-  }
   /**
    * @param Google_Service_Partners_AdWordsManagerAccountInfo
    */

@@ -19,9 +19,7 @@
  * Service definition for Script (v1).
  *
  * <p>
- * An API for managing and executing Google Apps Script projects. Note: In order
- * to use this API in your apps, you must  enable it for use. To allow other
- * apps to manage your scripts, you must  grant them access.</p>
+ * An API for managing and executing Google Apps Script projects.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -47,9 +45,6 @@ class Google_Service_Script extends Google_Service
   /** View and manage the provisioning of users on your domain. */
   const ADMIN_DIRECTORY_USER =
       "https://www.googleapis.com/auth/admin.directory.user";
-  /** View and manage your Google Docs documents. */
-  const DOCUMENTS =
-      "https://www.googleapis.com/auth/documents";
   /** View and manage the files in your Google Drive. */
   const DRIVE =
       "https://www.googleapis.com/auth/drive";
@@ -119,12 +114,12 @@ class Google_Service_Script extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'userProcessFilter.types' => array(
+                'userProcessFilter.statuses' => array(
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
                 ),
-                'userProcessFilter.statuses' => array(
+                'userProcessFilter.types' => array(
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
@@ -164,11 +159,11 @@ class Google_Service_Script extends Google_Service
                   'type' => 'string',
                   'repeated' => true,
                 ),
-                'scriptProcessFilter.startTime' => array(
+                'scriptProcessFilter.functionName' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'scriptProcessFilter.functionName' => array(
+                'scriptProcessFilter.startTime' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -241,11 +236,11 @@ class Google_Service_Script extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'metricsGranularity' => array(
+                'metricsFilter.deploymentId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'metricsFilter.deploymentId' => array(
+                'metricsGranularity' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -319,13 +314,13 @@ class Google_Service_Script extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
                 ),
               ),
             ),'update' => array(

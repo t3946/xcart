@@ -19,10 +19,7 @@ class Google_Service_ShoppingContent_ProductStatusItemLevelIssue extends Google_
 {
   public $attributeName;
   public $code;
-  public $description;
   public $destination;
-  public $detail;
-  public $documentation;
   public $resolution;
   public $servability;
 
@@ -42,14 +39,6 @@ class Google_Service_ShoppingContent_ProductStatusItemLevelIssue extends Google_
   {
     return $this->code;
   }
-  public function setDescription($description)
-  {
-    $this->description = $description;
-  }
-  public function getDescription()
-  {
-    return $this->description;
-  }
   public function setDestination($destination)
   {
     $this->destination = $destination;
@@ -57,22 +46,6 @@ class Google_Service_ShoppingContent_ProductStatusItemLevelIssue extends Google_
   public function getDestination()
   {
     return $this->destination;
-  }
-  public function setDetail($detail)
-  {
-    $this->detail = $detail;
-  }
-  public function getDetail()
-  {
-    return $this->detail;
-  }
-  public function setDocumentation($documentation)
-  {
-    $this->documentation = $documentation;
-  }
-  public function getDocumentation()
-  {
-    return $this->documentation;
   }
   public function setResolution($resolution)
   {

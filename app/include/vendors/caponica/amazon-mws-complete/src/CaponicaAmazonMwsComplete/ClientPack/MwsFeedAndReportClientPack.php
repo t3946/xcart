@@ -127,8 +127,6 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
     const PARAM_MARKETPLACE_ID_LIST                     = 'MarketplaceIdList';
     const PARAM_MAX_COUNT                               = 'MaxCount';
     const PARAM_MERCHANT                                = 'Merchant';
-    const PARAM_SELLER_ID                               = 'Merchant';   // Alias for PARAM_MERCHANT
-    const PARAM_MWS_AUTH_TOKEN                          = 'MWSAuthToken';
     const PARAM_NEXT_TOKEN                              = 'NextToken';
     const PARAM_PURGE_AND_REPLACE                       = 'PurgeAndReplace';
     const PARAM_REPORT                                  = 'Report';
@@ -160,13 +158,10 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
     protected $marketplaceId;
     /** @var string $sellerId           The MWS SellerID string used in API connections */
     protected $sellerId;
-    /** @var string $authToken          MWSAuthToken, only needed when working with (3rd party) client accounts which provide an Auth Token */
-    protected $authToken = null;
 
     public function __construct(MwsClientPoolConfig $poolConfig) {
         $this->marketplaceId    = $poolConfig->getMarketplaceId();
         $this->sellerId         = $poolConfig->getSellerId();
-        $this->authToken        = $poolConfig->getAuthToken();
 
         parent::__construct(
             $poolConfig->getAccessKey(),
@@ -181,20 +176,12 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
         return '/';
     }
 
-    // 'Sign' the request by adding SellerId and MWSAuthToken (if used)
-    private function signArray($requestArray = []) {
-        $requestArray[self::PARAM_SELLER_ID] = $this->sellerId;
-        if ($this->authToken) {
-            $requestArray[self::PARAM_MWS_AUTH_TOKEN] = $this->authToken;
-        }
-        return $requestArray;
-    }
 
     // ##################################################
     // #      basic wrappers for API calls go here      #
     // ##################################################
     public function callCancelFeedSubmissions($submissionIds = null, $feedTypes = null, $dateFrom = null, $dateTo = null) {
-        $requestArray = $this->signArray();
+        $requestArray = [ self::PARAM_MERCHANT => $this->sellerId ];
 
         if (!empty($submissionIds)) {
             $requestArray[self::PARAM_FEED_SUBMISSION_ID_LIST] = [ 'Id' => $submissionIds];
@@ -212,8 +199,7 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
         return $this->cancelFeedSubmissions($requestArray);
     }
     public function callGetFeedSubmissionCount($statusCodes = null, $feedTypes = null, $dateFrom = null, $dateTo = null) {
-        $requestArray = $this->signArray();
-
+        $requestArray = [ self::PARAM_MERCHANT => $this->sellerId ];
         if (!empty($statusCodes)) {
             $requestArray[self::PARAM_FEED_PROCESSING_STATUS_LIST] = [ 'Status' => $statusCodes ];
         }
@@ -229,8 +215,7 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
         return $this->getFeedSubmissionCount($requestArray);
     }
     public function callGetFeedSubmissionList($submissionIds = null, $maxCount = null, $statusCodes = null, $feedTypes = null, $dateFrom = null, $dateTo = null) {
-        $requestArray = $this->signArray();
-
+        $requestArray = [ self::PARAM_MERCHANT => $this->sellerId ];
         if (!empty($submissionIds)) {
             $requestArray[self::PARAM_FEED_SUBMISSION_ID_LIST] = [ 'Id' => $submissionIds];
         } else {
@@ -253,11 +238,10 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
         return $this->getFeedSubmissionList($requestArray);
     }
     public function callGetFeedSubmissionListByNextToken($nextToken) {
-        $requestArray = $this->signArray([
+        return $this->getFeedSubmissionListByNextToken([
             self::PARAM_NEXT_TOKEN          => $nextToken,
+            self::PARAM_MERCHANT            => $this->sellerId,
         ]);
-
-        return $this->getFeedSubmissionListByNextToken($requestArray);
     }
     /**
      * @param string $feedSubmissionId      The feedSubmissionId to get a processing report for
@@ -265,11 +249,11 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
      * @return \MarketplaceWebService_Model_GetFeedSubmissionResultResponse
      */
     public function callGetFeedSubmissionResult($feedSubmissionId, $filename) {
-        $requestArray = $this->signArray([
+        return $this->getFeedSubmissionResult([
             self::PARAM_FEED_SUBMISSION_ID      => $feedSubmissionId,
+            self::PARAM_MERCHANT                => $this->sellerId,
             self::PARAM_FEED_SUBMISSION_RESULT  => $filename,
         ]);
-        return $this->getFeedSubmissionResult($requestArray);
     }
 
     /**
@@ -286,9 +270,9 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
             self::PARAM_FEED_CONTENT_MD5    => $contentHash,
             self::PARAM_FEED_TYPE           => $feedType,
             self::PARAM_MARKETPLACE_ID_LIST => array('Id' => $this->marketplaceId),
+            self::PARAM_MERCHANT            => $this->sellerId,
             // self::PARAM_PURGE_AND_REPLACE   => $purge, // This is ignored for safety (uses the MWS API default of false)
         ];
-        $parameters = $this->signArray($parameters);
         return $this->submitFeed($parameters);
     }
 
@@ -302,6 +286,7 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
     public function callRequestReport($reportType, $startDate=null, $endDate=null) {
         $parameters = [
             self::PARAM_MARKETPLACE         => $this->marketplaceId,
+            self::PARAM_MERCHANT            => $this->sellerId,
             self::PARAM_REPORT_TYPE         => $reportType,
             self::PARAM_MARKETPLACE_ID_LIST => array('Id' => $this->marketplaceId),
         ];
@@ -311,7 +296,6 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
         if (!empty($endDate)) {
             $parameters[self::PARAM_END_DATE] = $endDate;
         }
-        $parameters = $this->signArray($parameters);
         return $this->requestReport($parameters);
     }
 
@@ -325,9 +309,10 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
      * @return \MarketplaceWebService_Model_GetReportRequestListResponse
      */
     public function callGetReportRequestList($reportRequestIds=null, $reportTypes=[], $reportProcessingStatuses=[], $requestedFromDate=null, $requestedToDate=null, $maxCount=10) {
-        $parameters = $this->signArray([
+        $parameters = [
             self::PARAM_MARKETPLACE             => $this->marketplaceId,
-        ]);
+            self::PARAM_MERCHANT                => $this->sellerId,
+        ];
         if (!empty($reportRequestIds)) {
             $parameters[self::PARAM_REPORT_REQUEST_ID_LIST] = ['Id' => $reportRequestIds];
         }
@@ -360,10 +345,10 @@ class MwsFeedAndReportClientPack extends MwsFeedAndReportClient {
      * @return \MarketplaceWebService_Model_GetReportResponse
      */
     public function callGetReport($reportId, $filename) {
-        $requestArray = $this->signArray([
+        return $this->getReport([
+            self::PARAM_MERCHANT                => $this->sellerId,
             self::PARAM_REPORT_ID               => $reportId,
             self::PARAM_REPORT                  => $filename,
         ]);
-        return $this->getReport($requestArray);
     }
 }

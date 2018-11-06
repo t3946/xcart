@@ -34,7 +34,13 @@ class Google_Service_CloudTasks_Resource_ProjectsLocationsQueuesTasks extends Go
    * The worker must acknowledge a task within the lease_duration or the lease
    * will expire and the task will become available to be leased again. After the
    * task is acknowledged, it will not be returned by a later LeaseTasks, GetTask,
-   * or ListTasks. (tasks.acknowledge)
+   * or ListTasks.
+   *
+   * To acknowledge multiple tasks at the same time, use [HTTP
+   * batching](/storage/docs/json_api/v1/how-tos/batch) or the batching
+   * documentation for your client library, for example
+   * https://developers.google.com/api-client-library/python/guide/batch.
+   * (tasks.acknowledge)
    *
    * @param string $name Required.
    *
@@ -73,6 +79,11 @@ class Google_Service_CloudTasks_Resource_ProjectsLocationsQueuesTasks extends Go
   }
   /**
    * Creates a task and adds it to a queue.
+   *
+   * To add multiple tasks at the same time, use [HTTP
+   * batching](/storage/docs/json_api/v1/how-tos/batch) or the batching
+   * documentation for your client library, for example
+   * https://developers.google.com/api-client-library/python/guide/batch.
    *
    * Tasks cannot be updated after creation; there is no UpdateTask command.
    *
@@ -247,26 +258,27 @@ class Google_Service_CloudTasks_Resource_ProjectsLocationsQueuesTasks extends Go
   /**
    * Forces a task to run now.
    *
-   * When this method is called, Cloud Tasks will dispatch the task, even if the
-   * task is already running, the queue has reached its RateLimits or is PAUSED.
-   *
    * This command is meant to be used for manual debugging. For example, RunTask
    * can be used to retry a failed task after a fix has been made or to manually
    * force a task to be dispatched now.
+   *
+   * When this method is called, Cloud Tasks will dispatch the task to its target,
+   * even if the queue is PAUSED.
    *
    * The dispatched task is returned. That is, the task that is returned contains
    * the status after the task is dispatched but before the task is received by
    * its target.
    *
-   * If Cloud Tasks receives a successful response from the task's target, then
+   * If Cloud Tasks receives a successful response from the task's handler, then
    * the task will be deleted; otherwise the task's schedule_time will be reset to
-   * the time that RunTask was called plus the retry delay specified in the
-   * queue's RetryConfig.
+   * the time that RunTask was called plus the retry delay specified in the queue
+   * and task's RetryConfig.
    *
    * RunTask returns NOT_FOUND when it is called on a task that has already
-   * succeeded or permanently failed.
+   * succeeded or permanently failed. FAILED_PRECONDITION is returned when RunTask
+   * is called on task that is dispatched or already running.
    *
-   * RunTask cannot be called on a pull task. (tasks.run)
+   * RunTask cannot be called on pull tasks. (tasks.run)
    *
    * @param string $name Required.
    *

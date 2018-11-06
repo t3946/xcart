@@ -26,7 +26,6 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   protected $httpsTriggerDataType = '';
   public $labels;
   public $name;
-  public $runtime;
   public $serviceAccountEmail;
   public $sourceArchiveUrl;
   protected $sourceRepositoryType = 'Google_Service_CloudFunctions_SourceRepository';
@@ -104,14 +103,6 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   public function getName()
   {
     return $this->name;
-  }
-  public function setRuntime($runtime)
-  {
-    $this->runtime = $runtime;
-  }
-  public function getRuntime()
-  {
-    return $this->runtime;
   }
   public function setServiceAccountEmail($serviceAccountEmail)
   {

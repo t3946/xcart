@@ -33,7 +33,6 @@ class Google_Service_Compute_Image extends Google_Collection
   public $kind;
   public $labelFingerprint;
   public $labels;
-  public $licenseCodes;
   public $licenses;
   public $name;
   protected $rawDiskType = 'Google_Service_Compute_ImageRawDisk';
@@ -167,14 +166,6 @@ class Google_Service_Compute_Image extends Google_Collection
   public function getLabels()
   {
     return $this->labels;
-  }
-  public function setLicenseCodes($licenseCodes)
-  {
-    $this->licenseCodes = $licenseCodes;
-  }
-  public function getLicenseCodes()
-  {
-    return $this->licenseCodes;
   }
   public function setLicenses($licenses)
   {

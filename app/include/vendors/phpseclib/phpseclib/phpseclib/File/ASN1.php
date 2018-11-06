@@ -582,7 +582,7 @@ class ASN1
                             $childClass = $tempClass = self::CLASS_UNIVERSAL;
                             $constant = null;
                             if (isset($temp['constant'])) {
-                                $tempClass = $temp['type'];
+                                $tempClass = isset($temp['class']) ? $temp['class'] : self::CLASS_CONTEXT_SPECIFIC;
                             }
                             if (isset($child['class'])) {
                                 $childClass = $child['class'];
@@ -645,7 +645,7 @@ class ASN1
                     $temp = $decoded['content'][$i];
                     $tempClass = self::CLASS_UNIVERSAL;
                     if (isset($temp['constant'])) {
-                        $tempClass = $temp['type'];
+                        $tempClass = isset($temp['class']) ? $temp['class'] : self::CLASS_CONTEXT_SPECIFIC;
                     }
 
                     foreach ($mapping['children'] as $key => $child) {

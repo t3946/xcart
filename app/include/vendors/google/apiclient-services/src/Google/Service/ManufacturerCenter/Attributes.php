@@ -29,7 +29,6 @@ class Google_Service_ManufacturerCenter_Attributes extends Google_Collection
   protected $countDataType = '';
   public $description;
   public $disclosureDate;
-  public $excludedDestination;
   protected $featureDescriptionType = 'Google_Service_ManufacturerCenter_FeatureDescription';
   protected $featureDescriptionDataType = 'array';
   public $flavor;
@@ -38,7 +37,6 @@ class Google_Service_ManufacturerCenter_Attributes extends Google_Collection
   public $gtin;
   protected $imageLinkType = 'Google_Service_ManufacturerCenter_Image';
   protected $imageLinkDataType = '';
-  public $includedDestination;
   public $itemGroupId;
   public $material;
   public $mpn;
@@ -143,14 +141,6 @@ class Google_Service_ManufacturerCenter_Attributes extends Google_Collection
   {
     return $this->disclosureDate;
   }
-  public function setExcludedDestination($excludedDestination)
-  {
-    $this->excludedDestination = $excludedDestination;
-  }
-  public function getExcludedDestination()
-  {
-    return $this->excludedDestination;
-  }
   /**
    * @param Google_Service_ManufacturerCenter_FeatureDescription
    */
@@ -210,14 +200,6 @@ class Google_Service_ManufacturerCenter_Attributes extends Google_Collection
   public function getImageLink()
   {
     return $this->imageLink;
-  }
-  public function setIncludedDestination($includedDestination)
-  {
-    $this->includedDestination = $includedDestination;
-  }
-  public function getIncludedDestination()
-  {
-    return $this->includedDestination;
   }
   public function setItemGroupId($itemGroupId)
   {

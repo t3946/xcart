@@ -19,8 +19,6 @@ class Google_Service_YouTubeAnalytics_Group extends Google_Model
 {
   protected $contentDetailsType = 'Google_Service_YouTubeAnalytics_GroupContentDetails';
   protected $contentDetailsDataType = '';
-  protected $errorsType = 'Google_Service_YouTubeAnalytics_Errors';
-  protected $errorsDataType = '';
   public $etag;
   public $id;
   public $kind;
@@ -40,20 +38,6 @@ class Google_Service_YouTubeAnalytics_Group extends Google_Model
   public function getContentDetails()
   {
     return $this->contentDetails;
-  }
-  /**
-   * @param Google_Service_YouTubeAnalytics_Errors
-   */
-  public function setErrors(Google_Service_YouTubeAnalytics_Errors $errors)
-  {
-    $this->errors = $errors;
-  }
-  /**
-   * @return Google_Service_YouTubeAnalytics_Errors
-   */
-  public function getErrors()
-  {
-    return $this->errors;
   }
   public function setEtag($etag)
   {

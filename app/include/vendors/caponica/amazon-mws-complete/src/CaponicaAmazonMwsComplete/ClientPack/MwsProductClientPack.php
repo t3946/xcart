@@ -37,7 +37,6 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
     const PARAM_ID_TYPE                         = 'IdType';
     const PARAM_ITEM_CONDITION                  = 'ItemCondition';
     const PARAM_MARKETPLACE_ID                  = 'MarketplaceId';
-    const PARAM_MWS_AUTH_TOKEN                  = 'MWSAuthToken';
     const PARAM_QUERY                           = 'Query';
     const PARAM_QUERY_CONTEXT_ID                = 'QueryContextId';
     const PARAM_SELLER_ID                       = 'SellerId';
@@ -107,13 +106,10 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
     protected $marketplaceId;
     /** @var string $sellerId           The MWS SellerID string used in API connections */
     protected $sellerId;
-    /** @var string $authToken          MWSAuthToken, only needed when working with (3rd party) client accounts which provide an Auth Token */
-    protected $authToken = null;
 
     public function __construct(MwsClientPoolConfig $poolConfig) {
         $this->marketplaceId    = $poolConfig->getMarketplaceId();
         $this->sellerId         = $poolConfig->getSellerId();
-        $this->authToken        = $poolConfig->getAuthToken();
 
         $this->initThrottleManager();
 
@@ -130,15 +126,6 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
         return '/Products/' . self::SERVICE_VERSION;
     }
 
-    // 'Sign' the request by adding SellerId and MWSAuthToken (if used)
-    private function signArray($requestArray = []) {
-        $requestArray[self::PARAM_SELLER_ID] = $this->sellerId;
-        $requestArray[self::PARAM_MARKETPLACE_ID] = $this->marketplaceId;
-        if ($this->authToken) {
-            $requestArray[self::PARAM_MWS_AUTH_TOKEN] = $this->authToken;
-        }
-        return $requestArray;
-    }
 
     // ##################################################
     // #      basic wrappers for API calls go here      #
@@ -149,11 +136,11 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      */
     public function callGetCompetitivePricingForASIN($asin) {
         $options = [
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN_LIST       => array('ASIN' => $asin),
         ];
         $weight = is_array($asin) ? count($asin) : 1;
-
-        $options = $this->signArray($options);
         return CaponicaClientPack::throttledCall($this, self::METHOD_GET_COMPETITIVE_PRICING_FOR_ASIN, $options, $weight);
     }
     /**
@@ -161,10 +148,11 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKUResponse
      */
     public function callGetCompetitivePricingForSKU($skuList) {
-        $options = $this->signArray([
+        return $this->getCompetitivePricingForSKU([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_SELLER_SKU_LIST => array('SellerSKU' => $skuList),
         ]);
-        return $this->getCompetitivePricingForSKU($options);
     }
     /**
      * @param string|array $asinList    One or more ASINs to lookup
@@ -173,12 +161,12 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      */
     public function callGetLowestOfferListingsForASIN($asinList, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
         $options = [
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN_LIST       => array('ASIN' => $asinList),
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ];
         $weight = is_array($asinList) ? count($asinList) : 1;
-
-        $options = $this->signArray($options);
         return CaponicaClientPack::throttledCall($this, self::METHOD_GET_LOWEST_OFFER_LISTINGS_FOR_ASIN, $options, $weight);
     }
     /**
@@ -187,11 +175,12 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetLowestOfferListingsForSKUResponse
      */
     public function callGetLowestOfferListingsForSKU($skuList, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
-        $options = $this->signArray([
+        return $this->getLowestOfferListingsForSKU([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_SELLER_SKU_LIST => array('SellerSKU' => $skuList),
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ]);
-        return $this->getLowestOfferListingsForSKU($options);
     }
     /**
      * @param string $asin              A single ASIN to lookup
@@ -199,11 +188,12 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetLowestPricedOffersForASINResponse
      */
     public function callGetLowestPricedOffersForASIN($asin, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
-        $options = $this->signArray([
+        return $this->getLowestPricedOffersForASIN([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN            => $asin,
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ]);
-        return $this->getLowestPricedOffersForASIN($options);
     }
     /**
      * @param string $sku               A single SKU to lookup
@@ -211,24 +201,25 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetLowestPricedOffersForSKUResponse
      */
     public function callGetLowestPricedOffersForSKU($sku, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
-        $options = $this->signArray([
+        return $this->getLowestPricedOffersForSKU([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_SELLER_SKU      => $sku,
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ]);
-        return $this->getLowestPricedOffersForSKU($options);
     }
     /**
      * @param string|array $asinList    One or more ASINs to lookup
      * @return \MarketplaceWebServiceProducts_Model_GetMatchingProductResponse
      */
     public function callGetMatchingProduct($asinList) {
-        $options = [
+        $parameters = [
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN_LIST       => array('ASIN' => $asinList),
         ];
         $weight = is_array($asinList) ? count($asinList) : 1;
-
-        $options = $this->signArray($options);
-        return CaponicaClientPack::throttledCall($this, self::METHOD_GET_MATCHING_PRODUCTS, $options, $weight);
+        return CaponicaClientPack::throttledCall($this, self::METHOD_GET_MATCHING_PRODUCTS, $parameters, $weight);
     }
     /**
      * @param string $idType            The IdType of the IDs to look up, one of the ID_TYPE_XYZ values
@@ -236,10 +227,12 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetMatchingProductForIdResponse
      */
     public function callGetMatchingProductForId($idType, $idList) {
-        $options = $this->signArray([
+        $options = [
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ID_TYPE         => $idType,
             self::PARAM_ID_LIST         => array('Id' => $idList),
-        ]);
+        ];
         $weight = is_array($idList) ? count($idList) : 1;
         return CaponicaClientPack::throttledCall($this, self::METHOD_GET_MATCHING_PRODUCTS_FOR_ID, $options, $weight);
     }
@@ -249,11 +242,12 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetMyPriceForASINResponse
      */
     public function callGetMyPriceForASIN($asinList, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
-        $options = $this->signArray([
+        return $this->getMyPriceForASIN([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN_LIST       => array('ASIN' => $asinList),
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ]);
-        return $this->getMyPriceForASIN($options);
     }
     /**
      * @param string|array $skuList     One or more SKUs to lookup
@@ -261,31 +255,34 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      * @return \MarketplaceWebServiceProducts_Model_GetMyPriceForSKUResponse
      */
     public function callGetMyPriceForSKU($skuList, $itemCondition = self::ITEM_CONDITION_TEXT_NEW) {
-        $options = $this->signArray([
+        return $this->getMyPriceForSKU([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_SELLER_SKU_LIST => array('SellerSKU' => $skuList),
             self::PARAM_ITEM_CONDITION  => $itemCondition,
         ]);
-        return $this->getMyPriceForSKU($options);
     }
     /**
      * @param string $asin              A single ASIN to lookup
      * @return \MarketplaceWebServiceProducts_Model_GetProductCategoriesForASINResponse
      */
     public function callGetProductCategoriesForASIN($asin) {
-        $options = $this->signArray([
+        return $this->getProductCategoriesForASIN([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_ASIN            => $asin,
         ]);
-        return $this->getProductCategoriesForASIN($options);
     }
     /**
      * @param string $sku               A single SKU to lookup
      * @return \MarketplaceWebServiceProducts_Model_GetProductCategoriesForSKUResponse
      */
     public function callGetProductCategoriesForSKU($sku) {
-        $options = $this->signArray([
+        return $this->getProductCategoriesForSKU([
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_SELLER_SKU      => $sku,
         ]);
-        return $this->getProductCategoriesForSKU($options);
     }
 
     /**
@@ -295,10 +292,11 @@ class MwsProductClientPack extends MwsProductClient implements ThrottleAwareClie
      */
     public function callListMatchingProducts($query, $queryContext = null) {
         $options = [
+            self::PARAM_SELLER_ID       => $this->sellerId,
+            self::PARAM_MARKETPLACE_ID  => $this->marketplaceId,
             self::PARAM_QUERY           => $query,
             self::PARAM_QUERY_CONTEXT_ID => $queryContext,
         ];
-        $options = $this->signArray($options);
         return CaponicaClientPack::throttledCall($this, self::METHOD_LIST_MATCHING_PRODUCTS, $options);
     }
 

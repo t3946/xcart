@@ -11,9 +11,6 @@
                 <Title>String</Title>
                 <QuantityOrdered>1</QuantityOrdered>
                 <QuantityShipped>1</QuantityShipped>
-                <ProductInfo>
-                    <NumberOfItems>1</NumberOfItems>
-                </ProductInfo>
                 <PointsGranted>
                     <PointsNumber>1</PointsNumber>
                     <PointsMonetaryValue>
@@ -64,7 +61,6 @@
                     <CurrencyCode>String</CurrencyCode>
                     <Amount>String</Amount>
                 </CODFeeDiscount>
-                <IsGift>true</IsGift>
                 <GiftMessageText>String</GiftMessageText>
                 <GiftWrapLevel>String</GiftWrapLevel>
                 <InvoiceData>
@@ -82,10 +78,6 @@
                 <BuyerCustomizedInfo>
                     <CustomizedURL>String</CustomizedURL>
                 </BuyerCustomizedInfo>
-                <TaxCollection>
-                    <Model>String</Model>
-                    <ResponsibleParty>String</ResponsibleParty>
-                </TaxCollection>
             </OrderItem>
         </OrderItems>
     </ListOrderItemsByNextTokenResult>

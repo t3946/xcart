@@ -17,7 +17,6 @@
 
 class Google_Service_ShoppingContent_ProductStatusDataQualityIssue extends Google_Model
 {
-  public $destination;
   public $detail;
   public $fetchStatus;
   public $id;
@@ -27,14 +26,6 @@ class Google_Service_ShoppingContent_ProductStatusDataQualityIssue extends Googl
   public $valueOnLandingPage;
   public $valueProvided;
 
-  public function setDestination($destination)
-  {
-    $this->destination = $destination;
-  }
-  public function getDestination()
-  {
-    return $this->destination;
-  }
   public function setDetail($detail)
   {
     $this->detail = $detail;

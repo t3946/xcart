@@ -9,8 +9,7 @@ class RestResponseTest extends TestCase
     public function testPurchaseSuccess()
     {
         $httpResponse = $this->getMockHttpResponse('RestPurchaseSuccess.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertTrue($response->isSuccessful());
         $this->assertSame('44E89981F8714392Y', $response->getTransactionReference());
@@ -20,8 +19,7 @@ class RestResponseTest extends TestCase
     public function testPurchaseFailure()
     {
         $httpResponse = $this->getMockHttpResponse('RestPurchaseFailure.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertFalse($response->isSuccessful());
         $this->assertNull($response->getTransactionReference());
@@ -31,9 +29,7 @@ class RestResponseTest extends TestCase
     public function testCompletePurchaseSuccess()
     {
         $httpResponse = $this->getMockHttpResponse('RestCompletePurchaseSuccess.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertTrue($response->isSuccessful());
         $this->assertSame('9EA05739TH369572R', $response->getTransactionReference());
@@ -43,9 +39,7 @@ class RestResponseTest extends TestCase
     public function testCompletePurchaseFailure()
     {
         $httpResponse = $this->getMockHttpResponse('RestCompletePurchaseFailure.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertFalse($response->isSuccessful());
         $this->assertNull($response->getTransactionReference());
@@ -55,9 +49,7 @@ class RestResponseTest extends TestCase
     public function testTokenFailure()
     {
         $httpResponse = $this->getMockHttpResponse('RestTokenFailure.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertFalse($response->isSuccessful());
         $this->assertSame('Client secret does not match for this client', $response->getMessage());
@@ -66,9 +58,7 @@ class RestResponseTest extends TestCase
     public function testAuthorizeSuccess()
     {
         $httpResponse = $this->getMockHttpResponse('RestAuthorizationSuccess.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertTrue($response->isSuccessful());
         $this->assertSame('58N7596879166930B', $response->getTransactionReference());
@@ -78,9 +68,7 @@ class RestResponseTest extends TestCase
     public function testCreateCardSuccess()
     {
         $httpResponse = $this->getMockHttpResponse('RestCreateCardSuccess.txt');
-        $data = json_decode($httpResponse->getBody()->getContents(), true);
-
-        $response = new RestResponse($this->getMockRequest(), $data, $httpResponse->getStatusCode());
+        $response = new RestResponse($this->getMockRequest(), $httpResponse->json(), $httpResponse->getStatusCode());
 
         $this->assertTrue($response->isSuccessful());
         $this->assertSame('CARD-70E78145XN686604FKO3L6OQ', $response->getCardReference());

@@ -17,27 +17,27 @@
 
 class Google_Service_Bigquery_QueryTimelineSample extends Google_Model
 {
-  public $activeUnits;
-  public $completedUnits;
+  public $activeInputs;
+  public $completedInputs;
   public $elapsedMs;
-  public $pendingUnits;
+  public $pendingInputs;
   public $totalSlotMs;
 
-  public function setActiveUnits($activeUnits)
+  public function setActiveInputs($activeInputs)
   {
-    $this->activeUnits = $activeUnits;
+    $this->activeInputs = $activeInputs;
   }
-  public function getActiveUnits()
+  public function getActiveInputs()
   {
-    return $this->activeUnits;
+    return $this->activeInputs;
   }
-  public function setCompletedUnits($completedUnits)
+  public function setCompletedInputs($completedInputs)
   {
-    $this->completedUnits = $completedUnits;
+    $this->completedInputs = $completedInputs;
   }
-  public function getCompletedUnits()
+  public function getCompletedInputs()
   {
-    return $this->completedUnits;
+    return $this->completedInputs;
   }
   public function setElapsedMs($elapsedMs)
   {
@@ -47,13 +47,13 @@ class Google_Service_Bigquery_QueryTimelineSample extends Google_Model
   {
     return $this->elapsedMs;
   }
-  public function setPendingUnits($pendingUnits)
+  public function setPendingInputs($pendingInputs)
   {
-    $this->pendingUnits = $pendingUnits;
+    $this->pendingInputs = $pendingInputs;
   }
-  public function getPendingUnits()
+  public function getPendingInputs()
   {
-    return $this->pendingUnits;
+    return $this->pendingInputs;
   }
   public function setTotalSlotMs($totalSlotMs)
   {

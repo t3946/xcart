@@ -71,21 +71,6 @@ MWS responses:
         echo $compPricing->asin;
     }
 
-NEW - MWSAuthToken
-==================
-
-If you're using an MWSAuthToken then you can pass it in via the config:
-
-    $mwsClientPoolUsa->setConfig([
-        'auth_token'            => 'YOUR_MWS_AUTH_TOKEN',
-        // ... other parameters ...
-    ]);
-
-Once set on the ClientPool, the token should be passed through to each Client and used in every API request.
-
-*REQUEST: Please feed back via [github](https://github.com/caponica/AmazonMwsComplete/issues) if this is the best way to 
-set and use the MWSAuthToken, and if it all works as expected. I don't used this functionality myself so cannot test it
-properly.*
 
 Working with reports
 ====================
@@ -133,12 +118,12 @@ Client library versions
 |FBAInventoryServiceMWS             |2010-10-01 |2014-09-30     |
 |FBAOutboundServiceMWS              |2010-10-01 |2016-10-19     |
 |MarketplaceWebService              |2009-01-01 |2016-09-21     |
-|MarketplaceWebServiceOrders        |2013-09-01 |2018-01-31     |
+|MarketplaceWebServiceOrders        |2013-09-01 |2017-02-22     |
 |MarketplaceWebServiceProducts      |2011-10-01 |2017-03-22     |
 |MarketplaceWebServiceSellers       |2011-07-01 |2015-06-18     |
 |MWSCartService                     |2014-03-01 |2015-06-18 ??  |
 |MWSCustomerService                 |2014-03-01 |2015-06-18 ??  |
-|MWSFinancesService                 |2015-05-01 |2018-03-22     |
+|MWSFinancesService                 |2015-05-01 |2017-07-26     |
 |MWSMerchantFulfillmentService      |2015-06-01 |2016-03-30 **  |
 |MWSRecommendationsSectionService   |2013-04-01 |2015-06-18     |
 |MWSSubscriptionsService            |2013-07-01 |2015-06-18     |

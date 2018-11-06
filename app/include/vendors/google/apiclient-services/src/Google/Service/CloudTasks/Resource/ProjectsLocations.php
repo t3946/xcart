@@ -26,7 +26,7 @@
 class Google_Service_CloudTasks_Resource_ProjectsLocations extends Google_Service_Resource
 {
   /**
-   * Gets information about a location. (locations.get)
+   * Get information about a location. (locations.get)
    *
    * @param string $name Resource name for the location.
    * @param array $optParams Optional parameters.

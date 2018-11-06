@@ -17,20 +17,11 @@
 
 class Google_Service_CloudFunctions_Location extends Google_Model
 {
-  public $displayName;
   public $labels;
   public $locationId;
   public $metadata;
   public $name;
 
-  public function setDisplayName($displayName)
-  {
-    $this->displayName = $displayName;
-  }
-  public function getDisplayName()
-  {
-    return $this->displayName;
-  }
   public function setLabels($labels)
   {
     $this->labels = $labels;

@@ -117,7 +117,7 @@ class AmazonFbaFeedHelper
                     break;
             }
 
-            $inventory = \array_merge($inventory, [
+            $inventory = array_merge($inventory, [
                 'SwitchFulfillmentTo' => $message['channel']
             ]);
 

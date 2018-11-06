@@ -160,7 +160,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @param string $format
      *
-     * @return Cookie[]
+     * @return array
      *
      * @throws \InvalidArgumentException When the $format is invalid
      */

@@ -103,9 +103,6 @@ class MwsClientPool {
     public function getChannelId() {
         return $this->channelId;
     }
-    public function getAmazonSite() {
-        return $this->config->getAmazonSite();
-    }
     public function getMarketplaceId() {
         return $this->config->getMarketplaceId();
     }

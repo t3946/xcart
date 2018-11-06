@@ -19,7 +19,6 @@ class Google_Service_Dataflow_MetricUpdate extends Google_Model
 {
   public $cumulative;
   public $distribution;
-  public $gauge;
   public $internal;
   public $kind;
   public $meanCount;
@@ -45,14 +44,6 @@ class Google_Service_Dataflow_MetricUpdate extends Google_Model
   public function getDistribution()
   {
     return $this->distribution;
-  }
-  public function setGauge($gauge)
-  {
-    $this->gauge = $gauge;
-  }
-  public function getGauge()
-  {
-    return $this->gauge;
   }
   public function setInternal($internal)
   {

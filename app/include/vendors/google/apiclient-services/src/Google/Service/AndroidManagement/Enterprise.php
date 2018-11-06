@@ -17,7 +17,7 @@
 
 class Google_Service_AndroidManagement_Enterprise extends Google_Collection
 {
-  protected $collection_key = 'termsAndConditions';
+  protected $collection_key = 'enabledNotificationTypes';
   public $appAutoApprovalEnabled;
   public $enabledNotificationTypes;
   public $enterpriseDisplayName;
@@ -26,8 +26,6 @@ class Google_Service_AndroidManagement_Enterprise extends Google_Collection
   public $name;
   public $primaryColor;
   public $pubsubTopic;
-  protected $termsAndConditionsType = 'Google_Service_AndroidManagement_TermsAndConditions';
-  protected $termsAndConditionsDataType = 'array';
 
   public function setAppAutoApprovalEnabled($appAutoApprovalEnabled)
   {
@@ -90,19 +88,5 @@ class Google_Service_AndroidManagement_Enterprise extends Google_Collection
   public function getPubsubTopic()
   {
     return $this->pubsubTopic;
-  }
-  /**
-   * @param Google_Service_AndroidManagement_TermsAndConditions
-   */
-  public function setTermsAndConditions($termsAndConditions)
-  {
-    $this->termsAndConditions = $termsAndConditions;
-  }
-  /**
-   * @return Google_Service_AndroidManagement_TermsAndConditions
-   */
-  public function getTermsAndConditions()
-  {
-    return $this->termsAndConditions;
   }
 }

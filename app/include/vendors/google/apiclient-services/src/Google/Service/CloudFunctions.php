@@ -19,7 +19,8 @@
  * Service definition for CloudFunctions (v1).
  *
  * <p>
- * Manages lightweight user-provided functions executed in response to events.</p>
+ * API for managing lightweight user-provided functions executed in response to
+ * events.</p>
  *
  * <p>
  * For more information about this service, see the API

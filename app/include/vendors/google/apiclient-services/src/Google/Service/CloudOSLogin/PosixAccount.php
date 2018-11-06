@@ -21,7 +21,6 @@ class Google_Service_CloudOSLogin_PosixAccount extends Google_Model
   public $gecos;
   public $gid;
   public $homeDirectory;
-  public $operatingSystemType;
   public $primary;
   public $shell;
   public $systemId;
@@ -59,14 +58,6 @@ class Google_Service_CloudOSLogin_PosixAccount extends Google_Model
   public function getHomeDirectory()
   {
     return $this->homeDirectory;
-  }
-  public function setOperatingSystemType($operatingSystemType)
-  {
-    $this->operatingSystemType = $operatingSystemType;
-  }
-  public function getOperatingSystemType()
-  {
-    return $this->operatingSystemType;
   }
   public function setPrimary($primary)
   {

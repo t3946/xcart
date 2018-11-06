@@ -18,7 +18,6 @@
 class Google_Service_ShoppingContent_AccountStatusAccountLevelIssue extends Google_Model
 {
   public $country;
-  public $destination;
   public $detail;
   public $id;
   public $severity;
@@ -31,14 +30,6 @@ class Google_Service_ShoppingContent_AccountStatusAccountLevelIssue extends Goog
   public function getCountry()
   {
     return $this->country;
-  }
-  public function setDestination($destination)
-  {
-    $this->destination = $destination;
-  }
-  public function getDestination()
-  {
-    return $this->destination;
   }
   public function setDetail($detail)
   {

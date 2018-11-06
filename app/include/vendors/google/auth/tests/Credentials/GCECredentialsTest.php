@@ -64,16 +64,10 @@ class GCECredentialsOnAppEngineFlexibleTest extends TestCase
         $this->assertFalse(GCECredentials::onAppEngineFlexible());
     }
 
-    public function testIsTrueWhenGaeInstanceHasAefPrefix()
+    public function testIsTrueWhenGaeVmIsTrue()
     {
-        putenv('GAE_INSTANCE=aef-default-20180313t154438');
+        $_SERVER['GAE_VM'] = 'true';
         $this->assertTrue(GCECredentials::onAppEngineFlexible());
-    }
-
-    protected function tearDown()
-    {
-        // removes it if assigned
-        putenv('GAE_INSTANCE');
     }
 }
 

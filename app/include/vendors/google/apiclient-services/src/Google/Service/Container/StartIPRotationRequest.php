@@ -20,7 +20,6 @@ class Google_Service_Container_StartIPRotationRequest extends Google_Model
   public $clusterId;
   public $name;
   public $projectId;
-  public $rotateCredentials;
   public $zone;
 
   public function setClusterId($clusterId)
@@ -46,14 +45,6 @@ class Google_Service_Container_StartIPRotationRequest extends Google_Model
   public function getProjectId()
   {
     return $this->projectId;
-  }
-  public function setRotateCredentials($rotateCredentials)
-  {
-    $this->rotateCredentials = $rotateCredentials;
-  }
-  public function getRotateCredentials()
-  {
-    return $this->rotateCredentials;
   }
   public function setZone($zone)
   {
