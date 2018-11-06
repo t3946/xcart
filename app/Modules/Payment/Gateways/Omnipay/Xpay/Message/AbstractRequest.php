@@ -182,8 +182,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'request' => Xpay::encrypt($xml,$this->getPublicKey()),
         ];
 
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $request)->send();
-        $this->response = new Response($this, Xpay::decrypt($httpResponse->getBody(), $this->getPrivateKey(), $this->getPrivateKeyPassword()));
+        $body = $request ? http_build_query($request, '', '&') : null;
+        $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $this->getHeaders(), $body);
+        $this->response = new Response($this, Xpay::decrypt($httpResponse->getBody()->getContents(), $this->getPrivateKey(), $this->getPrivateKeyPassword()));
         return $this->response;
     }
 
