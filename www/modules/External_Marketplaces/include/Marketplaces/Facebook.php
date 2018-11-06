@@ -97,6 +97,7 @@ class Facebook extends StoreFrontMarketPlace
 
 
             echo json_encode((new ProductCatalog($id))->createBatch([],['requests' => $requests])->exportAllData(), JSON_PRETTY_PRINT);
+            return true;
         }
     }
 }
