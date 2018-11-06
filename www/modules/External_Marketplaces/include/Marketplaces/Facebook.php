@@ -85,7 +85,7 @@ class Facebook extends StoreFrontMarketPlace
                             'description' => strip_tags($product->fulldescr),
                             'image_url' => 'https:'.$image_model->getCdnURL(),
                             'name' => $product->getFrontendName(),
-                            'price' => $product->getPrice() * 100,
+                            'price' => (int) $product->getPrice() * 100,
                             'url' => 'https:'.$product->getAbsoluteUrl(true).'?origin=facebook_product_ads',
                             'gtin' => $product->upc,
                             'condition' => 'new',
