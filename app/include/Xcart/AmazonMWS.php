@@ -2224,50 +2224,62 @@ SQL;
         $aShipments = AmazonListInboundShipment::objects()->filter(['shipment_status__raw' => "NOT IN ('DELETED', 'CANCELLED', 'CLOSED')"]);
 
         foreach ($aShipments as $shipment) {
-            $request = [
-                'SellerId' => MERCHANT_ID,
-                'ShipmentId' => $shipment->shipment_id,
-            ];
-            $this->dom_xml_arr = AmazonHelper::invokeListInboundShipmentsItems($request, $this->oMWSService);
+            $this->nextToken = 'start';
 
-            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
-                return $this;
-            }
-            if ($this->bEnableLog && $this->sLogPrefix) {
-                Xcart::app()->logger->debug('ListInboundItems response', $this->dom_xml_arr ?: [], "amazon_{$this->sLogPrefix}");
-            }
-
-            if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
-                $items = new SimpleXMLElement($this->dom_xml_arr);
-                $amazonRes = $items->ListInboundShipmentItemsResult;
-                if (!$amazonRes) {
-                    $amazonRes = $items->ListInboundShipmentItemsByNextTokenResult;
+            while (!empty($this->nextToken)) {
+                if ($this->nextToken === 'start') {
+                    $request = [
+                        'SellerId' => MERCHANT_ID,
+                        'ShipmentId' => $shipment->shipment_id,
+                    ];
+                    $this->dom_xml_arr = AmazonHelper::invokeListInboundShipmentsItems($request, $this->oMWSService);
+                } else {
+                    $request = [
+                        'SellerId' => MERCHANT_ID,
+                        'NextToken' => $this->nextToken,
+                    ];
+                    $this->dom_xml_arr = AmazonHelper::invokeListInboundShipmentsItemsByNextToken($request, $this->oMWSService);
                 }
-                if ($amazonRes->ItemData->member) {
-                    foreach ($amazonRes->ItemData->member as $member) {
-                        if ($productModel = ProductHelper::getProductByCode((string)$member->SellerSKU)) {
-                            $param = [
-                                'productid' => $productModel->productid,
-                                'shipment_id' => (string) $member->ShipmentId,
-                            ];
-                            /** @var AmazonListInboundShipmentItemModel $model */
-                            [$model] = AmazonListInboundShipmentItemModel::objects()->getOrNew($param);
 
-                            $model->setAttributes([
-                                'seller_sku' => (string) $member->SellerSKU,
-                                'fulfillment_network_sku' => (string) $member->FulfillmentNetworkSKU,
-                                'quantity_shipped' => (int) $member->QuantityShipped,
-                                'quantity_received' => (int) $member->QuantityReceived
-                            ]);
-                            if ($model->isValid()) {
-                                $model->save();
+                if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
+                    return $this;
+                }
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    Xcart::app()->logger->debug('ListInboundItems response', $this->dom_xml_arr ?: [], "amazon_{$this->sLogPrefix}");
+                }
+
+                if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
+                    $items = new SimpleXMLElement($this->dom_xml_arr);
+                    $amazonRes = $items->ListInboundShipmentItemsResult;
+                    if (!$amazonRes) {
+                        $amazonRes = $items->ListInboundShipmentItemsByNextTokenResult;
+                    }
+                    if ($amazonRes->ItemData->member) {
+                        foreach ($amazonRes->ItemData->member as $member) {
+                            if ($productModel = ProductHelper::getProductByCode((string)$member->SellerSKU)) {
+                                $param = [
+                                    'productid' => $productModel->productid,
+                                    'shipment_id' => (string)$member->ShipmentId,
+                                ];
+                                /** @var AmazonListInboundShipmentItemModel $model */
+                                [$model] = AmazonListInboundShipmentItemModel::objects()->getOrNew($param);
+
+                                $model->setAttributes([
+                                    'seller_sku' => (string)$member->SellerSKU,
+                                    'fulfillment_network_sku' => (string)$member->FulfillmentNetworkSKU,
+                                    'quantity_shipped' => (int)$member->QuantityShipped,
+                                    'quantity_received' => (int)$member->QuantityReceived
+                                ]);
+                                if ($model->isValid()) {
+                                    $model->save();
+                                }
                             }
                         }
                     }
+                    $this->nextToken = (string)$amazonRes->NextToken;
+                } else {
+                    break;
                 }
-                $this->nextToken = (string)$amazonRes->NextToken;
-            } else {
-                break;
             }
         }
 
