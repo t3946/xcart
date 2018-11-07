@@ -71,27 +71,28 @@ class Facebook extends StoreFrontMarketPlace
                 /** @var ProductModel $product */
                 $images_model = $product->getImages();
 
-                $image_model = $images_model ? reset($images_model) : $product->getThumbnail();
+                if ($image_model = $images_model ? reset($images_model) : $product->getThumbnail()) {
 
-                $requests[] =
-                    [
-                        'method' => 'CREATE',
-                        'retailer_id' => $product->productcode,
-                        'data' => [
-                            'availability' => $product->isOutOfStock() ? 'out of stock' : 'in stock',
-                            'brand' => $product->brand->brand,
-                            'category' => $product->getMainCategory()->getFrontendName(),
-                            'currency' => 'USD',
-                            'description' => strip_tags($product->fulldescr),
-                            'image_url' => 'https:'.$image_model->getCdnURL(),
-                            'name' => $product->getFrontendName(),
-                            'price' => (int) $product->getPrice() * 100,
-                            'url' => 'https:'.$product->getAbsoluteUrl(true).'?origin=facebook_product_ads',
-                            'gtin' => $product->upc,
-                            'condition' => 'new',
-                            'manufacturer_part_number' => $product->getMPN(),
-                        ],
-                    ];
+                    $requests[] =
+                        [
+                            'method' => 'CREATE',
+                            'retailer_id' => $product->productcode,
+                            'data' => [
+                                'availability' => $product->isOutOfStock() ? 'out of stock' : 'in stock',
+                                'brand' => $product->brand->brand,
+                                'category' => $product->getMainCategory()->getFrontendName(),
+                                'currency' => 'USD',
+                                'description' => strip_tags($product->fulldescr),
+                                'image_url' => 'https:' . $image_model->getCdnURL(),
+                                'name' => $product->getFrontendName(),
+                                'price' => (int)$product->getPrice() * 100,
+                                'url' => 'https:' . $product->getAbsoluteUrl(true) . '?origin=facebook_product_ads',
+                                'gtin' => $product->upc,
+                                'condition' => 'new',
+                                'manufacturer_part_number' => $product->getMPN(),
+                            ],
+                        ];
+                }
             }
 
 
