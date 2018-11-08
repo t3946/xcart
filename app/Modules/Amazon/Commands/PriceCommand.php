@@ -44,7 +44,7 @@ class PriceCommand extends Command
                     'sku' => $product->productcode,
                     'channel' => 'AFN',
                     'price' => $price,
-                    'min_price' => $min_price,
+                    'min_price' => min($min_price, $price),
                     'max_price' => $price
                 ];
 
