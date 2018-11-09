@@ -14,7 +14,7 @@ m.manufacturerid,
 p.productid,
 p.upc as UPC,
 COALESCE (CASE WHEN af.amazon_listing_sku_to_load = '' THEN NULL END, p.productcode) as SKU,
-cidev_get_amazon_ASIN(p.productid) as ASIN,
+p.ASIN,
 p.cost_to_us,
 p.amazon_fba,
 COALESCE(cidev_get_amazon_FBA_stock_total(p.productid), 0) + COALESCE(cidev_get_FBA_amount_in_working_shipments(p.productid), 0) As total_stock,
@@ -25,15 +25,18 @@ cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) As items_so
 cidev_get_amazon_FBA_overall_instock_days(p.productid, 1) As instock_days_1m,
 IFNULL(cidev_get_amazon_FBA_sold_items(p.productid, -9999) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),0) as overall_orders_rate,
 IFNULL(cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 1),0) as orders_rate_last_1_month,
-cidev_get_amazon_price(p.productid) as price,
-cidev_get_minimum_amazon_price(p.productid) as min_fba_price,
+f_amazonGetPriceFBA(p.productid) as price,
+f_amazonGetMinPriceFBA(p.productid) as min_fba_price,
 cidev_get_amazon_competitive_price_stat(p.productid, -60, 'AVG') as avg_comp_price,
 p.r_avail as r_avail,
 amazon.restocking_get_reorder_quantity(p.productid, :tau, :tau_m, :day_reorder, m.amazon_leadtime_for_fba_loads, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, :assortment) as restocking_qty,
 amazon.restocking_get_average_daily_sales_amazon() as ads_a,
-amazon.restocking_get_average_daily_sales_xcart() as ads_x
+amazon.restocking_get_average_daily_sales_xcart() as ads_x,
+of.lowest_LandedPrice as lowest_price,
+of.buybox_LandedPrice as buy_box_price,
 FROM xcart_products as p
 LEFT JOIN xcart_products_amz_fields af ON p.productid = af.productid
+LEFT JOIN amazon_offers of ON of.ASIN = p.ASIN
 INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
 INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
 WHERE p.amazon_enabled = 'Y' 
