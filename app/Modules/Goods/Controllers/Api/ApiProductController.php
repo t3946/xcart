@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers\Api;
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
