@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers\Api;
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Helpers\ShippingHelper;
@@ -49,7 +50,11 @@ class ApiProductController extends Controller
     {
         $mass_of_all_mpn = [];
 
-        foreach (ProductModel::objects()->filter(['manufacturerid' => (int) $mnf_id]) as $product_model) {
+        foreach (ProductModel::objects()->filter([
+            'manufacturerid' => (int) $mnf_id,
+            'forsale' => 'Y',
+            new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
+            ]) as $product_model) {
             /** @var ProductModel $product_model */
             $mass_of_all_mpn[] = $product_model->getMPN();
         }
