@@ -33,7 +33,7 @@ amazon.restocking_get_reorder_quantity(p.productid, :tau, :tau_m, :day_reorder, 
 amazon.restocking_get_average_daily_sales_amazon() as ads_a,
 amazon.restocking_get_average_daily_sales_xcart() as ads_x,
 of.lowest_LandedPrice as lowest_price,
-of.buybox_LandedPrice as buy_box_price,
+of.buybox_LandedPrice as buy_box_price
 FROM xcart_products as p
 LEFT JOIN xcart_products_amz_fields af ON p.productid = af.productid
 LEFT JOIN amazon_offers of ON of.ASIN = p.ASIN
