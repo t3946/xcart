@@ -52,7 +52,10 @@ class Gateway extends RestGateway
         return $this->createRequest('\Omnipay\PayPal\Message\RestLookupRequest', $parameters);
     }
 
-
+    public function capture(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\PayPal\Message\RestCaptureRequestNotFinalize', $parameters);
+    }
 
 
     public function __call($name, $arguments)
