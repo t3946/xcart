@@ -39,7 +39,7 @@
     {foreach $products as $product}
         <tr class="{cycle ["", "TableSubHead"]}">
             <td class="fba-required"><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&sf={$product.sfid}">{$product.SKU}</td>
-            <td><a href="{$product.ASIN}" target="_blank">{$product.ASIN}</a></td>
+            <td><a href="https://www.amazon.com/dp/{$product.ASIN}" target="_blank">{$product.ASIN}</a></td>
             <td><a target="_blank" href="https://sellercentral.amazon.com/hz/inventory?_encoding=UTF8&asin={$product.ASIN}&ref=xx_invmgr_shel_home&tbla_myitable=sort:%7B%22sortOrder%22%3A%22ASCENDING%22%2C%22sortedColumnId%22%3A%22skucondition%22%7D;search:{$product.ASIN};pagination:1;">{$product.UPC}</a></td>
             <td align="center">{$product.amazon_fba}</td>
             <td align="center">{$product.last_order_days}</td>
