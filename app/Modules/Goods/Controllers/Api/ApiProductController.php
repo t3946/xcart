@@ -51,13 +51,18 @@ class ApiProductController extends Controller
     {
         $mass_of_all_mpn = [];
 
-        foreach (ProductModel::objects()->filter([
-            'manufacturerid' => (int) $mnf_id,
-            'forsale' => 'Y',
-            new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
-            ]) as $product_model) {
-            /** @var ProductModel $product_model */
-            $mass_of_all_mpn[] = $product_model->getMPN();
+        $i = 0;
+
+        while ($pds = ProductModel::objects()->filter(
+            [
+                'manufacturerid' => (int)$mnf_id,
+                'forsale' => 'Y',
+                new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
+            ])->paginate(++$i, 10000)->all()) {
+            foreach ($pds as $product_model) {
+                /** @var ProductModel $product_model */
+                $mass_of_all_mpn[] = $product_model->getMPN();
+            }
         }
 
         $this->jsonResponse($mass_of_all_mpn);
@@ -71,8 +76,7 @@ class ApiProductController extends Controller
         if ($model = ProductModel::objects()->get(['productid' => (int)$id])) {
             if (($geo_ip = GeoipHelper::getGeoipLocation($ip = Xcart::app()->request->getUserIP()))
                 && ($state_model = $geo_ip->state_model)
-                && ShippingHelper::isUSAContiguous($state_model))
-            {
+                && ShippingHelper::isUSAContiguous($state_model)) {
                 if ($free_ship_q = ShippingHelper::getQtyForFreeShipping($model, $state_model, $geo_ip->postalCode)) {
 
                     if ($free_ship_q > 1) {
