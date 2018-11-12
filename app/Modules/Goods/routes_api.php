@@ -10,6 +10,11 @@ return [
         'name' => 'getmpn'
     ],
     [
+        'route' => 'products/mpn/{i:mnf_id}/',
+        'target' => [ApiProductController::class, 'getMpn'],
+        'name' => 'gmpn'
+    ],
+    [
         'route' => 'analytics',
         'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'

@@ -45,6 +45,18 @@ class ApiProductController extends Controller
         $this->jsonResponse($mass_of_all_mpn);
     }
 
+    public function getMpn($mnf_id): void
+    {
+        $mass_of_all_mpn = [];
+
+        foreach (ProductModel::objects()->filter(['manufacturerid' => (int) $mnf_id]) as $product_model) {
+            /** @var ProductModel $product_model */
+            $mass_of_all_mpn[] = $product_model->getMPN();
+        }
+
+        $this->jsonResponse($mass_of_all_mpn);
+    }
+
     public function getProductInfo($id): void
     {
         $result = [];
