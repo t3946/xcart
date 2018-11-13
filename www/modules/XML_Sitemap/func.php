@@ -12,6 +12,8 @@
  * @since       4.4.0
  */
 
+use Modules\Sites\Models\SiteModel;
+
 if (!defined('XCART_START')) { header('Location: ../../'); die('Access denied'); }
 
 /**
@@ -96,8 +98,8 @@ function xmlmap_generate($cron = "", $cron_storefrontid = "")
 	if ($cron_storefrontid != "") {
 		$current_storefront = $cron_storefrontid;
 	}
-	$current_storefront_info = func_get_storefront_info($current_storefront, 'ID', true);
-	$current_storefront_info['domain'] = strtolower($current_storefront_info['domain']);
+	$site = SiteModel::objects()->get(['storefrontid' => $cron_storefrontid]);
+	$current_storefront_info = $site->getAttributes();
 
 	$cur_date = date("Y-m-d");
 

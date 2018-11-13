@@ -1,4 +1,6 @@
 <?php
+
+use Modules\Sites\Models\SiteModel;
 use Xcart\StoreFront;
 
 define("CIDEV_CRON_START", "CRON");
@@ -33,11 +35,11 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 
         $config['XML_Sitemap']['filename'] = 'sitemap.xml';
 
-        /** @var StoreFront $oStoreFront */
-        $oStoreFront = new StoreFront(['storefrontid' => $storefrontid]);
+        /** @var SiteModel $oStoreFront */
+        $oStoreFront = SiteModel::objects()->get(['storefrontid' => $storefrontid]);
         if ($oStoreFront) {
-            $xml_protocol = ($oStoreFront->getConfigValue('https_enabled') == 'Y') ? 'https://' : 'http://';
-            $xmlmap_location = $xml_protocol . func_get_http_location_sf($storefrontid) . $xcart_web_dir;
+            $xml_protocol = 'https://';
+            $xmlmap_location = $xml_protocol . $oStoreFront->domain . $xcart_web_dir;
 
             $sf_condition = "storefrontid=$storefrontid";
 
