@@ -106,6 +106,11 @@ class AmazonOfferModel extends Model
                 'default' => 0,
                 'null' => false,
             ],
+            'fba_days_of_supply' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
             'FNSKU' => [
                 'class' => CharField::class,
                 'null' => true,

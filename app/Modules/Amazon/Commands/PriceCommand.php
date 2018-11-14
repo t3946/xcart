@@ -4,7 +4,6 @@ namespace Modules\Amazon\Commands;
 
 
 use Modules\Amazon\Helpers\AmazonFbaFeedHelper;
-use Modules\Amazon\Models\AmazonInventoryQueueModel;
 use Modules\Amazon\Models\AmazonPriceQueueModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Commands\Command;
