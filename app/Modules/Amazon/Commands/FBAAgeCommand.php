@@ -74,8 +74,10 @@ class FBAAgeCommand extends Command
                         $days_supply = 0;
                     }
 
-                    $model->fba_days_of_supply = $days_supply;
-                    $model->save();
+                    if ($model->fba_instock_supply) {
+                        $model->fba_days_of_supply = $days_supply;
+                        $model->save();
+                    }
                 }
             }
         }
