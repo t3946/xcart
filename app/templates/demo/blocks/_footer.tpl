@@ -58,7 +58,7 @@
                 <div class="row footer-row">
                     <div class="col col-sm-12 col col-lg-12 hidden-xs">
                         <a href="#" class="logo-s3stores" title="s3stores">
-                            <img src="/static/frontend/dist/images/home/1280/logo_S3Stores.svg" alt="s3stores_logo" class="logo-s3stores__image" />
+                            <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/home/1280/logo_S3Stores.svg" alt="s3stores_logo" class="logo-s3stores__image" />
                         </a>
                     </div>
                     <div class="col col-sm-25 col col-md-24 col col-lg-12 hidden-xs">

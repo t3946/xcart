@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://www.google-analytics.com">
 
 
-    <link rel="preload" href="/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
+    <link rel="preload" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
 
     {*<link rel="manifest" href="/manifest.json">*}
 
@@ -203,7 +203,7 @@
 
         window.addEventListener("load", function(event) {
 
-            createJsElement("/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
+            createJsElement("{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
 
             setTimeout(function() {
                 {ignore}
