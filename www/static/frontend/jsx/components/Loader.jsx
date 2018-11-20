@@ -6,7 +6,7 @@ export default class Loader
         this.loaders = 0;
         this.elements = {};
         this.options = extend({
-            'timeout': 1500
+            'timeout': 20
         }, options);
 
         this.timer = null;
