@@ -39,7 +39,7 @@ class AmazonAWSHelper
                             'config__value' => 'N',
                         ])->count()) {
 
-                        $inv = ['/skin1_kolin/*'];
+                        $inv = ['/static/frontend/*'];
 
                         $result = $client->createInvalidation([
                             'DistributionId' => $dn['Id'],

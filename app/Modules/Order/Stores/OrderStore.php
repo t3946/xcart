@@ -81,7 +81,7 @@ class OrderStore extends BaseStore
 
     public function getAmountToCapture()
     {
-        return max($this->getAuthorizeAvail() - $this->getRefunded(), 0);
+        return max($this->getAuthorizeAvail(), 0);
     }
 
     public function getAskFromCx()
