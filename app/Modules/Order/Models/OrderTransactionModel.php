@@ -149,7 +149,9 @@ class OrderTransactionModel extends Model
 
         /** @var OrderTransactionModel $model */
         foreach ($models = $this->child->all() as $model) {
-            $avail -= round(abs($model->getAvailAmount()), 2);
+            if ($model->type !== self::TYPE_REFUND) {
+                $avail -= round(abs($model->getAvailAmount()), 2);
+            }
         }
 
         return $avail;
