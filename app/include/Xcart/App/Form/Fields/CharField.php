@@ -20,6 +20,7 @@ class CharField extends Field
         if ($value instanceof \Xcart\App\Orm\Manager) {
             throw new Exception('Value must be a string, not a manager');
         }
-        return $this->value;
+
+        return htmlentities($this->value);
     }
 }

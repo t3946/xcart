@@ -12,4 +12,9 @@ class TextAreaField extends Field
     public $inputTemplate = 'forms/field/textarea/input.tpl';
 
     public $readonly = false;
+
+    public function getValue()
+    {
+        return htmlentities($this->value);
+    }
 }
