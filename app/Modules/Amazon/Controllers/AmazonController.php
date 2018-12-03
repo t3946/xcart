@@ -98,7 +98,9 @@ class AmazonController extends PrototypeAdminController
                             }
                         }
 
-                        $aProduct['restocking_qty'] = max($aProduct['restocking_qty'], $aProduct['min_amount']);
+                        if ($aProduct['restocking_qty']) {
+                            $aProduct['restocking_qty'] = max($aProduct['restocking_qty'], $aProduct['min_amount']);
+                        }
 
                         $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $batch->batch_id]));
                         $modelData->save();
