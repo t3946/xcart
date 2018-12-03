@@ -88,8 +88,7 @@ class AmazonController extends PrototypeAdminController
                     'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true)),
                     'assortment' => $batch->assortment
                 ];
-                $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
-                if ($aProducts) {
+                if ($aProducts = AmazonReorderingHelper::calculateAmazonProducts($params)) {
                     foreach ($aProducts as $aProduct) {
 
                         //Можно обнулить количество к закупу, если у дистрибьютора в стоке меньше или равно 5, так как такой товар скоро обнулится на складе у дистрибьютора и отправлен не будет. Кроме CTI & ECS
@@ -99,13 +98,26 @@ class AmazonController extends PrototypeAdminController
                             }
                         }
 
+                        $aProduct['restocking_qty'] = max($aProduct['restocking_qty'], $aProduct['min_amount']);
+
                         $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $batch->batch_id]));
                         $modelData->save();
                     }
                 }
+
+                $params = ['batch_id' => $batch->batch_id];
+                if ($aNewProducts = AmazonReorderingHelper::calculateBestSellers($params)) {
+                    foreach ($aNewProducts as $aNewProduct) {
+                        $modelData = new AmazonReorderBatchDataModel(array_merge($aNewProduct, ['batch_id' => $batch->batch_id]));
+                        $modelData->save();
+                    }
+                }
+
                 $batch->status = 'done';
                 $batch->save();
             }
+
+
         }
     }
 

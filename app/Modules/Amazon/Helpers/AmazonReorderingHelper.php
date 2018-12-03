@@ -25,6 +25,13 @@ class AmazonReorderingHelper
             ->fetchAll();
     }
 
+    public static function calculateBestSellers($params)
+    {
+        return Connection::getInstance()
+            ->executeQuery(AmazonSql::getAmazonBestSellersSql(), $params)
+            ->fetchAll();
+    }
+
 
 
     /**
