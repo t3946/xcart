@@ -1,6 +1,7 @@
 <?php
 
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\Models\OrderModel;
 
 x_load('cart','mail','order','product','taxes');
 
@@ -147,12 +148,19 @@ function func_CHECK_STATES($order_data){
 	$s_state = func_correct_field($order_data["userinfo"]["s_state"]);
 	$b_state = func_correct_field($order_data["userinfo"]["b_state"]);
 
-	$customer_ip = $order_data["order"]["extra"]["ip"];
+    $customer_ip = null;
+	if ($order = OrderModel::objects()->get(['orderid' => $order_data['order']['orderid']])) {
+        if (($extra = $order->extra_model) && $extra->ip) {
+            if (preg_match('/\d\.\d\.\d\.\d)', $extra->ip, $matches)) {
+                $customer_ip = $matches[0];
+            }
+        }
+    }
 
 	$geoip_state = "";
 	$phone_area_code_state = "";
 
-    if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
+    if ($customer_ip && $geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
         $geoip_state = func_correct_field($geo_litecity_location->region);
     }
 
