@@ -657,7 +657,7 @@ HTML;
         $replace_with = <<<HTML
 <a target="_blank" href="https://www.fastpeoplesearch.com/address/{$fs_address}_{$userinfo["s_zipcode"]}" style="color: #1F08F8;">Fast People Search shipping address</a>
 HTML;
-        $question_template_body = str_replace('{{fastpeoplesearch_billing}}', $replace_with, $question_template_body);
+        $question_template_body = str_replace('{{fastpeoplesearch_shipping}}', $replace_with, $question_template_body);
 
         $fb_address = str_replace(' ', '-', $userinfo["b_address"]);
         $replace_with = <<<HTML
