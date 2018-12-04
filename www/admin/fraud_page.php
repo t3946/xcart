@@ -649,19 +649,19 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 
         $fs_phone = substr($userinfo['phone'], 0,3).'-'.substr($userinfo['phone'], 3,3).'-'.substr($userinfo['phone'], 6);
         $replace_with = <<<HTML
-<a target="_blank" href="https://www.fastpeoplesearch.com/{$fs_phone}" style="color: #1F08F8;">Fast People Search phone</a>"
+<a target="_blank" href="https://www.fastpeoplesearch.com/{$fs_phone}" style="color: #1F08F8;">Fast People Search phone</a>
 HTML;
         $question_template_body = str_replace('{{fastpeoplesearch_phone}}', $replace_with, $question_template_body);
 
         $fs_address = str_replace(' ', '-', $userinfo["s_address"]);
         $replace_with = <<<HTML
-<a target="_blank" href="https://www.fastpeoplesearch.com/address/{$fs_address}_{$userinfo["s_zipcode"]}" style="color: #1F08F8;">Fast People Search shipping address</a>"
+<a target="_blank" href="https://www.fastpeoplesearch.com/address/{$fs_address}_{$userinfo["s_zipcode"]}" style="color: #1F08F8;">Fast People Search shipping address</a>
 HTML;
         $question_template_body = str_replace('{{fastpeoplesearch_billing}}', $replace_with, $question_template_body);
 
         $fb_address = str_replace(' ', '-', $userinfo["b_address"]);
         $replace_with = <<<HTML
-<a target="_blank" href="https://www.fastpeoplesearch.com/address/{$fb_address}_{$userinfo["b_zipcode"]}" style="color: #1F08F8;">Fast People Search billing address</a>"
+<a target="_blank" href="https://www.fastpeoplesearch.com/address/{$fb_address}_{$userinfo["b_zipcode"]}" style="color: #1F08F8;">Fast People Search billing address</a>
 HTML;
         $question_template_body = str_replace('{{fastpeoplesearch_billing}}', $replace_with, $question_template_body);
 
