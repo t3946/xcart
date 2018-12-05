@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="columns large-10">
-                {if $model->category == 'Christmas Sale'}
+                {if $model->category == 'Christmas HITS!'}
                     <div class="image_top"></div>
                 {/if}
 
