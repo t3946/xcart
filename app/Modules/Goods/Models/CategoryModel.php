@@ -11,6 +11,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
@@ -102,6 +103,11 @@ class CategoryModel extends TreeModel
                      'class' => CharField::className(),
                      'null' => false,
                      'default' => '',
+                 ],
+                 'icon' => [
+                     'class' => HasToOneField::class,
+                     'modelClass' => ImageCModel::class,
+                     'link' => ['categoryid' => 'id']
                  ],
             ]
         );
