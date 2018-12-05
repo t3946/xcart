@@ -12,12 +12,16 @@
                     {set $icon = $model->icon}
                     {if $icon}
                         <div class="image" id="image_left-top">
-                            <img src="{$model->icon}" alt="{$model->category}" itemprop="image" />
+                            <img class="lazy-img" src="" data-src="{$model->icon}" alt="{$model->category}" itemprop="image" />
                         </div>
                     {/if}
                 </div>
             </div>
             <div class="columns large-10">
+                {if $model->category == 'Christmas Sale'}
+                    <div class="image_top"></div>
+                {/if}
+
                 <h1 class="title" itemprop="name">{$model->category}</h1>
 
                 {if $model->description}

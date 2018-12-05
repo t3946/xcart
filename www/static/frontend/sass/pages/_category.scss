@@ -159,6 +159,12 @@ $padding_container: rem-calc(18);
     margin-top: 20px;
     margin-bottom: 18px;
   }
+
+  .image_top {
+    margin-bottom: rem-calc(8);
+    height: rem-calc(56);
+    background-image:url("../images/christmas_garland.png");
+  }
 }
 
 .mmodal-container {
