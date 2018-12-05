@@ -47,8 +47,9 @@
                 {*{cache key = 'category:' ~ $model->categoryid}*}
                 {set $subcategories = $model->getSubcategories()}
 
-                {if $subcategories|count > 0}
                 <div class="subcategories">
+                {if $subcategories|count > 0}
+
                     <a href="#subdepartmens" class="hide-for-large mmodal sub-dep_button">
                         See subdepartments
                     </a>
@@ -75,8 +76,8 @@
                         </div>
 
                     </div>
-                </div>
                 {/if}
+                </div>
                 {*{/cache}*}
             </div>
         </div>
