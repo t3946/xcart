@@ -12,10 +12,10 @@
             <div class="row align-justify">
                 <div class="columns shop-logo-block">
                     <a href="/">
-                        <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
+                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
                              alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
 
-                        <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
+                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
                              alt="{$.getSiteConfig->company_name->value}"
                              class="show-for-small hide-for-large logo-small">
                     </a>
@@ -27,19 +27,19 @@
                 </div>
                 <div class="columns s3-logo-block">
                     <a href="" class="s3-logo-big-link logo-link">
-                        <img src="/static/frontend/dist/images/logos/s3stores.svg"
+                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores.svg"
                              alt="s3stores"
                              class="show-for-large s3-logo-big">
                     </a>
 
                     <a href="" class="secured-logo-big-link logo-link">
-                        <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
+                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/verified_secured_logo.svg"
                              alt="verified&secured"
                              class="show-for-large secured-logo-big">
                     </a>
 
                     <a href="" class="s3-logo-small-link logo-link">
-                        <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
+                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores_logo.svg"
                              alt="s3stores"
                              class="show-for-small hide-for-large s3-logo-small">
                     </a>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="after-hours {if !$.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
-                            <img src="/static/frontend/images/icons/cart/place_order_online_icon.svg"
+                            <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""
                                  class="clock-icon">
                             <span>Place order online 24/7 or</span>
@@ -80,7 +80,7 @@
                         <a class="columns shrink cart-steps-back hide-for-large"
                            href="{$breadcrumbs->getPrevStage().url}">
                             <span class="img">
-                                <img src="/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                                <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
                             </span>
                             <span class="text">BACK</span>
                         </a>

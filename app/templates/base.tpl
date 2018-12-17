@@ -40,10 +40,10 @@
                                         </div>
                                         <div class="columns small-3 medium-2">
                                             <a href="/">
-                                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
+                                                <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
                                                      alt="{$.getSiteConfig->company_name->value}"
                                                      class="show-for-large logo-big">
-                                                <img src="/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
+                                                <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
                                                      alt="{$.getSiteConfig->company_name->value}"
                                                      class="show-for-small hide-for-large logo-small">
                                             </a>
