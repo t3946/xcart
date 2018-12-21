@@ -18,8 +18,11 @@
                 </div>
             </div>
             <div class="columns large-10">
-                {if $model->category == 'Christmas HITS!'}
-                    <div class="image_top"></div>
+                {if $model->categoryid == 85722}
+                    <div class="image_top christmas"></div>
+                {/if}
+                {if $model->categoryid == 85765}
+                    <div class="image_top new_year"></div>
                 {/if}
 
                 <h1 class="title" itemprop="name">{$model->category}</h1>

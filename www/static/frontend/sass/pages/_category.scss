@@ -165,9 +165,16 @@ $padding_container: rem-calc(18);
   }
 
   .image_top {
+
     margin-bottom: rem-calc(8);
     height: rem-calc(56);
-    background-image:url("../images/christmas_garland.png");
+    &.christmas {
+      background-image:url("../images/christmas_garland.png");
+    }
+    &.new_year {
+      background-image:url("../images/new_year_garland.png");
+    }
+
   }
 }
 
