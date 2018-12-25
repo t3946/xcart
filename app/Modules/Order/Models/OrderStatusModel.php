@@ -39,6 +39,7 @@ class OrderStatusModel extends Model
     public const ORDER_DA_STATUS_PENDING_ORDER_ENTRY = 'DE';
     public const ORDER_DA_STATUS_PENDING_AVAIL = 'DK';
     public const ORDER_DA_STATUS_RECEIVED_BY_DISTRIBUTOR = 'DL';
+    public const ORDER_DA_STATUS_RECEIVED_BY_AMAZON= 'DA';
 
     public const ORDER_BD_STATUS_UNPAID = 'W';
     public const ORDER_BD_STATUS_PAID = 'Y';

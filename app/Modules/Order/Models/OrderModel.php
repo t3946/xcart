@@ -444,18 +444,4 @@ class OrderModel extends Model
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
 
-    public function getAmazonCompetitorsMinPrice():? array
-    {
-        $res = null;
-
-        if ($details = $this->detail_models) {
-            foreach ($details as $detail) {
-                [$product, $shipping] = $detail->getAmazonCompetitorMinPrice();
-                $res['product'] += $product;
-                $res['shipping'] += $shipping;
-            }
-        }
-
-        return $res;
-    }
 }

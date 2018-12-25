@@ -176,7 +176,7 @@ var dc_status;
 
   dc_status = $('#groups_dc_status_{/literal}{$m_id}{literal}').val();
 
-  if (dc_status == "S" || dc_status == "L" || dc_status == "G" || dc_status == "C"){
+  if (dc_status == "S" || dc_status == "L" || dc_status == "G" || dc_status == "C" || dc_status == "DA"){
     $("#tracking_number_tr_id_{/literal}{$m_id}{literal}").show();
   } else {
     $("#tracking_number_tr_id_{/literal}{$m_id}{literal}").hide();
@@ -1056,7 +1056,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 {* ----------------------- *}
 
 
-<tr id="tracking_number_tr_id_{$m_id}" style="{if !($v.dc_status eq 'S' || $v.dc_status eq 'L' || $v.dc_status eq 'G' || $v.dc_status eq 'C')}display: none;{/if}">
+<tr id="tracking_number_tr_id_{$m_id}" style="{if !($v.dc_status eq 'S' || $v.dc_status eq 'L' || $v.dc_status eq 'G' || $v.dc_status eq 'C' || $v.dc_status eq 'DA')}display: none;{/if}">
 <td colspan="9">
 <script type="text/javascript">
 <!--
@@ -1303,7 +1303,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
   {/if}
 
 <tr id="pending_order_message1_{$m_id}" style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>
-<td colspan="11">{$lng.lbl_pending_order_message1}</td>
+<td colspan="11">
+    {$oOrderGroup->showPendingOrderMessage()}
+</td>
 </tr>
 
 <tr id="pending_order_message2_{$m_id}" style='background-color: #F4CCCC; {if $v.cb_status eq "P" && $v.dc_status eq "L" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website" && $v.order_entry_flag eq "Y"} {else} display: none; {/if}'>
@@ -1395,8 +1397,6 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
       </tr>
     {/if}
   {/if}
-
-    {assign var=arbitrage_price value=$oOrder->getAmazonCompetitorsMinPrice()}
 
     {include file='admin/main/order.total_table.tpl'}
 

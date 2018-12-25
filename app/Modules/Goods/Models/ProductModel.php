@@ -697,11 +697,11 @@ class ProductModel extends Model implements ICartItem
         return $this->options->filter(['active' => true])->order(['position'])->all();
     }
 
-    public function getAmazonArbitragePrice():? array
+    public function getAmazonArbitragePrice($qty = 1):? array
     {
         $result = null;
 
-        if ($offer = AmazonOfferCompetitorsModel::objects()->get(['id' => new Expression("f_amazonGetMinArbitrageOffer('B0002KY63A', 1)")])) {
+        if ($this->ASIN && $offer = AmazonOfferCompetitorsModel::objects()->get(['id' => new Expression("f_amazonGetMinArbitrageOffer('{$this->ASIN}', {$qty})")])) {
             $result = [$offer->ListingPrice, $offer->Shipping];
         }
 
