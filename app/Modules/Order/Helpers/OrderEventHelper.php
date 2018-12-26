@@ -132,7 +132,7 @@ class OrderEventHelper
                             $old_status = self::$_all_statuses[$oldValue] ?? $oldValue;
                             $new_status = self::$_all_statuses[$newValue] ?? $newValue;
 
-                            if ($newValue === OrderStatusModel::ORDER_DA_STATUS_RECEIVED_BY_AMAZON
+                            if ($newValue === OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON
                                 && $order_id
                                 && ($order = OrderModel::objects()->get(['orderid' => $order_id]))
                                 && $groups = $order->groups)

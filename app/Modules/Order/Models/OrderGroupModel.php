@@ -24,6 +24,9 @@ use Xcart\OrderGroup;
  * @property int orderid
  * @property int order_group_id
  * @property float total_net
+ * @property DistributorModel manufacturer
+ * @property OrderStatusModel|null cb_status_model
+ * @property mixed cb_status
  */
 class OrderGroupModel extends Model
 {
@@ -261,14 +264,30 @@ class OrderGroupModel extends Model
         return ($this->getAmazonCompetitorsMinTotal() <= $this->actual_shipping_gross + $this->getTotalCostToUs());
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function showPendingOrderMessage()
     {
-        $enter_on_amazon = '';
+        $distributor = $this->manufacturer;
 
-        $pending_order_message = func_get_langvar_by_name('lbl_pending_order_message1', null, false, true);
         if ($this->isEnterOnAmazon()) {
-            $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', ['group' => $this]);
+            $label = 'lbl_pending_order_message_amazon';
+            $distributor = new DistributorModel([
+                'd_url_to_login_to_distributor_website' => 'https://amazon.com',
+                'manufacturer' => 'Amazon',
+                'code' => $distributor->code
+            ]);
+        } else {
+            $label = 'lbl_pending_order_message1';
         }
+
+        $pending_order_message = func_get_langvar_by_name($label, null, false, true);
+
+        $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
+            'distributor' => $distributor
+        ]);
 
         return str_replace('{enter_this_on_amazon}', $enter_on_amazon, $pending_order_message);
     }

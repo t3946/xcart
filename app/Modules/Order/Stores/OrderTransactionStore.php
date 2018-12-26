@@ -14,6 +14,9 @@ use Modules\Payment\Helpers\PaymentHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Store\BaseStore;
 
+/**
+ * @method capture()
+ */
 class OrderTransactionStore extends BaseStore
 {
     public $params = [];
@@ -72,11 +75,7 @@ class OrderTransactionStore extends BaseStore
 
     public function __call($name, $params)
     {
-        if (array_key_exists($name, self::$gatewayMethods)) {
-            return $this->execute($name);
-        } else {
-            return $this->__smartCall($name, $params);
-        }
+        return array_key_exists($name, self::$gatewayMethods) ? $this->execute($name) : $this->__smartCall($name, $params);
     }
 
     public function populate(array $data)
@@ -87,6 +86,7 @@ class OrderTransactionStore extends BaseStore
     /**
      * @param string $method
      * @return OrderTransactionModel
+     * @throws \Exception
      */
     private function execute($method)
     {
@@ -109,7 +109,7 @@ class OrderTransactionStore extends BaseStore
                             'type' => $type
                         ]
                     );
-                    $this->log .= OrderModule::t('Transaction:') . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} \n";
+                    $this->log .= nl2br(OrderModule::t('Transaction:') . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} \n");
                 }
 
                 $model->save();
@@ -118,7 +118,7 @@ class OrderTransactionStore extends BaseStore
 
                 $logStatus = $model->transaction_status;
 
-                $this->log .= OrderModule::t('Transaction:') . " {$model->transaction_id} {$logStatus}\n";
+                $this->log .= nl2br(OrderModule::t('Transaction:') . " {$model->transaction_id} {$logStatus}\n");
 
                 self::lookupParentTransactions($model);
 
@@ -168,7 +168,7 @@ class OrderTransactionStore extends BaseStore
             $transactionLog->save();
         }
 
-        if (isset($result['reason_code']) && $result['reason_code'] == 'PAYMENT_REVIEW') {
+        if (isset($result['reason_code']) && $result['reason_code'] === 'PAYMENT_REVIEW') {
             $this->failed = true;
         }
 

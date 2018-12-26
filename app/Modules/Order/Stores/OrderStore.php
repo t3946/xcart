@@ -137,7 +137,7 @@ class OrderStore extends BaseStore
                 foreach ($details as $detail) {
                     if (!\in_array($detail->order_group->dc_status,
                         [
-                            OrderStatusModel::ORDER_DA_STATUS_RECEIVED_BY_AMAZON,
+                            OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
                             OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
                         ], true)) {
                         [$product] = $detail->getAmazonCompetitorMinPrice();
@@ -158,7 +158,7 @@ class OrderStore extends BaseStore
                 foreach ($details as $detail) {
                     if (!\in_array($detail->order_group->dc_status,
                         [
-                            OrderStatusModel::ORDER_DA_STATUS_RECEIVED_BY_AMAZON,
+                            OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
                             OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
                         ], true)) {
                         [, $shipping] = $detail->getAmazonCompetitorMinPrice();

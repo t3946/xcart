@@ -6,6 +6,9 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed name
+ */
 class OrderStatusModel extends Model
 {
     use AutoMetaTrait;
@@ -31,6 +34,9 @@ class OrderStatusModel extends Model
 
     public const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
     public const ORDER_DC_STATUS_SHIPPED = 'S';
+    public const ORDER_DC_STATUS_RECEIVED_BY_AMAZON = 'DA';
+    public const ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR = 'L';
+    public const ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED  = 'C';
 
     public const ORDER_DA_STATUS_NOT_SHIPPED = 'DT';
     public const ORDER_DA_STATUS_SHIPPED = 'DS';
@@ -39,7 +45,6 @@ class OrderStatusModel extends Model
     public const ORDER_DA_STATUS_PENDING_ORDER_ENTRY = 'DE';
     public const ORDER_DA_STATUS_PENDING_AVAIL = 'DK';
     public const ORDER_DA_STATUS_RECEIVED_BY_DISTRIBUTOR = 'DL';
-    public const ORDER_DA_STATUS_RECEIVED_BY_AMAZON= 'DA';
 
     public const ORDER_BD_STATUS_UNPAID = 'W';
     public const ORDER_BD_STATUS_PAID = 'Y';

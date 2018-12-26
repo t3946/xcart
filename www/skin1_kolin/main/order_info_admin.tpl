@@ -487,7 +487,7 @@ function check_r_fields(){
   <td width="7%"><span onmouseout="javascript: $('#header_lbl_net').hide();" onmouseover="javascript: cidev_showNote('header_lbl_net', this);" style="text-decoration: none;"><font class="Star">R</font>{$lng.lbl_net}</span>
     <div id="header_lbl_net" class="cidev_NoteBox" style="display: none; width: 600px; margin-left: -640px;">{$lng.lbl_order_edit_info_2}</div>
   </td>
-  <td width="7%">{$lng.lbl_gst}</td>
+  <td width="7%" nowrap="nowrap">{$lng.lbl_gst}</td>
 {*  <td width="7%">{$lng.lbl_pst}</td> *}
   <td width="7%">{$lng.lbl_gross}</td>
   {if !$static}<td width="5%">{$lng.lbl_remove}{else}<td>&nbsp;{/if}</td>

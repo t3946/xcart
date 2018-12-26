@@ -55,6 +55,7 @@ use Xcart\Order;
  * @property string po_number
  * @property string firstname
  * @property int storefrontid
+ * @property mixed transactions
  */
 class OrderModel extends Model
 {

@@ -21,10 +21,13 @@ use Xcart\Manufacturer;
  * @property float price_coef_z
  * @property float d_minimum_order_amount_in_us
  * @property string d_minimum_order_amount
+ * @property string code
  */
 class DistributorModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
+
+    public const AMAZON_MANUFACTURER_ID = 0;
 
     public static function getDataModelClass(): string
     {
