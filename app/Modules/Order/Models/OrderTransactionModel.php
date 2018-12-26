@@ -134,7 +134,7 @@ class OrderTransactionModel extends Model
         $result = [];
         if ($this->transaction_response['links']) {
             $result = array_filter($this->transaction_response['links'], function ($a) {
-                return ($a['method'] == 'POST' && array_key_exists($a['rel'], OrderTransactionStore::$gatewayMethods));
+                return ($a['method'] === 'POST' && array_key_exists($a['rel'], OrderTransactionStore::$gatewayMethods));
             });
         }
         return $result;

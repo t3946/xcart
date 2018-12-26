@@ -5,6 +5,7 @@ use Doctrine\DBAL\Types\Type;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
+use Modules\Amazon\Models\AmazonOfferCompetitorsModel;
 use Modules\Amazon\Models\AmazonOfferModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Amp\Models\AmpProductModel;
@@ -694,5 +695,16 @@ class ProductModel extends Model implements ICartItem
     public function getOptions()
     {
         return $this->options->filter(['active' => true])->order(['position'])->all();
+    }
+
+    public function getAmazonArbitragePrice($qty = 1):? array
+    {
+        $result = null;
+
+        if ($this->ASIN && $offer = AmazonOfferCompetitorsModel::objects()->get(['id' => new Expression("f_amazonGetMinArbitrageOffer('{$this->ASIN}', {$qty})")])) {
+            $result = [$offer->ListingPrice, $offer->Shipping];
+        }
+
+        return $result;
     }
 }

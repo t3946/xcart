@@ -40,6 +40,7 @@ use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Xcart\OrderGroupInvoices;
 use Xcart\Manufacturer;
@@ -646,12 +647,16 @@ if ($REQUEST_METHOD == "POST")
                     func_log_order($orderid, 'X', $log, $login);
                 }
 
-                $log                          = "";
-                $authorized_transactions_info = "";
-                if ($v["dc_status"] == "L"
-                    && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L"
-                    && $v["cb_status"] == "AP"
-                ) {
+                $log                          = '';
+                $authorized_transactions_info = '';
+
+                if ($v['cb_status'] === 'AP'
+                    && $cart_tmp['shipping_groups'][$m_id]['dc_status'] !== $v['dc_status']
+                    && \in_array($v['dc_status'], [
+                        OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
+                        OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR
+                    ], true))
+                {
                     $log .= OrderGroupHelper::dispatchGroup(
                         [
                             'orderid' => $orderid,
@@ -671,13 +676,17 @@ if ($REQUEST_METHOD == "POST")
                     }
                 }
 
-                if ($v['dc_status'] == "C" || $v['dc_status'] == "L") {
+                if (\in_array($v['dc_status'], [
+                    OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED,
+                    OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR,
+                    OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON], true))
+                {
                     $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                    if ($current_dc_status != $v['dc_status']) {
+                    if ($current_dc_status !== $v['dc_status']) {
 
-                        if ($v['dc_status'] == "C") {
+                        if ($v['dc_status'] === 'C') {
 
-                            $addition_column = "";
+                            $addition_column = '';
 
                             $current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
                             if (empty($current_dc_dispatched_time)) {
@@ -689,7 +698,7 @@ if ($REQUEST_METHOD == "POST")
                             db_query("UPDATE $sql_tbl[order_groups] SET time_to_dispatch='$time_to_dispatch' $addition_column WHERE manufacturerid='$m_id' AND orderid='$orderid'");
                         }
 
-                        if ($v['dc_status'] == "L") {
+                        if ($v['dc_status'] === 'L') {
                             $current_dc_received_by_distributor_time = func_query_first_cell("SELECT dc_received_by_distributor_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
 
                             if (empty($current_dc_received_by_distributor_time)) {

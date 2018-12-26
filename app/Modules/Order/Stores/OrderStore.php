@@ -6,6 +6,7 @@ namespace Modules\Order\Stores;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Store\BaseStore;
 
 class OrderStore extends BaseStore
@@ -13,6 +14,12 @@ class OrderStore extends BaseStore
     /** @var OrderModel $model */
     public $model = null;
     public $transactions = [];
+
+    private $actualShippingCostNet;
+    private $actualShippingCostGross;
+    private $amazonCompetitorsMinPrice;
+    private $amazonCompetitorsMinShipping;
+    private $amazonCompetitorsMinTotal;
 
     public function __construct(OrderModel $model = null)
     {
@@ -66,6 +73,7 @@ class OrderStore extends BaseStore
     }
 
     private $refunded = null;
+
     public function getRefunded()
     {
         if ($this->refunded === null) {
@@ -99,4 +107,87 @@ class OrderStore extends BaseStore
 
         return $this->additionalCaptureAmount;
     }
+
+    public function getActualShippingCostNet()
+    {
+        if ($this->actualShippingCostNet === null) {
+            foreach ($this->model->groups as $group) {
+                $this->actualShippingCostNet += $group->actual_shipping_net;
+            }
+        }
+        return $this->actualShippingCostNet;
+    }
+
+    public function getActualShippingCostGross()
+    {
+        if ($this->actualShippingCostGross === null) {
+            foreach ($this->model->groups as $group) {
+                $this->actualShippingCostGross += $group->actual_shipping_gross;
+            }
+        }
+        return $this->actualShippingCostGross;
+    }
+
+    public function getAmazonCompetitorsMinPrice(): ?float
+    {
+        $res = null;
+
+        if ($this->amazonCompetitorsMinPrice === null) {
+            if ($details = $this->model->detail_models) {
+                foreach ($details as $detail) {
+                    if (!\in_array($detail->order_group->dc_status,
+                        [
+                            OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
+                            OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
+                        ], true)) {
+                        [$product] = $detail->getAmazonCompetitorMinPrice();
+                        $this->amazonCompetitorsMinPrice += $product * $detail->amount;
+                    } else {
+                        $this->amazonCompetitorsMinPrice += $detail->amazon_price;
+                    }
+                }
+            }
+        }
+        return $this->amazonCompetitorsMinPrice;
+    }
+
+    public function getAmazonCompetitorsMinShipping(): ?float
+    {
+        if ($this->amazonCompetitorsMinShipping === null) {
+            if ($details = $this->model->detail_models) {
+                foreach ($details as $detail) {
+                    if (!\in_array($detail->order_group->dc_status,
+                        [
+                            OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
+                            OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
+                        ], true)) {
+                        [, $shipping] = $detail->getAmazonCompetitorMinPrice();
+                        $this->amazonCompetitorsMinShipping += $shipping;
+                    } else {
+                        $this->amazonCompetitorsMinShipping += $detail->amazon_shipping;
+                    }
+                }
+            }
+        }
+        return $this->amazonCompetitorsMinShipping;
+    }
+
+    public function getAmazonCompetitorsMinTotal(): ?float
+    {
+        if ($this->amazonCompetitorsMinTotal === null) {
+            $this->amazonCompetitorsMinTotal = $this->getAmazonCompetitorsMinPrice() + $this->getAmazonCompetitorsMinShipping();
+        }
+        return $this->amazonCompetitorsMinTotal;
+    }
+
+    public function getS3ToDxTotalNet()
+    {
+        return $this->model->getOrderCostToUs() + $this->getActualShippingCostNet();
+    }
+
+    public function getS3ToDxTotalGross()
+    {
+        return $this->model->getOrderCostToUs() + $this->getActualShippingCostGross();
+    }
+
 }

@@ -176,7 +176,7 @@ var dc_status;
 
   dc_status = $('#groups_dc_status_{/literal}{$m_id}{literal}').val();
 
-  if (dc_status == "S" || dc_status == "L" || dc_status == "G" || dc_status == "C"){
+  if (dc_status == "S" || dc_status == "L" || dc_status == "G" || dc_status == "C" || dc_status == "DA"){
     $("#tracking_number_tr_id_{/literal}{$m_id}{literal}").show();
   } else {
     $("#tracking_number_tr_id_{/literal}{$m_id}{literal}").hide();
@@ -487,7 +487,7 @@ function check_r_fields(){
   <td width="7%"><span onmouseout="javascript: $('#header_lbl_net').hide();" onmouseover="javascript: cidev_showNote('header_lbl_net', this);" style="text-decoration: none;"><font class="Star">R</font>{$lng.lbl_net}</span>
     <div id="header_lbl_net" class="cidev_NoteBox" style="display: none; width: 600px; margin-left: -640px;">{$lng.lbl_order_edit_info_2}</div>
   </td>
-  <td width="7%">{$lng.lbl_gst}</td>
+  <td width="7%" nowrap="nowrap">{$lng.lbl_gst}</td>
 {*  <td width="7%">{$lng.lbl_pst}</td> *}
   <td width="7%">{$lng.lbl_gross}</td>
   {if !$static}<td width="5%">{$lng.lbl_remove}{else}<td>&nbsp;{/if}</td>
@@ -1056,7 +1056,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 {* ----------------------- *}
 
 
-<tr id="tracking_number_tr_id_{$m_id}" style="{if !($v.dc_status eq 'S' || $v.dc_status eq 'L' || $v.dc_status eq 'G' || $v.dc_status eq 'C')}display: none;{/if}">
+<tr id="tracking_number_tr_id_{$m_id}" style="{if !($v.dc_status eq 'S' || $v.dc_status eq 'L' || $v.dc_status eq 'G' || $v.dc_status eq 'C' || $v.dc_status eq 'DA')}display: none;{/if}">
 <td colspan="9">
 <script type="text/javascript">
 <!--
@@ -1303,7 +1303,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
   {/if}
 
 <tr id="pending_order_message1_{$m_id}" style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>
-<td colspan="11">{$lng.lbl_pending_order_message1}</td>
+<td colspan="11">
+    {$oOrderGroup->showPendingOrderMessage()}
+</td>
 </tr>
 
 <tr id="pending_order_message2_{$m_id}" style='background-color: #F4CCCC; {if $v.cb_status eq "P" && $v.dc_status eq "L" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website" && $v.order_entry_flag eq "Y"} {else} display: none; {/if}'>
@@ -1396,37 +1398,8 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
     {/if}
   {/if}
 
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Total Product Price
+    {include file='admin/main/order.total_table.tpl'}
 
-<div class="bg__yellow color__black" align="left">
-Total Product Cost to us
-</div>
-
-  </td>
-  <td colspan="6">&nbsp;</td>
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceNet()}
-
-{* --- *}
-<div class="bg__yellow color__black" align="right">
-{include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
-</div>
-{* --- *}
-
-  </td>
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceHSTPST() hide_zero='Y'}</td>
-{*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceGross()}
-
-{* --- *}
-<div class="bg__yellow color__black" align="right">
-{include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
-</div>
-{* --- *}
-
-  </td>
-  <td>&nbsp;</td>
-</tr>
 {if $oOrder->getOrderRetailTrustPrice() != 0}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>
@@ -1438,67 +1411,19 @@ Total Product Cost to us
   <td align="right">{$oOrder->getOrderRetailTrustGross()|price_format}</td>
 </tr>
 {/if}
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Total Shipping Charge</td>
-  <td colspan="6">&nbsp;</td>
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingNet() hide_zero='Y'}</td>
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingHST() hide_zero='Y'}</td>
-{*  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingGross() hide_zero='Y'}</td>
-  <td>&nbsp;</td>
-</tr>
+
+    {include file='admin/main/order.total_shipping.tpl'}
 
 {if $order.coupon and $order.coupon_type eq "free_ship"}
-{$smarty.capture.coup_saving}
+    {$smarty.capture.coup_saving}
 {/if}
 
-{if $order.additional_fee ne ""}
-{foreach from=$order.additional_fee item=v_f key=k_f}
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td><input type="text" name="edit_additional_fee_name[{$v_f.id}][additional_fee_name]" value="{$v_f.additional_fee_name}" size="16" style="width: 99%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
-  <td colspan="6">&nbsp;</td>
-  <td align="right"><input type="text" name="edit_additional_fee_name[{$v_f.id}][additional_fee_value]" value="{$v_f.additional_fee_value}" size="8" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
-  <td>&nbsp;</td>
-  <td align="right">{$v_f.additional_fee_value}</td>
-  <td><input type="checkbox" value="Y" name="delete_additional_fee[{$v_f.id}]" {if $order.amazonorderid ne ""}disabled="disabled"{/if} /></td>
-</tr>
-{/foreach}
-{/if}
+{include file='admin/main/order.additional_fees.tpl'}
 
-{if $order.coupon}
-<tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-    <td>{$lng.lbl_coupon_saving}</td>
-    <td colspan="6">
-        {assign var="couponModel" value=$oOrder->getCouponModel()}
-        {if $couponModel}
-            {assign var="couponAdmin" value=$couponModel->getAdmin()}
-            {$couponModel->code}
+{include file='admin/main/order.coupon.tpl'}
 
-            ( <a href="{$couponAdmin->getInfoUrl()}" target="_blank">View info</a> )
-        {else}
-            {$order.coupon}
-        {/if}
-    </td>
-    <td align="right" class="color__red">
-        {include file="currency2.tpl" value=$oOrder->coupon_discount}
-    </td>
-    <td align="right"></td>
-    <td align="right" class="info color__red">
-        {include file="currency2.tpl" value=$oOrder->coupon_discount}
-    </td>
-    <td>&nbsp;</td>
-</tr>
-{/if}
+{include file='admin/main/order.total_grand.tpl'}
 
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
-  <td style="font-size: 1.1rem;">{$lng.lbl_grand_total}</td>
-  <td colspan="6">&nbsp;</td>
-  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNet()}</td>
-  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalHST() hide_zero='Y'}</td>
-{*  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 1.1rem;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
-  <td>&nbsp;</td>
-</tr>
 <tr>
     <td colspan="10">
         {include file="admin/main/transactions_summary.tpl" order_store=$order_store}

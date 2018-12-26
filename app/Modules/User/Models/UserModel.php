@@ -10,6 +10,9 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Customer;
 
+/**
+ * @property mixed login
+ */
 class UserModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;

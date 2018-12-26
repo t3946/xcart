@@ -55,6 +55,7 @@ use Xcart\Order;
  * @property string po_number
  * @property string firstname
  * @property int storefrontid
+ * @property mixed transactions
  */
 class OrderModel extends Model
 {
@@ -443,4 +444,5 @@ class OrderModel extends Model
     {
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
+
 }

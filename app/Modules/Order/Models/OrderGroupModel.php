@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Type;
@@ -23,6 +24,9 @@ use Xcart\OrderGroup;
  * @property int orderid
  * @property int order_group_id
  * @property float total_net
+ * @property DistributorModel manufacturer
+ * @property OrderStatusModel|null cb_status_model
+ * @property mixed cb_status
  */
 class OrderGroupModel extends Model
 {
@@ -98,22 +102,22 @@ class OrderGroupModel extends Model
             'detail_models' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderDetailModel::className(),
-                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'product_model__manufacturerid'],
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'product_model__manufacturerid'],
             ],
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
-                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'memos' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupMemoModel::className(),
-                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'refunds' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupRefundModel::className(),
-                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'tracking' => [
                 'class' => SerializeField::className(),
@@ -145,6 +149,7 @@ class OrderGroupModel extends Model
     }
 
     private static $shippingModels = [];
+
     public function getShippingModel()
     {
         if (isset(self::$shippingModels[$this->shippingid])) {
@@ -170,6 +175,7 @@ class OrderGroupModel extends Model
     }
 
     private $productModels = null;
+
     public function getProductModels()
     {
         if (is_null($this->productModels)) {
@@ -185,7 +191,9 @@ class OrderGroupModel extends Model
     public function getRefunds()
     {
         $refs = $this->refunds->all();
-        return $refs ? array_sum(array_map(function($a){return $a->total_gross;}, $refs)) : 0;
+        return $refs ? array_sum(array_map(function ($a) {
+            return $a->total_gross;
+        }, $refs)) : 0;
     }
 
     public function afterSave($owner, $isNew)
@@ -197,7 +205,7 @@ class OrderGroupModel extends Model
         }
     }
 
-    public function getEstimateProfit($additional_shipping_charge = null) :? array
+    public function getEstimateProfit($additional_shipping_charge = null): ?array
     {
         if ($order_payment_method = $this->payment_method ?: $this->order->payment_method_model) {
 
@@ -216,7 +224,71 @@ class OrderGroupModel extends Model
             return [$estimated_profit, $estimated_profit_margin, $estimated_profit_after_additional_payment ?: null, $estimated_profit_margin_after_additional_payment ?: null];
 
         }
-        
+
         return null;
+    }
+
+    public function getAmazonCompetitorsMinPrice(): ?float
+    {
+        $res = null;
+
+        if ($details = $this->detail_models) {
+            foreach ($details as $detail) {
+                [$product] = $detail->getAmazonCompetitorMinPrice();
+                $res += $product * $detail->amount;
+            }
+        }
+        return $res;
+    }
+
+    public function getAmazonCompetitorsMinShipping(): ?float
+    {
+        $res = null;
+
+        if ($details = $this->detail_models) {
+            foreach ($details as $detail) {
+                [, $shipping] = $detail->getAmazonCompetitorMinPrice();
+                $res += $shipping;
+            }
+        }
+        return $res;
+    }
+
+    public function getAmazonCompetitorsMinTotal(): ?float
+    {
+        return $this->getAmazonCompetitorsMinPrice() + $this->getAmazonCompetitorsMinShipping();
+    }
+
+    public function isEnterOnAmazon(): bool
+    {
+        return ($this->getAmazonCompetitorsMinTotal() <= $this->actual_shipping_gross + $this->getTotalCostToUs());
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function showPendingOrderMessage()
+    {
+        $distributor = $this->manufacturer;
+
+        if ($is_amazon = $this->isEnterOnAmazon()) {
+            $label = 'lbl_pending_order_message_amazon';
+            $orig_code = $distributor->code;
+            if ($distributor = DistributorModel::objects()->get(['code' => DistributorModel::AMAZON_MANUFACTURER_CODE])) {
+                $distributor->code = $orig_code;
+            }
+        } else {
+            $label = 'lbl_pending_order_message1';
+        }
+
+        $pending_order_message = func_get_langvar_by_name($label, null, false, true);
+
+        $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
+            'distributor' => $distributor,
+            'is_amazon' => $is_amazon
+        ]);
+
+        return str_replace('{enter_this_on_amazon}', $enter_on_amazon, $pending_order_message);
     }
 }

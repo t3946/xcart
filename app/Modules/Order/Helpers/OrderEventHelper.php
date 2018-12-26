@@ -6,7 +6,9 @@ namespace Modules\Order\Helpers;
 use Mobile_Detect;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudStatusModel;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -125,10 +127,28 @@ class OrderEventHelper
 
                 default: {
                     if (strpos($attribute, '_status') !== false) {
-                        if ($attribute != $oldValue)
+                        if ($newValue !== $oldValue)
                         {
                             $old_status = self::$_all_statuses[$oldValue] ?? $oldValue;
                             $new_status = self::$_all_statuses[$newValue] ?? $newValue;
+
+                            if ($newValue === OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON
+                                && $order_id
+                                && ($order = OrderModel::objects()->get(['orderid' => $order_id]))
+                                && $groups = $order->groups)
+                            {
+                                /** @var OrderGroupModel $group */
+                                foreach ($groups as $group) {
+                                    if ($group->isEnterOnAmazon()) {
+                                        /** @var OrderDetailModel $detail */
+                                        foreach ($group->detail_models as $detail) {
+                                            [$product, $shipping] = $detail->getAmazonCompetitorMinPrice();
+                                            $detail->setAttributes(['amazon_price' => $product ?? 0, 'amazon_shipping' => $shipping ?? 0]);
+                                            $detail->save();
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
