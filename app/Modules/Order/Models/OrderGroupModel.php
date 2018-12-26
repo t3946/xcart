@@ -272,13 +272,12 @@ class OrderGroupModel extends Model
     {
         $distributor = $this->manufacturer;
 
-        if ($this->isEnterOnAmazon()) {
+        if ($is_amazon = $this->isEnterOnAmazon()) {
             $label = 'lbl_pending_order_message_amazon';
-            $distributor = new DistributorModel([
-                'd_url_to_login_to_distributor_website' => 'https://amazon.com',
-                'manufacturer' => 'Amazon',
-                'code' => $distributor->code
-            ]);
+            $orig_code = $distributor->code;
+            if ($distributor = DistributorModel::objects()->get(['code' => DistributorModel::AMAZON_MANUFACTURER_CODE])) {
+                $distributor->code = $orig_code;
+            }
         } else {
             $label = 'lbl_pending_order_message1';
         }
@@ -286,7 +285,8 @@ class OrderGroupModel extends Model
         $pending_order_message = func_get_langvar_by_name($label, null, false, true);
 
         $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
-            'distributor' => $distributor
+            'distributor' => $distributor,
+            'is_amazon' => $is_amazon
         ]);
 
         return str_replace('{enter_this_on_amazon}', $enter_on_amazon, $pending_order_message);

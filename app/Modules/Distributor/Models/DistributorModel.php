@@ -27,7 +27,7 @@ class DistributorModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
-    public const AMAZON_MANUFACTURER_ID = 0;
+    public const AMAZON_MANUFACTURER_CODE = 'AMZ';
 
     public static function getDataModelClass(): string
     {
