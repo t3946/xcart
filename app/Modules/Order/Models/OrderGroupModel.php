@@ -234,8 +234,12 @@ class OrderGroupModel extends Model
 
         if ($details = $this->detail_models) {
             foreach ($details as $detail) {
-                [$product] = $detail->getAmazonCompetitorMinPrice();
-                $res += $product * $detail->amount;
+                if ($price = $detail->getAmazonCompetitorMinPrice()) {
+                    $product = $price[0];
+                    $res += $product * $detail->amount;
+                } else {
+                    return null;
+                }
             }
         }
         return $res;
@@ -247,8 +251,12 @@ class OrderGroupModel extends Model
 
         if ($details = $this->detail_models) {
             foreach ($details as $detail) {
-                [, $shipping] = $detail->getAmazonCompetitorMinPrice();
-                $res += $shipping;
+                if ($price = $detail->getAmazonCompetitorMinPrice()) {
+                    $shipping = $price[1];
+                    $res += $shipping;
+                } else {
+                    return null;
+                }
             }
         }
         return $res;
@@ -256,12 +264,19 @@ class OrderGroupModel extends Model
 
     public function getAmazonCompetitorsMinTotal(): ?float
     {
+        if (!$this->getAmazonCompetitorsMinPrice()) {
+            return null;
+        }
         return $this->getAmazonCompetitorsMinPrice() + $this->getAmazonCompetitorsMinShipping();
     }
 
     public function isEnterOnAmazon(): bool
     {
-        return ($this->getAmazonCompetitorsMinTotal() <= $this->actual_shipping_gross + $this->getTotalCostToUs());
+        $min_total = $this->getAmazonCompetitorsMinTotal();
+        if ($min_total === null) {
+            return false;
+        }
+        return ($min_total <= $this->actual_shipping_gross + $this->getTotalCostToUs());
     }
 
     /**
