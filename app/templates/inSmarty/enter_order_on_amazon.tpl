@@ -4,7 +4,7 @@
         {if $is_amazon}
             ${$order_group->getAmazonCompetitorsMinPrice()|price_format}
             {if ($order_group->getAmazonCompetitorsMinShipping())}
-                + {$order_group->getAmazonCompetitorsMinShipping()|price_format}
+                + {$order_group->getAmazonCompetitorsMinShipping()|price_format} shipping
             {else}
                 & Free shipping
             {/if}
