@@ -658,12 +658,14 @@ function check_r_fields(){
     {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
       <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
     {/if}
+    {if $product.oProduct->ASIN}
+          <br/>
+          <a target="_blank" href="https://amazon.com/dp/{$product.oProduct->ASIN}">{$product.oProduct->ASIN}</a>
+    {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
-    {if $product.oProduct->ASIN}
-        <br/><a target="_blank" href="https://amazon.com/dp/{$product.oProduct->ASIN}">{$product.oProduct->ASIN}</a>
-    {/if}
+
 
   </td>
   <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
