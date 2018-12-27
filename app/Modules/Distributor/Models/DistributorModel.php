@@ -22,6 +22,7 @@ use Xcart\Manufacturer;
  * @property float d_minimum_order_amount_in_us
  * @property string d_minimum_order_amount
  * @property string code
+ * @property string submit_to_operator
  */
 class DistributorModel extends Model
 {

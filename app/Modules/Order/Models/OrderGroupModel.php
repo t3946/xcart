@@ -27,6 +27,7 @@ use Xcart\OrderGroup;
  * @property DistributorModel manufacturer
  * @property OrderStatusModel|null cb_status_model
  * @property mixed cb_status
+ * @property mixed actual_shipping_gross
  */
 class OrderGroupModel extends Model
 {
@@ -285,6 +286,8 @@ class OrderGroupModel extends Model
      */
     public function showPendingOrderMessage()
     {
+        $enter_on_amazon = '';
+        /** @var DistributorModel $distributor */
         $distributor = $this->manufacturer;
 
         if ($is_amazon = $this->isEnterOnAmazon()) {
@@ -299,11 +302,13 @@ class OrderGroupModel extends Model
 
         $pending_order_message = func_get_langvar_by_name($label, null, false, true);
 
-        $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
-            'distributor' => $distributor,
-            'is_amazon' => $is_amazon
-        ]);
+        if ($distributor->submit_to_operator === 'through_distributor_website') {
+            $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
+                'distributor' => $distributor,
+                'is_amazon' => $is_amazon
+            ]);
+        }
 
-        return str_replace('{enter_this_on_amazon}', $enter_on_amazon, $pending_order_message);
+        return str_replace('{enter_this_on_website}', $enter_on_amazon, $pending_order_message);
     }
 }
