@@ -78,7 +78,7 @@ class OrderDetailModel  extends Model
 
         /** @var ProductModel $product */
         if ($product = $this->product_model) {
-            $result = $product->getAmazonArbitragePrice();
+            $result = $product->getAmazonArbitragePrice($this->amount);
         }
 
         return $result;
