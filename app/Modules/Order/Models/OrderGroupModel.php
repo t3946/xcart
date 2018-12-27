@@ -305,7 +305,8 @@ class OrderGroupModel extends Model
         if ($distributor->submit_to_operator === 'through_distributor_website') {
             $enter_on_amazon = Xcart::app()->template->render('inSmarty/enter_order_on_amazon.tpl', [
                 'distributor' => $distributor,
-                'is_amazon' => $is_amazon
+                'is_amazon' => $is_amazon,
+                'order_group' => $this
             ]);
         }
 

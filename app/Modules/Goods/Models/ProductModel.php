@@ -702,7 +702,7 @@ class ProductModel extends Model implements ICartItem
         $result = null;
 
         if ($this->ASIN && $offer = AmazonOfferCompetitorsModel::objects()->get(['id' => new Expression("f_amazonGetMinArbitrageOffer('{$this->ASIN}', {$qty})")])) {
-            $result = [$offer->ListingPrice, $offer->Shipping, $offer];
+            $result = [$offer->ListingPrice, $offer->Shipping];
         }
 
         return $result;
