@@ -162,7 +162,7 @@ if ($mode == "report") {
 #
 ##
 ###
-	$search_condition .= " AND o.cb_status NOT IN ('A','I','D') ";
+	$search_condition .= " AND o.cb_status NOT IN ('A','I','D', 'S1', 'S2', 'S3', 'S4') ";
 
         if (!empty($data['orders_source'])) {
  	       if ($data['orders_source'] == "xcart_orders_only"){
