@@ -768,33 +768,46 @@ if ($REQUEST_METHOD == "POST") {
 				foreach ($v_arr as $v){
 
 					$orderid = trim($v["orderid"]);
-                                	if (strpos($orderid,"-") !== false){
-                                        	$orderid_arr = explode("-", $orderid);
-	                                        $orderid = $orderid_arr["1"];
-        	                        }
-                	                $orderid = trim($orderid);
+					if (strpos($orderid, "-") !== false) {
+						$orderid_arr = explode("-", $orderid);
+						$orderid = $orderid_arr["1"];
+					}
+					$orderid = trim($orderid);
 
 					$order_added = false;
 
-					$order_group_invoices = func_query($qqq="SELECT invoice_number FROM $sql_tbl[order_group_invoices] WHERE status='U' AND part_of_total_transaction_in_amount_of IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
-					if (!empty($order_group_invoices)){
-						foreach ($order_group_invoices as $vv){
-							$invoice_number = $vv["invoice_number"];
-							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number'");
+					$f_invoice = [
+						'status' => 'U',
+						'part_of_total_transaction_in_amount_of__in' => ['0.00', $amount_csv_abs],
+						'orderid' => $orderid
+					];
+					/*
+					 * Hack for Amazon distributor
+					 */
+					if ((int) $manufacturerid !== 578) {
+						$f_invoice['manufacturerid'] = $manufacturerid;
+					}
+					if ($groupInvoices = OrderGroupInvoiceModel::objects()->filter($f_invoice)->all()) {
+						foreach ($groupInvoices as $groupInvoice){
+							$groupInvoice->setAttributes([
+								'reconciliation_id' => $r_id,
+							]);
+							if ($groupInvoice->save()) {
+								$order_added = true;
+							}
+						}
+					}
+
+
+					$order_group_memos = func_query("SELECT memo_number FROM $sql_tbl[order_group_memos] WHERE status='U' AND ref_to_us_part_of_transaction IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid' AND reconciliation_id='0'");
+					if (!empty($order_group_memos)) {
+						foreach ($order_group_memos as $vv) {
+							$memo_number = $vv["memo_number"];
+							db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
 
 							$order_added = true;
 						}
 					}
-
-                                        $order_group_memos = func_query("SELECT memo_number FROM $sql_tbl[order_group_memos] WHERE status='U' AND ref_to_us_part_of_transaction IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid' AND reconciliation_id='0'");
-                                        if (!empty($order_group_memos)){
-                                                foreach ($order_group_memos as $vv){
-                                                        $memo_number = $vv["memo_number"];
-                                                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
-
-							$order_added = true;
-                                                }
-                                        }
 
 					if (!empty($orderid)){
 
