@@ -6,6 +6,10 @@
         }
     }
 
+    .view_sets {
+        margin-bottom: 10px;
+    }
+
     .dashboard-filters {
         width: 100%;
         table-layout: fixed;
@@ -194,6 +198,16 @@
                 //    color: transparent;
                 //}
             }
+
+            .filter_owner {
+
+                border-top: 1px dotted;
+
+                &.hide {
+                    display: none;
+                }
+            }
+
         }
     }
 

@@ -1,82 +1,112 @@
 {extends 'base/admin.tpl'}
 {block 'heading'}
-    <h1 class="column large-10" align="center">Customer Care dashboard.</h1>
+    <h1 class="column large-10" align="center">Customer Care dashboard</h1>
     {if $site && $user}
         <a class="column large-2 button create-order" href="//{$site->domain}/?identify_admin={$user->login}" target="_blank">Create New Cx order</a>
     {/if}
 {/block}
 
 {block 'before-content'}
-    {*{autoescape false}*}
-    {*{orders_test_checkout}*}
-    {*{/autoescape}*}
+    {autoescape false}
+    {orders_test_checkout}
+    {/autoescape}
 {/block}
 
 {block 'content'}
     <div class="smarty-admin-block">
         <div class="tabs">
-            <div class="tabs-title">
-                <a href="#my_dashboard" class="link {if $myModels|count > 0}active{/if}">My dashboard</a>
-                <a href="#dashboard" class=" link {if $myModels|count == 0}active{/if}">Order dashboard</a>
-            </div>
+            <ul>
+                <li>
+                    <a href="#my_responsibilities" class="link {if $myModels|count > 0}active{/if}">My responsibilities</a>
+                </li>
+                <li>
+                    <a href="#dashboard" class="link {if $myModels|count == 0}active{/if}">Order dashboard</a>
+                </li>
+                <li>
+                    <a href="#pending_po" class="link">Pending PO entry</a>
+                </li>
+                <li>
+                    <a href="#product_questions" class="link">Product questions</a>
+                </li>
+                <li>
+                    <a href="#cart_retrieval" class="link">Cart retrieval</a>
+                </li>
+                <li>
+                    <a href="#inquiries" class="link">Inquiries</a>
+                </li>
+            </ul>
 
             <div class="tabs-content">
-                <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_dashboard">
+                <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_responsibilities">
                     {include 'dashboard/_dashboard_my.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
                 </div>
                 <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
+                    <div class="row view_sets">
+                        <div class="column text-right">
+                            <select class="viewer">
+                                <option value="0">Standard</option>
+                                <option value="1">Filter assignments</option>
+                                <option value="2">Operator responsibilities</option>
+                            </select>
+                        </div>
+                    </div>
                     {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
 
                     {foreach $groups as $group}
                         {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
                     {/foreach}
                 </div>
+                <div id="pending_po">
+                    {smarty_admin_block name= 'Pending PO entry'}
+                        Here are the places where you can find new POs to enter. Please make sure to login to <strong>s3helpdesk@gmail.com</strong> first. Once PO has been entered, please put Green star on the message to indicate that it has been taken care of.
+                        <br>
+                        <br>
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FFaxage+received"
+                                       target="_blank">Faxage-Received</a></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_!CustService+Inside+Communications"
+                                       target="_blank">CustService-Inside-Communications</a></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FMailboxForwarding+Service"
+                                       target="_blank">MailboxForwarding-Service</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <strong>Once PO has been found, it must be uploaded here:<br></strong>
+                        <br>
+                        <strong><a href="/admin/purchase_orders.php" target="_blank">PO pipeline</a></strong>
+                    {/smarty_admin_block}
+                </div>
+                <div id="product_questions">
+                    {smarty_admin_block name= 'Product questions'}
+                        <div class="question_products">
+                            {include 'dashboard/_product_question.tpl'}
+                        </div>
+                    {/smarty_admin_block}
+                </div>
+                <div id="cart_retrieval">
+                    {smarty_admin_block name= 'Cart retrieval'}
+                        <form action="{url "admin_cart:show"}" method="get">
+                            <b>Cart number:</b>
+                            <input name="ShoppingCartForm[id]" size="10" value="" id="cart_number" type="number">
+                            <input type="submit" value="Search cart"  />
+                        </form>
+                    {/smarty_admin_block}
+                </div>
+                <div id="inquiries">
+                    {smarty_admin_block name= 'Inquiries'}
+                        <a href="/admin/send_W9_form.php" target="_blank">Send W-9 form</a>
+                    {/smarty_admin_block}
+                </div>
             </div>
         </div>
     </div>
-    {smarty_admin_block name= 'Pending PO entry dashboard'}
-        Here are the places where you can find new POs to enter. Please make sure to login to <strong>s3helpdesk@gmail.com</strong> first. Once PO has been entered, please put Green star on the message to indicate that it has been taken care of.
-        <br>
-        <br>
-        <table>
-            <tbody>
-            <tr>
-                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FFaxage+received"
-                       target="_blank">Faxage-Received</a></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_!CustService+Inside+Communications"
-                       target="_blank">CustService-Inside-Communications</a></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FMailboxForwarding+Service"
-                       target="_blank">MailboxForwarding-Service</a></td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <strong>Once PO has been found, it must be uploaded here:<br></strong>
-        <br>
-        <strong><a href="/admin/purchase_orders.php" target="_blank">PO pipeline</a></strong>
-    {/smarty_admin_block}
-
-    {smarty_admin_block name= 'Product questions dashboard'}
-        <div class="question_products">
-            {include 'dashboard/_product_question.tpl'}
-        </div>
-    {/smarty_admin_block}
-
-    {smarty_admin_block name= 'Customer Care Dashboard'}
-        <form action="{url "admin_cart:show"}" method="get">
-            <b>Cart number:</b>
-            <input name="ShoppingCartForm[id]" size="10" value="" id="cart_number" type="number">
-            <input type="submit" value="Search cart"  />
-        </form>
-    {/smarty_admin_block}
-
-    {smarty_admin_block name= 'Inquiries dashboard'}
-        <a href="//admin/send_W9_form.php" target="_blank">Send W-9 form</a>
-    {/smarty_admin_block}
 {/block}
 
 {block 'js'}

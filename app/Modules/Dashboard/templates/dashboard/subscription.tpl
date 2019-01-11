@@ -23,7 +23,7 @@
                             {$model}
                         </label>
                     </div>
-                    <input type="submit" value="Ok">
+                    <input type="submit" value="Apply">
                 </form>
             </div>
         </div>

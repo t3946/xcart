@@ -101,6 +101,8 @@
                 }
             });
 
+            notify = false;
+
             if (notify && !self.__first)
             {
                 for (var i in data.filters)
@@ -145,10 +147,10 @@
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $.mnotify({
+                    /*$.mnotify({
                         title: self.options.notify.titles.err_refresh,
                         message: jqXHR.responseText
-                    });
+                    });*/
 
                     self.cycleRefresh();
                 }

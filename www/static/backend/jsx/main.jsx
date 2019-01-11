@@ -103,7 +103,7 @@
             e.preventDefault();
         });
 
-        $('.tabs .tabs-title a').on('click', function (e) {
+        /*$('.tabs .tabs-title a').on('click', function (e) {
             e.preventDefault();
 
             $('.tabs .tabs-title a').removeClass('active');
@@ -111,7 +111,24 @@
 
             let id = $(this).addClass('active').attr('href');
             $(id).addClass('active');
+        });*/
+
+        $('.tabs').tabs();
+
+        $('.main-block ').on('change', '.viewer', function(){
+            let view = this.value;
+            $('.dashboard-item .filter_owner').each(function() {
+                switch(view) {
+                    case '0': $(this).addClass('hide');
+                        break;
+                    case '1': $(this).removeClass('hide');
+                        break;
+                    case '2': $(this).addClass('hide');
+                        break;
+                }
+            });
         });
+
 
         let $form_bb = $('.smarty-admin-block .buttons-block:not(.fixed)');
         if ($form_bb.length) {

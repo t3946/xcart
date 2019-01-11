@@ -42604,6 +42604,8 @@ S2.define('jquery.select2',[
                 }
             });
 
+            notify = false;
+
             if (notify && !self.__first)
             {
                 for (var i in data.filters)
@@ -42648,10 +42650,10 @@ S2.define('jquery.select2',[
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $.mnotify({
+                    /*$.mnotify({
                         title: self.options.notify.titles.err_refresh,
                         message: jqXHR.responseText
-                    });
+                    });*/
 
                     self.cycleRefresh();
                 }
@@ -43722,14 +43724,31 @@ jQuery.fn.tablePositions = function (options) {
             e.preventDefault();
         });
 
-        $('.tabs .tabs-title a').on('click', function (e) {
+        /*$('.tabs .tabs-title a').on('click', function (e) {
             e.preventDefault();
-
-            $('.tabs .tabs-title a').removeClass('active');
+              $('.tabs .tabs-title a').removeClass('active');
             $('.tabs .tabs-content .tab').removeClass('active');
-
-            var id = $(this).addClass('active').attr('href');
+              let id = $(this).addClass('active').attr('href');
             $(id).addClass('active');
+        });*/
+
+        $('.tabs').tabs();
+
+        $('.main-block ').on('change', '.viewer', function () {
+            var view = this.value;
+            $('.dashboard-item .filter_owner').each(function () {
+                switch (view) {
+                    case '0':
+                        $(this).addClass('hide');
+                        break;
+                    case '1':
+                        $(this).removeClass('hide');
+                        break;
+                    case '2':
+                        $(this).addClass('hide');
+                        break;
+                }
+            });
         });
 
         var $form_bb = $('.smarty-admin-block .buttons-block:not(.fixed)');

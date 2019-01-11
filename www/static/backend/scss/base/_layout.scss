@@ -149,5 +149,20 @@
     &.wide {
       margin: 0;
     }
+
+    .messages-block {
+      margin-bottom: 20px;
+      border: 1px solid;
+      padding: 3px;
+      background-color: #F4CCCC;
+
+      .line{
+        line-height: 2;
+      }
+
+      .button{
+        color: inherit;
+      }
+    }
   }
 }

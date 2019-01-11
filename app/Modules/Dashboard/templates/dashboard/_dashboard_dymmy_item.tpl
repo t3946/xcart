@@ -16,12 +16,22 @@
                     <span class="priority empty">
                         -
                     </span>
-                    <span class="events empty">
-                        -
-                    </span>
                 </span>
 
             </span>
+            <div class="filter_owner hide">
+                {foreach $model->users->filter(['status' => 'Y']) as $user}
+                    {if $user->id != $model->id}
+                        <div class="item">
+                            <div class="row">
+                                <div class="columns large-12">
+                                    {$user}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                {/foreach}
+            </div>
         </div>
     </div>
 </a>

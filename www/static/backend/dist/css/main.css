@@ -7670,6 +7670,16 @@ a.ui-button:active,
 .wrapper .main-block.wide {
   margin: 0; }
 
+.wrapper .main-block .messages-block {
+  margin-bottom: 20px;
+  border: 1px solid;
+  padding: 3px;
+  background-color: #F4CCCC; }
+  .wrapper .main-block .messages-block .line {
+    line-height: 2; }
+  .wrapper .main-block .messages-block .button {
+    color: inherit; }
+
 .round {
   border-radius: 1000px; }
 
@@ -7831,7 +7841,8 @@ h1 {
   text-transform: capitalize; }
 
 .heading h1 {
-  text-align: center; }
+  text-align: center;
+  text-transform: none; }
 
 .modal-modal-bg {
   z-index: 100000; }
@@ -8745,6 +8756,9 @@ i.icon.m {
 .admin .dashboard-table a {
   text-decoration: none; }
 
+.admin .view_sets {
+  margin-bottom: 10px; }
+
 .admin .dashboard-filters {
   width: 100%;
   table-layout: fixed; }
@@ -8841,6 +8855,10 @@ i.icon.m {
         text-decoration: none;
         color: darkgray; }
       .admin .dashboard-filters .dashboard-item.empty .tag {
+        display: none; }
+    .admin .dashboard-filters .dashboard-item .filter_owner {
+      border-top: 1px dotted; }
+      .admin .dashboard-filters .dashboard-item .filter_owner.hide {
         display: none; }
 
 .admin .my_dashboard .container {
