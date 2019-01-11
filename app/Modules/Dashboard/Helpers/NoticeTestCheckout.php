@@ -9,7 +9,7 @@ class NoticeTestCheckout
 {
     public static function test()
     {
-        $model = OrderModel::objects()->filter(['groups__cb_status' => 'AP'])->order(['-orderid'])->limit(1)->get();
+        $model = OrderModel::objects()->filter(['groups__cb_status' => 'AP'])->order(['-groups__cb_update_datetime'])->limit(1)->get();
         $user = Xcart::app()->user;
 
         $no_orders_test_checkout_hide_time = Xcart::app()->request->session->get('no_orders_test_checkout_hide_time');
