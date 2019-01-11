@@ -169,7 +169,14 @@
                         return def.promise();
                     }
                 });
-            });
+
+                $('.tabs').tabs(
+                    {/ignore}
+                    {if $myModels|count == 0}
+                        {ignore}{active: 1}{/ignore}
+                    {/if}
+                    {ignore}
+                )});
             {/ignore}
         })();
     </script>

@@ -113,7 +113,6 @@
             $(id).addClass('active');
         });*/
 
-        $('.tabs').tabs();
 
         $('.main-block ').on('change', '.viewer', function(){
             let view = this.value;

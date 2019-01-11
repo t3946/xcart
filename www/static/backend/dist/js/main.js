@@ -43732,8 +43732,6 @@ jQuery.fn.tablePositions = function (options) {
             $(id).addClass('active');
         });*/
 
-        $('.tabs').tabs();
-
         $('.main-block ').on('change', '.viewer', function () {
             var view = this.value;
             $('.dashboard-item .filter_owner').each(function () {
