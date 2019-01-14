@@ -43,18 +43,25 @@
                 <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
                     <div class="row view_sets">
                         <div class="column text-right">
-                            <select class="viewer">
-                                <option value="0">Standard</option>
-                                <option value="1">Filter assignments</option>
-                                <option value="2">Operator responsibilities</option>
+                            <select class="viewer" name="mode">
+                                <option{if $mode} data-loc="{url 'dashboard:index'}#dashboard"{/if} value="0">Standard</option>
+                                <option{if $mode===1} selected="selected" {/if} {if $mode > 1} data-loc="{url 'dashboard:assignments'}#dashboard"{/if} value="1">Filter assignments</option>
+                                <option{if $mode === 2} selected="selected" {else} data-loc="{url 'dashboard:operators'}#dashboard" {/if} value="2">Operator responsibilities</option>
                             </select>
                         </div>
                     </div>
-                    {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
+                    {if $mode < 2}
+                        {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
 
-                    {foreach $groups as $group}
-                        {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
-                    {/foreach}
+                        {foreach $groups as $group}
+                            {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
+                        {/foreach}
+                    {elseif $mode === 2}
+                        {foreach $users as $user}
+                            {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:null:$user->id group=$user->id title=$user}
+                        {/foreach}
+                    {/if}
+
                 </div>
                 <div id="pending_po">
                     {smarty_admin_block name= 'Pending PO entry'}

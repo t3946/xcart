@@ -23,27 +23,20 @@
         <div id="order_tabs-{$tab.anchor}">
             {if $tab.section eq "all_logs_and_messages"}
                 {* ------- START: All logs and messages ------- *}
-                <table width="100%">
-                    <tr>
-                        <td width="12%"><B>Type</B></td>
-                        <td width="10%"><B>Date</B></td>
-                        <td width="15%"><B>Name</B></td>
+                <table width="100%" style="border-collapse: collapse;" class="order_log_table">
+                    <tr class="bordered">
+                        <td width="13%"><B>Type</B></td>
+                        <td width="13%"><B>Date</B></td>
+                        <td width="18%"><B>Name</B></td>
                         <td width="*"><B>Log</B></td>
                     </tr>
 
-                    {foreach from=$order_logs item=item key=key}
+                    {foreach from=$order_logs item=item key=key name=log}
                         {if $key gt "0"}
                             {math assign="previous_key" equation="x-1" x=$key}
                         {/if}
 
-                        {if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}
-                            <tr>
-                                <td colspan="4">
-                                    <hr/>
-                                </td>
-                            </tr>
-                        {/if}
-                        <tr>
+                        <tr class="bordered{if $item.type=='S'} highlight{/if}">
                             <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$type_names[$item.type]}{/if}</td>
                             <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$item.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}{/if}</td>
                             <td valign="top">
@@ -143,23 +136,15 @@
                                 {/if}
 
                                 {/if}
+                                {if $smarty.foreach.log.last}
+                                    {if $oOrder}
+                                    <br/>
+                                    Order source: <a href="{$oOrder->getLastRefererUrl()|default:$customer.referer}" target="_blank">Referral link</a>
+                                    {/if}
+                                {/if}
                             </td>
                         </tr>
                     {/foreach}
-                    {if $oOrder}
-                        {assign var="sSurfPathLastReferer" value=$oOrder->getLastRefererUrl()}
-                    {/if}
-                    <tr>
-                        <td colspan="3">&nbsp;</td>
-                        <td valign="top">Order source: <a href="{$sSurfPathLastReferer|default:$customer.referer}"
-                                                          target="_blank">Referral link</a></td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="4"><br/>
-                            <hr/>
-                            <br/></td>
-                    </tr>
 
                     <tr>
                         <td colspan="3"></td>

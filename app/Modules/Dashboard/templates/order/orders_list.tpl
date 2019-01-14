@@ -2,7 +2,7 @@
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="10%">#</td>
         <td>Fraud Check</td>
-        <td>Customer</td>
+        <td>Customer name</td>
         <td colspan="2">Order age</td>
         <td colspan="7" rowspan="2" width="40%">
             Last customer service message <br>
@@ -21,7 +21,7 @@
         <td></td>
         <td></td>
         <td>Country</td>
-        <td colspan="2">LATEST ETA DATE</td>
+        <td colspan="2">LATEST ETA</td>
         <td colspan="2">Payment</td>
         <td>Grand total</td>
         <td>+</td>

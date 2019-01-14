@@ -7564,6 +7564,16 @@ a.ui-button:active,
       .enter_on_site .enter_on_site__content.amazon a {
         color: #FE8E00; }
 
+.order_log_table {
+  border-collapse: collapse; }
+  .order_log_table tr.bordered {
+    border-bottom: 1px solid #939393;
+    box-shadow: 0 1px #DDDDDD; }
+  .order_log_table tr.highlight {
+    background-color: #fff2cc; }
+  .order_log_table tr td {
+    padding: 10px 0; }
+
 .admin-body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

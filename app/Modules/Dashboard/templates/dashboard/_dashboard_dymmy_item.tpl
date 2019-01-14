@@ -19,7 +19,7 @@
                 </span>
 
             </span>
-            <div class="filter_owner hide">
+            <div class="filter_owner {if $mode!== 1}hide{/if}">
                 {foreach $model->users->filter(['status' => 'Y']) as $user}
                     {if $user->id != $model->id}
                         <div class="item">

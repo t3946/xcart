@@ -7,6 +7,16 @@ return [
         'name' => 'index'
     ],
     [
+        'route' => '/operators',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'operators'],
+        'name' => 'operators'
+    ],
+    [
+        'route' => '/assignments',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'assignments'],
+        'name' => 'assignments'
+    ],
+    [
         'route' => '/subscription/{i:id}',
         'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'subscription'],
         'name' => 'filter_subscription'

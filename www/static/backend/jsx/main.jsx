@@ -126,6 +126,11 @@
                         break;
                 }
             });
+
+            if ($(this[this.selectedIndex]).attr('data-loc')) {
+                document.location = $(this[this.selectedIndex]).attr('data-loc');
+            }
+
         });
 
 

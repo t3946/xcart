@@ -33,7 +33,7 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
-    public function index()
+    public function index(): void
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
         $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
@@ -70,8 +70,50 @@ class DashboardController extends PrototypeAdminController
                 ]
             );
         }
+    }
 
+    public function assignments(): void
+    {
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
+        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+        echo $this->renderInternal('dashboard/index.tpl',
+            [
+                'models'  => $models,
+                'row_col' => DashboardFilter::getMaxRowCol(),
+                'myModels' => $myModels,
+                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                'questions' => $questionModels,
+                'user' => Xcart::app()->user,
+                'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
+                'mode' => 1,
+            ]
+        );
+    }
 
+    public function operators(): void
+    {
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
+        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+
+        if ($user_ids = UserFiltersLinkModel::objects()->filter(['user__status' => 'Y'])->cache(60)->valuesList(['user_id'], true)) {
+            $users = UserModel::objects()->cache(60)->all(['id__in' => \array_unique($user_ids)]);
+        }
+
+        echo $this->renderInternal('dashboard/index.tpl',
+            [
+                'models'  => $models,
+                'row_col' => DashboardFilter::getMaxRowCol(),
+                'myModels' => $myModels,
+                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                'questions' => $questionModels,
+                'user' => Xcart::app()->user,
+                'users' => $users ?? [],
+                'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
+                'mode' => 2
+            ]
+        );
     }
 
     public function filter($id)

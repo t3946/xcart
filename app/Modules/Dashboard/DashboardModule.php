@@ -37,16 +37,24 @@ class DashboardModule extends Module
             return '';
         });
 
-        $template->addModifier('get_filtered', function($models, $gid)
+        $template->addModifier('get_filtered', function($models, $gid, $uid = null)
         {
             $t_models = [];
             foreach ($models as $model)
             {
                 if (null === $gid && empty($model->group_id)) {
-                    $t_models[] = $model;
+                    if ($uid === null || $model->users->filter(['id' => $uid])->count()) {
+                        $t_models[] = $model;
+                    }
                 }
                 elseif ($model->group_id == $gid) {
-                    $t_models[] = $model;
+                    if ($uid === null || $model->users->filter(['id' => $uid])->count()) {
+                        $t_models[] = $model;
+                    }
+                } elseif ($uid) {
+                    if ($model->users->filter(['id' => $uid])->count()) {
+                        $t_models[] = $model;
+                    }
                 }
             }
             return $t_models;

@@ -2262,3 +2262,21 @@ a.ui-button:active,
 
   }
 }
+
+.order_log_table {
+  border-collapse: collapse;
+   tr {
+     &.bordered {
+       border-bottom: 1px solid #939393;
+       box-shadow: 0 1px #DDDDDD;
+     }
+
+     &.highlight {
+       background-color: #fff2cc;
+     }
+
+     td {
+       padding: 10px 0;
+     }
+   }
+}

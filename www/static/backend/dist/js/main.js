@@ -43747,6 +43747,10 @@ jQuery.fn.tablePositions = function (options) {
                         break;
                 }
             });
+
+            if ($(this[this.selectedIndex]).attr('data-loc')) {
+                document.location = $(this[this.selectedIndex]).attr('data-loc');
+            }
         });
 
         var $form_bb = $('.smarty-admin-block .buttons-block:not(.fixed)');
