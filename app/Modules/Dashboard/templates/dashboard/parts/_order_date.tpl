@@ -1,7 +1,7 @@
 <li>
     <div class="row">
         <div class="columns large-4">
-            <label for="o_date">Order date:</label>
+            <label for="o_date">Order date range:</label>
         </div>
 
         <div class="columns large-5">

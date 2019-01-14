@@ -5750,9 +5750,7 @@ html > body .mnotify {
   display: block;
   z-index: 10002;
   text-align: center;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.5);
   color: #000;
-  font-weight: 500;
   font-size: 0.9rem;
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   position: absolute;
@@ -9260,6 +9258,9 @@ i.icon.m {
     font-size: 12px; }
     .subscription-container .item input {
       vertical-align: middle; }
+    .subscription-container .item.title {
+      font-weight: 700;
+      text-align: center; }
 
 #wrapper {
   width: 100%;

@@ -1,6 +1,6 @@
 {extends 'base/admin.tpl'}
 {block 'heading'}
-    <h1 align="center">Filters list.
+    <h1 align="center">List of filters
         <a href="{url 'dashboard:create_filter'}" class="button">
             <i class="icon-plus"></i>
         </a>

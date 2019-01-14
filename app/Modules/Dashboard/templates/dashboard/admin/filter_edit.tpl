@@ -2,7 +2,7 @@
 
 
 {block 'heading'}
-    <h1 align="center">Filter {if $model->getIsNewRecord()}create{else}"{$model}" edit{/if}.</h1>
+    <h1 align="center">{if $model->getIsNewRecord()}Create filter{else}Edit "{$model}" filter{/if}.</h1>
 {/block}
 
 {block 'content'}

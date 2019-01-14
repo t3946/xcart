@@ -35,7 +35,7 @@ class DashboardFilter extends Model
                 'field' => 'group_id',
                 'class' => ForeignField::className(),
                 'modelClass' => GroupModel::className(),
-                'verboseName' => 'Group',
+                'verboseName' => 'Order filter group',
                 'null' => true,
             ],
             'users' => [
@@ -62,15 +62,18 @@ class DashboardFilter extends Model
             'position_row' => [
                 'class' => IntField::className(),
                 'null' => false,
+                'verboseName' => 'Row position',
             ],
             'position_column' => [
                 'class' => IntField::className(),
                 'null' => false,
+                'verboseName' => 'Column position',
             ],
             'tag' => [
                 'class' => CharField::className(),
                 'length' => 5,
                 'null' => true,
+                'verboseName' => 'Tag symbol (obsolete)',
             ],
             'color' => [
                 'class' => CharField::className(),
@@ -86,7 +89,7 @@ class DashboardFilter extends Model
                 'class' => IntField::className(),
                 'length' => 2,
                 'null' => true,
-                'verboseName' => 'Sorting order list',
+                'verboseName' => 'Order list sorting rule',
                 'default' => 1,
                 'choices' => [
                     1 => 'Priority shipping, Events count, Date',

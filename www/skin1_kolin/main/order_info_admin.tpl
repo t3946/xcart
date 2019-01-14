@@ -518,6 +518,18 @@ function check_r_fields(){
             {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
                 <span style="color: #000000; font-weight: normal;">ships by USPS</span>
             {/if}
+            {if $v.all_distributor_info.d_specific_instructions ne ""}
+                <span style="margin-left: 1em;">
+                    <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();"
+                       style="color: blue; border-bottom:1px dotted; text-decoration: none;"
+                       href="javascript: void(0);">Dx notes</a>
+
+                    <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox"
+                         style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
+                        {$v.all_distributor_info.d_specific_instructions}
+                    </div>
+                </span>
+            {/if}
         </td>
         <td>
             <table cellpadding="0" cellspacing="0" width="100%">
@@ -525,21 +537,7 @@ function check_r_fields(){
                     <td width="*">
                         {$v.code}
                     </td>
-                    {if $v.all_distributor_info.d_specific_instructions ne ""}
-                        <td align="right" width="5" nowrap="nowrap">
-                            <div>
-                                <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();"
-                                   style="color: blue; border-bottom:1px dotted; text-decoration: none;"
-                                   href="javascript: void(0);">Dx&nbsp;notes</a>
 
-                                <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox"
-                                     style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
-                                    {$v.all_distributor_info.d_specific_instructions}
-                                </div>
-                            </div>
-
-                        </td>
-                    {/if}
                 </tr>
             </table>
         </td>

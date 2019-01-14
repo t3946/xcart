@@ -215,6 +215,11 @@
         }
 
         font-size: 12px;
+
+        &.title {
+            font-weight: 700;
+            text-align: center;
+        }
     }
 }
 

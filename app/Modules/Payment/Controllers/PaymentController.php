@@ -148,7 +148,7 @@ class PaymentController extends Controller
 
     /**
      * @param $gateway
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws Exception
      */
     public function endpoint($gateway): void
     {

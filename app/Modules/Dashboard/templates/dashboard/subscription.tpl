@@ -1,4 +1,11 @@
 <div class="subscription-container">
+    <div class="row">
+        <div class="columns large-12">
+            <div class="title item">
+                Operators responsible
+            </div>
+        </div>
+    </div>
     {foreach $users as $user}
         {if $user->id != $model->id}
             <div class="item">
@@ -14,6 +21,13 @@
 
     {if !$model->getIsGuest()}
     <div class="item">
+        <div class="row">
+            <div class="columns large-12">
+                    <div class="title item">
+                        Take responsibility
+                    </div>
+            </div>
+        </div>
         <div class="row">
             <div class="columns large-12">
                 <form action="{url 'dashboard:filter_subscription' id=$id}" method="post">
