@@ -75,6 +75,10 @@ class SearchController extends PrototypeAdminController
             $form_collapse = false;
         }
 
+        if (isset($_GET['form_collapse'])) {
+            $form_collapse = true;
+        }
+
         echo $this->renderInternal('dashboard/search.tpl', array_merge(
             SearchHelper::getFormAndListData(),
             [
