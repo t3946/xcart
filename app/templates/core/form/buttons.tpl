@@ -3,8 +3,8 @@
         <div class="columns large-12" >
 
             <section class="button-group">
-                <input type="submit" class="button" name="save" value="Save and Close" >
                 <input type="submit" class="button" name="save_continue" value="Save">
+                <input type="submit" class="button" name="save" value="Save and Close" >
             </section>
 
 
