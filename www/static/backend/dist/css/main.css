@@ -8872,6 +8872,7 @@ i.icon.m {
       .admin .dashboard-filters .dashboard-item.empty .tag {
         display: none; }
     .admin .dashboard-filters .dashboard-item .filter_owner {
+      margin-top: 5px;
       border-top: 1px dotted; }
       .admin .dashboard-filters .dashboard-item .filter_owner .item .row .columns {
         color: #828282; }
