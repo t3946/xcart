@@ -413,7 +413,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_payment">Order payment method:</label>
+                    <label for="o_payment">Order payment method chosen by Cx:</label>
                 </div>
 
                 <div class="columns large-5">
@@ -800,7 +800,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_tm">Transaction payment method:</label>
+                    <label for="o_tm">Transaction payment gateway:</label>
                 </div>
 
                 <div class="columns large-5">

@@ -143,7 +143,7 @@ class OrderStore extends BaseStore
                         [$product] = $detail->getAmazonCompetitorMinPrice();
                         $this->amazonCompetitorsMinPrice += $product * $detail->amount;
                     } else {
-                        $this->amazonCompetitorsMinPrice += $detail->amazon_price;
+                        $this->amazonCompetitorsMinPrice += $detail->amazon_price * $detail->amount;
                     }
                 }
             }
