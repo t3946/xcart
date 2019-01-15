@@ -778,7 +778,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_ts">Order payment status per processor:</label>
+                    <label for="o_ts">Transaction status:</label>
                 </div>
 
                 <div class="columns large-5">
