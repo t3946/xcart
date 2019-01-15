@@ -2022,6 +2022,16 @@ div.ui.error.message ul.list {
 .admin-main-content {
   padding-top: 10px;
   padding-left: 20px;
+
+  .heading{
+    a {
+      color: blue;
+
+      &:hover {
+        color: blue;
+      }
+    }
+  }
 }
 
 .main-menu-modules {

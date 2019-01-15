@@ -7385,6 +7385,10 @@ div.ui.error.message ul.list {
 .admin-main-content {
   padding-top: 10px;
   padding-left: 20px; }
+  .admin-main-content .heading a {
+    color: blue; }
+    .admin-main-content .heading a:hover {
+      color: blue; }
 
 .main-menu-modules {
   line-height: 1.3; }
