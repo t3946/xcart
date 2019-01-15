@@ -219,14 +219,14 @@ function managedate(type, status) {
 <table cellpadding="3" cellspacing="1" width="100%">
  <tr>
  <td width="100px"><a target="_blank" href="send_W9_form.php">Send W-9 form</a></td>
-  <td width="20%" valign="top" align="center">
+ <td width="20%" valign="top" align="center">
 {if $inquiries ne ""}
 <B>Inquiry types</B><br />
 {foreach from=$inquiries item=v key=k}
 <a target="_blank" href="inquiries.php?inq_type_id={$v.inq_type_id}">{$v.inquiry_type} ({$v.count})</a><br />
 {/foreach}
 {/if}
-  </td>
+</td>
   <td valign="top" width="20%" align="center">
 {if $inquiry_attn_tags ne ""}
 <B>Inquiry tags</B></br />

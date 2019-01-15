@@ -6,6 +6,8 @@ use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
+use Modules\Dashboard\Models\InquiryAttentionTagModel;
+use Modules\Dashboard\Models\InquiryTypeModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Goods\Models\ProductQuestionModel;
@@ -35,9 +37,7 @@ class DashboardController extends PrototypeAdminController
 
     public function index(): void
     {
-        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
-        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
-        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+        [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($this->getRequest()->getIsAjax()) {
             $mIds = array_map(function($model){ return $model->pk; }, $myModels);
@@ -65,6 +65,8 @@ class DashboardController extends PrototypeAdminController
                     'myModels' => $myModels,
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
+                    'inquiries' => $inquiries,
+                    'inquiries_tags' => $inquiries_tags,
                     'user' => Xcart::app()->user,
                     'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
                 ]
@@ -74,9 +76,8 @@ class DashboardController extends PrototypeAdminController
 
     public function assignments(): void
     {
-        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
-        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
-        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+        [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
+
         echo $this->renderInternal('dashboard/index.tpl',
             [
                 'models'  => $models,
@@ -84,6 +85,8 @@ class DashboardController extends PrototypeAdminController
                 'myModels' => $myModels,
                 'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 'questions' => $questionModels,
+                'inquiries' => $inquiries,
+                'inquiries_tags' => $inquiries_tags,
                 'user' => Xcart::app()->user,
                 'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
                 'mode' => 1,
@@ -93,9 +96,7 @@ class DashboardController extends PrototypeAdminController
 
     public function operators(): void
     {
-        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
-        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
-        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+        [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($user_ids = UserFiltersLinkModel::objects()->filter(['user__status' => 'Y'])->cache(60)->valuesList(['user_id'], true)) {
             $users = UserModel::objects()->cache(60)->all(['id__in' => \array_unique($user_ids)]);
@@ -108,12 +109,24 @@ class DashboardController extends PrototypeAdminController
                 'myModels' => $myModels,
                 'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 'questions' => $questionModels,
+                'inquiries' => $inquiries,
+                'inquiries_tags' => $inquiries_tags,
                 'user' => Xcart::app()->user,
                 'users' => $users ?? [],
                 'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
                 'mode' => 2
             ]
         );
+    }
+
+    private function prepare(): array
+    {
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
+        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
+        $inquiries = InquiryTypeModel::objects()->filter(['active' => 'Y'])->order('inquiry_type')->all();
+        $inquiries_tags = InquiryAttentionTagModel::objects()->filter(['active' => 'Y'])->order(['inquiry_attn_tag'])->all();
+        return [$models, $myModels, $questionModels, $inquiries, $inquiries_tags];
     }
 
     public function filter($id)

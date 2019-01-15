@@ -3,6 +3,9 @@
         <span class="title">
             {$name}
         </span>
+        <span class="title right">
+            {$right}
+        </span>
     </div>
     <div class="white-back orange-border content-block">
         {raw $html}

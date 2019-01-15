@@ -107,8 +107,33 @@
                     {/smarty_admin_block}
                 </div>
                 <div id="inquiries">
-                    {smarty_admin_block name= 'Inquiries'}
-                        <a href="/admin/send_W9_form.php" target="_blank">Send W-9 form</a>
+                    {smarty_admin_block name= 'Inquiries' right="<a target='_blank' href='/admin/create_new_inquiry.php'>Create new iquiries</a>"}
+                        <table>
+                            <tr>
+                                <td width="110"><a href="/admin/send_W9_form.php" target="_blank">Send W-9 form</a></td>
+                                <td width="30%" valign="top" align="center">
+                                {if $inquiries}
+                                    <div><b>Inquiry types</b></div>
+                                    {foreach $inquiries as $inquiry}
+                                        <a target="_blank" href="{$inquiry->getUrl()}">{$inquiry->inquiry_type} ({$inquiry->count()})</a><br />
+                                    {/foreach}
+                                {/if}
+                                </td>
+                                <td valign="top" width="20%" align="center">
+                                    {if $inquiries_tags}
+                                        <div><b>Inquiry tags</b></div>
+                                        {foreach $inquiries_tags as $inquiries_tag}
+                                            {set $cnt = $inquiries_tag->count()}
+                                            {if $cnt}
+                                                <a target="_blank" href="inquiries.php?inq_tag_id={$inquiries_tag->inq_tag_id}">{$inquiries_tag->inquiry_attn_tag} ({$inquiries_tag->count()})</a><br />
+                                            {/if}
+                                        {/foreach}
+                                    {/if}
+                                </td>
+                                <td colspan="3" width="*"></td>
+                            </tr>
+                        </table>
+
                     {/smarty_admin_block}
                 </div>
             </div>

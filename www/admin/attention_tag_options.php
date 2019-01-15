@@ -49,7 +49,7 @@ if ($REQUEST_METHOD == 'POST'){
 	func_header_location("configuration.php?option=Attention_tag_options");
 }
 
-$allowed_operators = func_query("SELECT login, firstname, membershipid, usertype FROM xcart_customers WHERE usertype!='C' AND activity ='Y' AND status = 'Y' ORDER BY firstname");
+$allowed_operators = func_query("SELECT login, firstname, membershipid, usertype FROM xcart_customers WHERE usertype NOT IN ('C', 'V') AND activity ='Y' AND status = 'Y' ORDER BY firstname");
 
 $attention_tags_values = func_query("SELECT * FROM $sql_tbl[attention_tags_values] ORDER BY orderby, status");
 

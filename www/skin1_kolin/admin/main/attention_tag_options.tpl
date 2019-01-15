@@ -45,7 +45,7 @@
   Add:
   <select name="posted_data[{$attention_tags_values[pg].status_id}][select_login]">
 	<option value=""></option>
-	<option value="_ANY_">Any</option>
+	<option value="_ANY_">Anyone</option>
 	{foreach from=$allowed_operators item=v key=k}
 	<option value="{$v.login}">{$v.firstname} ({$v.login})</option>
 	{/foreach}

@@ -71,22 +71,22 @@ x_session_save("search_data");
 $data['_objects_per_page'] = "20";
 
 if (!empty($inq_type_id)){
-	$total_items = func_query_first_cell($q="SELECT COUNT(*) FROM $sql_tbl[inquiries] LEFT JOIN $sql_tbl[inquiry_types] ON $sql_tbl[inquiry_types].inq_type_id=$sql_tbl[inquiries].inq_type_id WHERE $sql_tbl[inquiries].inq_type_id='$inq_type_id' AND $sql_tbl[inquiries].status='O'");
+	$total_items = func_query_first_cell($q = "SELECT COUNT(*) FROM $sql_tbl[inquiries] LEFT JOIN $sql_tbl[inquiry_types] ON $sql_tbl[inquiry_types].inq_type_id=$sql_tbl[inquiries].inq_type_id WHERE $sql_tbl[inquiries].inq_type_id='$inq_type_id' AND $sql_tbl[inquiries].status='O'");
 
-        if (!empty($data['_objects_per_page'])) {
-                #
-                # Prepare the page navigation
-                #
-                $page = $search_data["inquiries"]["page"];
-                $objects_per_page = $data['_objects_per_page'];
-                $total_nav_pages = ceil($total_items/$objects_per_page)+1;
+	if (!empty($data['_objects_per_page'])) {
+		#
+		# Prepare the page navigation
+		#
+		$page = $search_data["inquiries"]["page"];
+		$objects_per_page = $data['_objects_per_page'];
+		$total_nav_pages = ceil($total_items / $objects_per_page) + 1;
 
-                include $xcart_dir."/include/navigation.php";
+		include $xcart_dir . "/include/navigation.php";
 
-                $sort_string .= " LIMIT $first_page, $objects_per_page";
-        }
+		$sort_string .= " LIMIT $first_page, $objects_per_page";
+	}
 
-	$inquiries = func_query("SELECT $sql_tbl[inquiries].*, $sql_tbl[inquiry_types].inquiry_type FROM $sql_tbl[inquiries] LEFT JOIN $sql_tbl[inquiry_types] ON $sql_tbl[inquiry_types].inq_type_id=$sql_tbl[inquiries].inq_type_id WHERE $sql_tbl[inquiries].inq_type_id='$inq_type_id' AND $sql_tbl[inquiries].status='O' ORDER BY $sql_tbl[inquiries].status DESC, datetime DESC".$sort_string);
+	$inquiries = func_query("SELECT $sql_tbl[inquiries].*, $sql_tbl[inquiry_types].inquiry_type FROM $sql_tbl[inquiries] LEFT JOIN $sql_tbl[inquiry_types] ON $sql_tbl[inquiry_types].inq_type_id=$sql_tbl[inquiries].inq_type_id WHERE $sql_tbl[inquiries].inq_type_id='$inq_type_id' AND $sql_tbl[inquiries].status='O' ORDER BY $sql_tbl[inquiries].status DESC, datetime DESC" . $sort_string);
 
 	$smarty->assign("inq_type_id", $inq_type_id);
 	$smarty->assign("navigation_script", "inquiries.php?inq_type_id=$inq_type_id");

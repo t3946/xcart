@@ -8497,6 +8497,10 @@ h1 {
       color: #fff !important;
       font-weight: 500;
       line-height: 15px; }
+      .smarty-admin-block .title-block .title.right {
+        float: right; }
+        .smarty-admin-block .title-block .title.right a {
+          color: blue; }
   .smarty-admin-block.padding-small .content-block {
     padding: 5px; }
   .smarty-admin-block.no-padding .content-block {
