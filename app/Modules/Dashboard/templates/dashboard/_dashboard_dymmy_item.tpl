@@ -19,19 +19,22 @@
                 </span>
 
             </span>
-            <div class="filter_owner {if $mode!== 1}hide{/if}">
-                {foreach $model->users->filter(['status' => 'Y']) as $user}
-                    {if $user->id != $model->id}
-                        <div class="item">
-                            <div class="row">
-                                <div class="columns large-12">
-                                    {$user}
+            {set $owners = $model->users->filter(['status' => 'Y'])->all()}
+            {if $owners}
+                <div class="filter_owner {if $mode!== 1}hide{/if}">
+                    {foreach $model->users->filter(['status' => 'Y']) as $user}
+                        {if $user->id != $model->id}
+                            <div class="item">
+                                <div class="row">
+                                    <div class="columns large-12">
+                                        {$user}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {/if}
-                {/foreach}
-            </div>
+                        {/if}
+                    {/foreach}
+                </div>
+            {/if}
         </div>
     </div>
 </a>
