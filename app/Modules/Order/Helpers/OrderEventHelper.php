@@ -132,13 +132,16 @@ class OrderEventHelper
                             $old_status = self::$_all_statuses[$oldValue] ?? $oldValue;
                             $new_status = self::$_all_statuses[$newValue] ?? $newValue;
 
-                            if ($newValue === OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON
-                                && $order_id
-                                && ($order = OrderModel::objects()->get(['orderid' => $order_id]))
-                                && $groups = $order->groups)
-                            {
+                            $order = $order_id ? OrderModel::objects()->get(['orderid' => $order_id]) : null;
+
+                            if ($order && \in_array($newValue, [OrderStatusModel::ORDER_STATUS_UNPAID, OrderStatusModel::ORDER_STATUS_CANCELED], true)) {
+                                $order->cart_number = null;
+                                $order->save();
+                            }
+
+                            if ($newValue === OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON && $order) {
                                 /** @var OrderGroupModel $group */
-                                foreach ($groups as $group) {
+                                foreach ($order->groups as $group) {
                                     if ($group->isEnterOnAmazon()) {
                                         /** @var OrderDetailModel $detail */
                                         foreach ($group->detail_models as $detail) {
