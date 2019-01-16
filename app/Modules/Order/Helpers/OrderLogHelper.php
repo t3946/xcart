@@ -23,7 +23,7 @@ class OrderLogHelper
                     $result[$log->date] = [
                         'date' => $log->date,
                         'login' => $log->login,
-                        'type' => 'S',
+                        'type' => 'X',
                         'log' => $log->log,
                     ];
                 }
