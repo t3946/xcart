@@ -56,7 +56,7 @@ class PriceCommand extends Command
                     'latency' => $product->distributor->amazon_leadtime_to_ship,
                     'price' => $min_price,
                     'min_price' => $min_price,
-                    'max_price' => $min_price
+                    'max_price' => max($min_price, 1000)
                 ];
             }
 
