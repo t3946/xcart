@@ -5,6 +5,7 @@ namespace Modules\Order\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 
@@ -33,6 +34,12 @@ class PurchaseOrderModel extends Model
                 'class' => TimestampField::class,
                 'autoNowAdd' => true,
                 'autoNow' => true,
+            ],
+            'logs' => [
+                'class' => HasManyField::class,
+                'modelClass' => LogModel::class,
+                'link' => ['po_id' => 'resource_id'],
+                'extra' => ['resource_type' => 'purchase_orders']
             ]
         ];
     }

@@ -4,6 +4,8 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderLogModel;
+use Modules\Order\Models\PurchaseOrderModel;
+use Modules\PBX\Helpers\AnveoAssignCalls;
 
 class OrderLogHelper
 {
@@ -15,7 +17,20 @@ class OrderLogHelper
             $result[(new \DateTime())->setTimestamp($log['date'])->format('Y-m-d H:i:s').$log['id']] = $log;
         }
 
-        $calls_log_data = \Modules\PBX\Helpers\AnveoAssignCalls::getResource($order_id);
+        if ($pos = PurchaseOrderModel::objects()->filter(['order_id' =>$order_id])->all()) {
+            foreach ($pos as $po) {
+                foreach ($po->logs->all() as $log) {
+                    $result[$log->date] = [
+                        'date' => $log->date,
+                        'login' => $log->login,
+                        'type' => 'S',
+                        'log' => $log->log,
+                    ];
+                }
+            }
+        }
+
+        $calls_log_data = AnveoAssignCalls::getResource($order_id);
         foreach ($calls_log_data as $call) {
             $result[$call['start_at']] = [
                 'date' => $call['start_at'],

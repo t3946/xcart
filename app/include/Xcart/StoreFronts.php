@@ -38,7 +38,9 @@ class StoreFronts extends Data
     {
         $aResult = [];
         foreach ($this->aStoreFronts as $oStoreFront){
-            $aResult[ $oStoreFront->getStoreFrontId()] = $oStoreFront->getCompanyName();
+            if ($name = $oStoreFront->getCompanyName()) {
+                $aResult[$oStoreFront->getStoreFrontId()] = $name;
+            }
         }
         return $aResult;
 

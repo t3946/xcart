@@ -132,10 +132,14 @@
             </table>
         </div>
         <div style="margin-bottom: 10px;">
-            <span>Enter PO using front-end checkout process.</span>
-            <input type="submit" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if}/>
-            <b>OR</b> <span>drop PO if it has already been entered or has been canceled.</span>
-            <input type="submit" name="purchase_order_drop_submit" value="Drop PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if} />
+            <div style="margin-bottom: 10px;">
+                <input type="submit" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if}/>
+                <span>using front-end checkout process.</span>
+            </div>
+            <div>
+                <input type="submit" name="purchase_order_drop_submit" value="Drop PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if} />
+                <span>if it has already been entered or has been canceled.</span>
+            </div>
         </div>
     </form>
    </div>
@@ -144,24 +148,22 @@
 {capture name=dialog_log}
 <div id="po_pipeline_log">
         <div style="margin-bottom: 20px;">
-            <table cellpadding="3" cellspacing="1" width="100%" >
+            <table width="100%" class="order_log_table">
 
-                <tr class="TableHead">
-                    <td width="150">Date </td>
-                    <td width="150" align="center">Name</td>
-                    <td width="*" align="center"> Action</td>
+                <tr class="bordered">
+                    <td width="150"><b>Date</b></td>
+                    <td width="150"><b>Name</b></td>
+                    <td width="*"><b>Log</b></td>
                 </tr>
                 {if !empty($aPendingOrdersLog)}
-                <tr>
                     {foreach from=$aPendingOrdersLog item=oPendingOrdersLog}
                     {assign var="oCustomer" value=$oPendingOrdersLog->getCustomerEntity()}
-                        <tr>
+                        <tr class="bordered">
                             <td>{$oPendingOrdersLog->getLogDate()}</td>
                             <td>{$oCustomer->getCustomerFullName()}<br/>{if $oCustomer->getCustomerLogin()}({/if}{$oCustomer->getCustomerLogin()}{if $oCustomer->getCustomerLogin()}){/if}</td>
                             <td>{$oPendingOrdersLog->getLogText()}</td>
                         </tr>
                     {/foreach}
-                </tr>
                 {/if}
             </table>
             {include file="customer/main/navigation.tpl"}

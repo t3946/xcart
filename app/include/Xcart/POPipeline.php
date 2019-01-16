@@ -4,7 +4,7 @@ namespace Xcart;
 class POPipeline extends Data
 {
     const PO_LINK_ON_MODIFY = "PO# %s corresponds to the following order(s): <a href='%s' target='_blank'>%s</a>";
-    const PO_NOT_IN_OUR_SYSTEM = "PO# %s is not yet in our system";
+    const PO_NOT_IN_OUR_SYSTEM = "PO# %s has NOT been entered in our system";
     const PO_HAS_ALREADY_BEEN_ADDED = "PO# %s has already been added to Pending entry POs queue";
     const PO_HAS_BEEN_UPLOADED = "PO# %s has been uploaded";
     const PO_HAS_BEEN_SELECTED = "PO# %s has been selected for entry";
