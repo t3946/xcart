@@ -1,5 +1,7 @@
 <?php
 
+use Modules\User\Models\UserModel;
+
 x_load('cart', 'mail', 'order', 'product', 'taxes');
 
 function func_check_tracking_number($linkid, $tracknum)
@@ -471,21 +473,23 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         }
 
         if (!empty($userinfo)) {
-            $oCustomer   = Xcart\Customer::model(['login' => $userinfo['login']]);
-            $arrNewValue = ['b_city'      => $userinfo['b_city'],
-                            'b_firstname' => addslashes($userinfo['b_firstname']),
-                            'b_address'   => addslashes($userinfo['b_address']),
-                            'b_state'     => $userinfo['b_state'],
-                            'b_country'   => $userinfo['b_country'],
-                            'b_zipcode'   => $userinfo['b_zipcode'],
-                            's_address'   => addslashes($userinfo['s_address']),
-                            's_firstname' => addslashes($userinfo['s_firstname']),
-                            's_city'      => $userinfo['s_city'],
-                            's_state'     => $userinfo['s_state'],
-                            's_country'   => $userinfo['s_country'],
-                            's_zipcode'   => $userinfo['s_zipcode'],
-            ];
-            $oCustomer->updateFields($arrNewValue);
+            if ($user_model = UserModel::objects()->get(['login' => $userinfo['login']])) {
+                $user_model->setAttributes([
+                    'b_city'      => $userinfo['b_city'],
+                    'b_firstname' => $userinfo['b_firstname'],
+                    'b_address'   => $userinfo['b_address'],
+                    'b_state'     => $userinfo['b_state'],
+                    'b_country'   => $userinfo['b_country'],
+                    'b_zipcode'   => $userinfo['b_zipcode'],
+                    's_address'   => $userinfo['s_address'],
+                    's_firstname' => $userinfo['s_firstname'],
+                    's_city'      => $userinfo['s_city'],
+                    's_state'     => $userinfo['s_state'],
+                    's_country'   => $userinfo['s_country'],
+                    's_zipcode'   => $userinfo['s_zipcode'],
+                ]);
+                $user_model->save();
+            }
         }
 
         $order_model = \Modules\Order\Models\OrderModel::objects()->get(['pk' => $cart['orderid']]);
