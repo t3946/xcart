@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Models\OrderCxInvoiceModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
@@ -479,7 +480,7 @@ function sendPayPalRequest($aParams = [])
                     'amount' => $aParams['paypal_request_amount'],
                     'currency' => $aParams['paypal_request_currency'],
                 ]);
-                Xcart\Logs::_log('orders', $iOrderId, 'X',
+                Xcart\Logs::_log('orders', $iOrderId, OrderLogModel::LOG_TYPE_SYSTEM,
                     "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
                 $aResult['result'] = true;
             }
