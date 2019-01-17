@@ -265,11 +265,11 @@ class PaymentController extends Controller
                             ])
                             )->save();
 
-                            if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() ===  0) {
+                            if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() ==  0) {
                                 $app->event->trigger('order:paid', ['model' => $order]);
-                            } else {
-                                OrderTagEventHelper::orderTagEvent(37, $order->orderid);
                             }
+                            OrderTagEventHelper::orderTagEvent(5, $order->orderid);
+
                         }
                         break;
                 }
