@@ -55,8 +55,10 @@ SQL;
 SELECT d.manufacturerid, d.productid, d.pr_sales_rank, d.product, d.sku as SKU, d.upc, d.ASIN, d.for_amazon_avail, d.amazon_enabled, d.amazon_verified, d.amazon_fba, d.pr_sales_rank, d.cost_to_us, d.xcart_price, d.our_amazon_price, d.min_fba_price, d.buy_box_price, d.lowest_price, d.lowest_channel,
 (d.buy_box_price - d.min_fba_price)/d.min_fba_price * 100 AS percent, GREATEST(1, d.min_amount) AS restocking_qty
 FROM v_products_amazon_mfn d
+LEFT JOIN xcart_products_amz_fields f ON f.productid = d.productid  
 LEFT JOIN amazon_reorder_batch_data b ON b.productid = d.productid AND b.batch_id = :batch_id
 WHERE d.ASIN IS NOT NULL AND d.amazon_fba = 'Y' AND d.our_amazon_price > 0 AND our_amazon_price != d.buy_box_price AND pr_sales_rank < 50000 AND pr_sales_rank > 0 AND d.min_fba_price <= d.buy_box_price AND d.min_fba_price < 500 AND (b.restocking_qty = 0 OR b.restocking_qty IS NULL) AND (b.total_stock = 0 OR b.total_stock IS NULL)
+AND (f.amazon_fba_restricted !='Y' OR f.productid IS NULL)
 ORDER BY d.manufacturerid, d.pr_sales_rank, percent DESC
 SQL;
         return $sql;
