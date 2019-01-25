@@ -773,7 +773,7 @@ if ($mode == "add" or !empty($manufacturerid)) {
 			func_header_location("manufacturers.php");
 		}
 		else {
-			//$manufacturer_data["used_by_others"] = func_manufacturer_is_used($manufacturerid, $manufacturer_data["provider"]);
+			$manufacturer_data["used_by_others"] = func_manufacturer_is_used($manufacturerid, $manufacturer_data["provider"]);
 			$location[] = array($manufacturer_data["manufacturer"], "");
 
 #
@@ -902,12 +902,18 @@ else {
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
 				}
-				/*$manufacturers[$k]["used_by_others"] = func_manufacturer_is_used($v["manufacturerid"], $v["provider"]);
+				$manufacturers[$k]["used_by_others"] = func_manufacturer_is_used($v["manufacturerid"], $v["provider"]);
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 				if (!@in_array($v['manufacturerid'], $selected_manufacturers) and $login_type == 'P') {
 					$total_items = $total_items - 1;
 					$total_nav_pages = ceil($total_items / $objects_per_page) + 1;
 					unset($manufacturers[$k]);
-				}*/
+				}
+
+
+#
+##
+###
 				if (substr($v["provider_name"], 0, 2) == ", ") {
 					$manufacturers[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
 				}
