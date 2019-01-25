@@ -838,7 +838,7 @@ SQL;
                                                         $orderDetailModel->save();
                                                     }
                                                     if ($orderGroupModel->amz_fullfilment_order_placed === 'Y') {
-                                                        [$orderInvoiceModel[$oOrderAmazonDetail->SKU]] = OrderGroupInvoiceModel::objects()->getOrNew([
+                                                        [$orderInvoiceModel[$oOrderAmazonDetail->SKU] ,$is_created] = OrderGroupInvoiceModel::objects()->getOrNew([
                                                             'orderid' => $orderGroupModel->orderid,
                                                             'manufacturerid' => $orderGroupModel->manufacturerid,
                                                             'invoice_number' => 1
@@ -878,6 +878,10 @@ SQL;
                                                             'unit_cost_total' => $fQuantity * $fCostToUs
                                                         ]);
                                                         $orderGroupInvoiceProduct->save();
+
+                                                        if (!$is_created) {
+                                                            unset($orderInvoiceModel[$oOrderAmazonDetail->SKU]);
+                                                        }
                                                     }
 
                                                     $orderGroupModel->recalculateAccounting();
