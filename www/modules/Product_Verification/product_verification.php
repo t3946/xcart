@@ -12,11 +12,18 @@ $aOrders = OrderModel::objects()
     ->filter(
         [
             'vn_status__isnt' => Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
-            'amazonorderid' => ''
+            'order_type' => 'XCART'
         ]
     )->exclude(
         [
-            'cb_status__in' => ['A', 'D', OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,]
+            'cb_status__in' => [
+                OrderStatusModel::ORDER_STATUS_CANCELED,
+                OrderStatusModel::ORDER_STATUS_DECLINED,
+                OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                ]
         ]
     )->all();
 
@@ -25,10 +32,9 @@ if ($aOrders) {
     /** @var OrderModel[] $aManufacturers */
     $aManufacturers = [];
     foreach ($aOrders as $oOrder) {
-        $aOrderProducts = $oOrder->getProducts();
-        if (!empty($aOrderProducts))
+        if ($aOrderProducts = $oOrder->getProducts())
         foreach ($aOrderProducts as $oProduct) {
-            if ($oProduct->forsale == 'Y') {
+            if ($oProduct->forsale === 'Y') {
                 $aManufacturers[$oProduct->manufacturerid][$oOrder->orderid] = $oOrder;
             }
         }
@@ -40,9 +46,9 @@ if ($aOrders) {
             $aOrderManufacturerProducts = $oOrderManufacturer->getProducts();
             if (!empty($aOrderManufacturerProducts))
             foreach ($aOrderManufacturerProducts as $oProduct) {
-                if ($oProduct->forsale == 'Y') {
+                if ($oProduct->forsale === 'Y') {
                     if ($oProduct->manufacturerid == $iManufacturerId) {
-                        if (!in_array($oProduct->productid, $aProducts)) {
+                        if (!\in_array($oProduct->productid, $aProducts)) {
                             $aProducts[] = $oProduct->productid;
                         }
                     }

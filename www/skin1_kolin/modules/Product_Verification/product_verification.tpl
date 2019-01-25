@@ -47,6 +47,7 @@
 	<td width="100" nowrap="nowrap" align="center">DISTR WEBSITE</td>
 	<td width="100" nowrap="nowrap" align="center">LAST VERIF DATE</td>
 	<td width="100" align="center">VERIFIED?</td>
+    <td width="100" align="center">ASIN</td>
 </tr>
 
 
@@ -88,6 +89,17 @@
 						{/foreach}
 					</select>
 					</td>
+                    <td align="center">
+                        {php}
+                            $oProduct = $this->get_template_vars('oProduct');
+                            $orderM = $this->get_template_vars('oOrderManufacturer');
+
+                            $params = ['pid' => $oProduct->productid, 'oid' => $orderM->orderid];
+                            $this->assign('u_params',$params);
+                        {/php}
+                        {$u_params|dd}
+                        <a target="_blank" href="{$xcartApp->router->url('amazon:verification', $u_params)}">{$oProduct->ASIN|default:'N/A'}</a>
+                    </td>
 				</tr>
 			{/if}
 		{/foreach}
