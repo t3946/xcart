@@ -79,7 +79,7 @@
                     </td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
-					<td align="center">
+					<td align="center" {if !$oProduct->verification_statusid}class="bg__red"{/if}>
 					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->orderid}" data-product-verification-id="{$oProduct->productid}"
                             class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->verification_statusid}">
 						{foreach from=$aVerifyStatuses item=aVerifyStatus}
@@ -89,14 +89,11 @@
 						{/foreach}
 					</select>
 					</td>
-                    <td align="center">
-                        {if $oProduct->amazon_verified != 'Y'}
+                    <td align="center" {if $oProduct->amazon_verified != 'Y'}class="bg__red color__white"{/if}>
                         <a target="_blank" href="/admin/amazon/verification/{$oProduct->productid}/{$oOrderManufacturer->orderid}">
-                        {/if}
                             {$oProduct->ASIN|default:'N/A'}
-                        {if $oProduct->amazon_verified != 'Y'}
                         </a>
-                        {/if}
+                        
                     </td>
 				</tr>
 			{/if}
