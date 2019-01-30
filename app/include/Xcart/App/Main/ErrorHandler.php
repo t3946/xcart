@@ -217,7 +217,9 @@ class ErrorHandler
 
             unset($err['traces'], $err['traces']);
 
-            $app->logger->critical($exception->getMessage(), $err, 'error');
+            if ((int) $code !== 404) {
+                $app->logger->critical($exception->getMessage(), $err, 'error');
+            }
 
             if (!headers_sent()) {
                 header("HTTP/1.0 {$code} " . $this->getHttpHeader($code, get_class($exception)));
