@@ -3,29 +3,35 @@
 namespace Modules\Amazon\Helpers;
 
 
+use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
+use Mindy\QueryBuilder\Q\QAnd;
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Main\Xcart;
 
 class AmazonVerificationHelper
 {
-    const LINK_SEARCH_BY_ASIN = 'https://www.amazon.com/dp/%s/';
-    const LINK_SEARCH_BY_UPC = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
-    const LINK_SEARCH_BY_NAME = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
+    public const LINK_SEARCH_BY_ASIN = 'https://www.amazon.com/dp/%s/';
+    public const LINK_SEARCH_BY_UPC = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
+    public const LINK_SEARCH_BY_NAME = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
 
     public static function getSearchLinksJson(ProductModel $model)
     {
         $result = [];
 
-        if ($model->ASIN) {
-            $result['asin'] = [Xcart::app()->router->url('amazon:view') . '?' . (sprintf(self::LINK_SEARCH_BY_ASIN, $model->ASIN)), "Open product by ASIN: {$model->ASIN}"];
+        if ($model->ASIN && $model->ASIN !== ProductModel::NO_ASIN_FOUND) {
+            $result['asin'] = [Xcart::app()->router->url('amazon:view') . '?' . sprintf(self::LINK_SEARCH_BY_ASIN, $model->ASIN), "Open product by ASIN: {$model->ASIN}"];
         }
 
         if ($model->upc) {
-            $result['upc'] = [Xcart::app()->router->url('amazon:view') . '?' . (sprintf(self::LINK_SEARCH_BY_UPC, $model->upc)), "Search product by UPC: {$model->upc}"];
+            $result['upc'] = [Xcart::app()->router->url('amazon:view') . '?' . sprintf(self::LINK_SEARCH_BY_UPC, $model->upc), "Search product by UPC: {$model->upc}"];
         }
 
         if ($name = $model->getFrontendName()) {
-            $result['name'] = [Xcart::app()->router->url('amazon:view') . '?' . (sprintf(self::LINK_SEARCH_BY_NAME, urlencode(html_entity_decode($model->getFrontendName())))), "Search product by Product Name: {$model->getFrontendName()}"];
+            $result['name'] = [Xcart::app()->router->url('amazon:view') . '?' . sprintf(self::LINK_SEARCH_BY_NAME, urlencode(html_entity_decode("{$name} {$model->getMPN()}"))), "Search product by Product Name: {$model->getFrontendName()}"];
         }
 
         return $result;
@@ -38,7 +44,7 @@ class AmazonVerificationHelper
             $rel = '.';
         }
 
-        if (parse_url($rel, PHP_URL_SCHEME) !== '' || strpos($rel, '//') === 0) {
+        if (parse_url($rel, PHP_URL_SCHEME) || strpos($rel, '//') === 0) {
             return $rel;
         } //Return if already an absolute URL
 
@@ -53,7 +59,7 @@ class AmazonVerificationHelper
             $path = '';
         } //Destroy path if relative url points to root
 
-        $port = isset($port) && (int) $port !== 80 ? ':' . $port : '';
+        $port = isset($port) && (int)$port !== 80 ? ':' . $port : '';
 
         $auth = '';
 
@@ -64,6 +70,8 @@ class AmazonVerificationHelper
             }
             $auth .= '@';
         }
+        $rel = ltrim($rel, '/');
+
         $abs = "$auth$host$port$path/$rel"; //Dirty absolute URL
 
         for ($n = 1; $n > 0; $abs = preg_replace(array("#(/\.?/)#", "#/(?!\.\.)[^/]+/\.\./#"), '/', $abs, -1, $n)) {
@@ -130,6 +138,146 @@ class AmazonVerificationHelper
                 return 'url(' . $base_url . self::rel2abs($url, $URL) . ')';
             },
             $css);
+    }
+
+    public static function getAmazonVerifyOrders()
+    {
+        return OrderModel::objects()
+            ->filter(
+                [
+                    new QOr(
+                        [
+                            'vn_status__isnt' => OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
+                            new QAnd([
+                                'detail_models__product_model__amazon_verified__isnt' => 'Y',
+                                'detail_models__product_model__forsale' => 'Y',
+                                'detail_models__product_model__verification_statusid__isnt' => 3,
+                            ]),
+                        ]),
+                    'order_type' => OrderModel::ORDER_TYPE_XCART,
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_AUTHORIZED,
+                        OrderStatusModel::ORDER_STATUS_QUEUED,
+                    ]
+                ]
+            )->order(['-orderid']);
+    }
+
+    public static function getNextAmazonProduct()
+    {
+
+    }
+
+    public static function checkConclusions($params): bool
+    {
+        if ($params['product_image'] === 'different') {
+            return false;
+        }
+        if ($params['product_names'] === 'different') {
+            return false;
+        }
+        if ($params['product_description'] === 'different') {
+            return false;
+        }
+        if ($params['qty_on_amazon'] !== $params['qty_on_our_website']) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function getConclusionsLog($params): string
+    {
+        $params = array_map(function($a){return str_replace('_', ' ', $a);}, $params);
+        $log = "Product images show: {$params['product_image']}\n";
+        $log .= "Product names: {$params['product_names']}\n";
+        $log .= "Product descriptions: {$params['product_description']}\n";
+        $log .= "Pack quantity listed on Amazon: {$params['qty_on_amazon']}\n";
+        $log .= "Pack quantity listed on our website: {$params['qty_on_our_website']}\n";
+
+        return $log;
+    }
+
+    public static function addAmazonListing(ProductModel $model):? string
+    {
+        if ($model->ASIN === ProductModel::NO_ASIN_FOUND) return null;
+
+        $sFeed = "TemplateType=Offer\tVersion=2014.0703" . str_repeat("\t", 254) . PHP_EOL;
+        $aHeader = ['sku',
+            'price',
+            'quantity',
+            'product-id',
+            'product-id-type',
+            'condition-type',
+            'condition-note',
+            'ASIN-hint',
+            'title',
+            'product-tax-code',
+            'operation-type',
+            'sale-price',
+            'sale-start-date',
+            'sale-end-date',
+            'leadtime-to-ship',
+            'launch-date',
+            'is-giftwrap-available',
+            'is-gift-message-available',
+            'fulfillment-center-id',
+            'main-offer-image',
+            'offer-image1',
+            'offer-image2',
+            'offer-image3',
+            'offer-image4',
+            'offer-image5'];
+        $sFeed .= implode("\t", $aHeader) . str_repeat("\t", 231) . "\n";
+        $sFeed .= implode("\t", $aHeader) . str_repeat("\t", 231) . "\n";
+
+        $row = [
+            $model->productcode,
+            number_format($model->getMinimumAmazonPrice(), 2, '.', ''),
+            $model->getAmazonQuantity(),
+            $model->ASIN,
+            'ASIN',
+            'New',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            $model->distributor->amazon_leadtime_to_ship,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''];
+
+        $sFeed .= implode("\t", $row) . str_repeat("\t", 231) . "\n";
+
+        $feedHandle = @fopen('php://temp', 'rw+');
+        if ($feedHandle) {
+            fwrite($feedHandle, $sFeed);
+            rewind($feedHandle);
+            $amzPool = new AmazonPoolStore();
+            /** @var \MarketplaceWebService_Model_SubmitFeedResult $result */
+            $result = $amzPool->getFeedAndReportClientPack()
+                ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_FLAT_LISTINGS, $feedHandle)
+                ->getSubmitFeedResult();
+            @fclose($feedHandle);
+
+            /** @var \MarketplaceWebService_Model_FeedSubmissionInfo $s_info */
+            $s_info = $result->getFeedSubmissionInfo();
+            return $s_info->getFeedSubmissionId();
+        }
+
+        return null;
+
     }
 
 }

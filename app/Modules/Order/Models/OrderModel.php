@@ -66,6 +66,11 @@ class OrderModel extends Model
     public const ORDER_TYPE_MFN = 'MFN';
     public const ORDER_TYPE_FB = 'FB';
 
+    const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
+    const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
+    const ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS = 'IP';
+    const ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED = 'NS';
+
     public $last_activity;
     public $last_message;
 

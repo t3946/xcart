@@ -45,7 +45,6 @@ function isSplitScreen() {
 }
 
 function iframeLoaded(ASIN) {
-    console.log(ASIN);
     if (ASIN != '') {
         $('#product_not_found_button').hide();
         $('#conclusion_buttons').fadeIn();
@@ -166,12 +165,13 @@ function submitConclusion(verify_status_id, batch_id, product_id, note_text, asi
             conclusion_buttons: conclusion_buttons
         },
         function (data) {
-            var ssplit = '';
             $('#verify_comment').val('');
+
+            var ssplit = '';
             if (isSplitScreen()) {
                 ssplit = '&split_screen=1';
             }
-            location.href = data.verify_url + '?batch=' + getBatchId() + ssplit;
+            location.href = '/admin/amazon/verification?batch_id=0' + ssplit;
         }, 'json');
 }
 
@@ -219,7 +219,7 @@ $(document).ready(function () {
     initButtons();
     loadOriginalProduct('ifrm2');
 
-    $('.amazon-search button').click(function () {
+    $('.amazon-search button').not('#original_product').click(function () {
         if (!$(this).hasClass('active')) {
             $(this).addClass('active').siblings().removeClass('active').blur();
             $('#conclusion_buttons').fadeOut();

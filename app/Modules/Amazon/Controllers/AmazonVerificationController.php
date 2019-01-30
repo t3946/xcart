@@ -10,10 +10,28 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 
 class AmazonVerificationController extends Controller
 {
+
+    public function index():void
+    {
+        /** @var OrderModel $order */
+
+        if ($orders = AmazonVerificationHelper::getAmazonVerifyOrders()->limit(100)->all()) {
+            foreach ($orders as $order) {
+                if ($products = $order->getProducts()) {
+                    foreach ($products as $product) {
+                        if ($product->amazon_verified !== 'Y') {
+                            $this->redirect('amazon:verification', ['id' => $product->productid, 'oid' => $order->orderid], 302, ['split_screen' => 1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public function verification($id, $oid): void
     {
@@ -34,7 +52,7 @@ class AmazonVerificationController extends Controller
     public function view(): void
     {
 
-        $cookieFile = 'cookie_jar.txt';
+        $cookieFile = Paths::get('runtime').'/tmp/'. Xcart::app()->user->login.'_cookie_jar.txt';
         $cookieJar = new FileCookieJar($cookieFile, TRUE);
         $client = new Client(['cookies' => $cookieJar]);
 
@@ -90,18 +108,57 @@ class AmazonVerificationController extends Controller
     {
 
         if (Xcart::app()->request->post->has('verify_status_id')) {
+
             $params = Xcart::app()->request->post->all();
-            if ($params['asin'] && $params['product_id'] && $model = ProductModel::objects()->get(['product_id' => $params['product_id']])) {
 
-                $model->asin = trim($params['asin']);
+            /** @var ProductModel $model */
+            if ($params['product_id'] && $model = ProductModel::objects()->get(['productid' => $params['product_id']])) {
 
+                $log = '';
+
+                $params['asin'] = trim($params['asin']);
+
+                $old_asin = $model->ASIN;
+
+                if ($params['verify_status_id'] === 'not_found' || !AmazonVerificationHelper::checkConclusions($params['conclusion_buttons'])) {
+                    $model->ASIN = ProductModel::NO_ASIN_FOUND;
+
+                    $log = "<b>Amazon verification</b>\n<b>{$model->productcode}</b> --> <b>{$model->ASIN}</b>\n";
+                }
+                elseif ($params['asin']) {
+                    $model->ASIN = $params['asin'];
+                    $log = "<b>Amazon verification</b>\n<b>{$model->productcode}</b> --> <b>{$model->ASIN}</b>\n";
+                }
+
+                $log .= AmazonVerificationHelper::getConclusionsLog($params['conclusion_buttons']);
+
+                if ($params['note_text']) {
+                    $log .= "<b>Note</b>\n";
+                    $log .= "{$params['note_text']}\n";
+                }
+
+                $model->amazon_verified = 'Y';
+
+                $model->save();
+
+                /** @var OrderModel $order */
                 if ($params['batch_id'] && $order = OrderModel::objects()->get(['orderid' => $params['batch_id']])) {
-                    (new OrderLogModel)->setAttributes([
+
+                    if ($old_asin !== $model->ASIN && $FeedSubmissionId = AmazonVerificationHelper::addAmazonListing($model)) {
+                          $log .= <<<HTML
+ Inventory file has been successfully created <a href="https://sellercentral.amazon.com/listing/status?reference_id={$FeedSubmissionId}#{$FeedSubmissionId}" target="_blank">Feed: {$FeedSubmissionId}</a>
+HTML;
+                    }
+
+                    (new OrderLogModel([
                         'orderid' => $order->orderid,
                         'type' => OrderLogModel::LOG_TYPE_XCART,
                         'login' => Xcart::app()->user->login,
-                        'log' => nl2br("<b>Amazon verification</b>\nSKU {$model->productcode} --> ASIN {$model->asin}\n"),
-                    ])->save();
+                        'log' => nl2br($log),
+                    ]))->save();
+
+
+                    echo json_encode(['status' => 'ok']);
                 }
             }
         }

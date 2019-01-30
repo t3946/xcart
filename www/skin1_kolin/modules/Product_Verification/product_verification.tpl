@@ -19,7 +19,7 @@
 {assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
 {/if}
 
-
+{$pager}
 
 {capture name=dialog}
 	<div style="margin-bottom: 20px;">
@@ -55,7 +55,7 @@
 	{assign var='showManufacturer' value=true}
 	{foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
 		{foreach from=$oOrderManufacturer->getProducts() item=oProduct name=manufacturerThird}
-			{if ($oProduct->manufacturerid == $iManufacturerId && $oProduct->verification_statusid < 3)}
+			{if ($oProduct->manufacturerid == $iManufacturerId && ($oProduct->verification_statusid < 3 || $oProduct->amazon_verified != 'Y'))}
 				{assign var='oManufacturer' value = $oProduct->distributor}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
 				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->orderid)}
@@ -90,15 +90,13 @@
 					</select>
 					</td>
                     <td align="center">
-                        {php}
-                            $oProduct = $this->get_template_vars('oProduct');
-                            $orderM = $this->get_template_vars('oOrderManufacturer');
-
-                            $params = ['pid' => $oProduct->productid, 'oid' => $orderM->orderid];
-                            $this->assign('u_params',$params);
-                        {/php}
-                        {$u_params|dd}
-                        <a target="_blank" href="{$xcartApp->router->url('amazon:verification', $u_params)}">{$oProduct->ASIN|default:'N/A'}</a>
+                        {if $oProduct->amazon_verified != 'Y'}
+                        <a target="_blank" href="/admin/amazon/verification/{$oProduct->productid}/{$oOrderManufacturer->orderid}">
+                        {/if}
+                            {$oProduct->ASIN|default:'N/A'}
+                        {if $oProduct->amazon_verified != 'Y'}
+                        </a>
+                        {/if}
                     </td>
 				</tr>
 			{/if}
@@ -156,8 +154,7 @@
                             rowtohide.css('opacity',1);
                             selectchanged.attr("data-prev-val",status.val());
                             selectchanged.attr("title",$('textarea',obj).val());
-                            if (status.val() == 3) {
-
+                            /*if (status.val() == 3) {
 
                                 rowtohide.fadeOut('slow', function () {
                                     if (rowtohide.data('manufacturer-id')){
@@ -169,7 +166,6 @@
                                             $('td:first-child > a',nextrow).show();
                                         }
                                     }
-                                    //rowtohide.show();
                                     if ($('#click_to_back_changes').next('tr').is(':visible')) {
                                         rowtohide.show();
                                     }
@@ -180,7 +176,7 @@
                                     $('#click_to_back_changes').show();
                                 });
 
-                            }
+                            }*/
                             $('textarea',obj).val('');
                             product.val('');
                             status.val('');

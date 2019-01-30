@@ -34,6 +34,11 @@ return [
         'name' => 'verification'
     ],
     [
+        'route' => '/verification',
+        'target' => [AmazonVerificationController::class, 'index'],
+        'name' => 'verification_index'
+    ],
+    [
         'route' => '/verification/view',
         'target' => [AmazonVerificationController::class, 'view'],
         'name' => 'view'
