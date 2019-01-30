@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
     <link rel="stylesheet" href="{$SkinDir}/verificator/css/main.css"/>
 
+    {set $site = $.getSite}
+    {set $config  = $site->getGlobalConfig()}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/dimmer.min.js" type="text/javascript"></script>
@@ -73,7 +75,7 @@
                     <div class="step">
                         <i class="question icon"></i>
                         <div class="content">
-                            <div class="title"><a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_images_popup_message}" href="#">Product images</a> show</div>
+                            <div class="title"><a class="popup_drop_link" data-html="{$config.amazon_verification_product_images_popup_message}" href="#">Product images</a> show</div>
                             <div class="description">
                                 <div class="ui form">
                                     <div class="grouped fields">
@@ -97,7 +99,7 @@
                     <div class="step">
                         <i class="question icon"></i>
                         <div class="content">
-                            <div class="title"><a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_names_popup_message}" href="#">Product names</a></div>
+                            <div class="title"><a class="popup_drop_link" data-html="{$config.amazon_verification_product_names_popup_message}" href="#">Product names</a></div>
                             <div class="description">
                                 <div class="ui form">
                                     <div class="grouped fields">
@@ -122,7 +124,7 @@
                         <i class="question icon"></i>
                         <div class="content">
                             <div class="title">
-                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" href="#">Product descriptions</a>
+                                <a class="popup_drop_link" data-html="{$config.amazon_verification_make_conclusion_popup_message}" href="#">Product descriptions</a>
                             </div>
                             <div class="description">
                                 <div class="ui form">
@@ -148,7 +150,7 @@
                         <i class="exclamation icon"></i>
                         <div class="content">
                             <div class="title">
-                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Pack quantity</a> listed
+                                <a class="popup_drop_link" data-html="{$config.amazon_verification_product_quantity_popup_message}" href="#">Pack quantity</a> listed
                             </div>
                             <div class="description">
                                 <div class="ui form buttons">
