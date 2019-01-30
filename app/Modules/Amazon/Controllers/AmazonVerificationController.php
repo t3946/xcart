@@ -139,7 +139,7 @@ class AmazonVerificationController extends Controller
 
                 $model->amazon_verified = 'Y';
 
-                $model->save();
+
 
                 /** @var OrderModel $order */
                 if ($params['batch_id'] && $order = OrderModel::objects()->get(['orderid' => $params['batch_id']])) {
@@ -148,17 +148,17 @@ class AmazonVerificationController extends Controller
                           $log .= <<<HTML
  Inventory file has been successfully created <a href="https://sellercentral.amazon.com/listing/status?reference_id={$FeedSubmissionId}#{$FeedSubmissionId}" target="_blank">Feed: {$FeedSubmissionId}</a>
 HTML;
+                        (new OrderLogModel([
+                            'orderid' => $order->orderid,
+                            'type' => OrderLogModel::LOG_TYPE_XCART,
+                            'login' => Xcart::app()->user->login,
+                            'log' => nl2br($log),
+                        ]))->save();
+
+                        $model->save();
+
+                        echo json_encode(['status' => 'ok']);
                     }
-
-                    (new OrderLogModel([
-                        'orderid' => $order->orderid,
-                        'type' => OrderLogModel::LOG_TYPE_XCART,
-                        'login' => Xcart::app()->user->login,
-                        'log' => nl2br($log),
-                    ]))->save();
-
-
-                    echo json_encode(['status' => 'ok']);
                 }
             }
         }
