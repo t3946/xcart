@@ -74,6 +74,7 @@ use Xcart\Product;
  * @property mixed amazon_fba
  * @property string provider
  * @property string original_provider
+ * @property mixed ASIN
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -81,6 +82,8 @@ use Xcart\Product;
 class ProductModel extends Model implements ICartItem
 {
     public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+
+    public const NO_ASIN_FOUND = 'No ASIN found';
 
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 

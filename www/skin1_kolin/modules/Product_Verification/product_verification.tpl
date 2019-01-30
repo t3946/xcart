@@ -19,7 +19,7 @@
 {assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
 {/if}
 
-
+{$pager}
 
 {capture name=dialog}
 	<div style="margin-bottom: 20px;">
@@ -47,6 +47,7 @@
 	<td width="100" nowrap="nowrap" align="center">DISTR WEBSITE</td>
 	<td width="100" nowrap="nowrap" align="center">LAST VERIF DATE</td>
 	<td width="100" align="center">VERIFIED?</td>
+    <td width="100" align="center">ASIN</td>
 </tr>
 
 
@@ -54,7 +55,7 @@
 	{assign var='showManufacturer' value=true}
 	{foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
 		{foreach from=$oOrderManufacturer->getProducts() item=oProduct name=manufacturerThird}
-			{if ($oProduct->manufacturerid == $iManufacturerId && $oProduct->verification_statusid < 3)}
+			{if ($oProduct->manufacturerid == $iManufacturerId && ($oProduct->verification_statusid < 3 || $oProduct->amazon_verified != 'Y'))}
 				{assign var='oManufacturer' value = $oProduct->distributor}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
 				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->orderid)}
@@ -78,7 +79,7 @@
                     </td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
-					<td align="center">
+					<td align="center" {if !$oProduct->verification_statusid}class="bg__red"{/if}>
 					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->orderid}" data-product-verification-id="{$oProduct->productid}"
                             class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->verification_statusid}">
 						{foreach from=$aVerifyStatuses item=aVerifyStatus}
@@ -88,6 +89,12 @@
 						{/foreach}
 					</select>
 					</td>
+                    <td align="center" {if $oProduct->amazon_verified != 'Y'}class="bg__red color__white"{/if}>
+                        <a target="_blank" href="/admin/amazon/verification/{$oProduct->productid}/{$oOrderManufacturer->orderid}">
+                            {$oProduct->ASIN|default:'N/A'}
+                        </a>
+                        
+                    </td>
 				</tr>
 			{/if}
 		{/foreach}
@@ -144,8 +151,7 @@
                             rowtohide.css('opacity',1);
                             selectchanged.attr("data-prev-val",status.val());
                             selectchanged.attr("title",$('textarea',obj).val());
-                            if (status.val() == 3) {
-
+                            /*if (status.val() == 3) {
 
                                 rowtohide.fadeOut('slow', function () {
                                     if (rowtohide.data('manufacturer-id')){
@@ -157,7 +163,6 @@
                                             $('td:first-child > a',nextrow).show();
                                         }
                                     }
-                                    //rowtohide.show();
                                     if ($('#click_to_back_changes').next('tr').is(':visible')) {
                                         rowtohide.show();
                                     }
@@ -168,7 +173,7 @@
                                     $('#click_to_back_changes').show();
                                 });
 
-                            }
+                            }*/
                             $('textarea',obj).val('');
                             product.val('');
                             status.val('');

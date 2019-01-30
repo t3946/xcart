@@ -1,34 +1,24 @@
 <?php
 
+use Modules\Amazon\Helpers\AmazonVerificationHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Goods\Models\VerificationStatusModel;
-use Modules\Order\Models\OrderStatusModel;
-use Xcart\Order;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-/** @var OrderModel[] $aOrders */
-$aOrders = OrderModel::objects()
-    ->filter(
-        [
-            'vn_status__isnt' => Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
-            'amazonorderid' => ''
-        ]
-    )->exclude(
-        [
-            'cb_status__in' => ['A', 'D', OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,]
-        ]
-    )->all();
+$orders = AmazonVerificationHelper::getAmazonVerifyOrders();
+$pager = new Pagination( $orders->getQuerySet(), ['pageSize' => 50], new QuerySetDataSource());
 
-if ($aOrders) {
+if ($orders = $pager->paginate()) {
 
     /** @var OrderModel[] $aManufacturers */
     $aManufacturers = [];
-    foreach ($aOrders as $oOrder) {
-        $aOrderProducts = $oOrder->getProducts();
-        if (!empty($aOrderProducts))
+    foreach ($orders as $oOrder) {
+        if ($aOrderProducts = $oOrder->getProducts())
         foreach ($aOrderProducts as $oProduct) {
-            if ($oProduct->forsale == 'Y') {
+            if ($oProduct->forsale === 'Y') {
                 $aManufacturers[$oProduct->manufacturerid][$oOrder->orderid] = $oOrder;
             }
         }
@@ -40,9 +30,9 @@ if ($aOrders) {
             $aOrderManufacturerProducts = $oOrderManufacturer->getProducts();
             if (!empty($aOrderManufacturerProducts))
             foreach ($aOrderManufacturerProducts as $oProduct) {
-                if ($oProduct->forsale == 'Y') {
+                if ($oProduct->forsale === 'Y') {
                     if ($oProduct->manufacturerid == $iManufacturerId) {
-                        if (!in_array($oProduct->productid, $aProducts)) {
+                        if (!\in_array($oProduct->productid, $aProducts)) {
                             $aProducts[] = $oProduct->productid;
                         }
                     }
@@ -55,6 +45,7 @@ if ($aOrders) {
 
     $smarty->assign('aVerifyStatuses',$aVerifyStatuses);
     $smarty->assign('aManufacturers',$aManufacturers);
+    $smarty->assign('pager', $pager);
 
 }
 

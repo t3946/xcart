@@ -34,7 +34,7 @@ func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_tex
 $classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')->
                  setBackProcessName(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT)->
                  setProcessWithoutAcknowledgedFlag()->
-                 //enableLog('settlement-reports')->
+                 enableLog('settlement-reports')->
                  _Request('GetReportList')->
                  _Request('GetReport')->
                  _Request('UpdateReportAcknowledgements')->

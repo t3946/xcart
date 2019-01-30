@@ -1,0 +1,1 @@
+{extends 'amazon/layouts/verification_layout.tpl'}
