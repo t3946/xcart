@@ -186,7 +186,7 @@ class SupplierFeedHelper
             if ($dont_update_fields) {
                 foreach ($dont_update_fields as $fieldUnset) {
                     $trimDesc = trim($model->fulldescr);
-                    if ($fieldUnset != 'fulldescr' || $fieldUnset == 'fulldescr' && !empty($trimDesc)) {
+                    if ($fieldUnset !== 'fulldescr' || ($fieldUnset === 'fulldescr' && !empty($trimDesc))) {
                         $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
                     }
                 }
