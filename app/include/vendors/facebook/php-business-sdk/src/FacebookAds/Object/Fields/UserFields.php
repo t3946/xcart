@@ -41,7 +41,6 @@ class UserFields extends AbstractEnum {
   const ADDRESS = 'address';
   const ADMIN_NOTES = 'admin_notes';
   const AGE_RANGE = 'age_range';
-  const BIO = 'bio';
   const BIRTHDAY = 'birthday';
   const CAN_REVIEW_MEASUREMENT_REQUEST = 'can_review_measurement_request';
   const CONTEXT = 'context';
@@ -93,7 +92,6 @@ class UserFields extends AbstractEnum {
   const TIMEZONE = 'timezone';
   const TOKEN_FOR_BUSINESS = 'token_for_business';
   const UPDATED_TIME = 'updated_time';
-  const USERNAME = 'username';
   const VERIFIED = 'verified';
   const VIDEO_UPLOAD_LIMITS = 'video_upload_limits';
   const VIEWER_CAN_SEND_GIFT = 'viewer_can_send_gift';
@@ -106,7 +104,6 @@ class UserFields extends AbstractEnum {
       'address' => 'Location',
       'admin_notes' => 'list<PageAdminNote>',
       'age_range' => 'AgeRange',
-      'bio' => 'string',
       'birthday' => 'string',
       'can_review_measurement_request' => 'bool',
       'context' => 'UserContext',
@@ -158,7 +155,6 @@ class UserFields extends AbstractEnum {
       'timezone' => 'float',
       'token_for_business' => 'string',
       'updated_time' => 'datetime',
-      'username' => 'string',
       'verified' => 'bool',
       'video_upload_limits' => 'VideoUploadLimits',
       'viewer_can_send_gift' => 'bool',

@@ -125,7 +125,9 @@ class Campaign extends AbstractArchivableCrudObject {
       'execution_options' => 'list<execution_options_enum>',
     );
     $enums = array(
-      'execution_options_enum' => CampaignExecutionOptionsValues::getInstance()->getValues(),
+      'execution_options_enum' => array(
+        'validate_only',
+      ),
     );
 
     $request = new ApiRequest(
@@ -151,7 +153,9 @@ class Campaign extends AbstractArchivableCrudObject {
       'execution_options' => 'list<execution_options_enum>',
     );
     $enums = array(
-      'execution_options_enum' => CampaignExecutionOptionsValues::getInstance()->getValues(),
+      'execution_options_enum' => array(
+        'validate_only',
+      ),
     );
 
     $request = new ApiRequest(
@@ -162,6 +166,30 @@ class Campaign extends AbstractArchivableCrudObject {
       new Campaign(),
       'EDGE',
       Campaign::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function getAdRulesGoverned(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'pass_evaluation' => 'bool',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/adrules_governed',
+      new AdRule(),
+      'EDGE',
+      AdRule::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -414,6 +442,7 @@ class Campaign extends AbstractArchivableCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'am_call_tags' => 'map',
       'date_preset' => 'date_preset_enum',
       'from_adtable' => 'bool',
       'time_range' => 'Object',
@@ -475,10 +504,8 @@ class Campaign extends AbstractArchivableCrudObject {
       'upstream_events' => 'map',
       'adlabels' => 'list<Object>',
       'iterative_split_test_configs' => 'list<Object>',
-      'kpi_custom_conversion_id' => 'string',
-      'kpi_type' => 'Object',
-      'is_autobid' => 'bool',
-      'is_average_price_pacing' => 'bool',
+      'adset_bid_amounts' => 'map',
+      'adset_budgets' => 'list<map>',
     );
     $enums = array(
       'objective_enum' => CampaignObjectiveValues::getInstance()->getValues(),

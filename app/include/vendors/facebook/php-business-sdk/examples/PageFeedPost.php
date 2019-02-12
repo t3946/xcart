@@ -31,7 +31,7 @@ use FacebookAds\Logger\CurlLogger;
 $access_token = '<ACCESS_TOKEN>';
 $app_secret = '<APP_SECRET>';
 $app_id = '<APP_ID>';
-$id = '<ID>';
+$id = '<PAGE_ID>';
 
 $api = Api::init($app_id, $app_secret, $access_token);
 $api->setLogger(new CurlLogger());
@@ -44,4 +44,4 @@ $params = array(
 echo json_encode((new Page($id))->createFeed(
   $fields,
   $params
-)->getResponse()->getContent(), JSON_PRETTY_PRINT);
+)->exportAllData(), JSON_PRETTY_PRINT);

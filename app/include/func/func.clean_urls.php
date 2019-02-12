@@ -68,7 +68,7 @@ function func_clean_url_check_format($clean_url)
         return false;
     }
 
-    if (zerolen($clean_url) || strlen($clean_url) > 760) {
+    if (empty($clean_url) || strlen($clean_url) > 760) {
         return false;
     }
 
@@ -170,7 +170,7 @@ function func_clean_url_cleanup_string($string)
 
     $string = trim($string);
 
-    if (zerolen($string)) {
+    if (empty($string)) {
         return '';
     }
 
@@ -196,10 +196,10 @@ function func_clean_url_has_url($clean_url, $excluding_resource = NULL)
         && isset($excluding_resource['resource_type'])
         && isset($excluding_resource['resource_id'])
     ) {
-        $exclusion_condition = " AND NOT (resource_type = '" . func_addslashes($excluding_resource['resource_type']) . "' AND resource_id = '" . func_addslashes($excluding_resource['resource_id']) . "')";
+        $exclusion_condition = " AND NOT (resource_type = '" . addslashes($excluding_resource['resource_type']) . "' AND resource_id = '" . addslashes($excluding_resource['resource_id']) . "')";
     }
 
-    $count = func_query_first_cell("SELECT COUNT(resource_id) FROM " . $sql_tbl['clean_urls'] . " WHERE clean_url='" . func_addslashes($clean_url) . "'" . $exclusion_condition);
+    $count = func_query_first_cell("SELECT COUNT(resource_id) FROM " . $sql_tbl['clean_urls'] . " WHERE clean_url='" . addslashes($clean_url) . "'" . $exclusion_condition);
 
     return $count;
 }
@@ -433,9 +433,9 @@ function func_clean_url_add($clean_url, $resource_type, $resource_id)
 //die();
 
     $record = array(
-        'clean_url'         => func_addslashes($clean_url),
-        'resource_type'     => func_addslashes($resource_type),
-        'resource_id'         => func_addslashes($resource_id),
+        'clean_url'         => addslashes($clean_url),
+        'resource_type'     => addslashes($resource_type),
+        'resource_id'         => addslashes($resource_id),
         'mtime'             => XC_TIME - $config['Appearance']['timezone_offset']
     );
 
@@ -877,7 +877,7 @@ function func_clean_url_autogen_prod_url($productid, $params)
 
     $productid = intval($productid);
 
-    if (isset($params['product']) && !zerolen($params['product'])) {
+    if (isset($params['product']) && !empty($params['product'])) {
 
         $url = func_construct_clean_url(func_clean_url_cleanup_string($params['product']));
 
@@ -928,7 +928,7 @@ function func_clean_url_autogen_prod_url($productid, $params)
 
     $productcode = NULL;
 
-    if (isset($params['productcode']) && !zerolen($params['productcode'])) {
+    if (!empty($params['productcode'])) {
 
         $productcode = $params['productcode'];
 
@@ -977,7 +977,7 @@ function func_clean_url_autogen_cat_url($categoryid, $params)
 
     $categoryid = intval($categoryid);
 
-    if (isset($params['category']) && !zerolen($params['category'])) {
+    if (isset($params['category']) && !empty($params['category'])) {
 
         $url = func_construct_clean_url(func_clean_url_cleanup_string($params['category']));
 
@@ -1068,7 +1068,7 @@ function func_clean_url_autogen_manuf_url($brandid, $params)
 {
     $brandid = intval($brandid);
 
-    if (isset($params['brand']) && !zerolen($params['brand'])) {
+    if (isset($params['brand']) && !empty($params['brand'])) {
 
         $url = func_construct_clean_url(func_clean_url_cleanup_string($params['brand']));
 

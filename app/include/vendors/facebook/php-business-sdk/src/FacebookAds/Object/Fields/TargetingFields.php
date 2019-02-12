@@ -43,6 +43,9 @@ class TargetingFields extends AbstractEnum {
   const APP_INSTALL_STATE = 'app_install_state';
   const AUDIENCE_NETWORK_POSITIONS = 'audience_network_positions';
   const BEHAVIORS = 'behaviors';
+  const BRAND_SAFETY_CONTENT_FILTER_LEVELS = 'brand_safety_content_filter_levels';
+  const BRAND_SAFETY_CONTENT_SEVERITY_LEVELS = 'brand_safety_content_severity_levels';
+  const CATALOG_BASED_TARGETING = 'catalog_based_targeting';
   const CITIES = 'cities';
   const COLLEGE_YEARS = 'college_years';
   const CONNECTIONS = 'connections';
@@ -113,7 +116,6 @@ class TargetingFields extends AbstractEnum {
   const RADIUS = 'radius';
   const REGIONS = 'regions';
   const RELATIONSHIP_STATUSES = 'relationship_statuses';
-  const RTB_FLAG = 'rtb_flag';
   const SITE_CATEGORY = 'site_category';
   const TARGETING_OPTIMIZATION = 'targeting_optimization';
   const USER_ADCLUSTERS = 'user_adclusters';
@@ -134,6 +136,9 @@ class TargetingFields extends AbstractEnum {
       'app_install_state' => 'string',
       'audience_network_positions' => 'list<string>',
       'behaviors' => 'list<IDName>',
+      'brand_safety_content_filter_levels' => 'list<string>',
+      'brand_safety_content_severity_levels' => 'list<string>',
+      'catalog_based_targeting' => 'CatalogBasedTargeting',
       'cities' => 'list<IDName>',
       'college_years' => 'list<unsigned int>',
       'connections' => 'list<IDName>',
@@ -204,7 +209,6 @@ class TargetingFields extends AbstractEnum {
       'radius' => 'string',
       'regions' => 'list<IDName>',
       'relationship_statuses' => 'list<unsigned int>',
-      'rtb_flag' => 'bool',
       'site_category' => 'list<string>',
       'targeting_optimization' => 'string',
       'user_adclusters' => 'list<IDName>',

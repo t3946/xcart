@@ -205,6 +205,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         print("Search of discontinued section\n");
 
         $i = 0;
+        $d_products = [];
         while ($discountinued_products = ProductModel::objects()->filter(
             [
 //                'sites__through__sfid' => $supplierFeedModel->storefront_id,
@@ -221,13 +222,13 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             foreach ($discountinued_products as $productcode) {
                 if (!in_array(strtoupper(trim($productcode)), $all_feed_productcodes)) {
                     $discontinued_products_count++;
-
-                    ProductModel::objects()->filter(['productcode' => $productcode])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
-
+                    $d_products[] = $productcode;
                 }
             }
             print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
         }
+
+        ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
     }
 
 

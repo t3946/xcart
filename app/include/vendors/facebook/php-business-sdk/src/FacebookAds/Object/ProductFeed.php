@@ -33,6 +33,7 @@ use FacebookAds\Object\Values\ProductFeedDelimiterValues;
 use FacebookAds\Object\Values\ProductFeedEncodingValues;
 use FacebookAds\Object\Values\ProductFeedFeedTypeValues;
 use FacebookAds\Object\Values\ProductFeedQuotedFieldsModeValues;
+use FacebookAds\Object\Values\ProductFeedRuleRuleTypeValues;
 
 /**
  * This class is auto-generated.
@@ -232,9 +233,9 @@ class ProductFeed extends AbstractCrudObject {
       $this->data['id'],
       RequestInterface::METHOD_GET,
       '/rules',
-      new AbstractCrudObject(),
+      new ProductFeedRule(),
       'EDGE',
-      array(),
+      ProductFeedRule::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -251,13 +252,7 @@ class ProductFeed extends AbstractCrudObject {
       'rule_type' => 'rule_type_enum',
     );
     $enums = array(
-      'rule_type_enum' => array(
-        'mapping_rule',
-        'value_mapping_rule',
-        'letter_case_rule',
-        'fallback_rule',
-        'regex_replace_rule',
-      ),
+      'rule_type_enum' => ProductFeedRuleRuleTypeValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
@@ -265,9 +260,9 @@ class ProductFeed extends AbstractCrudObject {
       $this->data['id'],
       RequestInterface::METHOD_POST,
       '/rules',
-      new AbstractCrudObject(),
+      new ProductFeedRule(),
       'EDGE',
-      array(),
+      ProductFeedRule::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -408,7 +403,6 @@ class ProductFeed extends AbstractCrudObject {
       'quoted_fields_mode' => 'quoted_fields_mode_enum',
       'schedule' => 'string',
       'update_schedule' => 'string',
-      'quoted_fields' => 'bool',
       'deletion_enabled' => 'bool',
     );
     $enums = array(

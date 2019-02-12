@@ -301,7 +301,7 @@ class AdVideo extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getCrosspostShareDPages(array $fields = array(), array $params = array(), $pending = false) {
+  public function getCrosspostSharedPages(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -479,7 +479,7 @@ class AdVideo extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getShareDPosts(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSharedPosts(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -653,8 +653,8 @@ class AdVideo extends AbstractCrudObject {
     $param_types = array(
       'metric' => 'list<Object>',
       'period' => 'period_enum',
-      'since' => 'Object',
-      'until' => 'Object',
+      'since' => 'datetime',
+      'until' => 'datetime',
     );
     $enums = array(
       'period_enum' => InsightsResultPeriodValues::getInstance()->getValues(),
@@ -725,16 +725,15 @@ class AdVideo extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'published' => 'bool',
       'target' => 'string',
       'scheduled_publish_time' => 'unsigned int',
       'name' => 'string',
       'description' => 'string',
       'tags' => 'list<string>',
-      'place' => 'Object',
       'preferred_thumbnail_id' => 'string',
-      'ad_breaks' => 'Object',
+      'ad_breaks' => 'list',
       'backdated_time' => 'datetime',
       'backdated_time_granularity' => 'backdated_time_granularity_enum',
       'call_to_action' => 'Object',

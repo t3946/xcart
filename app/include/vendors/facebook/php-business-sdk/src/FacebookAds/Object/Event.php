@@ -38,7 +38,12 @@ use FacebookAds\Object\Values\AdVideoUnpublishedContentTypeValues;
 use FacebookAds\Object\Values\AdVideoUploadPhaseValues;
 use FacebookAds\Object\Values\CommentCommentPrivacyValueValues;
 use FacebookAds\Object\Values\EventEventStateFilterValues;
+use FacebookAds\Object\Values\EventProjectionValues;
 use FacebookAds\Object\Values\EventPromotableEventTypesValues;
+use FacebookAds\Object\Values\EventSpatialAudioFormatValues;
+use FacebookAds\Object\Values\EventStatusValues;
+use FacebookAds\Object\Values\EventStereoscopicModeValues;
+use FacebookAds\Object\Values\EventStreamTypeValues;
 use FacebookAds\Object\Values\EventTimeFilterValues;
 use FacebookAds\Object\Values\EventTypeValues;
 use FacebookAds\Object\Values\PhotoBackdatedTimeGranularityValues;
@@ -65,6 +70,11 @@ class Event extends AbstractCrudObject {
   protected static function getReferencedEnums() {
     $ref_enums = array();
     $ref_enums['Type'] = EventTypeValues::getInstance()->getValues();
+    $ref_enums['Projection'] = EventProjectionValues::getInstance()->getValues();
+    $ref_enums['SpatialAudioFormat'] = EventSpatialAudioFormatValues::getInstance()->getValues();
+    $ref_enums['Status'] = EventStatusValues::getInstance()->getValues();
+    $ref_enums['StereoscopicMode'] = EventStereoscopicModeValues::getInstance()->getValues();
+    $ref_enums['StreamType'] = EventStreamTypeValues::getInstance()->getValues();
     $ref_enums['EventStateFilter'] = EventEventStateFilterValues::getInstance()->getValues();
     $ref_enums['TimeFilter'] = EventTimeFilterValues::getInstance()->getValues();
     $ref_enums['PromotableEventTypes'] = EventPromotableEventTypesValues::getInstance()->getValues();
@@ -112,6 +122,34 @@ class Event extends AbstractCrudObject {
       new User(),
       'EDGE',
       User::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function createAttending(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'eid' => 'string',
+      'action_context' => 'Object',
+      'app_context' => 'Object',
+      'tracking' => 'string',
+      'uid' => 'int',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_POST,
+      '/attending',
+      new Event(),
+      'EDGE',
+      Event::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -203,6 +241,34 @@ class Event extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
+  public function createDeclined(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'eid' => 'string',
+      'action_context' => 'Object',
+      'app_context' => 'Object',
+      'tracking' => 'string',
+      'uid' => 'int',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_POST,
+      '/declined',
+      new Event(),
+      'EDGE',
+      Event::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
   public function getFeed(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -249,7 +315,7 @@ class Event extends AbstractCrudObject {
       'call_to_action' => 'Object',
       'time_since_original_post' => 'unsigned int',
       'client_mutation_id' => 'string',
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'composer_session_id' => 'string',
       'content_attachment' => 'string',
       'actions' => 'Object',
@@ -311,7 +377,7 @@ class Event extends AbstractCrudObject {
       'text_format_preset_id' => 'string',
       'cta_link' => 'string',
       'cta_type' => 'string',
-      'place_list_data' => 'Object',
+      'place_list_data' => 'list',
       'formatting' => 'formatting_enum',
       'target_surface' => 'target_surface_enum',
       'adaptive_type' => 'string',
@@ -461,7 +527,7 @@ class Event extends AbstractCrudObject {
       'save_vod' => 'bool',
       'published' => 'bool',
       'status' => 'status_enum',
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'stop_on_delete_stream' => 'bool',
       'stream_type' => 'stream_type_enum',
       'content_tags' => 'list<string>',
@@ -480,30 +546,11 @@ class Event extends AbstractCrudObject {
       'stereoscopic_mode' => 'stereoscopic_mode_enum',
     );
     $enums = array(
-      'status_enum' => array(
-        'UNPUBLISHED',
-        'LIVE_NOW',
-        'SCHEDULED_UNPUBLISHED',
-        'SCHEDULED_LIVE',
-        'SCHEDULED_CANCELED',
-      ),
-      'stream_type_enum' => array(
-        'REGULAR',
-        'AMBIENT',
-      ),
-      'projection_enum' => array(
-        'EQUIRECTANGULAR',
-        'CUBEMAP',
-        'HALF_EQUIRECTANGULAR',
-      ),
-      'spatial_audio_format_enum' => array(
-        'ambiX_4',
-      ),
-      'stereoscopic_mode_enum' => array(
-        'MONO',
-        'LEFT_RIGHT',
-        'TOP_BOTTOM',
-      ),
+      'status_enum' => EventStatusValues::getInstance()->getValues(),
+      'stream_type_enum' => EventStreamTypeValues::getInstance()->getValues(),
+      'projection_enum' => EventProjectionValues::getInstance()->getValues(),
+      'spatial_audio_format_enum' => EventSpatialAudioFormatValues::getInstance()->getValues(),
+      'stereoscopic_mode_enum' => EventStereoscopicModeValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
@@ -511,9 +558,9 @@ class Event extends AbstractCrudObject {
       $this->data['id'],
       RequestInterface::METHOD_POST,
       '/live_videos',
-      new AbstractCrudObject(),
+      new Event(),
       'EDGE',
-      array(),
+      Event::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -538,6 +585,34 @@ class Event extends AbstractCrudObject {
       new User(),
       'EDGE',
       User::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function createMaybe(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'eid' => 'string',
+      'action_context' => 'Object',
+      'app_context' => 'Object',
+      'tracking' => 'string',
+      'uid' => 'int',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_POST,
+      '/maybe',
+      new Event(),
+      'EDGE',
+      Event::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -602,7 +677,6 @@ class Event extends AbstractCrudObject {
       'uid' => 'int',
       'profile_id' => 'int',
       'target_id' => 'int',
-      'checkin_id' => 'Object',
       'vault_image_id' => 'string',
       'tags' => 'list<Object>',
       'place' => 'Object',
@@ -614,7 +688,7 @@ class Event extends AbstractCrudObject {
       'og_icon_id' => 'string',
       'og_suggestion_mechanism' => 'string',
       'og_set_profile_badge' => 'bool',
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'targeting' => 'Object',
       'feed_targeting' => 'Object',
       'no_story' => 'bool',
@@ -861,33 +935,6 @@ class Event extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function deleteSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'eid' => 'string',
-      'cancel_message' => 'string',
-      'action_context' => 'Object',
-      'app_context' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/',
-      new AbstractCrudObject(),
-      'NODE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getSelf(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -900,33 +947,6 @@ class Event extends AbstractCrudObject {
       $this->api,
       $this->data['id'],
       RequestInterface::METHOD_GET,
-      '/',
-      new Event(),
-      'NODE',
-      Event::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function updateSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'eid' => 'string',
-      'event_info' => 'Object',
-      'action_context' => 'Object',
-      'app_context' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
       '/',
       new Event(),
       'NODE',

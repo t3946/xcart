@@ -33,7 +33,6 @@ use FacebookAds\Object\Values\CommentCommentPrivacyValueValues;
 use FacebookAds\Object\Values\CommentFilterValues;
 use FacebookAds\Object\Values\CommentLiveFilterValues;
 use FacebookAds\Object\Values\CommentOrderValues;
-use FacebookAds\Object\Values\LinkUnpublishedContentTypeValues;
 use FacebookAds\Object\Values\ProfileTypeValues;
 
 /**
@@ -56,7 +55,6 @@ class Link extends AbstractCrudObject {
 
   protected static function getReferencedEnums() {
     $ref_enums = array();
-    $ref_enums['UnpublishedContentType'] = LinkUnpublishedContentTypeValues::getInstance()->getValues();
     return $ref_enums;
   }
 
@@ -121,29 +119,6 @@ class Link extends AbstractCrudObject {
       new Comment(),
       'EDGE',
       Comment::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getLeads(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/leads',
-      new Lead(),
-      'EDGE',
-      Lead::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -253,7 +228,7 @@ class Link extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getShareDPosts(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSharedPosts(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(

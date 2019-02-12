@@ -41,7 +41,6 @@ class AdCreativeFields extends AbstractEnum {
   const ACTOR_ID = 'actor_id';
   const ADLABELS = 'adlabels';
   const APPLINK_TREATMENT = 'applink_treatment';
-  const ASSET_FEED_ID = 'asset_feed_id';
   const ASSET_FEED_SPEC = 'asset_feed_spec';
   const AUTHORIZATION_CATEGORY = 'authorization_category';
   const AUTO_UPDATE = 'auto_update';
@@ -79,6 +78,7 @@ class AdCreativeFields extends AbstractEnum {
   const PLACE_PAGE_SET_ID = 'place_page_set_id';
   const PLATFORM_CUSTOMIZATIONS = 'platform_customizations';
   const PLAYABLE_ASSET_ID = 'playable_asset_id';
+  const PORTRAIT_CUSTOMIZATIONS = 'portrait_customizations';
   const PRODUCT_SET_ID = 'product_set_id';
   const RECOMMENDER_SETTINGS = 'recommender_settings';
   const STATUS = 'status';
@@ -92,6 +92,7 @@ class AdCreativeFields extends AbstractEnum {
   const IS_DCO_INTERNAL = 'is_dco_internal';
   const CALL_TO_ACTION = 'call_to_action';
   const IMAGE_FILE = 'image_file';
+  const INTERACTIVE_COMPONENTS_SPEC = 'interactive_components_spec';
   const MOCKUP_ID = 'mockup_id';
   const PAGE_ID = 'page_id';
 
@@ -101,7 +102,6 @@ class AdCreativeFields extends AbstractEnum {
       'actor_id' => 'string',
       'adlabels' => 'list<AdLabel>',
       'applink_treatment' => 'ApplinkTreatment',
-      'asset_feed_id' => 'string',
       'asset_feed_spec' => 'AdAssetFeedSpec',
       'authorization_category' => 'string',
       'auto_update' => 'bool',
@@ -139,6 +139,7 @@ class AdCreativeFields extends AbstractEnum {
       'place_page_set_id' => 'string',
       'platform_customizations' => 'AdCreativePlatformCustomization',
       'playable_asset_id' => 'string',
+      'portrait_customizations' => 'AdCreativePortraitCustomizations',
       'product_set_id' => 'string',
       'recommender_settings' => 'AdCreativeRecommenderSettings',
       'status' => 'Status',
@@ -152,6 +153,7 @@ class AdCreativeFields extends AbstractEnum {
       'is_dco_internal' => 'bool',
       'call_to_action' => 'Object',
       'image_file' => 'string',
+      'interactive_components_spec' => 'map',
       'mockup_id' => 'string',
       'page_id' => 'string',
     );

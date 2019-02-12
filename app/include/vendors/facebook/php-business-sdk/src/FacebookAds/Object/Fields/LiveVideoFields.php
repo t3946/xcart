@@ -55,7 +55,6 @@ class LiveVideoFields extends AbstractEnum {
   const LIVE_VIEWS = 'live_views';
   const PERMALINK_URL = 'permalink_url';
   const PLANNED_START_TIME = 'planned_start_time';
-  const PREVIEW_URL = 'preview_url';
   const SECONDS_LEFT = 'seconds_left';
   const SECURE_STREAM_URL = 'secure_stream_url';
   const STATUS = 'status';
@@ -81,11 +80,10 @@ class LiveVideoFields extends AbstractEnum {
       'ingest_streams' => 'list<LiveVideoInputStream>',
       'is_manual_mode' => 'bool',
       'is_reference_only' => 'bool',
-      'live_encoders' => 'list<Object>',
+      'live_encoders' => 'list<LiveEncoder>',
       'live_views' => 'unsigned int',
       'permalink_url' => 'string',
       'planned_start_time' => 'datetime',
-      'preview_url' => 'string',
       'seconds_left' => 'int',
       'secure_stream_url' => 'string',
       'status' => 'string',

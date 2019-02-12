@@ -10,6 +10,6 @@ namespace CaponicaAmazonMwsComplete\AmazonClient;
 
 require_once __DIR__.'/../../AmazonPhpClientLibrary/MarketplaceWebServiceSellers/Client.php';
 
-class MwsSubscriptionClient extends \MWSSubscriptionsService_Client { //TODO remove manual edition
+class MwsSubscriptionClient extends \MarketplaceWebServiceSellers_Client {
 
 }

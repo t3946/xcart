@@ -41,7 +41,9 @@ class LiveVideoInputStreamFields extends AbstractEnum {
   const DASH_PREVIEW_URL = 'dash_preview_url';
   const ID = 'id';
   const IS_MASTER = 'is_master';
+  const LIVE_ENCODER = 'live_encoder';
   const SECURE_STREAM_URL = 'secure_stream_url';
+  const STREAM_HEALTH = 'stream_health';
   const STREAM_ID = 'stream_id';
   const STREAM_URL = 'stream_url';
 
@@ -51,7 +53,9 @@ class LiveVideoInputStreamFields extends AbstractEnum {
       'dash_preview_url' => 'string',
       'id' => 'string',
       'is_master' => 'bool',
+      'live_encoder' => 'LiveEncoder',
       'secure_stream_url' => 'string',
+      'stream_health' => 'Object',
       'stream_id' => 'string',
       'stream_url' => 'string',
     );

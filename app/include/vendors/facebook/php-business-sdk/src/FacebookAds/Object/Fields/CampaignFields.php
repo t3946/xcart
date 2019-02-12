@@ -52,10 +52,7 @@ class CampaignFields extends AbstractEnum {
   const DAILY_BUDGET = 'daily_budget';
   const EFFECTIVE_STATUS = 'effective_status';
   const ID = 'id';
-  const IS_AUTOBID = 'is_autobid';
-  const IS_AVERAGE_PRICE_PACING = 'is_average_price_pacing';
-  const KPI_CUSTOM_CONVERSION_ID = 'kpi_custom_conversion_id';
-  const KPI_TYPE = 'kpi_type';
+  const ISSUES_INFO = 'issues_info';
   const LAST_BUDGET_TOGGLING_TIME = 'last_budget_toggling_time';
   const LIFETIME_BUDGET = 'lifetime_budget';
   const NAME = 'name';
@@ -93,10 +90,7 @@ class CampaignFields extends AbstractEnum {
       'daily_budget' => 'string',
       'effective_status' => 'EffectiveStatus',
       'id' => 'string',
-      'is_autobid' => 'bool',
-      'is_average_price_pacing' => 'bool',
-      'kpi_custom_conversion_id' => 'string',
-      'kpi_type' => 'string',
+      'issues_info' => 'list<AdCampaignIssuesInfo>',
       'last_budget_toggling_time' => 'datetime',
       'lifetime_budget' => 'string',
       'name' => 'string',

@@ -235,6 +235,30 @@ class AdSet extends AbstractArchivableCrudObject
     return $pending ? $request : $request->execute();
   }
 
+  public function getAdRulesGoverned(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'pass_evaluation' => 'bool',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/adrules_governed',
+      new AdRule(),
+      'EDGE',
+      AdRule::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
   public function getAds(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -527,6 +551,7 @@ class AdSet extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
+      'am_call_tags' => 'map',
       'date_preset' => 'date_preset_enum',
       'from_adtable' => 'bool',
       'time_range' => 'Object',
@@ -579,6 +604,7 @@ class AdSet extends AbstractArchivableCrudObject
       'adlabels' => 'list<Object>',
       'bid_amount' => 'int',
       'bid_adjustments' => 'Object',
+      'bid_constraints' => 'map<string, Object>',
       'bid_strategy' => 'bid_strategy_enum',
       'billing_event' => 'billing_event_enum',
       'campaign_spec' => 'Object',
@@ -593,12 +619,7 @@ class AdSet extends AbstractArchivableCrudObject
       'destination_type' => 'destination_type_enum',
       'end_time' => 'datetime',
       'execution_options' => 'list<execution_options_enum>',
-      'frequency_cap' => 'unsigned int',
-      'frequency_cap_reset_period' => 'unsigned int',
-      'is_autobid' => 'bool',
-      'is_average_price_pacing' => 'bool',
       'lifetime_budget' => 'unsigned int',
-      'lifetime_frequency_cap' => 'unsigned int',
       'lifetime_imps' => 'unsigned int',
       'lifetime_min_spend_target' => 'unsigned int',
       'lifetime_spend_cap' => 'unsigned int',

@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -20,6 +21,7 @@ use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Goods\Stores\SupplierFeedStore;
+use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Helpers\Paths;
 
 class SupplierFeedHelper
@@ -109,10 +111,10 @@ class SupplierFeedHelper
     public static function getVideos($model)
     {
         /** @var ProductVideosModel $video_model */
-        if ($model->videos){
-            foreach ($model->videos as $video){
+        if ($model->videos) {
+            foreach ($model->videos as $video) {
                 $filter = [];
-                foreach ($video as $key => $value){
+                foreach ($video as $key => $value) {
                     $filter[$key] = $value;
                 }
                 $filter['product_id'] = $model->productid;
@@ -202,20 +204,25 @@ class SupplierFeedHelper
             }
 
             (new ProductStorefrontModel([
-                                            'productid' => $model->productid,
-                                            'sfid' => $feed->storefront_id]))
+                'productid' => $model->productid,
+                'sfid' => $feed->storefront_id]))
                 ->save();
 
             (new PricingModel([
-                                  'productid' => $model->productid,
-                                  'quantity' => 1,
-                                  'price' => $model->distributor->calculatePrice($model)]))
+                'productid' => $model->productid,
+                'quantity' => 1,
+                'price' => $model->distributor->calculatePrice($model)]))
                 ->save();
 
-            $clean_url = func_clean_url_autogenerate('P', $model->productid, array('product' => $model->product, 'productcode' => $model->productcode));
-            func_clean_url_add($clean_url, 'P', $model->productid);
-            func_build_quick_flags($model->productid);
-            func_build_quick_prices($model->productid);
+
+
+            [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'P', 'resource_id' => $model->productid]);
+            $url->clean_url = func_clean_url_autogenerate('P', $model->productid, ['product' => $model->getFrontendName(), 'productcode' => $model->productcode]);
+            $url->save();
+
+            //func_clean_url_add($clean_url, 'P', $model->productid);
+            //func_build_quick_flags($model->productid);
+            //func_build_quick_prices($model->productid);
 
         }
 
@@ -267,7 +274,9 @@ class SupplierFeedHelper
 
                 foreach ($uploads as $key => $url) {
 
-                    if (!$url) {continue;}
+                    if (!$url) {
+                        continue;
+                    }
 
                     $url_q = preg_quote($url, '/');
 
@@ -360,27 +369,28 @@ class SupplierFeedHelper
         if (!empty($data)) {
 
             if (!$brand = BrandModel::objects()->filter([
-                                                            'brand' => $data
-                                                        ])->limit(1)->order(['brandid'])->get()) {
+                'brand' => $data
+            ])->limit(1)->order(['brandid'])->get()) {
 
                 $brand = new BrandModel([
-                                            'brand' => $data,
-                                            'orderby' => 10,
-                                            'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                                            'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
-                                        ]);
+                    'brand' => $data,
+                    'orderby' => 10,
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                ]);
 
                 $brand->save();
 
-                $clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
 
-                func_clean_url_add($clean_url, 'M', $brand->brandid);
+                [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'M', 'resource_id' => $brand->brandid]);
+                $url->clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
+                $url->save();
             }
 
             BrandStorefrontModel::objects()->getOrCreate([
-                                                             'brandid' => $brand->brandid,
-                                                             'sfid' => $feed->storefront_id,
-                                                         ]);
+                'brandid' => $brand->brandid,
+                'sfid' => $feed->storefront_id,
+            ]);
 
             if ($brand->parent_brand_id) {
                 $brand = $brand->parent;
@@ -479,18 +489,19 @@ class SupplierFeedHelper
 
                     if ($is_cat_created) {
                         $modelCat->setAttributes([
-                                                     'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                                                     'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                                                     'is_bold' => 'Y',
-                                                     'order_by' => 10
-                                                 ]);
+                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                            'is_bold' => 'Y',
+                            'order_by' => 10
+                        ]);
 
                         $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
 
                         $modelCat->save();
 
-                        $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
-                        func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
+                        [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'C', 'resource_id' => $modelCat->categoryid]);
+                        $url->clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
+                        $url->save();
                     }
 
                     $lastCategory = $modelCat;
@@ -610,5 +621,84 @@ class SupplierFeedHelper
             }
         }
         return $data;
+    }
+
+    public static function discontinueProducts($all_feed_productcodes, $feed): int
+    {
+        $discontinued_products_count = 0;
+
+        if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $feed->disable_search_of_discontinued_items !== 'Y') {
+            print("Search of discontinued section\n");
+
+            $i = 0;
+            $d_products = [];
+            while ($discountinued_products = ProductModel::objects()->filter(
+                [
+                    'manufacturerid' => $feed->manufacturerid,
+                    'forsale' => 'Y',
+                    new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
+                ])
+                ->paginate(++$i, 10000)
+                ->valuesList('productcode', true)) {
+
+                foreach ($discountinued_products as $productcode) {
+                    if (!\in_array($productcode, $all_feed_productcodes, true)) {
+                        $discontinued_products_count++;
+                        $d_products[] = $productcode;
+                    }
+                }
+            }
+
+            ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
+        }
+        return $discontinued_products_count;
+    }
+
+    public static function feedStatistic(SupplierFeedModel $feed,  $params, $feedProductCount = 0): string
+    {
+        $md5 = $params['md5'];
+        $last_feed_fields_arr_vals = $params['last_feed_fields_arr_vals'];
+        $new_products_count = $params['new_products_count'];
+        $updated_products_count = $params['updated_products_count'];
+        $inserted_products_count = $params['inserted_products_count'];
+        $discontinued_products_count = $params['discontinued_products_count'];
+        $skippedProductsCount = $params['skippedProductsCount'];
+        $duplicate_sku = $params['duplicate_sku'];
+        $start_supplier_time = $params['start_supplier_time'];
+
+        $last_update_period = time() - $feed->last_update_time;
+        $average_update_period = round(($feed->average_update_period + $last_update_period) / 2, 0);
+
+        $feed->setAttributes([
+            "last_md5" => $md5,
+            "last_update_time" => time(),
+            "average_update_period" => $average_update_period,
+            "last_update_period" => $last_update_period,
+            "last_feed_fields" => $last_feed_fields_arr_vals,
+            "last_update_items_count" => $feedProductCount
+        ]);
+        $feed->save();
+
+
+
+        $distributorModel = $feed->distributor;
+
+        $log = "manufacturerid: {$distributorModel->manufacturerid}:{$distributorModel->manufacturer} - completed. \n";
+        $log .= "processed {$feedProductCount} items.\n";
+        $log .= "found new {$new_products_count} items.\n";
+        $log .= "updated {$updated_products_count} items.\n";
+        if ($inserted_products_count) {
+            $log .= "inserted {$inserted_products_count} items.\n";
+        }
+        $log .= "discontinued: {$discontinued_products_count}\n";
+        $log .= "skipped: {$skippedProductsCount}\n";
+
+        if ($duplicate_sku) {
+            $sku_d = implode(', ', $duplicate_sku);
+            $log .= "Duplicated SKU's:{$sku_d}\n";
+        }
+
+        $log .= "Duration: " . (new DateTime('now'))->diff($start_supplier_time)->format('%H:%I:%S') . "\n";
+        return $log;
     }
 }

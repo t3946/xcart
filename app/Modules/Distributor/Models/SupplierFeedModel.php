@@ -8,6 +8,11 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed disable_search_of_discontinued_items
+ * @property mixed manufacturerid
+ * @property mixed feed_file_name
+ */
 class SupplierFeedModel extends Model
 {
     use AutoMetaTrait;

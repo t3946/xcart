@@ -318,7 +318,7 @@ class CustomAudience extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getShareDAccountInfo(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSharedAccountInfo(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -530,7 +530,7 @@ class CustomAudience extends AbstractCrudObject {
       'event_source_group' => 'string',
       'product_set_id' => 'string',
       'event_sources' => 'list<map>',
-      'study_spec' => 'Object',
+      'study_spec' => 'map',
     );
     $enums = array(
       'customer_file_source_enum' => CustomAudienceCustomerFileSourceValues::getInstance()->getValues(),

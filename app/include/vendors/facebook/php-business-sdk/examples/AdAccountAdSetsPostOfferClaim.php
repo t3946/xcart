@@ -31,7 +31,7 @@ use FacebookAds\Logger\CurlLogger;
 $access_token = '<ACCESS_TOKEN>';
 $app_secret = '<APP_SECRET>';
 $app_id = '<APP_ID>';
-$id = '<ID>';
+$id = '<AD_ACCOUNT_ID>';
 
 $api = Api::init($app_id, $app_secret, $access_token);
 $api->setLogger(new CurlLogger());
@@ -41,8 +41,8 @@ $fields = array(
 $params = array(
   'name' => 'My Offer Claim AdSet',
   'lifetime_budget' => '56000',
-  'start_time' => '2018-09-20T12:14:33-0700',
-  'end_time' => '2018-09-27T12:14:33-0700',
+  'start_time' => '2019-01-02T21:34:39-0800',
+  'end_time' => '2019-01-09T21:34:39-0800',
   'campaign_id' => '<adCampaignLinkClicksID>',
   'billing_event' => 'LINK_CLICKS',
   'optimization_goal' => 'LINK_CLICKS',

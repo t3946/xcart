@@ -225,7 +225,6 @@ class PagePost extends AbstractCrudObject {
       'until' => 'datetime',
       'metric' => 'list<Object>',
       'period' => 'period_enum',
-      'show_permission_error' => 'bool',
       'date_preset' => 'date_preset_enum',
     );
     $enums = array(
@@ -357,6 +356,8 @@ class PagePost extends AbstractCrudObject {
         'AUTO_LOOKALIKE',
         'MULT_CUSTOM_AUDIENCES',
         'EVENT_CUSTOM_AUDIENCES',
+        'AUTO_PAGE_LOOKALIKE',
+        'AUTO_TARGETING',
       ),
       'cta_type_enum' => array(
         'OPEN_LINK',
@@ -407,6 +408,7 @@ class PagePost extends AbstractCrudObject {
         'EVENT_RSVP',
         'WHATSAPP_MESSAGE',
         'FOLLOW_NEWS_STORYLINE',
+        'SEE_MORE',
       ),
     );
 
@@ -473,7 +475,7 @@ class PagePost extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getShareDPosts(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSharedPosts(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -615,7 +617,7 @@ class PagePost extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'composer_session_id' => 'string',
       'message' => 'string',
       'is_hidden' => 'bool',

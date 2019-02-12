@@ -211,7 +211,6 @@ class Post extends AbstractCrudObject {
       'until' => 'datetime',
       'metric' => 'list<Object>',
       'period' => 'period_enum',
-      'show_permission_error' => 'bool',
       'date_preset' => 'date_preset_enum',
     );
     $enums = array(
@@ -318,7 +317,6 @@ class Post extends AbstractCrudObject {
       'uid' => 'int',
       'profile_id' => 'int',
       'target_id' => 'int',
-      'checkin_id' => 'Object',
       'vault_image_id' => 'string',
       'tags' => 'list<Object>',
       'place' => 'Object',
@@ -330,7 +328,7 @@ class Post extends AbstractCrudObject {
       'og_icon_id' => 'string',
       'og_suggestion_mechanism' => 'string',
       'og_set_profile_badge' => 'bool',
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'targeting' => 'Object',
       'feed_targeting' => 'Object',
       'no_story' => 'bool',
@@ -419,6 +417,8 @@ class Post extends AbstractCrudObject {
         'AUTO_LOOKALIKE',
         'MULT_CUSTOM_AUDIENCES',
         'EVENT_CUSTOM_AUDIENCES',
+        'AUTO_PAGE_LOOKALIKE',
+        'AUTO_TARGETING',
       ),
       'cta_type_enum' => array(
         'OPEN_LINK',
@@ -469,6 +469,7 @@ class Post extends AbstractCrudObject {
         'EVENT_RSVP',
         'WHATSAPP_MESSAGE',
         'FOLLOW_NEWS_STORYLINE',
+        'SEE_MORE',
       ),
     );
 
@@ -535,7 +536,7 @@ class Post extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getShareDPosts(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSharedPosts(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -677,7 +678,7 @@ class Post extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'composer_session_id' => 'string',
       'message' => 'string',
       'is_hidden' => 'bool',

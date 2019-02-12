@@ -233,9 +233,9 @@ class ProductHelper
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
                     return substr($upc_code, 0, -1) . $cd;
-                } else {
-                    return $upc_code;
                 }
+
+                return $upc_code;
                 break;
             case 11:
             case 12:
@@ -246,13 +246,11 @@ class ProductHelper
                         $cd = self::UPC_calculate_check_digit($upc_code . '1');
                         return $upc_code . $cd;
                     }
-                    else {
-                        return '';
-                    }
+
+                    return '';
                 }
-                else {
-                    return $upc_code;
-                }
+
+                return $upc_code;
 
                 break;
         }

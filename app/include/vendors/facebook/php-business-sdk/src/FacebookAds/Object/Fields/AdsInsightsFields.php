@@ -63,13 +63,15 @@ class AdsInsightsFields extends AbstractEnum {
   const CAMPAIGN_NAME = 'campaign_name';
   const CANVAS_AVG_VIEW_PERCENT = 'canvas_avg_view_percent';
   const CANVAS_AVG_VIEW_TIME = 'canvas_avg_view_time';
-  const CANVAS_COMPONENT_AVG_PCT_VIEW = 'canvas_component_avg_pct_view';
   const CLICKS = 'clicks';
+  const CONVERSION_VALUES = 'conversion_values';
+  const CONVERSIONS = 'conversions';
   const COST_PER_10_SEC_VIDEO_VIEW = 'cost_per_10_sec_video_view';
   const COST_PER_15_SEC_VIDEO_VIEW = 'cost_per_15_sec_video_view';
   const COST_PER_2_SEC_CONTINUOUS_VIDEO_VIEW = 'cost_per_2_sec_continuous_video_view';
   const COST_PER_ACTION_TYPE = 'cost_per_action_type';
   const COST_PER_AD_CLICK = 'cost_per_ad_click';
+  const COST_PER_CONVERSION = 'cost_per_conversion';
   const COST_PER_DDA_COUNTBY_CONVS = 'cost_per_dda_countby_convs';
   const COST_PER_ESTIMATED_AD_RECALLERS = 'cost_per_estimated_ad_recallers';
   const COST_PER_INLINE_LINK_CLICK = 'cost_per_inline_link_click';
@@ -79,6 +81,7 @@ class AdsInsightsFields extends AbstractEnum {
   const COST_PER_THRUPLAY = 'cost_per_thruplay';
   const COST_PER_UNIQUE_ACTION_TYPE = 'cost_per_unique_action_type';
   const COST_PER_UNIQUE_CLICK = 'cost_per_unique_click';
+  const COST_PER_UNIQUE_CONVERSION = 'cost_per_unique_conversion';
   const COST_PER_UNIQUE_INLINE_LINK_CLICK = 'cost_per_unique_inline_link_click';
   const COST_PER_UNIQUE_OUTBOUND_CLICK = 'cost_per_unique_outbound_click';
   const COUNTRY = 'country';
@@ -128,6 +131,7 @@ class AdsInsightsFields extends AbstractEnum {
   const PRODUCT_FORMAT = 'product_format';
   const PRODUCT_ID = 'product_id';
   const PUBLISHER_PLATFORM = 'publisher_platform';
+  const PURCHASE_ROAS = 'purchase_roas';
   const PURCHASING_INTERFACE = 'purchasing_interface';
   const REACH = 'reach';
   const REGION = 'region';
@@ -138,6 +142,7 @@ class AdsInsightsFields extends AbstractEnum {
   const TITLE_ASSET = 'title_asset';
   const UNIQUE_ACTIONS = 'unique_actions';
   const UNIQUE_CLICKS = 'unique_clicks';
+  const UNIQUE_CONVERSIONS = 'unique_conversions';
   const UNIQUE_CTR = 'unique_ctr';
   const UNIQUE_INLINE_LINK_CLICK_CTR = 'unique_inline_link_click_ctr';
   const UNIQUE_INLINE_LINK_CLICKS = 'unique_inline_link_clicks';
@@ -199,13 +204,15 @@ class AdsInsightsFields extends AbstractEnum {
       'campaign_name' => 'string',
       'canvas_avg_view_percent' => 'string',
       'canvas_avg_view_time' => 'string',
-      'canvas_component_avg_pct_view' => 'list<AdsActionStats>',
       'clicks' => 'string',
+      'conversion_values' => 'list<AdsActionStats>',
+      'conversions' => 'list<AdsActionStats>',
       'cost_per_10_sec_video_view' => 'list<AdsActionStats>',
       'cost_per_15_sec_video_view' => 'list<AdsActionStats>',
       'cost_per_2_sec_continuous_video_view' => 'list<AdsActionStats>',
       'cost_per_action_type' => 'list<AdsActionStats>',
       'cost_per_ad_click' => 'list<AdsActionStats>',
+      'cost_per_conversion' => 'list<AdsActionStats>',
       'cost_per_dda_countby_convs' => 'string',
       'cost_per_estimated_ad_recallers' => 'string',
       'cost_per_inline_link_click' => 'string',
@@ -215,6 +222,7 @@ class AdsInsightsFields extends AbstractEnum {
       'cost_per_thruplay' => 'list<AdsActionStats>',
       'cost_per_unique_action_type' => 'list<AdsActionStats>',
       'cost_per_unique_click' => 'string',
+      'cost_per_unique_conversion' => 'list<AdsActionStats>',
       'cost_per_unique_inline_link_click' => 'string',
       'cost_per_unique_outbound_click' => 'list<AdsActionStats>',
       'country' => 'string',
@@ -264,6 +272,7 @@ class AdsInsightsFields extends AbstractEnum {
       'product_format' => 'string',
       'product_id' => 'string',
       'publisher_platform' => 'string',
+      'purchase_roas' => 'list<AdsActionStats>',
       'purchasing_interface' => 'string',
       'reach' => 'string',
       'region' => 'string',
@@ -274,6 +283,7 @@ class AdsInsightsFields extends AbstractEnum {
       'title_asset' => 'Object',
       'unique_actions' => 'list<AdsActionStats>',
       'unique_clicks' => 'string',
+      'unique_conversions' => 'list<AdsActionStats>',
       'unique_ctr' => 'string',
       'unique_inline_link_click_ctr' => 'string',
       'unique_inline_link_clicks' => 'string',

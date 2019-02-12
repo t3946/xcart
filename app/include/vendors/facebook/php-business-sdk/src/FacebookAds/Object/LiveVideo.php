@@ -40,7 +40,6 @@ use FacebookAds\Object\Values\LiveVideoSpatialAudioFormatValues;
 use FacebookAds\Object\Values\LiveVideoStatusValues;
 use FacebookAds\Object\Values\LiveVideoStereoscopicModeValues;
 use FacebookAds\Object\Values\LiveVideoStreamTypeValues;
-use FacebookAds\Object\Values\LiveVideoTypeValues;
 use FacebookAds\Object\Values\ProfileTypeValues;
 
 /**
@@ -70,7 +69,6 @@ class LiveVideo extends AbstractCrudObject {
     $ref_enums['Status'] = LiveVideoStatusValues::getInstance()->getValues();
     $ref_enums['StereoscopicMode'] = LiveVideoStereoscopicModeValues::getInstance()->getValues();
     $ref_enums['StreamType'] = LiveVideoStreamTypeValues::getInstance()->getValues();
-    $ref_enums['Type'] = LiveVideoTypeValues::getInstance()->getValues();
     $ref_enums['LiveCommentModerationSetting'] = LiveVideoLiveCommentModerationSettingValues::getInstance()->getValues();
     return $ref_enums;
   }
@@ -130,7 +128,7 @@ class LiveVideo extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getCrosspostShareDPages(array $fields = array(), array $params = array(), $pending = false) {
+  public function getCrosspostSharedPages(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -215,6 +213,52 @@ class LiveVideo extends AbstractCrudObject {
       new VideoGameShow(),
       'EDGE',
       VideoGameShow::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function getGuestSessions(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/guest_sessions',
+      new LiveWithGuestSession(),
+      'EDGE',
+      LiveWithGuestSession::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function createGuestSession(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_POST,
+      '/guest_sessions',
+      new LiveWithGuestSession(),
+      'EDGE',
+      LiveWithGuestSession::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -373,6 +417,7 @@ class LiveVideo extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'target_token' => 'string',
     );
     $enums = array(
     );
@@ -397,7 +442,7 @@ class LiveVideo extends AbstractCrudObject {
 
     $param_types = array(
       'content_tags' => 'list<string>',
-      'privacy' => 'Object',
+      'privacy' => 'string',
       'title' => 'string',
       'description' => 'string',
       'embeddable' => 'bool',
