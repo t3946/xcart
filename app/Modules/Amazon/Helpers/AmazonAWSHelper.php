@@ -99,9 +99,9 @@ class AmazonAWSHelper
                 'QueueUrl' => self::AMAZON_SQS_URL,
                 'WaitTimeSeconds' => 1,
             ]);
-            foreach ($response->getPath('Messages/*/Body') as $messageBody) {
+            foreach ($response->search('Messages') as $messageBody) {
                 // Do something with the message
-                $result[] = json_decode(json_encode((array)simplexml_load_string($messageBody)),1);
+                $result[] = json_decode(json_encode((array)simplexml_load_string($messageBody['Body'])),1);
             }
 
         }
