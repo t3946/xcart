@@ -1077,9 +1077,7 @@ function func_get_proper_dimensions ($old_x, $old_y, $new_x, $new_y) {
 
 function func_set_correct_det_img($image_info, $update = false){
 
-    /** @var \Modules\Core\CoreModule $coreModule */
-    $coreModule = Xcart::app()->getModule('Core');
-    $config = $coreModule::getGlobalConfig();
+    $config = GlobalConfig::getInstance();
 
 	if (!empty($image_info["image_path"])){
 		$file_name_path = $image_info["image_path"];
@@ -1091,12 +1089,11 @@ function func_set_correct_det_img($image_info, $update = false){
 	$width = $image_info["image_x"];
 	$height = $image_info["image_y"];
 
-	if ($width >= $config['Appearance']['max_width_det_img']  || $height >= $config['Appearance']['max_height_det_img']){
+	if ($width >= $config['max_width_det_img']  || $height >= $config['max_height_det_img']){
         	$im = new Imagick();
 		try {
 			$im->pingImage($file_name_path);
 		} catch (ImagickException $e) {
-            GlobalConfig::getInstance()->setOldMode(false);
 			throw new Exception(_('Invalid or corrupted image file, please try uploading another image.'));
 		}
 
@@ -1105,7 +1102,7 @@ function func_set_correct_det_img($image_info, $update = false){
                 * as they are loaded instead of consuming additional resources to pass back
                 * to PHP. */
 
-	                $R = MIN($config['Appearance']['max_width_det_img']/$width,$config['Appearance']['max_height_det_img']/$height,1);
+	                $R = MIN($config['max_width_det_img']/$width,$config['max_height_det_img']/$height,1);
                         $new_width = round(abs($R*$width));
                         $new_height = round(abs($R*$height));
 
@@ -1137,7 +1134,6 @@ function func_set_correct_det_img($image_info, $update = false){
 
 		}
                 catch (ImagickException $e) {
-                    GlobalConfig::getInstance()->setOldMode(false);
 			header('HTTP/1.1 500 Internal Server Error');
                         throw new Exception(_('An error occured reszing the image.'). ' ' .$e->getMessage());
                 }
@@ -1145,7 +1141,6 @@ function func_set_correct_det_img($image_info, $update = false){
                /* cleanup Imagick */
                $im->destroy();
 	}
-    GlobalConfig::getInstance()->setOldMode(false);
 
 	return $image_info;
 }
