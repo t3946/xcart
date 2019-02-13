@@ -1106,7 +1106,7 @@ function func_set_correct_det_img($image_info, $update = false){
                         $new_width = round(abs($R*$width));
                         $new_height = round(abs($R*$height));
 
-                        $im->setSize($new_width, $width);
+                        $im->setSize($new_width, $new_height);
                         $im->readImage($file_name_path);
                         $im->thumbnailImage(abs($R*$width), 0, false);
 
