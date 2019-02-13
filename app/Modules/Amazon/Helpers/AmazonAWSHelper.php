@@ -4,7 +4,7 @@ namespace Modules\Amazon\Helpers;
 
 
 use Aws\CloudFront\CloudFrontClient;
-use Aws\Common\Credentials\Credentials;
+use Aws\Credentials\Credentials;
 use Aws\Sqs\SqsClient;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Sites\Models\SiteModel;
