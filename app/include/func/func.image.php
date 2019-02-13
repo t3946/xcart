@@ -1119,7 +1119,14 @@ function func_set_correct_det_img($image_info, $update = false){
                         $image_info["image_size"] = filesize($file_name_path);
 
 			if ($update && !empty($image_info["imageid"])){
-				db_query("UPDATE $sql_tbl[images_D] SET image_x='$new_width', image_y='$new_height', image_size='$image_info[image_size]' WHERE imageid='$image_info[imageid]'");
+			    if ($imodel = \Modules\Goods\Models\ImageDModel::objects()->get(['imageid' => $image_info['imageid']])) {
+                    $imodel->setAttributes([
+                        'image_x' => $new_width,
+                        'image_y' => $new_height,
+                        'image_size' => $image_info['image_size'],
+                    ]);
+                    $imodel->save();
+                }
 			}
 
 		}
