@@ -3,6 +3,9 @@
 #
 # Construct path to directory of images of type $type
 #
+use Modules\Core\Components\GlobalConfig;
+use Xcart\App\Main\Xcart;
+
 function func_image_dir($type) {
 	global $xcart_dir;
 
@@ -1074,7 +1077,9 @@ function func_get_proper_dimensions ($old_x, $old_y, $new_x, $new_y) {
 
 function func_set_correct_det_img($image_info, $update = false){
 
-	global $sql_tbl, $config;
+    /** @var \Modules\Core\CoreModule $coreModule */
+    $coreModule = Xcart::app()->getModule('Core');
+    $config = $coreModule::getGlobalConfig();
 
 	if (!empty($image_info["image_path"])){
 		$file_name_path = $image_info["image_path"];
@@ -1091,6 +1096,7 @@ function func_set_correct_det_img($image_info, $update = false){
 		try {
 			$im->pingImage($file_name_path);
 		} catch (ImagickException $e) {
+            GlobalConfig::getInstance()->setOldMode(false);
 			throw new Exception(_('Invalid or corrupted image file, please try uploading another image.'));
 		}
 
@@ -1131,13 +1137,15 @@ function func_set_correct_det_img($image_info, $update = false){
 
 		}
                 catch (ImagickException $e) {
+                    GlobalConfig::getInstance()->setOldMode(false);
 			header('HTTP/1.1 500 Internal Server Error');
-                        throw new Exception(_('An error occured reszing the image.'));
+                        throw new Exception(_('An error occured reszing the image.'). ' ' .$e->getMessage());
                 }
 
                /* cleanup Imagick */
                $im->destroy();
 	}
+    GlobalConfig::getInstance()->setOldMode(false);
 
 	return $image_info;
 }
