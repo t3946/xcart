@@ -91,14 +91,13 @@ class AmazonAWSHelper
     public static function getSQSMessages(): array
     {
         if ($credentials = new Credentials(self::SQS_ACCESS_KEY_ID, self::SQS_SECRET_ACCESS_KEY)) {
-            $client = new SqsClient(['credentials' => $credentials, 'region' => 'us-west-2']);
+            $client = new SqsClient(['credentials' => $credentials, 'region' => 'us-west-2', 'version' => 'latest']);
             $response = $client->receiveMessage([
                 'AttributeNames' => ['SentTimestamp'],
                 'MaxNumberOfMessages' => 10,
                 'MessageAttributeNames' => ['All'],
                 'QueueUrl' => self::AMAZON_SQS_URL,
                 'WaitTimeSeconds' => 1,
-                'version' => 'latest'
             ]);
             foreach ($response->getPath('Messages/*/Body') as $messageBody) {
                 // Do something with the message
