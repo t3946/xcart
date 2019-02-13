@@ -4,6 +4,7 @@
 # Construct path to directory of images of type $type
 #
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\Models\GlobalConfigModel;
 use Xcart\App\Main\Xcart;
 
 function func_image_dir($type) {
@@ -1077,7 +1078,10 @@ function func_get_proper_dimensions ($old_x, $old_y, $new_x, $new_y) {
 
 function func_set_correct_det_img($image_info, $update = false){
 
-    $config = GlobalConfig::getInstance();
+    $config = [
+        'max_width_det_img' => GlobalConfigModel::objects()->get(['name' => 'max_width_det_img'])->value,
+        'max_height_det_img' => GlobalConfigModel::objects()->get(['name' => 'max_height_det_img'])->value,
+    ];
 
 	if (!empty($image_info["image_path"])){
 		$file_name_path = $image_info["image_path"];
@@ -1108,7 +1112,7 @@ function func_set_correct_det_img($image_info, $update = false){
 
                         $im->setSize($new_width, $new_height);
                         $im->readImage($file_name_path);
-                        $im->thumbnailImage(abs($R*$width), 0, false);
+                        $im->thumbnailImage($new_width, 0, false);
 
                         $im->setImageCompression(Imagick::COMPRESSION_JPEG);
                         $im->setSamplingFactors(['2x2', '1x1', '1x1']);
