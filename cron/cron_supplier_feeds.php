@@ -228,7 +228,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             print "Discontinued {$discontinued_products_count} products "  . PHP_EOL;
         }
 
-        ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
+        if ($d_products) {
+            ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
+        }
     }
 
 
