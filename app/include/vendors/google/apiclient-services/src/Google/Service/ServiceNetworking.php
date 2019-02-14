@@ -91,18 +91,8 @@ class Google_Service_ServiceNetworking extends Google_Service
                   'required' => true,
                 ),
               ),
-            ),'searchRange' => array(
-              'path' => 'v1beta/{+parent}:searchRange',
-              'httpMethod' => 'POST',
-              'parameters' => array(
-                'parent' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
-            ),'updateConnections' => array(
-              'path' => 'v1beta/{+name}/connections',
+            ),'patch' => array(
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(

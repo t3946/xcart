@@ -20,8 +20,8 @@ class Google_Service_Pagespeedonline_LighthouseResultV5 extends Google_Collectio
   protected $collection_key = 'runWarnings';
   protected $auditsType = 'Google_Service_Pagespeedonline_LighthouseAuditResultV5';
   protected $auditsDataType = 'map';
-  protected $categoriesType = 'Google_Service_Pagespeedonline_LighthouseResultV5Categories';
-  protected $categoriesDataType = '';
+  protected $categoriesType = 'Google_Service_Pagespeedonline_LighthouseCategoryV5';
+  protected $categoriesDataType = 'map';
   protected $categoryGroupsType = 'Google_Service_Pagespeedonline_LighthouseResultV5CategoryGroupsElement';
   protected $categoryGroupsDataType = 'map';
   protected $configSettingsType = 'Google_Service_Pagespeedonline_LighthouseResultV5ConfigSettings';
@@ -56,14 +56,14 @@ class Google_Service_Pagespeedonline_LighthouseResultV5 extends Google_Collectio
     return $this->audits;
   }
   /**
-   * @param Google_Service_Pagespeedonline_LighthouseResultV5Categories
+   * @param Google_Service_Pagespeedonline_LighthouseCategoryV5
    */
-  public function setCategories(Google_Service_Pagespeedonline_LighthouseResultV5Categories $categories)
+  public function setCategories($categories)
   {
     $this->categories = $categories;
   }
   /**
-   * @return Google_Service_Pagespeedonline_LighthouseResultV5Categories
+   * @return Google_Service_Pagespeedonline_LighthouseCategoryV5
    */
   public function getCategories()
   {

@@ -28,7 +28,8 @@ class Google_Service_ServiceUsage_Resource_Services extends Google_Service_Resou
   /**
    * Enable multiple services on a project. The operation is atomic: if enabling
    * any service fails, then the entire batch fails, and no state changes occur.
-   * (services.batchEnable)
+   *
+   * Operation (services.batchEnable)
    *
    * @param string $parent Parent to enable services on.
    *
@@ -53,7 +54,9 @@ class Google_Service_ServiceUsage_Resource_Services extends Google_Service_Resou
    *
    * It is not valid to call the disable method on a service that is not currently
    * enabled. Callers will receive a `FAILED_PRECONDITION` status if the target
-   * service is not currently enabled. (services.disable)
+   * service is not currently enabled.
+   *
+   * Operation (services.disable)
    *
    * @param string $name Name of the consumer and service to disable the service
    * on.
@@ -73,7 +76,9 @@ class Google_Service_ServiceUsage_Resource_Services extends Google_Service_Resou
     return $this->call('disable', array($params), "Google_Service_ServiceUsage_Operation");
   }
   /**
-   * Enable a service so that it can be used with a project. (services.enable)
+   * Enable a service so that it can be used with a project.
+   *
+   * Operation (services.enable)
    *
    * @param string $name Name of the consumer and service to enable the service
    * on.
@@ -129,12 +134,12 @@ class Google_Service_ServiceUsage_Resource_Services extends Google_Service_Resou
    * (not project ID).
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string filter Only list services that conform to the given filter.
+   * The allowed filter strings are `state:ENABLED` and `state:DISABLED`.
    * @opt_param string pageToken Token identifying which result to start with,
    * which is returned by a previous list call.
    * @opt_param int pageSize Requested size of the next page of data. Requested
    * page size cannot exceed 200.  If not set, the default page size is 50.
-   * @opt_param string filter Only list services that conform to the given filter.
-   * The allowed filter strings are `state:ENABLED` and `state:DISABLED`.
    * @return Google_Service_ServiceUsage_ListServicesResponse
    */
   public function listServices($parent, $optParams = array())

@@ -31,6 +31,8 @@ class Google_Service_ShoppingContent_Resource_Liasettings extends Google_Service
    *
    * @param Google_Service_ShoppingContent_LiasettingsCustomBatchRequest $postBody
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param bool dryRun Flag to run the request in dry-run mode.
    * @return Google_Service_ShoppingContent_LiasettingsCustomBatchResponse
    */
   public function custombatch(Google_Service_ShoppingContent_LiasettingsCustomBatchRequest $postBody, $optParams = array())
@@ -105,6 +107,27 @@ class Google_Service_ShoppingContent_Resource_Liasettings extends Google_Service
     $params = array();
     $params = array_merge($params, $optParams);
     return $this->call('listposdataproviders', array($params), "Google_Service_ShoppingContent_LiasettingsListPosDataProvidersResponse");
+  }
+  /**
+   * Updates the LIA settings of the account. This method supports patch
+   * semantics. (liasettings.patch)
+   *
+   * @param string $merchantId The ID of the managing account. If this parameter
+   * is not the same as accountId, then this account must be a multi-client
+   * account and accountId must be the ID of a sub-account of this account.
+   * @param string $accountId The ID of the account for which to get or update LIA
+   * settings.
+   * @param Google_Service_ShoppingContent_LiaSettings $postBody
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param bool dryRun Flag to run the request in dry-run mode.
+   * @return Google_Service_ShoppingContent_LiaSettings
+   */
+  public function patch($merchantId, $accountId, Google_Service_ShoppingContent_LiaSettings $postBody, $optParams = array())
+  {
+    $params = array('merchantId' => $merchantId, 'accountId' => $accountId, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_ShoppingContent_LiaSettings");
   }
   /**
    * Requests access to a specified Google My Business account.
@@ -203,6 +226,8 @@ class Google_Service_ShoppingContent_Resource_Liasettings extends Google_Service
    * settings.
    * @param Google_Service_ShoppingContent_LiaSettings $postBody
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param bool dryRun Flag to run the request in dry-run mode.
    * @return Google_Service_ShoppingContent_LiaSettings
    */
   public function update($merchantId, $accountId, Google_Service_ShoppingContent_LiaSettings $postBody, $optParams = array())

@@ -264,6 +264,16 @@ class Google_Service_AndroidEnterprise extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),'getAndroidDevicePolicyConfig' => array(
+              'path' => 'enterprises/{enterpriseId}/androidDevicePolicyConfig',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'enterpriseId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
             ),'getServiceAccount' => array(
               'path' => 'enterprises/{enterpriseId}/serviceAccount',
               'httpMethod' => 'GET',

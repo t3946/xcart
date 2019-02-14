@@ -76,8 +76,8 @@ class Google_Service_Vision_Resource_ProjectsLocationsProductSets extends Google
     return $this->call('create', array($params), "Google_Service_Vision_ProductSet");
   }
   /**
-   * Permanently deletes a ProductSet. Products and ReferenceImages in the
-   * ProductSet are not deleted.
+   * Permanently deletes a ProductSet. All Products and ReferenceImages in the
+   * ProductSet will be deleted.
    *
    * The actual image files are not deleted from Google Cloud Storage.
    *
@@ -156,10 +156,10 @@ class Google_Service_Vision_Resource_ProjectsLocationsProductSets extends Google
    * Format is `projects/PROJECT_ID/locations/LOC_ID`.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param int pageSize The maximum number of items to return. Default 10,
-   * maximum 100.
    * @opt_param string pageToken The next_page_token returned from a previous List
    * request, if any.
+   * @opt_param int pageSize The maximum number of items to return. Default 10,
+   * maximum 100.
    * @return Google_Service_Vision_ListProductSetsResponse
    */
   public function listProjectsLocationsProductSets($parent, $optParams = array())

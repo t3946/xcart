@@ -1,17 +1,17 @@
 [
     {
         "name": "aws/aws-sdk-php",
-        "version": "3.87.4",
-        "version_normalized": "3.87.4.0",
+        "version": "3.87.10",
+        "version_normalized": "3.87.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/aws/aws-sdk-php.git",
-            "reference": "3435ed9535f83ca8f485ac8a78a7f3d99216af03"
+            "reference": "fcf0fc6992e2926327e8ccd553cbb7a594acc1db"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3435ed9535f83ca8f485ac8a78a7f3d99216af03",
-            "reference": "3435ed9535f83ca8f485ac8a78a7f3d99216af03",
+            "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fcf0fc6992e2926327e8ccd553cbb7a594acc1db",
+            "reference": "fcf0fc6992e2926327e8ccd553cbb7a594acc1db",
             "shasum": ""
         },
         "require": {
@@ -44,7 +44,7 @@
             "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
             "ext-sockets": "To use client-side monitoring"
         },
-        "time": "2019-02-05T22:07:42+00:00",
+        "time": "2019-02-13T23:07:20+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -715,24 +715,24 @@
     },
     {
         "name": "facebook/php-business-sdk",
-        "version": "3.2.7",
-        "version_normalized": "3.2.7.0",
+        "version": "3.2.8",
+        "version_normalized": "3.2.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/facebook/facebook-php-business-sdk.git",
-            "reference": "7a8bd28eead86a94028287a13dac83c91646eee8"
+            "reference": "56d868e0be7a4169c56c0214a45dc39be568e642"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/facebook/facebook-php-business-sdk/zipball/7a8bd28eead86a94028287a13dac83c91646eee8",
-            "reference": "7a8bd28eead86a94028287a13dac83c91646eee8",
+            "url": "https://api.github.com/repos/facebook/facebook-php-business-sdk/zipball/56d868e0be7a4169c56c0214a45dc39be568e642",
+            "reference": "56d868e0be7a4169c56c0214a45dc39be568e642",
             "shasum": ""
         },
         "require-dev": {
             "phpunit/phpunit": "~4.6",
             "symfony/finder": "~2.6"
         },
-        "time": "2019-01-29T21:33:49+00:00",
+        "time": "2019-02-12T03:33:55+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1048,17 +1048,17 @@
     },
     {
         "name": "google/apiclient-services",
-        "version": "v0.83",
-        "version_normalized": "0.83.0.0",
+        "version": "v0.76",
+        "version_normalized": "0.76.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/googleapis/google-api-php-client-services.git",
-            "reference": "f443f4107d9ba001dad60d18cf1ec0cf0e7234f9"
+            "reference": "50c4a818ad269839ad2c20f03828cd6f346ec887"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/f443f4107d9ba001dad60d18cf1ec0cf0e7234f9",
-            "reference": "f443f4107d9ba001dad60d18cf1ec0cf0e7234f9",
+            "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/50c4a818ad269839ad2c20f03828cd6f346ec887",
+            "reference": "50c4a818ad269839ad2c20f03828cd6f346ec887",
             "shasum": ""
         },
         "require": {
@@ -1067,7 +1067,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2019-01-30T22:06:40+00:00",
+        "time": "2018-12-01T00:23:06+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1938,20 +1938,21 @@
     },
     {
         "name": "moneyphp/money",
-        "version": "v3.2.0",
-        "version_normalized": "3.2.0.0",
+        "version": "v3.2.1",
+        "version_normalized": "3.2.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/moneyphp/money.git",
-            "reference": "53ce6e4b9a2aac6e5194a0a633b7a556a6b04b07"
+            "reference": "f6085de6c565e98d2f9a7311a605987b54e06d5e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/moneyphp/money/zipball/53ce6e4b9a2aac6e5194a0a633b7a556a6b04b07",
-            "reference": "53ce6e4b9a2aac6e5194a0a633b7a556a6b04b07",
+            "url": "https://api.github.com/repos/moneyphp/money/zipball/f6085de6c565e98d2f9a7311a605987b54e06d5e",
+            "reference": "f6085de6c565e98d2f9a7311a605987b54e06d5e",
             "shasum": ""
         },
         "require": {
+            "ext-json": "*",
             "php": ">=5.6"
         },
         "require-dev": {
@@ -1979,7 +1980,7 @@
             "florianv/swap": "Exchange rates library for PHP",
             "psr/cache-implementation": "Used for Currency caching"
         },
-        "time": "2018-12-05T12:17:01+00:00",
+        "time": "2019-02-07T18:01:35+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2101,17 +2102,17 @@
     },
     {
         "name": "mpdf/mpdf",
-        "version": "v7.1.8",
-        "version_normalized": "7.1.8.0",
+        "version": "v7.1.9",
+        "version_normalized": "7.1.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/mpdf/mpdf.git",
-            "reference": "5a124ed382cf9241597c7ba12f98a756daa7f8df"
+            "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mpdf/mpdf/zipball/5a124ed382cf9241597c7ba12f98a756daa7f8df",
-            "reference": "5a124ed382cf9241597c7ba12f98a756daa7f8df",
+            "url": "https://api.github.com/repos/mpdf/mpdf/zipball/a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
+            "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
             "shasum": ""
         },
         "require": {
@@ -2134,7 +2135,7 @@
             "ext-xml": "Needed mainly for SVG manipulation",
             "ext-zlib": "Needed for compression of embedded resources, such as fonts"
         },
-        "time": "2019-01-08T11:38:17+00:00",
+        "time": "2019-02-06T13:32:19+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
