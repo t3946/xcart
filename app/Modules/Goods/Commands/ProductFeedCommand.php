@@ -184,7 +184,7 @@ class ProductFeedCommand extends Command
                 'start_supplier_time' => $start_supplier_time
             ];
 
-            Xcart::app()->logger->debug(SupplierFeedHelper::feedStatistic($feed, $params), [], 'feed');;
+            Xcart::app()->logger->debug(SupplierFeedHelper::feedStatistic($feed, $params, $supplierFeed->products_in_feed), [], 'feed');;
 
             if (!empty($lastFeedFields)) {
                 if (!empty($supplierFeed->dont_update_fields)) {

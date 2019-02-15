@@ -656,7 +656,7 @@ class SupplierFeedHelper
         return $discontinued_products_count;
     }
 
-    public static function feedStatistic(SupplierFeedModel $feed,  $params): string
+    public static function feedStatistic(SupplierFeedModel $feed,  $params, $feedProductCount = 0): string
     {
         $md5 = $params['md5'];
         $last_feed_fields_arr_vals = $params['last_feed_fields_arr_vals'];
@@ -677,7 +677,7 @@ class SupplierFeedHelper
             "average_update_period" => $average_update_period,
             "last_update_period" => $last_update_period,
             "last_feed_fields" => $last_feed_fields_arr_vals,
-            "last_update_items_count" => $feed->products_in_feed
+            "last_update_items_count" => $feedProductCount
         ]);
         $feed->save();
 
