@@ -96,13 +96,13 @@ class SupplierFeedHelper
     {
         $newUPC = ProductHelper::calculateUPC($model->upc);
         $oldUPC = $model->getOldAttribute('upc');
-        if ($oldUPC != $newUPC) {
+        if ($newUPC && $oldUPC !== $newUPC) {
             $model->upc = $newUPC;
         } else {
             $model->upc = $oldUPC;
         }
 
-        return [$model, $oldUPC != $newUPC];
+        return [$model, $oldUPC !== $model->upc];
     }
 
     /**
@@ -165,8 +165,7 @@ class SupplierFeedHelper
 
         self::getVideos($model);
 
-        list($model, $upc_different) = SupplierFeedHelper::getUPC($model);
-
+        [$model, $upc_different] = SupplierFeedHelper::getUPC($model);
         if ($upc_different) {
             list($upcModel) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
             /** @var ProductUpcChangesModel $upcModel */
