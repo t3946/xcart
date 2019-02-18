@@ -93,7 +93,7 @@ class AmazonController extends PrototypeAdminController
 
                         //Можно обнулить количество к закупу, если у дистрибьютора в стоке меньше или равно 5, так как такой товар скоро обнулится на складе у дистрибьютора и отправлен не будет. Кроме CTI & ECS
                         if (!\in_array($aProduct['manufacturerid'], [523, 9])) {
-                            if ($aProduct['r_avail'] <= 0 || !$aProduct['items_sold_last_1m_of_stock']) {
+                            if ($aProduct['r_avail'] <= 0 || !$aProduct['items_sold_last_1m_of_stock'] || $aProduct['last_order_days'] >= 180) {
                                 $aProduct['restocking_qty'] = 0;
                             }
                         }
