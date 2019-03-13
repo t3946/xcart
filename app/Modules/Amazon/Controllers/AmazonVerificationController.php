@@ -138,6 +138,7 @@ class AmazonVerificationController extends Controller
                 }
 
                 $model->amazon_verified = 'Y';
+                $model->amazon_enabled = 'Y';
 
 
 
