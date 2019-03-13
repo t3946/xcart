@@ -90,8 +90,7 @@ class AmazonMWS
     const BACK_PROCESS_LOG_NAME_ORDER_INFO = 'amazon_info';
     const BACK_PROCESS_LOG_NAME_FBA_INVENTORY = 'amazon_fba_inventory_receipts';
     const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
-    const AMAZON_ORDER_LINK = "https://sellercentral.amazon.com/gp/orders-v2/list/ref=ag_myo_apsearch_myosearch?searchType=OrderID&searchKeyword=%s&showPending=1&isDebug=&isAdvancedSearch=1&ignoreSearchType=0&searchLanguage=en_US";
-
+    const AMAZON_ORDER_LINK = 'https://sellercentral.amazon.com/orders-v3/search?_encoding=UTF8&ref_=ag_myo_apsearch_myosearch&page=1&q=%s&qt=orderid&date-range=last-365';
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
@@ -1008,7 +1007,7 @@ SQL;
             try {
                 $response = $this->oMWSService->CreateFulfillmentOrder($req);
 
-                $log .= "Amazon shipping order placed: <a href='" . sprintf(self::AMAZON_ORDER_LINK, $oOrderGroup->getAmazonShippingOrderId()) . "' target='_blank'>" . $oOrderGroup->getAmazonShippingOrderId() . "</a> \n";
+                $log .= "\nAmazon shipping order placed: <a href='" . sprintf(self::AMAZON_ORDER_LINK, $oOrderGroup->getAmazonShippingOrderId()) . "' target='_blank'>" . $oOrderGroup->getAmazonShippingOrderId() . "</a> \n";
                 $log .= "DisplayableOrderComment: " . $sDisplayAmazonOrderComment . "\n";
                 $log .= "ShippingSpeedCategory: " . $sAmazonShippingMethodSelect . "\n";
                 $oOrderGroup->updateField('amz_fullfilment_order_placed', 'Y');
