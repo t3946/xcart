@@ -375,7 +375,8 @@ class SupplierFeedHelper
                     'brand' => $data,
                     'orderby' => 10,
                     'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N'
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                    'avail' => 'Y'
                 ]);
 
                 $brand->save();
