@@ -376,7 +376,7 @@ class SupplierFeedHelper
                     'orderby' => 10,
                     'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
                     'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                    'avail' => 'Y'
+                    'avail' => true
                 ]);
 
                 $brand->save();
@@ -398,7 +398,10 @@ class SupplierFeedHelper
 
             $model->brandid = $brand->brandid;
 
-            $model->forsale = $brand->avail === 'Y' ? 'Y' : 'N';
+        }
+
+        if ($model && $brand_model = $model->brand) {
+            $model->forsale = $brand_model->avail ? 'Y' : 'N';
         }
 
         return $model;
