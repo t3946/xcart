@@ -396,6 +396,8 @@ class SupplierFeedHelper
             }
 
             $model->brandid = $brand->brandid;
+
+            $model->forsale = $brand->avail === 'Y' ? 'Y' : 'N';
         }
 
         return $model;
