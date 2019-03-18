@@ -98,9 +98,9 @@ class AmazonController extends PrototypeAdminController
                             }
                         }
 
-                        if ($aProduct['manufacturerid'] == 12 && $aProduct['last_order_days'] >= 180) {
+                        /*if ($aProduct['manufacturerid'] == 12 && $aProduct['last_order_days'] >= 180) {
                             $aProduct['restocking_qty'] = 0;
-                        }
+                        }*/
 
                         if ($aProduct['restocking_qty'] > 0) {
                             $div = (int) ($aProduct['restocking_qty'] / $aProduct['min_amount']);
