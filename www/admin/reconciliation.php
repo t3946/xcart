@@ -1296,7 +1296,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 				$reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
 				$reconciliations[$k]["total_invoices_and_memos_amounts_abs"] = abs($total_invoices_and_memos_amounts);
 
-                                if (abs($total_invoices_and_memos_amounts) > 0 && abs($reconciliations[$k]["amount_csv_abs"]) > 0 && $total_invoices_and_memos_amounts != $reconciliations[$k]["amount_csv_abs"]){
+                                if ($total_invoices_and_memos_amounts > 0 && $reconciliations[$k]["amount_csv_abs"] > 0 && $total_invoices_and_memos_amounts != $reconciliations[$k]["amount_csv_abs"]){
                                 	$total_invoices_and_memos_amounts__amount_csv_abs_diff = $reconciliations[$k]["amount_csv_abs"] - $total_invoices_and_memos_amounts;
                                         $total_invoices_and_memos_amounts__amount_csv_abs_diff_abs = abs($total_invoices_and_memos_amounts__amount_csv_abs_diff);
                                         $reconciliations[$k]["total_invoices_and_memos_amounts__amount_csv_abs_diff_abs"] = price_format($total_invoices_and_memos_amounts__amount_csv_abs_diff_abs);
