@@ -1222,9 +1222,9 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 			$reconciliations[$k]["d_bulk_or_individual_order_payments"] = $manufacturerid_info[$manufacturerid]["d_bulk_or_individual_order_payments"];
 		}
 
-                if (!empty($v["amount_csv"]) && $v["amount_csv"] < 0){
-                        $reconciliations[$k]["amount_csv_abs"] = abs($v["amount_csv"]);
-                }
+		if (!empty($v["amount_csv"])) {
+			$reconciliations[$k]["amount_csv_abs"] = abs($v["amount_csv"]);
+		}
 		$reconciliations[$k]['aManufacturersEntities'] = $aManufacturersForReconciliation;
 
 		if ($tab == "unreconciled" || $tab == "reconciled"){
