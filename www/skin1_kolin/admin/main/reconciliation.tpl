@@ -410,7 +410,6 @@ to
   {elseif $tab eq "unreconciled"}
 
 	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
-    {$v.total_invoices_and_memos_amounts} + {$v.amount_csv_abs}
 	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
 		<br />
 		<br />
