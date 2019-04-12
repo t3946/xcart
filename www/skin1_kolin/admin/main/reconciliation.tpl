@@ -411,7 +411,7 @@ to
 
 	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
 
-	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs != 0}
+	{if 1==1 || $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
 		<br />
 		<br />
 		<input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
