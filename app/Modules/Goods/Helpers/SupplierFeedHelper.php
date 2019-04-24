@@ -400,7 +400,7 @@ class SupplierFeedHelper
 
         }
 
-        if ($model && $brand_model = $model->brand) {
+        if ($model && $model->forsale === 'Y' && $brand_model = $model->brand) {
             $model->forsale = $brand_model->avail ? 'Y' : 'N';
         }
 
