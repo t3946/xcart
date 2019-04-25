@@ -247,7 +247,7 @@ class PaymentController extends Controller
                                 'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
                                 'transaction_amount' => $app->request->request->get('payment_gross'),
                                 'login' => $order->login,
-                                'paymentid' => $order->paymentid,
+                                'paymentid' => 100,
                             ]);
 
                             $txn->save();
