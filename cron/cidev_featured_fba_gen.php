@@ -10,7 +10,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 $sql = /*** @lang MySQL */ <<<SQL
 select *
 from (
-    SELECT  p.productid, 
+    SELECT  COALESCE(p.group_root, p.productid) as productid, 
             p.productcode, 
             p.product, 
             p.amazon_fba_avail,
