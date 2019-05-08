@@ -159,7 +159,7 @@ class PromoController extends AbstractCatalogController
         }
 
         return parent::getQS($data)->filter([
-            'avail__gt' => 0,
+            'avail__gte' => 0,
         ])
             ->order(['?'])
             ->cache(10);
