@@ -23,7 +23,7 @@ class Customer extends Data
 
     public function getCustomerFullName()
     {
-        return $this->getField('b_title') . $this->getField('b_firstname');
+        return $this->getField('firstname');
     }
 
     public function getCustomerLogin()
