@@ -108,7 +108,7 @@ class AmazonController extends PrototypeAdminController
                             $div = (int) ($aProduct['restocking_qty'] / $aProduct['min_amount']);
                             $mod = $aProduct['min_amount'] % $aProduct['restocking_qty'];
 
-                            if (!$div) {
+                            if ($div <= 0) {
                                 $div = 1;
                             }
                             if ($mod) {
