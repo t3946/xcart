@@ -124,7 +124,7 @@ class AmazonController extends PrototypeAdminController
                 }
 
                 $params = ['batch_id' => $batch->batch_id];
-                if ($aNewProducts = AmazonReorderingHelper::calculateBestSellers($params)) {
+                /*if ($aNewProducts = AmazonReorderingHelper::calculateBestSellers($params)) {
                     foreach ($aNewProducts as $aNewProduct) {
                         /** @var AmazonReorderBatchDataModel $modelData */
                         [$modelData, $created] = AmazonReorderBatchDataModel::objects()->getOrNew([
@@ -136,7 +136,7 @@ class AmazonController extends PrototypeAdminController
                             $modelData->save();
                         }
                     }
-                }
+                }*/
 
                 $batch->status = 'done';
                 $batch->save();
