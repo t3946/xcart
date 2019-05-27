@@ -43,7 +43,6 @@ INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
 WHERE p.amazon_enabled = 'Y' 
 AND (af.amazon_fba_restricted = 'N' OR af.amazon_fba_restricted IS NULL) 
 AND p.forsale = 'Y'
-AND p.manufacturerid = 577
 AND p.amazon_fba = 'Y'
 SQL;
 
