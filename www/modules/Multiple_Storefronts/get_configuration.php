@@ -108,6 +108,7 @@ if (!empty($configuration)) {
       'shop_closed_method'      => 95,
 	  'new_shipping_calculation' => 990,
 	  'enable_https' => 2000,
+	  'currency' => 3000,
 	);
 
 	foreach ($configuration as $k => $v) {

@@ -5,13 +5,14 @@
         <p/>
         {set $message = $order->notification->email_body}
         {$message|replace:"{{c-fullname}}":$order->firstname}
-        {/if}
+    {/if}
 {/block}
 
 {block 'content'}
     {add $site = $.getSite}
     {add $config = $site->getGlobalConfig()}
     {add $site_config  = $site->getConfig()}
+    {add $site_currency = $site->getCurrency()}
     <table cellspacing="0" cellpadding="0" width="600" bgcolor="#ffffff">
     <tr>
     <td>

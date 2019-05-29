@@ -228,4 +228,9 @@ class SiteModel extends Model
         return $this->code. '-';
     }
 
+    public function getCurrency()
+    {
+        return CurrencyModel::objects()->get(['currency_id' => $this->getConfig()['currency'] ?? 1]);
+    }
+
 }

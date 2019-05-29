@@ -39,12 +39,15 @@
 
 <body>
 
+{if $mode!=='print'}
 {set $message = $order->notification->email_body}
 {$message|replace:"{{c-fullname}}":$order->firstname}
+{/if}
 
 {add $site = $.getSite}
 {add $config = $site->getGlobalConfig()}
 {add $site_config  = $site->getConfig()}
+{add $site_currency = $site->getCurrency()}
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td valign="top"><br/><br/>
@@ -347,7 +350,7 @@
             <td colspan="{$colspan}">
                 <b>
                     {$distributor->manufacturer} Items
-                    (delivery from {$distributor->m_city}, {$distributor->m_state}, {$distributor->m_country} {if $shipping} by {$shipping->getFrontendName()}{/if}, US$ {$group->shipping_gross}):
+                    (delivery from {$distributor->m_city}, {$distributor->m_state}, {$distributor->m_country} {if $shipping} by {$shipping->getFrontendName()}{/if}, {$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($group->shipping_gross)}):
                 </b>
             </td>
         </tr>
@@ -360,9 +363,9 @@
                     <span style="font-size: 11px"><a href="https:{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
                     {include "mail/_parts/_product_options.tpl"}
                 </td>
-                <td align="center" nowrap="nowrap">US$ {$order_detail->price|number_format:2}</td>
+                <td align="center" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order_detail->price)}</td>
                 <td align="center">{$order_detail->amount}</td>
-                <td align="right" nowrap="nowrap">US$ {($order_detail->price * $order_detail->amount)|number_format:2}</td>
+                <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order_detail->price * $order_detail->amount)}</td>
             </tr>
         {/foreach}
         <tr>
@@ -380,19 +383,19 @@
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td align="right" width="100%" height="20"><b>Total:</b>&nbsp;</td>
-        <td align="right" nowrap="nowrap">US$ {$order->subtotal|number_format:2}</td>
+        <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->subtotal)}</td>
     </tr>
     {if $order->discount > 0}
         <tr>
             <td align="right" width="100%" height="20"><b>Discount:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">US$ {$order->discount|number_format:2}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->discount)}</td>
         </tr>
     {/if}
 
     {if $order->coupon}
         <tr>
             <td align="right" width="100%" height="20"><b>Coupon Savings:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">US$ {$order->coupon_discount|number_format:2}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->coupon_discount)}</td>
         </tr>
     {/if}
 
@@ -400,14 +403,14 @@
         <tr>
             <td align="right" width="100%" height="20"><b>Discounted Total:</b>&nbsp;</td>
             <td align="right"
-                nowrap="nowrap">US$ {$order->total - $this->coupon_discount|number_format:2}</td>
+                nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->total - $this->coupon_discount)}</td>
         </tr>
     {/if}
 
     {if $config.disable_shipping != 'Y'}
         <tr>
             <td align="right" width="100%" height="20"><b>Total Shipping Cost:</b></td>
-            <td align="right" nowrap="nowrap">US$ {$order->shipping_cost|number_format:2}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->shipping_cost)}</td>
         </tr>
     {/if}
 
@@ -421,7 +424,7 @@
         <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>Grand total:</b>&nbsp;
         </td>
         <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
-            <b>US$ {$order->total|number_format:2}</b>
+            <b>{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->total)}</b>
         </td>
     </tr>
 

@@ -103,6 +103,7 @@ $domain_specific_config = array(
         'Enable_surf_stats' => '380',
         'Enable_desktop_notifications_on_product_page' => '660',
         'https_enabled' => '2000',
+        'currency' => '3000',
 
         'Preferred_served_country' => '480',
         'Preferred_language' => '580',
