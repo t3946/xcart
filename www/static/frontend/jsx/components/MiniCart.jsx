@@ -104,7 +104,7 @@ export default class MiniCart extends Component
     renderProducts()
     {
         if (this.state.cart.items) {
-console.log(this.state.cart);
+
             return _.map(this.state.cart.items, (item, key)=> (
                 <div className="item" key={key} data-product={item.id}>
                     <div className="image">
