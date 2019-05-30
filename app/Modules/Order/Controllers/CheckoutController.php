@@ -559,6 +559,8 @@ class CheckoutController extends FrontendController
 
         [$shippingAddress, $billingAddress] = $order->getAddressInfo();
 
+        $customerNotesForm->setAttributes(['customer_notes' => $order->customer_notes]);
+
         $this->display('checkout/review.tpl', [
             'order' => $order,
             'shipping_address' => $shippingAddress,
