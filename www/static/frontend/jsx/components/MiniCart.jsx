@@ -104,7 +104,7 @@ export default class MiniCart extends Component
     renderProducts()
     {
         if (this.state.cart.items) {
-
+console.log(this.state.cart);
             return _.map(this.state.cart.items, (item, key)=> (
                 <div className="item" key={key} data-product={item.id}>
                     <div className="image">
@@ -127,7 +127,7 @@ export default class MiniCart extends Component
                                 x
                             </div>
                             <div className="price">
-                                {this.state.currency} {item.price}
+                                {this.state.cart.currency} {item.price}
                             </div>
                         </div>
                     </div>
