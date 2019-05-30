@@ -8,25 +8,23 @@
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
     {set $site_currency = $site->getCurrency()}
+    {set $uri = $site->getHttpOrHttps() ~ $config.CDN_domain}
 
-    {*<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />*}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="date=no">
     <meta name="format-detection" content="address=no">
     <meta name="format-detection" content="email=no">
 
-    <link rel="dns-prefetch" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}">
+    <link rel="dns-prefetch" href="{$uri}">
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-    <link rel="preconnect" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}">
+    <link rel="preconnect" href="{$uri}">
     <link rel="preconnect" href="https://www.google-analytics.com">
 
 
-    <link rel="preload" href="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
-
-    {*<link rel="manifest" href="/manifest.json">*}
+    <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,7 +65,6 @@
     {block 'product_og'}{/block}
 
     {block 'noindex'}{/block}
-
 
     <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
 
@@ -112,19 +109,20 @@
     }
     </script>
 
-
-
-    {*<script src="/static/frontend/dist/js/vendors.js?v={frontend_version resource='vendors.js'}" defer></script>*}
-
     {block 'head'}{/block}
 
     {set $gConfig = $site->getGlobalConfig()}
 
-    {$gConfig.google_analitics_tracking_script
-        |replace:'{{ga_account_nr}}':$config.cidev_ga_code_number
-        |replace:'{{ga_ec_data}}':""
-        |replace:'{{ga_send}}':""
-    }
+    <script>
+        {ignore}
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','{/ignore}{$uri}{ignore}/analytics.js','ga');
+        ga('create', '{/ignore}{$config.cidev_ga_code_number}{ignore}', 'auto',  {'useAmpClientId': true});
+        ga('set', '&cu', '{/ignore}{$site_currency->currency_code}{ignore}');
+        {/ignore}
+    </script>
 
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}
