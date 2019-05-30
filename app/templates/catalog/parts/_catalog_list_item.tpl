@@ -9,13 +9,10 @@
      {if $brand}
          data-brand="{$brand->brand}"
      {/if}
-     {*data-uid="{$item->getUniqueId()}"*}
      data-prices='{$item->getPrices()|json_encode}'
      {if $item->getFrontendPrice() < $item->list_price}
      data-list-price="{$item->list_price}"
      {/if}
-     {*data-price-precalc*}
-     {*data-cart-action="{url 'cart:quantity:set:post' key=$item->getUniqueId()}"*}
      itemscope
      itemtype="http://schema.org/Product"
      itemprop="itemListElement">
@@ -45,12 +42,7 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
-                {*{if $item->isOutOfStock()}*}
-                    {*<span class="splash splash-out">Out of stock</span>*}
-                {*{/if}*}
-
             </a>
-            {*<a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>*}
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
@@ -69,7 +61,6 @@
                 <span class="value">
                     SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
-                {*<a data-tooltip class="has-tip right " title="What is SKU">?</a>*}
             </div>
 
 
@@ -113,27 +104,7 @@
                 </noindex>
             {/if}
 
-
-            {*{set $p_list = $item->getParamList()}*}
-            {*{if $p_list}*}
-                {*<div class="parameters show-for-medium">*}
-                    {*<ul class="no-bullet">*}
-                        {*{foreach $p_list as $param index=$index}*}
-                            {*<li>*}
-                                {*{$param.name}: {raw $param.values|join}*}
-                            {*</li>*}
-
-                            {*{if $index >= 3}*}
-                                {*{break}*}
-                            {*{/if}*}
-                        {*{/foreach}*}
-
-                    {*</ul>*}
-                {*</div>*}
-            {*{/if}*}
-
         </div>
-
 
         <div class="cart_price_container container">
             <div class="price_container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">

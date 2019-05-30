@@ -127,7 +127,7 @@ export default class MiniCart extends Component
                                 x
                             </div>
                             <div className="price">
-                                US$ {item.price}
+                                {this.state.currency} {item.price}
                             </div>
                         </div>
                     </div>

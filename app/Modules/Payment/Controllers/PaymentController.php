@@ -17,6 +17,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
@@ -50,7 +51,7 @@ class PaymentController extends Controller
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
-                    'currency' => 'USD',
+                    'currency' => $order->currency,
                     'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}"
                 ];
 
@@ -59,7 +60,7 @@ class PaymentController extends Controller
                     $params = [
                         'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
                         'amount' => $order->total,
-                        'currency' => 'USD',
+                        'currency' => $order->currency,
                         'payment_method_model' => $order->payment_method_model
                     ];
 

@@ -92,21 +92,17 @@ class CartController extends BaseCartController
 
     public function actionProductsGet(): void
     {
-        $isAjax = $this->getRequest()->getIsAjax();
-        $cart = $this->getCart();
-
-        if ($isAjax) {
+        if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getCartStateArray());
             Xcart::app()->end();
         }
-        else {
-            echo $cart->getQuantity();
-        }
+        echo $this->getCart()->getQuantity();
     }
 
     public function getCartStateArray(): array
     {
         $cart = $this->getCart();
+        $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
 
         return [
             'total' => $cart->getTotal(),
@@ -114,6 +110,7 @@ class CartController extends BaseCartController
             'quantity' => $cart->getQuantity(),
             'items' => $this->getCartProductsArray(),
             'groups' => $this->getCartGroupsArray(),
+            'currency' => "{$currency->symbol_prefix}{$currency}"
           //  'options' => $this->getOptions(),
         ];
     }

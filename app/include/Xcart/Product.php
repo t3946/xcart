@@ -379,7 +379,7 @@ SQL;
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock() && $fPrice > $this->cost_to_us) {
+        if ($fPrice > $this->cost_to_us && $this->isProductOutOfStock() && $this->isSupplierFeedsEnabled()) {
             $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
             $fPrice = max($this->getMapPrice(), $fPrice);
         }

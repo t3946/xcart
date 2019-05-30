@@ -73,9 +73,10 @@ class CheckoutController extends FrontendController
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
         /** @var OrderModel $order */
-
+        /** @var SiteModel $site */
         /** @var Application $app */
         $app = Xcart::app();
+        $site = $app->getModule('Sites')->getSite();
         $cart = $app->cart;
         $shipping = null;
         $shippingForm = new ShippingForm();
@@ -93,6 +94,7 @@ class CheckoutController extends FrontendController
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
                     'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
                     'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                    'currency'  => $site->getCurrency()->currency_code ?? 'USD'
                 ]));
 
                 if ($order->save()) {
