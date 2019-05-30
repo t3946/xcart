@@ -1,6 +1,7 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 {block 'content'}
-    {set $cartEmpty = $.app->cart->getIsEmpty()}
+{set $cartEmpty = $.app->cart->getIsEmpty()}
+{add $site_currency = $site->getCurrency()}
 <section class="cart-page cart_shipping-page">
     <div class="row">
         <div class="columns large-12">
