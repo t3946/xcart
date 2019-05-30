@@ -51,12 +51,12 @@
                                     </div>
                                     <div class="price-info hide-for-large">
                                         {set $extended = $item->amount * $item->price}
-                                        {$item->amount} x US$&nbsp;<span class="price">{$item->price|number_format:2}</span> = US$&nbsp;<span class="price">{$extended|number_format:2}</span>
+                                        {$item->amount} x {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($item->price)}</span> = {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($extended)}</span>
                                     </div>
                                 </div>
 
                                 <div class="order-table-cell price-info show-for-large">
-                                    US$&nbsp;<span class="price">{$item->price|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>
                                 </div>
 
                                 <div class="order-table-cell quantity show-for-large">
@@ -65,7 +65,7 @@
 
                                 <div class="order-table-cell extended show-for-large">
                                     {set $extended = $item->amount * $item->price}
-                                    US$&nbsp;<span class="price">{$extended|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($extended)}</span>
                                 </div>
                             </div>
                         {/foreach}
@@ -83,7 +83,7 @@
                                 </span>
                             {/if}
                             <span class="sum">
-                                US$&nbsp;<span class="price">{$group->shipping_gross|number_format:2}</span>
+                                {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($group->shipping_gross)}</span>
                             </span>
                         </div>
                     </div>
@@ -102,21 +102,20 @@
             <div class="order-total">
                 <div class="info-row total">
                     <span class="sum-info-label">{t 'Total' dict='order'}:</span>
-                    <span class="sum">US$&nbsp;<span class="price">{$order->subtotal|number_format:2}</span></span>
+                    <span class="sum">{$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($order->subtotal)}</span></span>
                 </div>
                 <div class="info-row total-shipping">
                     <span class="sum-info-label">{t 'Total Shipping Cost' dict='order'}:</span>
-                    <span class="sum">US$&nbsp;<span class="price">{$order->shipping_cost|number_format:2}</span></span>
+                    <span class="sum">{$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span></span>
                 </div>
                 <div class="info-row grand-total">
                     <span class="label">{t 'Grand Total' dict='order'}</span>
-                    <span class="sum">US$&nbsp;<span class="price">{$order->total|number_format:2}</span></span>
+                    <span class="sum">{$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($order->total)}</span></span>
                 </div>
                 {if $hst}
                 <div class="info-row ">
                     <span class="label">{t 'Including 13% HST' dict='order'}</span>
-                    <span class="sum">US$&nbsp;<span class="price">{$order->tax|number_format:2}</span></span>
-                    {*<span class="sum">US$&nbsp;<span class="price">23.67</span></span>*}
+                    <span class="sum">{$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($order->tax)}</span></span>
                 </div>
                 {/if}
             </div>

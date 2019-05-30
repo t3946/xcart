@@ -109,7 +109,7 @@
                                                         </div>
 
                                                         <div class="methods-cell delivery-item-price">
-                                                            <span class="cost">US$ {$quote->getShippingCharge()|number_format:2}</span>
+                                                            <span class="cost">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($quote->getShippingCharge())}</span>
                                                         </div>
 
                                                     </div>
@@ -143,7 +143,7 @@
                                 <div class="non-us-disclaimer checkbox-container">
                                     <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation"/>
                                     <label for="non-us-disclaimer-checkbox">
-                                        By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in USD.
+                                        By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in {$site_currency->currency_code}.
                                     </label>
                                 </div>
                             </div>

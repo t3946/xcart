@@ -1,4 +1,6 @@
 {add $brand = $item->cache()->brand}
+{add $site = $.getSite}
+{add $site_currency = $site->getCurrency()}
 
 <div class="item product{if $item->isOutOfStock()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
      data-product="{$item->productid}"
@@ -7,13 +9,10 @@
      {if $brand}
          data-brand="{$brand->brand}"
      {/if}
-     {*data-uid="{$item->getUniqueId()}"*}
      data-prices='{$item->getPrices()|json_encode}'
      {if $item->getFrontendPrice() < $item->list_price}
      data-list-price="{$item->list_price}"
      {/if}
-     {*data-price-precalc*}
-     {*data-cart-action="{url 'cart:quantity:set:post' key=$item->getUniqueId()}"*}
      itemscope
      itemtype="http://schema.org/Product"
      itemprop="itemListElement">
@@ -43,12 +42,7 @@
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
-                {*{if $item->isOutOfStock()}*}
-                    {*<span class="splash splash-out">Out of stock</span>*}
-                {*{/if}*}
-
             </a>
-            {*<a href="#" class="button yellow-white button-quick-view hide waves">quick view</a>*}
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
@@ -67,7 +61,6 @@
                 <span class="value">
                     SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
-                {*<a data-tooltip class="has-tip right " title="What is SKU">?</a>*}
             </div>
 
 
@@ -111,34 +104,14 @@
                 </noindex>
             {/if}
 
-
-            {*{set $p_list = $item->getParamList()}*}
-            {*{if $p_list}*}
-                {*<div class="parameters show-for-medium">*}
-                    {*<ul class="no-bullet">*}
-                        {*{foreach $p_list as $param index=$index}*}
-                            {*<li>*}
-                                {*{$param.name}: {raw $param.values|join}*}
-                            {*</li>*}
-
-                            {*{if $index >= 3}*}
-                                {*{break}*}
-                            {*{/if}*}
-                        {*{/foreach}*}
-
-                    {*</ul>*}
-                {*</div>*}
-            {*{/if}*}
-
         </div>
-
 
         <div class="cart_price_container container">
             <div class="price_container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">
                         <span class="title">List Price:</span>
-                        <span class="price">US$ {$item->list_price}</span>
+                        <span class="price">{$site_currency->symbol_prefix}{$site_currency->symbol} {$site_currency->getCurrencyFormat($item->list_price)}</span>
                     </span>
                 {/if}
 
@@ -146,8 +119,8 @@
                 <span class="current">
                     <span class="title">Price:</span>
                     <span class="price">
-                        <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price" var-price>{$item->getFrontendPrice()|number_format:2}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency->symbol}</span>
+                        <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>
 
                         {if $item->isOutOfStock()}
                             <link itemprop="availability" href="http://schema.org/OutOfStock" />
@@ -160,21 +133,21 @@
                     {if $item->getFrontendPrice() != $item->getFrontendPrice(2)}
                     <div>
                         <span class="price-title">Price from:</span>
-                        <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price">{$item->getFrontendPrice(1)|number_format:2}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
+                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
                     </div>
 
                     <div>
                         <span class="price-title">Price to:</span>
-                        <span itemprop="priceCurrency" content="USD">US$</span>
-                        <span itemprop="price">{$item->getFrontendPrice(2)|number_format:2}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
+                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>
                     </div>
                     {else}
                         <span class="current">
                             <span class="title">Price:</span>
                             <span class="price">
-                                <span itemprop="priceCurrency" content="USD">US$</span>
-                                <span itemprop="price">{$item->getFrontendPrice(1)|number_format:2}</span>
+                                <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
+                                <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
                             </span>
                         </span>
                     {/if}

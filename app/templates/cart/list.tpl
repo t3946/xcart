@@ -109,7 +109,7 @@
 
 
                                 <div class="table-column price show-for-large format_price">
-                                    US$ <span class="price" var-price>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
@@ -138,10 +138,10 @@
 
                                     <div class="table-column extended format_price">
                                         <span class="show-for-large">
-                                            US$ <span class="price" var-price-extended>{$position->getPrice()|number_format:2}</span>
+                                            {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->getPrice())}</span>
                                         </span>
                                         <span class="hide-for-large">
-                                            US$ <span class="price" var-price-extended>{$position->object->getFrontendPrice($position->quantity)|number_format:2}</span>
+                                            {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@
                                     <b>warehouse subtotal</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
-                                    US$ <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$group.subtotal|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>
                                 </div>
                             </div>
 
@@ -183,7 +183,7 @@
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
                         {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
-                            The minimum order amount for this product line is US$ {$warehouse->getMinimalAmount()}
+                            The minimum order amount for this product line is {$site_currency->symbol_prefix}{$site_currency} {$warehouse->getMinimalAmount()}
                         {/p_label}
                         {/if}
                         {if !$warehouse->hasCanadaShippingZone()}
@@ -204,7 +204,7 @@
                     <div class="grand-subtotal">
                         Subtotal:
                         <div class="subtotal">
-                            US$ <span class="cart_subtotal" var-cart-subtotal>{$total|number_format:2}</span>
+                            {$site_currency->symbol_prefix}{$site_currency} <span class="cart_subtotal" var-cart-subtotal>{$site_currency->getCurrencyFormat($total)}</span>
                         </div>
                     </div>
 

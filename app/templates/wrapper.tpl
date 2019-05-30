@@ -7,6 +7,7 @@
 
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
+    {set $site_currency = $site->getCurrency()}
 
     {*<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />*}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

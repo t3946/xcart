@@ -81,6 +81,8 @@ use Xcart\Product;
  */
 class ProductModel extends Model implements ICartItem
 {
+    private $front_name;
+
     public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
     public const NO_ASIN_FOUND = 'No ASIN found';
@@ -582,15 +584,19 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendName()
     {
-        $brand_name = '';
+        if ($this->front_name === null) {
+            $brand_name = '';
 
-        $name = $this->seo_product_name ?: $this->product;
+            $name = $this->seo_product_name ?: $this->product;
 
-        if ($brand = $this->brand) {
-            $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+            if ($brand = $this->brand) {
+                $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+            }
+
+            $this->front_name = ($this->isGroupChild()) ? $this->group_mask . ' ' . $name : $brand_name . $name;
         }
 
-        return ($this->isGroupChild()) ?  $this->group_mask . " ". $name : $brand_name . $name;
+        return $this->front_name;
     }
 
     public function getFrontendDescription()

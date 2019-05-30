@@ -82,7 +82,7 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
             'night_phone_c' => substr($order->phone, -4),
             'item_name' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}",
             'amount' => sprintf("%0.2f", $order->total),
-            'currency_code' => 'USD',
+            'currency_code' => $order->currency,
             'bn' => 'x-cart',
             'paymentaction' => 'authorization',
             'address1' => $order->b_address,

@@ -58,6 +58,7 @@
     "linkstate": "^1.1.0",
     "lodash": "^4.17.10",
     "modernizr": "^3.5.0",
+    "npm": "^6.9.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.16.0",
     "preact-markup": "^1.6.0",
