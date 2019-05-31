@@ -19,6 +19,7 @@ use Xcart\ShippingRate;
  * @property int rateid
  *
  * @method null|float getShippingCharge
+ * @method getShippingQuote()
  */
 class ShippingRateModel extends Model
 {

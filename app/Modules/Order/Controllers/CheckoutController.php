@@ -304,11 +304,12 @@ class CheckoutController extends FrontendController
                             $charge = 0;
 
                             /** @var ShippingRateModel[] $shipping_rates */
-                            if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $shipping_rates[$rate->rateid]) {
-                                $charge = $shipping_rates[$rate->rateid]->getShippingCharge();
+                            if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $sh_rate = $shipping_rates[$rate->rateid]) {
+                                $charge = $sh_rate->getShippingCharge();
                                 $group->setAttributes([
-                                    'shippingid' => $shipping_rates[$rate->rateid]->shippingid,
-                                    'shipping' => $shipping_rates[$rate->rateid]->shipping->getFrontendName(),
+                                    'shippingid' => $sh_rate->shippingid,
+                                    'shipping' => $sh_rate->shipping->getFrontendName(),
+                                    'shipping_quote' => $sh_rate->getShippingQuote()
                                 ]);
                             }
                         }
