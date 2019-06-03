@@ -9241,11 +9241,14 @@ i.icon.m {
     line-height: 1; }
   .admin .button:hover {
     border-color: royalblue;
-    box-shadow: #c4c4c4 0 1px 1px 0, #f0eeee 0 -2px 2px 0 inset, #f6f6f6 0 2px 3px 0 inset; }
+    box-shadow: #c4c4c4 0 1px 1px 0, #f0eeee 0 -2px 2px 0 inset, #f6f6f6 0 2px 3px 0 inset;
+    color: #550000; }
     .admin .button:hover.darkred {
       border-color: darkred; }
     .admin .button:hover.green {
       border-color: green; }
+  .admin .button:visited {
+    color: #550000; }
 
 .admin .drag .container {
   min-width: 5px;
