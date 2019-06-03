@@ -70,32 +70,70 @@
             </tr>
             <tr>
                 <td align="right"><b>Cardholder's name:</b></td>
-                <td><input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}"/></td>
+                <td>
+                    <input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}"/>
+                    <a href="#help-1" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span  id="help-1">{$lng.help_cardholder_label}</span>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td align="right"><b>Card number:</b></td>
-                <td><input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"
+                <td>
+                    <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"
                            id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')"/>
+                    <a href="#help-2" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span id="help-2">{$lng.help_cardnumber_text}</span>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td align="right"><b>Expiration date:</b></td>
                 <td><input type="text" name="paypal_vt[expiration_month]" value="" placeholder="MM" size="2"
                            maxlength="2"/> / <b>20</b><input type="text" name="paypal_vt[expiration_year]" value=""
-                                                             placeholder="YY" size="2" maxlength="2"/></td>
+                                                             placeholder="YY" size="2" maxlength="2"/>
+                    <a href="#help-3" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span id="help-3">{$lng.help_card_expiration_text}</span>
+                    </div>
+                </td>
             </tr>
 
             <tr>
                 <td nowrap="nowrap" align="right"><b>Security code (CSC):</b>
                     <div class="cidev_field_descr">Optional</div>
                 </td>
-                <td><input type="text" name="paypal_vt[csc]" value="" size="4" maxlength="4" autocomplete="off"/></td>
+                <td>
+                    <input type="text" name="paypal_vt[csc]" value="" size="4" maxlength="4" autocomplete="off"/>
+                    <a href="#help-4" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span id="help-4">{$lng.help_card_cvv_text}</span>
+                    </div>
+                </td>
             </tr>
 
-
             <tr>
-                <td align="right"><h3 style="color: #000000;">{$lng.lbl_billing_address}</h3></td>
-                <td></td>
+                <td align="right">
+                    <h3 style="color: #000000;">{$lng.lbl_billing_address}</h3>
+                </td>
+                <td>
+                    <a href="#help-5" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span id="help-5">{$lng.help_billing_address_text}</span>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td align="right"><b>{$lng.lbl_address}:</b></td>
@@ -148,6 +186,19 @@
                         <option value="Paypal VT">Paypal VT</option>
                         <option value="BluePay VT">BluePay VT</option>
                     </select>
+                    <a href="#help-5" class="mmodal">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                    <div class="hidden">
+                        <span id="help-5">{$lng.help_billing_address_text}</span>
+                    </div>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
                     <div id="default_Authorize_button">
                         <input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');"/>
                     </div>
