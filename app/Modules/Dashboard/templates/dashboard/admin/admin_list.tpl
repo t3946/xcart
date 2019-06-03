@@ -4,7 +4,9 @@
         <a href="{url 'dashboard:create_filter'}" class="button">
             <i class="icon-plus"></i>
         </a>
+        <a style="float:right" href="{url 'dashboard:create_filter'}">Create order filter</a>
     </h1>
+
 {/block}
 
 {block 'content'}
