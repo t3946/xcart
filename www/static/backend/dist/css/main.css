@@ -8913,7 +8913,9 @@ i.icon.m {
       margin: 3px;
       padding: 3px 7px;
       line-height: 1.5;
-      display: inline-block; }
+      display: inline-block;
+      border: 1px solid;
+      border-radius: 4px; }
   .admin .OrderSheet .message {
     margin-bottom: 1em; }
   .admin .OrderSheet .separator td {
