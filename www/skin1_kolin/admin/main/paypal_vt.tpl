@@ -76,7 +76,7 @@
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                     <div class="hidden">
-                        <span  id="help-1">{$lng.help_cardholder_label}</span>
+                        <span  id="help-1">{$lng.help_cardholder_text}</span>
                     </div>
                 </td>
             </tr>
