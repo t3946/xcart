@@ -160,7 +160,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
 
 
 
-<table cellpadding="3" cellspacing="1" >
+<table width="100%" cellpadding="3" cellspacing="1" >
 
 <tr><td colspan="5">This deposit contains checks for the following orders:</td></tr>
 
@@ -168,7 +168,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
         <td width="75">Order #</td>
         <td width="150"> Customer Check #</td>
         <td width="70">Amount</td>
-        <td width="500">Internal Notes</td>
+        <td width="*">Internal Notes</td>
 	<td {if $checks_deposited.status ne "P"}style="background: #ffffff;"{/if}>{if $checks_deposited.status eq "P"}Del{/if}</td>
 </tr>
 
