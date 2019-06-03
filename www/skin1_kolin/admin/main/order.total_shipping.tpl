@@ -7,14 +7,14 @@
     <td colspan="6">&nbsp;</td>
     <td align="right">
         {include file="currency2.tpl" value=$oOrder->getOrderShippingNet() hide_zero='Y'}
-        <div class="bg__yellow color__black">{$order_store->getActualShippingCostNet()|price_format}</div>
-        <div class="bg__amazon color__black">{$order_store->getAmazonCompetitorsMinShipping()|price_format}</div>
+        <div class="bg__yellow color__black">{$order_store->getActualShippingCostNet()|number_format:2:'.':','}</div>
+        <div class="bg__amazon color__black">{$order_store->getAmazonCompetitorsMinShipping()|number_format:2:'.':','}</div>
     </td>
     <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingHST() hide_zero='Y'}</td>
     <td align="right">
         {include file="currency2.tpl" value=$oOrder->getOrderShippingGross() hide_zero='Y'}
-        <div class="bg__yellow color__black">{$order_store->getActualShippingCostGross()|price_format}</div>
-        <div class="bg__amazon color__black">{$order_store->getAmazonCompetitorsMinShipping()|price_format}</div>
+        <div class="bg__yellow color__black">{$order_store->getActualShippingCostGross()|number_format:2:'.':','}</div>
+        <div class="bg__amazon color__black">{$order_store->getAmazonCompetitorsMinShipping()|number_format:2:'.':','}</div>
     </td>
     <td>&nbsp;</td>
 </tr>
