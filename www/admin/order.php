@@ -686,13 +686,12 @@ if ($REQUEST_METHOD == "POST") {
             }
 
             $subj .= " (posted on " . $date_sent . ")";
+            func_log_order($orderid, 'X', $log1, $login);
         }
         else {
-            $log1 = "'Post message' at 'Important messages'";
             $log2 = "<b>$subject_line</b><br/>" . $notes;
         }
 
-        func_log_order($orderid, 'X', $log1, $login);
         func_log_order($orderid, 'S', $log2, $login);
 
         $body = $notes . "\n\nposted by " . $userfullname . " (" . $login . ")";
