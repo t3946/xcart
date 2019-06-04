@@ -34,11 +34,16 @@
         <tr>
             <td align="right" style="font-size: .93rem;"><b>Short payment description* :</b>
             </td>
-            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_notes" value="" size="64" id="paypal_request_notes" /></td>
+            {assign var="module" value=$xcartApp->getModule('Sites')}
+            {assign var="site" value=$module->getSite()}
+            {assign var="site_config" value=$site->getConfig()}
+            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_notes" size="64" id="paypal_request_notes"
+                value="{$site_config.company_name} order # {$oOrder->getDisplayOrderNumber()}"
+                /></td>
         </tr>
         <tr>
             <td align="right" style="font-size: .93rem;"><b>Request amount* :</b> </td>
-            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_amount" value="0.00" size="8" id="paypal_request_amount" />
+            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_amount" value="{$oOrder->total|number_format:2:'.':','}" size="8" id="paypal_request_amount" />
                 <select style="font-size: .93rem; padding: 2px;" name="paypal_request_currency" id="paypal_request_currency">
                     <option value="USD">US Dollars</option>
                     <option value="CAD">CA Dollars</option>
