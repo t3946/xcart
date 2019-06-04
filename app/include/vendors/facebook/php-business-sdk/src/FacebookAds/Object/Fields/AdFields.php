@@ -69,12 +69,12 @@ class AdFields extends AbstractEnum {
   const TRACKING_AND_CONVERSION_WITH_DEFAULTS = 'tracking_and_conversion_with_defaults';
   const TRACKING_SPECS = 'tracking_specs';
   const UPDATED_TIME = 'updated_time';
+  const ADSET_SPEC = 'adset_spec';
   const AUDIENCE_ID = 'audience_id';
   const DATE_FORMAT = 'date_format';
-  const INCLUDE_DEMOLINK_HASHES = 'include_demolink_hashes';
-  const ADSET_SPEC = 'adset_spec';
   const DRAFT_ADGROUP_ID = 'draft_adgroup_id';
   const EXECUTION_OPTIONS = 'execution_options';
+  const INCLUDE_DEMOLINK_HASHES = 'include_demolink_hashes';
   const FILENAME = 'filename';
 
   public function getFieldTypes() {
@@ -111,12 +111,12 @@ class AdFields extends AbstractEnum {
       'tracking_and_conversion_with_defaults' => 'TrackingAndConversionWithDefaults',
       'tracking_specs' => 'list<ConversionActionQuery>',
       'updated_time' => 'datetime',
+      'adset_spec' => 'AdSet',
       'audience_id' => 'string',
       'date_format' => 'string',
-      'include_demolink_hashes' => 'bool',
-      'adset_spec' => 'AdSet',
       'draft_adgroup_id' => 'string',
       'execution_options' => 'list<ExecutionOptions>',
+      'include_demolink_hashes' => 'bool',
       'filename' => 'file',
     );
   }

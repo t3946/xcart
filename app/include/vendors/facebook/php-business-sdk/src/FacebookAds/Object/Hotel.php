@@ -84,40 +84,6 @@ class Hotel extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function createHotelRoom(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'room_id' => 'string',
-      'description' => 'string',
-      'name' => 'string',
-      'url' => 'string',
-      'currency' => 'string',
-      'base_price' => 'float',
-      'applinks' => 'Object',
-      'images' => 'list<Object>',
-      'margin_level' => 'unsigned int',
-      'pricing_variables' => 'list<Object>',
-      'sale_price' => 'float',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/hotel_rooms',
-      new HotelRoom(),
-      'EDGE',
-      HotelRoom::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function deleteSelf(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -169,17 +135,17 @@ class Hotel extends AbstractCrudObject {
 
     $param_types = array(
       'address' => 'Object',
-      'brand' => 'string',
-      'description' => 'string',
-      'name' => 'string',
-      'url' => 'string',
-      'images' => 'list<Object>',
-      'currency' => 'string',
-      'base_price' => 'unsigned int',
       'applinks' => 'Object',
+      'base_price' => 'unsigned int',
+      'brand' => 'string',
+      'currency' => 'string',
+      'description' => 'string',
+      'guest_ratings' => 'list<Object>',
+      'images' => 'list<Object>',
+      'name' => 'string',
       'phone' => 'string',
       'star_rating' => 'float',
-      'guest_ratings' => 'list<Object>',
+      'url' => 'string',
     );
     $enums = array(
     );

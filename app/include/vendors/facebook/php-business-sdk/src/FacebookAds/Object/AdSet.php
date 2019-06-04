@@ -30,7 +30,6 @@ use FacebookAds\Http\RequestInterface;
 use FacebookAds\TypeChecker;
 use FacebookAds\Object\Fields\AdSetFields;
 use FacebookAds\Object\Values\AdActivityCategoryValues;
-use FacebookAds\Object\Values\AdAsyncRequestStatusesValues;
 use FacebookAds\Object\Values\AdCampaignDeliveryEstimateOptimizationGoalValues;
 use FacebookAds\Object\Values\AdDatePresetValues;
 use FacebookAds\Object\Values\AdSetBidStrategyValues;
@@ -43,6 +42,7 @@ use FacebookAds\Object\Values\AdSetExecutionOptionsValues;
 use FacebookAds\Object\Values\AdSetFullFunnelExplorationModeValues;
 use FacebookAds\Object\Values\AdSetOperatorValues;
 use FacebookAds\Object\Values\AdSetOptimizationGoalValues;
+use FacebookAds\Object\Values\AdSetOptimizationSubEventValues;
 use FacebookAds\Object\Values\AdSetStatusOptionValues;
 use FacebookAds\Object\Values\AdSetStatusValues;
 use FacebookAds\Object\Values\AdsInsightsActionAttributionWindowsValues;
@@ -74,7 +74,7 @@ class AdSet extends AbstractArchivableCrudObject
    * @deprecated getEndpoint function is deprecated
    */
   protected function getEndpoint() {
-    return 'adsets';
+    return 'ad_sets';
   }
 
   /**
@@ -92,10 +92,11 @@ class AdSet extends AbstractArchivableCrudObject
     $ref_enums['EffectiveStatus'] = AdSetEffectiveStatusValues::getInstance()->getValues();
     $ref_enums['OptimizationGoal'] = AdSetOptimizationGoalValues::getInstance()->getValues();
     $ref_enums['Status'] = AdSetStatusValues::getInstance()->getValues();
-    $ref_enums['DatePreset'] = AdSetDatePresetValues::getInstance()->getValues();
     $ref_enums['DestinationType'] = AdSetDestinationTypeValues::getInstance()->getValues();
     $ref_enums['ExecutionOptions'] = AdSetExecutionOptionsValues::getInstance()->getValues();
     $ref_enums['FullFunnelExplorationMode'] = AdSetFullFunnelExplorationModeValues::getInstance()->getValues();
+    $ref_enums['OptimizationSubEvent'] = AdSetOptimizationSubEventValues::getInstance()->getValues();
+    $ref_enums['DatePreset'] = AdSetDatePresetValues::getInstance()->getValues();
     $ref_enums['Operator'] = AdSetOperatorValues::getInstance()->getValues();
     $ref_enums['StatusOption'] = AdSetStatusOptionValues::getInstance()->getValues();
     return $ref_enums;
@@ -107,12 +108,12 @@ class AdSet extends AbstractArchivableCrudObject
 
     $param_types = array(
       'after' => 'string',
+      'business_id' => 'string',
+      'category' => 'category_enum',
       'limit' => 'int',
       'since' => 'datetime',
-      'category' => 'category_enum',
-      'until' => 'datetime',
       'uid' => 'int',
-      'business_id' => 'string',
+      'until' => 'datetime',
     );
     $enums = array(
       'category_enum' => AdActivityCategoryValues::getInstance()->getValues(),
@@ -259,12 +260,13 @@ class AdSet extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'include_deleted' => 'bool',
-      'effective_status' => 'list<string>',
+      'ad_draft_id' => 'string',
       'date_preset' => 'date_preset_enum',
+      'effective_status' => 'list<string>',
+      'include_deleted' => 'bool',
+      'include_drafts' => 'bool',
       'time_range' => 'Object',
       'updated_since' => 'int',
-      'ad_draft_id' => 'string',
     );
     $enums = array(
       'date_preset_enum' => AdDatePresetValues::getInstance()->getValues(),
@@ -285,71 +287,17 @@ class AdSet extends AbstractArchivableCrudObject
     return $pending ? $request : $request->execute();
   }
 
-  public function getAsyncAdRequests(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'statuses' => 'list<statuses_enum>',
-    );
-    $enums = array(
-      'statuses_enum' => AdAsyncRequestStatusesValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/asyncadrequests',
-      new AdAsyncRequest(),
-      'EDGE',
-      AdAsyncRequest::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getCopies(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'effective_status' => 'list<effective_status_enum>',
-      'date_preset' => 'date_preset_enum',
-      'is_completed' => 'bool',
-      'time_range' => 'Object',
-    );
-    $enums = array(
-      'effective_status_enum' => AdSetEffectiveStatusValues::getInstance()->getValues(),
-      'date_preset_enum' => AdSetDatePresetValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/copies',
-      new AdSet(),
-      'EDGE',
-      AdSet::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function createCopy(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
-      'deep_copy' => 'bool',
       'campaign_id' => 'string',
-      'rename_options' => 'Object',
-      'status_option' => 'status_option_enum',
-      'start_time' => 'datetime',
-      'end_time' => 'datetime',
       'create_dco_adset' => 'bool',
+      'deep_copy' => 'bool',
+      'end_time' => 'datetime',
+      'rename_options' => 'Object',
+      'start_time' => 'datetime',
+      'status_option' => 'status_option_enum',
     );
     $enums = array(
       'status_option_enum' => AdSetStatusOptionValues::getInstance()->getValues(),
@@ -374,9 +322,9 @@ class AdSet extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'targeting_spec' => 'Targeting',
       'optimization_goal' => 'optimization_goal_enum',
       'promoted_object' => 'Object',
+      'targeting_spec' => 'Targeting',
     );
     $enums = array(
       'optimization_goal_enum' => AdCampaignDeliveryEstimateOptimizationGoalValues::getInstance()->getValues(),
@@ -401,21 +349,21 @@ class AdSet extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'default_summary' => 'bool',
-      'fields' => 'list<string>',
-      'filtering' => 'list<Object>',
-      'summary' => 'list<string>',
-      'sort' => 'list<string>',
       'action_attribution_windows' => 'list<action_attribution_windows_enum>',
       'action_breakdowns' => 'list<action_breakdowns_enum>',
       'action_report_time' => 'action_report_time_enum',
       'breakdowns' => 'list<breakdowns_enum>',
       'date_preset' => 'date_preset_enum',
+      'default_summary' => 'bool',
       'export_columns' => 'list<string>',
       'export_format' => 'string',
       'export_name' => 'string',
+      'fields' => 'list<string>',
+      'filtering' => 'list<Object>',
       'level' => 'level_enum',
       'product_id_limit' => 'int',
+      'sort' => 'list<string>',
+      'summary' => 'list<string>',
       'summary_action_breakdowns' => 'list<summary_action_breakdowns_enum>',
       'time_increment' => 'string',
       'time_range' => 'Object',
@@ -451,21 +399,21 @@ class AdSet extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'default_summary' => 'bool',
-      'fields' => 'list<string>',
-      'filtering' => 'list<Object>',
-      'summary' => 'list<string>',
-      'sort' => 'list<string>',
       'action_attribution_windows' => 'list<action_attribution_windows_enum>',
       'action_breakdowns' => 'list<action_breakdowns_enum>',
       'action_report_time' => 'action_report_time_enum',
       'breakdowns' => 'list<breakdowns_enum>',
       'date_preset' => 'date_preset_enum',
+      'default_summary' => 'bool',
       'export_columns' => 'list<string>',
       'export_format' => 'string',
       'export_name' => 'string',
+      'fields' => 'list<string>',
+      'filtering' => 'list<Object>',
       'level' => 'level_enum',
       'product_id_limit' => 'int',
+      'sort' => 'list<string>',
+      'summary' => 'list<string>',
       'summary_action_breakdowns' => 'list<summary_action_breakdowns_enum>',
       'time_increment' => 'string',
       'time_range' => 'Object',
@@ -554,25 +502,25 @@ class AdSet extends AbstractArchivableCrudObject
     );
     $enums = array(
       'date_preset_enum' => array(
-        'today',
-        'yesterday',
-        'this_month',
-        'last_month',
-        'this_quarter',
-        'lifetime',
-        'last_3d',
-        'last_7d',
         'last_14d',
         'last_28d',
         'last_30d',
+        'last_3d',
+        'last_7d',
         'last_90d',
+        'last_month',
+        'last_quarter',
         'last_week_mon_sun',
         'last_week_sun_sat',
-        'last_quarter',
         'last_year',
+        'lifetime',
+        'this_month',
+        'this_quarter',
         'this_week_mon_today',
         'this_week_sun_today',
         'this_year',
+        'today',
+        'yesterday',
       ),
     );
 
@@ -598,14 +546,14 @@ class AdSet extends AbstractArchivableCrudObject
       'account_id' => 'string',
       'ad_keywords' => 'Object',
       'adlabels' => 'list<Object>',
-      'bid_amount' => 'int',
+      'adset_schedule' => 'list<Object>',
+      'attribution_spec' => 'list<map>',
       'bid_adjustments' => 'Object',
+      'bid_amount' => 'int',
       'bid_constraints' => 'map<string, Object>',
       'bid_strategy' => 'bid_strategy_enum',
       'billing_event' => 'billing_event_enum',
       'campaign_spec' => 'Object',
-      'adset_schedule' => 'list<Object>',
-      'status' => 'status_enum',
       'creative_sequence' => 'list<string>',
       'daily_budget' => 'unsigned int',
       'daily_imps' => 'unsigned int',
@@ -615,34 +563,36 @@ class AdSet extends AbstractArchivableCrudObject
       'destination_type' => 'destination_type_enum',
       'end_time' => 'datetime',
       'execution_options' => 'list<execution_options_enum>',
+      'full_funnel_exploration_mode' => 'full_funnel_exploration_mode_enum',
       'lifetime_budget' => 'unsigned int',
       'lifetime_imps' => 'unsigned int',
       'lifetime_min_spend_target' => 'unsigned int',
       'lifetime_spend_cap' => 'unsigned int',
       'name' => 'string',
       'optimization_goal' => 'optimization_goal_enum',
+      'optimization_sub_event' => 'optimization_sub_event_enum',
       'pacing_type' => 'list<string>',
       'promoted_object' => 'Object',
       'rb_prediction_id' => 'string',
       'rf_prediction_id' => 'string',
       'start_time' => 'datetime',
+      'status' => 'status_enum',
       'targeting' => 'Targeting',
       'time_based_ad_rotation_id_blocks' => 'list<list<unsigned int>>',
       'time_based_ad_rotation_intervals' => 'list<unsigned int>',
       'time_start' => 'datetime',
       'time_stop' => 'datetime',
       'upstream_events' => 'map',
-      'full_funnel_exploration_mode' => 'full_funnel_exploration_mode_enum',
-      'attribution_spec' => 'list<map>',
     );
     $enums = array(
       'bid_strategy_enum' => AdSetBidStrategyValues::getInstance()->getValues(),
       'billing_event_enum' => AdSetBillingEventValues::getInstance()->getValues(),
-      'status_enum' => AdSetStatusValues::getInstance()->getValues(),
       'destination_type_enum' => AdSetDestinationTypeValues::getInstance()->getValues(),
       'execution_options_enum' => AdSetExecutionOptionsValues::getInstance()->getValues(),
-      'optimization_goal_enum' => AdSetOptimizationGoalValues::getInstance()->getValues(),
       'full_funnel_exploration_mode_enum' => AdSetFullFunnelExplorationModeValues::getInstance()->getValues(),
+      'optimization_goal_enum' => AdSetOptimizationGoalValues::getInstance()->getValues(),
+      'optimization_sub_event_enum' => AdSetOptimizationSubEventValues::getInstance()->getValues(),
+      'status_enum' => AdSetStatusValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(

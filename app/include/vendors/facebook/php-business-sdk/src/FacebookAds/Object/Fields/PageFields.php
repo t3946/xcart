@@ -62,7 +62,6 @@ class PageFields extends AbstractEnum {
   const COMPANY_OVERVIEW = 'company_overview';
   const CONNECTED_INSTAGRAM_ACCOUNT = 'connected_instagram_account';
   const CONTACT_ADDRESS = 'contact_address';
-  const CONTEXT = 'context';
   const COPYRIGHT_ATTRIBUTION_INSIGHTS = 'copyright_attribution_insights';
   const COPYRIGHT_WHITELISTED_IG_PARTNERS = 'copyright_whitelisted_ig_partners';
   const COUNTRY_PAGE_LIKES = 'country_page_likes';
@@ -206,9 +205,8 @@ class PageFields extends AbstractEnum {
       'category_list' => 'list<PageCategory>',
       'checkins' => 'unsigned int',
       'company_overview' => 'string',
-      'connected_instagram_account' => 'ShadowIGUser',
+      'connected_instagram_account' => 'IGUser',
       'contact_address' => 'MailingAddress',
-      'context' => 'OpenGraphContext',
       'copyright_attribution_insights' => 'CopyrightAttributionInsights',
       'copyright_whitelisted_ig_partners' => 'list<string>',
       'country_page_likes' => 'unsigned int',
@@ -240,7 +238,7 @@ class PageFields extends AbstractEnum {
       'id' => 'string',
       'impressum' => 'string',
       'influences' => 'string',
-      'instagram_business_account' => 'ShadowIGUser',
+      'instagram_business_account' => 'IGUser',
       'instant_articles_review_status' => 'string',
       'is_always_open' => 'bool',
       'is_chain' => 'bool',

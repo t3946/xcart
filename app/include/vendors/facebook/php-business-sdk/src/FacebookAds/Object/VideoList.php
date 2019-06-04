@@ -29,7 +29,6 @@ use FacebookAds\Cursor;
 use FacebookAds\Http\RequestInterface;
 use FacebookAds\TypeChecker;
 use FacebookAds\Object\Fields\VideoListFields;
-use FacebookAds\Object\Values\CommentCommentPrivacyValueValues;
 
 /**
  * This class is auto-generated.
@@ -55,67 +54,6 @@ class VideoList extends AbstractCrudObject {
   }
 
 
-  public function createComment(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'object_id' => 'string',
-      'parent_comment_id' => 'Object',
-      'nectar_module' => 'string',
-      'attachment_id' => 'string',
-      'attachment_url' => 'string',
-      'attachment_share_url' => 'string',
-      'feedback_source' => 'string',
-      'facepile_mentioned_ids' => 'list<string>',
-      'is_offline' => 'bool',
-      'comment_privacy_value' => 'comment_privacy_value_enum',
-      'message' => 'string',
-      'text' => 'string',
-      'tracking' => 'string',
-    );
-    $enums = array(
-      'comment_privacy_value_enum' => CommentCommentPrivacyValueValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/comments',
-      new Comment(),
-      'EDGE',
-      Comment::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function deleteVideos(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'video_ids' => 'list<string>',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/videos',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getVideos(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -132,30 +70,6 @@ class VideoList extends AbstractCrudObject {
       new AdVideo(),
       'EDGE',
       AdVideo::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createVideo(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'video_ids' => 'list<string>',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/videos',
-      new VideoList(),
-      'EDGE',
-      VideoList::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);

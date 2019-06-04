@@ -29,14 +29,7 @@ use FacebookAds\Cursor;
 use FacebookAds\Http\RequestInterface;
 use FacebookAds\TypeChecker;
 use FacebookAds\Object\Fields\OpenGraphObjectFields;
-use FacebookAds\Object\Values\CommentCommentPrivacyValueValues;
-use FacebookAds\Object\Values\CommentFilterValues;
-use FacebookAds\Object\Values\CommentLiveFilterValues;
-use FacebookAds\Object\Values\CommentOrderValues;
-use FacebookAds\Object\Values\PhotoBackdatedTimeGranularityValues;
-use FacebookAds\Object\Values\PhotoUnpublishedContentTypeValues;
 use FacebookAds\Object\Values\ProfilePictureSourceTypeValues;
-use FacebookAds\Object\Values\ProfileTypeValues;
 
 /**
  * This class is auto-generated.
@@ -62,204 +55,12 @@ class OpenGraphObject extends AbstractCrudObject {
   }
 
 
-  public function getComments(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'filter' => 'filter_enum',
-      'order' => 'order_enum',
-      'live_filter' => 'live_filter_enum',
-      'since' => 'datetime',
-    );
-    $enums = array(
-      'filter_enum' => CommentFilterValues::getInstance()->getValues(),
-      'order_enum' => CommentOrderValues::getInstance()->getValues(),
-      'live_filter_enum' => CommentLiveFilterValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/comments',
-      new Comment(),
-      'EDGE',
-      Comment::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createComment(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'object_id' => 'string',
-      'parent_comment_id' => 'Object',
-      'nectar_module' => 'string',
-      'attachment_id' => 'string',
-      'attachment_url' => 'string',
-      'attachment_share_url' => 'string',
-      'feedback_source' => 'string',
-      'facepile_mentioned_ids' => 'list<string>',
-      'is_offline' => 'bool',
-      'comment_privacy_value' => 'comment_privacy_value_enum',
-      'message' => 'string',
-      'text' => 'string',
-      'tracking' => 'string',
-    );
-    $enums = array(
-      'comment_privacy_value_enum' => CommentCommentPrivacyValueValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/comments',
-      new Comment(),
-      'EDGE',
-      Comment::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getLikes(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/likes',
-      new Profile(),
-      'EDGE',
-      Profile::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createLike(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'message' => 'string',
-      'url' => 'string',
-      'ref' => 'string',
-      'action' => 'string',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/likes',
-      new OpenGraphObject(),
-      'EDGE',
-      OpenGraphObject::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createPhoto(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'aid' => 'string',
-      'caption' => 'string',
-      'url' => 'string',
-      'uid' => 'int',
-      'profile_id' => 'int',
-      'target_id' => 'int',
-      'vault_image_id' => 'string',
-      'tags' => 'list<Object>',
-      'place' => 'Object',
-      'is_explicit_place' => 'bool',
-      'is_explicit_location' => 'bool',
-      'og_action_type_id' => 'string',
-      'og_object_id' => 'string',
-      'og_phrase' => 'string',
-      'og_icon_id' => 'string',
-      'og_suggestion_mechanism' => 'string',
-      'og_set_profile_badge' => 'bool',
-      'privacy' => 'string',
-      'targeting' => 'Object',
-      'feed_targeting' => 'Object',
-      'no_story' => 'bool',
-      'published' => 'bool',
-      'offline_id' => 'unsigned int',
-      'attempt' => 'unsigned int',
-      'backdated_time' => 'datetime',
-      'backdated_time_granularity' => 'backdated_time_granularity_enum',
-      'time_since_original_post' => 'unsigned int',
-      'filter_type' => 'unsigned int',
-      'scheduled_publish_time' => 'unsigned int',
-      'unpublished_content_type' => 'unpublished_content_type_enum',
-      'full_res_is_coming_later' => 'bool',
-      'composer_session_id' => 'string',
-      'qn' => 'string',
-      'manual_privacy' => 'bool',
-      'audience_exp' => 'bool',
-      'proxied_app_id' => 'string',
-      'ios_bundle_id' => 'string',
-      'android_key_hash' => 'string',
-      'user_selected_tags' => 'bool',
-      'allow_spherical_photo' => 'bool',
-      'spherical_metadata' => 'map',
-      'initial_view_heading_override_degrees' => 'unsigned int',
-      'initial_view_pitch_override_degrees' => 'unsigned int',
-      'initial_view_vertical_fov_override_degrees' => 'unsigned int',
-      'sponsor_id' => 'string',
-      'direct_share_status' => 'unsigned int',
-      'sponsor_relationship' => 'unsigned int',
-      'application_id' => 'string',
-      'name' => 'string',
-      'message' => 'string',
-    );
-    $enums = array(
-      'backdated_time_granularity_enum' => PhotoBackdatedTimeGranularityValues::getInstance()->getValues(),
-      'unpublished_content_type_enum' => PhotoUnpublishedContentTypeValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/photos',
-      new Photo(),
-      'EDGE',
-      Photo::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getPicture(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
-      'type' => 'type_enum',
       'redirect' => 'bool',
+      'type' => 'type_enum',
     );
     $enums = array(
       'type_enum' => ProfilePictureSourceTypeValues::getInstance()->getValues(),
@@ -280,31 +81,6 @@ class OpenGraphObject extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getReactions(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'type' => 'type_enum',
-    );
-    $enums = array(
-      'type_enum' => ProfileTypeValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/reactions',
-      new Profile(),
-      'EDGE',
-      Profile::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getSelf(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -317,32 +93,6 @@ class OpenGraphObject extends AbstractCrudObject {
       $this->api,
       $this->data['id'],
       RequestInterface::METHOD_GET,
-      '/',
-      new OpenGraphObject(),
-      'NODE',
-      OpenGraphObject::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function updateSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'locale' => 'list',
-      'object' => 'Object',
-      'action_properties' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
       '/',
       new OpenGraphObject(),
       'NODE',

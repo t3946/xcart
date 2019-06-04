@@ -42,13 +42,6 @@ use FacebookAds\Object\Fields\DestinationFields;
 class Destination extends AbstractCrudObject {
 
   /**
-   * @deprecated getEndpoint function is deprecated
-   */
-  protected function getEndpoint() {
-    return 'destinations';
-  }
-
-  /**
    * @return DestinationFields
    */
   public static function getFieldsEnum() {
@@ -73,37 +66,6 @@ class Destination extends AbstractCrudObject {
       $this->api,
       $this->data['id'],
       RequestInterface::METHOD_GET,
-      '/',
-      new Destination(),
-      'NODE',
-      Destination::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function updateSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'description' => 'string',
-      'url' => 'string',
-      'images' => 'list<Object>',
-      'currency' => 'string',
-      'price' => 'unsigned int',
-      'name' => 'string',
-      'types' => 'string',
-      'address' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
       '/',
       new Destination(),
       'NODE',

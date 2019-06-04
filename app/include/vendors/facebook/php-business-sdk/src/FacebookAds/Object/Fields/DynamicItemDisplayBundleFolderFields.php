@@ -43,7 +43,6 @@ class DynamicItemDisplayBundleFolderFields extends AbstractEnum {
   const PRODUCT_CATALOG = 'product_catalog';
   const PRODUCT_SET = 'product_set';
   const VALID_LABELS = 'valid_labels';
-  const BUNDLES = 'bundles';
 
   public function getFieldTypes() {
     return array(
@@ -52,8 +51,7 @@ class DynamicItemDisplayBundleFolderFields extends AbstractEnum {
       'name' => 'string',
       'product_catalog' => 'ProductCatalog',
       'product_set' => 'ProductSet',
-      'valid_labels' => 'list<Object>',
-      'bundles' => 'list<string>',
+      'valid_labels' => 'map<string, list<string>>',
     );
   }
 }

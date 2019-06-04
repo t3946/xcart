@@ -86,29 +86,6 @@ class BusinessUser extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getAssignedMonetizationProperties(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/assigned_monetization_properties',
-      new AdMonetizationProperty(),
-      'EDGE',
-      AdMonetizationProperty::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getAssignedPages(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -148,29 +125,6 @@ class BusinessUser extends AbstractCrudObject {
       new ProductCatalog(),
       'EDGE',
       ProductCatalog::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getBusinessSettingLogs(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/businesssettinglogs',
-      new BusinessSettingLogsData(),
-      'EDGE',
-      BusinessSettingLogsData::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -228,13 +182,13 @@ class BusinessUser extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'role' => 'role_enum',
+      'clear_pending_email' => 'bool',
+      'email' => 'string',
       'first_name' => 'string',
       'last_name' => 'string',
-      'title' => 'string',
-      'email' => 'string',
       'pending_email' => 'string',
-      'clear_pending_email' => 'bool',
+      'role' => 'role_enum',
+      'title' => 'string',
     );
     $enums = array(
       'role_enum' => BusinessUserRoleValues::getInstance()->getValues(),

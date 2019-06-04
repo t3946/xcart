@@ -68,7 +68,6 @@ class ApplicationFields extends AbstractEnum {
   const COMPANY = 'company';
   const CONFIGURED_IOS_SSO = 'configured_ios_sso';
   const CONTACT_EMAIL = 'contact_email';
-  const CONTEXT = 'context';
   const CREATED_TIME = 'created_time';
   const CREATOR_UID = 'creator_uid';
   const DAILY_ACTIVE_USERS = 'daily_active_users';
@@ -115,6 +114,7 @@ class ApplicationFields extends AbstractEnum {
   const PROPERTY_ID = 'property_id';
   const REAL_TIME_MODE_DEVICES = 'real_time_mode_devices';
   const RESTRICTIONS = 'restrictions';
+  const RESTRICTIVE_DATA_FILTER_RULES = 'restrictive_data_filter_rules';
   const SDK_UPDATE_MESSAGE = 'sdk_update_message';
   const SEAMLESS_LOGIN = 'seamless_login';
   const SECURE_CANVAS_URL = 'secure_canvas_url';
@@ -169,7 +169,6 @@ class ApplicationFields extends AbstractEnum {
       'company' => 'string',
       'configured_ios_sso' => 'bool',
       'contact_email' => 'string',
-      'context' => 'Object',
       'created_time' => 'datetime',
       'creator_uid' => 'string',
       'daily_active_users' => 'string',
@@ -216,6 +215,7 @@ class ApplicationFields extends AbstractEnum {
       'property_id' => 'string',
       'real_time_mode_devices' => 'list<string>',
       'restrictions' => 'Object',
+      'restrictive_data_filter_rules' => 'string',
       'sdk_update_message' => 'string',
       'seamless_login' => 'int',
       'secure_canvas_url' => 'string',

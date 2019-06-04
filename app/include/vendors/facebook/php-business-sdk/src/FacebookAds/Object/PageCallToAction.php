@@ -62,29 +62,6 @@ class PageCallToAction extends AbstractCrudObject {
   }
 
 
-  public function deleteSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/',
-      new AbstractCrudObject(),
-      'NODE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getSelf(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -97,47 +74,6 @@ class PageCallToAction extends AbstractCrudObject {
       $this->api,
       $this->data['id'],
       RequestInterface::METHOD_GET,
-      '/',
-      new PageCallToAction(),
-      'NODE',
-      PageCallToAction::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function updateSelf(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'type' => 'type_enum',
-      'intl_number_with_plus' => 'string',
-      'email_address' => 'string',
-      'web_destination_type' => 'web_destination_type_enum',
-      'web_url' => 'string',
-      'android_destination_type' => 'android_destination_type_enum',
-      'android_deeplink' => 'string',
-      'android_package_name' => 'string',
-      'android_url' => 'string',
-      'android_app_id' => 'int',
-      'iphone_destination_type' => 'iphone_destination_type_enum',
-      'iphone_deeplink' => 'string',
-      'iphone_url' => 'string',
-      'iphone_app_id' => 'int',
-    );
-    $enums = array(
-      'type_enum' => PageCallToActionTypeValues::getInstance()->getValues(),
-      'web_destination_type_enum' => PageCallToActionWebDestinationTypeValues::getInstance()->getValues(),
-      'android_destination_type_enum' => PageCallToActionAndroidDestinationTypeValues::getInstance()->getValues(),
-      'iphone_destination_type_enum' => PageCallToActionIphoneDestinationTypeValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
       '/',
       new PageCallToAction(),
       'NODE',

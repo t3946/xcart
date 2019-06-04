@@ -64,6 +64,7 @@ class AdCreativeFields extends AbstractEnum {
   const INSTAGRAM_ACTOR_ID = 'instagram_actor_id';
   const INSTAGRAM_PERMALINK_URL = 'instagram_permalink_url';
   const INSTAGRAM_STORY_ID = 'instagram_story_id';
+  const INTERACTIVE_COMPONENTS_SPEC = 'interactive_components_spec';
   const LINK_DEEP_LINK_URL = 'link_deep_link_url';
   const LINK_OG_ID = 'link_og_id';
   const LINK_URL = 'link_url';
@@ -89,12 +90,9 @@ class AdCreativeFields extends AbstractEnum {
   const URL_TAGS = 'url_tags';
   const USE_PAGE_ACTOR_OVERRIDE = 'use_page_actor_override';
   const VIDEO_ID = 'video_id';
-  const IS_DCO_INTERNAL = 'is_dco_internal';
   const CALL_TO_ACTION = 'call_to_action';
   const IMAGE_FILE = 'image_file';
-  const INTERACTIVE_COMPONENTS_SPEC = 'interactive_components_spec';
-  const MOCKUP_ID = 'mockup_id';
-  const PAGE_ID = 'page_id';
+  const IS_DCO_INTERNAL = 'is_dco_internal';
 
   public function getFieldTypes() {
     return array(
@@ -125,6 +123,7 @@ class AdCreativeFields extends AbstractEnum {
       'instagram_actor_id' => 'string',
       'instagram_permalink_url' => 'string',
       'instagram_story_id' => 'string',
+      'interactive_components_spec' => 'AdCreativeInteractiveComponentsSpec',
       'link_deep_link_url' => 'string',
       'link_og_id' => 'string',
       'link_url' => 'string',
@@ -150,12 +149,9 @@ class AdCreativeFields extends AbstractEnum {
       'url_tags' => 'string',
       'use_page_actor_override' => 'bool',
       'video_id' => 'string',
-      'is_dco_internal' => 'bool',
       'call_to_action' => 'Object',
       'image_file' => 'string',
-      'interactive_components_spec' => 'map',
-      'mockup_id' => 'string',
-      'page_id' => 'string',
+      'is_dco_internal' => 'bool',
     );
   }
 }
