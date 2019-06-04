@@ -21,7 +21,7 @@
 
     <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
         <td>
-            {if $order_store->getAmountDeficit() >= 0}Capture shortcoming
+            {if $order_store->getAmountDeficit() >= 0}To be captured
             {elseif $order_store->getAmountDeficit() < 0}Captured in excess
             {/if}
         </td>
@@ -31,7 +31,7 @@
         <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
             <td>
                 {if $order_store->getAskFromCx() >= 0}To be captured from Cx
-                {elseif $order_store->getAskFromCx() < 0}Return to Cx
+                {elseif $order_store->getAskFromCx() < 0}Authorized in excess
                 {/if}
             </td>
             <td width="1%" align="right" {if ($order_store->getAskFromCx() != 0)}class="bg__red color__white"{/if}>{include file="currency2.tpl" value=$order_store->getAskFromCx()}</td>
