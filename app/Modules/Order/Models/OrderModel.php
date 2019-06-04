@@ -11,6 +11,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -206,6 +207,12 @@ class OrderModel extends Model
                 'modelClass' => OrderStatusNotificationModel::class,
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Type::STRING,
+            ],
+            'site' => [
+                'field' => 'storefrontid',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'link' => ['storefrontid' => 'storefrontid'],
             ],
             'user' => [
                 'field' => 'user_id',

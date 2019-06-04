@@ -34,8 +34,7 @@
         <tr>
             <td align="right" style="font-size: .93rem;"><b>Short payment description* :</b>
             </td>
-            {assign var="module" value=$xcartApp->getModule('Sites')}
-            {assign var="site" value=$module->getSite()}
+            {assign var="site" value=$oOrder->site}
             {assign var="site_config" value=$site->getConfig()}
             <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_notes" size="64" id="paypal_request_notes"
                 value="{$site_config.company_name} order # {$oOrder->getDisplayOrderNumber()}"
