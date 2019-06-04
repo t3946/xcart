@@ -5,3 +5,4 @@
 <input type="hidden" name="mode" value="logout" />
 <input type="hidden" name="redirect" value="{$redirect}" />
 </form>
+<div style="margin: 8px 0" class="AuthText">Time shown is EST (not NY time)</div>
