@@ -18,7 +18,7 @@
                     </a>
                 {/if}
                 </div>
-                <div>
+                <div style="width:30%; float:left; margin-right:30px;">
                     {php}
                         $est_time = new DateTime("now", new DateTimeZone('EST') );
                         $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
@@ -30,6 +30,14 @@
                     <div style="margin-bottom: 3px;">EST Time: {$est_time->format('H:i')}</div>
                     <div style="margin-bottom: 3px;">&nbsp;NY Time: {$ny_time->format('H:i')}</div>
                     <div style="margin-bottom: 3px;">&nbsp;CA Time: {$ca_time->format('H:i')}</div>
+                </div>
+                <div>
+                    {if $order_store}
+                        {assign var='cs_date' value=$order_store->model->getCxDateTime()}
+                    <div style="margin-bottom: 3px;">&nbsp;</div>
+                    <div style="margin-bottom: 3px;">{if $cs_date}Cx Time: {$cs_date->format('H:i')} {/if}</div>
+                    <div style="margin-bottom: 3px;"></div>
+                    {/if}
                 </div>
 
             </td>
