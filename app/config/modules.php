@@ -28,4 +28,5 @@ return [
     'Shipping',
     'Landing',
     'Subscribe',
+    'Xero',
 ];
