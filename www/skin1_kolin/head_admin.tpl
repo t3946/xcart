@@ -11,11 +11,27 @@
         </td>
         {if $login ne ""}
             <td align="left" width="34%">
+                <div style="width:30%; float:left; margin-right:30px;">
                 {if $usertype ne "V"}
                     <a style="padding-left: 35px;" href="{$xcartApp->router->url('dashboard:index')}">
                         <img src="{$ImagesDir}/cc_dashbord.png" alt=""/>
                     </a>
                 {/if}
+                </div>
+                <div>
+                    {php}
+                        $est_time = new DateTime("now", new DateTimeZone('EST') );
+                        $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
+                        $ca_time = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
+                        $this->assign('est_time', $est_time);
+                        $this->assign('ny_time', $ny_time);
+                        $this->assign('ca_time', $ca_time);
+                    {/php}
+                    <div>EST Time: {$est_time->format('H:i')}</div>
+                    <div>&nbsp;NY Time: {$ny_time->format('H:i')}</div>
+                    <div>&nbsp;CA Time: {$ca_time->format('H:i')}</div>
+                </div>
+
             </td>
             <td align="right" width="33%">
                 {include file="authbox_top.tpl"}
