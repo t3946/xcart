@@ -18,4 +18,9 @@ class DistributorHelper
             ->group(['code'])
             ->all();
     }
+
+    public static function phoneNormalize($phone): string
+    {
+        return preg_replace("/[^0-9]/S",'', $phone);
+    }
 }

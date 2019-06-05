@@ -43,7 +43,7 @@
 
           <tr>
             <td>
-                <B>Distributor time:</B> {$manufacturer.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                <B>Distributor time:</B> {$distributorModel->getDistributorTime()|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                 <br />
                 <B>Distributor phone:</B> {$manufacturer.distributor_phone}
             </td>
@@ -52,7 +52,7 @@
           <tr>
               <td>
                     <div class="call_btn_distr_{if $manufacturer.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}">
-                        <a target="_blank" href="tel:{if $manufacturer.distributor_phone_phone_normalized ne ""}{$manufacturer.distributor_phone_phone_normalized}{else}{$manufacturer.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                        <a target="_blank" href="tel:{$distributorModel->getPhoneNormalized()}"><div style="width: 219px; height: 44px;"></div></a>
                     </div>
               </td>
           </tr>
@@ -561,34 +561,34 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <input type="hidden" id="delete_line_number" name="delete_line_number" value="" />
 
-{foreach from=$manufacturer.distributor_contacts item=item key=key}
+{foreach from=$distributorModel->contacts_model item=item key=key}
 <tr>
 {* <td>{$item.distributor_field_name}</td> *}
-<td><input type="text" name="distributor_contacts[{$key}][distributor_field_name]" value="{$item.distributor_field_name}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][distributor_field_name]" value="{$item->distributor_field_name}" size="30" /></td>
 <td>
 
-<input type="radio" name="pq" value="{$key}" {if $item.pq eq "Y"}checked="checked"{/if} /> 
+<input type="radio" name="pq" value="{$key}" {if $item->pq eq "Y"}checked="checked"{/if} />
 
 </td>
-<td><input type="text" name="distributor_contacts[{$key}][contact_name]" value="{$item.contact_name|escape:"html"}" size="30" /></td>
-<td><input type="text" name="distributor_contacts[{$key}][email]" value="{$item.email}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][contact_name]" value="{$item->contact_name|escape:"html"}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][email]" value="{$item->email}" size="30" /></td>
 
 <td>
 
 {if $key eq "1"}<div style="border: green 1px solid;">{/if}
-<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item.phone}" size="17" {if $key eq "1"} {* style="border: green 1px solid;" *}{/if} />
+<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item->phone}" size="17" {if $key eq "1"} {* style="border: green 1px solid;" *}{/if} />
 {if $key eq "1"}</div>{/if}
 
 </td>
-<td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item.ext}" size="7" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item->ext}" size="7" /></td>
 
 <td>
-{if $item.phone ne ""}
-<a target="_blank" style="color: blue;" href="tel:{$item.phone}">Call</a>
+{if $item->phone ne ""}
+<a target="_blank" style="color: blue;" href="tel:{$item->getPhoneNormalized()}">Call</a>
 {/if}
 </td>
 
-<td><input type="text" name="distributor_contacts[{$key}][fax]" value="{$item.fax}" size="17" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][fax]" value="{$item->fax}" size="17" /></td>
 <td>
  <input type="button" value="Delete" onclick="javascript: {literal}$('#mode').val('delete_line'); $('#delete_line_number').val('{/literal}{$key}{literal}'); document.manufacturer.submit();"{/literal} />
 </td>

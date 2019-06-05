@@ -3,8 +3,10 @@
 namespace Modules\Distributor\Models;
 
 
+use Modules\Distributor\Helpers\DistributorHelper;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 class DistributorContactsModel extends Model
@@ -21,7 +23,21 @@ class DistributorContactsModel extends Model
         return [
             'id' => [
                 'class' => AutoField::class
+            ],
+            'distributor' => [
+                'field' => 'manufacturerid',
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
             ]
         ];
+    }
+
+    public function getPhoneNormalized(): string
+    {
+        if (strlen($phone_normalized = DistributorHelper::phoneNormalize($this->phone)) === 10){
+            return $this->distributor->getPhonePrefix() . $phone_normalized;
+        }
+        return $this->phone;
     }
 }

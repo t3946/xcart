@@ -67,6 +67,11 @@ $provider_condition = ($single_mode || $current_area == "A"?"":"AND provider='$l
 
 $manufacturerid = intval($manufacturerid);
 
+if ($manufacturerid) {
+	$distributorModel = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
+	$smarty->assign("distributorModel", $distributorModel);
+}
+
 x_session_register('manufacturer_data_form');
 
 #
