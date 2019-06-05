@@ -27,9 +27,9 @@
                         $this->assign('ny_time', $ny_time);
                         $this->assign('ca_time', $ca_time);
                     {/php}
-                    <div>EST Time: {$est_time->format('H:i')}</div>
-                    <div>&nbsp;NY Time: {$ny_time->format('H:i')}</div>
-                    <div>&nbsp;CA Time: {$ca_time->format('H:i')}</div>
+                    <div style="margin-bottom: 3px;">EST Time: {$est_time->format('H:i')}</div>
+                    <div style="margin-bottom: 3px;">&nbsp;NY Time: {$ny_time->format('H:i')}</div>
+                    <div style="margin-bottom: 3px;">&nbsp;CA Time: {$ca_time->format('H:i')}</div>
                 </div>
 
             </td>
