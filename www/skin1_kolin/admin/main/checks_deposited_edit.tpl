@@ -126,7 +126,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
 {if $checks_deposited.status eq "D"}
 <input type="hidden" name="date" value="{$checks_deposited.date|date_format:'%m/%d/%Y'}" />
 {/if}
-<input id="date" {if $checks_deposited.status eq "D"}disabled="disabled"{/if} type="text" size="9" name="date" value="{$checks_deposited.date|date_format:'%m/%d/%Y'}" />
+<input autocomplete="off" id="date" {if $checks_deposited.status eq "D"}disabled="disabled"{/if} type="text" size="9" name="date" value="{$checks_deposited.date|date_format:'%m/%d/%Y'}" />
 
 </td>
 <td>&nbsp;&nbsp;</td>
