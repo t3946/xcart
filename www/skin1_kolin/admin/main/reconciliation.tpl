@@ -86,10 +86,10 @@ function remove_order_manually_row(index, r_id) {
     </td>
 <td width="*">&nbsp;</td>
 <td width="50" nowrap="nowrap">
-{if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}Payables{if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
+{if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}AP (Owe to Dx){if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
 <td width="50" nowrap="nowrap">
-{if $tab ne "receivables"}<a href="reconciliation.php?tab=receivables">{else}<B>{/if}Receivables{if $tab ne "receivables"}</a>{else}</B>{/if}
+{if $tab ne "receivables"}<a href="reconciliation.php?tab=receivables">{else}<B>{/if}AR (Unpaid: PO){if $tab ne "receivables"}</a>{else}</B>{/if}
 </td>
 </tr>
 </table>

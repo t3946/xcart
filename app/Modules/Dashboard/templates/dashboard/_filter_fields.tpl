@@ -484,7 +484,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_d2c">D2C payment status:</label>
+                    <label for="o_d2c">D2C shipping status:</label>
                 </div>
 
                 <div class="columns large-5">
