@@ -43,7 +43,8 @@
 
           <tr>
             <td>
-                <B>Distributor time:</B> {$distributorModel->getDistributorTime()|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                {assign var=distributor_time value=$distributorModel->getDistributorTime()}
+                <B>Distributor time:</B> {$distributor_time->format('d-M-Y H:i')}
                 <br />
                 <B>Distributor phone:</B> {$manufacturer.distributor_phone}
             </td>

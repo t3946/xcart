@@ -18,7 +18,7 @@
                     </a>
                 {/if}
                 </div>
-                <div style="width:30%; float:left; margin-right:30px;">
+                <div style="width:30%; float:left; margin-right:7px;">
                     {php}
                         $est_time = new DateTime("now", new DateTimeZone('EST') );
                         $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
@@ -34,9 +34,15 @@
                 <div>
                     {if $order_store}
                         {assign var='cs_date' value=$order_store->model->getCxDateTime()}
-                    <div style="margin-bottom: 3px;">&nbsp;</div>
                     <div style="margin-bottom: 3px;">{if $cs_date}Cx Time: {$cs_date->format('H:i')} {/if}</div>
-                    <div style="margin-bottom: 3px;"></div>
+                    <div style="margin-bottom: 3px;">
+                        Dx Time:
+                        {foreach from=$order_store->model->groups item=group}
+                            {assign var=distributor value=$group->manufacturer}
+                            {assign var=distributor_time value=$distributor->getDistributorTime()}
+                            {$distributor_time->format('H:i')}&nbsp;
+                        {/foreach}
+                    </div>
                     {/if}
                 </div>
 
