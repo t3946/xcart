@@ -4,6 +4,7 @@ namespace Modules\Dashboard\Helpers;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
+use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Distributor\Models\DistributorModel;
