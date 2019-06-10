@@ -925,7 +925,7 @@ function func_show_full_info(id){
     {literal}
         <script type="text/javascript">
             $('.order_list_dropdown').click(function () {
-                $(this).closest('tr#total_payable_row').nextAll().andSelf().css('opacity', 0.4);
+                $(this).closest('tr#total_payable_row').nextAll().addBack().css('opacity', 0.4);
                 $.post('ajax_admin.php',{
                             period : $(this).data('period'),
                             ajax_action: 'get_payable_orders'
