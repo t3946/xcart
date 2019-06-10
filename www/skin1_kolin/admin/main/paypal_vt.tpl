@@ -171,7 +171,7 @@
                         <option value="Paypal VT">Paypal VT</option>
                         <option value="BluePay VT">BluePay VT</option>
                     </select>
-                    <a href="#help-5" title="{$lng.help_billing_address_text}" class="tooltip">
+                    <a href="#help-5" title="{$lng.help_processor_text}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
