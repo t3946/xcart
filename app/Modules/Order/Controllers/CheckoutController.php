@@ -115,6 +115,7 @@ class CheckoutController extends FrontendController
                                 'bd_status' => $order->bd_status,
                                 'total_gross' => $cart_group['subtotal'],
                                 'total_net' => $cart_group['subtotal'],
+                                'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
                             ]);
                             $order->subtotal += $group->total_gross;
                             $order->total = $order->subtotal;
