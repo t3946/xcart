@@ -862,6 +862,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 //			"pc_mc_operator" => $pc_mc_operator,
 //			"pc_acc_operator" => $pc_acc_operator,
 			"amazon_enabled" => $amazon_enabled,
+			"amazon_verified" => $amazon_verified,
 			"seo_meta_descr" => trim($seo_meta_descr),
 ###
 ##

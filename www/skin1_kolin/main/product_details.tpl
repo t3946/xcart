@@ -661,6 +661,13 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="FormButton" nowrap="nowrap">Amazon verified:</td>
+                    <td class="ProductDetails">
+                        <input type="checkbox" name="amazon_verified"
+                               value="Y"{if $product.amazon_verified eq "Y"} checked="checked"{/if} />
+                    </td>
+                </tr>
+                <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead"></td>
                     {/if}
