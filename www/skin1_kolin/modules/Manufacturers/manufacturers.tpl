@@ -1341,10 +1341,11 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 <tr><td colspan="3"><hr /></td></tr>
 {/if}
 </table>
-<br />
+
 
 {elseif $d_section.distributor_section eq "11"}
 <table cellpadding="3" cellspacing="1" width="100%" id="distributor_section_id_11" {if $distributor_section ne "11"}style="display: none;" {/if}>
+    <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Payment to distributor arrangements"}</td></tr>
 <tr>
         <td width="20%" class="FormButton">We pay to distributor by</td>
         <td>&nbsp;</td>
@@ -1379,6 +1380,11 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
         </td>
 </tr>
 
+    <tr>
+        <td width="20%" class="FormButton">NET payment terms in days (put 0 if N/A)</td>
+        <td>&nbsp;</td>
+        <td width="80%" class="FormButton">NET<input type="text" name="d_net_payment_terms_in_days" value="{$manufacturer.d_net_payment_terms_in_days}" /></td>
+    </tr>
 
 
 <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Distributor checking account details"}</td></tr>
@@ -1497,15 +1503,7 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 <input type="text" id="dcad_account_number" name="dcad_account_number" size="32" maxlength="64" value="{$manufacturer.dcad_account_number}" />
 </td>
 </tr>
-
-
-
-<tr>
-        <td width="20%" class="FormButton">NET payment terms in days (put 0 if N/A)</td>
-        <td>&nbsp;</td>
-        <td width="80%" class="FormButton">NET<input type="text" name="d_net_payment_terms_in_days" value="{$manufacturer.d_net_payment_terms_in_days}" /></td>
-</tr>
-
+    <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Reconciliation settings"}</td></tr>
 <tr>
         <td width="20%" class="FormButton">Bulk or individual order payments</td>
         <td>&nbsp;</td>

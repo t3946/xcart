@@ -559,7 +559,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 <div align="center"><h1  style="color: #550000;">Invoice # {$order.order_prefix}{$order.orderid}_{$v.code}-I-{$invoice_number}</h1></div>
 
-<a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name} distributor invoice</a>
+<a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=11">{$v.group_name} distributor invoice</a>
 {include file="main/subheader.tpl" title=""}
 
 <table cellpadding="3" cellspacing="1" class="invoice_table invoice_table_{$m_id}_{$invoice_number}" data-mnf-id="{$m_id}">
