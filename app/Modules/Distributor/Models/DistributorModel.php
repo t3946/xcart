@@ -6,6 +6,7 @@ use DateTime;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -63,6 +64,11 @@ class DistributorModel extends Model
             'contacts_model' => [
                 'class' => HasManyField::class,
                 'modelClass' => DistributorContactsModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
+            'order_groups' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
             'feed_fields' => [
@@ -154,7 +160,7 @@ class DistributorModel extends Model
     public function getPhone(): string
     {
         if ($contact = $this->getDefaultContact()) {
-            return $contact->phone;
+            return $contact->phone ?? '';
         }
         return '';
     }
