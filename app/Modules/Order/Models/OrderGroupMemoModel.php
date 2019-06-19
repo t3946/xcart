@@ -51,4 +51,9 @@ class OrderGroupMemoModel extends Model
         ];
     }
 
+    public function __toString()
+    {
+        return "{$this->order->getOrderNumber()}_{$this->manufacturer->code}-C-{$this->memo_number}";
+    }
+
 }

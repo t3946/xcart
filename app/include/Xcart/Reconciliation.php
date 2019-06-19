@@ -1,6 +1,11 @@
 <?php
 namespace Xcart;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\Distributor\Models\DistributorModel;
+use Xcart\App\Main\Xcart;
+
 class Reconciliation extends Data
 {
     public function __construct($aParams = [])
@@ -173,17 +178,13 @@ SQL;
 
         if (!empty($sInterval)) {
             $sIntervalQueryInv = " AND date(oi.update_date) < DATE_SUB(NOW() , INTERVAL {$sInterval})";
-            $sIntervalQueryMemo = " AND date(om.update_date) < DATE_SUB(NOW() , INTERVAL {$sInterval})";
         }
         $sSql = <<<SQL
 SELECT og.*        
 FROM xcart_order_groups og
-INNER JOIN xcart_orders o ON o.orderid = og.orderid AND o.date >= unix_timestamp('2016-01-01')
-LEFT JOIN xcart_order_group_invoices oi ON oi.orderid = og.orderid AND og.manufacturerid = oi.invoice_number 
-LEFT JOIN xcart_order_group_memos om ON og.orderid = om.orderid AND og.manufacturerid = om.manufacturerid
-WHERE 
-((oi.orderid IS NOT NULL AND oi.status = 'U' {$sIntervalQueryInv}) OR (om.orderid IS NOT NULL AND om.status = 'U' {$sIntervalQueryMemo} ))
-
+INNER JOIN xcart_orders o ON o.orderid = og.orderid AND o.date >= unix_timestamp('2018-01-01')
+INNER JOIN xcart_order_group_invoices oi ON oi.orderid = og.orderid AND og.manufacturerid = oi.manufacturerid 
+WHERE oi.status = 'U' {$sIntervalQueryInv}
 ORDER BY orderid DESC 
 SQL;
         $aOrders = Connection::getInstance()->query($sSql)->fetchAll();

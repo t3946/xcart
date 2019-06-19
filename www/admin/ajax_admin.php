@@ -71,6 +71,9 @@ switch ($_POST['ajax_action']) {
     case "get_payable_orders":
         getPayablesOrders($_POST);
         break;
+    case "get_payable_manufacturers":
+        getPayablesOrders($_POST);
+        break;
     case "send_paypal_request":
         sendPayPalRequest($_POST);
         break;
@@ -424,8 +427,15 @@ HTML;
     echo $html;
 }
 
+function getPaybleManufacturers($aParams = [])
+{
+    $d = (new Xcart\Reconciliation)->getPayableManufacturers($aParams);
+    echo $d; die();
+}
+
 function getPayablesOrders($aParams = [])
 {
+
     $html = <<<HTML
 <tr>
 <td colspan="5">
@@ -437,6 +447,7 @@ function getPayablesOrders($aParams = [])
     </tr>
     
 HTML;
+
     $aOrderGroups = ((new Xcart\Reconciliation)->getPayablesOrderGroups($aParams['period']));
     if (!empty($aOrderGroups)) {
         foreach ($aOrderGroups as $oOrderGroup) {

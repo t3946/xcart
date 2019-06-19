@@ -562,7 +562,40 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=11">{$v.group_name} distributor invoice</a>
 {include file="main/subheader.tpl" title=""}
 
+{assign var="distributor" value=$v.oOrderGroup->manufacturer}
+
+<table>
+    <tr>
+        <td>
+            <b>Invoice date:&nbsp;</b>
+        </td>
+        <td>
+            <input autocomplete="off" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]"
+                   value="{$invoice.invoice_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
+                                onSelect: function (fd) {
+                                    var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
+                                    date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
+                                    date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
+                                    $('#payment_due_date').val($.datepicker.formatDate('mm/dd/yy', date2));
+                                },
+                                maxDate: 0
+                            }); $(this).datepicker('show');{/literal}" />
+        </td>
+    </tr>
+    {if $distributor->d_net_payment_terms_in_days > 0}
+    <tr>
+        <td>
+            <b>Payment due date:&nbsp;</b>
+        </td>
+        <td>
+            <input autocomplete="off" id="payment_due_date" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="" size="15" />
+        </td>
+    </tr>
+    {/if}
+
+</table>
 <table cellpadding="3" cellspacing="1" class="invoice_table invoice_table_{$m_id}_{$invoice_number}" data-mnf-id="{$m_id}">
+
 <tr class="TableHead">
   <td width="350">Product Name</td>
   <td width="80">Item #</td>
