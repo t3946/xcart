@@ -24,13 +24,13 @@
             <tr>
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$invoice->invoice_date|date_format:'%d-%b-%Y'}</td>
-                <td align="center">{$invoice->payment_due_date|date_format:'%d-%b-%Y'}</td>
+                <td>{$invoice->payment_due_date|date_format:'%d-%b-%Y'}</td>
                 <td>{$order_group->manufacturer}</td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
-                <td>{$invoice}</td>
-                <td align="center">{$invoice->invoice_total|number_format:2:'.':','}</td>
+                <td align="center">{$invoice}</td>
+                <td align="right">{$invoice->invoice_total|number_format:2:'.':','}</td>
                 <td></td>
-                <td align="center">
+                <td align="right">
                     {set $balance_due = $invoice->invoice_total}
                     {set $balance_total += $invoice->invoice_total}
                     {$balance_due|number_format:2:'.':','}
@@ -41,13 +41,13 @@
             <tr>
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$memo->memo_date|date_format:'%d-%b-%Y'}</td>
-                <td align="center"></td>
+                <td></td>
                 <td>{$order_group->manufacturer}</td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
-                <td>{$memo}</td>
+                <td align="center">{$memo}</td>
                 <td></td>
-                <td align="center">{$memo->ref_to_us_total|number_format:2:'.':','}</td>
-                <td align="center">
+                <td align="right">{$memo->ref_to_us_total|number_format:2:'.':','}</td>
+                <td align="right">
                     {set $balance_due = $memo->ref_to_us_total}
                     {set $balance_total -= $memo->ref_to_us_total}
                     ({$balance_due|number_format:2:'.':','})
