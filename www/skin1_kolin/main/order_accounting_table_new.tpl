@@ -588,7 +588,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
             <b>Payment due date:&nbsp;</b>
         </td>
         <td>
-            <input autocomplete="off" id="payment_due_date" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="" size="15" />
+            <input disabled="disabled" autocomplete="off" id="payment_due_date" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="" size="15" />
         </td>
     </tr>
     {/if}
