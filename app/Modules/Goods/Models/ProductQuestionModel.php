@@ -9,11 +9,18 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\ProductQuestion;
 
 
 class ProductQuestionModel extends Model
 {
-    use AutoMetaTrait;
+    use AutoMetaTrait, DataModelTrait;
+
+    public static function getDataModelClass(): string
+    {
+        return ProductQuestion::class;
+    }
 
     public static function tableName()
     {
