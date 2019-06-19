@@ -576,7 +576,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                                     var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
                                     date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
                                     date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
-                                    $('#payment_due_date').val($.datepicker.formatDate('mm/dd/yy', date2));
+                                    $('#payment_due_date_{/literal}{$invoice_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
                                 },
                                 maxDate: 0
                             }); $(this).datepicker('show');{/literal}" />
@@ -588,7 +588,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
             <b>Payment due date:&nbsp;</b>
         </td>
         <td>
-            <input disabled="disabled" autocomplete="off" id="payment_due_date" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="" size="15" />
+            <input disabled="disabled" autocomplete="off" id="payment_due_date_{$invoice_number}" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="{$invoice.payment_due_date|date_format:'%m/%d/%Y'}" size="15" />
         </td>
     </tr>
     {/if}
