@@ -910,7 +910,6 @@ function func_show_full_info(id){
                 $('option:selected', $('#distributor_choises')).each(function(){
                     distributor_data.push($(this).val());
                 });
-                console.log(distributor_data);
                 var data = [];
                 $('option:selected', $(this)).each(function(){
                     data.push($(this).val());
@@ -922,6 +921,7 @@ function func_show_full_info(id){
                     function (data) {
                         var option = '';
                         var i = 0;
+                        $('#distributor_choises').empty();
                         for (; i < data.length; i++) {
                             option = $('<option/>').attr('value', data[i].manufacturerid).text(data[i].manufacturer);
                             if (distributor_data.length > 0 && distributor_data.indexOf(data[i].manufacturerid) >= 0){
