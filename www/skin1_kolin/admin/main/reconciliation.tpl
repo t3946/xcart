@@ -875,7 +875,7 @@ function func_show_full_info(id){
             <tr><td>&nbsp;</td></tr>
             <tr>
                 <td>
-                    <select id="net_choises" title="Click to select NET" style="width:400px" class="select2 big" multiple>
+                    <select id="net_choises" title="Click to select Aging Period" style="width:400px" class="select2 big" multiple>
                         <option value="0">Current</option>
                         <option value="30">0-30</option>
                         <option value="60">31-60</option>
