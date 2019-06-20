@@ -64,7 +64,6 @@ class OrderGroupInvoiceModel extends Model
 
     public function getPaymentDueDate()
     {
-
         $date = $this->getField('invoice_date')->getValue()->add(new \DateInterval("P{$this->manufacturer->d_net_payment_terms_in_days}D"));
         return $date;
     }
