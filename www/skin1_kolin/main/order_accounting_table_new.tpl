@@ -546,9 +546,6 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 
 
-
-
-
 {if $v.invoices ne ""}
 {foreach from=$v.invoices item=invoice key=invoice_number}
 
@@ -557,12 +554,12 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <br />
 <br />
 
-<div align="center"><h1  style="color: #550000;">Invoice # {$order.order_prefix}{$order.orderid}_{$v.code}-I-{$invoice_number}</h1></div>
+<div align="center"><h1  style="color: #550000;">Invoice # {$invoice.invoice_model}</h1></div>
 
 <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=11">{$v.group_name} distributor invoice</a>
 {include file="main/subheader.tpl" title=""}
 
-{assign var="distributor" value=$v.oOrderGroup->manufacturer}
+{assign var="distributor" value=$invoice.invoice_model->manufacturer}
 
 <table>
     <tr>
@@ -570,7 +567,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
             <b>Invoice date:&nbsp;</b>
         </td>
         <td>
-            <input autocomplete="off" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]"
+            <input autocomplete="off" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}]"
                    value="{$invoice.invoice_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
                                 onSelect: function (fd) {
                                     var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
@@ -588,7 +585,8 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
             <b>Payment due date:&nbsp;</b>
         </td>
         <td>
-            <input disabled="disabled" autocomplete="off" id="payment_due_date_{$invoice_number}" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}][]" value="{$invoice.payment_due_date|date_format:'%m/%d/%Y'}" size="15" />
+            {assign var=payment_due_date value=$invoice.invoice_model->getPaymentDueDate()}
+            <input disabled="disabled" autocomplete="off" id="payment_due_date_{$invoice_number}" type="text" name="groups[{$m_id}][payment_due_date][{$invoice_number}][]" value="{$payment_due_date->format('m/d/Y')}" size="15" />
         </td>
     </tr>
     {/if}
@@ -840,10 +838,10 @@ Shipping quoted by distributor
  <table>
  <tr>
  <td>
-<input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][items_shipped_to_wrong_address]" {if $invoice.items_shipped_to_wrong_address eq "Y"}checked{/if} /> 
+<input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][items_shipped_to_wrong_address]" {if $invoice.items_shipped_to_wrong_address eq "Y"}checked{/if} />
  </td>
  <td>
-Items are shipped to an address that is different from 
+Items are shipped to an address that is different from
  </td>
  <td>
 <a onclick="javascript: $('#customers_shipping_address_{$m_id}_{$invoice_number}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">the customer's shipping address</a>.

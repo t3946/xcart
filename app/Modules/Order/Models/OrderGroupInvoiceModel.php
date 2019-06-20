@@ -51,11 +51,6 @@ class OrderGroupInvoiceModel extends Model
                 'default' => 0
             ],
             'invoice_date' => [
-                'class' => DateTimeField::className(),
-                'autoNowAdd' => true,
-                'null' => false
-            ],
-            'payment_due_date' => [
                 'class' => DateField::className(),
                 'null' => true
             ],
@@ -65,5 +60,12 @@ class OrderGroupInvoiceModel extends Model
     public function __toString()
     {
         return "{$this->order->getOrderNumber()}_{$this->manufacturer->code}-I-{$this->invoice_number}";
+    }
+
+    public function getPaymentDueDate()
+    {
+
+        $date = $this->getField('invoice_date')->getValue()->add(new \DateInterval("P{$this->manufacturer->d_net_payment_terms_in_days}D"));
+        return $date;
     }
 }

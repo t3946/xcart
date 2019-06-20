@@ -2080,6 +2080,17 @@ if ($REQUEST_METHOD == "POST")
 
                         if ($update_invoices_table_flag) {
                             func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
+
+                            if ($invoice_model = \Modules\Order\Models\OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'invoice_number' => $invoice_number])) {
+                                $t_invdate = trim($groups[$certain_mid]["invoice_date"][$invoice_number]);
+                                $t_invdate = empty($t_invdate) ? new \DateTime() : \DateTime::createFromFormat('m/d/Y', $t_invdate);
+                                $invoice_model->invoice_date = $t_invdate;
+                                $invoice_model->save();
+                                if ($t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"]) {
+                                    $log .= "<br />invoice_number-" . $invoice_number . ': Invoice date: ' . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"] . ' -> ' . $t_invdate->format('Y-m-d');
+                                }
+                            }
+
                             $oManufacturer = new Manufacturer(['manufacturerid' => $certain_mid]);
                             if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
                                 $oGroupInvoices = new OrderGroupInvoices();

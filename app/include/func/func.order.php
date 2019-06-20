@@ -4,6 +4,7 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
+use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
@@ -99,6 +100,7 @@ function func_get_shipping_groups($orderid)
             }
             else {
                 foreach ($invoices as $k_i => $v_i) {
+                    $invoices[$k_i]['invoice_model'] = OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $m_id, 'invoice_number' => $k_i]);
                     $i_products                 = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'", "itemid", false);
                     $invoices[$k_i]["products"] = $i_products;
                     $invoices[$k_i]["invoice_details"] = OrderGroupInvoiceProductModel::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id, 'invoice_number' => $k_i])->all();
