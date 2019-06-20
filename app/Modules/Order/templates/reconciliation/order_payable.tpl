@@ -24,7 +24,7 @@
             <tr>
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$invoice->invoice_date|date_format:'%d-%b-%Y'}</td>
-                <td>{$invoice->getPaymentDueDate()|date_format:'%d-%b-%Y'}</td>
+                <td>{$invoice->getPaymentDueDate()->format('m-d-Y')}</td>
                 <td>{$order_group->manufacturer}</td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
                 <td align="center">{$invoice}</td>
@@ -41,7 +41,7 @@
             <tr>
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$memo->memo_date|date_format:'%d-%b-%Y'}</td>
-                <td>{$memo->getPaymentDueDate()|date_format:'%d-%b-%Y'}</td>
+                <td>{$memo->getPaymentDueDate()->format('m-d-Y')}</td>
                 <td>{$order_group->manufacturer}</td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
                 <td align="center">{$memo}</td>
