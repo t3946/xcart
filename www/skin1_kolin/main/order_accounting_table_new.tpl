@@ -1163,6 +1163,39 @@ func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}');
 <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name} credit memo</a>
 {include file="main/subheader.tpl" title=""}
 
+    {assign var="distributor" value=$memo.memo_model->manufacturer}
+
+    <table>
+        <tr>
+            <td>
+                <b>Credit memo date:&nbsp;</b>
+            </td>
+            <td>
+                <input autocomplete="off" type="text" name="groups[{$m_id}][memo_date][{$memo_number}]"
+                       value="{$memo.memo_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
+                        onSelect: function (fd) {
+                        var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
+                        date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
+                        date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
+                        $('#payment_due_date_memo_{/literal}{$memo_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
+                        },
+                        maxDate: 0
+                        }); $(this).datepicker('show');{/literal}" />
+            </td>
+        </tr>
+        {if $distributor->d_net_payment_terms_in_days > 0}
+            <tr>
+                <td>
+                    <b>Payment due date:&nbsp;</b>
+                </td>
+                <td>
+                    {assign var=payment_due_date value=$memo.memo_model->getPaymentDueDate()}
+                    <input disabled="disabled" autocomplete="off" id="payment_due_date_memo_{$memo_number}" type="text" name="groups[{$m_id}][payment_due_date][{$memo_number}]" value="{$payment_due_date->format('m/d/Y')}" size="15" />
+                </td>
+            </tr>
+        {/if}
+    </table>
+
 <table cellpadding="3" cellspacing="1">
 <tr class="TableHead">
   <td width="350">Credit memo description</td>

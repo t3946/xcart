@@ -6,6 +6,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderModel;
@@ -111,6 +112,10 @@ function func_get_shipping_groups($orderid)
             $memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$m_id'", "memo_number", false);
             if (empty($memos)) {
                 $memos = "";
+            } else {
+                foreach ($memos as $k_i => $v_i) {
+                    $memos[$k_i]['memo_model'] = OrderGroupMemoModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $m_id, 'memo_number' => $k_i]);
+                }
             }
 
             $return[$m_id]["memos"] = $memos;

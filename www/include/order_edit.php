@@ -1769,6 +1769,16 @@ if ($REQUEST_METHOD == "POST")
                         if ($update_memos_table_flag) {
 
                             func_array2update("order_group_memos", $group_memos, "orderid='$orderid' AND manufacturerid='$certain_mid' AND memo_number='$memo_number'");
+
+                            if ($memo_model = \Modules\Order\Models\OrderGroupMemoModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'memo_number' => $memo_number])) {
+                                $t_invdate = trim($groups[$certain_mid]["memo_date"][$memo_number]);
+                                $t_invdate = empty($t_invdate) ? new \DateTime() : \DateTime::createFromFormat('m/d/Y', $t_invdate);
+                                $memo_model->memo_date = $t_invdate;
+                                $memo_model->save();
+                                if ($t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["memo_date"]) {
+                                    $log .= '<br />memo_number-' . $memo_number . ': Credit memo date: ' . $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["memo_date"] . ' -> ' . $t_invdate->format('Y-m-d');
+                                }
+                            }
                         }
                     } // foreach ($manufacturer_memos_data[$certain_mid] as $memo_number => $memo_data)
 
