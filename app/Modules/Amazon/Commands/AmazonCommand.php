@@ -87,7 +87,11 @@ class AmazonCommand extends Command
                                         'state' => $off['ShipsFrom']['State'] ?: '',
                                         'is_buybox' => $off['IsBuyBoxWinner'] === 'true'
                                     ]);
-                                    $offer->save();
+                                    if ($is_cmp_new) {
+                                        $offer->save();
+                                    } else {
+                                        $offer->save();
+                                    }
 
                                     if (AmazonOfferHelper::OUR_MERCHANT_ID === $off['SellerId']) {
                                         $listing->myPrice = $offer->LandingPrice;
