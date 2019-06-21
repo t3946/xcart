@@ -150,6 +150,11 @@ class OrderGroupModel extends Model
                 'class' => DecimalField::className(),
                 'null' => true,
             ],
+            'distributor_price_multiplier' => [
+                'class' => DecimalField::className(),
+                'default' => 1,
+                'null' => false,
+            ],
 
         ];
     }

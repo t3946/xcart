@@ -43,7 +43,8 @@
 
           <tr>
             <td>
-                <B>Distributor time:</B> {$manufacturer.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                {assign var=distributor_time value=$distributorModel->getDistributorTime()}
+                <B>Distributor time:</B> {$distributor_time->format('d-M-Y H:i')}
                 <br />
                 <B>Distributor phone:</B> {$manufacturer.distributor_phone}
             </td>
@@ -52,7 +53,7 @@
           <tr>
               <td>
                     <div class="call_btn_distr_{if $manufacturer.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}">
-                        <a target="_blank" href="tel:{if $manufacturer.distributor_phone_phone_normalized ne ""}{$manufacturer.distributor_phone_phone_normalized}{else}{$manufacturer.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                        <a target="_blank" href="tel:{$distributorModel->getPhoneNormalized()}"><div style="width: 219px; height: 44px;"></div></a>
                     </div>
               </td>
           </tr>
@@ -561,34 +562,34 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <input type="hidden" id="delete_line_number" name="delete_line_number" value="" />
 
-{foreach from=$manufacturer.distributor_contacts item=item key=key}
+{foreach from=$distributorModel->contacts_model item=item key=key}
 <tr>
 {* <td>{$item.distributor_field_name}</td> *}
-<td><input type="text" name="distributor_contacts[{$key}][distributor_field_name]" value="{$item.distributor_field_name}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][distributor_field_name]" value="{$item->distributor_field_name}" size="30" /></td>
 <td>
 
-<input type="radio" name="pq" value="{$key}" {if $item.pq eq "Y"}checked="checked"{/if} /> 
+<input type="radio" name="pq" value="{$key}" {if $item->pq eq "Y"}checked="checked"{/if} />
 
 </td>
-<td><input type="text" name="distributor_contacts[{$key}][contact_name]" value="{$item.contact_name|escape:"html"}" size="30" /></td>
-<td><input type="text" name="distributor_contacts[{$key}][email]" value="{$item.email}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][contact_name]" value="{$item->contact_name|escape:"html"}" size="30" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][email]" value="{$item->email}" size="30" /></td>
 
 <td>
 
 {if $key eq "1"}<div style="border: green 1px solid;">{/if}
-<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item.phone}" size="17" {if $key eq "1"} {* style="border: green 1px solid;" *}{/if} />
+<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item->phone}" size="17" {if $key eq "1"} {* style="border: green 1px solid;" *}{/if} />
 {if $key eq "1"}</div>{/if}
 
 </td>
-<td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item.ext}" size="7" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item->ext}" size="7" /></td>
 
 <td>
-{if $item.phone ne ""}
-<a target="_blank" style="color: blue;" href="tel:{$item.phone}">Call</a>
+{if $item->phone ne ""}
+<a target="_blank" style="color: blue;" href="tel:{$item->getPhoneNormalized()}">Call</a>
 {/if}
 </td>
 
-<td><input type="text" name="distributor_contacts[{$key}][fax]" value="{$item.fax}" size="17" /></td>
+<td><input type="text" name="distributor_contacts[{$key}][fax]" value="{$item->fax}" size="17" /></td>
 <td>
  <input type="button" value="Delete" onclick="javascript: {literal}$('#mode').val('delete_line'); $('#delete_line_number').val('{/literal}{$key}{literal}'); document.manufacturer.submit();"{/literal} />
 </td>
@@ -1340,10 +1341,11 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 <tr><td colspan="3"><hr /></td></tr>
 {/if}
 </table>
-<br />
+
 
 {elseif $d_section.distributor_section eq "11"}
 <table cellpadding="3" cellspacing="1" width="100%" id="distributor_section_id_11" {if $distributor_section ne "11"}style="display: none;" {/if}>
+    <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Payment to distributor arrangements"}</td></tr>
 <tr>
         <td width="20%" class="FormButton">We pay to distributor by</td>
         <td>&nbsp;</td>
@@ -1378,6 +1380,11 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
         </td>
 </tr>
 
+    <tr>
+        <td width="20%" class="FormButton">NET payment terms in days (put 0 if N/A)</td>
+        <td>&nbsp;</td>
+        <td width="80%" class="FormButton">NET<input type="text" name="d_net_payment_terms_in_days" value="{$manufacturer.d_net_payment_terms_in_days}" /></td>
+    </tr>
 
 
 <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Distributor checking account details"}</td></tr>
@@ -1496,15 +1503,7 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 <input type="text" id="dcad_account_number" name="dcad_account_number" size="32" maxlength="64" value="{$manufacturer.dcad_account_number}" />
 </td>
 </tr>
-
-
-
-<tr>
-        <td width="20%" class="FormButton">NET payment terms in days (put 0 if N/A)</td>
-        <td>&nbsp;</td>
-        <td width="80%" class="FormButton">NET<input type="text" name="d_net_payment_terms_in_days" value="{$manufacturer.d_net_payment_terms_in_days}" /></td>
-</tr>
-
+    <tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Reconciliation settings"}</td></tr>
 <tr>
         <td width="20%" class="FormButton">Bulk or individual order payments</td>
         <td>&nbsp;</td>

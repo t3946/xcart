@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Order\Controllers\Api\ReconciliationController;
+
 return [
     [
         'route' => '/{i:order_id}/{slug:mode}/{i:id}',
@@ -34,5 +37,15 @@ return [
         'route' => '/api/tag/del/{i:order_id}/{i:status_id}',
         'target' => ['\Modules\Order\Controllers\Admin\ApiTagsController', 'actionDel'],
         'name' => 'api:tag:del'
+    ],
+    [
+        'route' => '/api/payable_manufacturers',
+        'target' => [ReconciliationController::class, 'actionPayableManufacturers'],
+        'name' => 'api:payable_manufacturers'
+    ],
+    [
+        'route' => '/api/payable_orders',
+        'target' => [ReconciliationController::class, 'actionPayableOrders'],
+        'name' => 'api:payable_orders'
     ],
 ];

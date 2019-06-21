@@ -11,6 +11,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
+use Modules\Dashboard\Pagination\Pagination;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Goods\Models\ProductQuestionModel;
@@ -19,7 +20,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
-use Xcart\App\Pagination\Pagination;
+
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
 
@@ -40,6 +41,7 @@ class OrderSearchStore extends BaseStore
     /** @var Pagination */
     protected $pager;
     private $order;
+    private $sort;
     private $model = null;
 
     public $defaultPagerPageSize = 25;
@@ -92,6 +94,8 @@ class OrderSearchStore extends BaseStore
             $this->model = $model;
         }
 
+        $this->sort = isset($_GET['PageSort']) ? (int)$_GET['PageSort'] : null;
+
         $this->populate($data);
     }
 
@@ -106,6 +110,11 @@ class OrderSearchStore extends BaseStore
     {
         $this->order = $order;
         return $this;
+    }
+
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
     }
 
     public function getOrder()
@@ -871,6 +880,40 @@ class OrderSearchStore extends BaseStore
         $this->qs = $qs;
     }
 
+    public function setSorting($sorting, $qs)
+    {
+        if ($sorting) {
+
+            switch ($sorting) {
+                case 10:
+                    {
+                        $qs->order(['date']);
+                        break;
+                    }
+                case 11:
+                    {
+                        $qs->order(['-date']);
+                        break;
+                    }
+                case 1:
+                default:
+                    {
+                        $user = Xcart::app()->user;
+                        if ($user->show_events) {
+                            /** @var QuerySet $qs */
+                            $e_qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+                            $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+                            $qs->order(['-shipping.important', '-events.count', '-date', '-orderid']);
+                        } else {
+                            $qs->order(['-shipping.important', '-date', '-orderid']);
+                        }
+                    }
+            }
+        }
+
+        return $qs;
+    }
+
     public function getQSWithSorting()
     {
         $qs = clone $this->qs;
@@ -883,32 +926,12 @@ class OrderSearchStore extends BaseStore
 
         $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
 
-        $user = Xcart::app()->user;
-        if ($this->model instanceof DashboardFilter) {
-            switch ($this->model->sorting) {
-                case 10: {
-                    $qs->order(['date']);
-                    break;
-                }
-                case 11: {
-                    $qs->order(['-date']);
-                    break;
-                }
-                case 1:
-                default: {
-                    if ($user->show_events) {
-                        /** @var QuerySet $qs */
-                        $e_qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
-                        $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
-                        $qs->order(['-shipping.important', '-events.count', '-date', '-orderid']);
-                    }
-                    else {
-                        $qs->order(['-shipping.important', '-date', '-orderid']);
-                    }
-                }
-            }
+
+        if (!$this->sort && $this->model instanceof DashboardFilter) {
+            $this->sort = $this->model->sorting;
         }
 
+        $qs = $this->sort ? $this->setSorting($this->sort, $qs) : $this->setSorting(11, $qs);
 
         if ($this->order) {
             $qs->order($this->order);
@@ -920,7 +943,12 @@ class OrderSearchStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->getQSWithSorting(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+            $this->pager = new Pagination($this->getQSWithSorting(),[
+                    'pageSize' => $this->defaultPagerPageSize,
+                    'view' => 'dashboard/parts/_pager.tpl',
+                    'sorting_filter'       => (new DashboardFilter)->getField('sorting')->choices,
+                    'sort' => $this->sort,
+                ], new QuerySetDataSource());
         }
 
         return $this->pager;

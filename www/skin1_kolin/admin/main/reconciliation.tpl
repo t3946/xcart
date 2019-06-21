@@ -85,11 +85,11 @@ function remove_order_manually_row(index, r_id) {
         {if $tab ne "inventory"}<a href="reconciliation.php?tab=inventory">{else}<B>{/if}Inventory{if $tab ne "inventory"}</a>{else}</B>{/if}
     </td>
 <td width="*">&nbsp;</td>
-<td width="50" nowrap="nowrap">
-{if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}Payables{if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
+<td width="120" nowrap="nowrap">
+{if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}AP (Owed to Dx){if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
-<td width="50" nowrap="nowrap">
-{if $tab ne "receivables"}<a href="reconciliation.php?tab=receivables">{else}<B>{/if}Receivables{if $tab ne "receivables"}</a>{else}</B>{/if}
+<td width="120" nowrap="nowrap">
+{if $tab ne "receivables"}<a href="reconciliation.php?tab=receivables">{else}<B>{/if}AR (Unpaid: PO){if $tab ne "receivables"}</a>{else}</B>{/if}
 </td>
 </tr>
 </table>
@@ -136,6 +136,7 @@ function remove_order_manually_row(index, r_id) {
 {/if}
 
 <table {if $tab eq "accounts_payable" || $tab eq "receivables"}align="right"{/if}>
+{if $tab != "accounts_payable"}
 <tr>
 <td {if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "calculation"}class="FormButton" nowrap="nowrap" width="330" align="right"{/if}>
 <B>{if $tab eq "accounts_payable" || $tab eq "receivables"}Order dates{else}Transaction dates{/if}</B>
@@ -208,7 +209,7 @@ to
 {/if}
 </td>
 </tr>
-
+{/if}
 {if $tab eq "unreconciled"}
 <tr>
   <td class="FormButton" align="right">Show unreconciled invoices and credit memos</td>
@@ -260,9 +261,11 @@ to
 </table>
 
 </form>
+{if $tab != "accounts_payable"}
 <br />
 <br />
 <br />
+{/if}
 {/if}
 
 
@@ -744,7 +747,7 @@ Empty
         {literal}
         <script type="text/javascript">
             $('.order_list_dropdown').click(function () {
-                $(this).closest('tr#total_receivables_row').nextAll().andSelf().css('opacity', 0.4);
+                $(this).closest('tr#total_receivables_row').nextAll().addBack().css('opacity', 0.4);
                 $.post('ajax_admin.php',{
                             period : $(this).data('period'),
                             ajax_action: 'get_receivables_orders'
@@ -862,82 +865,100 @@ function func_show_full_info(id){
   {/if}
 
 {elseif $tab eq "accounts_payable"}
-    {if $aTotalPayable}
-        <table cellpadding="3" cellspacing="1" width="100%">
-            <tr class="TableHead">
-                <td style="background-color: #D9EAD3;" >Total</td>
-                <td style="background-color: #D9EAD3;" >1 month</td>
-                <td style="background-color: #D9EAD3;" >3 month</td>
-                <td style="background-color: #D9EAD3;" >6 month</td>
-                <td style="background-color: #D9EAD3;" >1 year and more</td>
-            </tr>
-            <tr id="total_payable_row">
-                <td align="center">
-                    {if $aTotalPayable.total > 0}
-                    <a href="#" data-period="total" class="order_list_dropdown">
-                        {/if}
-                        {$aTotalPayable.total|price_format}
-                        {if $aTotalPayable.total > 0}
-                    </a>
-                    {/if}
-                </td>
-                <td align="center">
-                    {if $aTotalPayable.one_month > 0}
-                    <a href="#" data-period="one_month" class="order_list_dropdown">
-                        {/if}
-                        {$aTotalPayable.one_month|price_format}
-                        {if $aTotalPayable.one_month > 0}
-                    </a>
-                    {/if}
-                </td>
-                <td align="center">
-                    {if $aTotalPayable.three_month > 0}
-                    <a href="#" data-period="three_month" class="order_list_dropdown">
-                        {/if}
-                        {$aTotalPayable.three_month|price_format}
-                        {if $aTotalPayable.three_month > 0}
-                    </a>
-                    {/if}
-                </td>
-                <td align="center">
-                    {if $aTotalPayable.six_month > 0}
-                    <a href="#" data-period="six_month" class="order_list_dropdown">
-                        {/if}
-                        {$aTotalPayable.six_month|price_format}
-                        {if $aTotalPayable.six_month > 0}
-                    </a>
-                    {/if}
-                </td>
-                <td align="center">
-                    {if $aTotalPayable.one_year > 0}
-                    <a href="#" data-period="one_year" class="order_list_dropdown">
-                        {/if}
-                        {$aTotalPayable.one_year|price_format}
-                        {if $aTotalPayable.one_year > 0}
-                    </a>
-                    {/if}
-                </td>
 
+        <table cellpadding="3" cellspacing="1" width="100%" class="admin" style="text-align: center">
+            <tr>
+                <td colspan="2" style="text-align: center">
+                    <h1>Balances due on invoices</h1>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td>
+                    <select id="net_choises" title="Click to select Aging Period" style="width:400px" class="select2 big" multiple>
+                        <option value="0">Current</option>
+                        <option value="30">0-30</option>
+                        <option value="60">31-60</option>
+                        <option value="90">61-90</option>
+                        <option value="91">Over 90</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="distributor_choises" title="Click to select Dx" style="width:400px" class="select2 big" multiple>
+
+                    </select>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td colspan="5" class="SubHeaderLine">
+                    <img src="/skin1_kolin/images/spacer.gif" class="Spc" alt="">
+                </td>
             </tr>
         </table>
+        <div style="margin-top:20px;" class="distibutor_payable"></div>
         <br/>
         <br/>
     {literal}
         <script type="text/javascript">
-            $('.order_list_dropdown').click(function () {
-                $(this).closest('tr#total_payable_row').nextAll().andSelf().css('opacity', 0.4);
-                $.post('ajax_admin.php',{
-                            period : $(this).data('period'),
-                            ajax_action: 'get_payable_orders'
-                        },
-                        function (data) {
-                            $('#total_payable_row').next().remove().end().css('opacity', 1).after(data);
-                        });
-                return false;
-            })
+            $('#net_choises').select2({
+                allowClear: true,
+                closeOnSelect: false,
+                placeholder: $('#net_choises').attr('title')
+            }).on('change.select2', function () {
+                var distributor_data = [];
+                $('option:selected', $('#distributor_choises')).each(function(){
+                    distributor_data.push($(this).val());
+                });
+                var data = [];
+                $('option:selected', $(this)).each(function(){
+                    data.push($(this).val());
+                });
+                $('#distributor_choises').empty().prop("disabled", true);
+                $.post('/admin/order/api/payable_manufacturers',{
+                        period : data
+                    },
+                    function (data) {
+                        var option = '';
+                        var i = 0;
+                        $('#distributor_choises').empty();
+                        for (; i < data.length; i++) {
+                            option = $('<option/>').attr('value', data[i].manufacturerid).text(data[i].manufacturer);
+                            if (distributor_data.length > 0 && distributor_data.indexOf(data[i].manufacturerid) >= 0){
+                                option.prop('selected', true);
+                            }
+                            $('#distributor_choises').append(option).prop("disabled", false);
+                        }
+                        $('#distributor_choises').change();
+                    });
+            });
+
+            $('#distributor_choises').select2({
+                allowClear: true,
+                closeOnSelect: false,
+                placeholder: $('#distributor_choises').attr('title')
+            }).on('change.select2', function(){
+                var distributor_data = [];
+                $('option:selected', $(this)).each(function(){
+                    distributor_data.push($(this).val());
+                });
+                var period_data = [];
+                $('option:selected', $('#net_choises')).each(function(){
+                    period_data.push($(this).val());
+                });
+
+                $.post('/admin/order/api/payable_orders',{
+                        period : period_data,
+                        distributor : distributor_data
+                    },
+                    function (data) {
+                        $('.distibutor_payable').empty().css('opacity', 1).html(data);
+                    });
+
+            });
         </script>
     {/literal}
-    {/if}
+
 
   {if $all_manufacturers_orders ne ""}
 

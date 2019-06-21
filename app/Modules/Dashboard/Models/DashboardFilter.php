@@ -92,9 +92,9 @@ class DashboardFilter extends Model
                 'verboseName' => 'Order list sorting rule',
                 'default' => 1,
                 'choices' => [
+                    11 => 'Reverse chronological order (Date DESC)',
+                    10 => 'Chronological order (Date ASC)',
                     1 => 'Priority shipping, Events count, Date',
-                    10 => 'Date ASC',
-                    11 => 'Date DESC',
                 ],
             ],
             'form_data' => [

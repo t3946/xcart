@@ -3,8 +3,10 @@
 namespace Modules\Distributor\Models;
 
 use DateTime;
+use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -62,6 +64,11 @@ class DistributorModel extends Model
             'contacts_model' => [
                 'class' => HasManyField::class,
                 'modelClass' => DistributorContactsModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
+            'order_groups' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
             'feed_fields' => [
@@ -143,5 +150,39 @@ class DistributorModel extends Model
     public function __toString()
     {
         return (string)$this->manufacturer;
+    }
+
+    public function getDefaultContact()
+    {
+        return $this->contacts_model->order(['distributor_field_code'])->limit(1)->get();
+    }
+
+    public function getPhone(): string
+    {
+        if ($contact = $this->getDefaultContact()) {
+            return $contact->phone ?? '';
+        }
+        return '';
+    }
+
+    public function getPhoneNormalized(): string
+    {
+        $phone = $this->getPhone();
+
+        if (strlen($phone_normalized = DistributorHelper::phoneNormalize($phone)) === 10){
+            return $this->getPhonePrefix() . $phone_normalized;
+        }
+        return $phone;
+    }
+
+    public function getPhonePrefix(): string
+    {
+        switch($this->m_country) {
+            case 'US':
+            case 'CA':
+                $prefix = '+1';
+                break;
+        }
+        return $prefix ?? '';
     }
 }

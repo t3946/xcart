@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -50,10 +51,20 @@ class OrderGroupInvoiceModel extends Model
                 'default' => 0
             ],
             'invoice_date' => [
-                'class' => DateTimeField::className(),
-                'autoNowAdd' => true,
-                'null' => false
+                'class' => DateField::className(),
+                'null' => true
             ],
         ];
+    }
+
+    public function __toString()
+    {
+        return "{$this->order->getOrderNumber()}_{$this->manufacturer->code}-I-{$this->invoice_number}";
+    }
+
+    public function getPaymentDueDate()
+    {
+        $date = $this->getField('invoice_date')->getValue()->add(new \DateInterval("P{$this->manufacturer->d_net_payment_terms_in_days}D"));
+        return $date;
     }
 }

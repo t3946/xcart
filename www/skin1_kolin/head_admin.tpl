@@ -11,11 +11,41 @@
         </td>
         {if $login ne ""}
             <td align="left" width="34%">
+                <div style="width:30%; float:left; margin-right:30px;">
                 {if $usertype ne "V"}
                     <a style="padding-left: 35px;" href="{$xcartApp->router->url('dashboard:index')}">
                         <img src="{$ImagesDir}/cc_dashbord.png" alt=""/>
                     </a>
                 {/if}
+                </div>
+                <div style="width:30%; float:left; margin-right:7px;">
+                    {php}
+                        $est_time = new DateTime("now", new DateTimeZone('EST') );
+                        $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
+                        $ca_time = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
+                        $this->assign('est_time', $est_time);
+                        $this->assign('ny_time', $ny_time);
+                        $this->assign('ca_time', $ca_time);
+                    {/php}
+                    <div style="margin-bottom: 3px;">EST Time: {$est_time->format('H:i')}</div>
+                    <div style="margin-bottom: 3px;">&nbsp;NY Time: {$ny_time->format('H:i')}</div>
+                    <div style="margin-bottom: 3px;">&nbsp;CA Time: {$ca_time->format('H:i')}</div>
+                </div>
+                <div>
+                    {if $order_store}
+                        {assign var='cs_date' value=$order_store->model->getCxDateTime()}
+                    <div style="margin-bottom: 3px;">{if $cs_date}Cx Time: {$cs_date->format('H:i')} {/if}</div>
+                    <div style="margin-bottom: 3px;">
+                        Dx Time:
+                        {foreach from=$order_store->model->groups item=group}
+                            {assign var=distributor value=$group->manufacturer}
+                            {assign var=distributor_time value=$distributor->getDistributorTime()}
+                            {$distributor_time->format('H:i')}&nbsp;
+                        {/foreach}
+                    </div>
+                    {/if}
+                </div>
+
             </td>
             <td align="right" width="33%">
                 {include file="authbox_top.tpl"}

@@ -162,17 +162,18 @@ $(function() {ldelim}
 </td>
 <td></td>
 <td valign="top" width="48%">
+        {assign var=oProduct value=$oProductQuestion->product}
 
         <table border="0" width="100%" cellpadding="3" cellspacing="1">
 
         <tr>
         <td><B>Product name:</B></td>
-        <td><a href="{$product_info.customer_url}" title="" style="color: #3A3AFF;" target="_blank">{$product_info.product}</a></td>
+        <td><a href="{$oProduct->getUrl()}" title="{$oProduct->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$oProduct->getFrontendName()}</a></td>
         </tr>
 
         <tr>
         <td><B>Product SKU:</B></td>
-        <td><a href="product_modify.php?productid={$product_info.productid}" style="color: #3A3AFF;" target="_blank">{$product_info.productcode}</a></td>
+        <td><a href="{$oProduct->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$oProduct->productcode}</a></td>
         </tr>
 
         <tr>

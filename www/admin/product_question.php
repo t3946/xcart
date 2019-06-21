@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Models\ProductQuestionModel;
 
 @set_time_limit(0);
 
@@ -315,11 +316,11 @@ if ($REQUEST_METHOD == "POST") {
     }
 }
 
-$oProductQuestion = \Xcart\ProductQuestion::model(['id' => $id]);
-$product_question = $oProductQuestion->getFields();
+$oProductQuestion = ProductQuestionModel::objects()->get(['id' => $id]);
+$product_question = $oProductQuestion->getAttributes();
 $prefix_product_question_id = "PRQN-".sprintf('%1$05d', $id);
 
-$use_current_storefront = $oProductQuestion->getProductEntity()->getStoreFront()->getStoreFrontId();
+$use_current_storefront = $oProductQuestion->product->getStoreFront()->getStoreFrontId();
 
 $product_info = func_select_product($product_question["productid"], 0, false, false, false, false, $use_current_storefront);
 

@@ -51,7 +51,6 @@ class SearchController extends PrototypeAdminController
         }
 
         $orderStore = new OrderSearchStore($form_data);
-        $orderStore->setOrder(['-date', '-orderid']);
 
         if (!empty($_REQUEST['fast_search'])) {
 

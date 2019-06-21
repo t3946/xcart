@@ -546,9 +546,6 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 
 
-
-
-
 {if $v.invoices ne ""}
 {foreach from=$v.invoices item=invoice key=invoice_number}
 
@@ -557,12 +554,46 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <br />
 <br />
 
-<div align="center"><h1  style="color: #550000;">Invoice # {$order.order_prefix}{$order.orderid}_{$v.code}-I-{$invoice_number}</h1></div>
+<div align="center"><h1  style="color: #550000;">Invoice # {$invoice.invoice_model}</h1></div>
 
-<a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name} distributor invoice</a>
+<a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=11">{$v.group_name} distributor invoice</a>
 {include file="main/subheader.tpl" title=""}
 
+{assign var="distributor" value=$invoice.invoice_model->manufacturer}
+
+<table>
+    <tr>
+        <td>
+            <b>Invoice date:&nbsp;</b>
+        </td>
+        <td>
+            <input autocomplete="off" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}]"
+                   value="{$invoice.invoice_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
+                                onSelect: function (fd) {
+                                    var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
+                                    date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
+                                    date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
+                                    $('#payment_due_date_{/literal}{$invoice_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
+                                },
+                                maxDate: 0
+                            }); $(this).datepicker('show');{/literal}" />
+        </td>
+    </tr>
+    {if $distributor->d_net_payment_terms_in_days > 0}
+    <tr>
+        <td>
+            <b>Payment due date:&nbsp;</b>
+        </td>
+        <td>
+            {assign var=payment_due_date value=$invoice.invoice_model->getPaymentDueDate()}
+            <input disabled="disabled" autocomplete="off" id="payment_due_date_{$invoice_number}" type="text" name="groups[{$m_id}][payment_due_date][{$invoice_number}][]" value="{$payment_due_date->format('m/d/Y')}" size="15" />
+        </td>
+    </tr>
+    {/if}
+
+</table>
 <table cellpadding="3" cellspacing="1" class="invoice_table invoice_table_{$m_id}_{$invoice_number}" data-mnf-id="{$m_id}">
+
 <tr class="TableHead">
   <td width="350">Product Name</td>
   <td width="80">Item #</td>
@@ -807,10 +838,10 @@ Shipping quoted by distributor
  <table>
  <tr>
  <td>
-<input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][items_shipped_to_wrong_address]" {if $invoice.items_shipped_to_wrong_address eq "Y"}checked{/if} /> 
+<input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][items_shipped_to_wrong_address]" {if $invoice.items_shipped_to_wrong_address eq "Y"}checked{/if} />
  </td>
  <td>
-Items are shipped to an address that is different from 
+Items are shipped to an address that is different from
  </td>
  <td>
 <a onclick="javascript: $('#customers_shipping_address_{$m_id}_{$invoice_number}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">the customer's shipping address</a>.
@@ -1131,6 +1162,39 @@ func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}');
 
 <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name} credit memo</a>
 {include file="main/subheader.tpl" title=""}
+
+    {assign var="distributor" value=$memo.memo_model->manufacturer}
+
+    <table>
+        <tr>
+            <td>
+                <b>Credit memo date:&nbsp;</b>
+            </td>
+            <td>
+                <input autocomplete="off" type="text" name="groups[{$m_id}][memo_date][{$memo_number}]"
+                       value="{$memo.memo_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
+                        onSelect: function (fd) {
+                        var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
+                        date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
+                        date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
+                        $('#payment_due_date_memo_{/literal}{$memo_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
+                        },
+                        maxDate: 0
+                        }); $(this).datepicker('show');{/literal}" />
+            </td>
+        </tr>
+        {if $distributor->d_net_payment_terms_in_days > 0}
+            <tr>
+                <td>
+                    <b>Payment due date:&nbsp;</b>
+                </td>
+                <td>
+                    {assign var=payment_due_date value=$memo.memo_model->getPaymentDueDate()}
+                    <input disabled="disabled" autocomplete="off" id="payment_due_date_memo_{$memo_number}" type="text" name="groups[{$m_id}][payment_due_date][{$memo_number}]" value="{$payment_due_date->format('m/d/Y')}" size="15" />
+                </td>
+            </tr>
+        {/if}
+    </table>
 
 <table cellpadding="3" cellspacing="1">
 <tr class="TableHead">
