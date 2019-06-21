@@ -72,7 +72,11 @@ class AmazonCommand extends Command
                                 if ($off['SubCondition'] === 'new') {
                                     $listing->offers++;
                                     /** @var AmazonOfferCompetitorsModel $offer */
-                                    [$offer, $is_cmp_new] = AmazonOfferCompetitorsModel::objects()->getOrNew(['seller' => $off['SellerId'], 'offer_id' => $listing->id]);
+                                    [$offer, $is_cmp_new] = AmazonOfferCompetitorsModel::objects()->getOrNew([
+                                        'seller' => $off['SellerId'],
+                                        'offer_id' => $listing->id,
+                                        'channel' => $off['IsFulfilledByAmazon'] === 'true' ? 'FBA' : 'MFN',
+                                    ]);
 
                                     $offer->setAttributes([
                                         'rating' => $off['SellerFeedbackRating']['SellerPositiveFeedbackRating'],
@@ -81,7 +85,6 @@ class AmazonCommand extends Command
                                         'Shipping' => (float)$off['Shipping']['Amount'],
                                         'country' => $off['ShipsFrom']['Country'] ?: '',
                                         'state' => $off['ShipsFrom']['State'] ?: '',
-                                        'channel' => $off['IsFulfilledByAmazon'] === 'true' ? 'FBA' : 'MFN',
                                         'is_buybox' => $off['IsBuyBoxWinner'] === 'true'
                                     ]);
                                     $offer->save();
