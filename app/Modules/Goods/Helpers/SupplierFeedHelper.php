@@ -207,11 +207,11 @@ class SupplierFeedHelper
                 'sfid' => $feed->storefront_id]))
                 ->save();
 
-            (new PricingModel([
+            /*(new PricingModel([
                 'productid' => $model->productid,
                 'quantity' => 1,
                 'price' => $model->distributor->calculatePrice($model)]))
-                ->save();
+                ->save();*/
 
 
 
