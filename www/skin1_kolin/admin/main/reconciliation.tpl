@@ -344,7 +344,7 @@ to
 		{$vv.date_csv|date_format:'%d-%b-%Y'}{if $kk eq "0"}<br /><br />{/if}
 	{/foreach}
   {else}
-	{$v.date_csv|date_format:'%d-%b-%Y'}
+	{$v.model->date_csv|date_format:'%d-%b-%Y'}
   {/if}
 </td>
 
@@ -354,10 +354,10 @@ to
 		{$vv.description_csv}{if $vv.transaction_type eq "P"} (PayPal){/if} {if $kk eq "0"}<br /><br />{/if}
 	{/foreach}
   {else}
-	{$v.description_csv}{if $v.transaction_type eq "P"} (PayPal){/if}
+	{$v.model->getDescriptionBold()}{if $v.transaction_type eq "P"} (PayPal){/if}
   {/if}
-  {if $v.gmail_search_link != ''}
-      (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.gmail_search_link}" target="_blank">lookup Gmail</a>)
+  {if $v.model->getLookupLink()}
+      (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.model->getLookupLink()}" target="_blank">lookup Gmail</a>)
   {/if}
 </td>
 

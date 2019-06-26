@@ -88,6 +88,16 @@ class DistributorModel extends Model
             'dx_leadtime_to' => [
                 'class' => IntField::class,
             ],
+            'parents' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorModel::class,
+                'link' => ['parent_manufacturer_id' => 'manufacturerid']
+            ],
+            'childs' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorModel::class,
+                'link' => ['manufacturerid' => 'parent_manufacturer_id']
+            ],
         ];
     }
 
