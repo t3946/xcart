@@ -325,7 +325,7 @@ to
 <td style="background-color: #F4CCCC;" width="90">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
 <td style="background-color: #F4CCCC;" width="100">Invoice #</td>
-<td style="background-color: #F4CCCC;" width="90">Invoice Date</td>
+<td style="background-color: #F4CCCC;" width="90">Order Date</td>
 {if $tab eq "unreconciled"}
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
 {/if}
@@ -414,13 +414,12 @@ to
                <br/>
            </td>
            <td width="90" align="center">
-               {assign var=invoice_date_time value=$vo->getField('invoice_date')}
-               {assign var=invoice_date_time_value value=$invoice_date_time->getValue()}
-               {math equation="(x-y)/(60*60*24)" x=$v.model->date_csv y=$invoice_date_time_value->getTimeStamp() assign="date_diff"}
+               {assign var=invoice_order value=$vo->order}
+               {math equation="(x-y)/(60*60*24)" x=$v.model->date_csv y=$invoice_order->date assign="date_diff"}
                {if $date_diff >= 30}
                <span style="background-color: #F4CCCC;">
                {/if}
-                   {$vo->invoice_date|date_format:'%d-%b-%Y'}
+                   {$invoice_order->date|date_format:'%d-%b-%Y'}
                {if $date_diff >= 30}
                </span>
                {/if}
@@ -534,73 +533,71 @@ to
 	{/if}
 
  {foreach from=$unreconciled_orders item=v key=k}
+     {assign var=order_model value=$v->order}
+     {assign var=distributor value=$v->manufacturer}
   <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 	<td colspan="4"></td>
 
-
-      {if $v.order_group_invoices ne "" || $v.order_group_memos ne ""}
-          <td colspan="5">
+      {if $v->invoices->count() || $v->memos->count()}
+          <td colspan="6">
               <table width="100%" cellpadding="0" cellspacing="0">
+                  {foreach from=$v->invoices item=vo key=ko}
+                      <tr>
+                          <td width="90" align="center" nowrap="nowrap">
+                              ({$vo->invoice_total})
+                          </td>
+                          <td width="90" align="center">
+                              <a style="position: relative; bottom: 3px; left:22px;"
+                                 href="manufacturers.php?manufacturerid={$distributor->manufacturerid}&distributor_section=11"
+                                 target="_blank">{$distributor->code}
+                              </a>
+                          </td>
+                          <td width="90" align="center">
+                              <a href="{$order_model->getAdminUrl()}"
+                                 target="_blank">{$order_model->getOrderNumber()}</a><br/>
+                          </td>
+                          <td width="100" align="center">
+                              {$vo}
+                              <br/>
+                          </td>
+                          <td width="90" align="center">
+                              {$order_model->date|date_format:'%d-%b-%Y'}
+                          </td>
+                      </tr>
+                  {/foreach}
 
-                  {if $v.order_group_invoices ne ""}
-                      {foreach from=$v.order_group_invoices item=vo key=ko}
-                          <tr>
-                              <td width="90" align="center" nowrap="nowrap">
-                                  ({$vo.invoice_total})
-                              </td>
-                              <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
-                                                               href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11"
-                                                               target="_blank">{$manufacturers[$v.manufacturerid].code}</a>
-                              </td>
-                              <td width="90" align="center">
-                                  <a href="order.php?orderid={$v.orderid}"
-                                     target="_blank">{$v.order_prefix}{$v.orderid}</a><br/>
-                              </td>
-                              <td width="100" align="center">
-                                  {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-I-{$ko}
-                                  <br/>
-                              </td>
-                              <td width="90" align="center">
-                                  {$v.date|date_format:'%d-%b-%Y'}
-                              </td>
-                          </tr>
-                      {/foreach}
-                  {/if}
-
-                  {if $v.order_group_memos ne ""}
-                      {foreach from=$v.order_group_memos item=vo key=ko}
-                          <tr>
-                              <td width="90" align="center" nowrap="nowrap">
-                                  {$vo.ref_to_us_total}
-                              </td>
-                              <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
-                                                               href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11"
-                                                               target="_blank">{$manufacturers[$v.manufacturerid].code}</a>
-                              </td>
-                              <td width="90" align="center">
-                                  <a href="order.php?orderid={$v.orderid}"
-                                     target="_blank">{$v.order_prefix}{$v.orderid}</a><br/>
-                              </td>
-                              <td width="100" align="center">
-                                  {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-C-{$ko}
-                                  <br/>
-                              </td>
-                              <td width="90" align="center">
-                                  {$v.date|date_format:'%d-%b-%Y'}
-                              </td>
-                          </tr>
-                      {/foreach}
-                  {/if}
+                  {foreach from=$v->memos item=vo key=ko}
+                      <tr>
+                          <td width="90" align="center" nowrap="nowrap">
+                              {$vo->ref_to_us_total}
+                          </td>
+                          <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
+                                                           href="manufacturers.php?manufacturerid={$distributor->manufacturerid}&distributor_section=11"
+                                                           target="_blank">{$distributor->code}</a>
+                          </td>
+                          <td width="90" align="center">
+                              <a href="{$order_model->getAdminUrl()}"
+                                 target="_blank">{$order_model->getOrderNumber()}</a><br/>
+                          </td>
+                          <td width="100" align="center">
+                              {$vo}
+                              <br/>
+                          </td>
+                          <td width="90" align="center">
+                              {$order_model->date|date_format:'%d-%b-%Y'}
+                          </td>
+                      </tr>
+                  {/foreach}
 
               </table>
           </td>
       {else}
           <td align="center"><B>N/A</B></td>
-          <td align="center">{$manufacturers[$v.manufacturerid].code}</td>
-          <td align="center"><a href="order.php?orderid={$v.orderid}"
-                                target="_blank">{$v.order_prefix}{$v.orderid}</a><br/></td>
+          <td align="center">{$distributor->code}</td>
+          <td align="center"><a href="{$order_model->getAdminUrl()}"
+                                target="_blank">{$order_model->getOrderNumber()}</a><br/></td>
           <td align="center"><B>Not received</B></td>
-          <td align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
+          <td align="center">{$order_model->date|date_format:'%d-%b-%Y'}</td>
       {/if}
 
 	<td></td>

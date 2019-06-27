@@ -54,9 +54,24 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 
         if ($oManufacturer->d_bulk_or_individual_order_payments === 'distributor_may_charge_for_several_orders_at_once') {
 
+            $cnt = $orders_models->filter($i_filter = [
+                'invoices__status' => 'U',
+                'invoices__reconciliation_id' => 0,
+                'invoices__invoice_total' => abs($v->amount_csv)
+            ]
+            )->count();
+            if (($cnt === 1) && $_order = $orders_models->get($i_filter)) {
+                /** @var OrderGroupInvoiceModel $invoice */
+                $invoice = $_order->invoices->filter(['status' => 'U', 'reconciliation_id' => 0, 'invoice_total' => abs($v->amount_csv)])->get();
+                $found_invoices_and_memos[] = (string) $invoice;
+                $invoice->reconciliation_id = $r_id;
+                $invoice->save();
+                continue;
+            }
+
             $SUM_invoice_total_OF_found_invoices = 0;
 
-            foreach ($orders_models->all() as $kk => $vv) {
+            foreach ($orders_models as $kk => $vv) {
 
                 /** @var OrderGroupInvoiceModel $invoice_info */
                 if ($vv->order->date < $v->date_csv) {
@@ -543,80 +558,70 @@ if ($REQUEST_METHOD == "POST") {
         }
 
 
-        if (!empty($add_order_manually) && is_array($add_order_manually)) {
+        if (isset($add_order_manually) && \is_array($add_order_manually)) {
 
-            $order_not_added_arr = array();
+            $order_not_added_arr = [];
 
             foreach ($add_order_manually as $r_id => $v_arr) {
-                if (!empty($v_arr) && is_array($v_arr)) {
+                if ($v_arr && is_array($v_arr) && $r_model = ReconciliationModel::objects()->get(['id' => $r_id])) {
 
-                    $manufacturerid__amount_csv = func_query_first("SELECT manufacturerid, amount_csv FROM $sql_tbl[reconciliations] WHERE id='$r_id'");
-                    // $manufacturerid = $manufacturerid__amount_csv["manufacturerid"];
-                    $manufacturerid = $manufacturer_selected[$r_id];
+                    foreach ($v_arr as $v) {
 
-                    if (!empty($manufacturerid)) {
+                        $orderid = trim($v["orderid"]);
+                        if (strpos($orderid, "-") !== false) {
+                            $orderid_arr = explode("-", $orderid);
+                            $orderid = $orderid_arr["1"];
+                        }
 
-                        $amount_csv_abs = abs($manufacturerid__amount_csv["amount_csv"]);
-                        $amount_csv_abs = price_format($amount_csv_abs);
+                        /** @var OrderModel $order_model */
+                        $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
 
-                        foreach ($v_arr as $v) {
+                        if (!$order_model) {continue;}
 
-                            $orderid = trim($v["orderid"]);
-                            if (strpos($orderid, "-") !== false) {
-                                $orderid_arr = explode("-", $orderid);
-                                $orderid = $orderid_arr["1"];
+                        $order_added = false;
+
+                        $f_invoice = [
+                            'status' => 'U',
+                            'part_of_total_transaction_in_amount_of__in' => [0, abs($r_model->amount_csv)],
+                            'orderid' => $orderid
+                        ];
+                        /*
+                         * Hack for Amazon distributor
+                         */
+                        if ((int) $r_model->manufacturerid !== 578) {
+                            $f_invoice['manufacturerid'] = $r_model->manufacturerid;
+                        }
+                        foreach (OrderGroupInvoiceModel::objects()->filter($f_invoice) as $groupInvoice) {
+                            $groupInvoice->setAttributes([
+                                'reconciliation_id' => $r_id,
+                            ]);
+                            if ($groupInvoice->save()) {
+                                $order_added = true;
                             }
-                            $orderid = trim($orderid);
+                        }
 
-                            $order_added = false;
-
-                            $f_invoice = [
-                                'status' => 'U',
-                                'part_of_total_transaction_in_amount_of__in' => ['0.00', $amount_csv_abs],
-                                'orderid' => $orderid
-                            ];
-                            /*
-                             * Hack for Amazon distributor
-                             */
-                            if ((int)$manufacturerid !== 578) {
-                                $f_invoice['manufacturerid'] = $manufacturerid;
+                        $f_memo = [
+                            'status' => 'U',
+                            'ref_to_us_part_of_transaction__in' => [0, abs($r_model->amount_csv)],
+                            'orderid' => $orderid
+                        ];
+                        foreach (OrderGroupMemoModel::objects()->filter($f_memo) as $_memos) {
+                            $_memos->setAttributes([
+                                'reconciliation_id' => $r_id,
+                            ]);
+                            if ($_memos->save()) {
+                                $order_added = true;
                             }
-                            if ($groupInvoices = OrderGroupInvoiceModel::objects()->filter($f_invoice)->all()) {
-                                foreach ($groupInvoices as $groupInvoice) {
-                                    $groupInvoice->setAttributes([
-                                        'reconciliation_id' => $r_id,
-                                    ]);
-                                    if ($groupInvoice->save()) {
-                                        $order_added = true;
-                                    }
-                                }
-                            }
+                        }
 
+                        if (!$order_added) {
+                            $order_not_added_arr[] = "Order # <a href='{$order_model->getAdminUrl()}' target='_blank' style='color: blue;'>{$order_model->getOrderNumber()}</a> hasn't been added.";
+                        }
 
-                            $order_group_memos = func_query("SELECT memo_number FROM $sql_tbl[order_group_memos] WHERE status='U' AND ref_to_us_part_of_transaction IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid' AND reconciliation_id='0'");
-                            if (!empty($order_group_memos)) {
-                                foreach ($order_group_memos as $vv) {
-                                    $memo_number = $vv["memo_number"];
-                                    db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
-
-                                    $order_added = true;
-                                }
-                            }
-
-                            if (!empty($orderid)) {
-
-                                $order_prefix = func_query_first_cell("SELECT order_prefix FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-
-                                if (!$order_added && !empty($orderid)) {
-                                    $order_not_added_arr[] = "Order # <a href='order.php?orderid=$orderid' target='_blank' style='color: blue;'>" . $order_prefix . $orderid . "</a> hasn't been added.";
-                                }
-                            }
-
-                        } // foreach ($v_arr as $v)
-                    } // if (!empty($manufacturerid))
-                } // if (!empty($v_arr) && is_array($v_arr))
-            } // foreach ($add_order_manually as $r_id => $v_arr)
-        } // if (!empty($add_order_manually) && is_array($add_order_manually))
+                    }
+                }
+            }
+        }
 
         if (!empty($action) && is_array($action)) {
             foreach ($action as $k => $v) {
@@ -876,12 +881,12 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
             }
 
 
-            if ($tab === 'unreconciled' && $search_data["reconciliation_tab_" . $tab]["show_unreconciled_invoices_and_memos"] === "Y") {
+            if ($tab === 'unreconciled' && $search_data['reconciliation_tab_' . $tab]['show_unreconciled_invoices_and_memos'] === "Y") {
 
                 $qs = OrderGroupModel::objects()->getQuerySet();
-                $qs->filter([
-                    'order__date__gte' => $search_data["reconciliation_tab_" . $tab]["date"]["start_date"],
-                    'order__date__lte' => $search_data["reconciliation_tab_" . $tab]["date"]["end_date"],
+                $_order_filter = [
+                    'order__date__gte' => $search_data['reconciliation_tab_' . $tab]['date']['start_date'],
+                    'order__date__lte' => $search_data['reconciliation_tab_' . $tab]['date']['end_date'],
                     'order__order_type__isnt' => OrderModel::ORDER_TYPE_FBA,
                     new QOr([
                         'cb_status__in' => [
@@ -892,51 +897,16 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                         ],
                         'order__order_type' => OrderModel::ORDER_TYPE_FB
                     ]),
-                ])->order(['-orderid']);
-                if ($filter_manufacturers && \is_array($filter_manufacturers)) {
-                    $qs->filter(['manufacturerid__in' => $filter_manufacturers]);
-                }
+                    new QOr(['invoices__status__in' => ['U','A'], 'memos__status__in' => ['U','A'], 'invoices__orderid__isnull' => true])
+                ];
 
-                foreach ($qs->all() as $ko => $vo) {
-                    $inv_a = $memo_a = [];
-
-                    $unreconciled_orders[$ko] = [
-                        'orderid' => $vo->orderid,
-                        'manufacturerid' => $vo->manufacturerid,
-                        'date' => $vo->order->date,
-                        'order_prefix' => $vo->order->order_prefix,
-                    ];
-
-                    /** @var OrderGroupInvoiceModel[] $invoices */
-                    $invoices = $vo->invoices->all();
-                    foreach ($invoices as $invoice_m) {
-                        if (\in_array($invoice_m->status, ['U', 'A'], true) && $invoice_m->reconciliation_id == 0) {
-                            $inv_a[$invoice_m->invoice_number] = $invoice_m->getAttributes();
-                        }
-                    }
-
-                    /** @var OrderGroupMemoModel[] $memos */
-                    $memos = $vo->memos->all();
-                    foreach ($memos as $memo_m) {
-                        if (\in_array($memo_m->status, ['U', 'A'], true) && $memo_m->reconciliation_id == 0) {
-                            $memo_a[$memo_m->memo_number] = $memo_m->getAttributes();
-                        }
-                    }
-
-                    if ($inv_a) {
-                        $unreconciled_orders[$ko]["order_group_invoices"] = $inv_a;
-                    }
-
-                    if ($memo_a) {
-                        $unreconciled_orders[$ko]["order_group_memos"] = $memo_a;
-                    }
-
-                    if (!$inv_a && !$memo_a && \count($invoices) > 0) {
-                        unset($unreconciled_orders[$ko]);
+                if ($search_data['reconciliation_tab_' . $tab]['select_distributors'] === 'from_the_list'){
+                    if ($filter_manufacturers = $search_data['reconciliation_tab_' . $tab]['manufacturers']) {
+                        $_order_filter = array_merge($_order_filter, ['manufacturerid__in' => $filter_manufacturers]);
                     }
                 }
 
-                $smarty->assign("unreconciled_orders", $unreconciled_orders);
+                $smarty->assign("unreconciled_orders", $qs->filter($_order_filter)->order(['-orderid']));
 
             }
         }
@@ -1055,4 +1025,4 @@ $smarty->assign("upload_max_filesize", ini_get("upload_max_filesize"));
 
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);
-?>
+
