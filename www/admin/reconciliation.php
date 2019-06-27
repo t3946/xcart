@@ -12,7 +12,6 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\ReconciliationModel;
-use Modules\Order\Models\ReconciliationSearchKeyphraseModel;
 use Xcart\Connection;
 
 set_time_limit(0);
@@ -682,9 +681,9 @@ if ($REQUEST_METHOD == "POST") {
 
 if (empty($tab)) $tab = "unreconciled";
 
-if ($tab == "import") {
+if ($tab === "import") {
 
-    $reconciliation_upload_info = func_query("SELECT * FROM $sql_tbl[reconciliation_upload_info] ORDER BY date");
+    $reconciliation_upload_info = func_query("SELECT * FROM $sql_tbl[reconciliation_upload_info] ORDER BY date DESC");
     if (!empty($reconciliation_upload_info) && is_array($reconciliation_upload_info)) {
         foreach ($reconciliation_upload_info as $k => $v) {
             $reconciliation_upload_info[$k]["firstname"] = func_query_first_cell("SELECT firstname FROM $sql_tbl[customers] WHERE login='$v[login]'");
@@ -943,11 +942,11 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
         }
 
     }
-}
 
-if (1==1) {
+    if ($tab === 'unreconciled') {
+        OrderReconciliationHelper::checkReconcileRules($_filter);
+    }
 
-    OrderReconciliationHelper::checkReconcileRules($_filter);
     $recModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m ?? []))->order(['date_csv'])->all();
 
     foreach ($recModels as $k => $v) {
@@ -957,114 +956,6 @@ if (1==1) {
 
         $reconciliations[$k] = $v->getAttributes();
         $reconciliations[$k]['model'] = $v;
-
-        foreach ($manufacturerid_info as $kk => $vv) {
-            if (!empty($v->description_csv) && !empty($vv["d_search_keyphrase_for_reconciliation"])) {
-
-                $d_search_keyphrase_for_reconciliation_arr = explode("<OR>", $vv["d_search_keyphrase_for_reconciliation"]);
-
-                foreach ($d_search_keyphrase_for_reconciliation_arr as $kk_s_r => $vv_s_r) {
-
-                    $vv_s_r = trim($vv_s_r);
-
-                    $v_description_csv_UPPER = strtoupper($v->description_csv);
-                    $vv_s_r_UPPER = strtoupper($vv_s_r);
-
-                    if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
-                        $manufacturerid = $kk;
-                        $aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer(['manufacturerid' => $manufacturerid]);
-                    }
-                }
-            }
-        }
-
-        if (!empty($manufacturerid)) {
-            $reconciliations[$k]["d_bulk_or_individual_order_payments"] = $manufacturerid_info[$manufacturerid]["d_bulk_or_individual_order_payments"];
-        }
-
-        if (!empty($v->amount_csv) && $v->amount_csv < 0) {
-            $reconciliations[$k]["amount_csv_abs"] = abs($v->amount_csv);
-        }
-        $reconciliations[$k]['aManufacturersEntities'] = $aManufacturersForReconciliation;
-
-        if ($tab == "unreconciled" || $tab == "reconciled") {
-            if (!empty($manufacturerid)) {
-
-                $reconciliations[$k]["distr_code"] = $manufacturerid_info[$manufacturerid]["code"];
-
-                $invoices = func_query("SELECT * FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$v->id'");
-                $memos = func_query("SELECT * FROM $sql_tbl[order_group_memos] WHERE reconciliation_id='$v->id'");
-
-                $found_records = array();
-                $counter = 0;
-                $found_order_info_for_speed_search = array();
-                $total_invoices_and_memos_amounts = 0;
-                $total_invoices_amounts = 0;
-                $tota_memos_amounts = 0;
-                if (!empty($invoices)) {
-                    foreach ($invoices as $kk => $vv) {
-
-                        if (empty($found_order_info_for_speed_search[$vv["orderid"]]["order_prefix"])) {
-                            $order_info_arr = func_query_first("SELECT order_prefix, date FROM $sql_tbl[orders] WHERE orderid='$vv[orderid]'");
-                            $found_order_info_for_speed_search[$vv["orderid"]] = $order_info_arr;
-                        } else {
-                            $order_info_arr = $found_order_info_for_speed_search[$vv["orderid"]];
-                        }
-                        $found_records[$counter] = $order_info_arr;
-                        $found_records[$counter]["orderid"] = $vv["orderid"];
-                        $found_records[$counter]["invoice_info"] = $vv;
-
-                        $total_invoices_and_memos_amounts += $vv["invoice_total"];
-                        $total_invoices_amounts += $vv["invoice_total"];
-
-                        $counter++;
-                    }
-                }
-                if (!empty($memos)) {
-                    foreach ($memos as $kk => $vv) {
-
-                        if (empty($found_order_info_for_speed_search[$vv["orderid"]]["order_prefix"])) {
-                            $order_info_arr = func_query_first("SELECT order_prefix, date FROM $sql_tbl[orders] WHERE orderid='$vv[orderid]'");
-                            $found_order_info_for_speed_search[$vv["orderid"]] = $order_info_arr;
-                        } else {
-                            $order_info_arr = $found_order_info_for_speed_search[$vv["orderid"]];
-                        }
-                        $found_records[$counter] = $order_info_arr;
-                        $found_records[$counter]["orderid"] = $vv["orderid"];
-                        $found_records[$counter]["memo_info"] = $vv;
-
-                        $total_invoices_and_memos_amounts -= $vv["ref_to_us_total"];
-                        $tota_memos_amounts += $vv["ref_to_us_total"];
-
-                        $counter++;
-                    }
-                }
-
-                if (!empty($found_records)) {
-                    foreach ($found_records as $kk => $vv) {
-                        $diff_date = ($v["date_csv"] - $vv["date"]) / (60 * 60 * 24);
-                        $found_records[$kk]["diff_date"] = $diff_date;
-                    }
-
-                    $reconciliations[$k]["invoices_and_memos"] = $found_records;
-
-                    $reconciliations[$k]["total_invoices_amounts"] = $total_invoices_amounts;
-                    $reconciliations[$k]["tota_memos_amounts"] = $tota_memos_amounts;
-
-                    $reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
-                    $reconciliations[$k]["total_invoices_and_memos_amounts_abs"] = abs($total_invoices_and_memos_amounts);
-
-                    if ($total_invoices_and_memos_amounts > 0 && $reconciliations[$k]["amount_csv_abs"] > 0 && $total_invoices_and_memos_amounts != $reconciliations[$k]["amount_csv_abs"]) {
-                        $total_invoices_and_memos_amounts__amount_csv_abs_diff = $reconciliations[$k]["amount_csv_abs"] - $total_invoices_and_memos_amounts;
-                        $total_invoices_and_memos_amounts__amount_csv_abs_diff_abs = abs($total_invoices_and_memos_amounts__amount_csv_abs_diff);
-                        $reconciliations[$k]["total_invoices_and_memos_amounts__amount_csv_abs_diff_abs"] = price_format($total_invoices_and_memos_amounts__amount_csv_abs_diff_abs);
-                        $reconciliations[$k]["total_invoices_and_memos_amounts__amount_csv_abs_diff"] = price_format($total_invoices_and_memos_amounts__amount_csv_abs_diff);
-                    }
-                }
-
-            } // if (!empty($manufacturerid))
-        } // if ($tab == "unreconciled" || $tab == "reconciled")
-
 
         if (!empty($config_reconciliation_search_keyphrases) && is_array($config_reconciliation_search_keyphrases)) {
             foreach ($config_reconciliation_search_keyphrases as $kk => $vv) {
@@ -1086,8 +977,6 @@ if (1==1) {
 
                     if ($flag_config_search_keyphrase_found) {
 
-
-//func_print_r($vv_search_keyphrase_UPPER);
                         $reconciliations[$k]["description_csv"] = str_replace($vv_search_keyphrase_UPPER, "<B>" . $vv_search_keyphrase_UPPER . "</B>", $v_description_csv_UPPER);
                         $reconciliations[$k]["config_search_keyphrase_found"] = "Y";
 

@@ -6,10 +6,13 @@ namespace Modules\Order\Models;
 
 use DateInterval;
 use DateTime;
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 class ReconciliationModel extends Model
@@ -27,11 +30,32 @@ class ReconciliationModel extends Model
             'id' => [
                 'class' => AutoField::class,
             ],
+            'date_csv' => UnixTimestampField::class,
+            'file_upload_date' => [
+                'class' => UnixTimestampField::class,
+                'autoNowAdd' => true,
+            ],
             'distributor' => [
                 'field' => 'manufacturerid',
                 'class' => ForeignField::class,
                 'modelClass' => DistributorModel::class,
             ],
+            'account' => [
+                'field' => 'account_id',
+                'class' => ForeignField::class,
+                'modelClass' => ReconciliationAccountModel::class,
+                'link' => ['account_id' => 'id']
+            ],
+            'invoices' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupInvoiceModel::class,
+                'link' => ['id' => 'reconciliation_id']
+            ],
+            'memos' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupMemoModel::class,
+                'link' => ['id' => 'reconciliation_id']
+            ]
         ];
     }
 
@@ -42,11 +66,27 @@ class ReconciliationModel extends Model
             $v_arr = explode('<OR>', strtoupper($dx->d_search_keyphrase_for_reconciliation));
             foreach ($v_arr as $k) {
                 if (trim($k)) {
-                    $result = \str_replace(trim($k), "<B>" . trim($k) . "</B>", $result);
+                    $result = \str_replace(trim($k), '<b>' . trim($k) . '</b>', $result);
                 }
             }
         }
         return $result ?? $this->description_csv;
+    }
+
+    public function isExpense()
+    {
+        if (!$_reference = strtoupper(trim($this->description_csv))) {return true;}
+
+        foreach (ReconciliationSearchKeyphraseModel::objects()->order(['code']) as $key_phrase) {
+            if ($search_keyphrase = trim($key_phrase->search_keyphrase)) {
+                $v_arr = explode('<OR>', $search_keyphrase);
+                if (\strpos($_reference, $v_arr) !== false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function getLookupLink()
