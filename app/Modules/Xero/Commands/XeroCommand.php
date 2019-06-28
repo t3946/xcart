@@ -59,7 +59,9 @@ class XeroCommand extends Command
 
             $strippedReference = htmlspecialchars_decode(trim(preg_replace('/\s+/', ' ', $transaction->getReference())), ENT_QUOTES);
 
-            $account_model = ReconciliationAccountModel::objects()->get(['code' => $transaction->getBankAccount()->getCode()]);
+            if ($transaction->getBankAccount()->getCode()) {
+                $account_model = ReconciliationAccountModel::objects()->get(['code' => $transaction->getBankAccount()->getCode()]);
+            }
 
             $rec = ReconciliationModel::objects()->get(['bank_transaction_id' => $transaction->getBankTransactionID()]);
             if (!$rec) {
