@@ -363,14 +363,14 @@ to
 </td>
 
 <td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
-  {if $tab eq "reconciled" || ($invoices_total == $v.model->amount_csv && $invoices_total != 0) || (!$distributor && $v.model->isExpense()) }
+  {if $tab eq "reconciled" || (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total, 2) != 0) || (!$distributor && $v.model->isExpense()) }
       <select name="action[{$v.model->id}]">
           <option value=""></option>
           {if $tab eq "reconciled"}
               <option value="UR">Unreconcile</option>
           {else}
               {if $v.model->action != "D"}
-                  {if ($invoices_total == $v.model->amount_csv && $invoices_total !=0) || $v.model->action eq "R"}
+                  {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action eq "R"}
                     <option value="R" selected="selected">Reconcile</option>
                   {/if}
               {/if}
@@ -384,7 +384,7 @@ to
 
 	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
 
-	{if $invoices_total != $v.model->amount_csv && $invoices_total !=0}
+	{if round($invoices_total,2) != $v.model->amount_csv && round($invoices_total, 2) !=0}
 		<br />
 		<br />
 		<input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
@@ -465,7 +465,7 @@ to
      {/foreach}
 
 
-   {if $invoices_total != $v.model->amount_csv && $invoices_total !=0}
+   {if round($invoices_total,2) != $v.model->amount_csv && round($invoices_total,2) !=0}
        {math equation="x-y" x=$v.model->amount_csv y=$invoices_total assign="invoices_diff"}
    <tr>
         <td align="center">
@@ -475,7 +475,7 @@ to
    </tr>
    {/if}
 
- {if $invoices_total == 0}
+ {if round($invoices_total,2) == 0}
 	<tr>
 	<td width="90"></td>
 	<td width="90" align="center">

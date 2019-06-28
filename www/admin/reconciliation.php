@@ -72,6 +72,15 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 
             $SUM_invoice_total_OF_found_invoices = 0;
 
+            foreach (OrderGroupInvoiceModel::objects()->filter(['reconciliation_id' => $r_id]) as $rc) {
+                $SUM_invoice_total_OF_found_invoices += $rc->invoice_total;
+                $found_invoices_and_memos[] = (string) $rc;
+            }
+            foreach (OrderGroupMemoModel::objects()->filter(['reconciliation_id' => $r_id]) as $rc) {
+                $SUM_invoice_total_OF_found_invoices -= $rc->ref_to_us_total;
+                $found_invoices_and_memos[] = (string) $rc;
+            }
+
             foreach ($orders_models as $kk => $vv) {
 
                 /** @var OrderGroupInvoiceModel $invoice_info */
@@ -79,7 +88,7 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
                     foreach ($vv->invoices->filter(['status' => 'U', 'reconciliation_id' => 0]) as $invoice_info) {
                         $price_to_search = (float) $invoice_info->invoice_total;
 
-                        $sum_total = $SUM_invoice_total_OF_found_invoices + $price_to_search;
+                        $sum_total = round($SUM_invoice_total_OF_found_invoices + $price_to_search, 2);
                         $count_reconciled_invoices_for_current_manufacturerid_with_such_reconciliation_id = ($invoice_info->reconciliation_id == $r_id);
                         if (
                             $amount_csv < 0
