@@ -97,14 +97,10 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
                             && !in_array((string)$invoice_info, $found_invoices_and_memos, true)
                             && !$count_reconciled_invoices_for_current_manufacturerid_with_such_reconciliation_id
                         ) {
-                            if ($amount_csv_abs === (float) $invoice_info->part_of_total_transaction_in_amount_of
-                                || (float)$invoice_info->part_of_total_transaction_in_amount_of === (float) 0) {
-                                $SUM_invoice_total_OF_found_invoices += $price_to_search;
-                                $found_invoices_and_memos[] = (string)$invoice_info;
-
-                                $invoice_info->reconciliation_id = $r_id;
-                                $invoice_info->save();
-                            }
+                            $SUM_invoice_total_OF_found_invoices += $price_to_search;
+                            $found_invoices_and_memos[] = (string)$invoice_info;
+                            $invoice_info->reconciliation_id = $r_id;
+                            $invoice_info->save();
                         }
                     }
 

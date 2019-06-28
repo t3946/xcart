@@ -325,7 +325,7 @@ to
 <td style="background-color: #F4CCCC;" width="90">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
 <td style="background-color: #F4CCCC;" width="100">Invoice #</td>
-<td style="background-color: #F4CCCC;" width="90">Order Date</td>
+<td style="background-color: #F4CCCC;" width="90">Invoice Date</td>
 {if $tab eq "unreconciled"}
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
 {/if}
@@ -419,7 +419,7 @@ to
                {if $date_diff >= 30}
                <span style="background-color: #F4CCCC;">
                {/if}
-                   {$invoice_order->date|date_format:'%d-%b-%Y'}
+                   {$vo->invoice_date|date_format:'%d-%b-%Y'}
                {if $date_diff >= 30}
                </span>
                {/if}
@@ -561,7 +561,7 @@ to
                               <br/>
                           </td>
                           <td width="90" align="center">
-                              {$order_model->date|date_format:'%d-%b-%Y'}
+                              {$vo->invoice_date|date_format:'%d-%b-%Y'}
                           </td>
                       </tr>
                   {/foreach}
@@ -584,7 +584,7 @@ to
                               <br/>
                           </td>
                           <td width="90" align="center">
-                              {$order_model->date|date_format:'%d-%b-%Y'}
+                              {$vo->memo_date|date_format:'%d-%b-%Y'}
                           </td>
                       </tr>
                   {/foreach}
