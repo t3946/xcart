@@ -111,12 +111,11 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
                     /** @var OrderGroupMemoModel $memo_info */
                     foreach ($vv->memos->filter(['status' => 'U', 'reconciliation_id' => 0]) as $memo_info) {
                         $price_to_search = (float) $memo_info->ref_to_us_total;
-
+                        $sum_total = round($SUM_invoice_total_OF_found_invoices - $price_to_search, 2);
                         $count_reconciled_memos_for_current_manufacturerid_with_such_reconciliation_id = ($memo_info->reconciliation_id == $r_id);
-
                         if (
-                            $amount_csv < 0 && $amount_csv_abs === (float) $memo_info->ref_to_us_part_of_transaction
-                            && $price_to_search <= $amount_csv_abs
+                            $amount_csv < 0
+                            && $sum_total <= $amount_csv_abs
                             && !in_array((string) $memo_info, $found_invoices_and_memos, true)
                             && !$count_reconciled_memos_for_current_manufacturerid_with_such_reconciliation_id
                         ) {
