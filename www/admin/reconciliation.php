@@ -587,7 +587,7 @@ if ($REQUEST_METHOD == "POST") {
 
                         $f_invoice = [
                             'status' => 'U',
-                            'part_of_total_transaction_in_amount_of__in' => [0, abs($r_model->amount_csv)],
+//                            'part_of_total_transaction_in_amount_of__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
                         /*
@@ -607,7 +607,7 @@ if ($REQUEST_METHOD == "POST") {
 
                         $f_memo = [
                             'status' => 'U',
-                            'ref_to_us_part_of_transaction__in' => [0, abs($r_model->amount_csv)],
+//                            'ref_to_us_part_of_transaction__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
                         foreach (OrderGroupMemoModel::objects()->filter($f_memo) as $_memos) {
