@@ -51,16 +51,17 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
         /** @var \Xcart\App\Orm\Manager $orders_models */
         $orders_models = clone $orders_to_check;
         $orders_models = $orders_models->filter(['manufacturerid__in' => $aManufacturersToCheck])->order(['orderid']);
+        $order_one_invoice = clone $orders_models;
 
         if ($oManufacturer->d_bulk_or_individual_order_payments === 'distributor_may_charge_for_several_orders_at_once') {
 
-            $cnt = $orders_models->filter($i_filter = [
+            $cnt = $order_one_invoice->filter($i_filter = [
                 'invoices__status' => 'U',
                 'invoices__reconciliation_id' => 0,
                 'invoices__invoice_total' => abs($v->amount_csv)
             ]
             )->count();
-            if (($cnt === 1) && $_order = $orders_models->get($i_filter)) {
+            if (($cnt === 1) && $_order = $order_one_invoice->get($i_filter)) {
                 /** @var OrderGroupInvoiceModel $invoice */
                 $invoice = $_order->invoices->filter(['status' => 'U', 'reconciliation_id' => 0, 'invoice_total' => abs($v->amount_csv)])->get();
                 $found_invoices_and_memos[] = (string) $invoice;
