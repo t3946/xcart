@@ -9,6 +9,8 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\ReconciliationModel;
+use Modules\Order\Models\ReconciliationSearchKeyphraseModel;
 
 class OrderReconciliationHelper
 {
@@ -94,5 +96,47 @@ class OrderReconciliationHelper
             }
         }
         return [];
+    }
+
+    public static function checkReconcileRules($_filter = [])
+    {
+        foreach (ReconciliationSearchKeyphraseModel::objects()->order(['code']) as $key_phrase) {
+            $a = [];
+            if ($search_keyphrase = trim($key_phrase->search_keyphrase)) {
+                $v_arr = explode('<OR>', $search_keyphrase);
+                foreach ($v_arr as $k) {
+                    if (trim($k)) {
+                        $a[] = new QOr(['description_csv__contains' => strtoupper(trim($k))]);
+                    }
+                }
+                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
+                    'manufacturerid' => 0,
+                    'action' => '',
+                    new QOr($a),
+                ])) as $all) {
+                    $all->action = 'D';
+                    $all->save();
+                }
+            }
+        }
+
+        foreach (DistributorModel::objects()->filter(['parent_manufacturer_id' => '-1']) as $distributor) {
+            $a = [];
+            if ($search_keyphrase = trim($distributor->d_search_keyphrase_for_reconciliation)) {
+                $v_arr = explode('<OR>', $search_keyphrase);
+                foreach ($v_arr as $k) {
+                    if (trim($k)) {
+                        $a[] = new QOr(['description_csv__contains' => strtoupper(trim($k))]);
+                    }
+                }
+                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
+                    'manufacturerid' => 0,
+                    new QOr($a),
+                ])) as $all){
+                    $all->manufacturerid = $distributor->manufacturerid;
+                    $all->save();
+                }
+            }
+        }
     }
 }

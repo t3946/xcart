@@ -55,7 +55,6 @@ class AdsInsightsFields extends AbstractEnum {
   const AUCTION_BID = 'auction_bid';
   const AUCTION_COMPETITIVENESS = 'auction_competitiveness';
   const AUCTION_MAX_COMPETITOR_BID = 'auction_max_competitor_bid';
-  const BID_TYPE = 'bid_type';
   const BODY_ASSET = 'body_asset';
   const BUYING_TYPE = 'buying_type';
   const CALL_TO_ACTION_ASSET = 'call_to_action_asset';
@@ -128,11 +127,9 @@ class AdsInsightsFields extends AbstractEnum {
   const PLACE_PAGE_NAME = 'place_page_name';
   const PLACEMENT = 'placement';
   const PLATFORM_POSITION = 'platform_position';
-  const PRODUCT_FORMAT = 'product_format';
   const PRODUCT_ID = 'product_id';
   const PUBLISHER_PLATFORM = 'publisher_platform';
   const PURCHASE_ROAS = 'purchase_roas';
-  const PURCHASING_INTERFACE = 'purchasing_interface';
   const REACH = 'reach';
   const REGION = 'region';
   const RELEVANCE_SCORE = 'relevance_score';
@@ -166,6 +163,7 @@ class AdsInsightsFields extends AbstractEnum {
   const VIDEO_P75_WATCHED_ACTIONS = 'video_p75_watched_actions';
   const VIDEO_P95_WATCHED_ACTIONS = 'video_p95_watched_actions';
   const VIDEO_PLAY_ACTIONS = 'video_play_actions';
+  const VIDEO_PLAY_CURVE_ACTIONS = 'video_play_curve_actions';
   const VIDEO_PLAY_RETENTION_0_TO_15S_ACTIONS = 'video_play_retention_0_to_15s_actions';
   const VIDEO_PLAY_RETENTION_20_TO_60S_ACTIONS = 'video_play_retention_20_to_60s_actions';
   const VIDEO_PLAY_RETENTION_GRAPH_ACTIONS = 'video_play_retention_graph_actions';
@@ -174,7 +172,6 @@ class AdsInsightsFields extends AbstractEnum {
   const WEBSITE_CTR = 'website_ctr';
   const WEBSITE_PURCHASE_ROAS = 'website_purchase_roas';
   const WISH_BID = 'wish_bid';
-  const ID = 'id';
 
   public function getFieldTypes() {
     return array(
@@ -196,7 +193,6 @@ class AdsInsightsFields extends AbstractEnum {
       'auction_bid' => 'string',
       'auction_competitiveness' => 'string',
       'auction_max_competitor_bid' => 'string',
-      'bid_type' => 'string',
       'body_asset' => 'Object',
       'buying_type' => 'string',
       'call_to_action_asset' => 'Object',
@@ -269,11 +265,9 @@ class AdsInsightsFields extends AbstractEnum {
       'place_page_name' => 'string',
       'placement' => 'string',
       'platform_position' => 'string',
-      'product_format' => 'string',
       'product_id' => 'string',
       'publisher_platform' => 'string',
       'purchase_roas' => 'list<AdsActionStats>',
-      'purchasing_interface' => 'string',
       'reach' => 'string',
       'region' => 'string',
       'relevance_score' => 'AdgroupRelevanceScore',
@@ -307,6 +301,7 @@ class AdsInsightsFields extends AbstractEnum {
       'video_p75_watched_actions' => 'list<AdsActionStats>',
       'video_p95_watched_actions' => 'list<AdsActionStats>',
       'video_play_actions' => 'list<AdsActionStats>',
+      'video_play_curve_actions' => 'list<Object>',
       'video_play_retention_0_to_15s_actions' => 'list<Object>',
       'video_play_retention_20_to_60s_actions' => 'list<Object>',
       'video_play_retention_graph_actions' => 'list<Object>',
@@ -315,7 +310,6 @@ class AdsInsightsFields extends AbstractEnum {
       'website_ctr' => 'list<AdsActionStats>',
       'website_purchase_roas' => 'list<AdsActionStats>',
       'wish_bid' => 'string',
-      'id' => 'string',
     );
   }
 }

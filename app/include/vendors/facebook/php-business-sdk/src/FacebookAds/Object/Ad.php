@@ -193,9 +193,9 @@ class Ad extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'include_deleted' => 'bool',
-      'effective_status' => 'list<string>',
       'date_preset' => 'date_preset_enum',
+      'effective_status' => 'list<string>',
+      'include_deleted' => 'bool',
       'time_range' => 'Object',
       'updated_since' => 'int',
     );
@@ -249,21 +249,21 @@ class Ad extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'default_summary' => 'bool',
-      'fields' => 'list<string>',
-      'filtering' => 'list<Object>',
-      'summary' => 'list<string>',
-      'sort' => 'list<string>',
       'action_attribution_windows' => 'list<action_attribution_windows_enum>',
       'action_breakdowns' => 'list<action_breakdowns_enum>',
       'action_report_time' => 'action_report_time_enum',
       'breakdowns' => 'list<breakdowns_enum>',
       'date_preset' => 'date_preset_enum',
+      'default_summary' => 'bool',
       'export_columns' => 'list<string>',
       'export_format' => 'string',
       'export_name' => 'string',
+      'fields' => 'list<string>',
+      'filtering' => 'list<Object>',
       'level' => 'level_enum',
       'product_id_limit' => 'int',
+      'sort' => 'list<string>',
+      'summary' => 'list<string>',
       'summary_action_breakdowns' => 'list<summary_action_breakdowns_enum>',
       'time_increment' => 'string',
       'time_range' => 'Object',
@@ -299,21 +299,21 @@ class Ad extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'default_summary' => 'bool',
-      'fields' => 'list<string>',
-      'filtering' => 'list<Object>',
-      'summary' => 'list<string>',
-      'sort' => 'list<string>',
       'action_attribution_windows' => 'list<action_attribution_windows_enum>',
       'action_breakdowns' => 'list<action_breakdowns_enum>',
       'action_report_time' => 'action_report_time_enum',
       'breakdowns' => 'list<breakdowns_enum>',
       'date_preset' => 'date_preset_enum',
+      'default_summary' => 'bool',
       'export_columns' => 'list<string>',
       'export_format' => 'string',
       'export_name' => 'string',
+      'fields' => 'list<string>',
+      'filtering' => 'list<Object>',
       'level' => 'level_enum',
       'product_id_limit' => 'int',
+      'sort' => 'list<string>',
+      'summary' => 'list<string>',
       'summary_action_breakdowns' => 'list<summary_action_breakdowns_enum>',
       'time_increment' => 'string',
       'time_range' => 'Object',
@@ -392,50 +392,24 @@ class Ad extends AbstractArchivableCrudObject
     return $pending ? $request : $request->execute();
   }
 
-  public function createLead(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'start_time' => 'datetime',
-      'end_time' => 'datetime',
-      'session_id' => 'string',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/leads',
-      new Lead(),
-      'EDGE',
-      Lead::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getPreviews(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
       'ad_format' => 'ad_format_enum',
+      'dynamic_asset_label' => 'string',
       'dynamic_creative_spec' => 'Object',
       'dynamic_customization' => 'Object',
-      'dynamic_asset_label' => 'string',
-      'interactive' => 'bool',
-      'post' => 'Object',
-      'height' => 'unsigned int',
-      'width' => 'unsigned int',
-      'place_page_id' => 'int',
-      'product_item_ids' => 'list<string>',
-      'start_date' => 'datetime',
       'end_date' => 'datetime',
+      'height' => 'unsigned int',
+      'interactive' => 'bool',
       'locale' => 'string',
+      'place_page_id' => 'int',
+      'post' => 'Object',
+      'product_item_ids' => 'list<string>',
       'render_type' => 'render_type_enum',
+      'start_date' => 'datetime',
+      'width' => 'unsigned int',
     );
     $enums = array(
       'ad_format_enum' => AdPreviewAdFormatValues::getInstance()->getValues(),
@@ -480,35 +454,12 @@ class Ad extends AbstractArchivableCrudObject
     return $pending ? $request : $request->execute();
   }
 
-  public function deleteTrackingTag(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/trackingtag',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function createTrackingTag(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
-      'url' => 'string',
       'add_template_param' => 'bool',
+      'url' => 'string',
     );
     $enums = array(
     );
@@ -563,25 +514,25 @@ class Ad extends AbstractArchivableCrudObject
     );
     $enums = array(
       'date_preset_enum' => array(
-        'today',
-        'yesterday',
-        'this_month',
-        'last_month',
-        'this_quarter',
-        'lifetime',
-        'last_3d',
-        'last_7d',
         'last_14d',
         'last_28d',
         'last_30d',
+        'last_3d',
+        'last_7d',
         'last_90d',
+        'last_month',
+        'last_quarter',
         'last_week_mon_sun',
         'last_week_sun_sat',
-        'last_quarter',
         'last_year',
+        'lifetime',
+        'this_month',
+        'this_quarter',
         'this_week_mon_today',
         'this_week_sun_today',
         'this_year',
+        'today',
+        'yesterday',
       ),
     );
 
@@ -604,24 +555,24 @@ class Ad extends AbstractArchivableCrudObject
     $this->assureId();
 
     $param_types = array(
-      'audience_id' => 'string',
-      'include_demolink_hashes' => 'bool',
-      'creative' => 'AdCreative',
-      'name' => 'string',
-      'status' => 'status_enum',
-      'priority' => 'unsigned int',
-      'tracking_specs' => 'Object',
-      'display_sequence' => 'unsigned int',
-      'engagement_audience' => 'bool',
-      'adset_spec' => 'AdSet',
-      'draft_adgroup_id' => 'string',
-      'execution_options' => 'list<execution_options_enum>',
       'adlabels' => 'list<Object>',
+      'adset_spec' => 'AdSet',
+      'audience_id' => 'string',
       'bid_amount' => 'int',
+      'creative' => 'AdCreative',
+      'display_sequence' => 'unsigned int',
+      'draft_adgroup_id' => 'string',
+      'engagement_audience' => 'bool',
+      'execution_options' => 'list<execution_options_enum>',
+      'include_demolink_hashes' => 'bool',
+      'name' => 'string',
+      'priority' => 'unsigned int',
+      'status' => 'status_enum',
+      'tracking_specs' => 'Object',
     );
     $enums = array(
-      'status_enum' => AdStatusValues::getInstance()->getValues(),
       'execution_options_enum' => AdExecutionOptionsValues::getInstance()->getValues(),
+      'status_enum' => AdStatusValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(

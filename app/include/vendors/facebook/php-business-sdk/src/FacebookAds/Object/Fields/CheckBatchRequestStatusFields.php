@@ -42,7 +42,8 @@ class CheckBatchRequestStatusFields extends AbstractEnum {
   const HANDLE = 'handle';
   const INVALID_ITEM_IDS = 'invalid_item_ids';
   const STATUS = 'status';
-  const ID = 'id';
+  const WARNINGS = 'warnings';
+  const WARNINGS_TOTAL_COUNT = 'warnings_total_count';
 
   public function getFieldTypes() {
     return array(
@@ -51,7 +52,8 @@ class CheckBatchRequestStatusFields extends AbstractEnum {
       'handle' => 'string',
       'invalid_item_ids' => 'list<string>',
       'status' => 'string',
-      'id' => 'string',
+      'warnings' => 'list<Object>',
+      'warnings_total_count' => 'int',
     );
   }
 }

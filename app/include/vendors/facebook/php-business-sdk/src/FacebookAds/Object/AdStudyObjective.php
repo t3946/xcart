@@ -227,8 +227,8 @@ class AdStudyObjective extends AbstractCrudObject {
       'breakdowns_enum' => array(
         'age',
         'cell_id',
-        'gender',
         'country',
+        'gender',
       ),
     );
 
@@ -251,14 +251,15 @@ class AdStudyObjective extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'adspixels' => 'list<Object>',
+      'applications' => 'list<Object>',
+      'customconversions' => 'list<Object>',
       'is_primary' => 'bool',
       'name' => 'string',
-      'type' => 'type_enum',
-      'adspixels' => 'list<Object>',
-      'customconversions' => 'list<Object>',
-      'applications' => 'list<Object>',
-      'offsitepixels' => 'list<Object>',
       'offline_conversion_data_sets' => 'list<Object>',
+      'offsitepixels' => 'list<Object>',
+      'product_sets' => 'list<Object>',
+      'type' => 'type_enum',
     );
     $enums = array(
       'type_enum' => AdStudyObjectiveTypeValues::getInstance()->getValues(),

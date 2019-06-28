@@ -70,8 +70,8 @@ class CampaignFields extends AbstractEnum {
   const UPDATED_TIME = 'updated_time';
   const ADBATCH = 'adbatch';
   const EXECUTION_OPTIONS = 'execution_options';
-  const UPSTREAM_EVENTS = 'upstream_events';
   const ITERATIVE_SPLIT_TEST_CONFIGS = 'iterative_split_test_configs';
+  const UPSTREAM_EVENTS = 'upstream_events';
 
   public function getFieldTypes() {
     return array(
@@ -108,8 +108,8 @@ class CampaignFields extends AbstractEnum {
       'updated_time' => 'datetime',
       'adbatch' => 'list<Object>',
       'execution_options' => 'list<ExecutionOptions>',
-      'upstream_events' => 'map',
       'iterative_split_test_configs' => 'list<Object>',
+      'upstream_events' => 'map',
     );
   }
 }

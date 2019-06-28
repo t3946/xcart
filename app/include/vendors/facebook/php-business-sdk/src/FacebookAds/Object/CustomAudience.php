@@ -126,8 +126,8 @@ class CustomAudience extends AbstractCrudObject {
     $param_types = array(
       'adaccounts' => 'list<string>',
       'permissions' => 'string',
-      'replace' => 'bool',
       'relationship_type' => 'list<string>',
+      'replace' => 'bool',
     );
     $enums = array(
     );
@@ -172,30 +172,6 @@ class CustomAudience extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function deleteCapabilities(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'adaccounts' => 'list<string>',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/capabilities',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function createCapability(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -226,24 +202,24 @@ class CustomAudience extends AbstractCrudObject {
 
     $param_types = array(
       'action_type' => 'action_type_enum',
-      'encoding' => 'encoding_enum',
-      'entry_type' => 'entry_type_enum',
-      'entries' => 'list<string>',
-      'session_id' => 'unsigned int',
       'batch_seq' => 'unsigned int',
+      'encoding' => 'encoding_enum',
+      'entries' => 'list<string>',
+      'entry_type' => 'entry_type_enum',
       'last_batch_flag' => 'bool',
+      'session_id' => 'unsigned int',
     );
     $enums = array(
       'action_type_enum' => array(
         'add',
-        'remove',
         'match',
         'optout',
+        'remove',
       ),
       'encoding_enum' => array(
         'md5',
-        'sha256',
         'plain',
+        'sha256',
       ),
       'entry_type_enum' => array(
         '0',
@@ -345,9 +321,9 @@ class CustomAudience extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'session' => 'Object',
-      'payload' => 'Object',
       'namespace' => 'string',
+      'payload' => 'Object',
+      'session' => 'Object',
     );
     $enums = array(
     );
@@ -371,9 +347,9 @@ class CustomAudience extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'session' => 'Object',
-      'payload' => 'Object',
       'namespace' => 'string',
+      'payload' => 'Object',
+      'session' => 'Object',
     );
     $enums = array(
     );
@@ -397,9 +373,9 @@ class CustomAudience extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'session' => 'Object',
-      'payload' => 'Object',
       'namespace' => 'string',
+      'payload' => 'Object',
+      'session' => 'Object',
     );
     $enums = array(
     );
@@ -423,9 +399,9 @@ class CustomAudience extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'session' => 'Object',
-      'payload' => 'Object',
       'namespace' => 'string',
+      'payload' => 'Object',
+      'session' => 'Object',
     );
     $enums = array(
     );
@@ -496,46 +472,47 @@ class CustomAudience extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'accountID' => 'string',
+      'additionalMetadata' => 'string',
+      'allowed_domains' => 'list<string>',
+      'claim_objective' => 'claim_objective_enum',
+      'content_type' => 'content_type_enum',
+      'countries' => 'string',
+      'customer_file_source' => 'customer_file_source_enum',
       'description' => 'string',
+      'details' => 'string',
+      'enable_fetch_or_create' => 'bool',
+      'event_source_group' => 'string',
+      'event_sources' => 'list<map>',
+      'exclusions' => 'list<Object>',
+      'expectedSize' => 'unsigned int',
+      'gender' => 'string',
+      'inclusions' => 'list<Object>',
+      'isPrivate' => 'bool',
+      'is_household' => 'bool',
+      'is_household_exclusion' => 'bool',
+      'lookalike_spec' => 'string',
+      'maxAge' => 'unsigned int',
+      'minAge' => 'unsigned int',
       'name' => 'string',
       'opt_out_link' => 'string',
       'parent_audience_id' => 'unsigned int',
-      'seed_audience' => 'unsigned int',
-      'tags' => 'list<string>',
-      'is_household' => 'bool',
-      'is_household_exclusion' => 'bool',
-      'allowed_domains' => 'list<string>',
-      'lookalike_spec' => 'string',
+      'partnerID' => 'string',
+      'partner_reference_key' => 'string',
+      'product_set_id' => 'string',
       'retention_days' => 'unsigned int',
-      'customer_file_source' => 'customer_file_source_enum',
+      'rev_share_policy_id' => 'unsigned int',
       'rule' => 'string',
       'rule_aggregation' => 'string',
-      'inclusions' => 'list<Object>',
-      'exclusions' => 'list<Object>',
-      'countries' => 'string',
-      'details' => 'string',
+      'seed_audience' => 'unsigned int',
       'source' => 'string',
-      'isPrivate' => 'bool',
-      'additionalMetadata' => 'string',
-      'minAge' => 'unsigned int',
-      'maxAge' => 'unsigned int',
-      'expectedSize' => 'unsigned int',
-      'gender' => 'string',
-      'partnerID' => 'string',
-      'accountID' => 'string',
-      'rev_share_policy_id' => 'unsigned int',
-      'partner_reference_key' => 'string',
-      'claim_objective' => 'claim_objective_enum',
-      'content_type' => 'content_type_enum',
-      'event_source_group' => 'string',
-      'product_set_id' => 'string',
-      'event_sources' => 'list<map>',
       'study_spec' => 'map',
+      'tags' => 'list<string>',
     );
     $enums = array(
-      'customer_file_source_enum' => CustomAudienceCustomerFileSourceValues::getInstance()->getValues(),
       'claim_objective_enum' => CustomAudienceClaimObjectiveValues::getInstance()->getValues(),
       'content_type_enum' => CustomAudienceContentTypeValues::getInstance()->getValues(),
+      'customer_file_source_enum' => CustomAudienceCustomerFileSourceValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
