@@ -538,7 +538,7 @@ to
   <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 	<td colspan="4"></td>
 
-      {if $v->invoices->count() || $v->memos->count()} //TODO filter by status 'U'
+      {if $v->invoices->count() || $v->memos->count()}
           <td colspan="6">
               <table width="100%" cellpadding="0" cellspacing="0">
                   {foreach from=$v->invoices item=vo key=ko}
