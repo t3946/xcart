@@ -542,7 +542,7 @@ to
           <td colspan="6">
               <table width="100%" cellpadding="0" cellspacing="0">
                   {foreach from=$v->invoices item=vo key=ko}
-                      {if $item->status === 'U'}
+                      {if $vo->status === 'U'}
                       <tr>
                           <td width="90" align="center" nowrap="nowrap">
                               ({$vo->invoice_total})
