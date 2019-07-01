@@ -569,7 +569,7 @@ to
                   {/foreach}
 
                   {foreach from=$v->memos item=vo key=ko}
-                      {if $item->status === 'U'}
+                      {if $vo->status === 'U'}
                       <tr>
                           <td width="90" align="center" nowrap="nowrap">
                               {$vo->ref_to_us_total}
