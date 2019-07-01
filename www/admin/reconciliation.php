@@ -911,7 +911,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                     }
                 }
 
-                $smarty->assign("unreconciled_orders", $qs->filter($_order_filter)->order(['-invoices__invoice_date', '-memos__memo_date']));
+                $smarty->assign("unreconciled_orders", $qs->filter($_order_filter)->order(['-invoices__invoice_date', '-memos__memo_date', '-orderid']));
 
             }
         }
