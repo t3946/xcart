@@ -542,6 +542,7 @@ to
           <td colspan="6">
               <table width="100%" cellpadding="0" cellspacing="0">
                   {foreach from=$v->invoices item=vo key=ko}
+                      {if $item->status === 'U'}
                       <tr>
                           <td width="90" align="center" nowrap="nowrap">
                               ({$vo->invoice_total})
@@ -564,9 +565,11 @@ to
                               {$vo->invoice_date|date_format:'%d-%b-%Y'}
                           </td>
                       </tr>
+                      {/if}
                   {/foreach}
 
                   {foreach from=$v->memos item=vo key=ko}
+                      {if $item->status === 'U'}
                       <tr>
                           <td width="90" align="center" nowrap="nowrap">
                               {$vo->ref_to_us_total}
@@ -587,6 +590,7 @@ to
                               {$vo->memo_date|date_format:'%d-%b-%Y'}
                           </td>
                       </tr>
+                      {/if}
                   {/foreach}
 
               </table>
