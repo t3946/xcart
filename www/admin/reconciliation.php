@@ -586,7 +586,7 @@ if ($REQUEST_METHOD == "POST") {
                         $order_added = false;
 
                         $f_invoice = [
-                            'status' => 'U',
+                            //'status' => 'U',
 //                            'part_of_total_transaction_in_amount_of__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
