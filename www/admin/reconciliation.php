@@ -606,7 +606,7 @@ if ($REQUEST_METHOD == "POST") {
                         }
 
                         $f_memo = [
-                            'status' => 'U',
+//                            'status' => 'U',
 //                            'ref_to_us_part_of_transaction__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
@@ -701,7 +701,7 @@ if ($tab === "import") {
     }
 }
 
-if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab == "expense_report" || $tab == "accounts_payable" || $tab == "receivables") {
+if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab == "expense_report" || $tab == "receivables") {
 
     if (empty($search_data["reconciliation_tab_" . $tab]["date_csv"])) {
         $search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"] = time();
@@ -793,59 +793,8 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
         }
 
-        if (!empty($orders) && $tab == "accounts_payable") {
-
-            $all_manufacturers_in_orders = array();
-
-            foreach ($orders as $k => $v) {
-                $all_manufacturers_in_orders[] = $v["manufacturerid"];
-            }
-
-            $all_manufacturers_in_orders_unique = array_unique($all_manufacturers_in_orders);
-
-            $sum_total_gross_accounting_1_2 = 0;
-
-            foreach ($all_manufacturers_in_orders_unique as $k => $v) {
-                foreach ($orders as $kk => $vv) {
-                    if ($v == $vv["manufacturerid"]) {
-
-                        $all_manufacturers_orders[$v]["manufacturerid"] = $v;
-                        $all_manufacturers_orders[$v]["distr_code"] = $manufacturerid_info[$v]["code"];
-                        $all_manufacturers_orders[$v]["manufacturer"] = $manufacturerid_info[$v]["manufacturer"];
-
-
-                        $accounting = func_make_accounting($vv["orderid"], $vv["manufacturerid"]);
-//						$accounting = unserialize($vv["accounting"]);
-                        $vv["accounting"] = $accounting;
-
-                        $total_gross_accounting_1_2 = $all_manufacturers_orders[$v]["total_gross_accounting_1_2"];
-                        if (empty($total_gross_accounting_1_2))
-                            $total_gross_accounting_1_2 = 0;
-
-                        $current_total_gross_accounting_1_2 = $accounting[1]["gross"] + $accounting[2]["gross"];
-                        $total_gross_accounting_1_2 += $current_total_gross_accounting_1_2;
-                        $all_manufacturers_orders[$v]["total_gross_accounting_1_2"] = $total_gross_accounting_1_2;
-                        $vv["current_total_gross_accounting_1_2"] = $current_total_gross_accounting_1_2;
-
-                        $all_manufacturers_orders[$v]["orders"][] = $vv;
-                    }
-                }
-
-                $sum_total_gross_accounting_1_2 += $all_manufacturers_orders[$v]["total_gross_accounting_1_2"];
-            }
-
-
-            $all_manufacturers_orders = my_array_sort($all_manufacturers_orders, "manufacturer", SORT_ASC);
-
-            $smarty->assign("sum_total_gross_accounting_1_2", $sum_total_gross_accounting_1_2);
-            $smarty->assign("all_manufacturers_orders", $all_manufacturers_orders);
-        }
-
         if ($tab == "receivables") {
             $smarty->assign("aTotalReceivables", (new \Xcart\Reconciliation())->getReceivablesTotalReport());
-        }
-        if ($tab == "accounts_payable") {
-            $smarty->assign("aTotalPayable", (new \Xcart\Reconciliation())->getPayableTotalReport());
         }
 
     } else {

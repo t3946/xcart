@@ -50,7 +50,7 @@ class OrderReconciliationHelper
                 ]
             )->order('manufacturer');
 
-            $d->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+            $d->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL 1 DAY), DATE(NOW()))')]);
 
             $d->having(self::getNetFilter($period));
 
@@ -85,7 +85,7 @@ class OrderReconciliationHelper
                     'invoices__status' => 'U',
                     'manufacturer__d_net_payment_terms_in_days__gt' => 0,
                 ])->order('orderid');
-                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL 1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));
