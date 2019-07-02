@@ -49,7 +49,7 @@ class OrderReconciliationHelper
                     'order_groups__order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
                     'order_groups__invoices__status' => 'U',
                     'd_net_payment_terms_in_days__gt' => 0,
-                    'amz_fullfilment_order_placed' => 'N',
+                    'order_groups__amz_fullfilment_order_placed' => 'N',
                 ]
             )->order('manufacturer');
 
