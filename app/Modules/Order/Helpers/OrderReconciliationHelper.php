@@ -8,6 +8,8 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Order\Models\OrderGroupInvoiceModel;
+use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\ReconciliationModel;
 use Modules\Order\Models\ReconciliationSearchKeyphraseModel;
@@ -80,11 +82,13 @@ class OrderReconciliationHelper
     {
         if ($distributors = $aParams['distributor']) {
             if (($period = $aParams['period']) && \is_array($period)) {
+                $t_a = OrderGroupInvoiceModel::objects()->getTableAlias();
+                $t_am = OrderGroupMemoModel::objects()->getTableAlias();
                 $o = OrderGroupModel::objects()->filter([
                     'order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
                     'invoices__status' => 'U',
                     'manufacturer__d_net_payment_terms_in_days__gt' => 0,
-                ])->order('orderid');
+                ])->order(["{$t_a}.invoice_date"]);
                 $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
