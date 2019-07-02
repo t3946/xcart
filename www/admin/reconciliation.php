@@ -842,6 +842,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                     'order__date__gte' => $search_data['reconciliation_tab_' . $tab]['date']['start_date'],
                     'order__date__lte' => $search_data['reconciliation_tab_' . $tab]['date']['end_date'],
                     'order__order_type__isnt' => OrderModel::ORDER_TYPE_FBA,
+                    'amz_fullfilment_order_placed' => 'N',
                     new QOr([
                         'cb_status__in' => [
                             OrderStatusModel::ORDER_STATUS_UNPAID_PO,
