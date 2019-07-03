@@ -11,6 +11,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\ReconciliationManufacturerModel;
 use Modules\Order\Models\ReconciliationModel;
 use Modules\Order\Models\ReconciliationSearchKeyphraseModel;
 
@@ -87,11 +88,11 @@ class OrderReconciliationHelper
                 $t_am = OrderGroupMemoModel::objects()->getTableAlias();
                 $o = OrderGroupModel::objects()->filter([
                     'order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
-                    'invoices__status' => 'U',
+                    new QOr(['invoices__status' => 'U', 'memos__status' => 'U']),
                     'manufacturer__d_net_payment_terms_in_days__gt' => 0,
                     'amz_fullfilment_order_placed' => 'N',
-                ])->order(["{$t_a}.invoice_date"]);
-                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+                ])->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
+                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));
@@ -116,7 +117,7 @@ class OrderReconciliationHelper
                     }
                 }
                 foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
-                    'manufacturerid' => 0,
+                    'distributors__manufacturerid__isnull' => true,
                     'action' => '',
                     new QOr($a),
                 ])) as $all) {
@@ -126,7 +127,7 @@ class OrderReconciliationHelper
             }
         }
 
-        foreach (DistributorModel::objects()->filter(['parent_manufacturer_id' => '-1']) as $distributor) {
+        foreach (DistributorModel::objects()->filter(['parent_manufacturer_id' => -1]) as $distributor) {
             $a = [];
             if ($search_keyphrase = trim($distributor->d_search_keyphrase_for_reconciliation)) {
                 $v_arr = explode('<OR>', $search_keyphrase);
@@ -136,11 +137,12 @@ class OrderReconciliationHelper
                     }
                 }
                 foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
-                    'manufacturerid' => 0,
                     new QOr($a),
                 ])) as $all){
-                    $all->manufacturerid = $distributor->manufacturerid;
-                    $all->save();
+                    [$rdm, $is_new] = ReconciliationManufacturerModel::objects()->getOrCreate([
+                        'manufacturer_id' => $distributor->manufacturerid,
+                        'reconciliation_id' => $all->id,
+                    ]);
                 }
             }
         }

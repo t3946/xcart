@@ -34,7 +34,7 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 
         $aManufacturersToCheck = [];
 
-        if ($oManufacturer = DistributorModel::objects()->get(['manufacturerid' => $v->manufacturerid])) {
+        foreach ($v->distributors as $oManufacturer) {
 
             $aManufacturersToCheck[] = $oManufacturer->manufacturerid;
 
@@ -515,7 +515,7 @@ if ($REQUEST_METHOD == "POST") {
 
         OrderReconciliationHelper::checkReconcileRules($_filter);
 
-        $_filter_m = ['manufacturerid__gt' => 0];
+        $_filter_m = ['distributors__manufacturerid__null' => false];
 
         if ($search_data["reconciliation_tab_" . $tab]["select_distributors"] === "from_the_list") {
             if (empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
@@ -523,7 +523,7 @@ if ($REQUEST_METHOD == "POST") {
                 $top_message["type"] = "E";
                 func_header_location("reconciliation.php?tab=" . $tab);
             }
-            $_filter_m = ['manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
+            $_filter_m = ['distributors__manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
         }
 
         $reconcileModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m))->order('id')->all();
@@ -586,7 +586,7 @@ if ($REQUEST_METHOD == "POST") {
                         $order_added = false;
 
                         $f_invoice = [
-                            //'status' => 'U',
+                            'status' => 'U',
 //                            'part_of_total_transaction_in_amount_of__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
@@ -594,7 +594,7 @@ if ($REQUEST_METHOD == "POST") {
                          * Hack for Amazon distributor
                          */
                         if ((int) $r_model->manufacturerid !== 578) {
-                            $f_invoice['manufacturerid'] = $r_model->manufacturerid;
+                            $f_invoice['manufacturerid__in'] = $r_model->distributors->valuesList('manufacturerid', true);
                         }
                         foreach (OrderGroupInvoiceModel::objects()->filter($f_invoice) as $groupInvoice) {
                             $groupInvoice->setAttributes([
@@ -606,7 +606,7 @@ if ($REQUEST_METHOD == "POST") {
                         }
 
                         $f_memo = [
-//                            'status' => 'U',
+                            'status' => 'U',
 //                            'ref_to_us_part_of_transaction__in' => [0, abs($r_model->amount_csv)],
                             'orderid' => $orderid
                         ];
@@ -818,20 +818,14 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
         if ($tab === 'reconciled' || $tab === 'unreconciled') {
 
-            $tmp_manufacturers_search_condition = "";
-
             if ($search_data['reconciliation_tab_' . $tab]["select_distributors"] === 'from_the_list') {
                 if (!empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
                     $tmp_manufacturers_str = implode("','", $search_data["reconciliation_tab_" . $tab]["manufacturers"]);
                     $tmp_manufacturers_str = "'" . $tmp_manufacturers_str . "'";
-                    $_filter_m = ['manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
+                    $_filter_m = ['distributors__manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
                 } else {
                     $tmp_manufacturers_str = "'0'";
                 }
-
-                $tmp_manufacturers_search_condition = " AND manufacturerid IN ($tmp_manufacturers_str)";
-                $search_condition .= $tmp_manufacturers_search_condition;
-
             }
 
 

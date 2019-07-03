@@ -12,8 +12,10 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
+use Xcart\Reconciliation;
 
 class ReconciliationModel extends Model
 {
@@ -55,7 +57,12 @@ class ReconciliationModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupMemoModel::class,
                 'link' => ['id' => 'reconciliation_id']
-            ]
+            ],
+            'distributors' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => DistributorModel::class,
+                'through' => ReconciliationManufacturerModel::class,
+            ],
         ];
     }
 
@@ -71,6 +78,21 @@ class ReconciliationModel extends Model
             }
         }
         return $result ?? $this->description_csv;
+    }
+
+    public function getDistributors()
+    {
+        if (!$_reference = strtoupper(trim($this->description_csv))) {return [];}
+
+        foreach (DistributorModel::objects() as $dx)
+        {
+            $v_arr = explode('<OR>', strtoupper($dx->d_search_keyphrase_for_reconciliation));
+            if (\strpos($_reference, $v_arr) !== false) {
+                $result[] = $dx;
+            }
+        }
+
+        return $result ?? [];
     }
 
     public function isExpense()

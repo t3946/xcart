@@ -433,7 +433,7 @@ to
            {/if}
        </tr>
    {/foreach}
-     {foreach from=$v.model->memos->order('memo_date') item=vo key=ko}
+   {foreach from=$v.model->memos->order('memo_date') item=vo key=ko}
          <tr>
              <td width="90" align="center" nowrap="nowrap">
                  {$vo->ref_to_us_total}
@@ -480,9 +480,9 @@ to
 	<td width="90"></td>
 	<td width="90" align="center">
 
-        {if $distributor}
-	        <a href="{$distributor->getAdminUrl()}&distributor_section=11" target="_blank">{$distributor->code}</a>
-        {/if}
+        {foreach from=$v.model->distributors item=dx}
+	        <a href="{$dx->getAdminUrl()}&distributor_section=11" target="_blank">{$dx->code}</a><br/>
+        {/foreach}
 	</td>
 	<td width="90"></td>
 	<td width="100"></td>
