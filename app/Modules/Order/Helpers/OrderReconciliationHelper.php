@@ -127,7 +127,7 @@ class OrderReconciliationHelper
             }
         }
 
-        foreach (DistributorModel::objects()->filter(['parent_manufacturer_id' => -1]) as $distributor) {
+        foreach (DistributorModel::objects() as $distributor) {
             $a = [];
             if ($search_keyphrase = trim($distributor->d_search_keyphrase_for_reconciliation)) {
                 $v_arr = explode('<OR>', $search_keyphrase);
