@@ -866,7 +866,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
         OrderReconciliationHelper::checkReconcileRules($_filter);
     }
 
-    $recModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m ?? []))->order(['date_csv'])->all();
+    $recModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m ?? []))->group(['id'])->order(['date_csv'])->all();
 
     foreach ($recModels as $k => $v) {
 
