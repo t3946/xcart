@@ -515,7 +515,7 @@ if ($REQUEST_METHOD == "POST") {
 
         OrderReconciliationHelper::checkReconcileRules($_filter);
 
-        $_filter_m = ['distributors__manufacturerid__null' => false];
+        $_filter_m = ['distributors__manufacturerid__isnull' => false];
 
         if ($search_data["reconciliation_tab_" . $tab]["select_distributors"] === "from_the_list") {
             if (empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
