@@ -68,7 +68,7 @@ class ReconciliationModel extends Model
 
     public function getDescriptionBold()
     {
-        if ($dx = $this->distributor){
+        if ($dx = $this->distributors->limit(1)->get()){
             $result = strtoupper(trim($this->description_csv));
             $v_arr = explode('<OR>', strtoupper($dx->d_search_keyphrase_for_reconciliation));
             foreach ($v_arr as $k) {
