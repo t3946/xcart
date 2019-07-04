@@ -2,6 +2,7 @@
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
+use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Distributor\Models\DistributorModel;
@@ -846,7 +847,11 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
                         ],
                         'order__order_type' => OrderModel::ORDER_TYPE_FB
                     ]),
-                    new QOr(['invoices__status__in' => ['U','A'], 'memos__status__in' => ['U','A'], 'invoices__orderid__isnull' => true])
+                    new QOr([
+                        new QAnd(['invoices__status__in' => ['U','A'], 'invoices__reconciliation_id' => 0]),
+                        new QAnd(['memos__status__in' => ['U','A'], 'memos__invoices__reconciliation_id' => 0]),
+                        'invoices__orderid__isnull' => true
+                    ])
                 ];
 
                 if ($search_data['reconciliation_tab_' . $tab]['select_distributors'] === 'from_the_list'){
