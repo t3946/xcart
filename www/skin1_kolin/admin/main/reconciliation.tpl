@@ -366,14 +366,16 @@ to
 <td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
   {if $tab eq "reconciled" || (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total, 2) != 0) || (!$distributor && $v.model->isExpense()) }
       <select name="action[{$v.model->id}]">
+      {if $v.model->action != "P"}
           <option value=""></option>
+      {/if}
           {if $tab eq "reconciled"}
               <option value="UR">Unreconcile</option>
           {else}
               {if $v.model->action != "D"}
                   {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action == "R"}
                       {if $v.model->action == "P"}
-                          <option value="P" selected="selected">Pre Reconcile</option>
+                          <option value="P" selected="selected">Pre-reconciled</option>
                       {else}
                           <option value="R" selected="selected">Reconcile</option>
                       {/if}
@@ -881,8 +883,8 @@ function func_show_full_info(id){
                         <option value="90">61-90</option>
                         <option value="91">Over 90</option>
                     </select>
-                    <div style="margin-left: -340px; margin-top: 10px;">
-                        <a style="text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
+                    <div style="margin-top: 10px;">
+                        <a style="position:relative; left:-170px; text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
                             Select all
                         </a>
                     </div>
