@@ -881,7 +881,7 @@ function func_show_full_info(id){
                         <option value="90">61-90</option>
                         <option value="91">Over 90</option>
                     </select>
-                    <div style="margin-left: 50px; text-align: left; margin-top: 10px;">
+                    <div style="margin-left: -340px; margin-top: 10px;">
                         <a style="text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
                             Select all
                         </a>
