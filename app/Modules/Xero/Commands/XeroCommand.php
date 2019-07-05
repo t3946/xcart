@@ -63,6 +63,7 @@ class XeroCommand extends Command
                 $account_model = ReconciliationAccountModel::objects()->get(['code' => $transaction->getBankAccount()->getCode()]);
             }
 
+            /** @var ReconciliationModel $rec */
             $rec = ReconciliationModel::objects()->get(['bank_transaction_id' => $transaction->getBankTransactionID()]);
             if (!$rec) {
                 [$rec, $is_new] = ReconciliationModel::objects()->getOrNew([
@@ -80,7 +81,25 @@ class XeroCommand extends Command
                     if (\DateTime::createFromFormat('d.m.Y', '01.06.2019') <= $transaction->getDate()) {
                         echo "{$transaction->getType()}\t{$transaction->getDate()->format('d-m-Y')}\t{$transaction->getBankAccount()->getCode()}\t{$transaction->getBankTransactionID()}\t{$transaction->getTotal()}\t{$transaction->getStatus()}\t{$strippedReference}\n";
 
-                        $rec->save();
+                        $rec->amount_csv = -6151.33;
+
+                        if ($pre_rec = ReconciliationModel::objects()->get([
+                            'amount_csv' => $rec->amount_csv,
+                            'action' => ReconciliationModel::RECONCILIATION_STATUS_PRE_RECONCILED
+                        ]))
+                        {
+                            $pre_rec->setAttributes([
+                                'action' => ReconciliationModel::RECONCILIATION_STATUS_RECONCILED,
+                                'description_csv' => $rec->description_csv,
+                                'date_csv' => $rec->date_csv,
+                            ]);
+                            if ($pre_rec->save()) {
+                                $pre_rec->invoices->update(['status' => 'R']);
+                                $pre_rec->memos->update(['status' => 'R']);
+                            }
+                        } else {
+                            $rec->save();
+                        }
                     }
                 } else {
                     $rec->save();

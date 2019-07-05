@@ -48,4 +48,9 @@ return [
         'target' => [ReconciliationController::class, 'actionPayableOrders'],
         'name' => 'api:payable_orders'
     ],
+    [
+        'route' => '/api/payable_orders/prereconcile',
+        'target' => [ReconciliationController::class, 'actionPayableOrdersPreReconcile'],
+        'name' => 'api:payable_prereconcile'
+    ],
 ];

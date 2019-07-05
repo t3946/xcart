@@ -19,6 +19,11 @@ use Xcart\Reconciliation;
 
 class ReconciliationModel extends Model
 {
+    public const RECONCILIATION_STATUS_RECONCILED = 'R';
+    public const RECONCILIATION_STATUS_PRE_RECONCILED = 'P';
+    public const RECONCILIATION_STATUS_DROPPED = 'D';
+    public const RECONCILIATION_STATUS_NULL = '';
+
     use AutoMetaTrait;
 
     public static function tableName()

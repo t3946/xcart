@@ -702,7 +702,7 @@ if ($tab === "import") {
     }
 }
 
-if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab == "expense_report" || $tab == "receivables") {
+if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $tab === 'expense_report' || $tab === 'receivables') {
 
     if (empty($search_data["reconciliation_tab_" . $tab]["date_csv"])) {
         $search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"] = time();
@@ -714,9 +714,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
         $search_data["reconciliation_tab_" . $tab]["date"]["start_date"] = time() - 30 * 60 * 60 * 24;
     }
 
-    $search_condition = "";
-
-    if ($tab == "accounts_payable" || $tab == "receivables") {
+    if ($tab === "accounts_payable" || $tab === "receivables") {
 
         $order_search_condition = "$sql_tbl[orders].date>='" . ($search_data["reconciliation_tab_" . $tab]["date"]["start_date"]) . "'";
         $order_search_condition .= " AND $sql_tbl[orders].date<='" . ($search_data["reconciliation_tab_" . $tab]["date"]["end_date"]) . "'";
@@ -800,9 +798,6 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
     } else {
 
-        $search_condition = "";
-        $search_condition .= "$sql_tbl[reconciliations].date_csv>='" . ($search_data["reconciliation_tab_" . $tab]["date_csv"]["start_date"]) . "'";
-        $search_condition .= " AND $sql_tbl[reconciliations].date_csv<='" . ($search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"]) . "'";
         $_filter = [
             'date_csv__gte' => $search_data["reconciliation_tab_" . $tab]["date_csv"]["start_date"],
             'date_csv__lte' => $search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"],
@@ -811,10 +806,11 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
         if ($tab === 'reconciled') {
             $_filter['action'] = 'R';
-            $search_condition .= " AND action='R'";
         } elseif ($tab === 'dropped') {
             $_filter['action'] = 'D';
-            $search_condition .= " AND action='D'";
+        } elseif ($tab === 'unreconciled') {
+            unset($_filter['action']);
+            $_filter['action__in'] = ['P', ''];
         }
 
         if ($tab === 'reconciled' || $tab === 'unreconciled') {

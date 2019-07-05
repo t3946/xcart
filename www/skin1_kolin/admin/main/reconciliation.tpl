@@ -352,7 +352,8 @@ to
 </td>
 
 <td width="200" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}">
-  {$v.model->getDescriptionBold()}{if $v.transaction_type eq "P"} (PayPal){/if}<br>({$v.model->account})
+  {$v.model->getDescriptionBold()}{if $v.transaction_type eq "P"} (PayPal){/if}<br>
+    {if ($v.model->account)}({$v.model->account}){/if}
   {if $v.model->getLookupLink()}
       (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.model->getLookupLink()}" target="_blank">lookup Gmail</a>)
   {/if}
@@ -370,8 +371,12 @@ to
               <option value="UR">Unreconcile</option>
           {else}
               {if $v.model->action != "D"}
-                  {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action eq "R"}
-                    <option value="R" selected="selected">Reconcile</option>
+                  {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action == "R"}
+                      {if $v.model->action == "P"}
+                          <option value="P" selected="selected">Pre Reconcile</option>
+                      {else}
+                          <option value="R" selected="selected">Reconcile</option>
+                      {/if}
                   {/if}
               {/if}
               {if !$distributor && $v.model->isExpense()}
