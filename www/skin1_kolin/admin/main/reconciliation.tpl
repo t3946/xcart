@@ -873,7 +873,7 @@ function func_show_full_info(id){
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
-                <td>
+                <td style="vertical-align: top;">
                     <select id="net_choises" title="Click to select Aging Period" style="width:400px" class="select2 big" multiple>
                         <option value="0">Current</option>
                         <option value="30">0-30</option>
@@ -881,8 +881,13 @@ function func_show_full_info(id){
                         <option value="90">61-90</option>
                         <option value="91">Over 90</option>
                     </select>
+                    <div style="margin-left: 50px; text-align: left; margin-top: 10px;">
+                        <a style="text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
+                            Select all
+                        </a>
+                    </div>
                 </td>
-                <td>
+                <td style="vertical-align: top;">
                     <select id="distributor_choises" title="Click to select Dx" style="width:400px" class="select2 big" multiple>
 
                     </select>
@@ -955,6 +960,13 @@ function func_show_full_info(id){
                     });
 
             });
+
+            $('.net_choises__select_all').click(function(){
+                $('#net_choises > option').prop("selected","selected");
+                $("#net_choises").trigger("change");
+                return false;
+            });
+
         </script>
     {/literal}
 
