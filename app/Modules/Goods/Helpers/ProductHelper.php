@@ -313,6 +313,7 @@ class ProductHelper
                 "image" => self::getJsonImages(1, $model),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
+                "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
                     "name" => $model->brand->getProductFrontendName(),
@@ -326,6 +327,7 @@ class ProductHelper
                         "minPrice" => $model->getFrontendPrice(),
                         "maxPrice" => $model->getFrontendPrice(2),
                     ],
+                    "url" => $model->getAbsoluteUrl(true),
                     "itemCondition" => "NewCondition",
                     "seller" => [
                         "@type" => "Organization",
@@ -351,6 +353,7 @@ class ProductHelper
                 "image" => self::getJsonImages(1, $model),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
+                "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
                     "name" => $model->brand->brand
@@ -359,6 +362,7 @@ class ProductHelper
                     "@type" => "Offer",
                     "priceCurrency" => "USD",
                     "price" => $model->getFrontendPrice(),
+                    "url" => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
                     "itemCondition" => "NewCondition",
                     "seller" => [
