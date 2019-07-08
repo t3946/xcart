@@ -322,4 +322,14 @@ class OrderGroupModel extends Model
 
         return str_replace('{enter_this_on_website}', $enter_on_amazon, $pending_order_message);
     }
+
+    public function getProfitMargin()
+    {
+        $profit_margin = null;
+
+        if ((float) $this->accounting_net_0) {
+            $profit_margin = round($this->accounting_net_5_profit / $this->accounting_net_0 * 100, 2);
+        }
+        return $profit_margin;
+    }
 }

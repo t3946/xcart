@@ -16,12 +16,17 @@
         <td>Payment due<br/>date</td>
         <td>Distributor</td>
         <td>Order #</td>
+        <td>Profit <br/>Margin</td>
         <td>Invoice # <br/>Credit memo #</td>
         <td>Invoice <br/>amount</td>
         <td>Credit memo <br/>amount</td>
         <td>Balance <br/>due</td>
     </tr>
+    {set $profit = 0}
+    {set $net = 0}
     {foreach $orders as $order_group first=$first}
+        {set $profit += $order_group->accounting_net_5_profit}
+        {set $net += $order_group->accounting_net_0}
         {if $first}
             <input type="hidden" name="manufacturer_id" value="{$order_group->manufacturerid}">
         {/if}
@@ -39,6 +44,7 @@
                 <td>{$invoice->getPaymentDueDate()->format('d-M-Y')}</td>
                 <td><a target="_blank" href="{$order_group->manufacturer->getAdminUrl()}&distributor_section=11">{$order_group->manufacturer}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
+                <td align="right">{if $order_group->getProfitMargin() < 0}({/if}{$order_group->getProfitMargin()|abs}%{if $order_group->getProfitMargin() < 0}){/if}</td>
                 <td align="center">{$invoice}</td>
                 <td align="right">{$invoice->invoice_total|number_format:2:'.':','}</td>
                 <td></td>
@@ -71,9 +77,20 @@
             </tr>
         {/foreach}
     {/foreach}
+    {set $profit_margin = $profit / $net * 100}
     <tr>
-        <td colspan="10" align="right">
-            <b>Total due: {$balance_total|number_format:2:'.':','}</b>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="right"><b>{$profit_margin|number_format:2:'.':','}%</b></td>
+        <td></td>
+        <td></td>
+        <td align="right"><b>Total due:</b></td>
+        <td colspan="11" align="right">
+            <b>${$balance_total|number_format:2:'.':','}</b>
         </td>
     </tr>
 
