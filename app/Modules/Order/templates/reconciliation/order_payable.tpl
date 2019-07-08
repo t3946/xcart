@@ -66,6 +66,7 @@
                 <td>{$memo->getPaymentDueDate()->format('d-M-Y')}</td>
                 <td><a target="_blank" href="{$order_group->manufacturer->getAdminUrl()}&distributor_section=11">{$order_group->manufacturer}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
+                <td align="right">{if $order_group->getProfitMargin() < 0}({/if}{$order_group->getProfitMargin()|abs}%{if $order_group->getProfitMargin() < 0}){/if}</td>
                 <td align="center">{$memo}</td>
                 <td></td>
                 <td align="right">{$memo->ref_to_us_total|number_format:2:'.':','}</td>
