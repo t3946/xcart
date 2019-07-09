@@ -47,6 +47,7 @@ class AmpHelper
                 "image" => $model->getJsonImages(1),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
+                "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
                     "name" => $model->brand->brand
@@ -77,6 +78,7 @@ class AmpHelper
                 "image" => $model->getJsonImages(1),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
+                "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
                     "name" => $model->brand->brand
