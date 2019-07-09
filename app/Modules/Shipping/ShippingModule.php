@@ -33,6 +33,7 @@ class ShippingModule extends Module
 
         /** @var DistributorModel $distributor */
         $distributor = DistributorModel::objects()->get(['pk' => $id]);
+        $order_group = $order->groups->get(['manufacturerid' => $id]);
 
         $cart = new Cart();
         foreach ($group['items'] as $key=>$position) {
@@ -54,7 +55,18 @@ class ShippingModule extends Module
         }
 
         if ($shipping_rates) {
+            $cnt = 0;
             foreach ($shipping_rates as $rate) {
+                if (++$cnt === 1 && $order_group) {
+                    $order_group->setAttributes([
+                        'shippingid' => $rate->shippingid,
+                        'shipping' => $rate->shipping->getFrontendName(),
+                        'shipping_quote' => $rate->getShippingQuote(),
+                        'shipping_gross' => $charge = $rate->getShippingCharge(),
+                        'shipping_net' => $charge,
+                    ]);
+                    $order_group->save();
+                }
                 $result[$rate->rateid] = $rate;
             }
         }

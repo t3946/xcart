@@ -147,7 +147,7 @@ class SupplierFeedHelper
         if (!empty($discontinuedDate)) {
             $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
             if ($discontinuedDateTimeDiff < (60 * 60 * 24 * 20)) {
-                if ($model->forsale != "N") {
+                if ($model->forsale !== "N") {
                     $model->forsale = "N";
                     $model->update_search_index = "Y";
                     return $model;
@@ -155,7 +155,7 @@ class SupplierFeedHelper
             }
         }
 
-        if ($is_created && !empty($model->fulldescr) && $feed->native_full_description != "Y") {
+        if ($is_created && !empty($model->fulldescr) && $feed->native_full_description !== "Y") {
             $model->fulldescr = ProductHelper::cleanProductFullDescription($model->fulldescr);
         }
 

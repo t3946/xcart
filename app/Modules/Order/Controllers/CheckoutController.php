@@ -268,15 +268,14 @@ class CheckoutController extends FrontendController
     public function actionOptions(): void
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_PAYMENT_OPTIONS);
+        $errors = [];
         /** @var ShippingModule $ship_module */
-
         /** @var Application $app */
         $app = Xcart::app();
-        //$user = $app->user;
         $site = $app->getModule('Sites')->getSite();
         $ship_module = $app->getModule('Shipping');
         $cart = $app->cart;
-        $errors = [];
+
         $billingForm = new BillingForm();
 
         $order = $this->getOrder();
@@ -296,13 +295,13 @@ class CheckoutController extends FrontendController
 
                 foreach ($cart_groups as $g => $cart_group) {
                     /** @var OrderGroupModel $group */
-                    if ($group = OrderGroupModel::objects()->get(['manufacturerid' => $g, 'orderid' => $order->orderid])) {
+                    if ($group = $order->groups->get(['manufacturerid' => $g])) {
+                        $charge = 0;
 
                         $group->setAttributes(['shippingid' => null, 'shipping' => '']);
 
                         /** @var ShippingRateModel $rate */
                         if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
-                            $charge = 0;
 
                             /** @var ShippingRateModel[] $shipping_rates */
                             if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $sh_rate = $shipping_rates[$rate->rateid]) {
@@ -325,10 +324,8 @@ class CheckoutController extends FrontendController
 
                         $order->subtotal += $group->total_gross;
                         $order->shipping_cost += $charge;
-
                         $group->total_gross += $charge;
                         $group->total_net += $charge;
-
                         $group->save();
                     }
                 }
@@ -625,7 +622,6 @@ class CheckoutController extends FrontendController
     private function checkoutStepsValidate(string $order_status, $current_step = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1): void
     {
         if (!self::isStepValid($order_status, $current_step)) {
-            //Xcart::app()->flash->error(OrderModule::t('Cart changed: One or more items have changed!'));
             $this->redirect(self::$steps[$order_status]['url'] ?? self::$steps[OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1]['url']);
         }
     }

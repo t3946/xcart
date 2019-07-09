@@ -24,6 +24,7 @@ class ImageHelper
      */
     public static function getImageFileName($image, $prefix)
     {
+        $ext = 'jpg';
         $image = html_entity_decode($image);
         $SET_IMAGE_URL = self::getImageFileNameFromDownloadLink($image);
 
@@ -35,8 +36,10 @@ class ImageHelper
 
             $img_path_after = implode("_", $img_path_arr2);
             $img_path_after_arr = explode(".", $img_path_after);
-            $ext = array_pop($img_path_after_arr);
 
+            if (count($img_path_after_arr) > 1) {
+                $ext = array_pop($img_path_after_arr);
+            }
             $Prod_ID = $prefix . "_" . implode("_", $img_path_after_arr);
             $image_file_name = $Prod_ID . "." . $ext;
         } else {
