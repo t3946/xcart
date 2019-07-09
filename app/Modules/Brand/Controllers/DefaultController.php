@@ -45,11 +45,16 @@ class DefaultController extends AbstractCatalogController
         if ($model = BrandModel::objects()->get(['brandid' => $id])) {
             $this->redirect($model->getAbsoluteUrl(), [], 301);
         }
+        $this->error(404);
     }
 
     public function actionView($sku)
     {
-//        $this->view_internal(BrandModel::objects()->filter(['productcode' => $sku])->get());
+        /** @var BrandModel $model */
+        if ($model = BrandModel::objects()->get(['brandid' => $sku])) {
+            $this->redirect($model->getAbsoluteUrl(), [], 301);
+        }
+        $this->error(404);
     }
 
     public function actionToList()
