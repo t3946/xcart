@@ -20,7 +20,7 @@ class ShippingModule extends Module
         $template->addAccessorSmart('get_shipping', self::class."::getShipping", $template::ACCESSOR_CALL);
     }
 
-    public static function getShipping(int $id, OrderModel $order, $group) : array
+    public static function getShipping(int $id, OrderModel $order, $group, $update_order = false) : array
     {
         $result = [];
 
@@ -57,15 +57,27 @@ class ShippingModule extends Module
         if ($shipping_rates) {
             $cnt = 0;
             foreach ($shipping_rates as $rate) {
-                if (++$cnt === 1 && $order_group) {
-                    $order_group->setAttributes([
-                        'shippingid' => $rate->shippingid,
-                        'shipping' => $rate->shipping->getFrontendName(),
-                        'shipping_quote' => $rate->getShippingQuote(),
-                        'shipping_gross' => $charge = $rate->getShippingCharge(),
-                        'shipping_net' => $charge,
-                    ]);
-                    $order_group->save();
+                if ($order_group && $update_order) {
+                    if (!$order_group->shippingid) {
+                        if (++$cnt === 1) {
+                            $order_group->setAttributes([
+                                'shippingid' => $rate->shippingid,
+                                'shipping' => $rate->shipping->getFrontendName(),
+                                'shipping_quote' => $rate->getShippingQuote(),
+                                'shipping_gross' => $charge = $rate->getShippingCharge(),
+                                'shipping_net' => $charge,
+                                'total_gross' => $order_group->total_gross + $charge,
+                                'total_net' => $order_group->total_net + $charge,
+                            ]);
+                            $order_group->save();
+                            $order->shipping_cost += $charge;
+                        }
+                    } else {
+                        if ($rate->shippingid == $order_group->shippingid) {
+                            $order->shipping_cost +=  $order_group->shipping_gross;
+                        }
+                    }
+                    $order->save();
                 }
                 $result[$rate->rateid] = $rate;
             }

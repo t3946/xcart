@@ -119,6 +119,7 @@ class CheckoutController extends FrontendController
                             ]);
                             $order->subtotal += $group->total_gross;
                             $order->total = $order->subtotal;
+                            $order->shipping_cost = 0;
 
                             $group->save();
 
@@ -279,6 +280,8 @@ class CheckoutController extends FrontendController
         $billingForm = new BillingForm();
 
         $order = $this->getOrder();
+        $order->shipping_cost = 0;
+        $order->save();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
 
@@ -397,6 +400,11 @@ class CheckoutController extends FrontendController
             'billingForm' => $billingForm,
             'shipping_address' => $shipping_address,
         ]);
+
+        if (!$app->request->getIsPost() && $order = OrderModel::objects()->get(['orderid' => $order->orderid])) {
+            $order->total = $order->subtotal + $order->shipping_cost;
+            $order->save();
+        }
     }
 
     /**
