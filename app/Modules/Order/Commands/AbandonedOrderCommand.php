@@ -40,6 +40,7 @@ class AbandonedOrderCommand extends Command
                     'type' => OrderLogModel::LOG_TYPE_XCART,
                     'log' => 'Automatic Decline abandoned order',
                 ]))->save();
+                echo "Automatic Decline abandoned order {$order->orderid}\n";
                 continue;
             }
 
@@ -51,6 +52,7 @@ class AbandonedOrderCommand extends Command
                 'type' => OrderLogModel::LOG_TYPE_XCART,
                 'log' => 'Automatic Unpaid abandoned order',
             ]))->save();
+            echo "Automatic Unpaid abandoned order {$order->orderid}\n";
 
             OrderInvoiceHelper::sendOrderStatusNotification($order);
         }
