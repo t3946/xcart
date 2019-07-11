@@ -37,7 +37,7 @@ class AbandonedOrderCommand extends Command
                 $order->save();
                 (new OrderLogModel([
                     'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
                     'log' => 'Automatic Decline abandoned order',
                 ]))->save();
                 continue;
@@ -48,7 +48,7 @@ class AbandonedOrderCommand extends Command
             $order->save();
             (new OrderLogModel([
                 'orderid' => $order->orderid,
-                'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                'type' => OrderLogModel::LOG_TYPE_XCART,
                 'log' => 'Automatic Unpaid abandoned order',
             ]))->save();
 
