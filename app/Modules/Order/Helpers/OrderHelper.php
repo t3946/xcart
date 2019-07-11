@@ -353,4 +353,15 @@ class OrderHelper
     {
         return md5(implode('', $data));
     }
+
+    public static function hasCustomerSiblingsOrders(OrderModel $order, $hours = 12): bool
+    {
+        return OrderModel::objects()->filter([
+            'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED, OrderStatusModel::ORDER_STATUS_QUEUED],
+            'date__gte' =>  new Expression("UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
+            'date__lte' =>  new Expression("UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
+            'email' => $order->email,
+            'orderid__isnt' => $order->orderid
+        ])->count() > 0 ;
+    }
 }
