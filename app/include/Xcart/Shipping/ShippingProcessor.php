@@ -370,6 +370,7 @@ abstract class ShippingProcessor
                 foreach ($quotes as $quote) {
                     if ($rate = $quote->shipping_rate) {
                         $rate->setShippingChargeQuote($quote->shipping_quote);
+                        $rate->setShippingCharge($quote->shipping_charge);
                         $rate->setCart($this->getCart());
                         $this->aShippingRates[] = $rate;
                     }

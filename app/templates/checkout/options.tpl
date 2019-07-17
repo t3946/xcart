@@ -67,7 +67,7 @@
                     </div>
                     {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                         {set $warehouse = $.get_warehouse($gi)}
-                        {set $shipping  = $.get_shipping($gi, $order, $group, true) }
+                        {set $shipping = $shipping_rates[$gi]}
                         {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
 
                         <div class="product-group-shipping">

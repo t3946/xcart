@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Shipping\Helpers\ShippingHelper;
+
 class ShippingRate extends Data
 {
     private $fShippingQuote;
@@ -103,6 +105,7 @@ class ShippingRate extends Data
 
             //$this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
+
             if ($this->useMapPrice && ($extra_margin = $oCart->getExtraMarginValue()) > 0) {
                 $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
                 $this->fShippingCharge -= $extra_margin;
@@ -151,25 +154,78 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
-    public function getCartShippingWeight(): float
+    public function getCartShippingDimentions(): array
     {
-        if ($this->fCartShippingWeight === null) {
-            $this->fCartShippingWeight = 0;
-            $aCartObjects = $this->getCart()->getElements();
-            if (!empty($aCartObjects)) {
-                /** @var CartElement $oCartElement */
-                foreach ($aCartObjects as $oCartElement) {
 
-                    $this->fCartShippingWeight +=
-                        $this->getShippingEntity()
-                            ->getShippingWeightN(
-                                $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
-                                $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity())
-                            ) * $oCartElement->getShippingWeightRatio($this->rateid);
+        $volume = 0;
+        if ($aCartObjects = $this->getCart()->getElements()) {
+            $widthRange = [];
+            $heightRange = [];
+            $depthRange = [];
+            foreach ($aCartObjects as $oCartElement) {
+                $product = $oCartElement->getProduct();
+                $volume += $product->getVolume() * $oCartElement->getQuantity();
+                for($i = 0; $i < $oCartElement->getQuantity(); $i++) {
+                    $widthRange[] = $product->shipping_dim_x;
+                    $heightRange[] = $product->shipping_dim_y;
+                    $depthRange[] = $product->shipping_dim_z;
+                }
+            }
+
+            if ((float) $volume === (float) 0) {
+                return [];
+            }
+
+            sort($widthRange);
+            sort($heightRange);
+            sort($depthRange);
+
+            $widthCombination = ShippingHelper::combination($widthRange);
+            $heightCombination = ShippingHelper::combination($heightRange);
+            $depthCombination = ShippingHelper::combination($depthRange);
+
+            $stacks = [];
+            foreach($widthCombination as $width) {
+                foreach($heightCombination as $height) {
+                    foreach($depthCombination as $depth) {
+                        $v = round($width*$height*$depth,2);
+                        if($v >= $volume) {
+                            $stacks[$v][$width+$height+$depth] = [$width, $height, $depth];
+                        }
+                    }
+                }
+            }
+
+            ksort($stacks);
+
+            foreach($stacks as $i => $dims) {
+                ksort($stacks[$i]);
+                foreach($stacks[$i] as $j => $stack) {
+                    rsort($stack);
+                    break;
+                }
+                break;
+            }
+
+            if ($stacks) {
+                if ($r = reset($stacks)) {
+                    return reset($r);
                 }
             }
         }
-        return round($this->fCartShippingWeight, 2);
+        return [];
+    }
+
+    public function getCartShippingWeight(): float
+    {
+        $weight = 0;
+        if ($aCartObjects = $this->getCart()->getElements()) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartObjects as $oCartElement) {
+                $weight += $oCartElement->getProduct()->getShippingWeight() * $oCartElement->getQuantity();
+            }
+        }
+        return $weight;
     }
 
     public function getCartShippingFreight(): float

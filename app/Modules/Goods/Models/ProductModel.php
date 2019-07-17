@@ -716,4 +716,17 @@ class ProductModel extends Model implements ICartItem
 
         return $result;
     }
+
+    public function getVolume():? float
+    {
+        if ($this->shipping_dim_x || $this->shipping_dim_y || $this->shipping_dim_z) {
+            return round($this->shipping_dim_x * $this->shipping_dim_y * $this->shipping_dim_z, 2);
+        }
+        return null;
+    }
+
+    public function getShippingWeight(): float
+    {
+        return max((float)$this->shipping_weight ?: (float)$this->weight, 0.01);
+    }
 }

@@ -3,6 +3,7 @@
 namespace Modules\Shipping\Helpers;
 
 
+use Modules\Amazon\Sqls\AmazonSql;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -13,6 +14,7 @@ use Modules\Shipping\Models\ZoneElementModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Cart;
+use Xcart\Connection;
 use Xcart\ShippingRate;
 
 class ShippingHelper
@@ -110,7 +112,7 @@ class ShippingHelper
                 's_city' => 'New City'
             ]);
 
-            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => (int) $qty]], $weight_ratio, $use_cache);
+            $result = ShippingHelper::getMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => (int)$qty]], $weight_ratio, $use_cache);
         }
 
         return $result;
@@ -162,11 +164,11 @@ class ShippingHelper
 
 
         $userModel = new UserModel([
-                                       's_country' => $state_mass['s_country'],
-                                       's_state' => $state_mass['s_state'],
-                                       's_zipcode' => $state_mass['s_zipcode'],
-                                       's_city' => 'New City'
-                                   ]);
+            's_country' => $state_mass['s_country'],
+            's_state' => $state_mass['s_state'],
+            's_zipcode' => $state_mass['s_zipcode'],
+            's_city' => 'New City'
+        ]);
 
         $result = ShippingHelper::getTmpMinShippingRate($userModel, $product_model->distributor, [['model' => $product_model, 'qty' => intval($qty)]], $weight_ratio, $use_cache);
 
@@ -190,34 +192,65 @@ class ShippingHelper
 
         if ($model && !$model->shipping_calc_disabled && ($distributor = $model->distributor) && $distributor->reduce_extra_margin) {
 
-                if($model->amazon_fba === 'Y') {
-                    if ($amazon_avail = max($model->getAmazonFBAAvailExcludedProcessing(), count($model->getProductsAvailOnAmazonParentWithChild($qty)))) {
-                        if ($rate = self::getStateMinShipping($model, ++$ups_qty, $state_model, $zip)) {
-                            if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
-                                return $ups_qty;
-                            }
-                        }
-                    }
-                }
-
-                if ($amazon_avail) {
-                    $ups_qty = ceil($amazon_avail / 2) ;
-                }
-
-                $i = 0;
-                do {
+            if ($model->amazon_fba === 'Y') {
+                if ($amazon_avail = max($model->getAmazonFBAAvailExcludedProcessing(), count($model->getProductsAvailOnAmazonParentWithChild($qty)))) {
                     if ($rate = self::getStateMinShipping($model, ++$ups_qty, $state_model, $zip)) {
                         if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
                             return $ups_qty;
                         }
-                        $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * $distributor->max_extra_margin)));
-                        if ($ups_qty > $model->r_avail || $ups_qty > 200) {
-                            break;
-                        }
                     }
-                } while($i++ < 10);
+                }
+            }
+
+            if ($amazon_avail) {
+                $ups_qty = ceil($amazon_avail / 2);
+            }
+
+            $i = 0;
+            do {
+                if ($rate = self::getStateMinShipping($model, ++$ups_qty, $state_model, $zip)) {
+                    if (($ship_model = $rate->shipping) && $ship_model->is_free_shipping) {
+                        return $ups_qty;
+                    }
+                    $ups_qty = ceil($rate->getShippingChargeBeforeMap() / ($model->getPrice($ups_qty) - ($model->cost_to_us * $distributor->max_extra_margin)));
+                    if ($ups_qty > $model->r_avail || $ups_qty > 200) {
+                        break;
+                    }
+                }
+            } while ($i++ < 10);
         }
 
         return $qty;
+    }
+
+    public static function getApproximateShippingCharge($value, $manufacturer_id)
+    {
+        return (float)Connection::getInstance()
+            ->executeQuery('SELECT f_price_getShippingUPS(:value, :m_id) as ups', ['value' => $value, 'm_id' => $manufacturer_id])
+            ->fetchColumn();
+    }
+
+    public static function combination($list)
+    {
+        $combination = array();
+        $total = 2 ** count($list);
+        for ($i = 0; $i < $total; $i++) {
+            $set = array();
+            //For each combination check if each bit is set
+            for ($j = 0; $j < $total; $j++) {
+                //Is bit $j set in $i?
+                if ((2 ** $j) & $i) $set[] = $list[$j];
+            }
+
+            if (empty($set) || in_array(array_sum($set), $combination)) {
+                continue;
+            }
+
+            $combination[] = array_sum($set);
+        }
+
+        sort($combination);
+
+        return $combination;
     }
 }

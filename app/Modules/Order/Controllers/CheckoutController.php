@@ -47,6 +47,7 @@ use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\Logs;
+use Xcart\Shipping;
 use Xcart\State;
 
 class CheckoutController extends FrontendController
@@ -280,41 +281,48 @@ class CheckoutController extends FrontendController
         $billingForm = new BillingForm();
 
         $order = $this->getOrder();
-        $order->shipping_cost = 0;
-        $order->save();
 
         $this->checkoutStepsValidate($order->cb_status, OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2);
 
-        if ($app->request->getIsPost()) {
+        if ($cart_groups = $cart->getItemsGroupedBy()) {
+            $rates = $app->request->post->get('shipping_rates');
 
-            $data = $app->request->post->all();
+            $order->subtotal = $order->shipping_cost = 0;
 
-            if ($cart_groups = $cart->getItemsGroupedBy()) {
-                $rates = $app->request->post->get('shipping_rates');
+            $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
 
-                $order->subtotal = $order->shipping_cost = 0;
+            foreach ($cart_groups as $g => $cart_group) {
+                /** @var OrderGroupModel $group */
+                if ($group = $order->groups->get(['manufacturerid' => $g])) {
+                    $charge = 0;
 
-                $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
+                    /** @var ShippingRateModel[] $shipping_rates */
+                    if ($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) {
 
-                foreach ($cart_groups as $g => $cart_group) {
-                    /** @var OrderGroupModel $group */
-                    if ($group = $order->groups->get(['manufacturerid' => $g])) {
-                        $charge = 0;
+                        $sh_rates[$g] = $shipping_rates;
+
+                        /** @var ShippingRateModel $rate */
+                        $rate = reset($shipping_rates);
+
+                        if ($group->shippingid && $rate = array_filter($shipping_rates, function ($a) use ($group) {
+                                return (int) $a->shippingid === (int) $group->shippingid;
+                            })) {
+                                $rate = \reset($rate);
+                            }
+
+                        if ($rates[$g]) {
+                            $rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]);
+                        }
 
                         $group->setAttributes(['shippingid' => null, 'shipping' => '']);
 
-                        /** @var ShippingRateModel $rate */
-                        if ($rates[$g] && ($rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]))) {
-
-                            /** @var ShippingRateModel[] $shipping_rates */
-                            if (($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) && $sh_rate = $shipping_rates[$rate->rateid]) {
-                                $charge = $sh_rate->getShippingCharge();
-                                $group->setAttributes([
-                                    'shippingid' => $sh_rate->shippingid,
-                                    'shipping' => $sh_rate->shipping->getFrontendName(),
-                                    'shipping_quote' => $sh_rate->getShippingQuote()
-                                ]);
-                            }
+                        if ($sh_rate = $shipping_rates[$rate->rateid]) {
+                            $charge = $sh_rate->getShippingCharge();
+                            $group->setAttributes([
+                                'shippingid' => $sh_rate->shippingid,
+                                'shipping' => $sh_rate->shipping->getFrontendName(),
+                                'shipping_quote' => $sh_rate->getShippingQuote()
+                            ]);
                         }
 
                         $group->setAttributes([
@@ -322,7 +330,6 @@ class CheckoutController extends FrontendController
                             'shipping_net' => $charge,
                             'total_gross' => $cart_group['subtotal'],
                             'total_net' => $cart_group['subtotal'],
-                            'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                         ]);
 
                         $order->subtotal += $group->total_gross;
@@ -332,15 +339,25 @@ class CheckoutController extends FrontendController
                         $group->save();
                     }
                 }
-
-                $order->setAttributes([
-                    'total' => $order->subtotal + $order->shipping_cost,
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
-                ]);
-
-            } else {
-                    $order->groups->delete();
             }
+
+            $order->setAttributes([
+                'total' => $order->subtotal + $order->shipping_cost,
+            ]);
+
+        } else {
+            $order->groups->delete();
+        }
+
+
+        if ($app->request->getIsPost()) {
+
+            $data = $app->request->post->all();
+
+            $order->setAttributes([
+                'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+            ]);
+            $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3]);
 
             if ($app->request->post->has('payment_method')) {
                 if (($paymentid = $app->request->post->get('payment_method')) && $payment_method = PaymentMethodModel::objects()->get(['paymentid' => $paymentid])) {
@@ -399,12 +416,9 @@ class CheckoutController extends FrontendController
             'errors' => $errors,
             'billingForm' => $billingForm,
             'shipping_address' => $shipping_address,
+            'shipping_rates' => $sh_rates ?? []
         ]);
 
-        if (!$app->request->getIsPost() && $order = OrderModel::objects()->get(['orderid' => $order->orderid])) {
-            $order->total = $order->subtotal + $order->shipping_cost;
-            $order->save();
-        }
     }
 
     /**

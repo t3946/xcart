@@ -38,9 +38,9 @@ class AbandonedOrderCommand extends Command
                 (new OrderLogModel([
                     'orderid' => $order->orderid,
                     'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => 'Automatic Decline abandoned order',
+                    'log' => 'Abandoned: The order has been declined',
                 ]))->save();
-                echo "Automatic Decline abandoned order {$order->orderid}\n";
+                echo "Abandoned: The order {$order->getOrderNumber()} has been declined\n";
                 continue;
             }
 
@@ -50,11 +50,11 @@ class AbandonedOrderCommand extends Command
             (new OrderLogModel([
                 'orderid' => $order->orderid,
                 'type' => OrderLogModel::LOG_TYPE_XCART,
-                'log' => 'Automatic Unpaid abandoned order',
+                'log' => 'Abandoned: Unpaid notification sent to Cx',
             ]))->save();
-            echo "Automatic Unpaid abandoned order {$order->orderid}\n";
+            echo "Abandoned: Unpaid notification sent to Cx {$order->getOrderNumber()}\n";
 
-            OrderInvoiceHelper::sendOrderStatusNotification($order);
+            OrderInvoiceHelper::sendOrderStatusNotification($order, false);
         }
     }
 }
