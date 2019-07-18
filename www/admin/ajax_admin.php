@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Models\OrderCxInvoiceModel;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -661,9 +662,8 @@ function getOrderGroupShippingCharge($aParams = [])
 {
     $sResult = 'Shipping quote not found';
     if (!empty($aParams['orderid']) && !empty($aParams['manufacturerid'])) {
-        /** @var OrderGroup $oOrderGroup */
-        $oOrderGroup = OrderGroup::objects()->filter(['orderid' => (int)$aParams['orderid'], 'manufacturerid' => (int)$aParams['manufacturerid']])->get();
-        if ($oOrderGroup) {
+        /** @var OrderGroupModel $oOrderGroup */
+        if ($oOrderGroup = OrderGroupModel::objects()->get(['orderid' => (int)$aParams['orderid'], 'manufacturerid' => (int)$aParams['manufacturerid']])) {
             $aShippingRates = $oOrderGroup->getShippingRates();
             if (!empty($aShippingRates)) {
                 /** @var ShippingRateModel $oShippingRate */

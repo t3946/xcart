@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\Goods\Models\ProductModel;
+
 class OrderDetail extends Data
 {
     /**
@@ -90,9 +92,9 @@ class OrderDetail extends Data
 
     public function getOrderDetailProduct()
     {
-        if (is_null($this->oProduct)) {
-            if ($this->getField('productid')) {
-                $this->oProduct = new Product(['productid' => $this->getField('productid')]);
+        if ($this->oProduct === null) {
+            if ($this->productid) {
+                $this->oProduct = new ProductModel(['productid' => $this->getField('productid')]);
             }
         }
         return $this->oProduct;
