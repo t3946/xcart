@@ -166,9 +166,9 @@ class ShippingRate extends Data
                 $product = $oCartElement->getProduct();
                 $volume += $product->getVolume() * $oCartElement->getQuantity();
                 for($i = 0; $i < $oCartElement->getQuantity(); $i++) {
-                    $widthRange[] = $product->shipping_dim_x;
-                    $heightRange[] = $product->shipping_dim_y;
-                    $depthRange[] = $product->shipping_dim_z;
+                    $widthRange[] = max($product->shipping_dim_x, 0.1);
+                    $heightRange[] = max($product->shipping_dim_y, 0.1);
+                    $depthRange[] = max($product->shipping_dim_z, 0.1);
                 }
             }
 
