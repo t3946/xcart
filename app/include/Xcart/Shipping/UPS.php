@@ -4,6 +4,7 @@ namespace Xcart\Shipping;
 
 use Exception;
 use Modules\Shipping\Helpers\ShippingHelper;
+use Modules\Shipping\Models\ApproximationShippingModel;
 use Ups\Entity\Address;
 use Ups\Entity\Dimensions;
 use Ups\Entity\Package;
@@ -12,8 +13,10 @@ use Ups\Entity\ShipFrom;
 use Ups\Entity\Shipment;
 use Ups\Entity\UnitOfMeasurement;
 use Ups\Rate;
+use Xcart\ApproximationShippingRates;
 use Xcart\Logs;
 use Xcart\ShippingRate;
+use Xcart\SQLBuilder;
 
 class UPS extends ShippingProcessor
 {
@@ -141,6 +144,52 @@ class UPS extends ShippingProcessor
     {
         /** @var ShippingRate[] $aShippingRates */
         if (!$this->aShippingRates && $aShippingRates = $this->getShippingRatesEntities()) {
+            if ($this->useApproximation) {
+                foreach ($aShippingRates as $oShippingRate) {
+                    if ((int)$oShippingRate->shippingid === (int)$this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
+                        /*get approximation rates for UPS Ground*/
+                        $oApproximationRates = ApproximationShippingModel::objects()->get([
+                            'manufacturerid' => $this->getManufacturer()->manufacturerid,
+                            'last_updated_date__gte' => time() - self::APPROXIMATION_MAX_VALID_TIME,
+                            'state' => $this->getCustomer()->s_state
+                        ]);
+                        if ($oApproximationRates) {
+                            $weight = ceil($oShippingRate->getCartShippingWeight());
+                            if ($dims = $oShippingRate->getCartShippingDimentions()) {
+                                $volume = $dims[0] * $dims[1] * $dims[2];
+                                $weight = ceil($volume >= 5184 ? max($weight, $volume / 194) : max($weight, $volume / 139));
+                            }
+
+                            $shippingCharge = 0;
+                            switch ($weight) {
+                                case ($weight > 0 && $weight <= 1):
+                                    $shippingCharge = $oApproximationRates->bw_1;
+                                    break;
+                                case ($weight > 1 && $weight <= 75):
+                                    $shippingCharge = $oApproximationRates->bw_1 + ($oApproximationRates->bw_75 - $oApproximationRates->bw_1) / (75 - 1) * ($weight - 1);
+                                    break;
+                                case ($weight > 75):
+                                    $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
+                                    break;
+                            }
+                            if (((int)$oShippingRate->shippingid === 1) &&
+                                $app_s = ShippingHelper::getApproximateShippingCharge($shippingCharge, $this->oManufacturer->manufacturerid))
+                            {
+                                $oShippingRate->setShippingCharge($app_s);
+                            }
+
+                            $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                            $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
+                        }
+                        break;
+                    }
+                }
+            }
+            if ($this->bGetOnlyApproximationRates && !empty($this->aShippingRates)) {
+                $this->saveShippingQuotesCached();
+                return $this->aShippingRates;
+            }
+
             if ($aResponses = $this->getServerQuotes($aShippingRates)) {
                 foreach ($aResponses as $aResponse) {
                     foreach ($aResponse as $Rate) {
