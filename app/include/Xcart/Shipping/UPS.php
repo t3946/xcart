@@ -175,11 +175,6 @@ class UPS extends ShippingProcessor
 
     public function getAdditionalShippingFee($weight)
     {
-        global $config;
-        $fAdditionalShippingFee = 0;
-        if ($weight >= $config['Oversize_Package']['oversize_lg_threshold']) {
-            $fAdditionalShippingFee = $config['Oversize_Package']['oversize_surcharge'];
-        }
-        return $fAdditionalShippingFee;
+        return 0;
     }
 }
