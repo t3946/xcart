@@ -94,7 +94,7 @@ class OrderDetail extends Data
     {
         if ($this->oProduct === null) {
             if ($this->productid) {
-                $this->oProduct = new ProductModel(['productid' => $this->getField('productid')]);
+                $this->oProduct = ProductModel::objects()->get(['productid' => $this->getField('productid')]);
             }
         }
         return $this->oProduct;
