@@ -128,7 +128,9 @@ class UPS extends ShippingProcessor
                 $aResponses = $rate->shopRates($shipment);
 
             } catch (Exception $e) {
-                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
+                $message = __CLASS__ . ': ' . $e->getMessage();
+                $to = " From: {$this->getManufacturer()->m_zipcode} To: {$oCustomer->s_zipcode}";
+                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, $message. $to);
             }
         }
 
