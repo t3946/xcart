@@ -172,9 +172,7 @@ class UPS extends ShippingProcessor
                                     $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
                                     break;
                             }
-                            if (((int)$oShippingRate->shippingid === 1) &&
-                                $app_s = ShippingHelper::getApproximateShippingCharge($shippingCharge, $this->oManufacturer->manufacturerid))
-                            {
+                            if ($app_s = ShippingHelper::getApproximateShippingCharge($shippingCharge, $this->oManufacturer->manufacturerid)){
                                 $oShippingRate->setShippingCharge($app_s);
                             }
 
