@@ -9,11 +9,14 @@
             <div class="h2 title">Shipping specs</div>
             <div class="options">
                 <div class="content">
-                    {include 'product/tabs/__option.tpl'
-                        title='Weight'
-                        value="{$model->weight} Lbs"
-                    }
+                    {if $model->weight > 0}
+                        {include 'product/tabs/__option.tpl'
+                            title='Weight'
+                            value="{$model->weight} Lbs"
+                        }
+                    {/if}
 
+                    {if $model->dim_x > 0 || $model->dim_y > 0 || $model->dim_z > 0}
                     {include  'product/tabs/__option.tpl'
                         title='Dimensions'
                         value="{$model->dim_x}\" x {$model->dim_y}\" x {$model->dim_z}\" "
@@ -26,7 +29,7 @@
                         }
                     {/if}
 
-                    {if $model->shipping_dim_x}
+                    {if $model->shipping_dim_x || $model->shipping_dim_y || $model->shipping_dim_z}
                         {include  'product/tabs/__option.tpl'
                             title='Shipping dimensions'
                             value="{$model->shipping_dim_x}\" x {$model->shipping_dim_y}\" x {$model->shipping_dim_z}\" "
