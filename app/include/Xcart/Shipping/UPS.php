@@ -204,8 +204,7 @@ class UPS extends ShippingProcessor
 
                                     $oShippingRate->setShippingChargeQuote(round($value,  2));
 
-                                    if (((int)$oShippingRate->shippingid === 1) &&
-                                        $app_s = ShippingHelper::getApproximateShippingCharge($oShippingRate->getShippingQuote(), $this->oManufacturer->manufacturerid))
+                                    if ($app_s = ShippingHelper::getApproximateShippingCharge($oShippingRate->getShippingQuote(), $this->oManufacturer->manufacturerid))
                                     {
                                         $oShippingRate->setShippingCharge($app_s);
                                     }
