@@ -3,6 +3,7 @@
 use CaponicaAmazonMwsComplete\AmazonClient\FbaInboundClient;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
@@ -45,9 +46,7 @@ foreach ($aShipments as $shipment) {
     }
 
     /** @var OrderModel $order */
-    $order = $shipment->order_id ? OrderModel::objects()->get(['orderid' => $shipment->order_id]) : new OrderModel;
-    $is_new_order = $order->getIsNewRecord();
-
+    [$order, $is_new_order] = OrderModel::objects()->getOrNew(['orderid' => $shipment->order_id]);
 
     switch ($shipment->shipment_status) {
         case AmazonListInboundShipment::SHIPMENT_STATUS_WORKING:
@@ -83,6 +82,8 @@ foreach ($aShipments as $shipment) {
     $order->save();
 
     if ($is_new_order) {
+        OrderInvoiceHelper::sendOrderStatusNotification($order);
+
         echo "Create order # {$order->getOrderNumber()}\n";
         $log_message = "<a style=\"color: #1411FF;\" href=\"https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$shipment->shipment_id}\" target=\"_blank\">Amazon FBA Shipment # {$shipment->shipment_name}</a>";
         (new OrderLogModel([
