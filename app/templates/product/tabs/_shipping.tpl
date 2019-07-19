@@ -21,6 +21,7 @@
                         title='Dimensions'
                         value="{$model->dim_x}\" x {$model->dim_y}\" x {$model->dim_z}\" "
                     }
+                    {/if}
 
                     {if $model->shipping_weight > 0}
                         {include 'product/tabs/__option.tpl'
