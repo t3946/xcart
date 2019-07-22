@@ -344,11 +344,11 @@ class CheckoutController extends FrontendController
             $order->setAttributes([
                 'total' => $order->subtotal + $order->shipping_cost,
             ]);
+            $order->save();
 
         } else {
             $order->groups->delete();
         }
-
 
         if ($app->request->getIsPost()) {
 
