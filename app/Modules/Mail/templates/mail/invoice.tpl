@@ -332,7 +332,7 @@
 
 {block 'signature'}
     {if $mode!=='print'}
-        {add $site = $.getSite}
+        {add $site = $order->site}
         {add $config = $site->getGlobalConfig()}
         {add $site_config  = $site->getConfig()}
 
