@@ -332,19 +332,18 @@ class CheckoutController extends FrontendController
                             'total_net' => $cart_group['subtotal'],
                         ]);
 
+                        $order->subtotal += $group->total_gross;
                         $order->shipping_cost += $charge;
                         $group->total_gross += $charge;
                         $group->total_net += $charge;
+                        $group->save();
                     }
-                    $order->subtotal += $group->total_gross;
-                    $group->save();
                 }
             }
 
             $order->setAttributes([
                 'total' => $order->subtotal + $order->shipping_cost,
             ]);
-            $order->save();
 
         } else {
             $order->groups->delete();
