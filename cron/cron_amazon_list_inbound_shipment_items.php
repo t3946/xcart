@@ -46,7 +46,13 @@ foreach ($aShipments as $shipment) {
     }
 
     /** @var OrderModel $order */
-    [$order, $is_new_order] = OrderModel::objects()->getOrNew(['orderid' => $shipment->order_id]);
+    if ($shipment->order_id) {
+        $order = OrderModel::objects()->getOrNew(['orderid' => $shipment->order_id]);
+        $is_new_order = false;
+    } else {
+        $order = new OrderModel;
+        $is_new_order = true;
+    }
 
     switch ($shipment->shipment_status) {
         case AmazonListInboundShipment::SHIPMENT_STATUS_WORKING:
