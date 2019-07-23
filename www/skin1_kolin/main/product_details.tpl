@@ -127,27 +127,31 @@
 
     {include file="check_froogle_upc_js.tpl"}
 
-    {if $product}
+    {if $oProduct}
         <table width="100%">
 
             <tr>
                 <td align="left" class="TopLabel">
-                    {if $product.forsale neq "N"}
-                        <span class="detail-title" style="font-weight: normal;"><a href="{$product.customer_url}"
-                                                                                   title=""
-                                                                                   target="_blank">{$product.product}</a></span>
+                    {if $oProduct->forsale != "N"}
+                        <span class="detail-title" style="font-weight: normal;">
+                            <a href="{$oProduct->getUrl()}" title="" target="_blank">{$oProduct->getFrontendName()}</a>
+                        </span>
                     {else}
-                        <span class="detail-title" style="font-weight: normal;">{$product.product}</span>
+                        <span class="detail-title" style="font-weight: normal;">{$oProduct->getFrontendName()}</span>
                     {/if}
                 </td>
 
-                {if $product.d_website_search_for_sku_url ne ""}
+                {if $oProduct->getDistributorUrl()}
                     <td align="right">
-                        {if $product.forsale neq "N"}<span class="detail-title"
-                                                           style="font-weight: normal; font-size: 12px;">{/if}
-                            <a href="{$product.d_website_search_for_sku_url}" title=""
-                               target="_blank">{if $product.forsale neq "N"}Product on distributor's website: {/if}{$product.mpn}</a>
-                            {if $product.forsale neq "N"}</span>{/if}
+                        {if $oProduct->forsale != "N"}
+                            <span class="detail-title" style="font-weight: normal; font-size: 12px;">
+                        {/if}
+                            <a href="{$oProduct->getDistributorUrl()}" title="" target="_blank">
+                                {if $oProduct->forsale != "N"}Product on distributor's website: {/if}{$oProduct->getMpn()}
+                            </a>
+                        {if $oProduct->forsale != "N"}
+                            </span>
+                        {/if}
                     </td>
                 {/if}
             </tr>
