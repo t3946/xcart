@@ -100,7 +100,6 @@ foreach ($aShipments as $shipment) {
             [
                 'from' => ['orders@s3stores.com' => $order->firstname],
                 'reply_to' => [$order->email => $order->firstname],
-                'bcc' => ['romann@s3stores.com' => ''],
                 'headers' => [
                     'X-Xcart-Label' => 'order-status-init'
                 ]
