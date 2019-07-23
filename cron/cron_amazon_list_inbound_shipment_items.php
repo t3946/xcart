@@ -9,6 +9,7 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Xcart\App\Main\Xcart;
 
 define('CIDEV_CRON_START', 'CRON');
 session_start();
@@ -88,7 +89,23 @@ foreach ($aShipments as $shipment) {
     $order->save();
 
     if ($is_new_order) {
-        OrderInvoiceHelper::sendOrderStatusNotification($order);
+        Xcart::app()->mail->template(
+            'orders@s3stores.com',
+            str_replace('{{orderid}}', $order->getOrderNumber(), '[S3 Stores] Order # {{orderid}}: D2A Pending order entry'),
+            'mail/invoice.tpl',
+            [
+                'order' => $order,
+                'type' => 'A',
+            ],
+            [
+                'from' => ['orders@s3stores.com' => $order->firstname],
+                'reply_to' => [$order->email => $order->firstname],
+                'bcc' => ['romann@s3stores.com' => ''],
+                'headers' => [
+                    'X-Xcart-Label' => 'order-status-init'
+                ]
+            ]
+        );
 
         echo "Create order # {$order->getOrderNumber()}\n";
         $log_message = "<a style=\"color: #1411FF;\" href=\"https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$shipment->shipment_id}\" target=\"_blank\">Amazon FBA Shipment # {$shipment->shipment_name}</a>";
