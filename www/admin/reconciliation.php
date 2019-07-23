@@ -594,7 +594,7 @@ if ($REQUEST_METHOD == "POST") {
                         /*
                          * Hack for Amazon distributor
                          */
-                        if (($amz_dx = $r_model->distributors->valuesList('manufacturerid', true)) && in_array(578, $amz_dx)) {
+                        if (($amz_dx = $r_model->distributors->valuesList('manufacturerid', true)) && !in_array(578, $amz_dx)) {
                             $f_invoice['manufacturerid__in'] = $amz_dx;
                         }
                         foreach (OrderGroupInvoiceModel::objects()->filter($f_invoice) as $groupInvoice) {
