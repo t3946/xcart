@@ -292,9 +292,10 @@ class CheckoutController extends FrontendController
             $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
 
             foreach ($cart_groups as $g => $cart_group) {
+                $charge = 0;
+
                 /** @var OrderGroupModel $group */
                 if ($group = $order->groups->get(['manufacturerid' => $g])) {
-                    $charge = 0;
 
                     /** @var ShippingRateModel[] $shipping_rates */
                     if ($shipping_rates = $ship_module::getShipping($g, $order, $cart_group)) {
@@ -331,13 +332,12 @@ class CheckoutController extends FrontendController
                             'total_gross' => $cart_group['subtotal'],
                             'total_net' => $cart_group['subtotal'],
                         ]);
-
-                        $order->subtotal += $group->total_gross;
-                        $order->shipping_cost += $charge;
-                        $group->total_gross += $charge;
-                        $group->total_net += $charge;
-                        $group->save();
                     }
+                    $order->subtotal += $group->total_gross;
+                    $order->shipping_cost += $charge;
+                    $group->total_gross += $charge;
+                    $group->total_net += $charge;
+                    $group->save();
                 }
             }
 
@@ -405,8 +405,11 @@ class CheckoutController extends FrontendController
         [$shipping_address, $billing_address] = $order->getAddressInfo();
 
 
-        if (!$app->request->getIsPost() && !$app->request->post->get('billing_same') && $order->b_firstname) {
-            $billingForm->setAttributes($order->getAttributes());
+        if (!$app->request->getIsPost()){
+            if (!$app->request->post->get('billing_same') && $order->b_firstname) {
+                $billingForm->setAttributes($order->getAttributes());
+            }
+            $order->save();
         }
 
         $this->display('checkout/options.tpl', [
