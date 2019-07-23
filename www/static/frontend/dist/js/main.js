@@ -71169,6 +71169,38 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var page = document.querySelector('.product-page');
     if (page) {
 
+        var prices_table = page.querySelector('.table__prices--down');
+        var prices_row = page.querySelectorAll('.price-row');
+
+        if (prices_row) {
+            var timers = {};
+
+            $(document).on('component.quantity.change', function (e, data) {
+
+                if (data.product && data.product.dataset.product === page.dataset.product) {
+                    var allHide = true;
+
+                    prices_row.forEach(function (price) {
+                        var hide = price.dataset.quantity <= data.val;
+                        var key = 'price_' + price.dataset.quantity;
+
+                        price.classList.toggle('hidden', hide);
+
+                        clearTimeout(timers[key]);
+                        timers[key] = setTimeout(function () {
+                            price.classList.toggle('af-anim', hide);
+                        }, 200);
+
+                        if (!hide) {
+                            allHide = false;
+                        }
+                    });
+
+                    prices_table.classList.toggle('hidden', allHide);
+                }
+            });
+        }
+
         var questionsContainer = $('#questions');
 
         $(document).on('app.start', function () {
