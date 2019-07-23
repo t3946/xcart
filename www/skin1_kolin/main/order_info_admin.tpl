@@ -766,16 +766,27 @@ Cost to us accurate
 </tr>
 {/foreach}
     {assign var="oOrderGroup" value=$v.oOrderGroup}
-    {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
+    {assign var="oOrderShipping" value= $oOrderGroup->shippingModel}
+    {if $oOrderGroup->shippingid === null}
+    <tr>
+        <td colspan="11">
+            <div class="enter_on_site">
+                <div class="enter_on_site__content">
+                    Our shipping server couldn’t provide us with an accurate shipping quote.
+                </div>
+            </div>
+        </td>
+    </tr>
+    {/if}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td nowrap="nowrap">
     <div>
-        <p>Carrier: {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</p>
-        <p>Customer's choice: <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
+        <p>Carrier: {if $oOrderShipping}{$oOrderShipping->code}{else}Undefined{/if}</p>
+        <p>Customer's choice: <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$oOrderGroup->shipping}"/>
         </p>
         <p>Method:
             {if !$static}
-                {if ($v.real_shipping_method eq '')}
+                {if (!$v.real_shipping_method && $oOrderShipping)}
                     {assign var="shipping_method" value=$oOrderShipping->getName()}
                 {else}
                     {assign var="shipping_method" value=$v.real_shipping_method}
@@ -788,7 +799,7 @@ Cost to us accurate
                 {$v.real_shipping_method}
             {/if}
 
-            {if ($v.real_shipping_method ne '') and ($v.real_shipping_method != $oOrderShipping->getName())}
+            {if $v.real_shipping_method && $oOrderShipping && $v.real_shipping_method != $oOrderShipping->getName()}
                 <span style="margin-left: 50px; display: block;">{$oOrderShipping->getName()}</span>
             {/if}
         </p>
