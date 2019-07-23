@@ -112,6 +112,11 @@ class ShippingRate extends Data
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
 
+            if ((int) $this->shippingid === 1 && $app_s = ShippingHelper::getApproximateShippingCharge($this->getShippingQuote(), $this->manufacturerid))
+            {
+                $this->fShippingCharge = $app_s;
+            }
+
             $this->fShippingCharge = min(max($this->fShippingCharge, $this->min_shipping_charge),  $this->max_shipping_charge);
 
             $this->fShippingCharge = round($this->fShippingCharge, 2);

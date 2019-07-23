@@ -172,12 +172,9 @@ class UPS extends ShippingProcessor
                                     $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
                                     break;
                             }
-                            if ($app_s = ShippingHelper::getApproximateShippingCharge($shippingCharge, $this->oManufacturer->manufacturerid)){
-                                $oShippingRate->setShippingCharge($app_s);
-                            }
-
                             $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
-                            $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
+
+                            $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                         }
                         break;
                     }
@@ -204,10 +201,6 @@ class UPS extends ShippingProcessor
 
                                     $oShippingRate->setShippingChargeQuote(round($value,  2));
 
-                                    if ($app_s = ShippingHelper::getApproximateShippingCharge($oShippingRate->getShippingQuote(), $this->oManufacturer->manufacturerid))
-                                    {
-                                        $oShippingRate->setShippingCharge($app_s);
-                                    }
                                     $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                                 }
                             }
