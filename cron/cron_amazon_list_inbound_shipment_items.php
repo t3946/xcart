@@ -47,7 +47,7 @@ foreach ($aShipments as $shipment) {
 
     /** @var OrderModel $order */
     if ($shipment->order_id) {
-        $order = OrderModel::objects()->getOrNew(['orderid' => $shipment->order_id]);
+        $order = OrderModel::objects()->get(['orderid' => $shipment->order_id]);
         $is_new_order = false;
     } else {
         $order = new OrderModel;
