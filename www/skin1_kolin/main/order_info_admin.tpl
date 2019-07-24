@@ -767,7 +767,7 @@ Cost to us accurate
 {/foreach}
     {assign var="oOrderGroup" value=$v.oOrderGroup}
     {assign var="oOrderShipping" value= $oOrderGroup->shippingModel}
-    {if $oOrderGroup->shippingid === null}
+    {if !$oOrderGroup->shippingid}
     <tr>
         <td colspan="11">
             <div class="enter_on_site">
