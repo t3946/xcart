@@ -93,6 +93,13 @@ class ShippingRate extends Data
     {
         if ($this->fShippingCharge === null && $this->fShippingQuote !== null) {
             $this->fShippingCharge = $this->fShippingQuote;
+
+            if (((int) $this->shippingid === 1 || (int) $this->shippingid === 23)  &&
+                $app_s = ShippingHelper::getApproximateShippingCharge($this->getShippingQuote(), $this->manufacturerid))
+            {
+                $this->fShippingCharge = $app_s;
+            }
+
             if ($this->getCostMarcup() > 0) {
                 $this->fShippingCharge *= $this->getCostMarcup();
             }
@@ -110,11 +117,6 @@ class ShippingRate extends Data
                 $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
                 $this->fShippingCharge -= $extra_margin;
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
-            }
-
-            if ((int) $this->shippingid === 1 && $app_s = ShippingHelper::getApproximateShippingCharge($this->getShippingQuote(), $this->manufacturerid))
-            {
-                $this->fShippingCharge = $app_s;
             }
 
             $this->fShippingCharge = min(max($this->fShippingCharge, $this->min_shipping_charge),  $this->max_shipping_charge);
