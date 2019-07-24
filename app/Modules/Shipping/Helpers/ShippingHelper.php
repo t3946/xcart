@@ -232,21 +232,30 @@ class ShippingHelper
 
     public static function combination($list)
     {
-        $combination = array();
-        $total = 2 ** count($list);
-        for ($i = 0; $i < $total; $i++) {
-            $set = array();
-            //For each combination check if each bit is set
-            for ($j = 0; $j < $total; $j++) {
-                //Is bit $j set in $i?
-                if ((2 ** $j) & $i) $set[] = $list[$j];
-            }
+        $combination = [];
 
-            if (empty($set) || in_array(array_sum($set), $combination)) {
-                continue;
+        if ($list && count(array_unique($list)) === 1) {
+            $l = 0;
+            foreach($list as $el) {
+                $l += $el;
+                $combination[] = $l;
             }
+        } else {
+            $total = 2 ** count($list);
+            for ($i = 0; $i < $total; $i++) {
+                $set = array();
+                //For each combination check if each bit is set
+                for ($j = 0; $j < $total; $j++) {
+                    //Is bit $j set in $i?
+                    if ((2 ** $j) & $i) $set[] = $list[$j];
+                }
 
-            $combination[] = array_sum($set);
+                if (empty($set) || in_array(array_sum($set), $combination)) {
+                    continue;
+                }
+
+                $combination[] = array_sum($set);
+            }
         }
 
         sort($combination);
