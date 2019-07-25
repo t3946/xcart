@@ -120,6 +120,19 @@
               flex: 0 0 rem-calc(128);
               width: rem-calc(128);
             }
+
+            .quantity-group {
+              .btn {
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+              }
+
+              input {
+                border: none;
+              }
+            }
           }
 
           &.extended {
@@ -253,6 +266,7 @@
       &.list-price {
         color: #5c5c5c;
         line-height: 2;
+        font-size: rem-calc(14);
 
         .value {
           text-decoration: line-through;

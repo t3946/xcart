@@ -43,7 +43,7 @@ import _ from 'lodash';
         let product = params.element.closest('[data-product]');
 
         if (!params.val || isNaN(params.val)) {
-            if (e.type == 'blur' || e.type == 'focusout') {
+            if (e.type === 'blur' || e.type === 'focusout') {
                 params.val = product.dataset.quantity;
                 params.$input.val(params.val);
             }

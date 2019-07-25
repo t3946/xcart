@@ -2,10 +2,23 @@
 
     <div class="row align-justify">
 
-        <div class="price-section columns small-12 medium-5 ml-12 hide-for-small show-for-medium">
+        <div class="price-section columns small-12">
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
             {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
-            <div class="price__quantity">
+            <div class="row price-info-block show-for-sm-only">
+                <div class="columns shrink price-value-text medium-12">
+                    {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>
+                </div>
+                {if $subtotal_hide}
+                    <div class="columns shrink save-info-text">
+                        Save {$site_currency->symbol}<span class="price">{$site_currency->getCurrencyFormat($price_safe)}</span>
+                    </div>
+                    <div class="columns shrink orig-info-text">
+                        Orig. {$site_currency->symbol}<span class="price">{$site_currency->getCurrencyFormat($model->list_price)}</span>
+                    </div>
+                {/if}
+            </div>
+            <div class="price__quantity hide-for-small show-for-medium">
                 <div class="row">
                     <div class="column small-12">
                         <div class="table table__prices table__prices--top">
