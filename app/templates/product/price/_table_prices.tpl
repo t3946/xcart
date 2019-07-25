@@ -2,7 +2,7 @@
 
     <div class="row align-justify">
 
-        <div class="price-section columns small-12 medium-5 ml-12">
+        <div class="price-section columns small-12 medium-5 ml-12 hide-for-small show-for-medium">
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
             {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
             <div class="price__quantity">
@@ -41,10 +41,13 @@
                                     <div class="value">
 
                                         <div class="cart_add">
-                                            <a class="add button waves waves-orange yellow">
-                                        <span class="text">
-                                            Add to cart
-                                        </span>
+                                            <a class="add button wait-button yellow">
+                                                <span class="text">
+                                                    Add to cart
+                                                </span>
+                                                <span class="wait-text">
+                                                    Added
+                                                </span>
                                             </a>
                                         </div>
 
@@ -141,7 +144,7 @@
                         {if $form}
                         {include "product/parts/_options.tpl" form=$form}
                         {/if}
-                        <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
+                        <div class="cart_add add-product show-for-sm-only" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {include "product/parts/_number_button.tpl"}
                             <a class="add button yellow wait-button">
                                 <span class="text">
