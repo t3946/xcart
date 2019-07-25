@@ -163,6 +163,15 @@
               border-right: none;
             }
 
+            &.price {
+              .value {
+                font: {
+                  size: rem-calc(30);
+                  weight: 700;
+                }
+              }
+            }
+
             .value {
               height: rem-calc(63);
               line-height: rem-calc(63);
