@@ -840,6 +840,7 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
                             OrderStatusModel::ORDER_STATUS_COMPLETED,
                             OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
                             OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                            OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
                         ],
                         'order__order_type' => OrderModel::ORDER_TYPE_FB
                     ]),

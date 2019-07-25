@@ -31,6 +31,7 @@ class OrderStatusModel extends Model
     public const ORDER_STATUS_UNPAID_PO = 'O';
     public const ORDER_STATUS_PENDING_PARTIAL_REFUND = '3';
     public const ORDER_STATUS_PARTIAL_REFUND = 'H';
+    public const ORDER_STATUS_FULLY_REFUND = 'R';
 
     public const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
     public const ORDER_DC_STATUS_SHIPPED = 'S';
