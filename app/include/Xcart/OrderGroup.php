@@ -973,7 +973,7 @@ class OrderGroup extends Data
 
     public function updateAccounting()
     {
-        $this->_update();
+        $this->_update_nullable();
     }
 
     public function getReconciledStatus()

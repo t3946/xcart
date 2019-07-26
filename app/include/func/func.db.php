@@ -562,6 +562,47 @@ function func_array2update($tbl, $arr, $where = '')
 /**
  * Update array data to table + where statament
  *
+ * @param $tbl
+ * @param $arr
+ * @param string $where
+ *
+ * @return bool|\Doctrine\DBAL\Driver\ResultStatement|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
+ */
+function func_array2update_nullable($tbl, $arr, $where = '')
+{
+    global $sql_tbl;
+
+    if (empty($tbl) || empty($arr) || !is_array($arr)) {
+        return false;
+    }
+
+    if ($sql_tbl[$tbl]) {
+        $tbl = $sql_tbl[$tbl];
+    }
+
+    $r = [];
+    foreach ($arr as $k => $v) {
+        if ($v !== null) {
+            if (!preg_match("/^`.*`$/", $k)) $k = "`$k`";
+            if ((!preg_match("/^'.*'$/", $v)) && (!preg_match('/^".*"$/', $v))) $v = "'$v'";
+            $r[] = "{$k}={$v}";
+        } else {
+            $r[] = "{$k}=NULL";
+        }
+    }
+
+    func_check_tbl_fields($tbl, array_keys($arr));
+
+    $query = "UPDATE $tbl SET " . implode(", ", $r) . ($where ? " WHERE " . $where : "");
+
+    return db_query($query);
+}
+
+/**
+ * Update array data to table + where statament
+ *
  * @param string $tbl         Table name
  * @param array $data         Data to update
  * @param string|array $where string statimern or associative array - implement as col AND col
