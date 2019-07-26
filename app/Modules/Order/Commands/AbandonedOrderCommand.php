@@ -54,7 +54,7 @@ class AbandonedOrderCommand extends Command
             ]))->save();
             echo "Abandoned: Unpaid notification sent to Cx {$order->getOrderNumber()}\n";
 
-            OrderInvoiceHelper::sendOrderStatusNotification($order, false);
+            OrderInvoiceHelper::sendOrderStatusNotification($order, true);
         }
     }
 }
