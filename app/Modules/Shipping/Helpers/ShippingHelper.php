@@ -47,6 +47,7 @@ class ShippingHelper
                 }
             } catch (\Exception $e) {
                 $shipping_rates = [];
+                Xcart::app()->logger->error($e->getMessage(), [], 'shipping');
             }
         }
 

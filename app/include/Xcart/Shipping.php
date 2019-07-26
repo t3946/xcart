@@ -110,11 +110,11 @@ class Shipping extends Data
      */
     public function getShippingZones($oCustomer, $oManufacturer)
     {
-        if (is_null($this->aShippingZones)) {
+        if ($this->aShippingZones === null) {
             if ($oCustomer->s_country) {
                 $cs_state = $oCustomer->s_state;
                 $cs_country = $oCustomer->s_country;
-                $sCA_ST = $cs_country . "_" . $cs_state;
+                $sCA_ST = "{$cs_country}_{$cs_state}";
 
                 $sSQL = <<<SQL
 SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
