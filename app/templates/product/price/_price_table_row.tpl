@@ -1,4 +1,4 @@
-<div class="table__prices--row price-row" data-quantity="{$quantity}">
+<div class="table__prices--row price-row {if $hidden}hidden{/if}" data-quantity="{$quantity}">
     <div class="column price">
 
         <div class="value">

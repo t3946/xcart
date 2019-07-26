@@ -5,7 +5,7 @@
         <div class="price-section columns small-12">
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
             {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
-            <div class="row price-info-block show-for-sm-only">
+            {*<div class="row price-info-block show-for-sm-only">
                 <div class="columns shrink price-value-text medium-12">
                     {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>
                 </div>
@@ -17,8 +17,8 @@
                         Orig. {$site_currency->symbol}<span class="price">{$site_currency->getCurrencyFormat($model->list_price)}</span>
                     </div>
                 {/if}
-            </div>
-            <div class="price__quantity hide-for-small show-for-medium">
+            </div>*}
+            <div class="price__quantity">
                 <div class="row">
                     <div class="column small-12">
                         <div class="table table__prices table__prices--top">
@@ -83,20 +83,20 @@
                     <div class="row">
                         <div class="column small-12 large-7 price-row-width xl-6">
                             <div class="table table__prices table__prices--down price-row-width">
-                                {foreach $model->getPrices() as $quantity => $price last=$last}
+                                {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
                                     {if $quantity == 1}{continue}{/if}
 
                                     {if $last_quantity!}
                                         {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity -1}
                                         {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
 
-                                        {include "product/price/_price_table_row.tpl" quantity=$last_quantity price=$last_price quantity_line = $ql}
+                                        {include "product/price/_price_table_row.tpl" hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
                                     {/if}
 
                                     {if $quantity > $model->avail}{break}{/if}
 
                                     {if $last}
-                                        {include "product/price/_price_table_row.tpl" quantity=$quantity price=$price quantity_line = "{$quantity}+"}
+                                        {include "product/price/_price_table_row.tpl" hidden=$index > 2 quantity=$quantity price=$price quantity_line = "{$quantity}+"}
                                     {/if}
 
                                     {set $last_quantity = $quantity}
@@ -105,11 +105,6 @@
                             </div>
 
                         </div>
-
-
-
-                        {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
-                        {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
 
                         <div class="column large-5 xl-6 hide-for-small show-for-medium auto">
                             <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
@@ -148,17 +143,15 @@
                 {/if}
             </div>
         </div>
-
-
         <div class="button-section columns small-12 medium-6 ml-12">
             {if !$model->isOutOfStock()}
                 <div class="row">
                     <div class="columns small-12">
                         {if $form}
-                        {include "product/parts/_options.tpl" form=$form}
+                            {include "product/parts/_options.tpl" form=$form}
                         {/if}
-                        <div class="cart_add add-product show-for-sm-only" data-form-id="{if $form}{$form->getFormId()}{/if}">
-                            {include "product/parts/_number_button.tpl"}
+                        <div class="cart_add add-product hide-for-medium" data-form-id="{if $form}{$form->getFormId()}{/if}">
+                            {*                            {include "product/parts/_number_button.tpl"}*}
                             <a class="add button yellow wait-button">
                                 <span class="text">
                                     Add to cart

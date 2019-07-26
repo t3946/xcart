@@ -131,6 +131,13 @@
 
               input {
                 border: none;
+
+                @include breakpoint(sm down) {
+                  height: rem-calc(30);
+                }
+                @include breakpoint(medium down) {
+                  height: rem-calc(34);
+                }
               }
             }
           }
@@ -181,6 +188,13 @@
                 font: {
                   size: rem-calc(30);
                   weight: 700;
+                }
+
+                @include breakpoint(sm down) {
+                  font: {
+                    size: rem-calc(22);
+                    weight: 700;
+                  }
                 }
               }
             }
