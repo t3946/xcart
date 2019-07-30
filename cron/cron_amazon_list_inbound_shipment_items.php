@@ -91,12 +91,9 @@ foreach ($aShipments as $shipment) {
     if ($is_new_order) {
         Xcart::app()->mail->template(
             'orders@s3stores.com',
-            str_replace('{{orderid}}', $order->getOrderNumber(), '[S3 Stores] Order # {{orderid}}: D2A Pending order entry'),
-            'mail/invoice.tpl',
-            [
-                'order' => $order,
-                'type' => 'A',
-            ],
+            "{$order->getOrderNumber()} init",
+            'mail/log_template.tpl',
+            ['message' => "{$order->getOrderNumber()} order"],
             [
                 'from' => $order->email,
                 'headers' => [
