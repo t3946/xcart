@@ -99,7 +99,6 @@ foreach ($aShipments as $shipment) {
             ],
             [
                 'from' => $order->email,
-                'reply_to' => $order->email,
                 'headers' => [
                     'X-Xcart-Label' => 'order-status-init'
                 ]
