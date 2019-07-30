@@ -84,6 +84,8 @@ class ListInboundCommand extends Command
                 'order_type' => OrderModel::ORDER_TYPE_FB,
                 'bd_status' => $order->bd_status ?? OrderStatusModel::ORDER_BD_STATUS_UNPAID,
                 'd2a_status' => $d2a_status,
+                'cb_status' => null,
+                'dc_status' => null,
                 'phone' => '1-800-929-2431',
                 'email' => 'orders@s3stores.com',
                 'vn_status' => OrderStatusModel::ORDER_VN_STATUS_VERIFIED,
@@ -128,6 +130,8 @@ class ListInboundCommand extends Command
                         [$groups[$product->manufacturerid], $is_new] = OrderGroupModel::objects()->getOrNew(['orderid' => $order->orderid, 'manufacturerid' => $product->manufacturerid]);
                         $groups[$product->manufacturerid]->bd_status = $order->bd_status;
                         $groups[$product->manufacturerid]->d2a_status = $order->d2a_status;
+                        $groups[$product->manufacturerid]->cb_status = null;
+                        $groups[$product->manufacturerid]->dc_status = null;
                         $groups[$product->manufacturerid]->total_gross = $groups[$product->manufacturerid]->total_net = 0;
 
                         if ($is_new) {
