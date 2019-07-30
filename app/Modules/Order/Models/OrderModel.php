@@ -193,6 +193,14 @@ class OrderModel extends Model
                 'sqlType' => Type::STRING,
                 'null' => true,
             ],
+            'd2a_status_model' => [
+                'field' => 'd2a_status',
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['d2a_status' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => true,
+            ],
             'fraud_status_model' => [
                 'field' => 'fraud_status',
                 'class' => ForeignField::className(),
