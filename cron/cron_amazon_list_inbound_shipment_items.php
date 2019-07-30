@@ -98,8 +98,8 @@ foreach ($aShipments as $shipment) {
                 'type' => 'A',
             ],
             [
-                'from' => ['orders@s3stores.com' => $order->firstname],
-                'reply_to' => [$order->email => $order->firstname],
+                'from' => $order->email,
+                'reply_to' => $order->email,
                 'headers' => [
                     'X-Xcart-Label' => 'order-status-init'
                 ]
