@@ -127,7 +127,9 @@ class Data extends OrmLegacy
 
     protected function recursive_escape(&$item)
     {
-        $item = addslashes($item);
+        if ($item !== null) {
+            $item = addslashes($item);
+        }
     }
 
     public function _update()
@@ -135,6 +137,13 @@ class Data extends OrmLegacy
         $aUpdateValues = $this->aPrimaryTableValue;
         array_walk_recursive($aUpdateValues, array(__CLASS__, 'recursive_escape'));
         func_array2update($this->sPrimaryTable, $aUpdateValues, $this->getWhereClause());
+    }
+
+    public function _update_nullable()
+    {
+        $aUpdateValues = $this->aPrimaryTableValue;
+        array_walk_recursive($aUpdateValues, array(__CLASS__, 'recursive_escape'));
+        func_array2update_nullable($this->sPrimaryTable, $aUpdateValues, $this->getWhereClause());
     }
 
 

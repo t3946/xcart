@@ -594,8 +594,8 @@ if ($REQUEST_METHOD == "POST") {
                         /*
                          * Hack for Amazon distributor
                          */
-                        if ((int) $r_model->manufacturerid !== 578) {
-                            $f_invoice['manufacturerid__in'] = $r_model->distributors->valuesList('manufacturerid', true);
+                        if (($amz_dx = $r_model->distributors->valuesList('manufacturerid', true)) && !in_array(578, $amz_dx)) {
+                            $f_invoice['manufacturerid__in'] = $amz_dx;
                         }
                         foreach (OrderGroupInvoiceModel::objects()->filter($f_invoice) as $groupInvoice) {
                             $groupInvoice->setAttributes([
@@ -840,6 +840,7 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
                             OrderStatusModel::ORDER_STATUS_COMPLETED,
                             OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
                             OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                            OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
                         ],
                         'order__order_type' => OrderModel::ORDER_TYPE_FB
                     ]),

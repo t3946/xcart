@@ -148,7 +148,7 @@ class LoggerManager
      * @param $loggerName
      * @return null|Logger
      */
-    protected function getLogger($loggerName):?Logger
+    public function getLogger($loggerName):?Logger
     {
         $log = null;
         foreach ($this->_loggers as $name => $logger) {

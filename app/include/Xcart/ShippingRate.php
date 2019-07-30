@@ -93,6 +93,13 @@ class ShippingRate extends Data
     {
         if ($this->fShippingCharge === null && $this->fShippingQuote !== null) {
             $this->fShippingCharge = $this->fShippingQuote;
+
+            if (((int) $this->shippingid === 1 || (int) $this->shippingid === 23)  &&
+                $app_s = ShippingHelper::getApproximateShippingCharge($this->getShippingQuote(), $this->manufacturerid))
+            {
+                $this->fShippingCharge = $app_s;
+            }
+
             if ($this->getCostMarcup() > 0) {
                 $this->fShippingCharge *= $this->getCostMarcup();
             }

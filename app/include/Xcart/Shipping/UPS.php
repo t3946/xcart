@@ -13,10 +13,8 @@ use Ups\Entity\ShipFrom;
 use Ups\Entity\Shipment;
 use Ups\Entity\UnitOfMeasurement;
 use Ups\Rate;
-use Xcart\ApproximationShippingRates;
-use Xcart\Logs;
+use Xcart\App\Main\Xcart;
 use Xcart\ShippingRate;
-use Xcart\SQLBuilder;
 
 class UPS extends ShippingProcessor
 {
@@ -72,7 +70,7 @@ class UPS extends ShippingProcessor
             $UPS_password = 'f3ddbec6bf';
             $UPS_accesskey = '8C381B1AAE49E83E';
 
-            $rate = new Rate($UPS_accesskey, $UPS_username, $UPS_password);
+            $rate = new Rate($UPS_accesskey, $UPS_username, $UPS_password, false, Xcart::app()->logger->getLogger('UPS'));
 
             try {
                 $oCustomer = $this->getCustomer();
@@ -133,7 +131,7 @@ class UPS extends ShippingProcessor
             } catch (Exception $e) {
                 $message = __CLASS__ . ': ' . $e->getMessage();
                 $to = " From: {$this->getManufacturer()->m_zipcode} To: {$oCustomer->s_zipcode}";
-                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, $message. $to);
+                Xcart::app()->logger->error($message. $to, [], 'shipping');
             }
         }
 
@@ -172,12 +170,9 @@ class UPS extends ShippingProcessor
                                     $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
                                     break;
                             }
-                            if ($app_s = ShippingHelper::getApproximateShippingCharge($shippingCharge, $this->oManufacturer->manufacturerid)){
-                                $oShippingRate->setShippingCharge($app_s);
-                            }
-
                             $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
-                            $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
+
+                            $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                         }
                         break;
                     }
@@ -204,10 +199,6 @@ class UPS extends ShippingProcessor
 
                                     $oShippingRate->setShippingChargeQuote(round($value,  2));
 
-                                    if ($app_s = ShippingHelper::getApproximateShippingCharge($oShippingRate->getShippingQuote(), $this->oManufacturer->manufacturerid))
-                                    {
-                                        $oShippingRate->setShippingCharge($app_s);
-                                    }
                                     $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                                 }
                             }

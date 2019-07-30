@@ -94,6 +94,14 @@ class OrderGroupModel extends Model
                 'link' => ['bd_status' => 'code'],
                 'null' => true,
             ],
+            'd2a_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'd2a_status',
+                'sqlType' => Type::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['d2a_status' => 'code'],
+                'null' => true,
+            ],
             'payment_method' => [
                 'field' => 'acc_paymentid',
                 'class' => ForeignField::class,

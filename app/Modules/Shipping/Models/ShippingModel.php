@@ -45,6 +45,11 @@ class ShippingModel extends Model
         ];
     }
 
+    public function getName()
+    {
+        return func_insert_trademark($this->getField('shipping'));
+    }
+
     public function getFrontendName()
     {
         return $this->frontend_name ?: func_insert_trademark($this->shipping);
