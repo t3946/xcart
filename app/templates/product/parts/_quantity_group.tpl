@@ -8,6 +8,7 @@
            step="{if $model->mult_order_quantity == 'Y'}{$model->min_amount}{else}1{/if}"
            value="{$model->min_amount}"
            id="quantity-{$model->productid}"
+           autocomplete="off"
     />
     <span class="btn inc active">+</span>
 </div>

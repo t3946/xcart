@@ -25,7 +25,7 @@
                             <div class="column price">
                                 <div class="title">Price</div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$model->getFrontendPrice()}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
                                 </div>
                             </div>
 
@@ -45,27 +45,11 @@
                                 <div class="column extended">
                                     <div class="title">Subtotal</div>
                                     <div class="value">
-                                        {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$model->getFrontendPrice()}</span>
+                                        {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
                                     </div>
                                 </div>
 
-                                <div class="column auto hide-for-small show-for-medium">
-                                    <div class="title"></div>
-                                    <div class="value">
 
-                                        <div class="cart_add">
-                                            <a class="add button wait-button yellow">
-                                                <span class="text">
-                                                    Add to cart
-                                                </span>
-                                                <span class="wait-text">
-                                                    Added
-                                                </span>
-                                            </a>
-                                        </div>
-
-                                    </div>
-                                </div>
                             {else}
 
                                 <div class="column notify auto">
@@ -81,22 +65,27 @@
                 </div>
                 {if !$model->isOutOfStock()}
                     <div class="row">
-                        <div class="column small-12 large-7 price-row-width xl-6">
+                        <div class="column small-8 large-8 price-row-width xl-8">
                             <div class="table table__prices table__prices--down price-row-width">
                                 {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
-                                    {if $quantity == 1}{continue}{/if}
+                                    {if $quantity == 1}
+                                        {set $discount_base = $price}
+                                        {continue}
+                                    {/if}
 
                                     {if $last_quantity!}
                                         {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity -1}
                                         {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
+                                        {set $discount = round(($discount_base - $last_price) / $discount_base * 100)}
 
-                                        {include "product/price/_price_table_row.tpl" hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
+                                        {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
                                     {/if}
 
                                     {if $quantity > $model->avail}{break}{/if}
 
                                     {if $last}
-                                        {include "product/price/_price_table_row.tpl" hidden=$index > 2 quantity=$quantity price=$price quantity_line = "{$quantity}+"}
+                                        {set $discount = round(($discount_base - $price) / $discount_base * 100)}
+                                        {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$quantity price=$price quantity_line = "{$quantity}+"}
                                     {/if}
 
                                     {set $last_quantity = $quantity}
@@ -105,38 +94,29 @@
                             </div>
 
                         </div>
-
-                        <div class="column large-5 xl-6 hide-for-small show-for-medium auto">
-                            <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
-                                {if $subtotal_hide}
-                                    <div class="safe-prices list-price">
-                                        <div class="title">
-                                            List Price:
-                                        </div>
-                                        <div class="value">
-                                            US$ <span class="price" var-price-list>{$model->list_price}</span>
-                                        </div>
-                                    </div>
-                                {/if}
-
-                                <div class="safe-prices safe safe-per-item">
-                                    <div class="title">
-                                        Per item saving:
-                                    </div>
-                                    <div class="value">
-                                        US$ <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
-                                    </div>
+                        <div class="column small-4 discount_block" data-timer="10">
+                            <div class="row" style="margin:0">
+                                <div class="columns discount__title">Extra qty discount</div>
+                            </div>
+                            <div class="row discount__counter" style="margin: 0 auto; max-width:100px">
+                                <div class="columns">
+                                    <div class="digit hours">00</div>
+                                    <div class="label hours">hrs</div>
                                 </div>
-
-                                <div class="safe-prices safe total-safe">
-                                    <div class="title">
-                                        Total saving:
-                                    </div>
-                                    <div class="value">
-                                        US$ <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
-                                    </div>
+                                <div class="columns">
+                                    <span class="delimiter">:</span>
                                 </div>
-
+                                <div class="columns">
+                                    <div class="digit minutes">00</div>
+                                    <div class="label minutes">min</div>
+                                </div>
+                                <div class="columns">
+                                    <span class="delimiter">:</span>
+                                </div>
+                                <div class="columns">
+                                    <div class="digit seconds">00</div>
+                                    <div class="label seconds">sec</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,7 +130,7 @@
                         {if $form}
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
-                        <div class="cart_add add-product hide-for-medium" data-form-id="{if $form}{$form->getFormId()}{/if}">
+                        <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {*                            {include "product/parts/_number_button.tpl"}*}
                             <a class="add button yellow wait-button">
                                 <span class="text">
@@ -160,6 +140,37 @@
                                     Added
                                 </span>
                             </a>
+                        </div>
+                    </div>
+                    <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
+                        <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
+                            <div class="safe-prices list-price">
+                                <div class="title">
+                                    List Price:
+                                </div>
+                                <div class="value">
+                                    US$ <span class="price" var-price-list>{$model->list_price}</span>
+                                </div>
+                            </div>
+
+                            <div class="safe-prices safe safe-per-item">
+                                <div class="title">
+                                    Per item savings:
+                                </div>
+                                <div class="value">
+                                    US$ <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
+                                </div>
+                            </div>
+
+                            <div class="safe-prices safe total-safe">
+                                <div class="title">
+                                    Total savings:
+                                </div>
+                                <div class="value">
+                                    US$ <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

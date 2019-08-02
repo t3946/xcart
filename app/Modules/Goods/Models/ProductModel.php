@@ -121,12 +121,6 @@ class ProductModel extends Model implements ICartItem
                 'sqlType' => Type::STRING,
             ],
 
-            'prices' => [
-                'class' => HasManyField::class,
-                'modelClass' => PricingModel::class,
-                'link' => ['productid' => 'productid'],
-            ],
-
             'sites' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => SiteModel::class,
@@ -163,9 +157,6 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductsSfMovesModel::class,
                 'link' => ['productid' => 'productid'],
             ],
-
-
-
             'productid' => [
                 'class' => AutoField::class,
             ],
@@ -607,9 +598,8 @@ class ProductModel extends Model implements ICartItem
     public function getPrices()
     {
         $t = [];
-        /** @var \Xcart\Pricing $price */
-        foreach ($this->getPricing() as $price) {
-            $t[$price->getQuantity()] = $this->getFrontendPrice($price->getQuantity());
+        foreach ($this->pricing as $price) {
+            $t[$price->quantity] = max($price->price, $this->new_map_price);
         }
 
         return $t;
