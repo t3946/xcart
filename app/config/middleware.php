@@ -1,40 +1,38 @@
 <?php
+
+use Modules\Core\Middleware\CorsMiddleware;
+use Modules\User\Middleware\ExpireHeadersMiddleware;
+use Modules\User\Middleware\ReferrerSearchMiddleware;
+use Modules\User\Middleware\BotsMiddleware;
+use Modules\Cart\Middleware\CouponCodeMiddleware;
+use Modules\Sites\Middleware\CurrentSiteMiddleware;
+use Modules\Core\Middleware\CacheMiddleware;
+use Modules\User\Middleware\UserDiscountMiddleware;
+
 return [
-//               'RedirectMiddleware' => [
-//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
-//               ],
-//               'AutoCacheMiddleware' => [
-//                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
-//               ],
     'CORS' => [
-        'class' => '\\Modules\\Core\\Middleware\\CorsMiddleware',
+        'class' => CorsMiddleware::class,
     ],
-//    'HtmlMinMiddleware' => [
-//        'class' => \Xcart\App\Middleware\HtmlMinMiddleware::class,
-//    ],
     'static_cache' => [
-        'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
+        'class' => CacheMiddleware::class,
         'cacheEnabled' => (defined('APP_DEBUG') && APP_DEBUG)? false : true,
     ],
     'CurrentSiteMiddleware' => [
-        'class' => '\Modules\Sites\Middleware\CurrentSiteMiddleware',
+        'class' => CurrentSiteMiddleware::class,
     ],
     'CouponCodeMiddleware' => [
-        'class' => '\Modules\Cart\Middleware\CouponCodeMiddleware'
+        'class' => CouponCodeMiddleware::class
     ],
-//    'UserAdminMiddleware' => [
-//        'class' => '\Modules\User\Middleware\UserAdminMiddleware'
-//    ],
     'BotsMiddleware' => [
-        'class' => '\Modules\User\Middleware\BotsMiddleware',
+        'class' => BotsMiddleware::class,
     ],
     'ReferrerSearch' => [
-        'class' => '\Modules\User\Middleware\ReferrerSearchMiddleware'
+        'class' => ReferrerSearchMiddleware::class
     ],
     'ExpireHeaders' => [
-        'class' => '\Modules\User\Middleware\ExpireHeadersMiddleware'
+        'class' => ExpireHeadersMiddleware::class
     ],
-//    'MetaMiddleware' => [
-//        'class' => '\Modules\Meta\Middleware\MetaMiddleware'
-//    ],
+    'DiscountMiddleware' => [
+        'class' => UserDiscountMiddleware::class
+    ],
 ];

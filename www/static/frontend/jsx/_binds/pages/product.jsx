@@ -63,6 +63,7 @@ import documentReady from "../../utils/documentReady";
                 let display_minutes = display.querySelector('.minutes');
                 let display_seconds = display.querySelector('.seconds');
                 let duration = timer_block.dataset.timer - 1;
+                let minutes = timer_block.dataset.minutes;
                 let timer = duration;
 
                 setInterval(function () {
@@ -80,7 +81,7 @@ import documentReady from "../../utils/documentReady";
                     timer_block.style.display = 'block';
 
                     if (--timer < 0) {
-                        timer = duration;
+                        timer = minutes * 60 - 1;
                     }
                 }, 1000);
             }

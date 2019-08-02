@@ -23,7 +23,7 @@
                     <div class="column small-12">
                         <div class="table table__prices table__prices--top">
                             <div class="column price">
-                                <div class="title">Price</div>
+                                <div class="title">Unit Price</div>
                                 <div class="value">
                                     {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
                                 </div>
@@ -94,27 +94,27 @@
                             </div>
 
                         </div>
-                        <div class="column small-4 discount_block" data-timer="10">
+                        <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
                             <div class="row" style="margin:0">
                                 <div class="columns discount__title">Extra qty discount</div>
                             </div>
-                            <div class="row discount__counter" style="margin: 0 auto; max-width:100px">
+                            <div class="row discount__counter">
                                 <div class="columns">
-                                    <div class="digit hours">00</div>
+                                    <div class="digit hours"></div>
                                     <div class="label hours">hrs</div>
                                 </div>
                                 <div class="columns">
                                     <span class="delimiter">:</span>
                                 </div>
                                 <div class="columns">
-                                    <div class="digit minutes">00</div>
+                                    <div class="digit minutes"></div>
                                     <div class="label minutes">min</div>
                                 </div>
                                 <div class="columns">
                                     <span class="delimiter">:</span>
                                 </div>
                                 <div class="columns">
-                                    <div class="digit seconds">00</div>
+                                    <div class="digit seconds"></div>
                                     <div class="label seconds">sec</div>
                                 </div>
                             </div>

@@ -52,17 +52,17 @@ import SelectNumberItems from "../../components/SelectNumberItems";
 
     let productItemResetState = product => {
 
-        let number = product.querySelector('.add-product .number-button span');
-        let val = parseInt(number.dataset.min, 10);
+        let input = product.querySelector('.quantity-group input');
+        let val = input.min;
 
-        number.innerHTML = val;
+        input.value = val;
         product.dataset.quantity = val;
 
-        // $(document).trigger('component.quantity.change', {
-        //     target: product,
-        //     val: val,
-        //     product: product,
-        // });
+         $(document).trigger('component.quantity.change', {
+             target: product,
+             val: val,
+             product: product,
+         });
     };
 
     // function getOptionNameFromString(nameString){

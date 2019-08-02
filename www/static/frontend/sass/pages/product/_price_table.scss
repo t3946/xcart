@@ -31,17 +31,27 @@
         .discount__title {
           height: rem-calc(16);
           font-size:rem-calc(14);
+
+          @include breakpoint(sm down) {
+            font-size:rem-calc(11);
+          }
         }
 
         .discount__counter{
           font-size:rem-calc(20);
+          max-width: rem-calc(110);
+          margin: 0 auto;
 
           .label {
             font: {
               size: rem-calc(11);
             }
             line-height: rem-calc(6);
-            text-align: right;
+            text-align: center;
+          }
+
+          @include breakpoint(sm down) {
+            max-width: rem-calc(88);
           }
         }
       }
@@ -231,7 +241,7 @@
             &.extended {
               .value {
                 font: {
-                  size: rem-calc(20);
+                  size: rem-calc(22);
                 }
               }
             }

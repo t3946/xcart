@@ -29668,9 +29668,9 @@ var sendAnalytics = function () {
         }
     };
 
-    sendAnalytics.prototype.pageview = function pageview() {
+    sendAnalytics.prototype.pageview = function pageview(data) {
         if (window['ga']) {
-            window.ga('send', 'pageview');
+            window.ga('send', 'pageview', data);
         }
     };
 
@@ -34292,7 +34292,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         window.surfMetaRegister();
         $(document).trigger('app.start');
 
-        window.sendAnalytics.pageview();
+        window.sendAnalytics.pageview({ 'dimension1': window.app.options.discount_minutes });
 
         Promise.all([new FontFaceObserver("Lato", {
             style: "normal",
@@ -61669,11 +61669,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     var productItemResetState = function productItemResetState(product) {
 
-        var number = product.querySelector('.add-product .number-button span');
-        var val = parseInt(number.dataset.min, 10);
+        var input = product.querySelector('.quantity-group input');
+        var val = input.min;
 
-        number.innerHTML = val;
+        input.value = val;
         product.dataset.quantity = val;
+
+        $(document).trigger('component.quantity.change', {
+            target: product,
+            val: val,
+            product: product
+        });
     };
 
     $(document).on('click', '.cart_add .add', function (e) {
@@ -71210,6 +71216,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                 var display_minutes = display.querySelector('.minutes');
                 var display_seconds = display.querySelector('.seconds');
                 var duration = timer_block.dataset.timer - 1;
+                var minutes = timer_block.dataset.minutes;
                 var timer = duration;
 
                 setInterval(function () {
@@ -71227,7 +71234,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     timer_block.style.display = 'block';
 
                     if (--timer < 0) {
-                        timer = duration;
+                        timer = minutes * 60 - 1;
                     }
                 }, 1000);
             }

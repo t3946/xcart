@@ -41,9 +41,9 @@ export default class sendAnalytics {
         }
     }
 
-    pageview () {
+    pageview (data) {
         if (window['ga']) {
-            window.ga('send', 'pageview');
+            window.ga('send', 'pageview', data);
         }
     }
 
