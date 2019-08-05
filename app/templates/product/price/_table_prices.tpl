@@ -94,6 +94,7 @@
                             </div>
 
                         </div>
+                        {if $index}
                         <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
                             <div class="row" style="margin:0">
                                 <div class="columns discount__title">Extra qty discount</div>
@@ -119,6 +120,7 @@
                                 </div>
                             </div>
                         </div>
+                        {/if}
                     </div>
                 {/if}
             </div>

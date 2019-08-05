@@ -58,32 +58,34 @@ import documentReady from "../../utils/documentReady";
 
             function startTimer() {
                 let timer_block = document.querySelector('.discount_block');
-                let display = timer_block.querySelector('.discount__counter');
-                let display_hours = display.querySelector('.hours');
-                let display_minutes = display.querySelector('.minutes');
-                let display_seconds = display.querySelector('.seconds');
-                let duration = timer_block.dataset.timer - 1;
-                let minutes = timer_block.dataset.minutes;
-                let timer = duration;
+                if (timer_block) {
+                    let display = timer_block.querySelector('.discount__counter');
+                    let display_hours = display.querySelector('.hours');
+                    let display_minutes = display.querySelector('.minutes');
+                    let display_seconds = display.querySelector('.seconds');
+                    let duration = timer_block.dataset.timer - 1;
+                    let minutes = timer_block.dataset.minutes;
+                    let timer = duration;
 
-                setInterval(function () {
-                    let hours = parseInt(timer / 3600, 10)
-                    let minutes = parseInt((timer / 60) % 60, 10)
-                    let seconds = parseInt(timer % 60, 10);
+                    setInterval(function () {
+                        let hours = parseInt(timer / 3600, 10)
+                        let minutes = parseInt((timer / 60) % 60, 10)
+                        let seconds = parseInt(timer % 60, 10);
 
-                    hours = hours < 10 ? "0" + hours : hours;
-                    minutes = minutes < 10 ? "0" + minutes : minutes;
-                    seconds = seconds < 10 ? "0" + seconds : seconds;
+                        hours = hours < 10 ? "0" + hours : hours;
+                        minutes = minutes < 10 ? "0" + minutes : minutes;
+                        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                    display_hours.textContent = hours;
-                    display_minutes.textContent = minutes;
-                    display_seconds.textContent = seconds;
-                    timer_block.style.display = 'block';
+                        display_hours.textContent = hours;
+                        display_minutes.textContent = minutes;
+                        display_seconds.textContent = seconds;
+                        timer_block.style.display = 'block';
 
-                    if (--timer < 0) {
-                        timer = minutes * 60 - 1;
-                    }
-                }, 1000);
+                        if (--timer < 0) {
+                            timer = minutes * 60 - 1;
+                        }
+                    }, 1000);
+                }
             }
 
             startTimer();
