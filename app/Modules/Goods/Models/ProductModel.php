@@ -661,7 +661,7 @@ class ProductModel extends Model implements ICartItem
 
     public function isFreeShipping()
     {
-        return false;
+        return true;
     }
 
     public function getExtraMarginValue(int $forQuantity = 1) :? float

@@ -285,7 +285,7 @@ SQL;
         }
 
         /* Free Shipping Calculation */
-        if ($min_rates) {
+        /*if ($min_rates) {
             foreach ($min_rates as $m_rate => $rates) {
                 foreach ($rates as $key_r => $rate) {
                     if ($rate->getShippingCharge() === (float) 0) {
@@ -295,7 +295,7 @@ SQL;
                     }
                 }
             }
-        }
+        }*/
         return $min_rates;
     }
 

@@ -71217,7 +71217,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     var display_minutes = display.querySelector('.minutes');
                     var display_seconds = display.querySelector('.seconds');
                     var duration = timer_block.dataset.timer - 1;
-                    var minutes = timer_block.dataset.minutes;
+                    var minutes_init = timer_block.dataset.minutes;
                     var timer = duration;
 
                     setInterval(function () {
@@ -71235,7 +71235,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         timer_block.style.display = 'block';
 
                         if (--timer < 0) {
-                            timer = minutes * 60 - 1;
+                            timer = minutes_init * 60 - 1;
                         }
                     }, 1000);
                 }

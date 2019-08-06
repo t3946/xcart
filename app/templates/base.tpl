@@ -79,6 +79,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mobile-banner hide-for-medium">
+                                    <div class="row align-justify">
+                                        <div class="columns banner">
+                                            <img src="/static/frontend/dist/images/free-sm.jpg">
+                                        </div>
+                                    </div>
+                                </div>
                             </header>
 
                             <div class="sticky-menu-container">

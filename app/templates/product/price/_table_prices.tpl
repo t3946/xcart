@@ -74,7 +74,7 @@
                                     {/if}
 
                                     {if $last_quantity!}
-                                        {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity -1}
+                                        {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity - 1}
                                         {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
                                         {set $discount = round(($discount_base - $last_price) / $discount_base * 100)}
 

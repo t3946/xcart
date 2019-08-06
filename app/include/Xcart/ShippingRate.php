@@ -3,6 +3,7 @@
 namespace Xcart;
 
 
+use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 
 class ShippingRate extends Data
@@ -159,6 +160,20 @@ class ShippingRate extends Data
     public function getCart()
     {
         return $this->oCart;
+    }
+
+    public function getCartShippingVolume()
+    {
+        $volume = 0;
+        if ($aCartObjects = $this->getCart()->getElements()) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartObjects as $oCartElement) {
+                /** @var ProductModel $product */
+                $product = $oCartElement->getProduct();
+                $volume += $product->getVolume() * $oCartElement->getQuantity();
+            }
+        }
+        return $volume;
     }
 
     public function getCartShippingDimentions(): array
