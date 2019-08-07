@@ -309,6 +309,17 @@ class OrderModel extends Model
                 'class' => BooleanCharField::class,
                 'null' => false,
             ],
+            'order_type' => [
+                'class' => CharField::class,
+                'default' => self::ORDER_TYPE_XCART,
+                'null' => false,
+                'choices' => [
+                    self::ORDER_TYPE_XCART,
+                    self::ORDER_TYPE_MFN,
+                    self::ORDER_TYPE_FBA,
+                    self::ORDER_TYPE_FB,
+                ]
+            ]
 
         ];
     }
