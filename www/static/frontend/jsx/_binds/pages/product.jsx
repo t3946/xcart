@@ -70,6 +70,7 @@ import documentReady from "../../utils/documentReady";
                     let timer = duration;
 
                     setInterval(function () {
+
                         let hours = parseInt(timer / 3600, 10)
                         let minutes = parseInt((timer / 60) % 60, 10)
                         let seconds = parseInt(timer % 60, 10);
@@ -81,10 +82,13 @@ import documentReady from "../../utils/documentReady";
                         display_hours.textContent = hours;
                         display_minutes.textContent = minutes;
                         display_seconds.textContent = seconds;
-                        timer_block.style.display = 'block';
-
+                        if (timer >= 0) {
+                            timer_block.style.display = 'block';
+                        }
                         if (--timer < 0) {
-                            timer = minutes_init * 60 - 1;
+                            timer_block.style.display = 'none';
+                            document.querySelector('.price__quantity .price-row-width').style.display = 'none';
+                            // timer = minutes_init * 60 - 1;
                         }
                     }, 1000);
                 }
