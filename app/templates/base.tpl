@@ -49,6 +49,10 @@
                                             </a>
                                         </div>
 
+                                        <div class="columns show-for-medium medium-5 large-4">
+                                            <img src="/static/frontend/dist/images/free.png">
+                                        </div>
+
                                         <div class="columns small-1 medium-5 large-push-3 show-for-large">
                                             <div class="main-menu-wrap">
                                                 <ul class="main-menu no-bullet show-for-medium">
@@ -57,7 +61,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="columns hide-for-large small-6 medium-4 small-offset-1 medium-offset-5 text-align--right mobile-header">
+                                        <div class="columns hide-for-large small-6 medium-4 small-offset-0 medium-offset-0 text-align--right mobile-header">
 
                                             <a href="tel:18009292431" class="mobile__call-btn middle-inline-block right-icon"></a>
 
@@ -72,6 +76,13 @@
                                                 </span>
                                             </a>
 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mobile-banner hide-for-medium">
+                                    <div class="row align-justify">
+                                        <div class="columns banner">
+                                            <img src="/static/frontend/dist/images/free-sm.jpg">
                                         </div>
                                     </div>
                                 </div>

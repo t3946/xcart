@@ -5,6 +5,7 @@ namespace Xcart\Shipping;
 use Exception;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\Shipping\Models\ApproximationShippingModel;
+use Modules\Shipping\Models\ShippingModel;
 use Ups\Entity\Address;
 use Ups\Entity\Dimensions;
 use Ups\Entity\Package;
@@ -104,7 +105,7 @@ class UPS extends ShippingProcessor
                 $shipToAddress->setCountryCode($oCustomer->s_country);
 
                 $shippingWeight = min(self::MAX_WEIGHT_FOR_UPS_PACKAGE, $oShippingRate->getCartShippingWeight());
-                $shippingWeight = max ($shippingWeight , 1);
+                $shippingWeight = max($shippingWeight, 1);
 
                 $shipping_dimensions = $oShippingRate->getCartShippingDimentions();
 
@@ -131,53 +132,66 @@ class UPS extends ShippingProcessor
             } catch (Exception $e) {
                 $message = __CLASS__ . ': ' . $e->getMessage();
                 $to = " From: {$this->getManufacturer()->m_zipcode} To: {$oCustomer->s_zipcode}";
-                Xcart::app()->logger->error($message. $to, [], 'shipping');
+                Xcart::app()->logger->error($message . $to, [], 'shipping');
             }
         }
 
         return $aResponses;
     }
 
+    public function getApproximationCharge($oShippingRate)
+    {
+        $shippingCharge = 0;
+        $oApproximationRates = ApproximationShippingModel::objects()->get([
+            'manufacturerid' => $this->getManufacturer()->manufacturerid,
+            'last_updated_date__gte' => time() - self::APPROXIMATION_MAX_VALID_TIME,
+            'state' => $this->getCustomer()->s_state
+        ]);
+        if ($oApproximationRates) {
+            $weight = ceil($oShippingRate->getCartShippingWeight());
+            if ($volume = $oShippingRate->getCartShippingVolume()) {
+                $weight = ceil($volume > 1728 ? max($weight, $volume / 139) : max($weight, $volume / 166));
+            }
+
+
+            switch ($weight) {
+                case ($weight > 0 && $weight <= 1):
+                    $shippingCharge = $oApproximationRates->bw_1;
+                    break;
+                case ($weight > 1 && $weight <= 75):
+                    $shippingCharge = $oApproximationRates->bw_1 + ($oApproximationRates->bw_75 - $oApproximationRates->bw_1) / (75 - 1) * ($weight - 1);
+                    break;
+                case ($weight > 75):
+                    $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
+                    break;
+            }
+        }
+        return $shippingCharge;
+    }
+
     public function getShippingQuotes()
     {
         /** @var ShippingRate[] $aShippingRates */
         if (!$this->aShippingRates && $aShippingRates = $this->getShippingRatesEntities()) {
+
+            foreach ($aShippingRates as $oShippingRate) {
+                if (($sh_m = ShippingModel::objects()->get(['shippingid' => $oShippingRate->shippingid])) && $sh_m->is_free_shipping) {
+                    $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
+                }
+            }
+
             if ($this->useApproximation) {
                 foreach ($aShippingRates as $oShippingRate) {
                     if ((int)$oShippingRate->shippingid === (int)$this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
                         /*get approximation rates for UPS Ground*/
-                        $oApproximationRates = ApproximationShippingModel::objects()->get([
-                            'manufacturerid' => $this->getManufacturer()->manufacturerid,
-                            'last_updated_date__gte' => time() - self::APPROXIMATION_MAX_VALID_TIME,
-                            'state' => $this->getCustomer()->s_state
-                        ]);
-                        if ($oApproximationRates) {
-                            $weight = ceil($oShippingRate->getCartShippingWeight());
-                            if ($dims = $oShippingRate->getCartShippingDimentions()) {
-                                $volume = $dims[0] * $dims[1] * $dims[2];
-                                $weight = ceil($volume >= 5184 ? max($weight, $volume / 194) : max($weight, $volume / 139));
-                            }
-
-                            $shippingCharge = 0;
-                            switch ($weight) {
-                                case ($weight > 0 && $weight <= 1):
-                                    $shippingCharge = $oApproximationRates->bw_1;
-                                    break;
-                                case ($weight > 1 && $weight <= 75):
-                                    $shippingCharge = $oApproximationRates->bw_1 + ($oApproximationRates->bw_75 - $oApproximationRates->bw_1) / (75 - 1) * ($weight - 1);
-                                    break;
-                                case ($weight > 75):
-                                    $shippingCharge = $oApproximationRates->bw_75 + ($oApproximationRates->bw_150 - $oApproximationRates->bw_75) / (150 - 75) * ($weight - 75);
-                                    break;
-                            }
-                            $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
-
-                            $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
-                        }
+                        $shippingCharge = $this->getApproximationCharge($oShippingRate);
+                        $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                        $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                         break;
                     }
                 }
             }
+
             if ($this->bGetOnlyApproximationRates && !empty($this->aShippingRates)) {
                 $this->saveShippingQuotesCached();
                 return $this->aShippingRates;
@@ -193,11 +207,20 @@ class UPS extends ShippingProcessor
                                 ) {
 
                                     $value = $Rate->TotalCharges->MonetaryValue;
-                                    if ($Rate->TotalCharges->CurrencyCode ==='CAD') {
+                                    if ($Rate->TotalCharges->CurrencyCode === 'CAD') {
                                         $value *= 0.77; //TODO multi currency support
                                     }
 
-                                    $oShippingRate->setShippingChargeQuote(round($value,  2));
+                                    if ($this->aShippingRates &&
+                                        array_filter($this->aShippingRates, function ($a) {
+                                            return $a->shipping->is_free_shipping;
+                                        }))
+                                    {
+                                        $ground_charge = $this->getApproximationCharge($oShippingRate);
+                                        $value = max($value - $ground_charge, 5);
+                                    }
+
+                                    $oShippingRate->setShippingChargeQuote(round($value, 2));
 
                                     $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                                 }

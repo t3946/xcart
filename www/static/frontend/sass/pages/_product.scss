@@ -4,12 +4,12 @@
 @import "../parts/product/questions";
 @import "product/options";
 //
-//@import "product/price_table";
+@import "product/price_table";
 
 .product-page {
   @include getProductTabs();
   //
-  //@include getPricesTable();
+  @include getPricesTable();
   #questions {
 
     .send-question {

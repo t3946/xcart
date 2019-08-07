@@ -25,7 +25,7 @@ class ApproximationShippingCommand extends Command
                 new Expression("DAYOFMONTH(NOW()) = FLOOR(27 * ((manufacturerid - 1) / ((SELECT MAX(manufacturerid) FROM xcart_manufacturers) - 1)) + 1) 
                     OR update_approximation_shipping_rates = 'Y'
                     OR shipping_rates_last_update_date = 0")
-            );
+            )->filter(['code' => 'AOP']);
 
         /** @var DistributorModel $distributor */
         foreach ($m as $distributor) {
