@@ -6,33 +6,35 @@ import documentReady from "../../utils/documentReady";
     if (page) {
 
         let prices_table = page.querySelector('.table__prices--down');
-        let prices_row = prices_table.querySelectorAll('.price-row');
+        if (prices_table) {
+            let prices_row = prices_table.querySelectorAll('.price-row');
 
-        if (prices_row) {
-            let timers = {};
+            if (prices_row) {
+                let timers = {};
 
-            $(document).on('component.quantity.change', (e, data) => {
+                $(document).on('component.quantity.change', (e, data) => {
 
-                if (data.product && data.product.dataset.product === page.dataset.product) {
-                    let allHide = true;
-                    let cnt = 0;
+                    if (data.product && data.product.dataset.product === page.dataset.product) {
+                        let allHide = true;
+                        let cnt = 0;
 
-                    prices_row.forEach( price => {
-                        let hide = (price.dataset.quantity <= data.val) || (cnt >= page.dataset.rows);
-                        let key = 'price_' + price.dataset.quantity;
+                        prices_row.forEach(price => {
+                            let hide = (price.dataset.quantity <= data.val) || (cnt >= page.dataset.rows);
+                            let key = 'price_' + price.dataset.quantity;
 
-                        price.classList.toggle('hidden', hide);
-                        price.classList.toggle('af-anim', hide);
+                            price.classList.toggle('hidden', hide);
+                            price.classList.toggle('af-anim', hide);
 
-                        if (!hide) {
-                            allHide = false;
-                            cnt++;
-                        }
-                    });
+                            if (!hide) {
+                                allHide = false;
+                                cnt++;
+                            }
+                        });
 
-                    prices_table.classList.toggle('hidden', allHide);
-                }
-            });
+                        prices_table.classList.toggle('hidden', allHide);
+                    }
+                });
+            }
         }
 
         let questionsContainer = $('#questions');
