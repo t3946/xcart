@@ -173,7 +173,7 @@
                 border: none;
 
                 @include breakpoint(sm down) {
-                  height: rem-calc(30);
+                  height: rem-calc(34);
                 }
                 @include breakpoint(medium down) {
                   height: rem-calc(34);
@@ -231,7 +231,7 @@
 
                 @include breakpoint(sm down) {
                   font: {
-                    size: rem-calc(22);
+                    size: rem-calc(16);
                     weight: 700;
                   }
                 }
@@ -242,6 +242,11 @@
               .value {
                 font: {
                   size: rem-calc(22);
+                }
+                @include breakpoint(sm down) {
+                  font: {
+                    size: rem-calc(16);
+                  }
                 }
               }
             }
