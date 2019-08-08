@@ -16,7 +16,7 @@ export default class sendAnalytics {
                 'quantity': product.dataset.quantity  || 1
             });
             window.ga('ec:setAction', 'add', {list: product.dataset.source});
-            window.ga('send', 'event', 'UX', 'click', 'Add to cart');
+            window.ga('send', 'event', 'UX', 'click', 'Add to cart', {'dimension1': window.app.options.discount_minutes});
         }
     }
 
