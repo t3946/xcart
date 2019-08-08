@@ -12,6 +12,7 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\User\Helpers\DiscountHelper;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
@@ -56,10 +57,14 @@ class OrderEventHelper
             ]);
             $order_extra_model->save();
 
-            $log_message[] = "<b>Customer IP:</b> {$ip}";
+            $log_message[] = "<b>Customer IP:</b> {$ip}\n";
 
             if (!empty($model->customer_notes)) {
                 $log_message[] = "<b>Customer notes:</b>\n{$model->customer_notes}\n\n";
+            }
+
+            if ($d_min = $app->request->session->get(DiscountHelper::CODE_PARAM_MINUTES)) {
+                $log_message[] = "<b>Discount time:</b> {$d_min} min. \n";
             }
 
             (new OrderLogModel([

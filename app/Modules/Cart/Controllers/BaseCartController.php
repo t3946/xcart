@@ -268,12 +268,12 @@ abstract class BaseCartController extends FrontendController
                     'total' => $cart->getTotal(),
                     'quantity' => $cart->getQuantity(),
                     'message' => [
-                        'title' => CartModule::t('Position sucessfully removed'),
+                        'title' => CartModule::t('The selected product has been removed successfully'),
                     ]
                 ]);
                 Xcart::app()->end();
             } else {
-                Xcart::app()->flash->success(CartModule::t('Position sucessfully removed'));
+                Xcart::app()->flash->success(CartModule::t('The selected product has been removed successfully'));
                 $this->getRequest()->redirect($this->getListRoute());
             }
         } else {
