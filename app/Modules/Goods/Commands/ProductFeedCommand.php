@@ -104,6 +104,8 @@ class ProductFeedCommand extends Command
 
                     print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
+                    $aProduct['manufacturerid'] = $feed->manufacturerid;
+
                     if (!$aProduct['productcode'] || (isset($aProduct['cost_to_us']) && (float)$aProduct['cost_to_us'] <= 0)) {
                         print("Skip product -->' \n");
                         $skippedProductsCount++;
