@@ -265,7 +265,7 @@ abstract class ShippingProcessor
 
     protected function saveShippingQuotesCached(): void
     {
-        if (!$this->useCache) {
+        if (!$this->useCache || 1==1) {
             return;
         }
 
