@@ -132,7 +132,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
             print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
-            $aProduct['manufacturerid'] = $feed->manufacturerid;
+            $aProduct['manufacturerid'] = $supplierFeedModel->manufacturerid;
 
             if (empty($aProduct['productcode']) || (isset($aProduct['cost_to_us']) && floatval($aProduct['cost_to_us']) <= 0)) {
                 print("Skip product -->' \n");
