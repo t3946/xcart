@@ -173,6 +173,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                     }
 
                     if ($is_created) {
+                        $modelProduct->setAttributes($aProduct);
                         $modelProduct->save();
                         print "Add product --> OK" . PHP_EOL;
                     }
