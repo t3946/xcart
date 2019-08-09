@@ -555,6 +555,8 @@ class SupplierFeedHelper
         if (empty($data['productcode'])) {
             $data['productcode'] = ProductHelper::getNewGroupSKU($feed->feed_model->manufacturerid);
         }
+
+        $data['manufacturerid'] = $feed->feed_model->manufacturerid;
         /** @var ProductModel $group */
         list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $data['productcode']]);
 
