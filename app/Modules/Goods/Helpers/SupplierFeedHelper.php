@@ -558,9 +558,12 @@ class SupplierFeedHelper
 
         $data['manufacturerid'] = $feed->feed_model->manufacturerid;
         /** @var ProductModel $group */
-        list($group, $is_created) = ProductModel::objects()->getOrCreate(['productcode' => $data['productcode']]);
+        [$group, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $data['productcode']]);
 
         $group->setAttributes(array_merge($data, ['parent' => $group]));
+        if ($is_created) {
+            $group->save();
+        }
         $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
         $group->save();
 
