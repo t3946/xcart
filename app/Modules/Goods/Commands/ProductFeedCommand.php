@@ -144,6 +144,7 @@ class ProductFeedCommand extends Command
                             }
 
                             if ($is_created) {
+                                $modelProduct->setAttributes($aProduct);
                                 $modelProduct->save();
                                 print 'Add product --> OK' . PHP_EOL;
                             }
