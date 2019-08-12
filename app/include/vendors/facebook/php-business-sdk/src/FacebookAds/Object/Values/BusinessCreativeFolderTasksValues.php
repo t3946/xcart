@@ -22,7 +22,7 @@
  *
  */
 
-namespace FacebookAds\Object\Fields;
+namespace FacebookAds\Object\Values;
 
 use FacebookAds\Enum\AbstractEnum;
 
@@ -33,19 +33,13 @@ use FacebookAds\Enum\AbstractEnum;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
+ * @method static BusinessCreativeFolderTasksValues getInstance()
  */
+class BusinessCreativeFolderTasksValues extends AbstractEnum {
 
-class ReachEstimateFields extends AbstractEnum {
-
-  const ESTIMATE_READY = 'estimate_ready';
-  const UNSUPPORTED = 'unsupported';
-  const USERS = 'users';
-
-  public function getFieldTypes() {
-    return array(
-      'estimate_ready' => 'bool',
-      'unsupported' => 'bool',
-      'users' => 'int',
-    );
-  }
+  const CREATE_CONTENT = 'CREATE_CONTENT';
+  const MANAGE_CONTENT = 'MANAGE_CONTENT';
+  const MANAGE_PERMISSIONS = 'MANAGE_PERMISSIONS';
+  const VIEW_CONTENT = 'VIEW_CONTENT';
+  const VIEW_INSIGHTS = 'VIEW_INSIGHTS';
 }

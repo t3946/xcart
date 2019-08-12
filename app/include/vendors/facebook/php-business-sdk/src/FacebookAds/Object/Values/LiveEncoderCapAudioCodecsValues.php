@@ -33,11 +33,9 @@ use FacebookAds\Enum\AbstractEnum;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
- * @method static PageSettingValues getInstance()
+ * @method static LiveEncoderCapAudioCodecsValues getInstance()
  */
-class PageSettingValues extends AbstractEnum {
+class LiveEncoderCapAudioCodecsValues extends AbstractEnum {
 
-  const EMAIL_NOTIF = 'EMAIL_NOTIF';
-  const MOBILE_NOTIF = 'MOBILE_NOTIF';
-  const POST_AS_SELF = 'POST_AS_SELF';
+  const AAC = 'AAC';
 }

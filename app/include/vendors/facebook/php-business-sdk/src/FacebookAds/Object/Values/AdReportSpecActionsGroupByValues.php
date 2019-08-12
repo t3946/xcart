@@ -37,10 +37,14 @@ use FacebookAds\Enum\AbstractEnum;
  */
 class AdReportSpecActionsGroupByValues extends AbstractEnum {
 
+  const ACTION_BRAND = 'action_brand';
   const ACTION_CANVAS_COMPONENT_ID = 'action_canvas_component_id';
   const ACTION_CANVAS_COMPONENT_NAME = 'action_canvas_component_name';
   const ACTION_CAROUSEL_CARD_ID = 'action_carousel_card_id';
   const ACTION_CAROUSEL_CARD_NAME = 'action_carousel_card_name';
+  const ACTION_CATEGORY = 'action_category';
+  const ACTION_CONVERTED_BRAND_TAG_ID = 'action_converted_brand_tag_id';
+  const ACTION_CONVERTED_CATEGORY_TAG_ID = 'action_converted_category_tag_id';
   const ACTION_CONVERTED_PRODUCT_ID = 'action_converted_product_id';
   const ACTION_DESTINATION = 'action_destination';
   const ACTION_DEVICE = 'action_device';

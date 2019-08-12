@@ -22,7 +22,7 @@
  *
  */
 
-namespace FacebookAds\Object\Values;
+namespace FacebookAds\Object\Fields;
 
 use FacebookAds\Enum\AbstractEnum;
 
@@ -33,9 +33,29 @@ use FacebookAds\Enum\AbstractEnum;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
- * @method static ThirdPartyMeasurementReportDatasetCategoryValues getInstance()
  */
-class ThirdPartyMeasurementReportDatasetCategoryValues extends AbstractEnum {
 
-  const MTA = 'MTA';
+class RecommendationFields extends AbstractEnum {
+
+  const CREATED_TIME = 'created_time';
+  const HAS_RATING = 'has_rating';
+  const HAS_REVIEW = 'has_review';
+  const OPEN_GRAPH_STORY = 'open_graph_story';
+  const RATING = 'rating';
+  const RECOMMENDATION_TYPE = 'recommendation_type';
+  const REVIEW_TEXT = 'review_text';
+  const REVIEWER = 'reviewer';
+
+  public function getFieldTypes() {
+    return array(
+      'created_time' => 'datetime',
+      'has_rating' => 'bool',
+      'has_review' => 'bool',
+      'open_graph_story' => 'Object',
+      'rating' => 'int',
+      'recommendation_type' => 'string',
+      'review_text' => 'string',
+      'reviewer' => 'User',
+    );
+  }
 }

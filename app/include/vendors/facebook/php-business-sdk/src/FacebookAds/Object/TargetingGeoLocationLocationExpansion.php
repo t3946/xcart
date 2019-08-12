@@ -22,9 +22,13 @@
  *
  */
 
-namespace FacebookAds\Object\Values;
+namespace FacebookAds\Object;
 
-use FacebookAds\Enum\AbstractEnum;
+use FacebookAds\ApiRequest;
+use FacebookAds\Cursor;
+use FacebookAds\Http\RequestInterface;
+use FacebookAds\TypeChecker;
+use FacebookAds\Object\Fields\TargetingGeoLocationLocationExpansionFields;
 
 /**
  * This class is auto-generated.
@@ -33,13 +37,21 @@ use FacebookAds\Enum\AbstractEnum;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
- * @method static CampaignEffectiveStatusValues getInstance()
  */
-class CampaignEffectiveStatusValues extends AbstractEnum {
 
-  const ACTIVE = 'ACTIVE';
-  const ARCHIVED = 'ARCHIVED';
-  const DELETED = 'DELETED';
-  const PAUSED = 'PAUSED';
-  const WITH_ISSUES = 'WITH_ISSUES';
+class TargetingGeoLocationLocationExpansion extends AbstractObject {
+
+  /**
+   * @return TargetingGeoLocationLocationExpansionFields
+   */
+  public static function getFieldsEnum() {
+    return TargetingGeoLocationLocationExpansionFields::getInstance();
+  }
+
+  protected static function getReferencedEnums() {
+    $ref_enums = array();
+    return $ref_enums;
+  }
+
+
 }

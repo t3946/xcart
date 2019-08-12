@@ -22,13 +22,9 @@
  *
  */
 
-namespace FacebookAds\Object;
+namespace FacebookAds\Object\Fields;
 
-use FacebookAds\ApiRequest;
-use FacebookAds\Cursor;
-use FacebookAds\Http\RequestInterface;
-use FacebookAds\TypeChecker;
-use FacebookAds\Object\Fields\NullNodeFields;
+use FacebookAds\Enum\AbstractEnum;
 
 /**
  * This class is auto-generated.
@@ -39,19 +35,13 @@ use FacebookAds\Object\Fields\NullNodeFields;
  *
  */
 
-class NullNode extends AbstractObject {
+class TargetingGeoLocationLocationExpansionFields extends AbstractEnum {
 
-  /**
-   * @return NullNodeFields
-   */
-  public static function getFieldsEnum() {
-    return NullNodeFields::getInstance();
+  const ALLOWED = 'allowed';
+
+  public function getFieldTypes() {
+    return array(
+      'allowed' => 'bool',
+    );
   }
-
-  protected static function getReferencedEnums() {
-    $ref_enums = array();
-    return $ref_enums;
-  }
-
-
 }

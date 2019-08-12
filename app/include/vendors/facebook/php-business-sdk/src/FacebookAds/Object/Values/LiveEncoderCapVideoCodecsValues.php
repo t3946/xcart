@@ -33,10 +33,9 @@ use FacebookAds\Enum\AbstractEnum;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
- * @method static EventSourceGroupTasksValues getInstance()
+ * @method static LiveEncoderCapVideoCodecsValues getInstance()
  */
-class EventSourceGroupTasksValues extends AbstractEnum {
+class LiveEncoderCapVideoCodecsValues extends AbstractEnum {
 
-  const ANALYZE = 'ANALYZE';
-  const ANALYZE_WITH_LIMITATIONS = 'ANALYZE_WITH_LIMITATIONS';
+  const H264 = 'H264';
 }

@@ -28,7 +28,7 @@ use FacebookAds\ApiRequest;
 use FacebookAds\Cursor;
 use FacebookAds\Http\RequestInterface;
 use FacebookAds\TypeChecker;
-use FacebookAds\Object\Fields\LeadFields;
+use FacebookAds\Object\Fields\PartnerStudyFields;
 
 /**
  * This class is auto-generated.
@@ -39,20 +39,13 @@ use FacebookAds\Object\Fields\LeadFields;
  *
  */
 
-class Lead extends AbstractCrudObject {
+class PartnerStudy extends AbstractCrudObject {
 
   /**
-   * @deprecated getEndpoint function is deprecated
-   */
-  protected function getEndpoint() {
-    return 'leads';
-  }
-
-  /**
-   * @return LeadFields
+   * @return PartnerStudyFields
    */
   public static function getFieldsEnum() {
-    return LeadFields::getInstance();
+    return PartnerStudyFields::getInstance();
   }
 
   protected static function getReferencedEnums() {
@@ -61,7 +54,7 @@ class Lead extends AbstractCrudObject {
   }
 
 
-  public function deleteSelf(array $fields = array(), array $params = array(), $pending = false) {
+  public function getSubmitters(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
@@ -72,11 +65,11 @@ class Lead extends AbstractCrudObject {
     $request = new ApiRequest(
       $this->api,
       $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/',
-      new AbstractCrudObject(),
-      'NODE',
-      array(),
+      RequestInterface::METHOD_GET,
+      '/submitters',
+      new User(),
+      'EDGE',
+      User::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -97,9 +90,9 @@ class Lead extends AbstractCrudObject {
       $this->data['id'],
       RequestInterface::METHOD_GET,
       '/',
-      new Lead(),
+      new PartnerStudy(),
       'NODE',
-      Lead::getFieldsEnum()->getValues(),
+      PartnerStudy::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);

@@ -53,7 +53,7 @@ class VideoPollFields extends AbstractEnum {
       'question' => 'string',
       'show_gradient' => 'bool',
       'show_results' => 'bool',
-      'status' => 'string',
+      'status' => 'Status',
     );
   }
 }

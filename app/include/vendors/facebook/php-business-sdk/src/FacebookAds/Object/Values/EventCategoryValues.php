@@ -22,13 +22,9 @@
  *
  */
 
-namespace FacebookAds\Object;
+namespace FacebookAds\Object\Values;
 
-use FacebookAds\ApiRequest;
-use FacebookAds\Cursor;
-use FacebookAds\Http\RequestInterface;
-use FacebookAds\TypeChecker;
-use FacebookAds\Object\Fields\ReachEstimateFields;
+use FacebookAds\Enum\AbstractEnum;
 
 /**
  * This class is auto-generated.
@@ -37,28 +33,33 @@ use FacebookAds\Object\Fields\ReachEstimateFields;
  * on github and we'll fix in our codegen framework. We'll not be able to accept
  * pull request for this class.
  *
+ * @method static EventCategoryValues getInstance()
  */
+class EventCategoryValues extends AbstractEnum {
 
-class ReachEstimate extends AbstractObject {
-
-  /**
-   * @deprecated getEndpoint function is deprecated
-   */
-  protected function getEndpoint() {
-    return 'reachestimate';
-  }
-
-  /**
-   * @return ReachEstimateFields
-   */
-  public static function getFieldsEnum() {
-    return ReachEstimateFields::getInstance();
-  }
-
-  protected static function getReferencedEnums() {
-    $ref_enums = array();
-    return $ref_enums;
-  }
-
-
+  const ART_EVENT = 'ART_EVENT';
+  const BOOK_EVENT = 'BOOK_EVENT';
+  const CLASS_EVENT = 'CLASS_EVENT';
+  const COMEDY_EVENT = 'COMEDY_EVENT';
+  const CONFERENCE_EVENT = 'CONFERENCE_EVENT';
+  const DANCE_EVENT = 'DANCE_EVENT';
+  const DINING_EVENT = 'DINING_EVENT';
+  const FAMILY_EVENT = 'FAMILY_EVENT';
+  const FESTIVAL_EVENT = 'FESTIVAL_EVENT';
+  const FITNESS = 'FITNESS';
+  const FOOD_TASTING = 'FOOD_TASTING';
+  const FUNDRAISER = 'FUNDRAISER';
+  const LECTURE = 'LECTURE';
+  const MEETUP = 'MEETUP';
+  const MOVIE_EVENT = 'MOVIE_EVENT';
+  const MUSIC_EVENT = 'MUSIC_EVENT';
+  const NEIGHBORHOOD = 'NEIGHBORHOOD';
+  const NIGHTLIFE = 'NIGHTLIFE';
+  const OTHER = 'OTHER';
+  const RELIGIOUS_EVENT = 'RELIGIOUS_EVENT';
+  const SHOPPING = 'SHOPPING';
+  const SPORTS_EVENT = 'SPORTS_EVENT';
+  const THEATER_EVENT = 'THEATER_EVENT';
+  const VOLUNTEERING = 'VOLUNTEERING';
+  const WORKSHOP = 'WORKSHOP';
 }
