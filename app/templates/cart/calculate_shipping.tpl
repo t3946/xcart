@@ -16,7 +16,7 @@
                 <div class="column small-12">
                     <div class="buttons text-center">
                         <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                            {t 'Submit' dict='order'}
+                            {t 'Submit' }
                         </button>
                     </div>
                 </div>

@@ -33,13 +33,13 @@ class GoodsModule extends Module
             }
 
             if (!$manager) {
-                $byLine = 'asked by ' . $name;
+                $byLine = self::t('asked by ') . $name;
             } else {
-                $byLine = 'answered by ' . $name . ' (Staff)';
+                $byLine = self::t('answered by ') . $name . self::t(' (Staff)');
             }
 
             if (!empty($date)) {
-                $byLine .= ' on ' . static::createTextDate($date);
+                $byLine .= self::t(' on ') . static::createTextDate($date);
             }
 
             return $byLine;

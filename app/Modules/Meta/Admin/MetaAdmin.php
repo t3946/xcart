@@ -47,6 +47,6 @@ class MetaAdmin extends Admin
 
     public static function getName()
     {
-        return MetaModule::t('Meta information');
+        return 'Meta information';
     }
 }

@@ -98,7 +98,7 @@
                                                 <div class="category-menu-container">
                                                     <div class="category-menu">
                                                         <span class="menu-icon"></span>
-                                                        <span class="category-menu-title">Departments</span>
+                                                        <span class="category-menu-title">{t 'Departments'}</span>
                                                     </div>
                                                 </div>
                                                 {cache key = '_parts/_menu_desktop.tpl'}

@@ -13,14 +13,14 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title top-title">{t 'Purchase Order Details' dict='order'}</h2>
+                            <h2 class="title top-title">{t 'Purchase Order Details'}</h2>
                         </div>
                     </div>
                     <div class="columns">
                         <div class="row">
                             <div class="column small-12 large-6 large-offset-6 large-collapse-left text-center large-text-left">
                                 <div class="mandatory">
-                                    {t 'The fields marked with' dict='order'} <span class="required">*</span> {t 'are mandatory.' dict='order'}
+                                    {t 'The fields marked with'} <span class="required">*</span> {t 'are mandatory.'}
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title">{t 'Purchasing Manager' dict='order'}</h2>
+                            <h2 class="title">{t 'Purchasing Manager'}</h2>
                         </div>
                     </div>
                     <div class="columns">
@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title">{t 'Accounts Payable' dict='order'}</h2>
+                            <h2 class="title">{t 'Accounts Payable'}</h2>
                         </div>
                     </div>
                     <div class="columns">
@@ -71,7 +71,7 @@
             <div class="column small-12">
                 <div class="buttons text-center">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                        {t 'Submit order' dict='order'}
+                        {t 'Submit order'}
                     </button>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                 <div class="column small-12">
                     <div class="buttons text-center">
                         <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                            {t 'Submit order' dict='order'}
+                            {t 'Submit order'}
                         </button>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
             <div class="row align-center">
                 <div class="column small-12">
                     <div class="submit-notes text-center submit-order-comment">
-                        {t 'Submit your order and get transferred to a credit card payment system.' dict='order'}
+                        {t 'Submit your order and get transferred to a credit card payment system.'}
                     </div>
                 </div>
             </div>

@@ -23,7 +23,7 @@ class CustomerNotesForm extends FrontendForm
                 'label' => OrderModule::t('Customer notes'),
                 'className' => 'wide_footer',
                 'html' => [
-                    'placeholder' => 'Put order related instructions here',
+                    'placeholder' => OrderModule::t('Put order related instructions here'),
                 ],
             ],
         ];

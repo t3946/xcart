@@ -1,7 +1,7 @@
 {extends "admin/base.tpl"}
 
 {block 'heading'}
-    <h1>{t 'Creating'}</h1>
+    <h1>Creating</h1>
 {/block}
 
 {block 'main_block'}
@@ -13,16 +13,16 @@
             <div class="actions-panel">
                 <div class="buttons">
                     <button type="submit" name="save" value="save" class="button pad round">
-                        {t 'Save'}
+                        Save
                     </button>
 
                     <button type="submit" name="save" value="save-stay" class="button transparent pad round">
-                        {t 'Save and continue'}
+                        Save and continue
                     </button>
 
                     {if !$.request->get->has('popup')}
                     <button type="submit" name="save" value="save-create" class="button transparent pad round">
-                        {t 'Save and create'}
+                        Save and create
                     </button>
                     {/if}
                 </div>

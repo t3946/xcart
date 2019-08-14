@@ -109,7 +109,7 @@ class OrderTransactionStore extends BaseStore
                             'type' => $type
                         ]
                     );
-                    $this->log .= OrderModule::t('Transaction:') . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} <br/>";
+                    $this->log .= 'Transaction:' . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} <br/>";
                 }
 
                 $model->save();
@@ -118,7 +118,7 @@ class OrderTransactionStore extends BaseStore
 
                 $logStatus = $model->transaction_status;
 
-                $this->log .= OrderModule::t('Transaction:') . " {$model->transaction_id} {$logStatus} <br/>";
+                $this->log .= 'Transaction:' . " {$model->transaction_id} {$logStatus} <br/>";
 
                 self::lookupParentTransactions($model);
 

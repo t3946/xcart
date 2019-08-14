@@ -6,7 +6,7 @@
             </span>
         </span>
         <span class="text">
-            {t 'Cart' dict='cart'}
+            {t 'Cart' }
         </span>
     </a>
 </div>

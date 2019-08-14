@@ -25,7 +25,7 @@
         </div>
         <a class="table-product-group-close-line" data-toggle="product-group-{$gi}">
         <span class="label-hide-items">
-            <span class="up-icon-text">Hide items</span>
+            <span class="up-icon-text">{t 'Hide items'}</span>
             <span class="up-icon">
                 <svg class="triangle-up" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                     <path class="triangle-up-path" d="M4 24 H28 L16 6 z"/>

@@ -19,19 +19,19 @@ class MetaCreateForm extends ModelForm
         return [
             'is_custom' => [
                 'class' => CheckboxField::className(),
-                'label' => MetaModule::t('Is custom'),
+                'label' => 'Is custom',
             ],
             'title' => [
                 'class' => TextField::className(),
-                'label' => MetaModule::t('Title')
+                'label' => 'Title'
             ],
             'description' => [
                 'class' => TextAreaField::className(),
-                'label' => MetaModule::t('Description')
+                'label' => 'Description'
             ],
             'keywords' => [
                 'class' => TextAreaField::className(),
-                'label' => MetaModule::t('Keywords')
+                'label' => 'Keywords'
             ],
         ];
     }

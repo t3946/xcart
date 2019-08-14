@@ -17,7 +17,7 @@ class BrandRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Brand restriction');
+        return 'Brand restriction';
     }
 
     public function getTypeValidation()

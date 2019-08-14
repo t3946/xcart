@@ -48,7 +48,7 @@
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
                             <span class="green-circle-icon"></span>
-                            <span class="grey-text-label">Order online or call us. Operators are standing by!</span>
+                            <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
                         </div>
                         <div class="phone">
                             <span class="phone-number"><span class="small-number">(616)</span> 259-5711</span>
@@ -60,10 +60,10 @@
                             <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/images/icons/cart/place_order_online_icon.svg"
                                  alt=""
                                  class="clock-icon">
-                            <span>Place order online 24/7 or</span>
+                            <span>{t 'Place order online 24/7 or'}</span>
                         </div>
                         <div class="phone">
-                            <span class="phone-label">Call us toll free</span>
+                            <span class="phone-label">{t 'Call us toll free'}</span>
                             <span class="phone-number">1-800-929-2431</span>
                         </div>
                     </div>

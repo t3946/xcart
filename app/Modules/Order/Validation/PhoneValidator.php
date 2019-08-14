@@ -3,12 +3,21 @@
 
 namespace Modules\Order\Validation;
 
+use Modules\Translate\TranslateModule;
 use Xcart\App\Translate\Translate;
 use Xcart\App\Validation\Validator;
 
 class PhoneValidator extends Validator
 {
     private $message = 'Phone number is invalid';
+
+    public function __construct($message = null)
+    {
+        $this->message = TranslateModule::t('Phone number is invalid');
+        if (!empty($message)) {
+            $this->message = $message;
+        }
+    }
 
     public function validate($value)
     {

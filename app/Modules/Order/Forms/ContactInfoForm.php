@@ -3,6 +3,7 @@
 namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
+use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
@@ -18,24 +19,24 @@ class ContactInfoForm extends FrontendForm
         return [
             'firstname' => [
                 'class' => CharField::class,
-                'label' => 'Full name',
+                'label' => OrderModule::t('Full name'),
                 'required' => true,
-                'hint' => 'First and last name of the order contact person',
+                'hint' => OrderModule::t('First and last name of the order contact person'),
                 'html' => [
-                    'placeholder' => 'Albert H. Einstein'
+                    'placeholder' => OrderModule::t('Albert H. Einstein')
                 ],
             ],
 
             'phone' => [
                 'class' => CharField::class,
-                'label' => 'Phone',
+                'label' => OrderModule::t('Phone'),
                 'required' => true,
-                'hint' => 'Phone number at which you can be reached is a must, otherwise order processing will be delayed',
+                'hint' => OrderModule::t('Phone number at which you can be reached is a must, otherwise order processing will be delayed'),
                 'validators' => [
                     new PhoneValidator(),
                 ],
                 'html' => [
-                    'placeholder' => '(609) 924-8399',
+                    'placeholder' => OrderModule::t('(609) 924-8399'),
                     'class' => 'phone'
                 ],
                 'extend' => 'phone_ext',
@@ -43,7 +44,7 @@ class ContactInfoForm extends FrontendForm
 
             'phone_ext' => [
                 'class' => CharField::class,
-                'label' => 'ext',
+                'label' => OrderModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
                 ],
@@ -55,14 +56,14 @@ class ContactInfoForm extends FrontendForm
 
             'email' => [
                 'class' => EmailField::class,
-                'label' => 'Email',
-                'hint' => 'Order progress notifications will be sent here',
+                'label' => OrderModule::t('Email'),
+                'hint' => OrderModule::t('Order progress notifications will be sent here'),
                 'required' => true,
                 'validators' => [
                     new EmailValidator()
                 ],
                 'html' => [
-                    'placeholder' => 'albert.einstein@gmail.com',
+                    'placeholder' => OrderModule::t('albert.einstein@gmail.com'),
                 ],
             ],
         ];

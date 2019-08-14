@@ -1,17 +1,17 @@
 [
     {
         "name": "aws/aws-sdk-php",
-        "version": "3.109.1",
-        "version_normalized": "3.109.1.0",
+        "version": "3.109.2",
+        "version_normalized": "3.109.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/aws/aws-sdk-php.git",
-            "reference": "1fb0ddf20c9b1a82dcc4dbae2362bb6de1392d31"
+            "reference": "bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1fb0ddf20c9b1a82dcc4dbae2362bb6de1392d31",
-            "reference": "1fb0ddf20c9b1a82dcc4dbae2362bb6de1392d31",
+            "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72",
+            "reference": "bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72",
             "shasum": ""
         },
         "require": {
@@ -45,7 +45,7 @@
             "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
             "ext-sockets": "To use client-side monitoring"
         },
-        "time": "2019-08-09T18:17:08+00:00",
+        "time": "2019-08-12T18:14:30+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1033,6 +1033,133 @@
             "geoip2",
             "geolocation",
             "maxmind"
+        ]
+    },
+    {
+        "name": "gettext/gettext",
+        "version": "v4.6.3",
+        "version_normalized": "4.6.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/oscarotero/Gettext.git",
+            "reference": "70c6ff2fecd275e6ef9cdd542f55939a3d1904d6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/70c6ff2fecd275e6ef9cdd542f55939a3d1904d6",
+            "reference": "70c6ff2fecd275e6ef9cdd542f55939a3d1904d6",
+            "shasum": ""
+        },
+        "require": {
+            "gettext/languages": "^2.3",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "illuminate/view": "*",
+            "phpunit/phpunit": "^4.8|^5.7|^6.5",
+            "squizlabs/php_codesniffer": "^3.0",
+            "symfony/yaml": "~2",
+            "twig/extensions": "*",
+            "twig/twig": "^1.31|^2.0"
+        },
+        "suggest": {
+            "illuminate/view": "Is necessary if you want to use the Blade extractor",
+            "symfony/yaml": "Is necessary if you want to use the Yaml extractor/generator",
+            "twig/extensions": "Is necessary if you want to use the Twig extractor",
+            "twig/twig": "Is necessary if you want to use the Twig extractor"
+        },
+        "time": "2019-07-15T12:56:31+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Gettext\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Oscar Otero",
+                "email": "oom@oscarotero.com",
+                "homepage": "http://oscarotero.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP gettext manager",
+        "homepage": "https://github.com/oscarotero/Gettext",
+        "keywords": [
+            "JS",
+            "gettext",
+            "i18n",
+            "mo",
+            "po",
+            "translation"
+        ]
+    },
+    {
+        "name": "gettext/languages",
+        "version": "2.5.0",
+        "version_normalized": "2.5.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+            "reference": "78db2d17933f0765a102f368a6663f057162ddbd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/78db2d17933f0765a102f368a6663f057162ddbd",
+            "reference": "78db2d17933f0765a102f368a6663f057162ddbd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4"
+        },
+        "time": "2018-11-13T22:06:07+00:00",
+        "bin": [
+            "bin/export-plural-rules",
+            "bin/export-plural-rules.php"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Gettext\\Languages\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michele Locati",
+                "email": "mlocati@gmail.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "gettext languages with plural rules",
+        "homepage": "https://github.com/mlocati/cldr-to-gettext-plural-rules",
+        "keywords": [
+            "cldr",
+            "i18n",
+            "internationalization",
+            "l10n",
+            "language",
+            "languages",
+            "localization",
+            "php",
+            "plural",
+            "plural rules",
+            "plurals",
+            "translate",
+            "translations",
+            "unicode"
         ]
     },
     {
@@ -2383,17 +2510,17 @@
     },
     {
         "name": "nikic/php-parser",
-        "version": "v4.2.2",
-        "version_normalized": "4.2.2.0",
+        "version": "v4.2.3",
+        "version_normalized": "4.2.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nikic/PHP-Parser.git",
-            "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420"
+            "reference": "e612609022e935f3d0337c1295176505b41188c8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
-            "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
+            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e612609022e935f3d0337c1295176505b41188c8",
+            "reference": "e612609022e935f3d0337c1295176505b41188c8",
             "shasum": ""
         },
         "require": {
@@ -2401,9 +2528,9 @@
             "php": ">=7.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "^6.5 || ^7.0"
+            "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
         },
-        "time": "2019-05-25T20:07:01+00:00",
+        "time": "2019-08-12T20:17:41+00:00",
         "bin": [
             "bin/php-parse"
         ],
@@ -4147,42 +4274,54 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v3.0.9",
-        "version_normalized": "3.0.9.0",
+        "version": "v4.3.3",
+        "version_normalized": "4.3.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "eee6c664853fd0576f21ae25725cfffeafe83f26"
+            "reference": "4e3e39cc485304f807622bdc64938e4633396406"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/eee6c664853fd0576f21ae25725cfffeafe83f26",
-            "reference": "eee6c664853fd0576f21ae25725cfffeafe83f26",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/4e3e39cc485304f807622bdc64938e4633396406",
+            "reference": "4e3e39cc485304f807622bdc64938e4633396406",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.5.9",
-            "symfony/polyfill-mbstring": "~1.0"
+            "php": "^7.1.3",
+            "symfony/polyfill-mbstring": "~1.0",
+            "symfony/translation-contracts": "^1.1.2"
         },
         "conflict": {
-            "symfony/config": "<2.8"
+            "symfony/config": "<3.4",
+            "symfony/dependency-injection": "<3.4",
+            "symfony/yaml": "<3.4"
+        },
+        "provide": {
+            "symfony/translation-implementation": "1.0"
         },
         "require-dev": {
             "psr/log": "~1.0",
-            "symfony/config": "~2.8|~3.0",
-            "symfony/intl": "~2.8|~3.0",
-            "symfony/yaml": "~2.8|~3.0"
+            "symfony/config": "~3.4|~4.0",
+            "symfony/console": "~3.4|~4.0",
+            "symfony/dependency-injection": "~3.4|~4.0",
+            "symfony/finder": "~2.8|~3.0|~4.0",
+            "symfony/http-kernel": "~3.4|~4.0",
+            "symfony/intl": "~3.4|~4.0",
+            "symfony/service-contracts": "^1.1.2",
+            "symfony/var-dumper": "~3.4|~4.0",
+            "symfony/yaml": "~3.4|~4.0"
         },
         "suggest": {
-            "psr/log": "To use logging capability in translator",
+            "psr/log-implementation": "To use logging capability in translator",
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2016-07-30T07:22:48+00:00",
+        "time": "2019-07-18T10:34:59+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.0-dev"
+                "dev-master": "4.3-dev"
             }
         },
         "installation-source": "dist",
@@ -4212,53 +4351,123 @@
         "homepage": "https://symfony.com"
     },
     {
-        "name": "symfony/validator",
-        "version": "v2.8.50",
-        "version_normalized": "2.8.50.0",
+        "name": "symfony/translation-contracts",
+        "version": "v1.1.5",
+        "version_normalized": "1.1.5.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/validator.git",
-            "reference": "d5d2090bba3139d8ddb79959fbf516e87238fe3a"
+            "url": "https://github.com/symfony/translation-contracts.git",
+            "reference": "cb4b18ad7b92a26e83b65dde940fab78339e6f3c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/validator/zipball/d5d2090bba3139d8ddb79959fbf516e87238fe3a",
-            "reference": "d5d2090bba3139d8ddb79959fbf516e87238fe3a",
+            "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/cb4b18ad7b92a26e83b65dde940fab78339e6f3c",
+            "reference": "cb4b18ad7b92a26e83b65dde940fab78339e6f3c",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.9",
+            "php": "^7.1.3"
+        },
+        "suggest": {
+            "symfony/translation-implementation": ""
+        },
+        "time": "2019-06-13T11:15:36+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Contracts\\Translation\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Generic abstractions related to translation",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "abstractions",
+            "contracts",
+            "decoupling",
+            "interfaces",
+            "interoperability",
+            "standards"
+        ]
+    },
+    {
+        "name": "symfony/validator",
+        "version": "v3.4.30",
+        "version_normalized": "3.4.30.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/validator.git",
+            "reference": "d10a8b1d632086666ca57ae6081f2cbf73037fb2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/validator/zipball/d10a8b1d632086666ca57ae6081f2cbf73037fb2",
+            "reference": "d10a8b1d632086666ca57ae6081f2cbf73037fb2",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.5.9|>=7.0.8",
             "symfony/polyfill-ctype": "~1.8",
             "symfony/polyfill-mbstring": "~1.0",
-            "symfony/translation": "~2.4|~3.0.0"
+            "symfony/translation": "~2.8|~3.0|~4.0"
+        },
+        "conflict": {
+            "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0",
+            "symfony/dependency-injection": "<3.3",
+            "symfony/http-kernel": "<3.3.5",
+            "symfony/yaml": "<3.4"
         },
         "require-dev": {
             "doctrine/annotations": "~1.0",
             "doctrine/cache": "~1.0",
-            "egulias/email-validator": "^1.2.1",
-            "symfony/config": "~2.2|~3.0.0",
-            "symfony/expression-language": "~2.4|~3.0.0",
-            "symfony/http-foundation": "~2.3|~3.0.0",
-            "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-            "symfony/property-access": "~2.3|~3.0.0",
-            "symfony/yaml": "^2.0.5|~3.0.0"
+            "egulias/email-validator": "^1.2.8|~2.0",
+            "symfony/cache": "~3.1|~4.0",
+            "symfony/config": "~2.8|~3.0|~4.0",
+            "symfony/dependency-injection": "~3.3|~4.0",
+            "symfony/expression-language": "~2.8|~3.0|~4.0",
+            "symfony/http-foundation": "~2.8|~3.0|~4.0",
+            "symfony/http-kernel": "^3.3.5|~4.0",
+            "symfony/intl": "^2.8.18|^3.2.5|~4.0",
+            "symfony/property-access": "~2.8|~3.0|~4.0",
+            "symfony/var-dumper": "~3.3|~4.0",
+            "symfony/yaml": "~3.4|~4.0"
         },
         "suggest": {
             "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
             "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
             "egulias/email-validator": "Strict (RFC compliant) email validation",
+            "psr/cache-implementation": "For using the metadata cache.",
             "symfony/config": "",
-            "symfony/expression-language": "For using the 2.4 Expression validator",
+            "symfony/expression-language": "For using the Expression validator",
             "symfony/http-foundation": "",
             "symfony/intl": "",
-            "symfony/property-access": "For using the 2.4 Validator API",
+            "symfony/property-access": "For accessing properties within comparison constraints",
             "symfony/yaml": ""
         },
-        "time": "2018-11-14T14:06:48+00:00",
+        "time": "2019-07-19T11:52:08+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.8-dev"
+                "dev-master": "3.4-dev"
             }
         },
         "installation-source": "dist",

@@ -44,48 +44,48 @@ class BrandModel extends Model
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t('Description')
+                'verboseName' => 'Description'
             ],
             'brand' => [
                 'class' => CharField::class,
                 'null' => false,
-                'verboseName' => BrandModule::t('Brand'),
+                'verboseName' => 'Brand',
             ],
             'meta_descr' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t('SEO meta description')
+                'verboseName' => 'SEO meta description'
             ],
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => 'Y',
-                'verboseName' => BrandModule::t('Availability')
+                'verboseName' => 'Availability'
             ],
             'prevent_search_indexing_of_all_brand_products' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => 'N',
-                'verboseName' => BrandModule::t('Prevent search indexing of all brand products')
+                'verboseName' => 'Prevent search indexing of all brand products'
             ],
             'prevent_search_indexing_brand_page' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => 'N',
-                'verboseName' => BrandModule::t('Prevent search indexing brand page')
+                'verboseName' => 'Prevent search indexing brand page'
             ],
             'disclaimer_text' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t('Brand disclaimer')
+                'verboseName' => 'Brand disclaimer'
             ],
             'title' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t("Title (<title>)")
+                'verboseName' => "Title (<title>)"
             ],
             'url' => [
                 'class' => CharField::class,
@@ -96,7 +96,7 @@ class BrandModel extends Model
                 'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
-                'verboseName' => BrandModule::t('Order by')
+                'verboseName' => 'Order by'
             ],
             'product_brand_name' => [
                 'class' => CharField::class,
@@ -127,13 +127,13 @@ class BrandModel extends Model
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t('SEO brand name (<H1>)')
+                'verboseName' => 'SEO brand name (<H1>)'
             ],
             'SEO_h2' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => BrandModule::t("SEO (<H2>)")
+                'verboseName' => "SEO (<H2>)"
             ],
             'brand_storefront' => [
                 'class' => HasManyField::class,

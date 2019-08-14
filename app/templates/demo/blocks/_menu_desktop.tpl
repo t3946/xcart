@@ -39,7 +39,7 @@
                     </ul>
 
                     <div class="view-all-container">
-                        <a href="#" class="view-all">View all departments</a>
+                        <a href="#" class="view-all">{t 'View all departments'}</a>
                     </div>
                 </div>
 

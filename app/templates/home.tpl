@@ -20,7 +20,7 @@
                     {if $product}
                     <a href="{$product->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/product_of_day.jpg">
                         <div class="product-of-the-day_cover banner__info">
-                            <div class="product-of-the-day__caption">Product of the day</div>
+                            <div class="product-of-the-day__caption">{t 'Product of the day'}</div>
                         </div>
                     </a>
                     {/if}
@@ -34,8 +34,7 @@
                 <div class="banner bestsellers dark">
                     <a href="{url 'catalog:bestsellers'}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/bestsellers.jpg">
                         <div class="banner__info">
-                            <div class="caption">Bestsellers</div>
-                            {*<div class="description">Try it for 90 days. Enjoy it for 25 years > </div>*}
+                            <div class="caption">{t 'Bestsellers'}</div>
                         </div>
                     </a>
                 </div>
@@ -44,7 +43,7 @@
                     {if $category_new}
                         <a href="{$category_new->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
                             <div class="banner__info">
-                                <div class="caption">What’s new</div>
+                                <div class="caption">{t 'What\'s new'}</div>
                             </div>
                         </a>
                     {/if}
@@ -62,22 +61,22 @@
                 <div class="links">
 
                     <a class="icon brands show-for-large"
-                       href="{url 'brand:list'}">Brands</a>
+                       href="{url 'brand:list'}">{t 'Brands'}</a>
                     {if ($category_new)}
                     <a class="icon new"
-                       href="{$category_new->getAbsoluteUrl()}">What's new</a>
+                       href="{$category_new->getAbsoluteUrl()}">{t 'What\'s new'}</a>
                     {/if}
 
                     <a class="icon bestsellers"
-                       href="{url 'catalog:bestsellers'}">Bestsellers</a>
+                       href="{url 'catalog:bestsellers'}">{t 'Bestsellers'}</a>
 
                     {if $product}
                     <a class="icon day"
-                       href="{$product->getAbsoluteUrl()}">Product of the day</a>
+                       href="{$product->getAbsoluteUrl()}">{t 'Product of the day'}</a>
                     {/if}
 
                     <a class="icon featured"
-                       href="{url 'catalog:featured'}">Featured products</a>
+                       href="{url 'catalog:featured'}">{t 'Featured products'}</a>
 
                 </div>
             </div>
@@ -88,7 +87,8 @@
     <div class="row">
         <div class="small-12 column slider-products slider-featured-product">
             {set $link}{url 'catalog:featured'}{/set}
-            {include 'slider/base_product_slider.tpl' title='Featured product' link=$link}
+            {set $title}{t 'Featured products'}{/set}
+            {include 'slider/base_product_slider.tpl' title=$title link=$link}
         </div>
     </div>
 
@@ -96,7 +96,8 @@
         <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
             {if $category_new}
-                {include 'slider/base_product_slider.tpl' title="What's new" link=$category_new->getAbsoluteUrl() data_link=$link}
+                {set $title}{t 'What\'s new'}{/set}
+                {include 'slider/base_product_slider.tpl' title=$title link=$category_new->getAbsoluteUrl() data_link=$link}
             {/if}
         </div>
     </div>

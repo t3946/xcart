@@ -58,7 +58,7 @@
                 <div class="row align-justify align-middle">
                     <div class="column shrink sku">
                         <span class="value">
-                            SKU: <span class="style">{$model->productcode}</span>
+                            {t 'SKU'}: <span class="style">{$model->productcode}</span>
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
@@ -136,7 +136,7 @@
                         </datalist>
                     {else}
                         <div class="not-avail-thumb">
-                            <p>Image not available</p>
+                            <p>{t 'Image not available'}</p>
                         </div>
                     {/if}
 
@@ -157,7 +157,7 @@
 
                 {if $model->descr}
                     <div class="highlights show-for-ml">
-                        <div class="h2 title">Product Highlights</div>
+                        <div class="h2 title">{t 'Product Highlights'}</div>
                         {raw $model->descr}
                     </div>
                 {/if}
@@ -171,7 +171,7 @@
                                 {if $parent}
                                     <div class="link__group_root">
                                         <a href="{$parent->getAbsoluteUrl()}">
-                                            Full {$parent->getFrontendName()} product line
+                                            {t 'Full'} {$parent->getFrontendName()} {t 'product line'}
                                         </a>
                                     </div>
                                 {/if}
@@ -181,8 +181,8 @@
                         <div class="full_line__group_root buttons">
                             {ignore}
                                 <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"
-                                   class="button yellow waves waves-orange waves-effect default-style">Full product line</a>
-                                <div class="info">Click here to see full product line</div>
+                                   class="button yellow waves waves-orange waves-effect default-style">{t 'Full product line'}</a>
+                                <div class="info">{t 'Click here to see full product line'}</div>
                             {/ignore}
                         </div>
                     {/if}
@@ -205,19 +205,22 @@
     <div class="row">
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
-            {include 'slider/base_product_slider.tpl' title="Customers Who Bought This Item Also Bought" link=$link hide=true hide_link=true}
+            {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-related">
             {set $link}{url 'catalog:related' id=$model->pk}{/set}
-            {include 'slider/base_product_slider.tpl' title="Similar products" link=$link hide=true hide_link=true}
+            {set $lbl}{t 'Similar products'}{/set}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-viewed">
             {set $link}{url 'catalog:viewed'}{/set}
-            {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
+            {set $lbl}{t 'You recently viewed items'}{/set}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
         </div>
     </div>
 {/block}

@@ -1,7 +1,7 @@
 <section class="info_tabs">
     <ul class="tabs" data-responsive-accordion-tabs="tabs small-accordion large-tabs" data-allow-all-closed="true" data-multi-expand="true" id="product_tabs">
         <li class="tabs-title is-active">
-          <a href="#description" aria-selected="true">Description</a>
+          <a href="#description" aria-selected="true">{t 'Description'}</a>
         </li>
 
         {*<li class="tabs-title">*}
@@ -9,7 +9,7 @@
         {*</li>*}
 
         <li class="tabs-title">
-          <a href="#shipping" aria-selected="false">Shipping</a>
+          <a href="#shipping" aria-selected="false">{t 'Shipping'}</a>
         </li>
 
         {foreach $tabs as $tab}
@@ -25,7 +25,7 @@
         {*</li>*}
 
         <li class="tabs-title">
-          <a href="#questions" aria-selected="false">Product questions</a>
+          <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
     </ul>
 

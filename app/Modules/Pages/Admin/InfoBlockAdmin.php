@@ -30,11 +30,11 @@ class InfoBlockAdmin extends Admin
 
     public static function getName()
     {
-        return PagesModule::t('Text blocks');
+        return 'Text blocks';
     }
 
     public static function getItemName()
     {
-        return PagesModule::t('Text block');
+        return 'Text block';
     }
 }

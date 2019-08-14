@@ -33,21 +33,21 @@ class MetaTemplate extends Model
             'id' => AutoField::className(),
             'title' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Title")
+                'verboseName' => "Title"
             ],
             'code' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Code"),
+                'verboseName' => "Code",
                 'unique' => true,
             ],
             'description' => [
                 'class' => TextField::className(),
-                'verboseName' => MetaModule::t('Description'),
+                'verboseName' => 'Description',
                 'null' => true
             ],
             'advanced' => [
                 'class' => JsonField::className(),
-                'verboseName' => MetaModule::t('Advanced fields'),
+                'verboseName' => 'Advanced fields',
                 'null' => true
             ],
         ];

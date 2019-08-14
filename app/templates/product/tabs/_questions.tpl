@@ -20,7 +20,7 @@
                 <div class="column no-padding small-12">
                     <div class="buttons text-center">
                         <button type="submit" class="button yellow-white waves waves-orange waves-effect">
-                            {t 'Submit question' dict='order'}
+                            {t 'Submit question' }
                         </button>
                     </div>
                 </div>

@@ -53,11 +53,11 @@ class ListConfigModel extends Model
             ],
             'list_icon' => [
                 'class' => ImageField::className(),
-                'verboseName' => SitesModule::t('Icon on list'),
+                'verboseName' => 'Icon on list',
             ],
             'list_image' => [
                 'class' => ImageField::className(),
-                'verboseName' => SitesModule::t('Icon background on list'),
+                'verboseName' => 'Icon background on list',
                 'sizes' => [
                     'q85' => [
                         176, 176,
@@ -79,7 +79,7 @@ class ListConfigModel extends Model
             ],
             'position' => [
                 'class' => IntField::className(),
-                'verboseName' => SitesModule::t('Position in list'),
+                'verboseName' => 'Position in list',
                 'default' => 9999,
             ],
         ];

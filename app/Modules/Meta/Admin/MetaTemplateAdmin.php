@@ -25,6 +25,6 @@ class MetaTemplateAdmin extends Admin
 
     public static function getName()
     {
-        return MetaModule::t('Meta templates');
+        return 'Meta templates';
     }
 }

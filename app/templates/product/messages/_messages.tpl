@@ -3,7 +3,8 @@
 {if !$model->isGroupRoot()}
     {if !$model->isOutOfStock()}
         {if $model->isFreeShipping()}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text="Free Shipping within contiguous U.S."}
+            {set $lbl}{t 'Free Shipping within contiguous U.S.'}{/set}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text=$lbl}
         {/if}
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}

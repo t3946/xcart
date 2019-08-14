@@ -29,4 +29,5 @@ return [
     'Landing',
     'Subscribe',
     'Xero',
+    'Translate',
 ];

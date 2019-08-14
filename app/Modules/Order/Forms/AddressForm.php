@@ -7,6 +7,7 @@ use Modules\Core\Forms\FrontendModelForm;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\CountryModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
@@ -24,45 +25,45 @@ abstract class AddressForm extends FrontendForm
         return [
             'firstname' => [
                 'class' => CharField::class,
-                'label' => 'Full Name',
-                'hint' => 'The order will be shipped under this name',
+                'label' => OrderModule::t('Full Name'),
+                'hint' => OrderModule::t('The order will be shipped under this name'),
                 'required' => true,
                 'html' => [
-                    'placeholder' => 'Albert H. Einstein'
+                    'placeholder' => OrderModule::t('Albert H. Einstein')
                 ]
             ],
 
             'company' => [
                 'class' => CharField::class,
-                'label' => 'Company',
-                'hint' => 'Fill in if shipping to a corporate or university address',
+                'label' => OrderModule::t('Company'),
+                'hint' => OrderModule::t('Fill in if shipping to a corporate or university address'),
                 'html' => [
-                    'placeholder' => 'Eureka Inc.'
+                    'placeholder' => OrderModule::t('Eureka Inc.')
                 ],
             ],
 
             'address' => [
                 'class' => CharField::class,
-                'label' => 'Address',
+                'label' => OrderModule::t('Address'),
                 'required' => true,
-                'hint' => 'Street address please, we don\'t ship to P.O. boxes',
+                'hint' => OrderModule::t("Street address please, we don't ship to P.O. boxes"),
                 'html' => [
-                    'placeholder' => '112 Mercer Street',
+                    'placeholder' => OrderModule::t('112 Mercer Street'),
                 ],
             ],
 
             'address_2' => [
                 'class' => CharField::class,
-                'label' => 'Address (line 2)',
-                'hint' => 'Apartment, suite, floor, etc.',
+                'label' => OrderModule::t('Address (line 2)'),
+                'hint' => OrderModule::t('Apartment, suite, floor, etc.'),
                 'html' => [
-                    'placeholder' => 'Apt 1'
+                    'placeholder' => OrderModule::t('Apt 1')
                 ],
             ],
 
             'country' => [
                 'class' => CharField::class,
-                'label' => 'Country',
+                'label' => OrderModule::t('Country'),
                 'required' => true,
                 'validators' => [
                     new CountryValidator()
@@ -84,7 +85,7 @@ abstract class AddressForm extends FrontendForm
 
             'zipcode' => [
                 'class' => CharField::class,
-                'label' => 'Zip/Postal Code',
+                'label' => OrderModule::t('Zip/Postal Code'),
                 'required' => true,
                 'validators' => [
                     new ZipCodeValidator()
@@ -98,7 +99,7 @@ abstract class AddressForm extends FrontendForm
 
             'state' => [
                 'class' => CharField::class,
-                'label' => 'State/Province',
+                'label' => OrderModule::t('State/Province'),
                 'required' => true,
                 'validators' => [
                     new StateValidator(['country' => 'country'])
@@ -118,7 +119,7 @@ abstract class AddressForm extends FrontendForm
 
             'city' => [
                 'class' => CharField::class,
-                'label' => 'City',
+                'label' => OrderModule::t('City'),
                 'required' => true,
                 'html' => [
                     'placeholder' => $geoIp['city'] ?? 'Princeton',

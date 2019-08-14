@@ -20,7 +20,7 @@ class DefaultRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Defaults validation');
+        return 'Defaults validation';
     }
 
     public function getTypeValidation()

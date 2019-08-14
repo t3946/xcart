@@ -1,16 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 27.06.2018
- * Time: 16:00
- */
 
 namespace Modules\Goods\Forms;
 
 use Modules\Core\Components\GlobalConfig;
 use Modules\Core\Forms\FrontendModelForm;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Main\Models\DepartmentsModel;
 use Modules\Order\Validation\PhoneValidator;
@@ -50,17 +45,17 @@ class ProductQuestionForm extends FrontendModelForm
             ],
             'firstname' => [
                 'class' => CharField::class,
-                'label' => 'Your first name',
+                'label' => GoodsModule::t('Your first name'),
                 'html' => [
-                    'placeholder' => 'Albert'
+                    'placeholder' => GoodsModule::t('Albert')
                 ],
                 'required' => true,
             ],
             'email' => [
                 'class' => CharField::class,
-                'label' => 'Your email',
+                'label' => GoodsModule::t('Your email'),
                 'html' => [
-                    'placeholder' => 'albert.einstein@gmail.com'
+                    'placeholder' => GoodsModule::t('albert.einstein@gmail.com')
                 ],
                 'required' => true,
                 'validators' => [
@@ -69,9 +64,9 @@ class ProductQuestionForm extends FrontendModelForm
             ],
             'phone' => [
                 'class' => CharField::class,
-                'label' => 'Your phone',
+                'label' => GoodsModule::t('Your phone'),
                 'html' => [
-                    'placeholder' => '(609) 734-8000',
+                    'placeholder' => GoodsModule::t('(609) 734-8000'),
                     'class' => 'phone'
                 ],
                 'required' => true,
@@ -82,7 +77,7 @@ class ProductQuestionForm extends FrontendModelForm
             ],
             'phone_ext' => [
                 'class' => CharField::class,
-                'label' => 'ext',
+                'label' => GoodsModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
                 ],
@@ -93,10 +88,10 @@ class ProductQuestionForm extends FrontendModelForm
             ],
             'question' => [
                 'class' => TextField::class,
-                'label' => 'Product question',
-                'hint' => 'Please don\'t mention your email and your phone in this field.',
+                'label' => GoodsModule::t('Product question'),
+                'hint' => GoodsModule::t("Please don't mention your email and your phone in this field."),
                 'html' => [
-                    'placeholder' => 'Please type your product question here'
+                    'placeholder' => GoodsModule::t('Please type your product question here')
                 ],
                 'required' => true,
             ],

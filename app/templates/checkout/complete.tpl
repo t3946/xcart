@@ -42,9 +42,9 @@
             <div class="row align-center">
                 <div class="column text-align--center">
                     <div class="green-border">
-                        <div class="title show-for-large">{t 'Order Confirmation' dict='order'}</div>
-                        <div>{t 'Your order has been successfuly placed. An order confirmation email has been sent to your email address.' dict='order'}</div>
-                        <div>{t 'Thank you for shopping with S3 Stores, Inc. We appreciate your business!' dict='order'}</div>
+                        <div class="title show-for-large">{t 'Order Confirmation' }</div>
+                        <div>{t 'Your order has been successfuly placed. An order confirmation email has been sent to your email address.' }</div>
+                        <div>{t 'Thank you for shopping with S3 Stores, Inc. We appreciate your business!' }</div>
                     </div>
                 </div>
             </div>
@@ -56,11 +56,11 @@
             <div class="row align-center">
                 <div class="column text-align--center">
                     <div class="title">
-                        {t 'Order #' dict='order'} {$order->getOrderNumber()}
+                        {t 'Order #' } {$order->getOrderNumber()}
                     </div>
                     {if $order->payment_method == 'Purchase Order'}
                         <div class="purchase-order-title hide-for-medium">
-                            {t 'Purchase order #' dict='order'} {$extra->purchase_order['po_number']}
+                            {t 'Purchase order #' } {$extra->purchase_order['po_number']}
                         </div>
                     {/if}
                 </div>
@@ -73,21 +73,21 @@
                             <div class="row">
                                 <div class="column small-5 medium-4 ml-5 large-6">
                                     <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
-                                         alt="{t 'S3 Stores, Inc.' dict='order'}" class="logo-big">
+                                         alt="{t 'S3 Stores, Inc.' }" class="logo-big">
                                     <div class="place-for-witter"></div>
                                 </div>
                                 <div class="column">
                                     <div class="text-item group-items-title">
-                                        {t 'S3 Stores, Inc.' dict='order'}
+                                        {t 'S3 Stores, Inc.' }
                                     </div>
                                     <div class="text-item">
-                                        {t '27 Joseph St.' dict='order'}
+                                        {t '27 Joseph St.' }
                                     </div>
                                     <div class="text-item">
-                                        {t 'Chatham, Ontario, N7L 3G4' dict='order'}
+                                        {t 'Chatham, Ontario, N7L 3G4' }
                                     </div>
                                     <div class="text-item">
-                                        {t 'Canada' dict='order'}
+                                        {t 'Canada' }
                                     </div>
                                 </div>
                             </div>
@@ -95,20 +95,20 @@
 
                         <div class="columns small-12 ml-6 large-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Toll free:' dict='order'}</div>
-                                <div class="column">{t '1-800-929-2431' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Toll free:' }</div>
+                                <div class="column">{t '1-800-929-2431' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Local phone:' dict='order'}</div>
-                                <div class="column">{t '(616) 259-5711' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Local phone:' }</div>
+                                <div class="column">{t '(616) 259-5711' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
-                                <div class="column">{t '1-800-929-2835' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' }</div>
+                                <div class="column">{t '1-800-929-2835' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
-                                <div class="column">{t 'orders@s3stores.com' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' }</div>
+                                <div class="column">{t 'orders@s3stores.com' }</div>
                             </div>
                         </div>
                     </div>
@@ -120,19 +120,19 @@
                     <div class="row ordering-info align-spaced line line-1">
                         <div class="columns small-12 ml-6 large-4">
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Date:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Date:' }</div>
                                 <div class="column">{$order->date|date_format:'%d-%b-%Y'}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Order status:' dict='order'}</div>
-                                <div class="column">{t 'please see below' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Order status:' }</div>
+                                <div class="column">{t 'please see below' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Payment method:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Payment method:' }</div>
                                 <div class="column">{$order->payment_method}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods:' }</div>
                                 <div class="column">
                                     {foreach $order->groups as $group}
                                         {set $s_model = $group->shippingModel}
@@ -147,18 +147,18 @@
                         </div>
                         <div class="columns small-12 ml-6 large-4">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Contact information' dict='order'}</div>
+                                <div class="column small-12 label group-items-title">{t 'Contact information' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' }</div>
                                 <div class="column">{$order->firstname}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' }</div>
                                 <div class="column">{$order->phone}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' }</div>
                                 <div class="column">{$order->email}</div>
                             </div>
                         </div>
@@ -166,71 +166,71 @@
                     <div class="row ordering-info align-spaced line line-2">
                         <div class="columns small-12 ml-6 large-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Shipping address' dict='order'}</div>
+                                <div class="column small-12 label group-items-title">{t 'Shipping address' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' }</div>
                                 <div class="column">{$shipping_info['firstname']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company:' }</div>
                                 <div class="column">{$shipping_info['company']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address:' }</div>
                                 <div class="column">{$shipping_info['address'][0]} {if $shipping_info['address'][1]}
                                         <br/>
                                         {$shipping_info['address'][1]}{/if}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City:' }</div>
                                 <div class="column">{$shipping_info['city']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province:' }</div>
                                 <div class="column">{$shipping_info['state']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country:' }</div>
                                 <div class="column">{$shipping_info['country']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code:' }</div>
                                 <div class="column">{$shipping_info['zipcode']}</div>
                             </div>
                         </div>
                         <div class="columns small-12 ml-6 large-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Billing address' dict='order'}</div>
+                                <div class="column small-12 label group-items-title">{t 'Billing address' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' }</div>
                                 <div class="column">{$billing_info['firstname']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company:' }</div>
                                 <div class="column">{$billing_info['company']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address:' }</div>
                                 <div class="column">{$billing_info['address'][0]} {if $billing_info['address'][1]}
                                         <br/>
                                         {$billing_info['address'][1]}{/if}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City:' }</div>
                                 <div class="column">{$billing_info['city']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province:' }</div>
                                 <div class="column">{$billing_info['state']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country:' }</div>
                                 <div class="column">{$billing_info['country']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code:' dict='order'}</div>
+                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code:' }</div>
                                 <div class="column">{$billing_info['zipcode']}</div>
                             </div>
                         </div>
@@ -246,14 +246,14 @@
                         <div class="row ordering-info align-spaced line-3 line">
                             <div class="columns small-12 ml-6 large-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Purchase order information' dict='order'}</div>
+                                    <div class="column small-12 label group-items-title">{t 'Purchase order information' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'PO number:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'PO number:' }</div>
                                     <div class="column">{$extra->purchase_order['po_number']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company name:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company name:' }</div>
                                     <div class="column">{$extra->purchase_order['company_name']}</div>
                                 </div>
                             </div>
@@ -263,43 +263,43 @@
                         <div class="row ordering-info align-spaced line-3 line">
                             <div class="columns small-12 ml-6 large-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Purchase manager' dict='order'}</div>
+                                    <div class="column small-12 label group-items-title">{t 'Purchase manager' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' }</div>
                                     <div class="column">{$extra->purchase_order['name_of_purchaser']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' }</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_phone']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' }</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' }</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_email']}</div>
                                 </div>
                             </div>
                             <div class="columns small-12 ml-6 large-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Accounts payable' dict='order'}</div>
+                                    <div class="column small-12 label group-items-title">{t 'Accounts payable' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name:' }</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_full_name']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone:' }</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_phone']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax:' }</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' dict='order'}</div>
+                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email:' }</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_email']}</div>
                                 </div>
                             </div>

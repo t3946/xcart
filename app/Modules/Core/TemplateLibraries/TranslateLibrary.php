@@ -2,6 +2,7 @@
 namespace Modules\Core\TemplateLibraries;
 
 use Xcart\App\Template\TemplateLibrary;
+use Xcart\App\Translate\Translate;
 
 class TranslateLibrary extends TemplateLibrary
 {
@@ -12,7 +13,7 @@ class TranslateLibrary extends TemplateLibrary
      */
     public static function trn($trn, $dict = 'main')
     {
-        return $trn;
+        return Translate::getInstance()->t($dict, $trn);
     }
 
 
