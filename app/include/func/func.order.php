@@ -10,6 +10,8 @@ use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Sites\Models\CurrencyModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\SurfPathModel;
@@ -2143,10 +2145,8 @@ function func_get_order_manufacturers($orderid)
                         }
                     }
 
-                    /** @var \Xcart\OrderGroup $oOrderGroup */
-                    $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
-                    if ($oOrderGroup) {
-                        $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
+                    if ($order_group) {
+                        $total_product_cost_to_us = $order_group->getTotalCostToUs();
                     }
                     $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
@@ -2231,9 +2231,16 @@ function func_get_order_manufacturers($orderid)
                     $order_products .= '<hr style="width:100%; margin: 5px 0 -5px 0; border: 0 none; border-bottom: 1px solid #999999;">S3 Stores, Inc.<br />Phone: ' . $config["Company"]["company_phone"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br />URL: <a href="http://www.s3stores.com">www.s3stores.com</a>';
                     $mess_body .= '<br />' . $order_products;
 
-                    $mess_body = str_replace("{{signature}}", $signature, $mess_body);
-                    $mess_body = str_replace("{{userfirstname}}", $userfirstname, $mess_body);
-                    $mess_body = str_replace("{{userfullname}}", $userfullname, $mess_body);
+                    $mess_body = str_replace(['{{signature}}', '{{userfirstname}}', '{{userfullname}}'], [$signature, $userfirstname, $userfullname], $mess_body);
+
+                    /** @var SiteModel $site */
+                    $site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+                    /** @var CurrencyModel $currency */
+                    $currency = $site->getCurrency();
+
+                    $fq = $order_group->actual_shipping_net > 0 ? $currency . $currency->getCurrencyFormat($order_group->actual_shipping_net) : 'N/A';
+
+                    $mess_body = str_replace(['{{first_dx_shipping_quoted}}'], [$fq], $mess_body);
 
                     $mnfs[$m_id]['mess_body'] = $mess_body;
 
