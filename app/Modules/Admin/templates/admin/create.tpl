@@ -40,7 +40,7 @@
                         <a target="_blank" href="{$model->getAbsoluteUrl()}">
                             <i class="icon-watch_on_site"></i>
                             <span class="text">
-                                {t 'Show on site'}
+                                Show on site
                             </span>
                         </a>
                     {/if}
@@ -49,7 +49,7 @@
                         <a href="{$admin->getRemoveUrl($model->pk)}" data-all="{$admin->getAllUrl()}" data-prevention data-title="Вы действительно хотите удалить данный объект?" data-trigger="form-removed">
                             <i class="icon-delete_in_filter"></i>
                             <span class="text">
-                                {t 'Delete'}
+                                Delete
                             </span>
                         </a>
                     {/if}

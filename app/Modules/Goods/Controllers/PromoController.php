@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
@@ -25,7 +26,7 @@ class PromoController extends AbstractCatalogController
 
         $bread = new Breadcrumbs();
 
-        $bread->add('Bestsellers');
+        $bread->add(GoodsModule::t('Bestsellers'));
 
         $this->setMetaBase(MetaType::BESTSELLER,[
             'model' => Xcart::app()->getModule('Sites')->getSite(),
@@ -33,7 +34,7 @@ class PromoController extends AbstractCatalogController
 
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
-            'title' => 'Bestsellers',
+            'title' => GoodsModule::t('Bestsellers'),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread),
         ];
         $this->view_internal();
@@ -46,7 +47,7 @@ class PromoController extends AbstractCatalogController
 
         $site = Xcart::app()->getModule('Sites')->getSite();
         $category_new = CategoryModel::objects()->filter([
-            'category' => 'New Products',
+            'category' => GoodsModule::t('New Products'),
             'storefrontid' => $site->pk,
             'level' => 1
         ])
@@ -80,7 +81,7 @@ class PromoController extends AbstractCatalogController
 
         $bread = new Breadcrumbs();
 
-        $bread->add('Featured products');
+        $bread->add(GoodsModule::t('Featured products'));
 
         $this->setMetaBase(MetaType::FEATURED,[
             'model' => Xcart::app()->getModule('Sites')->getSite(),
@@ -88,7 +89,7 @@ class PromoController extends AbstractCatalogController
 
         $this->view = 'catalog/promo.tpl';
         $this->advancedData = [
-            'title' => 'Featured products',
+            'title' => GoodsModule::t('Featured products'),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($bread),
         ];
         $this->view_internal();

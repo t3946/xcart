@@ -8,7 +8,7 @@
             {$title}
 
             {if !$hide_link}
-                <a href="{$link}" class="link">View all</a>
+                <a href="{$link}" class="link">{t 'View all'}</a>
             {/if}
         </div>
     </div>

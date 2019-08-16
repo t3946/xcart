@@ -73,7 +73,7 @@ class TranslateHelper
     {
         $file = file_get_contents($filename);
 
-        preg_match_all('/{t[^\']*\'([^}]*)\'[^}]*}/m', $file, $matches);
+        preg_match_all('/{t [^\'\"]*[\'\"]([^}]*)[\'\"][^}]*}/m', $file, $matches);
         if ($matches && $matches[1]) {
             foreach ($matches[1] as $original) {
                 $this->_translations->insert($original, $original);

@@ -179,11 +179,9 @@
                         </div>
                     {else}
                         <div class="full_line__group_root buttons">
-                            {ignore}
-                                <a onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"
-                                   class="button yellow waves waves-orange waves-effect default-style">{t 'Full product line'}</a>
-                                <div class="info">{t 'Click here to see full product line'}</div>
-                            {/ignore}
+                            <a {ignore}onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"{/ignore}
+                             class="button yellow waves waves-orange waves-effect default-style">{t 'Full product line'}</a>
+                             <div class="info">{t 'Click here to see full product line'}</div>
                         </div>
                     {/if}
                 </div>

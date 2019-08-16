@@ -172,7 +172,7 @@
                                     {$warehouse->m_city},
                                     {$warehouse->m_state},
                                     {$warehouse->m_country}
-                                    <b>warehouse subtotal</b>:
+                                    <b>{t 'warehouse subtotal'}</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
                                     {$site_currency->symbol_prefix}{$site_currency} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>
@@ -211,7 +211,7 @@
                     </div>
 
                     <div class="memo">
-                        {t 'Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.'}
+                        {t "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."}
                     </div>
                 </div>
 

@@ -35,11 +35,11 @@
                 {/if}
 
                 {if $item->isNewProduct()}
-                    <span class="splash splash-new show-for-large">New</span>
+                    <span class="splash splash-new show-for-large">{t 'New'}</span>
                 {/if}
 
                 {if $item->isSaleSticker()}
-                    <span class="splash splash-sale show-for-large">Sale</span>
+                    <span class="splash splash-sale show-for-large">{t 'Sale'}</span>
                 {/if}
 
             </a>
@@ -59,7 +59,7 @@
 
             <div class="sku show-for-large">
                 <span class="value">
-                    SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
+                    {t 'SKU'}: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
             </div>
 
@@ -67,7 +67,7 @@
             {if $brand}
             <div class="brand show-for-small">
 
-                Brand:
+                {t 'Brand'}:
                 <a class="value" itemprop="brand"  href="{$brand->getAbsoluteUrl()}">
                     {$brand->brand}
                 </a>
@@ -88,7 +88,7 @@
                         {/if}
                     </span>
 
-                    <a href="{$item->getAbsoluteUrl()}" class="show-for-medium see">See details</a>
+                    <a href="{$item->getAbsoluteUrl()}" class="show-for-medium see">{t 'See details'}</a>
                 </div>
 
                 <noindex>
@@ -110,14 +110,14 @@
             <div class="price_container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">
-                        <span class="title">List Price:</span>
+                        <span class="title">{t 'List Price'}:</span>
                         <span class="price">{$site_currency->symbol_prefix}{$site_currency->symbol} {$site_currency->getCurrencyFormat($item->list_price)}</span>
                     </span>
                 {/if}
 
                 {if !$item->isGroupRoot()}
                 <span class="current">
-                    <span class="title">Price:</span>
+                    <span class="title">{t 'Price'}:</span>
                     <span class="price">
                         <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency->symbol}</span>
                         <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>
@@ -132,19 +132,19 @@
                 {else}
                     {if $item->getFrontendPrice() != $item->getFrontendPrice(2)}
                     <div>
-                        <span class="price-title">Price from:</span>
+                        <span class="price-title">{t 'Price from'}:</span>
                         <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
                         <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
                     </div>
 
                     <div>
-                        <span class="price-title">Price to:</span>
+                        <span class="price-title">{t 'Price to'}:</span>
                         <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
                         <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>
                     </div>
                     {else}
                         <span class="current">
-                            <span class="title">Price:</span>
+                            <span class="title">{t 'Price'}:</span>
                             <span class="price">
                                 <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
                                 <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
@@ -169,8 +169,8 @@
                     {if !$item->isOutOfStock()}
                         <div class="cart_quantity">
                             <label for="quantity-{$item.productid}" class="show-for-large">
-                                <span class="show-for-xlarge">Quantity:</span>
-                                <span class="show-for-large-only">Qty:</span>
+                                <span class="show-for-xlarge">{t 'Quantity'}:</span>
+                                <span class="show-for-large-only">{t 'Qty'}:</span>
                             </label>
 
                             {include "product/parts/_quantity_group.tpl" model=$item}

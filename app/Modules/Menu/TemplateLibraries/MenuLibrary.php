@@ -3,6 +3,7 @@
 namespace Modules\Menu\TemplateLibraries;
 
 use Modules\Cart\Components\XCart;
+use Modules\Menu\MenuModule;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
 
@@ -67,25 +68,25 @@ class MenuLibrary extends TemplateLibrary
                 return [
                     [
                         'url' => '/shipping-delivery',
-                        'name' => 'Shipping & Delivery',
+                        'name' => MenuModule::t('Shipping & Delivery'),
                         'class' => '',
                         'items' => [],
                     ],
                     [
                         'url' => '/purchase-orders',
-                        'name' => 'Purchase Orders',
+                        'name' => MenuModule::t('Purchase Orders'),
                         'class' => '',
                         'items' => [],
                     ],
                     [
                         'url' => '/about-us',
-                        'name' => 'About Us',
+                        'name' => MenuModule::t('About Us'),
                         'class' => '',
                         'items' => [],
                     ],
                     [
                         'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
-                        'name' => 'Contact Us',
+                        'name' => MenuModule::t('Contact Us'),
                         'class' => '',
                         'items' => [],
                     ],
@@ -99,60 +100,60 @@ class MenuLibrary extends TemplateLibrary
             case 'pages-menu':
                 return [
                     [
-                        'name' => 'Shopping',
+                        'name' => MenuModule::t('Shopping'),
                         'items' => [
                             [
-                                'name' => 'Shipping & Delivery',
+                                'name' => MenuModule::t('Shipping & Delivery'),
                                 'url' => '/shipping-delivery',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Our Price Guarantee',
+                                'name' => MenuModule::t('Our Price Guarantee'),
                                 'url' => '/our-price-guarantee',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Sales Taxes',
+                                'name' => MenuModule::t('Sales Taxes'),
                                 'url' => '/sales-taxes',
                                 'items' => [],
                             ],
                         ],
                     ],
                     [
-                        'name' => 'Payments',
+                        'name' => MenuModule::t('Payments'),
                         'items' => [
                             [
-                                'name' => 'Safe & Secure Shopping',
+                                'name' => MenuModule::t('Safe & Secure Shopping'),
                                 'url' => '/safe-and-secure-shopping',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Purchase Orders',
+                                'name' => MenuModule::t('Purchase Orders'),
                                 'url' => '/purchase-orders',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Bill Me Later',
+                                'name' => MenuModule::t('Bill Me Later'),
                                 'url' => '/bill-me-later',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Combating eCommerce Fraud',
+                                'name' => MenuModule::t('Combating eCommerce Fraud'),
                                 'url' => '/ecomerce-fraud',
                                 'items' => [],
                             ],
                         ],
                     ],
                     [
-                        'name' => 'Orders',
+                        'name' => MenuModule::t('Orders'),
                         'items' => [
                             [
-                                'name' => 'Order Communication',
+                                'name' => MenuModule::t('Order Communication'),
                                 'url' => '/order-communication',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Retrieve Order',
+                                'name' => MenuModule::t('Retrieve Order'),
                                 'url' => '/retrieve-orders',
                                 'items' => [],
                             ],
@@ -164,50 +165,45 @@ class MenuLibrary extends TemplateLibrary
                         ],
                     ],
                     [
-                        'name' => 'Connect',
+                        'name' => MenuModule::t('Connect'),
                         'items' => [
                             [
-                                'name' => 'Contact Us',
+                                'name' => MenuModule::t('Contact Us'),
                                 'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
                                 'items' => [],
                             ],
                             [
-                                'name' => 'About Us',
+                                'name' => MenuModule::t('About Us'),
                                 'url' => '/about-us',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Community',
+                                'name' => MenuModule::t('Community'),
                                 'url' => '/community',
                                 'items' => [],
                             ],
-//                            [
-//                                'name' => 'Link to Us',
-//                                'url' => 'up',
-//                                'items' => [],
-//                            ],
                         ],
                     ],
                     [
-                        'name' => 'Policies',
+                        'name' => MenuModule::t('Policies'),
                         'items' => [
                             [
-                                'name' => 'Backorder Policy',
+                                'name' => MenuModule::t('Backorder Policy'),
                                 'url' => '/backorder-policy',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Return Policy',
+                                'name' => MenuModule::t('Return Policy'),
                                 'url' => '/return-policy',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Term of Use',
+                                'name' => MenuModule::t('Terms of Use'),
                                 'url' => '/terms-of-use',
                                 'items' => [],
                             ],
                             [
-                                'name' => 'Privacy Policy',
+                                'name' => MenuModule::t('Privacy Policy'),
                                 'url' => '/privacy-policy',
                                 'items' => [],
                             ],
@@ -218,17 +214,17 @@ class MenuLibrary extends TemplateLibrary
                 return [
                     [
                         'url' => '/terms-of-use',
-                        'name' => 'Terms of use',
+                        'name' => MenuModule::t('Terms of Use'),
                         'items' => []
                     ],
                     [
                         'url' => '/privacy-policy',
-                        'name' => 'Privacy policy',
+                        'name' => MenuModule::t('Privacy Policy'),
                         'items' => [],
                     ],
                     [
                         'url' => '/retail-trust-terms-and-conditions',
-                        'name' => 'Retail Trust Terms & Conditions',
+                        'name' => MenuModule::t('Retail Trust Terms & Conditions'),
                         'items' => [],
                     ],
                 ];

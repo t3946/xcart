@@ -5,5 +5,5 @@
     /
     <span class="full">
         {$pager->getTotal()}
-    </span> items shown
+    </span> {t 'items shown'}
 </span>

@@ -8,36 +8,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-08-14 17:49+0300\n"
+"PO-Revision-Date: 2019-08-16 12:53+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
-
-msgctxt "Login"
-msgid "Login"
-msgstr ""
-
-msgctxt "Show on site"
-msgid "Show on site"
-msgstr ""
 
 msgctxt "Delete"
 msgid "Delete"
 msgstr ""
 
-msgctxt "Edit"
-msgid "Edit"
-msgstr ""
-
-msgctxt "Home"
-msgid "Home"
-msgstr ""
-
 msgctxt "Clean"
 msgid "Clean"
-msgstr ""
-
-msgctxt "Website"
-msgid "Website"
 msgstr ""
 
 msgctxt "Order confirmation"
@@ -54,19 +34,19 @@ msgstr ""
 
 msgctxt "Product of the day"
 msgid "Product of the day"
-msgstr ""
+msgstr "Товар дня"
 
 msgctxt "Bestsellers"
 msgid "Bestsellers"
-msgstr ""
+msgstr "Хиты продаж"
 
 msgctxt "Brands"
 msgid "Brands"
-msgstr ""
+msgstr "Бренды"
 
 msgctxt "Featured products"
 msgid "Featured products"
-msgstr ""
+msgstr "Избранные товары"
 
 msgctxt "Purchase Order Details"
 msgid "Purchase Order Details"
@@ -107,10 +87,6 @@ msgstr ""
 msgctxt "ext"
 msgid "ext"
 msgstr "доб"
-
-msgctxt "seo"
-msgid "seo"
-msgstr ""
 
 msgctxt "Submit"
 msgid "Submit"
@@ -296,10 +272,6 @@ msgctxt "Accounts payable"
 msgid "Accounts payable"
 msgstr ""
 
-msgctxt "gv"
-msgid "gv"
-msgstr ""
-
 msgctxt "Delivery Methods"
 msgid "Delivery Methods"
 msgstr "Методы доставки"
@@ -432,10 +404,6 @@ msgctxt "Cart"
 msgid "Cart"
 msgstr "Корзина"
 
-msgctxt "What\\'s new"
-msgid "What\\'s new"
-msgstr "Новинки"
-
 msgctxt "Unit Price"
 msgid "Unit Price"
 msgstr "Цена"
@@ -502,7 +470,7 @@ msgstr "Изображение не доступно"
 
 msgctxt "Product Highlights"
 msgid "Product Highlights"
-msgstr ""
+msgstr "Особенности"
 
 msgctxt "Full"
 msgid "Full"
@@ -514,7 +482,7 @@ msgstr ""
 
 msgctxt "Full product line"
 msgid "Full product line"
-msgstr ""
+msgstr "Полная товарная линейка"
 
 msgctxt "Click here to see full product line"
 msgid "Click here to see full product line"
@@ -566,7 +534,7 @@ msgstr "Подписаться на рассылку"
 
 msgctxt "Your Email Address"
 msgid "Your Email Address"
-msgstr ""
+msgstr "Ваш Email адрес"
 
 msgctxt "Send"
 msgid "Send"
@@ -634,23 +602,23 @@ msgstr ""
 
 msgctxt "Error has occurred"
 msgid "Error has occurred"
-msgstr ""
+msgstr "Произошла ошибка"
 
 msgctxt "Quantity updated"
 msgid "Quantity updated"
-msgstr ""
+msgstr "Количество изменено"
 
 msgctxt "The selected product has been removed successfully"
 msgid "The selected product has been removed successfully"
-msgstr ""
+msgstr "Товар успешно удален"
 
 msgctxt "Customer phone or email"
 msgid "Customer phone or email"
-msgstr ""
+msgstr "Телефон или email покупателя"
 
 msgctxt "Minimal price"
 msgid "Minimal price"
-msgstr ""
+msgstr "Минимальная цена"
 
 msgctxt "Shopping cart"
 msgid "Shopping cart"
@@ -714,7 +682,7 @@ msgstr ""
 
 msgctxt "Name"
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 msgctxt "Phone"
 msgid "Phone"
@@ -770,7 +738,7 @@ msgstr ""
 
 msgctxt "Product SKU or your order #"
 msgid "Product SKU or your order #"
-msgstr ""
+msgstr "Артикул товара или № заказа"
 
 msgctxt "SKU of product you are interested in or your order #"
 msgid "SKU of product you are interested in or your order #"
@@ -782,19 +750,19 @@ msgstr ""
 
 msgctxt "Subject line"
 msgid "Subject line"
-msgstr ""
+msgstr "Тема"
 
 msgctxt "Your message"
 msgid "Your message"
-msgstr "Ваше сообщение"
+msgstr "Текст собщения"
 
 msgctxt "Title"
 msgid "Title"
-msgstr ""
+msgstr "Название"
 
 msgctxt "Text"
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 msgctxt "You must agree for custom duties"
 msgid "You must agree for custom duties"
@@ -810,10 +778,6 @@ msgstr ""
 
 msgctxt "This product line can only be shipped to a US address."
 msgid "This product line can only be shipped to a US address."
-msgstr ""
-
-msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
-msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
 msgstr ""
 
 msgctxt "Full name of the person who will remit the payment"
@@ -1002,4 +966,208 @@ msgstr ""
 
 msgctxt "Call us toll free"
 msgid "Call us toll free"
+msgstr ""
+
+msgctxt "Shipping & Delivery"
+msgid "Shipping & Delivery"
+msgstr "Доставка"
+
+msgctxt "About Us"
+msgid "About Us"
+msgstr "О нас"
+
+msgctxt "Our Price Guarantee"
+msgid "Our Price Guarantee"
+msgstr ""
+
+msgctxt "Sales Taxes"
+msgid "Sales Taxes"
+msgstr "Налог с продаж"
+
+msgctxt "Safe & Secure Shopping"
+msgid "Safe & Secure Shopping"
+msgstr ""
+
+msgctxt "Bill Me Later"
+msgid "Bill Me Later"
+msgstr ""
+
+msgctxt "Order Communication"
+msgid "Order Communication"
+msgstr ""
+
+msgctxt "Retrieve Order"
+msgid "Retrieve Order"
+msgstr ""
+
+msgctxt "Community"
+msgid "Community"
+msgstr ""
+
+msgctxt "Backorder Policy"
+msgid "Backorder Policy"
+msgstr ""
+
+msgctxt "Return Policy"
+msgid "Return Policy"
+msgstr "Политика возврата"
+
+msgctxt "Retail Trust Terms & Conditions"
+msgid "Retail Trust Terms & Conditions"
+msgstr ""
+
+msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgstr ""
+
+msgctxt "What's new"
+msgid "What's new"
+msgstr "Новинки"
+
+msgctxt "Shopping"
+msgid "Shopping"
+msgstr ""
+
+msgctxt "Payments"
+msgid "Payments"
+msgstr ""
+
+msgctxt "Orders"
+msgid "Orders"
+msgstr ""
+
+msgctxt "Connect"
+msgid "Connect"
+msgstr ""
+
+msgctxt "Policies"
+msgid "Policies"
+msgstr ""
+
+msgctxt "Terms of Use"
+msgid "Terms of Use"
+msgstr ""
+
+msgctxt "View all"
+msgid "View all"
+msgstr "Все"
+
+msgctxt "Place order online 24/7"
+msgid "Place order online 24/7"
+msgstr ""
+
+msgctxt "24/7 online ordering"
+msgid "24/7 online ordering"
+msgstr "24/7 прием заказов онлайн"
+
+msgctxt "New Products"
+msgid "New Products"
+msgstr "Новинки"
+
+msgctxt "Filter"
+msgid "Filter"
+msgstr "Фильтр"
+
+msgctxt "Sort by"
+msgid "Sort by"
+msgstr "Сортировать по"
+
+msgctxt "View as"
+msgid "View as"
+msgstr "Вид"
+
+msgctxt "Relevance"
+msgid "Relevance"
+msgstr "Релевантности"
+
+msgctxt "Price low to high"
+msgid "Price low to high"
+msgstr "Цене от низкой к высокой"
+
+msgctxt "Price high to low"
+msgid "Price high to low"
+msgstr "Цене от высокой к низкой"
+
+msgctxt "New"
+msgid "New"
+msgstr "Новизне"
+
+msgctxt "Brand name"
+msgid "Brand name"
+msgstr "Бренду"
+
+msgctxt "items shown"
+msgid "items shown"
+msgstr "товаров"
+
+msgctxt "Sale"
+msgid "Sale"
+msgstr "Скидка"
+
+msgctxt "See details"
+msgid "See details"
+msgstr "Подробнее"
+
+msgctxt "Price from"
+msgid "Price from"
+msgstr "Цена от"
+
+msgctxt "Price to"
+msgid "Price to"
+msgstr "до"
+
+msgctxt "Qty"
+msgid "Qty"
+msgstr "Кол"
+
+msgctxt "warehouse subtotal"
+msgid "warehouse subtotal"
+msgstr ""
+
+msgctxt "Apply"
+msgid "Apply"
+msgstr "Фильтр"
+
+msgctxt "Reset filters"
+msgid "Reset filters"
+msgstr "Сбросить"
+
+msgctxt "Filter by"
+msgid "Filter by"
+msgstr "Фильтр"
+
+msgctxt "to"
+msgid "to"
+msgstr "до"
+
+msgctxt "Loading ..."
+msgid "Loading ..."
+msgstr "Загрузка ..."
+
+msgctxt "Load more"
+msgid "Load more"
+msgstr "Показать еще"
+
+msgctxt "Shipping specs"
+msgid "Shipping specs"
+msgstr "Параметры доставки"
+
+msgctxt "Weight"
+msgid "Weight"
+msgstr "Вес"
+
+msgctxt "Dimensions"
+msgid "Dimensions"
+msgstr "Размеры"
+
+msgctxt "Shipping dimensions"
+msgid "Shipping dimensions"
+msgstr ""
+
+msgctxt "Shipping from"
+msgid "Shipping from"
+msgstr "Доставка со склада"
+
+msgctxt "Shipping weight"
+msgid "Shipping weight"
 msgstr ""

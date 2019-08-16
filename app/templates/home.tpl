@@ -43,7 +43,7 @@
                     {if $category_new}
                         <a href="{$category_new->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
                             <div class="banner__info">
-                                <div class="caption">{t 'What\'s new'}</div>
+                                <div class="caption">{t "What's new"}</div>
                             </div>
                         </a>
                     {/if}
@@ -64,7 +64,7 @@
                        href="{url 'brand:list'}">{t 'Brands'}</a>
                     {if ($category_new)}
                     <a class="icon new"
-                       href="{$category_new->getAbsoluteUrl()}">{t 'What\'s new'}</a>
+                       href="{$category_new->getAbsoluteUrl()}">{t "What's new"}</a>
                     {/if}
 
                     <a class="icon bestsellers"
@@ -96,7 +96,7 @@
         <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
             {if $category_new}
-                {set $title}{t 'What\'s new'}{/set}
+                {set $title}{t "What's new"}{/set}
                 {include 'slider/base_product_slider.tpl' title=$title link=$category_new->getAbsoluteUrl() data_link=$link}
             {/if}
         </div>
