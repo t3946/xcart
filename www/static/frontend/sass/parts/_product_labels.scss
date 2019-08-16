@@ -104,6 +104,16 @@
       }
     }
   }
+  &.free-shipping {
+    i {
+      display: none;
+
+      @include breakpoint(large) {
+        display: block;
+        background-image: url("../images/icons/item_product/free_shipping.svg");
+      }
+    }
+  }
 
 
   &.fill {
