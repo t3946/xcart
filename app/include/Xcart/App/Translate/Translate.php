@@ -48,7 +48,7 @@ class Translate
         }
 
         $str_o =  $this->translator->trans($str, $params, 'messages', 'ru');
-        if (!$str_o) {
+        if ($str_o === '') {
             $str_o = $str;
         }
         return $str_o;

@@ -8,9 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-08-16 12:53+0300\n"
+"PO-Revision-Date: 2019-08-20 16:13+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 msgctxt "Delete"
 msgid "Delete"
@@ -156,57 +157,21 @@ msgctxt "Canada"
 msgid "Canada"
 msgstr ""
 
-msgctxt "Toll free:"
-msgid "Toll free:"
-msgstr ""
-
-msgctxt "1-800-929-2431"
-msgid "1-800-929-2431"
-msgstr ""
-
-msgctxt "Local phone:"
-msgid "Local phone:"
-msgstr ""
-
 msgctxt "(616) 259-5711"
 msgid "(616) 259-5711"
 msgstr ""
 
-msgctxt "Fax:"
-msgid "Fax:"
-msgstr "Факс:"
-
 msgctxt "1-800-929-2835"
 msgid "1-800-929-2835"
-msgstr ""
-
-msgctxt "Email:"
-msgid "Email:"
 msgstr ""
 
 msgctxt "orders@s3stores.com"
 msgid "orders@s3stores.com"
 msgstr ""
 
-msgctxt "Date:"
-msgid "Date:"
-msgstr "Дата:"
-
-msgctxt "Order status:"
-msgid "Order status:"
-msgstr "Статус заказа:"
-
 msgctxt "please see below"
 msgid "please see below"
 msgstr ""
-
-msgctxt "Payment method:"
-msgid "Payment method:"
-msgstr "Метод оплаты:"
-
-msgctxt "Delivery methods:"
-msgid "Delivery methods:"
-msgstr "Метод доставки:"
 
 msgctxt "Contact information"
 msgid "Contact information"
@@ -215,10 +180,6 @@ msgstr "Контактная информация"
 msgctxt "Full name:"
 msgid "Full name:"
 msgstr "ФИО:"
-
-msgctxt "Phone:"
-msgid "Phone:"
-msgstr "Телефон:"
 
 msgctxt "Shipping address"
 msgid "Shipping address"
@@ -254,14 +215,6 @@ msgstr "Адрес плательщика"
 
 msgctxt "Purchase order information"
 msgid "Purchase order information"
-msgstr ""
-
-msgctxt "PO number:"
-msgid "PO number:"
-msgstr ""
-
-msgctxt "Company name:"
-msgid "Company name:"
 msgstr ""
 
 msgctxt "Purchase manager"
@@ -1016,14 +969,6 @@ msgctxt "Retail Trust Terms & Conditions"
 msgid "Retail Trust Terms & Conditions"
 msgstr ""
 
-msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
-msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
-msgstr ""
-
-msgctxt "What's new"
-msgid "What's new"
-msgstr "Новинки"
-
 msgctxt "Shopping"
 msgid "Shopping"
 msgstr ""
@@ -1170,4 +1115,204 @@ msgstr "Доставка со склада"
 
 msgctxt "Shipping weight"
 msgid "Shipping weight"
+msgstr ""
+
+msgctxt "PRICE RANGE"
+msgid "PRICE RANGE"
+msgstr ""
+
+msgctxt "FULL PRODUCT LINE"
+msgid "FULL PRODUCT LINE"
+msgstr ""
+
+msgctxt "In Stock"
+msgid "In Stock"
+msgstr ""
+
+msgctxt "PRICE"
+msgid "PRICE"
+msgstr ""
+
+msgctxt "Out Of Stock"
+msgid "Out Of Stock"
+msgstr ""
+
+msgctxt "FIND SIMILAR PRODUCTS"
+msgid "FIND SIMILAR PRODUCTS"
+msgstr ""
+
+msgctxt "See other product variations"
+msgid "See other product variations"
+msgstr ""
+
+msgctxt "BACK"
+msgid "BACK"
+msgstr ""
+
+msgctxt "Show more"
+msgid "Show more"
+msgstr ""
+
+msgctxt "See %count% product variation"
+msgid "See %count% product variation"
+msgid_plural "See %count% products variation"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgctxt "Toll Free"
+msgid "Toll Free"
+msgstr ""
+
+msgctxt "Local Phone"
+msgid "Local Phone"
+msgstr ""
+
+msgctxt "Date"
+msgid "Date"
+msgstr ""
+
+msgctxt "Order status"
+msgid "Order status"
+msgstr ""
+
+msgctxt "Zip/Postal code"
+msgid "Zip/Postal code"
+msgstr ""
+
+msgctxt "Company name"
+msgid "Company name"
+msgstr ""
+
+msgctxt "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+msgid "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+msgstr ""
+
+msgctxt "Billing Address"
+msgid "Billing Address"
+msgstr ""
+
+msgctxt "Stock Notification"
+msgid "Stock Notification"
+msgstr ""
+
+msgctxt "Email notification will be sent to your email address when the product is in stock."
+msgid "Email notification will be sent to your email address when the product is in stock."
+msgstr ""
+
+msgctxt "are mandatory"
+msgid "are mandatory"
+msgstr ""
+
+msgctxt "Order online or call us toll free"
+msgid "Order online or call us toll free"
+msgstr ""
+
+msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgstr ""
+
+msgctxt "What's new"
+msgid "What's new"
+msgstr "Новинки"
+
+msgctxt "UP"
+msgid "UP"
+msgstr "ВВЕРХ"
+
+msgctxt "DOWN"
+msgid "DOWN"
+msgstr "ВНИЗ"
+
+msgctxt "Shopping Cart"
+msgid "Shopping Cart"
+msgstr "Корзина"
+
+msgctxt "More categories"
+msgid "More categories"
+msgstr "Больше категорий"
+
+msgctxt "Less categories"
+msgid "Less categories"
+msgstr "Скрыть"
+
+msgctxt "Read more"
+msgid "Read more"
+msgstr "Читать далее"
+
+msgctxt "Read less"
+msgid "Read less"
+msgstr "Скрыть"
+
+msgctxt "Expected availability"
+msgid "Expected availability"
+msgstr ""
+
+msgctxt "Eta date"
+msgid "Eta date"
+msgstr ""
+
+msgctxt "Order at least %count% item"
+msgid "Order at least %count% item"
+msgid_plural "Order at least %count% items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgctxt "Order in multiples of %count% item"
+msgid "Order in multiples of %count% item"
+msgid_plural "Order in multiples of %count% items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgctxt "Lead time for this product is %count% business day"
+msgid "Lead time for this product is %count% business day"
+msgid_plural "Lead time for this product is %count% business days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgctxt "Lead time for this product is"
+msgid "Lead time for this product is"
+msgstr ""
+
+msgctxt "business days"
+msgid "business days"
+msgstr "рабочих дней"
+
+msgctxt "departments"
+msgid "departments"
+msgstr ""
+
+msgctxt "Contact us"
+msgid "Contact us"
+msgstr "Связаться с нами"
+
+msgctxt "Your message has been successfully sent"
+msgid "Your message has been successfully sent"
+msgstr "Ваше сообщение успешно отправлено"
+
+msgctxt "SKU or Order # not found"
+msgid "SKU or Order # not found"
+msgstr "Товар или заказ не найден"
+
+msgctxt "Wrong SKU or Order #, please call us at"
+msgid "Wrong SKU or Order #, please call us at"
+msgstr ""
+
+msgctxt "Web Form (recommended)"
+msgid "Web Form (recommended)"
+msgstr ""
+
+msgctxt "The fields marked with <span class=\"required\"></span> are mandatory"
+msgid "The fields marked with <span class=\"required\"></span> are mandatory"
+msgstr ""
+
+msgctxt "Mail"
+msgid "Mail"
+msgstr "Почта"
+
+msgctxt "Tel"
+msgid "Tel"
 msgstr ""

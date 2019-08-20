@@ -160,7 +160,7 @@
                         <a class="button waves waves-orange yellow-white see-other" href="{$item->getAbsoluteUrl()}">
                             <span class="text">
                                 {set $pv = $item->getFrontendChilds()->count()}
-                                See {$pv} product variation{if $pv > 1}s{/if}
+                                {t 'See %count% product variation' 'See %count% products variation' $pv}
                             </span>
                         </a>
                     </div>
@@ -183,10 +183,10 @@
                         <div class="cart_add cart_buttons">
                             <a class="add button yellow wait-button">
                                 <span class="text">
-                                    Add to cart
+                                    {t 'Add to cart'}
                                 </span>
                                 <span class="wait-text">
-                                    Added
+                                    {t 'Added'}
                                 </span>
                             </a>
                         </div>

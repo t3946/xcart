@@ -11,9 +11,15 @@ class TranslateLibrary extends TemplateLibrary
      * @kind accessorFunction
      * @return string
      */
-    public static function trn($trn, $dict = 'main')
+    public static function trn($trn, $m = null, $n = null, $dict = 'main')
     {
-        return Translate::getInstance()->t($dict, $trn);
+        if ($n !== null) {
+            $param = ['%count%' => $n];
+        };
+        if ($m !== null) {
+            $trn .= '|' . $m;
+        }
+        return Translate::getInstance()->t($dict, $trn, $param ?? []);
     }
 
 
@@ -24,9 +30,9 @@ class TranslateLibrary extends TemplateLibrary
      */
     public static function t_func($params)
     {
-        $trn = reset($params);
+        [$trn, $m, $n] = $params;
         $dict = empty($params['dict']) ? 'main' : $params['dict'];
 
-        return self::trn($trn, $dict);
+        return self::trn($trn, $m, $n, $dict);
     }
 }

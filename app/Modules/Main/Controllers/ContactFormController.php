@@ -10,6 +10,7 @@ namespace Modules\Main\Controllers;
 
 
 use Modules\Main\Forms\ContactUsForm;
+use Modules\Main\MainModule;
 use Modules\Meta\Types\MetaType;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\FrontendController;
@@ -29,15 +30,17 @@ class ContactFormController extends FrontendController
 
         $bread = new Breadcrumbs();
 
-        $bread->add('Contact us', $request->getAbsoluteUrl());
+        $bread->add(MainModule::t('Contact us'), $request->getAbsoluteUrl());
 
         $form = new ContactUsForm();
         if ($this->getRequest()->getIsPost() && $form->populate($_POST)->isValid()) {
-            Xcart::app()->flash->add('Your message has been successfully sent');
+            Xcart::app()->flash->add(MainModule::t('Your message has been successfully sent'));
             $this->refresh();
         } else {
-            if (in_array('SKU or Order # not found', $form->getErrors('product_sku'))) {
-                Xcart::app()->flash->error('Wrong SKU or Order #, please call us at 1-800-929-2431');
+            if (in_array(MainModule::t('SKU or Order # not found'), $form->getErrors('product_sku'))) {
+                $site = Xcart::app()->getModule('Sites')->getSite();
+                $config = $site->getConfig();
+                Xcart::app()->flash->error(MainModule::t('Wrong SKU or Order #, please call us at'). ' '. $config['cidev_top_header_code']);
             }
 
         }

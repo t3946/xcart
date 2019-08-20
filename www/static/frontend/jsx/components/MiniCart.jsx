@@ -61,7 +61,7 @@ export default class MiniCart extends Component
         }
     }
 
-    renderImage(item)
+    renderImage(item, props)
     {
         if (item.image) {
             return <img data-src={item.image}  alt={item.name} className="lazy lazy-img" itemprop="image" />;
@@ -70,7 +70,7 @@ export default class MiniCart extends Component
         return (
             <div className="not-avail">
                 <span className="text">
-                    Image not available
+                    {props.labels.img}
                 </span>
             </div>
         );
@@ -101,14 +101,14 @@ export default class MiniCart extends Component
         });
     }
 
-    renderProducts()
+    renderProducts(props, state)
     {
         if (this.state.cart.items) {
 
             return _.map(this.state.cart.items, (item, key)=> (
                 <div className="item" key={key} data-product={item.id}>
                     <div className="image">
-                        {this.renderImage(item)}
+                        {this.renderImage(item, props)}
                     </div>
 
                     <div className="name-quantity">
@@ -133,7 +133,7 @@ export default class MiniCart extends Component
                     </div>
 
                     <div className="actions">
-                        <a href="#" className="icon cart_remove" onClick={(e)=>{ this.handleRemove(e, key, item); }} title="Remove"></a>
+                        <a href="#" className="icon cart_remove" onClick={(e)=>{ this.handleRemove(e, key, item); }} title={props.labels.lng_remove}></a>
                     </div>
                 </div>
             ));
@@ -142,15 +142,15 @@ export default class MiniCart extends Component
         return;
     }
 
-    render() {
+    render(props, state) {
         return (
         <div className="minicart-items">
             <div className="product-list" ref={(product_list) => { this.product_list = product_list; }}>
-                {this.renderProducts()}
+                {this.renderProducts(props, state)}
             </div>
             <div className="buttons">
                 <a href="/cart/" className="button yellow waves waves-orange">
-                    Checkout
+                    {props.labels.lng_checkout}
                 </a>
             </div>
         </div>);

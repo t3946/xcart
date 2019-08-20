@@ -222,11 +222,11 @@ class MenuLibrary extends TemplateLibrary
                         'name' => MenuModule::t('Privacy Policy'),
                         'items' => [],
                     ],
-                    [
+                    /*[
                         'url' => '/retail-trust-terms-and-conditions',
                         'name' => MenuModule::t('Retail Trust Terms & Conditions'),
                         'items' => [],
-                    ],
+                    ],*/
                 ];
         }
 

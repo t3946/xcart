@@ -32,11 +32,11 @@
                              class="show-for-large s3-logo-big">
                     </a>
 
-                    <a href="" class="secured-logo-big-link logo-link">
+                    {*<a href="" class="secured-logo-big-link logo-link">
                         <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/verified_secured_logo.svg"
                              alt="verified&secured"
                              class="show-for-large secured-logo-big">
-                    </a>
+                    </a>*}
 
                     <a href="" class="s3-logo-small-link logo-link">
                         <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores_logo.svg"
@@ -52,7 +52,7 @@
                         </div>
                         <div class="phone">
                             <span class="phone-number"><span class="small-number">(616)</span> 259-5711</span>
-                            <span class="phone-number">1-800-929-2431</span>
+                            <span class="phone-number">{$config.cidev_top_header_code}</span>
                         </div>
                     </div>
                     <div class="after-hours {if !$.workingDayTimeNow}active{else}inactive{/if}">
@@ -64,7 +64,7 @@
                         </div>
                         <div class="phone">
                             <span class="phone-label">{t 'Call us toll free'}</span>
-                            <span class="phone-number">1-800-929-2431</span>
+                            <span class="phone-number">{$config.cidev_top_header_code}</span>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                             <span class="img">
                                 <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
                             </span>
-                            <span class="text">BACK</span>
+                            <span class="text">{t 'BACK'}</span>
                         </a>
                     {/if}
 

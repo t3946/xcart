@@ -6,6 +6,7 @@ use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Aggregation\Min;
 use Mindy\QueryBuilder\Expression;
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\FilterModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Manager;
@@ -67,7 +68,7 @@ class ProductFilterHelper
             $list['__price__'] = [
                 'type' => 'price',
                 'key' => 'price',
-                'name' => 'Price',
+                'name' => GoodsModule::t('Price'),
                 'changed' => ($selected_price['min'] != $prices['min'] || $selected_price['max'] != $prices['max']),
                 'values' => [
                     'prices' => $prices,
@@ -92,7 +93,7 @@ class ProductFilterHelper
             $list['__brand__'] = [
                 'type' => 'list',
                 'key' => 'brand',
-                'name' => 'Brand',
+                'name' => GoodsModule::t('Brand'),
                 'changed' => $changed,
                 'values' => $brands,
             ];

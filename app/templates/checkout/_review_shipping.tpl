@@ -11,25 +11,27 @@
             </div>
         </div>
         <div class="row full-name">
-            <div class="columns info-title small-6">{t 'Full name:' }</div>
+            <div class="columns info-title small-6">{t 'Full name' }:</div>
             <div class="columns info-text">{$order->firstname}</div>
         </div>
         <div class="row phone">
-            <div class="columns info-title small-6">{t 'Phone:' }</div>
+            <div class="columns info-title small-6">{t 'Phone' }:</div>
             <div class="columns info-text">{$order->phone}</div>
         </div>
         <div class="row email">
-            <div class="columns info-title small-6">{t 'Email:' }</div>
+            <div class="columns info-title small-6">{t 'Email' }:</div>
             <div class="columns info-text">{$order->email}</div>
         </div>
     </div>
 </div>
 <div class="row info-row address">
     <div class="columns small-12 large-6">
-        {include "checkout/_address_view_full.tpl" info=$shipping_address uri='checkout:shipping' header=$.t('Shipping Address','order')}
+        {set $lbl}{t 'Shipping Address'}{/set}
+        {include "checkout/_address_view_full.tpl" info=$shipping_address uri='checkout:shipping' header=$lbl}
     </div>
     <div class="columns small-12 large-6">
-        {include "checkout/_address_view_full.tpl" info=$billing_address uri='checkout:options' header=$.t('Billing Address','order')}
+        {set $lbl}{t 'Billing Address'}{/set}
+        {include "checkout/_address_view_full.tpl" info=$billing_address uri='checkout:options' header=$lbl}
     </div>
 </div>
 {*<div class="row">*}
@@ -70,7 +72,7 @@
         </div>
         <div class="row payment-method info-row">
             <div class="columns small-6 info-title">
-                {t 'Payment method:' }
+                {t 'Payment method' }:
             </div>
             <div class="columns info-text">{$order->payment_method}</div>
         </div>

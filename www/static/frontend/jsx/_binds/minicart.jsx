@@ -6,5 +6,5 @@ import storeCart from '../stores/StoreCart';
 let minicart = document.querySelector('body #search_container .minicart');
 
 if (minicart) {
-    render(<Provider store={storeCart}><MiniCart /></Provider>, minicart);
+    render(<Provider store={storeCart}><MiniCart labels={minicart.dataset} /></Provider>, minicart);
 }

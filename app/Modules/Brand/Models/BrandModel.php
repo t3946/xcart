@@ -187,7 +187,7 @@ class BrandModel extends Model
     {
         $bread = new Breadcrumbs();
 
-        $bread->add('Brands', 'brand:list');
+        $bread->add(BrandModule::t('Brands'), 'brand:list');
         $bread->add($this->brand, $this->getAbsoluteUrl());
         return $bread;
     }

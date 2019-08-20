@@ -47,7 +47,7 @@ export default class ButtonMoveUp extends Component {
             <a className={classString} onClick={() => {
                 this.scrollUp();
             }}>
-                UP
+                {props.label}
             </a>
         </div>);
     }

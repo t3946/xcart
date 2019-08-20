@@ -39,9 +39,9 @@
                             </div>
 
                             {ignore}
-                            <a class="show_more" onclick="$(this).hide().siblings('.show_less').show().end().siblings('.relative').find('article.must-show-less').addClass('full').end().find('.gradient').removeClass('gradient')">Read more</a>
-                            <a class="show_less" onclick="$(this).hide().siblings('.show_more').show().end().siblings('.relative').find('article.must-show-less').removeClass('full').end().find('.collapse-gradient').addClass('gradient')">Read less</a>
-                            {/ignore}
+                            <a class="show_more" onclick="$(this).hide().siblings('.show_less').show().end().siblings('.relative').find('article.must-show-less').addClass('full').end().find('.gradient').removeClass('gradient')">{/ignore}{t 'Read more'}{ignore}</a>
+                            <a class="show_less" onclick="$(this).hide().siblings('.show_more').show().end().siblings('.relative').find('article.must-show-less').removeClass('full').end().find('.collapse-gradient').addClass('gradient')">{/ignore}{t 'Read less'}</a>
+
                         </div>
                     </div>
                 </div>

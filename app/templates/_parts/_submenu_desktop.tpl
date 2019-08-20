@@ -40,7 +40,7 @@
         </div>
 
         <a href="{url 'catalog:list'}#id{$model->categoryid}" class="view-all">
-            View all {$menu_name} departments
+            {t 'View all'} {$menu_name} {t 'departments'}
         </a>
     </div>
 {/if}
