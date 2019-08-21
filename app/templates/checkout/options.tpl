@@ -56,7 +56,8 @@
             <div class="row">
                 <div class="columns large-4 show-for-large">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$shipping_address header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {set $lbl}{t 'Shipping Address'}{/set}
+                        {include 'checkout/_address_view.tpl' info=$shipping_address header=$lbl uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-12 large-8">
@@ -124,13 +125,13 @@
                                 <div class="row">
                                     <div class="columns small-12">
                                         <div class="no-quotes">
-                                            Our shipping server couldn’t provide us with an accurate shipping quote. This sometimes occurs<br/>
-                                            - when the product is oversized or somehow irregular in shape or weight<br/>
-                                            - for overseas shipments<br/>
+                                            {t "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"}<br/>
+                                            {t '- when the product is oversized or somehow irregular in shape or weight'}<br/>
+                                            {t '- for overseas shipments'}<br/>
                                             <br/>
-                                            <b>Please go ahead and place your order.</b><br/>
-                                            We will determine an accurate shipping charge manually and send you an updated invoice.<br/>
-                                            At this point we won’t collect your payment information.
+                                            <b>{t 'Please go ahead and place your order.'}</b><br/>
+                                            {t 'We will determine an accurate shipping charge manually and send you an updated invoice.'}<br/>
+                                            {t "At this point we won't collect your payment information."}
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +144,7 @@
                                 <div class="non-us-disclaimer checkbox-container">
                                     <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation"/>
                                     <label for="non-us-disclaimer-checkbox">
-                                        By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in {$site_currency->currency_code}.
+                                        {t 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in '} {$site_currency->currency_code}.
                                     </label>
                                 </div>
                             </div>

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-08-20 16:13+0300\n"
+"PO-Revision-Date: 2019-08-21 15:42+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -79,7 +79,7 @@ msgstr ""
 
 msgctxt "Products Ordered"
 msgid "Products Ordered"
-msgstr ""
+msgstr "Товары в заказе"
 
 msgctxt "The item below will be shipped from warehouse in"
 msgid "The item below will be shipped from warehouse in"
@@ -171,7 +171,7 @@ msgstr ""
 
 msgctxt "please see below"
 msgid "please see below"
-msgstr ""
+msgstr "смотри ниже"
 
 msgctxt "Contact information"
 msgid "Contact information"
@@ -243,7 +243,7 @@ msgstr "со склада в"
 
 msgctxt "Payment Methods"
 msgid "Payment Methods"
-msgstr "Методы оплаты"
+msgstr "Способы оплаты"
 
 msgctxt "Is Billing Address the same as Shipping Address?"
 msgid "Is Billing Address the same as Shipping Address?"
@@ -347,7 +347,7 @@ msgstr ""
 
 msgctxt "Payment method"
 msgid "Payment method"
-msgstr "Способы оплаты"
+msgstr "Способ оплаты"
 
 msgctxt "Submit question"
 msgid "Submit question"
@@ -1166,23 +1166,23 @@ msgstr ""
 
 msgctxt "Local Phone"
 msgid "Local Phone"
-msgstr ""
+msgstr "Телефон"
 
 msgctxt "Date"
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 msgctxt "Order status"
 msgid "Order status"
-msgstr ""
+msgstr "Статус заказа"
 
 msgctxt "Zip/Postal code"
 msgid "Zip/Postal code"
-msgstr ""
+msgstr "Почтовый индекс"
 
 msgctxt "Company name"
 msgid "Company name"
-msgstr ""
+msgstr "Наименование компании"
 
 msgctxt "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
 msgid "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
@@ -1190,7 +1190,7 @@ msgstr ""
 
 msgctxt "Billing Address"
 msgid "Billing Address"
-msgstr ""
+msgstr "Адрес плательщика"
 
 msgctxt "Stock Notification"
 msgid "Stock Notification"
@@ -1315,4 +1315,104 @@ msgstr "Почта"
 
 msgctxt "Tel"
 msgid "Tel"
+msgstr "Тел"
+
+msgctxt "By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in "
+msgid "By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in "
 msgstr ""
+
+msgctxt "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"
+msgid "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"
+msgstr ""
+
+msgctxt "- when the product is oversized or somehow irregular in shape or weight"
+msgid "- when the product is oversized or somehow irregular in shape or weight"
+msgstr ""
+
+msgctxt "- for overseas shipments"
+msgid "- for overseas shipments"
+msgstr ""
+
+msgctxt "Please go ahead and place your order."
+msgid "Please go ahead and place your order."
+msgstr ""
+
+msgctxt "We will determine an accurate shipping charge manually and send you an updated invoice."
+msgid "We will determine an accurate shipping charge manually and send you an updated invoice."
+msgstr ""
+
+msgctxt "At this point we won't collect your payment information."
+msgid "At this point we won't collect your payment information."
+msgstr ""
+
+msgctxt "Invoice"
+msgid "Invoice"
+msgstr "Счет"
+
+msgctxt "Order"
+msgid "Order"
+msgstr "Заказ"
+
+msgctxt "PO Number"
+msgid "PO Number"
+msgstr ""
+
+msgctxt "Company Name"
+msgid "Company Name"
+msgstr "Комания"
+
+msgctxt "a division of"
+msgid "a division of"
+msgstr ""
+
+msgctxt "URL"
+msgid "URL"
+msgstr "URL"
+
+msgctxt "Product"
+msgid "Product"
+msgstr "Наименование товара"
+
+msgctxt "Item price"
+msgid "Item price"
+msgstr "Цена"
+
+msgctxt "Qty ord"
+msgid "Qty ord"
+msgstr "Кол"
+
+msgctxt "Payment status"
+msgid "Payment status"
+msgstr "Статус платежа"
+
+msgctxt "Shipping status"
+msgid "Shipping status"
+msgstr "Статус доставки"
+
+msgctxt "Discount"
+msgid "Discount"
+msgstr "Скидка"
+
+msgctxt "Coupon Savings"
+msgid "Coupon Savings"
+msgstr ""
+
+msgctxt "Discounted Total"
+msgid "Discounted Total"
+msgstr ""
+
+msgctxt "Undefined"
+msgid "Undefined"
+msgstr "Не определен"
+
+msgctxt "Thank you for choosing S3 Stores!"
+msgid "Thank you for choosing S3 Stores!"
+msgstr ""
+
+msgctxt "Items"
+msgid "Items"
+msgstr ""
+
+msgctxt "delivery from"
+msgid "delivery from"
+msgstr "доставка из"

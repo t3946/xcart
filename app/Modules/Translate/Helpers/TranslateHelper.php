@@ -76,7 +76,7 @@ class TranslateHelper
         preg_match_all('/{t ([^\'\"]*[\'\"][^}]*[\'\"][^}]*)}/m', $file, $matches);
         if ($matches && $matches[1]) {
             foreach ($matches[1] as $original) {
-                preg_match_all($tpl = '/[\'](.*)[\']|[\"](.*)[\"]/mU', $original, $m);
+                preg_match_all($tpl = '/[\'](.*)[\']|["](.*)["]/msU', $original, $m);
                 if ($m && $m[2] && $m[2][0]) {
                     [$o, $p] = $m[2];
                 }
