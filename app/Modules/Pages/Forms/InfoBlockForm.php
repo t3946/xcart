@@ -5,6 +5,7 @@ namespace Modules\Pages\Forms;
 
 use Modules\Editor\Fields\EditorField;
 use Modules\Pages\Models\InfoBlock;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\ModelForm;
 
 
@@ -20,8 +21,12 @@ class InfoBlockForm extends ModelForm
     {
         return [
             'text' => [
-                'class' => EditorField::className(),
-                'label' => 'Editor'
+                'class' => EditorField::class,
+                'label' => 'Text'
+            ],
+            'language' => [
+                'class' => DropDownField::class,
+                'required' => true
             ]
         ];
     }

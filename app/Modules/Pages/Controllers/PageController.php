@@ -44,6 +44,8 @@ class PageController extends FrontendController
             $filter['url'] = ltrim($url, '/');
         }
 
+        $filter['language__lang_code'] = $site_model->getConfig()['Preferred_language'];
+
         $filter['sites__through__storefront_id'] = $site_model->storefrontid;
 
         /** @var Page $model */

@@ -37,4 +37,13 @@ class InfoBlockAdmin extends Admin
     {
         return 'Text block';
     }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        if ($property === 'language') {
+            return (string) $item->language;
+        }
+
+        return parent::getItemProperty($item, $property);
+    }
 }

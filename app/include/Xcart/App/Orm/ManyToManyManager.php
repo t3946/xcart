@@ -78,6 +78,7 @@ abstract class ManyToManyManager extends ManagerBase
     public function clean()
     {
         if ($this->primaryModel->pk === null) {
+            return;
             throw new Exception('Unable to clean models: the primary key of ' . get_class($this->primaryModel) . ' is null.');
         }
         $db = $this->primaryModel->getConnection();

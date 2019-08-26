@@ -33,7 +33,7 @@ class PagesForm extends ModelForm
                 'published_at', 'file', 'sites',
             ],
             'Display settings' => [
-                'view', 'view_children', 'sorting',
+                'view', 'view_children', 'sorting', 'language',
             ],
         ];
     }
@@ -86,7 +86,12 @@ class PagesForm extends ModelForm
 
                     return $mass;
                 },
+                'required' => true
             ],
+            'language' => [
+                'class' => DropDownField::class,
+                'required' => true
+            ]
         ];
     }
 

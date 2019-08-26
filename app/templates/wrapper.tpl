@@ -7,6 +7,7 @@
 
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
+    {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
     {set $uri = $site->getHttpOrHttps() ~ $config.CDN_domain}
     {set $uri = ''}
@@ -113,7 +114,7 @@
 
     {block 'head'}{/block}
 
-    {set $gConfig = $site->getGlobalConfig()}
+
 
     <script>
         {ignore}

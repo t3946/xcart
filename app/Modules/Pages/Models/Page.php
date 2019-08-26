@@ -5,6 +5,7 @@ namespace Modules\Pages\Models;
 use Closure;
 use Modules\Pages\PagesModule;
 use Modules\Sites\Models\SiteModel;
+use Modules\Translate\Models\LanguageModel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
@@ -13,6 +14,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -131,6 +133,12 @@ class Page extends TreeModel
                 'through' => PagesStorefrontLink::class,
                 'verboseName' => 'Sites',
             ],
+            'language' => [
+                'class' => ForeignField::class,
+                'field' => 'lang_id',
+                'modelClass' => LanguageModel::class,
+                'label' => 'Language'
+            ]
         ]);
     }
 

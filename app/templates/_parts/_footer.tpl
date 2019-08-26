@@ -50,8 +50,8 @@
                                 </li>
                                 <li>Mon-Fri: 9 a.m. to 5 p.m. EST</li>
                                 <li class="toll-free">{t 'Toll Free'}: <span class="number">{$config.cidev_top_header_code}</span></li>
-                                <li>{t 'Tel'}: (616) 259-5711</li>
-                                <li>{t 'Fax'}: 1-800-929-2835</li>
+                                <li>{t 'Tel'}: {$config.local_phone}</li>
+                                <li>{t 'Fax'}: {$config.fax_number}</li>
                             </ul>
 
                             <ul class="no-bullet menu-list show-for-medium-only">
@@ -188,7 +188,7 @@
                 </ul>
             </div>
             <div class="column small-12 medium-7 medium-order-1 copyright">
-                {t 'Copyright ©'} 2005-{date_add()|date:"Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {t 'Copyright ©'} {$config.start_year}-{date_add()|date:"Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
             </div>
         </div>
     </div>

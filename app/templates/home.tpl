@@ -116,7 +116,7 @@
         {*</div>*}
     {*</div>*}
 
-    {add $main_html = $.getSite->getConfig().cidev_main_page_code}
+    {add $main_html = $.fetch_info_block('mainpage', null, ['sfcode' => $site->code, 'lang' => 'ru'])}
     {if $main_html}
     <div class="row">
         <div class="small-12 column">

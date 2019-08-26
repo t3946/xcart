@@ -54,13 +54,13 @@
                             ,<br/>{$config.location_city}{if $config.location_country_has_states}, {$config.location_state_name}{/if}
                             <br/>
                             {$config.location_zipcode}, {$config.location_country_name}<br/>
-                            {if $config.company_phone}{t 'Toll Free'}: {$config.company_phone}
+                            {if $site_config.cidev_top_header_code}{t 'Toll Free'}: {$site_config.cidev_top_header_code}
                                 <br/>
                             {/if}
-                            {if $config.company_phone_2}{t 'Tel'}: {$config.company_phone_2}
+                            {if $site_config.local_phone}{t 'Tel'}: {$site_config.local_phone}
                                 <br/>
                             {/if}
-                            {if $config.company_fax}{t 'Fax'}: {$config.company_fax}<br/>{/if}
+                            {if $site_config.fax_number}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
                             {if $config.orders_department}{t 'Email'}: {$config.orders_department}
                                 <br/>
                             {/if}

@@ -126,7 +126,7 @@ require $xcart_dir."/include/states.php";
 
 $location[] = array(func_get_langvar_by_name("lbl_general_settings"), "configuration.php");
 
-if ($REQUEST_METHOD=="POST") {
+if ($REQUEST_METHOD === 'POST') {
 	require $xcart_dir."/include/safe_mode.php";
 }
 
@@ -394,9 +394,16 @@ elseif ($option == "Gift_Certificates") {
 	$smarty->assign('gc_templates', func_gc_get_templates($smarty->template_dir));
 }
 
-if (!empty($active_modules['Multiple_Storefronts']) && $option == 'Multiple_Storefronts') {
-	include $xcart_dir . '/modules/Multiple_Storefronts/get_configuration.php';
-} else if (!empty($active_modules['XPayments_Connector']) && $option == 'XPayments_Connector') {
+if (!empty($active_modules['Multiple_Storefronts']) && $option === 'Multiple_Storefronts') {
+
+	$configuration = \Modules\Sites\Models\SiteModel::objects()
+		->get(['storefrontid' => $current_storefront])
+		->config
+		->filter(['name__in' => array_keys(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS)])
+		->order('orderby')
+		->valuesList('*');
+
+} else if (!empty($active_modules['XPayments_Connector']) && $option === 'XPayments_Connector') {
 	include $xcart_dir . '/modules/XPayments_Connector/get_configuration.php';
 } else {
 	$configuration = func_query("SELECT * from $sql_tbl[config] WHERE category='$option' ORDER BY orderby");
@@ -450,7 +457,7 @@ if (is_array($options)) {
 	$dialog_tools_data["columns"] = 3;
 }
 
-if (!empty($active_modules["Fancy_Categories"]) && $option == "Fancy_Categories") {
+if (!empty($active_modules["Fancy_Categories"]) && $option === 'Fancy_Categories') {
 	include $xcart_dir."/modules/Fancy_Categories/admin_config.php";
 }
 

@@ -44,15 +44,14 @@
         {/if}
         <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
             <div class="h2 title">{t 'Shipping from'}</div>
-            {if $tab}
-                <div class="content">
-                    <div class="row">
-                        <div class="columns small-12">
-                            {raw $tab.content}
-                        </div>
+            {set $warehouse  = $model->distributor}
+            <div class="content">
+                <div class="row">
+                    <div class="columns small-12">
+                        {t 'This product is shipped from our warehouse in'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                     </div>
                 </div>
-            {/if}
+            </div>
         </div>
     </div>
 </div>

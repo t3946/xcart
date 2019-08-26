@@ -58,6 +58,9 @@ class PageAdmin extends Admin
         if ($property === 'sites') {
             return nl2br(implode("\n", $item->sites->all()));
         }
+        if ($property === 'language') {
+            return (string) $item->language;
+        }
 
         return parent::getItemProperty($item, $property);
 
