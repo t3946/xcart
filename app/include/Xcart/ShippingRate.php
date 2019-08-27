@@ -101,9 +101,7 @@ class ShippingRate extends Data
                 $this->fShippingCharge = $app_s;
             }
 
-            if ($this->getCostMarcup() > 0) {
-                $this->fShippingCharge *= $this->getCostMarcup();
-            }
+            $this->fShippingCharge *= $this->getCostMarcup();
             $oCart = $this->getCart();
 
             $this->fShippingCharge += $this->getRate();
