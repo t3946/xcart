@@ -98,7 +98,7 @@ class ShippingRate extends Data
             $oCart = $this->getCart();
 
             if ((int) $this->shippingid === 1) {
-                $this->fShippingCharge = $oCart->getShippingCost();
+                $this->fShippingQuote = $oCart->getShippingCost();
             }
 
             if (((int) $this->shippingid === 23)  &&
