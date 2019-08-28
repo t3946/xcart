@@ -231,6 +231,13 @@ class ShippingHelper
             ->fetchColumn();
     }
 
+    public static function getAverageShippingCharge($value, $qty)
+    {
+        return (float)Connection::getInstance()
+            ->executeQuery('SELECT f_price_getShippingCharge(:value, :qty) as ups', ['value' => $value, 'qty' => $qty])
+            ->fetchColumn();
+    }
+
     public static function combination($list)
     {
         $combination = [];

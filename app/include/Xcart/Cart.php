@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Shipping\Helpers\ShippingHelper;
+
 class Cart
 {
     private $fCost = null;
@@ -78,6 +80,18 @@ class Cart
             }
         }
         return $this->fCost;
+    }
+
+    public function getShippingCost()
+    {
+        $cost = null;
+        $iterator = $this->aArrayOfObjects->getIterator();
+        if (!empty($iterator)) {
+            foreach ($iterator as $k => $v) {
+                $cost += ShippingHelper::getAverageShippingCharge($v->getProduct()->productid,  $v->getQuantity());
+            }
+        }
+        return $cost;
     }
 
     public function getExtraMarginValue()
