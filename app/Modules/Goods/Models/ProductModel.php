@@ -661,6 +661,11 @@ class ProductModel extends Model implements ICartItem
 
     public function isFreeShipping()
     {
+        return false;
+    }
+
+    public function isFlatRate()
+    {
         return true;
     }
 

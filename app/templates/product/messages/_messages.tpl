@@ -5,6 +5,9 @@
         {if $model->isFreeShipping()}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text="Free Shipping within contiguous U.S."}
         {/if}
+        {if $model->isFlatRate()}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "flat-shipping" text="$8.99 flat tate shipping within contiguous U.S."}
+        {/if}
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
         {elseif $dx->dx_leadtime}

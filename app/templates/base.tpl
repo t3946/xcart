@@ -50,7 +50,7 @@
                                         </div>
 
                                         <div class="columns show-for-medium medium-5 large-4">
-                                            <img src="/static/frontend/dist/images/free.png">
+                                            <img src="/static/frontend/dist/images/flat.png">
                                         </div>
 
                                         <div class="columns small-1 medium-5 large-push-3 show-for-large">
@@ -82,7 +82,7 @@
                                 <div class="mobile-banner hide-for-medium">
                                     <div class="row align-justify">
                                         <div class="columns banner">
-                                            <img src="/static/frontend/dist/images/free-sm.jpg">
+                                            <img src="/static/frontend/dist/images/flat.png">
                                         </div>
                                     </div>
                                 </div>
