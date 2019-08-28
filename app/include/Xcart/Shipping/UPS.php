@@ -107,7 +107,8 @@ class UPS extends ShippingProcessor
                 $shippingWeight = min(self::MAX_WEIGHT_FOR_UPS_PACKAGE, $oShippingRate->getCartShippingWeight());
                 $shippingWeight = max($shippingWeight, 1);
 
-                $shipping_dimensions = $oShippingRate->getCartShippingDimentions();
+              $shipping_dimensions = [];
+//                $shipping_dimensions = $oShippingRate->getCartShippingDimentions();
 
                 $package = new Package();
                 $package->getPackagingType()->setCode(PackagingType::PT_PACKAGE);
