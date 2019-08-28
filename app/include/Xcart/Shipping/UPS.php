@@ -185,7 +185,8 @@ class UPS extends ShippingProcessor
                 foreach ($aShippingRates as $oShippingRate) {
                     if ((int)$oShippingRate->shippingid === (int)$this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
                         /*get approximation rates for UPS Ground*/
-                        $shippingCharge = $this->getApproximationCharge($oShippingRate);
+                        //$shippingCharge = $this->getApproximationCharge($oShippingRate);
+                        $shippingCharge = $oShippingRate->getCart()->getShippingCost();
                         $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
                         $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                         break;
