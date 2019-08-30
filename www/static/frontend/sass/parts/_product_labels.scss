@@ -120,7 +120,7 @@
 
       @include breakpoint(large) {
         display: block;
-        background-image: url("../images/icons/item_product/flat_shipping.svg");
+        background-image: url("../images/icons/item_product/flat_shipping.png");
         background-size: 100%;
         padding: 0;
       }
@@ -213,7 +213,7 @@
           display: block;
           width: rem-calc(64);
           padding: 5px;
-          background-image: url("../images/icons/item_product/flat_shipping.svg");
+          background-image: url("../images/icons/item_product/flat_shipping.png");
         }
       }
     }
