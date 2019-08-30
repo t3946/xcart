@@ -20,9 +20,7 @@ class SurfingHelper
             return false;
         }
 
-        $oSurfMeta = SurfMetaModel::getInstance();
-
-        if ($oSurfMeta->id) {
+        if (($oSurfMeta = SurfMetaModel::getInstance()) && $oSurfMeta->id) {
 
             if (in_array($model->resource_type, [SurfPathModel::GOAL_TYPE_ADD_TO_CART, SurfPathModel::GOAL_TYPE_CHECKOUT, SurfPathModel::GOAL_TYPE_SEARCH, SurfPathModel::GOAL_TYPE_ORDER])) {
                 $aGoalArray[$model->goals_arr[$model->resource_type]] = "Y";

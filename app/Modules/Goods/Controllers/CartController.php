@@ -11,6 +11,9 @@ use Modules\Order\Forms\CountShippingForm;
 use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\ShippingModule;
+use Modules\User\Helpers\DiscountHelper;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
 
 class CartController extends BaseCartController
@@ -300,6 +303,11 @@ class CartController extends BaseCartController
                 }
                 else {
                     $cart->add($model, $tq, null, $data);
+                    SurfingHelper::logSurfPath([
+                        'resource_type' => SurfPathModel::GOAL_TYPE_ADD_TO_CART,
+                        'resource_id' => $model->pk,
+                        'additional_data' => DiscountHelper::getDiscountMinutes()
+                    ]);
                 }
 
                 if ($tq != $quantity) {
