@@ -68,29 +68,31 @@ import documentReady from "../../utils/documentReady";
                     let duration = timer_block.dataset.timer - 1;
                     let minutes_init = timer_block.dataset.minutes;
                     let timer = duration;
+                    if (minutes_init > 0) {
 
-                    setInterval(function () {
+                        setInterval(function () {
 
-                        let hours = parseInt(timer / 3600, 10)
-                        let minutes = parseInt((timer / 60) % 60, 10)
-                        let seconds = parseInt(timer % 60, 10);
+                            let hours = parseInt(timer / 3600, 10)
+                            let minutes = parseInt((timer / 60) % 60, 10)
+                            let seconds = parseInt(timer % 60, 10);
 
-                        hours = hours < 10 ? "0" + hours : hours;
-                        minutes = minutes < 10 ? "0" + minutes : minutes;
-                        seconds = seconds < 10 ? "0" + seconds : seconds;
+                            hours = hours < 10 ? "0" + hours : hours;
+                            minutes = minutes < 10 ? "0" + minutes : minutes;
+                            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                        display_hours.textContent = hours;
-                        display_minutes.textContent = minutes;
-                        display_seconds.textContent = seconds;
-                        if (timer >= 0) {
-                            timer_block.style.display = 'block';
-                        }
-                        if (--timer < 0) {
-                            timer_block.style.display = 'none';
-                            document.querySelector('.price__quantity .price-row-width').style.display = 'none';
-                            // timer = minutes_init * 60 - 1;
-                        }
-                    }, 1000);
+                            display_hours.textContent = hours;
+                            display_minutes.textContent = minutes;
+                            display_seconds.textContent = seconds;
+                            if (timer >= 0) {
+                                timer_block.style.display = 'block';
+                            }
+                            if (--timer < 0) {
+                                timer_block.style.display = 'none';
+                                document.querySelector('.price__quantity .price-row-width').style.display = 'none';
+                                // timer = minutes_init * 60 - 1;
+                            }
+                        }, 1000);
+                    }
                 }
             }
 
