@@ -327,6 +327,19 @@
         }
       }
     }
+
+    .no-account {
+      margin-top: rem-calc(5);
+      color: #777777;
+      font-size: rem-calc(14);
+
+    }
+
+    .jackpot {
+      margin-bottom: rem-calc(10);
+      color: red;
+      display:none;
+    }
   }
 
   .subtotal_container {

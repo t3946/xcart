@@ -122,7 +122,10 @@ import SelectNumberItems from "../../components/SelectNumberItems";
                 }];
 
                 buttonAnimation.start();
-                cartAdd(data, ()=>{ productItemResetState(product); });
+                cartAdd(data, ()=>{
+                    productItemResetState(product);
+                    $('.jackpot').show();
+                });
                 window.sendAnalytics.addToCart(product);
             }
 

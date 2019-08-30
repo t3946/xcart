@@ -132,6 +132,9 @@
                         {if $form}
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
+                        <div class="jackpot">
+                            Jackpot! You got a great price!
+                        </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {*                            {include "product/parts/_number_button.tpl"}*}
                             <a class="add button yellow wait-button">
@@ -142,6 +145,9 @@
                                     Added
                                 </span>
                             </a>
+                        </div>
+                        <div class="no-account">
+                            No account needed! Checkout only takes 2 minutes.
                         </div>
                     </div>
                     <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
