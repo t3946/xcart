@@ -38,4 +38,18 @@ class RequestAvailabilityOptionModel extends Model
             ],
         ];
     }
+
+    public function getDaysUntil():? int
+    {
+        $dateTime = new \DateTime();
+        if ($dT = \DateTime::createFromFormat('m/d/Y', $this->date_mm_dd_yyyy)) {
+            return $dT->diff($dateTime)->days;
+        }
+        return null;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 }
