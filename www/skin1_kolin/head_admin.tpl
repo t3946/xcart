@@ -10,7 +10,7 @@
             </a>
         </td>
         {if $login ne ""}
-            <td align="left" width="68%">
+            <td align="left" width="70%">
                 {php}
                     $est_time = new DateTime("now", new DateTimeZone('EST') );
                     $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
