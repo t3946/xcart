@@ -63,9 +63,10 @@
                         <div style="margin-bottom: 3px;">&nbsp;CA Time: {$ca_time->format('H:i')}</div>
                     </div>
                     {if $order_store}
+                    <div style="float:left; margin-right:7px;">
                         {assign var='cs_date' value=$order_store->model->getCxDateTime()}
                         {if $cs_date}
-                            <div style="margin-bottom: 3px;">Cx Time: {$cs_date->format('H:i')}</div>{/if}
+                        <div style="margin-bottom: 3px;">Cx Time: {$cs_date->format('H:i')}</div>{/if}
                         <div style="margin-bottom: 3px; float:left; margin-right:7px;">
                             Dx Time:
                             {foreach from=$order_store->model->groups item=group}
@@ -74,6 +75,7 @@
                                 {$distributor_time->format('H:i')}&nbsp;
                             {/foreach}
                         </div>
+                    </div>
                     {/if}
                 </div>
             </td>
