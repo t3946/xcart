@@ -51,49 +51,31 @@ $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xp
 		'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message', 'RMA_subject', 'RMA_to_department_Subject',
 		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
 		'secure_data','amazon_verification_make_conclusion_popup_message','retail_trust_message', 'amazon_verification_product_quantity_popup_message','amazon_verification_product_names_popup_message',
-		'amazon_verification_product_images_popup_message', 'w9_message', 'html_into_head', 'thank_you_message_body_amazon'];
+		'amazon_verification_product_images_popup_message', 'w9_message', 'html_into_head', 'thank_you_message_body_amazon', 'dashboard_tabs_teamwork'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_load('backoffice','mail','order');
-
 $options = func_query_column("SELECT category FROM $sql_tbl[config] WHERE category NOT IN ('UPS_OnLine_Tools', 'Taxes') AND category != '' AND category != 'Search_All' GROUP BY category");
 
 
-#
-##
-###
-if (!empty($options) && is_array($options)){
-        foreach ($options as $k => $v){
-//                if ($v == "CMPI"){
-//                        unset($options[$k]);
-//                        $options['-1'] = $v;
-//                }
-
-#
-## https://basecamp.com/2070980/projects/1577907/messages/34203590
-		if ($v == "currently_assigned_to_statuses"){
+if (!empty($options) && is_array($options)) {
+	foreach ($options as $k => $v) {
+		if ($v === 'currently_assigned_to_statuses') {
 			unset($options[$k]);
 			continue;
 		}
-##
-#
-
-		if ($v == "PBX_options" && !empty($membership_code)){
+		if ($v === 'PBX_options' && !empty($membership_code)) {
 			unset($options[$k]);
 		}
 
 		$option_names_arr[$v] = func_query_first_cell("SELECT value FROM $sql_tbl[languages] WHERE name='option_title_$v' AND code='US'");
-        }
+	}
 	asort($option_names_arr);
 
 	$options = array_keys($option_names_arr);
 	$options = array_values($options);
 }
-###
-##
-#
 
 $disabled_modules = func_query_column("SELECT module_name FROM $sql_tbl[modules] WHERE active != 'Y'");
 if (!empty($disabled_modules)) {
@@ -126,8 +108,8 @@ require $xcart_dir."/include/states.php";
 
 $location[] = array(func_get_langvar_by_name("lbl_general_settings"), "configuration.php");
 
-if ($REQUEST_METHOD=="POST") {
-	require $xcart_dir."/include/safe_mode.php";
+if ($REQUEST_METHOD === 'POST') {
+	require $xcart_dir. '/include/safe_mode.php';
 }
 
 if (!empty($active_modules['Multiple_Storefronts']) && $option == 'Multiple_Storefronts') {

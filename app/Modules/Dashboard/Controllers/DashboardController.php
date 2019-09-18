@@ -3,6 +3,7 @@
 namespace Modules\Dashboard\Controllers;
 
 use Mindy\QueryBuilder\Expression;
+use Modules\Core\Models\GlobalConfigModel;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
@@ -58,6 +59,9 @@ class DashboardController extends PrototypeAdminController
             $this->jsonResponse($data);
         }
         else {
+
+            $add_tabs = GlobalConfigModel::objects()->filter(['category' => 'Order_Dashboard_Tabs'])->all();
+
             echo $this->renderInternal('dashboard/index.tpl',
                 [
                     'models'  => $models,
@@ -68,7 +72,8 @@ class DashboardController extends PrototypeAdminController
                     'inquiries' => $inquiries,
                     'inquiries_tags' => $inquiries_tags,
                     'user' => Xcart::app()->user,
-                    'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')])
+                    'site' => SiteModel::objects()->get(['storefrontid' => Xcart::app()->request->session->get('current_storefront')]),
+                    'add_tabs' => $add_tabs ?? []
                 ]
             );
         }
