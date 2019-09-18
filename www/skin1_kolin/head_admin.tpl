@@ -27,7 +27,7 @@
                     </div>
                     <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/reconciliation.php">Reconciliation / AP & AR</a></div>
-                        <div><a style="color: #140BFC" href="/checks_deposited.php">Checks deposited</a></div>
+                        <div><a style="color: #140BFC" href="/admin/checks_deposited.php">Checks deposited</a></div>
                         <div><a style="color: #140BFC" href="/admin/reports.php">Reports</a></div>
                     </div>
                 </div>
