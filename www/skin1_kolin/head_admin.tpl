@@ -40,7 +40,7 @@
                         {/if}
                     </div>
                 </div>
-                <div style="float:right; margin-right:17px;">
+                <div style="float:right;">
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>
                         {php}
