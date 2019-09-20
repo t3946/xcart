@@ -114,6 +114,18 @@
       }
     }
   }
+  &.flat-shipping {
+    i {
+      display: none;
+
+      @include breakpoint(large) {
+        display: block;
+        background-image: url("../images/icons/item_product/flat_shipping.png");
+        background-size: 100%;
+        padding: 0;
+      }
+    }
+  }
 
 
   &.fill {
@@ -187,6 +199,21 @@
           width: rem-calc(64);
           padding: 5px;
           background-image: url("../images/icons/item_product/free_shipping.svg");
+        }
+      }
+    }
+
+    &.flat-shipping {
+      border-color: #4EAAFC;
+      border-left: 1px dashed #4EAAFC;
+      i {
+        display: none;
+
+        @include breakpoint(large) {
+          display: block;
+          width: rem-calc(64);
+          padding: 5px;
+          background-image: url("../images/icons/item_product/flat_shipping.png");
         }
       }
     }

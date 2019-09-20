@@ -35,6 +35,13 @@
                 <li>
                     <a href="#inquiries" class="link">Inquiries</a>
                 </li>
+                {if $add_tabs}
+                    {foreach $add_tabs as $tab}
+                        <li>
+                            <a href="#{$tab->name}" class="link">{$tab->comment}</a>
+                        </li>
+                    {/foreach}
+                {/if}
             </ul>
 
             <div class="tabs-content">
@@ -137,6 +144,13 @@
 
                     {/smarty_admin_block}
                 </div>
+                {if $add_tabs}
+                    {foreach $add_tabs as $tab}
+                        <div id="{$tab->name}">
+                            {$tab->value}
+                        </div>
+                    {/foreach}
+                {/if}
             </div>
         </div>
     </div>

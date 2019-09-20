@@ -169,8 +169,7 @@
                     {if !$item->isOutOfStock()}
                         <div class="cart_quantity">
                             <label for="quantity-{$item.productid}" class="show-for-large">
-                                <span class="show-for-xlarge">{t 'Quantity'}:</span>
-                                <span class="show-for-large-only">{t 'Qty'}:</span>
+                                <span class="show-for-large">{t 'Quantity'}:</span>
                             </label>
 
                             {include "product/parts/_quantity_group.tpl" model=$item}

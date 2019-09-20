@@ -63,7 +63,8 @@ class OrderEventHelper
                 $log_message[] = "<b>Customer notes:</b>\n{$model->customer_notes}\n\n";
             }
 
-            if ($d_min = $app->request->session->get(DiscountHelper::CODE_PARAM_MINUTES)) {
+            $d_min = DiscountHelper::getDiscountMinutes();
+            if ($d_min !== null) {
                 $log_message[] = "<b>Discount time:</b> {$d_min} min. \n";
             }
 

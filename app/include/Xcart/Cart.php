@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Shipping\Helpers\ShippingHelper;
+
 class Cart
 {
     private $fCost = null;

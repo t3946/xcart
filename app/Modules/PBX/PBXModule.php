@@ -13,7 +13,7 @@ class PBXModule extends Module
 
         return [
             [
-                'name' => 'View calls',
+                'name' => 'Call recordings',
                 'route' => $router->url('admin_pbx:view'),
             ]
         ];

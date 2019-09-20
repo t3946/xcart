@@ -107,7 +107,8 @@ class UPS extends ShippingProcessor
                 $shippingWeight = min(self::MAX_WEIGHT_FOR_UPS_PACKAGE, $oShippingRate->getCartShippingWeight());
                 $shippingWeight = max($shippingWeight, 1);
 
-                $shipping_dimensions = $oShippingRate->getCartShippingDimentions();
+              $shipping_dimensions = [];
+//                $shipping_dimensions = $oShippingRate->getCartShippingDimentions();
 
                 $package = new Package();
                 $package->getPackagingType()->setCode(PackagingType::PT_PACKAGE);
@@ -139,6 +140,14 @@ class UPS extends ShippingProcessor
         return $aResponses;
     }
 
+    public function getAverageCharge($oShippingRate)
+    {
+        $weight = ceil($oShippingRate->getCartShippingWeight());
+        if ($volume = $oShippingRate->getCartShippingVolume()) {
+            $weight = ceil($volume > 1728 ? max($weight, $volume / 139) : max($weight, $volume / 166));
+        }
+        return ShippingHelper::getAverageShippingCharge($weight, $this->getManufacturer()->manufacturerid);
+    }
     public function getApproximationCharge($oShippingRate)
     {
         $shippingCharge = 0;
@@ -184,7 +193,7 @@ class UPS extends ShippingProcessor
                 foreach ($aShippingRates as $oShippingRate) {
                     if ((int)$oShippingRate->shippingid === (int)$this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
                         /*get approximation rates for UPS Ground*/
-                        $shippingCharge = $this->getApproximationCharge($oShippingRate);
+                        $shippingCharge = $this->getAverageCharge($oShippingRate);
                         $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
                         $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                         break;

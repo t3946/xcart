@@ -638,13 +638,12 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     <div align="right" class="invoice_unit_cost_to_us bg__yellow color__black" data-cost-to-us="{$product_model->cost_to_us}" >
         {include file="currency2.tpl" value=$product_model->cost_to_us|price_format}
     </div>
-    <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
+
         {if $order_detail_model->item_cost_to_us ne $product_model->cost_to_us}
+            <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
             {include file="currency2.tpl" value=$order_detail_model->item_cost_to_us|price_format}
-        {else}
-            Cost to us accurate
+            </div>
         {/if}
-    </div>
     {/if}
 </td>
 

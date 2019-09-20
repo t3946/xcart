@@ -659,6 +659,9 @@ function check_r_fields(){
     {if $product.oProduct->ASIN}
           <br/>
           <a target="_blank" href="https://amazon.com/dp/{$product.oProduct->ASIN}">{$product.oProduct->ASIN}</a>
+    {else}
+        <br/>
+        <a target="_blank" href="/admin/amazon/verification/{$product.oProduct->productid}/{$order.orderid}">N/A ASIN</a>
     {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
@@ -675,16 +678,11 @@ function check_r_fields(){
 {include file="currency2.tpl" value=$product.cost_to_us|price_format}
 </div>
 
-{if $product.item_cost_to_us ne ""}
-<div style="BACKGROUND-COLOR: #F2A3A8; color: #000000" align="right">
-{if $product.item_cost_to_us ne $product.cost_to_us}
-{include file="currency2.tpl" value=$product.item_cost_to_us|price_format}
-{else}
-Cost to us accurate
-{/if}
-</div>
-{/if}
-{* --- *}
+      {if $product.item_cost_to_us ne "" && $product.item_cost_to_us ne $product.cost_to_us}
+          <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000" align="right">
+              {include file="currency2.tpl" value=$product.item_cost_to_us|price_format}
+          </div>
+      {/if}
 
   </td>
   <td align="right" {* valign="top" *}>{if !$static}<input type="text" size="5" id="items_amount_{$m_id}_{$product.itemid}" name="items[{$product.itemid}][amount]" value="{$product.amount}" {* {if $v.dc_status eq 'C' || $v.dc_status eq 'L' || $v.dc_status eq 'S'}readonly="readonly"{/if} *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$product.amount}{/if}</td>

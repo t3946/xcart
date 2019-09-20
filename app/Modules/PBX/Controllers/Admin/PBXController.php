@@ -34,47 +34,47 @@ class PBXController extends BackendController
             foreach ($form->getAttributes() as $key => $value){
                 if ($value) {
 
-                    if ($key == 'order') {
+                    if ($key === 'order') {
                         $qs->filter(['orders__orderid' => $value]);
                     }
-                    elseif ($key == 'date_from') {
-                        if (!is_null($value) && !empty($value)) {
+                    elseif ($key === 'date_from') {
+                        if ($value !== null && !empty($value)) {
                             if ($date = PBXHelper::getClearDate($value)) {
                                 $qs->filter(['start_at__gte' => $date->format('Y-m-d H:i:s')]);
                             }
                         }
                     }
-                    elseif ($key == 'date_to') {
-                        if (!is_null($value) && !empty($value)) {
+                    elseif ($key === 'date_to') {
+                        if ($value !== null && !empty($value)) {
                             if ($date = PBXHelper::getClearDate($value)) {
                                 $qs->filter(['end_at__lte' => $date->format('Y-m-d H:i:s')]);
                             }
                         }
                     }
-                    elseif ($key == 'operator'){
+                    elseif ($key === 'operator'){
 
                         if (!empty($value)) {
                             $qs->filter(['account__user__id__in' => $value]);
                         }
                     }
-                    elseif ($key == 'e164'){
+                    elseif ($key === 'e164'){
                         $qs->filter([$key => $value]);
                     }
-                    elseif ($key == 'direction'){
-                        if ($value == 'in'){
+                    elseif ($key === 'direction'){
+                        if ($value === 'in'){
                             $qs->filter([
                                 'is_outgoing' => 0,
                                 'is_lost' => 0,
                                 'is_voice_mail' => 0
                                         ]);
                         }
-                        elseif ($value == 'out'){
+                        elseif ($value === 'out'){
                             $qs->filter(['is_outgoing' => 1]);
                         }
-                        elseif ($value == 'lost'){
+                        elseif ($value === 'lost'){
                             $qs->filter(['is_lost' => 1]);
                         }
-                        elseif ($value == 'vm'){
+                        elseif ($value === 'vm'){
                             $qs->filter(['is_voice_mail' => 1]);
                         }
                     }
@@ -92,7 +92,7 @@ class PBXController extends BackendController
         /** @var PbxAnveoCallModel $model */
         foreach ($pager->paginate() as $model) {
             if ($model) {
-                $name = "Not defined";
+                $name = 'Not defined';
 
                 if ($model->anveo_account) {
                     if ($options = $model->options) {
@@ -127,19 +127,19 @@ class PBXController extends BackendController
                 }
 
                 if ($model->isOutgoing()) {
-                    $mass[ $i ]['direction'] = "Outbound";
+                    $mass[ $i ]['direction'] = 'Outbound';
                 }
                 elseif ($model->isLost()) {
-                    $mass[ $i ]['direction'] = "Miss call";
+                    $mass[ $i ]['direction'] = 'Miss call';
                 }
                 elseif ($model->isVoiceMail()) {
-                    $mass[ $i ]['direction'] = "Voice mail";
+                    $mass[ $i ]['direction'] = 'Voice mail';
                 }
                 else {
-                    $mass[ $i ]['direction'] = "Inbound";
+                    $mass[ $i ]['direction'] = 'Inbound';
                 }
 
-                if (!is_null($model->end_at) && !is_null($model->start_at)) {
+                if ($model->end_at !== null && $model->start_at !== null) {
                     $datetime1 = new \DateTime($model->end_at);
                     $datetime2 = new \DateTime($model->start_at);
                     $interval = $datetime1->diff($datetime2);
@@ -149,16 +149,16 @@ class PBXController extends BackendController
                     $i++;
                 }
                 else {
-                    $mass[ $i ]['diff'] = "Not defined";
+                    $mass[ $i ]['diff'] = 'Not defined';
                 }
 
             }
         }
 
-        $pageTitle = "Call records";
+        $pageTitle = 'Call recordings';
 
-        Xcart::app()->breadcrumbs->add('pbxcalls');
-        echo $this->renderInSmarty("admin/pbxcall/index.tpl", [
+        Xcart::app()->breadcrumbs->add($pageTitle);
+        echo $this->renderInSmarty('admin/pbxcall/index.tpl', [
             'mass' => $mass,
             'pager' => $pager,
             'page_title' => $pageTitle,

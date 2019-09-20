@@ -11,6 +11,7 @@ namespace Modules\Main\Helpers;
 
 
 use DateTime;
+use Mindy\QueryBuilder\Expression;
 use Modules\Distributor\Models\RequestAvailabilityOptionModel;
 
 class WorkingTimeHelper
@@ -26,6 +27,7 @@ class WorkingTimeHelper
     /**
      * В данный момент рабочий день и рабочее время
      * @return bool
+     * @throws \Exception
      */
     public static function workingDayTimeNow(): bool
     {
@@ -35,6 +37,7 @@ class WorkingTimeHelper
     /**
      * Текущая дата и время
      * @return DateTime
+     * @throws \Exception
      */
     public static function getDayTimeNow(): DateTime
     {
@@ -45,6 +48,7 @@ class WorkingTimeHelper
      * День рабочий и идет рабочее время
      * @param $dateTime DateTime
      * @return bool
+     * @throws \Exception
      */
     public static function workingDayTime(DateTime $dateTime): bool
     {
@@ -55,6 +59,7 @@ class WorkingTimeHelper
      * Идет рабочее время
      * @param $dateTime DateTime
      * @return bool
+     * @throws \Exception
      */
     public static function workingTime(DateTime $dateTime): bool
     {
@@ -71,7 +76,7 @@ class WorkingTimeHelper
      */
     public static function workingWeekDay(DateTime $dateTime): bool
     {
-        return !in_array(intval($dateTime->format( 'N' )), [self::N_SATURDAY, self::N_SUNDAY]);
+        return !in_array((int) $dateTime->format('N'), [self::N_SATURDAY, self::N_SUNDAY], true);
     }
 
     /**
@@ -85,5 +90,21 @@ class WorkingTimeHelper
             'date_mm_dd_yyyy' => $dateTime->format('m/d/Y'),
             'active' => 'Y'
         ]) ? true : false;
+    }
+
+    /**
+     * Следующий прадничный день
+     * @param DateTime $dateTime
+     * @return RequestAvailabilityOptionModel|null
+     */
+    public function getNextHoliday(DateTime $dateTime):? RequestAvailabilityOptionModel
+    {
+        return RequestAvailabilityOptionModel::objects()
+            ->order(['date_mm_dd_yyyy'])
+            ->limit(1)
+            ->get([
+                new Expression("STR_TO_DATE(date_mm_dd_yyyy, '%c/%e/%Y') >= '{$dateTime->format('Y-m-d')}'"),
+                'active' => 'Y'
+            ]);
     }
 }
