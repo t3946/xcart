@@ -74,7 +74,7 @@ class MetaTemplate extends Model
 
         if ($this->advanced) {
             foreach ($this->advanced as $value) {
-                $result[$value['type']][$value['name']] = self::renderString($value['template'], $this->params);
+                $result[$value['type']][$value['name']] = $this->renderString(html_entity_decode($value['template']), $this->params);
             }
         }
 
@@ -83,6 +83,6 @@ class MetaTemplate extends Model
 
     public function render($name)
     {
-        return self::renderString($this->{$name}, $this->params);
+        return $this->renderString(html_entity_decode($this->{$name}), $this->params);
     }
 } 
