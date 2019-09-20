@@ -15,6 +15,6 @@ class TextAreaField extends Field
 
     public function getValue()
     {
-        return htmlentities(html_entity_decode($this->value));
+        return htmlentities($this->value);
     }
 }
