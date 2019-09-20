@@ -185,7 +185,7 @@ class CartController extends BaseCartController
             $image = '//cdn.' . $site->getBaseDomain() . $image;
         }
 
-        $price = $product->getPrice($item->getQuantity());
+        $price = $product->getFrontendPrice($item->getQuantity());
         $extended = $item->recalculate();
 //        $discount = $item->getPrice() - $extended;
         $discount = $item->getDiscountSum();

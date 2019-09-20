@@ -25,6 +25,7 @@ class SiteModel extends Model
 {
     private $_config = [];
     private $_globalConfig = [];
+    private $currency;
 
 
     public function __toString()
@@ -228,9 +229,12 @@ class SiteModel extends Model
         return $this->code. '-';
     }
 
-    public function getCurrency()
+    public function getCurrency():? CurrencyModel
     {
-        return CurrencyModel::objects()->get(['currency_id' => $this->getConfig()['currency'] ?? 1]);
+        if ($this->currency === null) {
+            $this->currency = CurrencyModel::objects()->get(['currency_id' => $this->getConfig()['currency'] ?? 1]);
+        }
+        return $this->currency;
     }
 
 }

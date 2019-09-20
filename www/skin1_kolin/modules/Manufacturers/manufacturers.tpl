@@ -876,75 +876,88 @@ function func_show_login_password_info(manufacturerid){
 {elseif $d_section.distributor_section eq "5"}
 <table cellpadding="3" cellspacing="1" width="100%" id="distributor_section_id_5" {if $distributor_section ne "5"}style="display: none;" {/if}>
 
-<tr>
+    <tr>
         <td width="20%" class="FormButton">Product catalog URL</td>
         <td>&nbsp;</td>
-        <td width="80%"><input type="text" size="50" name="d_product_catalog" value="{$manufacturer.d_product_catalog}" style="width:40%" />
-        {if $manufacturer.d_product_catalog ne ""}<a href="{$manufacturer.d_product_catalog}" target="_blank">Open</a>{/if}
+        <td width="80%"><input type="text" size="50" name="d_product_catalog" value="{$manufacturer.d_product_catalog}" style="width:40%"/>
+            {if $manufacturer.d_product_catalog ne ""}<a href="{$manufacturer.d_product_catalog}" target="_blank">Open</a>{/if}
         </td>
-</tr>
+    </tr>
 
-<tr>
+    <tr>
         <td width="20%" class="FormButton">Price-list URL</td>
         <td>&nbsp;</td>
-        <td width="80%"><input type="text" size="50" name="d_price_list" value="{$manufacturer.d_price_list}" style="width:40%" />
-        {if $manufacturer.d_price_list ne ""}<a href="{$manufacturer.d_price_list}" target="_blank">Open</a>{/if}
+        <td width="80%"><input type="text" size="50" name="d_price_list" value="{$manufacturer.d_price_list}"
+                               style="width:40%"/>
+            {if $manufacturer.d_price_list ne ""}<a href="{$manufacturer.d_price_list}" target="_blank">Open</a>{/if}
         </td>
-</tr>
+    </tr>
 
-<tr>
+    <tr>
         <td width="20%" class="FormButton">{$lng.lbl_cost_to_us}&nbsp;=</td>
         <td>&nbsp;</td>
-        <td width="80%"><input type="text" size="9" name="cost_to_us_coef_x" value="{$manufacturer.cost_to_us_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_list_price}</td>
-</tr>
+        <td width="80%"><input type="text" size="9" name="cost_to_us_coef_x" value="{$manufacturer.cost_to_us_coef_x}"/>&nbsp;*&nbsp;{$lng.lbl_list_price}
+        </td>
+    </tr>
 
-<tr>
+    <tr>
         <td class="FormButton">{$lng.lbl_price}&nbsp;=</td>
         <td>&nbsp;</td>
-        <td>(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;<input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}" />&nbsp;)&nbsp;/&nbsp;<input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}" /></td>
-</tr>
+        <td>(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}"/>
+            &nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;
+            <input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}"/>&nbsp;)&nbsp;/&nbsp;
+            <input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}"/>
+        </td>
+    </tr>
 
-<tr>
+    <tr>
         <td width="20%" class="FormButton">MAP policy</td>
         <td>&nbsp;</td>
         <td width="80%">
-<select name="d_map_policy" id="d_map_policy"
-onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();}else{$('#tr_d_map_prices').hide();}{/literal}"
->
-<option value="">N/A</option>
-<option value="applies_to_selected_products"{if $manufacturer.d_map_policy eq "applies_to_selected_products"} selected="selected"{/if}>applies to selected products</option>
-<option value="applies_to_all_products"{if $manufacturer.d_map_policy eq "applies_to_all_products"} selected="selected"{/if}>applies to all products</option>
-</select>
+            <select name="d_map_policy" id="d_map_policy"
+                    onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();}else{$('#tr_d_map_prices').hide();}{/literal}">
+                <option value="">N/A</option>
+                <option value="applies_to_selected_products"{if $manufacturer.d_map_policy eq "applies_to_selected_products"} selected="selected"{/if}>
+                    applies to selected products
+                </option>
+                <option value="applies_to_all_products"{if $manufacturer.d_map_policy eq "applies_to_all_products"} selected="selected"{/if}>
+                    applies to all products
+                </option>
+            </select>
         </td>
-</tr>
+    </tr>
 
-<tr id="tr_d_map_prices" {if $manufacturer.d_map_policy eq ""}style="display: none;"{/if}>
+    <tr id="tr_d_map_prices" {if $manufacturer.d_map_policy eq ""}style="display: none;"{/if}>
         <td width="20%" class="FormButton">MAP prices URL</td>
         <td>&nbsp;</td>
-        <td width="80%"><input type="text" size="50" name="d_map_prices" value="{$manufacturer.d_map_prices}" style="width:40%" />
-        {if $manufacturer.d_map_prices ne ""}<a href="{$manufacturer.d_map_prices}" target="_blank">Open</a>{/if}
+        <td width="80%">
+            <input type="text" size="50" name="d_map_prices" value="{$manufacturer.d_map_prices}" style="width:40%"/>
+            {if $manufacturer.d_map_prices ne ""}<a href="{$manufacturer.d_map_prices}" target="_blank">Open</a>{/if}
         </td>
-</tr>
+    </tr>
 
-<tr>
+    <tr>
         <td class="FormButton">MAP price&nbsp;=</td>
         <td>&nbsp;</td>
-        <td><input type="text" size="9" name="new_map_price_coef_x" value="{$manufacturer.new_map_price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_list_price}</td>
-</tr>
+        <td><input type="text" size="9" name="new_map_price_coef_x" value="{$manufacturer.new_map_price_coef_x}"/>&nbsp;*&nbsp;{$lng.lbl_list_price}
+        </td>
+    </tr>
 
-<tr>
+    <tr>
         <td class="FormButton">Bridge price&nbsp;=</td>
         <td>&nbsp;</td>
-        <td><input type="text" size="9" name="map_price_coef_x" value="{$manufacturer.map_price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_list_price}</td>
-</tr>
+        <td><input type="text" size="9" name="map_price_coef_x"
+                   value="{$manufacturer.map_price_coef_x}"/>&nbsp;*&nbsp;{$lng.lbl_list_price}</td>
+    </tr>
 
-<tr>
+    <tr>
         <td nowrap="nowrap" class="FormButton">Distributor product price multiplier</td>
         <td>&nbsp;</td>
-        <td><input type="text" size="9" name="supplier_products_price_multiplier" value="{$manufacturer.supplier_products_price_multiplier}" /></td>
-</tr>
+        <td><input type="text" size="9" name="supplier_products_price_multiplier"
+                   value="{$manufacturer.supplier_products_price_multiplier}"/></td>
+    </tr>
 
-<tr>
+    <tr>
         <td nowrap="nowrap" class="FormButton">Reduce extra margin from shipping cost</td>
         <td>&nbsp;</td>
         <td>
@@ -953,12 +966,23 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
                 <option value="Y" {if $manufacturer.reduce_extra_margin == 'Y'} selected="selected"{/if}>Y</option>
             </select>
         </td>
- </tr>
+    </tr>
     <tr>
         <td nowrap="nowrap" class="FormButton">Max extra margin for Free shipping</td>
         <td>&nbsp;</td>
         <td>
-            <input type="text" size="9" name="max_extra_margin" value="{$manufacturer.max_extra_margin}" />
+            <input type="text" size="9" name="max_extra_margin" value="{$manufacturer.max_extra_margin}"/>
+        </td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap" class="FormButton">Distributor currency</td>
+        <td>&nbsp;</td>
+        <td>
+            <select name="d_currency">
+                {foreach from=$currencies item=currency}
+                    <option {if $manufacturer.d_currency === $currency->currency_id}selected="selected"{/if} value="{$currency->currency_id}">{$currency->currency_code}</option>
+                {/foreach}
+            </select>
         </td>
     </tr>
 

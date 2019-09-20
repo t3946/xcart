@@ -8,11 +8,13 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
+use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -97,6 +99,13 @@ class DistributorModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'parent_manufacturer_id']
+            ],
+            'currency' => [
+                'field' => 'd_currency',
+                'class' => ForeignField::class,
+                'modelClass' => CurrencyModel::class,
+                'link' => ['d_currency' => 'currency_id'],
+                'default' => 1
             ],
         ];
     }
