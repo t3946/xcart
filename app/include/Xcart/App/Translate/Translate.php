@@ -18,9 +18,11 @@ class Translate
 
     public function __construct()
     {
-        $this->translator = new Translator('ru');
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getConfig();
+        $this->translator = new Translator($config['Preferred_language']);
         $this->translator->addLoader('po', new PoFileLoader());
-        $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath().'/lang/ru_RU.po', 'ru', 'messages');
+        $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath()."/lang/{$config['Preferred_language']}.po", $config['Preferred_language'], 'messages');
     }
 
     /**
@@ -47,7 +49,10 @@ class Translate
             //$str = $this->translator->trans($str, $params);
         }
 
-        $str_o =  $this->translator->trans($str, $params, 'messages', 'ru');
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getConfig();
+
+        $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language']);
         if ($str_o === '') {
             $str_o = $str;
         }

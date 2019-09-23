@@ -28,6 +28,8 @@ class CurrencyHelper
             $result *= $to->coefficient;
         }
 
+        $result /= 0.97; //Add conversion fee
+
         return (float) round($result, 2);
     }
 

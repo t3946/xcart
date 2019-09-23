@@ -7,7 +7,8 @@
             {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text=$lbl}
         {/if}
         {if $model->isFlatRate()}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "flat-shipping" text="$8.99 flat rate shipping within contiguous U.S."}
+            {set $lbl}{t '$8.99 flat rate shipping within contiguous U.S.'}{/set}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "flat-shipping" text=$lbl}
         {/if}
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}

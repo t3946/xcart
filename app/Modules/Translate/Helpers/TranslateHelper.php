@@ -39,7 +39,8 @@ class TranslateHelper
     public function processSave()
     {
         $path = Xcart::app()->getModule('Translate')->getPath();
-        $file = $path.'\lang\ru_RU.po';
+        
+        $file = $path.'\lang\ru.po';
         $translations_o = file_exists($file) ? Translations::fromPoFile($file) : new Translations;
         $translations_o->mergeWith($this->_translations, Merge::DEFAULTS | Merge::REMOVE);
         Po::toFile($translations_o, $file);

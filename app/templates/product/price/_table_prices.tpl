@@ -133,7 +133,7 @@
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
                         <div class="jackpot">
-                            Jackpot! You got a great price!
+                            {t 'Jackpot! You got a great price!'}
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {*                            {include "product/parts/_number_button.tpl"}*}
@@ -147,7 +147,7 @@
                             </a>
                         </div>
                         <div class="no-account">
-                            No account needed! Checkout only takes 2 minutes.
+                            {t 'No account needed! Checkout only takes 2 minutes.'}
                         </div>
                     </div>
                     <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
@@ -157,7 +157,7 @@
                                     {t 'List Price'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-list>{$model->list_price}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-list>{$model->list_price}</span>
                                 </div>
                             </div>
 
@@ -166,7 +166,7 @@
                                     {t 'Per item savings'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
                                 </div>
                             </div>
 
@@ -175,7 +175,7 @@
                                     {t 'Total savings'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
                                 </div>
                             </div>
 
