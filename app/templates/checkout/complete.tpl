@@ -100,11 +100,11 @@
                             </div>
                             <div class="row text-item">
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Local Phone' }:</div>
-                                <div class="column">{t '(616) 259-5711' }</div>
+                                <div class="column">{$config.local_phone}</div>
                             </div>
                             <div class="row text-item">
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax' }:</div>
-                                <div class="column">{t '1-800-929-2835' }</div>
+                                <div class="column">{$config.fax_number}</div>
                             </div>
                             <div class="row text-item">
                                 <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email' }:</div>

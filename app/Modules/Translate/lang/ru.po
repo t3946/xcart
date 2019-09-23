@@ -8,22 +8,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-08-26 12:43+0300\n"
+"PO-Revision-Date: 2019-09-23 14:31+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 msgctxt "Delete"
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 msgctxt "Clean"
 msgid "Clean"
-msgstr ""
+msgstr "Очистить"
 
 msgctxt "Order confirmation"
 msgid "Order confirmation"
-msgstr ""
+msgstr "Подтверждение заказа"
 
 msgctxt "Delivery from"
 msgid "Delivery from"
@@ -155,14 +155,6 @@ msgstr ""
 
 msgctxt "Canada"
 msgid "Canada"
-msgstr ""
-
-msgctxt "(616) 259-5711"
-msgid "(616) 259-5711"
-msgstr ""
-
-msgctxt "1-800-929-2835"
-msgid "1-800-929-2835"
 msgstr ""
 
 msgctxt "orders@s3stores.com"
@@ -903,7 +895,7 @@ msgstr "Некорректный номер телефона"
 
 msgctxt "Hide items"
 msgid "Hide items"
-msgstr ""
+msgstr "Свернуть"
 
 msgctxt "Product ordered"
 msgid "Product ordered"
@@ -975,11 +967,11 @@ msgstr ""
 
 msgctxt "Payments"
 msgid "Payments"
-msgstr ""
+msgstr "Оплата"
 
 msgctxt "Orders"
 msgid "Orders"
-msgstr ""
+msgstr "Заказы"
 
 msgctxt "Connect"
 msgid "Connect"
@@ -1061,13 +1053,9 @@ msgctxt "Price to"
 msgid "Price to"
 msgstr "до"
 
-msgctxt "Qty"
-msgid "Qty"
-msgstr "Кол"
-
 msgctxt "warehouse subtotal"
 msgid "warehouse subtotal"
-msgstr ""
+msgstr "итого  по складу"
 
 msgctxt "Apply"
 msgid "Apply"
@@ -1416,3 +1404,19 @@ msgstr ""
 msgctxt "delivery from"
 msgid "delivery from"
 msgstr "доставка из"
+
+msgctxt "$8.99 flat rate shipping within contiguous U.S."
+msgid "$8.99 flat rate shipping within contiguous U.S."
+msgstr ""
+
+msgctxt "Jackpot! You got a great price!"
+msgid "Jackpot! You got a great price!"
+msgstr ""
+
+msgctxt "No account needed! Checkout only takes 2 minutes."
+msgid "No account needed! Checkout only takes 2 minutes."
+msgstr ""
+
+msgctxt "This product is shipped from our warehouse in"
+msgid "This product is shipped from our warehouse in"
+msgstr ""

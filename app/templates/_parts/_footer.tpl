@@ -48,7 +48,7 @@
                                 <li class="title-menu">
                                     {t 'Telephone Customer Service'}
                                 </li>
-                                <li>Mon-Fri: 9 a.m. to 5 p.m. EST</li>
+                                <li>{$config.customer_service_working_time}</li>
                                 <li class="toll-free">{t 'Toll Free'}: <span class="number">{$config.cidev_top_header_code}</span></li>
                                 <li>{t 'Tel'}: {$config.local_phone}</li>
                                 <li>{t 'Fax'}: {$config.fax_number}</li>

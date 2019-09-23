@@ -1,0 +1,1419 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-09-23 13:58+0300\n"
+"PO-Revision-Date: 2019-09-23 13:58+0300\n"
+"Language: fr\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "Email address is invalid"
+msgid "Email address is invalid"
+msgstr ""
+
+msgctxt "Cannot be empty"
+msgid "Cannot be empty"
+msgstr ""
+
+msgctxt "SKU"
+msgid "SKU"
+msgstr ""
+
+msgctxt "PRICE RANGE"
+msgid "PRICE RANGE"
+msgstr ""
+
+msgctxt "FULL PRODUCT LINE"
+msgid "FULL PRODUCT LINE"
+msgstr ""
+
+msgctxt "In Stock"
+msgid "In Stock"
+msgstr ""
+
+msgctxt "PRICE"
+msgid "PRICE"
+msgstr ""
+
+msgctxt "Add to cart"
+msgid "Add to cart"
+msgstr ""
+
+msgctxt "Out Of Stock"
+msgid "Out Of Stock"
+msgstr ""
+
+msgctxt "FIND SIMILAR PRODUCTS"
+msgid "FIND SIMILAR PRODUCTS"
+msgstr ""
+
+msgctxt "See other product variations"
+msgid "See other product variations"
+msgstr ""
+
+msgctxt "Brands"
+msgid "Brands"
+msgstr ""
+
+msgctxt "Product added"
+msgid "Product added"
+msgstr ""
+
+msgctxt "Error has occurred"
+msgid "Error has occurred"
+msgstr ""
+
+msgctxt "Quantity updated"
+msgid "Quantity updated"
+msgstr ""
+
+msgctxt "The selected product has been removed successfully"
+msgid "The selected product has been removed successfully"
+msgstr ""
+
+msgctxt "Shopping Cart"
+msgid "Shopping Cart"
+msgstr ""
+
+msgctxt "Shopping cart"
+msgid "Shopping cart"
+msgstr ""
+
+msgctxt "Customer phone or email"
+msgid "Customer phone or email"
+msgstr ""
+
+msgctxt "Minimal price"
+msgid "Minimal price"
+msgstr ""
+
+msgctxt "Shipping Address"
+msgid "Shipping Address"
+msgstr ""
+
+msgctxt "Shipping & payment options"
+msgid "Shipping & payment options"
+msgstr ""
+
+msgctxt "Order review"
+msgid "Order review"
+msgstr ""
+
+msgctxt "Payment"
+msgid "Payment"
+msgstr ""
+
+msgctxt "ext"
+msgid "ext"
+msgstr ""
+
+msgctxt "optional"
+msgid "optional"
+msgstr ""
+
+msgctxt "Clean"
+msgid "Clean"
+msgstr ""
+
+msgctxt "Product(s) added"
+msgid "Product(s) added"
+msgstr ""
+
+msgctxt "Bestsellers"
+msgid "Bestsellers"
+msgstr ""
+
+msgctxt "New Products"
+msgid "New Products"
+msgstr ""
+
+msgctxt "Featured products"
+msgid "Featured products"
+msgstr ""
+
+msgctxt "Your first name"
+msgid "Your first name"
+msgstr ""
+
+msgctxt "Albert"
+msgid "Albert"
+msgstr ""
+
+msgctxt "Your email"
+msgid "Your email"
+msgstr ""
+
+msgctxt "albert.einstein@gmail.com"
+msgid "albert.einstein@gmail.com"
+msgstr ""
+
+msgctxt "Your phone"
+msgid "Your phone"
+msgstr ""
+
+msgctxt "(609) 734-8000"
+msgid "(609) 734-8000"
+msgstr ""
+
+msgctxt "Product question"
+msgid "Product question"
+msgstr ""
+
+msgctxt "Please type your product question here"
+msgid "Please type your product question here"
+msgstr ""
+
+msgctxt "asked by "
+msgid "asked by "
+msgstr ""
+
+msgctxt "answered by "
+msgid "answered by "
+msgstr ""
+
+msgctxt " (Staff)"
+msgid " (Staff)"
+msgstr ""
+
+msgctxt " on "
+msgid " on "
+msgstr ""
+
+msgctxt "Price"
+msgid "Price"
+msgstr ""
+
+msgctxt "Brand"
+msgid "Brand"
+msgstr ""
+
+msgctxt "Relevance"
+msgid "Relevance"
+msgstr ""
+
+msgctxt "Price low to high"
+msgid "Price low to high"
+msgstr ""
+
+msgctxt "Price high to low"
+msgid "Price high to low"
+msgstr ""
+
+msgctxt "New"
+msgid "New"
+msgstr ""
+
+msgctxt "Brand name"
+msgid "Brand name"
+msgstr ""
+
+msgctxt "tabs"
+msgid "tabs"
+msgstr ""
+
+msgctxt "Name"
+msgid "Name"
+msgstr ""
+
+msgctxt "Phone"
+msgid "Phone"
+msgstr ""
+
+msgctxt "Your email address"
+msgid "Your email address"
+msgstr ""
+
+msgctxt "Invoice"
+msgid "Invoice"
+msgstr ""
+
+msgctxt "Date"
+msgid "Date"
+msgstr ""
+
+msgctxt "Order"
+msgid "Order"
+msgstr ""
+
+msgctxt "Order status"
+msgid "Order status"
+msgstr ""
+
+msgctxt "please see below"
+msgid "please see below"
+msgstr ""
+
+msgctxt "Payment method"
+msgid "Payment method"
+msgstr ""
+
+msgctxt "Delivery methods"
+msgid "Delivery methods"
+msgstr ""
+
+msgctxt "Undefined"
+msgid "Undefined"
+msgstr ""
+
+msgctxt "Toll Free"
+msgid "Toll Free"
+msgstr ""
+
+msgctxt "Tel"
+msgid "Tel"
+msgstr ""
+
+msgctxt "Fax"
+msgid "Fax"
+msgstr ""
+
+msgctxt "Email"
+msgid "Email"
+msgstr ""
+
+msgctxt "Full Name"
+msgid "Full Name"
+msgstr ""
+
+msgctxt "PO Number"
+msgid "PO Number"
+msgstr ""
+
+msgctxt "Company Name"
+msgid "Company Name"
+msgstr ""
+
+msgctxt "Purchase manager"
+msgid "Purchase manager"
+msgstr ""
+
+msgctxt "Accounts payable"
+msgid "Accounts payable"
+msgstr ""
+
+msgctxt "Billing Address"
+msgid "Billing Address"
+msgstr ""
+
+msgctxt "Address"
+msgid "Address"
+msgstr ""
+
+msgctxt "City"
+msgid "City"
+msgstr ""
+
+msgctxt "State/Province"
+msgid "State/Province"
+msgstr ""
+
+msgctxt "Country"
+msgid "Country"
+msgstr ""
+
+msgctxt "Zip/Postal Code"
+msgid "Zip/Postal Code"
+msgstr ""
+
+msgctxt "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+msgid "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+msgstr ""
+
+msgctxt "Customer notes"
+msgid "Customer notes"
+msgstr ""
+
+msgctxt "Thank you for choosing S3 Stores!"
+msgid "Thank you for choosing S3 Stores!"
+msgstr ""
+
+msgctxt "a division of"
+msgid "a division of"
+msgstr ""
+
+msgctxt "URL"
+msgid "URL"
+msgstr ""
+
+msgctxt "Products Ordered"
+msgid "Products Ordered"
+msgstr ""
+
+msgctxt "Product"
+msgid "Product"
+msgstr ""
+
+msgctxt "Item price"
+msgid "Item price"
+msgstr ""
+
+msgctxt "Qty ord"
+msgid "Qty ord"
+msgstr ""
+
+msgctxt "Extended"
+msgid "Extended"
+msgstr ""
+
+msgctxt "Items"
+msgid "Items"
+msgstr ""
+
+msgctxt "delivery from"
+msgid "delivery from"
+msgstr ""
+
+msgctxt "by"
+msgid "by"
+msgstr ""
+
+msgctxt "Payment status"
+msgid "Payment status"
+msgstr ""
+
+msgctxt "Shipping status"
+msgid "Shipping status"
+msgstr ""
+
+msgctxt "Total"
+msgid "Total"
+msgstr ""
+
+msgctxt "Discount"
+msgid "Discount"
+msgstr ""
+
+msgctxt "Coupon Savings"
+msgid "Coupon Savings"
+msgstr ""
+
+msgctxt "Discounted Total"
+msgid "Discounted Total"
+msgstr ""
+
+msgctxt "Total Shipping Cost"
+msgid "Total Shipping Cost"
+msgstr ""
+
+msgctxt "Grand Total"
+msgid "Grand Total"
+msgstr ""
+
+msgctxt "Contact us"
+msgid "Contact us"
+msgstr ""
+
+msgctxt "Your message has been successfully sent"
+msgid "Your message has been successfully sent"
+msgstr ""
+
+msgctxt "SKU or Order # not found"
+msgid "SKU or Order # not found"
+msgstr ""
+
+msgctxt "Wrong SKU or Order #, please call us at"
+msgid "Wrong SKU or Order #, please call us at"
+msgstr ""
+
+msgctxt "Full name"
+msgid "Full name"
+msgstr ""
+
+msgctxt "Your first and last name"
+msgid "Your first and last name"
+msgstr ""
+
+msgctxt "Albert H. Einstein"
+msgid "Albert H. Einstein"
+msgstr ""
+
+msgctxt "Your company name"
+msgid "Your company name"
+msgstr ""
+
+msgctxt "Eureka Inc."
+msgid "Eureka Inc."
+msgstr ""
+
+msgctxt "Your zip/postal code"
+msgid "Your zip/postal code"
+msgstr ""
+
+msgctxt "Your phone number"
+msgid "Your phone number"
+msgstr ""
+
+msgctxt "Phone number you can be reached at"
+msgid "Phone number you can be reached at"
+msgstr ""
+
+msgctxt "Valid email address is a must"
+msgid "Valid email address is a must"
+msgstr ""
+
+msgctxt "Department"
+msgid "Department"
+msgstr ""
+
+msgctxt "Your message will be routed to this department"
+msgid "Your message will be routed to this department"
+msgstr ""
+
+msgctxt "Product SKU or your order #"
+msgid "Product SKU or your order #"
+msgstr ""
+
+msgctxt "SKU of product you are interested in or your order #"
+msgid "SKU of product you are interested in or your order #"
+msgstr ""
+
+msgctxt "EDR-T-A63127 or AR-54321"
+msgid "EDR-T-A63127 or AR-54321"
+msgstr ""
+
+msgctxt "Subject line"
+msgid "Subject line"
+msgstr ""
+
+msgctxt "Your message"
+msgid "Your message"
+msgstr ""
+
+msgctxt "Shipping & Delivery"
+msgid "Shipping & Delivery"
+msgstr ""
+
+msgctxt "Purchase Orders"
+msgid "Purchase Orders"
+msgstr ""
+
+msgctxt "About Us"
+msgid "About Us"
+msgstr ""
+
+msgctxt "Contact Us"
+msgid "Contact Us"
+msgstr ""
+
+msgctxt "Shopping"
+msgid "Shopping"
+msgstr ""
+
+msgctxt "Our Price Guarantee"
+msgid "Our Price Guarantee"
+msgstr ""
+
+msgctxt "Sales Taxes"
+msgid "Sales Taxes"
+msgstr ""
+
+msgctxt "Payments"
+msgid "Payments"
+msgstr ""
+
+msgctxt "Safe & Secure Shopping"
+msgid "Safe & Secure Shopping"
+msgstr ""
+
+msgctxt "Bill Me Later"
+msgid "Bill Me Later"
+msgstr ""
+
+msgctxt "Combating eCommerce Fraud"
+msgid "Combating eCommerce Fraud"
+msgstr ""
+
+msgctxt "Orders"
+msgid "Orders"
+msgstr ""
+
+msgctxt "Order Communication"
+msgid "Order Communication"
+msgstr ""
+
+msgctxt "Retrieve Order"
+msgid "Retrieve Order"
+msgstr ""
+
+msgctxt "Connect"
+msgid "Connect"
+msgstr ""
+
+msgctxt "Community"
+msgid "Community"
+msgstr ""
+
+msgctxt "Policies"
+msgid "Policies"
+msgstr ""
+
+msgctxt "Backorder Policy"
+msgid "Backorder Policy"
+msgstr ""
+
+msgctxt "Return Policy"
+msgid "Return Policy"
+msgstr ""
+
+msgctxt "Terms of Use"
+msgid "Terms of Use"
+msgstr ""
+
+msgctxt "Privacy Policy"
+msgid "Privacy Policy"
+msgstr ""
+
+msgctxt "Retail Trust Terms & Conditions"
+msgid "Retail Trust Terms & Conditions"
+msgstr ""
+
+msgctxt "Title"
+msgid "Title"
+msgstr ""
+
+msgctxt "Code"
+msgid "Code"
+msgstr ""
+
+msgctxt "Text"
+msgid "Text"
+msgstr ""
+
+msgctxt "You must agree for custom duties"
+msgid "You must agree for custom duties"
+msgstr ""
+
+msgctxt "Full name of the person who will remit the payment"
+msgid "Full name of the person who will remit the payment"
+msgstr ""
+
+msgctxt "Phone # of the person who will remit the payment"
+msgid "Phone # of the person who will remit the payment"
+msgstr ""
+
+msgctxt "Fax number of the person who will remit the payment"
+msgid "Fax number of the person who will remit the payment"
+msgstr ""
+
+msgctxt "Email of the person who will remit the payment"
+msgid "Email of the person who will remit the payment"
+msgstr ""
+
+msgctxt "The order will be shipped under this name"
+msgid "The order will be shipped under this name"
+msgstr ""
+
+msgctxt "Company"
+msgid "Company"
+msgstr ""
+
+msgctxt "Fill in if shipping to a corporate or university address"
+msgid "Fill in if shipping to a corporate or university address"
+msgstr ""
+
+msgctxt "112 Mercer Street"
+msgid "112 Mercer Street"
+msgstr ""
+
+msgctxt "Address (line 2)"
+msgid "Address (line 2)"
+msgstr ""
+
+msgctxt "Apartment, suite, floor, etc."
+msgid "Apartment, suite, floor, etc."
+msgstr ""
+
+msgctxt "Apt 1"
+msgid "Apt 1"
+msgstr ""
+
+msgctxt "(609) 924-8399"
+msgid "(609) 924-8399"
+msgstr ""
+
+msgctxt "First and last name of the order contact person"
+msgid "First and last name of the order contact person"
+msgstr ""
+
+msgctxt "Phone number at which you can be reached is a must, otherwise order processing will be delayed"
+msgid "Phone number at which you can be reached is a must, otherwise order processing will be delayed"
+msgstr ""
+
+msgctxt "Order progress notifications will be sent here"
+msgid "Order progress notifications will be sent here"
+msgstr ""
+
+msgctxt "Put order related instructions here"
+msgid "Put order related instructions here"
+msgstr ""
+
+msgctxt "PO number"
+msgid "PO number"
+msgstr ""
+
+msgctxt "PO number or internal order code in your system"
+msgid "PO number or internal order code in your system"
+msgstr ""
+
+msgctxt "14031879"
+msgid "14031879"
+msgstr ""
+
+msgctxt "Organization Name"
+msgid "Organization Name"
+msgstr ""
+
+msgctxt "The name of your organization"
+msgid "The name of your organization"
+msgstr ""
+
+msgctxt "Attach original PO"
+msgid "Attach original PO"
+msgstr ""
+
+msgctxt "Alternatively fax PO to 1-800-929-2835"
+msgid "Alternatively fax PO to 1-800-929-2835"
+msgstr ""
+
+msgctxt "Full name of the person placing the order"
+msgid "Full name of the person placing the order"
+msgstr ""
+
+msgctxt "Phone number of the person placing the order"
+msgid "Phone number of the person placing the order"
+msgstr ""
+
+msgctxt "Fax number of the person placing the order"
+msgid "Fax number of the person placing the order"
+msgstr ""
+
+msgctxt "Email of the person placing the order"
+msgid "Email of the person placing the order"
+msgstr ""
+
+msgctxt "Phone number is invalid"
+msgid "Phone number is invalid"
+msgstr ""
+
+msgctxt "Departments"
+msgid "Departments"
+msgstr ""
+
+msgctxt "Read more"
+msgid "Read more"
+msgstr ""
+
+msgctxt "Read less"
+msgid "Read less"
+msgstr ""
+
+msgctxt "More categories"
+msgid "More categories"
+msgstr ""
+
+msgctxt "Less categories"
+msgid "Less categories"
+msgstr ""
+
+msgctxt "Order online or call us. Operators are standing by!"
+msgid "Order online or call us. Operators are standing by!"
+msgstr ""
+
+msgctxt "Place order online 24/7 or"
+msgid "Place order online 24/7 or"
+msgstr ""
+
+msgctxt "Call us toll free"
+msgid "Call us toll free"
+msgstr ""
+
+msgctxt "BACK"
+msgid "BACK"
+msgstr ""
+
+msgctxt "Submit"
+msgid "Submit"
+msgstr ""
+
+msgctxt "Checkout"
+msgid "Checkout"
+msgstr ""
+
+msgctxt "Shop more"
+msgid "Shop more"
+msgstr ""
+
+msgctxt "Shopping Cart #"
+msgid "Shopping Cart #"
+msgstr ""
+
+msgctxt "The items below will be shipped from warehouse in"
+msgid "The items below will be shipped from warehouse in"
+msgstr ""
+
+msgctxt "Item name"
+msgid "Item name"
+msgstr ""
+
+msgctxt "Quantity"
+msgid "Quantity"
+msgstr ""
+
+msgctxt "Remove"
+msgid "Remove"
+msgstr ""
+
+msgctxt "Delete"
+msgid "Delete"
+msgstr ""
+
+msgctxt "warehouse subtotal"
+msgid "warehouse subtotal"
+msgstr ""
+
+msgctxt "The minimum order amount for this product line is"
+msgid "The minimum order amount for this product line is"
+msgstr ""
+
+msgctxt "This product line can only be shipped to a US address."
+msgid "This product line can only be shipped to a US address."
+msgstr ""
+
+msgctxt "Subtotal"
+msgid "Subtotal"
+msgstr ""
+
+msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
+msgstr ""
+
+msgctxt "Apply"
+msgid "Apply"
+msgstr ""
+
+msgctxt "Reset filters"
+msgid "Reset filters"
+msgstr ""
+
+msgctxt "Show more"
+msgid "Show more"
+msgstr ""
+
+msgctxt "Sale"
+msgid "Sale"
+msgstr ""
+
+msgctxt "See details"
+msgid "See details"
+msgstr ""
+
+msgctxt "List Price"
+msgid "List Price"
+msgstr ""
+
+msgctxt "Price from"
+msgid "Price from"
+msgstr ""
+
+msgctxt "Price to"
+msgid "Price to"
+msgstr ""
+
+msgctxt "See %count% product variation"
+msgid "See %count% product variation"
+msgid_plural "See %count% products variation"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "Added"
+msgid "Added"
+msgstr ""
+
+msgctxt "Filter by"
+msgid "Filter by"
+msgstr ""
+
+msgctxt "to"
+msgid "to"
+msgstr ""
+
+msgctxt "items shown"
+msgid "items shown"
+msgstr ""
+
+msgctxt "Filter"
+msgid "Filter"
+msgstr ""
+
+msgctxt "Sort by"
+msgid "Sort by"
+msgstr ""
+
+msgctxt "View as"
+msgid "View as"
+msgstr ""
+
+msgctxt "Order confirmation"
+msgid "Order confirmation"
+msgstr ""
+
+msgctxt "Order Confirmation"
+msgid "Order Confirmation"
+msgstr ""
+
+msgctxt "Your order has been successfuly placed. An order confirmation email has been sent to your email address."
+msgid "Your order has been successfuly placed. An order confirmation email has been sent to your email address."
+msgstr ""
+
+msgctxt "Thank you for shopping with S3 Stores, Inc. We appreciate your business!"
+msgid "Thank you for shopping with S3 Stores, Inc. We appreciate your business!"
+msgstr ""
+
+msgctxt "Order #"
+msgid "Order #"
+msgstr ""
+
+msgctxt "Purchase order #"
+msgid "Purchase order #"
+msgstr ""
+
+msgctxt "S3 Stores, Inc."
+msgid "S3 Stores, Inc."
+msgstr ""
+
+msgctxt "27 Joseph St."
+msgid "27 Joseph St."
+msgstr ""
+
+msgctxt "Chatham, Ontario, N7L 3G4"
+msgid "Chatham, Ontario, N7L 3G4"
+msgstr ""
+
+msgctxt "Canada"
+msgid "Canada"
+msgstr ""
+
+msgctxt "Local Phone"
+msgid "Local Phone"
+msgstr ""
+
+msgctxt "orders@s3stores.com"
+msgid "orders@s3stores.com"
+msgstr ""
+
+msgctxt "Contact information"
+msgid "Contact information"
+msgstr ""
+
+msgctxt "Shipping address"
+msgid "Shipping address"
+msgstr ""
+
+msgctxt "Zip/Postal code"
+msgid "Zip/Postal code"
+msgstr ""
+
+msgctxt "Billing address"
+msgid "Billing address"
+msgstr ""
+
+msgctxt "Purchase order information"
+msgid "Purchase order information"
+msgstr ""
+
+msgctxt "Company name"
+msgid "Company name"
+msgstr ""
+
+msgctxt "Delivery Methods"
+msgid "Delivery Methods"
+msgstr ""
+
+msgctxt "Delivery methods for"
+msgid "Delivery methods for"
+msgstr ""
+
+msgctxt "the items"
+msgid "the items"
+msgstr ""
+
+msgctxt "shipped from warehouse in"
+msgid "shipped from warehouse in"
+msgstr ""
+
+msgctxt "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"
+msgid "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"
+msgstr ""
+
+msgctxt "- when the product is oversized or somehow irregular in shape or weight"
+msgid "- when the product is oversized or somehow irregular in shape or weight"
+msgstr ""
+
+msgctxt "- for overseas shipments"
+msgid "- for overseas shipments"
+msgstr ""
+
+msgctxt "Please go ahead and place your order."
+msgid "Please go ahead and place your order."
+msgstr ""
+
+msgctxt "We will determine an accurate shipping charge manually and send you an updated invoice."
+msgid "We will determine an accurate shipping charge manually and send you an updated invoice."
+msgstr ""
+
+msgctxt "At this point we won't collect your payment information."
+msgid "At this point we won't collect your payment information."
+msgstr ""
+
+msgctxt "By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in "
+msgid "By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in "
+msgstr ""
+
+msgctxt "Payment Methods"
+msgid "Payment Methods"
+msgstr ""
+
+msgctxt "Is Billing Address the same as Shipping Address?"
+msgid "Is Billing Address the same as Shipping Address?"
+msgstr ""
+
+msgctxt "Yes"
+msgid "Yes"
+msgstr ""
+
+msgctxt "No"
+msgid "No"
+msgstr ""
+
+msgctxt "Continue"
+msgid "Continue"
+msgstr ""
+
+msgctxt "Continue to the order review page"
+msgid "Continue to the order review page"
+msgstr ""
+
+msgctxt "Purchase Order Details"
+msgid "Purchase Order Details"
+msgstr ""
+
+msgctxt "The fields marked with"
+msgid "The fields marked with"
+msgstr ""
+
+msgctxt "are mandatory."
+msgid "are mandatory."
+msgstr ""
+
+msgctxt "Purchasing Manager"
+msgid "Purchasing Manager"
+msgstr ""
+
+msgctxt "Accounts Payable"
+msgid "Accounts Payable"
+msgstr ""
+
+msgctxt "Submit order"
+msgid "Submit order"
+msgstr ""
+
+msgctxt "Submit your order and get transferred to a credit card payment system."
+msgid "Submit your order and get transferred to a credit card payment system."
+msgstr ""
+
+msgctxt "Contact Information"
+msgid "Contact Information"
+msgstr ""
+
+msgctxt "All your private data is confidential. We will never sell, exchange or market it in any way."
+msgid "All your private data is confidential. We will never sell, exchange or market it in any way."
+msgstr ""
+
+msgctxt "Submit and proceed to shipping & payment options."
+msgid "Submit and proceed to shipping & payment options."
+msgstr ""
+
+msgctxt "Modify"
+msgid "Modify"
+msgstr ""
+
+msgctxt "Full name:"
+msgid "Full name:"
+msgstr ""
+
+msgctxt "Company:"
+msgid "Company:"
+msgstr ""
+
+msgctxt "Address:"
+msgid "Address:"
+msgstr ""
+
+msgctxt "City:"
+msgid "City:"
+msgstr ""
+
+msgctxt "State/Province:"
+msgid "State/Province:"
+msgstr ""
+
+msgctxt "Country:"
+msgid "Country:"
+msgstr ""
+
+msgctxt "Zip/Postal code:"
+msgid "Zip/Postal code:"
+msgstr ""
+
+msgctxt "The item below will be shipped from warehouse in"
+msgid "The item below will be shipped from warehouse in"
+msgstr ""
+
+msgctxt "Qty ordered"
+msgid "Qty ordered"
+msgstr ""
+
+msgctxt "Delivery from"
+msgid "Delivery from"
+msgstr ""
+
+msgctxt "Including 13% HST"
+msgid "Including 13% HST"
+msgstr ""
+
+msgctxt "Print invoice"
+msgid "Print invoice"
+msgstr ""
+
+msgctxt "Open PDF invoice"
+msgid "Open PDF invoice"
+msgstr ""
+
+msgctxt "Hide items"
+msgid "Hide items"
+msgstr ""
+
+msgctxt "Product ordered"
+msgid "Product ordered"
+msgstr ""
+
+msgctxt "Shipping and Billing Information"
+msgid "Shipping and Billing Information"
+msgstr ""
+
+msgctxt "Shipping by"
+msgid "Shipping by"
+msgstr ""
+
+msgctxt "warehouse items:"
+msgid "warehouse items:"
+msgstr ""
+
+msgctxt "Web Form (recommended)"
+msgid "Web Form (recommended)"
+msgstr ""
+
+msgctxt "The fields marked with <span class=\"required\"></span> are mandatory"
+msgid "The fields marked with <span class=\"required\"></span> are mandatory"
+msgstr ""
+
+msgctxt "Mail"
+msgid "Mail"
+msgstr ""
+
+msgctxt "Loading ..."
+msgid "Loading ..."
+msgstr ""
+
+msgctxt "Load more"
+msgid "Load more"
+msgstr ""
+
+msgctxt "Place order online 24/7"
+msgid "Place order online 24/7"
+msgstr ""
+
+msgctxt "24/7 online ordering"
+msgid "24/7 online ordering"
+msgstr ""
+
+msgctxt "View all departments"
+msgid "View all departments"
+msgstr ""
+
+msgctxt "Product of the day"
+msgid "Product of the day"
+msgstr ""
+
+msgctxt "What's new"
+msgid "What's new"
+msgstr ""
+
+msgctxt "Free Shipping within contiguous U.S."
+msgid "Free Shipping within contiguous U.S."
+msgstr ""
+
+msgctxt "$8.99 flat rate shipping within contiguous U.S."
+msgid "$8.99 flat rate shipping within contiguous U.S."
+msgstr ""
+
+msgctxt "Lead time for this product is %count% business day"
+msgid "Lead time for this product is %count% business day"
+msgid_plural "Lead time for this product is %count% business days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "Lead time for this product is"
+msgid "Lead time for this product is"
+msgstr ""
+
+msgctxt "business days"
+msgid "business days"
+msgstr ""
+
+msgctxt "Order in multiples of %count% item"
+msgid "Order in multiples of %count% item"
+msgid_plural "Order in multiples of %count% items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "Order at least %count% item"
+msgid "Order at least %count% item"
+msgid_plural "Order at least %count% items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "Expected availability"
+msgid "Expected availability"
+msgstr ""
+
+msgctxt "Out of stock"
+msgid "Out of stock"
+msgstr ""
+
+msgctxt "Eta date"
+msgid "Eta date"
+msgstr ""
+
+msgctxt "Stock Notification"
+msgid "Stock Notification"
+msgstr ""
+
+msgctxt "Email notification will be sent to your email address when the product is in stock."
+msgid "Email notification will be sent to your email address when the product is in stock."
+msgstr ""
+
+msgctxt "are mandatory"
+msgid "are mandatory"
+msgstr ""
+
+msgctxt "Similar products"
+msgid "Similar products"
+msgstr ""
+
+msgctxt "Unit Price"
+msgid "Unit Price"
+msgstr ""
+
+msgctxt "Extra qty discount"
+msgid "Extra qty discount"
+msgstr ""
+
+msgctxt "hrs"
+msgid "hrs"
+msgstr ""
+
+msgctxt "min"
+msgid "min"
+msgstr ""
+
+msgctxt "sec"
+msgid "sec"
+msgstr ""
+
+msgctxt "Jackpot! You got a great price!"
+msgid "Jackpot! You got a great price!"
+msgstr ""
+
+msgctxt "No account needed! Checkout only takes 2 minutes."
+msgid "No account needed! Checkout only takes 2 minutes."
+msgstr ""
+
+msgctxt "Per item savings"
+msgid "Per item savings"
+msgstr ""
+
+msgctxt "Total savings"
+msgid "Total savings"
+msgstr ""
+
+msgctxt "Notify me when product is in stock"
+msgid "Notify me when product is in stock"
+msgstr ""
+
+msgctxt "Image not available"
+msgid "Image not available"
+msgstr ""
+
+msgctxt "Product Highlights"
+msgid "Product Highlights"
+msgstr ""
+
+msgctxt "Full"
+msgid "Full"
+msgstr ""
+
+msgctxt "product line"
+msgid "product line"
+msgstr ""
+
+msgctxt "Full product line"
+msgid "Full product line"
+msgstr ""
+
+msgctxt "Click here to see full product line"
+msgid "Click here to see full product line"
+msgstr ""
+
+msgctxt "Customers Who Bought This Item Also Bought"
+msgid "Customers Who Bought This Item Also Bought"
+msgstr ""
+
+msgctxt "You recently viewed items"
+msgid "You recently viewed items"
+msgstr ""
+
+msgctxt "QUESTION"
+msgid "QUESTION"
+msgstr ""
+
+msgctxt "BEST ANSWER"
+msgid "BEST ANSWER"
+msgstr ""
+
+msgctxt "Options"
+msgid "Options"
+msgstr ""
+
+msgctxt "Barcode"
+msgid "Barcode"
+msgstr ""
+
+msgctxt "Description"
+msgid "Description"
+msgstr ""
+
+msgctxt "Submit question"
+msgid "Submit question"
+msgstr ""
+
+msgctxt "Shipping specs"
+msgid "Shipping specs"
+msgstr ""
+
+msgctxt "Weight"
+msgid "Weight"
+msgstr ""
+
+msgctxt "Dimensions"
+msgid "Dimensions"
+msgstr ""
+
+msgctxt "Shipping weight"
+msgid "Shipping weight"
+msgstr ""
+
+msgctxt "Shipping dimensions"
+msgid "Shipping dimensions"
+msgstr ""
+
+msgctxt "Shipping from"
+msgid "Shipping from"
+msgstr ""
+
+msgctxt "This product is shipped from our warehouse in"
+msgid "This product is shipped from our warehouse in"
+msgstr ""
+
+msgctxt "Shipping"
+msgid "Shipping"
+msgstr ""
+
+msgctxt "Product questions"
+msgid "Product questions"
+msgstr ""
+
+msgctxt "View all"
+msgid "View all"
+msgstr ""
+
+msgctxt "UP"
+msgid "UP"
+msgstr ""
+
+msgctxt "DOWN"
+msgid "DOWN"
+msgstr ""
+
+msgctxt "Order online or call us toll free"
+msgid "Order online or call us toll free"
+msgstr ""
+
+msgctxt "Cart"
+msgid "Cart"
+msgstr ""
+
+msgctxt "Web order 24/7"
+msgid "Web order 24/7"
+msgstr ""
+
+msgctxt "Web Orders"
+msgid "Web Orders"
+msgstr ""
+
+msgctxt "24 hours a day, 7 days a week"
+msgid "24 hours a day, 7 days a week"
+msgstr ""
+
+msgctxt "Email Support"
+msgid "Email Support"
+msgstr ""
+
+msgctxt "Telephone Customer Service"
+msgid "Telephone Customer Service"
+msgstr ""
+
+msgctxt "Join our newsletter"
+msgid "Join our newsletter"
+msgstr ""
+
+msgctxt "Your Email Address"
+msgid "Your Email Address"
+msgstr ""
+
+msgctxt "Send"
+msgid "Send"
+msgstr ""
+
+msgctxt "Shop with Confidence"
+msgid "Shop with Confidence"
+msgstr ""
+
+msgctxt "Copyright ©"
+msgid "Copyright ©"
+msgstr ""
+
+msgctxt "All Rights Reserved."
+msgid "All Rights Reserved."
+msgstr ""
+
+msgctxt "departments"
+msgid "departments"
+msgstr ""

@@ -9,6 +9,7 @@ use Gettext\Extractors\PhpCode;
 use Gettext\Generators\Po;
 use Gettext\Merge;
 use Gettext\Translations;
+use Modules\Translate\Models\LanguageModel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
@@ -39,11 +40,12 @@ class TranslateHelper
     public function processSave()
     {
         $path = Xcart::app()->getModule('Translate')->getPath();
-        
-        $file = $path.'\lang\ru.po';
-        $translations_o = file_exists($file) ? Translations::fromPoFile($file) : new Translations;
-        $translations_o->mergeWith($this->_translations, Merge::DEFAULTS | Merge::REMOVE);
-        Po::toFile($translations_o, $file);
+        foreach (LanguageModel::objects()->all() as $lang) {
+            $file = "{$path}\\lang\\{$lang->lang_code}.po";
+            $translations_o = file_exists($file) ? Translations::fromPoFile($file) : new Translations;
+            $translations_o->mergeWith($this->_translations, Merge::DEFAULTS | Merge::REMOVE);
+            Po::toFile($translations_o, $file);
+        }
     }
 
     public function collectPath($path)

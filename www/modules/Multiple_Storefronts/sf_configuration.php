@@ -19,57 +19,51 @@ if ($REQUEST_METHOD === 'POST' && $option === 'Multiple_Storefronts') {
 
 	$post = \Xcart\App\Main\Xcart::app()->request->post->all();
 
-	foreach ($post as $key => $val) {
-		
-		if (!isset($var_properties[$key])) {
-			continue;
-					}
+    foreach ($post as $key => $val) {
 
-		$val = (is_string($val)) ? trim(stripslashes($val)) : $val;
+        $val = is_string($val) ? trim(stripslashes($val)) : $val;
 
-		if (
-			'opt_order_prefix' === $key
-			&& !empty($val)
-			&& !func_msf_is_unique_order_prefix($val, $selected_sf)
-		) {
-			// check order prefix
-			$errors_msg[] = func_get_langvar_by_name('msg_adm_order_prefix_is_not_unique');
+        if (
+            'opt_order_prefix' === $key
+            && !empty($val)
+            && !func_msf_is_unique_order_prefix($val, $selected_sf)
+        ) {
+            // check order prefix
+            $errors_msg[] = func_get_langvar_by_name('msg_adm_order_prefix_is_not_unique');
 
-			continue;
-				}
-	
-		if ($var_properties[$key] === 'numeric') {
-			
-			$val = doubleval(func_convert_numeric($val));
+            continue;
+        }
 
-		} else if ($var_properties[$key] === 'multiselector') {
+        if ($var_properties[$key] === 'numeric') {
 
-			$val = implode(';', $val);
-		
-		} else if ($var_properties[$key] === 'checkbox' && $val === 'on') {
+            $val = doubleval(func_convert_numeric($val));
 
-			$val = (!empty($val)) ? 'Y' : 'N';
-			}
+        } else if ($var_properties[$key] === 'multiselector') {
 
-		$update_query = ['value' => $val];
-		if (isset(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS[$key])) {
-			$update_query['orderby'] = \Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS[$key];
-		}
+            $val = implode(';', $val);
 
-		if ($selected_sf !== null) {
-			/** @var \Modules\Sites\Models\SiteConfigModel $con */
-			[$con] = \Modules\Sites\Models\SiteConfigModel::objects()->getOrNew(['storefrontid' => $selected_sf, 'name' => $key]);
-			$con->setAttributes($update_query);
-			$con->save();
-		}
+        } else if ($var_properties[$key] === 'checkbox' && $val === 'on') {
 
-		$section_data[stripslashes($key)] = stripslashes($val);
-	}
+            $val = (!empty($val)) ? 'Y' : 'N';
+        }
 
-	if (!empty($errors_msg)) {
-		$top_message['type'] = 'E';
-		$top_message['content'] = implode('<br />', $errors_msg);
-	}
+        $update_query = ['value' => $val];
+        if (isset(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS[$key])) {
+            $update_query['orderby'] = \Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS[$key];
+        }
+
+        if ($selected_sf !== null) {
+            /** @var \Modules\Sites\Models\SiteConfigModel $con */
+            [$con] = \Modules\Sites\Models\SiteConfigModel::objects()->updateOrCreate(['storefrontid' => $selected_sf, 'name' => $key], $update_query);
+        }
+
+        $section_data[stripslashes($key)] = stripslashes($val);
+    }
+
+    if (!empty($errors_msg)) {
+        $top_message['type'] = 'E';
+        $top_message['content'] = implode('<br />', $errors_msg);
+    }
 
 	func_header_location('configuration.php?option=Multiple_Storefronts');
 }
