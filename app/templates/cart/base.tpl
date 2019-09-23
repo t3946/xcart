@@ -20,11 +20,11 @@
                              class="show-for-small hide-for-large logo-small">
                     </a>
                 </div>
-                <div class="columns verified-secured-logo-block show-for-medium hide-for-large">
+                {*<div class="columns verified-secured-logo-block show-for-medium hide-for-large">
                     <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
                          alt="verified&secured"
                          class="secured-logo-big">
-                </div>
+                </div>*}
                 <div class="columns s3-logo-block">
                     <a href="" class="s3-logo-big-link logo-link">
                         <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores.svg"

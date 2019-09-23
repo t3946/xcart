@@ -207,17 +207,17 @@
 
             createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
 
-            setTimeout(function() {
+            /*setTimeout(function() {
                 {ignore}
                 (function(){ var widget_id = 'jamrvwO7Hx';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
                 {/ignore}
-            }, 10000);
+            }, 10000);*/
 
             setTimeout(function() {
-                var po = document.createElement('script');
+                /*var po = document.createElement('script');
                 po.type = 'text/javascript';
                 po.src = 'https://seal.godaddy.com/getSeal?sealID=RVzmFJZUlQZwVnp0XQOKJPtEwfIgrDGcXXE9L625dBokxJCuRu6qptcFSHmt';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);*/
 
                 {if $config.cidev_yandex_code_number}
                     (function (d, w, c) {
