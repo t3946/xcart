@@ -3,8 +3,6 @@
 namespace Modules\Payment\Gateways;
 
 
-use Modules\Order\Models\OrderModel;
-use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Interfaces\GatewayInterface;
 use Modules\Payment\Models\ProcessorModel;
@@ -59,7 +57,7 @@ abstract class Gateway implements GatewayInterface
 
     public function init()
     {
-        $this->test_mode = ($this->model->test_mode == 'Y');
+        $this->test_mode = $this->model->test_mode === 'Y';
     }
 
     public static function getProcessorName()

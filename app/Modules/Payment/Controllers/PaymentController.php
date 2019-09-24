@@ -20,6 +20,7 @@ use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+use function json_decode;
 
 class PaymentController extends Controller
 {

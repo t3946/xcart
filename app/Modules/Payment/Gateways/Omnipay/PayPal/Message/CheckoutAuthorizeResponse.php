@@ -39,7 +39,7 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
 
     public function getTransactionReference()
     {
-        return isset($this->data['TOKEN']) ? $this->data['TOKEN'] : null;
+        return $this->data['TOKEN'] ?? null;
     }
 
     public function getRedirectMethod()
@@ -81,17 +81,17 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
             'night_phone_b' => substr($order->phone, -7, -4),
             'night_phone_c' => substr($order->phone, -4),
             'item_name' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}",
-            'amount' => sprintf("%0.2f", $order->total),
+            'amount' => sprintf('%0.2f', $order->total),
             'currency_code' => $order->currency,
             'bn' => 'x-cart',
             'paymentaction' => 'authorization',
             'address1' => $order->b_address,
-            "country" => $order->b_country,
-            "state" => $order->b_state,
+            'country' => $order->b_country,
+            'state' => $order->b_state,
             'city' => $order->b_city,
             'zip' => $order->b_zipcode,
-            "return" => $this->getRequest()->getReturnUrl(),
-            "cancel_return" => $this->getRequest()->getCancelUrl(),
+            'return' => $this->getRequest()->getReturnUrl(),
+            'cancel_return' => $this->getRequest()->getCancelUrl(),
         ];
     }
 
@@ -102,7 +102,10 @@ class CheckoutAuthorizeResponse extends Response implements RedirectResponseInte
 
     protected function getBusiness()
     {
-        return $this->getRequest()->getTestMode() ? 'igor@s3stores.com' : 'paypal@s3stores.com';
+        /** @var OrderModel $order */
+        $order = $this->data['order'];
+        $config = $order->site->getConfig();
+        return $this->getRequest()->getTestMode() ? $config['sandbox_business'] ?? 'igor@s3stores.com' : $config['live_business'] ?? 'paypal@s3stores.com';
     }
 
     public function redirect(): void
