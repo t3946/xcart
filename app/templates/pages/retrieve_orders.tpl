@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="column large-12">
                     <div class="large-2column">
-                        {raw $model->content}
+                        {raw html_entity_decode($model->content)}
                         <div class="ro_email">
                             <form class="ro_email" method="post" action="{url "retrieve:retrieve_order"}">
                                 <input class="ro_input_email" type="email" name="email" placeholder="Your Email" required>

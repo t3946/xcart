@@ -1413,3 +1413,31 @@ msgstr ""
 msgctxt "departments"
 msgid "departments"
 msgstr ""
+
+msgctxt "Is gravitation responsible for people falling in love?"
+msgid "Is gravitation responsible for people falling in love?"
+msgstr ""
+
+msgctxt "Shipping quote"
+msgid "Shipping quote"
+msgstr ""
+
+msgctxt "Tracking number request"
+msgid "Tracking number request"
+msgstr ""
+
+msgctxt "Product replacement request"
+msgid "Product replacement request"
+msgstr ""
+
+msgctxt "Product return request"
+msgid "Product return request"
+msgstr ""
+
+msgctxt "W-9 from request"
+msgid "W-9 from request"
+msgstr ""
+
+msgctxt "Other requests "
+msgid "Other requests "
+msgstr ""

@@ -70,7 +70,7 @@ class ContactUsForm extends FrontendForm
                 'hint' => MainModule::t('Phone number you can be reached at'),
                 'type' => 'tel',
                 'html' => [
-                    'placeholder' => '(609) 734-8000',
+                    'placeholder' => MainModule::t('(609) 734-8000'),
                 ],
             ],
             'email' => [
@@ -84,7 +84,7 @@ class ContactUsForm extends FrontendForm
                     new EmailValidator()
                 ],
                 'html' => [
-                    'placeholder' => 'albert.einstein@gmail.com',
+                    'placeholder' => MainModule::t('albert.einstein@gmail.com'),
                 ],
             ],
             'department' => [
@@ -111,7 +111,7 @@ class ContactUsForm extends FrontendForm
                 'label' => MainModule::t('Subject line'),
                 'required' => true,
                 'html' => [
-                    'placeholder' => 'Is gravitation responsible for people falling in love?',
+                    'placeholder' => MainModule::t('Is gravitation responsible for people falling in love?'),
                 ],
                 'className' => 'wide'
             ],
@@ -158,14 +158,14 @@ class ContactUsForm extends FrontendForm
     {
         return [
             '' => '',
-            'Product questions' => 'Product questions',
-            'Shipping quote' => 'Shipping quote',
-            'Order status' => 'Order status',
-            'Tracking number request' => 'Tracking number request',
-            'Product replacement request' => 'Product replacement request',
-            'Product return request' => 'Product return request',
-            'W-9 from request' => 'W-9 from request',
-            'Other requests ' => 'Other requests ',
+            'Product questions' => MainModule::t('Product questions'),
+            'Shipping quote' => MainModule::t('Shipping quote'),
+            'Order status' => MainModule::t('Order status'),
+            'Tracking number request' => MainModule::t('Tracking number request'),
+            'Product replacement request' => MainModule::t('Product replacement request'),
+            'Product return request' => MainModule::t('Product return request'),
+            'W-9 from request' => MainModule::t('W-9 from request'),
+            'Other requests ' => MainModule::t('Other requests '),
         ];
     }
 
