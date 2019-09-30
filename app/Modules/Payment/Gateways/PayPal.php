@@ -5,6 +5,7 @@ namespace Modules\Payment\Gateways;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
+use Modules\Sites\Models\SiteModel;
 use PayPal\Api\CreditCard;
 use Xcart\OrderTransaction;
 
@@ -19,17 +20,23 @@ class PayPal extends Gateway
     {
         parent::init();
 
-        $this->gateway->initialize([
-            'testMode' => $this->test_mode
-        ]);
+        /** @var SiteModel $site */
+        $site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getConfig();
+        if (!isset($config['sandbox_client_id'], $config['sandbox_secret_key'], $config['live_client_id'], $config['live_secret_key'])) {
+            $config = $site->getGlobalConfig();
+        }
+
+        $this->gateway->initialize(['testMode' => $this->test_mode]);
+
         switch ($this->test_mode) {
             case 'Y' :
-                $this->gateway->setClientId(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_client_id'])->valuesList(['value'], true)));
-                $this->gateway->setSecret(current(GlobalConfigModel::objects()->filter(['name' => 'sandbox_secret_key'])->valuesList(['value'], true)));
+                $this->gateway->setClientId($config['sandbox_client_id']);
+                $this->gateway->setSecret($config['sandbox_secret_key']);
                 break;
             default:
-                $this->gateway->setClientId(current(GlobalConfigModel::objects()->filter(['name' => 'live_client_id'])->valuesList(['value'], true)));
-                $this->gateway->setSecret(current(GlobalConfigModel::objects()->filter(['name' => 'live_secret_key'])->valuesList(['value'], true)));
+                $this->gateway->setClientId($config['live_client_id']);
+                $this->gateway->setSecret($config['live_secret_key']);
                 break;
         }
 

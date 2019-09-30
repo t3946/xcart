@@ -29,7 +29,7 @@ class Paypal
         $USERPWD_username_ClientId = $config['Paypal_API']['live_client_id'];
         $USERPWD_password_Secret = $config['Paypal_API']['live_secret_key'];
         $this->paypalEmail = "paypal@s3stores.com";
-        if ($config['Paypal_API']['debug_mode'] == "Y") {
+        if ($config['Paypal_API']['debug_mode'] === 'Y') {
             $USERPWD_username_ClientId = $config['Paypal_API']['sandbox_client_id'];
             $USERPWD_password_Secret = $config['Paypal_API']['sandbox_secret_key'];
             $this->paypalEmail = "igor@s3stores.com";
@@ -41,18 +41,18 @@ class Paypal
             )
         );
         $this->apiContext->setConfig(
-            array(
-                'mode' => ($config['Paypal_API']['debug_mode'] == "Y") ? 'sandbox' : 'live',
+            [
+                'mode' => ($config['Paypal_API']['debug_mode'] === 'Y') ? 'sandbox' : 'live',
                 'log.LogEnabled' => true,
                 'log.FileName' => sprintf('../var/log/paypal-%s.php',date('ymd')),
-                'log.LogLevel' => ($config['Paypal_API']['debug_mode'] == "Y") ? 'DEBUG' : 'INFO',
+                'log.LogLevel' => ($config['Paypal_API']['debug_mode'] === 'Y') ? 'DEBUG' : 'INFO',
                 'cache.enabled' => true,
                 'http.CURLOPT_SSLVERSION' => 1,
                 'http.CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',
                 //'http.CURLOPT_CONNECTTIMEOUT' => 30
                 // 'http.headers.PayPal-Partner-Attribution-Id' => '123123123'
                 //'log.AdapterFactory' => '\PayPal\Log\DefaultLogFactory' // Factory class implementing \PayPal\Log\PayPalLogFactory
-            )
+            ]
         );
         $this->sAccessToken = $this->apiContext->getCredential()->getAccessToken($this->apiContext->getConfig());
         if (empty($this->sAccessToken)) {
