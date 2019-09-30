@@ -38,7 +38,7 @@ class TextLibrary extends TemplateLibrary
             $filter['tag'] = $tag;
         }
         if ($text = InfoBlock::objects()->filter($filter)->get()->text){
-            return $text;
+            return html_entity_decode($text);
         }
 
         return '';
