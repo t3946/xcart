@@ -63,7 +63,7 @@ class ImageHelper
         /** @var ImageDModel $imageModel */
         $imageModel = null;
 
-        $client = new \GuzzleHttp\Client(['verify' => false]);
+        $client = new \GuzzleHttp\Client(['verify' => false, 'timeout' => 10]);
         try {
             $res = $client->get($image, [
                 'save_to' => Paths::get('www') . $upload_image,
