@@ -190,7 +190,7 @@ class SiteModel extends Model
 
     public function getHttpOrHttps()
     {
-        return (($this->getConfig()['https_enabled'] == "Y")? 'https' : 'http') . '://';
+        return  'https://';
     }
 
     public function getName()
