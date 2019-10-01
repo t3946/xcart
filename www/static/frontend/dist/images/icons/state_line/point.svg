@@ -1,11 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
-<g>
-	<path style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" d="M50,100c27.56,0,50-22.44,50-50S77.56,0,50,0S0,22.44,0,50
-		S22.44,100,50,100L50,100z"/>
-	<path style="fill-rule:evenodd;clip-rule:evenodd;fill:#0E2431;" d="M50,72.222C62.2,72.222,72.222,62.2,72.222,50
-		S62.2,27.778,50,27.778S27.778,37.8,27.778,50S37.8,72.222,50,72.222L50,72.222z"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill-rule="evenodd" clip-rule="evenodd"><path d="M50 100c27.56 0 50-22.44 50-50S77.56 0 50 0 0 22.44 0 50s22.44 50 50 50z" fill="#fff"/><path d="M50 72.222C62.2 72.222 72.222 62.2 72.222 50S62.2 27.778 50 27.778 27.778 37.8 27.778 50 37.8 72.222 50 72.222z" fill="#0e2431"/></g></svg>
