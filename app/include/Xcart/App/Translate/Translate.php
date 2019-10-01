@@ -20,9 +20,10 @@ class Translate
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getConfig();
-        $this->translator = new Translator($config['Preferred_language']);
+        $l = $config['Preferred_language'] ?? 'en';
+        $this->translator = new Translator($l);
         $this->translator->addLoader('po', new PoFileLoader());
-        $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath()."/lang/{$config['Preferred_language']}.po", $config['Preferred_language'], 'messages');
+        $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath()."/lang/{$l}.po", $l, 'messages');
     }
 
     /**
@@ -52,7 +53,7 @@ class Translate
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getConfig();
 
-        $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language']);
+        $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language'] ?? 'en');
         if ($str_o === '') {
             $str_o = $str;
         }
