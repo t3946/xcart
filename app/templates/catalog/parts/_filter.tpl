@@ -2,7 +2,7 @@
 <div class="filter_container">
     <div class="filter-block" id="all_filter">
         <div class="block-title">
-            Filter by
+            {t 'Filter by'}
         </div>
 
         <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">

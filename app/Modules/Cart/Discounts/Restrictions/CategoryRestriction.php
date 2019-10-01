@@ -18,7 +18,7 @@ class CategoryRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Category restriction');
+        return 'Category restriction';
     }
 
     public function getTypeValidation()

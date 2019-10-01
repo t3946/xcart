@@ -2,8 +2,10 @@
 
 namespace Modules\Pages\Models;
 
+use Modules\Translate\Models\LanguageModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
@@ -20,19 +22,25 @@ class InfoBlock extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'name' => [
-                'class' => CharField::className(),
-                'label' => 'Наименование'
+                'class' => CharField::class,
+                'label' => 'Name'
             ],
             'text' => [
-                'class' => TextField::className(),
-                'label' => 'Текст'
+                'class' => TextField::class,
+                'label' => 'Text'
             ],
             'tag' => [
-                'class' => CharField::className(),
-                'label' => 'Ключ (для разработчика)',
+                'class' => CharField::class,
+                'label' => 'Developer key',
                 'null' => true
+            ],
+            'language' => [
+                'class' => ForeignField::class,
+                'field' => 'lang_id',
+                'modelClass' => LanguageModel::class,
+                'label' => 'Language'
             ]
         ];
     }

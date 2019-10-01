@@ -9,6 +9,7 @@
 namespace Modules\Order\Forms;
 
 
+use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
 
@@ -20,13 +21,13 @@ class ContactInfoFaxForm extends ContactInfoForm
 
         $fields['fax'] = [
             'class' => CharField::class,
-            'label' => 'Fax',
+            'label' => OrderModule::t('Fax'),
             'required' => false,
             'validators' => [
                 new PhoneValidator(),
             ],
             'html' => [
-                'placeholder' => '(609) 924-8399',
+                'placeholder' => OrderModule::t('(609) 924-8399'),
                 'class' => 'phone'
             ],
         ];

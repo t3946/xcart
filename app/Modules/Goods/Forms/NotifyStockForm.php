@@ -3,6 +3,7 @@
 namespace Modules\Goods\Forms;
 
 use Modules\Core\Forms\FrontendModelForm;
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\NotifyStockModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
@@ -30,18 +31,18 @@ class NotifyStockForm extends FrontendModelForm
 
             'first_name' => [
                 'class' => CharField::class,
-                'label' => 'Your first name',
+                'label' => GoodsModule::t('Your first name'),
                 'html' => [
-                    'placeholder' => 'Albert'
+                    'placeholder' => GoodsModule::t('Albert')
                 ],
                 'required' => true,
             ],
 
             'email' => [
                 'class' => EmailField::class,
-                'label' => 'Your email',
+                'label' => GoodsModule::t('Your email'),
                 'html' => [
-                    'placeholder' => 'albert.einstein@gmail.com'
+                    'placeholder' => GoodsModule::t('albert.einstein@gmail.com')
                 ],
                 'required' => true,
                 'validators' => [

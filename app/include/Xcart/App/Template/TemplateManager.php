@@ -21,6 +21,7 @@ use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Xcart\App\Translate\Translate;
 
 class TemplateManager
 {

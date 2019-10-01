@@ -23,17 +23,17 @@ class PagesForm extends ModelForm
     public function getFieldsets()
     {
         return [
-            PagesModule::t('Main information') => [
+            'Main information' => [
                 'name', 'url', 'parent', 'is_index', 'no_index', 'is_published',
             ],
-            PagesModule::t('Content') => [
+            'Content' => [
                 'content_short', 'content',
             ],
-            PagesModule::t('Additional') => [
+            'Additional' => [
                 'published_at', 'file', 'sites',
             ],
-            PagesModule::t('Display settings') => [
-                'view', 'view_children', 'sorting',
+            'Display settings' => [
+                'view', 'view_children', 'sorting', 'language',
             ],
         ];
     }
@@ -46,22 +46,21 @@ class PagesForm extends ModelForm
             'is_published' => CheckboxField::className(),
             'content_short' => [
                 'class' => TextAreaField::className(),
-                'label' => PagesModule::t('Short content'),
+                'label' => 'Short content',
             ],
             'content' => [
                 'class' => EditorField::className(),
-                'label' => PagesModule::t('Content'),
+                'label' => 'Content',
             ],
             'view' => [
                 'class' => DropDownField::className(),
                 'choices' => Page::getViews(),
-                'label' => PagesModule::t('View'),
+                'label' => 'View',
             ],
             'view_children' => [
                 'class' => DropDownField::className(),
                 'choices' => Page::getViews(),
-//                'hint' => PagesModule::t('View for children pages'),
-                'label' => PagesModule::t('View children'),
+                'label' => 'View children',
             ],
             'published_at' => [
                 'class' => DateTimeField::className(),
@@ -87,7 +86,12 @@ class PagesForm extends ModelForm
 
                     return $mass;
                 },
+                'required' => true
             ],
+            'language' => [
+                'class' => DropDownField::class,
+                'required' => true
+            ]
         ];
     }
 

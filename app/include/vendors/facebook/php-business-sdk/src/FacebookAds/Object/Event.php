@@ -29,6 +29,7 @@ use FacebookAds\Cursor;
 use FacebookAds\Http\RequestInterface;
 use FacebookAds\TypeChecker;
 use FacebookAds\Object\Fields\EventFields;
+use FacebookAds\Object\Values\EventCategoryValues;
 use FacebookAds\Object\Values\EventEventStateFilterValues;
 use FacebookAds\Object\Values\EventPromotableEventTypesValues;
 use FacebookAds\Object\Values\EventTimeFilterValues;
@@ -40,6 +41,7 @@ use FacebookAds\Object\Values\LiveVideoStereoscopicModeValues;
 use FacebookAds\Object\Values\LiveVideoStreamTypeValues;
 use FacebookAds\Object\Values\PhotoBackdatedTimeGranularityValues;
 use FacebookAds\Object\Values\PhotoUnpublishedContentTypeValues;
+use FacebookAds\Object\Values\ProfilePictureSourceTypeValues;
 
 /**
  * This class is auto-generated.
@@ -61,6 +63,7 @@ class Event extends AbstractCrudObject {
 
   protected static function getReferencedEnums() {
     $ref_enums = array();
+    $ref_enums['Category'] = EventCategoryValues::getInstance()->getValues();
     $ref_enums['Type'] = EventTypeValues::getInstance()->getValues();
     $ref_enums['EventStateFilter'] = EventEventStateFilterValues::getInstance()->getValues();
     $ref_enums['TimeFilter'] = EventTimeFilterValues::getInstance()->getValues();
@@ -85,52 +88,6 @@ class Event extends AbstractCrudObject {
       new Profile(),
       'EDGE',
       Profile::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getComments(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/comments',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getFeed(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/feed',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -317,34 +274,10 @@ class Event extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getLiveVideos(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/live_videos',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function createLiveVideo(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
-      'attribution_app_id' => 'string',
       'content_tags' => 'list<string>',
       'description' => 'string',
       'encoding_settings' => 'string',
@@ -383,29 +316,6 @@ class Event extends AbstractCrudObject {
       new LiveVideo(),
       'EDGE',
       LiveVideo::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getPhotos(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/photos',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -493,8 +403,13 @@ class Event extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'height' => 'int',
+      'redirect' => 'bool',
+      'type' => 'type_enum',
+      'width' => 'int',
     );
     $enums = array(
+      'type_enum' => ProfilePictureSourceTypeValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
@@ -502,32 +417,9 @@ class Event extends AbstractCrudObject {
       $this->data['id'],
       RequestInterface::METHOD_GET,
       '/picture',
-      new NullNode(),
+      new ProfilePictureSource(),
       'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getPosts(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/posts',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
+      ProfilePictureSource::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -551,29 +443,6 @@ class Event extends AbstractCrudObject {
       new Profile(),
       'EDGE',
       Profile::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getVideos(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/videos',
-      new NullNode(),
-      'EDGE',
-      NullNode::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);

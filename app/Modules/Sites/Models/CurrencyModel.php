@@ -5,6 +5,7 @@ namespace Modules\Sites\Models;
 
 
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Model;
 
 class CurrencyModel extends Model
@@ -14,6 +15,13 @@ class CurrencyModel extends Model
     public static function tableName()
     {
         return 'xcart_currencies';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'is_primary' => BooleanCharField::class
+        ];
     }
 
     public function getCurrencyFormat($number): string

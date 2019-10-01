@@ -31,7 +31,7 @@
 {*{set $inlines = $form->renderInlines()}*}
 {*{if $inlines}*}
     {*<hr>*}
-    {*<h2>{t 'Inline forms'}</h2>*}
+    {*<h2>Inline forms</h2>*}
     {*<br>*}
     {*{foreach $inlines as $name => $iforms}*}
         {*{foreach $iforms as $inline}*}

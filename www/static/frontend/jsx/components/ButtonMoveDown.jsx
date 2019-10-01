@@ -45,7 +45,7 @@ export default class ButtonMoveDown extends Component {
         }
         return (<div className={classStringContainer}>
             <a className={classString} onClick={() => { this.scrollDown(); }} >
-                DOWN
+                {props.label}
             </a>
         </div>);
     }

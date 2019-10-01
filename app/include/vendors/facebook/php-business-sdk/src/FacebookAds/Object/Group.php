@@ -506,7 +506,6 @@ class Group extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'attribution_app_id' => 'string',
       'content_tags' => 'list<string>',
       'description' => 'string',
       'encoding_settings' => 'string',
@@ -648,7 +647,7 @@ class Group extends AbstractCrudObject {
       $this->api,
       $this->data['id'],
       RequestInterface::METHOD_POST,
-      '/opengraphactionfeed',
+      '/open_graph_action_feed',
       new AbstractCrudObject(),
       'EDGE',
       array(),

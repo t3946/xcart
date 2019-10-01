@@ -4,6 +4,7 @@ namespace Modules\Main\Validation;
 
 
 use Modules\Goods\Models\ProductModel;
+use Modules\Main\MainModule;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Validation\Validator;
 
@@ -24,7 +25,7 @@ class ProductOrOrderValidator extends Validator
             if (!(ProductModel::objects()->filter(['productcode' => $value])->count() > 0
                 || ($order_number && OrderModel::objects()->filter(['pk' => $order_number, 'order_prefix' => $order_prefix])->count() > 0)))
             {
-                $this->addError('SKU or Order # not found');
+                $this->addError(MainModule::t('SKU or Order # not found'));
             }
 
         }

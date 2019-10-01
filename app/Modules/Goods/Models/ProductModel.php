@@ -12,6 +12,7 @@ use Modules\Amp\Models\AmpProductModel;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
@@ -559,7 +560,7 @@ class ProductModel extends Model implements ICartItem
 
     public function recalculate($quantity, $type, $data)
     {
-        return $quantity * $this->getPrice($quantity);
+        return $quantity * $this->getFrontendPrice($quantity);
     }
 
     public function getUniqueId($data = [])
@@ -598,8 +599,9 @@ class ProductModel extends Model implements ICartItem
     public function getPrices()
     {
         $t = [];
+        $curr = $this->distributor->currency;
         foreach ($this->pricing as $price) {
-            $t[$price->quantity] = max($price->price, $this->new_map_price);
+            $t[$price->quantity] = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
         }
 
         return $t;
@@ -724,4 +726,20 @@ class ProductModel extends Model implements ICartItem
     {
         return max((float)$this->shipping_weight ?: (float)$this->weight, 0.01);
     }
+
+    public function getFrontendPrice($forQuantity = 1)
+    {
+        $fPrice = $this->getPrice($forQuantity);
+
+        if ($fPrice > $this->cost_to_us && $this->isOutOfStock() && $this->isSupplierFeedsEnabled()) {
+            $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
+            $fPrice = max((float) $this->new_map_price, $fPrice);
+        }
+
+        $fPrice = CurrencyHelper::convert($this->distributor->currency, $fPrice);
+
+        return $fPrice;
+    }
+
+
 }

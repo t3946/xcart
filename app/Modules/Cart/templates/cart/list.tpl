@@ -1,16 +1,16 @@
 {extends "cart/base.tpl"}
 
 {block 'content'}
-    <h1>{$.t('Cart', 'cart')}</h1>
+    <h1>{t('Cart')}</h1>
 
     <table>
         <thead>
             <tr>
-                <th>{$.t('Name', 'cart')}</th>
-                <th>{$.t('Quantity', 'cart')}</th>
-                <th>{$.t('Attributes', 'cart')}</th>
-                <th>{$.t('Price', 'cart')}</th>
-                <th>{$.t('Actions', 'cart')}</th>
+                <th>{t('Name')}</th>
+                <th>{t('Quantity')}</th>
+                <th>{t('Attributes')}</th>
+                <th>{t('Price')}</th>
+                <th>{t('Actions')}</th>
             </tr>
         </thead>
         <tbody>
@@ -33,12 +33,12 @@
                     ${$position->getPrice()}
                 </td>
                 <td>
-                    <a href="{url 'cart:delete' key=$key}" title="{$.t('Delete', 'cart')}">{$.t('Delete', 'cart')}</a>
+                    <a href="{url 'cart:delete' key=$key}" title="{t('Delete')}">{t('Delete')}</a>
                 </td>
             </tr>
             {/foreach}
         </tbody>
     </table>
 
-    <p>{$.t("Total price", 'cart')}: {$total}</p>
+    <p>{t('Total price')}: {$total}</p>
 {/block}

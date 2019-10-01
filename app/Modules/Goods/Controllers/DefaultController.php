@@ -164,7 +164,7 @@ class DefaultController extends FrontendController
                 $params = array_merge($params, [
                     'pager' => $pager->setPage(0),
                     'sort' => $orderBy,
-                    'sort_arr' => ProductSortHelper::$orderBy,
+                    'sort_arr' => ProductSortHelper::getOrderBy(),
                 ]);
             }
         }

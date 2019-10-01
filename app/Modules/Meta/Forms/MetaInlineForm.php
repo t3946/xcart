@@ -30,7 +30,7 @@ class MetaInlineForm extends ModelForm
 
     public function getName()
     {
-        return MetaModule::t('Meta');
+        return 'Meta';
     }
 
     public function getFields()
@@ -38,15 +38,15 @@ class MetaInlineForm extends ModelForm
         return [
             'title' => [
                 'class' => CharField::className(),
-                'label' => MetaModule::t('Title'),
+                'label' => 'Title',
             ],
             'description' => [
                 'class' => TextAreaField::className(),
-                'label' => MetaModule::t('Description')
+                'label' => 'Description'
             ],
             'keywords' => [
                 'class' => TextAreaField::className(),
-                'label' => MetaModule::t('Keywords')
+                'label' => 'Keywords'
             ],
             'url' => [
                 'class' => HiddenField::className()

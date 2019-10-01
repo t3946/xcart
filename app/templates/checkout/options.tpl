@@ -56,13 +56,14 @@
             <div class="row">
                 <div class="columns large-4 show-for-large">
                     <div class="options">
-                        {include 'checkout/_address_view.tpl' info=$shipping_address header=$.t('Shipping Address','order') uri='checkout:shipping'}
+                        {set $lbl}{t 'Shipping Address'}{/set}
+                        {include 'checkout/_address_view.tpl' info=$shipping_address header=$lbl uri='checkout:shipping'}
                     </div>
                 </div>
                 <div class="columns small-12 large-8">
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Delivery Methods' dict='order'}</h2>
+                            <h2>{t 'Delivery Methods' }</h2>
                         </div>
                     </div>
                     {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
@@ -75,11 +76,11 @@
                                 <div class="columns small-12">
 
                                     <h3 class="shipped-from">
-                                        {t 'Delivery methods for' dict='order'}
+                                        {t 'Delivery methods for' }
                                         <a class="dashed" data-toggle="product-group-{$gi}">
-                                            <span>{t 'the items' dict='order'}</span>
+                                            <span>{t 'the items' }</span>
                                         </a>
-                                        {t 'shipped from warehouse in' dict='order'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                                        {t 'shipped from warehouse in' } {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                                     </h3>
 
                                     {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}
@@ -124,13 +125,13 @@
                                 <div class="row">
                                     <div class="columns small-12">
                                         <div class="no-quotes">
-                                            Our shipping server couldn’t provide us with an accurate shipping quote. This sometimes occurs<br/>
-                                            - when the product is oversized or somehow irregular in shape or weight<br/>
-                                            - for overseas shipments<br/>
+                                            {t "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"}<br/>
+                                            {t '- when the product is oversized or somehow irregular in shape or weight'}<br/>
+                                            {t '- for overseas shipments'}<br/>
                                             <br/>
-                                            <b>Please go ahead and place your order.</b><br/>
-                                            We will determine an accurate shipping charge manually and send you an updated invoice.<br/>
-                                            At this point we won’t collect your payment information.
+                                            <b>{t 'Please go ahead and place your order.'}</b><br/>
+                                            {t 'We will determine an accurate shipping charge manually and send you an updated invoice.'}<br/>
+                                            {t "At this point we won't collect your payment information."}
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +144,7 @@
                                 <div class="non-us-disclaimer checkbox-container">
                                     <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation"/>
                                     <label for="non-us-disclaimer-checkbox">
-                                        By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in {$site_currency->currency_code}.
+                                        {t 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada. All prices are in '} {$site_currency->currency_code}.
                                     </label>
                                 </div>
                             </div>
@@ -163,7 +164,7 @@
                 <div class="columns large-8">
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Payment Methods' dict='order'}</h2>
+                            <h2>{t 'Payment Methods' }</h2>
                         </div>
                     </div>
                     {if $payment_methods}
@@ -199,14 +200,14 @@
                     {set $billing_diff = $.app->request->post->get('billing_same') === '0' || $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Is Billing Address the same as Shipping Address?' dict='order'}</h2>
+                            <h2>{t 'Is Billing Address the same as Shipping Address?' }</h2>
                         </div>
                     </div>
                     <div class="row">
                         <div class="columns small-12">
                             <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
                             <label for="biiling_yes">
-                                {t 'Yes' dict='order'}
+                                {t 'Yes' }
                             </label>
                         </div>
                     </div>
@@ -214,7 +215,7 @@
                         <div class="columns small-12">
                             <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
                             <label for="biiling_no">
-                                {t 'No' dict='order'}
+                                {t 'No' }
                             </label>
                         </div>
                     </div>
@@ -239,7 +240,7 @@
                         <div class="column small-12 align-center">
                             <div class="buttons">
                                 <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                                    {t 'Continue' dict='order'}
+                                    {t 'Continue' }
                                 </button>
                             </div>
                         </div>
@@ -248,7 +249,7 @@
                     <div class="row">
                         <div class="column small-12 align-center">
                             <div class="submit-notes hint">
-                                {t 'Continue to the order review page' dict='order'}
+                                {t 'Continue to the order review page' }
                             </div>
                         </div>
                     </div>

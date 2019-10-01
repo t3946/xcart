@@ -17,7 +17,7 @@ class DateRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Date restriction');
+        return 'Date restriction';
     }
 
     public function getTypeValidation()

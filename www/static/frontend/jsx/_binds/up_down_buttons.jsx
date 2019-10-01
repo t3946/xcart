@@ -9,8 +9,8 @@ documentReady(() => {
     if(container){
         render(<div className="buttons-container">
             {/*<div className="columns small-12 buttons-container">*/}
-                <ButtonMoveUp className="move-button" />
-                <ButtonMoveDown className="move-button" />
+                <ButtonMoveUp className="move-button" label={container.dataset.lng_up}/>
+                <ButtonMoveDown className="move-button" label={container.dataset.lng_down} />
             {/*</div>*/}
         </div>, container, container.firstChild);
     }

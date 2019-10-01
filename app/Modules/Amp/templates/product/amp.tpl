@@ -72,19 +72,19 @@
         </div>
 
         {if $model->isGroupRoot()}
-            <h6 id="sku">SKU:
+            <h6 id="sku">{t 'SKU'}:
                 <span>{$model->productcode}<span>
             </h6>
             {if $model->getFrontendPrice() > 0}
                 {if $model->getFrontendPrice() != $model->getFrontendPrice(2)}
-                    <h6><b>PRICE RANGE:</b>
+                    <h6><b>{t 'PRICE RANGE'}:</b>
                         <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2} - US$ {$model->getFrontendPrice(2)|number_format:2}</span></b></span>
                     </h6>
 
                 {/if}
             {/if}
             <a class="button_redirect" id="group_prod" href="{$model->getAbsoluteUrl()}">
-                <b>FULL PRODUCT LINE</b>
+                <b>{t 'FULL PRODUCT LINE'}</b>
             </a>
 
             <br><br>
@@ -93,13 +93,13 @@
                 {if !$model->isOutOfStock()}
                     <form action="{url 'cart:add' uniqueId=$model->productid}" method="get" target="_top">
                         <div class="options price">
-                            <h6 id="sku">SKU:
+                            <h6 id="sku">{t 'SKU'}:
                                 <span>{$model->productcode}<span>
                             </h6>
                         </div>
-                            <p><b>In Stock</b></p>
+                            <p><b>{t 'In Stock'}</b></p>
                         <div class="options price">
-                            <h6><b>PRICE:</b>
+                            <h6><b>{t 'PRICE'}:</b>
                                 <!-- Display the price of the selected shirt in the selected size if available.
                                      Otherwise, display the placeholder text '---'. -->
                                 <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b><span>
@@ -113,7 +113,7 @@
                             -->
 
                                 <button id="place_order" class="mdl-button mdl-button--raised mdl-button--accent add_to_cart" >
-                                    Add to cart
+                                    {t 'Add to cart'}
                                 </button>
 
 
@@ -124,15 +124,15 @@
                 {else}
                     <div class="similar">
                         <div class="options price">
-                            <h6 id="sku">SKU:
+                            <h6 id="sku">{t 'SKU'}:
                                 <span>{$model->productcode}<span>
                             </h6>
                         </div>
 
-                        <p><b>Out Of Stock</b></p>
+                        <p><b>{t 'Out Of Stock'}</b></p>
                         <div class="options price">
 
-                            <h6><b>PRICE:</b>
+                            <h6><b>{t 'PRICE'}:</b>
                                 <!-- Display the price of the selected shirt in the selected size if available.
                                      Otherwise, display the placeholder text '---'. -->
                                 <span ><b>US$ <span class="mdl-color-text--red">{$model->getFrontendPrice()|number_format:2}</span></b></span>
@@ -141,7 +141,7 @@
 
                         </div>
                         <a class="button_redirect" id="similar_prod" href="{$helper->getLastChildCategoryUrl()}">
-                            <b>FIND SIMILAR PRODUCTS</b>
+                            <b>{t 'FIND SIMILAR PRODUCTS'}</b>
                         </a>
 
                     </div>
@@ -156,7 +156,7 @@
         {if $model->isGroupChild()}
             <br>
                 <a class="button_redirect_2" id="group_prod_2" href="{$model->parent->getAbsoluteUrl()}">
-                    <b>See other product variations</b>
+                    <b>{t 'See other product variations'}</b>
                 </a>
             <br>
         {/if}

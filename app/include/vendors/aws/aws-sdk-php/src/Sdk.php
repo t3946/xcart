@@ -26,6 +26,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionApplicationAutoScaling(array $args = [])
  * @method \Aws\ApplicationDiscoveryService\ApplicationDiscoveryServiceClient createApplicationDiscoveryService(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionApplicationDiscoveryService(array $args = [])
+ * @method \Aws\ApplicationInsights\ApplicationInsightsClient createApplicationInsights(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionApplicationInsights(array $args = [])
  * @method \Aws\Appstream\AppstreamClient createAppstream(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionAppstream(array $args = [])
  * @method \Aws\Athena\AthenaClient createAthena(array $args = [])
@@ -116,6 +118,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionDynamoDb(array $args = [])
  * @method \Aws\DynamoDbStreams\DynamoDbStreamsClient createDynamoDbStreams(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionDynamoDbStreams(array $args = [])
+ * @method \Aws\EC2InstanceConnect\EC2InstanceConnectClient createEC2InstanceConnect(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionEC2InstanceConnect(array $args = [])
  * @method \Aws\EKS\EKSClient createEKS(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionEKS(array $args = [])
  * @method \Aws\Ec2\Ec2Client createEc2(array $args = [])
@@ -140,6 +144,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionElasticsearchService(array $args = [])
  * @method \Aws\Emr\EmrClient createEmr(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionEmr(array $args = [])
+ * @method \Aws\EventBridge\EventBridgeClient createEventBridge(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionEventBridge(array $args = [])
  * @method \Aws\FMS\FMSClient createFMS(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionFMS(array $args = [])
  * @method \Aws\FSx\FSxClient createFSx(array $args = [])
@@ -202,6 +208,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionKinesisVideoMedia(array $args = [])
  * @method \Aws\Kms\KmsClient createKms(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionKms(array $args = [])
+ * @method \Aws\LakeFormation\LakeFormationClient createLakeFormation(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionLakeFormation(array $args = [])
  * @method \Aws\Lambda\LambdaClient createLambda(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionLambda(array $args = [])
  * @method \Aws\LexModelBuildingService\LexModelBuildingServiceClient createLexModelBuildingService(array $args = [])
@@ -258,6 +266,12 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionOrganizations(array $args = [])
  * @method \Aws\PI\PIClient createPI(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionPI(array $args = [])
+ * @method \Aws\Personalize\PersonalizeClient createPersonalize(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionPersonalize(array $args = [])
+ * @method \Aws\PersonalizeEvents\PersonalizeEventsClient createPersonalizeEvents(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionPersonalizeEvents(array $args = [])
+ * @method \Aws\PersonalizeRuntime\PersonalizeRuntimeClient createPersonalizeRuntime(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionPersonalizeRuntime(array $args = [])
  * @method \Aws\Pinpoint\PinpointClient createPinpoint(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionPinpoint(array $args = [])
  * @method \Aws\PinpointEmail\PinpointEmailClient createPinpointEmail(array $args = [])
@@ -310,6 +324,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionServiceCatalog(array $args = [])
  * @method \Aws\ServiceDiscovery\ServiceDiscoveryClient createServiceDiscovery(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionServiceDiscovery(array $args = [])
+ * @method \Aws\ServiceQuotas\ServiceQuotasClient createServiceQuotas(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionServiceQuotas(array $args = [])
  * @method \Aws\Ses\SesClient createSes(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionSes(array $args = [])
  * @method \Aws\Sfn\SfnClient createSfn(array $args = [])
@@ -361,7 +377,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.99.0';
+    const VERSION = '3.109.2';
 
     /** @var array Arguments for creating clients */
     private $args;

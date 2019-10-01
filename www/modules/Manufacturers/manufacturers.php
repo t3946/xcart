@@ -39,6 +39,7 @@
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Models\CurrencyModel;
 use Xcart\External_Marketplaces\ExternalMarketPlace;
 use Xcart\External_Marketplaces\DisabledMarketPlace;
 
@@ -434,6 +435,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"descr" => $descr,
 				"reduce_extra_margin" => $reduce_extra_margin,
 				"max_extra_margin" => $max_extra_margin,
+				"d_currency" => $d_currency,
 				"calculate_shipping" => $calculate_shipping
 			);
 			$query_data_lng = array(
@@ -1222,6 +1224,8 @@ $smarty->assign("distributor_sections", $distributor_sections);
 
 $ca_statuses = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' AND status!='' ORDER BY orderby");
 $smarty->assign('ca_statuses', $ca_statuses);
+
+$smarty->assign('currencies', CurrencyModel::objects()->all());
 
 
 $now_time = time();

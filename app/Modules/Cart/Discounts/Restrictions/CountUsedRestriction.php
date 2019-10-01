@@ -17,7 +17,7 @@ class CountUsedRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Count uses');
+        return 'Count uses';
     }
 
     public function getTypeValidation()

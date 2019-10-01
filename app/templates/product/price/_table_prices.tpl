@@ -23,27 +23,27 @@
                     <div class="column small-12">
                         <div class="table table__prices table__prices--top">
                             <div class="column price">
-                                <div class="title">Unit Price</div>
+                                <div class="title">{t 'Unit Price'}</div>
                                 <div class="value">
                                     {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
                                 </div>
                             </div>
 
                             <div class="column quantity">
-                                <div class="title">Quantity</div>
+                                <div class="title">{t 'Quantity'}</div>
                                 <div class="value">
 
                                     {if !$model->isOutOfStock()}
                                         {include "product/parts/_quantity_group.tpl"}
                                     {else}
-                                        Out of stock
+                                        {t 'Out of stock'}
                                     {/if}
                                 </div>
                             </div>
 
                             {if !$model->isOutOfStock()}
                                 <div class="column extended">
-                                    <div class="title">Subtotal</div>
+                                    <div class="title">{t 'Subtotal'}</div>
                                     <div class="value">
                                         {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
                                     </div>
@@ -97,26 +97,26 @@
                         {if $index}
                         <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
                             <div class="row" style="margin:0">
-                                <div class="columns discount__title">Extra qty discount</div>
+                                <div class="columns discount__title">{t 'Extra qty discount'}</div>
                             </div>
                             <div class="row discount__counter">
                                 <div class="columns">
                                     <div class="digit hours"></div>
-                                    <div class="label hours">hrs</div>
+                                    <div class="label hours">{t 'hrs'}</div>
                                 </div>
                                 <div class="columns">
                                     <span class="delimiter">:</span>
                                 </div>
                                 <div class="columns">
                                     <div class="digit minutes"></div>
-                                    <div class="label minutes">min</div>
+                                    <div class="label minutes">{t 'min'}</div>
                                 </div>
                                 <div class="columns">
                                     <span class="delimiter">:</span>
                                 </div>
                                 <div class="columns">
                                     <div class="digit seconds"></div>
-                                    <div class="label seconds">sec</div>
+                                    <div class="label seconds">{t 'sec'}</div>
                                 </div>
                             </div>
                         </div>
@@ -133,49 +133,49 @@
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
                         <div class="jackpot">
-                            Jackpot! You got a great price!
+                            {t 'Jackpot! You got a great price!'}
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {*                            {include "product/parts/_number_button.tpl"}*}
                             <a class="add button yellow wait-button">
                                 <span class="text">
-                                    Add to cart
+                                    {t 'Add to cart'}
                                 </span>
                                 <span class="wait-text">
-                                    Added
+                                    {t 'Added'}
                                 </span>
                             </a>
                         </div>
                         <div class="no-account">
-                            No account needed! Checkout only takes 2 minutes.
+                            {t 'No account needed! Checkout only takes 2 minutes.'}
                         </div>
                     </div>
                     <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
                         <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
                             <div class="safe-prices list-price">
                                 <div class="title">
-                                    List Price:
+                                    {t 'List Price'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-list>{$model->list_price}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-list>{$model->list_price}</span>
                                 </div>
                             </div>
 
                             <div class="safe-prices safe safe-per-item">
                                 <div class="title">
-                                    Per item savings:
+                                    {t 'Per item savings'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
                                 </div>
                             </div>
 
                             <div class="safe-prices safe total-safe">
                                 <div class="title">
-                                    Total savings:
+                                    {t 'Total savings'}:
                                 </div>
                                 <div class="value">
-                                    US$ <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
                                 </div>
                             </div>
 
@@ -190,7 +190,7 @@
         <div class="notify-me-stock">
 
             <a class="notify-me grey-border">
-                <span>Notify me when product is in stock</span>
+                <span>{t 'Notify me when product is in stock'}</span>
             </a>
 
         </div>

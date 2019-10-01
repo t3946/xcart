@@ -10,13 +10,13 @@
 
                 <div class="b-next">
                     <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
-                        Checkout
+                        {t 'Checkout'}
                     </a>
                 </div>
 
                 <div class="b-back">
                     <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                       Shop more
+                       {t 'Shop more'}
                     </a>
                 </div>
 
@@ -24,7 +24,7 @@
                 {if !$cartEmpty}
                 <div class="head">
                     <div class="nop"></div>
-                    <h2 class="cart-number">{t 'Shopping Cart #' ~~ $.app->cart->getCartNumber() dict='cart'}</h2>
+                    <h2 class="cart-number">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
                 </div>
                 {/if}
             </div>
@@ -37,31 +37,31 @@
 
             <div class="warehouse_products">
                 <div class="shipped_from">
-                    The items below will be shipped from warehouse in {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                    {t 'The items below will be shipped from warehouse in'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
                 </div>
 
                 <div class="table">
                     <div class="table-row table-head show-for-large">
                         <div class="table-column image-name">
-                            {t 'Item name'  dict='cart'}
+                            {t 'Item name'  }
                         </div>
 
                         <div class="table-column price">
-                            {t 'Price'  dict='cart'}
+                            {t 'Price'  }
                         </div>
 
                         <div class="table-column quantity">
-                            {t 'Quantity'  dict='cart'}
+                            {t 'Quantity'  }
                         </div>
                         <div class="table-column x">
                             &nbsp;
                         </div>
                         <div class="table-column extended">
-                            {t 'Extended'  dict='cart'}
+                            {t 'Extended'  }
                         </div>
 
                         {*<div class="table-column remove">*}
-                            {*{t 'Remove'  dict='cart'}*}
+                            {*{t 'Remove'  }*}
                         {*</div>*}
                     </div>
                     <div class="table-body">
@@ -89,7 +89,7 @@
 
                                     <div class="code sku show-for-medium">
                                         <div class="value">
-                                            {t 'SKU'  dict='cart'}:
+                                            {t 'SKU'  }:
                                             {$position->object->productcode}
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                 </div>
 
                                 <div class="close-wide-screen show-for-large">
-                                    <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                    <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart_remove" onclick="loader.load(this)">
                                         {include 'cart/_close_icon.tpl'}
                                     </a>
                                 </div>
@@ -116,7 +116,7 @@
 
                                 <div class="table-wrapper quantity-extended">
                                     <div class="close-wide-screen show-for-medium hide-for-large">
-                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart_remove" onclick="loader.load(this)">
                                             {include 'cart/_close_icon.tpl'}
                                         </a>
                                     </div>
@@ -150,7 +150,7 @@
                             </div>
 
                             <div class="table-column remove hide-for-medium">
-                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' dict='cart'}" class="icon cart_remove" onclick="loader.load(this)">
+                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart_remove" onclick="loader.load(this)">
                                     {include 'cart/_close_icon.tpl'}
                                 </a>
                             </div>
@@ -172,7 +172,7 @@
                                     {$warehouse->m_city},
                                     {$warehouse->m_state},
                                     {$warehouse->m_country}
-                                    <b>warehouse subtotal</b>:
+                                    <b>{t 'warehouse subtotal'}</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
                                     {$site_currency->symbol_prefix}{$site_currency} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>
@@ -185,12 +185,12 @@
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
                         {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
-                            The minimum order amount for this product line is {$site_currency->symbol_prefix}{$site_currency} {$warehouse->getMinimalAmount()}
+                            {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{$site_currency} {$warehouse->getMinimalAmount()}
                         {/p_label}
                         {/if}
                         {if !$warehouse->hasCanadaShippingZone()}
                             {p_label cls="err fill last-items"}
-                                This product line can only be shipped to a US address.
+                                {t 'This product line can only be shipped to a US address.'}
                             {/p_label}
                         {/if}
                     </div>
@@ -204,36 +204,31 @@
 
                 <div class="memo_subtotal">
                     <div class="grand-subtotal">
-                        Subtotal:
+                        {t 'Subtotal'}:
                         <div class="subtotal">
                             {$site_currency->symbol_prefix}{$site_currency} <span class="cart_subtotal" var-cart-subtotal>{$site_currency->getCurrencyFormat($total)}</span>
                         </div>
                     </div>
 
                     <div class="memo">
-                        Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page.
+                        {t "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."}
                     </div>
                 </div>
 
                 <div class="bottom_line">
                     <div class="b-next">
                         <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
-                            Checkout
+                            {t 'Checkout'}
                         </a>
                     </div>
 
                     <div class="b-back">
                         <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                            Shop more
+                            {t 'Shop more'}
                         </a>
                     </div>
                 </div>
-
             {/if}
-
-
-
-
         </div>
     </div>
 </section>

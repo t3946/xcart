@@ -1,6 +1,6 @@
 <div class="filter_price">
     <div class="inputs">
-        <span class="currency">US$</span>
+        <span class="currency">{$site_currency->symbol_prefix}{$site_currency}</span>
 
         <input type="number"
                id="filter_{$key}_min"

@@ -5,6 +5,7 @@ namespace Modules\Pages\Models;
 use Closure;
 use Modules\Pages\PagesModule;
 use Modules\Sites\Models\SiteModel;
+use Modules\Translate\Models\LanguageModel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
@@ -13,6 +14,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -52,91 +54,91 @@ class Page extends TreeModel
             'name' => [
                 'class' => CharField::className(),
                 'required' => true,
-                'verboseName' => PagesModule::t('Name')
+                'verboseName' => 'Name'
             ],
             'url' => [
                 'class' => CharField::className(),
                 'required' => true,
-                'verboseName' => PagesModule::t('Url'),
+                'verboseName' => 'Url',
             ],
             'content' => [
                 'class' => TextField::className(),
                 'null' => true,
-                'verboseName' => PagesModule::t('Content')
+                'verboseName' => 'Content'
             ],
             'content_short' => [
                 'class' => TextField::className(),
                 'null' => true,
-                'verboseName' => PagesModule::t('Short content')
+                'verboseName' => 'Short content'
             ],
             'file' => [
                 'class' => ImageField::className(),
                 'null' => true,
                 'sizes' => $sizes,
-                'verboseName' => PagesModule::t('File'),
+                'verboseName' => 'File',
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
-                'verboseName' => PagesModule::t("Created at")
+                'verboseName' => 'Created at'
             ],
             'updated_at' => [
                 'class' => DateTimeField::className(),
                 'autoNow' => true,
-                'verboseName' => PagesModule::t("Updated at")
+                'verboseName' => 'Updated at'
             ],
             'published_at' => [
                 'class' => DateTimeField::className(),
                 'null' => true,
-                'verboseName' => PagesModule::t("Published at"),
+                'verboseName' => 'Published at',
             ],
             'view' => [
                 'class' => CharField::className(),
                 'null' => true,
-                'verboseName' => PagesModule::t('View')
+                'verboseName' => 'View'
             ],
             'view_children' => [
                 'class' => CharField::className(),
                 'null' => true,
-                'verboseName' => PagesModule::t('View children')
+                'verboseName' => 'View children'
             ],
             'is_index' => [
                 'class' => BooleanField::className(),
-                'verboseName' => PagesModule::t('Is index (main page)')
+                'verboseName' => 'Is index (main page)'
             ],
             'no_index' => [
                 'class' => BooleanField::className(),
-                'verboseName' => PagesModule::t('No index')
+                'verboseName' => 'No index'
             ],
             'is_published' => [
                 'class' => BooleanField::className(),
-                'verboseName' => PagesModule::t('Is published'),
+                'verboseName' => 'Is published',
                 'default' => true
             ],
             'sorting' => [
                 'class' => CharField::className(),
                 'null' => true,
                 'choices' => [
-                    'published_at' => PagesModule::t('Published time ASC'),
-                    '-published_at' => PagesModule::t('Published time DESC'),
-                    'lft' => PagesModule::t('Position ASC'),
-                    '-lft' => PagesModule::t('Position DESC'),
+                    'published_at' => 'Published time ASC',
+                    '-published_at' => 'Published time DESC',
+                    'lft' => 'Position ASC',
+                    '-lft' => 'Position DESC',
                 ],
-                'verboseName' => PagesModule::t("Sorting")
+                'verboseName' => 'Sorting'
             ],
 
             'sites' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => SiteModel::class,
                 'through' => PagesStorefrontLink::class,
-                'verboseName' => PagesModule::t('Sites'),
+                'verboseName' => 'Sites',
             ],
-//            'sites' => [
-//                'class' => ManyToManyField::className(),
-//                'modelClass' => SiteModel::className(),
-//                'through' => PagesStorefrontLink::className(),
-//                'verboseName' => PagesModule::t('storefronts'),
-//            ],
+            'language' => [
+                'class' => ForeignField::class,
+                'field' => 'lang_id',
+                'modelClass' => LanguageModel::class,
+                'label' => 'Language'
+            ]
         ]);
     }
 
@@ -159,8 +161,8 @@ class Page extends TreeModel
     public function getTypes()
     {
         return [
-            self::PAGE => PagesModule::t('Page'),
-            self::PAGESET => PagesModule::t('Set of pages'),
+            self::PAGE => 'Page',
+            self::PAGESET => 'Set of pages',
         ];
     }
 

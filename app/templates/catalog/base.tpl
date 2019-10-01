@@ -27,11 +27,11 @@
                         </div>
 
                         <div class="buttons">
-                            <button class="button waves">Apply</button>
+                            <button class="button waves">{t 'Apply'}</button>
 
                             <a href="{$.request->getMatchingUrl(['q' => $.request->get->get('q')])}" class="reset_filter waves waves-dark" rel="nofollow">
                                 <span class="text">
-                                    Reset filters
+                                    {t 'Reset filters'}
                                 </span>
                             </a>
                         </div>

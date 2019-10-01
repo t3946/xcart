@@ -24,7 +24,6 @@ return array(
     'FBAOutboundServiceMWS_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
     'FBAInventoryServiceMWS_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
     'FBAInboundServiceMWS_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
     'CaponicaAmazonMwsComplete\\' => array($vendorDir . '/caponica/amazon-mws-complete/src'),
 );

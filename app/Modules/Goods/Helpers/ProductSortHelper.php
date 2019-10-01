@@ -1,20 +1,13 @@
 <?php
 namespace Modules\Goods\Helpers;
 
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\CategoryModel;
 use Xcart\Helpers\ViewedRelatedProducts;
 
 class ProductSortHelper
 {
     public static $default = 'relevance';
-
-    public static $orderBy = [
-        'relevance' => 'Relevance',
-        'price' => 'Price low to high',
-        '-price' => 'Price high to low',
-        'new' => 'New',
-        'brand' => 'Brand',
-    ];
 
     /** @var \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet  */
     private $qs;
@@ -158,5 +151,16 @@ class ProductSortHelper
         list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
         array_unshift($oldOrder, '-manufacturerid');
         return $qs->order($oldOrder);
+    }
+
+    public static function getOrderBy() {
+        return [
+            'relevance' => GoodsModule::t('Relevance'),
+            'price' => GoodsModule::t('Price low to high'),
+            '-price' => GoodsModule::t('Price high to low'),
+            'new' => GoodsModule::t('New'),
+            'brand' => GoodsModule::t('Brand name'),
+        ];
+
     }
 }

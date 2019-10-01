@@ -46,20 +46,6 @@
                             <tr>
                                 <td valign="top" style="font-family: Arial;text-align: left;">
                                     {block 'contacts'}
-                                        {*{param('core.core.sitename')} <br/>*}
-
-                                        {*{block 'phone'}*}
-                                        {*{/block}*}
-
-                                        {*E-mail:*}
-                                        {*<a href="mailto:{param('core.core.email_owner')}">*}
-                                            {*{param('core.core.email_owner')}*}
-                                        {*</a><br/>*}
-
-                                        {*{t 'Website'}:
-                                        <a href="{$.request->getHostInfo()}">
-                                            {$.request->getHostInfo()}
-                                        </a>*}
                                     {/block}
                                 </td>
                             </tr>

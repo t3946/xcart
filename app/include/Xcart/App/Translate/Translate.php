@@ -2,6 +2,10 @@
 
 namespace Xcart\App\Translate;
 
+use Symfony\Component\Translation\Loader\PoFileLoader;
+use Symfony\Component\Translation\Translator;
+use Xcart\App\Main\Xcart;
+
 /**
  * Class Translate DUMMY
  *
@@ -10,6 +14,16 @@ namespace Xcart\App\Translate;
 class Translate
 {
     private static $_self;
+    private $translator;
+
+    public function __construct()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getConfig();
+        $this->translator = new Translator($config['Preferred_language']);
+        $this->translator->addLoader('po', new PoFileLoader());
+        $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath()."/lang/{$config['Preferred_language']}.po", $config['Preferred_language'], 'messages');
+    }
 
     /**
      * @return $this
@@ -32,13 +46,17 @@ class Translate
     public function stringReplacement($str, array $params = [])
     {
         if ($params) {
-            $str = strtr($str, $params);
-//            foreach ($params as $k=>$v) {
-//                $str = str_replace($k, $str, $v);
-//            }
+            //$str = $this->translator->trans($str, $params);
         }
 
-        return $str;
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getConfig();
+
+        $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language']);
+        if ($str_o === '') {
+            $str_o = $str;
+        }
+        return $str_o;
     }
 
 }

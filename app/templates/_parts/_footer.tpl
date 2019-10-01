@@ -17,13 +17,13 @@
                                 </div>
 
                                 <div class="all-times">
-                                    <img src="" alt="Web order 24/7" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/footer/web_order.svg">
+                                    <img src="" alt="{t 'Web order 24/7'}" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/footer/web_order.svg">
                                     <div class="content">
                                         <div class="title">
-                                            Web Orders
+                                            {t 'Web Orders'}
                                         </div>
                                         <div>
-                                            24 hours a day, 7 days a week
+                                            {t '24 hours a day, 7 days a week'}
                                         </div>
                                     </div>
                                 </div>
@@ -31,9 +31,9 @@
 
                             <ul class="no-bullet menu-list show-for-large email-support">
                                 <li class="title-menu">
-                                    Email Support
+                                    {t 'Email Support'}
                                 </li>
-                                <li><a href="/contactus/">Contact Us</a></li>
+                                <li><a href="/contactus/">{t 'Contact Us'}</a></li>
                             </ul>
 
                         </div>
@@ -46,17 +46,17 @@
 
                             <ul class="no-bullet menu-list">
                                 <li class="title-menu">
-                                    Telephone Customer Service
+                                    {t 'Telephone Customer Service'}
                                 </li>
-                                <li>Mon-Fri: 9 a.m. to 5 p.m. EST</li>
-                                <li class="toll-free">Toll Free: <span class="number">1-800-929-2431</span></li>
-                                <li>Tel: (616) 259-5711</li>
-                                <li>Fax: 1-800-929-2835</li>
+                                <li>{$config.customer_service_working_time}</li>
+                                <li class="toll-free">{t 'Toll Free'}: <span class="number">{$config.cidev_top_header_code}</span></li>
+                                <li>{t 'Tel'}: {$config.local_phone}</li>
+                                <li>{t 'Fax'}: {$config.fax_number}</li>
                             </ul>
 
                             <ul class="no-bullet menu-list show-for-medium-only">
                                 <li class="title-menu">
-                                    Contact Us
+                                    {t 'Contact Us'}
                                 </li>
                                 <li><a href="/contactus/#form">Web Form</a></li>
                                 <li><a href="/contactus/#email">Email</a></li>
@@ -105,14 +105,14 @@
 
                 <ul class="no-bullet menu-list">
                     <li class="title-menu">
-                        Join our newsletter
+                        {t 'Join our newsletter'}
                     </li>
 
                     <li>
                         <form class="email-subscription" action="{url 'subscribe:send_message'}">
-                            <input type="email" name="subscribe[email]" required placeholder="Your Email Address" value="">
+                            <input type="email" name="subscribe[email]" required placeholder="{t 'Your Email Address'}" value="">
                             <button class="waves waves-dark">
-                                Send
+                                {t 'Send'}
                             </button>
                         </form>
                     </li>
@@ -130,7 +130,7 @@
 
                             <ul class="no-bullet menu-list">
                                 <li class="title-menu">
-                                    Payment Methods
+                                    {t 'Payment Methods'}
                                 </li>
                                 <li class="payment-methods">
                                     <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
@@ -144,8 +144,8 @@
                                     <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/po.png" alt="Purchase Order request icon">
                                 </li>
                                 <li class="fraud-orders">
-                                    <a href="/ecomerce-fraud">Combating eCommerce Fraud</a>
-                                    <a class="purchase-order" href="/purchase-orders">Purchase Orders</a>
+                                    <a href="/ecomerce-fraud">{t 'Combating eCommerce Fraud'}</a>
+                                    <a class="purchase-order" href="/purchase-orders">{t 'Purchase Orders'}</a>
                                 </li>
                             </ul>
 
@@ -155,7 +155,7 @@
 
                             <ul class="no-bullet menu-list">
                                 <li class="title-menu">
-                                    Shop with Confidence
+                                    {t 'Shop with Confidence'}
                                 </li>
                                 <li class="confidence">
                                     <span id="bbb">
@@ -188,7 +188,7 @@
                 </ul>
             </div>
             <div class="column small-12 medium-7 medium-order-1 copyright">
-                Copyright © 2005-{date_add()|date:"Y"} {$gConfig.holding_company_name} All Rights Reserved.
+                {t 'Copyright ©'} {$config.start_year}-{date_add()|date:"Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
             </div>
         </div>
     </div>

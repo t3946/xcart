@@ -28,10 +28,17 @@ class TextLibrary extends TemplateLibrary
                 $data['sfcode'] = strtolower($data['sfcode']);
                 $tag .= ":store.{$data['sfcode']}";
             }
+
+            $filter['language__lang_code'] = 'en';
+            if ($data['lang']) {
+                $data['lang'] = strtolower($data['lang']);
+                $filter['language__lang_code'] = $data['lang'];
+            }
+
             $filter['tag'] = $tag;
         }
         if ($text = InfoBlock::objects()->filter($filter)->get()->text){
-            return $text;
+            return html_entity_decode($text);
         }
 
         return '';

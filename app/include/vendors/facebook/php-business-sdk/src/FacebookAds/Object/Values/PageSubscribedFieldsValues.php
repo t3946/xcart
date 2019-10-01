@@ -45,6 +45,7 @@ class PageSubscribedFieldsValues extends AbstractEnum {
   const BRANDED_CAMERA = 'branded_camera';
   const CATEGORY = 'category';
   const CHECKINS = 'checkins';
+  const COMMERCE_ORDER = 'commerce_order';
   const COMPANY_OVERVIEW = 'company_overview';
   const CONVERSATIONS = 'conversations';
   const CULINARY_TEAM = 'culinary_team';
@@ -102,6 +103,7 @@ class PageSubscribedFieldsValues extends AbstractEnum {
   const RATINGS = 'ratings';
   const REGISTRATION = 'registration';
   const STANDBY = 'standby';
+  const VIDEO_TEXT_QUESTION_RESPONSES = 'video_text_question_responses';
   const VIDEOS = 'videos';
   const WEBSITE = 'website';
 }

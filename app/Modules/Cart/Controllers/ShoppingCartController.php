@@ -35,6 +35,7 @@
 namespace Modules\Cart\Controllers;
 
 use Modules\Admin\Controllers\BackendController;
+use Modules\Cart\CartModule;
 use Modules\Cart\Forms\ShoppingCartForm;
 use Modules\Cart\Models\CartModel;
 use Modules\Goods\Models\ProductModel;
@@ -75,11 +76,11 @@ class ShoppingCartController extends BackendController
 
         $pager = new Pagination($qs,['pageSize' => 25], new QuerySetDataSource());
 
-        $pageTitle = "Shopping Cart";
+        $pageTitle = CartModule::t('Shopping Cart');
 
         $form = new ShoppingCartForm();
 
-        Xcart::app()->breadcrumbs->add('Shopping cart');
+        Xcart::app()->breadcrumbs->add(CartModule::t('Shopping cart'));
         echo $this->renderInSmarty("admin/cart/all_carts.tpl", [
             'pager' => $pager,
             'page_title' => $pageTitle,

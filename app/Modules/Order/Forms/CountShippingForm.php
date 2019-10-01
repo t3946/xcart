@@ -10,6 +10,7 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
@@ -27,7 +28,7 @@ class CountShippingForm extends BaseForm
 
             'country' => [
                 'class' => CharField::class,
-                'label' => 'Country',
+                'label' => OrderModule::t('Country'),
                 'required' => true,
                 'validators' => [
                     new CountryValidator()
@@ -43,7 +44,7 @@ class CountShippingForm extends BaseForm
 
             'zipcode' => [
                 'class' => CharField::class,
-                'label' => 'Zip/Postal Code',
+                'label' => OrderModule::t('Zip/Postal Code'),
                 'required' => true,
                 'validators' => [
                     new ZipCodeValidator()
@@ -57,7 +58,7 @@ class CountShippingForm extends BaseForm
 
             'state' => [
                 'class' => CharField::class,
-                'label' => 'State/Province',
+                'label' => OrderModule::t('State/Province'),
                 'required' => true,
                 'validators' => [
                     new StateValidator(['country' => 'country'])
@@ -71,7 +72,7 @@ class CountShippingForm extends BaseForm
 
             'city' => [
                 'class' => CharField::class,
-                'label' => 'City',
+                'label' => OrderModule::t('City'),
                 'required' => true,
                 'html' => [
                     'placeholder' => 'Princeton',

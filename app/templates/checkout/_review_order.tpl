@@ -3,8 +3,8 @@
         <h1 class="text-center">{$header}</h1>
 
         <button type="submit" class="button submit yellow waves waves-orange waves-effect show-for-medium additional-button-large">
-            <span class="short-label">{t 'Submit' dict='order'}</span>
-            <span class="long-label">{t 'Submit order' dict='order'}</span>
+            <span class="short-label">{t 'Submit' }</span>
+            <span class="long-label">{t 'Submit order' }</span>
         </button>
 
     </div>
@@ -16,25 +16,25 @@
                 {set $warehouse = $.get_warehouse($order_group->manufacturerid)}
                 {set $items = $order_group->detail_models}
                 <h2 class="review-title">
-                    {t 'The items below will be shipped from warehouse in' dict='order'} {$warehouse->m_city}
+                    {t 'The items below will be shipped from warehouse in' } {$warehouse->m_city}
                     , {$warehouse->m_state}, {$warehouse->m_country}
                 </h2>
                 <div class="order-table">
                     <div class="order-table-row table-head show-for-large">
                         <div class="order-table-cell sku">
-                            {t 'SKU' dict='cart'}
+                            {t 'SKU' }
                         </div>
                         <div class="order-table-cell item-name">
-                            {t 'Item name' dict='cart'}
+                            {t 'Item name' }
                         </div>
                         <div class="order-table-cell price">
-                            {t 'Price' dict='cart'}
+                            {t 'Price' }
                         </div>
                         <div class="order-table-cell quantity">
-                            {t 'Quantity' dict='cart'}
+                            {t 'Quantity' }
                         </div>
                         <div class="order-table-cell extended">
-                            {t 'Extended' dict='cart'}
+                            {t 'Extended' }
                         </div>
                     </div>
                     {foreach $items as $item}
@@ -84,7 +84,7 @@
                                     {if $shippingModel->is_free_shipping}
                                         {$shippingModel->getFrontendName()}:
                                     {else}
-                                        {t 'Shipping by' dict='order'} {$shippingModel->getFrontendName()}:
+                                        {t 'Shipping by' } {$shippingModel->getFrontendName()}:
                                     {/if}
                                     {* не должно быть пробела! *}
                                 </span><span class="sum underline">
@@ -94,14 +94,14 @@
                     {/if}
                     {*<div class="sum-info shipping">*}
                                 {*<span class="sum-info-label underline">*}
-                                    {*{t 'Shipping by' dict='order'} dsfsdfsdsddf:*}
+                                    {*{t 'Shipping by' } dsfsdfsdsddf:*}
                                 {*</span><span class="sum underline">*}
                                     {*US$ <span class="price">123.45</span>*}
                         {*</span>*}
                     {*</div>*}
                     <div class="sum-info sum-price-info">
                         <span class="sum-info-label">
-                            {t 'Subtotal:' dict='order'}
+                            {t 'Subtotal' }:
                         </span>
                         <span class="sum">
                             {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order_group->total_gross)}</span>
@@ -122,15 +122,15 @@
     <div class="small-12 columns">
         <div class="order-total">
             <div class="info-row total">
-                <span class="label">{t 'Total:' dict='order'}</span>
+                <span class="label">{t 'Total' }:</span>
                 <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->subtotal)}</span></span>
             </div>
             <div class="info-row total-shipping">
-                <span class="label">{t 'Total Shipping Cost:' dict='order'}</span>
+                <span class="label">{t 'Total Shipping Cost' }:</span>
                 <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span></span>
             </div>
             <div class="info-row grand-total">
-                <span class="label">{t 'Grand Total:' dict='order'}</span>
+                <span class="label">{t 'Grand Total' }:</span>
                 <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span></span>
             </div>
         </div>

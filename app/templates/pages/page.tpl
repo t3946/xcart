@@ -11,7 +11,7 @@
         <section class="page-container">
             <div class="row">
                 <div class="column large-12">
-                    {raw $model->content}
+                    {raw html_entity_decode($model->content)}
                 </div>
             </div>
         </section>

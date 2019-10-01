@@ -51,7 +51,8 @@ $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xp
 		'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message', 'RMA_subject', 'RMA_to_department_Subject',
 		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
 		'secure_data','amazon_verification_make_conclusion_popup_message','retail_trust_message', 'amazon_verification_product_quantity_popup_message','amazon_verification_product_names_popup_message',
-		'amazon_verification_product_images_popup_message', 'w9_message', 'html_into_head', 'thank_you_message_body_amazon', 'dashboard_tabs_teamwork'];
+		'amazon_verification_product_images_popup_message', 'w9_message', 'html_into_head', 'thank_you_message_body_amazon', 'dashboard_tabs_teamwork',
+	    'local_phone', 'fax_number', 'customer_service_working_time'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
@@ -372,13 +373,20 @@ elseif ($option == 'Maintenance_Agent') {
 	$smarty->assign('periodical_log_labels', $periodical_log_labels);
 	$smarty->assign('periodical_logs_names', x_log_get_names());
 }
-elseif ($option == "Gift_Certificates") {
+elseif ($option === "Gift_Certificates") {
 	$smarty->assign('gc_templates', func_gc_get_templates($smarty->template_dir));
 }
 
-if (!empty($active_modules['Multiple_Storefronts']) && $option == 'Multiple_Storefronts') {
-	include $xcart_dir . '/modules/Multiple_Storefronts/get_configuration.php';
-} else if (!empty($active_modules['XPayments_Connector']) && $option == 'XPayments_Connector') {
+if (!empty($active_modules['Multiple_Storefronts']) && $option === 'Multiple_Storefronts') {
+
+	$configuration = \Modules\Sites\Models\SiteModel::objects()
+		->get(['storefrontid' => $current_storefront])
+		->config
+		->filter(['name__in' => array_keys(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS)])
+		->order('orderby')
+		->valuesList('*');
+
+} else if (!empty($active_modules['XPayments_Connector']) && $option === 'XPayments_Connector') {
 	include $xcart_dir . '/modules/XPayments_Connector/get_configuration.php';
 } else {
 	$configuration = func_query("SELECT * from $sql_tbl[config] WHERE category='$option' ORDER BY orderby");
@@ -432,7 +440,7 @@ if (is_array($options)) {
 	$dialog_tools_data["columns"] = 3;
 }
 
-if (!empty($active_modules["Fancy_Categories"]) && $option == "Fancy_Categories") {
+if (!empty($active_modules["Fancy_Categories"]) && $option === 'Fancy_Categories') {
 	include $xcart_dir."/modules/Fancy_Categories/admin_config.php";
 }
 

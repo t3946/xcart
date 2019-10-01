@@ -3,6 +3,7 @@ namespace Modules\Brand\Controllers;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Brand\BrandModule;
 use Modules\Brand\Models\BrandModel;
 use Modules\Core\Helpers\Cache;
 use Modules\Goods\Controllers\AbstractCatalogController;
@@ -70,7 +71,7 @@ class DefaultController extends AbstractCatalogController
     public function actionList()
     {
         $breadcrumbs = new Breadcrumbs();
-        $breadcrumbs->add('Brands', 'brand:list');
+        $breadcrumbs->add(BrandModule::t('Brands'), 'brand:list');
 
         $this->setMetaBase(MetaType::BRANDLIST, [
             'model' => Xcart::app()->getModule('Sites')->getSite(),

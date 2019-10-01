@@ -14,7 +14,7 @@
                     <div class="action_block  filter">
                         <a class="action_button filter" href="#filter_form" data-modal-class="filter default">
                             <span class="action">
-                                Filter
+                                {t 'Filter'}
                             </span>
                         </a>
                     </div>
@@ -23,7 +23,7 @@
                         <div class="action_block sort">
                             <div class="action_button sort">
                                 <span class="action">
-                                    Sort by
+                                    {t 'Sort by'}
                                 </span>
                                 <span class="active_value show-for-large">
                                     {foreach $sort_arr as $key=>$item}
@@ -45,7 +45,7 @@
                 </div>
                 <div class="action_block view">
                     <span class="show-for-large">
-                        View as
+                        {t 'View as'}
                     </span>
                     <a href="#" class="tile-view {if $.isBot}active{/if}" data-value="tile-view"></a>
                     <a href="#" class="list-view" data-value="list-view"></a>

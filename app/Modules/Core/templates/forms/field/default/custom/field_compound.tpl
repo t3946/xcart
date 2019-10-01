@@ -21,7 +21,7 @@
                 </div>
                 <div class="compound-field-container">
                     <label class="display-inline hide-for-medium">X</label>
-                    <label class="display-inline show-for-medium">{t 'ext' dict='order'}</label>
+                    <label class="display-inline show-for-medium">{t 'ext' }</label>
                     <div class="input-container {$field->className} {$hasCloseExt}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                         {raw $fieldExt->renderInput()}
                     </div>

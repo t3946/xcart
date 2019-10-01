@@ -24,6 +24,7 @@
         "fenom/fenom": "^2.11",
         "gabrielbull/ups-api": "^0.8.0",
         "geoip2/geoip2": "^2.7",
+        "gettext/gettext": "^4.6",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "0.76",
         "guzzlehttp/guzzle": "^6.3",
@@ -42,7 +43,7 @@
         "swiftmailer/swiftmailer": "^6",
         "symfony/http-foundation": "^2.8",
         "symfony/polyfill-mbstring": "^1.6",
-        "symfony/validator": "^2.8",
+        "symfony/validator": "^3.0",
         "theiconic/php-ga-measurement-protocol": "^2.7",
         "true/punycode": "^2.1"
     },

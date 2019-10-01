@@ -4,13 +4,13 @@
 
     <div class="contact-form default-content-page">
 
-        <h1>Contact Us</h1>
+        <h1>{t 'Contact Us'}</h1>
 
 
         <div class="contact-form default-form">
             <div class="row">
-                <div class="desktop-label column small-12 large-6">Web Form (recommended)</div>
-                <div class="page-info-text column small-12 large-6">The fields marked with <span class="required"></span> are mandatory</div>
+                <div class="desktop-label column small-12 large-6">{t 'Web Form (recommended)'}</div>
+                <div class="page-info-text column small-12 large-6">{t 'The fields marked with <span class="required"></span> are mandatory'}</div>
             </div>
             <div class="row">
                 <div class="column small-12">
@@ -21,7 +21,7 @@
                         </div>
                         <div class="row">
                             <div class="column button-row">
-                                <button class="button submit-button" type="submit" value="Submit">SUBMIT</button>
+                                <button class="button submit-button" type="submit" value="Submit">{t 'Submit'}</button>
                             </div>
                         </div>
                     {raw $form->renderEnd()}
@@ -42,23 +42,23 @@
                 <div class="tabs-container">
                     <div class="tabs-title-container">
                         <ul class="vertical tabs" data-tabs id="contact-us-tabs">
-                            <li class="tabs-title is-active"><a href="#Email" aria-selected="true"><span>Email</span></a></li>
-                            <li class="tabs-title"><a data-tabs-target="Phone" href="#Phone"><span>Phone</span></a></li>
-                            <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax"><span>Fax</span></a></li>
-                            <li class="tabs-title"><a data-tabs-target="Mail" href="#Mail"><span>Mail</span></a></li>
+                            <li class="tabs-title is-active"><a href="#Email" aria-selected="true"><span>{t 'Email'}</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Phone" href="#Phone"><span>{t 'Phone'}</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax"><span>{t 'Fax'}</span></a></li>
+                            <li class="tabs-title"><a data-tabs-target="Mail" href="#Mail"><span>{t 'Mail'}</span></a></li>
                         </ul>
                     </div>
                     <div class="tabs-content-container">
                         <div class="tabs-content" data-tabs-content="contact-us-tabs">
                             <div class="tabs-panel is-active" id="Email">
                                 <div class="tab-content">
-                                    <span class="title">Email</span><a href="mailto:helpdesk@s3stores.com">helpdesk@s3stores.com</a>
+                                    <span class="title">{t 'Email'}</span><a href="mailto:{$config.newsletter_email}">{$config.newsletter_email}</a>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Phone">
                                 <div class="tab-content">
                                     <div><span class="title">Local</span><wbr>(616) 259-5711</div>
-                                    <div><span class="title">Toll&nbsp;free</span><wbr>1-800-929-2431</div>
+                                    <div><span class="title">Toll&nbsp;free</span><wbr>{$config.cidev_top_header_code}</div>
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Fax">

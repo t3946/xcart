@@ -7,8 +7,10 @@
 
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
+    {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
     {set $uri = $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $uri = ''}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -112,7 +114,7 @@
 
     {block 'head'}{/block}
 
-    {set $gConfig = $site->getGlobalConfig()}
+
 
     <script>
         {ignore}
@@ -301,7 +303,7 @@
 
 {render_flash:raw template='base/_flash.tpl'}
 
-<div id="containerUpDown" class="show-for-large"></div>
+<div id="containerUpDown" class="show-for-large" data-lng_up="{t 'UP'}" data-lng_down="{t 'DOWN'}"></div>
 
 </body>
 </html>

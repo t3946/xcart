@@ -18,29 +18,29 @@ class Meta extends Model
         $fields = [
             'is_custom' => [
                 'class' => BooleanField::className(),
-                'verboseName' => MetaModule::t('Is custom'),
-                'helpText' => MetaModule::t('If "Set manually" field was not set, data will be generated automatically')
+                'verboseName' => 'Is custom',
+                'helpText' => 'If "Set manually" field was not set, data will be generated automatically'
             ],
             'title' => [
                 'class' => CharField::className(),
                 'length' => 200,
-                'verboseName' => MetaModule::t('Title')
+                'verboseName' => 'Title'
             ],
             'keywords' => [
                 'class' => CharField::className(),
                 'length' => 200,
-                'verboseName' => MetaModule::t('Keywords'),
+                'verboseName' => 'Keywords',
                 'null' => true
             ],
             'description' => [
                 'class' => CharField::className(),
                 'length' => 200,
-                'verboseName' => MetaModule::t('Description'),
+                'verboseName' => 'Description',
                 'null' => true
             ],
             'url' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t('Url'),
+                'verboseName' => 'Url',
                 'null' => true
             ],
         ];
@@ -52,7 +52,7 @@ class Meta extends Model
                 'class' => ForeignField::className(),
                 'sqlType' => Type::STRING,
                 'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
-                'verboseName' => SitesModule::t('Site'),
+                'verboseName' => 'Site',
                 'link' => ['site_code' => 'code'],
                 'required' => false,
                 'null' => true

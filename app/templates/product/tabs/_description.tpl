@@ -2,7 +2,7 @@
     <div class="column small-12 large-4 block">
 
         <div class="options">
-            <div class="h2 title">Options</div>
+            <div class="h2 title">{t 'Options'}</div>
             <div class="content">
 {*
                 {include 'product/tabs/__option.tpl'
@@ -13,8 +13,9 @@
 
                 {set $brand = $model->brand}
                 {if $brand}
+                    {set $lbl}{t 'Brand'}{/set}
                     {include 'product/tabs/__option.tpl'
-                        title='Brand'
+                        title=$lbl
                         value="<a href='"~ $brand->getAbsoluteUrl() ~"'>" ~ $brand->brand ~ "</a>"
                     }
                 {/if}
@@ -27,8 +28,9 @@
                 {/foreach}
 
                 {if $model->upc}
+                    {set $lbl}{t 'Barcode'}{/set}
                     {include 'product/tabs/__option.tpl'
-                        title="Barcode"
+                        title=$lbl
                         value=$model->upc
                     }
                 {/if}
@@ -52,7 +54,7 @@
     <div class="column small-12 large-8 block">
 
         <div class="description">
-            <div class="h2 title">Description</div>
+            <div class="h2 title">{t 'Description'}</div>
             <div class="content">
                 {raw $model->getFrontendDescription()}
             </div>

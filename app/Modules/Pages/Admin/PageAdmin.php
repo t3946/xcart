@@ -50,7 +50,7 @@ class PageAdmin extends Admin
 
     public static function getName()
     {
-        return PagesModule::t('Pages');
+        return 'Pages';
     }
 
     public function getItemProperty(Model $item, $property)
@@ -58,50 +58,13 @@ class PageAdmin extends Admin
         if ($property === 'sites') {
             return nl2br(implode("\n", $item->sites->all()));
         }
+        if ($property === 'language') {
+            return (string) $item->language;
+        }
 
         return parent::getItemProperty($item, $property);
 
     }
 
-//    public function getNames($model = null)
-//    {
-//        return [
-//            PagesModule::t('Pages'),
-//            PagesModule::t('Create page'),
-//            PagesModule::t('Update page')
-//        ];
-//    }
-//
-//    public function getActions()
-//    {
-//        return array_merge(parent::getActions(), [
-//            'publish' => PagesModule::t('Publish'),
-//            'unpublish' => PagesModule::t('Unpublish'),
-//        ]);
-//    }
-//
-//    public function unpublish(array $data = [])
-//    {
-//        if (isset($data['models'])) {
-//            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => false]);
-//        }
-//
-//        $this->redirect('admin:list', [
-//            'module' => $this->getModel()->getModuleName(),
-//            'adminClass' => $this->classNameShort()
-//        ]);
-//    }
-//
-//    public function publish(array $data = [])
-//    {
-//        if (isset($data['models'])) {
-//            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => true]);
-//        }
-//
-//        $this->redirect('admin:list', [
-//            'module' => $this->getModel()->getModuleName(),
-//            'adminClass' => $this->classNameShort()
-//        ]);
-//    }
 }
 

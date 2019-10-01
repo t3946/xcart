@@ -19,7 +19,7 @@ class SiteRestriction extends AbstractRestriction
 
     public function getName()
     {
-        return CartModule::t('Site restriction');
+        return 'Site restriction';
     }
 
     public function getTypeValidation()

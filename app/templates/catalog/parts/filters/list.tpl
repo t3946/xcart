@@ -24,7 +24,7 @@
         </ul>
         {if $values|count > 7}
             <a href="#filter_form" class="show_all short" {if $modal_class? }data-modal-class="{$modal_class}"{/if}>
-                Show more
+                {t 'Show more'}
             </a>
         {/if}
         <div class="full filter">

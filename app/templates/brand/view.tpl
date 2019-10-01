@@ -33,9 +33,9 @@
                             </div>
 
                             {ignore}
-                                <a class="show_more" onclick="$(this).hide().siblings('.show_less').show().end().siblings('.relative').find('article.must-show-less').addClass('full').end().find('.gradient').removeClass('gradient')">Read more</a>
-                                <a class="show_less" onclick="$(this).hide().siblings('.show_more').show().end().siblings('.relative').find('article.must-show-less').removeClass('full').end().find('.collapse-gradient').addClass('gradient')">Read less</a>
-                            {/ignore}
+                                <a class="show_more" onclick="$(this).hide().siblings('.show_less').show().end().siblings('.relative').find('article.must-show-less').addClass('full').end().find('.gradient').removeClass('gradient')">{/ignore}{t 'Read more'}{ignore}</a>
+                                <a class="show_less" onclick="$(this).hide().siblings('.show_more').show().end().siblings('.relative').find('article.must-show-less').removeClass('full').end().find('.collapse-gradient').addClass('gradient')">{/ignore}{t 'Read less'}</a>
+
                         </div>
                     </div>
                 </div>
@@ -69,8 +69,8 @@
                             <div class="row align-right">
                                 <div class="columns large-12">
 
-                                    <span class="hide-for-modal show_more" data-target="#sub_list" data-text-more="More categories" data-text-less="Less categories">
-                                        More categories
+                                    <span class="hide-for-modal show_more" data-target="#sub_list" data-text-more="{t 'More categories'}" data-text-less="{t 'Less categories'}">
+                                        {t 'More categories'}
                                     </span>
                                 </div>
                             </div>

@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Validation;
 
+use Modules\Translate\TranslateModule;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Translate\Translate;
 
@@ -50,6 +51,7 @@ class EmailValidator extends Validator
     public function __construct($required = true)
     {
         $this->required = $required;
+        $this->message = TranslateModule::t('Email address is invalid');
     }
 
     public function validate($value)
