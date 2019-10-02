@@ -74,7 +74,7 @@ class CategoryController extends AbstractCatalogController
             'active_product_count__gt' => 0,
             'avail' => 'Y',
             'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
-        ])->all();
+        ])->order('order_by')->all();
 
         $this->setMetaBase(MetaType::CATLIST, [
             'model' => Xcart::app()->getModule('Sites')->getSite(),
