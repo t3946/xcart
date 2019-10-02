@@ -64,8 +64,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         foreach ($products as $product)
         {
             $product_model = \Modules\Goods\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
-            if ($product["forsale"] == "Y") {
-                if ($record["type"] == "6")
+            if ($product['forsale'] === 'Y') {
+                if ($record['type'] == '6')
                 {
                     $data_arr  = [];
                     $data_json = "";
@@ -75,10 +75,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
                     $data_arr["productname"] = $product_model->getFrontendName();
+                    $data_arr["productname.productname_original"] = $product_model->getFrontendName();
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
                     $data_arr["description"] = $text = CoreHelper::stripTags($product["fulldescr"]);
+                    $data_arr["description.description_original"] = $text;
 
                     $data_arr["description.seo_fulldescr"]   = CoreHelper::stripTags($product["seo_fulldescr"]);
                     $data_arr["productname.seo_productname"] = CoreHelper::stripTags($product["seo_product_name"]);
