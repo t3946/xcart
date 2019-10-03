@@ -55,6 +55,7 @@ SELECT od2.productid as needed_resource_id, COUNT(od2.productid) AS orderby FROM
 INNER JOIN  xcart_order_details od ON od.productid = p.productid
 INNER JOIN xcart_order_groups g ON od.order_group_id = g.order_group_id AND g.cb_status = 'P'
 INNER JOIN xcart_order_details od2 ON od.order_group_id = od2.order_group_id AND od2.itemid != od.itemid
+INNER JOIN xcart_products p2 ON p2.productid = od2.productid AND p2.forsale = 'Y'
 WHERE p.productid = {$productid}
 GROUP BY od2.productid
 ORDER BY orderby DESC
