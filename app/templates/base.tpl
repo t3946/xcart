@@ -50,7 +50,9 @@
                                         </div>
 
                                         <div class="columns show-for-medium medium-5 large-4">
-                                            <img src="/static/frontend/dist/images/flat.png">
+                                            {if $config.flat_shipping_enabled !== 'Y'}
+                                            <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/flat.png">
+                                            {/if}
                                         </div>
 
                                         <div class="columns small-1 medium-5 large-push-3 show-for-large">
@@ -82,7 +84,9 @@
                                 <div class="mobile-banner hide-for-medium">
                                     <div class="row align-justify">
                                         <div class="columns banner">
-                                            <img src="/static/frontend/dist/images/flat.png">
+                                            {if $config.flat_shipping_enabled !== 'Y'}
+                                            <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/flat.png">
+                                            {/if}
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +147,8 @@
                             <div class="row">
                                 <div class="small-12 column slider-viewed">
                                     {set $link}{url 'catalog:viewed'}{/set}
-                                    {include 'slider/base_product_slider.tpl' title="You recently viewed items" link=$link hide=true hide_link=true}
+                                    {set $lbl}{t 'You recently viewed items'}{/set}
+                                    {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
                                 </div>
                             </div>
                         {/block}
