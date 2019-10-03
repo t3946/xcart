@@ -137,7 +137,9 @@ class PromoController extends AbstractCatalogController
 
         $sProducts = '';
         foreach ($products as $product) {
-            $sProducts .= $this->render($view, ['item' => $product]);
+            if ($product) {
+                $sProducts .= $this->render($view, ['item' => $product]);
+            }
         }
 
         if ($sProducts) {
