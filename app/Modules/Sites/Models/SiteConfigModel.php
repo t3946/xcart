@@ -58,6 +58,7 @@ class SiteConfigModel extends Model
 //        'new_shipping_calculation' => 990,
 //        'enable_https' => 2000,
         'currency' => 3000,
+        'flat_shipping_enabled' => 4000,
     ];
 
     public static function tableName()
