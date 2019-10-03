@@ -16,8 +16,8 @@ class ElasticSearch
 
 
 
-    function __construct($elasticConfig = array(),$index = ''){
-        $this->server = $elasticConfig["es_url"];
+    function __construct($server, $index = ''){
+        $this->server = rtrim($server, '/');
         $this->index = $index;
         //$this->queryParams["min_score"] = $elasticConfig["search_results_minimum_score_value"];
         $this->init();
@@ -57,6 +57,7 @@ class ElasticSearch
         $method = $data_json['method'];
         $content = $data_json['content'];
         $this->data_json = json_encode($content);
+//        echo($this->data_json); die();
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -90,15 +91,15 @@ class ElasticSearch
 {
     "query_string": {
         "fields": [
-         "productname.productname_original^1.5",
+         "productname^1.5",
          "productname.title_tag^1.5",
          "productname.seo_productname^1.5",
          "productname.seo_h2^1.5",
          "sku",
          "upc",
-         "brand.brand_original^0.5",
-         "description.description_original",
-         "description.seo_description"
+         "brand^0.5",
+         "description",
+         "description.seo_fulldescr"
         ],
         "analyzer":  "english",
         "query": ""
@@ -115,15 +116,15 @@ JSON;
     "query_string": {
         "analyzer": "snowball",
         "fields": [
-             "productname.productname^1.5",
+             "productname^1.5",
              "productname.title_tag^1.5",
              "productname.seo_productname^1.5",
              "productname.seo_h2^1.5",
              "sku",
              "upc",
-             "brand.brand^0.5",
-             "description.description",
-             "description.seo_description"
+             "brand^0.5",
+             "description",
+             "description.seo_fulldescr"
         ],
         "query": ""
     }

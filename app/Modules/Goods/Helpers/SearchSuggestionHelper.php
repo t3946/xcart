@@ -15,13 +15,13 @@ class SearchSuggestionHelper
 
     public function __construct($search, $indexes=null, $type = 'product') {
         /** @var \Modules\Core\CoreModule $coreModule */
-        $coreModule = Xcart::app()->getModule('Core');
-        $config = $coreModule::getGlobalConfig();
+        $coreModule = Xcart::app()->getModule('Sites');
+        $config = $coreModule->getSite()->getGlobalConfig();
 
-        $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
+        $config_min_scope = $config['search_results_minimum_score_value'];
 
         $this->search = trim($search);
-        $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $indexes ?: $this->getSearchIndex());
+        $this->elastic = new ElasticSearch($config['es_url'], $indexes ?: $this->getSearchIndex());
         $this->elastic->setSource("*._id");
         $this->elastic->setMinScore($config_min_scope);
         $this->elastic->setType($type);

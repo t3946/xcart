@@ -39,9 +39,10 @@ class SearchController extends AbstractCatalogController
     public function actionApiSuggestion(): void
     {
         if ($this->getRequest()->getIsAjax()) {
+            $q = $this->getRequest()->get->get('q');
             $this->jsonResponse([
-                'suggests' => (new SearchSuggestionHelper($this->getRequest()->get->get('q'), $this->getSearchIndex()))->mixed_suggestion(5, true),
-                'q' => $this->getRequest()->get->get('q'),
+                'suggests' => (new SearchSuggestionHelper($q, $this->getSearchIndex()))->mixed_suggestion(5, true),
+                'q' => $q,
             ]);
         }
     }
@@ -151,11 +152,11 @@ class SearchController extends AbstractCatalogController
     public function getElastic($search, $min_score = null)
     {
         /** @var \Modules\Core\CoreModule $coreModule */
-        $coreModule = Xcart::app()->getModule('Core');
-        $config = $coreModule::getGlobalConfig();
-        $config_min_scope = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
+        $coreModule = Xcart::app()->getModule('Sites');
+        $config = $coreModule->getSite()->getGlobalConfig();
+        $config_min_scope = $config['search_results_minimum_score_value'];
 
-        $classElastic = new ElasticSearch($config["ElasticSearch_options"], $this->getSearchIndex());
+        $classElastic = new ElasticSearch($config['es_url'], $this->getSearchIndex());
         $classElastic->setSource("*._id");
         $classElastic->setMinScore($min_score ?: $config_min_scope);
         $classElastic->setType('product');

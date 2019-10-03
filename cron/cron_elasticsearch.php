@@ -74,18 +74,17 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getFrontendName();
-                    $data_arr["productname.productname_original"] = $product_model->getFrontendName();
-                    $data_arr["sku"]         = $product["productcode"];
-                    $data_arr["upc"]         = $product["upc"];
-                    $data_arr["brand"]       = $product["brand"];
-                    $data_arr["description"] = $text = CoreHelper::stripTags($product["fulldescr"]);
-                    $data_arr["description.description_original"] = $text;
-
-                    $data_arr["description.seo_fulldescr"]   = CoreHelper::stripTags($product["seo_fulldescr"]);
-                    $data_arr["productname.seo_productname"] = CoreHelper::stripTags($product["seo_product_name"]);
-                    $data_arr["productname.seo_h2"]          = CoreHelper::stripTags($product["seo_h2"]);
-                    $data_arr["productname.title_tag"]       = CoreHelper::stripTags($product["title_tag"]);
+                    $data_arr = [
+                        'productname' => $product_model->getFrontendName(),
+                        'sku' => $product_model->productcode,
+                        'upc' => $product_model->upc,
+                        'brand' => $product_model->brand->brand,
+                        'description' => CoreHelper::stripTags($product_model->fulldescr),
+                        'description.seo_fulldescr' => CoreHelper::stripTags($product_model->seo_fulldescr),
+                        'productname.seo_productname' => CoreHelper::stripTags($product_model->seo_product_name),
+                        'productname.seo_h2' => CoreHelper::stripTags($product_model->seo_h2),
+                        'productname.title_tag' =>  CoreHelper::stripTags($product_model->title_tag),
+                    ];
 
                     $data_json = json_encode($data_arr);
 
@@ -132,16 +131,17 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"] = $product_model->getFrontendName();
-                    $data_arr["sku"]         = $product["productcode"];
-                    $data_arr["upc"]         = $product["upc"];
-                    $data_arr["brand"]       = $product["brand"];
-                    $data_arr["description"] = CoreHelper::stripTags($product["fulldescr"]);
-
-                    $data_arr["description.seo_fulldescr"]   = CoreHelper::stripTags($product["seo_fulldescr"]);
-                    $data_arr["productname.seo_productname"] = CoreHelper::stripTags($product["seo_product_name"]);
-                    $data_arr["productname.seo_h2"]          = CoreHelper::stripTags($product["seo_h2"]);
-                    $data_arr["productname.title_tag"]       = CoreHelper::stripTags($product["title_tag"]);
+                    $data_arr = [
+                        'productname' => $product_model->getFrontendName(),
+                        'sku' => $product_model->productcode,
+                        'upc' => $product_model->upc,
+                        'brand' => $product_model->brand->brand,
+                        'description' => CoreHelper::stripTags($product_model->fulldescr),
+                        'description.seo_fulldescr' => CoreHelper::stripTags($product_model->seo_fulldescr),
+                        'productname.seo_productname' => CoreHelper::stripTags($product_model->seo_product_name),
+                        'productname.seo_h2' => CoreHelper::stripTags($product_model->seo_h2),
+                        'productname.title_tag' =>  CoreHelper::stripTags($product_model->title_tag),
+                    ];
 
                     $data_json = json_encode($data_arr);
 
@@ -510,9 +510,9 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
     $categoryid = $record["resourceid"];
 
-    $category_info = func_query_first("Select C.avail, C.storefrontid, C.global_product_count As p_count, C.description, C.category From xcart_categories C where C.categoryid = '$categoryid'");
+    $category_info = func_query_first("Select C.avail, C.storefrontid, C.product_count As p_count, C.description, C.category From xcart_categories C where C.categoryid = '$categoryid'");
 
-    if ($category_info["avail"] != 'Y' || $category_info["p_count"] <= "0")
+    if ($category_info['avail'] !== 'Y' || $category_info['p_count'] <= "0")
     {
         foreach ($cidev_storefronts as $k => $v)
         {
