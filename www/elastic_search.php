@@ -39,7 +39,7 @@ if (!$load_all_e_products) {
     $e_search_data_substring = trim($e_search_data_substring);
 }
 
-$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"], $shop_domain);
+$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"]['es_url'], $shop_domain);
 $classElastic->setSource("*._id");
 $classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 $classElastic->setType('product');

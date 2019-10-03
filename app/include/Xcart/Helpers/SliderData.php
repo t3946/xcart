@@ -129,7 +129,7 @@ SQL;
 
             $saveOrder = true;
 
-            $classElastic = new ElasticSearch($config["ElasticSearch_options"], \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain);
+            $classElastic = new ElasticSearch($config["ElasticSearch_options"]['es_url'], \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite()->domain);
             $classElastic->setSource("*._id");
             $classElastic->setType("product");
             $classElastic->setMinScore(0.5);

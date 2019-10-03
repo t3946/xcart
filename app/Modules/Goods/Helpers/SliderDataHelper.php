@@ -113,7 +113,7 @@ SQL;
 
             $config = Xcart::app()->getModule('Core')::getGlobalConfig();
 
-            $classElastic = new ElasticSearch($config['ElasticSearch_options'], $site->domain);
+            $classElastic = new ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
             $classElastic->setSource('*._id');
             $classElastic->setType('product');
             $classElastic->setMinScore(0.5);

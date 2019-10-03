@@ -27,7 +27,7 @@ class ViewedRelatedProducts
 
         $this->ssid = Xcart::app()->request->session->getId();
 
-        $this->elastic = new ElasticSearch($config["ElasticSearch_options"],  $site_domain);
+        $this->elastic = new ElasticSearch($config["ElasticSearch_options"]['es_url'],  $site_domain);
 
         if (!empty($categories)) {
             $this->categories = $categories;

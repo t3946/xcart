@@ -516,7 +516,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
     {
         foreach ($cidev_storefronts as $k => $v)
         {
-            $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"], $v["domain"]);
+            $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"]['es_url'], $v["domain"]);
 
             $classElasticSearch->setType('category');
 
@@ -530,7 +530,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
     }
     else {
 
-        $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
+        $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"]['es_url'], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
 
         $classElasticSearch->setType('category');
 
