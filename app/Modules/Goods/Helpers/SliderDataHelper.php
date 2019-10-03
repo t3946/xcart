@@ -51,18 +51,14 @@ class SliderDataHelper
 
             if ($section_name === 'products_also_bought_with_this_product'){
                 $p_query = <<<SQL
-select RO.related_resource_id as needed_resource_id
-from xcart_cidev_related_objects RO
-inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y' AND P.productid != P.group_root
-inner join xcart_products_sf SF ON P.productid = SF.productid
-where RO.resource_id = '{$productid}' 
-  and RO.resource_type = 'OP' 
-  and RO.related_resource_type = 'P'  
-  and RO.related_resource_id NOT IN ('{$productids}')
-  and SF.sfid = '{$site->pk}'
-  
-order By RO.related_resource_orderby 
-limit 30
+SELECT od2.productid as needed_resource_id, COUNT(od2.productid) AS orderby FROM  xcart_products p
+INNER JOIN  xcart_order_details od ON od.productid = p.productid
+INNER JOIN xcart_order_groups g ON od.order_group_id = g.order_group_id AND g.cb_status = 'P'
+INNER JOIN xcart_order_details od2 ON od.order_group_id = od2.order_group_id AND od2.itemid != od.itemid
+WHERE p.productid = {$productid}
+GROUP BY od2.productid
+ORDER BY orderby DESC
+LIMIT 30
 SQL;
             }
             elseif ($section_name === 'recently_viewed_products' && !\defined('IS_ROBOT')){
