@@ -2185,10 +2185,8 @@ function func_get_order_manufacturers($orderid)
 
                     $mnfs[$m_id]['d_email_subject_14'] = $d_email_subject_14;
 
-                    $cidev_page_url2 = "http://www.s3stores.com/index.php?pageid=42";
-                    $cidev_mess_body = "<a href='$cidev_page_url2&$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/></a>";
                     $mess_body = $mv['mess_body'];
-                    $mess_body = str_replace("{{received}}", $cidev_mess_body, $mess_body);
+                    $mess_body = str_replace('{{received}}', OrderHelper::genReceivedConfirmation($order_group), $mess_body);
                     $mess_body = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $mess_body);
 
                     $oShipping = \Xcart\Shipping::model(['shippingid' => $order["shipping_groups"][$m_id]["shippingid"]]);

@@ -364,4 +364,25 @@ class OrderHelper
             'orderid__isnt' => $order->orderid
         ])->count() > 0 ;
     }
+
+    public static function genReceivedConfirmation(OrderGroupModel $orderGroup): string
+    {
+        $url = 'http://www.s3stores.com/index.php';
+        $secure_check = $orderGroup->orderid . $orderGroup->manufacturerid;
+        $secure_check = text_crypt($secure_check);
+        $params = [
+            'pageid' => 42,
+            's' => $secure_check,
+            'o' => $orderGroup->orderid,
+            'm' => $orderGroup->manufacturerid
+        ];
+        $query = http_build_query($params);
+
+        $result = <<<HTML
+<a href='{$url}?{$query}'>
+<img src='https://{$orderGroup->order->site->domain}/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/>
+</a>
+HTML;
+        return $result;
+    }
 }

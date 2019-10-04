@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -253,7 +254,7 @@ $storefronts[0]['storefront_name'] = func_query_first_cell("SELECT value FROM $s
 $subject = str_replace('{{storefront-name}}', $storefronts[$products[0]['storefrontid']]['storefront_name'], $subject);
 $body = str_replace('{{storefront-name}}', $storefronts[$products[0]['storefrontid']]['storefront_name'], $body);
 
-$storefront_url = "http://{$storefronts[$products[0]['storefrontid']]['domain']}";
+$storefront_url = "https://{$storefronts[$products[0]['storefrontid']]['domain']}";
 $subject = str_replace('{{storefront-url}}', $storefront_url, $subject);
 $body = str_replace('{{storefront-url}}', $storefront_url, $body);
 
@@ -379,12 +380,11 @@ if (!empty($additional_tag_status)) {
     $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$additional_tag_status'");
     $smarty->assign('status_name', $status_name);
 }
-
-if (($group_model = reset($order['shipping_groups'])['oOrderGroup']) && $invoice = $group_model->invoices->limit(1)->get()) {
+if (($group_model = $order['shipping_groups'][$manufacturerid]['oOrderGroup']) && $invoice = $group_model->invoices->limit(1)->get()) {
 
     $order_model = $group_model->order;
     /** @var SiteModel $site */
-    $site = Xcart::app()->getModule('Sites')->getSite();
+    $site = $order_model->site;
     /** @var CurrencyModel $currency */
     $currency = $site->getCurrency();
     $_credit_diff = round($invoice->shipping_charged - $group_model->actual_shipping_net, 2);
@@ -400,6 +400,9 @@ if (($group_model = reset($order['shipping_groups'])['oOrderGroup']) && $invoice
         $currency . $currency->getCurrencyFormat($invoice->shipping_charged),
         $_credit_diff
     ], $body);
+}
+if ($group_model) {
+    $body = str_replace('{{received}}', OrderHelper::genReceivedConfirmation($group_model), $body);
 }
 
 $from = 'orders@s3stores.com';
