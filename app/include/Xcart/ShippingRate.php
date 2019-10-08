@@ -3,7 +3,9 @@
 namespace Xcart;
 
 
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Shipping\Helpers\ShippingHelper;
 
 class ShippingRate extends Data
@@ -121,6 +123,7 @@ class ShippingRate extends Data
             }
 
             $this->fShippingCharge = min(max($this->fShippingCharge, $this->min_shipping_charge),  $this->max_shipping_charge);
+            $this->fShippingCharge = CurrencyHelper::convert(DistributorModel::objects()->get(['manufacturerid' => $this->manufacturerid])->currency, $this->fShippingCharge);
 
             $this->fShippingCharge = round($this->fShippingCharge, 2);
         }

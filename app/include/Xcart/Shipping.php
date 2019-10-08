@@ -117,18 +117,18 @@ class Shipping extends Data
                 $sCA_ST = "{$cs_country}_{$cs_state}";
 
                 $sSQL = <<<SQL
-SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
+SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt, CASE ZE.field_type WHEN 'S' THEN 100 WHEN 'C' THEN 1000 END pri
 FROM xcart_zone_element AS ZE
 INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
 INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$oManufacturer->manufacturerid} AND ZE.zoneid = SR.zoneid
-WHERE ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}'
+WHERE (ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}') OR (ZE.field_type = 'C' AND ZE.field = '{$cs_country}') 
 GROUP BY ZE.zoneid 
 UNION
-SELECT zoneid, 999999999
+SELECT zoneid, 999999999, 999999999
 FROM xcart_shipping_rates
 WHERE manufacturerid = {$oManufacturer->manufacturerid} AND zoneid = 0 
 GROUP BY zoneid
-ORDER BY cnt
+ORDER BY pri, cnt
 SQL;
 
                 $this->aShippingZones = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
