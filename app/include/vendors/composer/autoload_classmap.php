@@ -6,6 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname($vendorDir)));
 
 return array(
+    'Aveiv\\OpenExchangeRatesApi\\Client' => $vendorDir . '/aveiv/open-exchange-rates-api/src/Client.php',
+    'Aveiv\\OpenExchangeRatesApi\\CurlHttpClient' => $vendorDir . '/aveiv/open-exchange-rates-api/src/CurlHttpClient.php',
+    'Aveiv\\OpenExchangeRatesApi\\Exception\\Exception' => $vendorDir . '/aveiv/open-exchange-rates-api/src/Exception/Exception.php',
+    'Aveiv\\OpenExchangeRatesApi\\HttpClientInterface' => $vendorDir . '/aveiv/open-exchange-rates-api/src/HttpClientInterface.php',
     'Aws\\ACMPCA\\ACMPCAClient' => $vendorDir . '/aws/aws-sdk-php/src/ACMPCA/ACMPCAClient.php',
     'Aws\\ACMPCA\\Exception\\ACMPCAException' => $vendorDir . '/aws/aws-sdk-php/src/ACMPCA/Exception/ACMPCAException.php',
     'Aws\\Acm\\AcmClient' => $vendorDir . '/aws/aws-sdk-php/src/Acm/AcmClient.php',
@@ -12064,7 +12068,7 @@ return array(
     'Modules\\Core\\Behaviours\\FrontendFormDisplayBehavior' => $baseDir . '/app/Modules/Core/Behaviours/FrontendFormDisplayBehavior.php',
     'Modules\\Core\\Behaviours\\ProductFormDisplayBehavior' => $baseDir . '/app/Modules/Core/Behaviours/ProductFormDisplayBehavior.php',
     'Modules\\Core\\Commands\\CronCommand' => $baseDir . '/app/Modules/Core/Commands/CronCommand.php',
-    'Modules\\Core\\Commands\\TranslateCommand' => $baseDir . '/app/Modules/Core/Commands/TranslateCommand.php',
+    'Modules\\Core\\Commands\\CurrencyCommand' => $baseDir . '/app/Modules/Core/Commands/CurrencyCommand.php',
     'Modules\\Core\\Components\\GlobalConfig' => $baseDir . '/app/Modules/Core/Components/GlobalConfig.php',
     'Modules\\Core\\Components\\JobRunner' => $baseDir . '/app/Modules/Core/Components/JobRunner.php',
     'Modules\\Core\\Components\\Profiler' => $baseDir . '/app/Modules/Core/Components/Profiler.php',
@@ -12243,6 +12247,7 @@ return array(
     'Modules\\Main\\Controllers\\RobotsController' => $baseDir . '/app/Modules/Main/Controllers/RobotsController.php',
     'Modules\\Main\\Controllers\\TestController' => $baseDir . '/app/Modules/Main/Controllers/TestController.php',
     'Modules\\Main\\Forms\\ContactUsForm' => $baseDir . '/app/Modules/Main/Forms/ContactUsForm.php',
+    'Modules\\Main\\Helpers\\CurrencyHelper' => $baseDir . '/app/Modules/Main/Helpers/CurrencyHelper.php',
     'Modules\\Main\\Helpers\\WorkingTimeHelper' => $baseDir . '/app/Modules/Main/Helpers/WorkingTimeHelper.php',
     'Modules\\Main\\MainModule' => $baseDir . '/app/Modules/Main/MainModule.php',
     'Modules\\Main\\Models\\DepartmentsModel' => $baseDir . '/app/Modules/Main/Models/DepartmentsModel.php',
@@ -12411,6 +12416,10 @@ return array(
     'Modules\\Subscribe\\Helpers\\SubscribeHelper' => $baseDir . '/app/Modules/Subscribe/Helpers/SubscribeHelper.php',
     'Modules\\Subscribe\\Models\\SubscriberModel' => $baseDir . '/app/Modules/Subscribe/Models/SubscriberModel.php',
     'Modules\\Subscribe\\SubscribeModule' => $baseDir . '/app/Modules/Subscribe/SubscribeModule.php',
+    'Modules\\Translate\\Commands\\TranslateCommand' => $baseDir . '/app/Modules/Translate/Commands/TranslateCommand.php',
+    'Modules\\Translate\\Helpers\\TranslateHelper' => $baseDir . '/app/Modules/Translate/Helpers/TranslateHelper.php',
+    'Modules\\Translate\\Models\\LanguageModel' => $baseDir . '/app/Modules/Translate/Models/LanguageModel.php',
+    'Modules\\Translate\\TranslateModule' => $baseDir . '/app/Modules/Translate/TranslateModule.php',
     'Modules\\User\\Components\\Auth' => $baseDir . '/app/Modules/User/Components/Auth.php',
     'Modules\\User\\Components\\XcartSession' => $baseDir . '/app/Modules/User/Components/XcartSession.php',
     'Modules\\User\\Controllers\\Admin\\IdentityCheckController' => $baseDir . '/app/Modules/User/Controllers/Admin/IdentityCheckController.php',

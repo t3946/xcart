@@ -77,4 +77,5 @@ return array(
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
+    'Aveiv\\OpenExchangeRatesApi\\' => array($vendorDir . '/aveiv/open-exchange-rates-api/src'),
 );

@@ -5,6 +5,7 @@ namespace Modules\Sites\Models;
 
 
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Model;
 
@@ -20,7 +21,8 @@ class CurrencyModel extends Model
     public static function getFields()
     {
         return [
-            'is_primary' => BooleanCharField::class
+            'currency_id' => AutoField::class,
+            'is_primary' => BooleanCharField::class,
         ];
     }
 

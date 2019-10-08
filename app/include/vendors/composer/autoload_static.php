@@ -185,6 +185,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'A' => 
         array (
             'Aws\\' => 4,
+            'Aveiv\\OpenExchangeRatesApi\\' => 27,
         ),
     );
 
@@ -475,6 +476,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
         ),
+        'Aveiv\\OpenExchangeRatesApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aveiv/open-exchange-rates-api/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -582,6 +587,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
     );
 
     public static $classMap = array (
+        'Aveiv\\OpenExchangeRatesApi\\Client' => __DIR__ . '/..' . '/aveiv/open-exchange-rates-api/src/Client.php',
+        'Aveiv\\OpenExchangeRatesApi\\CurlHttpClient' => __DIR__ . '/..' . '/aveiv/open-exchange-rates-api/src/CurlHttpClient.php',
+        'Aveiv\\OpenExchangeRatesApi\\Exception\\Exception' => __DIR__ . '/..' . '/aveiv/open-exchange-rates-api/src/Exception/Exception.php',
+        'Aveiv\\OpenExchangeRatesApi\\HttpClientInterface' => __DIR__ . '/..' . '/aveiv/open-exchange-rates-api/src/HttpClientInterface.php',
         'Aws\\ACMPCA\\ACMPCAClient' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/ACMPCA/ACMPCAClient.php',
         'Aws\\ACMPCA\\Exception\\ACMPCAException' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/ACMPCA/Exception/ACMPCAException.php',
         'Aws\\Acm\\AcmClient' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/Acm/AcmClient.php',
@@ -12640,7 +12649,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Core\\Behaviours\\FrontendFormDisplayBehavior' => __DIR__ . '/../../../..' . '/app/Modules/Core/Behaviours/FrontendFormDisplayBehavior.php',
         'Modules\\Core\\Behaviours\\ProductFormDisplayBehavior' => __DIR__ . '/../../../..' . '/app/Modules/Core/Behaviours/ProductFormDisplayBehavior.php',
         'Modules\\Core\\Commands\\CronCommand' => __DIR__ . '/../../../..' . '/app/Modules/Core/Commands/CronCommand.php',
-        'Modules\\Core\\Commands\\TranslateCommand' => __DIR__ . '/../../../..' . '/app/Modules/Core/Commands/TranslateCommand.php',
+        'Modules\\Core\\Commands\\CurrencyCommand' => __DIR__ . '/../../../..' . '/app/Modules/Core/Commands/CurrencyCommand.php',
         'Modules\\Core\\Components\\GlobalConfig' => __DIR__ . '/../../../..' . '/app/Modules/Core/Components/GlobalConfig.php',
         'Modules\\Core\\Components\\JobRunner' => __DIR__ . '/../../../..' . '/app/Modules/Core/Components/JobRunner.php',
         'Modules\\Core\\Components\\Profiler' => __DIR__ . '/../../../..' . '/app/Modules/Core/Components/Profiler.php',
@@ -12819,6 +12828,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Main\\Controllers\\RobotsController' => __DIR__ . '/../../../..' . '/app/Modules/Main/Controllers/RobotsController.php',
         'Modules\\Main\\Controllers\\TestController' => __DIR__ . '/../../../..' . '/app/Modules/Main/Controllers/TestController.php',
         'Modules\\Main\\Forms\\ContactUsForm' => __DIR__ . '/../../../..' . '/app/Modules/Main/Forms/ContactUsForm.php',
+        'Modules\\Main\\Helpers\\CurrencyHelper' => __DIR__ . '/../../../..' . '/app/Modules/Main/Helpers/CurrencyHelper.php',
         'Modules\\Main\\Helpers\\WorkingTimeHelper' => __DIR__ . '/../../../..' . '/app/Modules/Main/Helpers/WorkingTimeHelper.php',
         'Modules\\Main\\MainModule' => __DIR__ . '/../../../..' . '/app/Modules/Main/MainModule.php',
         'Modules\\Main\\Models\\DepartmentsModel' => __DIR__ . '/../../../..' . '/app/Modules/Main/Models/DepartmentsModel.php',
@@ -12987,6 +12997,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Subscribe\\Helpers\\SubscribeHelper' => __DIR__ . '/../../../..' . '/app/Modules/Subscribe/Helpers/SubscribeHelper.php',
         'Modules\\Subscribe\\Models\\SubscriberModel' => __DIR__ . '/../../../..' . '/app/Modules/Subscribe/Models/SubscriberModel.php',
         'Modules\\Subscribe\\SubscribeModule' => __DIR__ . '/../../../..' . '/app/Modules/Subscribe/SubscribeModule.php',
+        'Modules\\Translate\\Commands\\TranslateCommand' => __DIR__ . '/../../../..' . '/app/Modules/Translate/Commands/TranslateCommand.php',
+        'Modules\\Translate\\Helpers\\TranslateHelper' => __DIR__ . '/../../../..' . '/app/Modules/Translate/Helpers/TranslateHelper.php',
+        'Modules\\Translate\\Models\\LanguageModel' => __DIR__ . '/../../../..' . '/app/Modules/Translate/Models/LanguageModel.php',
+        'Modules\\Translate\\TranslateModule' => __DIR__ . '/../../../..' . '/app/Modules/Translate/TranslateModule.php',
         'Modules\\User\\Components\\Auth' => __DIR__ . '/../../../..' . '/app/Modules/User/Components/Auth.php',
         'Modules\\User\\Components\\XcartSession' => __DIR__ . '/../../../..' . '/app/Modules/User/Components/XcartSession.php',
         'Modules\\User\\Controllers\\Admin\\IdentityCheckController' => __DIR__ . '/../../../..' . '/app/Modules/User/Controllers/Admin/IdentityCheckController.php',
