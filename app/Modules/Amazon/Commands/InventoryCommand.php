@@ -34,8 +34,8 @@ class InventoryCommand extends Command
 
                 $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
 
-                if ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
-                    !\in_array($prevent_selling, ['FBA', 'MFN'])) {
+                if ($product->manufacturerid == 12 || ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
+                    !\in_array($prevent_selling, ['FBA', 'MFN']))) {
 
                     $item = [
                         'sku' => $product->productcode,
