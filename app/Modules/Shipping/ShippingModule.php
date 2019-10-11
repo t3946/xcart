@@ -52,7 +52,7 @@ class ShippingModule extends Module
             $shipping_rates = Shipping::model()->getShippingRates($user, $distributor, $cart)[0];
         } catch (\Exception $e) {
             $shipping_rates = [];
-            Xcart::app()->logger->error($e->getMessage(), [], 'shipping');
+            //Xcart::app()->logger->error($e->getMessage(), [], 'shipping');
         }
 
         if ($shipping_rates) {
