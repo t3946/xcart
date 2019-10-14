@@ -169,47 +169,48 @@ SQL;
                 unset($i_ids[$key]);
             }
 
-            $qs = ProductModel::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
-            $ta = $qs->getTableAlias();
+            if ($i_ids) {
+                $qs = ProductModel::objects()->filter(array_merge(['productid__in' => $i_ids], $extendFilter));
+                $ta = $qs->getTableAlias();
 
-            $qs->getQueryBuilder()
-                ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta.'.productid' , 'ps.sfid' => new Expression($site->pk)], 'ps');
+                $qs->getQueryBuilder()
+                    ->join('inner join', 'xcart_products_sf', ['ps.productid' => $ta . '.productid', 'ps.sfid' => new Expression($site->pk)], 'ps');
 
 
-            if ($saveOrder) {
-                $qs = $qs->order([new Expression("FIELD({$qs->getTableAlias()}.productid, " . implode(',', $i_ids) . ") ASC")]);
-            }
-
-            $oProducts = $qs->all();
-
-            if (\count($oProducts) <= $fba_limit && \in_array($oProducts[0]->productid, $fba_pids, true)) {
-                return [$products, $sGoogleAnaliticsParam];
-            }
-
-            if (\in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
-                $oProducts = ProductHelper::groupRootProducts($oProducts);
-                if (isset($oProducts[$productid])) {
-                    unset($oProducts[$productid]);
-                }
-            }
-
-            /** @var ProductModel|Product $oProduct */
-            foreach ($oProducts as $oProduct)
-            {
-                if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
-                    continue;
+                if ($saveOrder) {
+                    $qs = $qs->order([new Expression("FIELD({$qs->getTableAlias()}.productid, " . implode(',', $i_ids) . ") ASC")]);
                 }
 
-                if ($oProduct->isGroupRoot() && $oProduct->getFrontendChilds()->count() === 0) {
-                    continue;
+                $oProducts = $qs->all();
+
+                if (\count($oProducts) <= $fba_limit && \in_array($oProducts[0]->productid, $fba_pids, true)) {
+                    return [$products, $sGoogleAnaliticsParam];
                 }
 
-                $p_ids[] = $oProduct->productid;
-                $oProduct->product = str_replace("'", '&#39;', $oProduct->product);
-                $products[] = $oProduct;
+                if (\in_array($section_name, ['similar_products', 'similar_products_ob', 'related_products'])) {
+                    $oProducts = ProductHelper::groupRootProducts($oProducts);
+                    if (isset($oProducts[$productid])) {
+                        unset($oProducts[$productid]);
+                    }
+                }
 
-                if (\count($p_ids) >= $max_products) {
-                    break;
+                /** @var ProductModel|Product $oProduct */
+                foreach ($oProducts as $oProduct) {
+                    if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
+                        continue;
+                    }
+
+                    if ($oProduct->isGroupRoot() && $oProduct->getFrontendChilds()->count() === 0) {
+                        continue;
+                    }
+
+                    $p_ids[] = $oProduct->productid;
+                    $oProduct->product = str_replace("'", '&#39;', $oProduct->product);
+                    $products[] = $oProduct;
+
+                    if (\count($p_ids) >= $max_products) {
+                        break;
+                    }
                 }
             }
         }
