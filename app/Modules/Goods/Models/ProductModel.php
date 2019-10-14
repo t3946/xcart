@@ -542,9 +542,7 @@ class ProductModel extends Model implements ICartItem
             $bread = new Breadcrumbs();
         }
 
-        if ($this->isGroupChild()) {
-            /** @var static $parent */
-            $parent = $this->parent;
+        if ($this->isGroupChild() && $parent = $this->parent) {
             $bread->add($parent->getFrontendName(), 'https:'.$parent->getAbsoluteUrl(true));
         }
 
