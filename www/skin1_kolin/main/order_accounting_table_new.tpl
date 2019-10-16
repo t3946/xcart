@@ -630,7 +630,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     <input type="text" size="8" class="invoices_data_unit_cost"
            id="manufacturer_invoices_data_unit_cost_{$m_id}_{$invoice_number}_{$order_detail_model->itemid}"
            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][unit_cost][{$order_detail_model->itemid}]"
-           value="{$invoice_detail->unit_cost|number_format:2:'.':','}"
+           value="{$invoice_detail->unit_cost|number_format:2:'.':''}"
            onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
            onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
            {if $invoice.status eq "R"}readonly="readonly"{/if} />
