@@ -8,6 +8,7 @@ use Modules\Amazon\Helpers\AmazonOfferHelper;
 use Modules\Amazon\Models\AmazonOfferCompetitorsModel;
 use Modules\Amazon\Models\AmazonOfferModel;
 use Xcart\App\Commands\Command;
+use Xcart\Connection;
 
 class AmazonCommand extends Command
 {
@@ -71,31 +72,40 @@ class AmazonCommand extends Command
                             foreach ($offers as $off) {
                                 if ($off['SubCondition'] === 'new') {
                                     $listing->offers++;
-                                    /** @var AmazonOfferCompetitorsModel $offer */
-                                    [$offer] = AmazonOfferCompetitorsModel::objects()->updateOrCreate([
+
+                                    $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state)';
+                                    $params = [
                                         'seller' => $off['SellerId'],
                                         'offer_id' => $listing->id,
                                         'channel' => $off['IsFulfilledByAmazon'] === 'true' ? 'FBA' : 'MFN',
-                                    ], [
                                         'rating' => $off['SellerFeedbackRating']['SellerPositiveFeedbackRating'],
                                         'LandingPrice' => (float)$off['ListingPrice']['Amount'] + (float)$off['Shipping']['Amount'],
                                         'ListingPrice' => (float)$off['ListingPrice']['Amount'],
                                         'Shipping' => (float)$off['Shipping']['Amount'],
-                                        'country' => $off['ShipsFrom']['Country'] ?: '',
-                                        'state' => $off['ShipsFrom']['State'] ?: '',
+                                        'country' => $off['ShipsFrom']['Country'] ?: null,
+                                        'state' => $off['ShipsFrom']['State'] ?: null,
                                         'is_buybox' => $off['IsBuyBoxWinner'] === 'true'
-                                    ]);
-                                    if (AmazonOfferHelper::OUR_MERCHANT_ID === $off['SellerId']) {
-                                        $listing->myPrice = $offer->LandingPrice;
-                                        $listing->is_buybox_my = $offer->is_buybox;
-                                        $found_me = true;
-                                    }
+                                    ];
+                                    Connection::getInstance()->executeQuery($query, $params);
 
-                                    if ($offer->is_buybox) {
-                                        $listing->buybox_Channel = $offer->channel;
-                                    }
+                                    /** @var AmazonOfferCompetitorsModel $offer */
+                                    if ($offer = AmazonOfferCompetitorsModel::objects()->get([
+                                        'seller' => $off['SellerId'],
+                                        'offer_id' => $listing->id,
+                                        'channel' => $off['IsFulfilledByAmazon'] === 'true' ? 'FBA' : 'MFN',
+                                    ])) {
+                                        if (AmazonOfferHelper::OUR_MERCHANT_ID === $off['SellerId']) {
+                                            $listing->myPrice = $offer->LandingPrice;
+                                            $listing->is_buybox_my = $offer->is_buybox;
+                                            $found_me = true;
+                                        }
 
-                                    $max_offers_price = $offer->LandingPrice;
+                                        if ($offer->is_buybox) {
+                                            $listing->buybox_Channel = $offer->channel;
+                                        }
+
+                                        $max_offers_price = $offer->LandingPrice;
+                                    }
                                 }
                             }
 
