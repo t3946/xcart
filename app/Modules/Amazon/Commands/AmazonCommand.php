@@ -84,7 +84,7 @@ class AmazonCommand extends Command
                                         'Shipping' => (float)$off['Shipping']['Amount'],
                                         'country' => $off['ShipsFrom']['Country'] ?: null,
                                         'state' => $off['ShipsFrom']['State'] ?: null,
-                                        'is_buybox' => $off['IsBuyBoxWinner'] === 'true'
+                                        'is_buybox' => (int) $off['IsBuyBoxWinner'] === 'true'
                                     ];
                                     Connection::getInstance()->executeQuery($query, $params);
 
