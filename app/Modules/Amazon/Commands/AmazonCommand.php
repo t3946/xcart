@@ -3,6 +3,7 @@
 namespace Modules\Amazon\Commands;
 
 
+use Mindy\QueryBuilder\Q\QOrNot;
 use Modules\Amazon\Helpers\AmazonAWSHelper;
 use Modules\Amazon\Helpers\AmazonOfferHelper;
 use Modules\Amazon\Models\AmazonOfferCompetitorsModel;
@@ -61,17 +62,20 @@ class AmazonCommand extends Command
                                 $listing->save();
                             }
 
-                            $listing->competitors->delete();
+
 
                             $offers = isset($anyOfferChangedNotification['Offers']['Offer']['SellerId'])
                                 ? [$anyOfferChangedNotification['Offers']['Offer']] : $anyOfferChangedNotification['Offers']['Offer'];
 
                             $max_offers_price = null;
                             $found_me = false;
+                            $p_sellers = [];
 
                             foreach ($offers as $off) {
                                 if ($off['SubCondition'] === 'new') {
                                     $listing->offers++;
+
+                                    $p_sellers[] = $off['SellerId'];
 
                                     $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state)';
                                     $params = [
@@ -112,6 +116,11 @@ class AmazonCommand extends Command
                             if ($offer && !$found_me && $max_offers_price) {
                                 $listing->myPrice = $max_offers_price + 0.01;
                             }
+
+                            if ($p_sellers) {
+                                $f = [new QOrNot(['seller__in' => $p_sellers])];
+                            }
+                            $listing->competitors->delete($f ?? []);
 
                             $listing->save();
                         }
