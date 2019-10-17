@@ -111,6 +111,7 @@
     }
     </script>
 
+
     {block 'head'}{/block}
 
 
@@ -120,9 +121,18 @@
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','{/ignore}{$uri}{ignore}/analytics.js','ga');
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         ga('create', '{/ignore}{$config.cidev_ga_code_number}{ignore}', 'auto',  {'useAmpClientId': true});
         ga('set', '&cu', '{/ignore}{$site_currency->currency_code}{ignore}');
+        {/ignore}
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1072406910"></script>
+    <script>
+        {ignore}
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
         {/ignore}
     </script>
 

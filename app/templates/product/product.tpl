@@ -229,5 +229,17 @@
 
     <script type="application/ld+json">
     {$helper->getJsonSchema($model)}
-</script>
+    </script>
+    <script>
+        gtag('event', 'page_view', {
+        send_to: 'AW-1072406910',
+        ecomm_pagetype: 'product',
+        ecomm_prodid: {$model->productid},
+        ecomm_totalvalue: {$model->getFrontendPrice()|number_format:2:'.':''},
+        ecomm_category: '{$category->category|escape}',
+        isSaleItem: {if $model->isSaleSticker()} true {else} false {/if}
+        });
+
+    </script>
+
 {/block}

@@ -408,9 +408,18 @@
                 {ignore}
                 });
                 {/ignore}
+                {set $pids[] = $product->productid}
             {/if}
         {/foreach}
         
+    </script>
+
+    <script>
+        gtag('event', 'purchase', {
+            send_to: 'AW-1072406910',
+            ecomm_prodid: [{$pids|implode:','}],
+            ecomm_totalvalue: {$order->total|number_format:2:'.':''}
+        });
     </script>
 
     {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
