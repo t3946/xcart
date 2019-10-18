@@ -240,7 +240,7 @@
     {/foreach}
     {if $pids}
     <script>
-        gtag('event', 'cart', {
+        gtag('event', 'page_view', {
             send_to: 'AW-1072406910',
             ecomm_pagetype: 'cart',
             ecomm_prodid: [{$pids|implode:','}],
