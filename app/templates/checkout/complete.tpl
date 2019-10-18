@@ -415,11 +415,15 @@
     </script>
 
     <script>
-        gtag('event', 'purchase', {
+        gtag('event', 'page_view', {
             send_to: 'AW-1072406910',
             ecomm_pagetype: 'purchase',
             ecomm_prodid: [{$pids|implode:','}],
             ecomm_totalvalue: {$order->total|number_format:2:'.':''}
+        });
+        gtag('event', 'purchase', {
+            send_to: 'AW-1072406910',
+            transaction_id: '{$order->getOrderNumber()}'
         });
     </script>
 
