@@ -242,6 +242,7 @@
     <script>
         gtag('event', 'cart', {
             send_to: 'AW-1072406910',
+            ecomm_pagetype: 'cart',
             ecomm_prodid: [{$pids|implode:','}],
             ecomm_totalvalue: {$total|number_format:2:'.':''}
         });
