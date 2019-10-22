@@ -9,7 +9,7 @@ class DiscountHelper
 {
     public const CODE_PARAM = 'discount_end_timestamp';
     public const CODE_PARAM_MINUTES = 'discount_end_minutes';
-    public const DISCOUNT_PERIODS = [0, 10, 25, 40, 55, 70, 85, 100, 115, 130];
+    public const DISCOUNT_PERIODS = [0, 85];
 
     public static function getDiscountTime()
     {

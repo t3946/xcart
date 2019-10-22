@@ -23,6 +23,7 @@ class UserDiscountMiddleware extends Middleware
             if ($d->getTimestamp() >= $now->getTimestamp()) {
                 return;
             }
+            $min =  $d_min;
         }
         $request->session->add(DiscountHelper::CODE_PARAM, $now->getTimestamp());
         $request->session->add(DiscountHelper::CODE_PARAM_MINUTES, $min);
