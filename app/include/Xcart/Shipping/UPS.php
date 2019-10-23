@@ -45,9 +45,9 @@ class UPS extends ShippingProcessor
     ];
 
     private $ups_approximation_shipping_methods = [
-        '' => 1,
-        'US' => 1,
-        'CA' => 65
+        '' => [1, 20017],
+        'US' => [1, 20017],
+        'CA' => [65]
     ];
 
     public function isProcessorApplicable()
@@ -191,7 +191,7 @@ class UPS extends ShippingProcessor
 
             if ($this->useApproximation) {
                 foreach ($aShippingRates as $oShippingRate) {
-                    if ((int)$oShippingRate->shippingid === (int)$this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
+                    if (in_array((int) $oShippingRate->shippingid, $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country], true)) {
                         /*get approximation rates for UPS Ground*/
                         $shippingCharge = $this->getAverageCharge($oShippingRate);
                         $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
@@ -211,8 +211,8 @@ class UPS extends ShippingProcessor
                     foreach ($aResponse as $Rate) {
                         foreach ($aShippingRates as $oShippingRate) {
                             if (in_array($oShippingRate->getShippingEntity()->service_code, $this->ups_services[$Rate->Service->getCode()])) {
-                                if ($oShippingRate->shippingid != $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country] ||
-                                    ($oShippingRate->shippingid == $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country] && empty($this->aShippingRates[$oShippingRate->shippingid]))
+                                if (!in_array((int) $oShippingRate->shippingid, $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country], true) ||
+                                    (in_array((int) $oShippingRate->shippingid, $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country], true) && empty($this->aShippingRates[$oShippingRate->shippingid]))
                                 ) {
 
                                     $value = $Rate->TotalCharges->MonetaryValue;
