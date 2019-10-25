@@ -199,7 +199,7 @@ abstract class ShippingProcessor
         return $this->aShippingRatesEntities;
     }
 
-    public function addShippingRate(ShippingRate $oShippingRate)
+    public function addShippingRate($oShippingRate)
     {
         $oShippingRate->setCart($this->getCart());
         if ($oShippingRate->checkShippingRateByFilterValues()) {
@@ -413,7 +413,7 @@ abstract class ShippingProcessor
      * @param Shipping $oShipping
      * @return $this
      */
-    public function addShippingMethod(Shipping $oShipping)
+    public function addShippingMethod($oShipping)
     {
         if (empty($this->aShippingMethods[$oShipping->getShippingId()])) {
             $this->aShippingMethods[$oShipping->getShippingId()] = $oShipping;

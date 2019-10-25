@@ -10,6 +10,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\Shipping\Models\ApproximationShippingModel;
+use Modules\Shipping\Models\ShippingModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Commands\Command;
 
@@ -26,6 +27,8 @@ class ApproximationShippingCommand extends Command
                     OR update_approximation_shipping_rates = 'Y'
                     OR shipping_rates_last_update_date = 0")
             );
+        $m = DistributorModel::objects()
+            ->filter(['manufacturerid' => 12]);
 
         /** @var DistributorModel $distributor */
         foreach ($m as $distributor) {
@@ -45,17 +48,37 @@ class ApproximationShippingCommand extends Command
                         's_state' => $state->code,
                         's_zipcode' => $state->base_state_zipcode
                     ]);
-                    if ($shipping_rate = ShippingHelper::getShippingRates($user, $distributor, [['model' => $product, 'qty' => 1]], null, false, false, false))
+
+                    if ($shipping_rate = ShippingHelper::getShippingMarkups($distributor, $state))
                     {
-                        /** @var ApproximationShippingModel $approximation */
-                        [$approximation] = ApproximationShippingModel::objects()->getOrNew(['manufacturerid' => $distributor->manufacturerid, 'state' => $state->code]);
                         foreach ($shipping_rate as $rate) {
-                            if (in_array((int) $rate->shippingid, [1, 63], true)) {
-                                $approximation->$key = $rate->getShippingQuote();
-                                echo "{$distributor->code} {$state->code} w:{$weight} r:{$approximation->$key}\n";
+                            /** @var ShippingModel $shipping_model */
+                            $shipping_model = $rate->shipping;
+                            if (in_array($shipping_model->code, ['UPS', 'UPSFlat'], true)) {
+                                /** @var ApproximationShippingModel $approximation */
+                                [$approximation] = ApproximationShippingModel::objects()->getOrNew(
+                                    [
+                                    'manufacturerid' => $distributor->manufacturerid,
+                                    'state' => $state->code,
+                                    'shipping_id' => $rate->shippingid
+                                    ]
+                                );
+
+                                $processor = ShippingHelper::getShippingCarrierProcessor($shipping_model->code, ShippingHelper::getShippingCart([['model' => $product, 'qty' => 1]]));
+                                $processor->setCustomer($user);
+                                $processor->setManufacturer($distributor);
+                                $processor->addShippingRate($rate);
+                                $processor->setUseCache(false);
+                                $processor->setUseApproximation(false);
+                                if ($quotes = $processor->getShippingQuotes()) {
+                                    $quotes = reset($quotes);
+                                }
+
+                                $approximation->$key = $quotes->getShippingQuote();
+                                $approximation->save();
+                                echo "{$distributor->code} {$state->code} w:{$weight} r:{$approximation->$key} {$shipping_model->getName()}\n";
                             }
                         }
-                        $approximation->save();
                     } else {
                         echo "{$distributor->code} {$state->code} w:{$weight} r:Failed\n";
                     }

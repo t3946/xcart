@@ -4,7 +4,6 @@
 namespace Modules\Shipping\Models;
 
 
-use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
@@ -41,6 +40,13 @@ class ApproximationShippingModel extends Model
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],
+            'shipping' => [
+                'field' => 'shipping_id',
+                'class' => ForeignField::class,
+                'modelClass' => ShippingModel::class,
+                'link' => ['shipping_id' => 'shippingid'],
+                'primary' => true
+            ]
         ];
     }
 }

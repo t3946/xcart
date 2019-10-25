@@ -146,7 +146,7 @@ class UPS extends ShippingProcessor
         if ($volume = $oShippingRate->getCartShippingVolume()) {
             $weight = ceil($volume > 1728 ? max($weight, $volume / 139) : max($weight, $volume / 166));
         }
-        return ShippingHelper::getAverageShippingCharge($weight, $this->getManufacturer()->manufacturerid);
+        return ShippingHelper::getAverageShippingCharge($weight, $this->getManufacturer()->manufacturerid, $oShippingRate->shippingid);
     }
     public function getApproximationCharge($oShippingRate)
     {
@@ -180,24 +180,17 @@ class UPS extends ShippingProcessor
 
     public function getShippingQuotes()
     {
+        $this->bGetOnlyApproximationRates = true;
+        $this->useCache = false;
         /** @var ShippingRate[] $aShippingRates */
         if (!$this->aShippingRates && $aShippingRates = $this->getShippingRatesEntities()) {
 
-            foreach ($aShippingRates as $oShippingRate) {
-                if (($sh_m = ShippingModel::objects()->get(['shippingid' => $oShippingRate->shippingid])) && $sh_m->is_free_shipping) {
-                    $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
-                }
-            }
-
             if ($this->useApproximation) {
                 foreach ($aShippingRates as $oShippingRate) {
-                    if (in_array((int) $oShippingRate->shippingid, $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country], true)) {
-                        /*get approximation rates for UPS Ground*/
-                        $shippingCharge = $this->getAverageCharge($oShippingRate);
-                        $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
-                        $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
-                        break;
-                    }
+                    /*get approximation rates for UPS Ground*/
+                    $shippingCharge = $this->getAverageCharge($oShippingRate);
+                    $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                    $this->aShippingRates[$oShippingRate->shippingid] = $oShippingRate;
                 }
             }
 

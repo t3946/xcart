@@ -3,7 +3,9 @@
 namespace Modules\Shipping\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Sqls\AmazonSql;
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -15,7 +17,9 @@ use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Cart;
 use Xcart\Connection;
+use Xcart\Shipping\ShippingProcessor;
 use Xcart\ShippingRate;
+use Xcart\ShippingZone;
 
 class ShippingHelper
 {
@@ -231,10 +235,10 @@ class ShippingHelper
             ->fetchColumn();
     }
 
-    public static function getAverageShippingCharge($value, $qty)
+    public static function getAverageShippingCharge($value, $qty, $shipping_id)
     {
         return (float)Connection::getInstance()
-            ->executeQuery('SELECT f_price_getAverageShipping(:value, :qty) as ups', ['value' => $value, 'qty' => $qty])
+            ->executeQuery('SELECT f_price_getAverageShipping(:value, :qty, :sid) as ups', ['value' => $value, 'qty' => $qty, 'sid' => $shipping_id])
             ->fetchColumn();
     }
 
@@ -269,5 +273,36 @@ class ShippingHelper
         sort($combination);
 
         return $combination;
+    }
+
+    public static function getShippingMarkups(DistributorModel $manufacturer, StateModel $state): array
+    {
+        return ShippingRateModel::objects()->filter([
+            'manufacturerid' => $manufacturer->manufacturerid,
+            'zoneid' => new Expression("f_shipping_getShippingZone({$manufacturer->manufacturerid}, '{$state->country_code}', '{$state->code}')")
+        ])->all();
+    }
+
+    public static function getShippingCarrierProcessor($cname, $cart)
+    {
+        if (!$cname) {
+            $cname = 'Flat';
+        }
+        $sProcessor = 'Xcart\\Shipping\\' . $cname;
+        if (class_exists($sProcessor)) {
+            /** @var ShippingProcessor $oProcessor */
+            $oProcessor = new $sProcessor($cart);
+        }
+        return $oProcessor;
+    }
+
+    public static function getShippingCart($products)
+    {
+        $oCart = new Cart();
+        foreach ($products as $product) {
+            $element = new \Xcart\CartElement($product['model'], $product['qty']);
+            $oCart->addObjectToCart($element);
+        }
+        return $oCart;
     }
 }

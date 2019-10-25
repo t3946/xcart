@@ -55,7 +55,7 @@ class CheckoutController extends FrontendController
 
     public function beforeAction($action, $params): void
     {
-        if ($action !== 'actionComplete' && !Xcart::app()->cart->isValid()) {
+        if ($action !== 'actionComplete' && !Xcart::app()->request->getIsAjax() && !Xcart::app()->cart->isValid()) {
             $this->redirect('cart:list');
         }
     }
