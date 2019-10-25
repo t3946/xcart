@@ -27,8 +27,6 @@ class ApproximationShippingCommand extends Command
                     OR update_approximation_shipping_rates = 'Y'
                     OR shipping_rates_last_update_date = 0")
             );
-        $m = DistributorModel::objects()
-            ->filter(['manufacturerid' => 12]);
 
         /** @var DistributorModel $distributor */
         foreach ($m as $distributor) {
@@ -71,12 +69,12 @@ class ApproximationShippingCommand extends Command
                                 $processor->setUseCache(false);
                                 $processor->setUseApproximation(false);
                                 if ($quotes = $processor->getShippingQuotes()) {
-                                    $quotes = reset($quotes);
+                                    if ($quotes = reset($quotes)) {
+                                        $approximation->$key = $quotes->getShippingQuote();
+                                        $approximation->save();
+                                        echo "{$distributor->code} {$state->code} w:{$weight} r:{$approximation->$key} {$shipping_model->getName()}\n";
+                                    }
                                 }
-
-                                $approximation->$key = $quotes->getShippingQuote();
-                                $approximation->save();
-                                echo "{$distributor->code} {$state->code} w:{$weight} r:{$approximation->$key} {$shipping_model->getName()}\n";
                             }
                         }
                     } else {
