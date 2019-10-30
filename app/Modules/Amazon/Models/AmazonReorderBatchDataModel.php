@@ -22,13 +22,13 @@ class AmazonReorderBatchDataModel extends Model
     {
         return [
             'batch_id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => 0
             ],
             'productid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => 0
@@ -37,6 +37,11 @@ class AmazonReorderBatchDataModel extends Model
                 'field' => 'manufacturerid',
                 'class' => ForeignField::class,
                 'modelClass' => DistributorModel::class,
+            ],
+            'sales_rank' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null
             ]
         ];
     }

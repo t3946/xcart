@@ -27,7 +27,7 @@
         <td title="Минимальная цена FBA со стандартной наценкой">Min FBA price</td>
         <td title="Минимальная цена на Amazon">Min Amazon price</td>
         <td title="Цена Buy Box">Buy Box price</td>
-        <td title="Средняя цена конкурентов за последние 60 дней">AVG comp price</td>
+        <td title="Sales rank">Sales rank</td>
 
         <td title="Средние продажи FBA в день">ADSa</td>
         <td title="Средние продажи XCart с доставкой через Амазон  в день">ADSx</td>
@@ -54,7 +54,7 @@
             <td class="float" align="center">${$product.min_fba_price|formatprice:"":"."}</td>
             <td class="float {if $product.min_fba_price > $product.lowest_price}changed{/if}" {if $product.min_fba_price < $product.lowest_price}style="background-color:green;"{/if} align="center">{if $product.lowest_price}${$product.lowest_price|formatprice:"":"."}{/if}</td>
             <td class="float {if $product.min_fba_price > $product.buy_box_price}changed{/if}" {if $product.min_fba_price < $product.buy_box_price}style="background-color:green;"{/if} align="center">{if $product.buy_box_price}${$product.buy_box_price|formatprice:"":"."}{/if}</td>
-            <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:"":"."}{/if}</td>
+            <td align="center">{$product.sales_rank}</td>
             <td align="center">{$product.ads_a}</td>
             <td align="center">{$product.ads_x}</td>
             <td align="center">{$product.r_avail}</td>
