@@ -9,6 +9,7 @@ use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\CurrencyModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -107,6 +108,12 @@ class DistributorModel extends Model
                 'link' => ['d_currency' => 'currency_id'],
                 'default' => 1
             ],
+            'site' => [
+                'field' => 'd_main_sf',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'link' => ['d_main_sf' => 'storefrontid']
+            ]
         ];
     }
 

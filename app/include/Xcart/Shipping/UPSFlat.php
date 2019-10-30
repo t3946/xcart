@@ -8,7 +8,7 @@ class UPSFlat extends UPS
 {
     public function isProcessorApplicable()
     {
-        $config = Xcart::app()->getModule('Sites')->getSite()->getConfig();
+        $config = $this->getManufacturer()->site->getConfig();
         return $config['flat_shipping_enabled'] !== 'N';
     }
 }
