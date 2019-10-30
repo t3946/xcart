@@ -887,12 +887,14 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {elseif $option eq "Multiple_Storefronts" and $configuration[cat_num].name eq "cidev_keywords"}
 <textarea name="{$configuration[cat_num].name}" cols="71" rows="2">{$configuration[cat_num].value|escape}</textarea>
 
-{* ---- *}
-{elseif $option eq "Multiple_Storefronts" and $configuration[cat_num].name eq "sf_top_image_favicon"}
-<span id="upload_fname_favicon">{if $storefront_info.is_image_favicon}<a href="{$catalogs.customer}/image.php?type=F&amp;id={$current_storefront}" target="_blank">{$storefront_info.image_favicon.filename|escape}</a>&nbsp;&nbsp;&nbsp;{/if}</span>
-<input type="button" id="F_edit_image_favicon" value="{$lng.lbl_plus|strip_tags:false|escape}" onclick="javascript: popup_image_selection('F', '{$current_storefront}', 'edit_image_favicon');" />
-<input type="file" id="file_edit_image_favicon" size="25" name="file_edit_image_favicon" onchange="javascript: $('#F_edit_image_favicon').attr('disabled', 'disabled');" />
-{* ---- *}
+    {elseif $option eq "Multiple_Storefronts" and $configuration[cat_num].name eq "sf_top_image_favicon"}
+    <span id="upload_fname_favicon">{if $storefront_info.is_image_favicon}<a
+            href="{$catalogs.customer}/image.php?type=F&amp;id={$current_storefront}"
+            target="_blank">{$storefront_info.image_favicon.filename|escape}</a>&nbsp;&nbsp;&nbsp;{/if}</span>
+    <input type="button" id="F_edit_image_favicon" value="{$lng.lbl_plus|strip_tags:false|escape}"
+           onclick="javascript: popup_image_selection('F', '{$current_storefront}', 'edit_image_favicon');"/>
+    <input type="file" id="file_edit_image_favicon" size="25" name="file_edit_image_favicon"
+           onchange="javascript: $('#F_edit_image_favicon').attr('disabled', 'disabled');"/>
 
 {elseif $option eq "Multiple_Storefronts" and $configuration[cat_num].name eq "sf_top_image"}
 <span id="upload_fname">{if $storefront_info.is_image}<a href="{$catalogs.customer}/image.php?type=S&amp;id={$current_storefront}" target="_blank">{$storefront_info.image.filename|escape}</a>&nbsp;&nbsp;&nbsp;{/if}</span>

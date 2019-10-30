@@ -385,6 +385,11 @@ if (!empty($active_modules['Multiple_Storefronts']) && $option === 'Multiple_Sto
 		->filter(['name__in' => array_keys(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS)])
 		->order('orderby')
 		->valuesList('*');
+	$configuration[] = [
+		'name' => 'sf_top_image_favicon',
+		'comment' => 'Storefront favicon',
+	];
+
 
 } else if (!empty($active_modules['XPayments_Connector']) && $option === 'XPayments_Connector') {
 	include $xcart_dir . '/modules/XPayments_Connector/get_configuration.php';
