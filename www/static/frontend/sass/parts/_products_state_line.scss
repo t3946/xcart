@@ -78,7 +78,7 @@
 
             .active_value {
               font-size: 14px;
-              width: 162px;
+              min-width: 162px;
               background: $white;
               border: 1px solid #aaa;
               height: 24px;
@@ -88,6 +88,7 @@
               display: inline-block;
               text-align: left;
               cursor: pointer;
+              padding-right: 24px;
 
               &:after {
                 transition: all .4s;
