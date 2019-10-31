@@ -15,6 +15,84 @@ if ($REQUEST_METHOD === 'POST' && $option === 'Multiple_Storefronts') {
 	if ($selected_sf !== null) {
 		\Modules\Sites\Models\SiteConfigModel::objects()->filter(['storefrontid' => $selected_sf, 'type__in' => ['checkbox', 'multiselector']])->update(['value' => 'N']);
 	}
+
+    if (!empty($file_upload_data["S"])){
+        // Check image permissions
+        $perms_S = func_check_image_storage_perms($file_upload_data, 'S');
+
+        if ($perms_S !== true) {
+
+            $top_message['type'] = 'E';
+            $top_message['content'] = $perms_S['content'];
+
+            func_header_location('configuration.php?option=Multiple_Storefronts');
+        }
+
+        // Image processing
+        if (func_check_image_posted($file_upload_data, 'S')) {
+            func_save_image($file_upload_data, 'S', $selected_sf);
+        }
+
+    }
+    // Image processing (custom field)
+    if (is_array($_FILES) && isset($_FILES['file_edit_image'])) {
+
+        $custom_image_options = array(
+            'id'                 => $selected_sf,
+            'from_parent_window' => 'Y',
+            'source'             => 'L',
+            'filename'           => 'file_edit_image',
+            'type'               => 'S',
+            'userfile'           => $_FILES['file_edit_image']['name'],
+            'userfile_size'      => $_FILES['file_edit_image']['size'],
+            'userfile_type'      => $_FILES['file_edit_image']['type'],
+        );
+
+        if (!empty($custom_image_options['userfile'])) {
+            extract($custom_image_options);
+            include $xcart_dir . '/include/image_selection.php';
+        }
+    }
+
+
+    if (!empty($file_upload_data["F"])){
+        // Check image permissions
+        $perms_F = func_check_image_storage_perms($file_upload_data, 'F');
+
+        if ($perms_F !== true) {
+
+            $top_message['type'] = 'E';
+            $top_message['content'] = $perms_F['content'];
+
+            func_header_location('configuration.php?option=Multiple_Storefronts');
+        }
+
+        // Image processing
+        if (func_check_image_posted($file_upload_data, 'F')) {
+            func_save_image($file_upload_data, 'F', $selected_sf);
+        }
+    }
+
+    // Image processing (custom field)
+    if (is_array($_FILES) && isset($_FILES['file_edit_image_favicon'])) {
+
+        $custom_image_options = array(
+            'id'                 => $selected_sf,
+            'from_parent_window' => 'Y',
+            'source'             => 'L',
+            'filename'           => 'file_edit_image_favicon',
+            'type'               => 'F',
+            'userfile'           => $_FILES['file_edit_image_favicon']['name'],
+            'userfile_size'      => $_FILES['file_edit_image_favicon']['size'],
+            'userfile_type'      => $_FILES['file_edit_image_favicon']['type'],
+        );
+
+        if (!empty($custom_image_options['userfile'])) {
+            extract($custom_image_options);
+            include $xcart_dir . '/include/image_selection.php';
+        }
+    }
+
 	$errors_msg = [];
 
 	$post = \Xcart\App\Main\Xcart::app()->request->post->all();
