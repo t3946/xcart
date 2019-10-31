@@ -185,7 +185,7 @@
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
                         {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
-                            {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$warehouse->getMinimalAmount()}{if $site_currency->after}{$site_currency}{/if}
+                            {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}{$site_currency}{/if}
                         {/p_label}
                         {/if}
                         {if !$warehouse->hasCanadaShippingZone()}
