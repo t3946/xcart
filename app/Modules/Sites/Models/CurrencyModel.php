@@ -23,6 +23,7 @@ class CurrencyModel extends Model
         return [
             'currency_id' => AutoField::class,
             'is_primary' => BooleanCharField::class,
+            'after' => BooleanCharField::class,
         ];
     }
 

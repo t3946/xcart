@@ -111,7 +111,7 @@
 
 
                                 <div class="table-column price show-for-large format_price">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
 
                                 <div class="table-wrapper quantity-extended">
@@ -140,10 +140,10 @@
 
                                     <div class="table-column extended format_price">
                                         <span class="show-for-large">
-                                            {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->getPrice())}</span>
+                                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->getPrice())}</span>{if $site_currency->after}{$site_currency}{/if}
                                         </span>
                                         <span class="hide-for-large">
-                                            {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>
+                                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($position->object->getFrontendPrice($position->quantity))}</span>{if $site_currency->after}{$site_currency}{/if}
                                         </span>
                                     </div>
                                 </div>
@@ -175,7 +175,7 @@
                                     <b>{t 'warehouse subtotal'}</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -185,7 +185,7 @@
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
                         {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
-                            {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{$site_currency} {$warehouse->getMinimalAmount()}
+                            {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$warehouse->getMinimalAmount()}{if $site_currency->after}{$site_currency}{/if}
                         {/p_label}
                         {/if}
                         {if !$warehouse->hasCanadaShippingZone()}
@@ -206,7 +206,7 @@
                     <div class="grand-subtotal">
                         {t 'Subtotal'}:
                         <div class="subtotal">
-                            {$site_currency->symbol_prefix}{$site_currency} <span class="cart_subtotal" var-cart-subtotal>{$site_currency->getCurrencyFormat($total)}</span>
+                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="cart_subtotal" var-cart-subtotal>{$site_currency->getCurrencyFormat($total)}</span>{if $site_currency->after}{$site_currency}{/if}
                         </div>
                     </div>
 

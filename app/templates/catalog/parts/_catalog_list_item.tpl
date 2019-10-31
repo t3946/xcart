@@ -111,7 +111,7 @@
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">
                         <span class="title">{t 'List Price'}:</span>
-                        <span class="price">{$site_currency->symbol_prefix}{$site_currency->symbol} {$site_currency->getCurrencyFormat($item->list_price)}</span>
+                        <span class="price">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($item->list_price)}</span>{if $site_currency->after}{$site_currency}{/if}
                     </span>
                 {/if}
 
@@ -119,8 +119,8 @@
                 <span class="current">
                     <span class="title">{t 'Price'}:</span>
                     <span class="price">
-                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency->symbol}</span>
-                        <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
+                        <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}{$site_currency}{/if}
 
                         {if $item->isOutOfStock()}
                             <link itemprop="availability" href="http://schema.org/OutOfStock" />
@@ -133,21 +133,21 @@
                     {if $item->getFrontendPrice() != $item->getFrontendPrice(2)}
                     <div>
                         <span class="price-title">{t 'Price from'}:</span>
-                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
-                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
+                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
                     </div>
 
                     <div>
                         <span class="price-title">{t 'Price to'}:</span>
-                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
-                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>
+                        <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
+                        <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>{if $site_currency->after}{$site_currency}{/if}
                     </div>
                     {else}
                         <span class="current">
                             <span class="title">{t 'Price'}:</span>
                             <span class="price">
-                                <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{$site_currency}</span>
-                                <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>
+                                <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
+                                <span itemprop="price">{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
                             </span>
                         </span>
                     {/if}

@@ -25,7 +25,7 @@
                             <div class="column price">
                                 <div class="title">{t 'Unit Price'}</div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price>{$model->getFrontendPrice()|number_format:2}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -45,7 +45,7 @@
                                 <div class="column extended">
                                     <div class="title">{t 'Subtotal'}</div>
                                     <div class="value">
-                                        {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span>
+                                        {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$model->getFrontendPrice()|number_format:2}</span> {if $site_currency->after}{$site_currency}{/if}
                                     </div>
                                 </div>
 
@@ -157,7 +157,7 @@
                                     {t 'List Price'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-list>{$model->list_price}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-list>{$model->list_price}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -166,7 +166,7 @@
                                     {t 'Per item savings'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-perunit-safe>{$price_safe|number_format:2}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -175,7 +175,7 @@
                                     {t 'Total savings'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price" var-price-safe>{$price_safe|number_format:2}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-safe>{$price_safe|number_format:2}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
