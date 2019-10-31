@@ -25,7 +25,7 @@
                     <div class="image_top new_year"></div>
                 {/if}
 
-                <h1 class="title" itemprop="name">{$model->category}</h1>
+                <h1 class="title" itemprop="name">{$model->getFrontendName()}</h1>
 
                 {if $model->description}
                 <div class="description">
