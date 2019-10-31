@@ -57,12 +57,12 @@
                                     {include "checkout/_parts/_options.tpl" item=$item}
                                 </div>
                                 <div class="price-info hide-for-medium">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
                             <div class="order-table-cell price-info show-for-medium">
-                                {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>
+                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>{if $site_currency->after}{$site_currency}{/if}
                             </div>
 
                             <div class="order-table-cell quantity show-for-large">
@@ -71,7 +71,7 @@
 
                             <div class="order-table-cell extended show-for-large">
                                 {set $extended = $item->amount * $item->price}
-                                {$site_currency->symbol_prefix}{$site_currency}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($extended)}</span>
+                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($extended)}</span>{if $site_currency->after}{$site_currency}{/if}
                             </div>
                         </div>
                     {/foreach}
@@ -88,7 +88,7 @@
                                     {/if}
                                     {* не должно быть пробела! *}
                                 </span><span class="sum underline">
-                                    {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order_group->shipping_gross)}</span>
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order_group->shipping_gross)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </span>
                         </div>
                     {/if}
@@ -104,7 +104,7 @@
                             {t 'Subtotal' }:
                         </span>
                         <span class="sum">
-                            {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order_group->total_gross)}</span>
+                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order_group->total_gross)}</span>{if $site_currency->after}{$site_currency}{/if}
                         </span>
                     </div>
                 </div>
@@ -123,15 +123,15 @@
         <div class="order-total">
             <div class="info-row total">
                 <span class="label">{t 'Total' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->subtotal)}</span></span>
+                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->subtotal)}</span>{if $site_currency->after}{$site_currency}{/if}</span>
             </div>
             <div class="info-row total-shipping">
                 <span class="label">{t 'Total Shipping Cost' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span></span>
+                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span>{if $site_currency->after}{$site_currency}{/if}</span>
             </div>
             <div class="info-row grand-total">
                 <span class="label">{t 'Grand Total' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span></span>
+                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span>{if $site_currency->after}{$site_currency}{/if}</span>
             </div>
         </div>
     </div>

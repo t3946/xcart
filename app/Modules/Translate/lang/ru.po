@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-10-02 12:07+0300\n"
+"PO-Revision-Date: 2019-10-31 15:23+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -319,11 +319,11 @@ msgstr "Открыть PDF счет"
 
 msgctxt "Shipping and Billing Information"
 msgid "Shipping and Billing Information"
-msgstr ""
+msgstr "Информация о заказе"
 
 msgctxt "The items below will be shipped from warehouse in"
 msgid "The items below will be shipped from warehouse in"
-msgstr "Товары будут отправлены со склада"
+msgstr "Товар будут отправлен со склада"
 
 msgctxt "Shipping by"
 msgid "Shipping by"
@@ -811,7 +811,7 @@ msgstr "Будут отправляться уведомления о состо
 
 msgctxt "Put order related instructions here"
 msgid "Put order related instructions here"
-msgstr ""
+msgstr "Оставьте свой комментарий к заказу"
 
 msgctxt "PO number"
 msgid "PO number"
