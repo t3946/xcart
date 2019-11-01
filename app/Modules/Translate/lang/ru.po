@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-01 12:21+0300\n"
+"PO-Revision-Date: 2019-11-01 14:36+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -451,15 +451,15 @@ msgstr "Все категории"
 
 msgctxt "Web order 24/7"
 msgid "Web order 24/7"
-msgstr ""
+msgstr "Онлайн заказ 24/7"
 
 msgctxt "Web Orders"
 msgid "Web Orders"
-msgstr ""
+msgstr "Онлайн заказы"
 
 msgctxt "24 hours a day, 7 days a week"
 msgid "24 hours a day, 7 days a week"
-msgstr ""
+msgstr "24 часа в день, 7 дней в неделю"
 
 msgctxt "Email Support"
 msgid "Email Support"
@@ -619,7 +619,7 @@ msgstr "ответил(а) "
 
 msgctxt " on "
 msgid " on "
-msgstr " "
+msgstr " на"
 
 msgctxt "tabs"
 msgid "tabs"
@@ -655,7 +655,7 @@ msgstr "Название Вашей организации"
 
 msgctxt "Eureka Inc."
 msgid "Eureka Inc."
-msgstr ""
+msgstr "ООО \"Эврика\""
 
 msgctxt "Your zip/postal code"
 msgid "Your zip/postal code"
@@ -667,11 +667,11 @@ msgstr "Телефон"
 
 msgctxt "Phone number you can be reached at"
 msgid "Phone number you can be reached at"
-msgstr ""
+msgstr "Номер телефона по которому с Вами можно связаться"
 
 msgctxt "Valid email address is a must"
 msgid "Valid email address is a must"
-msgstr ""
+msgstr "Введите свой email адрес"
 
 msgctxt "Department"
 msgid "Department"
@@ -679,7 +679,7 @@ msgstr "Отдел"
 
 msgctxt "Your message will be routed to this department"
 msgid "Your message will be routed to this department"
-msgstr ""
+msgstr "Ваше сообщение будет направлено в выбранный отдел"
 
 msgctxt "Product SKU or your order #"
 msgid "Product SKU or your order #"
@@ -947,7 +947,7 @@ msgstr ""
 
 msgctxt "Community"
 msgid "Community"
-msgstr ""
+msgstr "Комьюнити"
 
 msgctxt "Backorder Policy"
 msgid "Backorder Policy"
@@ -991,7 +991,7 @@ msgstr "Все"
 
 msgctxt "Place order online 24/7"
 msgid "Place order online 24/7"
-msgstr ""
+msgstr "Оформление заказа 24/7"
 
 msgctxt "24/7 online ordering"
 msgid "24/7 online ordering"
@@ -1095,7 +1095,7 @@ msgstr "Размеры"
 
 msgctxt "Shipping dimensions"
 msgid "Shipping dimensions"
-msgstr ""
+msgstr "Размеры для доставки"
 
 msgctxt "Shipping from"
 msgid "Shipping from"
@@ -1103,7 +1103,7 @@ msgstr "Доставка со склада"
 
 msgctxt "Shipping weight"
 msgid "Shipping weight"
-msgstr ""
+msgstr "Вес доставки"
 
 msgctxt "PRICE RANGE"
 msgid "PRICE RANGE"
@@ -1150,7 +1150,7 @@ msgstr[2] "Посмотреть %count% вариантов товара"
 
 msgctxt "Toll Free"
 msgid "Toll Free"
-msgstr ""
+msgstr "Бесплатный звонок"
 
 msgctxt "Local Phone"
 msgid "Local Phone"
@@ -1182,7 +1182,7 @@ msgstr "Адрес плательщика"
 
 msgctxt "Stock Notification"
 msgid "Stock Notification"
-msgstr ""
+msgstr "Уведомить о поступлении"
 
 msgctxt "Email notification will be sent to your email address when the product is in stock."
 msgid "Email notification will be sent to your email address when the product is in stock."
@@ -1194,7 +1194,7 @@ msgstr "обязательны к заполнению"
 
 msgctxt "Order online or call us toll free"
 msgid "Order online or call us toll free"
-msgstr ""
+msgstr "Оформите заказ онлайн"
 
 msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
 msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
@@ -1238,7 +1238,7 @@ msgstr ""
 
 msgctxt "Eta date"
 msgid "Eta date"
-msgstr ""
+msgstr "Дата поступления"
 
 msgctxt "Order at least %count% item"
 msgid "Order at least %count% item"
@@ -1263,7 +1263,7 @@ msgstr[2] "Время обработки заказа %count% рабочих д�
 
 msgctxt "Lead time for this product is"
 msgid "Lead time for this product is"
-msgstr ""
+msgstr "Время обработки заказа для данного товара"
 
 msgctxt "business days"
 msgid "business days"
@@ -1287,15 +1287,15 @@ msgstr "Товар или заказ не найден"
 
 msgctxt "Wrong SKU or Order #, please call us at"
 msgid "Wrong SKU or Order #, please call us at"
-msgstr ""
+msgstr "Неправильный Артикул или № заказа"
 
 msgctxt "Web Form (recommended)"
 msgid "Web Form (recommended)"
-msgstr ""
+msgstr "Форма обратной связи"
 
 msgctxt "The fields marked with <span class=\"required\"></span> are mandatory"
 msgid "The fields marked with <span class=\"required\"></span> are mandatory"
-msgstr ""
+msgstr "Поля отмеченные <span class=\"required\"></span> обязательны для заполнения"
 
 msgctxt "Mail"
 msgid "Mail"
