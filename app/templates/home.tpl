@@ -93,6 +93,14 @@
     </div>
 
     <div class="row">
+        <div class="small-12 column slider-products slider-bestsellers">
+            {set $link}{url 'catalog:bestsellers'}{/set}
+            {set $title}{t "Bestsellers"}{/set}
+            {include 'slider/base_product_slider.tpl' title=$title link=$link data_link=$link}
+        </div>
+    </div>
+
+    <div class="row">
         <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
             {if $category_new}

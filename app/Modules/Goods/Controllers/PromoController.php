@@ -24,6 +24,11 @@ class PromoController extends AbstractCatalogController
     {
         $this->qs = PromotionalProductsHelper::getBestsellersSQ();
 
+        if ($this->getRequest()->getIsAjax() && !$this->getRequest()->get->has('page'))
+        {
+            $this->renderSliderData($this->qs);
+        }
+
         $bread = new Breadcrumbs();
 
         $bread->add(GoodsModule::t('Bestsellers'));
