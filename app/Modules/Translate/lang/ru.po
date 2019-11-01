@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-01 14:36+0300\n"
+"PO-Revision-Date: 2019-11-01 15:05+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -687,7 +687,7 @@ msgstr "Артикул товара или № заказа"
 
 msgctxt "SKU of product you are interested in or your order #"
 msgid "SKU of product you are interested in or your order #"
-msgstr ""
+msgstr "Артикул товара или № Вашего заказа"
 
 msgctxt "EDR-T-A63127 or AR-54321"
 msgid "EDR-T-A63127 or AR-54321"
@@ -943,7 +943,7 @@ msgstr ""
 
 msgctxt "Retrieve Order"
 msgid "Retrieve Order"
-msgstr ""
+msgstr "Мои заказы"
 
 msgctxt "Community"
 msgid "Community"
@@ -1423,7 +1423,7 @@ msgstr "Этот товар будет отправлен с нашего скл
 
 msgctxt "Is gravitation responsible for people falling in love?"
 msgid "Is gravitation responsible for people falling in love?"
-msgstr ""
+msgstr "Тема сообщения"
 
 msgctxt "Shipping quote"
 msgid "Shipping quote"
