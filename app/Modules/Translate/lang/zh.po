@@ -1441,3 +1441,11 @@ msgstr ""
 msgctxt "Other requests "
 msgid "Other requests "
 msgstr ""
+
+msgctxt "Showing result for"
+msgid "Showing result for"
+msgstr ""
+
+msgctxt "We try to search your query across all storefront products, but nothing found. Please specify your request..."
+msgid "We try to search your query across all storefront products, but nothing found. Please specify your request..."
+msgstr ""
