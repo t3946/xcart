@@ -800,7 +800,7 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
 
         $_filter = [
             'date_csv__gte' => $search_data["reconciliation_tab_" . $tab]["date_csv"]["start_date"],
-            'date_csv__lte' => $search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"],
+            'date_csv__lte' => ($search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"]) ?: time(),
             'action' => ''
         ];
 
@@ -826,12 +826,11 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
             }
 
 
-            if ($tab === 'unreconciled' && $search_data['reconciliation_tab_' . $tab]['show_unreconciled_invoices_and_memos'] === "Y") {
-
+            if ($tab === 'unreconciled' && $search_data['reconciliation_tab_' . $tab]['show_unreconciled_invoices_and_memos'] === 'Y') {
                 $qs = OrderGroupModel::objects()->getQuerySet();
                 $_order_filter = [
-                    'order__date__gte' => $search_data['reconciliation_tab_' . $tab]['date']['start_date'],
-                    'order__date__lte' => $search_data['reconciliation_tab_' . $tab]['date']['end_date'],
+                    'order__date__gte' => $search_data['reconciliation_tab_' . $tab]['date_csv']['start_date'],
+                    'order__date__lte' => $search_data['reconciliation_tab_' . $tab]['date_csv']['end_date'] ?: time(),
                     'order__order_type__isnt' => OrderModel::ORDER_TYPE_FBA,
                     'amz_fullfilment_order_placed' => 'N',
                     new QOr([
