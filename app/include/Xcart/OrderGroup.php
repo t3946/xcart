@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Modules\Core\Models\StateModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Helpers\ShippingHelper;
@@ -1264,7 +1265,9 @@ class OrderGroup extends Data
                         's_state' => $order->s_state
                     ]
                 );
-                $aShippingRates = (new Shipping())->getShippingRates($customer, $this->getManufacturerEntity(), $oCart);
+
+                $dx = DistributorModel::objects()->get(['manufacturerid' => $this->manufacturerid]);
+                $aShippingRates = (new Shipping())->getShippingRates($customer, $dx, $oCart);
             }
         }
         return $aShippingRates;
