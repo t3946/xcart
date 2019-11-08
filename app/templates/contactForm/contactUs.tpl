@@ -57,13 +57,19 @@
                             </div>
                             <div class="tabs-panel" id="Phone">
                                 <div class="tab-content">
-                                    <div><span class="title">Local</span><wbr>(616) 259-5711</div>
-                                    <div><span class="title">Toll&nbsp;free</span><wbr>{$config.cidev_top_header_code}</div>
+                                    {if $config.local_phone}
+                                        <div><span class="title">Local</span><wbr>{$config.local_phone}</div>
+                                    {/if}
+                                    {if $config.cidev_top_header_code}
+                                        <div><span class="title">Toll&nbsp;free</span><wbr>{$config.cidev_top_header_code}</div>
+                                    {/if}
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Fax">
                                 <div class="tab-content">
-                                    <span>1-800-929-2835</span>
+                                    {if $config.fax_number}
+                                    <span>{$config.fax_number}</span>
+                                    {/if}
                                 </div>
                             </div>
                             <div class="tabs-panel" id="Mail">

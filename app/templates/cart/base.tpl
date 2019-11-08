@@ -63,8 +63,10 @@
                             <span>{t 'Place order online 24/7 or'}</span>
                         </div>
                         <div class="phone">
-                            <span class="phone-label">{t 'Call us toll free'}</span>
-                            <span class="phone-number">{$config.cidev_top_header_code}</span>
+                            {if $config.cidev_top_header_code}
+                                <span class="phone-label">{t 'Call us toll free'}</span>
+                                <span class="phone-number">{$config.cidev_top_header_code}</span>
+                            {/if}
                         </div>
                     </div>
                 </div>
