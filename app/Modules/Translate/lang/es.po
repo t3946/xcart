@@ -1481,3 +1481,7 @@ msgstr ""
 msgctxt "Product line"
 msgid "Product line"
 msgstr ""
+
+msgctxt "Search"
+msgid "Search"
+msgstr ""

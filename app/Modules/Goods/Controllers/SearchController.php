@@ -4,6 +4,7 @@ namespace Modules\Goods\Controllers;
 
 use Mindy\QueryBuilder\Expression;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\SearchStatsModel;
@@ -221,7 +222,7 @@ class SearchController extends AbstractCatalogController
     public function getBreadcrumbsFromData($data)
     {
         $bread = new Breadcrumbs();
-        $bread->add('Search: '. strip_tags($this->q));
+        $bread->add(GoodsModule::t('Search').': '. strip_tags($this->q));
 
         return $bread;
     }
