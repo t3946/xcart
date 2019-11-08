@@ -1461,3 +1461,23 @@ msgstr ""
 msgctxt "Your email address is invalid. Please enter a valid address."
 msgid "Your email address is invalid. Please enter a valid address."
 msgstr ""
+
+msgctxt "Your search"
+msgid "Your search"
+msgstr ""
+
+msgctxt "did NOT match any products"
+msgid "did NOT match any products"
+msgstr ""
+
+msgctxt "Showing results for"
+msgid "Showing results for"
+msgstr ""
+
+msgctxt "Related searches"
+msgid "Related searches"
+msgstr ""
+
+msgctxt "Product line"
+msgid "Product line"
+msgstr ""

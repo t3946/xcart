@@ -13,14 +13,14 @@
             <div class="columns large-10">
                 <div class="search-header">
                     {if $searched}
-                        <h1 class="title">Showing result for "<span class="highlight">{$q}</span>"</h1>
+                        <h1 class="title">{t 'Showing result for'} "<span class="highlight">{$q}</span>"</h1>
                     {else}
-                        <h1 class="title">Your search "<span class="bad">{$q_original}</span>" did NOT match any products</h1>
-                        <h2 class="subtitle">Showing results for "<span class="highlight">{$q}</span>"</h2>
+                        <h1 class="title">{t 'Your search'} "<span class="bad">{$q_original}</span>" {t 'did NOT match any products'}</h1>
+                        <h2 class="subtitle">{t 'Showing results for'} "<span class="highlight">{$q}</span>"</h2>
                     {/if}
 
                     {if $suggestion && $suggestion['phrase_suggestions'] }
-                        Related searches:
+                        {t 'Related searches'}:
                         {foreach $suggestion['phrase_suggestions'] as $suggest}
                             {* не надо делать перенос строки перед закрытием тега - появляется лишний пробел *}
                             <a href="{$.app->router->url('catalog:search', [], ['q' => $suggest])}" class="related">

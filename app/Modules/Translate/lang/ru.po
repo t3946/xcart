@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-08 17:12+0300\n"
+"PO-Revision-Date: 2019-11-08 17:39+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -1447,7 +1447,7 @@ msgstr "Другие запросы"
 
 msgctxt "Showing result for"
 msgid "Showing result for"
-msgstr "Результаты поиска"
+msgstr "Результат поиска"
 
 msgctxt "We try to search your query across all storefront products, but nothing found. Please specify your request..."
 msgid "We try to search your query across all storefront products, but nothing found. Please specify your request..."
@@ -1464,3 +1464,23 @@ msgstr "Письмо с подтверждением было успешно о�
 msgctxt "Your email address is invalid. Please enter a valid address."
 msgid "Your email address is invalid. Please enter a valid address."
 msgstr "Неверный email адрес. Введите верный email адрес."
+
+msgctxt "Your search"
+msgid "Your search"
+msgstr "Поисковая фраза"
+
+msgctxt "did NOT match any products"
+msgid "did NOT match any products"
+msgstr "не соответствует ни с одним товаром"
+
+msgctxt "Showing results for"
+msgid "Showing results for"
+msgstr "Результаты поиска"
+
+msgctxt "Related searches"
+msgid "Related searches"
+msgstr "Похожие поисковые фразы"
+
+msgctxt "Product line"
+msgid "Product line"
+msgstr "Товарная серия"
