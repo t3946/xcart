@@ -43,47 +43,7 @@
                 <div class="contacts">
                     <div class="row">
                         <div class="column small-12 ">
-
-                            <ul class="no-bullet menu-list">
-                                <li class="title-menu">
-                                    {t 'Telephone Customer Service'}
-                                </li>
-                                <li>{$config.customer_service_working_time}</li>
-                                <li class="toll-free">{t 'Toll Free'}: <span class="number">{$config.cidev_top_header_code}</span></li>
-                                <li>{t 'Tel'}: {$config.local_phone}</li>
-                                <li>{t 'Fax'}: {$config.fax_number}</li>
-                            </ul>
-
-                            <ul class="no-bullet menu-list show-for-medium-only">
-                                <li class="title-menu">
-                                    {t 'Contact Us'}
-                                </li>
-                                <li><a href="/contactus/#form">Web Form</a></li>
-                                <li><a href="/contactus/#email">Email</a></li>
-                                <li><a href="/contactus/#address">USA address</a></li>
-                                <li><a href="/contactus/#address">Canadian address</a></li>
-                            </ul>
-
-                            <ul class="no-bullet menu-list show-for-large">
-                                <li class="title-menu">
-                                    USA Address
-                                </li>
-                                <li>S3 Stores, Inc.</li>
-                                <li>2885 Sanford Ave SW #12717</li>
-                                <li>Grandville, MI 49418</li>
-                                <li>USA</li>
-                            </ul>
-
-                            <ul class="no-bullet menu-list show-for-large">
-                                <li class="title-menu">
-                                    Canadian Address
-                                </li>
-                                <li>S3 Stores, Inc.</li>
-                                <li>27 Joseph St.</li>
-                                <li>Chatham, Ontario N7L3G4</li>
-                                <li>Canada</li>
-                            </ul>
-
+                            {raw $config.cidev_footer_code}
                         </div>
                     </div>
                 </div>
