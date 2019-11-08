@@ -1,6 +1,7 @@
 <div class="row">
     <div class="columns small-12">
-        {include "catalog/parts/_state_line.tpl" hide_filter_button=true hide_sort=true state_title='Product line'}
+        {set $state_title}{t 'Product line'}{/set}
+        {include "catalog/parts/_state_line.tpl" hide_filter_button=true hide_sort=true state_title=$state_title}
 
         <div class="mobile_page_count hide-for-large page_count_wrap">
             {*{insert 'catalog/parts/_page_count.tpl'}*}
@@ -11,7 +12,7 @@
             {*{include "catalog/parts/_catalog_list_item.tpl" item=$item}*}
             {*{/foreach}*}
         </div>
-        {include "catalog/parts/_state_line.tpl" hide_filter_button=true hide_sort=true state_title='Product line'}
+        {include "catalog/parts/_state_line.tpl" hide_filter_button=true hide_sort=true state_title=$state_title}
 
         {raw $pager->render()}
 
