@@ -1382,10 +1382,6 @@ msgctxt "Email Support"
 msgid "Email Support"
 msgstr ""
 
-msgctxt "Telephone Customer Service"
-msgid "Telephone Customer Service"
-msgstr ""
-
 msgctxt "Join our newsletter"
 msgid "Join our newsletter"
 msgstr ""
@@ -1448,4 +1444,16 @@ msgstr ""
 
 msgctxt "We try to search your query across all storefront products, but nothing found. Please specify your request..."
 msgid "We try to search your query across all storefront products, but nothing found. Please specify your request..."
+msgstr ""
+
+msgctxt "You have already subscribed"
+msgid "You have already subscribed"
+msgstr ""
+
+msgctxt "Confirmation email was sent. Please check your inbox."
+msgid "Confirmation email was sent. Please check your inbox."
+msgstr ""
+
+msgctxt "Your email address is invalid. Please enter a valid address."
+msgid "Your email address is invalid. Please enter a valid address."
 msgstr ""

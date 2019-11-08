@@ -4,6 +4,7 @@ namespace Modules\Subscribe\Helpers;
 
 use Modules\Sites\Models\SiteModel;
 use Modules\Subscribe\Models\SubscriberModel;
+use Modules\Subscribe\SubscribeModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Validation\EmailValidator;
 
@@ -32,7 +33,7 @@ class SubscribeHelper
 
             if ($subscriber && $subscriber->subscribe) {
 
-                return ['success' => 'You have already subscribed'];
+                return ['success' => SubscribeModule::t('You have already subscribed')];
                 //$this->redirect('/');
             }
 
@@ -50,11 +51,10 @@ class SubscribeHelper
 //                ]
 //            );
 
-            return ['success' => 'Confirmation email was sent. Please check your inbox.'];
+            return ['success' => SubscribeModule::t('Confirmation email was sent. Please check your inbox.')];
         }
-        else {
-            return ['error' => 'Your email address is invalid. Please enter a valid address.'];
-        }
+
+        return ['error' => SubscribeModule::t('Your email address is invalid. Please enter a valid address.')];
 
     }
 
