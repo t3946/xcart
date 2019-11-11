@@ -111,7 +111,7 @@
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">
                         <span class="title">{t 'List Price'}:</span>
-                        <span class="price">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($item->list_price)}</span>{if $site_currency->after}{$site_currency}{/if}
+                        <span class="price">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($item->list_price)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
                     </span>
                 {/if}
 
@@ -120,7 +120,7 @@
                     <span class="title">{t 'Price'}:</span>
                     <span class="price">
                         <span itemprop="priceCurrency" content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
-                        <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}{$site_currency}{/if}
+                        <span itemprop="price" var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
 
                         {if $item->isOutOfStock()}
                             <link itemprop="availability" href="http://schema.org/OutOfStock" />

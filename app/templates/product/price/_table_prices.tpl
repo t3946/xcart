@@ -25,7 +25,7 @@
                             <div class="column price">
                                 <div class="title">{t 'Unit Price'}</div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price>{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>{if $site_currency->after}{$site_currency}{/if}
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price>{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -45,7 +45,7 @@
                                 <div class="column extended">
                                     <div class="title">{t 'Subtotal'}</div>
                                     <div class="value">
-                                        {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span> {if $site_currency->after}{$site_currency}{/if}
+                                        {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
                                     </div>
                                 </div>
 

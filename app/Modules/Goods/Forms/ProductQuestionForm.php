@@ -89,7 +89,7 @@ class ProductQuestionForm extends FrontendModelForm
             'question' => [
                 'class' => TextField::class,
                 'label' => GoodsModule::t('Product question'),
-                'hint' => GoodsModule::t("Please don't mention your email and your phone in this field."),
+                'hint' => GoodsModule::t("Please don`t mention your email and your phone in this field."),
                 'html' => [
                     'placeholder' => GoodsModule::t('Please type your product question here')
                 ],

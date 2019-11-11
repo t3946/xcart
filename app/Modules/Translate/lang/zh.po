@@ -1481,3 +1481,7 @@ msgstr ""
 msgctxt "Search"
 msgid "Search"
 msgstr ""
+
+msgctxt "Please don`t mention your email and your phone in this field."
+msgid "Please don`t mention your email and your phone in this field."
+msgstr ""

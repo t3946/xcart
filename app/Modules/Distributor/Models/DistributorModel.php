@@ -3,6 +3,9 @@
 namespace Modules\Distributor\Models;
 
 use DateTime;
+use Doctrine\DBAL\Types\Type;
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
@@ -113,7 +116,24 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => SiteModel::class,
                 'link' => ['d_main_sf' => 'storefrontid']
-            ]
+            ],
+            'country_model' => [
+                'field' => 'm_country',
+                'class' => ForeignField::class,
+                'sqlType' => Type::STRING,
+                'modelClass' => CountryModel::class,
+                'link' => ['m_country' => 'code']
+            ],
+            'state_model' => [
+                'field' => 'm_state',
+                'class' => ForeignField::class,
+                'sqlType' => Type::STRING,
+                'modelClass' => StateModel::class,
+                'link' => [
+                    'm_state' => 'code',
+                    'm_country' => 'country_code'
+                ],
+            ],
         ];
     }
 

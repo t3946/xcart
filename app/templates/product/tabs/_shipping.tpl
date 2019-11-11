@@ -44,11 +44,10 @@
         {/if}
         <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
             <div class="h2 title">{t 'Shipping from'}</div>
-            {set $warehouse  = $model->distributor}
             <div class="content">
                 <div class="row">
                     <div class="columns small-12">
-                        {t 'This product is shipped from our warehouse in'} {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                        {t 'This product is shipped from our warehouse in'} {$warehouse->m_city}, {$warehouse->state_model}, {$warehouse->country_model}
                     </div>
                 </div>
             </div>

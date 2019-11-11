@@ -7,6 +7,7 @@ namespace Modules\Sites\Models;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
 class CurrencyModel extends Model
@@ -24,12 +25,17 @@ class CurrencyModel extends Model
             'currency_id' => AutoField::class,
             'is_primary' => BooleanCharField::class,
             'after' => BooleanCharField::class,
+            'thousands_separator' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ','
+            ]
         ];
     }
 
     public function getCurrencyFormat($number): string
     {
-        return number_format($number, $this->decimals, $this->decimals_separator, $this->thousands_separator);
+        return number_format($number, $this->decimals ?? 2, $this->decimals_separator?? '', $this->thousands_separator ?? '');
     }
 
     public function __toString(): string
