@@ -282,7 +282,7 @@ class BrandModel extends Model
     {
         $brands = [];
         foreach ($allBrands as $brand) {
-            $letter = strtoupper(substr($brand->brand, 0, 1));
+            $letter = mb_strtoupper(mb_substr($brand->brand, 0, 1));
             if (!isset($brands[$letter])) {
                 $brands[$letter] = [$brand];
             } else {
