@@ -38,8 +38,8 @@
             <div class="warehouse_products">
                 <div class="shipped_from">
                     {t 'The items below will be shipped from warehouse in'} {$warehouse->m_city},
-                    {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                    {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                    {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                    {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                 </div>
 
                 <div class="table">
@@ -172,8 +172,8 @@
                             <div class="table-row">
                                 <div class="table-column auto from">
                                     {$warehouse->m_city},
-                                    {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                                    {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                                    {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                                    {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                                     <b>{t 'warehouse subtotal'}</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">

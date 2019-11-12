@@ -52,8 +52,8 @@
             <div class="row info-row delivery-method">
                 <div class="columns info-title small-6">
                     {$warehouse->m_city},
-                    {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                    {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                    {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                    {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                     <br/>{t 'warehouse items:' }
                 </div>
                 {if $shipping_model}

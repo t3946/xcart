@@ -81,8 +81,8 @@
                                             <span>{t 'the items' }</span>
                                         </a>
                                         {t 'shipped from warehouse in' } {$warehouse->m_city},
-                                        {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                                        {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                                        {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                                        {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                                     </h3>
 
                                     {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}

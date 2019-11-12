@@ -38,8 +38,8 @@
                 <b>
                     {$distributor->manufacturer} {t 'Items'}
                     ({t 'delivery from'} {$distributor->m_city},
-                    {if $site_config.Preferred_language === 'ru'}{$distributor->state_model}{else}{$distributor->m_state}{/if},
-                    {if $site_config.Preferred_language === 'ru'}{$distributor->country_model}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()}, {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($group->shipping_gross)}{if $site_currency->after}&nbsp;{$site_currency}{/if}):
+                    {if $site_config.show_full_state_country === 'Y'}{$distributor->state_model}{else}{$distributor->m_state}{/if},
+                    {if $site_config.show_full_state_country === 'Y'}{$distributor->country_model}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()}, {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($group->shipping_gross)}{if $site_currency->after}&nbsp;{$site_currency}{/if}):
                 </b>
             </td>
         </tr>

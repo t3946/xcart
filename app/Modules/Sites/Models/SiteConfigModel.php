@@ -59,6 +59,7 @@ class SiteConfigModel extends Model
 //        'enable_https' => 2000,
         'currency' => 3000,
         'flat_shipping_enabled' => 4000,
+        'show_full_state_country' => 5000,
     ];
 
     public static function tableName()
