@@ -613,7 +613,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$productid = db_insert_id();
 
 			# Insert price and image
-			db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '1', '".abs($price)."')");
+			//db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '1', '".abs($price)."')");
 
 			$status = "created";
 
