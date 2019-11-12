@@ -1072,10 +1072,6 @@ msgctxt "Zip/Postal code:"
 msgid "Zip/Postal code:"
 msgstr ""
 
-msgctxt "The item below will be shipped from warehouse in"
-msgid "The item below will be shipped from warehouse in"
-msgstr ""
-
 msgctxt "Qty ordered"
 msgid "Qty ordered"
 msgstr ""

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-11 14:19+0300\n"
+"PO-Revision-Date: 2019-11-11 17:59+0300\n"
 "Language: ru_RU\n"
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -27,11 +27,11 @@ msgstr "Подтверждение заказа"
 
 msgctxt "Delivery from"
 msgid "Delivery from"
-msgstr ""
+msgstr "Доставка из г."
 
 msgctxt "by"
 msgid "by"
-msgstr ""
+msgstr "через "
 
 msgctxt "Product of the day"
 msgid "Product of the day"
@@ -71,19 +71,15 @@ msgstr ""
 
 msgctxt "Submit order"
 msgid "Submit order"
-msgstr "Разместить заказ"
+msgstr "Оформить заказ"
 
 msgctxt "Submit your order and get transferred to a credit card payment system."
 msgid "Submit your order and get transferred to a credit card payment system."
-msgstr ""
+msgstr "После оформления  заказа Вы будете перенаправлены на страницу оплаты."
 
 msgctxt "Products Ordered"
 msgid "Products Ordered"
 msgstr "Товары в заказе"
-
-msgctxt "The item below will be shipped from warehouse in"
-msgid "The item below will be shipped from warehouse in"
-msgstr ""
 
 msgctxt "ext"
 msgid "ext"
@@ -255,7 +251,7 @@ msgstr "Продолжить"
 
 msgctxt "Continue to the order review page"
 msgid "Continue to the order review page"
-msgstr ""
+msgstr "Нажмите для перехода на страницу подтверждения заказа"
 
 msgctxt "Shipping Address"
 msgid "Shipping Address"
@@ -271,7 +267,7 @@ msgstr "Политика конфиденциальности"
 
 msgctxt "All your private data is confidential. We will never sell, exchange or market it in any way."
 msgid "All your private data is confidential. We will never sell, exchange or market it in any way."
-msgstr ""
+msgstr "Вся Ваша персональная информация строго конфиденциальна. Мы никогда не передаем получаемые данные третьим лицам."
 
 msgctxt "Submit and proceed to shipping & payment options."
 msgid "Submit and proceed to shipping & payment options."
@@ -307,7 +303,7 @@ msgstr "Комментарии"
 
 msgctxt "Shop more"
 msgid "Shop more"
-msgstr "Продолжить покупки"
+msgstr "Назад"
 
 msgctxt "Print invoice"
 msgid "Print invoice"
@@ -323,7 +319,7 @@ msgstr "Информация о заказе"
 
 msgctxt "The items below will be shipped from warehouse in"
 msgid "The items below will be shipped from warehouse in"
-msgstr "Товар будут отправлен со склада"
+msgstr "Товары будут отправлены со склада в г."
 
 msgctxt "Shipping by"
 msgid "Shipping by"
@@ -335,7 +331,7 @@ msgstr "Способы доставки"
 
 msgctxt "warehouse items:"
 msgid "warehouse items:"
-msgstr ""
+msgstr "Товары со склада:"
 
 msgctxt "Payment method"
 msgid "Payment method"
@@ -1194,7 +1190,7 @@ msgstr "Оформите заказ онлайн"
 
 msgctxt "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
 msgid "Your merchandise subtotal does not include shipping charges and taxes, which will be reflected on the 'order review' page."
-msgstr ""
+msgstr "Ваш промежуточный итог по товарам не включает стоимость доставки, которая будет отображена на странице \"Подтверждение заказа\""
 
 msgctxt "What's new"
 msgid "What's new"
@@ -1347,7 +1343,7 @@ msgstr "Комания"
 
 msgctxt "a division of"
 msgid "a division of"
-msgstr ""
+msgstr "подразделение"
 
 msgctxt "URL"
 msgid "URL"
@@ -1363,7 +1359,7 @@ msgstr "Цена"
 
 msgctxt "Qty ord"
 msgid "Qty ord"
-msgstr "Кол"
+msgstr "Кол-во"
 
 msgctxt "Payment status"
 msgid "Payment status"
@@ -1391,15 +1387,15 @@ msgstr "Не определен"
 
 msgctxt "Thank you for choosing S3 Stores!"
 msgid "Thank you for choosing S3 Stores!"
-msgstr ""
+msgstr "Спасибо что воспользовались нашим магазином!"
 
 msgctxt "Items"
 msgid "Items"
-msgstr ""
+msgstr " "
 
 msgctxt "delivery from"
 msgid "delivery from"
-msgstr "доставка из города"
+msgstr "доставка из г."
 
 msgctxt "$8.99 flat rate shipping within contiguous U.S."
 msgid "$8.99 flat rate shipping within contiguous U.S."
@@ -1407,7 +1403,7 @@ msgstr ""
 
 msgctxt "Jackpot! You got a great price!"
 msgid "Jackpot! You got a great price!"
-msgstr ""
+msgstr "Поздравляем! Вы получили выгодное предложение!"
 
 msgctxt "No account needed! Checkout only takes 2 minutes."
 msgid "No account needed! Checkout only takes 2 minutes."

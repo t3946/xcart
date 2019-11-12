@@ -80,7 +80,9 @@
                                         <a class="dashed" data-toggle="product-group-{$gi}">
                                             <span>{t 'the items' }</span>
                                         </a>
-                                        {t 'shipped from warehouse in' } {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}
+                                        {t 'shipped from warehouse in' } {$warehouse->m_city},
+                                        {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                                        {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                                     </h3>
 
                                     {include 'checkout/_product_group_list.tpl' items=$group.items gi=$gi}

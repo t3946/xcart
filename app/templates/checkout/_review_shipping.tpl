@@ -51,7 +51,10 @@
             {set $shipping_model = $group->shippingModel}
             <div class="row info-row delivery-method">
                 <div class="columns info-title small-6">
-                    {$warehouse->m_city}, {$warehouse->m_state}, {$warehouse->m_country}<br/>{t 'warehouse items:' }
+                    {$warehouse->m_city},
+                    {if $config.Preferred_language === 'ru'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                    {if $config.Preferred_language === 'ru'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                    <br/>{t 'warehouse items:' }
                 </div>
                 {if $shipping_model}
                     <div class="columns info-text">{$shipping_model->getFrontendName()}<br/>{$shipping_model->shipping_time}</div>

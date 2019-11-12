@@ -52,7 +52,7 @@ class SiteConfigModel extends Model
 //        'brands_columns' => 64,
 //        'storefront_columns' => 67,
 //        'show_seed_cats' => 70,
-//        'search_all_website_show' => 80,
+        'search_all_website_show' => 80,
         'shop_closed' => 90,
         'shop_closed_method'    => 95,
 //        'new_shipping_calculation' => 990,

@@ -68,7 +68,7 @@
                         {else}
                             {$order->getOrderNumber()}
                         {/if}
-                        <br/><b>{t 'Order status'}:</b> please see below
+                        <br/><b>{t 'Order status'}:</b> {t 'please see below'}
                         <br/><b>{t 'Payment method'}:</b><br/>
                         {$order->payment_method}<br/>
                         <b>{t 'Delivery methods'}:</b><br/>
@@ -86,13 +86,9 @@
                         ,<br/>{$config.location_city}{if $config.location_country_has_states}, {$config.location_state_name}{/if}
                         <br/>
                         {$config.location_zipcode}, {$config.location_country_name}<br/>
-                        {if $site_config.company_phone}{t 'Toll Free'}: {$site_config.cidev_top_header_code}
-                            <br/>
-                        {/if}
-                        {if $site_config.company_phone_2}{t 'Tel'}: {$site_config.local_phone}
-                            <br/>
-                        {/if}
-                        {if $site_config.company_fax}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
+                        {if $site_config.cidev_top_header_code}{t 'Toll Free'}: {$site_config.cidev_top_header_code}<br/>{/if}
+                        {if $site_config.local_phone}{t 'Tel'}: {$site_config.local_phone}<br/>{/if}
+                        {if $site_config.fax_number}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
                         {if $config.orders_department}{t 'Email'}: {$config.orders_department}
                             <br/>
                         {/if}
@@ -351,7 +347,9 @@
             <td colspan="{$colspan}">
                 <b>
                     {$distributor->manufacturer} {t 'Items'}
-                    ({t 'delivery from'} {$distributor->m_city}, {$distributor->m_state}, {$distributor->m_country} {if $shipping} {t 'by'} {$shipping->getFrontendName()}{/if}, {$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($group->shipping_gross)}):
+                    ({t 'delivery from'} {$distributor->m_city},
+                    {if $site_config.Preferred_language === 'ru'}{$distributor->state_model}{else}{$distributor->m_state}{/if},
+                    {if $site_config.Preferred_language === 'ru'}{$distributor->country_model}{else}{$distributor->m_country}{/if}  {if $shipping} {t 'by'} {$shipping->getFrontendName()}{/if}, {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($group->shipping_gross)}{if $site_currency->after}&nbsp;{$site_currency}{/if}):
                 </b>
             </td>
         </tr>
@@ -364,9 +362,9 @@
                     <span style="font-size: 11px"><a href="https:{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
                     {include "mail/_parts/_product_options.tpl"}
                 </td>
-                <td align="center" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order_detail->price)}</td>
+                <td align="center" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order_detail->price)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
                 <td align="center">{$order_detail->amount}</td>
-                <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order_detail->price * $order_detail->amount)}</td>
+                <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order_detail->price * $order_detail->amount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
             </tr>
         {/foreach}
         <tr>
@@ -384,19 +382,19 @@
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td align="right" width="100%" height="20"><b>{t 'Total'}:</b>&nbsp;</td>
-        <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->subtotal)}</td>
+        <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->subtotal)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
     </tr>
     {if $order->discount > 0}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Discount'}:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->discount)}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
         </tr>
     {/if}
 
     {if $order->coupon}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Coupon Savings'}:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->coupon_discount)}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->coupon_discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
         </tr>
     {/if}
 
@@ -404,14 +402,14 @@
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Discounted Total'}:</b>&nbsp;</td>
             <td align="right"
-                nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->total - $this->coupon_discount)}</td>
+                nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->total - $this->coupon_discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
         </tr>
     {/if}
 
     {if $config.disable_shipping != 'Y'}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Total Shipping Cost'}:</b></td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->shipping_cost)}</td>
+            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->shipping_cost)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
         </tr>
     {/if}
 
@@ -425,7 +423,7 @@
         <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{t 'Grand Total'}:</b>&nbsp;
         </td>
         <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
-            <b>{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($order->total)}</b>
+            <b>{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->total)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</b>
         </td>
     </tr>
 
@@ -476,8 +474,8 @@
 <p>
     <font size="2">
         {$site_config.company_name}, {t 'a division of'} {$config.operating_company_name}<br/>
-        {t 'Phone'}: {$config.company_phone}<br/>
-        {t 'Fax'}: {$config.company_fax}<br/>
+        {if $site_config.cidev_top_header_code}{t 'Phone'}: {$site_config.cidev_top_header_code}<br/>{/if}
+        {if $site_config.fax_number}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
         {t 'URL'}: <a href="{$site->getAbsoluteUrl()}" target=_new>{$site->getAbsoluteUrl()}</a>
     </font>
 </p>
