@@ -516,7 +516,7 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
  #
 
 					$v['productid'] = $new_productid;
-					func_array2insert("pricing", $v);
+					//func_array2insert("pricing", $v);
 				}
 			}
 
@@ -524,7 +524,7 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
 
 		# Rebuild product's cache tables
 		func_build_quick_flags($new_productid);
-		func_build_quick_prices($new_productid);
+		//func_build_quick_prices($new_productid);
 
 		if (!empty($active_modules['Fancy_Categories'])) {
 			$cats = func_fc_check_rebuild($productid, "P");
