@@ -124,9 +124,7 @@ class GMC extends StoreFrontMarketPlace
                         list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
 
                         /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
-                        $aDataQualityIssues = $oProduct->getDataQualityIssues();
-
-                        if (!empty($aDataQualityIssues)) {
+                        if ($aDataQualityIssues = $oProduct->getDataQualityIssues()) {
                             foreach ($aDataQualityIssues as $oDataQualityIssues) {
                                 $oIssue = IssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
                                 if (empty($oIssue)) {

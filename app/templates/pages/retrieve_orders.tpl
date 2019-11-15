@@ -17,8 +17,8 @@
                         {raw html_entity_decode($model->content)}
                         <div class="ro_email">
                             <form class="ro_email" method="post" action="{url "retrieve:retrieve_order"}">
-                                <input class="ro_input_email" type="email" name="email" placeholder="Your Email" required>
-                                <input class="ro_input_submit" type="submit" value="Submit">
+                                <input class="ro_input_email" type="email" name="email" placeholder="{t 'Your Email'}" required>
+                                <input class="ro_input_submit" type="submit" value="{t 'Submit'}">
                             </form>
                         </div>
                     </div>
