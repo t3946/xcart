@@ -833,9 +833,9 @@ else {
 #
 	$where = '';
 	if (!empty($word)) {
-		if (in_array($word, range('a','z'))) {
+		if (in_array($word, range('a', 'z'), true)) {
 			$where = " WHERE m.manufacturer LIKE '$word%'";
-		} elseif ($word == 'num') {
+		} elseif ($word === 'num') {
 			$where = " WHERE m.manufacturer REGEXP '^[0-9]+.*'";
 		}
 

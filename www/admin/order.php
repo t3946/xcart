@@ -1490,7 +1490,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'tatyanap', 'roman_n', 'dmitry_s'])) {
+        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'tatyanap', 'roman_n', 'dmitry_s', 'gleb'], true)) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1498,13 +1498,11 @@ if ($mode == 'ref_notify')
                         $ref_sum = $refund_model->total_gross;
                     }
 
-                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
-                        return ($a->type == OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status,
-                            [
+                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) {
+                        return ($a->type === OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status, [
                                 OrderTransactionModel::STATUS_COMPLETED,
                                 OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED
-                            ]
-                        ));
+                            ], true));
                     });
 
                 if ($completed_transactions) {
