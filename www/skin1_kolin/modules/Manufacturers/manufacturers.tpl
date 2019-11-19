@@ -256,7 +256,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {/if}
 
 
-{include file="customer/main/navigation.tpl"}
+{$pager}
 
 {/capture}
 
