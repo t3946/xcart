@@ -44,7 +44,7 @@ require "./init.php";
 
 x_load('files');
 
-x_session_register("login_type");
+x_session_register('login_type');
 $is_substitute = (($login_type == 'A' || $login_type == 'P') ? false : true);
 
 if (empty($id) && $type != "S" && $type != "F")

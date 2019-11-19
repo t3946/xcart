@@ -622,9 +622,9 @@ function func_filesize($file) {
 		return @filesize($file);
 
 	$host = parse_url($file);
-	if ($host['scheme'] != 'http')
-		return false;
-
+	if (!in_array($host['scheme'] ,['http', 'https'], true)) {
+        return false;
+    }
 	if (empty($host['port']))
 		$host['port'] = 80;
 

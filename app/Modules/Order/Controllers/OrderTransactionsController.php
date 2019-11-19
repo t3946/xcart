@@ -73,7 +73,7 @@ class OrderTransactionsController extends PrototypeAdminController
             $count = $orderModel->transactions->count();
 
             if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
-                if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) {
+                if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT !== 'Y')) {
 
                     $order_log .= $f_order = 'Error: First transaction in order exception';
                     func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);

@@ -13,6 +13,7 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -134,6 +135,49 @@ class DistributorModel extends Model
                     'm_country' => 'country_code'
                 ],
             ],
+            'provider_model' => [
+                'field' => 'provider',
+                'class' => ForeignField::class,
+                'sqlType' => Type::STRING,
+                'modelClass' => UserModel::class,
+                'link' => ['provider' => 'login'],
+            ],
+            'products' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid']
+            ],
+            'products_active' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+                'extra' => ['forsale' => 'Y']
+            ],
+            'feed_I_D' => [
+                'class' => HasManyField::class,
+                'modelClass' => SupplierFeedModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+                'extra' => ['feed_type' => 'I', 'enabled__isnt' => 'Y'],
+            ],
+            'feed_I_E' => [
+                'class' => HasManyField::class,
+                'modelClass' => SupplierFeedModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+                'extra' => ['feed_type' => 'I', 'enabled' => 'Y'],
+            ],
+            'feed_P_D' => [
+                'class' => HasManyField::class,
+                'modelClass' => SupplierFeedModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+                'extra' => ['feed_type' => 'P', 'enabled__isnt' => 'Y'],
+            ],
+            'feed_P_E' => [
+                'class' => HasManyField::class,
+                'modelClass' => SupplierFeedModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+                'extra' => ['feed_type' => 'P', 'enabled' => 'Y'],
+            ],
+
         ];
     }
 
@@ -230,5 +274,10 @@ class DistributorModel extends Model
                 break;
         }
         return $prefix ?? '';
+    }
+
+    public function getAdminUrl(): string
+    {
+        return "/admin/manufacturers.php?manufacturerid={$this->manufacturerid}";
     }
 }

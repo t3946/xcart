@@ -34,6 +34,11 @@
 # $Id: manufacturers.php,v 1.6 2006/01/11 06:55:57 mclap Exp $
 #
 
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
+
 define("IS_MULTILANGUAGE", true);
 define('USE_TRUSTED_POST_VARIABLES',1);
 $trusted_post_variables = array("descr","cart_manufact_text_displayed", "d_specific_instructions", "d_distributor_return_policy", "d_message_body_14", "d_instructions_to_order_entry_operator", "mess_body", "d_search_keyphrase_for_reconciliation", "d_dispatch_instructions");
@@ -49,6 +54,9 @@ else
 $smarty->assign("single_mode", $single_mode);
 
 $smarty->assign("main","manufacturers");
+$smarty->assign('site', Xcart::app()->request->get->get('site'));
+$smarty->assign('search', Xcart::app()->request->get->get('search'));
+$smarty->assign('sites', SiteModel::objects()->order(['code']));
 
 # Assign the current location line
 $smarty->assign("location", $location);

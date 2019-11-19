@@ -66,7 +66,7 @@ class PaymentHelper
 
         if ($groups = $model->groups) {
             foreach ($groups as $group) {
-                if (!in_array($group->cb_status, ['Q', 'N', 'I'])) {
+                if (!in_array($group->cb_status, ['Q', 'N', 'I', 'D', 'S1', 'S2', 'S3', 'S4',  'F'])) {
                     return false;
                 }
             }

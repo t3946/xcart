@@ -73,9 +73,9 @@ class UserModel extends Model
         ];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->firstname;
+        return (string) $this->firstname;
     }
 
     public function getIsGuest()
