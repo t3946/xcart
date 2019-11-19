@@ -8,7 +8,6 @@ if (!defined('XCART_START')) {
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\CurrencyModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\External_Marketplaces\ExternalMarketPlace;
@@ -787,7 +786,7 @@ if ($mode === "add" or !empty($manufacturerid)) {
         $qs->filter(new QOr(['manufacturer__contains' => $search, 'code__contains' => $search]));
     }
 
-    if ($site = Xcart::app()->request->get->get('site')) {
+    if ($site = \Xcart\App\Main\Xcart::app()->request->get->get('site')) {
         $qs->filter(['d_main_sf__in' => $site]);
     }
 
