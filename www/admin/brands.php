@@ -7,6 +7,11 @@ $trusted_post_variables = array("descr", "disclaimer_text");
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+if (\Xcart\App\Main\Xcart::app()->request->get->has('brandid')) {
+    Xcart\App\Main\Xcart::app()->request->redirect('brand:view_index', \Xcart\App\Main\Xcart::app()->request->get->get('brandid'), 301);
+}
+Xcart\App\Main\Xcart::app()->request->redirect('brand:list', [], 301);
+
 if(empty($active_modules['Brands']))
 	func_header_location ("error_message.php?access_denied&id=25");
 else
