@@ -9,8 +9,9 @@
          height="{$image->image_y}"
          alt="{$model->getFrontendName()|escape}"
          class="lazy lazy-img"
+         {if !$schema_off}
          itemscope
-         itemprop="image">
+         itemprop="image"{/if}>
 {else}
     <div class="not-avail-thumb">
         <p>Image not available</p>
