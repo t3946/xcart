@@ -60,6 +60,7 @@ class OrderTransactionModel extends Model
                     self::STATUS_CAPTURED => 'Captured',
                     self::STATUS_VOIDED => 'Voided',
                     self::STATUS_COMPLETED => 'Completed',
+                    self::STATUS_DECLINED => 'Declined',
                     self::STATUS_EXPIRED => 'Expired',
                     self::STATUS_FAILED => 'Failed',
                     self::STATUS_REFUNDED => 'Refunded',
