@@ -792,26 +792,11 @@ if ($mode === "add" or !empty($manufacturerid)) {
 
     $qs->order(['orderby', 'manufacturer']);
 
-    if ($total_items = $qs->count()) {
-        #
-        # Prepare the page navigation
-        #
-        $objects_per_page = $config['Manufacturers']['manufacturers_per_page'];
-        $pager = new Pagination( $qs->getQuerySet(), ['pageSize' => $objects_per_page], new QuerySetDataSource());
+    $objects_per_page = $config['Manufacturers']['manufacturers_per_page'];
+    $pager = new Pagination( $qs->getQuerySet(), ['pageSize' => $objects_per_page], new QuerySetDataSource());
 
+    $smarty->assign("manufacturers", $pager->paginate());
 
-        $total_nav_pages = ceil($total_items / $objects_per_page) + 1;
-
-        include $xcart_dir . '/include/navigation.php';
-        $smarty->assign("navigation_script", 'manufacturers.php?');
-        $smarty->assign("manufacturers", $pager->paginate());
-        $smarty->assign("first_item", $first_page + 1);
-        $smarty->assign("last_item", min($first_page + $objects_per_page, $total_items));
-    }
-
-    $smarty->assign('navigation_script', 'manufacturers.php?site=1' . $word);
-
-    $smarty->assign("total_items", $total_items);
     $smarty->assign('pager', $pager->render());
 
     $smarty->assign('words', range('a', 'z'));
