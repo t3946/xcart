@@ -21,6 +21,6 @@ class DiscountHelper
     public static function getDiscountMinutes()
     {
         $minutes = Xcart::app()->request->session->get(self::CODE_PARAM_MINUTES) ?? 0;
-        return ($minutes > 0) ? $minutes : 0;
+        return ($minutes > 0) ? $minutes : 100000;
     }
 }
