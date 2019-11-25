@@ -96,7 +96,7 @@ import documentReady from "../../utils/documentReady";
                 }
             }
 
-            startTimer();
+            //startTimer();
 
             $('#product_tabs').on('click', '#questions-label', () => {
 
