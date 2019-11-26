@@ -21,7 +21,7 @@
 {foreach from=$checks_deposited item=v key=k}
 
 <tr{cycle name="embed" values=", class='TableSubHead'"}>
-<td align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
+<td align="center">{$v.date|default:now|date_format:'%d-%b-%Y'}</td>
 <td align="center">{$v.currency}</td>
 <td align="right"><a href="checks_deposited.php?checks_deposited_id={$v.checks_deposited_id}">{$v.total_deposit_amount}</a></td>
 <td align="center">{if $v.status eq "P"}<I>{/if}{$deposite_statuses[$v.status]}{if $v.status eq "P"}</I>{/if}</td>
