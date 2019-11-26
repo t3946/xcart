@@ -133,7 +133,7 @@
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
                         <div class="jackpot">
-                            {t 'Jackpot! You got a great price!'}
+                            {t 'Congratulations! You got a great price!'}
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {*                            {include "product/parts/_number_button.tpl"}*}
