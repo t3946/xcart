@@ -230,7 +230,7 @@
         <table>
             <tr>
                 <td>
-                    <b>Transaction status:</b><br/>
+                    <b>Transaction status</b><br/>
                     <select name="transaction_status">
                         <option value="authorized">Authorized</option>
                         <option value="completed">Authorized & Captured</option>
@@ -240,15 +240,15 @@
                 <td>
                     <b>Currency<b>
                             <select name="transaction_currency">
-                                <option value="USD">U.S. Dollars</option>
-                                <option value="CAN"> CAN. Dollars</option>
+                                <option value="USD">US dollars</option>
+                                <option value="CAN">CA dollars</option>
                             </select>
                 </td>
                 <td width="20" colspan="4">&nbsp;</td>
             </tr>
             <tr>
                 <td>
-                    <b>Payment method:</b><br/>
+                    <b>Payment method</b><br/>
                     <select name="paymentid" required>
                         <option value=""></option>
                         {foreach from=$all_vt_processors item=item_vt key=key_vt}
@@ -259,17 +259,17 @@
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>Virtual terminal transaction ID:</b><br/>
+                    <b>Virtual terminal transaction ID</b><br/>
                     <input type="text" name="transaction_id" value="" size="40" required/>
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>AVS code:</b><br/>
+                    <b>AVS code</b><br/>
                     <input type="text" name="avs_code" value="" size="1" maxlength="1"/>
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>Transaction amount:</b><br/>
+                    <b>Transaction amount</b><br/>
                     <input name="transaction_amount" value="0" size="8" required pattern="^\d+(\.?\d+|)$" type="text"/>
                 </td>
             </tr>
@@ -279,7 +279,7 @@
 
     </form>
 {/capture}
-{include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
+{include file="dialog.tpl" title="Add transaction manually" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
 
 <script src="{$SkinDir}/js/semantic/components/dropdown.js"></script>
 <script src="{$SkinDir}/js/semantic/components/transition.js"></script>
