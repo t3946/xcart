@@ -37,7 +37,7 @@ class CountShippingForm extends BaseForm
                 'html' => [
                     'placeholder' => 'United States',
                     'class' => 'auto-complete country',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
 
             ],
@@ -52,7 +52,7 @@ class CountShippingForm extends BaseForm
                 'html' => [
                     'placeholder' => '08540',
                     'class' => 'auto-complete zip',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
             ],
 
@@ -66,7 +66,7 @@ class CountShippingForm extends BaseForm
                 'html' => [
                     'placeholder' => 'New Jersey',
                     'class' => 'auto-complete state',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
             ],
 
@@ -77,7 +77,7 @@ class CountShippingForm extends BaseForm
                 'html' => [
                     'placeholder' => 'Princeton',
                     'class' => 'auto-complete city',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
 
             ],
