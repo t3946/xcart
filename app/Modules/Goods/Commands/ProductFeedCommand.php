@@ -101,24 +101,31 @@ class ProductFeedCommand extends Command
                 }
 
                 foreach ($products as $aProduct) {
-
-                    print($kp . ' --> ' . $aProduct['productcode'] . "\n");
-
                     $aProduct['manufacturerid'] = $feed->manufacturerid;
 
-                    if (!$aProduct['productcode'] || (isset($aProduct['cost_to_us']) && (float)$aProduct['cost_to_us'] <= 0)) {
-                        print("Skip product -->' \n");
-                        $skippedProductsCount++;
-                        continue;
-                    }
-
-                    [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
-
-                    if (\in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
-                        $duplicate_sku[] = $modelProduct->productcode;
+                    if ($supplierFeed->supplier_name === 'Amazon') {
+                        [$modelProduct, $is_created] = ProductModel::objects()->getOrCreate(['manufacturerid' => $supplierFeed->supplier_id, 'ASIN' => $aProduct['ASIN']]);
+                        $modelProduct->productcode = "ZMA-{$modelProduct->productid}";
+                        $aProduct['productcode'] = $modelProduct->productcode;
+                        if (!$aProduct['cost_to_us']) {
+                            $aProduct['cost_to_us'] = 10000;
+                        }
+                        $modelProduct->save();
                     } else {
-                        $all_feed_productcodes[] = $modelProduct->productcode;
+                        if (!$aProduct['productcode'] || (isset($aProduct['cost_to_us']) && (float)$aProduct['cost_to_us'] <= 0)) {
+                            print("Skip product -->' \n");
+                            $skippedProductsCount++;
+                            continue;
+                        }
+                        [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+                        if (\in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
+                            $duplicate_sku[] = $modelProduct->productcode;
+                        } else {
+                            $all_feed_productcodes[] = $modelProduct->productcode;
+                        }
                     }
+
+                    print($kp . ' --> ' . $aProduct['productcode'] . "\n");
 
                     switch ($feed->feed_type) {
                         case 'I' :
