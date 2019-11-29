@@ -81,7 +81,6 @@ class ProductFilterHelper
             $tqs = clone $this->qs;
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
-                          ->limit(50)
                           ->order(['brand__brand'])
                           ->asArray()->all();
 
