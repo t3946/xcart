@@ -44,7 +44,6 @@ class ProductUpcByAsinCommand extends Command
                     $q->save();
                 } else {
                     $downloader = new GuzzleDownloader(['timeout' => 30, 'use_proxy' => true]);
-                    $downloader->initProxy();
                 }
             }
         }
