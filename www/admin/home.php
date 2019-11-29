@@ -1,7 +1,5 @@
 <?php
 
-use Xcart\App\Main\Xcart;
-
 require "./auth.php";
 
 ###
@@ -123,8 +121,6 @@ if (!empty($login) && $user_account["flag"] != "FS") {
 	$smarty->assign("main", "home");
 }
 
-$site = Xcart::app()->getModule('Sites')->getSite();
-$smarty->assign('site', $site);
 
 # Assign the current location line
 if (!empty($login))

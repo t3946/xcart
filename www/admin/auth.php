@@ -276,9 +276,7 @@ if (empty($_SERVER["HTTPS"]) && strpos($xcart_http_host, '.test.') === false && 
         $redirect_https_link = "https://".$xcart_http_host.$PHP_SELF . (($QUERY_STRING) ? ('?' . $QUERY_STRING) : '');
         func_header_location($redirect_https_link);
 }
-###
-##
-#
 
+$site = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+$smarty->assign('site', $site);
 
-?>
