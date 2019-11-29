@@ -277,6 +277,8 @@ if (empty($_SERVER["HTTPS"]) && strpos($xcart_http_host, '.test.') === false && 
         func_header_location($redirect_https_link);
 }
 
-$site = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
-$smarty->assign('site', $site);
+if (isset($current_storefront)) {
+    $site = \Modules\Sites\Models\SiteModel::objects()->get(['storefrontid' => $current_storefront]);
+    $smarty->assign('site', $site);
+}
 
