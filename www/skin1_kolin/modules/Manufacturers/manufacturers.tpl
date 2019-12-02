@@ -76,7 +76,7 @@
             Main SF
         </td>
         <td>
-            <select name="site[]" id="o_site" class="big select2" multiple>
+            <select name="search_site[]" id="o_site" class="big select2" multiple>
                 {foreach from=$sites item=s}
                     <option value="{$s->storefrontid}" {if in_array($s->storefrontid, $site)}selected{/if}>
                         {$s}

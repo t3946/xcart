@@ -786,8 +786,8 @@ if ($mode === "add" or !empty($manufacturerid)) {
         $qs->filter(new QOr(['manufacturer__contains' => $search, 'code__contains' => $search]));
     }
 
-    if ($site = \Xcart\App\Main\Xcart::app()->request->get->get('site')) {
-        $qs->filter(['d_main_sf__in' => $site]);
+    if ($search_site = \Xcart\App\Main\Xcart::app()->request->get->get('search_site')) {
+        $qs->filter(['d_main_sf__in' => $search_site]);
     }
 
     $qs->order(['orderby', 'manufacturer']);

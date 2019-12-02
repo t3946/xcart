@@ -54,7 +54,7 @@ else
 $smarty->assign("single_mode", $single_mode);
 
 $smarty->assign("main","manufacturers");
-$smarty->assign('site', Xcart::app()->request->get->get('site'));
+$smarty->assign('search_site', Xcart::app()->request->get->get('site'));
 $smarty->assign('search', Xcart::app()->request->get->get('search'));
 $smarty->assign('sites', SiteModel::objects()->order(['code']));
 
