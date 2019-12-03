@@ -18,6 +18,8 @@ class StandToListingCommand extends Command
         /** @var ProductModel $p */
         foreach ($qs as $p) {
             $products[] = $p;
+            $p->amazon_enabled = 'Y';
+            $p->save();
         }
         if ($products) {
             if ($FeedSubmissionId = AmazonVerificationHelper::addAmazonListing($products)) {
