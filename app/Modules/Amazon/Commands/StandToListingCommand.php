@@ -1,0 +1,28 @@
+<?php
+
+
+namespace Modules\Amazon\Commands;
+
+
+use Modules\Amazon\Helpers\AmazonVerificationHelper;
+use Modules\Goods\Models\ProductModel;
+use Xcart\App\Commands\Command;
+
+class StandToListingCommand extends Command
+{
+
+    public function handle($arguments = [])
+    {
+        $qs = ProductModel::objects()->filter(['forsale' => 'Y', 'manufacturerid' => 605, 'amazon_enabled' => 'N'])->order(['productid'])->limit(100);
+
+        /** @var ProductModel $p */
+        foreach ($qs as $p) {
+            $products[] = $p;
+        }
+        if ($products) {
+            if ($FeedSubmissionId = AmazonVerificationHelper::addAmazonListing($products)) {
+                echo "Listings has been submited. feed ID {$FeedSubmissionId} \n";
+            }
+        }
+    }
+}
