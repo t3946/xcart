@@ -274,7 +274,7 @@ class AmazonVerificationHelper
         $row = [
             $model->productcode,
             number_format($cost, 2, '.', ''),
-            $model->getAmazonQuantity(),
+            1,//$model->getAmazonQuantity(),
             $model->ASIN,
             'ASIN',
             'New',
