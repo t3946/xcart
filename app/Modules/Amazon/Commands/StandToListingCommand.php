@@ -13,7 +13,7 @@ class StandToListingCommand extends Command
 
     public function handle($arguments = [])
     {
-        $qs = ProductModel::objects()->filter(['manufacturerid' => 605, 'amazon_enabled' => 'N', 'upc__isnt' => ''])->order(['productid'])->limit(100);
+        $qs = ProductModel::objects()->filter(['manufacturerid' => 605, 'amazon_enabled' => 'N', 'upc__isnt' => ''])->order(['productid']);
 
         /** @var ProductModel $p */
         foreach ($qs as $p) {
