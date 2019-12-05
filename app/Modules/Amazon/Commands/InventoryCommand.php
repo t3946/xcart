@@ -24,7 +24,7 @@ class InventoryCommand extends Command
 
         $i = 0;
 
-        while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
+        while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 29900)->all()) {
             $items = $pids = [];
 
             foreach ($queues as $queue) {
