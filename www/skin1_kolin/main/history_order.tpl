@@ -158,7 +158,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </button>. <br/>
 
                  <div>
-                     <p><b>Subject line:</b></p>
+                     <p><b>Subject line:</b><span>(optional)</span></p>
                      <input style="width: 100%;" type="text" name="subject_line"/>
                  </div>
                  <p><b>Message body:</b></p>
