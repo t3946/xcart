@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td align="right" style="font-size: .93rem;"><b>Grand total:</b></td>
-                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.total}"
+                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.oOrder->getOrderTotalGross()}"
                            size="8" required pattern="^\d+(\.?\d+|)$"
                            id="paypal_vt_grand_total"/></td>
             </tr>
