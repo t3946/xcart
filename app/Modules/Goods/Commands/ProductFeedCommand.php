@@ -105,7 +105,7 @@ class ProductFeedCommand extends Command
 
                     if ($supplierFeed->supplier_name === 'Amazon') {
                         [$modelProduct, $is_created] = ProductModel::objects()->getOrCreate(['manufacturerid' => $supplierFeed->supplier_id, 'ASIN' => $aProduct['ASIN']]);
-                        $modelProduct->productcode = "ZMA-{$modelProduct->productid}";
+                        $modelProduct->productcode = "{$modelProduct->distributor->code}-{$modelProduct->productid}";
                         $aProduct['productcode'] = $modelProduct->productcode;
                         if (!$aProduct['cost_to_us']) {
                             $aProduct['cost_to_us'] = 10000;
