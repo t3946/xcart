@@ -80,8 +80,7 @@
             <tr>
                 <td align="right"><b>Card number:</b></td>
                 <td>
-                    <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"
-                           id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')"/>
+                    <input size="16" type="text" name="paypal_vt[card_number]" value="" autocomplete="off"  id="paypal_vt_card_number"/>
                     <a href="#help-2" title="{$lng.help_cardnumber_text}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
@@ -334,22 +333,53 @@
             form.submit();
         })
 </script>
- <script>
+    <script>
+        $("input[name='paypal_vt[expiration_month]']").keyup(function(){
+            if($(this).val().match(/^\d{2}$/)){
+                $("input[name='paypal_vt[expiration_year]']").focus();
+            }
+        });
+        $("input[name='paypal_vt[expiration_year]']").keyup(function(){
+            if($(this).val().match(/^\d{2}$/)){
+                $("input[name='paypal_vt[csc]']").focus();
+            }
+        });
+        $("#paypal_vt_card_number").keyup(function(){
+            if($(this).val().match(/^\d+$/)){
+                var c_num_l = 16;
+                if ($(this).val()[0] === '3') {
+                    c_num_l = 15;
+                }
+                if ($(this).val().length >= c_num_l) {
+                    $("input[name='paypal_vt[expiration_month]']").focus();
+                }
+            } else {
+                var p = parseInt($(this).val());
+                if (!isNaN(p)) {
+                    $(this).val(p);
+                } else {
+                    $(this).val('');
+                }
+            }
+        });
+    </script>
 
-                        $( function() {
-                            $('.tooltip').tooltip({
-                                position: {
-                                    using: function( position, feedback ) {
-                                        $( this ).css( position );
-                                        $( "<div>" )
-                                            .addClass( "tooltip__s3" )
-                                            .appendTo( this );
-                                    }
-                                }
-                            });
-                        } );
+    <script>
 
-                    </script>
+        $(function () {
+            $('.tooltip').tooltip({
+                position: {
+                    using: function (position, feedback) {
+                        $(this).css(position);
+                        $("<div>")
+                            .addClass("tooltip__s3")
+                            .appendTo(this);
+                    }
+                }
+            });
+        });
+
+    </script>
 <style>
     .ui-tooltip {
         border: 1px solid #ff6600 !important;
