@@ -80,7 +80,7 @@
             <tr>
                 <td align="right"><b>Card number:</b></td>
                 <td>
-                    <input size="16" type="text" name="paypal_vt[card_number]" value="" autocomplete="off"  id="paypal_vt_card_number"/>
+                    <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"  id="paypal_vt_card_number"/>
                     <a href="#help-2" title="{$lng.help_cardnumber_text}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
