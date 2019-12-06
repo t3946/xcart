@@ -46,7 +46,7 @@ class OrderStore extends BaseStore
                 $refund += $group->getRefunds();
             }
 
-            $this->total = $this->model->total - $refund;
+            $this->total = $this->model->getOrderTotalGross() - $refund;
         }
         return $this->total;
     }
