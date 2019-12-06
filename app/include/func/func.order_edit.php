@@ -919,6 +919,10 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             func_array2update('order_groups', $query_data_a, $where);
         }
     }
+
+    $order_model->total = $order_model->getOrderTotalGross();
+    $order_model->shipping_cost = $order_model->getOrderShippingGross();
+    $order_model->save();
 }
 
 #
