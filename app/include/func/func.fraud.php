@@ -142,19 +142,15 @@ function func_ORDER_FULLNAMES($order_data){
 function func_CHECK_STATES($order_data){
 	global $sql_tbl, $countries;
 
-        $fraud_score = "-1";
+    $fraud_score = "-1";
 	$fraud_result = "negative";
 
 	$s_state = func_correct_field($order_data["userinfo"]["s_state"]);
 	$b_state = func_correct_field($order_data["userinfo"]["b_state"]);
 
     $customer_ip = null;
-	if ($order = OrderModel::objects()->get(['orderid' => $order_data['order']['orderid']])) {
-        if (($extra = $order->extra_model) && $extra->ip) {
-            if (preg_match('/\d\.\d\.\d\.\d)', $extra->ip, $matches)) {
-                $customer_ip = $matches[0];
-            }
-        }
+    if ($extra = $order_data['oOrder']->extra_model) {
+        $customer_ip = $extra->getIP();
     }
 
 	$geoip_state = "";
