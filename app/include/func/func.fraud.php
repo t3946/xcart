@@ -328,12 +328,14 @@ function func_CHECK_DIFFERENT_SHIPPINGS_FOR_IP($order_data){
 
     /** @var OrderModel $v */
     foreach ($qs as $k => $v) {
-        $ip = $v->extra_model->getIp();
-        if ($customer_ip === $ip) {
-            $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
-            $full_address_s = func_correct_field($full_address_s);
-            $names[$v->orderid] = $full_address_s;
-            $full_address_names[$v->orderid] = $v->getAttributes();
+        if ($extra = $v->extra_model) {
+            $ip = $extra->getIp();
+            if ($customer_ip === $ip) {
+                $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
+                $full_address_s = func_correct_field($full_address_s);
+                $names[$v->orderid] = $full_address_s;
+                $full_address_names[$v->orderid] = $v->getAttributes();
+            }
         }
     }
 
@@ -382,12 +384,14 @@ function func_CHECK_DIFFERENT_BILLINGS_FOR_IP($order_data){
 
     /** @var OrderModel $v */
     foreach ($qs as $k => $v) {
-        $ip = $v->extra_model->getIp();
-        if ($customer_ip === $ip) {
-            $full_address_b = "{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
-            $full_address_b = func_correct_field($full_address_b);
-            $names[$v->orderid] = $full_address_b;
-            $full_address_names[$v->orderid] = $v->getAttributes();
+        if ($extra = $v->extra_model) {
+            $ip = $v->extra_model->getIp();
+            if ($customer_ip === $ip) {
+                $full_address_b = "{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
+                $full_address_b = func_correct_field($full_address_b);
+                $names[$v->orderid] = $full_address_b;
+                $full_address_names[$v->orderid] = $v->getAttributes();
+            }
         }
     }
 
