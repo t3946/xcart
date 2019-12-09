@@ -369,13 +369,13 @@ function func_CHECK_DIFFERENT_SHIPPINGS_FOR_IP($order_data){
 
 function func_CHECK_DIFFERENT_BILLINGS_FOR_IP($order_data){
 
-    $fraud_score = "-1";
+    $fraud_score = '-1';
 
     $customer_ip = '';
     if (($extra = $order_data['oOrder']->extra_model)) {
         $customer_ip = $extra->getIp();
     }
-    $order_date = $order_data["order"]["date"];
+    $order_date = $order_data['order']['date'];
 
     $time_condition = $order_date - 60 * 60 * 24 * 7;
     $qs = OrderModel::objects()->filter(['date__gte' => $time_condition, 'date__lte' => $order_date]);
@@ -385,7 +385,7 @@ function func_CHECK_DIFFERENT_BILLINGS_FOR_IP($order_data){
     /** @var OrderModel $v */
     foreach ($qs as $k => $v) {
         if ($extra = $v->extra_model) {
-            $ip = $v->extra_model->getIp();
+            $ip = $extra->getIp();
             if ($customer_ip === $ip) {
                 $full_address_b = "{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
                 $full_address_b = func_correct_field($full_address_b);
