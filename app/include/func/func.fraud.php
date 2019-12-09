@@ -202,57 +202,38 @@ function func_CHECK_STATES($order_data){
 	return $fraud_score_arr;
 }
 
-function func_GEOIP_CITY_VS_B_S($order_data){
-        global $sql_tbl;
+function func_GEOIP_CITY_VS_B_S($order_data)
+{
+    $fraud_score = '-1';
 
-        $fraud_score = "-1";
+    $s_city = func_correct_field($order_data["userinfo"]["s_city"]);
+    $b_city = func_correct_field($order_data["userinfo"]["b_city"]);
 
-        $s_city = func_correct_field($order_data["userinfo"]["s_city"]);
-        $b_city = func_correct_field($order_data["userinfo"]["b_city"]);
-
-        $customer_ip = $order_data["order"]["extra"]["ip"];
-
-        $geoip_city = "";
-
+    if (($extra = $order_data['oOrder']->extra_model) && $customer_ip = $extra->getIp()) {
         if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
             $geoip_city = func_correct_field($geo_litecity_location->city);
         }
+    }
 
-	$names = array();
+    $names = [$s_city, $b_city, $geoip_city ?? null];
+    $names = array_unique($names);
 
-//	if (!empty($s_city)){
-		$names[] = $s_city;
-//	}
+    $count_names = count($names);
 
-//        if (!empty($b_city)){
-                $names[] = $b_city;
-//        }
+    if ($count_names > 0) {
+        $fraud_score = 1 / $count_names;
 
-//        if (!empty($geoip_city)){
-                $names[] = $geoip_city;
-//        }
-
-        $names = array_unique($names);
-
-        $count_names = count($names);
-
-        if ($count_names > 0){
-                $fraud_score = 1/$count_names;
-
-                if ($fraud_score == "1"){
-                        $fraud_result = "positive";
-                } elseif ($fraud_score < 1) {
-                        $fraud_result = "negative";
-                }
+        if ($fraud_score == "1") {
+            $fraud_result = "positive";
+        } elseif ($fraud_score < 1) {
+            $fraud_result = "negative";
         }
+    }
 
-//func_print_r($names, $count_names, $fraud_score);
-//die();
+    $fraud_score_arr["fraud_result"] = $fraud_result;
+    $fraud_score_arr["score"] = $fraud_score;
 
-        $fraud_score_arr["fraud_result"] = $fraud_result;
-	$fraud_score_arr["score"] = $fraud_score;
-
-	return $fraud_score_arr;
+    return $fraud_score_arr;
 }
 
 function func_CHECK_OK_ORDERS_FOR_EMAIL($order_data){
