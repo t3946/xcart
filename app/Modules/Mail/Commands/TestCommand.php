@@ -10,16 +10,6 @@ class TestCommand extends Command
 {
     public function handle($arguments = [])
     {
-        $product = ProductModel::objects()->get(['productid' => 1284916]);
-        if ($brand = $product->brand) {
-            foreach ($brand->markets_disabled as $dm) {
-                if ($dm->marketplace_id == 3) {
-                    $prevent_selling = 'MFN';
-                }
-            }
-        }
-        echo $prevent_selling; die();
-
         try {
             $res = Xcart::app()->mail->template(
                 'team@s3stores.com',
