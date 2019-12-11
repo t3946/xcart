@@ -26,7 +26,7 @@ class GetPriceForAsinCommand extends Command
         $amzPool = new AmazonPoolStore();
         $client = $amzPool->getProductClientPackExt();
 
-        while ($offers = AmazonOfferModel::objects()->filter(['product__productid__isnull' => true])->paginate(++$i, 20)->all()) {
+        while ($offers = AmazonOfferModel::objects()->paginate(++$i, 20)->all()) {
             $products = [];
 
             $aASINs = array_values(array_map(function ($a) {
@@ -44,12 +44,12 @@ class GetPriceForAsinCommand extends Command
                 }
             }
 
-
             $diff = array_diff($aASINs, array_keys($products));
 
             if ($diff) {
                 $log_text = 'ERROR in getPriceForASIN for ASIN\'s: ' . implode(', ', $diff) . "\n";
                 func_backprocess_log('amazon_get_price_for_asin', $log_text);
+                AmazonOfferModel::objects()->delete(['ASIN__in' => $diff]);
             }
 
             foreach ($products as $asin => $sku) {
