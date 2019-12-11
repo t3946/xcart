@@ -5,6 +5,7 @@ namespace Modules\Brand\Models;
 use Doctrine\DBAL\Types\Type;
 use Modules\Brand\BrandModule;
 use Modules\Core\Helpers\Cache;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
@@ -173,6 +174,12 @@ class BrandModel extends Model
                 'modelClass' => CleanUrlModel::class,
                 'link' => ['brandid' => 'resource_id'],
                 'extra' => ['resource_type' => 'M'],
+            ],
+            'markets_disabled' => [
+                'class' => HasManyField::class,
+                'modelClass' => ExternalMarketplaceDisabledModel::class,
+                'link' => ['brandid' => 'resource_id'],
+                'extra' => ['resource_type' => 'B']
             ],
 
         ];
