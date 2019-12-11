@@ -11,7 +11,7 @@ use Xcart\App\Orm\Model;
 
 class ExternalMarketplaceDisabledModel extends Model
 {
-    public function getTable()
+    public static function tableName()
     {
         return 'xcart_products_disabled_marketplaces';
     }
