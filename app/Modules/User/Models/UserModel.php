@@ -1,11 +1,14 @@
 <?php
 namespace Modules\User\Models;
 
+use Doctrine\DBAL\Types\Type;
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -76,6 +79,12 @@ class UserModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => RoleModel::class,
                 'link' => ['membershipid' => 'membershipid']
+            ],
+            'distributors' => [
+                'modelClass' => DistributorModel::class,
+                'class' => HasManyField::class,
+                'sqlType' => Type::STRING,
+                'link' => ['login' => 'provider']
             ]
         ];
     }

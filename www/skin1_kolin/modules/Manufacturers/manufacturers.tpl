@@ -73,39 +73,61 @@
 <table cellpadding="3" cellspacing="1" width="100%">
     <tr>
         <td width="100">
-            Main SF
+            <b>Main SF</b>
         </td>
         <td>
             <select name="search_site[]" id="o_site" class="big select2" multiple>
                 {foreach from=$sites item=s}
-                    <option value="{$s->storefrontid}" {if in_array($s->storefrontid, $site)}selected{/if}>
+                    <option value="{$s->storefrontid}" {if in_array($s->storefrontid, $search_site)}selected{/if}>
                         {$s}
                     </option>
                 {/foreach}
             </select>
-            <script type="text/javascript">
-                {literal}
-                $('select.select2:not([data-ajax-from])').select2({
-                    allowClear: true,
-                    closeOnSelect: false,
-                    placeholder: 'Click to select SF'
-                });
-               {/literal}
-            </script>
         </td>
     </tr>
     <tr>
         <td width="100">
-            Dx name
+            <b>Dx name</b>
         </td>
-        <td><input name="search" type="text" {if $search}value="{$search}"{/if}/></td>
+        <td>
+            <input style="min-width: 290px;" name="search" type="text" {if $search}value="{$search}"{/if}/>
+        </td>
     </tr>
     <tr>
+        <td width="100">
+            <b>VRS</b>
+        </td>
+        <td>
+            <select style="min-width: 290px;" name="search_vrs[]" id="o_vrs" class="big select2" multiple>
+                {foreach from=$vrs item=s}
+                    <option value="{$s->login}" {if in_array($s->login, $search_vrs)}selected{/if}>
+                        {$s} ({$s->login})
+                    </option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
         <td>
             <input type="submit" value="Search"/>
         </td>
     </tr>
 </table>
+    <script type="text/javascript">
+        {literal}
+        $('#o_site').select2({
+            allowClear: true,
+            closeOnSelect: false,
+            placeholder: 'Click to select SF'
+        });
+        $('#o_vrs').select2({
+            allowClear: true,
+            closeOnSelect: false,
+            placeholder: 'Click to select VRS'
+        });
+        {/literal}
+    </script>
 </form>
 {/capture}
 

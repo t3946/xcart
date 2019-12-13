@@ -793,6 +793,10 @@ if ($mode === "add" or !empty($manufacturerid)) {
         $qs->filter(['d_main_sf__in' => $search_site]);
     }
 
+    if ($search_vrs = \Xcart\App\Main\Xcart::app()->request->get->get('search_vrs')) {
+        $qs->filter(['provider__in' => $search_vrs]);
+    }
+
     $qs->order(['orderby', 'manufacturer']);
 
     $objects_per_page = $config['Manufacturers']['manufacturers_per_page'];

@@ -35,6 +35,7 @@
 #
 
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -51,15 +52,17 @@ if(empty($active_modules['Manufacturers']))
 else
 	include $xcart_dir."/modules/Manufacturers/manufacturers.php";
 
-$smarty->assign("single_mode", $single_mode);
+$smarty->assign('single_mode', $single_mode);
 
-$smarty->assign("main","manufacturers");
-$smarty->assign('search_site', Xcart::app()->request->get->get('site'));
+$smarty->assign('main', 'manufacturers');
+$smarty->assign('search_site', Xcart::app()->request->get->get('search_site'));
+$smarty->assign('search_vrs', Xcart::app()->request->get->get('search_vrs'));
 $smarty->assign('search', Xcart::app()->request->get->get('search'));
 $smarty->assign('sites', SiteModel::objects()->order(['code']));
+$smarty->assign('vrs', UserModel::objects()->distinct()->filter(['distributors__manufacturerid__isnull' => false])->order(['firstname']));
 
 # Assign the current location line
-$smarty->assign("location", $location);
+$smarty->assign('location', $location);
 
 @include $xcart_dir."/modules/gold_display.php";
 func_display("admin/home.tpl",$smarty);
