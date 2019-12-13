@@ -280,4 +280,9 @@ class DistributorModel extends Model
     {
         return "/admin/manufacturers.php?manufacturerid={$this->manufacturerid}";
     }
+
+    public function isUserPriveded($login)
+    {
+        return $login === $this->provider;
+    }
 }

@@ -37,6 +37,9 @@ $manufacturerid = (int) $manufacturerid;
 if ($manufacturerid) {
     $distributorModel = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
     $smarty->assign("distributorModel", $distributorModel);
+    if (($distributor_section == 8 || $REQUEST_METHOD === 'POST') && $role && $role->membership === 'Vendor Relations Specialist' && !$distributorModel->isUserPriveded($login)) {
+        \Xcart\App\Main\Xcart::app()->request->redirect('error_message.php?access_denied&id=25');
+    }
 }
 
 x_session_register('manufacturer_data_form');

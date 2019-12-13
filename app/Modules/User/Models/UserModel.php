@@ -5,6 +5,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -70,6 +71,12 @@ class UserModel extends Model
                     'V' => 'Verificator',
                 ]
             ],
+            'role' => [
+                'field' => 'membershipid',
+                'class' => ForeignField::class,
+                'modelClass' => RoleModel::class,
+                'link' => ['membershipid' => 'membershipid']
+            ]
         ];
     }
 
