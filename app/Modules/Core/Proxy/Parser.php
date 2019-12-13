@@ -23,6 +23,17 @@ class Parser {
         return $date->format('Y-m-d');
     }
 
+    private static function fetchProxies($url)
+    {
+        echo "Get proxies list {$url} \n";
+        $downloader = new GuzzleDownloader(['timeout' => 120]);
+        $downloader->get($url);
+        if ($response = $downloader->getInternalResponse()) {
+            return $response->getContent();
+        }
+        return null;
+    }
+
     private static function getProxychekerNetProxies($day_sub = 0) {
         if ($validProxies = Xcart::app()->cache->get('proxies')) {
             $total = count($validProxies);
@@ -34,19 +45,19 @@ class Parser {
         $total = 0;
         while(!$total) {
             $url = str_replace('{{date}}', self::getDate($day_sub), self::CHECKERPROXY_NET_API_URL);
-            echo "Get proxies list {$url} \n";
-            $downloader = new GuzzleDownloader(['timeout' => 60]);
-            $downloader->get($url);
-            if ($response = $downloader->getInternalResponse()) {
-                if ($json = json_decode($response->getContent(), true)) {
-                    foreach ($json as $items) {
-                        if ((int)$items['type'] === 2 && Helper::validateProxyIpPort($items['addr'])) {
-                            $validProxies[] = $items['addr'];
-                        }
+            if (($response = self::fetchProxies($url)) && $json = json_decode($response, true)) {
+                foreach ($json as $items) {
+                    if ((int)$items['type'] === 2 && Helper::validateProxyIpPort($items['addr'])) {
+                        $validProxies[] = $items['addr'];
                     }
-                } else {
-                    if (!$day_sub) {
-                        return self::getProxychekerNetProxies(1);
+                }
+            }
+            $url = 'https://api.proxyscrape.com/?request=getproxies&proxytype=http&timeout=10000&country=all&ssl=yes&anonymity=all';
+            if (!$validProxies && ($response = self::fetchProxies($url)) && $json = explode("\n", $response)) {
+                foreach ($json as $items) {
+                    $p = trim($items);
+                    if (Helper::validateProxyIpPort($p)) {
+                        $validProxies[] = $p;
                     }
                 }
             }
