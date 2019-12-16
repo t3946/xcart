@@ -73,6 +73,14 @@
 <table cellpadding="3" cellspacing="1" width="100%">
     <tr>
         <td width="100">
+            <b>Dx name</b>
+        </td>
+        <td>
+            <input style="min-width: 290px;" name="search" type="text" {if $search}value="{$search}"{/if}/>
+        </td>
+    </tr>
+    <tr>
+        <td width="100">
             <b>Main SF</b>
         </td>
         <td>
@@ -83,14 +91,6 @@
                     </option>
                 {/foreach}
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td width="100">
-            <b>Dx name</b>
-        </td>
-        <td>
-            <input style="min-width: 290px;" name="search" type="text" {if $search}value="{$search}"{/if}/>
         </td>
     </tr>
     <tr>
