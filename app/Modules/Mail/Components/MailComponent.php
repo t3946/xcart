@@ -9,6 +9,8 @@ class MailComponent
     use SmartProperties;
 
     public $to = null;
+    public $cc = null;
+    public $bcc = null;
     public $from = null;
     public $reply_to = null;
     public $attachments = [];
@@ -211,13 +213,21 @@ class MailComponent
 
             list($message_header, $mail_message) = func_parse_mail($msgs);
         }
-        $headers = "From: " . $this->from . $lend . "MIME-Version: 1.0" . $lend . $message_header;
-        if (trim($this->from) != "") {
+
+        $headers = "From: {$this->from}{$lend}";
+        if ($this->cc) {
+            $headers .= "Cс: {$this->cc}{$lend}";
+        }
+        if ($this->bcc) {
+            $headers .= "Bсс: {$this->bcc}{$lend}";
+        }
+        $headers .= "MIME-Version: 1.0{$lend}{$message_header}";
+        if (trim($this->from)) {
             $mail_from = $this->from;
             if (!empty($this->reply_to)) {
                 $mail_from = $this->reply_to;
             }
-            $headers .= "Reply-to: " . $mail_from . $lend;
+            $headers .= "Reply-to: {$mail_from}{$lend}";
         }
         if (!empty($this->header)){
             foreach ($this->header as $key => $header) {
@@ -228,9 +238,9 @@ class MailComponent
 
         if (preg_match('/([^ @,;<>]+@[^ @,;<>]+)/S', $this->from, $m)) {
             return @mail($this->to, $mail_subject, $mail_message, $headers, "-f" . $m[1]);
-        } else {
-            return @mail($this->to, $mail_subject, $mail_message, $headers);
         }
+
+        return @mail($this->to, $mail_subject, $mail_message, $headers);
     }
 
     public function setFrom($sFrom)
