@@ -661,7 +661,7 @@ function check_r_fields(){
           <a target="_blank" href="https://amazon.com/dp/{$product.oProduct->ASIN}">{$product.oProduct->ASIN}</a>
     {else}
         <br/>
-        <a target="_blank" href="/admin/amazon/verification/{$product.oProduct->productid}/{$order.orderid}">N/A ASIN</a>
+        <a target="_blank" href="/admin/amazon/verification/{$product.oProduct->productid}/{$order.orderid}">ASIN N/A</a>
     {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
