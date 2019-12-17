@@ -78,6 +78,13 @@ class AmazonCommand extends Command
                                     $p_sellers[] = $off['SellerId'];
 
                                     $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state, :minimumHours, :maximumHours, :availabilityType, :availableDate)';
+
+                                    $avail_date = null;
+                                    if (isset($off['ShippingTime']['@attributes']['availableDate'])) {
+                                        $avail_date = \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $off['ShippingTime']['@attributes']['availableDate'], new \DateTimeZone( 'UTC' ));
+                                    }
+
+
                                     $params = [
                                         'seller' => $off['SellerId'],
                                         'offer_id' => $listing->id,
@@ -89,7 +96,7 @@ class AmazonCommand extends Command
                                         'minimumHours' => $off['ShippingTime']['@attributes']['minimumHours'],
                                         'maximumHours' => $off['ShippingTime']['@attributes']['maximumHours'],
                                         'availabilityType' => $off['ShippingTime']['@attributes']['availabilityType'],
-                                        'availableDate' => $off['ShippingTime']['@attributes']['availableDate'],
+                                        'availableDate' => $avail_date ? $avail_date->format('Y-m-d H:i:s') : null,
                                         'country' => $off['ShipsFrom']['Country'] ?: null,
                                         'state' => $off['ShipsFrom']['State'] ?: null,
                                         'is_buybox' => (int) ($off['IsBuyBoxWinner'] === 'true')
