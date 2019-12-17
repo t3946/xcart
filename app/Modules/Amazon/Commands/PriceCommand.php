@@ -49,12 +49,13 @@ class PriceCommand extends Command
 
             } else {
                 $min_price = $product->getMinimumAmazonPrice();
+                $max_price = $min_price + 0.01;
                 $item = [
                     'sku' => $product->productcode,
                     'channel' => 'MFN',
                     'quantity' => ($prevent_selling === 'MFN') ? 0 : $product->getAmazonQuantity(),
                     'latency' => $product->distributor->amazon_leadtime_to_ship,
-                    'price' => $min_price,
+                    'price' => $queue->type === 'SFN' ? $max_price : $min_price,
                     'min_price' => $min_price,
                     'max_price' => max($min_price, 1000)
                 ];
