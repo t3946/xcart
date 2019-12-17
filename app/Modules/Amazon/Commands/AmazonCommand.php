@@ -77,7 +77,7 @@ class AmazonCommand extends Command
 
                                     $p_sellers[] = $off['SellerId'];
 
-                                    $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state)';
+                                    $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state, :minimumHours, :maximumHours, :availabilityType)';
                                     $params = [
                                         'seller' => $off['SellerId'],
                                         'offer_id' => $listing->id,
