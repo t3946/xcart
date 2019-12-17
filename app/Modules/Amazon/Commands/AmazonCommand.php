@@ -86,6 +86,9 @@ class AmazonCommand extends Command
                                         'LandingPrice' => (float)$off['ListingPrice']['Amount'] + (float)$off['Shipping']['Amount'],
                                         'ListingPrice' => (float)$off['ListingPrice']['Amount'],
                                         'Shipping' => (float)$off['Shipping']['Amount'],
+                                        'minimumHours' => $off['ShippingTime']['@attributes']['minimumHours'],
+                                        'maximumHours' => $off['ShippingTime']['@attributes']['maximumHours'],
+                                        'availabilityType' => $off['ShippingTime']['@attributes']['availabilityType'],
                                         'country' => $off['ShipsFrom']['Country'] ?: null,
                                         'state' => $off['ShipsFrom']['State'] ?: null,
                                         'is_buybox' => (int) ($off['IsBuyBoxWinner'] === 'true')
