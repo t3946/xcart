@@ -77,7 +77,7 @@ class AmazonCommand extends Command
 
                                     $p_sellers[] = $off['SellerId'];
 
-                                    $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state, :minimumHours, :maximumHours, :availabilityType)';
+                                    $query = 'call f_amazonInsertOfferCompetitor(:offer_id, :seller, :rating, :LandingPrice, :ListingPrice, :Shipping, :channel, :is_buybox, :country, :state, :minimumHours, :maximumHours, :availabilityType, :availableDate)';
                                     $params = [
                                         'seller' => $off['SellerId'],
                                         'offer_id' => $listing->id,
@@ -89,6 +89,7 @@ class AmazonCommand extends Command
                                         'minimumHours' => $off['ShippingTime']['@attributes']['minimumHours'],
                                         'maximumHours' => $off['ShippingTime']['@attributes']['maximumHours'],
                                         'availabilityType' => $off['ShippingTime']['@attributes']['availabilityType'],
+                                        'availableDate' => $off['ShippingTime']['@attributes']['availableDate'],
                                         'country' => $off['ShipsFrom']['Country'] ?: null,
                                         'state' => $off['ShipsFrom']['State'] ?: null,
                                         'is_buybox' => (int) ($off['IsBuyBoxWinner'] === 'true')
