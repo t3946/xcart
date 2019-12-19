@@ -117,7 +117,7 @@ class GMC extends StoreFrontMarketPlace
             $parameters['includeInvalidInsertedItems'] = true;
             $parameters['maxResults'] = 250;
             $aQueue = $aLinks = [];
-            GoogleProductsModel::objects()->delete();
+
             try {
                 $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
 

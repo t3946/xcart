@@ -1,4 +1,6 @@
 <?php
+
+use Modules\Goods\Models\GoogleProductsModel;
 use Xcart\App\Main\Xcart;
 use Xcart\External_Marketplaces\Marketplaces\GMC;
 use Xcart\StoreFronts;
@@ -38,6 +40,7 @@ func_backprocess_log(BACK_PROCESS_LOG_NAME, $log_text);
 $oStoreFronts = new StoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
 if (!empty($aStoreFronts)) {
+    GoogleProductsModel::objects()->delete();
     foreach ($aStoreFronts as $aStoreFront) {
         $aMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
