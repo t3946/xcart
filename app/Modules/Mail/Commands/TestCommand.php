@@ -2,6 +2,7 @@
 namespace Modules\Mail\Commands;
 
 
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Commands\Command;
 use Xcart\App\Main\Xcart;
 

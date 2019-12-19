@@ -310,7 +310,7 @@ class ProductHelper
                 "@context" => "http://schema.org/",
                 "@type" => "Product",
                 "name" => $model->getFrontendName(),
-                "image" => self::getJsonImages(1, $model),
+                "image" => self::getJsonImages(0, $model),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
                 "sku" => $model->productcode,
@@ -350,9 +350,10 @@ class ProductHelper
                 "@context" => "http://schema.org/",
                 "@type" => "Product",
                 "name" => $model->getFrontendName(),
-                "image" => self::getJsonImages(1, $model),
+                "image" => self::getJsonImages(0, $model),
                 "description" => $descript,
                 "mpn" => $model->getMPN(),
+                'upc' => $model->upc,
                 "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
@@ -393,9 +394,9 @@ class ProductHelper
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $model->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.' : 'www.';
+        $pref = ($site->getConfig()['Enable_CDN'] === 'Y') ? 'cdn.' : 'www.';
         $domain = $site->getBaseDomain();
-        $domain = "//" . $pref . $domain;
+        $domain = '//' . $pref . $domain;
 
         if ($model->isGroupRoot()) {
             $product_models = $model->getFrontendChilds();

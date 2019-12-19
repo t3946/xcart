@@ -145,7 +145,7 @@ class AmazonVerificationController extends Controller
                 /** @var OrderModel $order */
                 if ($params['batch_id'] && $order = OrderModel::objects()->get(['orderid' => $params['batch_id']])) {
 
-                    if ($old_asin !== $model->ASIN && $FeedSubmissionId = AmazonVerificationHelper::addAmazonListing($model)) {
+                    if ($old_asin !== $model->ASIN && $FeedSubmissionId = AmazonVerificationHelper::addAmazonListing([$model])) {
                           $log .= <<<HTML
  Inventory file has been successfully created <a href="https://sellercentral.amazon.com/listing/status?reference_id={$FeedSubmissionId}#{$FeedSubmissionId}" target="_blank">Feed: {$FeedSubmissionId}</a>
 HTML;

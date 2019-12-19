@@ -73,11 +73,61 @@
 <table cellpadding="3" cellspacing="1" width="100%">
     <tr>
         <td width="100">
-            <input name="search" type="text" />
+            <b>Dx name</b>
         </td>
-        <td> <input type="submit" value="Search"/></td>
+        <td>
+            <input style="min-width: 290px;" name="search" type="text" {if $search}value="{$search}"{/if}/>
+        </td>
+    </tr>
+    <tr>
+        <td width="100">
+            <b>Main SF</b>
+        </td>
+        <td>
+            <select name="search_site[]" id="o_site" class="big select2" multiple>
+                {foreach from=$sites item=s}
+                    <option value="{$s->storefrontid}" {if in_array($s->storefrontid, $search_site)}selected{/if}>
+                        {$s}
+                    </option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td width="100">
+            <b>VRS</b>
+        </td>
+        <td>
+            <select style="min-width: 290px;" name="search_vrs[]" id="o_vrs" class="big select2" multiple>
+                {foreach from=$vrs item=s}
+                    <option value="{$s->login}" {if in_array($s->login, $search_vrs)}selected{/if}>
+                        {$s} ({$s->login})
+                    </option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type="submit" value="Search"/>
+        </td>
     </tr>
 </table>
+    <script type="text/javascript">
+        {literal}
+        $('#o_site').select2({
+            allowClear: true,
+            closeOnSelect: false,
+            placeholder: 'Click to select SF'
+        });
+        $('#o_vrs').select2({
+            allowClear: true,
+            closeOnSelect: false,
+            placeholder: 'Click to select VRS'
+        });
+        {/literal}
+    </script>
 </form>
 {/capture}
 
@@ -105,7 +155,7 @@
 
 <br />
 
-{include file="customer/main/navigation.tpl"}
+{$pager}
 
 {if $manufacturers ne ""}
 
@@ -131,34 +181,53 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <tr class="TableHead">
 	{if $manufacturers ne ""}<td width="10">&nbsp;</td>{/if}
-	<td width="35%">{$lng.lbl_manufacturer}</td>
-	<td width="10%">{$lng.lbl_distr_code}</td>
-	<td width="25%">{$lng.lbl_provider}</td>
-	<td width="20%" align="center">{$lng.lbl_products}</td>
-	<td width="30" align="center">Inventory feed</td>
+    <td width="30" align="center">{$lng.lbl_orderby}</td>
+	<td width="35%">DX Company Name</td>
+	<td width="10%">DX Prefix</td>
+	<td width="25%">Main SF</td>
+	<td width="20%" align="center">All SKUs</td>
+	<td width="20%" align="center">Active SKUs</td>
+	<td width="30" align="center">Inv feed</td>
 	<td width="30" align="center">Product feed</td>
-	<td width="30" align="center">Child manufacturers</td>
-	<td width="30" align="center">Parent manufacturer</td>
-	<td width="30" align="center">{$lng.lbl_orderby}</td>
+	<td width="30" align="center">Parent DX</td>
+    <td width="30" align="center">Child DX</td>
+
 	<td width="30" align="center">{$lng.lbl_active}</td>
 </tr>
 
 {if $manufacturers ne ""}
 
 {foreach from=$manufacturers item=v}
-
+{assign var=products_count value=$v->products->count()}
+{assign var=active_products_count value=$v->products_active->count()}
 <tr{cycle values=", class='TableSubHead'"}>
-	<td align="center"><input type="checkbox" name="to_delete[{$v.manufacturerid}]"{if $administrate eq "" and ($v.provider ne $login or $v.used_by_others gt 0)} disabled="disabled"{/if} /></td>
-	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v.manufacturerid}{if $page}&amp;page={$page}{/if}">{$v.manufacturer}</a></b></td>
-	<td align="center">{$v.code}</td>
-	<td style="white-space: nowrap;">{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
-	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
-	<td>{$v.I_supplier_feeds_enabled} {$v.I_supplier_feeds_disabled}</td>
-	<td>{$v.P_supplier_feeds_enabled} {$v.P_supplier_feeds_disabled}</td>
-	<td align="center">{foreach from=$v.aChildrenManufacturers item=aChildM name=childmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aChildM.manufacturerid}">{$aChildM.code}</a> {$aChildM.storefronPrefix} {if !$smarty.foreach.childmanufacturers.last} <br/> {/if} {/foreach}</td>
-	<td align="center">{foreach from=$v.aParentManufacturer item=aParentM name=parentmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aParentM.manufacturerid}">{$aParentM.code}</a> {$aParentM.storefronPrefix} {if !$smarty.foreach.parentmanufacturers.last} <br/> {/if} {/foreach}</td>
-	<td align="center"><input type="text" name="records[{$v.manufacturerid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
-	<td align="center"><input type="checkbox" name="records[{$v.manufacturerid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
+	<td align="center">
+        <input type="checkbox" name="to_delete[{$v->manufacturerid}]"{if !$administrate && ($v->provider != $login or $v->used_by_others gt 0)} disabled="disabled"{/if} />
+    </td>
+    <td align="center">
+        <input type="text" name="records[{$v->manufacturerid}][orderby]" size="5" value="{$v->orderby}"{if !$administrate} disabled="disabled"{/if} />
+    </td>
+	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v->manufacturerid}{if $page}&amp;page={$page}{/if}">{$v->manufacturer}</a></b></td>
+	<td style="white-space: nowrap;" align="center">{$v->code}</td>
+    <td style="white-space: nowrap;"><a target="_blank" href="{$v->site->getAbsoluteUrl()}">{$v->site}</a></td>
+	<td align="center">{if $products_count}{$products_count}{else}{$lng.txt_not_available}{/if}</td>
+    <td align="center">{if $active_products_count}{$active_products_count}{else}{$lng.txt_not_available}{/if}</td>
+	<td align="center">{if $v->feed_I_E->count()}Y({$v->feed_I_E->count()}){/if} {if $v->feed_I_D->count()}N({$v->feed_I_D->count()}){/if}</td>
+	<td align="center" >{if $v->feed_P_E->count()}Y({$v->feed_P_E->count()}){/if} {if $v->feed_P_D->count()}N({$v->feed_P_D->count()}){/if}</td>
+	<td style="white-space: nowrap;" align="center">
+        {foreach from=$v->parents item=parent}
+            <a target="_blank" href="{$parent->getAdminUrl()}">{$parent->code}</a><br/>
+        {/foreach}
+    </td>
+	<td style="white-space: nowrap;" align="center">
+        {foreach from=$v->childs item=child}
+            <a target="_blank" href="{$child->getAdminUrl()}">{$child->code}</a><br/>
+        {/foreach}
+    </td>
+
+	<td align="center">
+        <input type="checkbox" name="records[{$v->manufacturerid}][avail]" value="Y"{if $v->avail eq "Y"} checked="checked"{/if}{if !$administrate} disabled="disabled"{/if} />
+    </td>
 </tr>
 
 {/foreach}
@@ -209,7 +278,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {/if}
 
 
-{include file="customer/main/navigation.tpl"}
+{$pager}
 
 {/capture}
 
@@ -376,13 +445,19 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 {if $d_section.distributor_section eq "1"}
 <table cellpadding="3" cellspacing="1" width="100%" id="distributor_section_id_1" {if $distributor_section ne "1"}style="display: none;" {/if}>
-<tr>
-	<td width="20%" class="FormButton">Distributor company name</td>
-	<td><font class="Star">*</font></td>
-	<td width="80%"><input type="text" name="manufacturer" size="50" value="{$manufacturer.manufacturer}" style="width:80%"{$disabled} /></td>
-</tr>
+    <tr>
+        <td width="20%" class="FormButton">Added by </td>
+        <td></td>
+        <td width="80%">{$distributorModel->provider_model} ({$distributorModel->provider})</td>
+    </tr>
 
-<tr>
+    <tr>
+        <td width="20%" class="FormButton">Distributor company name</td>
+        <td><font class="Star">*</font></td>
+        <td width="80%"><input type="text" name="manufacturer" size="50" value="{$manufacturer.manufacturer}" style="width:80%"{$disabled} /></td>
+    </tr>
+
+    <tr>
 	<td width="20%" class="FormButton">Distributor prefix</td>
 	<td><font class="Star">*</font></td>
 	<td width="80%"><input type="text" name="code" size="10" maxlength="5" value="{$manufacturer.code}" style="width:25%"{$disabled} /></td>

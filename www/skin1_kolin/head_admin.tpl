@@ -2,8 +2,8 @@
     <tr>
         <td class="HeadLogo_admin" width="*">
             <a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">
-            {if $current_storefront_info.storefrontid gte 0}
-                <img src="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" alt=""/>
+            {if $site}
+                <img src="/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg" alt=""/>
             {else}
                 <img src="{$ImagesDir}/admin_xlogo.gif" width="244" height="67" alt=""/>
             {/if}

@@ -402,11 +402,12 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
     func_header_location("fraud_page.php?orderid=" . $orderid . "#buttons");
 }
 
-
-$geoip_address = "";
-$customer_ip = $order["extra"]["ip"];
-$geoip_state = "";
-
+$customer_ip = '';
+$geoip_address = '';
+$geoip_state = '';
+if ($extra = $order['oOrder']->extra_model) {
+    $customer_ip = $extra->getIP();
+}
 
 if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
     $geoip_state = $geo_litecity_location->region;

@@ -13,7 +13,7 @@ class UserDiscountMiddleware extends Middleware
 
     public function processHttpRequest($request)
     {
-        $now = new \DateTime('now');
+        /*$now = new \DateTime('now');
         $min = DiscountHelper::DISCOUNT_PERIODS[random_int(0, count(DiscountHelper::DISCOUNT_PERIODS) - 1)];
 
         if ($request->session->has(DiscountHelper::CODE_PARAM) && $d_timestamp = $request->session->get(DiscountHelper::CODE_PARAM)) {
@@ -28,6 +28,6 @@ class UserDiscountMiddleware extends Middleware
             }
         }
         $request->session->add(DiscountHelper::CODE_PARAM, $now->getTimestamp());
-        $request->session->add(DiscountHelper::CODE_PARAM_MINUTES, $min);
+        $request->session->add(DiscountHelper::CODE_PARAM_MINUTES, $min);*/
     }
 }

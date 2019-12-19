@@ -3,6 +3,9 @@
 #
 # Get image size abstract function
 #
+use Modules\Core\Helpers\GuzzleDownloader;
+use Xcart\App\Helpers\Paths;
+
 function func_get_image_size($filename, $is_image = false) {
 	static $img_types = array (
 		"1" => "image/gif",
@@ -25,7 +28,15 @@ function func_get_image_size($filename, $is_image = false) {
 			return false;
 	}
 
-	list($width, $height, $type) = @getimagesize($filename);
+    /*$downloader = new GuzzleDownloader(['verify' => false]);
+    $downloader->get($filename, 'GET');
+    if ($downloader->getInternalResponse()) {
+        $data = $downloader->getInternalResponse()->getContent();
+        [$width, $height, $type] = @getimagesizefromstring($data);
+        return [(int)$downloader->getInternalResponse()->getHeader('Content-Length'),$width,$height,$type];
+    }*/
+
+    list($width, $height, $type) = @getimagesize($filename);
 
 	if (!empty($img_types[$type])) {
 		$type = $img_types[$type];
@@ -622,9 +633,9 @@ function func_filesize($file) {
 		return @filesize($file);
 
 	$host = parse_url($file);
-	if ($host['scheme'] != 'http')
-		return false;
-
+	if (!in_array($host['scheme'] ,['http', 'https'], true)) {
+        return false;
+    }
 	if (empty($host['port']))
 		$host['port'] = 80;
 

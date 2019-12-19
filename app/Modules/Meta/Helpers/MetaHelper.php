@@ -106,7 +106,7 @@ class MetaHelper
     {
         $qs = Meta::objects()->filter(['url' => $uri]);
         if (Xcart::app()->getModule('Meta')->onSite) {
-            $qs = $qs->currentSite();
+            $qs->filter(['site_code' => Xcart::app()->getModule('Sites')->getSite()->code]);
         }
         return $qs->limit(1)->get();
     }

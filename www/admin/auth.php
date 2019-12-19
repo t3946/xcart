@@ -276,9 +276,9 @@ if (empty($_SERVER["HTTPS"]) && strpos($xcart_http_host, '.test.') === false && 
         $redirect_https_link = "https://".$xcart_http_host.$PHP_SELF . (($QUERY_STRING) ? ('?' . $QUERY_STRING) : '');
         func_header_location($redirect_https_link);
 }
-###
-##
-#
 
+if (isset($current_storefront)) {
+    $site = \Modules\Sites\Models\SiteModel::objects()->get(['storefrontid' => $current_storefront]);
+    $smarty->assign('site', $site);
+}
 
-?>

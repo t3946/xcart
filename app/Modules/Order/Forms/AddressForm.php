@@ -29,7 +29,8 @@ abstract class AddressForm extends FrontendForm
                 'hint' => OrderModule::t('The order will be shipped under this name'),
                 'required' => true,
                 'html' => [
-                    'placeholder' => OrderModule::t('Albert H. Einstein')
+                    'placeholder' => OrderModule::t('Albert H. Einstein'),
+                    'autocomplete' => 'new-password'
                 ]
             ],
 
@@ -77,8 +78,8 @@ abstract class AddressForm extends FrontendForm
 				'html' => [
                     'placeholder' => $country->name ?? 'United States',
                     'class' => 'auto-complete country',
-                    'autocomplete' => 'off',
-                    'data-code' => $country->code ?? null
+                    'data-code' => $country->code ?? null,
+                    'autocomplete' => 'new-password'
                 ],
 
             ],
@@ -93,7 +94,7 @@ abstract class AddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => $geoIp['postalCode'] ?? '08540',
                     'class' => 'auto-complete zip',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
             ],
 
@@ -113,7 +114,7 @@ abstract class AddressForm extends FrontendForm
                         ? $state->state
                         : 'New Jersey',
                     'class' => 'auto-complete state',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
             ],
 
@@ -124,7 +125,7 @@ abstract class AddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => $geoIp['city'] ?? 'Princeton',
                     'class' => 'auto-complete city',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'new-password'
                 ],
 
             ],

@@ -1490,7 +1490,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" && in_array($login, ['sergey2', 'tatyanap', 'roman_n', 'dmitry_s'])) {
+        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'tatyanap', 'roman_n', 'dmitry_s'], true)) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1498,13 +1498,11 @@ if ($mode == 'ref_notify')
                         $ref_sum = $refund_model->total_gross;
                     }
 
-                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) use ($ref_sum) {
-                        return ($a->type == OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status,
-                            [
+                    $completed_transactions = array_filter($orderModel->transactions->all(), function($a) {
+                        return ($a->type === OrderTransactionModel::TYPE_CAPTURE && in_array($a->transaction_status, [
                                 OrderTransactionModel::STATUS_COMPLETED,
                                 OrderTransactionModel::STATUS_PARTIALLY_RUFUNDED
-                            ]
-                        ));
+                            ], true));
                     });
 
                 if ($completed_transactions) {
@@ -1701,12 +1699,12 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
         $mnf_body = func_eol2br(stripslashes($mnf_body));
     }
 
-    if ($mode == "mnf_notify" && $set_status_K != "Y")
+    if ($mode === 'mnf_notify' && $set_status_K !== 'Y')
     {
         $log = "";
 
-        if ($bad_time_do_not_send_email == "Y") {
-            $log .= "'Send (Off-hours dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
+        if ($bad_time_do_not_send_email === 'Y') {
+            $log .= "'Send (Off-hours dispatch to distributor)' at '{$manufacturer_name}: Dispatch to distributor'";
         }
 
         $log .= OrderGroupHelper::dispatchGroup(
@@ -1716,24 +1714,19 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             ]
         );
 
-        if ($bad_time_do_not_send_email == "Y")
+        if ($bad_time_do_not_send_email === 'Y')
         {
-            /* Moved above
-			$log .= "'Send (Off-hours dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
-*/
             $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
             $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
 
-            if ($current_dc_status != "DP") {
+            if ($current_dc_status !== 'DP') {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='DP'");
-                $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
+                $log .= "<br/><B>{$code}:</B> dc_status: {$current_dc_status_value} -> {$new_value}";
 
                 OrderGroupModel::objects()
                     ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
                     ->setAttribute('dc_status', 'DP')
                     ->save();
-
-//                db_query("UPDATE $sql_tbl[order_groups] SET dc_status='DP' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
             }
 
             $message_in_db_id = func_query_first_cell("SELECT id FROM $sql_tbl[off_hours_messages] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");

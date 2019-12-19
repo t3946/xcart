@@ -142,19 +142,15 @@ function func_ORDER_FULLNAMES($order_data){
 function func_CHECK_STATES($order_data){
 	global $sql_tbl, $countries;
 
-        $fraud_score = "-1";
+    $fraud_score = "-1";
 	$fraud_result = "negative";
 
 	$s_state = func_correct_field($order_data["userinfo"]["s_state"]);
 	$b_state = func_correct_field($order_data["userinfo"]["b_state"]);
 
     $customer_ip = null;
-	if ($order = OrderModel::objects()->get(['orderid' => $order_data['order']['orderid']])) {
-        if (($extra = $order->extra_model) && $extra->ip) {
-            if (preg_match('/\d\.\d\.\d\.\d)', $extra->ip, $matches)) {
-                $customer_ip = $matches[0];
-            }
-        }
+    if ($extra = $order_data['oOrder']->extra_model) {
+        $customer_ip = $extra->getIP();
     }
 
 	$geoip_state = "";
@@ -202,57 +198,38 @@ function func_CHECK_STATES($order_data){
 	return $fraud_score_arr;
 }
 
-function func_GEOIP_CITY_VS_B_S($order_data){
-        global $sql_tbl;
+function func_GEOIP_CITY_VS_B_S($order_data)
+{
+    $fraud_score = '-1';
 
-        $fraud_score = "-1";
+    $s_city = func_correct_field($order_data["userinfo"]["s_city"]);
+    $b_city = func_correct_field($order_data["userinfo"]["b_city"]);
 
-        $s_city = func_correct_field($order_data["userinfo"]["s_city"]);
-        $b_city = func_correct_field($order_data["userinfo"]["b_city"]);
-
-        $customer_ip = $order_data["order"]["extra"]["ip"];
-
-        $geoip_city = "";
-
+    if (($extra = $order_data['oOrder']->extra_model) && $customer_ip = $extra->getIp()) {
         if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
             $geoip_city = func_correct_field($geo_litecity_location->city);
         }
+    }
 
-	$names = array();
+    $names = [$s_city, $b_city, $geoip_city ?? null];
+    $names = array_unique($names);
 
-//	if (!empty($s_city)){
-		$names[] = $s_city;
-//	}
+    $count_names = count($names);
 
-//        if (!empty($b_city)){
-                $names[] = $b_city;
-//        }
+    if ($count_names > 0) {
+        $fraud_score = 1 / $count_names;
 
-//        if (!empty($geoip_city)){
-                $names[] = $geoip_city;
-//        }
-
-        $names = array_unique($names);
-
-        $count_names = count($names);
-
-        if ($count_names > 0){
-                $fraud_score = 1/$count_names;
-
-                if ($fraud_score == "1"){
-                        $fraud_result = "positive";
-                } elseif ($fraud_score < 1) {
-                        $fraud_result = "negative";
-                }
+        if ($fraud_score == "1") {
+            $fraud_result = "positive";
+        } elseif ($fraud_score < 1) {
+            $fraud_result = "negative";
         }
+    }
 
-//func_print_r($names, $count_names, $fraud_score);
-//die();
+    $fraud_score_arr["fraud_result"] = $fraud_result;
+    $fraud_score_arr["score"] = $fraud_score;
 
-        $fraud_score_arr["fraud_result"] = $fraud_result;
-	$fraud_score_arr["score"] = $fraud_score;
-
-	return $fraud_score_arr;
+    return $fraud_score_arr;
 }
 
 function func_CHECK_OK_ORDERS_FOR_EMAIL($order_data){
@@ -331,121 +308,121 @@ function func_CHECK_FULLNAMES_FOR_EMAIL($order_data){
 }
 
 function func_CHECK_DIFFERENT_SHIPPINGS_FOR_IP($order_data){
-        global $sql_tbl;
 
-        $fraud_score = "-1";
+    $fraud_score = "-1";
 
-	$customer_ip = $order_data["order"]["extra"]["ip"];
-	$order_date = $order_data["order"]["date"];
+    $customer_ip = '';
+    if (($extra = $order_data['oOrder']->extra_model)) {
+        $customer_ip = $extra->getIp();
+    }
 
-        $time_condition = $order_date - 60*60*24*7;
-        $orders = func_query("SELECT orderid, order_prefix, date, s_address, s_city, s_state, s_country, s_zipcode FROM $sql_tbl[orders] WHERE date >= '$time_condition' AND date <= '$order_date'");
+    $order_date = $order_data["order"]["date"];
 
-	$additional_info = array();
+    $time_condition = $order_date - 60 * 60 * 24 * 7;
+    $qs = OrderModel::objects()->filter(['date__gte' => $time_condition, 'date__lte' => $order_date]);
 
-	if (!empty($orders) && is_array($orders)){
+    $additional_info = array();
 
-		$names = array();
-		$full_address_names = array();
+    $names = array();
+    $full_address_names = array();
 
-		foreach ($orders as $k => $v){
-			$ip = func_query_first_cell("SELECT value FROM $sql_tbl[order_extras] WHERE orderid='$v[orderid]' AND khash='ip'");
+    /** @var OrderModel $v */
+    foreach ($qs as $k => $v) {
+        if ($extra = $v->extra_model) {
+            $ip = $extra->getIp();
+            if ($customer_ip === $ip) {
+                $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
+                $full_address_s = func_correct_field($full_address_s);
+                $names[$v->orderid] = $full_address_s;
+                $full_address_names[$v->orderid] = $v->getAttributes();
+            }
+        }
+    }
 
-			if ($customer_ip == $ip){
-				$full_address_s = $v["s_address"] . "-" . $v["s_city"] . "-". $v["s_state"] . "-". $v["s_country"] . "-". $v["s_zipcode"];
-			        $full_address_s = func_correct_field($full_address_s);
-				$names[$v["orderid"]] = $full_address_s;
-				$full_address_names[$v["orderid"]] = $v;
-			}
-		}
+    $names = array_unique($names);
+    $count_names = count($names);
 
-	        $names = array_unique($names);
-        	$count_names = count($names);
+    if ($count_names > 0) {
 
-	        if ($count_names > 0){
+        foreach ($names as $k => $v) {
+            $s_address_arr = explode("\n", $full_address_names[$k]["s_address"]);
+            $full_address_names[$k]["s_address1"] = trim($s_address_arr[0]);
+            $full_address_names[$k]["s_address2"] = trim($s_address_arr[1]);
+            $additional_info[] = $full_address_names[$k];
+        }
 
-			foreach ($names as $k => $v){
-				$s_address_arr = explode("\n", $full_address_names[$k]["s_address"]);
-				$full_address_names[$k]["s_address1"] = trim($s_address_arr[0]);
-				$full_address_names[$k]["s_address2"] = trim($s_address_arr[1]);
-				$additional_info[] = $full_address_names[$k];
-			}
+        $fraud_score = 1 / $count_names;
 
-        	        $fraud_score = 1/$count_names;
+        if ($fraud_score == "1") {
+            $fraud_result = "positive";
+        } elseif ($fraud_score < 1) {
+            $fraud_result = "negative";
+        }
+    }
 
-	                if ($fraud_score == "1"){
-        	                $fraud_result = "positive";
-                	} elseif ($fraud_score < 1) {
-                        	$fraud_result = "negative";
-	                }
-	        }
-	}
+    $fraud_score_arr["fraud_result"] = $fraud_result;
+    $fraud_score_arr["score"] = $fraud_score;
+    $fraud_score_arr["additional_info"] = $additional_info;
 
-        $fraud_score_arr["fraud_result"] = $fraud_result;
-	$fraud_score_arr["score"] = $fraud_score;
-	$fraud_score_arr["additional_info"] = $additional_info;
-
-	return $fraud_score_arr;
+    return $fraud_score_arr;
 }
 
 function func_CHECK_DIFFERENT_BILLINGS_FOR_IP($order_data){
-        global $sql_tbl;
 
-        $fraud_score = "-1";
+    $fraud_score = '-1';
 
-        $customer_ip = $order_data["order"]["extra"]["ip"];
-	$order_date = $order_data["order"]["date"];
+    $customer_ip = '';
+    if (($extra = $order_data['oOrder']->extra_model)) {
+        $customer_ip = $extra->getIp();
+    }
+    $order_date = $order_data['order']['date'];
 
-        $time_condition = $order_date - 60*60*24*7;
-        $orders = func_query("SELECT orderid, order_prefix, date, b_address, b_city, b_state, b_country, b_zipcode FROM $sql_tbl[orders] WHERE date >= '$time_condition' AND date <= '$order_date'");
+    $time_condition = $order_date - 60 * 60 * 24 * 7;
+    $qs = OrderModel::objects()->filter(['date__gte' => $time_condition, 'date__lte' => $order_date]);
 
-	$additional_info = array();
+    $additional_info = $names = $full_address_names = [];
 
-        if (!empty($orders) && is_array($orders)){
+    /** @var OrderModel $v */
+    foreach ($qs as $k => $v) {
+        if ($extra = $v->extra_model) {
+            $ip = $extra->getIp();
+            if ($customer_ip === $ip) {
+                $full_address_b = "{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
+                $full_address_b = func_correct_field($full_address_b);
+                $names[$v->orderid] = $full_address_b;
+                $full_address_names[$v->orderid] = $v->getAttributes();
+            }
+        }
+    }
 
-                $names = array();
-		$full_address_names = array();
+    $names = array_unique($names);
 
-                foreach ($orders as $k => $v){
-                        $ip = func_query_first_cell("SELECT value FROM $sql_tbl[order_extras] WHERE orderid='$v[orderid]' AND khash='ip'");
+    $count_names = count($names);
 
-                        if ($customer_ip == $ip){
-                                $full_address_b = $v["b_address"] . "-" . $v["b_city"] . "-". $v["b_state"] . "-". $v["b_country"] . "-". $v["b_zipcode"];
-                                $full_address_b = func_correct_field($full_address_b);
-                                $names[$v["orderid"]] = $full_address_b;
-                                $full_address_names[$v["orderid"]] = $v;
-                        }
-                }
+    if ($count_names > 0) {
 
-                $names = array_unique($names);
-
-                $count_names = count($names);
-
-                if ($count_names > 0){
-
-                        foreach ($names as $k => $v){
-                                $b_address_arr = explode("\n", $full_address_names[$k]["b_address"]);
-                                $full_address_names[$k]["b_address1"] = trim($b_address_arr[0]);
-                                $full_address_names[$k]["b_address2"] = trim($b_address_arr[1]);
-                                $additional_info[] = $full_address_names[$k];
-                        }
-
-                        $fraud_score = 1/$count_names;
-
-	                if ($fraud_score == "1"){
-                        	$fraud_result = "positive";
-                	} elseif ($fraud_score < 1) {
-        	                $fraud_result = "negative";
-	                }
-
-                }
+        foreach ($names as $k => $v) {
+            $b_address_arr = explode("\n", $full_address_names[$k]["b_address"]);
+            $full_address_names[$k]["b_address1"] = trim($b_address_arr[0]);
+            $full_address_names[$k]["b_address2"] = trim($b_address_arr[1]);
+            $additional_info[] = $full_address_names[$k];
         }
 
-        $fraud_score_arr["fraud_result"] = $fraud_result;
-	$fraud_score_arr["score"] = $fraud_score;
-	$fraud_score_arr["additional_info"] = $additional_info;
+        $fraud_score = 1 / $count_names;
 
-	return $fraud_score_arr;
+        if ($fraud_score == "1") {
+            $fraud_result = "positive";
+        } elseif ($fraud_score < 1) {
+            $fraud_result = "negative";
+        }
+
+    }
+
+    $fraud_score_arr["fraud_result"] = $fraud_result;
+    $fraud_score_arr["score"] = $fraud_score;
+    $fraud_score_arr["additional_info"] = $additional_info;
+
+    return $fraud_score_arr;
 }
 
 function func_CHECK_DIFFERENT_SHIPPINGS_FOR_PHONE($order_data){

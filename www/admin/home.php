@@ -1,39 +1,4 @@
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
-
-#
-# $Id: home.php,v 1.33 2006/01/11 06:55:57 mclap Exp $
-#
 
 require "./auth.php";
 
@@ -162,23 +127,6 @@ if (!empty($login))
 	$smarty->assign("location", $location);
 
 @include $xcart_dir."/modules/gold_display.php";
-
-/*if (isset($mccornic)) {
-    func_xpay_func_load();
-    $txn_msg = '';
-    $api_data = array(
-        'txnId' => '5d79e25ed824a7de7db95a751d9b2754',
-    );
-    list($api_status, $api_response) = xpc_api_request('payment', 'get_additional_info', $api_data);
-    if (!empty($api_response['transactions'])) {
-        $txn_id = $api_response['transactions'][0]['txnid'];
-        if (!empty($txn_id)) {
-            $txn_msg = " (TransID #$txn_id)";
-        }
-    }
-    var_dump($api_response);
-    var_dump($txn_msg);
-}*/
 
 func_display("admin/home.tpl", $smarty);
 ?>

@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td align="right" style="font-size: .93rem;"><b>Grand total:</b></td>
-                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.total}"
+                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.oOrder->getOrderTotalGross()}"
                            size="8" required pattern="^\d+(\.?\d+|)$"
                            id="paypal_vt_grand_total"/></td>
             </tr>
@@ -80,8 +80,7 @@
             <tr>
                 <td align="right"><b>Card number:</b></td>
                 <td>
-                    <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"
-                           id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')"/>
+                    <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"  id="paypal_vt_card_number"/>
                     <a href="#help-2" title="{$lng.help_cardnumber_text}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
@@ -230,7 +229,7 @@
         <table>
             <tr>
                 <td>
-                    <b>Transaction status:</b><br/>
+                    <b>Transaction status</b><br/>
                     <select name="transaction_status">
                         <option value="authorized">Authorized</option>
                         <option value="completed">Authorized & Captured</option>
@@ -240,15 +239,15 @@
                 <td>
                     <b>Currency<b>
                             <select name="transaction_currency">
-                                <option value="USD">U.S. Dollars</option>
-                                <option value="CAN"> CAN. Dollars</option>
+                                <option value="USD">US dollars</option>
+                                <option value="CAN">CA dollars</option>
                             </select>
                 </td>
                 <td width="20" colspan="4">&nbsp;</td>
             </tr>
             <tr>
                 <td>
-                    <b>Payment method:</b><br/>
+                    <b>Payment method</b><br/>
                     <select name="paymentid" required>
                         <option value=""></option>
                         {foreach from=$all_vt_processors item=item_vt key=key_vt}
@@ -259,17 +258,17 @@
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>Virtual terminal transaction ID:</b><br/>
+                    <b>Virtual terminal transaction ID</b><br/>
                     <input type="text" name="transaction_id" value="" size="40" required/>
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>AVS code:</b><br/>
+                    <b>AVS code</b><br/>
                     <input type="text" name="avs_code" value="" size="1" maxlength="1"/>
                 </td>
                 <td width="20">&nbsp;</td>
                 <td>
-                    <b>Transaction amount:</b><br/>
+                    <b>Transaction amount</b><br/>
                     <input name="transaction_amount" value="0" size="8" required pattern="^\d+(\.?\d+|)$" type="text"/>
                 </td>
             </tr>
@@ -279,7 +278,7 @@
 
     </form>
 {/capture}
-{include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
+{include file="dialog.tpl" title="Add transaction manually" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
 
 <script src="{$SkinDir}/js/semantic/components/dropdown.js"></script>
 <script src="{$SkinDir}/js/semantic/components/transition.js"></script>
@@ -334,22 +333,53 @@
             form.submit();
         })
 </script>
- <script>
+    <script>
+        $("input[name='paypal_vt[expiration_month]']").keyup(function(){
+            if($(this).val().match(/^\d{2}$/)){
+                $("input[name='paypal_vt[expiration_year]']").focus();
+            }
+        });
+        $("input[name='paypal_vt[expiration_year]']").keyup(function(){
+            if($(this).val().match(/^\d{2}$/)){
+                $("input[name='paypal_vt[csc]']").focus();
+            }
+        });
+        $("#paypal_vt_card_number").keyup(function(){
+            if($(this).val().match(/^\d+$/)){
+                var c_num_l = 16;
+                if ($(this).val()[0] === '3') {
+                    c_num_l = 15;
+                }
+                if ($(this).val().length >= c_num_l) {
+                    $("input[name='paypal_vt[expiration_month]']").focus();
+                }
+            } else {
+                var p = parseInt($(this).val());
+                if (!isNaN(p)) {
+                    $(this).val(p);
+                } else {
+                    $(this).val('');
+                }
+            }
+        });
+    </script>
 
-                        $( function() {
-                            $('.tooltip').tooltip({
-                                position: {
-                                    using: function( position, feedback ) {
-                                        $( this ).css( position );
-                                        $( "<div>" )
-                                            .addClass( "tooltip__s3" )
-                                            .appendTo( this );
-                                    }
-                                }
-                            });
-                        } );
+    <script>
 
-                    </script>
+        $(function () {
+            $('.tooltip').tooltip({
+                position: {
+                    using: function (position, feedback) {
+                        $(this).css(position);
+                        $("<div>")
+                            .addClass("tooltip__s3")
+                            .appendTo(this);
+                    }
+                }
+            });
+        });
+
+    </script>
 <style>
     .ui-tooltip {
         border: 1px solid #ff6600 !important;

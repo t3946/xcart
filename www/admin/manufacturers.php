@@ -34,6 +34,12 @@
 # $Id: manufacturers.php,v 1.6 2006/01/11 06:55:57 mclap Exp $
 #
 
+use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
+
 define("IS_MULTILANGUAGE", true);
 define('USE_TRUSTED_POST_VARIABLES',1);
 $trusted_post_variables = array("descr","cart_manufact_text_displayed", "d_specific_instructions", "d_distributor_return_policy", "d_message_body_14", "d_instructions_to_order_entry_operator", "mess_body", "d_search_keyphrase_for_reconciliation", "d_dispatch_instructions");
@@ -46,12 +52,17 @@ if(empty($active_modules['Manufacturers']))
 else
 	include $xcart_dir."/modules/Manufacturers/manufacturers.php";
 
-$smarty->assign("single_mode", $single_mode);
+$smarty->assign('single_mode', $single_mode);
 
-$smarty->assign("main","manufacturers");
+$smarty->assign('main', 'manufacturers');
+$smarty->assign('search_site', Xcart::app()->request->get->get('search_site'));
+$smarty->assign('search_vrs', Xcart::app()->request->get->get('search_vrs'));
+$smarty->assign('search', Xcart::app()->request->get->get('search'));
+$smarty->assign('sites', SiteModel::objects()->order(['code']));
+$smarty->assign('vrs', UserModel::objects()->distinct()->filter(['distributors__manufacturerid__isnull' => false])->order(['firstname']));
 
 # Assign the current location line
-$smarty->assign("location", $location);
+$smarty->assign('location', $location);
 
 @include $xcart_dir."/modules/gold_display.php";
 func_display("admin/home.tpl",$smarty);

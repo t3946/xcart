@@ -198,9 +198,13 @@ class AmazonVerificationHelper
         return $log;
     }
 
-    public static function addAmazonListing(ProductModel $model):? string
+    /**
+     * @param ProductModel[] $models
+     * @return string|null
+     */
+    public static function addAmazonListing(array $models):? string
     {
-        if ($model->ASIN === ProductModel::NO_ASIN_FOUND) return null;
+
 
         $sFeed = "TemplateType=Offer\tVersion=2014.0703" . str_repeat("\t", 254) . PHP_EOL;
         $aHeader = ['sku',
@@ -230,11 +234,47 @@ class AmazonVerificationHelper
             'offer-image5'];
         $sFeed .= implode("\t", $aHeader) . str_repeat("\t", 231) . "\n";
         $sFeed .= implode("\t", $aHeader) . str_repeat("\t", 231) . "\n";
+        $sFeedBody = '';
+
+        foreach ($models as $model) {
+            if ($model->ASIN && $model->ASIN !== ProductModel::NO_ASIN_FOUND) {
+                $sFeedBody.= self::getFeedRow($model);
+            }
+        }
+
+        if ($sFeedBody) {
+
+            $sFeed .= $sFeedBody;
+
+            $feedHandle = @fopen('php://temp', 'rw+');
+            if ($feedHandle) {
+                fwrite($feedHandle, $sFeed);
+                rewind($feedHandle);
+                $amzPool = new AmazonPoolStore();
+                /** @var \MarketplaceWebService_Model_SubmitFeedResult $result */
+                $result = $amzPool->getFeedAndReportClientPack()
+                    ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_FLAT_LISTINGS, $feedHandle)
+                    ->getSubmitFeedResult();
+                @fclose($feedHandle);
+
+                /** @var \MarketplaceWebService_Model_FeedSubmissionInfo $s_info */
+                $s_info = $result->getFeedSubmissionInfo();
+                return $s_info->getFeedSubmissionId();
+            }
+        }
+
+        return null;
+
+    }
+
+    public static function getFeedRow(ProductModel $model): string
+    {
+        $cost = $model->getMinimumAmazonPrice() ?: ($model->cost_to_us * 1.5);
 
         $row = [
             $model->productcode,
-            number_format($model->getMinimumAmazonPrice(), 2, '.', ''),
-            $model->getAmazonQuantity(),
+            number_format($cost, 2, '.', ''),
+            1,//$model->getAmazonQuantity(),
             $model->ASIN,
             'ASIN',
             'New',
@@ -257,27 +297,7 @@ class AmazonVerificationHelper
             '',
             '',
             ''];
-
-        $sFeed .= implode("\t", $row) . str_repeat("\t", 231) . "\n";
-
-        $feedHandle = @fopen('php://temp', 'rw+');
-        if ($feedHandle) {
-            fwrite($feedHandle, $sFeed);
-            rewind($feedHandle);
-            $amzPool = new AmazonPoolStore();
-            /** @var \MarketplaceWebService_Model_SubmitFeedResult $result */
-            $result = $amzPool->getFeedAndReportClientPack()
-                ->callSubmitFeed(MwsFeedAndReportClientPack::FEED_TYPE_PAI_FLAT_LISTINGS, $feedHandle)
-                ->getSubmitFeedResult();
-            @fclose($feedHandle);
-
-            /** @var \MarketplaceWebService_Model_FeedSubmissionInfo $s_info */
-            $s_info = $result->getFeedSubmissionInfo();
-            return $s_info->getFeedSubmissionId();
-        }
-
-        return null;
-
+        return implode("\t", $row) . str_repeat("\t", 231) . "\n";
     }
 
 }

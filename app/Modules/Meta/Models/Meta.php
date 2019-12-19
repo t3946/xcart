@@ -49,7 +49,7 @@ class Meta extends Model
         if ($onSite) {
             $fields['site'] = [
                 'field' => 'site_code',
-                'class' => ForeignField::className(),
+                'class' => ForeignField::class,
                 'sqlType' => Type::STRING,
                 'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
                 'verboseName' => 'Site',

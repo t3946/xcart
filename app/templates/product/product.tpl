@@ -157,7 +157,6 @@
 
                 {if $model->descr}
                     <div class="highlights show-for-ml">
-                        <div class="h2 title">{t 'Product Highlights'}</div>
                         {raw $model->descr}
                     </div>
                 {/if}

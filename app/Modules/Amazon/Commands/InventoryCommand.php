@@ -24,7 +24,7 @@ class InventoryCommand extends Command
 
         $i = 0;
 
-        while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 30000)->all()) {
+        while ($queues = AmazonInventoryQueueModel::objects()->order(['type'])->paginate(++$i, 29900)->all()) {
             $items = $pids = [];
 
             foreach ($queues as $queue) {
@@ -33,6 +33,14 @@ class InventoryCommand extends Command
                 $pids[] = $product->productid;
 
                 $prevent_selling = $product->amazon_fields->limit(1)->get()->prevent_selling_on_amazon;
+
+                if ($brand = $product->brand) {
+                    foreach ($brand->markets_disabled as $dm) {
+                        if ($dm->marketplace_id == 3) {
+                            $prevent_selling = 'MFN';
+                        }
+                    }
+                }
 
                 if ($product->manufacturerid == 12 || ($product->isAmazonFBAEnabled() && ((int)$product->amazon_fba_avail > 0 || $product->getAmazonFBAStockReservedTransfers() > 0) &&
                     !\in_array($prevent_selling, ['FBA', 'MFN']))) {
