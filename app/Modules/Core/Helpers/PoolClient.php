@@ -63,7 +63,8 @@ class PoolClient extends Client
             'allow_redirects' => false,
             'auth' => $this->auth,
             'http_errors' => false,
-            'timeout' => $this->timeout
+            'timeout' => $this->timeout,
+            'verify' => false
         );
 
         if ($this->proxy) {
