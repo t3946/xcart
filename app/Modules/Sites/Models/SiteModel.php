@@ -118,6 +118,11 @@ class SiteModel extends Model
                 'modelClass' => Page::class,
                 'link' => ['storefrontid' => 'storefront_id'],
             ],
+            'marketplaces' => [
+                'class' => HasManyField::class,
+                'modelClass' => SiteMarketplaceModel::class,
+                'link' => ['storefrontid' => 'storefront_id']
+            ],
             'short_name' => CharField::class
         ];
     }

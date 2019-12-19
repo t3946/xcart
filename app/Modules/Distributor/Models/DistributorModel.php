@@ -32,6 +32,7 @@ use Xcart\Manufacturer;
  * @property string d_minimum_order_amount
  * @property string code
  * @property string submit_to_operator
+ * @property mixed currency
  */
 class DistributorModel extends Model
 {

@@ -76,6 +76,11 @@ use Xcart\Product;
  * @property string provider
  * @property string original_provider
  * @property mixed ASIN
+ * @property mixed mult_order_quantity
+ * @property mixed min_amount
+ * @property mixed brand
+ * @property mixed r_avail
+ * @property mixed list_price
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
