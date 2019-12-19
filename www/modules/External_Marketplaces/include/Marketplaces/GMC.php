@@ -1,5 +1,7 @@
 <?php
 namespace Xcart\External_Marketplaces\Marketplaces;
+use Google_Service_ShoppingContent_ProductStatusDestinationStatus;
+use Modules\Goods\Models\GoogleProductsModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
 use Monolog\Handler\StreamHandler;
@@ -115,21 +117,26 @@ class GMC extends StoreFrontMarketPlace
             $parameters['includeInvalidInsertedItems'] = true;
             $parameters['maxResults'] = 250;
             $aQueue = $aLinks = [];
+            GoogleProductsModel::objects()->delete();
             try {
                 $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+
                 /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
-                $aProducts = $oResponse->getResources();
-                if (!empty($aProducts)) {
+                if ($aProducts = $oResponse->getResources()) {
                     foreach ($aProducts as $oProduct) {
-                        list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
+                        [,,,$iProductId] = explode(':', $oProduct->getProductId());
+
+                        /** @var Google_Service_ShoppingContent_ProductStatusDestinationStatus $destinationStatus */
+                        foreach ($oProduct->getDestinationStatuses() as $destinationStatus) {
+                            if ($destinationStatus->getDestination() === 'Shopping') {
+                                GoogleProductsModel::objects()->updateOrCreate(['product_id' => $iProductId],['shopping_status' => $destinationStatus->getApprovalStatus()]);
+                            }
+                        }
 
                         /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
-                        $aDataQualityIssues = $oProduct->getDataQualityIssues();
-
-                        if (!empty($aDataQualityIssues)) {
+                        if ($aDataQualityIssues = $oProduct->getDataQualityIssues()) {
                             foreach ($aDataQualityIssues as $oDataQualityIssues) {
-                                $oIssue = IssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
-                                if (empty($oIssue)) {
+                                if ($oIssue = IssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId())) {
                                     $oIssue = new IssuesProcessingRules();
                                     $oIssue->setIssueGMCId($oDataQualityIssues->getId());
                                     $iIssueId = $oIssue->_insert();
@@ -147,14 +154,14 @@ class GMC extends StoreFrontMarketPlace
                                         $oGMCQualityIssues = new GMCQualityIssues();
                                     }
                                 }
-                                if (!$oGMCQualityIssues->getProductId() && $oIssue->getIssueProcessing() != 'skip') {
+                                if (!$oGMCQualityIssues->getProductId() && $oIssue->getIssueProcessing() !== 'skip') {
                                     $oGMCQualityIssues->fill(['productid' => $iProductId,
                                         'issue_id' => $oIssue->getIssueId(),
                                         'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
                                         'issue_data' => addslashes(json_encode($oDataQualityIssues)),
                                         'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
                                     ]);
-                                    if ($oIssue->getIssueProcessing() == 'exclude') {
+                                    if ($oIssue->getIssueProcessing() === 'exclude') {
                                         //Google
                                         $oDisableMarketplace = new DisabledMarketPlace();
                                         $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
