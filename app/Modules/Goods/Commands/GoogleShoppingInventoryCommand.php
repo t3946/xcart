@@ -43,8 +43,10 @@ class GoogleShoppingInventoryCommand extends Command
             func_backprocess_log('incremental inventory feed', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
             echo "{$l}\n";
 
+            $config = $site->getConfig();
             $marketplace = $site->marketplaces->filter(['marketplace_id' => 1])->limit(1)->get();
             $merchantId = $marketplace->P1;
+            $lang = $config['Preferred_language'] ?? 'en';
             $i = 0;
 
             /** @var UpdatedProductModel[] $up */
@@ -63,7 +65,7 @@ class GoogleShoppingInventoryCommand extends Command
                         /** @var DistributorModel $dX */
                         $dX = $product->distributor;
                         $entry = new Google_Service_ShoppingContent_InventoryCustomBatchRequestEntry();
-                        $entry->setProductId($product->productid);
+                        $entry->setProductId("online:{$lang}:{$marketplace->countries}:{$product->productid}");
                         $entry->setStoreCode('online');
                         $inventory = new Google_Service_ShoppingContent_Inventory();
                         $currency = $dX->currency;
