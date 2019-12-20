@@ -129,15 +129,17 @@ class GoogleShoppingCommand extends Command
                             $states[$state->stateid] = $state;
                             $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
                             $rate = reset($rates[$state->stateid]);
-                            $shipping = new Google_Service_ShoppingContent_ProductShipping();
-                            $shipping->setCountry($state->country_code);
-                            $shipping->setRegion($state->code);
-                            $shipping->setService($rate->shipping->getFrontendName());
-                            $price = new Google_Service_ShoppingContent_Price();
-                            $price->setCurrency($currency->currency_code ?? 'USD');
-                            $price->setValue($rate->getShippingCharge());
-                            $shipping->setPrice($price);
-                            $sa[] = $shipping;
+                            if ($rate && $sModel = $rate->shipping) {
+                                $shipping = new Google_Service_ShoppingContent_ProductShipping();
+                                $shipping->setCountry($state->country_code);
+                                $shipping->setRegion($state->code);
+                                $shipping->setService($rate->shipping->getFrontendName());
+                                $price = new Google_Service_ShoppingContent_Price();
+                                $price->setCurrency($currency->currency_code ?? 'USD');
+                                $price->setValue($rate->getShippingCharge());
+                                $shipping->setPrice($price);
+                                $sa[] = $shipping;
+                            }
                         }
                     }
 
