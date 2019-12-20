@@ -121,34 +121,36 @@ class GoogleShoppingCommand extends Command
                     if ($h->getValue() > 0) {
                         $batch->setShippingHeight($h);
                     }*/
-                    $sa = [];
-                    if ($states = StateModel::objects()
-                        ->filter(['country_code' => 'US'])
-                        ->exclude(['base_state_zipcode' => ''])
-                        ->order(['state'])
-                        ->all()) {
-                        /** @var StateModel $state */
-                        foreach ($states as $state) {
-                            $states[$state->stateid] = $state;
-                            $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
-                            $rate = reset($rates[$state->stateid]);
-                            if ($rate && $sModel = $rate->shipping) {
-                                $shipping = new Google_Service_ShoppingContent_ProductShipping();
-                                $shipping->setCountry($state->country_code);
-                                $shipping->setRegion($state->code);
-                                $shipping->setService($rate->shipping->getFrontendName());
-                                $price = new Google_Service_ShoppingContent_Price();
-                                $price->setCurrency($currency->currency_code ?? 'USD');
-                                $price->setValue($rate->getShippingCharge());
-                                $shipping->setPrice($price);
-                                $sa[] = $shipping;
+                    if ($product->forsale === 'Y') {
+                        $sa = [];
+                        if ($states = StateModel::objects()
+                            ->filter(['country_code' => 'US'])
+                            ->exclude(['base_state_zipcode' => ''])
+                            ->order(['state'])
+                            ->all()) {
+                            /** @var StateModel $state */
+                            foreach ($states as $state) {
+                                $states[$state->stateid] = $state;
+                                $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
+                                $rate = reset($rates[$state->stateid]);
+                                if ($rate && $sModel = $rate->shipping) {
+                                    $shipping = new Google_Service_ShoppingContent_ProductShipping();
+                                    $shipping->setCountry($state->country_code);
+                                    $shipping->setRegion($state->code);
+                                    $shipping->setService($rate->shipping->getFrontendName());
+                                    $price = new Google_Service_ShoppingContent_Price();
+                                    $price->setCurrency($currency->currency_code ?? 'USD');
+                                    $price->setValue($rate->getShippingCharge());
+                                    $shipping->setPrice($price);
+                                    $sa[] = $shipping;
+                                }
                             }
                         }
+
+                        $batch->setCustomLabel2('UPS rates');
+
+                        $batch->setShipping($sa);
                     }
-
-                    $batch->setCustomLabel2('UPS rates');
-
-                    $batch->setShipping($sa);
 
                     $ats = [
                         [
