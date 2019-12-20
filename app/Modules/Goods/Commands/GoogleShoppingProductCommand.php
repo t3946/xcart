@@ -22,6 +22,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\Sites\Models\SiteModel;
@@ -122,7 +123,7 @@ class GoogleShoppingProductCommand extends Command
                         if ($h->getValue() > 0) {
                             $batch->setShippingHeight($h);
                         }*/
-                        if ($product->forsale === 'Y') {
+                        if (ProductHelper::isGoogleShoppingEnabled($product)) {
                             $sa = [];
                             if ($states = StateModel::objects()
                                 ->filter(['country_code' => 'US'])
@@ -224,7 +225,7 @@ class GoogleShoppingProductCommand extends Command
 
                         $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
 
-                        $entry->setMethod(($product->forsale === 'Y') ? 'insert' : 'delete');
+                        $entry->setMethod((ProductHelper::isGoogleShoppingEnabled($product)) ? 'insert' : 'delete');
                         if ($entry->getMethod() === 'delete') {
                             $entry->setProductId("online:{$lang}:{$marketplace->countries}:{$product->productid}");
                         } else {

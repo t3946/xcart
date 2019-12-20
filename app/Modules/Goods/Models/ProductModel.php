@@ -13,6 +13,7 @@ use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Main\Helpers\CurrencyHelper;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\Menu\Models\CleanUrlModel;
@@ -378,7 +379,13 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
-            ]
+            ],
+            'markets_disabled' => [
+                'class' => HasManyField::class,
+                'modelClass' => ExternalMarketplaceDisabledModel::class,
+                'link' => ['productid' => 'resource_id'],
+                'extra' => ['resource_type' => 'P']
+            ],
         ];
     }
 
@@ -746,5 +753,16 @@ class ProductModel extends Model implements ICartItem
         return $fPrice;
     }
 
+    public function isMarketPlaceEnabled($marketpalce_id): bool
+    {
+        $c = $this->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+        if (!$c) {
+            $b = $this->brand->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+            if (!$b) {
+                $d = $this->distributor->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+            }
+        }
+        return !(($c+$b+$d) > 0);
+    }
 
 }

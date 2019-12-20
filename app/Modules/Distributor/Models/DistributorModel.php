@@ -9,6 +9,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\CurrencyModel;
@@ -177,6 +178,12 @@ class DistributorModel extends Model
                 'modelClass' => SupplierFeedModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'extra' => ['feed_type' => 'P', 'enabled' => 'Y'],
+            ],
+            'markets_disabled' => [
+                'class' => HasManyField::class,
+                'modelClass' => ExternalMarketplaceDisabledModel::class,
+                'link' => ['manufacturerid' => 'resource_id'],
+                'extra' => ['resource_type' => 'D']
             ],
 
         ];
