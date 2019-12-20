@@ -40,7 +40,7 @@ class GoogleShoppingCommand extends Command
             func_backprocess_log('incremental feeds', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
             echo "{$l}\n";
 
-            $entries = [];
+
             $config = $site->getConfig();
 
             $marketplace = $site->marketplaces->filter(['marketplace_id' => 1])->limit(1)->get();
@@ -57,6 +57,7 @@ class GoogleShoppingCommand extends Command
                 ->paginate(++$i, 100)->all()) {
                 $i++;
                 $toDelete = [];
+                $entries = [];
 
                 foreach ($up as $model) {
                     if ($product = $model->product) {
