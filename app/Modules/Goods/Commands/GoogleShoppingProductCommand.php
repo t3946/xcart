@@ -28,7 +28,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
 use Xcart\App\Helpers\Paths;
 
-class GoogleShoppingCommand extends Command
+class GoogleShoppingProductCommand extends Command
 {
 
     public function handle($arguments = []): void
@@ -37,7 +37,7 @@ class GoogleShoppingCommand extends Command
         /** @var SiteModel $site */
         foreach (SiteModel::objects()->filter(['marketplaces__marketplace_id' => 1])->order(['storefrontid']) as $site) {
 
-            func_backprocess_log('incremental feeds', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
+            func_backprocess_log('incremental product feed', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
             echo "{$l}\n";
 
 
@@ -248,7 +248,7 @@ class GoogleShoppingCommand extends Command
                     $batchReq->setEntries($entries);
                     $log_text = '';
                     try {
-                        func_backprocess_log('incremental feeds', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
+                        func_backprocess_log('incremental product feed', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
                         echo "{$l}\n";
 
                         $result = $oService->products->customBatch($batchReq);
@@ -270,7 +270,7 @@ class GoogleShoppingCommand extends Command
                     }
 
                     if ($log_text) {
-                        func_backprocess_log('incremental feeds', $log_text);
+                        func_backprocess_log('incremental product feed', $log_text);
                         echo $log_text;
                     }
                 }
