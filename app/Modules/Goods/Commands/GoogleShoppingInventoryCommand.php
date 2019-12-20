@@ -56,7 +56,6 @@ class GoogleShoppingInventoryCommand extends Command
                 ->group(['resourceid'])
                 ->order(['-utype', '-product__forsale'])
                 ->paginate(++$i, 140)->all()) {
-                $i++;
                 $toDelete = [];
                 $entries = [];
 
