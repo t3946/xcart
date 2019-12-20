@@ -51,7 +51,7 @@ class GoogleShoppingCommand extends Command
             /** @var UpdatedProductModel[] $up */
             while ($up = UpdatedProductModel::objects()
                 ->select(['*', 'product__forsale', 'utype' => new Expression('MIN(type)')])
-                ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type__lte' => 2, new QOr(['mask__isnull' => true, new QOrNot(['mask' => 0])])])
+                ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type' => 1, new QOr(['mask__isnull' => true, new QOrNot(['mask' => 0])])])
                 ->group(['resourceid'])
                 ->order(['-utype', '-product__forsale'])
                 ->paginate(++$i, 100)->all()) {
@@ -263,7 +263,7 @@ class GoogleShoppingCommand extends Command
                                 }
                             }
                         }
-                        UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type__lte' => 2]);
+                        UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type' => 1]);
 
                     } catch (Exception $e) {
                         $log_text .= "{$e->getMessage()}\n";
