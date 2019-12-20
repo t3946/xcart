@@ -14,11 +14,16 @@ use Google_Service_ShoppingContent_Product;
 use Google_Service_ShoppingContent_ProductsCustomBatchRequest;
 use Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry;
 use Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry;
+use Google_Service_ShoppingContent_ProductShipping;
 use Google_Service_ShoppingContent_ProductShippingDimension;
 use Google_Service_ShoppingContent_ProductShippingWeight;
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QOr;
+use Mindy\QueryBuilder\Q\QOrNot;
+use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
 use Xcart\App\Helpers\Paths;
@@ -30,9 +35,10 @@ class GoogleShoppingCommand extends Command
     {
 
         /** @var SiteModel $site */
-        foreach (SiteModel::objects()->order(['storefrontid']) as $site) {
+        foreach (SiteModel::objects()->filter(['marketplaces__marketplace_id' => 1])->order(['storefrontid']) as $site) {
 
-            func_backprocess_log('incremental feeds', "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
+            func_backprocess_log('incremental feeds', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
+            echo "{$l}\n";
 
             $entries = [];
             $config = $site->getConfig();
@@ -44,10 +50,10 @@ class GoogleShoppingCommand extends Command
             /** @var UpdatedProductModel[] $up */
             $up = UpdatedProductModel::objects()
                 ->select(['*', 'product__forsale', 'utype' => new Expression('MIN(type)')])
-                ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type__lte' => 2, 'mask__isnt' => 0])
+                ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type__lte' => 2, new QOr(['mask__isnull' => true, new QOrNot(['mask' => 0])])])
                 ->group(['resourceid'])
                 ->order(['-utype', '-product__forsale'])
-                ->limit(100);
+                ->limit(3000);
 
             $toDelete = [];
 
@@ -112,6 +118,32 @@ class GoogleShoppingCommand extends Command
                     if ($h->getValue() > 0) {
                         $batch->setShippingHeight($h);
                     }
+                    $sa = [];
+                    if ($states = StateModel::objects()
+                        ->filter(['country_code' => 'US'])
+                        ->exclude(['base_state_zipcode' => ''])
+                        ->order(['state'])
+                        ->all()) {
+                        /** @var StateModel $state */
+                        foreach ($states as $state) {
+                            $states[$state->stateid] = $state;
+                            $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
+                            $rate = reset($rates[$state->stateid]);
+                            $shipping = new Google_Service_ShoppingContent_ProductShipping();
+                            $shipping->setCountry($state->country_code);
+                            $shipping->setRegion($state->code);
+                            $shipping->setService($rate->shipping->getFrontendName());
+                            $price = new Google_Service_ShoppingContent_Price();
+                            $price->setCurrency($currency->currency_code ?? 'USD');
+                            $price->setValue($rate->getShippingCharge());
+                            $shipping->setPrice($price);
+                            $sa[] = $shipping;
+                        }
+                    }
+
+                    $batch->setCustomLabel2('UPS rates');
+
+                    $batch->setShipping($sa);
 
                     $ats = [
                         [
@@ -184,7 +216,6 @@ class GoogleShoppingCommand extends Command
                         $batch->setShippingLabel("Minimum order value {$m_order_amount} {$price->getCurrency()}");
                     }
 
-
                     $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
 
                     $entry->setMethod($product->forsale === 'Y' ? 'insert' : 'delete');
@@ -197,6 +228,7 @@ class GoogleShoppingCommand extends Command
                     $entry->setMerchantId($merchantId);
                     $entries[] = $entry;
                 }
+                $toDelete[] = $model->resourceid;
             }
             if ($entries) {
                 $client = new Google_Client(['verify' => false]);
@@ -209,7 +241,8 @@ class GoogleShoppingCommand extends Command
                 $batchReq->setEntries($entries);
                 $log_text = '';
                 try {
-                    func_backprocess_log('incremental feeds', "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
+                    func_backprocess_log('incremental feeds', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
+                    echo "{$l}\n";
 
                     $result = $oService->products->customBatch($batchReq);
 
@@ -223,6 +256,7 @@ class GoogleShoppingCommand extends Command
                             }
                         }
                     }
+                    UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type__lte' => 2]);
 
                 } catch (Exception $e) {
                     $log_text .= "{$e->getMessage()}\n";
@@ -232,7 +266,6 @@ class GoogleShoppingCommand extends Command
                     func_backprocess_log('incremental feeds', $log_text);
                     echo $log_text;
                 }
-
             }
         }
     }
