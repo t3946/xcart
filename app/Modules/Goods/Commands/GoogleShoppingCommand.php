@@ -108,8 +108,11 @@ class GoogleShoppingCommand extends Command
                     $l->setValue(min(max($product->dim_x, $product->dim_y), 150));
                     $w->setValue(min(min($product->dim_x, $product->dim_y),150));
                     $h->setValue(min($product->dim_z,150));
+                    $batch->setShippingLength($l);
+                    $batch->setShippingWidth($w);
+                    $batch->setShippingHeight($h);
 
-                    if ($l->getValue() > 0) {
+                    /*if ($l->getValue() > 0) {
                         $batch->setShippingLength($l);
                     }
                     if ($w->getValue() > 0) {
@@ -117,7 +120,7 @@ class GoogleShoppingCommand extends Command
                     }
                     if ($h->getValue() > 0) {
                         $batch->setShippingHeight($h);
-                    }
+                    }*/
                     $sa = [];
                     if ($states = StateModel::objects()
                         ->filter(['country_code' => 'US'])
@@ -220,7 +223,7 @@ class GoogleShoppingCommand extends Command
 
                     $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
 
-                    $entry->setMethod($product->forsale === 'Y' ? 'insert' : 'delete');
+                    $entry->setMethod(($product->forsale === 'Y') ? 'insert' : 'delete');
                     if ($entry->getMethod() === 'delete') {
                         $entry->setProductId("online:{$lang}:{$marketplace->countries}:{$product->productid}");
                     } else {
