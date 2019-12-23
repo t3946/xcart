@@ -3,7 +3,7 @@
         <td class="HeadLogo_admin" width="*">
             <a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">
             {if $site}
-                <img src="/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg" alt=""/>
+                <img width="186" src="/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg" alt=""/>
             {else}
                 <img src="{$ImagesDir}/admin_xlogo.gif" width="244" height="67" alt=""/>
             {/if}
