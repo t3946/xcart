@@ -547,7 +547,8 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
 # START: random:20341 [2010 Jul 29 14:46] 
                     "code" => trim($code),
 # END: random:20341 [2010 Jul 29 14:46] 
-                    "url" => trim($url)
+                    "url" => trim($url),
+                    "d_main_sf" => trim($d_main_sf),
                 );
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
