@@ -100,7 +100,7 @@ class WorkingTimeHelper
     public function getNextHoliday(DateTime $dateTime):? RequestAvailabilityOptionModel
     {
         return RequestAvailabilityOptionModel::objects()
-            ->order(['date_mm_dd_yyyy'])
+            ->order([new Expression("STR_TO_DATE(date_mm_dd_yyyy, '%c/%e/%Y')")])
             ->limit(1)
             ->get([
                 new Expression("STR_TO_DATE(date_mm_dd_yyyy, '%c/%e/%Y') >= '{$dateTime->format('Y-m-d')}'"),

@@ -110,9 +110,12 @@ class GoogleShoppingProductCommand extends Command
                         $w->setUnit('in');
                         $l->setUnit('in');
                         $h->setUnit('in');
-                        $l->setValue(min(max($product->dim_x, $product->dim_y), 150));
-                        $w->setValue(min(min($product->dim_x, $product->dim_y), 150));
-                        $h->setValue(min($product->dim_z, 150));
+                        $dimx = $product->shipping_dim_x ?: $product->dim_x;
+                        $dimy = $product->shipping_dim_y ?: $product->dim_y;
+                        $dimz = $product->shipping_dim_z ?: $product->dim_z;
+                        $l->setValue(min(max($dimx, $dimy), 150));
+                        $w->setValue(min(min($dimx, $dimy), 150));
+                        $h->setValue(max(min($dimz, 150), 0.1));
                         $batch->setShippingLength($l);
                         $batch->setShippingWidth($w);
                         $batch->setShippingHeight($h);
