@@ -755,9 +755,12 @@ class ProductModel extends Model implements ICartItem
 
     public function isMarketPlaceEnabled($marketpalce_id): bool
     {
+        $b = null;
         $c = $this->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
         if (!$c) {
-            $b = $this->brand->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+            if ($this->brand) {
+                $b = $this->brand->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+            }
             if (!$b) {
                 $d = $this->distributor->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
             }
