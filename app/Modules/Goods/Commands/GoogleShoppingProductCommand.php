@@ -44,6 +44,9 @@ class GoogleShoppingProductCommand extends Command
 
             $config = $site->getConfig();
 
+            if (!$site->marketplaces) {
+                continue;
+            }
             $marketplace = $site->marketplaces->filter(['marketplace_id' => 1])->limit(1)->get();
             $merchantId = $marketplace->P1;
             $lang = $config['Preferred_language'] ?? 'en';
