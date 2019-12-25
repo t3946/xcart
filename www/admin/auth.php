@@ -261,12 +261,13 @@ $smarty->assign('publication_statuses', $publication_statuses);
 //func_print_r($all_storefronts);
 ###
 
-$invoice_memo_statuses = array(
-	"N" => "Not received",
-	"A" => "Added",
-	"U" => "Updated",
-	"R" => "Reconciled"
-);
+$invoice_memo_statuses = [
+	'N' => 'Not received',
+	'A' => 'Added',
+	'U' => 'Updated',
+	'R' => 'Reconciled',
+	'P' => 'Pre-reconciled'
+];
 $smarty->assign('invoice_memo_statuses', $invoice_memo_statuses);
 
 #
