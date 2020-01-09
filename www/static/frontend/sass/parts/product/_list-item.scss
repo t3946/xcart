@@ -723,6 +723,7 @@
           order: 3;
           flex: 0 0 30%;
           line-height: 1;
+          z-index: -1;
 
           @include breakpoint(sm down) {
             //flex: 0 0 50%;
