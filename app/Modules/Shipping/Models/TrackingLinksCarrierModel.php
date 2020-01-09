@@ -20,7 +20,7 @@ class TrackingLinksCarrierModel extends Model
     {
         return [
             'carrier_id' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
         ];
     }

@@ -122,7 +122,7 @@
                     <span class="title">{t 'Price'}:</span>
                     <span class="price">
                         <span {if !$schema_off}itemprop="priceCurrency" content="{$site_currency->currency_code}"{/if}>{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
-                        <span {if !$schema_off}itemprop="price"{/if} var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                        <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice()}"{/if} var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {if !$schema_off}
                             {if $item->isOutOfStock()}
                                 <link itemprop="availability" href="http://schema.org/OutOfStock" />

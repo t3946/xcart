@@ -7,14 +7,17 @@ use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Helpers\DistributorHelper;
+use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
+use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -23,6 +26,7 @@ use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
@@ -87,6 +91,10 @@ class DistributorModel extends Model
             ],
             'reduce_extra_margin' => [
                 'class' => BooleanCharField::class,
+            ],
+            'distributor_charges_for_each_order_twice_and_split_invoices' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
             ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
@@ -155,6 +163,11 @@ class DistributorModel extends Model
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'extra' => ['forsale' => 'Y']
             ],
+            'feeds' => [
+                'class' => HasManyField::class,
+                'modelClass' => SupplierFeedModel::class,
+                'link' => ['manufacturerid' => 'manufacturerid'],
+            ],
             'feed_I_D' => [
                 'class' => HasManyField::class,
                 'modelClass' => SupplierFeedModel::class,
@@ -185,7 +198,21 @@ class DistributorModel extends Model
                 'link' => ['manufacturerid' => 'resource_id'],
                 'extra' => ['resource_type' => 'D']
             ],
-
+            'images' => [
+                'class' => HasManyField::class,
+                'modelClass' => ImageMModel::class,
+                'link' => ['manufacturerid' => 'id'],
+            ],
+            'carriers' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => TrackingLinksCarrierModel::class,
+                'through' => DistributorCarrierModel::class,
+            ],
+            'sites' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => DistributorSiteModel::class,
+            ],
         ];
     }
 
@@ -292,5 +319,12 @@ class DistributorModel extends Model
     public function isUserPriveded($login)
     {
         return $login === $this->provider;
+    }
+
+    public function getAdminOrdersUrl(int $month): string
+    {
+        $url = Xcart::app()->router->url('dashboard:search');
+        $time_for_request = urlencode(date('m/d/Y', time() - $month * 30 * 24 * 60 * 60) . ' - ' . date('m/d/Y'));
+        return "{$url}?search[order][distributor][]={$this->manufacturerid}&search[order][date]={$time_for_request}";
     }
 }
