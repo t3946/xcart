@@ -2,6 +2,7 @@
   .cart_add {
     width: 100%;
     display: flex;
+    z-index: -1;
 
     &.add-product {
       //margin-top: 1rem;
