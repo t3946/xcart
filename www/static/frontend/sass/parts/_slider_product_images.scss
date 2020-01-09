@@ -145,7 +145,7 @@
           }
 
           @include breakpoint(large){
-            width: rem-calc(500);
+            width: rem-calc(470);
             height: rem-calc(500);
           }
 
@@ -181,7 +181,7 @@
               }
 
               @include breakpoint(large){
-                width: rem-calc(500);
+                width: rem-calc(470);
                 height: rem-calc(500);
                 margin-right: rem-calc(51);
               }
