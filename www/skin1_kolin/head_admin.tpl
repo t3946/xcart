@@ -69,11 +69,13 @@
                         <div style="margin-bottom: 3px;">Cx Time: {$cs_date->format('H:i')}</div>{/if}
                         <div style="margin-bottom: 3px; float:left; margin-right:7px;">
                             Dx Time:
+                            <span style="float:right">
                             {foreach from=$order_store->model->groups item=group}
                                 {assign var=distributor value=$group->manufacturer}
                                 {assign var=distributor_time value=$distributor->getDistributorTime()}
-                                {$distributor_time->format('H:i')}&nbsp;
+                                {$distributor_time->format('H:i')}<br/>
                             {/foreach}
+                            </span>
                         </div>
                     </div>
                     {/if}
