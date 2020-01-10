@@ -68,7 +68,7 @@
                         {if $cs_date}
                         <div style="margin-bottom: 3px;">Cx Time: {$cs_date->format('H:i')}</div>{/if}
                         <div style="margin-bottom: 3px; float:left; margin-right:7px;">
-                            Dx Time:
+                            Dx Time:&nbsp;
                             <span style="float:right">
                             {foreach from=$order_store->model->groups item=group}
                                 {assign var=distributor value=$group->manufacturer}
