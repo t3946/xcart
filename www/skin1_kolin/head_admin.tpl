@@ -44,9 +44,11 @@
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>
                         {php}
-                            $holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime);
-                            $this->assign('next_holiday', $holiday);
-                            $this->assign('next_holiday_days', $holiday->getDaysUntil() );
+                            if ($holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime))
+                            {
+                                $this->assign('next_holiday', $holiday);
+                                $this->assign('next_holiday_days', $holiday->getDaysUntil());
+                            }
                         {/php}
                         {if $next_holiday && $next_holiday_days !== null}
                             <div style="text-align:center; border: 2px solid red;">
