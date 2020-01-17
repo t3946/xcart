@@ -9,7 +9,7 @@
             <select class="default_storefront" disabled="disabled">
                 <option value="-1">Default</option>
                 {foreach from=$sites item=store}
-                    <option value="{$store->storefrontid}" {if ($site.model->storefrontid == $store->storefrontid)}selected="selected"{/if}>
+                    <option value="{$store->storefrontid}" {if ($site->storefrontid == $store->storefrontid)}selected="selected"{/if}>
                         {$store->domain}
                     </option>
                 {/foreach}
