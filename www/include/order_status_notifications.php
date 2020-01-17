@@ -111,4 +111,5 @@ $status_types = array(
 $smarty->assign('status_types', $status_types);
 
 $smarty->assign('status', $selected_status);
-?>
+$smarty->assign('main', 'order_status_notifications');
+

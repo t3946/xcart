@@ -94,7 +94,7 @@ foreach ($options as $on) {
 	}
 }
 
-array_splice($options, intval(array_search('Logging', array_values($options))) + 1, 0, 'Filter_Presets');
+array_splice($options, (int) array_search('Logging', array_values($options)) + 1, 0, 'Filter_Presets');
 
 if (!in_array($option, $options)) {
 	$option = "General";
@@ -123,6 +123,10 @@ if ($option == 'XPayments_Connector') {
 
 if ($option == 'Product_Page') {
 	include $xcart_dir . '/include/product_page_options.php';
+}
+
+if ($option === 'Order_Status_Notifications') {
+	include $xcart_dir . '/include/order_status_notifications.php';
 }
 
 if ($option == 'Retail_Trust') {
