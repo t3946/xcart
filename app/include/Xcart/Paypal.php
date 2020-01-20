@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use Modules\Order\Models\OrderModel;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\BillingInfo;
@@ -78,25 +79,24 @@ class Paypal
 
             $invoice->getMerchantInfo()
                 ->setEmail($this->paypalEmail)
-                ->setBusinessName("S3 Stores, Inc.")
+                ->setBusinessName('S3 Stores, Inc.')
                 ->setPhone(new Phone())
                 ->setAddress(new InvoiceAddress());
 
             $invoice->getMerchantInfo()->getPhone()
-                ->setCountryCode("001")
-                ->setNationalNumber("8009292431");
+                ->setCountryCode('001')
+                ->setNationalNumber('8009292431');
 
             $invoice->getMerchantInfo()->getAddress()
                 ->setLine1("27 Joseph St.")
                 ->setCity("Chatham")
-                ->setState("ON")
-                ->setPostalCode("N7L 3G4")
-                ->setCountryCode("CA");
+                ->setState('ON')
+                ->setPostalCode('N7L 3G4')
+                ->setCountryCode('CA');
 
-            $oOrder = Order::model(['orderid' => (int)$aParams['send_request_orderid']]);
             $billing = $invoice->getBillingInfo();
             $billing[0]->setEmail($aParams['paypal_request_email']);
-            $billing[0]->setFirstName($oOrder->getCustomerEntity()->getCustomerFullName());
+            $billing[0]->setFirstName($aParams['b_firstname']);
 
             $items = array();
             $items[0] = new InvoiceItem();
@@ -123,7 +123,7 @@ class Paypal
                     $invoice = null;
                 }
             } catch (\Exception $e) {
-                Logs::_log('orders', $oOrder->getOrderId(), 'X', $e->getMessage());
+                Logs::_log('orders', (int)$aParams['send_request_orderid'], 'X', $e->getMessage());
                 $invoice = null;
             }
         }

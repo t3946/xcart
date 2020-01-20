@@ -11,28 +11,34 @@
     <table cellspacing="5" cellpadding="0" align="center">
         <tr>
             <td align="right" style="font-size: .93rem;">
-                <b>Cx invoice number* :</b>
+                <b>Invoice #</b>
             </td>
             <td>
                 <input readonly="readonly" class="field" style="font-size: .93rem;" type="text" name="paypal_request_invoice_number" value="{$oOrder->getDisplayOrderNumber()}-{$oOrder->getCustomerInvoiceNextNumber()}" size="20" id="paypal_request_invoice_number" />
             </td>
         </tr>
         <tr>
+            <td align="right" style="font-size: .93rem;"><b>‘Bill to’ Full name</b></td>
+            <td>
+                <input class="field" style="font-size: .93rem;" type="text" name="b_firstname" value="{$oOrder->b_firstname}" size="64" id="paypal_b_firstname" />
+            </td>
+        </tr>
+        <tr>
             <td align="right" style="font-size: .93rem;">
-                <b>Payer email* :</b>
+                <b>‘Bill to’ Email</b>
             </td>
             <td>
                 <input class="field" style="font-size: .93rem;" type="text" name="paypal_request_email" value="{$oOrder->getEmail()}" size="64" id="paypal_request_email" />
             </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Payment Request subject* :</b>
-                <div class="cidev_field_descr">(put S3 Stores Inc. name and order number at least)</div>
+            <td align="right" style="font-size: .93rem;"><b>Payment request subject line</b>
+                <div class="cidev_field_descr">(should contain S3 Stores Inc. and order #)</div>
             </td>
             <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_subject" value="PayPal money request for order # {$oOrder->getDisplayOrderNumber()} from S3 Stores, Inc." size="64" id="paypal_request_subject" /></td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Short payment description* :</b>
+            <td align="right" style="font-size: .93rem;"><b>Invoice description</b>
             </td>
             {assign var="site" value=$oOrder->site}
             {assign var="site_config" value=$site->getConfig()}
@@ -41,7 +47,7 @@
                 /></td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Request amount* :</b> </td>
+            <td align="right" style="font-size: .93rem;"><b>Amount due</b> </td>
             <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_amount" value="{$oOrder->total|number_format:2:'.':','}" size="8" id="paypal_request_amount" />
                 <select style="font-size: .93rem; padding: 2px;" name="paypal_request_currency" id="paypal_request_currency">
                     <option value="USD">US Dollars</option>
@@ -69,16 +75,17 @@
     <table cellspacing="5" cellpadding="0" width="100%">
         <thead>
         <th>Invoice date</th>
-        <th>Cx invoice #</th>
-        <th>PP invoice #</th>
-        <th>Payment description</th>
-        <th>Payment amount</th>
+        <th>Invoice #</th>
+        <th>Link to PayPal invoice</th>
+        <th>Invoice description</th>
+        <th>Amount due</th>
         <th>Invoice status</th>
         </thead>
         {foreach from=$cx_invoices item="inv_item"}
             <tr class="invoice_list_row" data-status="new">
                 {assign var="invDate" value=$inv_item->getInvoiceDate()}
                 <td>{$invDate->format('d-M-Y H:i')}</td>
+                <td>{$oOrder->b_firstname}</td>
                 <td>{$oOrder->getDisplayOrderNumber()}-{$inv_item->getField('invoice_order_number')}</td>
                 <td class="pp_invoice_number" data-inv-number="{$inv_item->getField('invoice_number')}"><a href="https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$inv_item->getField('invoice_number')}" target="_blank">{$inv_item->getField('invoice_number')}</a></td>
                 <td>{$inv_item->getField('short_payment_description')}</td>
