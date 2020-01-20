@@ -85,7 +85,6 @@
             <tr class="invoice_list_row" data-status="new">
                 {assign var="invDate" value=$inv_item->getInvoiceDate()}
                 <td>{$invDate->format('d-M-Y H:i')}</td>
-                <td>{$oOrder->b_firstname}</td>
                 <td>{$oOrder->getDisplayOrderNumber()}-{$inv_item->getField('invoice_order_number')}</td>
                 <td class="pp_invoice_number" data-inv-number="{$inv_item->getField('invoice_number')}"><a href="https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$inv_item->getField('invoice_number')}" target="_blank">{$inv_item->getField('invoice_number')}</a></td>
                 <td>{$inv_item->getField('short_payment_description')}</td>
