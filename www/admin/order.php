@@ -33,6 +33,7 @@
 use Modules\Goods\Models\OptionModel;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\OptionVariantModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
@@ -365,7 +366,7 @@ if ($REQUEST_METHOD == "GET")
         {
             foreach ($order_details_table as $k => $v)
             {
-                $oProduct     = Xcart\Product::model(['productid' => $v['productid']]);
+                $oProduct     = ProductModel::objects()->get(['productid' => $v['productid']]);
                 $insert_data3 = [
                     'orderid'           => $new_orderid,
                     'productid'         => $v['productid'],
@@ -379,7 +380,7 @@ if ($REQUEST_METHOD == "GET")
                     'product'           => addslashes($v['product']),
                     'original_provider' => $v['original_provider'],
                     'items_stock'       => $v['items_stock'],
-                    'item_cost_to_us'   => $oProduct->getProductCostToUs(),
+                    'item_cost_to_us'   => $oProduct->cost_to_us,
                 ];
 
                 func_array2insert('order_details', $insert_data3);
