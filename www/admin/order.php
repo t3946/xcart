@@ -1955,6 +1955,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
         else {
             $mail_smarty->assign('order', $order_after_refund);
         }
+        $mail_smarty->assign('sf_info', func_get_storefront_info($order['storefrontid'], 'ID', true));
 
         $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
         $oMail->init();

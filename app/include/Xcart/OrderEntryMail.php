@@ -43,6 +43,7 @@ class OrderEntryMail extends Mail
             $mail_smarty->assign('order', $this->aOrderData['order']);
 
             $mail_smarty->assign('email_is_sent_to_operator', 'Y');
+            $mail_smarty->assign('sf_info', func_get_storefront_info($this->aOrderData['order']['storefrontid'], 'ID', true));
 
             $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
             $oMail->init();

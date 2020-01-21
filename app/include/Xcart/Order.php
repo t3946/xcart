@@ -875,7 +875,7 @@ class Order extends Data
         $order = $order_data['order'];
 
         foreach ($aOrderGroups as $oOrderGroup) {
-            if ($oOrderGroup->getManufacturerEntity()->getField('submit_to_operator') != 'through_distributor_website') {
+            if ($oOrderGroup->getManufacturerEntity()->getField('submit_to_operator') !== 'through_distributor_website') {
                 return false;
             }
             if (!empty($order['shipping_groups'][$oOrderGroup->getManufacturerId()])) {
@@ -917,9 +917,9 @@ class Order extends Data
             if ($this->getOrderGroupsCount() == 1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;
 
             if (
-                in_array($oOrderGroup->getOrderGroupStatusCB(), ["P", "O", "3", "H", "AP"]) &&
-                in_array($oOrderGroup->getOrderGroupStatusDC(), ["T", "K", "M"]) &&
-                $this->getField('vn_status') == self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
+                in_array($oOrderGroup->getOrderGroupStatusCB(), ['P', 'O', '3', 'H', 'AP'], true) &&
+                in_array($oOrderGroup->getOrderGroupStatusDC(), ['T', 'K', 'M'], true) &&
+                $this->getField('vn_status') === self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
             ) {
                 $d_instructions_to_order_entry_operator = $oOrderGroup->getManufacturerEntity()->getField('d_instructions_to_order_entry_operator');
                 $d_order_entry_operator_subject_line_8 = $oOrderGroup->getManufacturerEntity()->getField('d_order_entry_operator_subject_line_8');
