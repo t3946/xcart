@@ -41,7 +41,7 @@ class ProductFeedCommand extends Command
         $adapter = new AwsS3Adapter($client, 's3-feeds');
         $filesystem = new Filesystem($adapter);
 
-        $suppliers = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type' => 'P']);
+        $suppliers = SupplierFeedModel::objects()->filter(['enabled' => 'Y']);
 
         /** @var SupplierFeedModel $feed */
         foreach ($suppliers as $feed) {
