@@ -77,7 +77,7 @@ If <b>extra items are present on the invoice</b>, then set the following attenti
 <tr>
         <td width="3%">&nbsp;</td>
         <td width="57%">
-If <b>Tax charged (except HST)</b> &gt; <b>0</b>, then set the following attention tag:
+If <b>Non-HST tax charged (for example, Sales tax)</b> &gt; <b>0</b>, then set the following attention tag:
         </td>
         <td width="40%">
 <select name="tag_for_Tax_charged_except_HST_GT_0">

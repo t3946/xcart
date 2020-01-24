@@ -565,6 +565,7 @@ class SupplierFeedHelper
             $group->save();
         }
         $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
+        $group->group_root = $group->productid;
         $group->save();
 
         $childs = [];

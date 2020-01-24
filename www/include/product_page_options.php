@@ -60,4 +60,4 @@ if (!empty($replacements)) {
 	$smarty->assign('replacements', $replacements);
 	$smarty->assign('qreps', count($replacements));
 }
-?>
+

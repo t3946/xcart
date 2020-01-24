@@ -5,6 +5,7 @@ namespace Modules\Goods\Commands;
 
 use Aws\S3\S3Client;
 use DateTime;
+use Doctrine\DBAL\DBALException;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
@@ -21,7 +22,7 @@ class ProductFeedCommand extends Command
 
     /**
      * @param array $arguments
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function handle($arguments = [])
     {
@@ -41,10 +42,11 @@ class ProductFeedCommand extends Command
         $adapter = new AwsS3Adapter($client, 's3-feeds');
         $filesystem = new Filesystem($adapter);
 
-        $suppliers = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type' => 'P']);
+        $suppliers = SupplierFeedModel::objects()->filter(['enabled' => 'Y']);
 
         /** @var SupplierFeedModel $feed */
         foreach ($suppliers as $feed) {
+            $last_feed_fields_arr_vals = null;
             $info = pathinfo($feed->feed_file_name);
 
             try {
@@ -81,7 +83,7 @@ class ProductFeedCommand extends Command
                 continue;
             }
 
-            $create_date_time_diff = time() - $supplierFeed->getFeedDate();
+            //$create_date_time_diff = time() - $supplierFeed->getFeedDate();
 
             $log = "manufacturerid: {$feed->manufacturerid}. Started. ({$feed->feed_type})\n";
             Xcart::app()->logger->debug($log, [], 'feed');
@@ -118,7 +120,7 @@ class ProductFeedCommand extends Command
                             continue;
                         }
                         [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
-                        if (\in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
+                        if (in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
                             $duplicate_sku[] = $modelProduct->productcode;
                         } else {
                             $all_feed_productcodes[] = $modelProduct->productcode;
@@ -145,7 +147,7 @@ class ProductFeedCommand extends Command
                                     $skippedProductsCount++;
                                     continue 2;
                                 }
-                                if (!$is_created && $feed->add_new_only === "Y") {
+                                if (!$is_created && $feed->add_new_only === 'Y') {
                                     print("Skip product --> 'Add new only' \n");
                                     $skippedProductsCount++;
                                     continue 2;
@@ -194,7 +196,7 @@ class ProductFeedCommand extends Command
                 'start_supplier_time' => $start_supplier_time
             ];
 
-            Xcart::app()->logger->debug(SupplierFeedHelper::feedStatistic($feed, $params, $supplierFeed->products_in_feed), [], 'feed');;
+            Xcart::app()->logger->debug(SupplierFeedHelper::feedStatistic($feed, $params, $supplierFeed->products_in_feed), [], 'feed');
 
             if (!empty($lastFeedFields)) {
                 if (!empty($supplierFeed->dont_update_fields)) {

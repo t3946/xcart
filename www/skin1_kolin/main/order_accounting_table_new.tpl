@@ -795,7 +795,7 @@ Cost to us for the products in X-cart
 
 <tr>
 <td>
-Tax charged (except HST)
+Non-HST tax charged (for example, Sales tax)
 </td>
 <td colspan="4"></td>
 <td align="center">

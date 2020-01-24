@@ -108,7 +108,7 @@
     .slider-detail {
       //width: rem-calc(350);
       height: 100%;
-      overflow: hidden;
+      //overflow: hidden;
       margin: 0 auto;
       text-align: center;
 
@@ -145,7 +145,7 @@
           }
 
           @include breakpoint(large){
-            width: rem-calc(500);
+            width: rem-calc(470);
             height: rem-calc(500);
           }
 
@@ -181,7 +181,7 @@
               }
 
               @include breakpoint(large){
-                width: rem-calc(500);
+                width: rem-calc(470);
                 height: rem-calc(500);
                 margin-right: rem-calc(51);
               }

@@ -44,9 +44,11 @@
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>
                         {php}
-                            $holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime);
-                            $this->assign('next_holiday', $holiday);
-                            $this->assign('next_holiday_days', $holiday->getDaysUntil() );
+                            if ($holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime))
+                            {
+                                $this->assign('next_holiday', $holiday);
+                                $this->assign('next_holiday_days', $holiday->getDaysUntil());
+                            }
                         {/php}
                         {if $next_holiday && $next_holiday_days !== null}
                             <div style="text-align:center; border: 2px solid red;">
@@ -68,12 +70,14 @@
                         {if $cs_date}
                         <div style="margin-bottom: 3px;">Cx Time: {$cs_date->format('H:i')}</div>{/if}
                         <div style="margin-bottom: 3px; float:left; margin-right:7px;">
-                            Dx Time:
+                            Dx Time:&nbsp;
+                            <span style="float:right">
                             {foreach from=$order_store->model->groups item=group}
                                 {assign var=distributor value=$group->manufacturer}
                                 {assign var=distributor_time value=$distributor->getDistributorTime()}
-                                {$distributor_time->format('H:i')}&nbsp;
+                                {$distributor_time->format('H:i')}<br/>
                             {/foreach}
+                            </span>
                         </div>
                     </div>
                     {/if}

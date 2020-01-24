@@ -41,15 +41,6 @@
         <a href="{$catalogs.admin}/checks_deposited.php" class="VertMenuItems">Checks deposited</a>
     {/if}
 
-
-
-    {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
-        <a href="{$catalogs.admin}/order_status_notifications.php"
-           class="VertMenuItems">{$lng.lbl_order_status_notifications}</a>
-    {/if}
-
-
-
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
         <a href="{$catalogs.admin}/product_question_search.php?mode=search&status=all&from_dashboard=Y"
            class="VertMenuItems">Product questions</a>

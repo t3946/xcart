@@ -107,6 +107,10 @@
 
 {include file="admin/main/templates_order_related_messages.tpl"}
 
+{elseif $option eq "Order_Status_Notifications"}
+
+{include file="main/order_status_notifications.tpl"}
+
 {elseif $option eq "thankyou_for_order"}
 
 {include file="admin/main/thankyou_for_order.tpl"}
