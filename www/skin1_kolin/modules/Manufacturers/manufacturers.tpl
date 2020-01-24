@@ -456,10 +456,18 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td></td>
         <td>
             {if $distributorModel && $distributorModel->images->count()}{assign var="no_delete" value=""}{else}{assign var="no_delete" value="Y"}{/if}
-            {include file="main/edit_image.tpl" type="M" id=$distributorModel->manufacturerid delete_url="manufacturers.php?mode=delete_image&manufacturerid=`$distributorModel->manufacturerid`" button_name=$lng.lbl_save no_delete=$no_delete}
-            <a title="{$lng.help_dx_logo_text|default:help_dx_logo_text}" class="tooltip">
-                <i class="fa fa-question-circle pointer"></i>
-            </a>
+            <table>
+            <tr>
+                <td>
+                    {include file="main/edit_image.tpl" type="M" id=$distributorModel->manufacturerid delete_url="manufacturers.php?mode=delete_image&manufacturerid=`$distributorModel->manufacturerid`" button_name=$lng.lbl_save no_delete=$no_delete}
+                </td>
+                <td>
+                    <a title="{$lng.help_dx_logo_text|default:help_dx_logo_text}" class="tooltip">
+                        <i class="fa fa-question-circle pointer"></i>
+                    </a>
+                </td>
+            </tr>
+            </table>
         </td>
     </tr>
     <tr>
@@ -468,19 +476,29 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>
             {assign var=dx_sites value=$distributorModel->sites}
             {assign var=dx_sss value=$dx_sites->valuesList("storefrontid", true)}
-            <select multiple class="select2" name="d_main_sf">
-                {foreach from=$sd_selects key=key item=sf}
-                    <option value="{$key}" {if $distributorModel && in_array($key, $dx_sss)} selected="selected" disabled="disabled" {/if}>{$sf}</option>
-                {/foreach}
-            </select>
-            {if $distributorModel}
-                {foreach from=$dx_sites item=dx_site}
-                    <a href="{$dx_site->getAbsoluteUrl()}" target="_blank">SF website</a><br/>
-                {/foreach}
-            {/if}
-            <a title="{$lng.help_dx_site_text|default:help_dx_site_text}" class="tooltip">
-                <i class="fa fa-question-circle pointer"></i>
-            </a>
+            <table>
+                <tr>
+                    <td>
+                        <select multiple class="select2" name="d_main_sf[]">
+                            {foreach from=$sd_selects key=key item=sf}
+                                <option value="{$key}" {if $distributorModel && in_array($key, $dx_sss)} selected="selected" {/if}>{$sf}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    {if $distributorModel}
+                        <td>
+                            {foreach from=$dx_sites item=dx_site}
+                                <a href="{$dx_site->getAbsoluteUrl()}" target="_blank">SF website</a>
+                                <br/>
+                            {/foreach}
+                        </td>
+                    {/if}
+                    <td><a title="{$lng.help_dx_site_text|default:help_dx_site_text}" class="tooltip">
+                            <i class="fa fa-question-circle pointer"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>

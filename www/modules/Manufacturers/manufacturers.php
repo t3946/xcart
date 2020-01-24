@@ -8,6 +8,7 @@ if (!defined('XCART_START')) {
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorCarrierModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorSiteModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -204,9 +205,7 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
 
         if (isset($manufacturerid) && $manufacturerid) {
 
-            /** @var DistributorModel $dModel */
-            $dModel = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
-            $current_manufacturer_info = $dModel->getAttributes();
+            $current_manufacturer_info = $distributorModel->getAttributes();
 
             if (!empty($products_quantity_behavior) && $distributor_section === 20) {
 
@@ -214,8 +213,8 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                     $display_quantity_of = abs((int)$display_quantity_of);
                 }
 
-                $current_products_quantity_behavior = $dModel->products_quantity_behavior;
-                $current_display_quantity_of = $dModel->display_quantity_of;
+                $current_products_quantity_behavior = $distributorModel->products_quantity_behavior;
+                $current_display_quantity_of = $distributorModel->display_quantity_of;
 
                 if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior === 'R') {
                     // use real quantity on storefront
@@ -292,18 +291,20 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 $query_data['allow_dispatch_off_working_hours'] = 'N';
             }
 
-            $dModel->setAttributes(func_array_map('trim', func_array_map('stripcslashes', $query_data)));
-            $dModel->save();
+            $distributorModel->setAttributes(func_array_map('trim', func_array_map('stripcslashes', $query_data)));
+            $distributorModel->save();
             func_array2insert("manufacturers_lng", $query_data_lng, true);
 
-            if ($contacts = $dModel->contacts_model) {
+
+
+            if ($contacts = $distributorModel->contacts_model) {
                 $contacts->delete();
             }
             if (!empty($distributor_contacts) && is_array($distributor_contacts)) {
                 foreach ($distributor_contacts as $field_code => $v) {
                     if ($field_code == $pq) {
                         $v['pq'] = 'Y';
-                        $dModel->setAttributes([
+                        $distributorModel->setAttributes([
                           'd_product_questions_send_to_name' =>  $v['contact_name'],
                           'd_product_questions_send_to_phone' =>  $v['phone'],
                           'd_product_questions_send_to_email' =>  $v['email'],
@@ -312,7 +313,7 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                         $v['pq'] = '';
                     }
                     $contactM = new \Modules\Distributor\Models\DistributorContactsModel([
-                        'manufacturerid' => $dModel->manufacturerid,
+                        'manufacturerid' => $distributorModel->manufacturerid,
                         'distributor_field_name' => $v['distributor_field_name'],
                         'distributor_field_code' => $field_code,
                         'contact_name' => $v['contact_name'],
@@ -326,12 +327,27 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 }
             }
 
-            DistributorCarrierModel::objects()->delete(['manufacturer_id' => $dModel->manufacturerid]);
             if (\Xcart\App\Main\Xcart::app()->request->post->has('distributor_carrier') && $carriers = \Xcart\App\Main\Xcart::app()->request->post->get('distributor_carrier')) {
+                $msa = [];
                 foreach ($carriers as $carrier) {
-                    $cm = new DistributorCarrierModel(['manufacturer_id' => $dModel->manufacturerid, 'carrier_id' => $carrier]);
-                    $cm->save();
+                    DistributorCarrierModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'carrier_id' => $carrier]);
+                    $msa[] = $carrier;
                 }
+                if ($msa) {
+                    DistributorCarrierModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['carrier_id__in' => $msa])]);
+                }
+            }
+
+            if (\Xcart\App\Main\Xcart::app()->request->post->has('d_main_sf') && $main_sfs = \Xcart\App\Main\Xcart::app()->request->post->get('d_main_sf')) {
+                $msa = [];
+                foreach ($main_sfs as $main_sf) {
+                    DistributorSiteModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'site_id' => $main_sf]);
+                    $msa[] = $main_sf;
+                }
+                if ($msa) {
+                    DistributorSiteModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['site_id__in' => $msa])]);
+                }
+
             }
 
             $return_address_ids = func_query("SELECT id FROM $sql_tbl[distributor_return_address] WHERE manufacturerid='$manufacturerid'");
