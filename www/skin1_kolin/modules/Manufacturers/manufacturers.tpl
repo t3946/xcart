@@ -175,8 +175,8 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td width="25%">Main SF</td>
 	<td width="20%" align="center">All SKUs</td>
 	<td width="20%" align="center">Active SKUs</td>
-	<td width="30" align="center">Inv feed</td>
-	<td width="30" align="center">Product feed</td>
+	<td width="30" align="center">Feed</td>
+	<td width="30" align="center">Feed source</td>
 	<td width="30" align="center">Parent DX</td>
     <td width="30" align="center">Child DX</td>
 
@@ -200,8 +200,14 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
     <td style="white-space: nowrap;"><a target="_blank" href="{$v->site->getAbsoluteUrl()}">{$v->site}</a></td>
 	<td align="center">{if $products_count}{$products_count}{else}{$lng.txt_not_available}{/if}</td>
     <td align="center">{if $active_products_count}{$active_products_count}{else}{$lng.txt_not_available}{/if}</td>
-	<td align="center">{if $v->feed_I_E->count()}Y({$v->feed_I_E->count()}){/if} {if $v->feed_I_D->count()}N({$v->feed_I_D->count()}){/if}</td>
-	<td align="center" >{if $v->feed_P_E->count()}Y({$v->feed_P_E->count()}){/if} {if $v->feed_P_D->count()}N({$v->feed_P_D->count()}){/if}</td>
+	<td align="center">{if $v->feed_I_E->count()}I({$v->feed_I_E->count()}){/if}{if $v->feed_P_E->count()}P({$v->feed_P_E->count()}){/if}</td>
+	<td align="center">
+        {foreach from=$v->feeds item=feed}
+            {assign value=$feed->getField('feed_source') var=field_source}
+            {$field_source->toText()}<br/>
+            {$feed->feed_source_date}
+        {/foreach}
+    </td>
 	<td style="white-space: nowrap;" align="center">
         {foreach from=$v->parents item=parent}
             <a target="_blank" href="{$parent->getAdminUrl()}">{$parent->code}</a><br/>

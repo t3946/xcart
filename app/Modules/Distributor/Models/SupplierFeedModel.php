@@ -6,6 +6,7 @@ use DateTime;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
@@ -32,13 +33,11 @@ class SupplierFeedModel extends Model
                 'primary' => true,
                 'null' => false,
             ],
-
             'last_feed_fields' => [
                 'class' => SerializeField::class,
                 'null' => false,
                 'default' => ''
             ],
-
             'distributor' => [
                 'field' => 'manufacturerid',
                 'class' => ForeignField::class,
@@ -46,7 +45,6 @@ class SupplierFeedModel extends Model
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
-
             'feed_type' => [
                 'class' => CharField::class,
                 'choices' => [
@@ -54,7 +52,18 @@ class SupplierFeedModel extends Model
                     'I' => 'inventory',
                 ],
                 'default' => 'I'
-            ]
+            ],
+            'feed_source' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'site' => 'Site',
+                    'price' => 'Price list',
+                ],
+                'default' => 'site'
+            ],
+            'feed_source_date' => [
+                'class' => DateTimeField::class,
+            ],
         ];
     }
 
