@@ -613,7 +613,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 <tr class="invoice_data_row_{$m_id}_{$invoice_number}" {cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
 
-<td>{if $invoice_detail->itemid}
+<td>{if $invoice_detail->itemid && $product_model}
         {$product_model->getFrontendName()}
     {else}
         {$invoice_detail->item_string}
