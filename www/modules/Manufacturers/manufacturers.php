@@ -6,7 +6,10 @@ if (!defined('XCART_START')) {
 }
 
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Distributor\Models\DistributorCarrierModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorSiteModel;
+use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -30,9 +33,9 @@ $location[] = array(func_get_langvar_by_name("lbl_manufacturers"), "");
 # is not owner of this manufacturer, owner will not be able to delete that
 # manufacturer.
 #
-$provider_condition = ($single_mode || $current_area == "A" ? "" : "AND provider='$login'");
+$provider_condition = ($single_mode || $current_area === 'A' ? '' : "AND provider='{$login}'");
 
-$manufacturerid = (int) $manufacturerid;
+$manufacturerid = (int)$manufacturerid;
 
 if ($manufacturerid) {
     $distributorModel = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
@@ -44,7 +47,7 @@ if ($manufacturerid) {
 
 x_session_register('manufacturer_data_form');
 
-$distributor_section = (int) $distributor_section;
+$distributor_section = (int)$distributor_section;
 
 if (($distributor_section === 19 || $distributor_section === 21) && !empty($manufacturerid)) {
     include $xcart_dir . '/provider/shipping_rates_new.php';
@@ -134,7 +137,7 @@ if ($REQUEST_METHOD === 'POST' && $mode === 'copy_distributor' && $manufactureri
             'parent_manufacturer_id' => $manufacturerid,
             'provider' => $login,
             'sf_prefix' => rtrim($storefont_info['prefix'], '-'),
-		];
+        ];
 
         $aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
         $aOriginalManufacturer = reset($aOriginalManufacturer);
@@ -198,30 +201,26 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
             $orderby = 10;
         }
 
-		$orderby = (int) $orderby;
+        $orderby = (int)$orderby;
 
-        if (!empty($manufacturerid)) {
+        if (isset($manufacturerid) && $manufacturerid) {
 
-			$dModel = DistributorModel::objects()->get(['manufacturerid' => $manufacturerid]);
-            $current_manufacturer_info = $dModel->getAttributes();
+            $current_manufacturer_info = $distributorModel->getAttributes();
 
-            if (!empty($products_quantity_behavior) && (int) $distributor_section === 20) {
+            if (!empty($products_quantity_behavior) && $distributor_section === 20) {
 
                 if ($display_quantity_of != "") {
-                    $display_quantity_of = abs(intval($display_quantity_of));
+                    $display_quantity_of = abs((int)$display_quantity_of);
                 }
 
-                $current_products_quantity_behavior = $dModel->products_quantity_behavior;
-                $current_display_quantity_of = $dModel->display_quantity_of;
+                $current_products_quantity_behavior = $distributorModel->products_quantity_behavior;
+                $current_display_quantity_of = $distributorModel->display_quantity_of;
 
                 if ($products_quantity_behavior != $current_products_quantity_behavior && $products_quantity_behavior === 'R') {
                     // use real quantity on storefront
                     db_query("UPDATE $sql_tbl[products] SET avail = r_avail WHERE manufacturerid='$manufacturerid' AND r_avail>0");
                     db_query("UPDATE $sql_tbl[variants] v LEFT JOIN $sql_tbl[products] p ON p.productid = v.productid SET v.avail = p.r_avail WHERE p.manufacturerid='$manufacturerid' AND p.r_avail>0");
-
                 }
-
-
                 if (
                     $products_quantity_behavior === 'D' && $display_quantity_of > 0
                     &&
@@ -262,143 +261,13 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
             else
                 $do_not_touch = false;
 
-            $query_data = array(
-                "reverse_sku" => $reverse_sku,
-                "remove_dashes" => $remove_dashes,
-                "products_quantity_behavior" => $products_quantity_behavior,
-                "display_quantity_of" => $display_quantity_of,
-                "url" => trim($url),
-                'cost_to_us_coef_x' => (float)$cost_to_us_coef_x,
-                'map_price_coef_x' => (float)$map_price_coef_x,
-                'new_map_price_coef_x' => (float)$new_map_price_coef_x,
-                'price_coef_x' => (float)$price_coef_x,
-                'price_coef_y' => (float)$price_coef_y,
-                'price_coef_z' => (float)$price_coef_z,
-                "catalog_sku" => trim($catalog_sku),
-                "catalog_price" => $catalog_price != '' ? price_format($catalog_price) : '',
-                "catalog_text" => $catalog_text,
-                "add_cost_to_us_column_to_dispatch_message" => $add_cost_to_us_column_to_dispatch_message,
-                "d_pay_to_distributor_by" => addslashes($d_pay_to_distributor_by),
-                "d_we_can_save" => addslashes($d_we_can_save),
-                "d_pay_to_distributor_save_text" => addslashes($d_pay_to_distributor_save_text),
-                "d_product_catalog" => addslashes($d_product_catalog),
-                "d_price_list" => addslashes($d_price_list),
-                "d_map_policy" => addslashes($d_map_policy),
-                "d_map_prices" => addslashes($d_map_prices),
-                "d_shipping_weights_dimensions" => addslashes($d_shipping_weights_dimensions),
-                "d_website_search_for_sku_url" => addslashes($d_website_search_for_sku_url),
-                "amazon_leadtime_to_ship" => intval($amazon_leadtime_to_ship),
-                "amazon_leadtime_for_fba_loads" => intval($amazon_leadtime_for_fba_loads),
-                "dx_leadtime" => (int)$dx_leadtime,
-                "dx_leadtime_to" => (int)$dx_leadtime_to,
-                "d_ships_to_within" => addslashes($d_ships_to_within),
-                "d_shipping_methods_usps" => addslashes($d_shipping_methods_usps),
-                "d_shipping_methods_ups" => addslashes($d_shipping_methods_ups),
-                "d_shipping_methods_fedex" => addslashes($d_shipping_methods_fedex),
-                "d_shipping_methods_trucking_company" => addslashes($d_shipping_methods_trucking_company),
-                "d_shipping_methods_other" => addslashes($d_shipping_methods_other),
-                "d_drop_ship_fee_select" => addslashes($d_drop_ship_fee_select),
-                "d_drop_ship_fee_in_us" => addslashes($d_drop_ship_fee_in_us),
-                "d_minimum_order_amount" => addslashes($d_minimum_order_amount),
-                "d_minimum_order_amount_in_us" => addslashes($d_minimum_order_amount_in_us),
-                "d_for_orders_below_min_order_amount" => addslashes($d_for_orders_below_min_order_amount),
-                "d_dealer_discount_reduced_from" => addslashes($d_dealer_discount_reduced_from),
-                "d_dealer_discount_reduced_to" => addslashes($d_dealer_discount_reduced_to),
-                "distributor_offers_free_shipping" => $distributor_offers_free_shipping,
-                "free_shipping_on_orders_over_value" => $free_shipping_on_orders_over_value,
-                "warehouse_pickups_are_allowed" => $warehouse_pickups_are_allowed,
-                "d_our_dealer_account_n" => $d_our_dealer_account_n,
-                "d_preferred_way_submit_orders" => addslashes($d_preferred_way_submit_orders),
-                "d_url_to_login_to_distributor_website" => addslashes($d_url_to_login_to_distributor_website),
-                "d_login" => addslashes($d_login),
-                "d_password" => addslashes($d_password),
-                "d_submit_to_order_entry_operator" => addslashes($d_submit_to_order_entry_operator),
-                "d_order_entry_operator_email" => addslashes($d_order_entry_operator_email),
-                "d_instructions_to_order_entry_operator" => $d_instructions_to_order_entry_operator,
-                "d_distributor_return_policy" => $d_distributor_return_policy,
-                "d_tax_policy_in_states" => addslashes($d_tax_policy_in_states),
-                "d_dispatch_instructions" => addslashes($d_dispatch_instructions),
-                "d_warranty_starts_when_order_is" => addslashes($d_warranty_starts_when_order_is),
-                "d_warranty_last_day" => addslashes($d_warranty_last_day),
-                "d_re_stocking_fee_for_authorized_returns" => addslashes($d_re_stocking_fee_for_authorized_returns),
-                "d_re_stocking_fee_for_unauthorized_returns" => addslashes($d_re_stocking_fee_for_unauthorized_returns),
-                "d_we_pay_to_distributor_by" => addslashes($d_we_pay_to_distributor_by),
-                "d_net_payment_terms_in_days" => addslashes($d_net_payment_terms_in_days),
-                "d_bulk_or_individual_order_payments" => addslashes($d_bulk_or_individual_order_payments),
-                "distributor_charges_for_each_order_twice_and_split_invoices" => (empty($distributor_charges_for_each_order_twice_and_split_invoices)) ? 'N' : $distributor_charges_for_each_order_twice_and_split_invoices,
-                "d_available_on_distributor_site_checkbox" => addslashes($d_available_on_distributor_site_checkbox),
-                "d_sent_by_email_to" => addslashes($d_sent_by_email_to),
-                "d_put_on_the_invoices" => addslashes($d_put_on_the_invoices),
-                "d_available_on_distributor_site_url" => addslashes($d_available_on_distributor_site_url),
-                "d_sent_by_email_to_email_address" => addslashes($d_sent_by_email_to_email_address),
-                "d_invoices_sent_by_email_to" => addslashes($d_invoices_sent_by_email_to),
-                "d_invoices_sent_by_fax_to" => addslashes($d_invoices_sent_by_fax_to),
-                "d_invoices_sent_to" => addslashes($d_invoices_sent_to),
-                "d_invoices_by_fax_sent_to" => addslashes($d_invoices_by_fax_sent_to),
-                "d_invoices_mailed_to_our" => addslashes($d_invoices_mailed_to_our),
-                "d_invoices_mailed_to_our_checkbox" => addslashes($d_invoices_mailed_to_our_checkbox),
-                "d_availability_must_be_checked" => addslashes($d_availability_must_be_checked),
-                "d_send_to_email_14" => addslashes($d_send_to_email_14),
-                "d_message_body_14" => $d_message_body_14,
-                "d_email_subject_14" => addslashes($d_email_subject_14),
-                "d_link_to_order_distributors_website" => addslashes($d_link_to_order_distributors_website),
-                "d_sec14_show_header" => $d_sec14_show_header,
-                "d_sec14_show_items_stock" => $d_sec14_show_items_stock,
-                "d_sec14_show_shipto" => $d_sec14_show_shipto,
-                "d_sec14_show_items_cost" => $d_sec14_show_items_cost,
-                "d_sec14_show_footer" => $d_sec14_show_footer,
-                "allow_pre_orders" => $allow_pre_orders,
-                "add_ca_status_id" => $add_ca_status_id,
-                "allow_dispatch_off_working_hours" => $allow_dispatch_off_working_hours,
-                "lead_time_message" => $lead_time_message,
-                "d_send_to_email_for_templates" => $d_send_to_email_for_templates,
-                "d_contact_name_for_templates" => $d_contact_name_for_templates,
-                "d_server_min_distributor_time" => $d_server_min_distributor_time,
-                "d_shipping_options" => trim($d_shipping_options),
-                "d_specific_instructions" => trim($d_specific_instructions),
-                "d_subject_line_8" => trim($d_subject_line_8),
-                "d_order_entry_operator_subject_line_8" => trim($d_order_entry_operator_subject_line_8),
-                "d_main_sf" => trim($d_main_sf),
-                "d_enable_feed" => $d_enable_feed,
-                "d_feed_updation_frequency" => trim($d_feed_updation_frequency),
-                "d_ftp_host" => trim($d_ftp_host),
-                "d_ftp_login" => trim($d_ftp_login),
-                "d_ftp_password" => trim($d_ftp_password),
-                "d_ftp_folder" => trim($d_ftp_folder),
-                "product_feeds_comments" => trim($product_feeds_comments),
-                "d_feed_procedure_id" => trim($d_feed_procedure_id),
-                "d_product_management_team_email" => trim($d_product_management_team_email),
-                "d_last_feed_rows_processed" => trim($d_last_feed_rows_processed),
-                "d_validation_threshold" => trim($d_validation_threshold),
-                "supplier_products_price_multiplier" => trim($supplier_products_price_multiplier),
-                "d_search_keyphrase_for_reconciliation" => trim($d_search_keyphrase_for_reconciliation),
-                "update_approximation_shipping_rates" => trim($update_approximation_shipping_rates),
-                "USE_MY_UPS_FEDEX_ACCOUNT_functionality" => trim($USE_MY_UPS_FEDEX_ACCOUNT_functionality),
-                "USE_MY_TRUCKING_ACCOUNT_functionality" => trim($USE_MY_TRUCKING_ACCOUNT_functionality),
-                "dcad_bank_name" => trim($dcad_bank_name),
-                "dcad_address" => trim($dcad_address),
-                "dcad_address_2" => trim($dcad_address_2),
-                "dcad_city" => trim($dcad_city),
-                "dcad_country" => trim($dcad_country),
-                "dcad_state" => trim($dcad_state),
-                "dcad_zipcode" => trim($dcad_zipcode),
-                "dcad_company_name" => trim($dcad_company_name),
-                "dcad_routing_number" => trim($dcad_routing_number),
-                "dcad_account_number" => trim($dcad_account_number),
-                "products_always_verify" => trim($products_always_verify),
-                "days_before_verify" => trim($products_days_before_verify),
-                "code" => trim($code),
-                "descr" => $descr,
-                "reduce_extra_margin" => $reduce_extra_margin,
-                "max_extra_margin" => $max_extra_margin,
-                "d_currency" => $d_currency,
-                "calculate_shipping" => $calculate_shipping
-            );
-            $query_data_lng = array(
-                "manufacturerid" => $manufacturerid,
-                "code" => $shop_language,
-                "descr" => $descr
-            );
+            $query_data = \Xcart\App\Main\Xcart::app()->request->post->all();
+
+            $query_data_lng = [
+                'manufacturerid' => $manufacturerid,
+                'code' => $shop_language,
+                'descr' => $descr
+            ];
             if (!$do_not_touch) {
                 $query_data_lng['manufacturer'] = $manufacturer;
                 if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE manufacturer = '$manufacturer'") == 0)
@@ -409,16 +278,6 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 func_unset($query_data, "manufacturer", "descr");
             }
 
-            $query_data['avail'] = $avail;
-            $query_data['orderby'] = $orderby;
-
-            $query_data['m_address'] = $b_address;
-            $query_data['m_address_2'] = $b_address_2;
-            $query_data['m_city'] = $b_city;
-            $query_data['m_country'] = $b_country;
-            $query_data['m_state'] = $b_state;
-            $query_data['m_zipcode'] = $b_zipcode;
-
             if ($login_type === 'P') {
                 $selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
                 if (!empty($selected_manufacturers)) {
@@ -428,42 +287,68 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 db_query("UPDATE $sql_tbl[customers] SET manufacturerids = '" . addslashes(serialize($selected_manufacturers)) . "' WHERE  login='$login' AND usertype='$login_type'");
             }
 
-            $query_data['email'] = $email;
-            $query_data['mess_body'] = $mess_body;
-            $query_data['submit_to_operator'] = ($submit_to_operator == 'through_distributor_website') ? $submit_to_operator = 'through_distributor_website' : $submit_to_operator = 'by_email_or_and_fax';
-            if ($query_data['submit_to_operator'] == 'through_distributor_website') {
+            if ($query_data['submit_to_operator'] === 'through_distributor_website') {
                 $query_data['allow_dispatch_off_working_hours'] = 'N';
             }
 
-            $query_data['manufact_text_displayed'] = $manufact_text_displayed;
-            $query_data['cart_manufact_text_displayed'] = $cart_manufact_text_displayed;
-
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-            func_array2update("manufacturers", $query_data, "manufacturerid='$manufacturerid' " . $provider_condition);
+            $distributorModel->setAttributes(func_array_map('trim', func_array_map('stripcslashes', $query_data)));
+            $distributorModel->save();
             func_array2insert("manufacturers_lng", $query_data_lng, true);
 
-#
-##
-###
-            db_query("DELETE FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$manufacturerid'");
+
+
+            if ($contacts = $distributorModel->contacts_model) {
+                $contacts->delete();
+            }
             if (!empty($distributor_contacts) && is_array($distributor_contacts)) {
-
-
                 foreach ($distributor_contacts as $field_code => $v) {
-
                     if ($field_code == $pq) {
-                        $v["pq"] = "Y";
-
-                        db_query("UPDATE $sql_tbl[manufacturers] SET d_product_questions_send_to_name='" . $v["contact_name"] . "', d_product_questions_send_to_phone='" . addslashes($v["phone"]) . "', d_product_questions_send_to_email='" . addslashes($v["email"]) . "' WHERE manufacturerid='$manufacturerid'");
-
+                        $v['pq'] = 'Y';
+                        $distributorModel->setAttributes([
+                          'd_product_questions_send_to_name' =>  $v['contact_name'],
+                          'd_product_questions_send_to_phone' =>  $v['phone'],
+                          'd_product_questions_send_to_email' =>  $v['email'],
+                        ]);
                     } else {
-                        $v["pq"] = "";
+                        $v['pq'] = '';
                     }
-
-                    db_query("INSERT INTO $sql_tbl[distributor_contacts] (manufacturerid, distributor_field_name, distributor_field_code, contact_name, email, phone, ext, fax, pq) VALUES ('$manufacturerid', '" . addslashes($v["distributor_field_name"]) . "', '$field_code', '" . $v["contact_name"] . "', '" . addslashes($v["email"]) . "', '" . addslashes($v["phone"]) . "', '" . addslashes($v["ext"]) . "', '" . addslashes($v["fax"]) . "', '$v[pq]')");
+                    $contactM = new \Modules\Distributor\Models\DistributorContactsModel([
+                        'manufacturerid' => $distributorModel->manufacturerid,
+                        'distributor_field_name' => $v['distributor_field_name'],
+                        'distributor_field_code' => $field_code,
+                        'contact_name' => $v['contact_name'],
+                        'email' => $v['email'],
+                        'phone' => $v['phone'],
+                        'ext' => $v['ext'],
+                        'fax' => $v['fax'],
+                        'pq' => $v['pq']
+                    ]);
+                    $contactM->save();
                 }
             }
 
+            if (\Xcart\App\Main\Xcart::app()->request->post->has('distributor_carrier') && $carriers = \Xcart\App\Main\Xcart::app()->request->post->get('distributor_carrier')) {
+                $msa = [];
+                foreach ($carriers as $carrier) {
+                    DistributorCarrierModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'carrier_id' => $carrier]);
+                    $msa[] = $carrier;
+                }
+                if ($msa) {
+                    DistributorCarrierModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['carrier_id__in' => $msa])]);
+                }
+            }
+
+            if (\Xcart\App\Main\Xcart::app()->request->post->has('d_main_sf') && $main_sfs = \Xcart\App\Main\Xcart::app()->request->post->get('d_main_sf')) {
+                $msa = [];
+                foreach ($main_sfs as $main_sf) {
+                    DistributorSiteModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'site_id' => $main_sf]);
+                    $msa[] = $main_sf;
+                }
+                if ($msa) {
+                    DistributorSiteModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['site_id__in' => $msa])]);
+                }
+
+            }
 
             $return_address_ids = func_query("SELECT id FROM $sql_tbl[distributor_return_address] WHERE manufacturerid='$manufacturerid'");
 
@@ -485,14 +370,7 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                     db_query("UPDATE $sql_tbl[distributor_return_address] SET warehouse_name='" . $$tmp_warehouse_name . "', full_name='" . $$tmp_full_name . "', company='" . $$tmp_company . "', address='" . $$tmp_address . "', address_2='" . $$tmp_address_2 . "', city='" . $$tmp_city . "', country='" . $$tmp_country . "', state='" . $$tmp_state . "', zipcode='" . $$tmp_zipcode . "', phone='" . $$tmp_phone . "', ext='" . $$tmp_ext . "' WHERE id='$v_a[id]'");
                 }
             }
-###
-##
-#
-
-#
-##
-###
-            if ($distributor_section == "18") {
+            if ($distributor_section == 18) {
 
                 $current_fields_in_supplier_product_feeds = func_query_first("SELECT * FROM $sql_tbl[supplier_product_feeds] WHERE manufacturerid='$manufacturerid'");
 
@@ -690,11 +568,11 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
 }
 
 
-if (is_file($xcart_dir . "/files/distributor_contacts.txt")) {
+/*if (is_file($xcart_dir . "/files/distributor_contacts.txt")) {
     $distributor_contacts_file_name = "distributor_contacts.txt";
     $smarty->assign('distributor_contacts_file_name', $distributor_contacts_file_name);
     $smarty->assign('distributor_contacts_file', $xcart_dir . "/files/" . $distributor_contacts_file_name);
-}
+}*/
 
 #
 # Process the GET request
@@ -704,11 +582,11 @@ if ($mode === "add" or !empty($manufacturerid)) {
 #
 # Get the manufacturer data and display manufacturer details page
 #
-    if ($mode === 'add') {
+    /*if ($mode === 'add') {
         $active_operators = func_query("SELECT login, b_firstname, b_lastname FROM $sql_tbl[customers] WHERE usertype='P' AND status='Y' AND activity='Y' ORDER BY login");
 
         $smarty->assign('operators', $active_operators);
-    }
+    }*/
 
     $location[count($location) - 1][1] = 'manufacturers.php?word=num';
 
@@ -719,17 +597,12 @@ if ($mode === "add" or !empty($manufacturerid)) {
 
         $manufacturer_data = func_query_first("SELECT $sql_tbl[manufacturers].*, IF($sql_tbl[images_M].id IS NULL, '', 'Y') as is_image, IFNULL($sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer, IFNULL($sql_tbl[manufacturers_lng].descr, $sql_tbl[manufacturers].descr) as descr FROM $sql_tbl[manufacturers] LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[manufacturers_lng].manufacturerid = $sql_tbl[manufacturers].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$shop_language' LEFT JOIN $sql_tbl[images_M] ON $sql_tbl[images_M].id = $sql_tbl[manufacturers].manufacturerid WHERE $sql_tbl[manufacturers].manufacturerid = '$manufacturerid'");
 
-        if (empty($manufacturer_data)) {
+        if (!$distributor_model) {
             $top_message['content'] = func_get_langvar_by_name('msg_adm_err_manufacturer_not_exists');
             $top_message['type'] = 'E';
             func_header_location('manufacturers.php');
         } else {
-            //$manufacturer_data["used_by_others"] = func_manufacturer_is_used($manufacturerid, $manufacturer_data["provider"]);
-            $location[] = array($manufacturer_data["manufacturer"], "");
-
-#
-##
-###
+            $location[] = array($manufacturer_data['manufacturer'], '');
 
             $distributor_field_codes = func_query("SELECT distributor_field_code FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$manufacturerid' ORDER BY distributor_field_code");
             if (!empty($distributor_field_codes) && is_array($distributor_field_codes)) {
@@ -751,11 +624,11 @@ if ($mode === "add" or !empty($manufacturerid)) {
 
             $phone_normalized = preg_replace("/[^0-9]/S", "", $manufacturer_data["distributor_phone"]);
             if (strlen($phone_normalized) == "10") {
-                $manufacturer_data["distributor_phone_phone_normalized"] = "+1" . $phone_normalized;
+                $manufacturer_data['distributor_phone_phone_normalized'] = '+1' . $phone_normalized;
             }
 
-            $smarty->assign("manufacturer", $manufacturer_data);
-            $smarty->assign("image", func_image_properties("M", $manufacturerid));
+            $smarty->assign('manufacturer', $manufacturer_data);
+            $smarty->assign('image', func_image_properties('M', $manufacturerid));
         }
 
     } else {
@@ -766,10 +639,10 @@ if ($mode === "add" or !empty($manufacturerid)) {
 
 
         x_session_unregister('manufacturer_data_form');
-        $location[] = array(func_get_langvar_by_name("lbl_add_manufacturer"), "");
+        $location[] = [func_get_langvar_by_name('lbl_add_manufacturer'), ''];
     }
 
-    $smarty->assign("mode", "manufacturer_info");
+    $smarty->assign('mode', 'manufacturer_info');
 } else {
 #
 # Get and display the manufacturers list
@@ -801,9 +674,9 @@ if ($mode === "add" or !empty($manufacturerid)) {
     $qs->order(['orderby', 'manufacturer']);
 
     $objects_per_page = $config['Manufacturers']['manufacturers_per_page'];
-    $pager = new Pagination( $qs->getQuerySet(), ['pageSize' => $objects_per_page], new QuerySetDataSource());
+    $pager = new Pagination($qs->getQuerySet(), ['pageSize' => $objects_per_page], new QuerySetDataSource());
 
-    $smarty->assign("manufacturers", $pager->paginate());
+    $smarty->assign('manufacturers', $pager->paginate());
 
     $smarty->assign('pager', $pager->render());
 
@@ -811,170 +684,147 @@ if ($mode === "add" or !empty($manufacturerid)) {
 
 }
 
-if (!empty($page))
-    $smarty->assign("page", $page);
-
-#
-##
-###
-$distributor_sections = array();
-
-$distributor_sections[] = array(
-    'title' => 'General distributor information',
-    'order_by' => '10',
-    'distributor_section' => '1'
-);
-$distributor_sections[] = array(
-    'title' => 'Quick links',
-    'order_by' => '11',
-    'distributor_section' => '15'
-);
-$distributor_sections[] = array(
-    'title' => 'Front-end messages',
-    'order_by' => '20',
-    'distributor_section' => '2'
-);
-$distributor_sections[] = array(
-    'title' => 'Distributor contacts',
-    'order_by' => '30',
-    'distributor_section' => '3'
-);
-/*
-    $distributor_sections[] = array(
-        'title'  => 'Distributor materials',
-        'order_by' => '40',
-        'distributor_section' => '4'
-    );
-*/
-$distributor_sections[] = array(
-    'title' => 'Distributor pricing equations',
-    'order_by' => '50',
-    'distributor_section' => '5'
-);
-$distributor_sections[] = array(
-    'title' => 'Distributor ships from (for US orders)',
-    'order_by' => '60',
-    'distributor_section' => '6'
-);
-$distributor_sections[] = array(
-    'title' => 'Distributor shipping policy',
-    'order_by' => '70',
-    'distributor_section' => '7'
-);
-$distributor_sections[] = array(
-    'title' => 'UPS shipping markups',
-    'order_by' => '73',
-    'distributor_section' => '19'
-);
-$distributor_sections[] = array(
-    'title' => 'Flat rate shipping markups',
-    'order_by' => '74',
-    'distributor_section' => '21'
-);
-$distributor_sections[] = array(
-    'title' => 'Requesting availability / shipping quote / cost to us',
-    'order_by' => '75',
-    'distributor_section' => '14'
-);
-$distributor_sections[] = array(
-    'title' => 'Order submission',
-    'order_by' => '80',
-    'distributor_section' => '8'
-);
-$distributor_sections[] = array(
-    'title' => 'Order tracking',
-    'order_by' => '85',
-    'distributor_section' => '12'
-);
-$distributor_sections[] = array(
-    'title' => 'Tax policy',
-    'order_by' => '90',
-    'distributor_section' => '9'
-);
-$distributor_sections[] = array(
-    'title' => 'Return policy',
-    'order_by' => '100',
-    'distributor_section' => '10'
-);
-$distributor_sections[] = array(
-    'title' => 'Product page locked fields',
-    'order_by' => '105',
-    'distributor_section' => '22'
-);
-$distributor_sections[] = array(
-    'title' => 'Distributor invoices',
-    'order_by' => '110',
-    'distributor_section' => '13'
-);
-$distributor_sections[] = array(
-    'title' => 'Payment to distributor arrangement',
-    'order_by' => '120',
-    'distributor_section' => '11'
-);
-$distributor_sections[] = array(
-    'title' => 'Product questions',
-    'order_by' => '130',
-    'distributor_section' => '16'
-);
-
-$distributor_sections[] = array(
-    'title' => 'Distributor feeds info',
-    'order_by' => '140',
-    'distributor_section' => '17'
-);
-
-if ($distributor_section == "17") {
-    $supplier_feeds_info_I = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='I'");
-    if (!empty($supplier_feeds_info_I)) {
-        foreach ($supplier_feeds_info_I as $k_s => $v_s) {
-            $cur_time = time();
-            $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-            $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time + $v_s["average_update_period"]));
-            $interval = $date1->diff($date2);
-            $years = $interval->format("%y");
-            $months = $interval->format("%m");
-            $days = $interval->format("%d");
-            $hours = $interval->format("%h");
-            $mins = $interval->format("%i");
-            $age_str = ($years != 0 ? $years . " years, " : "") . ($months != 0 ? $months . " months, " : "") . ($days != 0 ? $days . " days, " : "") . sprintf('%1$02d', $hours) . ":" . sprintf('%1$02d', $mins) . " hours";
-            $supplier_feeds_info_I[$k_s]["average_update_period_str"] = $age_str;
-
-            $supplier_feeds_info_I[$k_s]["last_feed_fields"] = unserialize(stripslashes($v_s["last_feed_fields"]));
-        }
-    }
-    $smarty->assign("supplier_feeds_info_I", $supplier_feeds_info_I);
-
-    $supplier_feeds_info_P = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='P'");
-    if (!empty($supplier_feeds_info_P)) {
-        foreach ($supplier_feeds_info_P as $k_s => $v_s) {
-            $cur_time = time();
-            $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-            $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time + $v_s["average_update_period"]));
-            $interval = $date1->diff($date2);
-            $years = $interval->format("%y");
-            $months = $interval->format("%m");
-            $days = $interval->format("%d");
-            $hours = $interval->format("%h");
-            $mins = $interval->format("%i");
-            $age_str = ($years != 0 ? $years . " years, " : "") . ($months != 0 ? $months . " months, " : "") . ($days != 0 ? $days . " days, " : "") . sprintf('%1$02d', $hours) . ":" . sprintf('%1$02d', $mins) . " hours";
-            $supplier_feeds_info_P[$k_s]["average_update_period_str"] = $age_str;
-
-            $supplier_feeds_info_P[$k_s]["last_feed_fields"] = unserialize(stripslashes($v_s["last_feed_fields"]));
-        }
-    }
-    $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
+if (!empty($page)) {
+    $smarty->assign('page', $page);
 }
 
-if ($distributor_section == "30") {
+$distributor_sections = [
+    [
+        'title' => 'General distributor information',
+        'order_by' => '10',
+        'distributor_section' => '1'
+    ],
+    [
+        'title' => 'Quick links',
+        'order_by' => '11',
+        'distributor_section' => '15'
+    ],
+    [
+        'title' => 'Front-end messages',
+        'order_by' => '20',
+        'distributor_section' => '2'
+    ],
+    [
+        'title' => 'Distributor contacts',
+        'order_by' => '30',
+        'distributor_section' => '3'
+    ],
+    [
+        'title' => 'Distributor pricing equations',
+        'order_by' => '50',
+        'distributor_section' => '5'
+    ],
+    [
+        'title' => 'Distributor ships from (for US orders)',
+        'order_by' => '60',
+        'distributor_section' => '6'
+    ],
+    [
+        'title' => 'Distributor shipping policy',
+        'order_by' => '70',
+        'distributor_section' => '7'
+    ],
+    [
+        'title' => 'UPS shipping markups',
+        'order_by' => '73',
+        'distributor_section' => '19'
+    ],
+    [
+        'title' => 'Flat rate shipping markups',
+        'order_by' => '74',
+        'distributor_section' => '21'
+    ],
+    [
+        'title' => 'Requesting availability / shipping quote / cost to us',
+        'order_by' => '75',
+        'distributor_section' => '14'
+    ],
+    [
+        'title' => 'Order submission',
+        'order_by' => '80',
+        'distributor_section' => '8'
+    ],
+    [
+        'title' => 'Order tracking',
+        'order_by' => '85',
+        'distributor_section' => '12'
+    ],
+    [
+        'title' => 'Tax policy',
+        'order_by' => '90',
+        'distributor_section' => '9'
+    ],
+    [
+        'title' => 'Return policy',
+        'order_by' => '100',
+        'distributor_section' => '10'
+    ],
+    [
+        'title' => 'Product page locked fields',
+        'order_by' => '105',
+        'distributor_section' => '22'
+    ],
+    [
+        'title' => 'Distributor invoices',
+        'order_by' => '110',
+        'distributor_section' => '13'
+    ],
+    [
+        'title' => 'Payment to distributor arrangement',
+        'order_by' => '120',
+        'distributor_section' => '11'
+    ],
+    [
+        'title' => 'Product questions',
+        'order_by' => '130',
+        'distributor_section' => '16'
+    ],
+    [
+        'title' => 'Distributor feeds info',
+        'order_by' => '140',
+        'distributor_section' => '17'
+    ],
+    [
+        'title' => 'SF product page behavior',
+        'order_by' => '160',
+        'distributor_section' => '20'
+    ],
+    [
+        'title' => 'Clone distributor to another storefront',
+        'order_by' => '170',
+        'distributor_section' => '30'
+    ],
+    [
+        'title' => 'External marketplaces',
+        'order_by' => '180',
+        'distributor_section' => '40'
+    ],
+    [
+        'title' => 'Product verification settings',
+        'order_by' => '180',
+        'distributor_section' => '31'
+    ]
+];
+
+if ($distributor_section === 7) {
+    $smarty->assign('trackingLinksCarriers', TrackingLinksCarrierModel::objects()->order(['orderby']));
+}
+
+if ($distributor_section === 17) {
+    $smarty->assign('supplier_feeds_info_I', $distributorModel->feeds->filter(['feed_type' => 'I']));
+    $smarty->assign('supplier_feeds_info_P', $distributorModel->feeds->filter(['feed_type' => 'P']));
+}
+
+if ($distributor_section === 30) {
     $classManufacturer = new Xcart\Manufacturers();
     $aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
 
-    $smarty->assign("aParentManufacturer", $aParentManufacturer);
+    $smarty->assign('aParentManufacturer', $aParentManufacturer);
     $aChildManufacturers = $classManufacturer->getParentManufacturers($manufacturerid);
-    $smarty->assign("aChildManufacturers", $aChildManufacturers);
+    $smarty->assign('aChildManufacturers', $aChildManufacturers);
 }
 
-if ($distributor_section == "40") {
+if ($distributor_section === 40) {
     global $xcart_dir;
     $aMarketplaces = ExternalMarketPlace::getExternalMarketPlaces();
     $aExternalMarketplaces = [];
@@ -990,60 +840,17 @@ if ($distributor_section == "40") {
 }
 
 
-
-/*
-    $distributor_sections[] = array(
-        'title'  => 'Product feeds',
-        'order_by' => '150',
-        'distributor_section' => '18'
-    );
-
-if ($distributor_section == "18"){
-	$product_feed_info = func_query_first("SELECT * FROM $sql_tbl[supplier_product_feeds] WHERE manufacturerid='$manufacturerid'");
-	$smarty->assign("product_feed_info", $product_feed_info);
-}
-*/
-
-$distributor_sections[] = array(
-    'title' => 'SF product page behavior',
-    'order_by' => '160',
-    'distributor_section' => '20'
-);
-
-$distributor_sections[] = array(
-    'title' => 'Clone distributor to another storefront',
-    'order_by' => '170',
-    'distributor_section' => '30'
-);
-
-$distributor_sections[] = array(
-    'title' => 'External marketplaces',
-    'order_by' => '180',
-    'distributor_section' => '40'
-);
-
-$distributor_sections[] = array(
-    'title' => 'Product verification settings',
-    'order_by' => '180',
-    'distributor_section' => '31'
-);
-
-
 $count_rows_in_cell = ceil(count($distributor_sections) / 2);
 
 if (empty($distributor_section))
     $distributor_section = 1;
 
-$smarty->assign("distributor_section", $distributor_section);
-$smarty->assign("count_rows_in_cell", $count_rows_in_cell);
-$smarty->assign("distributor_sections", $distributor_sections);
+$smarty->assign('distributor_section', $distributor_section);
+$smarty->assign('count_rows_in_cell', $count_rows_in_cell);
+$smarty->assign('distributor_sections', $distributor_sections);
 
 $ca_statuses = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' AND status!='' ORDER BY orderby");
 $smarty->assign('ca_statuses', $ca_statuses);
 
 $smarty->assign('currencies', CurrencyModel::objects()->all());
 
-
-$now_time = time();
-$time_for_request = urlencode(date('m/d/Y', $now_time - 6 * 30 * 24 * 60 * 60) . " - " . date('m/d/Y', $now_time));
-$smarty->assign('time_for_request', $time_for_request);

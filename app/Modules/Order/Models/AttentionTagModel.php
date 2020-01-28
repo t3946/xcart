@@ -17,13 +17,13 @@ class AttentionTagModel extends Model
     public static function getFields()
     {
         return [
-            'status_id' => AutoField::className(),
+            'status_id' => AutoField::class,
             'status' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
             ],
             'active' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'choices' => [
                     'Y' => 'Enabled',
@@ -32,7 +32,7 @@ class AttentionTagModel extends Model
                 'default' => 'Y'
             ],
             'events' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'length' => 1,
                 'null' => false,
                 'choices' => [
@@ -42,17 +42,17 @@ class AttentionTagModel extends Model
                 'default' => 0
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],
             'color' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '#F4CCCC',
             ],
             'description' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
                 'default' => ''
             ],
