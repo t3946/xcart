@@ -2278,7 +2278,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
     {rdelim});
     {literal}
     $(function () {
-        $('.tooltip').tooltip({
+        var t= $('.tooltip').tooltip({
             position: {
                 using: function (position, feedback) {
                     $(this).css(position);
@@ -2286,6 +2286,13 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
                         .addClass("tooltip__s3")
                         .appendTo(this);
                 }
+            },
+            content: function(){
+                var element = $( this );
+                return element.attr('title')
+            },
+            open: function (event, ui) {
+                ui.tooltip.css("max-width", "400px");
             }
         });
     });
