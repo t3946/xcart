@@ -669,8 +669,6 @@ class SupplierFeedHelper
 
     public static function feedStatistic(SupplierFeedModel $feed,  $params, $feedProductCount = 0): string
     {
-        $md5 = $params['md5'];
-        $last_feed_fields_arr_vals = $params['last_feed_fields_arr_vals'];
         $new_products_count = $params['new_products_count'];
         $updated_products_count = $params['updated_products_count'];
         $inserted_products_count = $params['inserted_products_count'];
@@ -683,16 +681,16 @@ class SupplierFeedHelper
         $average_update_period = round(($feed->average_update_period + $last_update_period) / 2, 0);
 
         $feed->setAttributes([
-            "last_md5" => $md5,
+            "last_md5" => $params['md5'],
             "last_update_time" => time(),
             "average_update_period" => $average_update_period,
             "last_update_period" => $last_update_period,
-            "last_feed_fields" => $last_feed_fields_arr_vals,
-            "last_update_items_count" => $feedProductCount
+            "last_feed_fields" => $params['last_feed_fields_arr_vals'],
+            "last_update_items_count" => $feedProductCount,
+            'feed_source' => $params['feed_source'],
+            'feed_source_date' => $params['feed_source_date'],
         ]);
         $feed->save();
-
-
 
         $distributorModel = $feed->distributor;
 
