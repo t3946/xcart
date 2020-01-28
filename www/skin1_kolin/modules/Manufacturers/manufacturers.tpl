@@ -423,7 +423,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td width="20%" class="FormButton">Added by </td>
         <td></td>
         <td width="80%">{$distributorModel->provider_model} ({$distributorModel->provider})
-            <a title="{$lng.help_dx_provider_text|default:help_dx_provider_text}" class="tooltip">
+            <a title="{$lng.help_dx_provider_text|htmlspecialchars|default:help_dx_provider_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -432,7 +432,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td width="20%" class="FormButton">Distributor company name</td>
         <td><span class="Star">*</span></td>
         <td width="80%"><input style="width:50%" type="text" name="manufacturer" size="50" value="{$distributorModel->manufacturer}" style="width:80%"{$disabled} />
-            <a title="{$lng.help_dx_comapny_name_text|default:help_dx_comapny_name_text}" class="tooltip">
+            <a title="{$lng.help_dx_comapny_name_text|htmlspecialchars|default:help_dx_comapny_name_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -442,7 +442,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td><span class="Star">*</span></td>
         <td width="80%"><input type="text" name="code" size="10" maxlength="5" value="{$distributorModel->code}"
                                style="width:12%"{$disabled} />
-            <a title="{$lng.help_dx_prefix_text|default:help_dx_prefix_text}" class="tooltip">
+            <a title="{$lng.help_dx_prefix_text|htmlspecialchars|default:help_dx_prefix_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -452,7 +452,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>&nbsp;</td>
         <td><input type="text" size="47" name="url" value="{$distributorModel->url}" style="width:50%" {$disabled} />
             {if $distributorModel->url ne ""}<a href="{$distributorModel->url}" target="blank">Website</a>{/if}
-            <a title="{$lng.help_dx_website_text|default:help_dx_website_text}" class="tooltip">
+            <a title="{$lng.help_dx_website_text|htmlspecialchars|default:help_dx_website_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -468,7 +468,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
                     {include file="main/edit_image.tpl" type="M" id=$distributorModel->manufacturerid delete_url="manufacturers.php?mode=delete_image&manufacturerid=`$distributorModel->manufacturerid`" button_name=$lng.lbl_save no_delete=$no_delete}
                 </td>
                 <td>
-                    <a title="{$lng.help_dx_logo_text|default:help_dx_logo_text}" class="tooltip">
+                    <a title="{$lng.help_dx_logo_text|htmlspecialchars|default:help_dx_logo_text}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -499,7 +499,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
                             {/foreach}
                         </td>
                     {/if}
-                    <td><a title="{$lng.help_dx_site_text|default:help_dx_site_text}" class="tooltip">
+                    <td><a title="{$lng.help_dx_site_text|htmlspecialchars|default:help_dx_site_text}" class="tooltip">
                             <i class="fa fa-question-circle pointer"></i>
                         </a>
                     </td>
@@ -513,7 +513,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>
             <textarea {if $distributor_section eq "1"}class="new_editor"{/if} name="d_specific_instructions" rows="20"
                       cols="60" style="width: 80%;">{$distributorModel->d_specific_instructions}</textarea>
-            <a title="{$lng.help_dx_instructions_text|default:help_dx_instructions_text}" class="tooltip">
+            <a title="{$lng.help_dx_instructions_text|htmlspecialchars|default:help_dx_instructions_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -524,7 +524,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
             <td>&nbsp;</td>
             <td>
                 <input type="checkbox" name="avail" value="Y"{if $distributorModel->avail === 'Y' || !$distributorModel} checked="checked"{/if} />
-                <a title="{$lng.help_dx_activate_text|default:help_dx_activate_text}" class="tooltip">
+                <a title="{$lng.help_dx_activate_text|htmlspecialchars|default:help_dx_activate_text}" class="tooltip">
                     <i class="fa fa-question-circle pointer"></i>
                 </a>
             </td>
@@ -556,7 +556,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>&nbsp;</td>
         <td>
             <textarea name="cart_manufact_text_displayed" rows="5" cols="60" style="width:80%">{$manufacturer.cart_manufact_text_displayed}</textarea>
-            <a title="{$lng.help_dx_front_page_tabs_text|default:help_dx_front_page_tabs_text}" class="tooltip">
+            <a title="{$lng.help_dx_front_page_tabs_text|htmlspecialchars|default:help_dx_front_page_tabs_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -566,7 +566,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>&nbsp;</td>
         <td>
             <input type="text" size="50" name="lead_time_message" value="{$manufacturer.lead_time_message|escape}" style="width:80%"/>
-            <a title="{$lng.help_dx_add_to_cart_popup_text|default:help_dx_add_to_cart_popup_text}" class="tooltip">
+            <a title="{$lng.help_dx_add_to_cart_popup_text|htmlspecialchars|default:help_dx_add_to_cart_popup_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -918,7 +918,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             <input type="text" size="50" name="d_product_catalog" value="{$distributorModel->d_product_catalog}" style="width:40%"/>
             {if $distributorModel->d_product_catalog !== ''}<a href="{$distributorModel->d_product_catalog}" target="_blank">Open</a>{/if}
-            <a title="{$lng.help_dx_catalog_url_text|default:help_dx_catalog_url_text}" class="tooltip">
+            <a title="{$lng.help_dx_catalog_url_text|htmlspecialchars|default:help_dx_catalog_url_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -929,7 +929,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             <input type="text" size="50" name="d_price_list" value="{$distributorModel->d_price_list}" style="width:40%"/>
             {if $distributorModel->d_price_list !== ''}<a href="{$distributorModel->d_price_list}" target="_blank">Open</a>{/if}
-            <a title="{$lng.help_dx_price_list_text|default:help_dx_price_list_text}" class="tooltip">
+            <a title="{$lng.help_dx_price_list_text|htmlspecialchars|default:help_dx_price_list_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -943,7 +943,7 @@ function func_show_login_password_info(manufacturerid) {
                     <option {if $distributorModel->d_currency === $currency->currency_id}selected="selected"{/if} value="{$currency->currency_id}">{$currency->currency_code}</option>
                 {/foreach}
             </select>
-            <a title="{$lng.help_dx_currency_text|default:help_dx_currency_text}" class="tooltip">
+            <a title="{$lng.help_dx_currency_text|htmlspecialchars|default:help_dx_currency_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -953,7 +953,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="9" name="cost_to_us_coef_x" value="{$distributorModel->cost_to_us_coef_x}"/>&nbsp;*&nbsp;{$lng.lbl_list_price}
-            <a title="{$lng.help_dx_cost_to_us_text|default:help_dx_cost_to_us_text}" class="tooltip">
+            <a title="{$lng.help_dx_cost_to_us_text|htmlspecialchars|default:help_dx_cost_to_us_text}" class="tooltip">
             <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -965,7 +965,7 @@ function func_show_login_password_info(manufacturerid) {
             &nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;
             <input type="text" size="9" name="price_coef_y" value="{$distributorModel->price_coef_y}"/>&nbsp;)&nbsp;/&nbsp;
             <input type="text" size="9" name="price_coef_z" value="{$distributorModel->price_coef_z}"/>
-            <a title="{$lng.help_dx_price_text|default:help_dx_price_text}" class="tooltip">
+            <a title="{$lng.help_dx_price_text|htmlspecialchars|default:help_dx_price_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -984,7 +984,7 @@ function func_show_login_password_info(manufacturerid) {
                     applies to all products
                 </option>
             </select>
-            <a title="{$lng.help_dx_map_text|default:help_dx_map_text}" class="tooltip">
+            <a title="{$lng.help_dx_map_text|htmlspecialchars|default:help_dx_map_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -995,7 +995,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             <input type="text" size="50" name="d_map_prices" value="{$distributorModel->d_map_prices}" style="width:40%"/>
             {if $distributorModel->d_map_prices}<a href="{$distributorModel->d_map_prices}" target="_blank">Open</a>{/if}
-            <a title="{$lng.help_dx_map_price_url_text|default:help_dx_map_price_url_text}" class="tooltip">
+            <a title="{$lng.help_dx_map_price_url_text|htmlspecialchars|default:help_dx_map_price_url_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1005,7 +1005,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td>
             <input type="text" size="9" name="new_map_price_coef_x" value="{$distributorModel->new_map_price_coef_x}"/>&nbsp;*&nbsp;{$lng.lbl_list_price}
-            <a title="{$lng.help_dx_map_price_text|default:help_dx_map_price_text}" class="tooltip">
+            <a title="{$lng.help_dx_map_price_text|htmlspecialchars|default:help_dx_map_price_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1015,7 +1015,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td>
             <input type="text" size="9" name="supplier_products_price_multiplier" value="{$distributorModel->supplier_products_price_multiplier}"/>
-            <a title="{$lng.help_dx_price_multiplier_text|default:help_dx_price_multiplier_text}" class="tooltip">
+            <a title="{$lng.help_dx_price_multiplier_text|htmlspecialchars|default:help_dx_price_multiplier_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1029,7 +1029,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="50" name="d_ships_to_within" value="{$distributorModel->d_ships_to_within}" style="width:80%"/>
-            <a title="{$lng.help_dx_ships_to_text|default:help_dx_ships_to_text}" class="tooltip">
+            <a title="{$lng.help_dx_ships_to_text|htmlspecialchars|default:help_dx_ships_to_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1045,7 +1045,7 @@ function func_show_login_password_info(manufacturerid) {
                     <option value="{$carrier->carrier_id}" {if in_array($carrier->carrier_id, $ccc)}selected="selected"{/if}>{$carrier->carrier}</option>
                 {/foreach}
             </select>
-            <a title="{$lng.help_dx_shipping_methods_text|default:help_dx_shipping_methods_text}" class="tooltip">
+            <a title="{$lng.help_dx_shipping_methods_text|htmlspecialchars|default:help_dx_shipping_methods_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1056,7 +1056,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             from <input type="text" size="3" name="dx_leadtime" value="{$manufacturer.dx_leadtime}"/>
             to <input type="text" size="3" name="dx_leadtime_to" value="{$manufacturer.dx_leadtime_to}"/>
-            <a title="{$lng.help_dx_to_cx_lead_text|default:help_dx_to_cx_lead_text}" class="tooltip">
+            <a title="{$lng.help_dx_to_cx_lead_text|htmlspecialchars|default:help_dx_to_cx_lead_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1066,7 +1066,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="3" name="amazon_leadtime_to_ship" value="{$manufacturer.amazon_leadtime_to_ship}"/>
-            <a title="{$lng.help_amazon_to_cx_lead_text|default:help_amazon_to_cx_lead_text}" class="tooltip">
+            <a title="{$lng.help_amazon_to_cx_lead_text|htmlspecialchars|default:help_amazon_to_cx_lead_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1076,7 +1076,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="3" name="amazon_leadtime_for_fba_loads" value="{$manufacturer.amazon_leadtime_for_fba_loads}"/>
-            <a title="{$lng.help_dx_to_amazon_lead_text|default:help_dx_to_amazon_lead_text}" class="tooltip">
+            <a title="{$lng.help_dx_to_amazon_lead_text|htmlspecialchars|default:help_dx_to_amazon_lead_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1106,7 +1106,7 @@ function func_show_login_password_info(manufacturerid) {
                  id="free_shipping_on_orders_over_value">
                 &nbsp; {$dCurrency->symbol_prefix}{$dCurrency} <input type="text" name="free_shipping_on_orders_over_value" value="{$distributorModel->free_shipping_on_orders_over_value}" size="7"/>
             </div>
-            <a title="{$lng.help_dx_offers_free_text|default:help_dx_offers_free_text}" class="tooltip">
+            <a title="{$lng.help_dx_offers_free_text|htmlspecialchars|default:help_dx_offers_free_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1126,7 +1126,7 @@ function func_show_login_password_info(manufacturerid) {
                 <option value="Y"{if $manufacturer.warehouse_pickups_are_allowed eq "Y"} selected="selected"{/if}>Yes
                 </option>
             </select>
-            <a title="{$lng.help_dx_warehouse_pickups_text|default:help_dx_warehouse_pickups_text}" class="tooltip">
+            <a title="{$lng.help_dx_warehouse_pickups_text|htmlspecialchars|default:help_dx_warehouse_pickups_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1146,7 +1146,7 @@ function func_show_login_password_info(manufacturerid) {
                     applies to orders below minimum order amount only
                 </option>
             </select>
-            <a title="{$lng.help_dx_dropship_fee_text|default:help_dx_dropship_fee_text}" class="tooltip">
+            <a title="{$lng.help_dx_dropship_fee_text|htmlspecialchars|default:help_dx_dropship_fee_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1156,7 +1156,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" name="d_drop_ship_fee_in_us" value="{$manufacturer.d_drop_ship_fee_in_us}" size="7"/>
-            <a title="{$lng.help_dx_dropship_fee_price_text|default:help_dx_dropship_fee_price_text}" class="tooltip">
+            <a title="{$lng.help_dx_dropship_fee_price_text|htmlspecialchars|default:help_dx_dropship_fee_price_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1172,7 +1172,7 @@ function func_show_login_password_info(manufacturerid) {
                     applies to all orders
                 </option>
             </select>
-            <a title="{$lng.help_dx_minimum_order_amount_text|default:help_dx_minimum_order_amount_text}" class="tooltip">
+            <a title="{$lng.help_dx_minimum_order_amount_text|htmlspecialchars|default:help_dx_minimum_order_amount_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1183,7 +1183,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" name="d_minimum_order_amount_in_us" value="{$manufacturer.d_minimum_order_amount_in_us}" size="7"/>
-            <a title="{$lng.help_dx_minimum_order_amount_price_text|default:help_dx_minimum_order_amount_price_text}" class="tooltip">
+            <a title="{$lng.help_dx_minimum_order_amount_price_text|htmlspecialchars|default:help_dx_minimum_order_amount_price_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1206,7 +1206,7 @@ function func_show_login_password_info(manufacturerid) {
                     dealer discount is reduced
                 </option>
             </select>
-            <a title="{$lng.help_dx_below_minimum_order_text|default:help_dx_below_minimum_order_text}" class="tooltip">
+            <a title="{$lng.help_dx_below_minimum_order_text|htmlspecialchars|default:help_dx_below_minimum_order_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1219,7 +1219,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             from <input type="text" name="d_dealer_discount_reduced_from" value="{$manufacturer.d_dealer_discount_reduced_from}" size="7"/>% to
             <input type="text" name="d_dealer_discount_reduced_to" value="{$manufacturer.d_dealer_discount_reduced_to}" size="7"/>%
-            <a title="{$lng.help_dx_discount_reduced_text|default:help_dx_discount_reduced_text}" class="tooltip">
+            <a title="{$lng.help_dx_discount_reduced_text|htmlspecialchars|default:help_dx_discount_reduced_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1234,7 +1234,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             <input type="checkbox" name="update_approximation_shipping_rates" value="Y"{if $manufacturer.update_approximation_shipping_rates eq 'Y'} checked="checked"{/if} />
-            <a title="{$lng.help_dx_update_approximate_shipping_rates_text|default:help_dx_update_approximate_shipping_rates_text}" class="tooltip">
+            <a title="{$lng.help_dx_update_approximate_shipping_rates_text|htmlspecialchars|default:help_dx_update_approximate_shipping_rates_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1245,7 +1245,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             <input readonly="readonly" type="text" size="50" name="shipping_rates_last_update_date"
                    value="{if $manufacturer.shipping_rates_last_update_date gt "0"}{$manufacturer.shipping_rates_last_update_date|date_format:'%d-%b-%Y&nbsp; %H:%M:%S'}{/if}"/>
-            <a title="{$lng.help_dx_date_approximate_shippings_text|default:help_dx_date_approximate_shippings_text}" class="tooltip">
+            <a title="{$lng.help_dx_date_approximate_shippings_text|htmlspecialchars|default:help_dx_date_approximate_shippings_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1830,7 +1830,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
             <td>&nbsp;</td>
             <td width="60%">
                 <input type="text" size="50" name="d_website_search_for_sku_url" value="{$distributorModel->d_website_search_for_sku_url}" style="width:80%"/>
-                <a title="{$lng.help_dx_search_for_sku_url_text|default:help_dx_search_for_sku_url_text}" class="tooltip">
+                <a title="{$lng.help_dx_search_for_sku_url_text|htmlspecialchars|default:help_dx_search_for_sku_url_text}" class="tooltip">
                     <i class="fa fa-question-circle pointer"></i>
                 </a>
             </td>
@@ -1840,7 +1840,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
             <td>&nbsp;</td>
             <td width="60%">
                 <input type="text" size="50" name="d_link_to_order_distributors_website" value="{$distributorModel->d_link_to_order_distributors_website}" style="width:80%"/>
-                <a title="{$lng.help_dx_link_to_order_text|default:help_dx_link_to_order_text}" class="tooltip">
+                <a title="{$lng.help_dx_link_to_order_text|htmlspecialchars|default:help_dx_link_to_order_text}" class="tooltip">
                     <i class="fa fa-question-circle pointer"></i>
                 </a>
             </td>
