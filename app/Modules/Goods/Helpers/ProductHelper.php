@@ -303,8 +303,10 @@ class ProductHelper
         }
 
         $descript = strip_tags($model->getFrontendDescription());
+        $brand = $model->brand;
 
         if($model->isGroupRoot()){
+
 
             $json = [
                 "@context" => "http://schema.org/",
@@ -316,7 +318,7 @@ class ProductHelper
                 "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
-                    "name" => $model->brand->getProductFrontendName(),
+                    "name" => $brand ? $brand->getProductFrontendName() : '',
                 ],
                 "offers" => [
                     "@type" => "Offer",
@@ -357,7 +359,7 @@ class ProductHelper
                 "sku" => $model->productcode,
                 "brand" => [
                     "@type" => "Thing",
-                    "name" => $model->brand->brand
+                    "name" => $brand ? $brand->brand : ''
                 ],
                 "offers" => [
                     "@type" => "Offer",
