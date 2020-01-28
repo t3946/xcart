@@ -42,6 +42,7 @@ class BluePay extends Gateway
 
     public function void($params)
     {
+        $params['amount'] = str_replace(',', '', $params['amount']);
         $this->result = $this->gateway
             ->setToken($params['transactionReference'])
             ->void($params)
