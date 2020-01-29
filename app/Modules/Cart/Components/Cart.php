@@ -328,7 +328,7 @@ class Cart
             $newItems = [];
             foreach ($items as $key =>$item) {
                 $object = $item->getObject();
-                if ($newObject = $object->objects()->get(['pk' => $object->pk])) {
+                if ($newObject = $object->objects()->get(['pk' => $object->pk, 'forsale' => 'Y'])) {
                     $item->setObject($newObject);
                     $newItems[$key] = $item;
                 } else {

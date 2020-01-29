@@ -961,10 +961,11 @@ function func_show_login_password_info(manufacturerid) {
     <tr>
         <td class="FormButton">{$lng.lbl_price}&nbsp;=</td>
         <td>&nbsp;</td>
-        <td>(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$distributorModel->price_coef_x}"/>
+        <td>{*(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$distributorModel->price_coef_x}"/>
             &nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;
             <input type="text" size="9" name="price_coef_y" value="{$distributorModel->price_coef_y}"/>&nbsp;)&nbsp;/&nbsp;
-            <input type="text" size="9" name="price_coef_z" value="{$distributorModel->price_coef_z}"/>
+            <input type="text" size="9" name="price_coef_z" value="{$distributorModel->price_coef_z}"/>*}
+            calculated by our algorithm
             <a title="{$lng.help_dx_price_text|htmlspecialchars|default:help_dx_price_text}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
@@ -1062,7 +1063,7 @@ function func_show_login_password_info(manufacturerid) {
         </td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Amazon to Cx lead time to ship for MFN orders (days):</td>
+        <td width="20%" class="FormButton">Amazon to Cx lead time to ship for MFN orders (business days):</td>
         <td>&nbsp;</td>
         <td width="80%">
             <input type="text" size="3" name="amazon_leadtime_to_ship" value="{$manufacturer.amazon_leadtime_to_ship}"/>
@@ -2288,8 +2289,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
                 }
             },
             content: function(){
-                var element = $( this );
-                return element.attr('title')
+                return $(this).attr('title');
             },
             open: function (event, ui) {
                 ui.tooltip.css("max-width", "400px");
