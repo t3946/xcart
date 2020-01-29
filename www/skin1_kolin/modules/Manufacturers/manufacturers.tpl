@@ -1220,9 +1220,7 @@ function func_show_login_password_info(manufacturerid) {
         <td width="80%">
             from <input type="text" name="d_dealer_discount_reduced_from" value="{$manufacturer.d_dealer_discount_reduced_from}" size="7"/>%
             <a title="{$lng.help_dx_discount_reduced_text_from|htmlspecialchars|default:help_dx_discount_reduced_text_from}" class="tooltip">
-                <i class="fa fa-question-circle pointer"></i>
-            </a>
-            to
+                <i class="fa fa-question-circle pointer"></i></a>to
             <input type="text" name="d_dealer_discount_reduced_to" value="{$manufacturer.d_dealer_discount_reduced_to}" size="7"/>%
             <a title="{$lng.help_dx_discount_reduced_text_to|htmlspecialchars|default:help_dx_discount_reduced_text_to}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
