@@ -1163,7 +1163,7 @@ function func_show_login_password_info(manufacturerid) {
         </td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Minimum order amount in {$dCurrency->symbol_prefix}{$dCurrency}</td>
+        <td width="20%" class="FormButton">Minimum order amount</td>
         <td>&nbsp;</td>
         <td width="80%">
             <select name="d_minimum_order_amount" id="d_minimum_order_amount"
@@ -1218,9 +1218,13 @@ function func_show_login_password_info(manufacturerid) {
         <td width="20%" class="FormButton"></td>
         <td>&nbsp;</td>
         <td width="80%">
-            from <input type="text" name="d_dealer_discount_reduced_from" value="{$manufacturer.d_dealer_discount_reduced_from}" size="7"/>% to
+            from <input type="text" name="d_dealer_discount_reduced_from" value="{$manufacturer.d_dealer_discount_reduced_from}" size="7"/>%
+            <a title="{$lng.help_dx_discount_reduced_text_from|htmlspecialchars|default:help_dx_discount_reduced_text_from}" class="tooltip">
+                <i class="fa fa-question-circle pointer"></i>
+            </a>
+            to
             <input type="text" name="d_dealer_discount_reduced_to" value="{$manufacturer.d_dealer_discount_reduced_to}" size="7"/>%
-            <a title="{$lng.help_dx_discount_reduced_text|htmlspecialchars|default:help_dx_discount_reduced_text}" class="tooltip">
+            <a title="{$lng.help_dx_discount_reduced_text_to|htmlspecialchars|default:help_dx_discount_reduced_text_to}" class="tooltip">
                 <i class="fa fa-question-circle pointer"></i>
             </a>
         </td>
@@ -1231,7 +1235,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Update approximate shipping rates (ASR)</td>
+        <td width="20%" class="FormButton">Force ASR (approximate shipping rates) update</td>
         <td>&nbsp;</td>
         <td width="80%">
             <input type="checkbox" name="update_approximation_shipping_rates" value="Y"{if $manufacturer.update_approximation_shipping_rates eq 'Y'} checked="checked"{/if} />
@@ -1241,7 +1245,7 @@ function func_show_login_password_info(manufacturerid) {
         </td>
     </tr>
     <tr>
-        <td width="20%" class="FormButton">Date of the ASR last update</td>
+        <td width="20%" class="FormButton">Date and time of the last ASR update</td>
         <td>&nbsp;</td>
         <td width="80%">
             <input readonly="readonly" type="text" size="50" name="shipping_rates_last_update_date"
