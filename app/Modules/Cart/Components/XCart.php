@@ -73,6 +73,13 @@ class XCart extends Cart
 
             foreach ($groups as $mid => $item) {
                 $dist_valid[$mid] = $distrs[$mid]->checkMinimalAmount($item['subtotal']);
+                foreach ($item['items'] as $product) {
+                    if ($p_model = $product->_object->objects()->get(['pk' => $product->_object->pk])) {
+                        if ($p_model->forsale === 'N') {
+                            return false;
+                        }
+                    }
+                }
             }
         }
 
