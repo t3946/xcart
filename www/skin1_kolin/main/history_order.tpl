@@ -1232,11 +1232,6 @@ $( document ).ready(function() {
         {assign var="show_dispatch_to_distributor" value="N"}
 {/if}
 
-
-{*---- for test ---------*}
-{* {assign var=show_dispatch_to_distributor value="Y"} *}
-{*-------------*}
-
  {if $show_dispatch_to_distributor eq "Y" && $order.fraud_status eq "C" && $order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0}
 
   <a name="dispatch_to_distributor_{$mnf_id}"></a>
@@ -1254,27 +1249,17 @@ $( document ).ready(function() {
   <B>Subject line:</B><br />
   <input type="text" name="d_email_subject_14" value="{$v.d_subject_line_8}" style="width: 80%;" /><br /><br />
   <B>{$lng.lbl_message_body}:</B><br />
-{*  <textarea rows="20" cols="60" name="mnf_body" style="width: 80%;">{$v.mess_body}</textarea><br /><br /> *}
-{*  <input type="submit" value="Send (Dispatch to distributor)" /><br /><br /> *}
-
-  {* --- *}
-
-{*
-  {include file="main/textarea_def.tpl" name="dispatch_to_distributor_mnf_body_`$mnf_id`" cols="60" rows="30" class="InputWidth" data=$v.mess_body|replace:"\n":"<br />" width="99%" btn_rows="30"}
-*}
 
   <textarea rows="30" cols="60" name="dispatch_to_distributor_mnf_body_{$mnf_id}" style="width: 80%;" class="new_editor">{$v.mess_body|replace:"\n":"<br />"}</textarea>
 
   <input type="hidden" name="mnf_body" value="" />
   <br />
 
-
   {if $v.submit_to_operator eq "by_email_or_and_fax" && $customer.s_country != "US"}
   {$config.SF_localization_options.outside_sf_localization_warning}
   <br />
   <br />
   {/if}
-
 
 {if $v.submit_to_operator eq "by_email_or_and_fax" && $v.d_dispatch_instructions ne ""}
 {$v.d_dispatch_instructions}<br /><br />
@@ -1317,7 +1302,6 @@ $( document ).ready(function() {
   </tr>
   </table>
   <br />
-  {* --- *}
 
   <hr /><br />
   </form>

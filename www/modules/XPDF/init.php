@@ -88,10 +88,10 @@ if (x_check_controller_condition('C', 'cart', 'order_message')) {
 } elseif (x_check_controller_condition('A', 'order')) {
 
     // Admin's order page
-    x_tpl_add_regexp_patch(
+    /*x_tpl_add_regexp_patch(
         'modules/XPDF/invoice_link_admin.tpl',
         '/(<table [^>]*class="[^"]*ButtonsRow[^"]*"[^>]*>.+)(<td [^>]*class="ButtonsRow"[^>]*>.+<\/td>)/USs',
         '\1<td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">%%</td>\2'
-    );
+    );*/
 }
 

@@ -638,7 +638,6 @@ function check_r_fields(){
                         {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
                     <option>No options selected</option>
                     {foreach from=$option->variants item=variant}
-                        {$product.oOrderDetail->product_options[$p_option_id]}
                         <option value="{$variant->id}"
                                 {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option_id] == $variant->variant_id}
                                     selected="selected"

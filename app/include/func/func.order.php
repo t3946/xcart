@@ -1,6 +1,7 @@
 <?php
 
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -2076,32 +2077,20 @@ function func_get_order_manufacturers($orderid)
                                 /** @var ProductModel $product_model */
                                 $product_model = $detail_model->product_model;
                                 $v = $product_model->getAttributes();
-                                $selected_product_options = $options = null;
+                                $selected_product_options = null;
 
-                                if (!empty($detail_model->product_options)) {
-
-                                    $options = $detail_model->product_options;
-
-                                } else {
-
-                                    $extra_data = $detail_model->extra_data;
-
-                                    if (!empty($extra_data['product_options'])) {
-                                        list($variant, $options) = func_get_product_options_data($product_model->productid, $extra_data['product_options']);
-                                    }
-                                }
-
-                                if (!empty($options)) {
-                                    if (is_array($options)) {
-                                        foreach ($options as $kk => $vv) {
-                                            $selected_product_options .= "<br />" . $vv["classtext"] . " " . $vv["option_name"];
+                                if ($product_options = $detail_model->product_options) {
+                                    $selected_product_options = '<br/> <b>Options:</b> ';
+                                    foreach ($product_options as $productOptionId => $variantId) {
+                                        if ($optionItem = (new ProductOptionVariantModel)->findItem($productOptionId, $variantId)) {
+                                            $name = $optionItem->product_option->option->title;
+                                            $value = $optionItem->variant->name;
+                                            $selected_product_options .= "{$name}: {$value} <br/>";
                                         }
-                                    } else {
-                                        $selected_product_options .= "<br />" . $options;
                                     }
                                 }
 
-                                if ($department == 'distributor' || empty($department)){
+                                if ($department === 'distributor' || empty($department)){
                                     $tmp_sku = $product_model->getMPN();
                                 }
                                 else {
