@@ -2079,14 +2079,10 @@ function func_get_order_manufacturers($orderid)
                                 $v = $product_model->getAttributes();
                                 $selected_product_options = null;
 
-                                if ($product_options = $detail_model->product_options) {
+                                if ($detail_model->product_options) {
                                     $selected_product_options = '<br/> <b>Options:</b> ';
-                                    foreach ($product_options as $productOptionId => $variantId) {
-                                        if ($optionItem = (new ProductOptionVariantModel)->findItem($productOptionId, $variantId)) {
-                                            $name = $optionItem->product_option->option->title;
-                                            $value = $optionItem->variant->name;
-                                            $selected_product_options .= "{$name}: {$value} <br/>";
-                                        }
+                                    foreach ($detail_model->getOptions() as $name => $value) {
+                                       $selected_product_options .= "{$name}: {$value} <br/>";
                                     }
                                 }
 

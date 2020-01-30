@@ -2,6 +2,7 @@
 namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DecimalField;
@@ -82,6 +83,17 @@ class OrderDetailModel  extends Model
         }
 
         return $result;
+    }
 
+    public function getOptions(): array
+    {
+        if ($product_options = $this->product_options) {
+            foreach ($product_options as $productOptionId => $variantId) {
+                if ($optionItem = (new ProductOptionVariantModel)->findItem($productOptionId, $variantId)) {
+                    $result[$optionItem->product_option->option->title] = $optionItem->variant->name;
+                }
+            }
+        }
+        return $result ?? [];
     }
 }
