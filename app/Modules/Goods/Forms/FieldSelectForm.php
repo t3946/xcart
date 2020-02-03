@@ -23,7 +23,6 @@ class FieldSelectForm extends DecoratedProductForm
      */
     protected function fields(): array
     {
-        $selected = [];
         /*if (count($this->variants) === 1) {
             $selected[] = key($this->variants);
         }*/
