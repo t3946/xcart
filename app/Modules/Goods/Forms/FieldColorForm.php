@@ -22,6 +22,11 @@ class FieldColorForm extends FieldSelectForm
      */
     protected function fields(): array
     {
+        $selected = [];
+        if (count($this->variants) === 1) {
+            $selected[] = key($this->variants);
+        }
+
         return [
             $this->fieldName => [
                 'class' => DropDownField::class,
@@ -31,7 +36,7 @@ class FieldColorForm extends FieldSelectForm
                 'requiredMessage' => $this->createRequiredMessage(),
                 'required' => true,
                 'disabled' => [''],
-                'selected' => [''],
+                'selected' => $selected ?? [''],
 //                'className' => $this->type
                 'html' => [
                     'class' => $this->type
