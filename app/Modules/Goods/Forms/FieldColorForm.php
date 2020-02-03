@@ -23,9 +23,9 @@ class FieldColorForm extends FieldSelectForm
     protected function fields(): array
     {
         $selected = [];
-        if (count($this->variants) === 1) {
+        /*if (count($this->variants) === 1) {
             $selected[] = key($this->variants);
-        }
+        }*/
 
         return [
             $this->fieldName => [
