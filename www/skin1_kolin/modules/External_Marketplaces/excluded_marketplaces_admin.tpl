@@ -9,6 +9,9 @@
             <select style="width: 80%;" class="select2" multiple="multiple" name="excluded_marketplaces[]">
                 {html_options values=$aExternalMarketplaces.values output=$aExternalMarketplaces.names selected=$aDisabledMarketPlaces}
             </select>
+            <a title="{$lng.help_dx_excluded_marketplaces_text|htmlspecialchars|default:help_dx_excluded_marketplaces_text}" class="tooltip">
+                <i class="fa fa-question-circle pointer"></i>
+            </a>
         </td>
     </tr>
     {if $show_button}
