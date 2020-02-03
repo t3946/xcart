@@ -23,6 +23,11 @@ class FieldSelectForm extends DecoratedProductForm
      */
     protected function fields(): array
     {
+        $selected = [];
+        if (count($this->variants) === 1) {
+            $selected[] = key($this->variants);
+        }
+
         return [
             $this->fieldName => [
                 'class' => DropDownField::class,
@@ -31,7 +36,7 @@ class FieldSelectForm extends DecoratedProductForm
                 'required' => true,
                 'requiredMessage' => $this->createRequiredMessage(),
                 'disabled' => [''],
-                'selected' => ['']
+                'selected' => $selected ?? ['']
             ]
         ];
     }
