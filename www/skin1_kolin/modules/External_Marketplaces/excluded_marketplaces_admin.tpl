@@ -6,7 +6,7 @@
         <td style="vertical-align: top;" width="20%" class="FormButton">Excluded marketplaces:</td>
         <td>&nbsp;</td>
         <td width="80%">
-            <select style="width: 80%;" multiple="multiple" name="excluded_marketplaces[]">
+            <select style="width: 80%;" class="select2" multiple="multiple" name="excluded_marketplaces[]">
                 {html_options values=$aExternalMarketplaces.values output=$aExternalMarketplaces.names selected=$aDisabledMarketPlaces}
             </select>
         </td>
@@ -18,3 +18,12 @@
     </tr>
     {/if}
 </table>
+<script>
+    {literal}
+    $('.select2').select2({
+        allowClear: true,
+        closeOnSelect: false,
+        placeholder: 'Click to select marketplaces'
+    });
+    {/literal}
+</script>
