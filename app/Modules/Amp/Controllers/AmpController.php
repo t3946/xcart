@@ -14,7 +14,7 @@ use Modules\Amp\Helpers\AmpHelper;
 
 class AmpController extends FrontendController
 {
-    public function index($id, $slug)
+    public function index($id, $slug): void
     {
         $this->redirect('amp:product', ['id' => $id, 'slug' => $slug]);
     }
@@ -26,12 +26,10 @@ class AmpController extends FrontendController
 
         if (!$model) {
             $this->redirect('/', [], 301);
-        }
-        elseif ($model->forsale != "Y") {
-            /** @var CategoryModel $category */
-            $category = $model->getMainCategory();
+        } elseif ($model->forsale !== 'Y') {
 
-            if ($category && $category->avail != 'Y') {
+            /** @var CategoryModel $category */
+            if (($category = $model->getMainCategory()) && $category->avail !== 'Y') {
                 $category = $category->getObjects()->ancestors()->filter(['avail' => 'Y'])->limit(1)->get();
             }
 
@@ -41,19 +39,18 @@ class AmpController extends FrontendController
             $this->redirect('/', [], 301);
         }
 
-        if ( $model )
-        {
+        if ($model) {
 
             /** @var \Modules\Sites\Models\SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
 
-            if ( ( !$site->isWork() ) || (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count())  ){
+            if ((!$site->isWork()) || (!$model->sites->filter(['storefrontid__in' => [$site->storefrontid]])->count())) {
                 $this->redirect('/');
             }
 
             $u_slug = $model->clean_url->getSlugPart();
             if ($slug != $u_slug) {
-                $this->redirect('amp:product', ['id' => $id, 'slug' => $u_slug],301);
+                $this->redirect('amp:product', ['id' => $id, 'slug' => $u_slug], 301);
             }
 
             $category = $model->getMainCategory();
@@ -63,13 +60,11 @@ class AmpController extends FrontendController
                 'category' => $category
             ]);
 
-
-            $cids = explode('/',$category->categoryid_path);
-            if ($cids) {
+            if ($cids = explode('/', $category->categoryid_path)) {
                 $categories = CategoryModel::objects()
-                                      ->filter(['categoryid__in' =>$cids])
-                                      ->order([new Expression('FIELD(categoryid, '.implode(',', $cids).')')])
-                                      ->all();
+                    ->filter(['categoryid__in' => $cids])
+                    ->order([new Expression('FIELD(categoryid, ' . implode(',', $cids) . ')')])
+                    ->all();
             }
 
             $ga_account = CurrentSiteHelper::getGoogleAnalitycsAccount();
@@ -77,7 +72,7 @@ class AmpController extends FrontendController
             echo $this->render('product/amp.tpl', [
                 'model' => $model,
                 'category' => $category,
-                'categories' =>$categories,
+                'categories' => $categories ?? [],
                 'ga_account' => $ga_account,
                 'helper' => new AmpHelper($model),
             ]);
