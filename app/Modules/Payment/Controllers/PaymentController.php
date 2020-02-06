@@ -14,6 +14,7 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
@@ -233,9 +234,24 @@ class PaymentController extends Controller
 
                             $txn->transaction_response = $app->request->request->all();
                             $txn->save();
+                            $transactionLog = new TransactionLogModel(
+                                [
+                                    'orderid' => $txn->orderid,
+                                    'paymentid' => $txn->paymentid,
+                                    'order_transaction_id' => $txn->id,
+                                    'transaction_id' => $txn->transaction_id,
+                                    'transaction_status' => $txn->transaction_status,
+                                    'transaction_total' => $txn->transaction_amount,
+                                    'login' => $txn->login,
+                                    'transaction_log' => $txn->transaction_response
+                                ]
+                            );
+
+                            if ($transactionLog->isValid()) {
+                                $transactionLog->save();
+                            }
 
                             if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
-
                                 $app->event->trigger('order:paid', ['model' => $order]);
                             }
                         }
