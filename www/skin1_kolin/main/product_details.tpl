@@ -1396,7 +1396,7 @@
                 <td{if $geid ne ''} colspan="2"{/if}>&nbsp;</td>
                 <td><br/>
                     <input type="button" value=" {$lng.lbl_save|strip_tags:false|escape} "
-                           onclick="javascript: if (check_froogle_upc_field(document.modifyform.upc)) document.modifyform.submit(); else return false;"/>
+                           onclick="document.modifyform.submit();"/>
                 </td>
             </tr>
 
