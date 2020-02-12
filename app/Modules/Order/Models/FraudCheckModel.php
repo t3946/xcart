@@ -269,7 +269,7 @@ HTML;
         if ($oTransaction = $this->getFirstTransaction($order)) {
             return ($oTransaction->payment_method_model->processor->processor_name === 'PayPal');
         }
-        return null;
+        return false;
     }
 
     protected function scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING(OrderModel $order)
