@@ -221,7 +221,10 @@ HTML;
 
     private function getFirstTransaction(OrderModel $order)
     {
-        return $order->transactions->limit(1)->order(['date'])->get();
+        if ($log = $order->transactions_log->limit(1)->order(['date'])->get()) {
+            return $log->transaction;
+        }
+        return null;
     }
 
     protected function scoreMANUAL_XPAY_AVS(OrderModel $order)
