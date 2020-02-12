@@ -357,7 +357,7 @@ HTML;
     {
         $field = trim($field);
         $field = preg_replace('/\s+/', ' ', $field);
-        $field = preg_replace("/[^\w\s\[,.\-\/\@_\]]/", "", $field);
+        $field = preg_replace("/[^\w\s\[,.\-\/\@_\]]/", '', $field);
         $field = strtoupper($field);
         return $field;
     }
@@ -656,7 +656,8 @@ HTML;
 
         foreach ($orders as $k => $v) {
             if ($phone === preg_replace('/[^0-9]/', '', $v->phone)) {
-                $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
+                $address = trim($v->s_address);
+                $full_address_s = "{$address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
                 $full_address_s = self::correct($full_address_s);
                 $names[$v->orderid] = $full_address_s;
                 $full_address_names[$v->orderid] = $v;
@@ -698,7 +699,8 @@ HTML;
 
         foreach ($orders as $k => $v) {
             if ($phone === preg_replace('/[^0-9]/', '', $v->phone)) {
-                $full_address_s = "{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
+                $address = trim($v->b_address);
+                $full_address_s = "{$address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
                 $full_address_s = self::correct($full_address_s);
                 $names[$v->orderid] = $full_address_s;
                 $full_address_names[$v->orderid] = $v;
