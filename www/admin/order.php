@@ -2208,20 +2208,24 @@ elseif ($mode == 'mode_info_request_survey') {
 
                         $update_in_db = false;
 
-                        if ($item_stock != "" && $vs == "some_in_stock") {
+                        if ($item_stock != '' && $vs === 'some_in_stock') {
                             $item_stock   = abs(intval($item_stock));
                             $back         = $amount - $item_stock;
                             $update_in_db = true;
                         }
-                        elseif ($vs == "discontinued" || $vs == "out_of_stock") {
+                        elseif ($vs === 'discontinued' || $vs === 'out_of_stock') {
                             $item_stock   = 0;
                             $back         = $amount;
                             $update_in_db = true;
                         }
-                        elseif ($vs == "all_in_stock") {
+                        elseif ($vs === 'all_in_stock') {
                             $item_stock   = $amount;
                             $back         = 0;
                             $update_in_db = true;
+                        }
+
+                        if ($vs === 'discontinued') {
+                            ProductModel::objects()->filter(['productid' => $productid])->update(['forsale' => 'N', 'lock_forsale' => 'Y']);
                         }
 
                         if ($update_in_db) {
