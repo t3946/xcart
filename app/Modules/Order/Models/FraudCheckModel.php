@@ -233,20 +233,26 @@ HTML;
         $fraud_result = 'negative';
         $manual_action = 'N';
 
-        if (($oTransaction = $this->getFirstTransaction($order)) && $cv = $oTransaction->transaction_response['cardValidation'] ?? null) {
-            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M' && $this->isPaypalPayment($order)) {
-                $score = 1;
-                $fraud_result = 'positive';
-                $manual_action = 'Y';
-            }
-            if ($oTransaction->payment_method_model->processor->processor_name === 'BluePay') {
-                if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
-                    if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
-                        $score = 1;
-                        $fraud_result = 'positive';
-                        $manual_action = 'Y';
+        if (($oTransaction = $this->getFirstTransaction($order))) {
+            switch ($oTransaction->payment_method_model->processor->processor_name) {
+                case 'PayPal':
+                    if ($cv = $oTransaction->transaction_response['cardValidation'] ?? null) {
+                        if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M') {
+                            $score = 1;
+                            $fraud_result = 'positive';
+                            $manual_action = 'Y';
+                        }
                     }
-                }
+                    break;
+                case 'BluePay':
+                    if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
+                        if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
+                            $score = 1;
+                            $fraud_result = 'positive';
+                            $manual_action = 'Y';
+                        }
+                    }
+                    break;
             }
         }
         return [$fraud_result, $score, null, $manual_action];
@@ -280,10 +286,10 @@ HTML;
                 $oTransaction->transaction_response['address_city'] === $order->s_city &&
                 self::correct($oTransaction->transaction_response['address_zip']) === self::correct($order->s_zipcode) &&
                 stripos($p_address, $o_address) !== false) {
-                    $fraud_result = 'positive';
-                    $fraud_score = 1;
-                    $manual_action = 'Y';
-                }
+                $fraud_result = 'positive';
+                $fraud_score = 1;
+                $manual_action = 'Y';
+            }
         }
         return [$fraud_result, $fraud_score, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action];
     }
@@ -301,7 +307,7 @@ HTML;
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score,  null, $manual_action];
+        return [$fraud_result, $fraud_score, null, $manual_action];
     }
 
     protected function scoreMANUAL_PAYPAL_FULLNAME_VERIFIED(OrderModel $order)
