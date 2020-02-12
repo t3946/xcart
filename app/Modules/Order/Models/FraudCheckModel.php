@@ -234,14 +234,14 @@ HTML;
         $manual_action = 'N';
 
         if (($oTransaction = $this->getFirstTransaction($order)) && $cv = $oTransaction->transaction_response['cardValidation'] ?? null) {
-            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M') {
+            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M' && $this->isPaypalPayment($order)) {
                 $score = 1;
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
             }
             if ($oTransaction->payment_method_model->processor->processor_name === 'BluePay') {
                 if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
-                    if (in_array($cv['AVS'], ['Street and Zip match'], true) && $cv['CVV'] === 'CVV2 - Match') {
+                    if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
                         $score = 1;
                         $fraud_result = 'positive';
                         $manual_action = 'Y';
@@ -257,11 +257,13 @@ HTML;
         return $this->scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE($order);
     }
 
-    private function isPaypalPyment(OrderModel $order): bool
+    private function isPaypalPayment(OrderModel $order): bool
     {
         /** @var OrderTransactionModel $oTransaction */
-        return !(($oTransaction = $this->getFirstTransaction($order)) &&
-            ($oPaymentMethod = $oTransaction->payment_method_model) && in_array((int)$oPaymentMethod->paymentid, [21, 102], true));
+        if ($oTransaction = $this->getFirstTransaction($order)) {
+            return ($oTransaction->payment_method_model->processor->processor_name === 'PayPal');
+        }
+        return null;
     }
 
     protected function scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING(OrderModel $order)
@@ -270,7 +272,7 @@ HTML;
         $fraud_score = 1;
         $manual_action = 'N';
         /** @var OrderTransactionModel $oTransaction */
-        if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
+        if ($this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
             $o_address = self::correctAddress($order->s_address);
             $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
             if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
@@ -292,7 +294,7 @@ HTML;
         $fraud_score = 1;
         $manual_action = 'N';
         [$r] = $this->scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING($order);
-        if ($r === 'positive' && $this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
+        if ($r === 'positive' && $this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
             if ($oTransaction->transaction_response['address_status'] === 'confirmed') {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
@@ -307,7 +309,7 @@ HTML;
         $fraud_result = 'negative';
         $fraud_score = 1;
         $manual_action = 'N';
-        if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
+        if ($this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
             if ($oTransaction->transaction_response['payer_status'] === 'verified') {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
@@ -322,7 +324,7 @@ HTML;
         $fraud_result = 'negative';
         $fraud_score = 1;
         $manual_action = 'N';
-        if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
+        if ($this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
             if ($oTransaction->transaction_response['payer_email'] === $order->email) {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
@@ -337,7 +339,7 @@ HTML;
         $fraud_result = 'negative';
         $fraud_score = 1;
         $manual_action = 'N';
-        if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
+        if ($this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
             $ar = array_unique([$order->s_firstname, $order->b_firstname, $order->firstname]);
             if (count($ar) === 1) {
                 $name = reset($ar);
