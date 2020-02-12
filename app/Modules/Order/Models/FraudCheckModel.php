@@ -732,14 +732,14 @@ HTML;
         $orders = OrderModel::objects()->filter(['date__gte' => $time_condition, 'date__lte' => $order->date, 'email' => $order->email])->order(['-orderid']);
 
         foreach ($orders as $k => $v) {
-            $full_address_s = self::correct("{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
-            $unames[] = $full_address_s;
+            $address = trim($v->s_address);
+            $full_address_s = self::correct("{$address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
-        $unames = array_unique($unames);
+        $names = array_unique($names);
 
-        if (($count_names = count($unames)) > 0) {
+        if (($count_names = count($names)) > 0) {
             foreach ($names as $k => $v) {
                 $additional_info[] = $full_address_names[$k];
             }
@@ -766,14 +766,14 @@ HTML;
         $orders = OrderModel::objects()->filter(['date__gte' => $time_condition, 'date__lte' => $order->date, 'email' => $order->email])->order(['-orderid']);
 
         foreach ($orders as $k => $v) {
-            $full_address_s = self::correct("{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
-            $unames[] = $full_address_s;
+            $address = trim($v->b_address);
+            $full_address_s = self::correct("{$address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
-        $unames = array_unique($unames);
+        $names = array_unique($names);
 
-        if (($count_names = count($unames)) > 0) {
+        if (($count_names = count($names)) > 0) {
             foreach ($names as $k => $v) {
                 $additional_info[] = $full_address_names[$k];
             }
