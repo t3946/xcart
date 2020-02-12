@@ -234,7 +234,7 @@ HTML;
         $manual_action = 'N';
 
         if (($oTransaction = $this->getFirstTransaction($order)) && $cv = $oTransaction->transaction_response['cardValidation'] ?? null) {
-            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M') {
+            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M' && $this->isPaypalPyment($order)) {
                 $score = 1;
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
@@ -271,17 +271,19 @@ HTML;
         $manual_action = 'N';
         /** @var OrderTransactionModel $oTransaction */
         if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
-            if (self::correct($oTransaction->transaction_response['address_country_code']) === self::correct($order->s_country) &&
-                self::correct($oTransaction->transaction_response['address_state']) === self::correct($order->s_state) &&
-                self::correct($oTransaction->transaction_response['address_city']) === self::correct($order->s_city) &&
+            $o_address = self::correct($order->s_address);
+            $p_address = self::correct($oTransaction->transaction_response['address_street']);
+            if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
+                $oTransaction->transaction_response['address_state'] === $order->s_state &&
+                $oTransaction->transaction_response['address_city'] === $order->s_city &&
                 self::correct($oTransaction->transaction_response['address_zip']) === self::correct($order->s_zipcode) &&
-                stripos(self::correct($order->s_address), self::correct($oTransaction->transaction_response['address_street'])) !== false) {
+                stripos($p_address, $o_address) !== false) {
                     $fraud_result = 'positive';
                     $fraud_score = 1;
                     $manual_action = 'Y';
                 }
         }
-        return [$fraud_result, $fraud_score, null, $manual_action];
+        return [$fraud_result, $fraud_score, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action];
     }
 
     protected function scoreMANUAL_PAYPAL_SHIPPING_CONFIRMED(OrderModel $order)
