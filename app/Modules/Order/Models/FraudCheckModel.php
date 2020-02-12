@@ -234,7 +234,7 @@ HTML;
         $manual_action = 'N';
 
         if (($oTransaction = $this->getFirstTransaction($order)) && $cv = $oTransaction->transaction_response['cardValidation'] ?? null) {
-            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M' && $this->isPaypalPyment($order)) {
+            if ((int)$cv['avs_z'] === 1 && (int)$cv['avs_c'] === 1 && (int)$cv['avs_a'] && $cv['cvv_code'] === 'M') {
                 $score = 1;
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
