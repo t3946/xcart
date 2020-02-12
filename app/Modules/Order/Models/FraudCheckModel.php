@@ -241,7 +241,7 @@ HTML;
             }
             if ($oTransaction->payment_method_model->processor->processor_name === 'BluePay') {
                 if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
-                    if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
+                    if (in_array($cv['AVS'], ['Street and Zip match'], true) && $cv['CVV'] === 'CVV2 - Match') {
                         $score = 1;
                         $fraud_result = 'positive';
                         $manual_action = 'Y';
@@ -271,8 +271,8 @@ HTML;
         $manual_action = 'N';
         /** @var OrderTransactionModel $oTransaction */
         if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
-            $o_address = self::correct($order->s_address);
-            $p_address = self::correct($oTransaction->transaction_response['address_street']);
+            $o_address = self::correctAddress($order->s_address);
+            $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
             if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
                 $oTransaction->transaction_response['address_state'] === $order->s_state &&
                 $oTransaction->transaction_response['address_city'] === $order->s_city &&
@@ -370,6 +370,14 @@ HTML;
         $field = preg_replace('/\s+/', ' ', $field);
         $field = preg_replace("/[^\w\s\[,.\-\/\@_\]]/", '', $field);
         $field = strtoupper($field);
+        return $field;
+    }
+
+    private static function correctAddress($field)
+    {
+        $field = trim($field);
+        $field = preg_replace('/\s+/', ' ', $field);
+        $field = preg_replace('/[\[,.-\/@_\]]/', '', $field);
         return $field;
     }
 
