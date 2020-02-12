@@ -279,13 +279,13 @@ HTML;
         $manual_action = 'N';
         /** @var OrderTransactionModel $oTransaction */
         if ($this->isPaypalPayment($order) && $oTransaction = $this->getFirstTransaction($order)) {
-            $o_address = self::correctAddress($order->s_address);
+            $o_address = self::addressAbbreviationsPrepare(self::correctAddress($order->s_address));
             $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
             if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
                 $oTransaction->transaction_response['address_state'] === $order->s_state &&
-                $oTransaction->transaction_response['address_city'] === $order->s_city &&
-                self::correct($oTransaction->transaction_response['address_zip']) === self::correct($order->s_zipcode) &&
-                stripos($p_address, $o_address) !== false) {
+                self::correctAddress($oTransaction->transaction_response['address_city']) === self::correctAddress($order->s_city) &&
+                self::correctAddress($oTransaction->transaction_response['address_zip']) === self::correctAddress($order->s_zipcode) &&
+                preg_match("/{$o_address}/", $p_address, $mm)) {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
                 $manual_action = 'Y';
@@ -381,11 +381,70 @@ HTML;
         return $field;
     }
 
+    private static function addressAbbreviationsPrepare($field)
+    {
+        $arr = [
+            'Apt' => 'Apartment',
+            'Ave' => 'Avenue',
+            'Blvd' => 'Boulevard',
+            'Bldg' => 'Building',
+            'Ctr' => ['Center', 'Centers'],
+            'Cir' => ['Circle', 'Circles'],
+            'Ct' => 'Court',
+            'Dr' => 'Drive',
+            'E' => 'East',
+            'Expy' => 'Expressway',
+            'Ext' => 'Extension',
+            'Ft' => 'Fort',
+            'Fwy' => 'Freeway',
+            'Hts' => ['Height', 'Heights'],
+            'Hwy' => 'Highway',
+            'Is' => 'Island',
+            'Jct' => 'Junction',
+            'Ln' => 'Lane',
+            'Mt' => ['Mount', 'Mountain'],
+            'N' => 'North',
+            'NE' => 'Northeast',
+            'NW' => 'Northwest',
+            'Pky' => 'Parkway',
+            'Pl' => 'Place',
+            'PO' => 'Post Office',
+            'Rd' => 'Road',
+            'RD' => 'Rural Delivery',
+            'RR' => 'Rural Route',
+            'St' => ['Saint', 'Street'],
+            'S' => 'South',
+            'SE' => 'Southeast',
+            'SW' => 'Southwest',
+            'Spg' => 'Spring',
+            'Spgs' => 'Springs',
+            'Sq' => ['Square', 'Squares'],
+            'Ste' => 'Suite',
+            'Ter' => 'Terrace',
+            'Tpke' => 'Turnpike',
+            'W' => 'West',
+        ];
+        foreach ($arr as $key => $val) {
+            $a = [$key];
+            if (!is_array($val)) {
+                $a[] = $val;
+            } else {
+                array_push ($a, ...$val);
+            }
+            $b = array_map(static function($e){return "\b{$e}\b";}, $a);
+            $search = implode('|', $b);
+            $replacement = '(' .implode('|', $a). ')';
+            $field = preg_replace("/{$search}/", $replacement, $field);
+        }
+        return $field;
+    }
+
     private static function correctAddress($field)
     {
         $field = trim($field);
         $field = preg_replace('/\s+/', ' ', $field);
         $field = preg_replace('/[\[,.-\/@_\]]/', '', $field);
+        $field = strtoupper($field);
         return $field;
     }
 
