@@ -733,12 +733,13 @@ HTML;
 
         foreach ($orders as $k => $v) {
             $full_address_s = self::correct("{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
+            $unames[] = $full_address_s;
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
-        $names = array_unique($names);
+        $unames = array_unique($unames);
 
-        if (($count_names = count($names)) > 0) {
+        if (($count_names = count($unames)) > 0) {
             foreach ($names as $k => $v) {
                 $additional_info[] = $full_address_names[$k];
             }
@@ -766,12 +767,13 @@ HTML;
 
         foreach ($orders as $k => $v) {
             $full_address_s = self::correct("{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
+            $unames[] = $full_address_s;
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
-        $names = array_unique($names);
+        $unames = array_unique($unames);
 
-        if (($count_names = count($names)) > 0) {
+        if (($count_names = count($unames)) > 0) {
             foreach ($names as $k => $v) {
                 $additional_info[] = $full_address_names[$k];
             }
