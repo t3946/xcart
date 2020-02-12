@@ -239,7 +239,7 @@ HTML;
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
             }
-            if ($oTransaction->payment_method->payment_method_model->processor->processor_name === 'BluePay') {
+            if ($oTransaction->payment_method_model->processor->processor_name === 'BluePay') {
                 if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
                     if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
                         $score = 1;
