@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DecimalField;
@@ -95,5 +96,20 @@ class OrderDetailModel  extends Model
             }
         }
         return $result ?? [];
+    }
+
+    public function getAbsoluteUrl($full = false)
+    {
+        if ($this->productid) {
+            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->productid, 'slug' => '']);
+
+            if ($full && $site = $this->order_group->order->site) {
+                $url = '//' . $site->domain . rtrim($url, '/') .'/';
+            }
+
+            return $url;
+        }
+
+        return false;
     }
 }

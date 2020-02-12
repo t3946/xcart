@@ -452,7 +452,7 @@ function func_order_data($orderid)
     }
 
     $giftcerts = func_query("SELECT * $gc_add_date FROM $sql_tbl[giftcerts] WHERE orderid = '$orderid'");
-    if (!empty($giftcerts) && $config["General"]["use_counties"] == "Y") {
+    if (!empty($giftcerts) && $config['General']['use_counties'] === 'Y') {
         foreach ($giftcerts as $k => $v) {
             if (!empty($v['recipient_county'])) {
                 $giftcerts[$k]['recipient_countyname'] = func_get_county($v['recipient_county']);
@@ -467,7 +467,7 @@ function func_order_data($orderid)
 
     $order['is_returns'] = $is_returns;
 
-    if ($current_area == "A" || ($current_area == "P" && !empty($active_modules['Simple_Mode']))) {
+    if ($current_area === 'A' || ($current_area === 'P' && !empty($active_modules['Simple_Mode']))) {
         if (strpos($order['details'], "{CardNumber}:") !== false && file_exists($xcart_dir . "/payment/cmpi.php")) {
             $order['is_cc_payment'] = "Y";
         }
@@ -488,7 +488,7 @@ function func_order_data($orderid)
     $userinfo['titleid']   = func_detect_title($userinfo['title']);
     $userinfo['b_titleid'] = func_detect_title($userinfo['b_title']);
     $userinfo['s_titleid'] = func_detect_title($userinfo['s_title']);
-    if ($current_area == 'C') {
+    if ($current_area === 'C') {
         $userinfo['title']   = func_get_title($userinfo['titleid']);
         $userinfo['b_title'] = func_get_title($userinfo['b_titleid']);
         $userinfo['s_title'] = func_get_title($userinfo['s_titleid']);
@@ -503,7 +503,7 @@ function func_order_data($orderid)
     $userinfo["s_statename"]   = $userinfo["s_state_text"] = func_get_state($userinfo["s_state"], $userinfo["s_country"]);
     $userinfo["b_statename"]   = func_get_state($userinfo["b_state"], $userinfo["b_country"]);
     $userinfo["b_countryname"] = func_get_country($userinfo["b_country"]);
-    if ($config["General"]["use_counties"] == "Y") {
+    if ($config['General']['use_counties'] === 'Y') {
         $userinfo["b_countyname"] = func_get_county($userinfo["b_county"]);
         $userinfo["s_countyname"] = func_get_county($userinfo["s_county"]);
     }
@@ -519,7 +519,7 @@ function func_order_data($orderid)
     $est_time_offset  = func_query_first_cell("SELECT est_time_offset FROM $sql_tbl[states] WHERE code='$userinfo[s_state]' AND country_code='$userinfo[s_country]'");
     $est_time_offset  = $est_time_offset * 60 * 60;
     $tmp_cur_time_sec -= $est_time_offset;
-    $userinfo["customer_time"] = $tmp_cur_time_sec;
+    $userinfo['customer_time'] = $tmp_cur_time_sec;
     $tmp_cur_time_date_format  = date("G.i", $tmp_cur_time_sec);
     $tmp_date_mm_dd_yyyy       = date("m/d/Y", $tmp_cur_time_sec);
     // $tmp_cur_time_sec += 2*24*60*60; // for checking
@@ -529,20 +529,20 @@ function func_order_data($orderid)
     if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")) {
         if (!empty($request_availability_options) && is_array($request_availability_options)) {
             foreach ($request_availability_options as $k_r => $v_r) {
-                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y") {
+                if ($v_r['date_mm_dd_yyyy'] == $tmp_date_mm_dd_yyyy && $v_r['active'] === "Y") {
                     $good_time_to_send_email_to_customer = "N";
                 }
             }
         }
 
-        if ($good_time_to_send_email_to_customer != "N") {
-            $good_time_to_send_email_to_customer = "Y";
+        if ($good_time_to_send_email_to_customer !== 'N') {
+            $good_time_to_send_email_to_customer = 'Y';
         }
 
-        $userinfo["good_time_to_send_email_to_customer"] = $good_time_to_send_email_to_customer;
+        $userinfo['good_time_to_send_email_to_customer'] = $good_time_to_send_email_to_customer;
     }
     else {
-        $userinfo["good_time_to_send_email_to_customer"] = "N";
+        $userinfo['good_time_to_send_email_to_customer'] = 'N';
     }
 
     if (!$products) {
@@ -565,7 +565,7 @@ function func_order_data($orderid)
         $products[$k]["categoryid"] = $v["categoryid"] = $category_info["categoryid"];
         $products[$k]["category"]   = $v["category"] = $category_info["category"];
 
-        if (!empty($active_modules['Extra_Fields']) && $v['is_deleted'] != 'Y') {
+        if (!empty($active_modules['Extra_Fields']) && $v['is_deleted'] !== 'Y') {
             $v['extra_fields'] = func_query("SELECT $sql_tbl[extra_fields].*, $sql_tbl[extra_field_values].*, IF($sql_tbl[extra_fields_lng].field != '', $sql_tbl[extra_fields_lng].field, $sql_tbl[extra_fields].field) as field FROM $sql_tbl[extra_field_values], $sql_tbl[extra_fields] LEFT JOIN $sql_tbl[extra_fields_lng] ON $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_fields_lng].fieldid AND $sql_tbl[extra_fields_lng].code = '$shop_language' WHERE $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_field_values].fieldid AND $sql_tbl[extra_field_values].productid = '$v[productid]' AND $sql_tbl[extra_fields].active = 'Y' ORDER BY $sql_tbl[extra_fields].orderby");
         }
 
@@ -576,33 +576,33 @@ function func_order_data($orderid)
         $v['links'] = func_get_product_link_sf($v['productid'], $v['storefrontid']);
 
         $v['product_options_txt'] = $v['product_options'];
-        if ($v["extra_data"]) {
-            $v["extra_data"] = unserialize($v["extra_data"]);
+        if ($v['extra_data']) {
+            $v['extra_data'] = unserialize($v['extra_data']);
             if (is_array(@$v["extra_data"]["display"])) {
                 foreach ($v["extra_data"]["display"] as $i => $j) {
-                    $v["display_" . $i] = $j;
+                    $v["display_{$i}"] = $j;
                 }
             }
-            if (is_array($v["extra_data"]["taxes"])) {
-                foreach ($v["extra_data"]["taxes"] as $i => $j) {
-                    if ($j["tax_value"] > 0) {
-                        $_product_taxes[$i] = $j["tax_display_name"];
+            if (is_array($v['extra_data']['taxes'])) {
+                foreach ($v['extra_data']['taxes'] as $i => $j) {
+                    if ($j['tax_value'] > 0) {
+                        $_product_taxes[$i] = $j['tax_display_name'];
                     }
                 }
             }
         }
 
-        $v["original_price"]     = $v["ordered_price"] = $v["price"];
-        $v["price_deducted_tax"] = "Y";
+        $v['original_price']     = $v['ordered_price'] = $v['price'];
+        $v['price_deducted_tax'] = 'Y';
 
         #
         # Get the original price (current price in the database)
         #
-        if ($v['is_deleted'] != 'Y') {
-            $v["original_price"] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = '$v[productid]' AND $sql_tbl[pricing].membershipid IN ('$userinfo[membershipid]', 0) AND $sql_tbl[pricing].quantity <= '$v[amount]' AND $sql_tbl[pricing].variantid = 0");
+        if ($v['is_deleted'] !== 'Y') {
+            $v['original_price'] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = '$v[productid]' AND $sql_tbl[pricing].membershipid IN ('$userinfo[membershipid]', 0) AND $sql_tbl[pricing].quantity <= '$v[amount]' AND $sql_tbl[pricing].variantid = 0");
 
             if (!empty($active_modules['Product_Options']) && isset($v['extra_data']['product_options'])) {
-                list($variant, $product_options) = func_get_product_options_data($v['productid'], $v['extra_data']['product_options'], $userinfo['membershipid']);
+                [$variant, $product_options] = func_get_product_options_data($v['productid'], $v['extra_data']['product_options'], $userinfo['membershipid']);
 
                 if ($product_options === false) {
                     unset($product_options);
@@ -616,7 +616,7 @@ function func_order_data($orderid)
                     unset($variant['price']);
                     if ($product_options) {
                         foreach ($product_options as $o) {
-                            if ($o['modifier_type'] == '%') {
+                            if ($o['modifier_type'] === '%') {
                                 $v["original_price"] += $v["original_price"] * $o['price_modifier'] / 100;
                             }
                             else {
@@ -679,13 +679,18 @@ function func_order_data($orderid)
         }
 
         global $xcart_dir;
-        $classProduct      = ProductModel::objects()->get(['productid' => $v['productid']]);
-        $mpn               = $classProduct->getMPN();
-        $v["mpn"]          = $mpn;
-        $v["oProduct"]     = $classProduct;
-        $v["oOrderDetail"] = OrderDetailModel::objects()->get(['itemid' => $v['itemid']]);
+        $v['oOrderDetail'] = OrderDetailModel::objects()->get(['itemid' => $v['itemid']]);
+        if ($classProduct      = ProductModel::objects()->get(['productid' => $v['productid']])) {
+            $mpn               = $classProduct->getMPN();
+            $v['mpn']          = $mpn;
+            $v['oProduct']     = $classProduct;
+        } else {
+            $v['manufacturerid'] = $v["oOrderDetail"]->order_group->manufacturerid;
+            $v['oProduct'] = new ProductModel;
+            $v['oProduct']->setAttributes($v);
+        }
 
-        $v["orig_product_classes"] = func_get_product_classes($v["productid"]);
+        $v['orig_product_classes'] = func_get_product_classes($v['productid']);
 
         if (!empty($v["eta_date_mm_dd_yyyy"])
             && $config["backorder_decision_request"]["do_not_offer_backorder_if_eta_more_than_days"] != ""
@@ -721,7 +726,7 @@ function func_order_data($orderid)
 
         if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)) {
             foreach ($manufacturer_feed_fields as $km => $vm) {
-                if (($vm["locked"] == 'Y' && $vm["admin_lock"] == 'Y') || ($vm["locked"] == 'N' && $vm["admin_lock"] == 'Y')) {
+                if (($vm['locked'] === 'Y' && $vm['admin_lock'] === 'Y') || ($vm['locked'] === 'N' && $vm['admin_lock'] === 'Y')) {
                     $manufacturer_feed_fields[$km]["disable"] = "Y";
                 }
                 else {

@@ -374,7 +374,7 @@ class OrderModel extends Model
             ->all();
     }
 
-    public function getOrderNumber()
+    public function getOrderNumber(): string
     {
         return $this->order_prefix . $this->orderid;
     }
@@ -406,7 +406,7 @@ class OrderModel extends Model
     public function getAddressInfo() : array
     {
         $info[] = [
-            'address' => explode(PHP_EOL, $this->s_address, 2),
+            'address' => explode("\n", $this->s_address, 2),
             'firstname' => $this->s_firstname,
             'company' => $this->s_company,
             'city' => $this->s_city,
@@ -417,7 +417,7 @@ class OrderModel extends Model
 
         if ($this->b_firstname || $this->b_company || $this->b_address || $this->b_city || $this->b_state || $this->b_country || $this->b_zipcode !== null) {
             $info[] = [
-                'address' => explode(PHP_EOL, $this->b_address, 2),
+                'address' => explode("\n", $this->b_address, 2),
                 'firstname' => $this->b_firstname,
                 'company' => $this->b_company,
                 'city' => $this->b_city,
@@ -479,7 +479,33 @@ class OrderModel extends Model
     public function getCxDateTime():? \DateTime
     {
         if ($time_zone = $this->billing_state->timezone) {
-            return new \DateTime("now", new \DateTimeZone($time_zone));
+            return new \DateTime('now', new \DateTimeZone($time_zone));
+        }
+        return null;
+    }
+
+    public function getBillingAddressString(): string
+    {
+        [,$b_address] = $this->getAddressInfo();
+        return $b_address['address'][0] . ($b_address['address'][1] ? ", {$b_address['address'][1]}" : '') . ", {$b_address['city']}, {$b_address['state']->code}, {$b_address['zipcode']}";
+    }
+
+    public function getShippingAddressString(): string
+    {
+        [$s_address] = $this->getAddressInfo();
+        return $s_address['address'][0] . ($s_address['address'][1] ? ", {$s_address['address'][1]}" : '') . ", {$s_address['city']}, {$s_address['state']->code}, {$s_address['zipcode']}";
+    }
+
+    public function getEmailDomain(): string
+    {
+        $userinfo_site_arr = explode('@', $this->email);
+        return $userinfo_site_arr[1] ?? '';
+    }
+
+    public function getIp()
+    {
+        if ($extra = $this->extra_model) {
+            return $extra->getIP();
         }
         return null;
     }

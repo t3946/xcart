@@ -103,7 +103,7 @@ function func_ORDER_FULLNAMES($order_data){
 	$fraud_score = "-1";
 
 	$names = array();
-	
+
 	$firstname = func_correct_field($order_data["userinfo"]["firstname"]);
 	if (!empty($firstname)){
 		$names[] = $firstname;
@@ -858,9 +858,9 @@ function func_CHECK_TOTAL($order_data){
 		$num = 1;
 	}
 
-	$sign = $num / abs($num);	
+	$sign = $num / abs($num);
 
-	$fraud_score = ((max("50", $order_data["order"]["total"])/min("50", $order_data["order"]["total"]))-1)*$sign;
+	$fraud_score = ((max("50", $order_data["order"]["total"])/min("50", $order_data["order"]["total"])) - 1) * $sign;
 
 
 /*
@@ -886,16 +886,18 @@ function func_CHECK_TOTAL($order_data){
 
 function func_CHECK_SHIPPING_ADDRESS_LINE2($order_data){
 
-	$fraud_score = "1";
-	$fraud_result = "positive";
+	$fraud_score = '1';
+	$fraud_result = 'positive';
 
-	if (!empty($order_data["userinfo"]["s_address_2"])){
-		$fraud_score = "-1";
-		$fraud_result = "negative";
-	}
+    if (!empty($order_data['userinfo']['s_address_2']) ||
+        preg_match('/\bApartment\b|\bApt\b|\bSuite\b|\bSte\b|\bUnit\b|#|\d-\d/i', $order_data['userinfo']['s_address'])
+    ) {
+        $fraud_score = '-1';
+        $fraud_result = 'negative';
+    }
 
-        $fraud_score_arr["fraud_result"] = $fraud_result;
-	$fraud_score_arr["score"] = $fraud_score;
+    $fraud_score_arr['fraud_result'] = $fraud_result;
+	$fraud_score_arr['score'] = $fraud_score;
 
 	return $fraud_score_arr;
 }

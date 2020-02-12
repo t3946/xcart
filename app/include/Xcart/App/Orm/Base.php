@@ -862,10 +862,11 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function unserialize($serialized)
     {
         $us = unserialize($serialized);
+        if ($us) {
+            $this->attributes = new AttributeCollection;
+            $this->setAttributes($us['attributes']);
 
-        $this->attributes = new AttributeCollection;
-        $this->setAttributes($us['attributes']);
-
-        $this->attributesNotField = $us['attributesNotField'];
+            $this->attributesNotField = $us['attributesNotField'];
+        }
     }
 }

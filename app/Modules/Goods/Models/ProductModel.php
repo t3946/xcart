@@ -483,9 +483,7 @@ class ProductModel extends Model implements ICartItem
         if ($this->productid) {
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): '']);
 
-            if ($full) {
-                $site = $this->sites->limit(1)->get();
-
+            if ($full && $site = $this->sites->limit(1)->get()) {
                 $url = '//' . $site->domain . $url;
             }
 

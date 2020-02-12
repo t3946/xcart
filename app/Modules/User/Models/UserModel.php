@@ -111,7 +111,7 @@ class UserModel extends Model
     public function getIsSuperuser()
     {
         if (!$this->getIsGuest()) {
-            return (in_array($this->usertype, ['A'])) && empty($this->membershipid);
+            return ($this->usertype === 'A') && empty($this->membershipid);
         }
 
         return false;

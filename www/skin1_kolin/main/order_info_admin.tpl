@@ -607,7 +607,7 @@ function check_r_fields(){
     {if $product.coupon_discount > 0}
         <i class="m icon discount float__left margin__first_image"></i>
     {/if}
-    <a href="{$product.oProduct->getUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}</a>
+    <a href="{$product.oProduct->getAmpAbsoluteUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}</a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">

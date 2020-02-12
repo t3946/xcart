@@ -139,7 +139,7 @@
                                 {if $smarty.foreach.log.last}
                                     {if $oOrder}
                                     <br/>
-                                    Order source: <a href="{$oOrder->getLastRefererUrl()|default:$customer.referer}" target="_blank">Referral link</a>
+                                    Order source: <a href="{$oOrder->getLastRefererUrl()}" target="_blank">Referral link</a>
                                     {/if}
                                 {/if}
                             </td>
