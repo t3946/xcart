@@ -271,11 +271,11 @@ HTML;
         $manual_action = 'N';
         /** @var OrderTransactionModel $oTransaction */
         if ($this->isPaypalPyment($order) && $oTransaction = $this->getFirstTransaction($order)) {
-            if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
-                $oTransaction->transaction_response['address_state'] === $order->s_state &&
-                $oTransaction->transaction_response['address_city'] === $order->s_city &&
-                $oTransaction->transaction_response['address_zip'] === $order->s_zipcode &&
-                stripos($order->s_address, $oTransaction->transaction_response['address_street']) !== false) {
+            if (self::correct($oTransaction->transaction_response['address_country_code']) === self::correct($order->s_country) &&
+                self::correct($oTransaction->transaction_response['address_state']) === self::correct($order->s_state) &&
+                self::correct($oTransaction->transaction_response['address_city']) === self::correct($order->s_city) &&
+                self::correct($oTransaction->transaction_response['address_zip']) === self::correct($order->s_zipcode) &&
+                stripos(self::correct($order->s_address), self::correct($oTransaction->transaction_response['address_street'])) !== false) {
                     $fraud_result = 'positive';
                     $fraud_score = 1;
                     $manual_action = 'Y';
