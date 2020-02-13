@@ -113,45 +113,40 @@ checkboxes = new Array({section name=zone loop=$zones_list}{foreach key=shipid i
 					{capture name=rates_list}
 						{foreach key=shipid item=shipping_method from=$zones_list[zone].shipping_methods}
 							<tr>
-								<td class="SubHeaderGreyLine"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
+								<td class="SubHeaderGreyLine">
+									<img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
 								</td>
 							</tr>
 							<tr class="TableSubHead">
 								<td>
 									<table cellpadding="2" cellspacing="0">
-
-										<script type="text/javascript" language="JavaScript 1.2">
-<!--
-checkboxes{$zones_list[zone].zone.zoneid}_{$shipid}
-											 = new Array({section name=rate loop=$shipping_method.rates}{if not %rate.first%},{/if}'posted_data[{$shipping_method.rates[rate].rateid}][to_delete]'{/section});
--->  
-
+										<script>
+checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=rate loop=$shipping_method.rates}{if not %rate.first%},{/if}'posted_data[{$shipping_method.rates[rate].rateid}][to_delete]'{/section});
 										</script>
-
 										<tr>
-											<td><input type="checkbox" id="sm_{$zones_list[zone].zone.zoneid}_{$shipid}"
-													   name="sm_{$zones_list[zone].zone.zoneid}_{$shipid}"
-													   onclick="javascript:change_all(this.checked, checkboxes_form, checkboxes{$zones_list[zone].zone.zoneid}_{$shipid});"/>
+											<td>
+												<input type="checkbox" id="sm_{$zones_list[zone].zone.zoneid}_{$shipid}" name="sm_{$zones_list[zone].zone.zoneid}_{$shipid}"
+													   onclick="change_all(this.checked, checkboxes_form, checkboxes{$zones_list[zone].zone.zoneid}_{$shipid});"/>
 											</td>
 											<td>
-												<b><label for="sm_{$zones_list[zone].zone.zoneid}_{$shipid}">{$shipping_method.shipping|trademark}
-														({if $shipping_method.destination eq "I"}{$lng.lbl_intl}{else}{$lng.lbl_national}{/if}
-														)
-													</label></b></td>
+												<b>
+													<label for="sm_{$zones_list[zone].zone.zoneid}_{$shipid}">
+														{$shipping_method.shipping|trademark}({if $shipping_method.destination eq "I"}{$lng.lbl_intl}{else}{$lng.lbl_national}{/if})
+													</label>
+												</b>
+											</td>
 										</tr>
 									</table>
-
 								</td>
 							</tr>
 							<tr>
-								<td class="SubHeaderGreyLine"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
+								<td class="SubHeaderGreyLine">
+									<img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
 								</td>
 							</tr>
 							<tr>
 								<td>
-
 									<table cellpadding="0" cellspacing="3" width="100%" border="0">
-
 										{section name=rate loop=$shipping_method.rates}
 											{assign var="shipping_rate" value=$shipping_method.rates[rate]}
 											<tr>
@@ -173,8 +168,8 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid}
 														   name="posted_data[{$shipping_rate.rateid}][rate]"
 														   size="5"
 														   value="{$shipping_rate.rate|formatprice}"
-														   onkeyup="javascript: func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');"
-														   onchange="javascript: func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');"/>
+														   onkeyup="func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');"
+														   onchange="func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');"/>
 												</td>
 												<td>{$lng.lbl_percent_charge}:</td>
 												<td>
@@ -232,27 +227,25 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid}
 												</td>
 												<td nowrap="nowrap"></td>
 											</tr>
-											{if $type eq "D"}
-												<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td>Min shipping charge ({$dCurrency->symbol_prefix}{$dCurrency}):</td>
-													<td>
-														<input type="text"
-															   name="posted_data[{$shipping_rate.rateid}][min_shipping_charge]"
-															   size="5"
-															   value="{$shipping_rate.min_shipping_charge|formatprice}"/>
-													</td>
-													<td>Max shipping charge ({$dCurrency->symbol_prefix}{$dCurrency}):</td>
-													<td>
-														<input type="text"
-															   name="posted_data[{$shipping_rate.rateid}][max_shipping_charge]"
-															   size="8"
-															   value="{$shipping_rate.max_shipping_charge|formatprice}"/>
-													</td>
+											<tr>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td>Min shipping charge ({$dCurrency->symbol_prefix}{$dCurrency}):</td>
+												<td>
+													<input type="text"
+														   name="posted_data[{$shipping_rate.rateid}][min_shipping_charge]"
+														   size="5"
+														   value="{$shipping_rate.min_shipping_charge|formatprice}"/>
+												</td>
+												<td>Max shipping charge ({$dCurrency->symbol_prefix}{$dCurrency}):</td>
+												<td>
+													<input type="text"
+														   name="posted_data[{$shipping_rate.rateid}][max_shipping_charge]"
+														   size="8"
+														   value="{$shipping_rate.max_shipping_charge|formatprice}"/>
+												</td>
 												</tr>
-											{/if}
 											{if not %rate.last%}
 												<tr>
 													<td colspan="7" class="SubHeaderGreyLine">

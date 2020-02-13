@@ -647,61 +647,72 @@ function check_r_fields(){
             {/if}
         {/foreach}
     {/if}
-{* --------------------- *}
   </td>
   <td>
-    {if $current_membership_flag ne 'FS'}<a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>{else}{$product.productcode}{/if}
+    {if $current_membership_flag ne 'FS'}
+        <a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>
+    {else}
+        {$product.productcode}
+    {/if}
     {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
       <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
     {/if}
+      <br/>
     {if $product.oProduct->ASIN}
-          <br/>
           <a target="_blank" href="https://amazon.com/dp/{$product.oProduct->ASIN}">{$product.oProduct->ASIN}</a>
     {else}
-        <br/>
         <a target="_blank" href="/admin/amazon/verification/{$product.oProduct->productid}/{$order.orderid}">ASIN N/A</a>
     {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
-
-
   </td>
-  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getPrice()|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}{/if}
+  <td align="right">
+      {if !$static}
+          <input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.oOrderDetail->getPrice()|price_format}"
+                 {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+      {else}
+          {include file="currency2.tpl" value=$product.oOrderDetail->getPrice()|price_format}
+      {/if}
 
-{* --- *}
 {math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
 
-<div class="bg__yellow color__black" align="right">
-{include file="currency2.tpl" value=$product.cost_to_us|price_format}
-</div>
-
+    <div class="bg__yellow color__black" align="right">
+    {include file="currency2.tpl" value=$product.cost_to_us|price_format}
+    </div>
       {if $product.item_cost_to_us ne "" && $product.item_cost_to_us ne $product.cost_to_us}
           <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000" align="right">
               {include file="currency2.tpl" value=$product.item_cost_to_us|price_format}
           </div>
       {/if}
-
   </td>
-  <td align="right" {* valign="top" *}>{if !$static}<input type="text" size="5" id="items_amount_{$m_id}_{$product.itemid}" name="items[{$product.itemid}][amount]" value="{$product.amount}" {* {if $v.dc_status eq 'C' || $v.dc_status eq 'L' || $v.dc_status eq 'S'}readonly="readonly"{/if} *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$product.amount}{/if}</td>
-
+  <td align="right">
+      {if !$static}
+          <input type="text" size="5" id="items_amount_{$m_id}_{$product.itemid}" name="items[{$product.itemid}][amount]" value="{$product.amount}"
+                 {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+      {else}
+          {$product.amount}
+      {/if}
+  </td>
   <td align="center">{$product.oProduct->getAmazonFBAAvail()}</td>
+  <td align="right">
+      {if !$static}
+          {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
+              {$product.back}
+              <input type="hidden" name="items[{$product.itemid}][back]" value="{$product.back}"
+                     {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+          {else}
+              <input type="text" size="5" name="items[{$product.itemid}][back]" value="{$product.back}"
+                     {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+          {/if}
+      {else}
+          {$product.back}
+      {/if}
 
-  <td align="right" {* valign="top" *}>
-{if !$static}
-  {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
-    {$product.back}
-    <input type="hidden" name="items[{$product.itemid}][back]" value="{$product.back}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-  {else}
-    <input type="text" size="5" name="items[{$product.itemid}][back]" value="{$product.back}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-  {/if}
-{else}
-  {$product.back}
-{/if}
-
-{if $product.dropped eq "Y"}
-  <br />Dropped
-{/if}
+      {if $product.dropped eq "Y"}
+          <br/>
+          Dropped
+      {/if}
   </td>
 
 {if !($order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
