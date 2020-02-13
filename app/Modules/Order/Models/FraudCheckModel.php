@@ -80,7 +80,7 @@ class FraudCheckModel extends Model
             $phone_area_code_state = "{$telephoneModel->area} ({$telephoneModel->state_code})";
             $phone_area_code_address = "{$telephoneModel->country_code}, {$telephoneModel->state_code}, {$telephoneModel->area}";
         }
-        $orderModel->s_firstname,$orderModel->b_firstname,$orderModel->firstname;
+        //$orderModel->s_firstname,$orderModel->b_firstname,$orderModel->firstname;
 
         $email_domain_website = <<<HTML
 <a target="_blank" href="//www.{$orderModel->getEmailDomain()}" style="color: #1F08F8;">www.{$orderModel->getEmailDomain()}</a>
