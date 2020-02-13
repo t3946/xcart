@@ -482,9 +482,9 @@ HTML;
             } else {
                 array_push ($a, ...$val);
             }
-            $b = array_map(static function($e){return "\b{$e}\b";}, $a);
+            $b = array_map(static function($e){$e = strtoupper($e); return "\b{$e}\b";}, $a);
             $search = implode('|', $b);
-            $replacement = '(' .implode('|', $a). ')';
+            $replacement = '(' .implode('|', array_map('strtoupper',$a)). ')';
             $field = preg_replace("/{$search}/", $replacement, $field);
         }
         return $field;
