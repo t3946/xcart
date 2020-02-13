@@ -297,7 +297,7 @@ HTML;
                     break;
                 case 'BluePay':
                     if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
-                        if ($cv['AVS'] === 'Street and Zip match' && $cv['CVV'] === 'CVV2 - Match') {
+                        if ($cv['CVV'] === 'CVV2 - Match' && in_array($cv['AVS'], ['Street and Zip match', 'Zip match 5, street match'], true)) {
                             $score = 1;
                             $fraud_result = 'positive';
                             $manual_action = 'Y';
