@@ -55,6 +55,7 @@ class FraudCheckModel extends Model
                 }
             }
         }
+        $fraud_Google_address_search_exclusions = $fraud_Google_phone_search_exclusions = $fraud_Google_email_search_exclusions = '';
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getGlobalConfig();
@@ -79,12 +80,31 @@ class FraudCheckModel extends Model
             $phone_area_code_state = "{$telephoneModel->area} ({$telephoneModel->state_code})";
             $phone_area_code_address = "{$telephoneModel->country_code}, {$telephoneModel->state_code}, {$telephoneModel->area}";
         }
+        $orderModel->s_firstname,$orderModel->b_firstname,$orderModel->firstname;
 
         $email_domain_website = <<<HTML
 <a target="_blank" href="//www.{$orderModel->getEmailDomain()}" style="color: #1F08F8;">www.{$orderModel->getEmailDomain()}</a>
 HTML;
         $google_shipping_l = <<<HTML
 <a target="_blank" href="https://www.google.com/#q={$google_shipping_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address</a>
+HTML;
+        $google_shipping_contact_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}{$orderModel->firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Contact Last name</a>
+HTML;
+        $google_shipping_shipping_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}{$orderModel->s_firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Shipping Last name</a>
+HTML;
+        $google_shipping_billing_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}{$orderModel->b_firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Billing Last name</a>
+HTML;
+        $google_billing_contact_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_billing_address}{$orderModel->firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Contact Last name</a>
+HTML;
+        $google_billing_shipping_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_billing_address}{$orderModel->s_firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Shipping Last name</a>
+HTML;
+        $google_billing_billing_name = <<<HTML
+<a target="_blank" href="https://www.google.com/#q={$google_billing_address}{$orderModel->b_firstname}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address + Billing Last name</a>
 HTML;
         $google_bill_l = <<<HTML
 <a target="_blank" href="https://www.google.com/#q={$google_billing_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google billing address</a>
@@ -128,9 +148,9 @@ HTML;
         }
 
         $question_template_body = str_replace(
-            ['{{customer_phone}}', '{{google_shipping}}', '{{google_billing}}', '{{google_email}}', '{{google_phone}}', '{{fastpeoplesearch_phone}}', '{{fastpeoplesearch_shipping}}', '{{emails_domain}}', '{{link_to_paypal_transaction}}', '{{payment_method}}', '{{spokeo_shipping}}', '{{spokeo_billing}}', '{{links_to_ordered_products}}', '{{billing_address}}', '{{shipping_address}}', '{{orders_full_names}}', '{{shipping_state}}', '{{billing_state}}', '{{geoip_state}}', '{{phone_area_code_state}}', '{{customer_email}}', '{{areacode_state}}', '{{geoip_address}}', '{{phone_area_code_address}}', '{{orders_company_names}}', '{{email_domain_website}}', '{{fastpeoplesearch_billing}}'],
-            [$phone, $google_shipping_l, $google_bill_l, $google_email, $google_phone_l, $fs_phone, $fastpeoplesearch_shipping, "@{$orderModel->getEmailDomain()}"
-                , $sTransactionReplaceText, $sPaymentMethodReplaceText, $google_shipping_link, $google_billing_link, $links_to_ordered_products ?? '', $orderModel->getBillingAddressString(), $orderModel->getShippingAddressString(), $orders_full_names, $orderModel->s_state, $orderModel->b_state, $geoip_state, $phone_area_code_state, $orderModel->email, $areacode_state, $geoip_address, $phone_area_code_address, $orders_company_names, $email_domain_website, $fastpeoplelink], $this->question_template_body);
+            ['{{customer_phone}}', '{{google_shipping}}', '{{google_billing}}', '{{google_email}}', '{{google_phone}}', '{{fastpeoplesearch_phone}}', '{{fastpeoplesearch_shipping}}', '{{emails_domain}}', '{{link_to_paypal_transaction}}', '{{payment_method}}', '{{spokeo_shipping}}', '{{spokeo_billing}}', '{{links_to_ordered_products}}', '{{billing_address}}', '{{shipping_address}}', '{{orders_full_names}}', '{{shipping_state}}', '{{billing_state}}', '{{geoip_state}}', '{{phone_area_code_state}}', '{{customer_email}}', '{{areacode_state}}', '{{geoip_address}}', '{{phone_area_code_address}}', '{{orders_company_names}}', '{{email_domain_website}}', '{{fastpeoplesearch_billing}}',
+ 'google_shipping_contact_name', 'google_shipping_shipping_name', 'google_shipping_billing_name', 'google_billing_contact_name', 'google_billing_shipping_name', 'google_billing_billing_name'],
+            [$phone, $google_shipping_l, $google_bill_l, $google_email, $google_phone_l, $fs_phone, $fastpeoplesearch_shipping, "@{$orderModel->getEmailDomain()}", $sTransactionReplaceText, $sPaymentMethodReplaceText, $google_shipping_link, $google_billing_link, $links_to_ordered_products ?? '', $orderModel->getBillingAddressString(), $orderModel->getShippingAddressString(), $orders_full_names, $orderModel->s_state, $orderModel->b_state, $geoip_state, $phone_area_code_state, $orderModel->email, $areacode_state, $geoip_address, $phone_area_code_address, $orders_company_names, $email_domain_website, $fastpeoplelink, $google_shipping_contact_name, $google_shipping_shipping_name, $google_shipping_billing_name, $google_billing_contact_name, $google_billing_shipping_name, $google_billing_billing_name], $this->question_template_body);
 
         return $question_template_body;
     }
@@ -241,6 +261,18 @@ HTML;
                             $score = 1;
                             $fraud_result = 'positive';
                             $manual_action = 'Y';
+                        }
+                    }
+                    /** PayPal VT */
+                    if ($txns = $oTransaction->transaction_response['transactions'] ?? null) {
+                        $txn = reset($txns);
+                        if ($rtxns = $txn['related_resources']) {
+                            $rtxn = reset($rtxns);
+                            if (($pr = $rtxn['processor_response'] ?? null) && $pr['avs_code'] === 'D' && $pr['cvv_code'] === 'M') {
+                                $score = 1;
+                                $fraud_result = 'positive';
+                                $manual_action = 'Y';
+                            }
                         }
                     }
                     break;
