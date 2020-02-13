@@ -555,7 +555,6 @@ function check_r_fields(){
             </a>
         </td>
         <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
-        {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
         <td align="right">
             <a class="group_total_link" href="#">
                 {if $v.coupon_discount  > 0}<i class="m icon discount float__left margin__first_image"></i>{/if}
@@ -607,16 +606,16 @@ function check_r_fields(){
     {if $product.coupon_discount > 0}
         <i class="m icon discount float__left margin__first_image"></i>
     {/if}
-    <a href="{$product.oProduct->getAmpAbsoluteUrl()}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}</a>
+    <a href="{$product.oProduct->getAbsoluteUrl(true)}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">
+        {$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}
+    </a>
     {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
     {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
         <img src="{$ImagesDir}/html-shot.png" />
       </a>
     {/if}
-{* --------------------- *}
     {if $product.oProduct->options->count()}
-
       {assign var="refunded_option_found" value="N"}
       {if $order.refund_groups[$m_id].products ne ""}
         {foreach from=$order.refund_groups[$m_id].products item=product_ref key=prod_num_ref}
