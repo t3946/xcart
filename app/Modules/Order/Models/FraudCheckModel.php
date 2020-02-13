@@ -268,7 +268,7 @@ HTML;
                         $txn = reset($txns);
                         if ($rtxns = $txn['related_resources']) {
                             $rtxn = reset($rtxns);
-                            if (($pr = $rtxn['processor_response'] ?? null) && $pr['avs_code'] === 'D' && $pr['cvv_code'] === 'M') {
+                            if (($pr = $rtxn['authorization']['processor_response'] ?? null) && $pr['avs_code'] === 'D' && $pr['cvv_code'] === 'M') {
                                 $score = 1;
                                 $fraud_result = 'positive';
                                 $manual_action = 'Y';
