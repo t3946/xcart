@@ -1054,7 +1054,9 @@ SQL;
         if ($this->referer_id)
         {
             if ($oRefererDomain = ReferrerModel::objects()->filter(['referer_id' => $this->referer_id])->get()) {
-                $sRefererDomain = "//" . $oRefererDomain->referer;
+                 if (strpos($oRefererDomain->referer, '//') === false) {
+                    $sRefererDomain = "//{$oRefererDomain->referer}";
+                 }
             }
         }
         return $sRefererDomain;
