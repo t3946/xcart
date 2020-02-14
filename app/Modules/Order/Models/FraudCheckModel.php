@@ -287,7 +287,7 @@ HTML;
                         $txn = reset($txns);
                         if ($rtxns = $txn['related_resources']) {
                             $rtxn = reset($rtxns);
-                            if (($pr = $rtxn['authorization']['processor_response'] ?? null) && $pr['avs_code'] === 'D' && $pr['cvv_code'] === 'M') {
+                            if (($cv = $rtxn['authorization']['processor_response'] ?? null) && $cv['avs_code'] === 'D' && $cv['cvv_code'] === 'M') {
                                 $score = 1;
                                 $fraud_result = 'positive';
                                 $manual_action = 'Y';
@@ -306,7 +306,7 @@ HTML;
                     break;
             }
         }
-        return [$fraud_result, $score, null, $manual_action];
+        return [$fraud_result, $score, $cv ?? [], $manual_action];
     }
 
     protected function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE_FOR_SHIPPING_ADDRESS(OrderModel $order): array
