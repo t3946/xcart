@@ -7580,16 +7580,16 @@ a.ui-button:active,
   background-image: url("../images/ui-icons_444444_256x240.png"); }
 
 table.orders tr.selected.body td:first-child, table.orders tr.selected.title td:first-child, table.orders tr.selected.bottom td:first-child, table.orders tr.selected.second td:first-child {
-  border-left: 3px red solid; }
+  border-left: 2px red solid; }
 
 table.orders tr.selected.body td:last-child, table.orders tr.selected.title td:last-child, table.orders tr.selected.bottom td:last-child {
-  border-right: 3px red solid; }
+  border-right: 2px red solid; }
 
 table.orders tr.selected.title td {
-  border-top: 3px red solid; }
+  border-top: 2px red solid; }
 
 table.orders tr.selected.bottom td {
-  border-bottom: 3px red solid; }
+  border-bottom: 2px red solid; }
 
 .admin-body {
   -webkit-font-smoothing: antialiased;

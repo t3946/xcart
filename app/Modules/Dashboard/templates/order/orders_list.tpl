@@ -55,7 +55,7 @@
 
         <tr class="{$cycle_class} title order_list_row_{$order->orderid}" data-orderid="{$order->orderid}">
             <td>
-                <a href="{$order->getAdminUrl()}" class="select-order" style="color: blue; font-weight: bold;" target="_blank">
+                <a class="select-order" href="{$order->getAdminUrl()}" class="select-order" style="color: blue; font-weight: bold;" target="_blank">
                     {$order->getOrderNumber()}
                 </a>
             </td>
@@ -91,13 +91,13 @@
             </td>
         </tr>
 
-        <tr class="{$cycle_class} second order_list_row_{$order->orderid}">
+        <tr class="{$cycle_class} second order_list_row_{$order->orderid}" data-orderid="{$order->orderid}">
             <td>
                 {raw $order->date|date_format:'%d-%b-%Y %H:%M:%S'}
             </td>
             <td>
                 {if $order->otrs_ticket}
-                    <a style="color: blue;" href="{$order->otrs_ticket}" target="_blank">
+                    <a style="color: blue;" href="{$order->otrs_ticket}" class="select-order" target="_blank">
                         OTRS ticket
                     </a>
 
@@ -108,7 +108,7 @@
             </td>
             <td colspan="1">
                 {set $zip_code = '-'|explode:$order->s_zipcode}
-                <a href="{url 'dashboard:search'}?search[customer][zip_code]={$zip_code.0}" target="_blank">
+                <a href="{url 'dashboard:search'}?search[customer][zip_code]={$zip_code.0}" class="select-order" target="_blank">
                     {$order->s_zipcode}
                 </a>
             </td>
@@ -117,7 +117,7 @@
             </td>
         </tr>
 
-        <tr class="{$cycle_class} body order_list_row_{$order->orderid}">
+        <tr class="{$cycle_class} body order_list_row_{$order->orderid}" data-orderid="{$order->orderid}">
             <td></td>
             <td></td>
             <td>
@@ -180,13 +180,13 @@
             <td colspan="12" style="padding: 0;"></td>
         </tr>
         {foreach $order->groups as $group last=$last_group}
-            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if} order_list_row_{$order->orderid} bottom">
+            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if} order_list_row_{$order->orderid} bottom" data-orderid="{$order->orderid}">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
 
                     {set $query =  $.request->getQueryArray()}
                     {set $query['search']['order']['distributor'][] = $group->manufacturer->manufacturerid }
 
-                    <a href="{$.app->router->url($route.name, $route.params, $query)}" target="_blank">
+                    <a href="{$.app->router->url($route.name, $route.params, $query)}" class="select-order" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>
