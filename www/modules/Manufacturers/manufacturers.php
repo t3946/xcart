@@ -715,7 +715,7 @@ $distributor_sections = [
         'distributor_section' => '5'
     ],
     [
-        'title' => 'Distributor ships from (for US orders)',
+        'title' => 'Distributor ships from',
         'order_by' => '60',
         'distributor_section' => '6'
     ],

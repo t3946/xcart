@@ -7579,6 +7579,18 @@ a.ui-button:active,
 .ui-widget-header .ui-icon {
   background-image: url("../images/ui-icons_444444_256x240.png"); }
 
+table.orders tr.selected.body td:first-child, table.orders tr.selected.title td:first-child, table.orders tr.selected.bottom td:first-child, table.orders tr.selected.second td:first-child {
+  border-left: 3px red solid; }
+
+table.orders tr.selected.body td:last-child, table.orders tr.selected.title td:last-child, table.orders tr.selected.bottom td:last-child {
+  border-right: 3px red solid; }
+
+table.orders tr.selected.title td {
+  border-top: 3px red solid; }
+
+table.orders tr.selected.bottom td {
+  border-bottom: 3px red solid; }
+
 .admin-body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

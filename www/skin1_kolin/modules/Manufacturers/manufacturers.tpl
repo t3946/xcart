@@ -197,7 +197,11 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
     </td>
 	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v->manufacturerid}{if $page}&amp;page={$page}{/if}">{$v->manufacturer}</a></b></td>
 	<td style="white-space: nowrap;" align="center">{$v->code}</td>
-    <td style="white-space: nowrap;"><a target="_blank" href="{$v->site->getAbsoluteUrl()}">{$v->site}</a></td>
+    <td style="white-space: nowrap;">
+        {foreach from=$v->sites item=site}
+        <a target="_blank" href="{$site->getAbsoluteUrl()}">{$site}</a><br/>
+        {/foreach}
+    </td>
 	<td align="center">{if $products_count}{$products_count}{else}{$lng.txt_not_available}{/if}</td>
     <td align="center">{if $active_products_count}{$active_products_count}{else}{$lng.txt_not_available}{/if}</td>
 	<td align="center">{if $v->feed_I_E->count()}I({$v->feed_I_E->count()}){/if}{if $v->feed_P_E->count()}P({$v->feed_P_E->count()}){/if}</td>
@@ -622,9 +626,9 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <td>
 
-{if $key eq "1"}<div style="border: green 1px solid;">{/if}
-<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item->phone}" size="17" {if $key eq "1"} {* style="border: green 1px solid;" *}{/if} />
-{if $key eq "1"}</div>{/if}
+{if $key == 0}<div style="border: green 1px solid;">{/if}
+<input type="text" name="distributor_contacts[{$key}][phone]" value="{$item->phone}" size="17" />
+{if $key == 0}</div>{/if}
 
 </td>
 <td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item->ext}" size="7" /></td>

@@ -291,7 +291,7 @@
                         <label style="margin-left:30px;"><input style="vertical-align: bottom;" type="checkbox"
                                                                 name="eta_date_locked_checkbox"
                                                                 {if $product.eta_date_lock=="Y"}checked="checked"{/if}/>
-                            <b>Lock</b></label>
+                            <b>Lock until ETA date</b></label>
                     {/if}
                 </td>
             </tr>

@@ -53,10 +53,10 @@
             {set $cycle_class = 'OrderSheetDark'}
         {/if}
 
-        <tr class="{$cycle_class} title">
+        <tr class="{$cycle_class} title order_list_row_{$order->orderid}" data-orderid="{$order->orderid}">
             <td>
-                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
-                    {$order->order_prefix}{$order->orderid}
+                <a href="{$order->getAdminUrl()}" class="select-order" style="color: blue; font-weight: bold;" target="_blank">
+                    {$order->getOrderNumber()}
                 </a>
             </td>
             <td align="center">
@@ -91,7 +91,7 @@
             </td>
         </tr>
 
-        <tr class="{$cycle_class}">
+        <tr class="{$cycle_class} second order_list_row_{$order->orderid}">
             <td>
                 {raw $order->date|date_format:'%d-%b-%Y %H:%M:%S'}
             </td>
@@ -117,7 +117,7 @@
             </td>
         </tr>
 
-        <tr class="{$cycle_class}">
+        <tr class="{$cycle_class} body order_list_row_{$order->orderid}">
             <td></td>
             <td></td>
             <td>
@@ -180,7 +180,7 @@
             <td colspan="12" style="padding: 0;"></td>
         </tr>
         {foreach $order->groups as $group last=$last_group}
-            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if}">
+            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if} order_list_row_{$order->orderid} bottom">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
 
                     {set $query =  $.request->getQueryArray()}
@@ -251,3 +251,11 @@
 
     {/foreach}
 </table>
+<script>
+    $('a.select-order').click(function () {
+        $('.orders tr').removeClass('selected');
+        let orderid = $(this).closest('tr').data('orderid');
+        $('tr.order_list_row_' + orderid).addClass('selected');
+        return true;
+    });
+</script>

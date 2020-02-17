@@ -2294,3 +2294,39 @@ a.ui-button:active,
 .ui-widget-header .ui-icon {
   background-image: url("../images/ui-icons_444444_256x240.png");
 }
+
+table {
+  &.orders {
+    tr {
+      &.selected {
+        &.body, &.title, &.bottom, &.second {
+          td {
+            &:first-child {
+              border-left: 3px red solid;
+            }
+          }
+        }
+
+        &.body, &.title, &.bottom {
+          td {
+            &:last-child {
+              border-right: 3px red solid;
+            }
+          }
+        }
+
+        &.title {
+          td {
+            border-top: 3px red solid;
+          }
+        }
+
+        &.bottom {
+          td {
+            border-bottom: 3px red solid;
+          }
+        }
+      }
+    }
+  }
+}
