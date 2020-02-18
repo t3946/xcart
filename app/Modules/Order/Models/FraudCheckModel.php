@@ -48,7 +48,7 @@ class FraudCheckModel extends Model
 
     public function getCompiledBody(OrderModel $order): string
     {
-        $question_template_body = $geoip_state = $phone_area_code_state = $areacode_state = $geoip_address = $phone_area_code_address = '';
+        $question_template_body = $geoip_state = $phone_area_code_state = $areacode_state = $geoip_address = $phone_area_code_address = $google_phone_name = $google_email_name = '';
         if ($app = Xcart::app()) {
             $oPaymentMethod = null;
             $google_billing_address = $google_shipping_address = '';
@@ -118,6 +118,32 @@ HTML;
                 }
             }
 
+            foreach (['Google phone' => $google_phone] as $address_key => $add_link) {
+                $unique_names = [];
+                foreach (['Contact Last name' => $order->firstname, 'Shipping Last name' => $order->s_firstname, 'Billing Last name' => $order->b_firstname] as $key => $name) {
+                    if ($name && !in_array($name, $unique_names, true)) {
+                        $unique_names[] = $name;
+                        $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
+                        $google_phone_name .= <<<HTML
+{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+HTML;
+                    }
+                }
+            }
+
+            foreach (['Google email' => $order->email] as $address_key => $add_link) {
+                $unique_names = [];
+                foreach (['Contact Last name' => $order->firstname, 'Shipping Last name' => $order->s_firstname, 'Billing Last name' => $order->b_firstname] as $key => $name) {
+                    if ($name && !in_array($name, $unique_names, true)) {
+                        $unique_names[] = $name;
+                        $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
+                        $google_email_name .= <<<HTML
+{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+HTML;
+                    }
+                }
+            }
+
             $email_domain_website = <<<HTML
 <a target="_blank" href="//www.{$order->getEmailDomain()}" style="color: #1F08F8;">www.{$order->getEmailDomain()}</a>
 HTML;
@@ -174,8 +200,8 @@ HTML;
             }
 
             $question_template_body = str_replace(
-                ['{{customer_phone}}', '{{google_shipping}}', '{{google_billing}}', '{{google_email}}', '{{google_phone}}', '{{fastpeoplesearch_phone}}', '{{fastpeoplesearch_shipping}}', '{{emails_domain}}', '{{link_to_paypal_transaction}}', '{{payment_method}}', '{{spokeo_shipping}}', '{{spokeo_billing}}', '{{links_to_ordered_products}}', '{{billing_address}}', '{{shipping_address}}', '{{orders_full_names}}', '{{shipping_state}}', '{{billing_state}}', '{{geoip_state}}', '{{phone_area_code_state}}', '{{customer_email}}', '{{areacode_state}}', '{{geoip_address}}', '{{phone_area_code_address}}', '{{orders_company_names}}', '{{email_domain_website}}', '{{fastpeoplesearch_billing}}', '{{google_name_s}}', '{{google_name_b}}', '{{google_company_s}}', '{{google_company_b}}', '{{whitepages_shipping}}', '{{whitepages_billing}}'],
-                [$phone, $google_shipping_l, $google_bill_l, $google_email, $google_phone_l, $fs_phone, $fastpeoplesearch_shipping, "@{$order->getEmailDomain()}", $sTransactionReplaceText, $sPaymentMethodReplaceText, $google_shipping_link, $google_billing_link, $links_to_ordered_products ?? '', $order->getBillingAddressString(), $order->getShippingAddressString(), $orders_full_names, $order->s_state, $order->b_state, $geoip_state, $phone_area_code_state, $order->email, $areacode_state, $geoip_address, $phone_area_code_address, $orders_company_names, $email_domain_website, $fastpeoplelink, $google_name_s, $google_name_b, $google_company_s, $google_company_b, $whitepages_shipping, $whitepages_billing], $this->question_template_body);
+                ['{{customer_phone}}', '{{google_shipping}}', '{{google_billing}}', '{{google_email}}', '{{google_phone}}', '{{fastpeoplesearch_phone}}', '{{fastpeoplesearch_shipping}}', '{{emails_domain}}', '{{link_to_paypal_transaction}}', '{{payment_method}}', '{{spokeo_shipping}}', '{{spokeo_billing}}', '{{links_to_ordered_products}}', '{{billing_address}}', '{{shipping_address}}', '{{orders_full_names}}', '{{shipping_state}}', '{{billing_state}}', '{{geoip_state}}', '{{phone_area_code_state}}', '{{customer_email}}', '{{areacode_state}}', '{{geoip_address}}', '{{phone_area_code_address}}', '{{orders_company_names}}', '{{email_domain_website}}', '{{fastpeoplesearch_billing}}', '{{google_name_s}}', '{{google_name_b}}', '{{google_company_s}}', '{{google_company_b}}', '{{whitepages_shipping}}', '{{whitepages_billing}}', '{{google_phone_name}}', '{{google_email_name}}'],
+                [$phone, $google_shipping_l, $google_bill_l, $google_email, $google_phone_l, $fs_phone, $fastpeoplesearch_shipping, "@{$order->getEmailDomain()}", $sTransactionReplaceText, $sPaymentMethodReplaceText, $google_shipping_link, $google_billing_link, $links_to_ordered_products ?? '', $order->getBillingAddressString(), $order->getShippingAddressString(), $orders_full_names, $order->s_state, $order->b_state, $geoip_state, $phone_area_code_state, $order->email, $areacode_state, $geoip_address, $phone_area_code_address, $orders_company_names, $email_domain_website, $fastpeoplelink, $google_name_s, $google_name_b, $google_company_s, $google_company_b, $whitepages_shipping, $whitepages_billing, $google_phone_name, $google_email_name], $this->question_template_body);
         }
 
         return $question_template_body;
