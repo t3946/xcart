@@ -174,7 +174,7 @@ class FraudCheckHelper
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, ['o_address' => $order->s_address, 'p_address' => $p_address], $manual_action];
+        return [$fraud_result, $fraud_score, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action];
     }
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_CONFIRMED(OrderModel $order, FraudCheckModel $fraud): array
@@ -207,7 +207,7 @@ class FraudCheckHelper
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, $payer_status, $manual_action];
+        return [$fraud_result, $fraud_score, ['Payer status' => $payer_status], $manual_action];
     }
 
     public static function scoreMANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER(OrderModel $order, FraudCheckModel $fraud)
@@ -224,7 +224,7 @@ class FraudCheckHelper
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, $payer_email, $manual_action];
+        return [$fraud_result, $fraud_score, ['Payer email' => $payer_email], $manual_action];
     }
 
     public static function scoreMANUAL_PAYPAL_FULLNAME_EQUAL_TO_ORDER(OrderModel $order, FraudCheckModel $fraud)
@@ -259,7 +259,7 @@ class FraudCheckHelper
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, "{$first_name} {$last_name}" , $manual_action];
+        return [$fraud_result, $fraud_score, ['Payer full name' => "{$first_name} {$last_name}"] , $manual_action];
     }
 
     public static function scoreCHECK_B_S(OrderModel $order, FraudCheckModel $fraud): array
