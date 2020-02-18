@@ -12,6 +12,12 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed postalCode
+ * @property mixed region
+ * @property mixed country
+ * @property mixed city
+ */
 class GeoipLitecityLocationModel extends Model
 {
     use AutoMetaTrait;

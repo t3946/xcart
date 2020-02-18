@@ -101,6 +101,11 @@ class TemplateManager
         return $this->_renderer->fetch($template, $params);
     }
 
+    public function exists($template)
+    {
+        return $this->_renderer->templateExists($template);
+    }
+
     public function renderString($source, $params = [])
     {
         return $this->_renderer->compileCode($source)->fetch($params);

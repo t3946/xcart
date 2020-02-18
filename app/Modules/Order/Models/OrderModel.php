@@ -58,6 +58,15 @@ use Xcart\Order;
  * @property int storefrontid
  * @property mixed transactions
  * @property mixed b_company
+ * @property mixed b_firstname
+ * @property mixed phone
+ * @property mixed b_state
+ * @property mixed b_city
+ * @property mixed b_address
+ * @property mixed email
+ * @property mixed phone_ext
+ * @property mixed b_zipcode
+ * @property mixed transactions_log
  */
 class OrderModel extends Model
 {

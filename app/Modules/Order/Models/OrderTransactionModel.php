@@ -18,6 +18,9 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property OrderModel order
+ * @property mixed transaction_id
+ * @property mixed paymentid
+ * @property mixed payment_method_model
  */
 class OrderTransactionModel extends Model
 {

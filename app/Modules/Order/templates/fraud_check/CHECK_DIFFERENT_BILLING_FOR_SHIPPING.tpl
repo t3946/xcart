@@ -1,0 +1,1 @@
+{extends "fraud_check/CHECK_DIFFERENT_BILLINGS_FOR_IP.tpl"}
