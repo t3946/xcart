@@ -121,6 +121,7 @@ class FraudCheckHelper
                             $score = 1;
                             $fraud_result = 'positive';
                             $manual_action = 'Y';
+                            $add_r = ['AVS' => $cv['avs_code'], 'CVV' => $cv['cvv_code']];
                         }
                     }
                     /** PayPal VT */
@@ -132,6 +133,7 @@ class FraudCheckHelper
                                 $score = 1;
                                 $fraud_result = 'positive';
                                 $manual_action = 'Y';
+                                $add_r = ['AVS' => $cv['avs_code'], 'CVV' => $cv['cvv_code']];
                             }
                         }
                     }
@@ -142,12 +144,13 @@ class FraudCheckHelper
                             $score = 1;
                             $fraud_result = 'positive';
                             $manual_action = 'Y';
+                            $add_r = ['AVS' => $cv['AVS'], 'CVV' => $cv['CVV']];
                         }
                     }
                     break;
             }
         }
-        return [$fraud_result, $score, $cv ?? "Processor: {$processor}", $manual_action];
+        return [$fraud_result, $score, $add_r ?? [], $manual_action];
     }
 
     public static function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE_FOR_SHIPPING_ADDRESS(OrderModel $order, FraudCheckModel $fraud): array
