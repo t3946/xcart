@@ -174,7 +174,7 @@ class FraudCheckHelper
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action];
+        return [$fraud_result, $fraud_score, ['o_address' => $order->s_address, 'p_address' => $p_address], $manual_action];
     }
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_CONFIRMED(OrderModel $order, FraudCheckModel $fraud): array
