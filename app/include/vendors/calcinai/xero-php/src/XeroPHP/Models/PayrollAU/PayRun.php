@@ -6,95 +6,92 @@ use XeroPHP\Remote;
 
 class PayRun extends Remote\Model
 {
-
     /**
-     * See PayrollCalendars
+     * See PayrollCalendars.
      *
      * @property string PayrollCalendarID
      */
 
     /**
-     * Xero identifier for pay run
+     * Xero identifier for pay run.
      *
      * @property string PayRunID
      */
 
     /**
-     * Period Start Date for the PayRun (YYYY-MM-DD)
+     * Period Start Date for the PayRun (YYYY-MM-DD).
      *
      * @property \DateTimeInterface PayRunPeriodStartDate
      */
 
     /**
-     * Period End Date for the PayRun (YYYY-MM-DD)
+     * Period End Date for the PayRun (YYYY-MM-DD).
      *
      * @property \DateTimeInterface PayRunPeriodEndDate
      */
 
     /**
-     * See PayRun Status types
+     * See PayRun Status types.
      *
      * @property string PayRunStatus
      */
 
     /**
-     * Payment Date for the PayRun (YYYY-MM-DD)
+     * Payment Date for the PayRun (YYYY-MM-DD).
      *
      * @property \DateTimeInterface PaymentDate
      */
 
     /**
-     * Payslip message for the PayRun
+     * Payslip message for the PayRun.
      *
      * @property string PayslipMessage
      */
 
     /**
-     * See Payslip
+     * See Payslip.
      *
      * @property Payslip[] Payslips
      */
 
     /**
-     * Total Wages for the PayRun
+     * Total Wages for the PayRun.
      *
      * @property string Wages
      */
 
     /**
-     * Total Deduction for the PayRun
+     * Total Deduction for the PayRun.
      *
      * @property string Deductions
      */
 
     /**
-     * Total Tax for the PayRun
+     * Total Tax for the PayRun.
      *
      * @property float Tax
      */
 
     /**
-     * Total Super for the PayRun
+     * Total Super for the PayRun.
      *
      * @property string Super
      */
 
     /**
-     * Total Reimbursement for the PayRun
+     * Total Reimbursement for the PayRun.
      *
      * @property string Reimbursement
      */
 
     /**
-     * Total NetPay for the PayRun
+     * Total NetPay for the PayRun.
      *
      * @property string NetPay
      */
 
-
-
     /**
-     * Get the resource uri of the class (Contacts) etc
+     * Get the resource uri of the class (Contacts) etc.
      *
      * @return string
      */
@@ -103,9 +100,8 @@ class PayRun extends Remote\Model
         return 'PayRuns';
     }
 
-
     /**
-     * Get the root node name.  Just the unqualified classname
+     * Get the root node name.  Just the unqualified classname.
      *
      * @return string
      */
@@ -114,9 +110,8 @@ class PayRun extends Remote\Model
         return 'PayRun';
     }
 
-
     /**
-     * Get the guid property
+     * Get the guid property.
      *
      * @return string
      */
@@ -125,9 +120,8 @@ class PayRun extends Remote\Model
         return 'PayRunID';
     }
 
-
     /**
-     * Get the stem of the API (core.xro) etc
+     * Get the stem of the API (core.xro) etc.
      *
      * @return string|null
      */
@@ -136,26 +130,24 @@ class PayRun extends Remote\Model
         return Remote\URL::API_PAYROLL;
     }
 
-
     /**
-     * Get the supported methods
+     * Get the supported methods.
      */
     public static function getSupportedMethods()
     {
         return [
             Remote\Request::METHOD_POST,
-            Remote\Request::METHOD_GET
+            Remote\Request::METHOD_GET,
         ];
     }
 
     /**
-     *
      * Get the properties of the object.  Indexed by constants
      *  [0] - Mandatory
      *  [1] - Type
      *  [2] - PHP type
      *  [3] - Is an Array
-     *  [4] - Saves directly
+     *  [4] - Saves directly.
      *
      * @return array
      */
@@ -175,7 +167,7 @@ class PayRun extends Remote\Model
             'Tax' => [false, self::PROPERTY_TYPE_FLOAT, null, false, false],
             'Super' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
             'Reimbursement' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
-            'NetPay' => [false, self::PROPERTY_TYPE_STRING, null, false, false]
+            'NetPay' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
         ];
     }
 
@@ -194,12 +186,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return PayRun
      */
     public function setPayrollCalendarID($value)
     {
         $this->propertyUpdated('PayrollCalendarID', $value);
         $this->_data['PayrollCalendarID'] = $value;
+
         return $this;
     }
 
@@ -213,12 +207,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return PayRun
      */
     public function setPayRunID($value)
     {
         $this->propertyUpdated('PayRunID', $value);
         $this->_data['PayRunID'] = $value;
+
         return $this;
     }
 
@@ -232,12 +228,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param \DateTimeInterface $value
+     *
      * @return PayRun
      */
     public function setPayRunPeriodStartDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('PayRunPeriodStartDate', $value);
         $this->_data['PayRunPeriodStartDate'] = $value;
+
         return $this;
     }
 
@@ -251,12 +249,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param \DateTimeInterface $value
+     *
      * @return PayRun
      */
     public function setPayRunPeriodEndDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('PayRunPeriodEndDate', $value);
         $this->_data['PayRunPeriodEndDate'] = $value;
+
         return $this;
     }
 
@@ -270,12 +270,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return PayRun
      */
     public function setPayRunStatus($value)
     {
         $this->propertyUpdated('PayRunStatus', $value);
         $this->_data['PayRunStatus'] = $value;
+
         return $this;
     }
 
@@ -289,12 +291,14 @@ class PayRun extends Remote\Model
 
     /**
      * @param \DateTimeInterface $value
+     *
      * @return PayRun
      */
     public function setPaymentDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('PaymentDate', $value);
         $this->_data['PaymentDate'] = $value;
+
         return $this;
     }
 
@@ -306,16 +310,13 @@ class PayRun extends Remote\Model
         return $this->_data['PayslipMessage'];
     }
 
-
     /**
      * @return Payslip[]|Remote\Collection
-     * Always returns a collection, switch is for type hinting
      */
     public function getPayslips()
     {
         return $this->_data['Payslips'];
     }
-
 
     /**
      * @return string
@@ -325,7 +326,6 @@ class PayRun extends Remote\Model
         return $this->_data['Wages'];
     }
 
-
     /**
      * @return string
      */
@@ -333,7 +333,6 @@ class PayRun extends Remote\Model
     {
         return $this->_data['Deductions'];
     }
-
 
     /**
      * @return float
@@ -343,7 +342,6 @@ class PayRun extends Remote\Model
         return $this->_data['Tax'];
     }
 
-
     /**
      * @return string
      */
@@ -352,7 +350,6 @@ class PayRun extends Remote\Model
         return $this->_data['Super'];
     }
 
-
     /**
      * @return string
      */
@@ -360,7 +357,6 @@ class PayRun extends Remote\Model
     {
         return $this->_data['Reimbursement'];
     }
-
 
     /**
      * @return string

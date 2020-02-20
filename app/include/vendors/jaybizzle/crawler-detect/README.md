@@ -1,5 +1,5 @@
-<p align="center"><a href="http://crawlerdetect.io/" target="_blank"><img src="https://cloud.githubusercontent.com/assets/340752/23082173/1bd1a396-f550-11e6-8aba-4d3c75edea2f.png" width="321" height="219" /></a><br><br>
-<a href="http://crawlerdetect.io/" target="_blank">crawlerdetect.io</a>
+<p align="center"><a href="https://crawlerdetect.io/" target="_blank"><img src="https://cloud.githubusercontent.com/assets/340752/23082173/1bd1a396-f550-11e6-8aba-4d3c75edea2f.png" width="321" height="219" /></a><br><br>
+<a href="https://crawlerdetect.io/" target="_blank">crawlerdetect.io</a>
 <br><br>
 </p>
 
@@ -18,7 +18,9 @@
 CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent and http_from header. Currently able to detect 1,000's of bots/spiders/crawlers.
 
 ### Installation
-Run `composer require jaybizzle/crawler-detect 1.*` or add `"jaybizzle/crawler-detect" :"1.*"` to your `composer.json`.
+```
+composer require jaybizzle/crawler-detect
+```
 
 ### Usage
 ```PHP
@@ -57,11 +59,11 @@ To use this library with the YII2 framework, check out [yii2-crawler-detect](htt
 ### ES6 Library
 To use this library with NodeJS or any ES6 application based, check out [es6-crawler-detect](https://github.com/JefferyHus/es6-crawler-detect).
 
+### Python Library
+To use this library in a Python project, check out [crawlerdetect](https://github.com/moskrc/CrawlerDetect).
+
 ### .NET Library
 To use this library in a .net standard (including .net core) based project, check out [NetCrawlerDetect](https://github.com/gplumb/NetCrawlerDetect).
-
-### Nette Extension
-To use this library with the Nette framework, checkout [NetteCrawlerDetect](https://github.com/JanGalek/Crawler-Detect).
 
 ### Ruby Gem
 

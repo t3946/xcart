@@ -82,4 +82,5 @@ return array(
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
     'Aveiv\\OpenExchangeRatesApi\\' => array($vendorDir . '/aveiv/open-exchange-rates-api/src'),
+    'AfterShip\\' => array($vendorDir . '/aftership/aftership-php-sdk/src'),
 );

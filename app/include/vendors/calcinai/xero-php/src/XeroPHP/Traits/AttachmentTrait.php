@@ -2,17 +2,17 @@
 
 namespace XeroPHP\Traits;
 
-use XeroPHP\Models\Accounting\Attachment;
-use XeroPHP\Remote\Request;
-use XeroPHP\Remote\URL;
 use XeroPHP\Exception;
+use XeroPHP\Remote\URL;
+use XeroPHP\Remote\Request;
+use XeroPHP\Models\Accounting\Attachment;
 
 trait AttachmentTrait
 {
     public function addAttachment(Attachment $attachment, $include_online = false)
     {
         /**
-         * @var \XeroPHP\Remote\Model $this
+         * @var \XeroPHP\Remote\Model
          */
         $uri = sprintf('%s/%s/Attachments/%s', $this::getResourceURI(), $this->getGUID(), rawurlencode($attachment->getFileName()));
 
@@ -40,7 +40,7 @@ trait AttachmentTrait
     public function getAttachments()
     {
         /**
-         * @var \XeroPHP\Remote\Model $this
+         * @var \XeroPHP\Remote\Model
          */
         if ($this->hasGUID() === false) {
             throw new Exception(
