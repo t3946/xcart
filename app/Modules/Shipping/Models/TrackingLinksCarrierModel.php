@@ -7,6 +7,9 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed carrier
+ */
 class TrackingLinksCarrierModel extends Model
 {
     use AutoMetaTrait;

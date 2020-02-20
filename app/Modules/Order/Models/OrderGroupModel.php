@@ -114,6 +114,11 @@ class OrderGroupModel extends Model
                 'modelClass' => OrderDetailModel::className(),
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'product_model__manufacturerid'],
             ],
+            'trackings' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderTrackingModel::class,
+                'link' => ['order_group_id' => 'order_group_id'],
+            ],
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),

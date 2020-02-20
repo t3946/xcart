@@ -67,6 +67,8 @@ use Xcart\Order;
  * @property mixed phone_ext
  * @property mixed b_zipcode
  * @property mixed transactions_log
+ * @property mixed tracking_all_filled
+ * @property int tracking_fill_time
  */
 class OrderModel extends Model
 {

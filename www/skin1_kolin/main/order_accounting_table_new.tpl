@@ -1019,79 +1019,70 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
 <tr>
   <td colspan="3"></td>
   <td colspan="2">
-    {if $v.tracking}
+    {if $v.oOrderGroup.trackings}
 
       {assign var="row_conter" value="0"}
-      {foreach from=$v.tracking item=t}
-
-       {math equation="x+1" x=$row_conter assign="row_conter"}
-       {assign var="current_carrier_id" value=$t.carrier_id}
-
-       {if ($t.invoice_number eq $invoice_number) || ($t.invoice_number eq "" && $invoice_number eq "1")}
+      {foreach from=$v.oOrderGroup.trackings item=t key=row_conter}
+        {assign var="current_carrier_id" value=$t->carrier_id}
+        {if $invoice_number == 1}
 
         <div id="acc_tracknum_{$m_id}_{$invoice_number}_{$row_conter}">
-          {if $t.tracknum ne ""}
-            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">
-                Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}</a>
-          {else}
-            Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
-          {/if}
+            {if $t->tracknum}
+            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t->tracknum}" target="_blank">
+                {/if}
+                Shipped on {$t->shipping_date|date_format:'%B %d, %Y'} by {$tracking_links_carrier[$current_carrier_id].carrier}
+                {if $tracking_links[$current_link_id].shipping}
+                    {$tracking_links[$current_link_id].shipping}
+                {/if} : {if $t->tracknum}{$t->tracknum}{else}{$tracking_links_carrier[$current_carrier_id].link}{/if}
+                {if $t->tracknum}
+            </a>
+            {/if}
 
-          <a href="javascript: void(0);" onclick="javascript: $('#acc_tracknum_val_{$m_id}_{$invoice_number}_{$row_conter}').val(''); $('#acc_tracknum_link_{$m_id}_{$invoice_number}_{$row_conter}').val('');  $('#acc_tracknum_carrier_id_{$m_id}_{$invoice_number}_{$row_conter}').val(''); $('#acc_tracknum_{$m_id}_{$invoice_number}_{$row_conter}').hide();"><img src="{$ImagesDir}/minus.gif" /></a>
+          <a href="javascript: void(0);" onclick="$('#acc_tracknum_{$m_id}_{$invoice_number}_{$row_conter}').remove();">
+              <img src="{$ImagesDir}/minus.gif" />
+          </a>
 
-          <input type="hidden" name="tracknums[{$m_id}][{$invoice_number}][{$row_conter}][tracknum]" value="{$t.tracknum}" id="acc_tracknum_val_{$m_id}_{$invoice_number}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$invoice_number}][{$row_conter}][linkid]" value="{$t.linkid|default:0}" id="acc_tracknum_link_{$m_id}_{$invoice_number}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$invoice_number}][{$row_conter}][ship_date]" value="{$t.ship_date}" id="acc_tracknum_ship_date_{$m_id}_{$invoice_number}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$invoice_number}][{$row_conter}][carrier_id]" value="{$t.carrier_id}" id="acc_tracknum_carrier_id_{$m_id}_{$invoice_number}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_id][]" value="{$t->id}" id="acc_trackid_val_{$m_id}_{$invoice_number}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_number][]" value="{$t->tracknum}" id="acc_tracknum_val_{$m_id}_{$invoice_number}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_shipper][]" value="{$t->linkid|default:0}" id="acc_tracknum_link_{$m_id}_{$invoice_number}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_ship_date][]" value="{$t->shipping_date}" id="acc_tracknum_ship_date_{$m_id}_{$invoice_number}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_carrier][]" value="{$t->carrier_id}" id="acc_tracknum_carrier_id_{$m_id}_{$invoice_number}_{$row_conter}" />
 
           </div>
-
        {/if}
-
       {/foreach}
-    {else}
-      &nbsp;
     {/if}
   </td>
 </tr>
 
 
 <tr id="acc_track_{$m_id}_{$invoice_number}_tr">
-
-  <td id="acc_track_{$m_id}_{$invoice_number}_box_3" style="padding-right: 5px;">
-
-  <input type="text" id="tracking_ship_date_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_ship_date][{$invoice_number}][0]" value="" size="15" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} *} onclick="javascript: $(this).datepicker(); /* $(this).datepicker('option', 'dateFormat', 'MM d, yy'); */ $(this).datepicker('show');" />
-  </td>
-
-  <td id="acc_track_{$m_id}_{$invoice_number}_box_4" style="padding-right: 10px;">
-  <select id="tracking_carrier_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_carrier][{$invoice_number}][0]" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} *} onchange="func_set_tracking_shipping(this, '{$m_id}', '{$invoice_number}');">
-  <option value=""></option>
-{foreach from=$tracking_links_carrier item=vvv key=carrier_id}
-  <option value="{$carrier_id}">{$vvv.carrier}</option>
-{/foreach}
-  </select>
-  </td>
-
+    <td id="acc_track_{$m_id}_{$invoice_number}_box_3" style="padding-right: 5px;">
+        <input type="text" id="tracking_ship_date_{$m_id}_{$invoice_number}_box_0"
+               name="groups[{$m_id}][tracking_ship_date][]" value="" size="15"
+               onclick="$(this).datepicker();  $(this).datepicker('show');"/>
+    </td>
+    <td id="acc_track_{$m_id}_{$invoice_number}_box_4" style="padding-right: 10px;">
+        <select id="tracking_carrier_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_carrier][]"
+                onchange="func_set_tracking_shipping(this, '{$m_id}', '{$invoice_number}');">
+            <option value=""></option>
+            {foreach from=$tracking_links_carrier item=vvv key=carrier_id}
+                <option value="{$carrier_id}">{$vvv.carrier}</option>
+            {/foreach}
+        </select>
+    </td>
   <td id="acc_track_{$m_id}_{$invoice_number}_box_1" style="padding-right: 10px;">
-  <select id="tracking_shipping_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_shipper][{$invoice_number}][0]" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} *} style="width: 100%;">
-  <option value="">select carrier</option>
-
-{*
-{foreach from=$tracking_links item=vvv key=linkid}
-  <option value="{$linkid}">{$vvv.shipping}</option>
-{/foreach}
-*}
-
-  </select>
+      <select id="tracking_shipping_{$m_id}_{$invoice_number}_box_0"
+              name="groups[{$m_id}][tracking_shipper][]" style="width: 100%;">
+          <option value="">select carrier</option>
+      </select>
   </td>
-  <td id="acc_track_{$m_id}_{$invoice_number}_box_2" style="padding-right: 5px;">
-  <input type="text" name="groups[{$m_id}][tracking_number][{$invoice_number}][0]" value="" size="40" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} *} />
-  </td>
+    <td id="acc_track_{$m_id}_{$invoice_number}_box_2" style="padding-right: 5px;">
+        <input type="text" name="groups[{$m_id}][tracking_number][]" value="" size="40"/>
+    </td>
 
   <td width="30">
-{*{if !($v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}*}
-{include file="buttons/multirow_add.tpl" mark="acc_track_`$m_id`_`$invoice_number`"}
-{*{/if}*}
+      {include file="buttons/multirow_add.tpl" mark="acc_track_`$m_id`_`$invoice_number`"}
   </td>
 </tr>
 
