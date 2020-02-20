@@ -2,12 +2,11 @@
 
 namespace XeroPHP;
 
-use XeroPHP\Remote;
-use XeroPHP\Remote\Collection;
-use XeroPHP\Remote\OAuth\Client;
+use XeroPHP\Remote\URL;
 use XeroPHP\Remote\Query;
 use XeroPHP\Remote\Request;
-use XeroPHP\Remote\URL;
+use XeroPHP\Remote\Collection;
+use XeroPHP\Remote\OAuth\Client;
 
 abstract class Application
 {
@@ -18,7 +17,7 @@ abstract class Application
             'core_version' => '2.0',
             'payroll_version' => '1.0',
             'file_version' => '1.0',
-            'model_namespace' => '\\XeroPHP\\Models'
+            'model_namespace' => '\\XeroPHP\\Models',
         ],
         //OAuth config
         'oauth' => [
@@ -26,7 +25,7 @@ abstract class Application
             'signature_location' => Client::SIGN_LOCATION_HEADER,
             'authorize_url' => 'https://api.xero.com/oauth/Authorize',
             'request_token_path' => 'oauth/RequestToken',
-            'access_token_path' => 'oauth/AccessToken'
+            'access_token_path' => 'oauth/AccessToken',
         ],
         'curl' => [
             CURLOPT_USERAGENT => 'XeroPHP',
@@ -38,7 +37,7 @@ abstract class Application
             CURLOPT_PROXY => false,
             CURLOPT_PROXYUSERPWD => false,
             CURLOPT_ENCODING => '',
-        ]
+        ],
     ];
 
     /**
@@ -77,6 +76,7 @@ abstract class Application
 
     /**
      * @param string|null $oauth_token
+     *
      * @return string
      */
     public function getAuthorizeURL($oauth_token = null)
@@ -86,14 +86,17 @@ abstract class Application
 
     /**
      * @param mixed $key
-     * @return mixed
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function getConfig($key)
     {
-        if (!isset($this->config[$key])) {
-            throw new Exception("Invalid configuration key [$key]");
+        if (! isset($this->config[$key])) {
+            throw new Exception("Invalid configuration key [{$key}]");
         }
+
         return $this->config[$key];
     }
 
@@ -101,19 +104,23 @@ abstract class Application
      * @param string $config
      * @param mixed $option
      * @param mixed $value
-     * @return mixed
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function getConfigOption($config, $option)
     {
-        if (!isset($this->getConfig($config)[$option])) {
-            throw new Exception("Invalid configuration option [$option]");
+        if (! isset($this->getConfig($config)[$option])) {
+            throw new Exception("Invalid configuration option [{$option}]");
         }
+
         return $this->getConfig($config)[$option];
     }
 
     /**
      * @param array $config
+     *
      * @return array
      */
     public function setConfig($config)
@@ -131,24 +138,29 @@ abstract class Application
      * @param string $config
      * @param mixed $option
      * @param mixed $value
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     public function setConfigOption($config, $option, $value)
     {
-        if (!isset($this->config[$config])) {
-            throw new Exception("Invalid configuration key [$config]");
+        if (! isset($this->config[$config])) {
+            throw new Exception("Invalid configuration key [{$config}]");
         }
         $this->config[$config][$option] = $value;
+
         return $this->config;
     }
 
     /**
-     * Validates and expands the provided model class to a full PHP class
+     * Validates and expands the provided model class to a full PHP class.
      *
      * @param string $class
-     * @return string
+     *
      * @throws Exception
+     *
+     * @return string
      */
     public function validateModelClass($class)
     {
@@ -158,18 +170,18 @@ abstract class Application
 
         $class = $this->prependConfigNamespace($class);
 
-        if (!class_exists($class)) {
-            throw new Exception("Class does not exist [$class]");
+        if (! class_exists($class)) {
+            throw new Exception("Class does not exist [{$class}]");
         }
 
         return $class;
     }
 
-
     /**
      * Prepend the configuration namespace to the class.
      *
-     * @param  string  $class
+     * @param string $class
+     *
      * @return string
      */
     protected function prependConfigNamespace($class)
@@ -177,20 +189,21 @@ abstract class Application
         return $this->getConfig('xero')['model_namespace'].'\\'.$class;
     }
 
-
     /**
-     * As you should never have a GUID for a non-existent object, will throw a NotFoundExceptioon
+     * As you should never have a GUID for a non-existent object, will throw a NotFoundExceptioon.
      *
      * @param $model
      * @param $guid
-     * @return Remote\Model|null
+     *
      * @throws Exception
      * @throws Remote\Exception\NotFoundException
+     *
+     * @return Remote\Model|null
      */
     public function loadByGUID($model, $guid)
     {
         /**
-         * @var Remote\Model $class
+         * @var Remote\Model
          */
         $class = $this->validateModelClass($model);
 
@@ -204,28 +217,32 @@ abstract class Application
         //Return the first (if any) element from the response.
         foreach ($request->getResponse()->getElements() as $element) {
             /**
-             * @var Remote\Model $object
+             * @var Remote\Model
              */
             $object = new $class($this);
             $object->fromStringArray($element);
+
             return $object;
         }
-        return null;
+
+        
     }
 
     /**
-     * Filter by comma separated string of guid's
+     * Filter by comma separated string of guid's.
      *
      * @param $model
      * @param string $guids
-     * @return Collection
+     *
      * @throws Exception
      * @throws Remote\Exception\NotFoundException
+     *
+     * @return Collection
      */
     public function loadByGUIDs($model, $guids)
     {
         /**
-         * @var Remote\Model $class
+         * @var Remote\Model
          */
         $class = $this->validateModelClass($model);
 
@@ -234,12 +251,12 @@ abstract class Application
 
         $url = new URL($this, $uri, $api);
         $request = new Request($this, $url, Request::METHOD_GET);
-        $request->setParameter("IDs", $guids);
+        $request->setParameter('IDs', $guids);
         $request->send();
         $elements = new Collection();
         foreach ($request->getResponse()->getElements() as $element) {
             /**
-             * @var Remote\Model $object
+             * @var Remote\Model
              */
             $object = new $class($this);
             $object->fromStringArray($element);
@@ -251,20 +268,25 @@ abstract class Application
 
     /**
      * @param string $model
-     * @return Query
+     *
      * @throws Remote\Exception
+     *
+     * @return Query
      */
     public function load($model)
     {
         $query = new Query($this);
+
         return $query->from($model);
     }
 
     /**
      * @param Remote\Model $object
      * @param bool $replace_data
-     * @return Remote\Response|null
+     *
      * @throws Exception
+     *
+     * @return Remote\Response|null
      */
     public function save(Remote\Model $object, $replace_data = false)
     {
@@ -272,8 +294,8 @@ abstract class Application
         //(special saving endpoints)
         $this->savePropertiesDirectly($object);
 
-        if (!$object->isDirty()) {
-            return null;
+        if (! $object->isDirty()) {
+            return;
         }
         $object->validate();
 
@@ -288,7 +310,7 @@ abstract class Application
             $object->setApplication($this);
         }
 
-        if (!$object::supportsMethod($method)) {
+        if (! $object::supportsMethod($method)) {
             throw new Exception(sprintf('%s doesn\'t support [%s] via the API', get_class($object), $method));
         }
 
@@ -310,9 +332,13 @@ abstract class Application
     }
 
     /**
-     * @param Collection|array $objects
-     * @return Remote\Response
+     * @param array|Collection $objects
+     * @param mixed $checkGuid
+     * @param mixed $replace_data
+     *
      * @throws Exception
+     *
+     * @return Remote\Response
      */
     public function saveAll($objects, $checkGuid = true, $replace_data = false)
     {
@@ -321,7 +347,7 @@ abstract class Application
         //Just get one type to compare with, doesn't matter which.
         $current_object = $objects[0];
         /**
-         * @var Remote\Model $type
+         * @var Remote\Model
          */
         $type = get_class($current_object);
         $has_guid = $checkGuid ? $current_object->hasGUID() : true;
@@ -372,6 +398,7 @@ abstract class Application
      * adding contacts to ContactGroups
      *
      * @param Remote\Model $object
+     *
      * @throws Exception
      */
     private function savePropertiesDirectly(Remote\Model $object)
@@ -381,7 +408,7 @@ abstract class Application
                 //Then actually save
                 $property_objects = $object->$property_name;
                 /** @var Remote\Model $property_type */
-                $property_type = get_class(current($property_objects));
+                $property_type = get_class(current($property_objects->getArrayCopy()));
 
                 $url = new URL($this, sprintf('%s/%s/%s', $object::getResourceURI(), $object->getGUID(), $property_type::getResourceURI()));
                 $request = new Request($this, $url, Request::METHOD_PUT);
@@ -413,12 +440,14 @@ abstract class Application
 
     /**
      * @param Remote\Model $object
-     * @return Remote\Response
+     *
      * @throws Exception
+     *
+     * @return Remote\Response
      */
     public function delete(Remote\Model $object)
     {
-        if (!$object::supportsMethod(Request::METHOD_DELETE)) {
+        if (! $object::supportsMethod(Request::METHOD_DELETE)) {
             throw new Exception(
                 sprintf(
                     '%s doesn\'t support [DELETE] via the API',
