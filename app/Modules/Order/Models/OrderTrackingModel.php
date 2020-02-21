@@ -4,6 +4,7 @@
 namespace Modules\Order\Models;
 
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderTrackingHelper;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Shipping\Models\TrackingLinksModel;
 use Xcart\App\Main\Xcart;
@@ -13,6 +14,9 @@ use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property OrderGroupModel order_group
+ */
 class OrderTrackingModel extends Model
 {
     public static function tableName()
@@ -48,10 +52,19 @@ class OrderTrackingModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TrackingLinksCarrierModel::class,
                 'link' => ['carrier_id' => 'carrier_id'],
+            ],
+            'aftership_id' => [
+                'class' => CharField::class,
+                'null' => true
             ]
         ];
     }
 
+    /**
+     * @param OrderTrackingModel$owner
+     * @param $isNew
+     * @throws \Exception
+     */
     public function afterSave($owner, $isNew)
     {
         parent::afterSave($owner, $isNew);
@@ -74,6 +87,10 @@ class OrderTrackingModel extends Model
                 'log' => nl2br($log),
             ]))->save();
             OrderHelper::checkOrderTrackedAll($current_dc_status->order);
+            if (($r = OrderTrackingHelper::trackAfterShip($owner)) && isset($r['data']['tracking']['id'])) {
+                $this->aftership_id = $r['data']['tracking']['id'];
+                $this->update(['aftership_id']);
+            }
         }
     }
     public function afterDelete($owner) {
@@ -87,5 +104,6 @@ class OrderTrackingModel extends Model
             'log' => nl2br($log),
         ]))->save();
         OrderHelper::checkOrderTrackedAll($this->order_group->order);
+        OrderTrackingHelper::deleteAfterShip($owner);
     }
 }

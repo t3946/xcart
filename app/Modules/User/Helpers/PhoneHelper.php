@@ -50,4 +50,28 @@ class PhoneHelper
         $google_phone .= ($phone_ext ? " ext {$phone_ext}" : '');
         return [$userinfo_area_code, str_replace(' ', '+', $google_phone)];
     }
+
+    public static function phoneNormalize($phone): string
+    {
+        return preg_replace('/[^0-9]/S','', $phone);
+    }
+
+    public static function getPhonePrefix($country): string
+    {
+        switch($country) {
+            case 'US':
+            case 'CA':
+                $prefix = '+1';
+                break;
+        }
+        return $prefix ?? '';
+    }
+
+    public static function getPhoneNormalized($phone, $country)
+    {
+        if (strlen($phone_normalized = PhoneHelper::phoneNormalize($phone)) === 10){
+            return PhoneHelper::getPhonePrefix($country) . $phone_normalized;
+        }
+        return $phone;
+    }
 }

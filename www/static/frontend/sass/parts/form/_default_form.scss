@@ -238,6 +238,35 @@
       border: none;
     }
 
+    input[type=checkbox] {
+      content: '';
+      display: block;
+      width: rem-calc(21);
+      height: rem-calc(21);
+      border: 1px solid #d4d4d4;
+      top: 0;
+      cursor: pointer;
+      left: rem-calc(8);
+      @include breakpoint(large){
+        left: rem-calc(5);
+      }
+
+      &:checked {
+        &:after {
+          content: url("../../dist/images/icons/order/check_mark_grey.svg");
+          position: relative;
+          display: block;
+          width: rem-calc(12);
+          height: rem-calc(15);
+          top: rem-calc(-14);
+          left: rem-calc(-6);
+          @include breakpoint(large) {
+            top: rem-calc(0);
+          }
+        }
+      }
+    }
+
     /* special styles for textarea */
 
     textarea {

@@ -544,6 +544,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             $query_data_tmp = [
                 "itemid"          => $product['itemid'],
                 "orderid"         => $cart['orderid'],
+                "order_group_id"  => $cart['order_group_id'],
                 "productid"       => $product['productid'],
                 "amount"          => $product['amount'],
                 'back'            => $product['back'],
