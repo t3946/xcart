@@ -248,6 +248,28 @@ class DistributorModel extends Model
                 ])->count() > 0;
     }
 
+    public function getShippingOnlyOneCountry()
+    {
+        if (($countries = $this->getShippingCountries()) && count($countries) === 1) {
+            return reset($countries);
+        }
+        return null;
+    }
+
+    public function getShippingCountries()
+    {
+        $result = $r = [];
+        foreach ($this->shipping_rates as $rate) {
+            array_push($r,  ...$rate->zone_element_country->all());
+        }
+        if ($r) {
+            foreach($r as $zone_element) {
+                $result[] = $zone_element->field;
+            }
+        }
+        return array_unique($result);
+    }
+
     public function getDistributorTime(): DateTime
     {
         return (new DateTime())->setTimestamp(time() - $this->d_server_min_distributor_time * 60 * 60);
