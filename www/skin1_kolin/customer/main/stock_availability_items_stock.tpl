@@ -90,18 +90,12 @@
 		    </td>
 
                     <td>
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
+<script>
 {literal}
   $(function() {
-    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker(
-    {/literal}
-    {if $item.manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}{literal}{maxDate: "+2w",minDate: "-1d"}{/literal}{/if}
-    {literal}
-    );
+    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker();
   });
 {/literal}
--->
 </script>
 
                       <div id="div_eta_date_mm_dd_yyyy_{$item.productid}" 

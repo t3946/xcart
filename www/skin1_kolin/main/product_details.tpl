@@ -103,27 +103,13 @@
             $('#' + id).val(round(res, 2));
         {rdelim}
     </script>
-    {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
-        <script type="text/javascript" language="JavaScript 1.2">
-            <!--
-            {literal}
-              $(function() {
-                $("#eta_date_mm_dd_yyyy").datepicker({maxDate: "+2w",minDate: "-1d"});
-              });
-            {/literal}
-            -->
-        </script>
-    {else}
-        <script type="text/javascript" language="JavaScript 1.2">
-            <!--
-           {literal}
-             $(function() {
-               $("#eta_date_mm_dd_yyyy").datepicker();
-             });
-           {/literal}
-           -->
-        </script>
-    {/if}
+    <script>
+        {literal}
+        $(function () {
+            $("#eta_date_mm_dd_yyyy").datepicker();
+        });
+        {/literal}
+    </script>
 
     {include file="check_froogle_upc_js.tpl"}
 
