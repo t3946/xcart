@@ -148,7 +148,7 @@ class OrderGroupHelper
         }
 
         foreach ($params['tracking_carrier'] as $_k => $sh) {
-            if ($sh && !$params['tracking_id'][$_k]) {
+            if ($sh && !$params['tracking_id'][$_k] && trim($params['tracking_number'][$_k])) {
                 $t_shipdate = trim($params['tracking_ship_date'][$_k]);
                 $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
                 $tri = [

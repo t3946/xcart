@@ -1,16 +1,21 @@
 <?php
 
+use Modules\PBX\Helpers\AnveoAssignCalls;
+use Modules\Order\Models\OrderUserActivityModel;
+use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Payment\Helpers\PaymentEventHelper;
+use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Helpers\OrderEventHelper;
 
 return [
     'anveo:call' => [
         [
-            'callback' => ['\\Modules\\PBX\\Helpers\\AnveoAssignCalls', 'eventBindCallToOrder']
+            'callback' => [AnveoAssignCalls::class, 'eventBindCallToOrder']
         ]
     ],
     'order:status.changed' => [
         [
-            'callback' => ['\\Modules\\Order\\Models\\OrderEventsModel', 'newOrderEvent'],
+            'callback' => [OrderEventsModel::class, 'newOrderEvent'],
         ],
     ],
 
@@ -26,20 +31,26 @@ return [
         ],
     ],
 
+    'order:shipped' => [
+        [
+            'callback' => [OrderEventHelper::class, 'triggerOrderShippedEvent'],
+        ],
+    ],
+
     'payment:authorize' => [
         [
-            'callback' => ['\\Modules\\Payment\\Helpers\\PaymentEventHelper', 'triggerPaymentAuthorizeEvent'],
+            'callback' => [PaymentEventHelper::class, 'triggerPaymentAuthorizeEvent'],
         ],
     ],
 
     'order:tag' => [
         [
-            'callback' => ['\\Modules\\Order\\Helpers\\OrderTagEventHelper', 'triggerOrderTagEvent'],
+            'callback' => [OrderTagEventHelper::class, 'triggerOrderTagEvent'],
         ],
     ],
     'order:view' => [
         [
-            'callback' => ['\\Modules\\Order\\Models\\OrderUserActivityModel', 'userView'],
+            'callback' => [OrderUserActivityModel::class, 'userView'],
         ]
     ],
     'app:end' => []

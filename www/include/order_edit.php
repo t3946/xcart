@@ -1285,6 +1285,7 @@ if ($REQUEST_METHOD === 'POST')
                 if ($mode === 'accounting_apply' && $user_account['flag'] !== 'FS') {
                     if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
                         define('TRACKING_ADDED', 1);
+                        func_send_order_status_notification($orderGroupModel->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
                     }
                 }
 

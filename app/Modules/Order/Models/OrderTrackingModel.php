@@ -9,6 +9,7 @@ use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Shipping\Models\TrackingLinksModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -16,6 +17,11 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property OrderGroupModel order_group
+ * @property mixed carrier_id
+ * @property TrackingLinksCarrierModel carrier
+ * @property TrackingLinksModel link
+ * @property mixed tracknum
+ * @property mixed shipping_date
  */
 class OrderTrackingModel extends Model
 {
@@ -39,6 +45,8 @@ class OrderTrackingModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TrackingLinksModel::class,
                 'link' => ['linkid' => 'linkid'],
+                'null' => true,
+                'default' => null
             ],
             'tracknum' => [
                 'class' => CharField::class,
@@ -56,6 +64,10 @@ class OrderTrackingModel extends Model
             'aftership_id' => [
                 'class' => CharField::class,
                 'null' => true
+            ],
+            'send_to_amazon' => [
+                'class' => BooleanField::class,
+                'default' => false
             ]
         ];
     }

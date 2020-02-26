@@ -1568,7 +1568,7 @@ if ($mode == 'ref_notify')
     func_header_location("order.php?orderid=" . $orderid);
 }
 
-if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
+if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 {
     #
     # Send manufacturer notification and update order's manufacturer notified status

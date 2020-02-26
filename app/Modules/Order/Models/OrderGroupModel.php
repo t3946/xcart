@@ -26,6 +26,7 @@ use Xcart\OrderGroup;
  * @property int order_group_id
  * @property float total_net
  * @property DistributorModel manufacturer
+ * @property OrderTrackingModel[] trackings
  * @property OrderStatusModel|null cb_status_model
  * @property mixed cb_status
  * @property mixed actual_shipping_gross

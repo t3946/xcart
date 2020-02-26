@@ -653,15 +653,12 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                                              . ' FROM ' . $sql_tbl['order_groups']
                                              . ' WHERE orderid = "' . $cart['orderid'] . '" AND manufacturerid = "' . $mid . '"');
 
-            if (empty($v['tracking']) && $back_products[$mid] == 2) {
-//        	        $v['dc_status'] = 'B';
-//        	        $v['dc_status'] = 'M';
-            }
-            elseif (!empty($v['tracking']) && $back_products[$mid] >= 1) {
-                $v['dc_status'] = 'G';
-            }
-            elseif (!empty($v['tracking']) && $back_products[$mid] == 0) {
-                $v['dc_status'] = 'S';
+            if ($v['oOrderGroup']->trackings->count()) {
+                if ($back_products[$mid] >= 1) {
+                    $v['dc_status'] = \Modules\Order\Models\OrderStatusModel::ORDER_DC_STATUS_SHIPPED_BACKORDERED;
+                } elseif ($back_products[$mid] == 0) {
+                    $v['dc_status'] = \Modules\Order\Models\OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
+                }
             }
 
             foreach ($status_of_all_groups as $type => $sag) {
@@ -675,7 +672,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 }
             }
 
-            if ($v['dc_status'] == 'S' && defined('TRACKING_ADDED')) {
+            if ($v['dc_status'] === 'S' && defined('TRACKING_ADDED')) {
                 $force_send_notification = true;
             }
 
