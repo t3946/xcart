@@ -37,7 +37,7 @@ class DistributorContactsModel extends Model
     public function getPhoneNormalized(): string
     {
         if (strlen($phone_normalized = PhoneHelper::phoneNormalize($this->phone)) === 10){
-            return $this->distributor->getPhonePrefix() . $phone_normalized;
+            return PhoneHelper::getPhonePrefix($this->distributor->m_country) . $phone_normalized;
         }
         return $this->phone;
     }
