@@ -48,7 +48,7 @@ if ($ogModels) {
                         $tri = [
                             'tracknum' => $amTrack['track_number'],
                             'shipping_date' => $amTrack['shipping_date'],
-                            'carrier_id' => $sh,
+                            'carrier_id' => $sh ?? 1,
                             'order_group_id' => $ogm->order_group_id
                         ];
                         [$trackingModel, $isNew] = OrderTrackingModel::objects()->getOrCreate($tri);
