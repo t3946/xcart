@@ -5,6 +5,7 @@ namespace Modules\Amazon\Helpers;
 
 use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
 use DateTime;
+use DateTimeZone;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderTrackingModel;
@@ -37,7 +38,8 @@ class AmazonFbaFeedHelper
         $items = [];
         if ($trackNumberData) {
             $orderModel = $trackNumberData->order_group->order;
-            $shipDate = $trackNumberData->shipping_date ? $trackNumberData->shipping_date->format(DATE_W3C) : '';
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', "{$trackNumberData->shipping_date} 00:00:00", new DateTimeZone('EST'));
+            $shipDate = $date->format(DATE_W3C);
 
             $cm = $trackNumberData->carrier;
 
