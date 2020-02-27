@@ -18,7 +18,7 @@ class TrackingConvertCommand extends Command
     public function handle($arguments = [])
     {
         foreach (OrderGroupModel::objects()->filter([
-//            'order__date__gte' => new Expression('UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 10 YEAR))'),
+            'order__date__gte' => new Expression('UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 3 YEAR))'),
             'dc_status__in' => [OrderStatusModel::ORDER_DC_STATUS_SHIPPED]])->order(['orderid']) as $group) {
             foreach ($group->tracking as $track) {
                 if (!$t_shipdate = $track['shipping_date']) {
