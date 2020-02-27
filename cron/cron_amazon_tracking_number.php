@@ -38,9 +38,8 @@ if ($ogModels) {
         try {
             $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getAmazonShippingOrderId()));
             if ($res) {
-                if ($ogm->trackings) {
-                    $tracks = array_map(function ($a) {return $a['tracknum'];}, $ogm->trackings);
-                }
+                $tracks = $ogm->trackings->valuesList('tracknum', true);
+
                 foreach ($res as $amTrack) {
                     if (!in_array($amTrack['track_number'], $tracks, true)) {
                         if ($carrierModel = TrackingLinksCarrierModel::objects()->get(['carrier' => $amTrack['carrier_code']])) {
@@ -52,10 +51,10 @@ if ($ogModels) {
                             'carrier_id' => $sh,
                             'order_group_id' => $ogm->order_group_id
                         ];
-                        $trackingModel = new OrderTrackingModel($tri);
-                        $trackingModel->save();
-
-                        func_send_order_status_notification($ogm->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
+                        [$trackingModel, $isNew] = OrderTrackingModel::objects()->getOrCreate($tri);
+                        if ($isNew) {
+                            func_send_order_status_notification($ogm->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
+                        }
                     }
                 }
             }
