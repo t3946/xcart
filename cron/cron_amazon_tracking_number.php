@@ -5,6 +5,8 @@ use Modules\Amazon\Helpers\AmazonFbaOutboundHelper;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\Models\OrderTrackingModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 
 define('CIDEV_CRON_START', 'CRON');
@@ -35,32 +37,25 @@ if ($ogModels) {
         $tracks = [];
         try {
             $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getAmazonShippingOrderId()));
-            if (!empty($res)) {
-                if (!empty($ogm->tracking)) {
-                    $tracks = array_map(function ($a) {return $a['tracknum'];}, $ogm->tracking);
+            if ($res) {
+                if ($ogm->trackings) {
+                    $tracks = array_map(function ($a) {return $a['tracknum'];}, $ogm->trackings);
                 }
                 foreach ($res as $amTrack) {
-                    if (!in_array($amTrack['track_number'], $tracks)) {
-                        $old = $ogm->tracking;
-                        $newTrack = [
-                            'tracknum' => $amTrack['track_number'],
-                            'ship_date' => $amTrack['shipping_date']->format('m/d/Y'),
-                            'shipping_date' => $amTrack['shipping_date'],
-                        ];
+                    if (!in_array($amTrack['track_number'], $tracks, true)) {
                         if ($carrierModel = TrackingLinksCarrierModel::objects()->get(['carrier' => $amTrack['carrier_code']])) {
-                            $newTrack['carrier_id'] = $carrierModel->carrier_id;
+                            $sh = $carrierModel->carrier_id;
                         }
-                        $old[] = $newTrack;
-                        $ogm->tracking = $old;
-                        $ogm->dc_status = 'S';
+                        $tri = [
+                            'tracknum' => $amTrack['track_number'],
+                            'shipping_date' => $amTrack['shipping_date'],
+                            'carrier_id' => $sh,
+                            'order_group_id' => $ogm->order_group_id
+                        ];
+                        $trackingModel = new OrderTrackingModel($tri);
+                        $trackingModel->save();
 
-                        func_backprocess_log($log_category, $log = "Add tracking number {$amTrack['track_number']} in order {$ogm->orderid}");
-
-                        print $log . PHP_EOL;
-
-                        $ogm->save();
-
-                        func_send_order_status_notification($ogm->orderid, 'S', true);
+                        func_send_order_status_notification($ogm->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
                     }
                 }
             }
