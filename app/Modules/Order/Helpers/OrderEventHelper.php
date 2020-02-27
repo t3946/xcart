@@ -36,6 +36,11 @@ class OrderEventHelper
         self::orderPaidEvent($model, $status);
     }
 
+    public static function triggerOrderShippedEvent($owner = null, OrderModel $model): void
+    {
+        self::orderShippedEvent($model);
+    }
+
     public static function orderCreateEvent(OrderModel $model): void
     {
         if ($model && $app = Xcart::app()) {
@@ -189,6 +194,11 @@ class OrderEventHelper
 
         $model->groups->update(['cb_status' => $model->cb_status]);
 
+        OrderInvoiceHelper::sendOrderStatusNotification($model);
+    }
+
+    public static function orderShippedEvent(OrderModel $model): void
+    {
         OrderInvoiceHelper::sendOrderStatusNotification($model);
     }
 }

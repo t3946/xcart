@@ -6,6 +6,7 @@ use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Validation\EmailValidator;
 use Xcart\App\Validation\PhoneExtValidator;
@@ -54,6 +55,13 @@ class ContactInfoForm extends FrontendForm
                 ],
             ],
 
+            'track_sms' => [
+                'class' => CheckboxField::class,
+                'label' => OrderModule::t('SMS notifications'),
+                'hint' => OrderModule::t('Get shipment status notifications by SMS (free service)'),
+                'labelTemplate' => 'forms/field/checkbox/label.tpl',
+            ],
+
             'email' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t('Email'),
@@ -92,7 +100,7 @@ class ContactInfoForm extends FrontendForm
         if ($this->replacement) {
             $replace = array_flip($this->replacement);
             foreach ($data as $key => $val) {
-                if (\is_string($val)) {
+                if (is_string($val)) {
                     $t_data[$replace[$key]] = trim($val);
                 }
             }
@@ -110,7 +118,7 @@ class ContactInfoForm extends FrontendForm
             $replace = $this->replacement;
             foreach ($fields as $fieldName => $fieldInfo) {
 
-                if(isset($fieldInfo['extend']) && isset($this->replacement[$fieldInfo['extend']])){
+                if(isset($fieldInfo['extend'], $this->replacement[$fieldInfo['extend']])){
                     $fieldInfo['extend'] = $this->replacement[$fieldInfo['extend']];
                 }
                 $newFields[$replace[$fieldName]] = $fieldInfo;

@@ -3624,7 +3624,7 @@ function func_send_order_status_notification($orderid, $status, $force_send_emai
                 $from     = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
 
-                if ($_POST["send_email"] == "Y" || $force_send_email) {
+                if ($_POST["send_email"] === 'Y' || $force_send_email) {
                     $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
                     $oMail->to = $to;
                     $oMail->from = $from;

@@ -2,32 +2,47 @@
 
 namespace XeroPHP\Remote;
 
-use XeroPHP\Application;
 use XeroPHP\Helpers;
+use XeroPHP\Application;
 
 class Request
 {
     const METHOD_GET = 'GET';
+
     const METHOD_PUT = 'PUT';
+
     const METHOD_POST = 'POST';
+
     const METHOD_DELETE = 'DELETE';
 
     const CONTENT_TYPE_HTML = 'text/html';
+
     const CONTENT_TYPE_XML = 'text/xml';
+
     const CONTENT_TYPE_JSON = 'application/json';
+
     const CONTENT_TYPE_PDF = 'application/pdf';
 
     const HEADER_ACCEPT = 'Accept';
+
     const HEADER_CONTENT_TYPE = 'Content-Type';
+
     const HEADER_CONTENT_LENGTH = 'Content-Length';
+
     const HEADER_AUTHORIZATION = 'Authorization';
+
     const HEADER_IF_MODIFIED_SINCE = 'If-Modified-Since';
 
     private $app;
+
     private $url;
+
     private $method;
+
     private $headers;
+
     private $parameters;
+
     private $body;
 
     /**
@@ -48,9 +63,10 @@ class Request
             case self::METHOD_POST:
             case self::METHOD_DELETE:
                 $this->method = $method;
+
                 break;
             default:
-                throw new Exception("Invalid request method [$method]");
+                throw new Exception("Invalid request method [{$method}]");
         }
 
         //Default to XML so you get the  xsi:type attribute in the root node.
@@ -90,7 +106,7 @@ class Request
         $query_string = Helpers::flattenAssocArray($this->getParameters(), '%s=%s', '&', true);
 
         if (strlen($query_string) > 0) {
-            $full_uri .= "?$query_string";
+            $full_uri .= "?{$query_string}";
         }
         curl_setopt($ch, CURLOPT_URL, $full_uri);
 
@@ -108,7 +124,7 @@ class Request
             list($name, $value) = explode(':', $header, 2);
             $name = strtolower(trim($name));
             $value = trim($value);
-            if (!array_key_exists($name, $headers)) {
+            if (! array_key_exists($name, $headers)) {
                 $headers[$name] = [];
             }
             $headers[$name][] = $value;
@@ -120,7 +136,7 @@ class Request
         $info = curl_getinfo($ch);
 
         if ($response === false) {
-            throw new Exception('Curl error: ' . curl_error($ch));
+            throw new Exception('Curl error: '.curl_error($ch));
         }
 
         $this->response = new Response($this, $response, $info, $headers);
@@ -132,6 +148,7 @@ class Request
     public function setParameter($key, $value)
     {
         $this->parameters[$key] = $value;
+
         return $this;
     }
 
@@ -142,13 +159,15 @@ class Request
 
     /**
      * @param $key string Name of the header
-     * @return null|string Header or null if not defined
+     *
+     * @return string|null Header or null if not defined
      */
     public function getHeader($key)
     {
-        if (!isset($this->headers[$key])) {
-            return null;
+        if (! isset($this->headers[$key])) {
+            return;
         }
+
         return $this->headers[$key];
     }
 
@@ -165,7 +184,8 @@ class Request
         if (isset($this->response)) {
             return $this->response;
         }
-        return null;
+
+        
     }
 
     /**
@@ -177,6 +197,7 @@ class Request
     public function setHeader($key, $val)
     {
         $this->headers[$key] = $val;
+
         return $this;
     }
 

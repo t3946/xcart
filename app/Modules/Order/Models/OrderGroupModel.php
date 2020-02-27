@@ -26,9 +26,12 @@ use Xcart\OrderGroup;
  * @property int order_group_id
  * @property float total_net
  * @property DistributorModel manufacturer
+ * @property OrderTrackingModel[] trackings
  * @property OrderStatusModel|null cb_status_model
  * @property mixed cb_status
  * @property mixed actual_shipping_gross
+ * @property mixed actual_shipping_net
+ * @property OrderModel order
  */
 class OrderGroupModel extends Model
 {
@@ -113,6 +116,11 @@ class OrderGroupModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => OrderDetailModel::className(),
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'product_model__manufacturerid'],
+            ],
+            'trackings' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderTrackingModel::class,
+                'link' => ['order_group_id' => 'order_group_id'],
             ],
             'invoices' => [
                 'class' => HasManyField::className(),

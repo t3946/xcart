@@ -6,59 +6,54 @@ use XeroPHP\Remote;
 
 class Setting extends Remote\Model
 {
-
     /**
-     * The prefix used for fixed asset numbers (“FA-” by default)
+     * The prefix used for fixed asset numbers (“FA-” by default).
      *
      * @property string assetNumberPrefix
      */
 
     /**
-     * The next available sequence number
+     * The next available sequence number.
      *
      * @property string assetNumberSequence
      */
 
     /**
-     * The date depreciation calculations started on registered fixed assets in Xero
+     * The date depreciation calculations started on registered fixed assets in Xero.
      *
      * @property \DateTimeInterface assetStartDate
      */
 
     /**
-     * The last depreciation date
+     * The last depreciation date.
      *
      * @property \DateTimeInterface lastDepreciationDate
      */
 
     /**
-     * Default account that gains are posted to
+     * Default account that gains are posted to.
      *
      * @property string defaultGainOnDisposalAccountId
      */
 
     /**
-     * Default account that losses are posted to
+     * Default account that losses are posted to.
      *
      * @property string defaultLossOnDisposalAccountId
      */
 
     /**
-     * Default account that capital gains are posted to
+     * Default account that capital gains are posted to.
      *
      * @property string defaultCapitalGainOnDisposalAccount
      */
 
     /**
-     *
-     *
      * @property string optInForTax
      */
 
-
-
     /**
-     * Get the resource uri of the class (Contacts) etc
+     * Get the resource uri of the class (Contacts) etc.
      *
      * @return string
      */
@@ -67,9 +62,8 @@ class Setting extends Remote\Model
         return 'Settings';
     }
 
-
     /**
-     * Get the root node name.  Just the unqualified classname
+     * Get the root node name.  Just the unqualified classname.
      *
      * @return string
      */
@@ -78,9 +72,8 @@ class Setting extends Remote\Model
         return 'Setting';
     }
 
-
     /**
-     * Get the guid property
+     * Get the guid property.
      *
      * @return string
      */
@@ -89,9 +82,8 @@ class Setting extends Remote\Model
         return '';
     }
 
-
     /**
-     * Get the stem of the API (core.xro) etc
+     * Get the stem of the API (core.xro) etc.
      *
      * @return string|null
      */
@@ -100,25 +92,23 @@ class Setting extends Remote\Model
         return Remote\URL::API_ASSET;
     }
 
-
     /**
-     * Get the supported methods
+     * Get the supported methods.
      */
     public static function getSupportedMethods()
     {
         return [
-            Remote\Request::METHOD_GET
+            Remote\Request::METHOD_GET,
         ];
     }
 
     /**
-     *
      * Get the properties of the object.  Indexed by constants
      *  [0] - Mandatory
      *  [1] - Type
      *  [2] - PHP type
      *  [3] - Is an Array
-     *  [4] - Saves directly
+     *  [4] - Saves directly.
      *
      * @return array
      */
@@ -132,7 +122,7 @@ class Setting extends Remote\Model
             'defaultGainOnDisposalAccountId' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
             'defaultLossOnDisposalAccountId' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
             'defaultCapitalGainOnDisposalAccount' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
-            'optInForTax' => [false, self::PROPERTY_TYPE_STRING, null, false, false]
+            'optInForTax' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
         ];
     }
 
@@ -151,12 +141,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setassetNumberPrefix($value)
     {
         $this->propertyUpdated('assetNumberPrefix', $value);
         $this->_data['assetNumberPrefix'] = $value;
+
         return $this;
     }
 
@@ -170,12 +162,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setassetNumberSequence($value)
     {
         $this->propertyUpdated('assetNumberSequence', $value);
         $this->_data['assetNumberSequence'] = $value;
+
         return $this;
     }
 
@@ -189,12 +183,14 @@ class Setting extends Remote\Model
 
     /**
      * @param \DateTimeInterface $value
+     *
      * @return Setting
      */
     public function setassetStartDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('assetStartDate', $value);
         $this->_data['assetStartDate'] = $value;
+
         return $this;
     }
 
@@ -208,12 +204,14 @@ class Setting extends Remote\Model
 
     /**
      * @param \DateTimeInterface $value
+     *
      * @return Setting
      */
     public function setlastDepreciationDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('lastDepreciationDate', $value);
         $this->_data['lastDepreciationDate'] = $value;
+
         return $this;
     }
 
@@ -227,12 +225,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setdefaultGainOnDisposalAccountId($value)
     {
         $this->propertyUpdated('defaultGainOnDisposalAccountId', $value);
         $this->_data['defaultGainOnDisposalAccountId'] = $value;
+
         return $this;
     }
 
@@ -246,12 +246,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setdefaultLossOnDisposalAccountId($value)
     {
         $this->propertyUpdated('defaultLossOnDisposalAccountId', $value);
         $this->_data['defaultLossOnDisposalAccountId'] = $value;
+
         return $this;
     }
 
@@ -265,12 +267,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setdefaultCapitalGainOnDisposalAccount($value)
     {
         $this->propertyUpdated('defaultCapitalGainOnDisposalAccount', $value);
         $this->_data['defaultCapitalGainOnDisposalAccount'] = $value;
+
         return $this;
     }
 
@@ -284,12 +288,14 @@ class Setting extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return Setting
      */
     public function setoptInForTax($value)
     {
         $this->propertyUpdated('optInForTax', $value);
         $this->_data['optInForTax'] = $value;
+
         return $this;
     }
 }

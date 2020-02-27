@@ -3,9 +3,13 @@
 namespace Modules\Order\Helpers;
 
 
+use DateTime;
+use DateTimeZone;
+use Mindy\QueryBuilder\Q\QOrNot;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\Models\OrderTrackingModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\OrderModule;
 use Modules\Order\Stores\OrderTransactionStore;
@@ -130,5 +134,35 @@ class OrderGroupHelper
 
         Xcart::app()->request->session->add('section_name_top_message', $section_name_top_message);
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_model->orderid}");
+    }
+
+    public static function addTrackingNumbers($group, $params): array
+    {
+        $d_filter = ['order_group_id' => $group->order_group_id];
+        if ($params['tracking_id']) {
+            $d_filter[] = new QOrNot(['id__in' => $params['tracking_id']]);
+        }
+        /** @var OrderTrackingModel $dm */
+        foreach (OrderTrackingModel::objects()->filter($d_filter) as $dm) {
+            $dm->delete();
+        }
+
+        foreach ($params['tracking_carrier'] as $_k => $sh) {
+            if ($sh && !$params['tracking_id'][$_k] && trim($params['tracking_number'][$_k])) {
+                $t_shipdate = trim($params['tracking_ship_date'][$_k]);
+                $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
+                $tri = [
+                    'linkid' => $params['tracking_shipper'][$_k] ?? 0,
+                    'tracknum' => trim($params['tracking_number'][$_k]),
+                    'shipping_date' => $t_shipdate ? DateTime::createFromFormat('m/d/Y H:i:s', "{$t_shipdate} 00:00:00", new DateTimeZone('EST')) : null,
+                    'carrier_id' => $sh,
+                    'order_group_id' => $group->order_group_id
+                ];
+                $trackingModel = new OrderTrackingModel($tri);
+                $trackingModel->save();
+                $tracking[] = $trackingModel;
+            }
+        }
+        return $tracking ?? [];
     }
 }

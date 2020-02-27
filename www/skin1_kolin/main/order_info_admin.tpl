@@ -835,27 +835,30 @@ function check_r_fields(){
     </td>
   {else}
   <td colspan="6">
-    {if $oOrderGroup->tracking}
-      {foreach from=$oOrderGroup->tracking item=t key=row_conter}
+    {if $oOrderGroup->trackings}
+      {foreach from=$oOrderGroup->trackings item=t key=row_conter}
 
-        {assign var="current_carrier_id" value=$t.carrier_id}
+        {assign var="current_carrier_id" value=$t->carrier_id}
+        {assign var="current_link_id" value=$t->linkid}
 
         <div id="tracknum_{$m_id}_{$row_conter}">
-          {if $t.tracknum}
-            <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t.tracknum}" target="_blank">
-                Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$t.tracknum}
-            </a>
-          {else}
-            Shipped{if $t.shipping_date || $t.ship_date} on {if $t.shipping_date}{$t.shipping_date->format('F j, Y')}{else}{$t.ship_date}{/if}{/if} by {$tracking_links_carrier[$current_carrier_id].carrier}{if $tracking_links[$t.linkid].shipping ne ""} {$tracking_links[$t.linkid].shipping}{/if}: {$tracking_links_carrier[$current_carrier_id].link}
-          {/if}
+            {if $t->tracknum}
+                <a href="{$tracking_links_carrier[$current_carrier_id].link|substitute:"tracknum":$t->tracknum}" target="_blank">
+            {/if}
+            Shipped on {$t->shipping_date|date_format:'%B %d, %Y'} by {$tracking_links_carrier[$current_carrier_id].carrier}
+                    {if $tracking_links[$current_link_id].shipping}
+                        {$tracking_links[$current_link_id].shipping}
+                    {/if} : {if $t->tracknum}{$t->tracknum}{else}{$tracking_links_carrier[$current_carrier_id].link}{/if}
+            {if $t->tracknum}
+                </a>
+            {/if}
 
-          <a href="javascript: void(0);" onclick="javascript: $('#tracknum_val_{$m_id}_{$row_conter}').val(''); $('#tracknum_link_{$m_id}_{$row_conter}').val(''); $('#tracknum_invoice_number_{$m_id}_{$row_conter}').val(''); $('#tracknum_carrier_id_{$m_id}_{$row_conter}').val(''); $('#tracknum_{$m_id}_{$row_conter}').hide();"><img src="{$ImagesDir}/minus.gif" /></a>
-
-          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][tracknum]" value="{$t.tracknum}" id="tracknum_val_{$m_id}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][linkid]" value="{$t.linkid}" id="tracknum_link_{$m_id}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][invoice_number]" value="{$t.invoice_number|default:'1'}" id="tracknum_invoice_number_{$m_id}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][ship_date]" value="{$t.ship_date}" id="tracknum_ship_date_{$m_id}_{$row_conter}" />
-          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][carrier_id]" value="{$t.carrier_id}" id="tracknum_carrier_id_{$m_id}_{$row_conter}" />
+          <a href="javascript: void(0);" onclick="$('#tracknum_{$m_id}_{$row_conter}').remove();"><img src="{$ImagesDir}/minus.gif" /></a>
+          <input type="hidden" name="groups[{$m_id}][tracking_id][]" value="{$t->id}" id="trackid_val_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_number][]" value="{$t->tracknum}" id="tracknum_val_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_shipper][]" value="{$t->linkid}" id="tracknum_link_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_ship_date][]" value="{$t->shipping_date}" id="tracknum_ship_date_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="groups[{$m_id}][tracking_carrier][]" value="{$t->carrier_id}" id="tracknum_carrier_id_{$m_id}_{$row_conter}" />
 
         </div>
 
@@ -1027,110 +1030,71 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 </td>
 </tr>
 
-{*
- {if $all_vt_processors ne ""}
- <tr style="background-color: #F4CCCC; display: none;" id="additional_vt_info_{$m_id}" >
- <td colspan="11">
-   <table>
-     <tr>
-       <td>
-         <b>Payment method:</b><br />
-  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
-<input type="hidden" name="groups[{$m_id}][additional_vt_paymentid]" id="additional_vt_paymentid_{$m_id}" value="{$v.additional_vt_paymentid}" />
-  {/if}
-         <select name="groups[{$m_id}][additional_vt_paymentid]" id="additional_vt_paymentid_{$m_id}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-         <option value="0"></option>
-         {foreach from=$all_vt_processors item=item_vt key=key_vt}
-         <option {if $v.additional_vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
-         {/foreach}
-         </select>
-       </td>
-       <td width="20">&nbsp;</td>
-       <td>
-           <b>Virtual terminal transaction ID:</b><br />
-           <input type="text" name="groups[{$m_id}][additional_transaction_id_link]" id="additional_transaction_id_link_{$m_id}" value="{$v.additional_transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-       </td>
-       <td width="20">&nbsp;</td>
-       <td>
-           <b>AVS code:</b><br />
-           <input type="text" name="groups[{$m_id}][additional_avs_code]" id="additional_avs_code_{$m_id}" value="{$v.additional_avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-       </td>
-     </tr>
-   </table>
- </td>
- </tr>
- {/if}
-*}
-
-{* {if $order_manufacturers[$m_id].additional_shipping_status eq "W" && $v.actual_shipping_cost.net gt 0} *}
-{if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
-<tr>
-<td colspan="6"><B>Estimated profit after additional payment</B></td>
-<td colspan="3"></td>
-<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs ne ""}<span style="color: #FF0000;">(${$order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs})</span>{else}${$order_manufacturers[$m_id].estimated_profit_after_additional_payment}{/if}</B></td>
-<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs ne ""}<span style="color: #FF0000;">({$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs}%)</span>{else}{$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent}%{/if}</B></td>
-</tr>
+    {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
+        <tr>
+            <td colspan="6"><B>Estimated profit after additional payment</B></td>
+            <td colspan="3"></td>
+            <td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs ne ""}
+                        <span style="color: #FF0000;">
+                        (${$order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs})</span>{else}${$order_manufacturers[$m_id].estimated_profit_after_additional_payment}{/if}
+                </B></td>
+            <td align="right">
+                <B>{if $order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs ne ""}
+                        <span style="color: #FF0000;">
+                        ({$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs}%)</span>{else}{$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent}%{/if}
+                </B></td>
+        </tr>
+    {/if}
 {/if}
-
-{/if}
-
-{* ----------------------- *}
-
 
 <tr id="tracking_number_tr_id_{$m_id}" style="{if !($v.dc_status eq 'S' || $v.dc_status eq 'L' || $v.dc_status eq 'G' || $v.dc_status eq 'C' || $v.dc_status eq 'DA')}display: none;{/if}">
 <td colspan="9">
-<script type="text/javascript">
-<!--
-multirowInputSets['track_{$m_id}'] = [];
-multirowInputSets['track_{$m_id}'].noCloneContent = 1;
--->
-</script>
+    <script>
+        multirowInputSets['track_{$m_id}'] = [];
+        multirowInputSets['track_{$m_id}'].noCloneContent = 1;
+    </script>
 <table cellpadding="0" cellspacing="0" border="0">
-<tr>
-  <td><B>Ship date:</B></td>
-  <td><B>Carrier:</B></td>
-  <td width="250"><B>Shipping method:</B></td>
-	<td colspan="2"><b>Tracking number</b> (is put on the invoice)<b>:</b></td>
-</tr>
+    <tr>
+        <td><B>Ship date:</B></td>
+        <td><B>Carrier:</B></td>
+        <td width="250"><B>Shipping method:</B></td>
+        <td colspan="2"><b>Tracking number</b> (is put on the invoice)<b>:</b></td>
+    </tr>
+    <tr id="track_{$m_id}_tr">
+        <td id="track_{$m_id}_box_3" style="padding-right: 5px;">
+            <input type="text" id="tracking_ship_date_{$m_id}_box_0" name="groups[{$m_id}][tracking_ship_date][]"
+                   value=""
+                   size="15" onclick="$(this).datepicker();$(this).datepicker('show');"
+                   onchange="$(this).datepicker('hide');"/>
+        </td>
+        <td id="track_{$m_id}_box_4" style="padding-right: 10px;">
+            <select id="tracking_carrier_{$m_id}_box_0"
+                    name="groups[{$m_id}][tracking_carrier][]"
+                    onchange="func_set_tracking_shipping(this, '{$m_id}', '0');">
+                <option value=""></option>
+                {foreach from=$tracking_links_carrier item=vvv key=carrier_id}
+                    <option value="{$carrier_id}">{$vvv.carrier}</option>
+                {/foreach}
+            </select>
+        </td>
+        <td id="track_{$m_id}_box_1" style="padding-right: 10px;">
+            <select id="tracking_shipping_{$m_id}_box_0" name="groups[{$m_id}][tracking_shipper][]"
+                    {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}
+                    style="width: 100%;">
+                <option value="">select carrier</option>
+            </select>
+        </td>
+        <td id="track_{$m_id}_box_2" style="padding-right: 5px;">
+            <input type="text" name="groups[{$m_id}][tracking_number][]" value="" size="40"
+                   {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} />
+        </td>
 
-<tr id="track_{$m_id}_tr">
-
-  <td id="track_{$m_id}_box_3" style="padding-right: 5px;">
-  <input type="text" id="tracking_ship_date_{$m_id}_box_0" name="groups[{$m_id}][tracking_ship_date][0]" value="" size="15" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} *} onclick="javascript: $(this).datepicker(); /*$(this).datepicker('option', 'dateFormat', 'MM d, yy'); */ $(this).datepicker('show');" onchange="javascript: $(this).datepicker('hide');" />
-  </td>
-
-  <td id="track_{$m_id}_box_4" style="padding-right: 10px;">
-  <select id="tracking_carrier_{$m_id}_box_0" name="groups[{$m_id}][tracking_carrier][0]" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} *} onchange="func_set_tracking_shipping(this, '{$m_id}', '0');">
-  <option value=""></option>
-{foreach from=$tracking_links_carrier item=vvv key=carrier_id}
-  <option value="{$carrier_id}">{$vvv.carrier}</option>
-{/foreach}
-  </select>
-  </td>
-
-	<td id="track_{$m_id}_box_1" style="padding-right: 10px;">
-	<select id="tracking_shipping_{$m_id}_box_0" name="groups[{$m_id}][tracking_shipper][0]" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} style="width: 100%;">
-	<option value="">select carrier</option>
-
-{*
-{foreach from=$tracking_links item=vvv key=linkid}
-	<option value="{$linkid}">{$vvv.shipping}</option>
-{/foreach}
-*}
-
-	</select>
-	</td>
-	<td id="track_{$m_id}_box_2" style="padding-right: 5px;">
-	<input type="text" name="groups[{$m_id}][tracking_number][0]" value="" size="40" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} />
-	</td>
-
-	<td width="30">
-{if !($v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
-{include file="buttons/multirow_add.tpl" mark="track_`$m_id`"}
-{/if}
-  </td>
-</tr>
-
+        <td width="30">
+            {if !($v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
+                {include file="buttons/multirow_add.tpl" mark="track_`$m_id`"}
+            {/if}
+        </td>
+    </tr>
 </table>
 
 </td>

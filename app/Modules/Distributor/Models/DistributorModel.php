@@ -16,6 +16,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -314,23 +315,7 @@ class DistributorModel extends Model
 
     public function getPhoneNormalized(): string
     {
-        $phone = $this->getPhone();
-
-        if (strlen($phone_normalized = DistributorHelper::phoneNormalize($phone)) === 10){
-            return $this->getPhonePrefix() . $phone_normalized;
-        }
-        return $phone;
-    }
-
-    public function getPhonePrefix(): string
-    {
-        switch($this->m_country) {
-            case 'US':
-            case 'CA':
-                $prefix = '+1';
-                break;
-        }
-        return $prefix ?? '';
+        return PhoneHelper::getPhoneNormalized($this->getPhone(), $this->m_country);
     }
 
     public function getAdminUrl(): string

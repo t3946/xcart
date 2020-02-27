@@ -12,10 +12,12 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -67,6 +69,9 @@ use Xcart\Order;
  * @property mixed phone_ext
  * @property mixed b_zipcode
  * @property mixed transactions_log
+ * @property mixed tracking_all_filled
+ * @property int tracking_fill_time
+ * @property bool track_sms
  */
 class OrderModel extends Model
 {
@@ -319,6 +324,11 @@ class OrderModel extends Model
                 'class' => BooleanCharField::class,
                 'null' => false,
             ],
+            'track_sms' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
             'order_type' => [
                 'class' => CharField::class,
                 'default' => self::ORDER_TYPE_XCART,
@@ -518,6 +528,11 @@ class OrderModel extends Model
             return $extra->getIP();
         }
         return null;
+    }
+
+    public function getPhoneNormalized(): string
+    {
+        return PhoneHelper::getPhoneNormalized($this->phone, $this->b_country);
     }
 
 }

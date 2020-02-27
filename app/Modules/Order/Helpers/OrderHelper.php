@@ -230,7 +230,7 @@ class OrderHelper
                 $trStore = new OrderTransactionStore($params, $auth_tr);
                 $model = $trStore->void();
 
-                $log .= "<br />" . $trStore->log;
+                $log .= "<br />{$trStore->log}";
             }
         }
 
@@ -384,5 +384,26 @@ class OrderHelper
 </a>
 HTML;
         return $result;
+    }
+
+    public static function checkOrderTrackedAll(OrderModel $order)
+    {
+        $all =true;
+        /** @var OrderGroupModel $group */
+        foreach ($order->groups as $group) {
+            if (!$group->trackings->count()) {
+                $all = false;
+                break;
+            }
+        }
+        if ($all) {
+            if ($order->tracking_all_filled !== 'Y') {
+                $order->tracking_fill_time = time();
+            }
+            $order->tracking_all_filled = 'Y';
+        } else {
+            $order->tracking_all_filled = 'N';
+        }
+        $order->save();
     }
 }

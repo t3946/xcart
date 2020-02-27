@@ -74,8 +74,10 @@
                             <span style="float:right">
                             {foreach from=$order_store->model->groups item=group}
                                 {assign var=distributor value=$group->manufacturer}
-                                {assign var=distributor_time value=$distributor->getDistributorTime()}
-                                {$distributor_time->format('H:i')}<br/>
+                                {if $distributor}
+                                    {assign var=distributor_time value=$distributor->getDistributorTime()}
+                                    {$distributor_time->format('H:i')}<br/>
+                                {/if}
                             {/foreach}
                             </span>
                         </div>

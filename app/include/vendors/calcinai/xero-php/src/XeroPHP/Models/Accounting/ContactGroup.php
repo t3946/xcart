@@ -6,9 +6,8 @@ use XeroPHP\Remote;
 
 class ContactGroup extends Remote\Model
 {
-
     /**
-     * The Name of the contact group. Required when creating a new contact group
+     * The Name of the contact group. Required when creating a new contact group.
      *
      * @property string Name
      */
@@ -23,7 +22,7 @@ class ContactGroup extends Remote\Model
     /**
      * The Xero identifier for an contact group – specified as a string following the endpoint name.
      * e.g.
-     * /297c2dc5-cc47-4afd-8ec8-74990b8761e9
+     * /297c2dc5-cc47-4afd-8ec8-74990b8761e9.
      *
      * @property string ContactGroupID
      */
@@ -35,10 +34,8 @@ class ContactGroup extends Remote\Model
      * @property Contact[] Contacts
      */
 
-
-
     /**
-     * Get the resource uri of the class (Contacts) etc
+     * Get the resource uri of the class (Contacts) etc.
      *
      * @return string
      */
@@ -47,9 +44,8 @@ class ContactGroup extends Remote\Model
         return 'ContactGroups';
     }
 
-
     /**
-     * Get the root node name.  Just the unqualified classname
+     * Get the root node name.  Just the unqualified classname.
      *
      * @return string
      */
@@ -58,9 +54,8 @@ class ContactGroup extends Remote\Model
         return 'ContactGroup';
     }
 
-
     /**
-     * Get the guid property
+     * Get the guid property.
      *
      * @return string
      */
@@ -69,9 +64,8 @@ class ContactGroup extends Remote\Model
         return 'ContactGroupID';
     }
 
-
     /**
-     * Get the stem of the API (core.xro) etc
+     * Get the stem of the API (core.xro) etc.
      *
      * @return string|null
      */
@@ -80,9 +74,8 @@ class ContactGroup extends Remote\Model
         return Remote\URL::API_CORE;
     }
 
-
     /**
-     * Get the supported methods
+     * Get the supported methods.
      */
     public static function getSupportedMethods()
     {
@@ -90,18 +83,17 @@ class ContactGroup extends Remote\Model
             Remote\Request::METHOD_GET,
             Remote\Request::METHOD_PUT,
             Remote\Request::METHOD_POST,
-            Remote\Request::METHOD_DELETE
+            Remote\Request::METHOD_DELETE,
         ];
     }
 
     /**
-     *
      * Get the properties of the object.  Indexed by constants
      *  [0] - Mandatory
      *  [1] - Type
      *  [2] - PHP type
      *  [3] - Is an Array
-     *  [4] - Saves directly
+     *  [4] - Saves directly.
      *
      * @return array
      */
@@ -111,7 +103,7 @@ class ContactGroup extends Remote\Model
             'Name' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
             'Status' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
             'ContactGroupID' => [false, self::PROPERTY_TYPE_STRING, null, false, false],
-            'Contacts' => [false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\Contact', true, true]
+            'Contacts' => [false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\Contact', true, true],
         ];
     }
 
@@ -130,12 +122,14 @@ class ContactGroup extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return ContactGroup
      */
     public function setName($value)
     {
         $this->propertyUpdated('Name', $value);
         $this->_data['Name'] = $value;
+
         return $this;
     }
 
@@ -149,12 +143,14 @@ class ContactGroup extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return ContactGroup
      */
     public function setStatus($value)
     {
         $this->propertyUpdated('Status', $value);
         $this->_data['Status'] = $value;
+
         return $this;
     }
 
@@ -168,18 +164,19 @@ class ContactGroup extends Remote\Model
 
     /**
      * @param string $value
+     *
      * @return ContactGroup
      */
     public function setContactGroupID($value)
     {
         $this->propertyUpdated('ContactGroupID', $value);
         $this->_data['ContactGroupID'] = $value;
+
         return $this;
     }
 
     /**
      * @return Contact[]|Remote\Collection
-     * Always returns a collection, switch is for type hinting
      */
     public function getContacts()
     {
@@ -188,15 +185,17 @@ class ContactGroup extends Remote\Model
 
     /**
      * @param Contact $value
+     *
      * @return ContactGroup
      */
     public function addContact(Contact $value)
     {
         $this->propertyUpdated('Contacts', $value);
-        if (!isset($this->_data['Contacts'])) {
+        if (! isset($this->_data['Contacts'])) {
             $this->_data['Contacts'] = new Remote\Collection();
         }
         $this->_data['Contacts'][] = $value;
+
         return $this;
     }
 }

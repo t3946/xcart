@@ -1,35 +1,6 @@
 <?php
-/*****************************************************************************\
- * +-----------------------------------------------------------------------------+
- * | X-Cart                                                                      |
- * | Copyright (c) 2001-2010 Ruslan R. Fazliev <rrf@rrf.ru>                      |
- * | All rights reserved.                                                        |
- * +-----------------------------------------------------------------------------+
- * | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
- * | FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
- * | AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
- * |                                                                             |
- * | THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
- * | THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
- * | FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
- * | AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
- * | PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
- * | CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
- * | COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
- * | (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
- * | LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
- * | AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
- * | OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
- * | AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
- * | THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
- * | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
- * |                                                                             |
- * | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
- * | Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2010           |
- * | Ruslan R. Fazliev. All Rights Reserved.                                     |
- * +-----------------------------------------------------------------------------+
- * \*****************************************************************************/
 
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
 use Modules\Order\Forms\PurchasingManagerForm;
@@ -41,97 +12,95 @@ use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
-use Modules\Order\Models\OrderTransactionModel;
 use Xcart\OrderGroupInvoices;
 use Xcart\Manufacturer;
-use Xcart\Order;
-use Xcart\Paypal;
 
 global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
-if (!defined("XCART_SESSION_START")) {
-    header("Location: ../");
-    die("Access denied");
+if (!defined('XCART_SESSION_START')) {
+    header('Location: ../');
+    die('Access denied');
 }
 
 x_load('order_edit', 'taxes');
 
-include $xcart_dir . "/include/countries.php";
-include $xcart_dir . "/include/states.php";
+include "{$xcart_dir}/include/countries.php";
+include "{$xcart_dir}/include/states.php";
 
-x_session_register("intershipper_rates");
-x_session_register("intershipper_recalc");
-x_session_register("current_carrier", "UPS");
+x_session_register('intershipper_rates');
+x_session_register('intershipper_recalc');
+x_session_register('current_carrier', 'UPS');
 
+/** @var OrderModel $oOrder */
 $oOrder = $orderid ? OrderModel::objects()->get(['orderid' => $orderid]) : null;
 $smarty->assign('oOrder', $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
-$all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
-$smarty->assign("all_processors", $all_processors);
+$all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", 'paymentid', false);
+$smarty->assign('all_processors', $all_processors);
 
 #
 # This flag enables the taxes recalculation if customer profile is modified
 #
-$real_taxes = "Y";
+$real_taxes = 'Y';
 
-if ($real_taxes == "Y" && !defined('XAOM')) {
+if ($real_taxes === 'Y' && !defined('XAOM')) {
     define("XAOM", 1);
 }
 
-$intershipper_recalc = "Y";
+$intershipper_recalc = 'Y';
 
 $cart_tmp                     = $order;
-$cart_tmp["orders"][0]        = $order_data["order"];
-$cart_tmp["total_cost"]       = $cart_tmp["total"];
-$cart_tmp["giftcerts"]        = $order_data["giftcerts"];
-$cart_tmp["products"]         = $order_data["products"];
-$cart_tmp["userinfo"]         = $order_data["userinfo"];
-$cart_tmp["discount_coupon"]  = $order_data["order"]["coupon"];
-$cart_tmp["use_discount_alt"] = "Y";
-$cart_tmp["discount_alt"]     = $order_data["order"]["discount"];
+$cart_tmp['orders'][0]        = $order_data['order'];
+$cart_tmp['total_cost']       = $cart_tmp['total'];
+$cart_tmp['giftcerts']        = $order_data["giftcerts"];
+$cart_tmp['products']         = $order_data["products"];
+$cart_tmp['userinfo']         = $order_data["userinfo"];
+$cart_tmp['discount_coupon']  = $order_data["order"]["coupon"];
+$cart_tmp['use_discount_alt'] = 'Y';
+$cart_tmp['discount_alt']     = $order_data["order"]["discount"];
 
 if (empty($cart_tmp['extra']['discount_info'])) {
     $cart_tmp['extra']['discount_info'] = [
-        "discount"      => $order_data["order"]["discount"],
-        "discount_type" => "absolute",
+        'discount' => $order_data['order']['discount'],
+        'discount_type' => 'absolute',
     ];
 }
 
-$cart_tmp["use_shipping_costs_alt"] = "Y";
-$cart_tmp["shipping_costs_alt"]     = [];
-$cart_tmp["shipping_cost_alt"]      = 0;
+$cart_tmp['use_shipping_costs_alt'] = 'Y';
+$cart_tmp['shipping_costs_alt']     = [];
+$cart_tmp['shipping_cost_alt']      = 0;
 
-if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-    foreach ($order["shipping_groups"] as $m_id => $v) {
-        $cart_tmp["shipping_costs_alt"][$m_id] = $v["shipping_cost"]["gross"];
-        $cart_tmp["shipping_cost_alt"] += $v["shipping_cost"]["gross"];
+if (!empty($order['shipping_groups']) && is_array($order['shipping_groups'])) {
+    foreach ($order['shipping_groups'] as $m_id => $v) {
+        $cart_tmp['shipping_costs_alt'][$m_id] = $v['shipping_cost']['gross'];
+        $cart_tmp['shipping_cost_alt'] += $v['shipping_cost']['gross'];
     }
 }
 
-if (is_array($cart_tmp["products"])) {
-    foreach ($cart_tmp["products"] as $k => $v)
+if (is_array($cart_tmp['products'])) {
+    foreach ($cart_tmp['products'] as $k => $v)
     {
-        $cart_tmp["products"][$k]["free_price"] = $v["price"];
-        $cart_tmp["products"][$k]["price"]      = $v["price"];
-        if (!empty($v["extra_data"]["taxes"]) && is_array($v["extra_data"]["taxes"])) {
-            foreach ($v["extra_data"]["taxes"] as $_tax) {
-                if (($_tax["price_includes_tax"] == "Y" || $_tax['display_including_tax'] == 'Y') && $config["Taxes"]["display_taxed_order_totals"] == 'Y') {
-                    $cart_tmp["products"][$k]["price"] -= price_format($_tax["tax_value_precise"]);
+        $cart_tmp['products'][$k]['free_price'] = $v['price'];
+        $cart_tmp['products'][$k]['price']      = $v['price'];
+        if (!empty($v['extra_data']['taxes']) && is_array($v['extra_data']['taxes'])) {
+            foreach ($v['extra_data']['taxes'] as $_tax) {
+                if (($_tax['price_includes_tax'] === 'Y' || $_tax['display_including_tax'] === 'Y') && $config['Taxes']['display_taxed_order_totals'] === 'Y') {
+                    $cart_tmp['products'][$k]['price'] -= price_format($_tax['tax_value_precise']);
                 }
             }
         }
-        $cart_tmp["products"][$k]["taxed_price"] = $v["display_price"];
-        if ($v["product_type"] == "C") {
-            $cart_tmp["products"][$k]["options_surcharge"] = $v["price"];
+        $cart_tmp['products'][$k]['taxed_price'] = $v['display_price'];
+        if ($v['product_type'] === 'C') {
+            $cart_tmp['products'][$k]['options_surcharge'] = $v['price'];
         }
-        if (!empty($active_modules["Product_Options"])) {
-            $cart_tmp["products"][$k]["keep_options"] = "Y";
+        if (!empty($active_modules['Product_Options'])) {
+            $cart_tmp['products'][$k]['keep_options'] = 'Y';
         }
     }
 }
 
-$customer_membershipid = $cart_tmp["userinfo"]["membershipid"];
+$customer_membershipid = $cart_tmp['userinfo']['membershipid'];
 
 if (!empty($debug)) {
     func_print_r($cart_tmp);
@@ -140,73 +109,71 @@ if (!empty($debug)) {
 #
 # Process and update orders data
 #
-if ($REQUEST_METHOD == "POST")
+if ($REQUEST_METHOD === 'POST')
 {
-    if ($mode == "convert_to_regular_order" && !empty($order["shipping_groups"]))
+    if ($mode === 'convert_to_regular_order' && !empty($order['shipping_groups']))
     {
-        $new_cb_status       = "N";
-        $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$new_cb_status'");
+        $new_cb_status_value = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_UNPAID]);
 
         $log = "'Convert to regular order' at 'Customer info'";
 
-        foreach ($order["shipping_groups"] as $m_id => $v)
+        foreach ($order['shipping_groups'] as $m_id => $v)
         {
-            $current_cb_status = $v["cb_status"];
-
-            if (in_array($current_cb_status, ["IO", "O"]) && $current_cb_status != $new_cb_status)
+            $current_cb_status_value = OrderStatusModel::objects()->get(['code' => $v['cb_status']]);
+            if ($current_cb_status_value->code !== $new_cb_status_value->code && in_array($current_cb_status_value->code, ['IO', 'O'], true) &&
+                $og = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]))
             {
-                db_query("UPDATE $sql_tbl[order_groups] SET cb_status='$new_cb_status' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
-
-                $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
-                $log .= "<br /><B>" . $v["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
+                $og->cb_status = $new_cb_status_value->code;
+                $og->save();
+                $log .= "<br /><b>{$v['all_distributor_info']['code']}:</b> cb_status: {$current_cb_status_value} -> {$new_cb_status_value}";
             }
         }
 
         func_log_order($orderid, 'X', $log, $login);
 
-        func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-customer_info");
+        func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-customer_info");
     }
-    elseif ($mode == "order_edit_apply") {
+    elseif ($mode === 'order_edit_apply') {
 
         $tmp_mnfs = func_get_order_manufacturers($orderid);
         global $po_update, $name_of_purchaser, $accounts_payable_full_name, $purchase_manager_email, $accounts_payable_email;
         global $customer_info, $purchase_manager_phone, $po_fax, $accounts_payable_phone, $accounts_payable_fax, $total_shipping_charge_on_orig_po, $po_issued_to, $orig_po;
         if ($po_update == "1") {
             if (
-                $name_of_purchaser != "unknown"
-                && $accounts_payable_full_name != "unknown"
-                && $purchase_manager_email != "unknown@unknown.com"
-                && $accounts_payable_email != "unknown@unknown.com"
-                && $customer_info["email"] != "unknown@unknown.com"
-                && $purchase_manager_phone != "(000) 000-0000"
-                && $po_fax != "(000) 000-0000"
-                && $accounts_payable_phone != "(000) 000-0000"
-                && $accounts_payable_fax != "(000) 000-0000"
-                && $customer_info["phone"] != "(000) 000-0000"
+                $name_of_purchaser !== 'unknown'
+                && $accounts_payable_full_name !== 'unknown'
+                && $purchase_manager_email !== 'unknown@unknown.com'
+                && $accounts_payable_email !== 'unknown@unknown.com'
+                && $customer_info["email"] !== 'unknown@unknown.com'
+                && $purchase_manager_phone !== '(000) 000-0000'
+                && $po_fax !== '(000) 000-0000'
+                && $accounts_payable_phone !== '(000) 000-0000'
+                && $accounts_payable_fax !== '(000) 000-0000'
+                && $customer_info["phone"] !== '(000) 000-0000'
                 && $total_shipping_charge_on_orig_po > 0
-                && $po_issued_to != "A"
-                && $po_issued_to != ""
-                && $orig_po != ""
+                && $po_issued_to !== 'A'
+                && $po_issued_to !== ''
+                && $orig_po !== ''
             ) {
-                $new_cb_status = "O";
+                $new_cb_status = 'O';
 
-                if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-                    foreach ($order["shipping_groups"] as $k_sg => $v_sg) {
-                        $current_cb_status = $v_sg["cb_status"];
-                        if ($current_cb_status == "IO") {
-                            $order["shipping_groups"][$k_sg]["cb_status"] = $new_cb_status;
+                if (!empty($order['shipping_groups']) && is_array($order['shipping_groups'])) {
+                    foreach ($order['shipping_groups'] as $k_sg => $v_sg) {
+                        $current_cb_status = $v_sg['cb_status'];
+                        if ($current_cb_status === 'IO') {
+                            $order['shipping_groups'][$k_sg]['cb_status'] = $new_cb_status;
                         }
                     }
                 }
             }
             else {
-                if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-                    $new_cb_status = "IO";
+                if (!empty($order['shipping_groups']) && is_array($order['shipping_groups'])) {
+                    $new_cb_status = 'IO';
 
-                    foreach ($order["shipping_groups"] as $k_sg => $v_sg) {
-                        $current_cb_status = $v_sg["cb_status"];
-                        if ($current_cb_status == "O") {
-                            $order["shipping_groups"][$k_sg]["cb_status"] = $new_cb_status;
+                    foreach ($order['shipping_groups'] as $k_sg => $v_sg) {
+                        $current_cb_status = $v_sg['cb_status'];
+                        if ($current_cb_status === 'O') {
+                            $order['shipping_groups'][$k_sg]['cb_status'] = $new_cb_status;
                         }
                     }
                 }
@@ -216,7 +183,7 @@ if ($REQUEST_METHOD == "POST")
         $all_groups_cb_status_eq_P   = true;
         $groups_cb_status_eq_P_found = false;
 
-        $cart_tmp["flag_change"] = true;
+        $cart_tmp['flag_change'] = true;
 
         if (!empty($items)) {
             foreach ($items as $itemid => $v)
@@ -224,7 +191,7 @@ if ($REQUEST_METHOD == "POST")
                 $k = -1;
                 foreach ($cart_tmp["products"] as $kp => $vp)
                 {
-                    if ($vp["itemid"] == $itemid) {
+                    if ($vp['itemid'] == $itemid) {
                         $k = $kp;
                         break;
                     }
@@ -239,8 +206,8 @@ if ($REQUEST_METHOD == "POST")
                 $ref_values = func_get_refund_values($v['amount'], 'Q');
 
                 $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$v[productid]'");
-                if ($ref_values["is_refunded"] == "1") {
-                    $log = "<B>" . $product_code . "</B>: amount: " . $v["amount"];
+                if ($ref_values['is_refunded'] == '1') {
+                    $log = "<b>{$product_code}</b>: amount: {$v["amount"]}";
                     func_log_order($orderid, 'X', $log, $login);
                 }
 
@@ -261,7 +228,7 @@ if ($REQUEST_METHOD == "POST")
                 }
                 $cart_tmp['products'][$k]['refund'] = $ref_values;
 
-                $v["amount"] = intval($v["amount"]);
+                $v['amount'] = intval($v['amount']);
                 $v['back']   = intval($v['back']);
 
                 // back can't be more than amount
@@ -274,7 +241,7 @@ if ($REQUEST_METHOD == "POST")
 
                 $current_eta_date_mm_dd_yyyy      = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
                 $current_eta_date_mm_dd_yyyy_time = $current_eta_date_mm_dd_yyyy;
-                $current_eta_date_mm_dd_yyyy      = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+                $current_eta_date_mm_dd_yyyy      = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, 'm/d/Y');
 
                 $new_eta_date_mm_dd_yyyy = $v['eta_date_mm_dd_yyyy'];
 
@@ -290,15 +257,15 @@ if ($REQUEST_METHOD == "POST")
                     $new_eta_date_mm_dd_yyyy_time = 0;
                 }
 
-                $tmp_manufacturerid = $cart_tmp['products'][$k]["manufacturerid"];
+                $tmp_manufacturerid = $cart_tmp['products'][$k]['manufacturerid'];
 
                 if (($current_back == "0" || ($current_eta_date_mm_dd_yyyy_time < time() || empty($current_eta_date_mm_dd_yyyy)))
                     && ($new_back > 0 && $new_eta_date_mm_dd_yyyy_time > time())
                 ) {
-                    $order['shipping_groups'][$tmp_manufacturerid]['dc_status'] = "M";
+                    $order['shipping_groups'][$tmp_manufacturerid]['dc_status'] = 'M';
 
                     if (!empty($groups[$tmp_manufacturerid]['dc_status'])) {
-                        $groups[$tmp_manufacturerid]['dc_status'] = "M";
+                        $groups[$tmp_manufacturerid]['dc_status'] = 'M';
                     }
                 }
 
@@ -311,8 +278,7 @@ if ($REQUEST_METHOD == "POST")
                 }
 
                 if (!empty($vt_paymentid)) {
-
-                    if ($groups[$tmp_manufacturerid]["cb_status"] != "P") {
+                    if ($groups[$tmp_manufacturerid]['cb_status'] !== 'P') {
                         $all_groups_cb_status_eq_P = false;
                     }
                     else {
@@ -321,216 +287,206 @@ if ($REQUEST_METHOD == "POST")
                 }
 
                 ### LOG: START
-                if (($current_eta_date_mm_dd_yyyy !== false) && !empty($v["eta_date_mm_dd_yyyy"]) && $current_eta_date_mm_dd_yyyy != $v["eta_date_mm_dd_yyyy"]) {
-                    $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$productid'");
-
-                    $log = "<B>" . $product_code . "</B> ETA date: " . $current_eta_date_mm_dd_yyyy . " -> " . $v["eta_date_mm_dd_yyyy"];
-                    func_log_order($orderid, 'X', $log, $login);
-                    db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='" . $new_eta_date_mm_dd_yyyy_time . "' WHERE productid='$v[productid]'");
+                if (($current_eta_date_mm_dd_yyyy !== false) && !empty($v['eta_date_mm_dd_yyyy']) && $current_eta_date_mm_dd_yyyy != $v['eta_date_mm_dd_yyyy']) {
+                    /** @var ProductModel $pModel */
+                    if ($pModel = ProductModel::objects()->get(['productid' => $productid])) {
+                        $log = "<b>{$product_code}</b> ETA date: {$current_eta_date_mm_dd_yyyy} -> {$v['eta_date_mm_dd_yyyy']}";
+                        func_log_order($orderid, 'X', $log, $login);
+                        $pModel->eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time;
+                        $pModel->save();
+                    }
                 }
                 ### LOG: END
                 $cart_tmp['products'][$k]['back'] = $v['back'];
 
-                if (!empty($v["delete"]) || $v["amount"] == 0) {
-                    $cart_tmp["products"][$k]["deleted"] = true;
+                if (!empty($v['delete']) || $v['amount'] == 0) {
+                    $cart_tmp['products'][$k]['deleted'] = true;
 
-                    $log = "<B>Deleted:</B> " . $product_code;
+                    $log = "<b>Deleted:</b> {$product_code}";
                     func_log_order($orderid, 'X', $log, $login);
                     continue;
                 }
 
-                if (\in_array($groups[$tmp_manufacturerid]["cb_status"], ['P', '3', 'V', 'H', 'R'])) {
+                if (in_array($groups[$tmp_manufacturerid]['cb_status'], ['P', '3', 'V', 'H', 'R'], true)) {
 
-                    if ($v["price"] != $cart_tmp["products"][$k]["price"]) {
-                        $v["price"] = $cart_tmp["products"][$k]["price"];
+                    if ($v['price'] != $cart_tmp['products'][$k]['price']) {
+                        $v['price'] = $cart_tmp['products'][$k]['price'];
 
-                        if (!isset($top_message["content"])) {
-                            $top_message["content"] = "";
+                        if (!isset($top_message['content'])) {
+                            $top_message['content'] = '';
                         }
                         else {
-                            $top_message["content"] .= "<br />";
+                            $top_message['content'] .= '<br />';
                         }
 
-                        $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"]      = "I";
+                        $top_message['content'] .= func_get_langvar_by_name('txt_shipping_cost_net_not_saved');
+                        $top_message['type']      = 'I';
                         $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
+                        x_session_save('section_name_top_message');
                     }
 
-                    if (strpos($v["amount"], "r") === false && (strpos($v["amount"], "R")) === false && $v["amount"] != $cart_tmp["products"][$k]["amount"]) {
-                        if (!isset($top_message["content"])) {
-                            $top_message["content"] = "";
+                    if (strpos($v['amount'], 'r') === false && (strpos($v['amount'], 'R')) === false && $v['amount'] != $cart_tmp['products'][$k]['amount']) {
+                        if (!isset($top_message['content'])) {
+                            $top_message['content'] = '';
                         }
                         else {
-                            $top_message["content"] .= "<br />";
+                            $top_message['content'] .= '<br />';
                         }
 
-                        $v["amount"] = $cart_tmp["products"][$k]["amount"];
+                        $v['amount'] = $cart_tmp['products'][$k]['amount'];
 
-                        $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"]      = "I";
+                        $top_message['content'] .= func_get_langvar_by_name('txt_shipping_cost_net_not_saved');
+                        $top_message['type']      = 'I';
                         $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
+                        x_session_save('section_name_top_message');
                     }
                 }
 
                 # Check if product is out of stock
                 $count_product_in_stock = func_oe_get_quantity_in_stock($productid, $order_data['order']['cb_status'], $order_data['order']['dc_status'], $v['product_options'], @$order_data["products"][$k]);
-                if ($v["amount"] > 0) {
-                    $cart_tmp["products"][$k]["amount"] = $v["amount"];
+                if ($v['amount'] > 0) {
+                    $cart_tmp['products'][$k]['amount'] = $v['amount'];
                 }
 
-                $v["price"] = preg_replace("/[^0-9\.]/S", "", $v["price"]);
-                $v["price"] = func_oe_validate_price($v["price"]);
+                $v['price'] = preg_replace("/[^0-9\.]/S", '', $v['price']);
+                $v['price'] = func_oe_validate_price($v['price']);
 
-                $v["price"] = price_format($v["price"]);
+                $v['price'] = price_format($v['price']);
 
-                $cart_tmp["products"][$k]["price"]        = $v["price"];
-                $cart_tmp["products"][$k]["free_price"]   = $v["price"];
-                $cart_tmp["products"][$k]["stock_update"] = "N";
-            } // foreach ($items as $itemid => $v
+                $cart_tmp['products'][$k]['price']        = $v['price'];
+                $cart_tmp['products'][$k]['free_price']   = $v['price'];
+                $cart_tmp['products'][$k]['stock_update'] = 'N';
+            }
         }
 
         if (!empty($groups)) {
-            $cart_tmp["shipping_cost_alt"] = 0;
+            $cart_tmp['shipping_cost_alt'] = 0;
 
             $payment_method_info = func_query_first("SELECT vt, how_process_payment_at_checkout FROM $sql_tbl[payment_methods] WHERE paymentid='" . $order["paymentid"] . "'");
 
             foreach ($groups as $m_id => $v) {
+                /** @var OrderGroupModel $orderGroupModel */
+                $orderGroupModel = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
+                $cart_tmp['order_group_id'] = $orderGroupModel->order_group_id;
                 if (func_check_comma_in_field($orderid, $v['shipping_cost_net'], 'shipping_cost_net')) {
-                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"]      = "I";
+                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
+                    $top_message['type']      = 'I';
                     $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
+                    x_session_save('section_name_top_message');
                     break;
                 }
                 if (func_check_comma_in_field($orderid, $v['actual_shipping_cost_net'], 'actual_shipping_cost_net')) {
-                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"]      = "I";
+                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
+                    $top_message['type']      = 'I';
                     $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
+                    x_session_save('section_name_top_message');
                     break;
                 }
 
                 ### LOG: START
-                $current_actual_shipping_net = func_query_first_cell("SELECT actual_shipping_net FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$m_id'");
-
-                $log  = "";
-                $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$m_id'");
-
-                $current_shipping_value_selectbox = func_query_first_cell("SELECT shipping_value_selectbox FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$m_id'");
+                $log  = '';
+                $current_actual_shipping_net = $orderGroupModel->actual_shipping_net;
+                $current_shipping_value_selectbox = $orderGroupModel->shipping_value_selectbox;
+                $code = $orderGroupModel->manufacturer->code;
 
                 if ($current_shipping_value_selectbox != $v['shipping_value_selectbox']) {
-                    if ($log != "") $log .= "<br />";
-                    $log .= "<B>" . $code . ": </B>" . "shipping_value_selectbox: " . $current_shipping_value_selectbox . " -> " . $v['shipping_value_selectbox'];
+                    if ($log) {
+                        $log .= '<br />';
+                    }
+                    $log .= "<b>{$code}: </b>shipping_value_selectbox: {$current_shipping_value_selectbox} -> {$v['shipping_value_selectbox']}";
                 }
 
-                if (!empty($v["additional_shipping_status"])) {
+                if (!empty($v['additional_shipping_status'])) {
 
                     $current_additional_shipping_status = $order['shipping_groups'][$m_id]['additional_shipping_status'];
-                    $new_additional_shipping_status     = $v["additional_shipping_status"];
+                    $new_additional_shipping_status     = $v['additional_shipping_status'];
 
-                    if (
-                        (
-                            ($v["cb_status"] == "O" && $new_additional_shipping_status == "P")
-                            || ($v["cb_status"] == "AP" && $new_additional_shipping_status == "A")
-                        )
-                        && $current_additional_shipping_status != $new_additional_shipping_status
-                    ) {
-                        if ($log != "") $log .= "<br />";
-                        $log .= "<B>" . $code . ": </B>Additional shipping charge: " . $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                    if ((($v['cb_status'] === 'O' && $new_additional_shipping_status === 'P') || ($v['cb_status'] === 'AP' && $new_additional_shipping_status === 'A'))
+                        && $current_additional_shipping_status != $new_additional_shipping_status)
+                    {
+                        if ($log) {
+                            $log .= '<br />';
+                        }
+                        $log .= "<b>{$code}: </b>Additional shipping charge: {$tmp_mnfs[$m_id]['additional_shipping_charge']}";
 
-                        $order["shipping_groups"][$m_id]["total"]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $order["shipping_groups"][$m_id]["total"]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["total"]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["total"]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                        $order['shipping_groups'][$m_id]['total']['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $order['shipping_groups'][$m_id]['total']['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $groups[$m_id]['total']['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $groups[$m_id]['total']['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
 
-                        $order["shipping_groups"][$m_id]["accounting"][0]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $order["shipping_groups"][$m_id]["accounting"][0]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                        $order['shipping_groups'][$m_id]['accounting'][0]['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $order['shipping_groups'][$m_id]['accounting'][0]['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
 
-                        $order["shipping_groups"][$m_id]["accounting"][5]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $order["shipping_groups"][$m_id]["accounting"][5]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                        $order['shipping_groups'][$m_id]['accounting'][5]['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $order['shipping_groups'][$m_id]['accounting'][5]['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
 
-                        $groups[$m_id]["accounting"][0]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["accounting"][0]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                        $groups[$m_id]['accounting'][0]['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $groups[$m_id]['accounting'][0]['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
 
-                        $groups[$m_id]["accounting"][5]["net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["accounting"][5]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
+                        $groups[$m_id]['accounting'][5]['net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $groups[$m_id]['accounting'][5]['gross'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
 
-                        $v["shipping_cost_net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["shipping_cost_net"]                   = $v["shipping_cost_net"];
-                        $order["shipping_groups"][$m_id]["shipping_cost_net"] = $v["shipping_cost_net"];
+                        $v['shipping_cost_net'] += $tmp_mnfs[$m_id]['additional_shipping_charge'];
+                        $groups[$m_id]['shipping_cost_net']                   = $v['shipping_cost_net'];
+                        $order['shipping_groups'][$m_id]['shipping_cost_net'] = $v['shipping_cost_net'];
                     }
                     if ($current_additional_shipping_status != $new_additional_shipping_status) {
-                        db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='$new_additional_shipping_status' WHERE orderid='$orderid' AND manufacturerid='$m_id'");
-
-                        if ($log != "") $log .= "<br />";
-                        $log .= "<B>" . $code . ": </B>" . "additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> " . $additional_shipping_statuses[$new_additional_shipping_status];
+                        $orderGroupModel->additional_shipping_status = $new_additional_shipping_status;
+                        $orderGroupModel->save();
+                        if ($log) {
+                            $log .= '<br />';
+                        }
+                        $log .= "<b>{$code}: </b>additional_shipping_status: {$additional_shipping_statuses[$current_additional_shipping_status]} -> {$additional_shipping_statuses[$new_additional_shipping_status]}";
                     }
                 }
 
-                if (\in_array($v["cb_status"], ['P', '3', 'V', 'H', 'R'])) {
-                    if (
-                        ($order["shipping_groups"][$m_id]["shipping_cost"]["net"] != $v["shipping_cost_net"])
-                        && ((strpos($v["shipping_cost_net"], "r")) === false
-                            && (strpos($v["shipping_cost_net"], "R")) === false)
-                        && empty($v["additional_shipping_status"])
-                    ) {
-                        $v["shipping_cost_net"] = $order["shipping_groups"][$m_id]["shipping_cost"]["net"];
-
-                        if (!isset($top_message["content"])) {
-                            $top_message["content"] = "";
-                        }
-                        else {
-                            $top_message["content"] .= "<br />";
-                        }
-
-                        $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"]      = "I";
-                        $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
+                if (empty($v['additional_shipping_status']) &&
+                    in_array($v['cb_status'], ['P', '3', 'V', 'H', 'R'], true) &&
+                    ($order['shipping_groups'][$m_id]['shipping_cost']['net'] != $v['shipping_cost_net']) &&
+                    ((strpos($v['shipping_cost_net'], 'r')) === false && (strpos($v['shipping_cost_net'], 'R')) === false)) {
+                    $v['shipping_cost_net'] = $order['shipping_groups'][$m_id]['shipping_cost']['net'];
+                    if (isset($top_message['content'])) {
+                        $top_message['content'] .= '<br />';
+                    } else {
+                        $top_message['content'] = '';
                     }
+                    $top_message['content'] .= func_get_langvar_by_name('txt_shipping_cost_net_not_saved');
+                    $top_message['type'] = 'I';
+                    $section_name_top_message = $top_message;
+                    x_session_save('section_name_top_message');
                 }
 
-                if ($current_actual_shipping_net != $v["actual_shipping_cost_net"]) {
-                    $tmp_actual_shipping_cost_net = $v["actual_shipping_cost_net"];
+                if ($current_actual_shipping_net != $v['actual_shipping_cost_net']) {
+                    $tmp_actual_shipping_cost_net = $v['actual_shipping_cost_net'];
                     if (empty($tmp_actual_shipping_cost_net)) {
                         $tmp_actual_shipping_cost_net = 0;
                     }
 
                     if (!empty($log)) {
-                        $log .= "<br />";
+                        $log .= '<br />';
                     }
                     else {
-                        $log = "";
+                        $log = '';
                     }
 
-                    $log .= "<B>" . $code . ": </B>" . "Actual shipping cost net: " . $current_actual_shipping_net . " -> " . $tmp_actual_shipping_cost_net;
+                    $log .= "<b>{$code}: </b>Actual shipping cost net: {$current_actual_shipping_net} -> {$tmp_actual_shipping_cost_net}";
                 }
 
-                if ($log != "") {
-
-                    if ($save_additional_vt) {
-                        $set_type = "S";
-                    }
-                    else {
-                        $set_type = "X";
-                    }
-
+                if ($log !== '') {
+                    $set_type = $save_additional_vt ? 'S': 'X';
                     func_log_order($orderid, $set_type, $log, $login);
                 }
-                ### LOG: END
 
-                $v["actual_shipping_cost_net"] = preg_replace("/[^0-9\.]/S", "", $v["actual_shipping_cost_net"]);
+                $v['actual_shipping_cost_net'] = preg_replace("/[^0-9\.]/S", '', $v['actual_shipping_cost_net']);
 
-                $actual_shipping_gross = $v["actual_shipping_cost_net"];
+                $actual_shipping_gross = $v['actual_shipping_cost_net'];
 
-                if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_all_orders") {
+                if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] === 'applies_to_all_orders') {
                     if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
                         $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
                     }
                 }
-                elseif ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_orders_below_minimum_order_amount_only") {
+                elseif ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] === 'applies_to_orders_below_minimum_order_amount_only') {
                     if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
 
                         $sum_cost_to_us = 0;
@@ -547,34 +503,36 @@ if ($REQUEST_METHOD == "POST")
                     }
                 }
 
-                db_query("UPDATE $sql_tbl[order_groups] SET actual_shipping_net='$v[actual_shipping_cost_net]', actual_shipping_gross='$actual_shipping_gross', shipping_value_selectbox='$v[shipping_value_selectbox]' WHERE orderid='$orderid' AND manufacturerid='$m_id'");
+                $orderGroupModel->setAttributes([
+                    'actual_shipping_net' => $v['actual_shipping_cost_net'],
+                    'actual_shipping_gross' => $actual_shipping_gross,
+                    'shipping_value_selectbox' => $v['shipping_value_selectbox'],
+                ]);
+                $orderGroupModel->save();
+
                 $ref_values = func_get_refund_values($v['shipping_cost_net'], 'S');
 
-                if ($ref_values["is_refunded"] == "1") {
-                    $log = "<B>" . $code . "</B>: shipping_cost_net: " . $v["shipping_cost_net"];
+                if ($ref_values['is_refunded'] == '1') {
+                    $log = "<b>{$code}</b>: shipping_cost_net: {$v['shipping_cost_net']}";
                     func_log_order($orderid, 'X', $log, $login);
                 }
-
                 if (!empty($ref_values) && $ref_values['is_refunded']) {
                     $v['shipping_cost_net'] = $v['shipping_cost_net_orig'];
                 }
                 $order['shipping_groups'][$m_id]['refund'] = $ref_values;
-
-                $v["shipping_cost_net"]      = preg_replace("/[^0-9\.]/S", "", $v["shipping_cost_net"]);
-                $v["shipping_cost_net_orig"] = preg_replace("/[^0-9\.]/S", "", $v["shipping_cost_net_orig"]);
-
+                $v['shipping_cost_net']      = preg_replace("/[^0-9\.]/S", '', $v['shipping_cost_net']);
+                $v['shipping_cost_net_orig'] = preg_replace("/[^0-9\.]/S", '', $v['shipping_cost_net_orig']);
                 $order['shipping_groups'][$m_id]['shipping_cost_net_orig'] = $v['shipping_cost_net_orig'];
+                $order['shipping_groups'][$m_id]['shipping_cost'] = func_tax_price_details($v['shipping_cost_net'], $order['shipping_groups'][$m_id]['taxes']);
+                $cart_tmp['shipping_costs_alt'][$m_id] = $order['shipping_groups'][$m_id]['shipping_cost']['gross'];
+                $cart_tmp['shipping_cost_alt'] += $cart_tmp["shipping_costs_alt"][$m_id];
 
-                $order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
-                $cart_tmp["shipping_costs_alt"][$m_id]            = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
-                $cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
-
-                if (isset($v["shipping"])) {
-                    $order["shipping_groups"][$m_id]["shipping"] = $v["shipping"];
+                if (isset($v['shipping'])) {
+                    $order['shipping_groups'][$m_id]['shipping'] = $v['shipping'];
                 }
 
-                if (isset($v["real_shipping_method"])) {
-                    $order["shipping_groups"][$m_id]["real_shipping_method"] = $v["real_shipping_method"];
+                if (isset($v['real_shipping_method'])) {
+                    $order['shipping_groups'][$m_id]['real_shipping_method'] = $v['real_shipping_method'];
                 }
 
                 if ($user_account['flag'] === 'FS' && !\in_array($v['dc_status'], ['C', 'S'])) {
@@ -592,59 +550,9 @@ if ($REQUEST_METHOD == "POST")
 
                 $order['shipping_groups'][$m_id]['po_status'] = $v['po_status'];
 
-                if (empty($order["shipping_groups"][$m_id]["tracking"])) {
-                    $tracking = [];
-                }
-                else {
-                    $tracking = $order["shipping_groups"][$m_id]["tracking"];
-                }
-                if (!is_array($tracking)) {
-                    $tracking = [];
-                }
-
-                $add_tracking_log = false;
-                $log              = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
-                foreach ($v["tracking_carrier"] as $_k => $sh) {
-                    if (!empty($v["tracking_carrier"][$_k])) {
-
-                        if (!isset($v["tracking_shipper"][$_k])) {
-                            $linkid = 0;
-                        }
-                        else {
-                            $linkid = $v["tracking_shipper"][$_k];
-                        }
-
-                        $t_shipdate = trim($v["tracking_ship_date"][$_k]);
-                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
-
-                        $tracking[]                                   = [
-                            'linkid' => $linkid,
-                            'tracknum' => trim($v["tracking_number"][$_k]),
-                            'ship_date' => $t_shipdate,
-                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
-                            'carrier_id' => $sh
-                        ];
-
-                        $order['shipping_groups'][$m_id]['dc_status'] = 'S';
-                        define('TRACKING_ADDED', 1);
-
-                        if (!empty($linkid)) {
-                            $shipping_link = func_query_first_cell("SELECT shipping FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
-                        }
-                        else {
-                            $shipping_link = "";
-                        }
-
-                        $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$sh'");
-
-                        $log .= $carrier . " " . $shipping_link . ": " . trim($v["tracking_number"][$_k]) . "<br />";
-                        $add_tracking_log = true;
-                    }
-                }
-                $order["shipping_groups"][$m_id]['tracking'] = $tracking;
-
-                if ($add_tracking_log) {
-                    func_log_order($orderid, 'X', $log, $login);
+                if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
+                    $order['shipping_groups'][$m_id]['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
+                    define('TRACKING_ADDED', 1);
                 }
 
                 $log                          = '';
@@ -652,81 +560,56 @@ if ($REQUEST_METHOD == "POST")
 
                 if ($v['cb_status'] === 'AP'
                     && $cart_tmp['shipping_groups'][$m_id]['dc_status'] !== $v['dc_status']
-                    && \in_array($v['dc_status'], [
+                    && in_array($v['dc_status'], [
                         OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON,
                         OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR
                     ], true))
                 {
-                    $log .= OrderGroupHelper::dispatchGroup(
-                        [
-                            'orderid' => $orderid,
-                            'mnf_id' => $m_id,
-                        ]
-                    );
-                    if ($group_model = OrderGroupModel::objects()->get(
-                        [
-                            'manufacturerid' => $m_id,
-                            'orderid' => $orderid
-                        ]
-                    )) {
-                        $order["shipping_groups"][$m_id]["cb_status"] = $group_model->cb_status;
+                    $log .= OrderGroupHelper::dispatchGroup(['orderid' => $orderid,'mnf_id' => $m_id,]);
+                    if ($group_model = OrderGroupModel::objects()->get(['manufacturerid' => $m_id,'orderid' => $orderid])) {
+                        $order['shipping_groups'][$m_id]['cb_status'] = $group_model->cb_status;
                     }
-                    if (!empty($log)) {
+                    if ($log) {
                         func_log_order($orderid, 'X', $log, $login);
                     }
                 }
 
-                if (\in_array($v['dc_status'], [
+                if (in_array($v['dc_status'], [
                     OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED,
                     OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR,
                     OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON], true))
                 {
-                    $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                    if ($current_dc_status !== $v['dc_status']) {
-
+                    $current_dc_status_model =  OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
+                    if ($current_dc_status_model && $current_dc_status_model->dc_status !== $v['dc_status']) {
                         if ($v['dc_status'] === 'C') {
-
-                            $addition_column = '';
-
-                            $current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                            if (empty($current_dc_dispatched_time)) {
-                                $addition_column = ", dc_dispatched_time='" . time() . "'";
+                            if (!$current_dc_status_model->dc_dispatched_time) {
+                                $current_dc_status_model->dc_dispatched_time = time();
                             }
-
-                            $time_to_dispatch = time() - $order["date"];
-
-                            db_query("UPDATE $sql_tbl[order_groups] SET time_to_dispatch='$time_to_dispatch' $addition_column WHERE manufacturerid='$m_id' AND orderid='$orderid'");
+                            $time_to_dispatch = time() - $order['date'];
+                            $current_dc_status_model->time_to_dispatch = $time_to_dispatch;
                         }
-
-                        if ($v['dc_status'] === 'L') {
-                            $current_dc_received_by_distributor_time = func_query_first_cell("SELECT dc_received_by_distributor_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-
-                            if (empty($current_dc_received_by_distributor_time)) {
-                                db_query("UPDATE $sql_tbl[order_groups] SET dc_received_by_distributor_time='" . time() . "' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                            }
+                        if (($v['dc_status'] === 'L') && !$current_dc_status_model->dc_received_by_distributor_time) {
+                            $current_dc_status_model->dc_received_by_distributor_time = time();
                         }
+                        $current_dc_status_model->save();
                     }
                 }
             }
 
             $make_paypal_void = $sendAnalyticsRefund = false;
-            foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp) {
-                if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])
-                    && ($groups[$k_cart_tmp]["cb_status"] == "D" || $groups[$k_cart_tmp]["cb_status"] == "A")
-                    && $v_cart_tmp["cb_status"] == "AP"
-                ) {
+            foreach ($cart_tmp['shipping_groups'] as $k_cart_tmp => $v_cart_tmp) {
+                if (isset($v_cart_tmp['cb_status'], $groups[$k_cart_tmp]['cb_status']) && $v_cart_tmp['cb_status'] === 'AP' &&
+                    in_array($groups[$k_cart_tmp]['cb_status'], ['D', 'A'], true)) {
                     $make_paypal_void = true;
-                }
-                else {
+                } else {
                     $make_paypal_void = false;
                     break;
                 }
-
             }
 
-            foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp) {
-                if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])){
-                    if (in_array($groups[$k_cart_tmp]["cb_status"], ['D', 'A']) && in_array($v_cart_tmp["cb_status"], ['AP', 'Q', 'O'])) {
+            foreach ($cart_tmp['shipping_groups'] as $k_cart_tmp => $v_cart_tmp) {
+                if (isset($v_cart_tmp['cb_status'], $groups[$k_cart_tmp]['cb_status'])){
+                    if (in_array($groups[$k_cart_tmp]['cb_status'], ['D', 'A'], true) && in_array($v_cart_tmp['cb_status'], ['AP', 'Q', 'O'], true)) {
                         $sendAnalyticsRefund = true;
                     } else {
                         $sendAnalyticsRefund = false;
@@ -735,63 +618,33 @@ if ($REQUEST_METHOD == "POST")
                 }
             }
 
-            /** @var OrderModel $orderModel */
-            if (($sendAnalyticsRefund) && ($orderModel = OrderModel::objects()->get(['orderid' => $orderid]))) {
-                OrderAnalyticsHelper::sendRefund($orderModel);
+            if ($sendAnalyticsRefund) {
+                OrderAnalyticsHelper::sendRefund($oOrder);
             }
 
             if ($make_paypal_void) {
                 $log .= OrderHelper::cancelOrder($orderid);
             }
-
-            if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
-                $tracking_in_all_distrs = true;
-                foreach ($order["shipping_groups"] as $ko => $vo) {
-                    if (empty($vo["tracking"]) || !is_array($tracking)) {
-                        $tracking_in_all_distrs = false;
-                        break;
-                    }
-                }
-
-                $current_tracking_all_filled = func_query_first_cell("SELECT tracking_all_filled FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-
-                if ($tracking_in_all_distrs) {
-                    if ($current_tracking_all_filled != "Y") {
-                        db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='Y', tracking_fill_time='" . time() . "' WHERE orderid='$orderid'");
-                    }
-                }
-                else {
-                    if ($current_tracking_all_filled == "Y") {
-                        db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='N' WHERE orderid='$orderid'");
-                    }
-                }
-            }
-        } // foreach ($groups as $m_id => $v)
+        }
 
         $operator_login = $login;
 
-        if (!empty($add_productcode) && is_array($add_productcode)) {
-            foreach ($add_productcode as $kkk => $sku) {
-                if (empty($sku)) {
-                    unset($add_productcode[$kkk]);
-                }
-            }
-        }
-
         if (!empty($add_productcode))
         {
-            $saved_data   = compact("login", "login_type", "current_area");
-            $login        = $cart_tmp["userinfo"]["login"];
-            $login_type   = "C";
-            $current_area = "C";
+            $saved_data   = compact('login', 'login_type', 'current_area');
+            $login        = $cart_tmp['userinfo']['login'];
+            $login_type   = $current_area = 'C';
             foreach ($add_productcode as $kkk => $sku)
             {
+                if (empty($sku)) {
+                    continue;
+                }
                 if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount'))
                 {
-                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"]      = "I";
+                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
+                    $top_message['type']      = 'I';
                     $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
+                    x_session_save('section_name_top_message');
                     break;
                 }
 
@@ -801,12 +654,14 @@ if ($REQUEST_METHOD == "POST")
                     continue;
                 }
 
-                $newproductid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='" . trim($sku) . "'");
-                if (empty($newproductid)) {
+                if ($newproductModel = ProductModel::objects()->get(['productcode' => trim($sku)])) {
+                    $newproductid = $newproductModel->productid;
+                }
+                if (!$newproductModel) {
                     $_tmp = func_query_first("SELECT productid, variantid FROM $sql_tbl[variants] WHERE productcode='" . trim($sku) . "'");
                     if (!empty($_tmp)) {
-                        $newproductid = $_tmp["productid"];
-                        $newvariantid = $_tmp["variantid"];
+                        $newproductid = $_tmp['productid'];
+                        $newvariantid = $_tmp['variantid'];
                     }
                     if (empty($newproductid)) {
                         continue;
@@ -818,38 +673,36 @@ if ($REQUEST_METHOD == "POST")
 
                 $prd = func_select_product($newproductid, $customer_membershipid, false, false, true);
 
-                if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && in_array($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"], ["P", "3", "V", "H", "R"]))
+                if (!empty($order['shipping_groups'][$prd['manufacturerid']]['cb_status']) &&
+                    in_array($order['shipping_groups'][$prd['manufacturerid']]['cb_status'], ['P', '3', 'V', 'H', 'R'], true))
                 {
-                    if (!isset($top_message["content"])) {
-                        $top_message["content"] = "";
+                    if (!isset($top_message['content'])) {
+                        $top_message['content'] = '';
                     }
                     else {
-                        $top_message["content"] .= "<br />";
+                        $top_message['content'] .= '<br />';
                     }
 
-                    $top_message["content"] .= func_get_langvar_by_name("txt_product_was_not_added");
-                    $top_message["type"]      = "I";
+                    $top_message['content'] .= func_get_langvar_by_name('txt_product_was_not_added');
+                    $top_message['type']      = 'I';
                     $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
+                    x_session_save('section_name_top_message');
 
                     continue;
                 }
 
                 if (!empty($prd))
                 {
-                    $log = "<B>Add product:</B> " . $sku . " x " . $amount;
+                    $log = "<b>Add product:</b> {$sku} x {$amount}";
                     func_log_order($orderid, 'X', $log, $operator_login);
 
-                    $prd["provider"] = (!empty($config['General']['default_provider_name'])) ? $config['General']['default_provider_name'] : $prd['provider'];
+                    $prd['provider'] = (!empty($config['General']['default_provider_name'])) ? $config['General']['default_provider_name'] : $prd['provider'];
 
-                    if ($prd["avail"] <= 0 && $config["General"]["unlimited_products"] == "N") {
-
+                    if ($prd['avail'] <= 0 && $config['General']['unlimited_products'] === 'N') {
                         $skip_product = true;
-
-                        if (!empty($prd["eta_date_mm_dd_yyyy"]) && $prd["eta_date_in_future"] == "Y") {
+                        if (!empty($prd['eta_date_mm_dd_yyyy']) && $prd['eta_date_in_future'] === 'Y') {
                             $skip_product = false;
                         }
-
                         if ($skip_product) {
                             continue;
                         }
@@ -858,82 +711,82 @@ if ($REQUEST_METHOD == "POST")
                     Xcart\Product::model(['productid' => $newproductid])->createHTMLShot($orderid);
 
                     # Update wholesale price
-                    $prd["price"] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid='$newproductid' AND $sql_tbl[pricing].quantity<='$amount' AND $sql_tbl[pricing].variantid = '$newvariantid'");
+                    $prd['price'] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid='$newproductid' AND $sql_tbl[pricing].quantity<='$amount' AND $sql_tbl[pricing].variantid = '$newvariantid'");
 
-                    $prd["new_map_price"] = func_query_first_cell("SELECT new_map_price FROM $sql_tbl[products] WHERE productid='$newproductid'");
-                    $prd["price"]         = max($prd["price"], $prd["new_map_price"]);
+                    $prd['new_map_price'] = func_query_first_cell("SELECT new_map_price FROM $sql_tbl[products] WHERE productid='$newproductid'");
+                    $prd['price']         = max($prd['price'], $prd['new_map_price']);
 
-                    $prd["catalog_price"] = $prd["price"];
+                    $prd['catalog_price'] = $prd['price'];
 
-                    if ($active_modules["Product_Options"]) {
+                    if ($active_modules['Product_Options']) {
                         if ($newvariantid && $vars = func_get_product_variants($newproductid, $customer_membershipid, 'C')) {
                             $variant                              = $vars[$newvariantid];
-                            $variant["variantid"]                 = $newvariantid;
-                            $product_options_result               = $variant["options"];
-                            $prd['extra_data']["product_options"] = [];
+                            $variant['variantid']                 = $newvariantid;
+                            $product_options_result               = $variant['options'];
+                            $prd['extra_data']['product_options'] = [];
                             if ($product_options_result) {
                                 foreach ($product_options_result as $opt) {
-                                    $prd['extra_data']["product_options"][$opt["classid"]] = $opt["optionid"];
+                                    $prd['extra_data']['product_options'][$opt['classid']] = $opt['optionid'];
                                 }
                             }
                         }
                         else {
-                            $prd['extra_data']["product_options"] = func_get_default_options($newproductid, $amount, $customer_membershipid);
-                            list($variant, $product_options_result) = func_get_product_options_data($newproductid, $prd['extra_data']["product_options"], $customer_membershipid);
+                            $prd['extra_data']['product_options'] = func_get_default_options($newproductid, $amount, $customer_membershipid);
+                            list($variant, $product_options_result) = func_get_product_options_data($newproductid, $prd['extra_data']['product_options'], $customer_membershipid);
                         }
                         $surcharge              = 0;
                         $prd['product_options'] = $product_options_result;
                         if ($product_options_result) {
                             foreach ($product_options_result as $key => $o) {
-                                $surcharge += ($o['modifier_type'] == '%' ? ($prd['price'] * $o['price_modifier'] / 100) : $o['price_modifier']);
+                                $surcharge += ($o['modifier_type'] === '%' ? ($prd['price'] * $o['price_modifier'] / 100) : $o['price_modifier']);
                             }
                         }
-                        if (!empty($variant) && !empty($variant["productcode"]) && $variant["productid"] == $cart_tmp["products"][$k]["productid"]) {
-                            $cart_tmp["products"][$k]["productcode"]   = $variant["productcode"];
-                            $cart_tmp["products"][$k]["variantid"]     = $variant["variantid"];
-                            $cart_tmp["products"][$k]["catalog_price"] = $prd["price"] = $variant["price"];
+                        if (!empty($variant) && !empty($variant['productcode']) && $variant['productid'] == $cart_tmp['products'][$k]['productid']) {
+                            $cart_tmp['products'][$k]['productcode']   = $variant['productcode'];
+                            $cart_tmp['products'][$k]['variantid']     = $variant['variantid'];
+                            $cart_tmp['products'][$k]['catalog_price'] = $prd['price'] = $variant['price'];
                         }
 
-                        $prd["price"] = price_format($prd["price"] + $surcharge);
+                        $prd['price'] = price_format($prd['price'] + $surcharge);
                     }
-                    $prd["amount"] = $amount;
-                    $prd["new"]    = true;
+                    $prd['amount'] = $amount;
+                    $prd['new']    = true;
 
-                    $cart_tmp["products"][] = $prd;
-                    if (!array_key_exists($prd["manufacturerid"], $order["shipping_groups"])) {
-                        $order["shipping_groups"][$prd["manufacturerid"]] = ["new" => true];
+                    $cart_tmp['products'][] = $prd;
+                    if (!array_key_exists($prd['manufacturerid'], $order['shipping_groups'])) {
+                        $order['shipping_groups'][$prd['manufacturerid']] = ['new' => true];
                     }
                     unset($prd);
                 }
 
-                $top_message["content"]   = func_get_langvar_by_name("txt_do_not_forget_re_calculate_shipping");
-                $top_message["type"]      = "I";
+                $top_message['content']   = func_get_langvar_by_name('txt_do_not_forget_re_calculate_shipping');
+                $top_message['type']      = 'I';
                 $section_name_top_message = $top_message;
-                x_session_save("section_name_top_message");
+                x_session_save('section_name_top_message');
             }
             extract($saved_data);
         }
 
-        $log            = "";
+        $log            = '';
         $additional_fee = [];
 
         if (!empty($delete_additional_fee) && is_array($delete_additional_fee) && !empty($edit_additional_fee_name) && is_array($edit_additional_fee_name)) {
             foreach ($delete_additional_fee as $k => $v) {
-                if ($v == "Y") {
-                    $log .= $edit_additional_fee_name[$k]["additional_fee_name"] . " $" . $edit_additional_fee_name[$k]["additional_fee_value"] . " - Deleted <br />";
+                if ($v === 'Y') {
+                    $log .= "{$edit_additional_fee_name[$k]['additional_fee_name']} ${$edit_additional_fee_name[$k]['additional_fee_value']} - Deleted <br />";
                     unset($edit_additional_fee_name[$k]);
                     db_query("DELETE FROM $sql_tbl[order_additional_fee] WHERE id='$k'");
                 }
             }
         }
 
-        if (!empty($add_additional_fee_name) && is_array($add_additional_fee_name) && !empty($add_additional_fee_value) && is_array($add_additional_fee_value) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
+        if (!empty($add_additional_fee_name) && is_array($add_additional_fee_name) && !empty($add_additional_fee_value) && is_array($add_additional_fee_value) && !empty($order['shipping_groups']) && is_array($order['shipping_groups'])) {
 
             $allow_to_add_fee = false;
-            foreach ($order["shipping_groups"] as $k_manufacturerid => $v_m_info) {
+            foreach ($order['shipping_groups'] as $k_manufacturerid => $v_m_info) {
 
-                if (!empty($v_m_info["cb_status"])) {
-                    if (!in_array($v_m_info["cb_status"], ["P", "3", "V", "H", "R"])) {
+                if (!empty($v_m_info['cb_status'])) {
+                    if (!in_array($v_m_info['cb_status'], ['P', '3', 'V', 'H', 'R'], true)) {
                         $allow_to_add_fee = true;
                         break;
                     }
@@ -945,17 +798,17 @@ if ($REQUEST_METHOD == "POST")
                     $v = trim($v);
                     if (!empty($v)) {
                         if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'add_additional_fee_value')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
+                            $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
+                            $top_message['type']      = 'I';
                             $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
+                            x_session_save('section_name_top_message');
                             break;
                         }
                         $add_price                                  = price_format($add_additional_fee_value[$k]);
-                        $additional_fee_row["additional_fee_name"]  = $v;
-                        $additional_fee_row["additional_fee_value"] = $add_price;
+                        $additional_fee_row['additional_fee_name']  = $v;
+                        $additional_fee_row['additional_fee_value'] = $add_price;
                         $additional_fee[]                           = $additional_fee_row;
-                        $log .= $v . " $" . $add_price . " - Added <br />";
+                        $log .= "{$v} ${$add_price} - Added <br />";
 
                         db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '" . $v . "', '$add_price')");
                     }
@@ -966,10 +819,10 @@ if ($REQUEST_METHOD == "POST")
                 foreach ($add_additional_fee_name as $k => $v) {
                     $v = trim($v);
                     if (!empty($v)) {
-                        $top_message["content"]   = func_get_langvar_by_name("txt_product_was_not_added");
-                        $top_message["type"]      = "I";
+                        $top_message['content']   = func_get_langvar_by_name('txt_product_was_not_added');
+                        $top_message['type']      = 'I';
                         $section_name_top_message = $top_message;
-                        x_session_save("section_name_top_message");
+                        x_session_save('section_name_top_message');
                         break;
                     }
                 }
@@ -982,28 +835,28 @@ if ($REQUEST_METHOD == "POST")
             {
                 if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value'))
                 {
-                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"]      = "I";
+                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
+                    $top_message['type']      = 'I';
                     $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
+                    x_session_save('section_name_top_message');
                     break;
                 }
 
-                $add_price                                  = price_format($v["additional_fee_value"]);
-                $additional_fee_row["additional_fee_name"]  = $v["additional_fee_name"];
-                $additional_fee_row["additional_fee_value"] = $add_price;
+                $add_price                                  = price_format($v['additional_fee_value']);
+                $additional_fee_row['additional_fee_name']  = $v['additional_fee_name'];
+                $additional_fee_row['additional_fee_value'] = $add_price;
                 $additional_fee[]                           = $additional_fee_row;
 
                 $current_fee_info = func_query_first("SELECT additional_fee_name, additional_fee_value FROM $sql_tbl[order_additional_fee] WHERE id='$k'");
-                if ($current_fee_info["additional_fee_name"] != $v["additional_fee_name"] || $current_fee_info["additional_fee_value"] != $add_price) {
-                    $log .= $current_fee_info["additional_fee_name"] . " $" . $current_fee_info["additional_fee_value"] . " -> " . $v["additional_fee_name"] . " $" . $add_price . "<br />";
+                if ($current_fee_info['additional_fee_name'] != $v['additional_fee_name'] || $current_fee_info['additional_fee_value'] != $add_price) {
+                    $log .= "{$current_fee_info['additional_fee_name']} ${$current_fee_info['additional_fee_value']} -> {$v['additional_fee_name']} ${$add_price}<br />";
                 }
 
-                db_query("UPDATE $sql_tbl[order_additional_fee] SET additional_fee_name='" . $v["additional_fee_name"] . "', additional_fee_value='$add_price' WHERE id='$k'");
+                db_query("UPDATE $sql_tbl[order_additional_fee] SET additional_fee_name='" . $v['additional_fee_name'] . "', additional_fee_value='$add_price' WHERE id='$k'");
             }
         }
 
-        $cart_tmp["additional_fee"] = $additional_fee;
+        $cart_tmp['additional_fee'] = $additional_fee;
 
         if (!empty($log)) {
             func_log_order($orderid, 'X', $log, $login);
@@ -1012,7 +865,7 @@ if ($REQUEST_METHOD == "POST")
         $login = $operator_login;
 
         if (!empty($customer_info)) {
-            $cart_tmp["userinfo"] = func_array_merge($cart_tmp["userinfo"], func_array_map("stripslashes", $customer_info));
+            $cart_tmp['userinfo'] = func_array_merge($cart_tmp['userinfo'], func_array_map('stripslashes', $customer_info));
         }
         if (!empty($additional_fields) && !empty($cart_tmp["userinfo"]["additional_fields"])) {
             foreach ($additional_fields as $ak => $av) {
@@ -1025,7 +878,7 @@ if ($REQUEST_METHOD == "POST")
             }
         }
 
-        if ($order["paymentid"] == PAYMENT_PURCHASE_ID)
+        if ($order['paymentid'] == PAYMENT_PURCHASE_ID)
         {
             # Get PO data from order details text
             $data = explode("\n", $order["details"]);
@@ -1113,11 +966,11 @@ if ($REQUEST_METHOD == "POST")
             $all_dc_status_eq_S = true;
 
             foreach ($groups as $k => $v) {
-                if ($v["cb_status"] != "O") {
+                if ($v["cb_status"] !== 'O') {
                     $all_cb_status_eq_O = false;
                 }
 
-                if ($v["dc_status"] != "S") {
+                if ($v["dc_status"] !== 'S') {
                     $all_dc_status_eq_S = false;
                 }
             }
@@ -1128,7 +981,7 @@ if ($REQUEST_METHOD == "POST")
                 if (!empty($current_dc_statuses) && is_array($current_dc_statuses)) {
                     $all_current_dc_status_NOT_eq_S = false;
                     foreach ($current_dc_statuses as $k => $v) {
-                        if ($v["dc_status"] != "S") {
+                        if ($v["dc_status"] !== 'S') {
                             $all_current_dc_status_NOT_eq_S = true;
                             break;
                         }
@@ -1137,7 +990,7 @@ if ($REQUEST_METHOD == "POST")
             }
         }
 
-        if (!empty($order['coupon']) || empty($order['coupon']) && $coupon_admin) {
+        if (!empty($order['coupon']) || (empty($order['coupon']) && $coupon_admin)) {
             if (empty($order['coupon']) && $ckmodel = \Modules\Cart\Models\CouponKitModel::objects()->get(['code' => $coupon_admin])) {
                 $cart_tmp['coupon'] = $coupon_admin;
 
@@ -1344,7 +1197,7 @@ if ($REQUEST_METHOD == "POST")
             # N 1
 
             $send_to_email = func_query_first_cell("SELECT email FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-            $send_to_email .= ",custserv@s3stores.com";
+            $send_to_email .= ',custserv@s3stores.com';
 
             $po_instructions_subject_line = $config['Purchase_Order']['po_instructions_subject_line'];
             $po_instructions_subject_line = str_replace("{{orderid}}", $orderid, $po_instructions_subject_line);
@@ -1417,7 +1270,7 @@ if ($REQUEST_METHOD == "POST")
 
         func_header_location("order.php?orderid=$orderid");
     }
-    elseif ((($mode == "accounting_apply" && $user_account["flag"] != "FS") || $mode == "table_accounting_apply") && !empty($certain_mid)) {
+    elseif ((($mode === 'accounting_apply' && $user_account["flag"] !== 'FS') || $mode === 'table_accounting_apply') && !empty($certain_mid)) {
 
         if (!empty($groups)) {
             $tracking_in_all_distrs     = true;
@@ -1427,175 +1280,14 @@ if ($REQUEST_METHOD == "POST")
                 if ($m_id != $certain_mid) {
                     continue;
                 }
-                if ($mode == "accounting_apply" && $user_account["flag"] != "FS") {
+                $orderGroupModel = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
 
-                    if (!empty($tracknums[$m_id]) && is_array($tracknums[$m_id])) {
-
-                        $tmp_tracknums         = [];
-                        $tmp_tracknums_counter = 0;
-
-                        foreach ($tracknums[$m_id] as $invoice_number => $v_tracknums) {
-                            if (!empty($v_tracknums) && is_array($v_tracknums)) {
-                                foreach ($v_tracknums as $row_conter => $vv_tracknums) {
-
-                                    $tmp_tracknums[$tmp_tracknums_counter]                   = $vv_tracknums;
-                                    $tmp_tracknums[$tmp_tracknums_counter]["invoice_number"] = $invoice_number;
-
-                                    $tmp_tracknums_counter++;
-                                }
-                            }
-                        }
-
-                        $tracknums[$m_id] = $tmp_tracknums;
+                if ($mode === 'accounting_apply' && $user_account['flag'] !== 'FS') {
+                    if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
+                        define('TRACKING_ADDED', 1);
+                        func_send_order_status_notification($orderGroupModel->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
                     }
-                    else {
-                        $tmp_tracknums_counter = 0;
-                    }
-
-                    $Tracking_number_Added_flag = false;
-
-                    if (!empty($v["tracking_carrier"]) && is_array($v["tracking_carrier"])) {
-
-                        foreach ($v["tracking_carrier"] as $invoice_number => $v_tracking_carrier) {
-                            if (!empty($v_tracking_carrier) && is_array($v_tracking_carrier)) {
-
-                                $add_tracking_log = false;
-                                $log              = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
-                                foreach ($v_tracking_carrier as $_k => $sh) {
-                                    if (!empty($sh)) {
-
-                                        if (!isset($v["tracking_shipper"][$invoice_number][$_k])) {
-                                            $linkid = 0;
-                                        }
-                                        else {
-                                            $linkid = $v["tracking_shipper"][$invoice_number][$_k];
-                                        }
-
-                                        $t_shipdate = trim($v["tracking_ship_date"][$invoice_number][$_k]);
-                                        $t_shipdate = empty($t_shipdate) ? (new \DateTime())->format('m/d/Y') : $t_shipdate;
-
-                                        $tracknums[$m_id][$tmp_tracknums_counter] = [
-                                            'linkid' => $linkid,
-                                            'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]),
-                                            'invoice_number' => $invoice_number,
-                                            'ship_date' => $t_shipdate,
-                                            'shipping_date' => empty($t_shipdate) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $t_shipdate.' 00:00:00'),
-                                            'carrier_id' => $sh
-                                        ];
-                                        $tmp_tracknums_counter++;
-
-                                        if (!empty($linkid)) {
-                                            $shipping_link = func_query_first_cell("SELECT shipping FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
-                                        }
-                                        else {
-                                            $shipping_link = "";
-                                        }
-
-                                        $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$sh'");
-                                        $log .= "invoice_number_" . $invoice_number . ": " . $carrier . " " . $shipping_link . ": " . trim($v["tracking_number"][$invoice_number][$_k]) . "<br />";
-                                        $add_tracking_log           = true;
-                                        $Tracking_number_Added_flag = true;
-                                    }
-                                }
-
-                                if ($add_tracking_log) {
-
-                                    $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                                    if ($current_dc_status != "S") {
-
-                                        $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-                                        $new_value               = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='S'");
-                                        $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-
-                                        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='S' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
-                                    }
-
-                                    func_log_order($orderid, 'X', $log, $login);
-                                }
-                                $log = "";
-                            }
-                        }
-                    }
-
-                    $current_trackings = func_query_first_cell("SELECT tracking FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                    $current_trackings = unserialize($current_trackings);
-                    if (empty($current_trackings) || !is_array($current_trackings)) {
-                        $current_trackings = [];
-                    }
-
-                    $log = "<B>Tracking numbers:</B><br />";
-
-                    $current_trackings_for_diff = [];
-                    if (!empty($current_trackings) && is_array($current_trackings)) {
-                        $log .= "<B>Before:</B><br />";
-                        foreach ($current_trackings as $kk => $vv) {
-                            $invoice_number = $vv["invoice_number"];
-                            if (empty($invoice_number)) {
-                                $invoice_number = 1;
-                            }
-                            $shipping_link = $vv["shipping"];
-                            $carrier_id    = $vv["carrier_id"];
-                            $carrier       = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
-
-                            $current_tracking_str = "invoice_number_" . $invoice_number . ": " . $carrier . " " . $shipping_link . ": " . $vv["tracknum"];
-                            $log .= $current_tracking_str . "<br />";
-                            $current_trackings_for_diff[] = $current_tracking_str;
-                        }
-                    }
-
-                    db_query("UPDATE $sql_tbl[order_groups] SET tracking='' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-
-                    $tracknums_to_db    = [];
-                    $trackings_for_diff = [];
-                    if (!empty($tracknums[$m_id]) && is_array($tracknums[$m_id])) {
-                        $tracknums_to_db_index = 0;
-                        $log .= "<B>Now:</B><br />";
-                        foreach ($tracknums[$m_id] as $kk => $vv) {
-                            if (!empty($vv["carrier_id"])) {
-                                $tracknums_to_db[$tracknums_to_db_index]["linkid"]         = $vv["linkid"];
-                                $tracknums_to_db[$tracknums_to_db_index]["tracknum"]       = $vv["tracknum"];
-                                $tracknums_to_db[$tracknums_to_db_index]["invoice_number"] = $vv["invoice_number"];
-                                $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = $vv["ship_date"];
-                                if (empty($vv["shipping_date"])) {
-                                    $vv["shipping_date"] = empty($vv["ship_date"]) ? null : \DateTime::createFromFormat('m/d/Y H:i:s', $vv["ship_date"].' 00:00:00');
-                                }
-                                $tracknums_to_db[$tracknums_to_db_index]["shipping_date"]  = $vv["shipping_date"];
-                                $tracknums_to_db[$tracknums_to_db_index]["carrier_id"]     = $vv["carrier_id"];
-                                $tracknums_to_db_index++;
-
-                                $shipping_link = $vv["shipping"];
-                                $carrier_id    = $vv["carrier_id"];
-
-                                $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
-
-                                $tracking_str = "invoice_number_" . $vv["invoice_number"] . ": " . $carrier . " " . $shipping_link . ": " . $vv["tracknum"];
-                                $log .= $tracking_str . "<br />";
-                                $trackings_for_diff[] = $tracking_str;
-                            }
-                        }
-                    }
-                    else {
-                        $tracking_in_all_distrs = false;
-                    }
-
-                    $trackings_diff = array_diff($current_trackings_for_diff, $trackings_for_diff);
-
-                    if (!empty($trackings_diff)) {
-                        func_log_order($orderid, 'X', $log, $login);
-                    }
-
-                    $tracknums_to_db = addslashes(serialize($tracknums_to_db));
-                    db_query("UPDATE $sql_tbl[order_groups] SET tracking='$tracknums_to_db' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-                    unset($tracknums_to_db);
-
-                    if ($Tracking_number_Added_flag) {
-                        // SEND mail
-
-                        $old_v = $v;
-                        include $xcart_dir . '/include/send_order_email.php';
-                        $v = $old_v;
-                    }
-                } //if ($mode == "accounting_apply" && $user_account["flag"] != "FS")
+                }
 
                 $v["acc"][1]["gst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["gst"]);
                 $v["acc"][1]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["pst"]);
@@ -1613,8 +1305,8 @@ if ($REQUEST_METHOD == "POST")
                 $v["acc"][4]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["pst"]);
                 $v["acc"][4]["gross"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["gross"]);
 
-                if ($order['shipping_groups'][$m_id]['ru_status'] == "RR") {
-                    $v["ru_status"] = "RR";
+                if ($order['shipping_groups'][$m_id]['ru_status'] === 'RR') {
+                    $v['ru_status'] = 'RR';
                 }
                 else {
                     if ($v["acc"][4]["gross"] > 0) {
@@ -1628,7 +1320,7 @@ if ($REQUEST_METHOD == "POST")
                 $order['shipping_groups'][$m_id]['acc_paymentid']  = $v['paymentid'];
                 $order['shipping_groups'][$m_id]['manufacturerid'] = $m_id;
 
-                if ($mode == "table_accounting_apply") {
+                if ($mode === 'table_accounting_apply') {
 
                     if (is_array($order['shipping_groups'][$m_id]['accounting']) && !empty($order['shipping_groups'][$m_id]['accounting'])) {
                         $acc_zero_data = [

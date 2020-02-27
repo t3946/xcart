@@ -9,6 +9,7 @@
 namespace Modules\Core\Behaviours;
 
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\FormView\FormViewBehavior;
 

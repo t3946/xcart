@@ -20,7 +20,7 @@ trait AddressAttributesReplacement
 
         foreach ($data as $key=>$val)
         {
-            if (\is_string($val)) {
+            if (\is_string($val) || is_bool($val)) {
                 $t_data[$key] = trim($val);
             }
         }

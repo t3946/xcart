@@ -35,6 +35,7 @@ class OrderStatusModel extends Model
 
     public const ORDER_DC_STATUS_NOT_SHIPPED = 'T';
     public const ORDER_DC_STATUS_SHIPPED = 'S';
+    public const ORDER_DC_STATUS_SHIPPED_BACKORDERED = 'G';
     public const ORDER_DC_STATUS_RECEIVED_BY_AMAZON = 'DA';
     public const ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR = 'L';
     public const ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED  = 'C';

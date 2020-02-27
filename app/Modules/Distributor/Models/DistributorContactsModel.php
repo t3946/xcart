@@ -4,6 +4,7 @@ namespace Modules\Distributor\Models;
 
 
 use Modules\Distributor\Helpers\DistributorHelper;
+use Modules\User\Helpers\PhoneHelper;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -35,7 +36,7 @@ class DistributorContactsModel extends Model
 
     public function getPhoneNormalized(): string
     {
-        if (strlen($phone_normalized = DistributorHelper::phoneNormalize($this->phone)) === 10){
+        if (strlen($phone_normalized = PhoneHelper::phoneNormalize($this->phone)) === 10){
             return $this->distributor->getPhonePrefix() . $phone_normalized;
         }
         return $this->phone;

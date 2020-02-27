@@ -7,28 +7,18 @@ use CaponicaAmazonMwsComplete\ClientPack\MwsFeedAndReportClientPack;
 use DateTime;
 use Modules\Amazon\Stores\AmazonPoolStore;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderTrackingModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Shipping\Models\TrackingLinksModel;
 use Xcart\App\Helpers\Xml;
 
 class AmazonFbaFeedHelper
 {
-    public static function sendTrackingCodeToAmazon(OrderGroupModel $orderGroup, array $trackNumberData)
+    public static function sendTrackingCodeToAmazon(OrderTrackingModel $trackNumberData)
     {
         $result = null;
-        if (empty($trackNumberData['shipping_date'])) {
-            $trackNumberData['shipping_date'] = DateTime::createFromFormat('m/d/Y H:i:s', $trackNumberData['ship_date'] . ' 00:00:00');
-        }
 
-        $cm = TrackingLinksCarrierModel::objects()->get(['carrier_id' => $trackNumberData['carrier_id']]);
-
-        $trackNumberData['carrier'] = $cm ? $cm->carrier : '';
-
-        if (isset($trackNumberData['linkid']) && $trackNumberData['linkid']) {
-            $lm = TrackingLinksModel::objects()->get(['linkid' => $trackNumberData['linkid']]);
-            $trackNumberData['shipping_method'] = $lm ? $lm->shipping : '';
-        }
-        if ($orderGroup && $feedContent = self::encodeOrderfulfillmentFeed($orderGroup, $trackNumberData)) {
+        if ($feedContent = self::encodeOrderfulfillmentFeed($trackNumberData)) {
             func_dump($feedContent);
             $feedHandle = @fopen('php://temp', 'rw+');
             fwrite($feedHandle, $feedContent);
@@ -42,22 +32,20 @@ class AmazonFbaFeedHelper
         return $result;
     }
 
-    public static function encodeOrderfulfillmentFeed(OrderGroupModel $orderGroup, array $trackNumberData)
+    public static function encodeOrderfulfillmentFeed(OrderTrackingModel $trackNumberData)
     {
         $items = [];
-        if (!empty($trackNumberData)) {
-            $orderModel = $orderGroup->order;
-            $shipDate = ($trackNumberData['shipping_date']) ? $trackNumberData['shipping_date']->format(DATE_W3C) : '';
+        if ($trackNumberData) {
+            $orderModel = $trackNumberData->order_group->order;
+            $shipDate = $trackNumberData->shipping_date ? $trackNumberData->shipping_date->format(DATE_W3C) : '';
 
-            /*if ($details = $orderGroup->detail_models->all()) {
-                foreach ($details as $detail) {
-                    $items[] = ['Item' => [
-                        'AmazonOrderItemCode' => $detail->AmazonOrderItemCode,
-                        'MerchantFulfillmentItemID' => $detail->productcode,
-                        'Quantity' => $detail->amount
-                    ]];
-                }
-            }*/
+            $cm = $trackNumberData->carrier;
+
+            $carrier = $cm ? $cm->carrier : '';
+
+            $lm = $trackNumberData->link;
+            $shipping_method = $lm ? $lm->shipping : '';
+
             $data_0 = [
                 'Header' => [
                     'DocumentVersion' => '1.01',
@@ -71,9 +59,9 @@ class AmazonFbaFeedHelper
                         'MerchantFulfillmentID' => $orderModel->orderid,
                         'FulfillmentDate' => $shipDate,
                         'FulfillmentData' => [
-                            'CarrierName' => $trackNumberData['carrier'],
-                            'ShippingMethod' => $trackNumberData['shipping_method'],
-                            'ShipperTrackingNumber' => $trackNumberData['tracknum']
+                            'CarrierName' => $carrier,
+                            'ShippingMethod' => $shipping_method,
+                            'ShipperTrackingNumber' => $trackNumberData->tracknum
                         ]
                     ]
                 ]

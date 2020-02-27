@@ -7,17 +7,16 @@ use XeroPHP\Models\Accounting\TrackingCategory;
 
 class LineItem extends Remote\Model
 {
-
     /**
      * Description needs to be at least 1 char long. A line item with just a description (i.e no unit
      * amount or quantity) can be created by specifying just a <Description> element that contains at least
-     * 1 character
+     * 1 character.
      *
      * @property string Description
      */
 
     /**
-     * LineItem Quantity
+     * LineItem Quantity.
      *
      * @property string Quantity
      */
@@ -31,7 +30,7 @@ class LineItem extends Remote\Model
      */
 
     /**
-     * See Accounts
+     * See Accounts.
      *
      * @property string AccountCode
      */
@@ -64,10 +63,8 @@ class LineItem extends Remote\Model
      * @property TrackingCategory[] Tracking
      */
 
-
-
     /**
-     * Get the resource uri of the class (Contacts) etc
+     * Get the resource uri of the class (Contacts) etc.
      *
      * @return string
      */
@@ -76,9 +73,8 @@ class LineItem extends Remote\Model
         return 'LineItems';
     }
 
-
     /**
-     * Get the root node name.  Just the unqualified classname
+     * Get the root node name.  Just the unqualified classname.
      *
      * @return string
      */
@@ -87,9 +83,8 @@ class LineItem extends Remote\Model
         return 'LineItem';
     }
 
-
     /**
-     * Get the guid property
+     * Get the guid property.
      *
      * @return string
      */
@@ -98,9 +93,8 @@ class LineItem extends Remote\Model
         return '';
     }
 
-
     /**
-     * Get the stem of the API (core.xro) etc
+     * Get the stem of the API (core.xro) etc.
      *
      * @return string|null
      */
@@ -109,9 +103,8 @@ class LineItem extends Remote\Model
         return Remote\URL::API_CORE;
     }
 
-
     /**
-     * Get the supported methods
+     * Get the supported methods.
      */
     public static function getSupportedMethods()
     {
@@ -120,13 +113,12 @@ class LineItem extends Remote\Model
     }
 
     /**
-     *
      * Get the properties of the object.  Indexed by constants
      *  [0] - Mandatory
      *  [1] - Type
      *  [2] - PHP type
      *  [3] - Is an Array
-     *  [4] - Saves directly
+     *  [4] - Saves directly.
      *
      * @return array
      */
@@ -140,7 +132,7 @@ class LineItem extends Remote\Model
             'TaxType' => [false, self::PROPERTY_TYPE_ENUM, null, false, false],
             'TaxAmount' => [false, self::PROPERTY_TYPE_FLOAT, null, false, false],
             'LineAmount' => [false, self::PROPERTY_TYPE_FLOAT, null, false, false],
-            'Tracking' => [false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\TrackingCategory', true, false]
+            'Tracking' => [false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\TrackingCategory', true, false],
         ];
     }
 
@@ -157,7 +149,6 @@ class LineItem extends Remote\Model
         return $this->_data['Description'];
     }
 
-
     /**
      * @return string
      */
@@ -165,7 +156,6 @@ class LineItem extends Remote\Model
     {
         return $this->_data['Quantity'];
     }
-
 
     /**
      * @return float
@@ -175,7 +165,6 @@ class LineItem extends Remote\Model
         return $this->_data['UnitAmount'];
     }
 
-
     /**
      * @return string
      */
@@ -183,7 +172,6 @@ class LineItem extends Remote\Model
     {
         return $this->_data['AccountCode'];
     }
-
 
     /**
      * @return string
@@ -193,7 +181,6 @@ class LineItem extends Remote\Model
         return $this->_data['TaxType'];
     }
 
-
     /**
      * @return float
      */
@@ -201,7 +188,6 @@ class LineItem extends Remote\Model
     {
         return $this->_data['TaxAmount'];
     }
-
 
     /**
      * @return float
@@ -211,10 +197,8 @@ class LineItem extends Remote\Model
         return $this->_data['LineAmount'];
     }
 
-
     /**
-     * @return TrackingCategory[]|Remote\Collection
-     * Always returns a collection, switch is for type hinting
+     * @return Remote\Collection|TrackingCategory[]
      */
     public function getTracking()
     {
