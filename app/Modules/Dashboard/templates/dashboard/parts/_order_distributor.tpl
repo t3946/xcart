@@ -8,7 +8,7 @@
             <select name="search[order][distributor][]" id="o_distributor" class="big" multiple>
 
                 {foreach $distributors as $distributor}
-                    <option value="{raw $distributor.manufacturerid}" {if $form_data.form_data.order.distributor && $distributor.manufacturerid in list $form_data.form_data.order.distributor}selected{/if}>{raw $distributor.manufacturer}</option>
+                    <option value="{raw $distributor.manufacturerid}" {if $form_data_raw.order.distributor && $distributor.manufacturerid in list $form_data_raw.order.distributor}selected{/if}>{raw $distributor.manufacturer}</option>
                 {/foreach}
             </select>
         </div>

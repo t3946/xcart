@@ -190,9 +190,10 @@
                             {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {/p_label}
                         {/if}
-                        {if !$warehouse->hasCanadaShippingZone()}
+                        {set $only_one_country = $warehouse->getShippingOnlyOneCountry()}
+                        {if $only_one_country}
                             {p_label cls="err fill last-items"}
-                                {t 'This product line can only be shipped to a US address.'}
+                                {t 'This product line can only be shipped to a'} {$only_one_country} {t 'address.'}
                             {/p_label}
                         {/if}
                     </div>
