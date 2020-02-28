@@ -94,6 +94,12 @@ return array_merge($admin_routes, [
     ],
 
     [
+        'route' => '/order',
+        'path' => 'Modules.Order.routes',
+        'namespace' => 'order'
+    ],
+
+    [
         'route' => '/subscribe',
         'path' => 'Modules.Subscribe.routes',
         'namespace' => 'subscribe'
