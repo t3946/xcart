@@ -13,6 +13,7 @@ class AfterShipController extends Controller
     {
         $request = $this->getRequest();
         $json = key($request->request->all());
+        Xcart::app()->logger->debug($json, [], 'afterShip');
         if ($params = json_decode($json, true)) {
             Xcart::app()->logger->debug($params, [], 'afterShip');
         }
