@@ -653,7 +653,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                                              . ' FROM ' . $sql_tbl['order_groups']
                                              . ' WHERE orderid = "' . $cart['orderid'] . '" AND manufacturerid = "' . $mid . '"');
 
-            if ($v['oOrderGroup']->trackings->count()) {
+            if ($v['oOrderGroup'] && $v['oOrderGroup']->trackings && $v['oOrderGroup']->trackings->count()) {
                 if ($back_products[$mid] >= 1) {
                     $v['dc_status'] = \Modules\Order\Models\OrderStatusModel::ORDER_DC_STATUS_SHIPPED_BACKORDERED;
                 } elseif ($back_products[$mid] == 0) {
