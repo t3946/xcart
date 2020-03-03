@@ -1045,8 +1045,10 @@ function func_show_login_password_info(manufacturerid) {
         <td class="FormButton">Shipping methods used by distributor</td>
         <td>&nbsp;</td>
         <td width="80%">
-            {assign var=carriers value=$distributorModel->carriers->order("orderby")}
-            {assign var=ccc value=$carriers->valuesList("carrier_id", true)}
+            {if $distributorModel}
+                {assign var=carriers value=$distributorModel->carriers->order("orderby")}
+                {assign var=ccc value=$carriers->valuesList("carrier_id", true)}
+            {/if}
             <select name="distributor_carrier[]" multiple class="select2" style="width: 80%">
                 {foreach from=$trackingLinksCarriers item=carrier}
                     <option value="{$carrier->carrier_id}" {if in_array($carrier->carrier_id, $ccc)}selected="selected"{/if}>{$carrier->carrier}</option>
