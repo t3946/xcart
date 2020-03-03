@@ -485,7 +485,9 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td></td>
         <td>
             {assign var=dx_sites value=$distributorModel->sites}
-            {assign var=dx_sss value=$dx_sites->valuesList("storefrontid", true)}
+            {if $dx_sites}
+                {assign var=dx_sss value=$dx_sites->valuesList("storefrontid", true)}
+            {/if}
             <table>
                 <tr>
                     <td>
