@@ -679,28 +679,28 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
             <td class="FormButton" width="20%">{$lng.lbl_address}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap" width="80%">
-                <input type="text" id="b_address" name="b_address" size="32" maxlength="64" value="{$manufacturer.m_address}"/>
+                <input type="text" id="b_address" name="m_address" size="32" maxlength="64" value="{$manufacturer.m_address}"/>
             </td>
         </tr>
         <tr>
             <td class="FormButton">{$lng.lbl_address_2}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap">
-                <input type="text" id="b_address_2" name="b_address_2" size="32" maxlength="64" value="{$manufacturer.m_address_2}"/>
+                <input type="text" id="b_address_2" name="m_address_2" size="32" maxlength="64" value="{$manufacturer.m_address_2}"/>
             </td>
         </tr>
         <tr>
             <td class="FormButton">{$lng.lbl_city}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap">
-                <input type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{$manufacturer.m_city}"/>
+                <input type="text" id="b_city" name="m_city" size="32" maxlength="64" value="{$manufacturer.m_city}"/>
             </td>
         </tr>
         <tr>
             <td class="FormButton">{$lng.lbl_country}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap">
-                <select name="b_country" id="b_country" onchange="check_zip_code()">
+                <select name="m_country" id="b_country" onchange="check_zip_code()">
                     {section name=country_idx loop=$countries}
                         <option value="{$countries[country_idx].country_code}"
                                 {if $manufacturer.m_country eq $countries[country_idx].country_code ||
@@ -714,19 +714,19 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
             <td class="FormButton">{$lng.lbl_state}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap">
-                {include file="main/states.tpl" states=$states name="b_state" default=$manufacturer.m_state default_country=$manufacturer.m_country country_name="b_country"}
+                {include file="main/states.tpl" states=$states name="m_state" default=$manufacturer.m_state default_country=$manufacturer.m_country country_name="m_country"}
             </td>
         </tr>
         <tr style="display: none;">
             <td>
-                {include file="main/register_states.tpl" state_name="b_state" country_name="b_country" county_name="b_county" state_value=$manufacturer.m_state county_value=$manufacturer.m_county}
+                {include file="main/register_states.tpl" state_name="m_state" country_name="m_country" county_name="m_county" state_value=$manufacturer.m_state county_value=$manufacturer.m_county}
             </td>
         </tr>
         <tr>
             <td class="FormButton">{$lng.lbl_zip_code}</td>
             <td>&nbsp;</td>
             <td nowrap="nowrap">
-                <input type="text" id="b_zipcode" name="b_zipcode" size="32" maxlength="32" value="{$manufacturer.m_zipcode}" onchange="check_zip_code()"/>
+                <input type="text" id="b_zipcode" name="m_zipcode" size="32" maxlength="32" value="{$manufacturer.m_zipcode}" onchange="check_zip_code()"/>
             </td>
         </tr>
     </table>
