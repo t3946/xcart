@@ -132,11 +132,11 @@ class MenuLibrary extends TemplateLibrary
                                 'url' => '/purchase-orders',
                                 'items' => [],
                             ],
-                            [
+                            /*[
                                 'name' => MenuModule::t('Bill Me Later'),
                                 'url' => '/bill-me-later',
                                 'items' => [],
-                            ],
+                            ],*/
                             [
                                 'name' => MenuModule::t('Combating eCommerce Fraud'),
                                 'url' => '/ecomerce-fraud',
@@ -177,11 +177,11 @@ class MenuLibrary extends TemplateLibrary
                                 'url' => '/about-us',
                                 'items' => [],
                             ],
-                            [
+                            /*[
                                 'name' => MenuModule::t('Community'),
                                 'url' => '/community',
                                 'items' => [],
-                            ],
+                            ],*/
                         ],
                     ],
                     [
