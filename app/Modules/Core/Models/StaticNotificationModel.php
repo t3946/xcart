@@ -2,10 +2,12 @@
 namespace Modules\Core\Models;
 
 
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
@@ -56,6 +58,13 @@ class StaticNotificationModel extends Model
                 'null' => true,
                 'verboseName' => 'End showing message date and time'
             ],
+
+            'site' => [
+                'field' => 'storefront_id',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'null' => true
+            ]
         ];
     }
 

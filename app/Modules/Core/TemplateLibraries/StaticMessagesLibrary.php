@@ -4,6 +4,7 @@ namespace Modules\Core\TemplateLibraries;
 
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Core\Models\StaticNotificationModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
@@ -19,11 +20,14 @@ class StaticMessagesLibrary extends TemplateLibrary
     public static function renderStaticMessages($params)
     {
         $template = isset($params['template']) ? $params['template'] : 'base/_notifications.tpl';
+        /** @var SiteModel $site */
+        $site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
 
         $qs = StaticNotificationModel::objects()->filter([
             'active' => true,
             new QOr(['start_at__isnull' => true, 'start_at__lte' => new \DateTime()]),
             new QOr(['end_at__isnull' => true, 'end_at__gte' => new \DateTime()]),
+            new QOr(['storefront_id__isnull' => true, 'storefront_id' => $site->storefrontid])
         ]);
 
         if ($idx = Xcart::app()->request->cookie->get('notification_hide_idx')) {

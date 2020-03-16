@@ -31,7 +31,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                {render_static_notifications}
                                 <div class="logo_menu">
                                     <div class="row align-justify">
                                         <div class="columns small-2 medium-1 show-for-small hide-for-large">
