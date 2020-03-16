@@ -9,8 +9,8 @@
                         {$model->title}
                     </div>
                     {/if}
-                    <div class="description"  >
-                        {$model->description}
+                    <div class="description">
+                        {$model->description|unescape}
                     </div>
                     <a href="#" class="close" data-id="{$model->pk}"><i class="icon-delete_in_filter"></i></a>
                 </div>
