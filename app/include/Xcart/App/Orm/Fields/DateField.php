@@ -102,7 +102,7 @@ class DateField extends Field
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (($value instanceof DateTime) == false && !is_null($value)) {
+        if (($value instanceof DateTime) == false && $value !== null) {
             $value = (new DateTime())->setTimestamp(is_numeric($value) ? $value : strtotime($value));
         }
 
