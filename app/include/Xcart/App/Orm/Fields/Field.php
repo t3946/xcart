@@ -239,14 +239,15 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @return int|mixed|null|strin
+     * @return int|mixed|null|string
      */
     public function getValue()
     {
-        if ($this->getModel() && $value = $this->getModel()->getAttribute($this->getAttributeName())) {
+        if ($this->getModel() && ($value = $this->getModel()->getAttribute($this->getAttributeName())) !== null) {
             return $value;
         }
-        else if (empty($this->value)) {
+
+        if (empty($this->value)) {
             $this->value = $this->null === true ? null : $this->default;
         }
 

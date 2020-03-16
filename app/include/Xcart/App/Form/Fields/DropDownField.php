@@ -151,7 +151,7 @@ class DropDownField extends Field
                 }
                 else {
                     $selected = $this->value;
-                };
+                }
             }
         }
         elseif  ($this->form instanceof ModelForm && $this->form->getModel()->hasField($this->name)) {
@@ -208,7 +208,7 @@ class DropDownField extends Field
                 if (!$this->required) {
                     $data[''] = $this->empty;
                 }
-                if ($value = $this->getValue()) {
+                if (($value = $this->getValue()) !== null) {
                     $selected[] = $value instanceof Model ? $value->{$to} : $value;
                 }
                 foreach ($qs->all() as $item) {

@@ -4,7 +4,10 @@ namespace Modules\Core\Forms;
 use Modules\Core\Fields\ColorPickerField;
 use Modules\Core\Models\StaticNotificationModel;
 use Modules\Editor\Fields\EditorField;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\DateTimeField;
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
 class StaticNotificationForm extends ModelForm
@@ -31,6 +34,9 @@ class StaticNotificationForm extends ModelForm
             ],
             'description' => [
                 'class' => EditorField::className(),
+            ],
+            'site' => [
+                'class' => DropdownField::className(),
             ]
         ];
     }
