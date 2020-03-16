@@ -3,7 +3,7 @@
     <div class="messages-list">
         {foreach $models as $model}
             <div data-id="{$model->pk}" style="background-color: {$model->bg_color}; color: {$model->text_color};" class="message-block">
-                <div class="message">
+                <div class="message" style="max-width: 80rem; margin: 0 auto;">
                     {if $model->title}
                     <div class="title">
                         {$model->title}
