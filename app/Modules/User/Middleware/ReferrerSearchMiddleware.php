@@ -4,22 +4,22 @@ namespace Modules\User\Middleware;
 
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
-use Xcart\App\Cli\Cli;
 use Xcart\App\Middleware\Middleware;
+use function GuzzleHttp\Psr7\parse_query;
 
 class ReferrerSearchMiddleware extends Middleware
 {
     public $isProcessRequest = true;
 
-    public function processHttpRequest($request)
+    public function processHttpRequest($request): void
     {
 
-        if ($request->getReferrer()) {
-            $url = SurfingHelper::getReferUrl();
+        if (!$request->getIsAjax()) {
+            $url = $request->getRequestUri();
 
             $url = parse_url($url);
             if ($url && !empty($url['query'])) {
-                $query = \GuzzleHttp\Psr7\parse_query($url['query']);
+                $query = parse_query($url['query']);
 
                 if ($query && (!empty($query['q']) || !empty($query['qpvt']))) {
 

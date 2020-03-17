@@ -16,14 +16,18 @@ class SurfingHelper
 
         $model = new SurfPathModel($params);
 
-        if (defined("IS_ROBOT")) {
+        if (defined('IS_ROBOT')) {
             return false;
         }
 
         if (($oSurfMeta = SurfMetaModel::getInstance()) && $oSurfMeta->id) {
 
-            if (in_array($model->resource_type, [SurfPathModel::GOAL_TYPE_ADD_TO_CART, SurfPathModel::GOAL_TYPE_CHECKOUT, SurfPathModel::GOAL_TYPE_SEARCH, SurfPathModel::GOAL_TYPE_ORDER])) {
-                $aGoalArray[$model->goals_arr[$model->resource_type]] = "Y";
+            if (in_array($model->resource_type, [
+                SurfPathModel::GOAL_TYPE_ADD_TO_CART,
+                SurfPathModel::GOAL_TYPE_CHECKOUT,
+                SurfPathModel::GOAL_TYPE_SEARCH,
+                SurfPathModel::GOAL_TYPE_ORDER], true)) {
+                $aGoalArray[$model->goals_arr[$model->resource_type]] = 'Y';
             }
 
             $oSurfMeta->points_visited++;
@@ -86,7 +90,7 @@ class SurfingHelper
                 SurfPathModel::GOAL_TYPE_CATEGORY,
                 SurfPathModel::GOAL_TYPE_BRAND,
                 SurfPathModel::GOAL_TYPE_SEARCH
-            ])
+            ], true)
             && !empty($params['cidev_filters_tree_sorted'])
             && is_array($params['cidev_filters_tree_sorted'])) {
             foreach ($params['cidev_filters_tree_sorted'] as $v) {
