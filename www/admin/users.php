@@ -82,7 +82,9 @@ if ($REQUEST_METHOD == "POST") {
 		if (!empty($posted_data['membershipid'])) {
 			list($posted_data['usertype'], $posted_data['membershipid']) = explode("-", $posted_data['membershipid']);
 		}
-
+		if (!is_array($search_data)) {
+			$search_data = [];
+		}
 		$search_data["users"] = $posted_data;
 
 	}
