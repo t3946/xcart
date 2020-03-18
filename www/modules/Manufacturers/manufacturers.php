@@ -262,6 +262,7 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 $do_not_touch = false;
 
             $query_data = \Xcart\App\Main\Xcart::app()->request->post->all();
+            $query_data['d_availability_must_be_checked'] = $query_data['d_availability_must_be_checked'] ?? 'N';
 
             $query_data_lng = [
                 'manufacturerid' => $manufacturerid,
