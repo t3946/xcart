@@ -348,4 +348,19 @@ class OrderGroupModel extends Model
         }
         return $profit_margin;
     }
+
+    public function getShippingCalculateLink(): string
+    {
+        if ($model = $this->shippingModel) {
+            if ($model->code === 'UPS') {
+                $dx = $this->manufacturer;
+                $order = $this->order;
+                return <<<URL
+https://wwwapps.ups.com/ctc/request?loc=en_US&destCountry={$order->s_country}&destPostal={$order->s_zipcode}&destCity={$order->s_city}
+&origPostal={$dx->m_zipcode}&origCity={$dx->m_city}&origCountry={$dx->m_country}
+URL;
+            }
+        }
+        return '';
+    }
 }

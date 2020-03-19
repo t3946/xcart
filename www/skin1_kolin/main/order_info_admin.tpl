@@ -788,7 +788,19 @@ function check_r_fields(){
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td nowrap="nowrap">
     <div>
-        <p>Carrier: {if $oOrderShipping}{$oOrderShipping->code}{else}Undefined{/if}</p>
+        <p>Carrier:
+            {if $oOrderShipping}
+                {if $oOrderGroup->getShippingCalculateLink()}
+                <a href="{$oOrderGroup->getShippingCalculateLink()}" target="_blank">
+                {/if}
+                    {$oOrderShipping->code}
+                {if ($oOrderGroup->getShippingCalculateLink())}
+                </a>
+                {/if}
+            {else}
+                Undefined
+            {/if}
+        </p>
         <p>Customer's choice: <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$oOrderGroup->shipping}"/>
         </p>
         <p>Method:
