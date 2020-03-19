@@ -44,7 +44,7 @@
 {$message|replace:"{{c-fullname}}":$order->firstname}
 {/if}
 
-{add $site = $.getSite}
+{add $site = $order->site}
 {add $config = $site->getGlobalConfig()}
 {add $site_config  = $site->getConfig()}
 {add $site_currency = $site->getCurrency()}
@@ -80,6 +80,21 @@
                             {/if}
                         {/foreach}
                     </td>
+                    {if $order->orderid == 178607}
+                        <td valign="bottom" align="right">
+                            <b>{$config.operating_company_name}</b><br/>
+                            2885 Sanford Ave SW #12717
+                            ,<br/>Grandville
+                            <br/>
+                            49418, <br/>
+                            {if $site_config.cidev_top_header_code}{t 'Toll Free'}: {$site_config.cidev_top_header_code}<br/>{/if}
+                            {if $site_config.local_phone}{t 'Tel'}: {$site_config.local_phone}<br/>{/if}
+                            {if $site_config.fax_number}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
+                            {if $config.orders_department}{t 'Email'}: {$config.orders_department}
+                                <br/>
+                            {/if}
+                        </td>
+                    {else}
                     <td valign="bottom" align="right">
                         <b>{$config.operating_company_name}</b><br/>
                         {$config.location_address}
@@ -92,8 +107,8 @@
                         {if $config.orders_department}{t 'Email'}: {$config.orders_department}
                             <br/>
                         {/if}
-
                     </td>
+                    {/if}
                 </tr>
             </table>
         </td>
