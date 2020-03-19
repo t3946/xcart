@@ -83,10 +83,9 @@
                     {if $order->orderid == 178607}
                         <td valign="bottom" align="right">
                             <b>{$config.operating_company_name}</b><br/>
-                            2885 Sanford Ave SW #12717
-                            ,<br/>Grandville
+                            2885 Sanford Ave SW #12717,<br/>Grandville
                             <br/>
-                            49418, <br/>
+                            49418,<br/>
                             {if $site_config.cidev_top_header_code}{t 'Toll Free'}: {$site_config.cidev_top_header_code}<br/>{/if}
                             {if $site_config.local_phone}{t 'Tel'}: {$site_config.local_phone}<br/>{/if}
                             {if $site_config.fax_number}{t 'Fax'}: {$site_config.fax_number}<br/>{/if}
