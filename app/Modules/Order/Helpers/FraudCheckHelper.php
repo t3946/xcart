@@ -135,6 +135,11 @@ class FraudCheckHelper
                             }
                         }
                     }
+                    if (isset($oTransaction->transaction_response['advinfo'])) {
+                        $cv = array_merge($cv, $oTransaction->transaction_response['advinfo']);
+                    }
+
+
                     break;
                 case 'BluePay':
                     if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
@@ -145,6 +150,9 @@ class FraudCheckHelper
                         }
                     }
                     break;
+            }
+            if (isset($oTransaction->transaction_response['maskedCardData'])) {
+                $cv = array_merge($cv, $oTransaction->transaction_response['maskedCardData']);
             }
         }
         return [$fraud_result, $score, $cv ?? ['Payment processor' => $processor], $manual_action];
