@@ -23,6 +23,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -105,6 +106,11 @@ class DistributorModel extends Model
             ],
             'dx_leadtime_to' => [
                 'class' => IntField::class,
+            ],
+            'dx_eta_date' => [
+                'class' => DateField::class,
+                'null' => true,
+                'default' => null
             ],
             'parents' => [
                 'class' => HasManyField::class,

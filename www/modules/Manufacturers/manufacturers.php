@@ -292,7 +292,12 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 $query_data['allow_dispatch_off_working_hours'] = 'N';
             }
 
+
+
             $distributorModel->setAttributes(func_array_map('trim', func_array_map('stripcslashes', $query_data)));
+
+            $distributorModel->dx_eta_date = $query_data['dx_eta_date'] ? DateTime::createFromFormat('m/d/Y', $query_data['dx_eta_date'], new DateTimeZone('EST')) : null;
+
             $distributorModel->save();
             func_array2insert("manufacturers_lng", $query_data_lng, true);
 
