@@ -53,18 +53,18 @@ class AmpController extends FrontendController
                 $this->redirect('amp:product', ['id' => $id, 'slug' => $u_slug], 301);
             }
 
-            $category = $model->getMainCategory();
+            if ($category = $model->getMainCategory()) {
+                $this->setMetaBase(MetaType::PRODUCT, [
+                    'model' => $model,
+                    'category' => $category
+                ]);
 
-            $this->setMetaBase(MetaType::PRODUCT, [
-                'model' => $model,
-                'category' => $category
-            ]);
-
-            if ($cids = explode('/', $category->categoryid_path)) {
-                $categories = CategoryModel::objects()
-                    ->filter(['categoryid__in' => $cids])
-                    ->order([new Expression('FIELD(categoryid, ' . implode(',', $cids) . ')')])
-                    ->all();
+                if ($cids = explode('/', $category->categoryid_path)) {
+                    $categories = CategoryModel::objects()
+                        ->filter(['categoryid__in' => $cids])
+                        ->order([new Expression('FIELD(categoryid, ' . implode(',', $cids) . ')')])
+                        ->all();
+                }
             }
 
             $ga_account = CurrentSiteHelper::getGoogleAnalitycsAccount();
