@@ -525,7 +525,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         </td>
     </tr>
     <tr>
-        <td class="FormButton">Dx ETA date</td>
+        <td class="FormButton">Dx warehouse is closed until</td>
         <td></td>
         <td>
             <input value="{$distributorModel->dx_eta_date|date_format:"%m/%d/%Y"}" type="text" name="dx_eta_date" data-language="en" data-clear-button="1" class="datepicker-here big" />
