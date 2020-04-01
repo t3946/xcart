@@ -1,4 +1,4 @@
-<div class="item minimal product{if $item->isOutOfStock()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
+<div class="item minimal product{if $item->isOutOfStockFrontend()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
      data-product="{$item->productid}"
      {*data-uid="{$item->getUniqueId()}"*}
      {*data-prices='{$item->getPrices()|json_encode}'*}

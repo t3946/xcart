@@ -295,11 +295,12 @@ class ProductHelper
     {
         $json = [];
 
-        if ($model->isOutOfStock()) {
-            $availability = "http://schema.org/OutOfStock";
-        }
-        else {
-            $availability = "http://schema.org/InStock";
+        if ($model->isOutOfStock() && !$model->isOutOfStockFrontend()) {
+            $availability = 'http://schema.org/PreOrder';
+        } elseif ($model->isOutOfStockFrontend()) {
+            $availability = 'http://schema.org/OutOfStock';
+        } else {
+            $availability = 'http://schema.org/InStock';
         }
 
         $descript = strip_tags($model->getFrontendDescription());

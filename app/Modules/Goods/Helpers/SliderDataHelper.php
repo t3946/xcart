@@ -196,7 +196,7 @@ SQL;
 
                 /** @var ProductModel|Product $oProduct */
                 foreach ($oProducts as $oProduct) {
-                    if ($isInStock && $oProduct->isProductOutOfStock() && !$oProduct->isGroupRoot()) {
+                    if ($isInStock && $oProduct->isOutOfStock() && !$oProduct->isGroupRoot()) {
                         continue;
                     }
 

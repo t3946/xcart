@@ -2,7 +2,7 @@
 {add $site = $.getSite}
 {add $site_currency = $site->getCurrency()}
 
-<div class="item product{if $item->isOutOfStock()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
+<div class="item product{if $item->isOutOfStockFrontend()} out_of_stock{/if} {if $item->isGroupRoot()} group{/if}"
      data-product="{$item->productid}"
      data-name="{$item->getFrontendName()|escape}"
      data-source="{$analytics_source}"
@@ -124,7 +124,9 @@
                         <span {if !$schema_off}itemprop="priceCurrency" content="{$site_currency->currency_code}"{/if}>{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
                         <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice()}"{/if} var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {if !$schema_off}
-                            {if $item->isOutOfStock()}
+                            {if !$item->isOutOfStockFrontend() && $item->isOutOfStock()}
+                                <link itemprop="availability" href="http://schema.org/PreOrder" />
+                            {elseif $item->isOutOfStockFrontend()}
                                 <link itemprop="availability" href="http://schema.org/OutOfStock" />
                             {else}
                                 <link itemprop="availability" href="http://schema.org/InStock" />
@@ -169,7 +171,7 @@
                     </div>
                 {else}
 
-                    {if !$item->isOutOfStock()}
+                    {if !$item->isOutOfStockFrontend()}
                         <div class="cart_quantity">
                             <label for="quantity-{$item.productid}" class="show-for-large">
                                 <span class="show-for-large">{t 'Quantity'}:</span>

@@ -4,6 +4,7 @@
 namespace Modules\Goods\Commands;
 
 
+use DateTime;
 use Exception;
 use Google_Client;
 use Google_Service_ShoppingContent;
@@ -75,7 +76,20 @@ class GoogleShoppingProductCommand extends Command
 
                         $batch->setContentLanguage($lang);
                         $batch->setChannel('online');
-                        $batch->setAvailability($product->isOutOfStock() ? 'out of stock' : 'in stock');
+                        if (!$product->isOutOfStockFrontend() && $product->isOutOfStock()) {
+                            $availability = 'preorder';
+                            if ($product->eta_date_mm_dd_yyyy) {
+                                $etaDate = new DateTime();
+                                $etaDate->setTimestamp($product->eta_date_mm_dd_yyyy);
+                                $batch->setAvailabilityDate($etaDate->format(DateTime::ISO8601));
+                            }
+                        } elseif ($product->isOutOfStockFrontend()) {
+                            $availability = 'out of stock';
+                        } else {
+                            $availability = 'in stock';
+                        }
+                        $batch->setAvailability($availability);
+
                         $batch->setCondition('new');
                         $batch->setMpn($product->getMpn());
                         $batch->setOnlineOnly(true);

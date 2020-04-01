@@ -33,7 +33,7 @@
                                 <div class="title">{t 'Quantity'}</div>
                                 <div class="value">
 
-                                    {if !$model->isOutOfStock()}
+                                    {if !$model->isOutOfStockFrontend()}
                                         {include "product/parts/_quantity_group.tpl"}
                                     {else}
                                         {t 'Out of stock'}
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
 
-                            {if !$model->isOutOfStock()}
+                            {if !$model->isOutOfStockFrontend()}
                                 <div class="column extended">
                                     <div class="title">{t 'Subtotal'}</div>
                                     <div class="value">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-                {if !$model->isOutOfStock()}
+                {if !$model->isOutOfStockFrontend()}
                     <div class="row">
                         <div class="column small-8 large-8 price-row-width xl-8">
                             <div class="table table__prices table__prices--down price-row-width">
@@ -126,7 +126,7 @@
             </div>
         </div>
         <div class="button-section columns small-12 medium-6 ml-12">
-            {if !$model->isOutOfStock()}
+            {if !$model->isOutOfStockFrontend()}
                 <div class="row">
                     <div class="columns small-12">
                         {if $form}
@@ -186,7 +186,7 @@
         </div>
     </div>
 
-    {if $model->isOutOfStock()}
+    {if $model->isOutOfStockFrontend()}
         <div class="notify-me-stock">
 
             <a class="notify-me grey-border">

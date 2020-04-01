@@ -1,7 +1,7 @@
 {set $class = ($fill! && $fill) ? 'fill' : '' }
 {set $dx = $model->distributor}
 {if !$model->isGroupRoot()}
-    {if !$model->isOutOfStock()}
+    {if !$model->isOutOfStockFrontend()}
         {if $model->isFreeShipping()}
             {set $lbl}{t 'Free Shipping within contiguous U.S.'}{/set}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "free-shipping" text=$lbl}
@@ -30,6 +30,10 @@
                 {set $lbl}{t 'Order at least %count% item' 'Order at least %count% items' $model->min_amount}{/set}
                 {include "product/messages/_p_label.tpl" cls=$class ~~ "last-items" text=$lbl}
             {/if}
+        {/if}
+        {if $model->eta_date_mm_dd_yyyy && $model->eta_date_mm_dd_yyyy > time()}
+            {set $lbl}{t 'Expected availability'}{/set}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "out-of-stock" text=$lbl ~ ": {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
         {/if}
     {else}
         {if $fill! && $fill}

@@ -90,7 +90,7 @@
             <br><br>
 
             {else}
-                {if !$model->isOutOfStock()}
+                {if !$model->isOutOfStockFrontend()}
                     <form action="{url 'cart:add' uniqueId=$model->productid}" method="get" target="_top">
                         <div class="options price">
                             <h6 id="sku">{t 'SKU'}:

@@ -475,7 +475,49 @@ class ProductModel extends Model implements ICartItem
 
     public function isOutOfStock()
     {
-        return $this->isProductOutOfStock();
+        if (!$res = $this->isOutOfStockFrontend()) {
+            if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
+                $res = true;
+            }
+        }
+        return $res;
+    }
+
+    public function isOutOfStockFrontend()
+    {
+        if ($this->group_root == $this->productid) {
+            return false;
+        }
+
+        if (!$this->isForSale()) {
+            return true;
+        }
+
+        if ($this->cost_to_us <= 0) {
+            return true;
+        }
+
+        if ($this->avail <= 0) {
+            return true;
+        }
+
+        if ($this->avail < $this->min_amount) {
+            return true;
+        }
+
+        if (($this->list_price > 0) && ($this->getPrice() / $this->list_price < 0.1)) {
+            return true;
+        }
+
+        if ($this->cost_to_us > $this->getPrice()) {
+            return true;
+        }
+
+        if ((float)$this->shipping_freight === (float) 0 && strpos($this->productcode, 'ART-') === false) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getAbsoluteUrl($full = false)

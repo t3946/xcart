@@ -284,7 +284,7 @@ class CartController extends BaseCartController
         /** @var ProductModel $model */
         $model = ProductModel::objects()->get(['pk' => $uniqueId]);
 
-        if ($model && !$model->isOutOfStock()) {
+        if ($model && !$model->isOutOfStockFrontend()) {
             $cart = $this->getCart();
             $item = null;
             $inCart = 0;
@@ -327,7 +327,7 @@ class CartController extends BaseCartController
         /** @var ProductModel $model */
         $model = ProductModel::objects()->get(['pk' => $uniqueId]);
 
-        if ($model && !$model->isOutOfStock()) {
+        if ($model && !$model->isOutOfStockFrontend()) {
             $cart = $this->getCart();
 
             if ($cart->has($model)) {
