@@ -35,9 +35,9 @@
             {if $dx->dx_eta_date}
                 {set $lbl}{t 'Warehouse closed until'}{/set}
             {else}
-                {set $lbl}{t 'Expected availability'}{/set}
+                {set $lbl}{t 'Expected availability'}:{/set}
             {/if}
-            {include "product/messages/_p_label.tpl" cls=$class ~~ "out-of-stock" text=$lbl ~ ": {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
+            {include "product/messages/_p_label.tpl" cls=$class ~~ "out-of-stock" text=$lbl ~ " {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
         {/if}
     {else}
         {if $fill! && $fill}
