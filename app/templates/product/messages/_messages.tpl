@@ -33,7 +33,7 @@
         {/if}
         {if $model->eta_date_mm_dd_yyyy && $model->eta_date_mm_dd_yyyy > time()}
             {if $dx->dx_eta_date}
-                {set $lbl}{t 'Warehouse closed until'}{/set}
+                {set $lbl}{t 'Warehouse is closed until'}{/set}
             {else}
                 {set $lbl}{t 'Expected availability'}:{/set}
             {/if}
