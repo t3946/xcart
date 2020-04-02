@@ -84,7 +84,7 @@ class GoogleShoppingInventoryCommand extends Command
                         }
                         $inventory->setKind('content#inventory');
                         if (!$product->isOutOfStockFrontend() && $product->isOutOfStock()) {
-                            $availability = 'preorder';
+                            $availability = 'out of stock';
                         } elseif ($product->isOutOfStockFrontend()) {
                             $availability = 'out of stock';
                         } else {
