@@ -83,11 +83,7 @@ class GoogleShoppingInventoryCommand extends Command
                             $inventory->setPrice($lPrice);
                         }
                         $inventory->setKind('content#inventory');
-                        if ($product->isOutOfStock()) {
-                            $availability = 'out of stock';
-                        } else {
-                            $availability = 'in stock';
-                        }
+                        $availability = $product->isOutOfStock() ? 'out of stock' : 'in stock';
                         $inventory->setAvailability($availability);
                         $entry->setInventory($inventory);
                         $entry->setBatchId($product->productid);

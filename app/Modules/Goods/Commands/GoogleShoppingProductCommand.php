@@ -84,11 +84,7 @@ class GoogleShoppingProductCommand extends Command
                                 $batch->setAvailabilityDate($etaDate->format(DateTime::ISO8601));
                             }
                         } else*/
-                        if ($product->isOutOfStock()) {
-                            $availability = 'out of stock';
-                        } else {
-                            $availability = 'in stock';
-                        }
+                        $availability = $product->isOutOfStock() ? 'out of stock' : 'in stock';
                         $batch->setAvailability($availability);
 
                         $batch->setCondition('new');
