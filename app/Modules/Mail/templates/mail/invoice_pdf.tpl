@@ -251,12 +251,10 @@
                     <td width="40%"><b>{t 'Full Name'}:</b></td>
                     <td>{$order->s_firstname}</td>
                 </tr>
-                {if $order->s_company}
-                    <tr>
-                        <td><b>{t 'Company'}:</b></td>
-                        <td>{$order->s_company|nl2br}</td>
-                    </tr>
-                {/if}
+                <tr>
+                    <td><b>{t 'Company'}:</b></td>
+                    <td>{$order->s_company|nl2br}</td>
+                </tr>
                 <tr>
                     <td><b>{t 'Address'}:</b></td>
                     <td>{$order->s_address|nl2br}</td>
@@ -287,12 +285,10 @@
                     <td width="40%"><b>{t 'Full Name'}:</b></td>
                     <td>{$order->b_firstname}</td>
                 </tr>
-                {if $order->b_company}
-                    <tr>
-                        <td><b>{t 'Company'}:</b></td>
-                        <td>{$order->b_company|nl2br}</td>
-                    </tr>
-                {/if}
+                <tr>
+                    <td><b>{t 'Company'}:</b></td>
+                    <td>{$order->b_company|nl2br}</td>
+                </tr>
                 <tr>
                     <td><b>{t 'Address'}:</b></td>
                     <td>{$order->b_address|nl2br}</td>
