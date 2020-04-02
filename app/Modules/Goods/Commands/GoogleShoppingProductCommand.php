@@ -76,14 +76,15 @@ class GoogleShoppingProductCommand extends Command
 
                         $batch->setContentLanguage($lang);
                         $batch->setChannel('online');
-                        if (!$product->isOutOfStockFrontend() && $product->isOutOfStock()) {
+                        /*if (!$product->isOutOfStockFrontend() && $product->isOutOfStock()) {
                             $availability = 'out of stock';
                             if ($product->eta_date_mm_dd_yyyy) {
                                 $etaDate = new DateTime();
                                 $etaDate->setTimestamp($product->eta_date_mm_dd_yyyy);
                                 $batch->setAvailabilityDate($etaDate->format(DateTime::ISO8601));
                             }
-                        } elseif ($product->isOutOfStockFrontend()) {
+                        } else*/
+                        if ($product->isOutOfStock()) {
                             $availability = 'out of stock';
                         } else {
                             $availability = 'in stock';
