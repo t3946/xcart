@@ -475,12 +475,10 @@ class ProductModel extends Model implements ICartItem
 
     public function isOutOfStock()
     {
-        if (!$res = $this->isOutOfStockFrontend()) {
-            if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
-                $res = true;
-            }
+        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
+            return true;
         }
-        return $res;
+        return $this->isOutOfStockFrontend();
     }
 
     public function isOutOfStockFrontend()
