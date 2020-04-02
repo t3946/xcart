@@ -75,6 +75,7 @@ class ProductHelper
      * @param $filePath
      * @param $product_id
      * @return ProductFileModel|null
+     * @throws \Exception
      */
     public static function uploadProductFile($fileDesc, $filePath, $product_id):? ProductFileModel
     {
@@ -184,7 +185,7 @@ class ProductHelper
         $arr = null;
         foreach ($a as $w) {
             $as = explode(' ', $w);
-            if (\is_null($arr)) {
+            if ($arr === null) {
                 $arr = $as;
             } else {
                 $arr = intersect($as, $arr);
@@ -310,38 +311,38 @@ class ProductHelper
 
 
             $json = [
-                "@context" => "http://schema.org/",
-                "@type" => "Product",
-                "name" => $model->getFrontendName(),
-                "image" => self::getJsonImages(0, $model),
-                "description" => $descript,
-                "mpn" => $model->getMPN(),
-                "sku" => $model->productcode,
-                "brand" => [
-                    "@type" => "Thing",
-                    "name" => $brand ? $brand->getProductFrontendName() : '',
+                '@context' => 'http://schema.org/',
+                '@type' => 'Product',
+                'name' => $model->getFrontendName(),
+                'image' => self::getJsonImages(0, $model),
+                'description' => $descript,
+                'mpn' => $model->getMPN(),
+                'sku' => $model->productcode,
+                'brand' => [
+                    '@type' => 'Thing',
+                    'name' => $brand ? $brand->getProductFrontendName() : '',
                 ],
-                "offers" => [
-                    "@type" => "Offer",
-                    "PriceSpecification" => [
-                        "@type" => "PriceSpecification",
-                        "priceCurrency" => "USD",
-                        "price" => $model->getFrontendPrice(),
-                        "minPrice" => $model->getFrontendPrice(),
-                        "maxPrice" => $model->getFrontendPrice(2),
+                'offers' => [
+                    '@type' => 'Offer',
+                    'PriceSpecification' => [
+                        '@type' => 'PriceSpecification',
+                        'priceCurrency' => 'USD',
+                        'price' => $model->getFrontendPrice(),
+                        'minPrice' => $model->getFrontendPrice(),
+                        'maxPrice' => $model->getFrontendPrice(2),
                     ],
-                    "url" => $model->getAbsoluteUrl(true),
-                    "itemCondition" => "NewCondition",
-                    "seller" => [
-                        "@type" => "Organization",
-                        "name" => "S3Stores, Inc.",
-                        "url" => "http://www.s3stores.com/",
-                        "sameAs" => [
-                            "https://www.facebook.com/s3stores/",
-                            "https://twitter.com/s3stores/",
-                            "https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg",
-                            "https://www.pinterest.com/s3storesinc/",
-                            "https://plus.google.com/118379608603424325840"
+                    'url' => $model->getAbsoluteUrl(true),
+                    'itemCondition' => 'NewCondition',
+                    'seller' => [
+                        '@type' => 'Organization',
+                        'name' => 'S3Stores, Inc.',
+                        'url' => 'http://www.s3stores.com/',
+                        'sameAs' => [
+                            'https://www.facebook.com/s3stores/',
+                            'https://twitter.com/s3stores/',
+                            'https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg',
+                            'https://www.pinterest.com/s3storesinc/',
+                            'https://plus.google.com/118379608603424325840'
                         ],
                     ]
                 ]
@@ -349,40 +350,40 @@ class ProductHelper
 
         } else {
 
-            $json = [
-                "@context" => "http://schema.org/",
-                "@type" => "Product",
-                "name" => $model->getFrontendName(),
-                "image" => self::getJsonImages(0, $model),
-                "description" => $descript,
-                "mpn" => $model->getMPN(),
+            $json = array(
+                '@context' => 'http://schema.org/',
+                '@type' => 'Product',
+                'name' => $model->getFrontendName(),
+                'image' => self::getJsonImages(0, $model),
+                'description' => $descript,
+                'mpn' => $model->getMPN(),
                 'upc' => $model->upc,
-                "sku" => $model->productcode,
-                "brand" => [
-                    "@type" => "Thing",
-                    "name" => $brand ? $brand->brand : ''
-                ],
-                "offers" => [
-                    "@type" => "Offer",
-                    "priceCurrency" => "USD",
-                    "price" => $model->getFrontendPrice(),
-                    "url" => $model->getAbsoluteUrl(true),
+                'sku' => $model->productcode,
+                'brand' => array(
+                    '@type' => 'Thing',
+                    'name' => $brand ? $brand->brand : ''
+                ),
+                'offers' => [
+                    '@type' => 'Offer',
+                    'priceCurrency' => 'USD',
+                    'price' => $model->getFrontendPrice(),
+                    'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
-                    "itemCondition" => "NewCondition",
-                    "seller" => [
-                        "@type" => "Organization",
-                        "name" => "S3Stores, Inc.",
-                        "url" => "http://www.s3stores.com/",
-                        "sameAs" => [
-                            "https://www.facebook.com/s3stores/",
-                            "https://twitter.com/s3stores/",
-                            "https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg",
-                            "https://ru.pinterest.com/s3storesinc/",
-                            "https://plus.google.com/118379608603424325840"
+                    'itemCondition' => 'NewCondition',
+                    'seller' => [
+                        '@type' => 'Organization',
+                        'name' => 'S3Stores, Inc.',
+                        'url' => 'http://www.s3stores.com/',
+                        'sameAs' => [
+                            'https://www.facebook.com/s3stores/',
+                            'https://twitter.com/s3stores/',
+                            'https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg',
+                            'https://ru.pinterest.com/s3storesinc/',
+                            'https://plus.google.com/118379608603424325840'
                         ],
                     ]
                 ]
-            ];
+            );
         }
 
         return json_encode($json);
