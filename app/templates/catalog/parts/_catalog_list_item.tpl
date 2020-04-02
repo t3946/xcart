@@ -125,7 +125,7 @@
                         <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice()}"{/if} var-price>{$site_currency->getCurrencyFormat($item->getFrontendPrice())}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {if !$schema_off}
                             {if !$item->isOutOfStockFrontend() && $item->isOutOfStock()}
-                                <link itemprop="availability" href="http://schema.org/PreOrder" />
+                                <link itemprop="availability" href="http://schema.org/OutOfStock" />
                             {elseif $item->isOutOfStockFrontend()}
                                 <link itemprop="availability" href="http://schema.org/OutOfStock" />
                             {else}

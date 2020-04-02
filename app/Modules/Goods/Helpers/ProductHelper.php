@@ -296,7 +296,7 @@ class ProductHelper
         $json = [];
 
         if ($model->isOutOfStock() && !$model->isOutOfStockFrontend()) {
-            $availability = 'http://schema.org/PreOrder';
+            $availability = 'http://schema.org/OutOfStock';
         } elseif ($model->isOutOfStockFrontend()) {
             $availability = 'http://schema.org/OutOfStock';
         } else {
