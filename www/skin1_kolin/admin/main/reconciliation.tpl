@@ -969,8 +969,7 @@ function func_show_full_info(id){
             });
 
             $('.net_choises__select_all').click(function(){
-                let net_choises = $(this).parent().prev('select');
-                console.log(net_choises, $(this).parent(), $(this).parent().prev('select'));
+                let net_choises = $(this).parent().prev();
                 net_choises.find('option').prop("selected","selected");
                 net_choises.trigger("change");
                 return false;
