@@ -113,7 +113,7 @@ class OrderTransactionsController extends PrototypeAdminController
                 Xcart::app()->event->trigger('payment:authorize', ['model' => $orderModel, 'order_before' => $order_before, 'transaction' => $transaction_model]);
             }
 
-            if (!$count && $send_notification) {
+            if ($send_notification) {
                 func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
             }
 
