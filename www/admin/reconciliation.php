@@ -765,6 +765,10 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
                     }
                 }
 
+                if ($orderModel = OrderModel::objects()->get(['orderid' => $v['orderid']])) {
+                    $v['po_data'] = $orderModel->extra_model->purchase_order;
+                }
+
                 $v["details"] = $details;
                 $v["po_details"] = $po_details;
 

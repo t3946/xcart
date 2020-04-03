@@ -776,9 +776,9 @@ Empty
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 <td width="90" valign="top" align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
 <td width="90" valign="top" align="center"><a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a></td>
-<td width="100" valign="top">{$v.po_details.po_number}</td>
-<td width="*" valign="top">{$v.po_details.company_name}</td>
-<td width="200" valign="top">{$v.po_details.name_of_purchaser}</td>
+<td width="100" valign="top">{$v.po_data.po_number}</td>
+<td width="*" valign="top">{$v.po_data.company_name}</td>
+<td width="200" valign="top">{$v.po_data.name_of_purchaser}</td>
 <td width="90" valign="top" align="center">{$v.current_total_gross|price_format}</td>
 </tr>
 {/foreach}
