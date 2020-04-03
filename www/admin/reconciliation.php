@@ -728,7 +728,10 @@ if ($tab === 'unreconciled' || $tab === 'reconciled' || $tab === 'dropped' || $t
         }
 
 
-        $orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
+        $orders = func_query(<<<SQL
+SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross, $sql_tbl[orders].b_company, $sql_tbl[orders].b_firstname FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition
+SQL
+);
 
         if (!empty($orders) && $tab == "receivables") {
 
