@@ -893,6 +893,11 @@ function func_show_full_info(id){
                     <select id="distributor_choises" title="Click to select Dx" style="width:400px" class="select2 big" multiple>
 
                     </select>
+                    <div style="margin-top: 10px;">
+                        <a style="position:relative; left:-170px; text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
+                            Select all
+                        </a>
+                    </div>
                 </td>
             </tr>
             <tr><td>&nbsp;</td></tr>
@@ -964,8 +969,9 @@ function func_show_full_info(id){
             });
 
             $('.net_choises__select_all').click(function(){
-                $('#net_choises > option').prop("selected","selected");
-                $("#net_choises").trigger("change");
+                let net_choises = $(this).parent().prev('select');
+                net_choises.find('option').prop("selected","selected");
+                net_choises.trigger("change");
                 return false;
             });
 
