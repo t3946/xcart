@@ -969,7 +969,7 @@ function func_show_full_info(id){
             });
 
             $('.net_choises__select_all').click(function(){
-                let net_choises = $(this).parent().prev();
+                var net_choises = $(this).parent().sibling('select');
                 net_choises.find('option').prop("selected","selected");
                 net_choises.trigger("change");
                 return false;
