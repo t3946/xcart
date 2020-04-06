@@ -83,9 +83,7 @@ class ProductHelper
     {
         $product_files_dir = Paths::get('www') . '/product_files';
 
-        if (($fileName = file_get_filename_curl($filePath)) &&
-            !$fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf'))
-        {
+        if (!$fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf')) {
             return null;
         }
 
@@ -94,7 +92,11 @@ class ProductHelper
         if (!($productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get())) {
             $client = new \GuzzleHttp\Client(['verify' => false, 'timeout' => 30]);
             try {
-                $newFile = "{$product_files_dir}/{$product_id}/{$fileName}";
+                $path = "{$product_files_dir}/{$product_id}";
+                if (!is_dir($path)) {
+                    func_mkdir($path, 0755);
+                }
+                $newFile = "{$path}/{$fileName}";
                 $res = $client->get($filePath, [
                     'save_to' => $newFile,
                     'http_errors' => false,
