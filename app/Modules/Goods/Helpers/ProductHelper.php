@@ -8,6 +8,7 @@ use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
+use Xcart\App\Helpers\Paths;
 
 class ProductHelper
 {
@@ -79,7 +80,7 @@ class ProductHelper
      */
     public static function uploadProductFile($fileDesc, $filePath, $product_id):? ProductFileModel
     {
-        global $product_files_dir;
+        $product_files_dir = Paths::get('www') . '/product_files';
 
         $fileName = file_get_filename_curl($filePath);
         if (empty($fileName)) {
