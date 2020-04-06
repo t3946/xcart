@@ -72,7 +72,7 @@
             <tr>
                 <td>
                     <iframe width="600" height="450" frameborder="1" style="border:1"
-                            src="https://www.google.com/maps/embed/v1/place?zoom=4&q={$order.s_zipcode},+{$order.s_countryname|replace:' ':'+'}|{$v.m_zipcode},{$v.m_country_name_for_google}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
+                            src="https://www.google.com/maps/embed/v1/place?zoom=4&q={$order.s_zipcode},+{$order.s_address},+{$order.s_city},+{$order.s_countryname|replace:' ':'+'}|{$v.m_zipcode},{$v.m_country_name_for_google}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
                 </td>
 
                 <td valign="top">
