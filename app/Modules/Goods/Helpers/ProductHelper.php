@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use Exception;
 use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -82,25 +83,28 @@ class ProductHelper
     {
         $product_files_dir = Paths::get('www') . '/product_files';
 
-        $fileName = file_get_filename_curl($filePath);
-        if (empty($fileName)) {
-            $fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf');
+        if (($fileName = file_get_filename_curl($filePath)) &&
+            !$fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf'))
+        {
+            return null;
         }
 
-        if (!$fileName) return null;
         $param = ['filename' => $fileName, 'productid' => $product_id];
 
         if (!($productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get())) {
-            $fileData = file_get_contents_curl($filePath);
-            if (!empty($fileData)) {
-                $path = $product_files_dir . '/' . $product_id;
-                if (!is_dir($path)) {
-                    func_mkdir($path, 0755);
-                }
-                if ($fileSize = file_put_contents($path . "/" . $fileName, $fileData)) {
+            $client = new \GuzzleHttp\Client(['verify' => false, 'timeout' => 30]);
+            try {
+                $res = $client->get($filePath, [
+                    'save_to' => $product_files_dir,
+                    'http_errors' => false,
+                ]);
+                if ($res->getStatusCode() === 200 && $fileSize = filesize($product_files_dir)) {
                     $productFileModel = new ProductFileModel($param);
                     $productFileModel->setAttributes(['description' => $fileDesc,'filesize' => $fileSize]);
                 }
+            } catch (Exception $e) {
+                print $e->getMessage();
+                $productFileModel = null;
             }
         }
         return $productFileModel;
