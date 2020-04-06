@@ -94,11 +94,12 @@ class ProductHelper
         if (!($productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get())) {
             $client = new \GuzzleHttp\Client(['verify' => false, 'timeout' => 30]);
             try {
+                $newFile = "{$product_files_dir}/{$product_id}/{$fileName}";
                 $res = $client->get($filePath, [
-                    'save_to' => $product_files_dir,
+                    'save_to' => $newFile,
                     'http_errors' => false,
                 ]);
-                if ($res->getStatusCode() === 200 && $fileSize = filesize($product_files_dir)) {
+                if ($res->getStatusCode() === 200 && $fileSize = filesize($newFile)) {
                     $productFileModel = new ProductFileModel($param);
                     $productFileModel->setAttributes(['description' => $fileDesc,'filesize' => $fileSize]);
                 }
