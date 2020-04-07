@@ -37,6 +37,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
+use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
@@ -1170,8 +1171,8 @@ $smarty->assign("orderid", $orderid);
 
 if ($REQUEST_METHOD == "POST") {
 
-    if ($mode == 'map_incorrect' && !empty($zipcode)) {
-        GroundMap::model(['zipcode' => $zipcode])->_delete();
+    if ($mode === 'map_incorrect' && !empty($zipcode)) {
+        GroundMapModel::objects()->delete(['zipcode' => $zipcode]);
         func_header_location("order.php?orderid=" . $orderid);
     }
     elseif ($mode == "invoice_received") {

@@ -7,7 +7,6 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
-use Modules\Order\Forms\ShippingAddressForm;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -405,5 +404,16 @@ HTML;
             $order->tracking_all_filled = 'N';
         }
         $order->save();
+    }
+
+    public static function fetchMap($zipcode)
+    {
+        $client = new \Goutte\Client(['timeout' => 5]);
+        $url = 'https://www.ups.com/maps/results';
+        $data = ['loc' => 'en_US', 'zip' => $zipcode, 'stype' => 'O'];
+        if (($res = $client->request('POST', $url, $data)) && $mapUrl = $res->filter('#imgMap')->image()->getUri()) {
+            return $mapUrl;
+        }
+        return null;
     }
 }

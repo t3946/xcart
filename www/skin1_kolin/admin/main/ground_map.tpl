@@ -4,38 +4,31 @@
             <li><a href="#maps-tabs-{$k}">{$v.code}</a></li>
         {/foreach}
     </ul>
+{foreach from=$oOrderGroups item=group}
+    {assign var=dx value=$group->manufacturer}
 
-{foreach from=$order_manufacturers item=v key=k}
-    <div id="maps-tabs-{$k}">
+    <div id="maps-tabs-{$group->manufacturerid}">
         <table align="center" width="100%">
             <tr>
-                <td colspan="2" align="center"><h2><B>{$v.manufacturer}</B></h2></td>
+                <td colspan="2" align="center"><h2><B>{$dx->manufacturer}</B></h2></td>
             </tr>
             <tr>
                 <td>
-
                     <table>
                         <tr>
                             <td>
-                                {if $v.map_url ne ""}
-                                    <img src="{$v.map_url}"/>
-                                {else}
-                                    <B>Map not found</B>
-                                {/if}
+                                <img src="/api/upsmap/{$dx->m_zipcode}"/>
                             </td>
                         </tr>
                     </table>
-
                 </td>
-
                 <td valign="top">
                     <table>
-
                         <tr>
                             <td valign="top">
                                 <B>Shipping from</B><br/>
-                                {$v.m_city}, {$v.m_state} {$v.m_zipcode}<br/>
-                                {$v.m_country}
+                                {$dx->m_city}, {$dx->m_state} {$dx->m_zipcode}<br/>
+                                {$dx->m_country}
                                 <br/>
                             </td>
                         </tr>
@@ -52,55 +45,44 @@
                                 <form class="ground_map_form" action="order.php" method="post" name="ground_map_form">
                                     <input type="hidden" name="mode" value="calc_shipping"/>
                                     <input type="hidden" name="orderid" value="{$order.orderid}"/>
-                                    <input type="hidden" name="mid" value="{$k}"/>
+                                    <input type="hidden" name="mid" value="{$dx->manufacturerid}"/>
                                     <input name="get_shipping_charge" type="button" value="Get shipping quote"/>
                                 </form>
-                                <p id="shipping_charge_{$k}"></p>
-                                <form action="order.php" method="post" name="ground_map_incorrect_form">
-                                    <input type="hidden" name="mode" value="map_incorrect"/>
-                                    <input type="hidden" name="orderid" value="{$order.orderid}"/>
-                                    <input type="hidden" name="zipcode" value="{$v.m_zipcode}"/>
-                                    <input type="submit" value='Refresh UPS map'/>
-                                </form>
-
+                                <p id="shipping_charge_{$dx->manufacturerid}"></p>
                             </td>
                         </tr>
-
                     </table>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <iframe width="600" height="450" frameborder="1" style="border:1"
-                            src="https://www.google.com/maps/embed/v1/place?zoom=4&q={$order.s_zipcode},+{$order.s_address},+{$order.s_city},+{$order.s_countryname|replace:' ':'+'}|{$v.m_zipcode},{$v.m_country_name_for_google}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
+                    <iframe width="600" height="450" frameborder="1" style="border:1px"
+                            src="https://www.google.com/maps/embed/v1/place?zoom=4&q={$order.s_zipcode},+{$order.s_address},+{$order.s_city},+{$order.s_countryname|replace:' ':'+'}|{$dx->m_zipcode},{$dx->m_country|replace:" ":"+"}&key=AIzaSyCv9x3eaQ6pmDU6AoffekkTjHOH8QXk7iM"></iframe>
                 </td>
 
                 <td valign="top">
                     <table>
-
                         <tr>
                             <td width="320">
-                                <B>{* Distributor *}{$v.manufacturer}
-                                    time:</B> {$v.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                                <B>{$dx->manufacturer}
+                                    time:</B> {$dx->getDistributorTime()|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                                 <br/>
-                                <B>{* Distributor *}{$v.manufacturer}
-                                    phone:</B> {$v.distributor_phone} {if $v.distributor_phone_ext}<b>
-                                    ext {$v.distributor_phone_ext}</b>{/if}
+                                <B>{$dx->manufacturer} phone:</B> {$dx->getPhone()}
+                                {if $dx->getPhoneExt()}<b> ext {$dx->getPhoneExt()}</b>{/if}
                             </td>
                         </tr>
-
                         <tr>
                             <td>
-                                <div class="call_btn_distr_{if $v.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}">
+                                <div class="call_btn_distr_{if $dx->isGoodTimeToSendEmail()}a{else}d{/if}">
                                     <a target="_blank"
-                                       href="tel:{if $v.distributor_phone_phone_normalized ne ""}{$v.distributor_phone_phone_normalized}{else}{$v.distributor_phone}{/if}">
+                                       href="tel:{$dx->getPhoneNormalized()}">
                                         <div style="width: 219px; height: 44px;"></div>
                                     </a>
                                 </div>
                             </td>
                         </tr>
 
-                        {assign var="key_carrier" value=$order.shipping_groups[$k].tracking.0.carrier_id}
+                        {assign var="key_carrier" value=$order.shipping_groups[$group->manufacturerid].tracking.0.carrier_id}
                         {if $key_carrier ne ""}
                             <tr>
                                 <td>&nbsp;</td>

@@ -319,6 +319,14 @@ class DistributorModel extends Model
         return '';
     }
 
+    public function getPhoneExt(): string
+    {
+        if ($contact = $this->getDefaultContact()) {
+            return $contact->ext ?? '';
+        }
+        return '';
+    }
+
     public function getPhoneNormalized(): string
     {
         return PhoneHelper::getPhoneNormalized($this->getPhone(), $this->m_country);
