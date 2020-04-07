@@ -82,19 +82,18 @@
                             </td>
                         </tr>
 
-                        {assign var="key_carrier" value=$order.shipping_groups[$group->manufacturerid].tracking.0.carrier_id}
-                        {if $key_carrier ne ""}
+                        {if $group->trackings->count()}
                             <tr>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td><B>Shipper phone:</B> {$tracking_links_carrier[$key_carrier].phone}</td>
+                                <td><B>Shipper phone:</B> {$group->trackings[0]->carrier->phone}</td>
                             </tr>
                             <tr>
                                 <td>
 
                                     <div class="call_btn call_btn_shipper">
-                                        <a target="_blank" href="tel:{$tracking_links_carrier[$key_carrier].phone}">
+                                        <a target="_blank" href="tel:{$group->trackings[0]->carrier->phone}">
                                             <div style="width: 219px; height: 44px;"></div>
                                         </a>
                                     </div>
