@@ -17,7 +17,7 @@
                     <table>
                         <tr>
                             <td>
-                                <img width="546" src="/api/upsmap/{$dx->m_zipcode}"/>
+                                <img style="max-width: 600px" src="/api/upsmap/{$dx->m_zipcode}"/>
                             </td>
                         </tr>
                     </table>
