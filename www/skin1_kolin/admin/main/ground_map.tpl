@@ -17,7 +17,7 @@
                     <table>
                         <tr>
                             <td>
-                                <img src="/api/upsmap/{$dx->m_zipcode}"/>
+                                <img width="546" src="/api/upsmap/{$dx->m_zipcode}"/>
                             </td>
                         </tr>
                     </table>
@@ -91,7 +91,6 @@
                             </tr>
                             <tr>
                                 <td>
-
                                     <div class="call_btn call_btn_shipper">
                                         <a target="_blank" href="tel:{$group->trackings[0]->carrier->phone}">
                                             <div style="width: 219px; height: 44px;"></div>
