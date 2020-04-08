@@ -60,10 +60,10 @@
     </td>
     {/if}
     
-    <td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.extra_data.display.price}</td>
+    <td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.ref_price}</td>
     <td align="center">-{$product.ref_qty}</td>
     <td align="center" nowrap="nowrap">
-        {math assign="total" equation="amount*price" amount=$product.ref_qty price=$product.extra_data.display.price}
+        {math assign="total" equation="amount*price" amount=$product.ref_qty price=$product.ref_price}
         ({include file="currency.tpl" value=$total})
     </td>
 </tr>
