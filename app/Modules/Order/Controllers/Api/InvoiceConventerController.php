@@ -7,6 +7,7 @@ use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderModel;
 use Mpdf\Mpdf;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class InvoiceConventerController extends Controller
 {
@@ -51,6 +52,7 @@ class InvoiceConventerController extends Controller
 
             if ($slug == $hash) {
                 echo OrderInvoiceHelper::getInvoiceHtml($order_model, 'mail/invoice.tpl', $mode);
+               Xcart::app()->end();
             }
         }
         $this->redirect(404);
