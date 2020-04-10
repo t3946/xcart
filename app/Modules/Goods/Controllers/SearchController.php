@@ -119,22 +119,22 @@ class SearchController extends AbstractCatalogController
 
         if ($show_empty) {
             echo $this->render('catalog/search_empty.tpl', [
-                'model' => $q,
-                'breadcrumbs' => $this->getBreadcrumbsFromData($q),
+                'model' => $this->q ?? $q,
+                'breadcrumbs' => $this->getBreadcrumbsFromData($this->q ?? $q),
             ]);
             die();
         }
 
         (new SearchStatsModel(
             [
-                'search_phrase' => $this->q,
+                'search_phrase' => $this->q ?? $q,
                 'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
                 'customer_id' => Xcart::app()->request->session->getId(),
                 'hits' => (int) $this->searched,
             ]
         ))->save();
-
-        $this->view_internal("search?q={$this->q}");
+        $q = $this->q ?? $q;
+        $this->view_internal($q);
     }
 
 

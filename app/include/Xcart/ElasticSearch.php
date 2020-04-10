@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use GuzzleHttp\Client;
+
 class ElasticSearch
 {
     private $server;
@@ -49,26 +51,19 @@ class ElasticSearch
     }
 
     function call($path, $data_json = array()){
-        //return [];
 
-        //if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;
 
         $method = $data_json['method'];
         $content = $data_json['content'];
-        $this->data_json = json_encode($content);
-//        echo($this->data_json); die();
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-        $result_json = curl_exec($ch);
-        $this->curl_info = curl_getinfo($ch);
-        curl_close($ch);
-        $result = json_decode($result_json, true);
+
+        $client = new Client(['timeout' => 3]);
+        try {
+            $response = $client->request($method, $url, ['json' => $content]);
+            $result = json_decode($response->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            $result = [];
+        }
 
         if (!empty($result["hits"])) {
             $this->hitsCount = count($result["hits"]["hits"]);
@@ -114,7 +109,7 @@ JSON;
         $query = /** @lang JSON */ <<<JSON
 {
     "query_string": {
-        "analyzer": "snowball",
+        
         "fields": [
              "productname^1.5",
              "productname.title_tag^1.5",
@@ -138,7 +133,7 @@ JSON;
         $query = /** @lang JSON */ <<<JSON
 {
     "multi_match": {
-        "analyzer": "snowball",
+        
         "boost": 0.5,
         "fields": [
             "description.seo_description",
