@@ -119,8 +119,8 @@ class SearchController extends AbstractCatalogController
 
         if ($show_empty) {
             echo $this->render('catalog/search_empty.tpl', [
-                'model' => $this->q,
-                'breadcrumbs' => $this->getBreadcrumbsFromData($this->q),
+                'model' => $q,
+                'breadcrumbs' => $this->getBreadcrumbsFromData($q),
             ]);
             die();
         }
@@ -222,7 +222,7 @@ class SearchController extends AbstractCatalogController
     public function getBreadcrumbsFromData($data)
     {
         $bread = new Breadcrumbs();
-        $bread->add(GoodsModule::t('Search').': '. strip_tags($this->q));
+        $bread->add(GoodsModule::t('Search').': '. strip_tags($data));
 
         return $bread;
     }
