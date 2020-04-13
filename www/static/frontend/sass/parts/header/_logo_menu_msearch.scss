@@ -103,6 +103,23 @@ header {
               font-size: rem-calc(16);
             }
           }
+
+          &.stop-corona {
+            a {
+              color: red;
+
+              &:before {
+                content: '';
+                background: url("../images/stop-corona_sm.png") no-repeat;
+                position:relative;
+                width: rem-calc(46);
+                height: rem-calc(46);
+                top:rem-calc(16);
+                display: inline-block;
+                margin-right: rem-calc(4);
+              }
+            }
+          }
         }
       }
     }

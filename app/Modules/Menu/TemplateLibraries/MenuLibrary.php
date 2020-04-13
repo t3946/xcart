@@ -4,6 +4,8 @@ namespace Modules\Menu\TemplateLibraries;
 
 use Modules\Cart\Components\XCart;
 use Modules\Menu\MenuModule;
+use Modules\Pages\Helpers\PageHelper;
+use Modules\Pages\Models\Page;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
 
@@ -25,8 +27,7 @@ class MenuLibrary extends TemplateLibrary
 
             if (!is_array($params)) {
                 $code = $params;
-            }
-            else {
+            } else {
                 if (!empty($params['code'])) {
                     $code = $params['code'];
                 }
@@ -63,40 +64,30 @@ class MenuLibrary extends TemplateLibrary
 
     public static function getData($code)
     {
+
         switch ($code) {
             case 'main-menu':
-                return [
-                    [
-                        'url' => '/shipping-delivery',
-                        'name' => MenuModule::t('Shipping & Delivery'),
-                        'class' => '',
-                        'items' => [],
-                    ],
-                    [
-                        'url' => '/purchase-orders',
-                        'name' => MenuModule::t('Purchase Orders'),
-                        'class' => '',
-                        'items' => [],
-                    ],
-                    [
-                        'url' => '/about-us',
-                        'name' => MenuModule::t('About Us'),
-                        'class' => '',
-                        'items' => [],
-                    ],
-                    [
-                        'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
-                        'name' => MenuModule::t('Contact Us'),
-                        'class' => '',
-                        'items' => [],
-                    ],
-//                    [
-//                        'url' => '/testimonials',
-//                        'name' => 'Testimonials',
-//                        'class' => '',
-//                        'items' => [],
-//                    ],
-                ];
+                $pages = ['/shipping-delivery', '/purchase-orders', '/about-us'];
+                $site_model = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+                $pages = array_filter(array_map(static function ($p) use($site_model) {
+                    if ($model = PageHelper::getPage($p)) {
+                        return [
+                            'url' => "/{$model->url}",
+                            'name' => $model->name,
+                            'class' => $model->url === 'purchase-orders' && $site_model->code === 'HC' ? 'stop-corona' : '',
+                            'items' => [],
+                        ];
+                    }
+                    return null;
+                }, $pages));
+                $pages = array_merge($pages, [[
+                    'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
+                    'name' => MenuModule::t('Contact Us'),
+                    'class' => '',
+                    'items' => [],
+                ]]);
+                return $pages;
+
             case 'pages-menu':
                 return [
                     [
