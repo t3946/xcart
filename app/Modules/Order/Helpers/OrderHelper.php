@@ -406,13 +406,17 @@ HTML;
         $order->save();
     }
 
-    public static function fetchMap($zipcode)
+    public static function fetchMap($zipcode): ?string
     {
         $client = new \Goutte\Client(['timeout' => 5]);
         $url = 'https://www.ups.com/maps/results';
         $data = ['loc' => 'en_US', 'zip' => $zipcode, 'stype' => 'O'];
-        if (($res = $client->request('POST', $url, $data)) && $mapUrl = $res->filter('#imgMap')->image()->getUri()) {
-            return $mapUrl;
+        if (($res = $client->request('POST', $url, $data)) &&
+            ($mapUrl = $res->filter('#imgMap')) &&
+            $mapUrl->count() &&
+            $image = $mapUrl->image()->getUri())
+        {
+            return $image;
         }
         return null;
     }
