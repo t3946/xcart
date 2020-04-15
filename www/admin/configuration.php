@@ -460,7 +460,7 @@ if (!empty($configuration)) {
 		case 'sns_script_extension':
 			if (empty($sns_extensions)) {
 				unset($configuration[$k]);
-				continue;
+				continue 2;
 			}
 
 			$v['variants'] = "";
@@ -473,7 +473,7 @@ if (!empty($configuration)) {
 			$currs = func_query_hash("SELECT code, name FROM $sql_tbl[currencies]", "code", false, true);
 			if (empty($currs)) {
 				unset($configuration[$k]);
-				continue;
+				continue 2;
 			}
 
 			$v['variants'] = "";

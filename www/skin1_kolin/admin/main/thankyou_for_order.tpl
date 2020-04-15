@@ -6,15 +6,7 @@
         <td></td>
         <td>Storefront:</td>
         <td>
-            <select class="default_storefront" disabled="disabled">
-                <option value="-1">Default</option>
-                {foreach from=$sites item=store}
-                    <option value="{$store->storefrontid}" {if ($site->storefrontid == $store->storefrontid)}selected="selected"{/if}>
-                        {$store->domain}
-                    </option>
-                {/foreach}
-            </select>
-
+            Default template
         </td>
     </tr>
     {foreach from=$global_config item=glob}
