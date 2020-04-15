@@ -11,8 +11,7 @@ class AfterShipController extends Controller
 {
     public function webHook()
     {
-        $request = $this->getRequest();
-        $json = key($request->request->all());
+        $json = file_get_contents('php://input');
         Xcart::app()->logger->debug($json, [], 'afterShip');
         if ($params = json_decode($json, true)) {
             Xcart::app()->logger->debug($params, [], 'afterShip');
