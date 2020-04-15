@@ -2,6 +2,7 @@
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\CsTipsModel;
@@ -21,37 +22,33 @@ if ($storefrontsModels = SiteModel::objects()->all()){
     foreach ($storefrontsModels as $storefrontModel) {
         $defaultDays = GlobalConfigModel::objects()->get(['name' => 'thank_you_days']);
         $configDays = SiteConfigModel::objects()->get(['name' => 'thank_you_days', 'storefrontid' => $storefrontModel->storefrontid]);
-        $thank_you_days = abs(empty($configDays) ? intval($defaultDays->value) : intval($configDays->value));
+        $thank_you_days = abs(empty($configDays) ? (int)$defaultDays->value : (int)$configDays->value);
         $days_to_check = 60 * 60 * 24 * $thank_you_days;
         $diff_time = time() - $days_to_check;
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp($diff_time);
 
         /** @var OrderModel[] $ordersModels */
         $ordersModels = OrderModel::objects()
             ->filter([
-                'tracking_all_filled' => 'Y',
-                'tracking_fill_time__lt' => $diff_time,
+                'groups__dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                'order_type' => 'XCART',
+                'groups__cb_status__in' => [
+                    OrderStatusModel::ORDER_STATUS_COMPLETED,
+                    OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                    OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND],
+                'groups__dc_update_datetime__lt' => $dateTime,
                 'storefrontid' => $storefrontModel->storefrontid
             ])
             ->exclude([
                 new QOr([
-                    'thankyou_for_order_email_sent' => 'Y',
-                    'tracking_fill_time' => 0])
-            ])->all();
+                    'thankyou_for_order_email_sent' => 'Y'])
+            ])->group(['orderid'])->all();
 
 
         if (!empty($ordersModels)) {
             foreach($ordersModels as $orderModel){
-                $send = false;
-                if ($groups = $orderModel->groups){
-                    $send = true;
-                    foreach($groups as $groupModel){
-                        if (!((in_array($groupModel->cb_status, ['P', 'O', 'H'])
-                            && in_array($groupModel->dc_status, ['S', 'L', 'C'])))){
-                            $send = false;
-                            break;
-                        }
-                    }
-                }
+                $send = true;
 
 //                $csTipsModel = new CsTipsModel();
 //
@@ -114,19 +111,13 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;
                         $oMail->body = (empty($configMessage)) ? $defaultMessage->value : $configMessage->value;
                         $oMail->sendEmail();
-                        $oMail->to = 'igor@s3stores.com';
-                        $oMail->sendEmail();
-                        $oMail->to = 'nikolay@s3stores.com';
+                        $oMail->to = 'romann@s3stores.com';
                         $oMail->sendEmail();
 
                         $orderModel->thankyou_for_order_email_sent = 'Y';
                         $orderModel->save();
 
-//                        $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
-//                        $log_text = "This order {$orderModel->orderid} 'thank you' email message";
-//                        func_backprocess_log($log_category, $log_text);
-
-                        $log = "Thank you email sent by system <br />";
+                        $log = 'Thank you email sent by system <br />';
                         func_log_order($orderModel->orderid, 'X', $log);
                     }
                 }
