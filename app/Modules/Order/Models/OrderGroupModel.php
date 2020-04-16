@@ -32,6 +32,7 @@ use Xcart\OrderGroup;
  * @property mixed actual_shipping_gross
  * @property mixed actual_shipping_net
  * @property OrderModel order
+ * @property OrderStatusModel|null dc_status_model
  */
 class OrderGroupModel extends Model
 {

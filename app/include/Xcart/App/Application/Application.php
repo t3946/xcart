@@ -140,7 +140,7 @@ class Application
         return $this->_modules[$name];
     }
 
-    public function getModuleConfig($name):array
+    public function getModuleConfig($name): ?array
     {
         if (array_key_exists($name, $this->_modulesConfig)) {
             return $this->_modulesConfig[$name];
