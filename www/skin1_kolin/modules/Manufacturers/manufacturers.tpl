@@ -35,7 +35,7 @@
                     <tr>
                         <td>
                             {assign var=distributor_time value=$distributorModel->getDistributorTime()}
-                            <B>Distributor time:</B> {$distributor_time->format('d-M-Y H:i')}
+                            <B>Distributor time:</B> {$distributor_time->format('H:i')}
                             <br/>
                             <B>Distributor phone:</B> {$distributorModel->getPhoneNormalized()}
                         </td>

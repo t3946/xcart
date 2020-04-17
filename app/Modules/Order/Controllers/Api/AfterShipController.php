@@ -16,16 +16,12 @@ class AfterShipController extends Controller
     {
         $json = file_get_contents('php://input');
         Xcart::app()->logger->debug($json, [], 'afterShip');
-        if (true || (($params = json_decode($json, true)) &&
+        if (($params = json_decode($json, true)) &&
             isset($params['msg']) &&
             $params['msg']['order_id'] &&
             $params['msg']['tag'] === 'Delivered' &&
             $order = OrderModel::objects()->get(['orderid' => $params['msg']['order_id']])))
         {
-            $params['msg']['tracking_number'] = '1Z7749810352229132';
-            $params['msg']['order_id'] = '115042';
-            $order = OrderModel::objects()->get(['orderid' => $params['msg']['order_id']]);
-
             if ($group = $order->groups->get(['trackings__tracknum' => $params['msg']['tracking_number']])) {
 
                 $current_dc_status_value = $group->dc_status_model->name;
