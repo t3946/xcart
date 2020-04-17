@@ -670,7 +670,7 @@ if ($mode === "add" or !empty($manufacturerid)) {
     }
 
     if ($search_site = \Xcart\App\Main\Xcart::app()->request->get->get('search_site')) {
-        $qs->filter(['d_main_sf__in' => $search_site]);
+        $qs->filter(['sites__storefrontid__in' => $search_site]);
     }
 
     if ($search_vrs = \Xcart\App\Main\Xcart::app()->request->get->get('search_vrs')) {
