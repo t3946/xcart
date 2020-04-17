@@ -20,7 +20,7 @@ class AfterShipController extends Controller
             isset($params['msg']) &&
             $params['msg']['order_id'] &&
             $params['msg']['tag'] === 'Delivered' &&
-            $order = OrderModel::objects()->get(['orderid' => $params['msg']['order_id']])))
+            $order = OrderModel::objects()->get(['orderid' => $params['msg']['order_id']]))
         {
             if ($group = $order->groups->get(['trackings__tracknum' => $params['msg']['tracking_number']])) {
 
