@@ -26,7 +26,7 @@
     $('.select2').select2({
         allowClear: true,
         closeOnSelect: false,
-        placeholder: 'Click to select marketplaces'
+        placeholder: 'Click to select'
     });
     {/literal}
 </script>

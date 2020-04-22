@@ -72,7 +72,7 @@
                 <td align="right"><b>Cardholder's name:</b></td>
                 <td>
                     <input type="text" name="paypal_vt[cardholderl_name]" value="{$customer.b_firstname}"/>
-                    <a href="#help-1" title="{$lng.help_cardholder_text}" class="tooltip">
+                    <a href="#help-1" title="{$lng.help_cardholder_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -81,7 +81,7 @@
                 <td align="right"><b>Card number:</b></td>
                 <td>
                     <input type="text" name="paypal_vt[card_number]" value="" autocomplete="off"  id="paypal_vt_card_number"/>
-                    <a href="#help-2" title="{$lng.help_cardnumber_text}" class="tooltip">
+                    <a href="#help-2" title="{$lng.help_cardnumber_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -91,7 +91,7 @@
                 <td><input type="text" name="paypal_vt[expiration_month]" value="" placeholder="MM" size="2"
                            maxlength="2"/> / <b>20</b><input type="text" name="paypal_vt[expiration_year]" value=""
                                                              placeholder="YY" size="2" maxlength="2"/>
-                    <a href="#help-3" title="{$lng.help_card_expiration_text}" class="tooltip">
+                    <a href="#help-3" title="{$lng.help_card_expiration_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -103,7 +103,7 @@
                 </td>
                 <td>
                     <input type="text" name="paypal_vt[csc]" value="" size="4" maxlength="4" autocomplete="off"/>
-                    <a href="#help-4" title="{$lng.help_card_cvv_text}" class="tooltip">
+                    <a href="#help-4" title="{$lng.help_card_cvv_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -114,7 +114,7 @@
                     <h3 style="color: #000000;">{$lng.lbl_billing_address}</h3>
                 </td>
                 <td>
-                    <a href="#help-5" title="{$lng.help_billing_address_text}" class="tooltip">
+                    <a href="#help-5" title="{$lng.help_billing_address_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -170,7 +170,7 @@
                         <option value="Paypal VT">Paypal VT</option>
                         <option value="BluePay VT">BluePay VT</option>
                     </select>
-                    <a href="#help-5" title="{$lng.help_processor_text}" class="tooltip">
+                    <a href="#help-5" title="{$lng.help_processor_text|htmlspecialchars}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
