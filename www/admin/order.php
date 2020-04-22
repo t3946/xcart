@@ -37,16 +37,21 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
+use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\GroundMapModel;
+use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Goods\Models\OptionValueModel;
+use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\GroundMap;
 use Xcart\Customer;
@@ -650,55 +655,58 @@ if (empty($ticket_resolver_link)) {
 
 if ($REQUEST_METHOD == "POST") {
 
-    if ($mode == "submit_message" && $type == 'empty') {
+    if ($mode === 'submit_message' && $type === 'empty') {
 
         func_log_order($orderid, 'EL', '  ', $login);
     }
 
-    if ($mode == "submit_message" && !empty($notes) && !empty($orderid))
+    if ($mode === 'submit_message' && !empty($notes) && !empty($orderid))
     {
-        $section_name = "main_order_tabs-logs";
-        x_session_save("section_name");
+        $section_name = 'main_order_tabs-logs';
+        x_session_save('section_name');
 
-        $oOrder       = \Xcart\Order::model(['orderid' => $orderid]);
-        $order_prefix = $oOrder->getOrderPrefix();
+        /** @var OrderModel $oOrder */
+        $oOrder = OrderModel::objects()->get(['orderid' => $orderid]);
+        $user = Xcart::app()->user;
 
-        if (empty($subject_line)) {
-            $notes_arr  = explode("\n", $notes);
+        if (!empty($subject_line)) {
+            $first_line = $subject_line;
+        }
+        else {
+            $notes_arr = explode("\n", $notes);
             $first_line = trim($notes_arr[0]);
         }
-        else $first_line = $subject_line;
-        $subj = $order_prefix . $orderid . " note: " . $first_line;
+        $subj = "{$oOrder->getOrderNumber()} note: {$first_line}";
 
         $notes_length = strlen($notes);
 
         if ($notes_length > 260) {
             $log1      = "'Post to OTRS only' at 'Important messages'";
-            $date_sent = date("j-M-Y_H-i-s");
+            $date_sent = date('j-M-Y_H-i-s');
 
             if (empty($ticket_resolver_link)) {
-                $ticket_resolver_link = $oOrder->getField('otrs_ticket');
+                $ticket_resolver_link = $oOrder->otrs_ticket;
             }
 
             if (!empty($ticket_resolver_link)) {
-                $log2 = "Message was posted to <a href='" . $ticket_resolver_link . "' target='_blank' style='color: #1411FF;'>OTRS ticket system</a>";
+                $log2 = "Message was posted to <a href='{$ticket_resolver_link}' target='_blank' style='color: #1411FF;'>OTRS ticket system</a>";
             }
             else {
-                $log2 = "Message was posted to OTRS ticket system";
+                $log2 = 'Message was posted to OTRS ticket system';
             }
 
-            $subj .= " (posted on " . $date_sent . ")";
-            func_log_order($orderid, 'X', $log1, $login);
+            $subj .= " (posted on {$date_sent})";
+            func_log_order($orderid, 'X', $log1, $user->login);
         }
         else {
-            $log2 = "<b>$subject_line</b><br/>" . $notes;
+            $log2 = "<b>$subject_line</b><br/>{$notes}";
         }
 
-        func_log_order($orderid, 'S', $log2, $login);
+        func_log_order($orderid, 'S', $log2, $user->login);
 
-        $body = $notes . "\n\nposted by " . $userfullname . " (" . $login . ")";
-        $from = $userfullname . "<helpdesk@s3stores.com>";
-        $to   = "orders@s3stores.com";
+        $body = "{$notes}\n\nposted by {$userfullname} ({$user->login})";
+        $from = $userfullname . '<helpdesk@s3stores.com>';
+        $to   = 'orders@s3stores.com';
 
         $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
         $oMail->init();
@@ -709,7 +717,28 @@ if ($REQUEST_METHOD == "POST") {
         $oMail->subject = $subj;
         $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
         $oMail->sendEmail();
-        //func_send_simple_mail($to, $subj, $body, $from);
+
+        /** @var SiteModel $site_model */
+        $site_model = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+        $config = $site_model->getGlobalConfig();
+        if (!in_array($user->id, explode(',', $config['order_note_tag_users']))) {
+            if ($config['order_note_tag']) {
+                /** @var AttentionTagModel $model */
+                if ($model = AttentionTagModel::objects()->filter(['status_id' => $config['order_note_tag']])->get()) {
+                    [$link, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $model->status_id, 'orderid' => $orderid]);
+                    $message = "Attention tag added: {$model->status}";
+                    if ($created) {
+                        (new OrderLogModel([
+                            'orderid' => $orderid,
+                            'type' => OrderLogModel::LOG_TYPE_XCART,
+                            'log' => $message,
+                            'login' => Xcart::app()->user->login
+                        ]))->save();
+                    }
+                }
+            }
+        }
+
 
         func_header_location("order.php?orderid=" . $orderid);
     }

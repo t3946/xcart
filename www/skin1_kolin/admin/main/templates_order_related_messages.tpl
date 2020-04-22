@@ -2,39 +2,38 @@
 {$lng.lbl_templates_order_related_messages_top}
 
 <table>
-<tr>
-<td>Templates for communicating to</td>
-<td>
+    <tr>
+        <td>Templates for communicating to</td>
+        <td>
 
-        <script type="text/javascript">
-        <!--
+            <script>
                 var lbl_add = '{$lng.lbl_add|escape}';
                 var lbl_remove_row = '{$lng.lbl_remove_row|escape}';
                 var ImagesDir = '{$ImagesDir}';
                 var row_max_index = {$row_max_index};
-		var str_ca_statuses_options = '{$str_ca_statuses_options}';
-        -->
-        </script>
+                var str_ca_statuses_options = '{$str_ca_statuses_options}';
+            </script>
 
-{include file="main/include_js.tpl" src="main/manage_templates_for_communication.js"}
+            {include file="main/include_js.tpl" src="main/manage_templates_for_communication.js"}
 
-{if $department_arr ne ""}
-<form name="osnotificform" action="configuration.php" method="GET">
-    <input type="hidden" name="option" value="Templates_OrderRelatedMessages">
-    <select name="department" onchange="javascript: document.osnotificform.submit();">
-	<option value="">Please select</option>
-    	{foreach from=$department_arr item=item key=key}
-	<option value="{$key}"{if $department eq $key} selected="selected"{/if}>{$item}</option>
-	{/foreach}
-    </select>
-</form>
-</td>
-<td>
-<a href="javascript: void(0);" onclick="javascript: add_template('{$row_max_index}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
-</td>
-</tr>
+            {if $department_arr ne ""}
+            <form name="osnotificform" action="configuration.php" method="GET">
+                <input type="hidden" name="option" value="Templates_OrderRelatedMessages">
+                <select name="department" onchange="javascript: document.osnotificform.submit();">
+                    <option value="">Please select</option>
+                    {foreach from=$department_arr item=item key=key}
+                        <option value="{$key}"{if $department eq $key} selected="selected"{/if}>{$item}</option>
+                    {/foreach}
+                </select>
+            </form>
+        </td>
+        <td>
+            <a href="javascript: void(0);" onclick="javascript: add_template('{$row_max_index}');"><img
+                        src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/></a>
+        </td>
+    </tr>
 </table>
-{/if}
+            {/if}
 
 <br />
 <br />
@@ -53,10 +52,6 @@ Selected: {$department_arr[$department]}
 	<td width="10"><b>Active</b></td>
 	<td width="4%" align="center"><b>Pos.</b></td>
 	<td width="30%"><b>Email settings</b></td>
-{*
-	<td width="20%"><b>'Send to' email</b></td>
-	<td width="20%"><b>Subject line</b></td>
-*}
 	<td width="*"><b>Message body</b></td>
 	<td width="20"></td>
 </tr>
@@ -136,12 +131,58 @@ Selected: {$department_arr[$department]}
 
 <tr {if $templates_for_communication eq ""}style="display: none;"{/if} id="tr_submit_row">
 	<td colspan="7">
-{*
-		<input type="submit" name="Save" value="Save" />
-*}
 		<INPUT type="button" value="Save" onclick="tinyMCE.triggerSave(); document.osnotificform2.submit();">
 	</td>
 </tr>
 
+
+
 </table>
 </form>
+<form name="tag_settings_form" action="{$xcartApp->router->url('order:order_note_tag_settings')}" method="POST">
+    <input type="hidden" name="option" value="Templates_OrderRelatedMessages_Tags">
+<table width="100%">
+    <tr>
+        <td>Add the following Attention tag when order note is left:</td>
+        <td>
+            <select id="o_status" style="width:230px;" class="select2"  name="order_note_tag">
+                <option></option>
+                {foreach from=$ca_statuses item=item_v key=key_k}
+                    <option {if $global_config.order_note_tag == $item_v.status_id}selected="selected"{/if}value="{$item_v.status_id}">{$item_v.status}</option>
+                {/foreach}
+            </select>
+        </td>
+        <td width="40%"></td>
+    </tr>
+    <tr>
+        <td>Do NOT apply Attention tag when order note is left by:</td>
+        <td>
+            <select style="width:230px;" id="o_users" multiple class="select2" name="order_note_tag_users[]">
+                <option></option>
+                {foreach from=$users item=item_u key=key_k}
+                    <option {if in_array($item_u->id, ','|explode:$global_config.order_note_tag_users)}selected="selected"{/if} value="{$item_u->id}">{$item_u}</option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <button type="submit">Save</button>
+        </td>
+    </tr>
+
+</table>
+</form>
+<script type="text/javascript">
+    {literal}
+    $('#o_status').select2({
+        allowClear: false,
+        placeholder: 'Click to select Attention Tag'
+    });
+    $('#o_users').select2({
+        allowClear: false,
+        closeOnSelect: false,
+        placeholder: 'Click to select Users'
+    });
+    {/literal}
+</script>

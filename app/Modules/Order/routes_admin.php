@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Controllers\Admin\OrderRelatedMessagesController;
 use Modules\Order\Controllers\Api\ReconciliationController;
 
 return [
@@ -52,5 +53,10 @@ return [
         'route' => '/api/payable_orders/prereconcile',
         'target' => [ReconciliationController::class, 'actionPayableOrdersPreReconcile'],
         'name' => 'api:payable_prereconcile'
+    ],
+    [
+        'route' => '/order_note_tag_settings',
+        'target' => [OrderRelatedMessagesController::class, 'actionSetOrderNoteTag'],
+        'name' => 'order_note_tag_settings'
     ],
 ];
