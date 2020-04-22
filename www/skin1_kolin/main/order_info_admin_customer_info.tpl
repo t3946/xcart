@@ -143,6 +143,15 @@
           {else}
               {$customer.phone_ext}
           {/if}
+          {if $oOrder->track_sms}
+              <span style="padding: 2px 8px; color:white; background-color: #eec642; border: 1px solid #e3e4e4">
+                  SMS
+              </span>
+          {else}
+              <span style="padding: 2px 8px; color:white; background-color: #cccccc; border: 1px solid #e3e4e4">
+                  no SMS
+              </span>
+          {/if}
           <br>
           <a target="_blank" href="https://www.google.com/#q={$google_phone}" style="color: #1F08F8;">Google #</a>
           {if in_array($order.fraud_status, array('E', 'R'))}
