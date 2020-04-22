@@ -61,7 +61,7 @@ class ApiTagsController extends BackendController
         {
             foreach ($allowed_logins as $k => $v)
             {
-                if ($v["login"] == $login || $v["login"] == "_ANY_") {
+                if ($v['login'] == $login || $v['login'] === '_ANY_') {
                     $allowed_to_unset_flag = true;
                     break;
                 }
@@ -81,7 +81,7 @@ class ApiTagsController extends BackendController
                 func_log_order($order_id, 'X', $log, $login);
 
                 $this->jsonResponse([
-                    'content' => 'Done.',
+                    'content' => 'Attn tag has been successfully removed!',
                     'type' => 'success',
                 ]);
 

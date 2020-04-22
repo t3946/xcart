@@ -272,7 +272,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                   $select
                                       .on('select2:selecting', function(e){
                                           fncS2selections(e, 'add', function(data, status_id) {
-                                              if (data.type == 'success') {
+                                              if (data.type === 'success') {
                                                   let values = $select.val();
                                                   values.push(status_id);
                                                   $select.val(values);
@@ -283,8 +283,13 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                           return false;
                                       })
                                       .on('select2:unselecting', function(e){
+                                          if (!e.params.args.originalEvent) {
+                                              return false;
+                                          }
+                                          e.params.args.originalEvent.stopPropagation();
+
                                           fncS2selections(e, 'del', function(data, status_id) {
-                                              if (data.type == 'success') {
+                                              if (data.type === 'success') {
                                                   let values = $select.val();
                                                   let index = values.indexOf(status_id);
                                                   if (index > -1) {
