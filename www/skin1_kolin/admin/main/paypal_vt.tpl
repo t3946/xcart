@@ -375,7 +375,10 @@
                             .addClass("tooltip__s3")
                             .appendTo(this);
                     }
-                }
+                },
+                content: function(){
+                    return $(this).attr('title');
+                },
             });
         });
 
