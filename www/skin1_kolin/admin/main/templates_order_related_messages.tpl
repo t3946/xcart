@@ -166,7 +166,7 @@ Selected: {$department_arr[$department]}
         </td>
     </tr>
     <tr>
-        <td align="center">
+        <td colspan="3" align="center">
             <button type="submit">Save</button>
         </td>
     </tr>
