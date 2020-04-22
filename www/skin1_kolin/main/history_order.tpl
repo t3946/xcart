@@ -159,7 +159,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
                  <div>
                      <p><b>Subject line(optional):</b</p>
-                     <input style="width: 100%;" type="text" name="subject_line"/>
+                     <input style="width: 360px;" type="text" name="subject_line"/>
                  </div>
                  <p><b>Message body:</b></p>
                  <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
