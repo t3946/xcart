@@ -111,19 +111,28 @@ function remove_order_manually_row(index, r_id) {
 	</td>
         <td width="10">&nbsp;</td>
         <td width="320">
-          <select name="posted_data[manufacturers][]" multiple="multiple" size="10">
-          {foreach from=$manufacturers item=mnf key=mid}
-                <option value="{$mid}"
-		{if $search_prefilled.manufacturers ne ""}
-		  {foreach from=$search_prefilled.manufacturers item=v key=k}
-			{if $mid eq $v} selected="selected"{/if}
-		  {/foreach}
-		{/if}
-		>{$mnf.manufacturer}</option>
-          {/foreach}
-          </select>
+            <select id="o_dx" name="posted_data[manufacturers][]" multiple="multiple" class="select2">
+                {foreach from=$manufacturers item=mnf key=mid}
+                    <option value="{$mid}"
+                            {if $search_prefilled.manufacturers ne ""}
+                                {foreach from=$search_prefilled.manufacturers item=v key=k}
+                                    {if $mid eq $v} selected="selected"{/if}
+                                {/foreach}
+                            {/if}
+                    >{$mnf.manufacturer}</option>
+                {/foreach}
+            </select>
         </td>
 </tr>
+    <script type="text/javascript">
+        {literal}
+        $('#o_dx').select2({
+            allowClear: true,
+            closeOnSelect: false,
+            placeholder: 'Click to select Dx'
+        });
+        {/literal}
+    </script>
 
 <tr>
 	<td class="FormButton" nowrap="nowrap" align="right">
