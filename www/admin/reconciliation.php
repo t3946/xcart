@@ -518,14 +518,14 @@ if ($REQUEST_METHOD == "POST") {
 
         $_filter_m = ['distributors__manufacturerid__isnull' => false];
 
-        if ($search_data["reconciliation_tab_" . $tab]["select_distributors"] === "from_the_list") {
+
             if (empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
                 $top_message["content"] = "Select distributor(s)";
                 $top_message["type"] = "E";
                 func_header_location("reconciliation.php?tab=" . $tab);
             }
             $_filter_m = ['distributors__manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
-        }
+
 
         $reconcileModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m))->order('id')->all();
 
@@ -822,7 +822,7 @@ SQL
 
         if ($tab === 'reconciled' || $tab === 'unreconciled') {
 
-            if ($search_data['reconciliation_tab_' . $tab]["select_distributors"] === 'from_the_list') {
+
                 if (!empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
                     $tmp_manufacturers_str = implode("','", $search_data["reconciliation_tab_" . $tab]["manufacturers"]);
                     $tmp_manufacturers_str = "'" . $tmp_manufacturers_str . "'";
@@ -830,7 +830,7 @@ SQL
                 } else {
                     $tmp_manufacturers_str = "'0'";
                 }
-            }
+
 
 
             if ($tab === 'unreconciled' && $search_data['reconciliation_tab_' . $tab]['show_unreconciled_invoices_and_memos'] === 'Y') {
@@ -857,11 +857,9 @@ SQL
                     ])
                 ];
 
-                if ($search_data['reconciliation_tab_' . $tab]['select_distributors'] === 'from_the_list'){
                     if ($filter_manufacturers = $search_data['reconciliation_tab_' . $tab]['manufacturers']) {
                         $_order_filter = array_merge($_order_filter, ['manufacturerid__in' => $filter_manufacturers]);
                     }
-                }
 
                 $smarty->assign("unreconciled_orders", $qs->filter($_order_filter)->order(['-invoices__invoice_date', '-memos__memo_date', '-orderid'])->group(['orderid']));
 

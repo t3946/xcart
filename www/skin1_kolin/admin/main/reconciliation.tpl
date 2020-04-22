@@ -107,7 +107,7 @@ function remove_order_manually_row(index, r_id) {
 <table>
 <tr>
         <td class="FormButton" nowrap="nowrap" width="330" align="right">
-<input type="radio" name="posted_data[select_distributors]" value="from_the_list" {if $search_prefilled.select_distributors eq "from_the_list" || $search_prefilled.select_distributors eq ""}checked="checked"{/if} />Select distributors from the list
+            Select distributors from the list
 	</td>
         <td width="10">&nbsp;</td>
         <td width="320">
@@ -134,12 +134,6 @@ function remove_order_manually_row(index, r_id) {
         {/literal}
     </script>
 
-<tr>
-	<td class="FormButton" nowrap="nowrap" align="right">
-<input type="radio" name="posted_data[select_distributors]" value="ALL" {if $search_prefilled.select_distributors eq "ALL"}checked="checked"{/if} />Select ALL distributors
-	</td>
-	<td colspan="2"></td>
-</tr>
 </table>
 <br />
 {/if}
