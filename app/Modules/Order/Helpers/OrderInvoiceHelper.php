@@ -4,15 +4,23 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusNotificationModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
 class OrderInvoiceHelper
 {
-    public static function sendOrderStatusNotification(OrderModel $order, bool $send_copy = true): void
+    public static function sendOrderStatusNotification(OrderModel $order, bool $send_copy = true, $status = null): void
     {
+        if ($status) {
+            $notification = OrderStatusNotificationModel::objects()->get(['code' => $status]);
+            $xcartLabel = 'order-status-changed';
+        } else {
+            $notification = $order->notification;
+            $xcartLabel = 'order-status-init';
+        }
 
-        if ($notification = $order->notification) {
+        if ($notification) {
 
             /** @var SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
@@ -25,10 +33,8 @@ class OrderInvoiceHelper
                     $order->email,
                     str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
                     'mail/invoice.tpl',
-                    ['order' => $order],
-                    [
-                        'from' => $cs_email
-                    ]
+                    ['order' => $order,'notification' => $notification],
+                    ['from' => $cs_email]
                 );
 
                 if ($send_copy) {
@@ -36,21 +42,18 @@ class OrderInvoiceHelper
                         $cs_email,
                         str_replace('{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
                         'mail/invoice.tpl',
-                        [
-                            'order' => $order,
-                            'type' => 'A',
-                        ],
+                        ['order' => $order, 'type' => 'A', 'notification' => $notification],
                         [
                             'from' => [$cs_email => $order->firstname],
                             'reply_to' => [$order->email => $order->firstname],
                             'bcc' => ['romann@s3stores.com' => ''],
                             'headers' => [
-                                'X-Xcart-Label' => 'order-status-init'
+                                'X-Xcart-Label' => $xcartLabel
                             ]
                         ]
                     );
                 }
-            } catch(\Exception $exception){
+            } catch (\Exception $exception) {
                 Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
             }
         }

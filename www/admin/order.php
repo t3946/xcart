@@ -593,7 +593,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "note_is_taken_care_of") {
     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-");
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "alt_items_add" && !empty($alt_items_add)) {
+if ($REQUEST_METHOD === "POST" && $mode === "alt_items_add" && !empty($alt_items_add)) {
 
     $alt_items_add = implode(',', $alt_items_add);
 
@@ -607,11 +607,11 @@ if ($REQUEST_METHOD == "POST" && $mode == "alt_items_add" && !empty($alt_items_a
     func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-alt_items");
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "alt_items_update" && !empty($all_alt_items) && is_array($all_alt_items)) {
+if ($REQUEST_METHOD === "POST" && $mode === "alt_items_update" && !empty($all_alt_items) && is_array($all_alt_items)) {
 
     if (!empty($alt_items_del) && is_array($alt_items_del)) {
         foreach ($alt_items_del as $sku => $v) {
-            if ($v == "Y") {
+            if ($v === "Y") {
                 unset($all_alt_items[$sku]);
             }
         }
@@ -1535,7 +1535,7 @@ if ($mode == 'ref_notify')
 
                         foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product)
                         {
-                            $clean_url_link                                                    = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
+                            $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
                             $order['refund_groups'][$notify_mid]['products'][$pk]['clean_url'] = $clean_url_link;
                         }
 
@@ -1545,13 +1545,13 @@ if ($mode == 'ref_notify')
                         $mail_smarty->assign('manufacturer_code', $manufacturer_code);
                         $mail_smarty->assign('statuses', $statuses);
 
-                        if ($ref_notify_button_clicked == "Update_C2B_status") {
+                        if ($ref_notify_button_clicked === "Update_C2B_status") {
 
                             $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
                             $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
                             func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
                         }
-                        elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification") {
+                        elseif ($ref_notify_button_clicked === "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked === "Send_refund_notification") {
                             $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
                             $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
@@ -1568,10 +1568,9 @@ if ($mode == 'ref_notify')
                             $oMail->body_template = 'mail/refund_notification.tpl';
                             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
                             $oMail->sendEmail();
-                            //func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
                             db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="' . addslashes($ref_groups[$notify_mid]["refund_reason"]) . '"'
-                                     . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
+                                . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
 
                             $top_message = [
                                 'content' => func_get_langvar_by_name('txt_ref_notification_sent'),

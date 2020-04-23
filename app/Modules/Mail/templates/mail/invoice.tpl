@@ -3,7 +3,7 @@
 {block 'message'}
     {if $mode!=='print'}
         <p/>
-        {set $message = $order->notification->email_body}
+        {set $message = $notification->email_body}
         {$message|replace:"{{c-fullname}}":$order->firstname}
     {/if}
 {/block}
