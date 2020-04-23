@@ -103,9 +103,14 @@ $status_types = array(
     'CB' => func_get_langvar_by_name('lbl_cust_bus_payment_status'),
     'DC' => func_get_langvar_by_name('lbl_distr_cust_shipping_status'),
     'BD' => func_get_langvar_by_name('lbl_bus_distr_payment_status'),
-//    'CA'    => 'Currently assigned to',
+    'CA' => 'Currently assigned to',
     'RU' => 'REF TO US status',
     'PO' => 'Check transit status',
+    'PV' => 'Product verification status',
+    'DA' => 'Distributor to Amazon shipping status',
+    'C2' => 'Customer to Amazon payment status',
+    'AB' => 'Amazon to business payment status',
+    'AC' => 'Amazon to customer shipping status',
 );
 
 $smarty->assign('status_types', $status_types);
