@@ -595,14 +595,16 @@ if ($REQUEST_METHOD == "POST" && $mode == "note_is_taken_care_of") {
 
 if ($REQUEST_METHOD == "POST" && $mode == "alt_items_add" && !empty($alt_items_add)) {
 
-    $alt_items = func_query_first_cell("SELECT alt_items FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+    $alt_items_add = implode(',', $alt_items_add);
 
-    if (!empty($alt_items)) {
-        $alt_items_add .= "," . $alt_items;
+    if ($order = OrderModel::objects()->get(['orderid' => $orderid])) {
+        if ($order->alt_items) {
+            $alt_items_add .= ",{$order->alt_items}";
+        }
+        $order->alt_items = $alt_items_add;
+        $order->save();
     }
-
-    db_query("UPDATE $sql_tbl[orders] SET alt_items='$alt_items_add' WHERE orderid='$orderid'");
-    func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-alt_items");
+    func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-alt_items");
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == "alt_items_update" && !empty($all_alt_items) && is_array($all_alt_items)) {

@@ -14,9 +14,10 @@ class InvoiceConventerController extends Controller
     public function convertToPdf()
     {
         $request = $this->getRequest();
+        $orderId = $request->get->get('orderid');
 
         /** @var OrderModel $order_model */
-        if ($order_model = OrderModel::objects()->get(['orderid' => $request->get->get('orderid')])) {
+        if ($orderId && $order_model = OrderModel::objects()->get(['orderid' => $orderId])) {
 
             $slug = $request->get->get('p');
             $mode = $request->get->get('mode');
@@ -42,8 +43,10 @@ class InvoiceConventerController extends Controller
     {
         $request = $this->getRequest();
 
+        $orderId = $request->get->get('orderid');
+
         /** @var OrderModel $order_model */
-        if ($order_model = OrderModel::objects()->get(['orderid' => $request->get->get('orderid')])) {
+        if ($orderId && $order_model = OrderModel::objects()->get(['orderid' => $orderId])) {
 
             $slug = $request->get->get('p');
             $mode = $request->get->get('mode');

@@ -37,6 +37,19 @@
 <form name="alt_items_form" action="order.php?orderid={$order.orderid}&tab=y#main_order_tabs-alt_items" method="POST">
 <input type="hidden" name="orderid" value="{$order.orderid}" />
 <input type="hidden" name="mode" value="alt_items_add" />
-<span style="color: #550000;">SKU list (separated by comma):</span> <input type="text" name="alt_items_add" value="" />
-<input type="submit" name="submit_alt_items" value="Add alt items" />
+  <table >
+    <tr id="alt_items_add_tr">
+      <td id="alt_items_add_box_0"><span style="color: #550000;">SKU:</span>
+        <input type="text" name="alt_items_add[]" value="" />
+      </td>
+      <td>{include file="buttons/multirow_add.tpl" mark="alt_items_add"}</td>
+    </tr>
+    
+    <tr>
+      <td colspan="3">
+        <input type="submit" name="submit_alt_items" value="Add alt items" />
+      </td>
+    </tr>
+  </table>
+
 </form>
