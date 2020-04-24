@@ -203,7 +203,7 @@ gulp.task('backend:jsx', function() {
 });
 
 gulp.task('backend:js', ['backend:jsx'], function() {
-    let pipe = gulp.src(backend.src.js);
+    let pipe = gulp.src(backend.src.js, {allowEmpty: true});
 
     if (backend.config.compress) {
         pipe = pipe.pipe(uglify(backend.config.uglify))
