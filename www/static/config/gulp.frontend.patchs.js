@@ -56,7 +56,7 @@ module.exports = {
         fonts: [
             'frontend/fonts/**/*'
         ],
-        raw: []
+        raw: ['frontend/row/*']
     },
     vendors: {
         bower: {

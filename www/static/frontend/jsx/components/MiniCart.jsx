@@ -1,19 +1,18 @@
 import { h, Component, render } from 'preact';
 import _ from 'lodash';
 import SimpleBar from 'simplebar';
-// import { Provider, connect } from 'preact-redux';
+ import { connect } from 'preact-redux';
 
-export default class MiniCart extends Component
+class MiniCart extends Component
 {
-    constructor(state, props) {
-        super();
-
+    constructor(props, state) {
+        super(props, state);
         this.changes = {};
         this.timers = {};
         this.simplebar = null;
         this.product_list = null;
-
-        this.state = props.store.getState();
+        this.store = props.store;
+        this.state = this.store.getState();
         this.unsubscribe = props.store.subscribe(()=>{
             this.setState(props.store.getState());
         });
@@ -48,7 +47,7 @@ export default class MiniCart extends Component
             this.timers.change = setTimeout(()=>{
                 this.changes[key] = e.target.value;
 
-                this.context.store.dispatch({
+                this.store.dispatch({
                     type:'PUSH',
                     action: 'SET',
                     data: { items: [{ id:item.id, quantity: e.target.value }] },
@@ -143,6 +142,7 @@ export default class MiniCart extends Component
     }
 
     render(props, state) {
+
         return (
         <div className="minicart-items">
             <div className="product-list" ref={(product_list) => { this.product_list = product_list; }}>
@@ -156,3 +156,5 @@ export default class MiniCart extends Component
         </div>);
     }
 }
+
+export default MiniCart;
