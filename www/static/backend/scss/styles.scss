@@ -328,6 +328,11 @@
     .select2-results__option {
         padding: 1px;
 
+        &[aria-selected=true] {
+            background-color: #CCCCCC;
+            pointer-events: none;
+        }
+
         .option-result {
             padding:.5em;
         }
