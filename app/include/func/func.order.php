@@ -3,6 +3,7 @@
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
@@ -3575,12 +3576,22 @@ function func_order_details_translate($order_details, $force = false)
 #
 function func_send_order_status_notification($orderid, $status, $force_send_email = false)
 {
+    /** @var OrderModel $model */
+    $model = OrderModel::objects()->get(['orderid' => $orderid]);
+
+    if (!$model) {
+        return;
+    }
+
+    OrderInvoiceHelper::sendOrderStatusNotification($model, ($_POST['send_email'] === 'Y' || $force_send_email), $status);
+    return;
+
     global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice, $xcart_dir;
 
     $order_data = func_order_data($orderid);
 
     $aorder_notification = func_get_order_notification($status, $order_data);
-    $oOrder              = new Xcart\Order(['orderid' => $orderid]);
+    $oOrder              = $order_data['oOrder'];
     $mail_smarty->assign('oOrder', $oOrder);
     if (!empty($aorder_notification)) {
         foreach ($aorder_notification as $oOrderNotification) {
