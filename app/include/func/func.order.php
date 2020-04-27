@@ -837,7 +837,7 @@ function func_order_data($orderid)
                 $alt_products[$k]                = $alt_product;
                 $alt_products[$k]["orderby"]     = $orderby;
                 $alt_products[$k]["productcode"] = $productcode;
-                $alt_products[$k]["url"]         = "http://" . $all_storefronts[$alt_product["sfid"]]["domain"] . "/" . func_clean_url_get("P", $alt_product["productid"], false);
+                $alt_products[$k]["url"]         = "https://" . $all_storefronts[$alt_product["sfid"]]["domain"] . "/" . func_clean_url_get("P", $alt_product["productid"], false);
             }
         }
 
@@ -2159,9 +2159,9 @@ function func_get_order_manufacturers($orderid)
                     $d_message_body_14 = str_replace("{{signature}}", $signature, $d_message_body_14);
                     $d_message_body_14 = str_replace("{{userfirstname}}", $userfirstname, $d_message_body_14);
                     $d_message_body_14 = str_replace("{{userfullname}}", $userfullname, $d_message_body_14);
-                    $cidev_page_url1 = "http://www.s3stores.com/stock_availability.php";
+                    $cidev_page_url1 = "https://www.s3stores.com/stock_availability.php";
 
-                    $webpagebutton = "<a href='$cidev_page_url1?$cidev_url_variables'><img src='http://www.artistsupplysource.com/skin1_kolin/images/webpage_button.png' alt='Please click here to send us product availability information' /></a>";
+                    $webpagebutton = "<a href='$cidev_page_url1?$cidev_url_variables'><img src='https://www.artistsupplysource.com/skin1_kolin/images/webpage_button.png' alt='Please click here to send us product availability information' /></a>";
                     $d_message_body_14 = str_replace("{{webpagebutton}}", $webpagebutton, $d_message_body_14);
                     $mnfs[$m_id]['d_message_body_14'] = $d_message_body_14;
 
@@ -2217,7 +2217,7 @@ function func_get_order_manufacturers($orderid)
                     $mnfs[$m_id]["d_shipping_options_arr"] = $d_shipping_options_arr;
                     unset($d_shipping_options_arr);
 
-                    $order_products .= '<hr style="width:100%; margin: 5px 0 -5px 0; border: 0 none; border-bottom: 1px solid #999999;">S3 Stores, Inc.<br />Phone: ' . $config["Company"]["company_phone"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br />URL: <a href="http://www.s3stores.com">www.s3stores.com</a>';
+                    $order_products .= '<hr style="width:100%; margin: 5px 0 -5px 0; border: 0 none; border-bottom: 1px solid #999999;">S3 Stores, Inc.<br />Phone: ' . $config["Company"]["company_phone"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br />URL: <a href="https://www.s3stores.com">www.s3stores.com</a>';
                     $mess_body .= '<br />' . $order_products;
 
                     $mess_body = str_replace(['{{signature}}', '{{userfirstname}}', '{{userfullname}}'], [$signature, $userfirstname, $userfullname], $mess_body);
@@ -3579,11 +3579,15 @@ function func_send_order_status_notification($orderid, $status, $force_send_emai
     /** @var OrderModel $model */
     $model = OrderModel::objects()->get(['orderid' => $orderid]);
 
+    if (!($_POST['send_email'] === 'Y' || $force_send_email)) {
+        return;
+    }
+
     if (!$model) {
         return;
     }
 
-    OrderInvoiceHelper::sendOrderStatusNotification($model, ($_POST['send_email'] === 'Y' || $force_send_email), $status);
+    OrderInvoiceHelper::sendOrderStatusNotification($model, true, $status);
     return;
 
     global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice, $xcart_dir;
