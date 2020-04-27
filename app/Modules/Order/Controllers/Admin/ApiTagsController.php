@@ -20,7 +20,7 @@ class ApiTagsController extends BackendController
         {
             foreach ($allowed_logins as $k => $v)
             {
-                if ($v["login"] == $login || $v["login"] == "_ANY_") {
+                if ($v['login'] === $login || $v['login'] === '_ANY_') {
                     $allowed_to_set_flag = true;
                     break;
                 }
@@ -35,7 +35,7 @@ class ApiTagsController extends BackendController
                 OrderTagEventHelper::orderTagEvent($status_id, $order_id);
 
                 $this->jsonResponse([
-                    'content' => 'Done.',
+                    'content' => 'Attention tag has been added!',
                     'type' => 'success',
                 ]);
 
@@ -77,11 +77,11 @@ class ApiTagsController extends BackendController
                 db_query("DELETE FROM xcart_orders_additional_tags WHERE status_id='$status_id' AND orderid='$order_id'");
 
 
-                $log = "'" . $status_name . "' attention tag removed";
+                $log = "'" . $status_name . "' attention tag has been removed";
                 func_log_order($order_id, 'X', $log, $login);
 
                 $this->jsonResponse([
-                    'content' => 'Attn tag has been successfully removed!',
+                    'content' => 'Attn tag has been removed',
                     'type' => 'success',
                 ]);
 
