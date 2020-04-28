@@ -9,7 +9,7 @@
 {/block}
 
 {block 'content'}
-    {add $site = $.getSite}
+    {add $site = $order->site}
     {add $config = $site->getGlobalConfig()}
     {add $site_config  = $site->getConfig()}
     {add $site_currency = $site->getCurrency()}
