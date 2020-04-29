@@ -72,7 +72,7 @@ class ElasticSearch
             return $result;
         }
 
-        return [];
+        return $result;
     }
 
     public function setDisMaxBoost($boost)

@@ -1,5 +1,7 @@
 <?php
 use Modules\Core\Helpers\CoreHelper;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\UpdatedProductModel;
 
 define("CIDEV_CRON_START", "CRON");
 
@@ -486,9 +488,11 @@ if ($body != "") {
 #
 ## Секция категорий
 ###
-$cidev_updated_products = db_query($query = "Select * From xcart_cidev_updated_products where type ='8'  and time_stamp < '$start_time'");
 
-$total_items = db_num_rows($cidev_updated_products);
+
+$cidev_updated_products = UpdatedProductModel::objects()->filter(['type' => 8]);
+
+$total_items = $cidev_updated_products->count();
 
 $updated_ok   = 0;
 $update_fail  = 0;
@@ -497,7 +501,7 @@ $deleted_fail = 0;
 $processed    = 0;
 $data_arr     = [];
 
-while ($record = db_fetch_array($cidev_updated_products)) {
+foreach ($cidev_updated_products as $record) {
 
     $counter++;
     if ($counter % 100 == 0) {
@@ -508,55 +512,37 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         func_flush();
     }
 
-    $categoryid = $record["resourceid"];
+    $categoryid = $record['resourceid'];
 
-    $category_info = func_query_first("Select C.avail, C.storefrontid, C.product_count As p_count, C.description, C.category From xcart_categories C where C.categoryid = '$categoryid'");
+    /** @var CategoryModel $categoryModel */
+    $categoryModel = CategoryModel::objects()->get(['categoryid' => $categoryid]);
 
-    if ($category_info['avail'] !== 'Y' || $category_info['p_count'] <= "0")
-    {
-        foreach ($cidev_storefronts as $k => $v)
-        {
-            $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"]['es_url'], $v["domain"]);
+    $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $categoryModel->site->domain);
 
-            $classElasticSearch->setType('category');
+    $classElasticSearch->setType('category');
 
-            $result = $classElasticSearch->delete($categoryid);
+    $result = $classElasticSearch->delete($categoryid);
 
-        }
-
-        db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
-
-        $deleted_ok++;
-    }
-    else {
-
-        $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"]['es_url'], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
-
-        $classElasticSearch->setType('category');
-
-        $result = $classElasticSearch->delete($categoryid);
-
+    if ($categoryModel->avail === 'Y' || $categoryModel->active_product_count > 0) {
         $info = $classElasticSearch->curl_info;
 
-        $data_arr["category"]         = $category_info["category"];
-        $category_info["description"] = str_replace("/r/n", " ", $category_info["description"]);
-        $category_info["description"] = str_replace("\r\n", " ", $category_info["description"]);
-        $data_arr["description"]      = CoreHelper::stripTags($category_info["description"]);
+        $data_arr = [
+            'category' => $categoryModel->getFrontendName(),
+            'description' => CoreHelper::stripTags(str_replace(['/r/n', "\r\n"], '', $categoryModel->description)),
+        ];
 
         $classElasticSearch->setQueryParam($data_arr);
 
         $result = $classElasticSearch->add($categoryid);
 
-        $info = $classElasticSearch->curl_info;
-
-        if (!in_array($info["http_code"], ["200", "201"])) {
+        if ($result['created'] !== true) {
             $update_fail++;
-        }
-        else {
-            db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
-
+        } else {
+            $record->delete();
             $updated_ok++;
         }
+    } else {
+        $deleted_ok++;
     }
 
     $processed++;
@@ -568,7 +554,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
         $rest_documents_to_index = $total_items - ($updated_ok + $deleted_ok);
 
-        $subj = "ES-robot statistics (Categories)";
+        $subj = 'ES-robot statistics (Categories)';
         $body
               = "
                 Total categories to index: $total_items 
@@ -580,11 +566,10 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 Rest documents to index: $rest_documents_to_index 
                 Working time:  $diff_time_in_mins minutes";
 
-        func_backprocess_log("ElasticSearch updates", $body);
+        func_backprocess_log('ElasticSearch updates', $body);
         break;
     }
 }
-db_free_result($cidev_updated_products);
 
 if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time_per_start_in_minutes"] && $total_items > 0) {
 
