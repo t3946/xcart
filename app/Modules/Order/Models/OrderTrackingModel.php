@@ -72,6 +72,14 @@ class OrderTrackingModel extends Model
         ];
     }
 
+    public function getLink(): string
+    {
+        if ($link = $this->carrier->link) {
+            return str_replace('{{tracknum}}', $this->tracknum, $link);
+        }
+        return '';
+    }
+
     /**
      * @param OrderTrackingModel$owner
      * @param $isNew

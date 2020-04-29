@@ -27,4 +27,9 @@ class TrackingLinksCarrierModel extends Model
             ],
         ];
     }
+
+    public function __toString()
+    {
+        return (string) $this->carrier;
+    }
 }
