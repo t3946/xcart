@@ -65,9 +65,9 @@ class ElasticSearch
             $result = [];
         }
 
-        if (!empty($result["hits"])) {
-            $this->hitsCount = count($result["hits"]["hits"]);
-            $this->hitsTotal = $result["hits"]["total"];
+        if (!empty($result['hits'])) {
+            $this->hitsCount = count($result['hits']['hits']);
+            $this->hitsTotal = $result['hits']['total'];
 
             return $result;
         }
@@ -77,7 +77,7 @@ class ElasticSearch
 
     public function setDisMaxBoost($boost)
     {
-        $this->queryParams["query"]["dis_max"]['boost'] = $boost;
+        $this->queryParams['query']['dis_max']['boost'] = $boost;
     }
 
     public function setQueryParamsDefault($sQuery)
