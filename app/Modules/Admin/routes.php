@@ -1,90 +1,100 @@
 <?php
 
+use Modules\Admin\Controllers\AuthController;
+use Modules\Admin\Controllers\AdminController;
+use Modules\Admin\Controllers\CommonController;
+use Modules\Admin\Controllers\DistributorController;
+
 return [
     [
         'route' => '',
-        'target' => ['\Modules\Admin\Controllers\CommonController', 'index'],
+        'target' => [CommonController::class, 'index'],
         'name' => 'index'
     ],
     [
         'route' => '/list/{:module}/{:admin}/owner/{:id}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'target' => [AdminController::class, 'all'],
         'name' => 'list_owned'
     ],
     [
         'route' => '/suggestion/{:module}/{:admin}/{:entity}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'suggestion'],
+        'target' => [AdminController::class, 'suggestion'],
         'name' => 'suggestion'
     ],
     [
         'route' => '/list/{:module}/{:admin}/{:id}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'target' => [AdminController::class, 'all'],
         'name' => 'list_nested'
     ],
     [
         'route' => '/list/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'all'],
+        'target' => [AdminController::class, 'all'],
         'name' => 'list'
     ],
     [
         'route' => '/create/{:module}/{:admin}/owner/{:id}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'target' => [AdminController::class, 'create'],
         'name' => 'create_owned'
     ],
     [
         'route' => '/create/{:module}/{:admin}/{:id}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'target' => [AdminController::class, 'create'],
         'name' => 'create_nested'
     ],
     [
         'route' => '/create/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'create'],
+        'target' => [AdminController::class, 'create'],
         'name' => 'create'
     ],
     [
         'route' => '/group_action/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'groupAction'],
+        'target' => [AdminController::class, 'groupAction'],
         'name' => 'group_action'
     ],
     [
         'route' => '/sort/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'sort'],
+        'target' => [AdminController::class, 'sort'],
         'name' => 'sort'
     ],
     [
         'route' => '/columns/{:module}/{:admin}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'columns'],
+        'target' => [AdminController::class, 'columns'],
         'name' => 'columns'
     ],
 
     [
         'route' => '/update/{:module}/{:admin}/{:pk}/owner/{:owner}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'update'],
+        'target' => [AdminController::class, 'update'],
         'name' => 'update_owned'
     ],
     [
         'route' => '/update/{:module}/{:admin}/{:pk}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'update'],
+        'target' => [AdminController::class, 'update'],
         'name' => 'update'
     ],
     [
         'route' => '/info/{:module}/{:admin}/{:pk}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'info'],
+        'target' => [AdminController::class, 'info'],
         'name' => 'info'
     ],
     [
         'route' => '/remove/{:module}/{:admin}/{:pk}',
-        'target' => ['\Modules\Admin\Controllers\AdminController', 'remove'],
+        'target' => [AdminController::class, 'remove'],
         'name' => 'remove'
     ],
     [
         'route' => '/login',
-        'target' => ['\Modules\Admin\Controllers\AuthController', 'login'],
+        'target' => [AuthController::class, 'login'],
         'name' => 'login'
     ],
     [
         'route' => '/logout',
-        'target' => ['\Modules\Admin\Controllers\AuthController', 'logout'],
+        'target' => [AuthController::class, 'logout'],
         'name' => 'logout'
+    ],
+    [
+        'route' => '/distributor/{i:mid}/{i:section}',
+        'target' => [DistributorController::class, 'index'],
+        'name' => 'section'
     ],
 ];

@@ -30,4 +30,14 @@ class LanguageModel extends Model
 
         ];
     }
+
+    public static function translate($name, $code = 'US')
+    {
+        return self::objects()->get(['code' => $code, 'name' => $name]);
+    }
+
+    public function __toString()
+    {
+        return (string) $this->value;
+    }
 }
