@@ -2,6 +2,7 @@
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Sites\Models\SiteModel;
 
 define("CIDEV_CRON_START", "CRON");
 
@@ -20,10 +21,9 @@ $cidev_storefronts = \Modules\Sites\Models\SiteModel::objects()->exclude(['code'
 ## 1. Секция обновления продуктов в индексе Elastic
 ###
 
-$cidev_updated_products = db_query($query = "Select * From xcart_cidev_updated_products where (type = 6 or type = 61) and time_stamp < '$start_time'");
+$cidev_updated_products = UpdatedProductModel::objects()->filter(['type__in' => [6, 61]]);
 
-
-$total_items = db_num_rows($cidev_updated_products);
+$total_items = $cidev_updated_products->count();
 
 $updated_ok   = 0;
 $update_fail  = 0;
@@ -31,202 +31,113 @@ $deleted_ok   = 0;
 $deleted_fail = 0;
 $processed    = 0;
 $requests     = 0;
-$body         = "";
+$body         = '';
 
-while ($record = db_fetch_array($cidev_updated_products)) {
+$updated_ok_flag  = false;
+$update_fail_flag = false;
+$deleted_ok_flag  = false;
+$flag61           = false;
+
+
+foreach ($cidev_updated_products as $record) {
     $counter++;
     if ($counter % 100 == 0) {
-        func_flush(".");
+        func_flush('.');
         if ($counter % 5000 == 0) {
             func_flush("<br />\n");
         }
         func_flush();
     }
 
-    $products = func_query("Select PS.sfid, P.*, $sql_tbl[storefronts].domain, $sql_tbl[brands].brand As brand From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid LEFT JOIN $sql_tbl[brands] ON $sql_tbl[brands].brandid = P.brandid where P.productid = '$record[resourceid]'");
-
-    if (!empty($products))
+    if ($product_model = $record->product)
     {
-        $updated_ok_flag  = false;
-        $update_fail_flag = false;
-        $deleted_ok_flag  = false;
-        $flag61           = false;
-
         $storefronts_for_product = [];
-
-        foreach ($products as $k => $product) {
-
-            if (empty($product["domain"])) {
-                $products[$k]["domain"] = "www.artistsupplysource.com";
-            }
-
-            $storefronts_for_product[] = $products[$k]["domain"];
-        }
-
-        foreach ($products as $product)
         {
-            $product_model = \Modules\Goods\Models\ProductModel::objects()->get(['productid' => $product['productid']]);
-            if ($product['forsale'] === 'Y') {
-                if ($record['type'] == '6')
+            if ($product_model->forsale === 'Y') {
+                if (in_array($record->type, ['6', '61'], true))
                 {
-                    $data_arr  = [];
-                    $data_json = "";
-                    $url       = $config["ElasticSearch_options"]["es_url"] . $product["domain"] . "/product/" . $product["productid"];
+                    if ($record->type === '61') {
+                                /*
+                             пройти по списку магазинов отличных от полученных магазинов продукта и выполнить запрос на удаление данных продукта в индексах этих магазинов
 
-                    $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
-                    $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
-
-                    $data_arr = [
-                        'productname' => $product_model->getFrontendName(),
-                        'sku' => $product_model->productcode,
-                        'upc' => $product_model->upc,
-                        'brand' => $product_model->brand->brand,
-                        'description' => CoreHelper::stripTags($product_model->fulldescr),
-                        'description.seo_fulldescr' => CoreHelper::stripTags($product_model->seo_fulldescr),
-                        'productname.seo_productname' => CoreHelper::stripTags($product_model->seo_product_name),
-                        'productname.seo_h2' => CoreHelper::stripTags($product_model->seo_h2),
-                        'productname.title_tag' =>  CoreHelper::stripTags($product_model->title_tag),
-                    ];
-
-                    $data_json = json_encode($data_arr);
-
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $result_json = curl_exec($ch);
-                    $info        = curl_getinfo($ch);
-                    curl_close($ch);
-                    $result = json_decode($result_json, true);
-                    $requests++;
-                }
-                elseif ($record["type"] == "61") {
-                    /*
-                     пройти по списку магазинов отличных от полученных магазинов продукта и выполнить запрос на удаление данных продукта в индексах этих магазинов
-
-                     отправить данные продукта в индексы его магазинов
-                     получить код ответа сервера индекса на каждую отправку
-                    */
-
-                    if (!$flag61) {
-                        foreach ($cidev_storefronts as $k => $v) {
-                            if (!in_array($v["domain"], $storefronts_for_product)) {
-
-                                $data_json = "";
-                                $url       = $config["ElasticSearch_options"]["es_url"] . $v["domain"] . "/product/" . $product["productid"];
-
-                                // (Delete for current prouct at first too)
-                                $ch = curl_init($url);
-                                curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-                                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                $result_json = curl_exec($ch);
-                                curl_close($ch);
+                             отправить данные продукта в индексы его магазинов
+                             получить код ответа сервера индекса на каждую отправку
+                            */
+                        if (!$flag61) {
+                            foreach (SiteModel::objects() as $site) {
+                                $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
+                                $classElasticSearch->setType('product');
+                                $classElasticSearch->delete($product_model->productid);
                                 $requests++;
                             }
+                            $flag61 = true;
                         }
-                        $flag61 = true;
                     }
 
-                    $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
-                    $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
+                    foreach ($product_model->sites as $site) {
+                        $data_arr  = [];
+                        $data_json = '';
+                        $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
+                        $classElasticSearch->setType('product');
+                        $classElasticSearch->delete($product_model->productid);
+                        $requests++;
 
-                    $data_arr = [
-                        'productname' => $product_model->getFrontendName(),
-                        'sku' => $product_model->productcode,
-                        'upc' => $product_model->upc,
-                        'brand' => $product_model->brand->brand,
-                        'description' => CoreHelper::stripTags($product_model->fulldescr),
-                        'description.seo_fulldescr' => CoreHelper::stripTags($product_model->seo_fulldescr),
-                        'productname.seo_productname' => CoreHelper::stripTags($product_model->seo_product_name),
-                        'productname.seo_h2' => CoreHelper::stripTags($product_model->seo_h2),
-                        'productname.title_tag' =>  CoreHelper::stripTags($product_model->title_tag),
-                    ];
-
-                    $data_json = json_encode($data_arr);
-
-                    $url = $config["ElasticSearch_options"]["es_url"] . $product["domain"] . "/product/" . $product["productid"];
-                    $ch  = curl_init($url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $result_json = curl_exec($ch);
-                    $info        = curl_getinfo($ch);
-                    curl_close($ch);
-                    $result = json_decode($result_json, true);
-                    $requests++;
-                } // elseif ($record["type"] == "61")
-
-                if ($info["http_code"] == "200" || $info["http_code"] == "201") {
-                    $updated_ok_flag = true;
+                        $data_arr = [
+                            'productname' => $product_model->getFrontendName(),
+                            'sku' => $product_model->productcode,
+                            'upc' => $product_model->upc,
+                            'brand' => $product_model->brand->brand,
+                            'description' => CoreHelper::stripTags(str_replace(['/r/n', "\r\n"], ' ', $product_model->fulldescr)),
+                            'description.seo_fulldescr' => CoreHelper::stripTags($product_model->seo_fulldescr),
+                            'productname.seo_productname' => CoreHelper::stripTags($product_model->seo_product_name),
+                            'productname.seo_h2' => CoreHelper::stripTags($product_model->seo_h2),
+                            'productname.title_tag' =>  CoreHelper::stripTags($product_model->title_tag),
+                        ];
+                        $classElasticSearch->setQueryParam($data_arr);
+                        $result = $classElasticSearch->add($product_model->productid);
+                        $requests++;
+                    }
                 }
-                else {
+
+                if ($result['created'] === true) {
+                    $updated_ok_flag = true;
+                } else {
                     $update_fail_flag = true;
                 }
             }
-            else { //if ($product["forsale"] == "Y")
+            else {
 
-                foreach ($cidev_storefronts as $k => $v) {
-                    $data_json = "";
-                    $url       = $config["ElasticSearch_options"]["es_url"] . $v["domain"] . "/product/" . $product["productid"];
-
-                    // Delete prouct
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $result_json = curl_exec($ch);
-                    curl_close($ch);
-                    $result = json_decode($result_json, true);
+                foreach ($product_model->sites as $site) {
+                    $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
+                    $classElasticSearch->setType('product');
+                    $classElasticSearch->delete($product_model->productid);
                     $requests++;
                 }
 
-                db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
-
                 $deleted_ok_flag = true;
                 $deleted_ok++;
-            } // else
-
-        } // foreach ($products as $product)
-
+                $record->delete();
+            }
+        }
         if (!$deleted_ok_flag) {
-            if (
-                (!$updated_ok_flag && !$update_fail_flag)
-                || ($update_fail_flag)
-            ) {
+            if ((!$updated_ok_flag && !$update_fail_flag) || ($update_fail_flag)) {
                 $update_fail++;
-                db_query("UPDATE $sql_tbl[cidev_updated_products] SET source = 're-queued' WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
-            }
-            else {
+                $record->source = 're-queued';
+                $record->update(['source' => 're-queued']);
+            } else {
                 $updated_ok++;
-
-                db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+                $record->delete();
             }
-        } // if (!$deleted_ok_flag)
-
-    } // if (!empty($products))
+        }
+    }
     else {
-        foreach ($cidev_storefronts as $k => $v) {
-
-            $data_json = "";
-            $url       = $config["ElasticSearch_options"]["es_url"] . $v["domain"] . "/product/" . $record["resourceid"];
-
-            // (Delete for current prouct at first too)
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result_json = curl_exec($ch);
-            curl_close($ch);
+        foreach (SiteModel::objects() as $site) {
+            $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
+            $classElasticSearch->setType('product');
+            $classElasticSearch->delete($record->resourceid);
             $requests++;
         }
-
-        db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+        $record->delete();
         $deleted_ok++;
     }
 
@@ -255,7 +166,6 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         break;
     }
 }
-db_free_result($cidev_updated_products);
 
 $current_time      = time();
 $diff_time_in_mins = ($current_time - $start_time) / 60;
