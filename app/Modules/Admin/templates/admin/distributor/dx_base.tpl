@@ -97,6 +97,9 @@
             text-decoration: none !important;
             color:red;
         }
+        .dx_form input, .dx_form textarea {
+            width: 100%;
+        }
 
     </style>
     <div align="right">

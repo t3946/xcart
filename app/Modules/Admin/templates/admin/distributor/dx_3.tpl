@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name='General distributor information'}
+    {smarty_admin_block name='Distributor contacts'}
 
     {/smarty_admin_block}
 {/block}
