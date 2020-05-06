@@ -411,29 +411,34 @@ if ($REQUEST_METHOD == "GET")
     }
 }
 
-if ($REQUEST_METHOD == "POST")
+if ($REQUEST_METHOD === "POST")
 {
     $order_tabs_group_tab_number = $_POST["order_tabs_group_tab_number"];
     x_session_save("order_tabs_group_tab_number");
 
-    if ($mode == "order_edit_apply")
+    if ($mode === 'order_edit_apply')
     {
         if (!empty($distributors_to_delete) && is_array($distributors_to_delete)) {
             foreach ($distributors_to_delete as $k => $v)
             {
-                if ($v["delete"] == "Y")
+                if ($v['delete'] === 'Y')
                 {
-                    $shipping_gross    = func_query_first_cell("SELECT shipping_gross FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$k'");
-                    $shipping_cost     = func_query_first_cell("SELECT shipping_cost FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+                    $order = OrderModel::objects()->get(['orderid' => $orderid]);
+                    $group = $order->groups->get(['manufacturerid' => $k]);
+                    $shipping_gross    = $group->shipping_gross;
+                    $shipping_cost     = $order->shipping_cost;
                     $new_shipping_cost = $shipping_cost - $shipping_gross;
 
                     if ($new_shipping_cost < 0) {
                         $new_shipping_cost = 0;
                     }
 
+                    $order->update(['shipping_cost' => $new_shipping_cost]);
 
-                    db_query("UPDATE  $sql_tbl[orders] SET shipping_cost='$new_shipping_cost' WHERE orderid='$orderid'");
-                    db_query("DELETE FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$k'");
+                    $log = "<b>Deleted:</b> {$group->manufacturer->code}";
+                    func_log_order($orderid, 'X', $log, $login);
+
+                    $group->delete();
 
                     unset($groups[$k]);
                     unset($_POST["groups"][$k]);
