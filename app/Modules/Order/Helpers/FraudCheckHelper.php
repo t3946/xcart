@@ -874,15 +874,12 @@ class FraudCheckHelper
         $callerId = '';
         if ($res = self::fetchMellissaPhone($order->phone)) {
             if (($callerId = $res['CallerID'])) {
-                if ($names = explode(' ', $order->firstname)) {
-                    $first = implode(' ', $names);
-                    $names = array_reverse($names);
-                    $second = implode(' ', $names);
-                }
-                $s1 = soundex($callerId);
-                $s2 = soundex($first);
-                $s3 = soundex($second);
-                if (levenshtein($s1, $s2) <= 0 || levenshtein($s1, $s3) <= 0) {
+                $names = array_merge(self::getAllVariations($order->firstname), self::getAllVariations($order->s_firstname), self::getAllVariations($order->b_firstname));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+
+                if (in_array(soundex($callerId), $names, true)) {
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
@@ -897,19 +894,23 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_IS_GOOGLE_EMAIL_1(OrderModel $order, FraudCheckModel $fraud): array
     {
-        ;
         $fraud_score = -1;
         $fraud_result = 'negative';
-        $fullName = '';
         if ($res = self::fetchMellissaEmail($order->email)) {
-            if (($fullName = $res['NameFull']) && soundex($fullName) === soundex($order->firstname)) {
-                $fraud_score = 1;
-                $fraud_result = 'positive';
-                $manual_action = 'Y';
+            if (($fullName = $res['NameFull'])) {
+                $names = array_merge(self::getAllVariations($order->firstname), self::getAllVariations($order->s_firstname), self::getAllVariations($order->b_firstname));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+                if (in_array(soundex($fullName), $names, true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
             }
         }
         return [$fraud_result, $fraud_score, [
-            'NameFull' => $fullName,
+            'NameFull' => $fullName ?? '',
         ], $manual_action ?? 'N'];
 
     }
@@ -930,6 +931,15 @@ class FraudCheckHelper
         }
     }
 
+    private static function getAllVariations($string): array
+    {
+        $array = explode(' ', $string);
+        self::depthPicker($array, "", $collect);
+        return array_filter($collect, static function ($a) {
+            return strpos(trim($a), ' ') !== false;
+        });
+    }
+
     public static function scoreMANUAL_GOOGLE_SHIPPING_1(OrderModel $order, FraudCheckModel $fraud): array
     {
         $fraud_score = -1;
@@ -945,15 +955,10 @@ class FraudCheckHelper
             'zipcode' => $order->s_zipcode,
         ])) {
             if ($fullName = $res['NameFull']) {
-                $partyOwner1NameFullArray = explode(' ', $res['PartyOwner1NameFull'] ?? '');
-                self::depthPicker($partyOwner1NameFullArray, "", $partyOwner1NameFullCollect);
-                $partyOwner1NameFullCollect = array_filter($partyOwner1NameFullCollect, static function($a){return strpos(trim($a), ' ') !== false;});
-                $fullNameArray = explode(' ', $fullName);
-                self::depthPicker($fullNameArray, "", $fullNameArrayCollect);
-                $fullNameArrayCollect = array_filter($fullNameArrayCollect, static function($a){return strpos(trim($a), ' ') !== false;});
-
-                $names = array_merge($fullNameArrayCollect, $partyOwner1NameFullCollect);
-                $names = array_map(static function($a){return soundex($a);}, $names);
+                $names = array_merge(self::getAllVariations($fullName), self::getAllVariations($res['PartyOwner1NameFull'] ?? ''));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
 
                 if (in_array(soundex($order->s_firstname), $names, true)) {
                     $fraud_score = 1;
@@ -992,18 +997,7 @@ class FraudCheckHelper
             'zipcode' => $order->b_zipcode,
         ])) {
             if ($fullName = $res['NameFull']) {
-                $partyOwner1NameFullArray = explode(' ', $res['PartyOwner1NameFull'] ?? '');
-                self::depthPicker($partyOwner1NameFullArray, "", $partyOwner1NameFullCollect);
-                $partyOwner1NameFullCollect = array_filter($partyOwner1NameFullCollect, static function ($a) {
-                    return strpos(trim($a), ' ') !== false;
-                });
-                $fullNameArray = explode(' ', $fullName);
-                self::depthPicker($fullNameArray, "", $fullNameArrayCollect);
-                $fullNameArrayCollect = array_filter($fullNameArrayCollect, static function ($a) {
-                    return strpos(trim($a), ' ') !== false;
-                });
-
-                $names = array_merge($fullNameArrayCollect, $partyOwner1NameFullCollect);
+                $names = array_merge(self::getAllVariations($fullName), self::getAllVariations($res['PartyOwner1NameFull'] ?? ''));
                 $names = array_map(static function ($a) {
                     return soundex($a);
                 }, $names);
