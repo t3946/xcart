@@ -108,7 +108,9 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
                     'fraud_result' => $fraud_result,
                     'additional_info' => $additional_info
                 ]);
-                [$orderFraudCheckModel->fraud_score, $orderFraudCheckModel->bare_fraud_score, $orderFraudCheckModel->fraud_result] = $orderFraudCheckModel->getScore($fraudCheckModel);
+                [$orderFraudCheckModel->fraud_score, $orderFraudCheckModel->bare_fraud_score, $orderFraudCheckModel->fraud_result] =
+                    $orderFraudCheckModel->getScore($fraudCheckModel);
+
                 $overall_fraud_score += $orderFraudCheckModel->fraud_score;
                 $orderFraudCheckModel->save();
 
@@ -190,7 +192,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
 $smarty->assign('orderid', $orderid);
 $smarty->assign('orderModel', $orderModel);
 $smarty->assign('overall_fraud_score', $orderModel->overall_fraud_score);
-$smarty->assign('fraud_checks', FraudCheckModel::objects());
+$smarty->assign('fraud_checks', FraudCheckModel::objects()->order('orderby'));
 $smarty->assign('main', 'fraud_page');
 $smarty->assign('all_processors', PaymentMethodModel::objects()->filter(['acc_proc' => 'Y'])->order(['orderby']));
 
