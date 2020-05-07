@@ -238,7 +238,7 @@ HTML;
     {
         /** @var OrderTransactionModel $oTransaction */
         if ($oTransaction = $this->getFirstTransaction($order)) {
-            return ($oTransaction->payment_method_model->processor->processor_name === 'PayPal');
+            return ($oTransaction->payment_method_model->frontend_processor->processor_name === 'PayPal');
         }
         return false;
     }
