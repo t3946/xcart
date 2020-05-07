@@ -181,11 +181,12 @@ class FraudCheckHelper
             $manual_action = 'N';
             $o_address = self::addressAbbreviationsPrepare(self::correctAddress($order->s_address));
             $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
+            $o_address_replaces = str_replace(' ', '\s?', $o_address);
             if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
                 $oTransaction->transaction_response['address_state'] === $order->s_state &&
                 self::correctAddress($oTransaction->transaction_response['address_city']) === self::correctAddress($order->s_city) &&
                 self::correctAddress($oTransaction->transaction_response['address_zip']) === self::correctAddress($order->s_zipcode) &&
-                preg_match("/{$o_address}/", $p_address, $mm)) {
+                preg_match("/{$o_address_replaces}/", $p_address, $mm)) {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
                 $manual_action = 'Y';
