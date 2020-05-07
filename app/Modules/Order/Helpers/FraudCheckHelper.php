@@ -1115,15 +1115,15 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_IS_ORDER_ITEMS_EASY_TO_SELL(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $fraud_result = 'neutral';
-        $fraud_score = 0;
+        $fraud_result = 'negative';
+        $fraud_score = -1;
         $maxOrderPriceAmount = 0;
         foreach ($order->detail_models as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             if ($hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid])) {
                 switch ($hts = $hardResellModel->getHardToResellStatus()) {
                     case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
-                        $hard[] = 'neutral';
+                        $hard[] = 'negative';
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_YES:
                         $hard[] = 'positive';
