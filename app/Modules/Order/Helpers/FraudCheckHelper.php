@@ -469,7 +469,7 @@ class FraudCheckHelper
         $userinfo_area_code = trim(substr($userinfo_phone, 0, 3));
 
         if ($telephoneModel = TelephoneAreaModel::objects()->get(['area_code' => $userinfo_area_code])) {
-            $areacode_state = $telephoneModel->state_model->code;
+            $areacode_state = $telephoneModel->state_code;
         }
 
         if ($s_state === $b_state && $b_state === $geoip_state && $s_state === $areacode_state) {
