@@ -972,7 +972,8 @@ class FraudCheckHelper
             'NameFull' => $fullName,
             'PhoneNumber' => $res['PhoneNumber'] ?? '',
             'PartyOwner1NameFull' => $res['PartyOwner1NameFull'] ?? '',
-            'AddressVerified' => $addressVerified ? 'Verified' : 'Not verified'
+            'AddressVerified' => $addressVerified ? 'Verified' : 'Not verified',
+            'AddressTypeCode' => $res['AddressTypeCode'] ?? '',
         ], $manual_action ?? 'N'];
     }
 
