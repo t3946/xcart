@@ -27,7 +27,7 @@ class FraudCheckCommand extends Command
                 OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
             ],
             'fraud_status' => FraudStatusModel::STATUS_NOT_YET_STARTED
-        ])->group('orderid') as $order) {
+        ])->group(['orderid']) as $order) {
             $overallFraudScore = 0;
             $new_fraud_status = null;
             $log = '';
