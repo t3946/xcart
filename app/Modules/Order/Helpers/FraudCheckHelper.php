@@ -873,10 +873,20 @@ class FraudCheckHelper
         $fraud_result = 'negative';
         $callerId = '';
         if ($res = self::fetchMellissaPhone($order->phone)) {
-            if (($callerId = $res['CallerID']) && soundex($callerId) === soundex($order->firstname)) {
-                $fraud_score = 1;
-                $fraud_result = 'positive';
-                $manual_action = 'Y';
+            if (($callerId = $res['CallerID'])) {
+                if ($names = explode(' ', $order->firstname)) {
+                    $first = implode(' ', $names);
+                    $names = array_reverse($names);
+                    $second = implode(' ', $names);
+                }
+                $s1 = soundex($callerId);
+                $s2 = soundex($first);
+                $s3 = soundex($second);
+                if (levenshtein($s1, $s2) <= 0 || levenshtein($s1, $s3) <= 0) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
             }
         }
         return [$fraud_result, $fraud_score, [

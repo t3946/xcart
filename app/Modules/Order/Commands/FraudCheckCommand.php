@@ -11,6 +11,6 @@ class FraudCheckCommand extends Command
 
     public function handle($arguments = [])
     {
-        
+
     }
 }
