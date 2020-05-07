@@ -10,6 +10,9 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null fraud_result
+ */
 class OrderFraudCheckModel extends Model
 {
     use AutoMetaTrait;
