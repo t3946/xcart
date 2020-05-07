@@ -77,7 +77,7 @@ class FraudCheckCommand extends Command
 
             (new OrderLogModel([
                 'orderid' => $order->orderid,
-                'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                'type' => OrderLogModel::LOG_TYPE_XCART,
                 'login' => '',
                 'log' => $log
             ])
