@@ -78,7 +78,7 @@ class FraudCheckModel extends Model
             [$userinfo_area_code, $google_phone] = PhoneHelper::getGooglePhone($order->phone, $order->phone_ext);
             /** @var OrderTransactionModel $oTransaction */
             $oTransaction = $this->getFirstTransaction($order);
-            if (($customer_ip = $order->getIp()) && $geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
+            if ($geo_litecity_location = $order->getGeoLocation()) {
                 $geoip_state = $geo_litecity_location->region;
                 $geoip_address = $geo_litecity_location;
             }

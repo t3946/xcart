@@ -13,6 +13,7 @@ use Xcart\App\Orm\Model;
  * @property string code
  * @property string country_code
  * @property string base_state_zipcode
+ * @property string timezone
  */
 class StateModel extends Model
 {

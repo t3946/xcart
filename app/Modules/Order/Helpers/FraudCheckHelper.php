@@ -409,7 +409,7 @@ class FraudCheckHelper
         $email_arr = explode('@', $order->email);
         $email_1 = strtoupper($email_arr[0]);
 
-        if (($firstname_arr = explode(' ', FraudCheckHelper::correct($order->firstname))) && $email_1) {
+        if ($email_1 && ($firstname_arr = explode(' ', self::correct($order->firstname)))) {
             foreach ($firstname_arr as $k => $v) {
                 $name = trim($v);
                 if ($name && stripos($email_1, $name) !== false) {
@@ -459,11 +459,11 @@ class FraudCheckHelper
         $fraud_result = 'negative';
         $geoip_state = $areacode_state = '';
 
-        $s_state = FraudCheckHelper::correct($order->s_state);
-        $b_state = FraudCheckHelper::correct($order->b_state);
+        $s_state = self::correct($order->s_state);
+        $b_state = self::correct($order->b_state);
 
-        if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($order->getIp())) {
-            $geoip_state = FraudCheckHelper::correct($geo_litecity_location->region);
+        if ($geo_litecity_location = $order->getGeoLocation()) {
+            $geoip_state = self::correct($geo_litecity_location->region);
         }
 
         $userinfo_phone = str_replace([' ', '(', ')'], '', $order->phone);
@@ -486,11 +486,11 @@ class FraudCheckHelper
         $fraud_score = -1;
         $fraud_result = 'negative';
 
-        $s_city = FraudCheckHelper::correct($order->s_city);
-        $b_city = FraudCheckHelper::correct($order->b_city);
+        $s_city = self::correct($order->s_city);
+        $b_city = self::correct($order->b_city);
 
-        if (($customer_ip = $order->getIp()) && $geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
-            $geoip_city = FraudCheckHelper::correct($geo_litecity_location->city);
+        if ($geo_litecity_location = $order->getGeoLocation()) {
+            $geoip_city = self::correct($geo_litecity_location->city);
         }
 
         $names = array_unique([$s_city, $b_city, $geoip_city ?? null]);
@@ -566,7 +566,7 @@ class FraudCheckHelper
         foreach ($qs as $k => $v) {
             if (($ip = $v->getIp()) && $customer_ip === $ip) {
                 $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
-                $full_address_s = FraudCheckHelper::correct($full_address_s);
+                $full_address_s = self::correct($full_address_s);
                 $names[$v->orderid] = $full_address_s;
                 $full_address_names[$v->orderid] = $v;
             }
@@ -944,6 +944,24 @@ class FraudCheckHelper
                 return $res;
             }
         }
+    }
+
+    public static function fetchMelissaIp($ip)
+    {
+        $client = new Client(['verify' => false, 'timeout' => 10]);
+        $params = [
+            'ip' => $ip,
+            'fmt' => 'json',
+            'id' => self::MELISSA_KEY
+        ];
+        $url = 'https://www.melissa.com/v2/lookups/iplocation/ip/';
+        if ($response = $client->request('GET', $url, ['query' => $params])) {
+            if ($res = json_decode($response->getBody(), true)) {
+                $res = reset($res);
+                return $res;
+            }
+        }
+        return [];
     }
 
     public static function scoreMANUAL_IS_GOOGLE_PHONE_1(OrderModel $order, FraudCheckModel $fraud): array

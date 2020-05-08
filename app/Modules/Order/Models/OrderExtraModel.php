@@ -3,6 +3,7 @@
 namespace Modules\Order\Models;
 
 
+use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -60,6 +61,21 @@ class OrderExtraModel extends Model
     {
         if (preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $this->ip, $match)) {
             return $match[0];
+        }
+        return null;
+    }
+
+    public function getGeoLocation(): ?GeoipLitecityLocationModel
+    {
+        if (preg_match('/(\w+),\s(\w+),\s(\D+),\s(\d+)/', $this->ip, $match)) {
+            return new GeoipLitecityLocationModel(
+                [
+                    'country' => $match[1] ? $match[1] : null,
+                    'region' => $match[2] ? $match[2] : null,
+                    'city' => $match[3] ? $match[3] : null,
+                    'postalCode' => $match[4] ? $match[4] : null,
+                ]
+            );
         }
         return null;
     }

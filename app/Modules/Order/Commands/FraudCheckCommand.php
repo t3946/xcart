@@ -4,6 +4,7 @@
 namespace Modules\Order\Commands;
 
 
+use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
@@ -31,6 +32,13 @@ class FraudCheckCommand extends Command
             $overallFraudScore = 0;
             $new_fraud_status = null;
             $log = '';
+
+            $extraModel = $order->extra_model;
+            if (($ip = $extraModel->getIP()) && $geoModel = GeoIpHelper::getMelissaIpLocation($ip)) {
+                $ip .= " ({$geoModel})";
+                $extraModel->ip = $ip;
+                $extraModel->save();
+            }
 
             /** @var FraudCheckModel $fraud */
             foreach (FraudCheckModel::objects()->order(['orderby']) as $fraud) {

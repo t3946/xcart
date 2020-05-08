@@ -6,6 +6,7 @@ use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -74,6 +75,9 @@ use Xcart\Order;
  * @property bool track_sms
  * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null date
  * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null b_country
+ * @property OrderExtraModel extra_model
+ * @property StateModel billing_state
+ * @property StateModel shipping_state
  */
 class OrderModel extends Model
 {
@@ -524,10 +528,18 @@ class OrderModel extends Model
         return $userinfo_site_arr[1] ?? '';
     }
 
-    public function getIp()
+    public function getIp(): ?string
     {
         if ($extra = $this->extra_model) {
             return $extra->getIP();
+        }
+        return null;
+    }
+
+    public function getGeoLocation(): ?GeoipLitecityLocationModel
+    {
+        if ($extra = $this->extra_model) {
+            return $extra->getGeoLocation();
         }
         return null;
     }
