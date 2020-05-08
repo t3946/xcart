@@ -971,7 +971,13 @@ class FraudCheckHelper
         $callerId = '';
         if ($res = self::fetchMellissaPhone($order->phone)) {
             if (($callerId = $res['CallerID'])) {
-                $names = array_merge(self::getAllVariations($order->firstname), self::getAllVariations($order->s_firstname), self::getAllVariations($order->b_firstname));
+                $names = array_merge(
+                    self::getAllVariations($order->firstname),
+                    self::getAllVariations($order->s_firstname),
+                    self::getAllVariations($order->b_firstname),
+                    self::getAllVariations($order->s_company),
+                    self::getAllVariations($order->b_company),
+                );
                 $names = array_map(static function ($a) {
                     return soundex($a);
                 }, $names);
