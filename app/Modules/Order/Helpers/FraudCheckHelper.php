@@ -1068,19 +1068,11 @@ class FraudCheckHelper
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
-                } else {
-                    if ($nameParts = explode(' ',$order->s_firstname)) {
-                        if (($lastName= trim(end($nameParts))) && strlen($lastName) > 3) {
-                            if ($fNameParts = explode(' ' ,$fullName)) {
-                                $fLastName = trim(end($fNameParts));
-                                if ($lastName === $fLastName) {
-                                    $fraud_score = 1;
-                                    $fraud_result = 'positive';
-                                    $manual_action = 'Y';
-                                }
-                            }
-                        }
-                    }
+                } else if (($lastName = self::getLastPart($order->s_firstname)) && strlen($lastName) > 3 &&
+                    in_array($lastName, [self::getLastPart($fullName), self::getLastPart($res['PartyOwner1NameFull'] ?? '')], true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
                 }
             }
             if ($resultsArr = explode(',', $res['Results'] ?? '')) {
@@ -1101,6 +1093,14 @@ class FraudCheckHelper
             'AddressTypeCode' => $res['AddressTypeCode'] ?? '',
             'Commercial_Mail_Receiving_Agency' => $addressCMRA,
         ], $manual_action ?? 'N'];
+    }
+
+    private static function getLastPart($str)
+    {
+        if ($fNameParts = explode(' ' , $str)) {
+            $fLastName = trim(end($fNameParts));
+        }
+        return $fLastName ?? '';
     }
 
     public static function scoreMANUAL_GOOGLE_BILLING_1(OrderModel $order, FraudCheckModel $fraud): array
@@ -1128,19 +1128,11 @@ class FraudCheckHelper
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
-                } else {
-                    if ($nameParts = explode(' ',$order->b_firstname)) {
-                        if (($lastName= trim(end($nameParts))) && strlen($lastName) > 3) {
-                            if ($fNameParts = explode(' ' ,$fullName)) {
-                                $fLastName = trim(end($fNameParts));
-                                if ($lastName === $fLastName) {
-                                    $fraud_score = 1;
-                                    $fraud_result = 'positive';
-                                    $manual_action = 'Y';
-                                }
-                            }
-                        }
-                    }
+                } else if (($lastName = self::getLastPart($order->b_firstname)) && strlen($lastName) > 3 &&
+                    in_array($lastName, [self::getLastPart($fullName), self::getLastPart($res['PartyOwner1NameFull'] ?? '')], true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
                 }
             }
             if ($resultsArr = explode(',', $res['Results'] ?? '')) {
