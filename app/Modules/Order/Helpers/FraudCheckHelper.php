@@ -976,7 +976,7 @@ class FraudCheckHelper
                     self::getAllVariations($order->s_firstname),
                     self::getAllVariations($order->b_firstname),
                     self::getAllVariations($order->s_company),
-                    self::getAllVariations($order->b_company),
+                    self::getAllVariations($order->b_company)
                 );
                 $names = array_map(static function ($a) {
                     return soundex($a);
