@@ -94,7 +94,7 @@ class FraudCheckCommand extends Command
             $order->groups->update(['acc_paymentid' => $order->paymentid]);
 
             $order->save();
-            $order->recalculateAccounting();
+            //$order->recalculateAccounting();
         }
     }
 }
