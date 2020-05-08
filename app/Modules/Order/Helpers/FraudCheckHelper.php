@@ -1069,7 +1069,8 @@ class FraudCheckHelper
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
                 } else if (($lastName = self::getLastPart($order->s_firstname)) && strlen($lastName) > 3 &&
-                    in_array($lastName, [self::getLastPart($fullName), self::getLastPart($res['PartyOwner1NameFull'] ?? '')], true)) {
+                    in_array(strtolower($lastName),
+                        [strtolower(self::getLastPart($fullName)), strtolower(self::getLastPart($res['PartyOwner1NameFull'] ?? ''))], true)) {
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
@@ -1129,7 +1130,8 @@ class FraudCheckHelper
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
                 } else if (($lastName = self::getLastPart($order->b_firstname)) && strlen($lastName) > 3 &&
-                    in_array($lastName, [self::getLastPart($fullName), self::getLastPart($res['PartyOwner1NameFull'] ?? '')], true)) {
+                    in_array(strtolower($lastName),
+                        [strtolower(self::getLastPart($fullName)), strtolower(self::getLastPart($res['PartyOwner1NameFull'] ?? ''))], true)) {
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
