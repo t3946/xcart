@@ -986,6 +986,17 @@ class FraudCheckHelper
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
+                } else if (($lastName = self::getLastPart($callerId)) && strlen($lastName) > 3 &&
+                    in_array(strtolower($lastName),
+                        [
+                            strtolower(self::getLastPart($order->firstname)),
+                            strtolower(self::getLastPart($order->s_firstname)),
+                            strtolower(self::getLastPart($order->b_firstname)),
+                        ],
+                        true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
                 }
             }
         }
