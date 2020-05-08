@@ -1136,7 +1136,7 @@ class FraudCheckHelper
                     return soundex($a);
                 }, $names);
 
-                if (in_array(soundex($order->b_firstname), $names, true) || in_array(soundex($order->s_company), $names, true)) {
+                if (in_array(soundex($order->b_firstname), $names, true) || in_array(soundex($order->b_company), $names, true)) {
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
