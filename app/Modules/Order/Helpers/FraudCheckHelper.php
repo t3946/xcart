@@ -1068,6 +1068,19 @@ class FraudCheckHelper
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
+                } else {
+                    if ($nameParts = explode(' ',$order->s_firstname)) {
+                        if (($lastName= trim(end($nameParts))) && strlen($lastName) > 3) {
+                            if ($fNameParts = explode(' ' ,$fullName)) {
+                                $fLastName = trim(end($fNameParts));
+                                if ($lastName === $fLastName) {
+                                    $fraud_score = 1;
+                                    $fraud_result = 'positive';
+                                    $manual_action = 'Y';
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if ($resultsArr = explode(',', $res['Results'] ?? '')) {
@@ -1115,6 +1128,19 @@ class FraudCheckHelper
                     $fraud_score = 1;
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
+                } else {
+                    if ($nameParts = explode(' ',$order->b_firstname)) {
+                        if (($lastName= trim(end($nameParts))) && strlen($lastName) > 3) {
+                            if ($fNameParts = explode(' ' ,$fullName)) {
+                                $fLastName = trim(end($fNameParts));
+                                if ($lastName === $fLastName) {
+                                    $fraud_score = 1;
+                                    $fraud_result = 'positive';
+                                    $manual_action = 'Y';
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if ($resultsArr = explode(',', $res['Results'] ?? '')) {
