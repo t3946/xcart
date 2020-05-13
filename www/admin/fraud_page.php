@@ -88,26 +88,27 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
     }
     $posted_data = Xcart::app()->request->post->get('posted_data');
     if (($mode === 'apply_changes_and_update_fraud_scores' || $mode === 'apply_changes_and_update_fraud_scores_and_change_fraud_check_status') && $posted_data) {
-        /*$manual_action_not_selected = '';
+        $manual_action_not_selected = '';
         $overall_fraud_score = 0;
         foreach ($posted_data as $k => $v) {
             $question_code = strtoupper($v['question_code']);
             $manual_action = $v['manual_action'];
             if ($fraudCheckModel = FraudCheckModel::objects()->filter(['question_code' => $question_code])->limit(1)->get()) {
-                $fraud_score = $fraudCheckModel->getScore($orderModel);
-                [$fraud_result, $bare_fraud_score, $additional_info] = $fraudCheckModel->getMethodResult($orderModel);
-
                 [$orderFraudCheckModel, $is_created] = OrderFraudCheckModel::objects()->getOrNew([
                     'orderid' => $orderid,
                     'question_code' => $question_code
                 ]);
-                $orderFraudCheckModel->setAttributes([
-                    'manual_action' => $manual_action,
-                    'fraud_score' => $fraud_score,
-                    'bare_fraud_score' => $bare_fraud_score,
-                    'fraud_result' => $fraud_result,
-                    'additional_info' => $additional_info
-                ]);
+                if ($fraudCheckModel->auto !== 'Y') {
+                    $fraud_score = $fraudCheckModel->getScore($orderModel);
+                    [$fraud_result, $bare_fraud_score, $additional_info] = $fraudCheckModel->getMethodResult($orderModel);
+                    $orderFraudCheckModel->setAttributes([
+                        'manual_action' => $manual_action,
+                        'fraud_score' => $fraud_score,
+                        'bare_fraud_score' => $bare_fraud_score,
+                        'fraud_result' => $fraud_result,
+                        'additional_info' => $additional_info
+                    ]);
+                }
                 [$orderFraudCheckModel->fraud_score, $orderFraudCheckModel->bare_fraud_score, $orderFraudCheckModel->fraud_result] =
                     $orderFraudCheckModel->getScore($fraudCheckModel);
 
@@ -153,8 +154,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
                 $new_fraud_status = $config['below_threshold_status'];
             }
         }
-        */
-        $current_fraud_status = $orderModel->fraud_status;
+
         $fraud_status = Xcart::app()->request->post->get('fraud_status');
         if ($mode === 'apply_changes_and_update_fraud_scores_and_change_fraud_check_status') {
             $new_fraud_status = $fraud_status;
