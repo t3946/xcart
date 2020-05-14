@@ -22,9 +22,9 @@ class InvoiceConventerController extends Controller
             $slug = $request->get->get('p');
             $mode = $request->get->get('mode');
 
-            $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
+            $hash = $order_model->getOrderHash();
 
-            if ($slug == $hash) {
+            if ($slug === $hash) {
             $string = '<html lang="en">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />';
 
@@ -51,9 +51,9 @@ class InvoiceConventerController extends Controller
             $slug = $request->get->get('p');
             $mode = $request->get->get('mode');
 
-            $hash = OrderHelper::getOrderHash([$order_model->orderid, $order_model->total, $order_model->email]);
+            $hash = $order_model->getOrderHash();
 
-            if ($slug == $hash) {
+            if ($slug === $hash) {
                 echo OrderInvoiceHelper::getInvoiceHtml($order_model, 'mail/invoice.tpl', $mode);
                Xcart::app()->end();
             }

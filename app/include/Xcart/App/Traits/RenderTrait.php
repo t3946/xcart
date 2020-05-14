@@ -7,7 +7,7 @@ trait RenderTrait
 {
     public function renderString($source, array $data = [])
     {
-        return Xcart::app()->template->renderString($source, $this->mergeData($data));
+        return Xcart::app()->template->renderString($source, self::mergeData($data));
     }
 
     protected static function mergeData($data)

@@ -47,7 +47,7 @@ class ReportsModule extends Module
             if (function_exists($agg_func)) {
                 $res = $agg_func($value);
             } else {
-                if ($agg_func == 'array_avg' && is_array($value)) {
+                if ($agg_func === 'array_avg' && is_array($value)) {
                     $res = array_sum($value) / count($value);
                 }
             }

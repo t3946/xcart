@@ -78,6 +78,7 @@ use Xcart\Order;
  * @property OrderExtraModel extra_model
  * @property StateModel billing_state
  * @property StateModel shipping_state
+ * @property SiteModel site
  */
 class OrderModel extends Model
 {
@@ -547,6 +548,11 @@ class OrderModel extends Model
     public function getPhoneNormalized(): string
     {
         return PhoneHelper::getPhoneNormalized($this->phone, $this->b_country);
+    }
+
+    public function getOrderCancelLink()
+    {
+
     }
 
 }

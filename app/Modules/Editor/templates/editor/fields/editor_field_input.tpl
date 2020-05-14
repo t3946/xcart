@@ -14,6 +14,9 @@
         relative_urls: false,
         browser_spellcheck : true,
         inline_boundaries: true,
+        {if ($field->disable_forced_root_block)}
+            forced_root_block: false,
+        {/if}
         image_advtab: true,
         file_browser_callback: function(field_name, url, type, win) {
             window.file_browser_window = win;

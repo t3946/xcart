@@ -627,7 +627,7 @@ class CheckoutController extends FrontendController
 
         if($order = OrderModel::objects()->get(['orderid' => $order_id])) {
 
-            $hash = OrderHelper::getOrderHash([$order->orderid, $order->total, $order->email]);
+            $hash = $order->getOrderHash();
 
             if ($slug !== $hash) {
                 $this->error(404);
