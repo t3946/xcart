@@ -12,6 +12,7 @@
                     <div class="column small-12 medium-9 medium-order-1 align-self-middle">
                         <h1 style="color: white;">{$h1}</h1>
                         <p style="color: white;">{$content}</p>
+                        {if $sendMessage}
                         <p style="color: white;">Would you like to leave us a message regarding your order?</p>
                         <form method="post">
                             <textarea required autocomplete="off" name="message" style="width: 100%; height: 10em;"></textarea>
@@ -23,6 +24,7 @@
                                 </div>
                             </div>
                         </form>
+                        {/if}
                     </div>
                     <div class="column small-12 medium-3 freddy">
                         <img alt="Freddy" src="/static/frontend/dist/images/freddy.png">

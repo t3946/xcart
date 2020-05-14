@@ -59,6 +59,7 @@ class OrderLogHelper
             'orderid' => $order->orderid,
             'type' => OrderLogModel::LOG_TYPE_XCART,
             'log' => $message,
+            'login' => Xcart::app()->user->login
         ]))->save();
 
         $site_model = $order->site;

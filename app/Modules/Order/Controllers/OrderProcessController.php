@@ -6,14 +6,10 @@ namespace Modules\Order\Controllers;
 
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
-use Modules\Order\Models\AttentionTagModel;
-use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
-use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\FrontendController;
-use Xcart\App\Main\Xcart;
 
 class OrderProcessController extends FrontendController
 {
@@ -32,7 +28,7 @@ class OrderProcessController extends FrontendController
                 $order->save();
                 (new OrderLogModel([
                     'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
                     'log' => 'Abandoned: The order has been canceled',
                 ]))->save();
                 OrderInvoiceHelper::sendOrderStatusNotification($order, false);
@@ -57,6 +53,7 @@ class OrderProcessController extends FrontendController
 
                 $this->display('confirmation/confirmation.tpl', [
                     'model' => $order,
+                    'sendMessage' => false,
                     'h1' => "Thank you for your decision to continue with your order # {$order->getOrderNumber()}",
                     'content' => "We'll get back to you shortly.<br/>Have a lovely day!"
                 ]);
