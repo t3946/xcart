@@ -53,7 +53,7 @@ class OrderProcessController extends FrontendController
 
                 $this->display('confirmation/confirmation.tpl', [
                     'model' => $order,
-                    'sendMessage' => false,
+                    'sendMessage' => true,
                     'h1' => "Thank you for your decision to continue with your order # {$order->getOrderNumber()}",
                     'content' => "We'll get back to you shortly.<br/>Have a lovely day!"
                 ]);
