@@ -63,19 +63,7 @@ class OrderLogHelper
         ]))->save();
 
         $site_model = $order->site;
-        if (($config = $site_model->getGlobalConfig()) && $config['order_note_tag'] &&
-            $model = AttentionTagModel::objects()->filter(['status_id' => $config['order_note_tag']])->get()) {
-            [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $model->status_id, 'orderid' => $order->orderid]);
-            $message = "Attention tag added: {$model->status}";
-            if ($created) {
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => $message,
-                    'login' => Xcart::app()->user->login
-                ]))->save();
-            }
-        }
+        $config = $site_model->getGlobalConfig();
 
         try {
             Xcart::app()->mail->raw(
@@ -91,6 +79,20 @@ class OrderLogHelper
             );
         } catch (Exception $exception) {
             Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
+        }
+
+        if ($config && $config['order_note_tag'] &&
+            $model = AttentionTagModel::objects()->filter(['status_id' => $config['order_note_tag']])->get()) {
+            [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $model->status_id, 'orderid' => $order->orderid]);
+            $message = "Attention tag added: {$model->status}";
+            if ($created) {
+                (new OrderLogModel([
+                    'orderid' => $order->orderid,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
+                    'log' => $message,
+                    'login' => Xcart::app()->user->login
+                ]))->save();
+            }
         }
     }
 }
