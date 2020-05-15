@@ -36,6 +36,7 @@
 global $xcart_dir;
 define('USE_TRUSTED_POST_VARIABLES',1);
 define('USE_TRUSTED_SCRIPT_VARS',1);
+
 $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xpc_private_key", "xpc_public_key", 'code_below_thumb',
 		'search_products_box_code', 'search_products_result_code', 'cidev_tracking_code', 'cidev_main_page_code', 'cidev_footer_code',
 		'cidev_keywords', 'cidev_description', 'cidev_header_code', 'cidev_top_header_code', 'cidev_yandex_code_number', 'cidev_ga_code_number',
@@ -52,7 +53,7 @@ $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xp
 		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
 		'secure_data','amazon_verification_make_conclusion_popup_message','retail_trust_message', 'amazon_verification_product_quantity_popup_message','amazon_verification_product_names_popup_message',
 		'amazon_verification_product_images_popup_message', 'w9_message', 'html_into_head', 'thank_you_message_body_amazon', 'dashboard_tabs_teamwork',
-	    'local_phone', 'fax_number', 'customer_service_working_time'];
+	    'local_phone', 'fax_number', 'customer_service_working_time', 'update'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
