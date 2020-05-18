@@ -201,7 +201,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 {if $brand.brandid ne ''}
 {include file="main/language_selector.tpl" script="brands.php?brandid=`$brand.brandid`&"}
 {/if}
-<form action="brands.php" method="post" enctype="multipart/form-data" name="brand" {* onsubmit='javascript: return checkRequired(requiredFields){if $config.SEO.clean_urls_enabled eq "Y"} &amp;&amp;checkCleanUrl(document.brand.clean_url){/if};' *}>
+<form action="brands.php" method="post" enctype="multipart/form-data" name="brand">
 <input type="hidden" name="mode" value="details" />
 <input type="hidden" name="brandid" value="{$brand.brandid}" />
 <input type="hidden" name="page" value="{$page}" />
@@ -222,7 +222,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 <tr>
 	<td width="20%" class="FormButton">{$lng.lbl_brand}:</td>
 	<td><font class="Star">*</font></td>
-	<td width="80%"><input type="text" name="brand" size="50" value="{$brand.brand}" style="width:80%"{$disabled} {* {if $config.SEO.clean_urls_enabled eq "Y"}onchange="javascript: if (this.form.clean_url.value == '') copy_clean_url(this, this.form.clean_url)"{/if} *} /></td>
+	<td width="80%"><input type="text" name="brand" size="50" value="{$brand.brand}" style="width:80%"{$disabled} /></td>
 </tr>
 
 {if $brand.brandid ne ""}
@@ -282,6 +282,14 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
         </td>
 </tr>
 
+    <tr>
+        <td class="FormButton">Lead time (business days):</td>
+        <td>&nbsp;</td>
+        <td>
+            from <input type="text" size="3" name="leadtime_from" value="{$brand.leadtime_from}">
+            to <input type="text" size="3" name="leadtime_to" value="{$brand.leadtime_to}">
+        </td>
+    </tr>
 
 {if $administrate eq "Y"}
 <tr>

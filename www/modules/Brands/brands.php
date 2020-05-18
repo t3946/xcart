@@ -1,39 +1,4 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's brands) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2009 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2009           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
-
-#
-# brands.php, random
-#
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
@@ -41,9 +6,9 @@ x_load('backoffice','image');
 
 $location[] = array(func_get_langvar_by_name("lbl_brands"), "");
 
-$provider_condition = ($single_mode || $current_area == "A"?"":"AND provider='$login'");
+$provider_condition = ($single_mode || $current_area === "A"?"":"AND provider='$login'");
 
-if ($current_area == 'P') {
+if ($current_area === 'P') {
     $provider_condition = '';
 }
 
@@ -54,17 +19,17 @@ function func_brand_is_used($brandid, $provider) {
 	return func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE brandid='$brandid' AND provider!='$provider'");
 }
 
-if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
+if ($REQUEST_METHOD === "POST" || ($mode === "delete_image" && $brandid)) {
 
 
-	if ($mode == "details" && ($image_perms = func_check_image_storage_perms($file_upload_data, "B")) !== true) {
+	if ($mode === "details" && ($image_perms = func_check_image_storage_perms($file_upload_data, "B")) !== true) {
 		# Check permissions
 		$top_message = array(
 			"content" => $image_perms['content'],
 			"type" => "E"
 		);
 
-	} elseif ($mode == "details") {
+	} elseif ($mode === "details") {
 
 		$orderby = intval($orderby);
 
@@ -103,6 +68,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 				"meta_descr" => trim($meta_descr),
 				"disclaimer_text" => trim($disclaimer_text),
 				"descr" => $descr,
+				"leadtime_from" => $leadtime_from,
+				"leadtime_to" => $leadtime_to,
 				"customer_service_name" => $customer_service_name,
 				"customer_service_phone" => $customer_service_phone,
 				"customer_service_email" => $customer_service_email
@@ -220,7 +187,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
         }
 
 	}
-	elseif ($mode == "delete" and !empty($to_delete) && is_array($to_delete)) {
+	elseif ($mode === "delete" and !empty($to_delete) && is_array($to_delete)) {
 	#
 	# Delete selected brands
 	#
@@ -241,13 +208,13 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 			$top_message["content"] = func_get_langvar_by_name("msg_adm_brand_del");
 		}
 	}
-	elseif ($mode == "delete_image" && $brandid) {
+	elseif ($mode === "delete_image" && $brandid) {
 	#
 	# Delete image of selected brand
 	#
 		func_delete_image($brandid, "B");
 	}
-	elseif ($mode == "excluded_marketplace" && $brandid) {
+	elseif ($mode === "excluded_marketplace" && $brandid) {
 		global $xcart_dir;
 		Xcart\External_Marketplaces\DisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
@@ -256,7 +223,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 			$oMarketPlace->addDisabledMarketPlace();
 		}
 	}
-	elseif ($mode == "update" and empty($provider_condition)) {
+	elseif ($mode === "update" and empty($provider_condition)) {
 	#
 	# Update brands list
 	#
@@ -269,7 +236,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 			$top_message["content"] = func_get_langvar_by_name("msg_adm_brands_upd");
 		}
 	} elseif (
-        $mode == 'clean_urls_history'
+        $mode === 'clean_urls_history'
         && $brandid
     ) {
 
@@ -312,7 +279,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 # Process the GET request
 #
 
-if ($mode == "add" or !empty($brandid)) {
+if ($mode === "add" or !empty($brandid)) {
 #
 # Get the brand data and display brand details page
 #
@@ -330,7 +297,7 @@ if ($mode == "add" or !empty($brandid)) {
 			$brand_data["used_by_others"] = func_brand_is_used($brandid, $brand_data["provider"]);
 			$httppre = ($HTTPS) ? 'https://' : 'http://';
 			if (!empty($active_modules['Multiple_Storefronts'])) {
-				if ($current_area == 'C') {
+				if ($current_area === 'C') {
 					$brand_data['customer_url'] .= func_get_http_location_sf($current_storefront) . '/brands.php?brandid=' . $brandid;
 				} else {
 					$sfid = false;
@@ -395,7 +362,7 @@ else {
 	if (!empty($word)) {
 		if (in_array($word, range('a', 'z'))) {
 			$where = " WHERE b.brand LIKE '$word%'";
-		} elseif ($word == 'num') {
+		} elseif ($word === 'num') {
 			$where = " WHERE b.brand REGEXP '^[0-9]+.*'";
 		}
         
@@ -411,7 +378,7 @@ else {
 		$word = 'search=' . $search;
 	}
 
-	if (!empty($active_modules['Multiple_Storefronts']) && $current_area == 'C') {
+	if (!empty($active_modules['Multiple_Storefronts']) && $current_area === 'C') {
         if (empty($where)) {
             $where = " WHERE xcart_brands_sf.sfid = {$current_storefront} AND parent_brand_id ISNULL";
         } else {
@@ -436,7 +403,7 @@ else {
 		#
 		# Get the brands list
 		#
-		if (!empty($active_modules['Multiple_Storefronts']) && $current_area == 'C') {
+		if (!empty($active_modules['Multiple_Storefronts']) && $current_area === 'C') {
 			$brands = func_query("SELECT b.*, IFNULL($sql_tbl[brands_lng].brand, $sql_tbl[brands].brand) as brand,"
                 . " CONCAT($sql_tbl[customers].lastname,', ',$sql_tbl[customers].firstname) as provider_name,"
 				. " IF($sql_tbl[customers].login IS NULL,'','Y') as is_provider"
@@ -468,7 +435,7 @@ else {
 
                 $brands[$k]["used_by_others"] = func_brand_is_used($v["brandid"], $v["provider"]);
 
-                if (substr($v["provider_name"], 0, 2) == ", ") {
+                if (substr($v["provider_name"], 0, 2) === ", ") {
                     $brands[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
                 }
             }
