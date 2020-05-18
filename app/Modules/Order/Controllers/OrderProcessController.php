@@ -17,7 +17,7 @@ class OrderProcessController extends FrontendController
     {
         /** @var OrderModel $order */
         if ($order = OrderModel::objects()->get(['orderid' => $order_id])) {
-            if ($order->getOrderHash() === $slug) {
+            if ($order->getOrderHash() === $slug && $order->cb_status === OrderStatusModel::ORDER_STATUS_UNPAID) {
                 $this->display('confirmation/confirmation.tpl', [
                     'model' => $order,
                     'h1' => "Order # {$order->getOrderNumber()} has been deleted from our system.",
@@ -43,7 +43,7 @@ class OrderProcessController extends FrontendController
     {
         /** @var OrderModel $order */
         if ($order = OrderModel::objects()->get(['orderid' => $order_id])) {
-            if ($order->getOrderHash() === $slug) {
+            if ($order->getOrderHash() === $slug && $order->cb_status === OrderStatusModel::ORDER_STATUS_UNPAID) {
                 if ($this->getRequest()->getIsPost()) {
                     if ($message = $this->getRequest()->post->get('message')) {
                         OrderLogHelper::sendOrderNote($order, $message);
