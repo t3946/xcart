@@ -48,7 +48,7 @@ trait BehaviorTrait
      * @param $name
      * @return FormViewBehavior
      */
-    public function getBehavior($name): FormViewBehavior
+    public function getBehavior($name):? FormViewBehavior
     {
         if (!isset($this->_behaviors[$name])) {
             return null;

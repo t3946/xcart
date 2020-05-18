@@ -1,4 +1,4 @@
-<tr>
+<tr {if $field->isHidden()}style="display: none;"{/if}>
     <td width="30%" class="FormButton">
         {raw $label}
         {if $field->hasHint()}
@@ -10,5 +10,6 @@
         {raw $errors}
     </td>
     <td></td>
+    {raw $ext}
 </tr>
 

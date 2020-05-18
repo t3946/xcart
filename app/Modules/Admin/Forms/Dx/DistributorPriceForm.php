@@ -73,8 +73,17 @@ class DistributorPriceForm extends DistributorForm
                     'applies_to_selected_products' => 'applies to selected products',
                     'applies_to_all_products' => 'applies to all products',
                 ],
+                'html' => ['onchange' => "this.value ? $('#DistributorPriceForm_d_map_prices').closest('tr').show() : $('#DistributorPriceForm_d_map_prices').closest('tr').hide()"],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+            ],
+            'd_map_prices' => [
+                'class' => CharField::class,
+                'label' => 'MAP prices URL',
+                'hint' => 'Hint',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => true
             ],
             'new_map_price_coef_x' => [
                 'class' => CharField::class,

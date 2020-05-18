@@ -561,6 +561,11 @@ abstract class Field implements IValidateField
         return !empty($this->hint);
     }
 
+    public function isHidden()
+    {
+        return $this->hidden && !$this->value;
+    }
+
     public function render($fieldExtension = null)
     {
         return $this->innerRender($this->fieldTemplate, [

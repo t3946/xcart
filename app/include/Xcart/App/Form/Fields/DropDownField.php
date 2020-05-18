@@ -144,13 +144,8 @@ class DropDownField extends Field
                 }
             }
             elseif ($this->getForm() instanceof Form) {
-                if (!is_array($this->value)) {
-                    if ($this->value) {
-                        $selected = [$this->value];
-                    }
-                }
-                else {
-                    $selected = $this->value;
+                if ($selected !== null && !is_array($selected)) {
+                    $selected = [$selected];
                 }
             }
         }

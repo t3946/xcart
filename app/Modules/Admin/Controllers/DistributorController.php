@@ -6,8 +6,10 @@ namespace Modules\Admin\Controllers;
 
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorFrontEndMessagesForm;
+use Modules\Admin\Forms\Dx\DistributorGeneralForm;
 use Modules\Admin\Forms\Dx\DistributorPriceForm;
 use Modules\Admin\Forms\Dx\DistributorQuickLinksForm;
+use Modules\Admin\Forms\Dx\DistributorShipesFrom;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 
@@ -20,7 +22,8 @@ class DistributorController extends BackendController
             1 => [
                 'title' => 'General distributor information',
                 'order_by' => '10',
-                'distributor_section' => '1'
+                'distributor_section' => '1',
+                'form' => DistributorGeneralForm::class
             ],
             9 => [
                 'title' => 'Tax policy',
@@ -73,7 +76,8 @@ class DistributorController extends BackendController
             6 => [
                 'title' => 'Distributor ships from',
                 'order_by' => '60',
-                'distributor_section' => '6'
+                'distributor_section' => '6',
+                'form' => DistributorShipesFrom::class,
             ],
             16 => [
                 'title' => 'Product questions',
@@ -144,7 +148,9 @@ class DistributorController extends BackendController
 
         $form = new $distributor_sections[$section]['form'];
 
-        $form->setAttributes($dx->getAttributes());
+        $form->setAttributes(array_merge($dx->getAttributes(), [
+            'd_sites' => $dx->sites
+        ]));
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,
