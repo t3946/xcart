@@ -33,7 +33,7 @@ class OrderProcessController extends FrontendController
                 ]))->save();
                 OrderInvoiceHelper::sendOrderStatusNotification($order, false);
             } else {
-                $this->redirect(404);
+                $this->error(404);
             }
         }
     }
@@ -61,7 +61,7 @@ class OrderProcessController extends FrontendController
                 OrderLogHelper::sendOrderNote($order, $message);
 
             } else {
-                $this->redirect(404);
+                $this->error(404);
             }
         }
     }
