@@ -1,5 +1,6 @@
 {set $class = ($fill! && $fill) ? 'fill' : '' }
 {set $dx = $model->distributor}
+{set $brand = $model->brand}
 {if !$model->isGroupRoot()}
     {if !$model->isOutOfStockFrontend()}
         {if $model->isFreeShipping()}
@@ -12,6 +13,15 @@
         {/if}
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
+        {elseif $brand->leadtime_from}
+            {if $brand->leadtime_from === $brand->leadtime_to || !$brand->leadtime_to}
+                {set $lbl}{t 'Lead time for this product is %count% business day' 'Lead time for this product is %count% business days' $brand->leadtime_from}{/set}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$lbl}
+            {else}
+                {set $lbl1}{t 'Lead time for this product is'}{/set}
+                {set $lbl2}{t 'business days'}{/set}
+                {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$lbl1 ~~ $brand->leadtime_from~"-"~$brand->leadtime_to ~~ $lbl2}
+            {/if}
         {elseif $dx->dx_leadtime}
             {if $dx->dx_leadtime === $dx->dx_leadtime_to || !$dx->dx_leadtime_to}
                 {set $lbl}{t 'Lead time for this product is %count% business day' 'Lead time for this product is %count% business days' $dx->dx_leadtime}{/set}
