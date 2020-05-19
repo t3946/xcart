@@ -5,18 +5,32 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\LanguageModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 
-class DistributorShipesFrom extends DistributorForm
+class DistributorShippesFromForm extends DistributorForm
 {
+    public function getFieldsets()
+    {
+        return [[
+            'm_address',
+            'm_address_2',
+            'm_city',
+            'm_country',
+            'm_state',
+            'm_zipcode',
+        ]];
+    }
+
     public function getFields()
     {
         return [
             'm_address' => [
                 'class' => CharField::class,
                 'label' => 'Address',
+                'hint' => LanguageModel::translate('help_dx_search_for_sku_url_text') ?? 'help_dx_search_for_sku_url_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' =>'width:200px;'],

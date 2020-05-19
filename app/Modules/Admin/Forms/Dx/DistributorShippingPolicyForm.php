@@ -1,0 +1,194 @@
+<?php
+
+
+namespace Modules\Admin\Forms\Dx;
+
+
+use Modules\Core\Models\LanguageModel;
+use Modules\Shipping\Models\TrackingLinksCarrierModel;
+use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CheckboxField;
+use Xcart\App\Form\Fields\DateField;
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
+
+class DistributorShippingPolicyForm extends DistributorForm
+{
+    public function getFieldsets()
+    {
+        return [
+            [
+                'd_ships_to_within',
+                'distributor_carrier',
+                'dx_leadtime',
+                'amazon_leadtime_to_ship',
+                'amazon_leadtime_for_fba_loads',
+            ],
+            [
+                'distributor_offers_free_shipping',
+            ],
+            [
+                'warehouse_pickups_are_allowed',
+                'd_drop_ship_fee_select',
+                'd_drop_ship_fee_in_us',
+                'd_minimum_order_amount',
+                'd_minimum_order_amount_in_us',
+                'd_for_orders_below_min_order_amount',
+            ],
+            [
+                'update_approximation_shipping_rates',
+                'shipping_rates_last_update_date'
+            ]
+        ];
+    }
+
+    public function getFields()
+    {
+        $dx = $this->getInstance();
+        $currency = $dx->currency;
+        return [
+            'd_ships_to_within' => [
+                'class' => CharField::class,
+                'label' => 'Distributor ships to/within',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
+            ],
+            'distributor_carrier' => [
+                'class' => Select2Field::class,
+                'label' => 'Shipping carriers used by distributor',
+                'placeholder' => 'Click to select shipping carriers',
+                'choices' => static function () {
+                    foreach (TrackingLinksCarrierModel::objects()->order(['orderby']) as $carrier) {
+                        $result[$carrier->pk] = (string)$carrier;
+                    }
+                    return $result ?? [];
+                },
+                'multiple' => true,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_shipping_methods_text') ?? 'help_dx_shipping_methods_text',
+            ],
+            'dx_leadtime' => [
+                'class' => CharField::class,
+                'label' => 'Dx to Cx lead time [business days]',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extend' => 'from',
+                'hint' => LanguageModel::translate('help_dx_to_cx_lead_text') ?? 'help_dx_to_cx_lead_text',
+            ],
+            'amazon_leadtime_to_ship' => [
+                'class' => CharField::class,
+                'label' => 'Amazon to Cx lead time to ship for MFN orders [business days]',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'html' => ['style' => 'width:50px;'],
+                'hint' => LanguageModel::translate('help_amazon_to_cx_lead_text') ?? 'help_amazon_to_cx_lead_text',
+            ],
+            'amazon_leadtime_for_fba_loads' => [
+                'class' => CharField::class,
+                'label' => 'Dx to Amazon lead time (DLT) for FBA loads [days]',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'html' => ['style' => 'width:50px;'],
+                'hint' => LanguageModel::translate('help_dx_to_amazon_lead_text') ?? 'help_dx_to_amazon_lead_text',
+            ],
+            'distributor_offers_free_shipping' => [
+                'class' => DropDownField::class,
+                'label' => 'Distributor offers free shipping',
+                'choices' => [
+                    'never' => 'never',
+                    'on_orders_over' => 'on orders over',
+                ],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_offers_free_text') ?? 'help_dx_offers_free_text',
+            ],
+            'warehouse_pickups_are_allowed' => [
+                'class' => DropDownField::class,
+                'label' => 'Warehouse pickups are allowed?',
+                'choices' => [
+                    'N' => 'No',
+                    'Y' => 'Yes',
+                ],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_warehouse_pickups_text') ?? 'help_dx_warehouse_pickups_text',
+            ],
+            'd_drop_ship_fee_select' => [
+                'class' => DropDownField::class,
+                'label' => 'Drop-ship fee',
+                'choices' => [
+                    '' => 'N/A',
+                    'applies_to_all_orders' => 'applies to all orders',
+                    'applies_to_orders_below_minimum_order_amount_only' => 'applies to orders below minimum order amount only',
+                ],
+                'html' => ['onchange' => "this.value ? $('#DistributorShippingPolicyForm_d_drop_ship_fee_in_us').closest('tr').show() : $('#DistributorShippingPolicyForm_d_drop_ship_fee_in_us').closest('tr').hide()"],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_dropship_fee_text') ?? 'help_dx_dropship_fee_text',
+            ],
+            'd_drop_ship_fee_in_us' => [
+                'class' => CharField::class,
+                'label' => "Drop-ship fee in {$currency->symbol_prefix}{$currency}",
+                'html' => ['style' => 'width:50px;'],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => empty($dx->d_drop_ship_fee_select),
+                'hint' => LanguageModel::translate('help_dx_dropship_fee_price_text') ?? 'help_dx_dropship_fee_price_text',
+            ],
+            'd_minimum_order_amount' => [
+                'class' => DropDownField::class,
+                'label' => 'Minimum order amount',
+                'choices' => [
+                    '' => 'N/A',
+                    'applies_to_all_orders' => 'applies to all orders',
+                ],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_text') ?? 'help_dx_minimum_order_amount_text',
+                'html' => ['onchange' => "this.value ? $('#DistributorShippingPolicyForm_d_minimum_order_amount_in_us, #DistributorShippingPolicyForm_d_for_orders_below_min_order_amount').closest('tr').show() : $('#DistributorShippingPolicyForm_d_minimum_order_amount_in_us, #DistributorShippingPolicyForm_d_for_orders_below_min_order_amount').closest('tr').hide()"],
+            ],
+            'd_minimum_order_amount_in_us' => [
+                'class' => CharField::class,
+                'label' => "Minimum order amount in {$currency->symbol_prefix}{$currency}",
+                'html' => ['style' => 'width:50px;'],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => empty($dx->d_minimum_order_amount),
+                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_price_text') ?? 'help_dx_minimum_order_amount_price_text',
+            ],
+            'd_for_orders_below_min_order_amount' => [
+                'class' => DropDownField::class,
+                'label' => '(For) orders below minimum order amount',
+                'choices' => [
+                    'are_rejected' => 'are rejected',
+                    'drop_ship_fee_is_applied' => 'drop-ship fee is applied',
+                    'dealer_discount_is_reduced' => 'dealer discount is reduced',
+                ],
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => empty($dx->d_minimum_order_amount),
+                'hint' => LanguageModel::translate('help_dx_below_minimum_order_text') ?? 'help_dx_below_minimum_order_text',
+            ],
+            'update_approximation_shipping_rates' => [
+                'class' => CheckboxField::class,
+                'label' => 'Force ASR (approximate shipping rates) update',
+                'hint' => LanguageModel::translate('help_dx_update_approximate_shipping_rates_text') ?? 'help_dx_update_approximate_shipping_rates_text',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'html' => ['style' =>'width:16px;'],
+            ],
+            'shipping_rates_last_update_date' => [
+                'class' => DateField::class,
+                'label' => 'Date and time of the last ASR update',
+                'hint' => LanguageModel::translate('help_dx_date_approximate_shippings_text') ?? 'help_dx_date_approximate_shippings_text',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'html' => ['style' => 'width:150px; border: none;'],
+            ]
+        ];
+    }
+}

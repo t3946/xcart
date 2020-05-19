@@ -26,6 +26,7 @@ class Select2Field extends DropDownField
     public $placeholder = 'Click to select value';
 
     public $ajaxUrl = "";
+    public $editable = false;
 
     public function render($fieldExtension = null)
     {
@@ -92,10 +93,21 @@ class Select2Field extends DropDownField
         }
 
         if ($this->getChoices()) {
-            return['allowClear' => true,
+            return[
+                'allowClear' => true,
                 'placeholder' => Translate::getInstance()->t('form', $this->placeholder),
                 'multiple' => $multiple,
                 'width' => 'resolve',
+                'tags' => $this->editable,
+                'createTag' => new JavaScriptExpression('function (params) {
+                      var term = $.trim(params.term);
+                      if (term === \'\') return null;
+                      return {
+                          id: term,
+                          text: term,
+                          newTag: true
+                      }
+                }'),
             ];
         }
 

@@ -1,6 +1,6 @@
 <tr {if $field->isHidden()}style="display: none;"{/if}>
     <td width="30%" class="FormButton">
-        {raw $label}
+        <b>{raw $label}</b>
         {if $field->hasHint()}
             {raw $hint}
         {/if}

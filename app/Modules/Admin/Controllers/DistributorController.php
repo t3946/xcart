@@ -7,9 +7,11 @@ namespace Modules\Admin\Controllers;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorFrontEndMessagesForm;
 use Modules\Admin\Forms\Dx\DistributorGeneralForm;
+use Modules\Admin\Forms\Dx\DistributorPaymentToDxForm;
 use Modules\Admin\Forms\Dx\DistributorPriceForm;
 use Modules\Admin\Forms\Dx\DistributorQuickLinksForm;
-use Modules\Admin\Forms\Dx\DistributorShipesFrom;
+use Modules\Admin\Forms\Dx\DistributorShippesFromForm;
+use Modules\Admin\Forms\Dx\DistributorShippingPolicyForm;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 
@@ -71,13 +73,14 @@ class DistributorController extends BackendController
             11 => [
                 'title' => 'Payment to distributor arrangement',
                 'order_by' => '120',
-                'distributor_section' => '11'
+                'distributor_section' => '11',
+                'form' => DistributorPaymentToDxForm::class,
             ],
             6 => [
                 'title' => 'Distributor ships from',
                 'order_by' => '60',
                 'distributor_section' => '6',
-                'form' => DistributorShipesFrom::class,
+                'form' => DistributorShippesFromForm::class,
             ],
             16 => [
                 'title' => 'Product questions',
@@ -87,7 +90,8 @@ class DistributorController extends BackendController
             7 => [
                 'title' => 'Distributor shipping policy',
                 'order_by' => '70',
-                'distributor_section' => '7'
+                'distributor_section' => '7',
+                'form' => DistributorShippingPolicyForm::class
             ],
             17 => [
                 'title' => 'Distributor feeds info',
@@ -147,9 +151,11 @@ class DistributorController extends BackendController
         $section = $section ?? 1;
 
         $form = new $distributor_sections[$section]['form'];
+        $form->setInstance($dx);
 
         $form->setAttributes(array_merge($dx->getAttributes(), [
-            'd_sites' => $dx->sites
+            'd_sites' => $dx->sites,
+            'distributor_carrier' => $dx->carriers
         ]));
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [

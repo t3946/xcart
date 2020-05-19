@@ -4,9 +4,9 @@
 namespace Modules\Admin\Forms\Dx;
 
 
-use Xcart\App\Form\Form;
+use Xcart\App\Form\ModelForm;
 
-class DistributorForm extends Form
+class DistributorForm extends ModelForm
 {
     public $templates = [
         'default' => 'admin/distributor/form/_dx_form.tpl'

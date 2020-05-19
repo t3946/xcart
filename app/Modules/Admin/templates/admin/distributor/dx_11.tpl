@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name='Distributor shipping policy'}
+    {smarty_admin_block name='Payment to distributor arrangement'}
     {raw $form->renderBegin([
     'action' => $.app->router->url('admin:section', ['mid' => $distributorModel->manufacturerid, 'section' => $section]),
     'method' => 'POST',
