@@ -2,10 +2,16 @@
 
 {if $value}
     <br>
-    <a class="current-image" style="background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
+    <a target="_blank" class="current-image" style="margin: 10px;
+            vertical-align: middle;
+            display: inline-block;
+            width: 200px;
+            min-height: 100px;
+            background:  no-repeat center center;
+            background-size: contain; background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
 {/if}
 
 {if $field->canClear()}
-    <input value="{$field->getClearValue()}" id="{$id}_clear" type="checkbox" name="{$name}">
-    <label for="{$id}_clear">{t 'Clean'}</label>
+    <input style="width: 1rem;" value="{$field->getClearValue()}" id="{$id}_clear" type="checkbox" name="{$name}">
+    <label for="{$id}_clear">{t 'Delete image'}</label>
 {/if}

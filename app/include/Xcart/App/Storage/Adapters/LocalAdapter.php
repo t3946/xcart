@@ -48,6 +48,6 @@ class LocalAdapter extends Local implements AdapterExtInterface
             return $this->relativeBase .'/'. $path;
         }
 
-        return false;
+        return '/'. $path;
     }
 }

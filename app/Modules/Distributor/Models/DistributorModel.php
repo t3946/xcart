@@ -18,6 +18,7 @@ use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -233,6 +234,8 @@ class DistributorModel extends Model
             ],
             'logo' => [
                 'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/M/',
                 'null' => true,
             ]
         ];

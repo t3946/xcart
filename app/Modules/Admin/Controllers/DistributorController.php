@@ -156,10 +156,11 @@ class DistributorController extends BackendController
         $form->setInstance($dx);
 
         if (Xcart::app()->request->getIsPost()) {
-            $form->populate(Xcart::app()->request->post);
+            $form->populate(Xcart::app()->request->post, $_FILES);
             if ($form->isValid()) {
                 $dx->setAttributes($form->getAttributes());
                 $dx->save();
+                $this->redirect($this->getRequest()->getUrl());
             }
         }
 
