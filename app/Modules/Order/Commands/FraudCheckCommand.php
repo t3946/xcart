@@ -34,7 +34,7 @@ class FraudCheckCommand extends Command
             $log = '';
 
             $extraModel = $order->extra_model;
-            if (($ip = $extraModel->getIP()) && $geoModel = GeoIpHelper::getMelissaIpLocation($ip)) {
+            if ($extraModel && ($ip = $extraModel->getIP()) && $geoModel = GeoIpHelper::getMelissaIpLocation($ip)) {
                 $ip .= " ({$geoModel})";
                 $extraModel->ip = $ip;
                 $extraModel->save();
