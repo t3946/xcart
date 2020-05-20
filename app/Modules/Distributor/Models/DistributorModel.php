@@ -27,6 +27,7 @@ use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
@@ -70,6 +71,16 @@ class DistributorModel extends Model
             ],
             'manufacturer' => [
                 'class' => CharField::class
+            ],
+            'avail' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'update_approximation_shipping_rates' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'N'
             ],
             'shipping_rates' => [
                 'class' => HasManyField::className(),
@@ -220,6 +231,10 @@ class DistributorModel extends Model
                 'modelClass' => SiteModel::class,
                 'through' => DistributorSiteModel::class,
             ],
+            'logo' => [
+                'class' => ImageField::class,
+                'null' => true,
+            ]
         ];
     }
 

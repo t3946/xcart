@@ -9,6 +9,8 @@ use Xcart\App\Form\Fields\CharField;
 
 class DistributorQuickLinksForm extends DistributorForm
 {
+    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
+
     public function getFieldsets()
     {
         return [[

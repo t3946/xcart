@@ -118,7 +118,7 @@ abstract class ManyToManyManager extends ManagerBase
                 $from => $this->primaryModel->pk,
                 $to => $model->pk,
             ]);
-            return $through->pk;
+            return $through;
         }
         else {
             $db = $this->primaryModel->getConnection();

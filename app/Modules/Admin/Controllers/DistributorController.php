@@ -5,10 +5,13 @@ namespace Modules\Admin\Controllers;
 
 
 use Modules\Admin\AdminModule;
+use Modules\Admin\Forms\Dx\DistributorFeedInfoForm;
+use Modules\Admin\Forms\Dx\DistributorForm;
 use Modules\Admin\Forms\Dx\DistributorFrontEndMessagesForm;
 use Modules\Admin\Forms\Dx\DistributorGeneralForm;
 use Modules\Admin\Forms\Dx\DistributorPaymentToDxForm;
 use Modules\Admin\Forms\Dx\DistributorPriceForm;
+use Modules\Admin\Forms\Dx\DistributorProductQuestionsForm;
 use Modules\Admin\Forms\Dx\DistributorQuickLinksForm;
 use Modules\Admin\Forms\Dx\DistributorShippesFromForm;
 use Modules\Admin\Forms\Dx\DistributorShippingPolicyForm;
@@ -85,7 +88,8 @@ class DistributorController extends BackendController
             16 => [
                 'title' => 'Product questions',
                 'order_by' => '130',
-                'distributor_section' => '16'
+                'distributor_section' => '16',
+                'form' => DistributorProductQuestionsForm::class,
             ],
             7 => [
                 'title' => 'Distributor shipping policy',
@@ -96,7 +100,8 @@ class DistributorController extends BackendController
             17 => [
                 'title' => 'Distributor feeds info',
                 'order_by' => '140',
-                'distributor_section' => '17'
+                'distributor_section' => '17',
+                'form' => DistributorFeedInfoForm::class
             ],
             19 => [
                 'title' => 'UPS shipping markups',
@@ -145,18 +150,22 @@ class DistributorController extends BackendController
             ],
         ];
 
-        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'));
-
         $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
-        $section = $section ?? 1;
-
+        /** @var DistributorForm $form */
         $form = new $distributor_sections[$section]['form'];
         $form->setInstance($dx);
 
-        $form->setAttributes(array_merge($dx->getAttributes(), [
-            'd_sites' => $dx->sites,
-            'distributor_carrier' => $dx->carriers
-        ]));
+        if (Xcart::app()->request->getIsPost()) {
+            $form->populate(Xcart::app()->request->post);
+            if ($form->isValid()) {
+                $dx->setAttributes($form->getAttributes());
+                $dx->save();
+            }
+        }
+
+        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'));
+
+        $section = $section ?? 1;
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,

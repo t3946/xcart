@@ -13,6 +13,8 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorPaymentToDxForm extends DistributorForm
 {
+    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
+
     public function getFieldsets()
     {
         return [
@@ -38,14 +40,22 @@ class DistributorPaymentToDxForm extends DistributorForm
             ],
             'Reconciliation settings' => [
                 'd_bulk_or_individual_order_payments',
-                'd_search_keyphrase_for_reconciliation'
+                'd_search_keyphrase_for_reconciliation',
+                'hint' => [LanguageModel::translate('help_dx_reconciliation_settings') ?? 'help_dx_reconciliation_settings'],
             ]
         ];
     }
 
     public function getFields()
     {
-        $dx = $this->getInstance();
+        $phrases = (function () {
+            $opts = array_map('trim', explode('<OR>', $this->getInstance()->d_search_keyphrase_for_reconciliation));
+            foreach ($opts as $opt) {
+                $result[$opt] = $opt;
+            }
+            return $result ?? [];
+        })->__invoke();
+
         return [
             'd_we_pay_to_distributor_by' => [
                 'class' => DropDownField::class,
@@ -206,14 +216,8 @@ class DistributorPaymentToDxForm extends DistributorForm
             'd_search_keyphrase_for_reconciliation' => [
                 'class' => Select2Field::class,
                 'label' => 'Search keyphrase for reconciliation',
-                'choices' => function () {
-                    $opts = array_map('trim', explode('<OR>', $this->getInstance()->d_search_keyphrase_for_reconciliation));
-                    return $opts;
-                },
-                'selected' => function () {
-                    $opts = array_map('trim', explode('<OR>', $this->getInstance()->d_search_keyphrase_for_reconciliation));
-                    return $opts;
-                },
+                'choices' => $phrases,
+                'selected' => $phrases,
                 'html' => ['style' => 'width:100%'],
                 'editable' => true,
                 'multiple' => true,

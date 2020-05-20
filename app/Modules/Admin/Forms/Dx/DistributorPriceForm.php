@@ -11,6 +11,8 @@ use Xcart\App\Form\Fields\DropDownField;
 
 class DistributorPriceForm extends DistributorForm
 {
+    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
+
     public function getFieldsets()
     {
         return [[

@@ -23,7 +23,7 @@ class DistributorGeneralForm extends DistributorForm
             'code',
             'url',
             'logo',
-            'd_sites',
+            'sites',
             'd_specific_instructions',
             'dx_eta_date',
             'avail',
@@ -73,7 +73,7 @@ class DistributorGeneralForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_logo_text'),
             ],
-            'd_sites' => [
+            'sites' => [
                 'class' => Select2Field::class,
                 'label' => 'Main SF',
                 'multiple' => true,

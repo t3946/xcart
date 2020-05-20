@@ -6,6 +6,7 @@
     {raw $form->renderBegin([
     'action' => $.app->router->url('admin:section', ['mid' => $distributorModel->manufacturerid, 'section' => $section]),
     'method' => 'POST',
+    'enctype' => 'multipart/form-data'
     ])}
     {raw $form->render()}
         <div class="row" style="margin-top: 15px;">

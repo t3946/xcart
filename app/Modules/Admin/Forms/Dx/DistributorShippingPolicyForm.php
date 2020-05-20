@@ -14,12 +14,14 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorShippingPolicyForm extends DistributorForm
 {
+    public $exclude = ['provider_model', 'site', 'sites', 'country_model', 'state_model'];
+
     public function getFieldsets()
     {
         return [
             [
                 'd_ships_to_within',
-                'distributor_carrier',
+                'carriers',
                 'dx_leadtime',
                 'amazon_leadtime_to_ship',
                 'amazon_leadtime_for_fba_loads',
@@ -54,7 +56,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
             ],
-            'distributor_carrier' => [
+            'carriers' => [
                 'class' => Select2Field::class,
                 'label' => 'Shipping carriers used by distributor',
                 'placeholder' => 'Click to select shipping carriers',

@@ -21,9 +21,9 @@ class CharField extends Field
             throw new Exception('Value must be a string, not a manager');
         }
 
-        if (is_string($this->value)) {
+        /*if (is_string($this->value)) {
             return htmlentities(html_entity_decode($this->value));
-        }
+        }*/
         return $this->value;
     }
 }

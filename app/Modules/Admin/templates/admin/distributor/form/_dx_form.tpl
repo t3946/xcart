@@ -2,13 +2,15 @@
     {var $fieldsets = $form->getFieldsets()}
     {if $fieldsets}
         {foreach $fieldsets as $name => $fieldsNames}
-            {if $name}
+            {if !is_integer($name)}
                 <tr>
                     <td colspan="3"><br>
                         <table class="SubHeader" cellspacing="0">
                             <tbody>
                             <tr>
-                                <td class="Green2">{$name}</td>
+                                <td class="Green2">
+                                    {$name}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="SubHeaderLine">
@@ -18,15 +20,26 @@
                         </table>
                     </td>
                 </tr>
+                {if $fieldsNames['hint']}
+                    <tr>
+                        <td colspan="3">
+                            {$fieldsNames['hint'][0]}
+                        </td>
+                    </tr>
+                {/if}
             {/if}
             {foreach $fieldsNames as $fieldName}
-                {var $field = $form->getField($fieldName)}
-                {raw $field->render()}
+                {if !is_array($fieldName)}
+                    {var $field = $form->getField($fieldName)}
+                    {raw $field->render()}
+                {/if}
             {/foreach}
-            {if !$name}
-            <tr>
-                <td colspan="3"><hr></td>
-            </tr>
+            {if is_integer($name)}
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
             {/if}
         {/foreach}
     {else}
@@ -38,7 +51,7 @@
 </table>
 <script>
     $(function () {
-        let t= $('.tooltip').tooltip({
+        let t = $('.tooltip').tooltip({
             position: {
                 using: function (position, feedback) {
                     $(this).css(position);
@@ -47,7 +60,7 @@
                         .appendTo(this);
                 }
             },
-            content: function(){
+            content: function () {
                 return $(this).attr('title');
             },
             open: function (event, ui) {

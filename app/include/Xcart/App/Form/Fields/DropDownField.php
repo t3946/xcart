@@ -222,7 +222,7 @@ class DropDownField extends Field
             $this->_attributes['multiple'] = 'multiple';
         }
 
-        $this->_selected = $selected;
+        $this->_selected = $this->selected ?: $selected;
 
         return $data;
     }
