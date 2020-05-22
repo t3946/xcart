@@ -6,11 +6,12 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
-use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledDxModel;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
+use Modules\Marketplace\Models\ExternalMarketPlaceModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
@@ -18,7 +19,6 @@ use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
-use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -66,6 +66,8 @@ class DistributorModel extends Model
 
     public static function getFields()
     {
+        $alias = ExternalMarketplaceDisabledModel::objects()->getTableAlias();
+
         return [
             'manufacturerid' => [
                 'class' => AutoField::className()
@@ -139,6 +141,10 @@ class DistributorModel extends Model
                 'default' => 'N'
             ],
             'calculate_shipping' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'products_always_verify' => [
                 'class' => BooleanCharField::class,
                 'default' => 'N'
             ],
@@ -248,6 +254,12 @@ class DistributorModel extends Model
                 'modelClass' => ExternalMarketplaceDisabledModel::class,
                 'link' => ['manufacturerid' => 'resource_id'],
                 'extra' => ['resource_type' => 'D']
+            ],
+            'disabled_marketplaces' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ExternalMarketPlaceModel::class,
+                'through' => ExternalMarketplaceDisabledDxModel::class,
+                'extra' => ["{$alias}.resource_type" => 'D']
             ],
             'images' => [
                 'class' => HasManyField::class,

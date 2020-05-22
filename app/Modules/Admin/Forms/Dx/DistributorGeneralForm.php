@@ -77,12 +77,6 @@ class DistributorGeneralForm extends DistributorForm
                 'class' => Select2Field::class,
                 'label' => 'Main SF',
                 'multiple' => true,
-                'choices' => static function () {
-                    foreach (SiteModel::objects()->all() as $site) {
-                        $result[$site->pk] = (string)$site;
-                    }
-                    return $result ?? [];
-                },
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_site_text'),

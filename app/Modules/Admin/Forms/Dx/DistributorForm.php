@@ -9,7 +9,7 @@ use Xcart\App\Form\ModelForm;
 
 class DistributorForm extends ModelForm
 {
-    public $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model'];
+    public $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces'];
 
     public $templates = [
         'default' => 'admin/distributor/form/_dx_form.tpl'
@@ -128,7 +128,8 @@ class DistributorForm extends ModelForm
         40 => [
             'title' => 'External marketplaces',
             'order_by' => '180',
-            'distributor_section' => '40'
+            'distributor_section' => '40',
+            'form' => DistributorExcludedMarketplacesForm::class,
         ],
         8 => [
             'title' => 'Order submission',
@@ -138,7 +139,8 @@ class DistributorForm extends ModelForm
         31 => [
             'title' => 'Product verification settings',
             'order_by' => '180',
-            'distributor_section' => '31'
+            'distributor_section' => '31',
+            'form' => DistributorProductVerificationForm::class,
         ],
         12 => [
             'title' => 'Order tracking',

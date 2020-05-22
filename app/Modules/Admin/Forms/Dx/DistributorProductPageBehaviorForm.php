@@ -12,14 +12,14 @@ use Xcart\App\Form\Fields\RadioField;
 
 class DistributorProductPageBehaviorForm extends DistributorForm
 {
-    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
+    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
 
     public function getFieldsets()
     {
         return [[
             'products_quantity_behavior',
-            'allow_pre_orders',
             'calculate_shipping',
+            'allow_pre_orders',
         ]];
     }
 

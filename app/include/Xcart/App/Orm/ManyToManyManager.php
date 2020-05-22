@@ -114,10 +114,12 @@ abstract class ManyToManyManager extends ManagerBase
                 [$from, $to] = $this->throughLink;
             }
 
-            [$through, $created] = $throughModel->objects()->getOrCreate([
+            $data = array_merge([
                 $from => $this->primaryModel->pk,
                 $to => $model->pk,
-            ]);
+            ], $extra);
+
+            [$through, $created] = $throughModel->objects()->getOrCreate($data);
             return $through;
         }
         else {

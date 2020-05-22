@@ -4,13 +4,14 @@
 namespace Modules\Marketplace\Models;
 
 
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class ExternalMarketplaceDisabledModel extends Model
+class ExternalMarketplaceDisabledDxModel extends Model
 {
     public static function tableName()
     {
@@ -26,15 +27,21 @@ class ExternalMarketplaceDisabledModel extends Model
                 'link' => ['marketplace_id' => 'id'],
                 'primary' => true,
             ],
-            'resource_id' => [
-                'class' => IntField::class,
+            'resource' => [
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
+                'link' => ['resource_id' => 'manufacturerid'],
                 'primary' => true,
             ],
             'resource_type' => [
                 'class' => CharField::class,
                 'primary' => true,
+                'default' => 'D',
             ],
-            'update_date' => DateTimeField::class
+            'update_date' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ]
         ];
     }
 }
