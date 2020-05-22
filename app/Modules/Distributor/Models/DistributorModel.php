@@ -110,6 +110,38 @@ class DistributorModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => 'N'
             ],
+            'd_available_on_distributor_site_checkbox' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_sent_by_email_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_put_on_the_invoices' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_sent_by_email_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_sent_by_fax_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_mailed_to_our_checkbox' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'allow_pre_orders' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'calculate_shipping' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
             ],

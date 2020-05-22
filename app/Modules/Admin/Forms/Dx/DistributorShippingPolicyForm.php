@@ -78,8 +78,18 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extend' => 'from',
+                'extends' => 'from',
+                'extend' => 'dx_leadtime_to',
                 'hint' => LanguageModel::translate('help_dx_to_cx_lead_text') ?? 'help_dx_to_cx_lead_text',
+            ],
+            'dx_leadtime_to' => [
+                'class' => CharField::class,
+                'label' => '',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extends' => 'to',
             ],
             'amazon_leadtime_to_ship' => [
                 'class' => CharField::class,
@@ -106,7 +116,18 @@ class DistributorShippingPolicyForm extends DistributorForm
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
+                'extend' => 'free_shipping_on_orders_over_value',
                 'hint' => LanguageModel::translate('help_dx_offers_free_text') ?? 'help_dx_offers_free_text',
+            ],
+            'free_shipping_on_orders_over_value' => [
+                'class' => CharField::class,
+                'label' => '',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:110px;'],
+                'extends' => "{$currency->symbol_prefix}{$currency}",
             ],
             'warehouse_pickups_are_allowed' => [
                 'class' => DropDownField::class,
@@ -189,7 +210,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_date_approximate_shippings_text') ?? 'help_dx_date_approximate_shippings_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width:150px; border: none;'],
+                'html' => ['style' => 'width:150px; border: none; background: white; color: black', 'disabled' => 'disabled'],
             ]
         ];
     }

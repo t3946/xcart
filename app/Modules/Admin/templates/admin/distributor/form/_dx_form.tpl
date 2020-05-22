@@ -49,23 +49,4 @@
         {/foreach}
     {/if}
 </table>
-<script>
-    $(function () {
-        let t = $('.tooltip').tooltip({
-            position: {
-                using: function (position, feedback) {
-                    $(this).css(position);
-                    $("<div>")
-                        .addClass("tooltip__s3")
-                        .appendTo(this);
-                }
-            },
-            content: function () {
-                return $(this).attr('title');
-            },
-            open: function (event, ui) {
-                ui.tooltip.css("max-width", "400px");
-            }
-        });
-    });
-</script>
+

@@ -9,6 +9,7 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorPaymentToDxForm extends DistributorForm
@@ -21,8 +22,6 @@ class DistributorPaymentToDxForm extends DistributorForm
             'Payment to distributor arrangements' => [
                 'd_we_pay_to_distributor_by',
                 'd_pay_to_distributor_by',
-                'd_pay_to_distributor_save_text',
-                'd_we_can_save',
                 'd_net_payment_terms_in_days',
             ],
             'Distributor checking account details' => [
@@ -79,6 +78,8 @@ class DistributorPaymentToDxForm extends DistributorForm
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
+                'extend' => 'd_pay_to_distributor_save_text',
                 'hint' => LanguageModel::translate('help_dx_if_we_pay_to_distributor') ?? 'help_dx_if_we_pay_to_distributor',
             ],
             'd_pay_to_distributor_save_text' => [
@@ -88,6 +89,9 @@ class DistributorPaymentToDxForm extends DistributorForm
                     'we_can_save' => 'we can save',
                     'we_cannot_save' => "we can't save",
                 ],
+                'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
+                'extend' => 'd_we_can_save',
+                'extends' => ', ',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],
@@ -95,6 +99,16 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'class' => CharField::class,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extend' => 'd_we_can_save_after',
+            ],
+            'd_we_can_save_after' => [
+                'class' => HiddenField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'extends' => '%',
             ],
             'd_net_payment_terms_in_days' => [
                 'class' => CharField::class,
@@ -103,7 +117,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:80px;'],
-                'extend' => 'NET',
+                'extends' => 'NET',
                 'hint' => LanguageModel::translate('help_dx_net_payment_terms_in_days') ?? 'help_dx_net_payment_terms_in_days',
             ],
             'dcad_company_name' => [
@@ -226,5 +240,13 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_d_search_keyphrase_for_reconciliation') ?? 'help_dx_d_search_keyphrase_for_reconciliation',
             ],
         ];
+    }
+
+    public function beforeInstanceSave($instance)
+    {
+        parent::beforeInstanceSave($instance);
+        if ($instance->d_search_keyphrase_for_reconciliation && is_array($instance->d_search_keyphrase_for_reconciliation)) {
+            $instance->d_search_keyphrase_for_reconciliation = implode('<OR>', $instance->d_search_keyphrase_for_reconciliation);
+        }
     }
 }

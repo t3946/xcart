@@ -32448,8 +32448,8 @@ var widgetsTooltip = $.ui.tooltip;
     $.confirm.options = {
         text: "Вы уверены?",
         title: "",
-        confirmButton: "Да",
-        cancelButton: "Нет",
+        confirmButton: "Yes",
+        cancelButton: "No",
         post: false,
         confirmButtonClass: "button green round",
         cancelButtonClass: "button transparent grey round",

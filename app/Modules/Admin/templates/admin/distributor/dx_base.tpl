@@ -1,7 +1,9 @@
 {extends 'base/admin.tpl'}
 
 {block "before-content"}
-
+{if $form}
+    {set $distributorModel = $form->getDx()}
+{/if}
     <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
             <td width="33%">
@@ -58,7 +60,8 @@
         <tr>
             <td width="100%" valign="top">
                 <table width="100%">
-                    {foreach $distributor_sections as $key => $item index=$index first=$first}
+                    {set $sections = Modules\Admin\Forms\Dx\DistributorForm::getSections()}
+                    {foreach $sections as $key => $item index=$index first=$first}
                         {if !$index % 2}
                             <tr>
                         {/if}
@@ -115,4 +118,27 @@
             </tr>
         </table>
     </div>
+{/block}
+
+{block 'js'}
+    <script>
+        $(function () {
+            let t = $('.tooltip').tooltip({
+                position: {
+                    using: function (position, feedback) {
+                        $(this).css(position);
+                        $("<div>")
+                            .addClass("tooltip__s3")
+                            .appendTo(this);
+                    }
+                },
+                content: function () {
+                    return $(this).attr('title');
+                },
+                open: function (event, ui) {
+                    ui.tooltip.css("max-width", "400px");
+                }
+            });
+        });
+    </script>
 {/block}

@@ -30,6 +30,12 @@ class AdminController extends BackendController
         $admin->update($pk);
     }
 
+    public function updateall($module, $admin)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->updateall();
+    }
+
     public function remove($module, $admin, $pk)
     {
         if (!$this->getRequest()->getIsPost()) {

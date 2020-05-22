@@ -15,7 +15,7 @@ class RadioField extends CharField
 
     public $type = "radio";
 
-    public function render()
+    /*public function render()
     {
 
         $template = empty($this->choices) ? $this->templateWithoutChoices : $this->templateWithChoices;
@@ -29,7 +29,7 @@ class RadioField extends CharField
             'name' => $this->getHtmlName(),
         ]);
 
-    }
+    }*/
 
     private function hintToTemplate(){
         return $this->hint ? $this->renderHint() : '';
@@ -62,17 +62,23 @@ class RadioField extends CharField
                 $input = $this->renderInputInternal($this->getHtmlId() . '_' . $i, $value,  ($checked ? " checked='checked'" : ''));
                 $i++;
                 $hint = $this->hint ? $this->renderHint() : '';
-                $inputs[] = "<div class='radio-container'>{$input}{$label}{$hint}</div>";
+                $inputs[] = "{$input}{$label}{$hint}";
             }
+            if ($this->extend && $inputs) {
+                $ex = " {$this->getForm()->getField($this->extend)->renderInput()}";
+                $inputs[count($inputs)-1] .= $ex;
+            }
+            $inputs = array_map(function($a){return "<div class='radio-container'>{$a}</div>";}, $inputs);
+
             return implode("\n", $inputs);
         } else {
             if ($this->value) {
-                $this->html['checked'] = 'checked';
+               $checked = 'checked';
             }
-            $input = $this->renderInputInternal($this->getHtmlId(), 1);
+            $input = $this->renderInputInternal($this->getHtmlId(), 1, ($checked ? " checked='checked'" : ''));
             return implode("\n", [
-                "<input type='hidden' value='' name='" . $this->getHtmlName() . "' />",
-                $input
+                //"<input type='hidden' value='' name='" . $this->getHtmlName() . "' />",
+                $input,
             ]);
         }
     }

@@ -32,7 +32,6 @@ class DistributorShippesFromForm extends DistributorForm
             'm_address' => [
                 'class' => CharField::class,
                 'label' => 'Address',
-                'hint' => LanguageModel::translate('help_dx_search_for_sku_url_text') ?? 'help_dx_search_for_sku_url_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' =>'width:200px;'],

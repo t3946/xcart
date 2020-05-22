@@ -73,6 +73,11 @@ return [
         'name' => 'update'
     ],
     [
+        'route' => '/update/{:module}/{:admin}',
+        'target' => [AdminController::class, 'updateall'],
+        'name' => 'updateall'
+    ],
+    [
         'route' => '/info/{:module}/{:admin}/{:pk}',
         'target' => [AdminController::class, 'info'],
         'name' => 'info'
