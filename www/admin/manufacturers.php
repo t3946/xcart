@@ -60,6 +60,12 @@ $smarty->assign('search_vrs', Xcart::app()->request->get->get('search_vrs'));
 $smarty->assign('search', Xcart::app()->request->get->get('search'));
 $smarty->assign('sites', SiteModel::objects()->order(['code']));
 $smarty->assign('vrs', UserModel::objects()->distinct()->filter(['distributors__manufacturerid__isnull' => false])->order(['firstname']));
+if ($distributorModel) {
+	$smarty->assign('sectionMenu', Xcart::app()->template->render('admin/distributor/dx_base.tpl', [
+		'distributorModel' => $distributorModel ?? null,
+		'section' => $distributor_section
+	]));
+}
 
 # Assign the current location line
 $smarty->assign('location', $location);

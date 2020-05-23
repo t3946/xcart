@@ -30,6 +30,11 @@ class DistributorController extends BackendController
         }
 
         $distributor_sections = DistributorForm::getSections();
+
+        if (!$distributor_sections[$section]['form']) {
+            $this->redirect("/admin/manufacturers.php?manufacturerid={$dx->manufacturerid}&distributor_section={$section}");
+        }
+
         $form = new $distributor_sections[$section]['form'];
         $form->setInstance($dx);
 

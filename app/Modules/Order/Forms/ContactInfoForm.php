@@ -5,6 +5,7 @@ namespace Modules\Order\Forms;
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\EmailField;
@@ -19,7 +20,7 @@ class ContactInfoForm extends FrontendForm
     {
         return [
             'firstname' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Full name'),
                 'required' => true,
                 'hint' => OrderModule::t('First and last name of the order contact person'),
@@ -29,7 +30,7 @@ class ContactInfoForm extends FrontendForm
             ],
 
             'phone' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Phone'),
                 'required' => true,
                 'hint' => OrderModule::t('Phone number at which you can be reached is a must, otherwise order processing will be delayed'),
@@ -44,7 +45,7 @@ class ContactInfoForm extends FrontendForm
             ],
 
             'phone_ext' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
