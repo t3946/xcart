@@ -6,7 +6,6 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Core\Models\LanguageModel;
 use Modules\Editor\Fields\EditorField;
-use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateField;
@@ -51,6 +50,7 @@ class DistributorGeneralForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_comapny_name_text'),
+                'required' => true,
             ],
             'code' => [
                 'class' => CharField::class,
@@ -58,6 +58,7 @@ class DistributorGeneralForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_prefix_text'),
+                'required' => true,
             ],
             'url' => [
                 'class' => CharField::class,

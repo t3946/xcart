@@ -103,7 +103,9 @@
         .dx_form input, .dx_form textarea {
             width: 100%;
         }
-
+        .admin .required {
+            color: inherit;
+        }
     </style>
     <div align="right">
         <table cellspacing="0" cellpadding="0">

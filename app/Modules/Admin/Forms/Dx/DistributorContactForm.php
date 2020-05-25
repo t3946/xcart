@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Distributor\Models\DistributorContactsModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\RadioField;
 
@@ -21,6 +22,11 @@ class DistributorContactForm extends DistributorForm
             'ext',
             'fax',
         ]];
+    }
+
+    public function getModel()
+    {
+        return new DistributorContactsModel();
     }
 
     public function getDx()

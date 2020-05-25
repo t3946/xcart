@@ -1,17 +1,40 @@
-<input type="{$type}" accept="{$field->getHtmlAccept()}" value="{$value}" id="{$id}" name="{$name}" {raw $html}>
-
-{if $value}
+<div style="height:0px;overflow:hidden">
+    <input type="{$type}" accept="{$field->getHtmlAccept()}" value="{$value}" id="{$id}" name="{$name}" {raw $html}>
+</div>
+    <button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image</button>
+    <button type="button" onclick="uploadUrl()">Upload from url</button>
     <br>
-    <a target="_blank" class="current-image" style="margin: 10px;
+    <a target="_blank" class="{$id}_current-image" style="margin: 10px;
             vertical-align: middle;
-            display: inline-block;
+            {if $value}display: inline-block; {else} display: none; {/if}
             width: 200px;
             min-height: 100px;
             background:  no-repeat center center;
             background-size: contain; background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
-{/if}
+
 
 {if $field->canClear()}
     <input style="width: 1rem;" value="{$field->getClearValue()}" id="{$id}_clear" type="checkbox" name="{$name}">
     <label for="{$id}_clear">{t 'Delete image'}</label>
 {/if}
+<script>
+    async function uploadUrl() {
+        let url = prompt('Enter file url');
+        if (url) {
+            let input = document.querySelector('#{$id}');
+            input.setAttribute('value', url);
+            input.type='hidden';
+            let img = document.querySelector('.{$id}_current-image');
+            let blob = await fetch(url).then(r => r.blob());
+            img.style.backgroundImage = 'url(' + URL.createObjectURL(blob) + ')';
+            img.style.display = 'inline-block';
+        }
+    }
+    document.querySelector('#{$id}').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            var img = document.querySelector('.{$id}_current-image');
+            img.style.backgroundImage = 'url('+ URL.createObjectURL(this.files[0]) + ')';
+            img.style.display = 'inline-block';
+        }
+    });
+</script

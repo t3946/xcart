@@ -148,6 +148,10 @@ class DistributorModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => 'N'
             ],
+            'warehouse_pickups_are_allowed' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
             ],
@@ -370,7 +374,7 @@ class DistributorModel extends Model
 
     public function getDefaultContact()
     {
-        return $this->contacts_model->order(['distributor_field_code'])->limit(1)->get();
+        return $this->contacts_model->exclude(['phone' => ''])->order(['position'])->limit(1)->get();
     }
 
     public function getPhone(): string

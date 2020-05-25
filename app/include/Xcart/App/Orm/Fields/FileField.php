@@ -14,6 +14,7 @@ use Xcart\App\Storage\FileNameHasher\FileNameHasherInterface;
 use Xcart\App\Storage\FileNameHasher\MD5NameHasher;
 use Xcart\App\Storage\Files\File;
 use Xcart\App\Storage\Files\LocalFile;
+use Xcart\App\Storage\Files\RemoteFile;
 use Xcart\App\Storage\Files\ResourceFile;
 use Xcart\App\Orm\ModelInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -215,6 +216,9 @@ class FileField extends CharField
                 list(, $value) = explode(',', $value);
                 $value = base64_decode($value);
                 $value = new ResourceFile($value, null, null);
+            }
+            elseif (strpos($value,'http') !== false) {
+                $value = new RemoteFile($value);
             }
             elseif (realpath($value)) {
                 $value = new LocalFile(realpath($value));
