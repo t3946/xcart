@@ -34,7 +34,7 @@ class MiniCart extends Component
     handleRemove(e, key, item)
     {
         e.preventDefault();
-        this.context.store.dispatch({type:'PUSH', action: 'DEL', data: {items:[key]}});
+        this.store.dispatch({type:'PUSH', action: 'DEL', data: {items:[key]}});
     }
 
     handleInput(e, key, item)
