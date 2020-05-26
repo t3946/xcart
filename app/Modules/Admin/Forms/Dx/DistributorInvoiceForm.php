@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -44,6 +45,7 @@ class DistributorInvoiceForm extends DistributorForm
             'd_invoices_sent_by_fax_to' => [
                 'class' => CheckboxField::class,
                 'label' => 'Distributor invoices are',
+                'hint' => LanguageModel::translate('help_dx_invoices_are_text') ?? 'help_dx_invoices_are_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'extend' => 'd_invoices_by_fax_sent_to',
@@ -74,6 +76,8 @@ class DistributorInvoiceForm extends DistributorForm
                 'choices' => [
                     'usa' => 'US address',
                     'canada' => 'Canadian address',
+                    'estonia' => 'Estonian address',
+                    'russia' => 'Russian address',
                 ],
                 'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
                 'extends' => 'mailed to our',
