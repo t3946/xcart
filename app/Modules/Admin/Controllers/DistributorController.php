@@ -15,11 +15,12 @@ use Xcart\App\Main\Xcart;
 class DistributorController extends BackendController
 {
 
-    public function index($mid, $section)
+    public function index($mid = null, $section = 1)
     {
+        if ($mid) {
+            $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+        }
 
-
-        $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
         /** @var DistributorForm $form */
         if ($section == 3) {
             $admin = new DxContactAdmin();
@@ -36,19 +37,35 @@ class DistributorController extends BackendController
         }
 
         $form = new $distributor_sections[$section]['form'];
-        $form->setInstance($dx);
-
+        if ($dx) {
+            $form->setInstance($dx);
+        }
         if (Xcart::app()->request->getIsPost()) {
             $form->populate(Xcart::app()->request->post, $_FILES);
-            if ($form->isValid()) {
+            if (!$dx) {
+                if (!DistributorModel::objects()->filter(['code' => $form->code->getValue()])->count()) {
+                    $dx = new DistributorModel(array_merge($form->getAttributes(), ['provider' => Xcart::app()->user->login]));
+                    $dx->save();
+                    $form->setInstance($dx);
+                } else {
+                    Xcart::app()->flash->error('Distributor code you entered already exists in the database.');
+                }
+            }
+            if ($dx && $form->isValid()) {
                 $form->save();
-                $this->redirect($this->getRequest()->getUrl());
+                $this->redirect( Xcart::app()->router->url('admin:section', [
+                    'mid' => $dx->manufacturerid,
+                    'section' => $section,
+                ]));
             }
         }
 
-        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'));
+        if (!$dx) {
+            Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Add Distributor'));
+        } else {
+            Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'));
+        }
 
-        $section = $section ?? 1;
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,

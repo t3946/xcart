@@ -8,6 +8,7 @@ use Modules\Core\Models\LanguageModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\HiddenField;
+use Xcart\App\Form\Fields\UrlField;
 
 class DistributorOrderTrackingForm extends DistributorForm
 {
@@ -35,12 +36,12 @@ class DistributorOrderTrackingForm extends DistributorForm
                 'html' => ['style' => 'width: 1em']
             ],
             'd_available_on_distributor_site_url' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'inputTemplate' => 'admin/distributor/form/url.tpl',
                 'extends' => 'available on distributor website',
-                'html' => ['style' => 'width: 350px']
+                'html' => ['style' => 'width: 300px']
             ],
             'd_sent_by_email_to' => [
                 'class' => CheckboxField::class,

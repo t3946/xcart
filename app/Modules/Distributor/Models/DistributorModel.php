@@ -75,6 +75,51 @@ class DistributorModel extends Model
             'manufacturer' => [
                 'class' => CharField::class
             ],
+            'descr' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'manufact_text_displayed' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'mess_body' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'cart_manufact_text_displayed' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_instructions_to_order_entry_operator' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_message_body_14' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_distributor_return_policy' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'product_feeds_comments' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_dispatch_instructions' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
@@ -154,12 +199,18 @@ class DistributorModel extends Model
             ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_leadtime' => [
                 'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_leadtime_to' => [
                 'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_eta_date' => [
                 'class' => DateField::class,

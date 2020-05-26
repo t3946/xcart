@@ -11,6 +11,7 @@ use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
+use Xcart\App\Form\Fields\UrlField;
 
 class DistributorGeneralForm extends DistributorForm
 {
@@ -55,17 +56,19 @@ class DistributorGeneralForm extends DistributorForm
             'code' => [
                 'class' => CharField::class,
                 'label' => 'Distributor prefix',
+                'html' => ['style' =>'width:100px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_prefix_text'),
                 'required' => true,
             ],
             'url' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'label' => 'Distributor website URL (main page)',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_website_text'),
+                'extend' => 'Website'
             ],
             'logo' => [
                 'class' => ImageField::class,
@@ -81,6 +84,7 @@ class DistributorGeneralForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_site_text'),
+                'required' => true
             ],
             'd_specific_instructions' => [
                 'class' => EditorField::class,

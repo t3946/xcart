@@ -102,4 +102,9 @@ return [
         'target' => [DistributorController::class, 'index'],
         'name' => 'section'
     ],
+    [
+        'route' => '/distributor/add',
+        'target' => [DistributorController::class, 'index'],
+        'name' => 'dx_add'
+    ],
 ];

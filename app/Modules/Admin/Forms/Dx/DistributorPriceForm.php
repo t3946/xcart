@@ -8,6 +8,7 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\UrlField;
 
 class DistributorPriceForm extends DistributorForm
 {
@@ -38,18 +39,20 @@ class DistributorPriceForm extends DistributorForm
 
         return [
             'd_product_catalog' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'label' => 'Product catalog URL',
                 'hint' => LanguageModel::translate('help_dx_catalog_url_text') ?? 'help_dx_catalog_url_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'extend' => 'Open'
             ],
             'd_price_list' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'label' => 'Price-list URL',
                 'hint' => LanguageModel::translate('help_dx_price_list_text') ?? 'help_dx_price_list_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'extend' => 'Open'
             ],
             'd_currency' => [
                 'class' => DropDownField::class,
