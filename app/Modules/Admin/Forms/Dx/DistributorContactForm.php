@@ -22,7 +22,6 @@ class DistributorContactForm extends DistributorForm
             'phone',
             'ext',
             'fax',
-            'call'
         ]];
     }
 
@@ -38,6 +37,9 @@ class DistributorContactForm extends DistributorForm
 
     public function getFields()
     {
+        if ($this->getInstance() && $this->getInstance()->distributor) {
+            $phone = "tel:{$this->getInstance()->distributor->getPhoneNormalized()}";
+        }
         return [
             'pq' => [
                 'class' => RadioField::class,
@@ -94,7 +96,7 @@ class DistributorContactForm extends DistributorForm
                 'class' => LinkField::class,
                 'label' => 'Call',
                 'html' => ['class' => 'admin_link'],
-                'value' => "tel:{$this->getInstance()->distributor->getPhoneNormalized()}",
+                'value' => $phone ?? '',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ]

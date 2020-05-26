@@ -134,6 +134,22 @@ class DxContactAdmin extends Admin
         ]);
     }
 
+    public function getItemProperty(Model $item, $property)
+    {
+        $form = $this->getForm();
+        $form->setInstance($item);
+        $data = explode('__', $property);
+        foreach ($data as $name) {
+            if ($name === 'call') {
+                $value = $this->getItemEditProperty($item, $property);
+            } else {
+                $value = $form->getField($name)->getValue();
+            }
+
+        }
+        return $value;
+    }
+
     public function getItemEditProperty(Model $item, $property)
     {
         $form = $this->getForm();
@@ -184,7 +200,7 @@ class DxContactAdmin extends Admin
                     foreach ($values[$f] as $id => $value) {
                         $forms[$id] = array_merge($forms[$id] ?? [], [$f => $value]);
                     }
-                } else {
+                } elseif ($f === 'pq') {
                     $forms[$values[$f]] = array_merge($forms[$values[$f]] ?? [], [$f => true]);
                 }
             }
