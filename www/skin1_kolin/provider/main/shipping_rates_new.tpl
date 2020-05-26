@@ -279,7 +279,11 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 
 {/if}
 
-<p>{if $type eq "D"}{include file="main/subheader.tpl" title=$lng.lbl_add_shipping_charge_values}{else}{include file="main/subheader.tpl" title=$lng.lbl_add_shipping_markup_values}{/if}</p>
+<p>{if $type eq "D"}
+		{include file="main/subheader.tpl" title=$lng.lbl_add_shipping_charge_values}
+	{else}
+		{include file="main/subheader.tpl" title=$lng.lbl_add_shipping_markup_values}
+	{/if}</p>
 
 {if $shipping ne ""}
 
@@ -337,7 +341,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 			-
 			<input type="text" name="maxweight_new" size="9" value="{$maxvalue|formatprice}"/>
 		</td>
-		<td><b>{$lng.lbl_flat_charge} ({$dCurrency->symbol_prefix}{$dCurrency}):</b></td>
+		<td><b>{if $type eq "R"}{$lng.lbl_flat_charge}{else}Flat rate{/if} ({$dCurrency->symbol_prefix}{$dCurrency}):</b></td>
 		<td nowrap="nowrap">
 			<input type="text" id="rate_new" name="rate_new" size="5" value="{0|formatprice}"
 				   onkeyup="javascript: func_hide_show_real_drop_ship_fee('rate_new', 'real_drop_ship_fee_new');"
