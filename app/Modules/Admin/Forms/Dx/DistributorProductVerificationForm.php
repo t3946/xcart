@@ -24,14 +24,14 @@ class DistributorProductVerificationForm extends DistributorForm
         return [
             'products_always_verify' => [
                 'class' => CheckboxField::class,
-                'label' => 'Tick the checkbox if product verification is NOT required:',
+                'label' => 'Tick the checkbox if product verification is NOT required',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:1em;'],
             ],
             'days_before_verify' => [
                 'class' => CharField::class,
-                'label' => 'How long (in days) product verification remains valid?',
+                'label' => 'How long [in days] product verification remains valid?',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:100px;'],
