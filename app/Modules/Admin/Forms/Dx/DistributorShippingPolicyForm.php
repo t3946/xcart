@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Xcart\App\Form\Fields\CharField;
@@ -48,10 +49,43 @@ class DistributorShippingPolicyForm extends DistributorForm
     {
         $dx = $this->getInstance();
         $currency = $dx->currency;
+
+        $countriesSelected = (function () {
+            $opts = array_map('trim', explode(',', $this->getInstance()->d_ships_to_within));
+            foreach ($opts as $opt) {
+                $result[$opt] = $opt;
+            }
+            return $result ?? [];
+        })->__invoke();
+
+        $countries = (function () {
+            $opts = CountryModel::objects()->order(['name']);
+            $result = [
+                'All regions' => 'All regions',
+                'North America' => 'North America',
+                'Europe' => 'Europe',
+                'Australia and Oceania' => 'Australia and Oceania',
+                'Latin America' => 'Latin America',
+                'Former USSR' => 'Former USSR',
+                'Asia' => 'Asia',
+                'Africa' => 'Africa',
+                'Antarctica' => 'Antarctica',
+            ];
+
+            foreach ($opts as $opt) {
+                $result[$opt->name] = $opt->name;
+            }
+            return $result ?? [];
+        })->__invoke();
+
         return [
             'd_ships_to_within' => [
-                'class' => CharField::class,
+                'class' => Select2Field::class,
                 'label' => 'Distributor ships to/within',
+                'choices' => $countries,
+                'selected' => $countriesSelected,
+                'multiple' => true,
+                'html' => ['style' => 'width:400px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
@@ -60,6 +94,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'class' => Select2Field::class,
                 'label' => 'Shipping carriers used by distributor',
                 'placeholder' => 'Click to select shipping carriers',
+                'html' => ['style' => 'width:400px;'],
                 'choices' => static function () {
                     foreach (TrackingLinksCarrierModel::objects()->order(['orderby']) as $carrier) {
                         $result[$carrier->pk] = (string)$carrier;
@@ -213,5 +248,13 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'html' => ['style' => 'width:150px; border: none; background: white; color: black', 'disabled' => 'disabled'],
             ]
         ];
+    }
+
+    public function beforeInstanceSave($instance)
+    {
+        parent::beforeInstanceSave($instance);
+        if ($instance->d_ships_to_within && is_array($instance->d_ships_to_within)) {
+            $instance->d_ships_to_within = implode(',', $instance->d_ships_to_within);
+        }
     }
 }
