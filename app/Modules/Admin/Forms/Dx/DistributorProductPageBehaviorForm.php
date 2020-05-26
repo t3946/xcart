@@ -32,7 +32,7 @@ class DistributorProductPageBehaviorForm extends DistributorForm
                     'R' => 'display real quantity',
                     'D' => 'display quantity of',
                 ],
-                'label' => 'Quantity in stock behavior on the SF product page:',
+                'label' => 'Quantity in stock behavior on the SF product page',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'extend' => 'display_quantity_of',

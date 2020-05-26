@@ -24,7 +24,7 @@ class DistributorQuickLinksForm extends DistributorForm
         return [
             'd_website_search_for_sku_url' => [
                 'class' => CharField::class,
-                'label' => 'Link to product on distributor website (use {{mpn}}):',
+                'label' => 'Link to product on distributor website (use {{mpn}})',
                 'hint' => LanguageModel::translate('help_dx_search_for_sku_url_text') ?? 'help_dx_search_for_sku_url_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
@@ -32,7 +32,7 @@ class DistributorQuickLinksForm extends DistributorForm
             'd_link_to_order_distributors_website' => [
                 'class' => CharField::class,
                 'hint' => LanguageModel::translate('help_dx_link_to_order_text') ?? 'help_dx_link_to_order_text',
-                'label' => 'Link to order on distributor website (use {{orderid}}):',
+                'label' => 'Link to order on distributor website (use {{orderid}})',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],

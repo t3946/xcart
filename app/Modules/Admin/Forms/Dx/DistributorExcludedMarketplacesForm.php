@@ -23,7 +23,7 @@ class DistributorExcludedMarketplacesForm extends DistributorForm
         return [
             'disabled_marketplaces' => [
                 'class' => Select2Field::class,
-                'label' => 'Excluded marketplaces:',
+                'label' => 'Excluded marketplaces',
                 'placeholder' => 'Click to select',
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,

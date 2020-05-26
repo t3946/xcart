@@ -144,7 +144,7 @@
                     return $(this).attr('title');
                 },
                 open: function (event, ui) {
-                    ui.tooltip.css("max-width", "400px");
+                    ui.tooltip.css("max-width", "650px");
                 }
             });
         });
