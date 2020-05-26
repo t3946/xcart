@@ -112,11 +112,6 @@ checkboxes = new Array({section name=zone loop=$zones_list}{foreach key=shipid i
 					</tr>
 					{capture name=rates_list}
 						{foreach key=shipid item=shipping_method from=$zones_list[zone].shipping_methods}
-							<tr>
-								<td class="SubHeaderGreyLine">
-									<img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
-								</td>
-							</tr>
 							<tr class="TableSubHead">
 								<td>
 									<table cellpadding="2" cellspacing="0">
@@ -139,11 +134,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 									</table>
 								</td>
 							</tr>
-							<tr>
-								<td class="SubHeaderGreyLine">
-									<img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
-								</td>
-							</tr>
+							
 							<tr>
 								<td>
 									<table cellpadding="0" cellspacing="3" width="100%" border="0">
@@ -408,6 +399,6 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 {if $type eq "D"}
 {include file="dialog.tpl" title=$lng.lbl_shipping_charges content=$smarty.capture.dialog extra='width="100%"'}
 {else}
-{include file="dialog.tpl" title="Shipping markups list" content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$lng.lbl_shipping_markups content=$smarty.capture.dialog extra='width="100%"'}
 {/if}
 

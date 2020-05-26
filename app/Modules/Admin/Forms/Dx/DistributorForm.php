@@ -100,7 +100,7 @@ class DistributorForm extends ModelForm
             'form' => DistributorFeedInfoForm::class
         ],
         19 => [
-            'title' => 'UPS shipping markups',
+            'title' => 'Shipping server markups',
             'order_by' => '73',
             'distributor_section' => '19'
         ],
