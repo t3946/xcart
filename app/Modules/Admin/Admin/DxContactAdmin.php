@@ -71,7 +71,7 @@ class DxContactAdmin extends Admin
         if ($this->editable) {
             $columns[] = 'pq';
         }
-        return array_merge($columns, ['contact_name', 'email', 'phone', 'ext']);
+        return array_merge($columns, ['contact_name', 'email', 'phone', 'ext', 'call']);
     }
 
     public function getAvailableListColumns()
@@ -113,6 +113,13 @@ class DxContactAdmin extends Admin
                 'title' => 'Fax',
                 'template' => $this->columnDefaultTemplate,
             ],
+            'call' => [
+                'title' => ' ',
+                'placeholder' => 'Call',
+                'html' => ['style' => 'color: blue'],
+                'title_inline' => true,
+                'template' => $this->columnDefaultTemplate,
+            ]
         ];
     }
 

@@ -6,6 +6,7 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Distributor\Models\DistributorContactsModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\LinkField;
 use Xcart\App\Form\Fields\RadioField;
 
 class DistributorContactForm extends DistributorForm
@@ -21,6 +22,7 @@ class DistributorContactForm extends DistributorForm
             'phone',
             'ext',
             'fax',
+            'call'
         ]];
     }
 
@@ -88,6 +90,14 @@ class DistributorContactForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'inputTemplate' => 'admin/distributor/form/input_mult.tpl',
             ],
+            'call' => [
+                'class' => LinkField::class,
+                'label' => 'Call',
+                'html' => ['class' => 'admin_link'],
+                'value' => "tel:{$this->getInstance()->distributor->getPhoneNormalized()}",
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+            ]
         ];
     }
 }
