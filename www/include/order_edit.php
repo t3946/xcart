@@ -302,8 +302,6 @@ if ($REQUEST_METHOD === 'POST')
                 if (!empty($v['delete']) || $v['amount'] == 0) {
                     $cart_tmp['products'][$k]['deleted'] = true;
 
-                    $log = "<b>Deleted:</b> {$product_code}";
-                    func_log_order($orderid, 'X', $log, $login);
                     continue;
                 }
 

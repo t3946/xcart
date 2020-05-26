@@ -8,7 +8,7 @@
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste fullpage"
+                "insertdatetime media table contextmenu paste"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             forced_root_block: false,
@@ -50,6 +50,9 @@
 {if $statuses}
 
 {$lng.lbl_order_status_replace_vars}
+{foreach from=$snippets item=snippet}
+    {literal}{{{/literal}{$snippet->code}{literal}}}{/literal} = {$snippet->description} <br/>
+{/foreach}
 
 <form name="osnotificform" action="order_status_notifications.php" method="post">
     <input type="hidden" name="mode" value="update"/>
@@ -62,7 +65,6 @@
                         {if $type ne 'BD' && $type ne 'CA'}
                             <optgroup label="{$status_types[$type]}">
                                 {foreach from=$group item=order_status key="code"}
-                                    {* {if $code ne "K" && $code ne "L" && $code ne "M" && $code ne "V"} *}
                                     {if $code ne "K" && $code ne "L" && $code ne "M"}
                                         <option value="{$code}"{if $status eq $code} selected="selected"{/if}>{$order_status}</option>
                                     {/if}

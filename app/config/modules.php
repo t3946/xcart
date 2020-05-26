@@ -22,6 +22,7 @@ return [
     'Order',
     'Reports',
     'Brand',
+    'Forms',
     'Pages',
     'Amp',
     'PBX',
@@ -30,4 +31,5 @@ return [
     'Subscribe',
     'Xero',
     'Translate',
+
 ];

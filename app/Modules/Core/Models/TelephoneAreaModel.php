@@ -5,6 +5,7 @@ namespace Modules\Core\Models;
 use Doctrine\DBAL\Types\Type;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
@@ -36,7 +37,10 @@ class TelephoneAreaModel extends Model
                 'link' => ['country_code' => 'country_code', 'state_code' => 'code'],
                 'field' => 'state',
                 'sqlType' => Type::STRING,
-            ]
+            ],
+            'state_code' => [
+                'class' => CharField::class,
+            ],
         ];
     }
 }

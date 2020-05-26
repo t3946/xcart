@@ -31,18 +31,21 @@ class OrderInvoiceHelper
             try {
                 Xcart::app()->mail->template(
                     $order->email,
-                    str_replace('{{orderid}}', $order->getOrderNumber(), $notification->customer_subject),
+                    $notification->render('customer_subject', ['order' => $order]),
                     'mail/invoice.tpl',
-                    ['order' => $order,'notification' => $notification],
+                    [
+                        'order' => $order,
+                        'email_body' => $notification->render('email_body', ['order' => $order]),
+                    ],
                     ['from' => $cs_email]
                 );
 
                 if ($send_copy) {
                     Xcart::app()->mail->template(
                         $cs_email,
-                        str_replace('{{orderid}}', $order->getOrderNumber(), $notification->copy_subject),
+                        $notification->render('copy_subject', ['order' => $order]),
                         'mail/invoice.tpl',
-                        ['order' => $order, 'type' => 'A', 'notification' => $notification],
+                        ['order' => $order, 'type' => 'A', 'email_body' => $notification->render('email_body', ['order' => $order])],
                         [
                             'from' => [$cs_email => $order->firstname],
                             'reply_to' => [$order->email => $order->firstname],

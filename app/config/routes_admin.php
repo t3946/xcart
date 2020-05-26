@@ -56,6 +56,11 @@ return [
         'namespace' => 'files'
     ],
     [
+        'route' => '/admin/forms',
+        'path' => 'Modules.Forms.routes_admin',
+        'namespace' => 'forms'
+    ],
+    [
         'route' => '/admin',
         'path' => 'Modules.Admin.routes',
         'namespace' => 'admin'

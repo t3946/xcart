@@ -109,6 +109,16 @@ class BrandModel extends Model
                 'null' => false,
                 'default' => '',
             ],
+            'leadtime_from' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'leadtime_to' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
             'link_to_us_url' => [
                 'class' => CharField::class,
                 'null' => false,

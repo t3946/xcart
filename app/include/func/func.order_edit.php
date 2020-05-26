@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Models\OrderDetailModel;
 use Modules\User\Models\UserModel;
 
 x_load('cart', 'mail', 'order', 'product', 'taxes');
@@ -519,75 +520,66 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         $items         = [];
         $manufacturers = [];
         foreach ($products as $pk => $product) {
-            if ($product["deleted"]) {
-                continue;
+
+            if ($product['itemid']) {
+                [$dm, $created] = OrderDetailModel::objects()->getOrCreate(['itemid' => $product['itemid']]);
+            } else {
+                $dm = new OrderDetailModel([
+                    'order_group_id' => $cart['order_group_id'],
+                    'orderid' => $cart['orderid'],
+                    'productid' => $product['productid'],
+                ]);
+                $created = true;
             }
 
+            if ($product['deleted']) {
+                $dm->delete();
+                $log = "<b>Deleted:</b> {$product['productcode']}";
+                func_log_order($dm->orderid, 'X', $log, $login);
+            }
 
-            if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P") {
-
+            if ($shipping_groups[$product['manufacturerid']]['cb_status'] === 'P') {
                 if (empty($product['new'])) {
-
-                    $amount = func_query_first_cell("SELECT amount FROM $sql_tbl[order_details] WHERE orderid='$cart[orderid]' AND itemid='$product[itemid]'");
-
-                    if ($amount != "") {
+                    $amount = $dm->amount;
+                    if ($amount) {
                         $product['amount'] = $amount;
                     }
                 }
             }
 
-            $query_data = [];
-            if (!empty($product['itemid'])) {
-                $query_data = func_query_first("SELECT * FROM $sql_tbl[order_details] WHERE itemid='$product[itemid]'");
-            }
-
             $query_data_tmp = [
-                "itemid"          => $product['itemid'],
-                "orderid"         => $cart['orderid'],
-                "order_group_id"  => $cart['order_group_id'],
-                "productid"       => $product['productid'],
-                "amount"          => $product['amount'],
-                'back'            => $product['back'],
-                "price"           => $product['price'],
-                "provider"        => $product["provider"],
-                "extra_data"      => serialize($product["extra_data"]),
-                "productcode"     => $product['productcode'],
-                "product"         => stripslashes($product['product']),
-                "item_cost_to_us" => $product['cost_to_us'],
-                "coupon_discount" => $product['coupon_discount'],
+                'amount' => $product['amount'],
+                'back' => $product['back'],
+                'price' => $product['price'],
+                'provider' => $product["provider"],
+                'extra_data' => serialize($product['extra_data']),
+                'productcode' => $product['productcode'],
+                'product' => stripslashes($product['product']),
+                'item_cost_to_us' => $product['cost_to_us'],
+                'coupon_discount' => $product['coupon_discount'],
             ];
-            if (floatval($query_data['item_cost_to_us']) != 0) {
+            if (!$created) {
                 unset($query_data_tmp['item_cost_to_us']);
             }
-            $query_data     = array_merge($query_data, $query_data_tmp);
 
-            if (@$user_account["flag"] != "FS") {
+            $dm->setAttributes($query_data_tmp);
 
-                $log = "";
-                $log_name = ["amount", "back", "price"];
-
-                $insert_log = false;
-                foreach ($log_name as $field_in_db) {
-                    $current = func_query_first_cell("SELECT $field_in_db FROM $sql_tbl[order_details] WHERE itemid='$product[itemid]'");
-                    if ($current != $product[$field_in_db] && $current != "") {
-                        $log .= "<B>" . $product['productcode'] . "</B>: " . $field_in_db . ": " . $current . " -> " . $product[$field_in_db] . "<br />";
-                        $insert_log = true;
-                    }
+            $log = '';
+            $log_name = ['amount', 'back', 'price'];
+            $insert_log = false;
+            foreach ($log_name as $field_in_db) {
+                $current = $dm->$field_in_db;
+                if ($current && $current != $product[$field_in_db]) {
+                    $log .= "<b>{$product['productcode']}</b>: {$field_in_db}: {$current} -> {$product[$field_in_db]}<br />";
+                    $insert_log = true;
                 }
-
-                if ($insert_log) {
-                    func_log_order($cart["orderid"], 'X', $log, $login);
-                }
-
-                /** @var \Modules\Order\Models\OrderDetailModel $dm */
-                $dm = $query_data['itemid']
-                    ? \Modules\Order\Models\OrderDetailModel::objects()->get(['itemid' => $query_data['itemid']])
-                    : new Modules\Order\Models\OrderDetailModel($query_data);
-                $dm->setAttributes($query_data);
-                $dm->save();
-
-                $items[] = $products[$pk]['itemid'] = $dm->itemid;
             }
+            if ($insert_log) {
+                func_log_order($cart['orderid'], 'X', $log, $login);
+            }
+            $dm->save();
+
+            $items[] = $products[$pk]['itemid'] = $dm->itemid;
 
             if (!isset($back_products[$product['manufacturerid']])) {
                 $back_products[$product['manufacturerid']] = -1;
@@ -628,9 +620,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 $back_products[$product['manufacturerid']] = -1;
             }
         }
-        if (@$user_account["flag"] != "FS") {
-            db_query("DELETE FROM $sql_tbl[order_details] WHERE orderid='$cart[orderid]' AND itemid NOT IN ('" . implode("','", $items) . "')");
-        }
+
     }
 
     if (!empty($shipping_groups))

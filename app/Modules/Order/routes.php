@@ -2,6 +2,7 @@
 
 use Modules\Order\Controllers\Api\AfterShipController;
 use Modules\Order\Controllers\Api\InvoiceConventerController;
+use Modules\Order\Controllers\OrderProcessController;
 
 return [
     [
@@ -19,5 +20,20 @@ return [
         'route' => '/api/webhook/',
         'target' => [AfterShipController::class, 'webHook'],
         'name' => 'webhook'
+    ],
+    [
+        'route' => '/cancel/{i:order_id}/{slug:slug}',
+        'target' => [OrderProcessController::class, 'cancel'],
+        'name' => 'cancel'
+    ],
+    [
+        'route' => '/continue/{i:order_id}/{slug:slug}',
+        'target' => [OrderProcessController::class, 'continue'],
+        'name' => 'continue'
+    ],
+    [
+        'route' => '/continue/success',
+        'target' => [OrderProcessController::class, 'success'],
+        'name' => 'success'
     ],
 ];

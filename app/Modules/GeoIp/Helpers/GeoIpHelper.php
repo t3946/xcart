@@ -10,6 +10,7 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
+use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Sites\Models\SiteConfigModel;
 
 class GeoIpHelper
@@ -52,6 +53,25 @@ class GeoIpHelper
     public static function getGeoipLocation($ip)
     {
         return self::getGeoipLocation2($ip);
+    }
+
+    public static function getMelissaIpLocation($ip)
+    {
+        if ($res = FraudCheckHelper::fetchMelissaIp($ip)) {
+            if ($country = CountryModel::objects()->get(['name' => $res['Country']])) {
+                $state = StateModel::objects()->get(['state' => $res['State'], 'country_code' => $country->code]);
+            }
+            $model = new GeoipLitecityLocationModel(
+                [
+                    'country' => $country ? $country->code : null,
+                    'region' => $state ? $state->code : null,
+                    'city' => $res['City'] ?? null,
+                    'postalCode' => $res['PostalCode'] ?? null,
+                ]
+            );
+            return $model;
+        }
+        return null;
     }
 
     public static function getAreaCodeFromPhone($phone)

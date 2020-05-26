@@ -4,10 +4,12 @@
 namespace Modules\Order\Helpers;
 
 
+use GuzzleHttp\Client;
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\FraudCheckModel;
+use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Sites\Models\SiteModel;
@@ -15,6 +17,8 @@ use Xcart\App\Main\Xcart;
 
 class FraudCheckHelper
 {
+    private const MELISSA_KEY = 'lBRkrbaK8DVVghZCwkUO2k**nSAcwXpxhQ0PC2lXxuDAZ-**';
+
     public static function addressAbbreviationsPrepare($field)
     {
         $arr = [
@@ -63,11 +67,14 @@ class FraudCheckHelper
             if (!is_array($val)) {
                 $a[] = $val;
             } else {
-                array_push ($a, ...$val);
+                array_push($a, ...$val);
             }
-            $b = array_map(static function($e){$e = strtoupper($e); return "\b{$e}\b";}, $a);
+            $b = array_map(static function ($e) {
+                $e = strtoupper($e);
+                return "\b{$e}\b";
+            }, $a);
             $search = implode('|', $b);
-            $replacement = '(' .implode('|', array_map('strtoupper',$a)). ')';
+            $replacement = '(' . implode('|', array_map('strtoupper', $a)) . ')';
             $field = preg_replace("/{$search}/", $replacement, $field);
         }
         return $field;
@@ -143,7 +150,7 @@ class FraudCheckHelper
                     break;
                 case 'BluePay':
                     if ($cv = $oTransaction->transaction_response['advinfo'] ?? null) {
-                        if (/*$cv['CVV'] === 'CVV2 - Match' && */in_array($cv['AVS'], ['Street and Zip match', 'Zip match 5, street match'], true)) {
+                        if (/*$cv['CVV'] === 'CVV2 - Match' && */ in_array($cv['AVS'], ['Street and Zip match', 'Zip match 5, street match'], true)) {
                             $score = 1;
                             $fraud_result = 'positive';
                             $manual_action = 'Y';
@@ -165,18 +172,21 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $fraud_result = 'negative';
-        $fraud_score = 1;
-        $manual_action = 'N';
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
         /** @var OrderTransactionModel $oTransaction */
         if ($fraud->isPaypalPayment($order) && $oTransaction = $fraud->getFirstTransaction($order)) {
-            $o_address = FraudCheckHelper::addressAbbreviationsPrepare(FraudCheckHelper::correctAddress($order->s_address));
-            $p_address = FraudCheckHelper::correctAddress($oTransaction->transaction_response['address_street']);
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+            $o_address = self::addressAbbreviationsPrepare(self::correctAddress($order->s_address));
+            $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
+            $o_address_replaces = str_replace(' ', '\s?', $o_address);
             if ($oTransaction->transaction_response['address_country_code'] === $order->s_country &&
                 $oTransaction->transaction_response['address_state'] === $order->s_state &&
-                FraudCheckHelper::correctAddress($oTransaction->transaction_response['address_city']) === FraudCheckHelper::correctAddress($order->s_city) &&
-                FraudCheckHelper::correctAddress($oTransaction->transaction_response['address_zip']) === FraudCheckHelper::correctAddress($order->s_zipcode) &&
-                preg_match("/{$o_address}/", $p_address, $mm)) {
+                self::correctAddress($oTransaction->transaction_response['address_city']) === self::correctAddress($order->s_city) &&
+                self::correctAddress($oTransaction->transaction_response['address_zip']) === self::correctAddress($order->s_zipcode) &&
+                preg_match("/{$o_address_replaces}/", $p_address, $mm)) {
                 $fraud_result = 'positive';
                 $fraud_score = 1;
                 $manual_action = 'Y';
@@ -187,32 +197,94 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_CONFIRMED(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $fraud_result = 'negative';
-        $fraud_score = 1;
-        $manual_action = 'N';
-        [$r] = self::scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING($order, $fraud);
-        if ($r === 'positive' && $fraud->isPaypalPayment($order) && $oTransaction = $fraud->getFirstTransaction($order)) {
-            if ($oTransaction->transaction_response['address_status'] === 'confirmed') {
-                $fraud_result = 'positive';
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
+
+        if ($fraud->isPaypalPayment($order)) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+            [$r] = self::scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING($order, $fraud);
+            if ($r === 'positive' && $oTransaction = $fraud->getFirstTransaction($order)) {
+                if ($oTransaction->transaction_response['address_status'] === 'confirmed') {
+                    $fraud_result = 'positive';
+                    $fraud_score = 1;
+                    $manual_action = 'Y';
+                }
+            }
+        }
+        return [
+            $fraud_result,
+            $fraud_score,
+            ['MANUAL_PAYPAL_SHIPPING_EQUAL_BILLING' => $r, 'address_status' => $oTransaction->transaction_response['address_status'] ?? ''],
+            $manual_action
+        ];
+    }
+
+    public static function scoreMANUAL_IS_FREIGHT_FORWARDER_FOUND(OrderModel $order, FraudCheckModel $fraud): array
+    {
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
+
+        /** @var OrderFraudCheckModel $orderFraud */
+        if ($orderFraudShipping = OrderFraudCheckModel::objects()->get(['orderid' => $order->orderid, 'question_code' => 'MANUAL_GOOGLE_SHIPPING_1'])) {
+            $r = $orderFraudShipping->fraud_result;
+            if ($r === 'positive') {
+                $fraud_result = $r;
                 $fraud_score = 1;
                 $manual_action = 'Y';
             }
         }
-        return [$fraud_result, $fraud_score, ['MANUAL_PAYPAL_SHIPPING_EQUAL_BILLING' => $r, 'address_status' => $oTransaction->transaction_response['address_status'] ?? ''], $manual_action];
+        if ($orderFraudBilling = OrderFraudCheckModel::objects()->get(['orderid' => $order->orderid, 'question_code' => 'MANUAL_GOOGLE_BILLING_1'])) {
+            $r2 = $orderFraudBilling->fraud_result;
+            if ($r2 === 'positive') {
+                $fraud_result = $r2;
+                $fraud_score = 1;
+                $manual_action = 'Y';
+            }
+        }
+
+        if (($info = $orderFraudShipping->additional_info) && $info['Commercial_Mail_Receiving_Agency']) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+        }
+
+        if ($fraud_result !== 'negative' && ($info = $orderFraudBilling->additional_info) && $info['Commercial_Mail_Receiving_Agency']) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+        }
+
+        return [
+            $fraud_result,
+            $fraud_score,
+            [
+                'MANUAL_GOOGLE_SHIPPING_1' => $r ?? '',
+                'MANUAL_GOOGLE_BILLING_1' => $r2 ?? '',
+                'Commercial_Mail_Receiving_Agency' => $info['Commercial_Mail_Receiving_Agency']
+            ],
+            $manual_action
+        ];
     }
 
     public static function scoreMANUAL_PAYPAL_FULLNAME_VERIFIED(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $fraud_result = 'negative';
-        $fraud_score = 1;
-        $manual_action = 'N';
-        $payer_status = '';
-        if ($fraud->isPaypalPayment($order) && $oTransaction = $fraud->getFirstTransaction($order)) {
-            $payer_status = $oTransaction->transaction_response['payer_status'];
-            if ($payer_status === 'verified') {
-                $fraud_result = 'positive';
-                $fraud_score = 1;
-                $manual_action = 'Y';
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
+
+        if ($fraud->isPaypalPayment($order)) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+            $payer_status = '';
+            if ($oTransaction = $fraud->getFirstTransaction($order)) {
+                $payer_status = $oTransaction->transaction_response['payer_status'];
+                if ($payer_status === 'verified') {
+                    $fraud_result = 'positive';
+                    $fraud_score = 1;
+                    $manual_action = 'Y';
+                }
             }
         }
         return [$fraud_result, $fraud_score, ['Payer status' => $payer_status], $manual_action];
@@ -220,54 +292,67 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER(OrderModel $order, FraudCheckModel $fraud)
     {
-        $fraud_result = 'negative';
-        $fraud_score = 1;
-        $manual_action = 'N';
-        $payer_email = '';
-        if ($fraud->isPaypalPayment($order) && $oTransaction = $fraud->getFirstTransaction($order)) {
-            $payer_email = $oTransaction->transaction_response['payer_email'];
-            if ($oTransaction->transaction_response['payer_email'] === $order->email) {
-                $fraud_result = 'positive';
-                $fraud_score = 1;
-                $manual_action = 'Y';
-            }
-        }
-        return [$fraud_result, $fraud_score, ['Payer email' => $payer_email], $manual_action];
-    }
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
 
-    public static function scoreMANUAL_PAYPAL_FULLNAME_EQUAL_TO_ORDER(OrderModel $order, FraudCheckModel $fraud)
-    {
-        $fraud_result = 'negative';
-        $fraud_score = 1;
-        $manual_action = 'N';
-        $first_name = $last_name = '';
-        if ($fraud->isPaypalPayment($order) && $oTransaction = $fraud->getFirstTransaction($order)) {
-            $first_name = $oTransaction->transaction_response['first_name'];
-            $last_name = $oTransaction->transaction_response['last_name'];
-            $ar = array_unique([$order->s_firstname, $order->b_firstname, $order->firstname]);
-            if (count($ar) === 1) {
-                $name = reset($ar);
-                if (stripos($name, $first_name) !== false &&
-                    stripos($name, $last_name) !== false) {
+        if ($fraud->isPaypalPayment($order)) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+            $payer_email = '';
+            if ($oTransaction = $fraud->getFirstTransaction($order)) {
+                $payer_email = $oTransaction->transaction_response['payer_email'];
+                if ($oTransaction->transaction_response['payer_email'] === $order->email) {
                     $fraud_result = 'positive';
                     $fraud_score = 1;
                     $manual_action = 'Y';
                 }
             }
-            if (stripos($order->s_company, $first_name) !== false &&
-                stripos($order->s_company, $last_name) !== false) {
-                $fraud_result = 'positive';
-                $fraud_score = 1;
-                $manual_action = 'Y';
-            }
-            if (stripos($order->b_company, $first_name) !== false &&
-                stripos($order->b_company, $last_name) !== false) {
-                $fraud_result = 'positive';
-                $fraud_score = 1;
-                $manual_action = 'Y';
+        }
+
+        return [$fraud_result, $fraud_score, ['Payer email' => $payer_email], $manual_action];
+    }
+
+    public static function scoreMANUAL_PAYPAL_FULLNAME_EQUAL_TO_ORDER(OrderModel $order, FraudCheckModel $fraud)
+    {
+        $fraud_result = 'neutral';
+        $fraud_score = 0;
+
+        if ($fraud->isPaypalPayment($order)) {
+            $fraud_result = 'negative';
+            $fraud_score = 1;
+            $manual_action = 'N';
+            $first_name = $last_name = '';
+
+            if ($oTransaction = $fraud->getFirstTransaction($order)) {
+                $first_name = $oTransaction->transaction_response['first_name'];
+                $last_name = $oTransaction->transaction_response['last_name'];
+                $ar = array_unique([$order->s_firstname, $order->b_firstname, $order->firstname]);
+                if (count($ar) === 1) {
+                    $name = reset($ar);
+                    if (stripos($name, $first_name) !== false &&
+                        stripos($name, $last_name) !== false) {
+                        $fraud_result = 'positive';
+                        $fraud_score = 1;
+                        $manual_action = 'Y';
+                    }
+                }
+                if (stripos($order->s_company, $first_name) !== false &&
+                    stripos($order->s_company, $last_name) !== false) {
+                    $fraud_result = 'positive';
+                    $fraud_score = 1;
+                    $manual_action = 'Y';
+                }
+                if (stripos($order->b_company, $first_name) !== false &&
+                    stripos($order->b_company, $last_name) !== false) {
+                    $fraud_result = 'positive';
+                    $fraud_score = 1;
+                    $manual_action = 'Y';
+                }
             }
         }
-        return [$fraud_result, $fraud_score, ['Payer full name' => "{$first_name} {$last_name}"] , $manual_action];
+
+        return [$fraud_result, $fraud_score, ['Payer full name' => "{$first_name} {$last_name}"], $manual_action];
     }
 
     public static function scoreCHECK_B_S(OrderModel $order, FraudCheckModel $fraud): array
@@ -275,10 +360,10 @@ class FraudCheckHelper
 
         [$s_address, $b_address] = $order->getAddressInfo();
         $full_address_s = "{$s_address['address'][0]}-{$s_address['address'][1]}-{$order->s_city}-{$order->s_state}-{$order->s_country}-{$order->s_zipcode}";
-        $full_address_s = FraudCheckHelper::correct($full_address_s);
+        $full_address_s = self::correct($full_address_s);
 
         $full_addresb_b = "{$b_address['address'][0]}-{$b_address['address'][1]}-{$order->b_city}-{$order->b_state}-{$order->b_country}-{$order->b_zipcode}";
-        $full_addresb_b = FraudCheckHelper::correct($full_addresb_b);
+        $full_addresb_b = self::correct($full_addresb_b);
 
         if ($full_address_s === $full_addresb_b) {
             $fraud_score = 1;
@@ -324,7 +409,7 @@ class FraudCheckHelper
         $email_arr = explode('@', $order->email);
         $email_1 = strtoupper($email_arr[0]);
 
-        if (($firstname_arr = explode(' ', FraudCheckHelper::correct($order->firstname))) && $email_1) {
+        if ($email_1 && ($firstname_arr = explode(' ', self::correct($order->firstname)))) {
             foreach ($firstname_arr as $k => $v) {
                 $name = trim($v);
                 if ($name && stripos($email_1, $name) !== false) {
@@ -374,11 +459,11 @@ class FraudCheckHelper
         $fraud_result = 'negative';
         $geoip_state = $areacode_state = '';
 
-        $s_state = FraudCheckHelper::correct($order->s_state);
-        $b_state = FraudCheckHelper::correct($order->b_state);
+        $s_state = self::correct($order->s_state);
+        $b_state = self::correct($order->b_state);
 
-        if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($order->getIp())) {
-            $geoip_state = FraudCheckHelper::correct($geo_litecity_location->region);
+        if ($geo_litecity_location = $order->getGeoLocation()) {
+            $geoip_state = self::correct($geo_litecity_location->region);
         }
 
         $userinfo_phone = str_replace([' ', '(', ')'], '', $order->phone);
@@ -401,11 +486,11 @@ class FraudCheckHelper
         $fraud_score = -1;
         $fraud_result = 'negative';
 
-        $s_city = FraudCheckHelper::correct($order->s_city);
-        $b_city = FraudCheckHelper::correct($order->b_city);
+        $s_city = self::correct($order->s_city);
+        $b_city = self::correct($order->b_city);
 
-        if (($customer_ip = $order->getIp()) && $geo_litecity_location = GeoIpHelper::getGeoipLocation($customer_ip)) {
-            $geoip_city = FraudCheckHelper::correct($geo_litecity_location->city);
+        if ($geo_litecity_location = $order->getGeoLocation()) {
+            $geoip_city = self::correct($geo_litecity_location->city);
         }
 
         $names = array_unique([$s_city, $b_city, $geoip_city ?? null]);
@@ -481,7 +566,7 @@ class FraudCheckHelper
         foreach ($qs as $k => $v) {
             if (($ip = $v->getIp()) && $customer_ip === $ip) {
                 $full_address_s = "{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}";
-                $full_address_s = FraudCheckHelper::correct($full_address_s);
+                $full_address_s = self::correct($full_address_s);
                 $names[$v->orderid] = $full_address_s;
                 $full_address_names[$v->orderid] = $v;
             }
@@ -609,7 +694,7 @@ class FraudCheckHelper
             if ($phone === preg_replace('/[^0-9]/', '', $v->phone)) {
                 $address = trim($v->b_address);
                 $full_address_s = "{$address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}";
-                $full_address_s = FraudCheckHelper::correct($full_address_s);
+                $full_address_s = self::correct($full_address_s);
                 $names[$v->orderid] = $full_address_s;
                 $full_address_names[$v->orderid] = $v;
             }
@@ -643,7 +728,7 @@ class FraudCheckHelper
 
         foreach ($orders as $k => $v) {
             $address = trim($v->s_address);
-            $full_address_s = FraudCheckHelper::correct("{$address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
+            $full_address_s = self::correct("{$address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
@@ -677,7 +762,7 @@ class FraudCheckHelper
 
         foreach ($orders as $k => $v) {
             $address = trim($v->b_address);
-            $full_address_s = FraudCheckHelper::correct("{$address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
+            $full_address_s = self::correct("{$address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
             $names[$v->orderid] = $full_address_s;
             $full_address_names[$v->orderid] = $v;
         }
@@ -711,13 +796,11 @@ class FraudCheckHelper
 
     public static function scoreCHECK_DIFFERENT_BILLING_FOR_SHIPPING(OrderModel $order): array
     {
-        global $sql_tbl;
-
         $fraud_score = -1;
         $fraud_result = 'negative';
         $additional_info = $names = $full_address_names = [];
 
-        $full_address_s = FraudCheckHelper::correct("{$order->s_address}-{$order->s_city}-{$order->s_state}-{$order->s_country}-{$order->s_zipcode}");
+        $full_address_s = self::correct("{$order->s_address}-{$order->s_city}-{$order->s_state}-{$order->s_country}-{$order->s_zipcode}");
 
         $time_condition = $order->date - 60 * 60 * 24 * 180;
         $orders = OrderModel::objects()->filter([
@@ -731,9 +814,9 @@ class FraudCheckHelper
         ]);
 
         foreach ($orders as $k => $v) {
-            $tmp_full_address_s = FraudCheckHelper::correct("{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
+            $tmp_full_address_s = self::correct("{$v->s_address}-{$v->s_city}-{$v->s_state}-{$v->s_country}-{$v->s_zipcode}");
             if ($full_address_s == $tmp_full_address_s) {
-                $tmp_full_address_b = FraudCheckHelper::correct("{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
+                $tmp_full_address_b = self::correct("{$v->b_address}-{$v->b_city}-{$v->b_state}-{$v->b_country}-{$v->b_zipcode}");
                 $names[$v->orderid] = $tmp_full_address_b;
                 $full_address_names[$v->orderid] = $v;
             }
@@ -811,17 +894,291 @@ class FraudCheckHelper
         return [$fraud_result, $fraud_score, null];
     }
 
+    private static function fetchMelissaAddress($address)
+    {
+        $client = new Client(['verify' => false, 'timeout' => 10]);
+        $params = [
+            'freeForm' => self::correct("{$address['address']} {$address['city']} {$address['state']} {$address['country']} {$address['zipcode']}"),
+            'fmt' => 'json',
+            'id' => self::MELISSA_KEY
+        ];
+        $url = 'https://www.melissa.com/v2/lookups/addresscheck/address/';
+        if ($response = $client->request('GET', $url, ['query' => $params])) {
+            if ($res = json_decode($response->getBody(), true)) {
+                $res = reset($res);
+                return $res;
+            }
+        }
+        return [];
+    }
+
+    private static function fetchMellissaPhone($phone)
+    {
+        $client = new Client(['verify' => false, 'timeout' => 10]);
+        $params = [
+            'phone' => $phone,
+            'fmt' => 'json',
+            'id' => self::MELISSA_KEY
+        ];
+        $url = 'https://www.melissa.com/v2/lookups/phonecheck/';
+        if ($response = $client->request('GET', $url, ['query' => $params])) {
+            if ($res = json_decode($response->getBody(), true)) {
+                $res = reset($res);
+                return $res;
+            }
+        }
+    }
+
+    private static function fetchMellissaEmail($email)
+    {
+        $client = new Client(['verify' => false, 'timeout' => 10]);
+        $params = [
+            'emailAddress' => $email,
+            'fmt' => 'json',
+            'id' => self::MELISSA_KEY
+        ];
+        $url = 'https://www.melissa.com/v2/lookups/personator/';
+        if ($response = $client->request('GET', $url, ['query' => $params])) {
+            if ($res = json_decode($response->getBody(), true)) {
+                $res = reset($res);
+                return $res;
+            }
+        }
+    }
+
+    public static function fetchMelissaIp($ip)
+    {
+        $client = new Client(['verify' => false, 'timeout' => 10]);
+        $params = [
+            'ip' => $ip,
+            'fmt' => 'json',
+            'id' => self::MELISSA_KEY
+        ];
+        $url = 'https://www.melissa.com/v2/lookups/iplocation/ip/';
+        if ($response = $client->request('GET', $url, ['query' => $params])) {
+            if ($res = json_decode($response->getBody(), true)) {
+                $res = reset($res);
+                return $res;
+            }
+        }
+        return [];
+    }
+
+    public static function scoreMANUAL_IS_GOOGLE_PHONE_1(OrderModel $order, FraudCheckModel $fraud): array
+    {
+        $fraud_score = -1;
+        $fraud_result = 'negative';
+        $callerId = '';
+        if ($res = self::fetchMellissaPhone($order->phone)) {
+            if (($callerId = $res['CallerID'])) {
+                $names = array_merge(
+                    self::getAllVariations($order->firstname),
+                    self::getAllVariations($order->s_firstname),
+                    self::getAllVariations($order->b_firstname),
+                    self::getAllVariations($order->s_company),
+                    self::getAllVariations($order->b_company)
+                );
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+
+                if (in_array(soundex($callerId), $names, true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                } else if (($lastName = self::getLastPart($callerId)) && strlen($lastName) > 3 &&
+                    in_array(strtolower($lastName),
+                        [
+                            strtolower(self::getLastPart($order->firstname)),
+                            strtolower(self::getLastPart($order->s_firstname)),
+                            strtolower(self::getLastPart($order->b_firstname)),
+                        ],
+                        true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
+            }
+        }
+        return [$fraud_result, $fraud_score, [
+            'CallerID' => $callerId,
+            'Phone' => $res['Phone'] ?? '',
+        ], $manual_action ?? 'N'];
+    }
+
+    public static function scoreMANUAL_IS_GOOGLE_EMAIL_1(OrderModel $order, FraudCheckModel $fraud): array
+    {
+        $fraud_score = -1;
+        $fraud_result = 'negative';
+        if ($res = self::fetchMellissaEmail($order->email)) {
+            if (($fullName = $res['NameFull'])) {
+                $names = array_merge(self::getAllVariations($order->firstname), self::getAllVariations($order->s_firstname), self::getAllVariations($order->b_firstname));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+                if (in_array(soundex($fullName), $names, true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
+            }
+        }
+        return [$fraud_result, $fraud_score, [
+            'NameFull' => $fullName ?? '',
+        ], $manual_action ?? 'N'];
+
+    }
+
+    private static function depthPicker($arr, $temp_string, &$collect)
+    {
+        if ($temp_string !== '')
+            $collect [] = $temp_string;
+
+        for ($i = 0, $iMax = sizeof($arr); $i < $iMax; $i++) {
+            $arrcopy = $arr;
+            $elem = array_splice($arrcopy, $i, 1); // removes and returns the i'th element
+            if (count($arrcopy) > 0) {
+                self::depthPicker($arrcopy, "{$temp_string} {$elem[0]}", $collect);
+            } else {
+                $collect [] = "{$temp_string} {$elem[0]}";
+            }
+        }
+    }
+
+    private static function getAllVariations($string): array
+    {
+        $array = explode(' ', $string);
+        self::depthPicker($array, "", $collect);
+        return array_filter($collect, static function ($a) {
+            return strpos(trim($a), ' ') !== false;
+        });
+    }
+
+    public static function scoreMANUAL_GOOGLE_SHIPPING_1(OrderModel $order, FraudCheckModel $fraud): array
+    {
+        $fraud_score = -1;
+        $fraud_result = 'negative';
+        $fullName = '';
+        $addressVerified = false;
+        $addressCMRA = false;
+
+        if ($res = self::fetchMelissaAddress([
+            'address' => $order->s_address,
+            'city' => $order->s_city,
+            'state' => $order->s_state,
+            'country' => $order->s_country,
+            'zipcode' => $order->s_zipcode,
+        ])) {
+            if ($fullName = $res['NameFull']) {
+                $names = array_merge(self::getAllVariations($fullName), self::getAllVariations($res['PartyOwner1NameFull'] ?? ''));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+
+                if (in_array(soundex($order->s_firstname), $names, true) || in_array(soundex($order->s_company), $names, true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                } else if (($lastName = self::getLastPart($order->s_firstname)) && strlen($lastName) > 3 &&
+                    in_array(strtolower($lastName),
+                        [strtolower(self::getLastPart($fullName)), strtolower(self::getLastPart($res['PartyOwner1NameFull'] ?? ''))], true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
+            }
+            if ($resultsArr = explode(',', $res['Results'] ?? '')) {
+                if (in_array('AS01', $resultsArr, 'true')) {
+                    $addressVerified = true;
+                }
+                if (in_array('AS10', $resultsArr, 'true')) {
+                    $addressCMRA = true;
+                }
+            }
+        }
+
+        return [$fraud_result, $fraud_score, [
+            'NameFull' => $fullName,
+            'PhoneNumber' => $res['PhoneNumber'] ?? '',
+            'PartyOwner1NameFull' => $res['PartyOwner1NameFull'] ?? '',
+            'AddressVerified' => $addressVerified ? 'Verified' : 'Not verified',
+            'AddressTypeCode' => $res['AddressTypeCode'] ?? '',
+            'Commercial_Mail_Receiving_Agency' => $addressCMRA,
+        ], $manual_action ?? 'N'];
+    }
+
+    private static function getLastPart($str)
+    {
+        if ($fNameParts = explode(' ' , $str)) {
+            $fLastName = trim(end($fNameParts));
+        }
+        return $fLastName ?? '';
+    }
+
+    public static function scoreMANUAL_GOOGLE_BILLING_1(OrderModel $order, FraudCheckModel $fraud): array
+    {
+        $fraud_score = -1;
+        $fraud_result = 'negative';
+        $fullName = '';
+        $addressVerified = false;
+        $addressCMRA = false;
+
+        if ($res = self::fetchMelissaAddress([
+            'address' => $order->b_address,
+            'city' => $order->b_city,
+            'state' => $order->b_state,
+            'country' => $order->b_country,
+            'zipcode' => $order->b_zipcode,
+        ])) {
+            if ($fullName = $res['NameFull']) {
+                $names = array_merge(self::getAllVariations($fullName), self::getAllVariations($res['PartyOwner1NameFull'] ?? ''));
+                $names = array_map(static function ($a) {
+                    return soundex($a);
+                }, $names);
+
+                if (in_array(soundex($order->b_firstname), $names, true) || in_array(soundex($order->b_company), $names, true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                } else if (($lastName = self::getLastPart($order->b_firstname)) && strlen($lastName) > 3 &&
+                    in_array(strtolower($lastName),
+                        [strtolower(self::getLastPart($fullName)), strtolower(self::getLastPart($res['PartyOwner1NameFull'] ?? ''))], true)) {
+                    $fraud_score = 1;
+                    $fraud_result = 'positive';
+                    $manual_action = 'Y';
+                }
+            }
+            if ($resultsArr = explode(',', $res['Results'] ?? '')) {
+                if (in_array('AS01', $resultsArr, 'true')) {
+                    $addressVerified = true;
+                }
+                if (in_array('AS10', $resultsArr, 'true')) {
+                    $addressCMRA = true;
+                }
+            }
+        }
+
+        return [$fraud_result, $fraud_score, [
+            'NameFull' => $fullName,
+            'PhoneNumber' => $res['PhoneNumber'] ?? '',
+            'PartyOwner1NameFull' => $res['PartyOwner1NameFull'] ?? '',
+            'AddressVerified' => $addressVerified ? 'Verified' : 'Not verified',
+            'AddressTypeCode' => $res['AddressTypeCode'] ?? '',
+            'Commercial_Mail_Receiving_Agency' => $addressCMRA,
+        ], $manual_action ?? 'N'];
+    }
+
     public static function scoreMANUAL_IS_ORDER_ITEMS_EASY_TO_SELL(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $fraud_result = 'neutral';
-        $fraud_score = 0;
+        $fraud_result = 'negative';
+        $fraud_score = -1;
         $maxOrderPriceAmount = 0;
         foreach ($order->detail_models as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             if ($hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid])) {
                 switch ($hts = $hardResellModel->getHardToResellStatus()) {
                     case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
-                        $hard[] = 'neutral';
+                        $hard[] = 'negative';
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_YES:
                         $hard[] = 'positive';

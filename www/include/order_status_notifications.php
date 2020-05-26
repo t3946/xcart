@@ -34,6 +34,8 @@
 # $Id: order_status_notifications.php, v 1.0.0 2011/10/18 12:50:09 kate Exp $
 #
 
+use Modules\Forms\Models\SnippetModel;
+
 if (!defined('XCART_SESSION_START')) {
     header('Location: ../');
     die('Access denied');
@@ -53,8 +55,8 @@ if (isset($status)) {
     }
 }
 
-if ($REQUEST_METHOD == 'POST') {
-    if ($mode == 'update') {
+if ($REQUEST_METHOD === 'POST') {
+    if ($mode === 'update') {
         if (is_array($update)) {
             if (!empty($update['customer_subject'])) {
                 db_query('DELETE FROM ' . $sql_tbl['order_status_notifications'] . ' WHERE code = "' . $selected_status . '"');
@@ -114,6 +116,7 @@ $status_types = array(
 );
 
 $smarty->assign('status_types', $status_types);
+$smarty->assign('snippets', SnippetModel::objects());
 
 $smarty->assign('status', $selected_status);
 $smarty->assign('main', 'order_status_notifications');

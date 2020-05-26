@@ -3,8 +3,7 @@
 {block 'message'}
     {if $mode!=='print'}
         <p/>
-        {set $message = $notification->email_body}
-        {$message|replace:["{{c-fullname}}","{{orderid}}"]:[$order->firstname, $order->getOrderNumber()]}
+        {$email_body}
     {/if}
 {/block}
 
