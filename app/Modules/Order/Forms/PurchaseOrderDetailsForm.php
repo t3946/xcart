@@ -12,6 +12,7 @@ namespace Modules\Order\Forms;
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
 use Xcart\App\Form\BaseForm;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\FileField;
 use Xcart\App\Form\Fields\NumberField;
@@ -22,7 +23,7 @@ class PurchaseOrderDetailsForm extends FrontendForm
     {
         return [
             'po_number' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('PO number'),
                 'required' => true,
                 'hint' => OrderModule::t('PO number or internal order code in your system'),
@@ -32,7 +33,7 @@ class PurchaseOrderDetailsForm extends FrontendForm
                 ]
             ],
             'organization_name' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Organization Name'),
                 'required' => true,
                 'hint' => OrderModule::t('The name of your organization'),

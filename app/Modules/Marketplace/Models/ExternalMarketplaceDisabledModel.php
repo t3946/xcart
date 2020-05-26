@@ -6,6 +6,7 @@ namespace Modules\Marketplace\Models;
 
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -19,8 +20,10 @@ class ExternalMarketplaceDisabledModel extends Model
     public static function getFields()
     {
         return [
-            'marketplace_id' => [
-                'class' => IntField::class,
+            'marketplace' => [
+                'class' => ForeignField::class,
+                'modelClass' => ExternalMarketPlaceModel::class,
+                'link' => ['marketplace_id' => 'id'],
                 'primary' => true,
             ],
             'resource_id' => [

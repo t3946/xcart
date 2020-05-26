@@ -6,11 +6,12 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
-use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledDxModel;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
+use Modules\Marketplace\Models\ExternalMarketPlaceModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
@@ -27,6 +28,7 @@ use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
@@ -64,12 +66,69 @@ class DistributorModel extends Model
 
     public static function getFields()
     {
+        $alias = ExternalMarketplaceDisabledModel::objects()->getTableAlias();
+
         return [
             'manufacturerid' => [
                 'class' => AutoField::className()
             ],
             'manufacturer' => [
                 'class' => CharField::class
+            ],
+            'descr' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'manufact_text_displayed' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'mess_body' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'cart_manufact_text_displayed' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_instructions_to_order_entry_operator' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_message_body_14' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_distributor_return_policy' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'product_feeds_comments' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'd_dispatch_instructions' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
+            'avail' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'update_approximation_shipping_rates' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'N'
             ],
             'shipping_rates' => [
                 'class' => HasManyField::className(),
@@ -98,14 +157,60 @@ class DistributorModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => 'N'
             ],
+            'd_available_on_distributor_site_checkbox' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_sent_by_email_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_put_on_the_invoices' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_sent_by_email_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_sent_by_fax_to' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'd_invoices_mailed_to_our_checkbox' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'allow_pre_orders' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'calculate_shipping' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'products_always_verify' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
+            'warehouse_pickups_are_allowed' => [
+                'class' => BooleanCharField::class,
+                'default' => 'N'
+            ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_leadtime' => [
                 'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_leadtime_to' => [
                 'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
             ],
             'dx_eta_date' => [
                 'class' => DateField::class,
@@ -205,6 +310,12 @@ class DistributorModel extends Model
                 'link' => ['manufacturerid' => 'resource_id'],
                 'extra' => ['resource_type' => 'D']
             ],
+            'disabled_marketplaces' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ExternalMarketPlaceModel::class,
+                'through' => ExternalMarketplaceDisabledDxModel::class,
+                'extra' => ["{$alias}.resource_type" => 'D']
+            ],
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageMModel::class,
@@ -220,6 +331,12 @@ class DistributorModel extends Model
                 'modelClass' => SiteModel::class,
                 'through' => DistributorSiteModel::class,
             ],
+            'logo' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/M/',
+                'null' => true,
+            ]
         ];
     }
 
@@ -308,7 +425,7 @@ class DistributorModel extends Model
 
     public function getDefaultContact()
     {
-        return $this->contacts_model->order(['distributor_field_code'])->limit(1)->get();
+        return $this->contacts_model->exclude(['phone' => ''])->order(['position'])->limit(1)->get();
     }
 
     public function getPhone(): string

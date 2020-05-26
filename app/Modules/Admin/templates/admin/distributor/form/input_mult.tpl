@@ -1,0 +1,1 @@
+<input type="{$type}" value="{$value}" id="{$id}" name="{$name}[{$field->getForm()->getInstance()->id}]" {raw $html}>

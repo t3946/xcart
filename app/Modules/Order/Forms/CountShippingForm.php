@@ -15,6 +15,7 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\BaseForm;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 
 class CountShippingForm extends BaseForm
@@ -27,7 +28,7 @@ class CountShippingForm extends BaseForm
         return [
 
             'country' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Country'),
                 'required' => true,
                 'validators' => [
@@ -43,7 +44,7 @@ class CountShippingForm extends BaseForm
             ],
 
             'zipcode' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Zip/Postal Code'),
                 'required' => true,
                 'validators' => [
@@ -57,7 +58,7 @@ class CountShippingForm extends BaseForm
             ],
 
             'state' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('State/Province'),
                 'required' => true,
                 'validators' => [
@@ -71,7 +72,7 @@ class CountShippingForm extends BaseForm
             ],
 
             'city' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('City'),
                 'required' => true,
                 'html' => [

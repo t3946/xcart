@@ -11,6 +11,7 @@ namespace Modules\Order\Forms;
 
 use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 
 class ContactInfoFaxForm extends ContactInfoForm
@@ -20,7 +21,7 @@ class ContactInfoFaxForm extends ContactInfoForm
         $fields = parent::getFields();
 
         $fields['fax'] = [
-            'class' => CharField::class,
+            'class' => CharCleanField::class,
             'label' => OrderModule::t('Fax'),
             'required' => false,
             'validators' => [

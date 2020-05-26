@@ -1,60 +1,8 @@
 
-{if $distributorModel}
-    <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-            <td width="33%" align="left">
-                {include file="page_title.tpl" title=$lng.lbl_manufacturers link='manufacturers.php?word=num' h1_align="left"}
-            </td>
-            <td width="*" align="center">
-                <h1 align="left">{$distributorModel} / <a style="color: #0101F7;" href="{$distributorModel->getAdminOrdersUrl(6)}" target="_blank">Last 6 months of order history</a></h1>
-            </td>
-        </tr>
-    </table>
-    {assign var=dCurrency value=$distributorModel->currency}
-{else}
-    {include file="page_title.tpl" title=$lng.lbl_manufacturers}
-{/if}
-
 {if $usertype eq "A" or ($active_modules.Simple_Mode ne "" and $usertype eq "P")}
 {assign var="administrate" value="Y"}
 {/if}
 
-<table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-        <td width="*" align="left" valign="top">
-            {$lng.txt_manufacturers_top_text}
-
-            {if $active_modules.Simple_Mode eq "" and $usertype eq "P"}
-                {$lng.txt_manufacturers_note_pro_provider}
-            {/if}
-        </td>
-        {if $distributorModel}
-            <td width="2%" align="center">&nbsp;</td>
-            <td width="48%" align="left" valign="top">
-                <table>
-                    <tr>
-                        <td>
-                            {assign var=distributor_time value=$distributorModel->getDistributorTime()}
-                            <B>Distributor time:</B> {$distributor_time->format('H:i')}
-                            <br/>
-                            <B>Distributor phone:</B> {$distributorModel->getPhoneNormalized()}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="call_btn_distr_{if $distributorModel->isGoodTimeToSendEmail()}a{else}d{/if}">
-                                <a target="_blank" href="tel:{$distributorModel->getPhoneNormalized()}">
-                                    <div style="width: 219px; height: 44px;"></div>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        {/if}
-    </tr>
-</table>
-<br /><br />
 {if $mode ne "manufacturer_info"}
 {capture name=dialogsearch}
 <form action="manufacturers.php" method="get" name="search_manufacturer">
@@ -195,7 +143,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
     <td align="center">
         <input type="text" name="records[{$v->manufacturerid}][orderby]" size="5" value="{$v->orderby}"{if !$administrate} disabled="disabled"{/if} />
     </td>
-	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v->manufacturerid}{if $page}&amp;page={$page}{/if}">{$v->manufacturer}</a></b></td>
+	<td style="white-space: nowrap;"><b><a href="/admin/distributor/{$v->manufacturerid}/1">{$v->manufacturer}</a></b></td>
 	<td style="white-space: nowrap;" align="center">{$v->code}</td>
     <td style="white-space: nowrap;">
         {foreach from=$v->sites item=site}
@@ -289,110 +237,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 {include file="main/include_js.tpl" src="main/popup_image_selection.js"}
 
-{* --- *}
-
-
-<table cellspacing="0" cellpadding="0" width="100%" class="NavDialogBox" style="BORDER: #FFCC33 1px solid;">
- <tr>
-	<td class="NavDialogBorder" height="15"><B>Distributor sections:</B></td>
-	<td class="NavDialogBorder" height="15" align="right">
-<a href="
-{if $manufacturer.d_main_sf eq '0'}http://{$main_storefront}{/if}
-{foreach from=$storefronts item=sf}
-{if $sf.storefrontid ne "0"}
-{if $manufacturer.d_main_sf eq $sf.storefrontid}http://{$sf.domain}{/if}
-{/if}
-{/foreach}
-" target="_blank" style="color: #0101F7">
-{if $manufacturer.d_main_sf eq '0'}{$main_storefront}{/if}
-{foreach from=$storefronts item=sf}
-{if $sf.storefrontid ne "0"}
-{if $manufacturer.d_main_sf eq $sf.storefrontid}{$sf.domain}{/if}
-{/if}
-{/foreach}
-</a>
-	</td>
- </tr>
- <tr>
-  <td width="50%" valign="top">
-
-   {if $distributor_sections ne ""}
-        <table cellspacing="1" cellpadding="1">
-
-    {assign var=cell_counter value=0}
-{*    {assign var=cell_counter_not_shown value=0} *}
-     {foreach from=$distributor_sections item=item key=key}
-
-       {assign var=show_row value="Y"}
-
-       {if
-	($item.distributor_section eq "2" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-		||
-	($item.distributor_section eq "5" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-		||
-        ($item.distributor_section eq "11" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-                ||
-	($item.distributor_section eq "19" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-                ||
-        ($item.distributor_section eq "21" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-		||
-	($item.distributor_section eq "14" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-                ||
-        ($item.distributor_section eq "16" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-                ||
-        ($item.distributor_section eq "17" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-                ||
-        ($item.distributor_section eq "18" && ($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
-       }
-	{assign var=show_row value="N"}
-
-       {/if}
-
-
-	{assign var=cell_counter value=$cell_counter+1}
-        <tr>
-         <td class="NavDialogCell"><a href="manufacturers.php?manufacturerid={$manufacturer.manufacturerid}&distributor_section={$item.distributor_section}&page={$page}" class="VertMenuItems"><img alt="" src="{$SkinDir}/images/rarrow.gif"></a></td>
-         <td class="NavDialogCell">
-
-	 {if $smarty.get.distributor_section eq $item.distributor_section}
-	 <B>
-	 {else}
-		 {if $show_row eq "Y"}<a href="manufacturers.php?manufacturerid={$manufacturer.manufacturerid}&distributor_section={$item.distributor_section}&page={$page}">{/if}
-	 {/if}
-	{$item.title}
-         {if $smarty.get.distributor_section eq $item.distributor_section}
-         </B>
-         {else}
-	 	{if $show_row eq "Y"}</a>{/if}
-	 {/if}
-	 </td>
-	</tr>
-
-	{if $cell_counter eq $count_rows_in_cell}
-	</table>
-	</td>
-	<td width="*" valign="top">
-	<table cellspacing="1" cellpadding="1">
-	{/if}
-     {/foreach}
-   {/if}
-        </table>
-  </td>
- </tr>
-</table>
-<br />
-
-<div align="right">
-<table cellspacing="0" cellpadding="0">
-<tr>
-        <td>{include file="buttons/button.tpl" button_title=$lng.lbl_manufacturers_list href="manufacturers.php?page=`$page`&word=num"}</td>
-{if $manufacturer.manufacturerid}
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td>{include file="buttons/button.tpl" button_title=$lng.lbl_add_manufacturer href="manufacturers.php?mode=add&page=`$page`"}</td>
-{/if}
-</tr>
-</table>
-</div>
+{$sectionMenu}
 
 {capture name=dialog}
 

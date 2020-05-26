@@ -283,7 +283,7 @@ class ImageField extends FileField
         $value = $this->getValue();
         $path = $this->sizeStoragePath($prefix, $this->getValue());
 
-        if ($this->force || $this->checkMissing && !$this->getFilesystem()->has($path)) {
+        if ($this->force || ($this->checkMissing && !$this->getFilesystem()->has($path))) {
             $file = $this->getFilesystem()->get($value);
 
             if ($file instanceof File) {

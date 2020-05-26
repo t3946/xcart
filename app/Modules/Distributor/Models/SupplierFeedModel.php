@@ -3,6 +3,7 @@
 namespace Modules\Distributor\Models;
 
 use DateTime;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -37,6 +38,12 @@ class SupplierFeedModel extends Model
                 'class' => SerializeField::class,
                 'null' => false,
                 'default' => ''
+            ],
+            'site' => [
+                'field' => 'storefront_id',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'link' => ['storefront_id' => 'storefrontid']
             ],
             'distributor' => [
                 'field' => 'manufacturerid',
@@ -83,5 +90,9 @@ class SupplierFeedModel extends Model
             ($days !== 0 ? $days . ' days, ' : '') .
             sprintf('%1$02d', $hours) . ':' .
             sprintf('%1$02d', $mins) . ' hours';
+    }
+    public function __toString()
+    {
+        return (string) $this->feed_name;
     }
 }

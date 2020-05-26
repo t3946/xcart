@@ -11,6 +11,7 @@ use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Main\Xcart;
 
@@ -24,7 +25,7 @@ abstract class AddressForm extends FrontendForm
 
         return [
             'firstname' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Full Name'),
                 'hint' => OrderModule::t('The order will be shipped under this name'),
                 'required' => true,
@@ -35,7 +36,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'company' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Company'),
                 'hint' => OrderModule::t('Fill in if shipping to a corporate or university address'),
                 'html' => [
@@ -44,7 +45,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'address' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Address'),
                 'required' => true,
                 'hint' => OrderModule::t("Street address please, we don't ship to P.O. boxes"),
@@ -54,7 +55,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'address_2' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Address (line 2)'),
                 'hint' => OrderModule::t('Apartment, suite, floor, etc.'),
                 'html' => [
@@ -63,7 +64,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'country' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Country'),
                 'required' => true,
                 'validators' => [
@@ -85,7 +86,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'zipcode' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('Zip/Postal Code'),
                 'required' => true,
                 'validators' => [
@@ -99,7 +100,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'state' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('State/Province'),
                 'required' => true,
                 'validators' => [
@@ -119,7 +120,7 @@ abstract class AddressForm extends FrontendForm
             ],
 
             'city' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t('City'),
                 'required' => true,
                 'html' => [

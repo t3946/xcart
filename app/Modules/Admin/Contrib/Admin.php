@@ -766,6 +766,11 @@ abstract class Admin
         $this->update(null, $pk);
     }
 
+    public function updateall()
+    {
+
+    }
+
     public function update($pk = null, $parent_id = null)
     {
         /** @var \Xcart\App\Orm\TreeModel $model */
@@ -788,6 +793,7 @@ abstract class Admin
             $this->parent_pk = $model->parent_id;
         }
 
+        $this->model = $model;
         $form->setInstance($model);
 
         if ((string) $model !== '') {

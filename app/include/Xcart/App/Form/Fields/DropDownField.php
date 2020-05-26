@@ -144,13 +144,8 @@ class DropDownField extends Field
                 }
             }
             elseif ($this->getForm() instanceof Form) {
-                if (!is_array($this->value)) {
-                    if ($this->value) {
-                        $selected = [$this->value];
-                    }
-                }
-                else {
-                    $selected = $this->value;
+                if ($selected !== null && !is_array($selected)) {
+                    $selected = [$selected];
                 }
             }
         }
@@ -227,7 +222,7 @@ class DropDownField extends Field
             $this->_attributes['multiple'] = 'multiple';
         }
 
-        $this->_selected = $selected;
+        $this->_selected = $this->selected ?: $selected;
 
         return $data;
     }

@@ -73,6 +73,11 @@ return [
         'name' => 'update'
     ],
     [
+        'route' => '/update/{:module}/{:admin}',
+        'target' => [AdminController::class, 'updateall'],
+        'name' => 'updateall'
+    ],
+    [
         'route' => '/info/{:module}/{:admin}/{:pk}',
         'target' => [AdminController::class, 'info'],
         'name' => 'info'
@@ -96,5 +101,10 @@ return [
         'route' => '/distributor/{i:mid}/{i:section}',
         'target' => [DistributorController::class, 'index'],
         'name' => 'section'
+    ],
+    [
+        'route' => '/distributor/add',
+        'target' => [DistributorController::class, 'index'],
+        'name' => 'dx_add'
     ],
 ];

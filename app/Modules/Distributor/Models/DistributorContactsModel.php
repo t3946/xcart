@@ -7,6 +7,7 @@ use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\User\Helpers\PhoneHelper;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
@@ -24,6 +25,11 @@ class DistributorContactsModel extends Model
         return [
             'id' => [
                 'class' => AutoField::class
+            ],
+            'pq' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false
             ],
             'distributor' => [
                 'field' => 'manufacturerid',

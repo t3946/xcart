@@ -23,11 +23,24 @@ class Select2Field extends DropDownField
 
     public $modelField = 'name';
 
-    public $placeholder = 'Please select value';
+    public $placeholder = 'Click to select value';
 
     public $ajaxUrl = "";
+    public $editable = false;
 
-    public function render()
+    public function render($fieldExtension = null)
+    {
+        $extension = implode("\n",
+            [
+                '<script type="text/javascript">',
+                '$("#' . $this->getHtmlId() . '").select2(' . JavaScript::encode($this->getJSOptions()) . ');',
+                '</script>',
+            ]
+        );
+        return parent::render($extension);
+    }
+
+    /*public function render()
     {
         $label = $this->renderLabel();
 
@@ -62,7 +75,7 @@ class Select2Field extends DropDownField
         ]);
 
         return $out;
-    }
+    }*/
 
     public function getJSOptions()
     {
@@ -79,6 +92,24 @@ class Select2Field extends DropDownField
             $multiple = $this->multiple;
         }
 
+        if ($this->getChoices()) {
+            return[
+                'allowClear' => true,
+                'placeholder' => Translate::getInstance()->t('form', $this->placeholder),
+                'multiple' => $multiple,
+                'width' => 'resolve',
+                'tags' => $this->editable,
+                'createTag' => new JavaScriptExpression('function (params) {
+                      var term = $.trim(params.term);
+                      if (term === \'\') return null;
+                      return {
+                          id: term,
+                          text: term,
+                          newTag: true
+                      }
+                }'),
+            ];
+        }
 
         $options = [
             'width' => 'resolve',
