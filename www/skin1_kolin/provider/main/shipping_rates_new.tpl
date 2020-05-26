@@ -134,14 +134,14 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 									</table>
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									<table cellpadding="0" cellspacing="3" width="100%" border="0">
 										{section name=rate loop=$shipping_method.rates}
 											{assign var="shipping_rate" value=$shipping_method.rates[rate]}
 											<tr>
-												<td rowspan="{if $type eq "R"}3{else}2{/if}}" nowrap="nowrap">
+												<td rowspan="{if $type eq "R"}3{else}3{/if}" nowrap="nowrap">
 													<img src="{$ImagesDir}/spacer.gif" width="10" height="1" alt=""/>
 													<input type="checkbox" name="posted_data[{$shipping_rate.rateid}][to_delete]"/>
 												</td>
