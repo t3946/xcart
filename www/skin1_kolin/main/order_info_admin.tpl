@@ -508,13 +508,12 @@ function check_r_fields(){
   <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
   {if !$static}<td width="5%">{else}<td>{/if}</td>
 </tr>
-
 {foreach from=$order.shipping_groups item=v key=m_id}
 {if $m_id gt 0}
     <tr class="distributor-totals-line">
         <td>
             <a target="_blank" style="color: green;"
-               href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
+               href="{$v.oOrderGroup->manufacturer->getAdminUrl(3)}">{$v.group_name}</a>
             {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
                 <span style="color: #000000; font-weight: normal;">ships by USPS</span>
             {/if}

@@ -449,9 +449,9 @@ class DistributorModel extends Model
         return PhoneHelper::getPhoneNormalized($this->getPhone(), $this->m_country);
     }
 
-    public function getAdminUrl(): string
+    public function getAdminUrl($section = 1): string
     {
-        return "/admin/manufacturers.php?manufacturerid={$this->manufacturerid}";
+        return Xcart::app()->router->url('admin:section', ['mid' => $this->manufacturerid, 'section' => $section]);
     }
 
     public function isUserPriveded($login)
