@@ -68,8 +68,10 @@ class OrdersCallsModel extends Model
 
     public function afterSave($owner, $isNew)
     {
-        if ($isNew && ($call = $this->call) && ($call->isVoiceMail() || $call->isLost())) {
-            OrderHelper::setOrderTag($this->order_id, 62); //Voicemail left tag
+        if (($call = $this->call) && ($call->isVoiceMail() || $call->isLost())) {
+            if ($this->$this->getChangedAttributes()) {
+                OrderHelper::setOrderTag($this->order_id, 62); //Voicemail left tag
+            }
         }
     }
 
