@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -60,6 +61,13 @@ class OrdersCallsModel extends Model
             ],
 
         ];
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        if ($isNew && ($call = $this->call) && $call->isVoiceMail()) {
+            OrderHelper::setOrderTag($this->order_id, 62); //Voicemail left tag
+        }
     }
 
 }

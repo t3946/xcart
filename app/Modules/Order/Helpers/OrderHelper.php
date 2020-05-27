@@ -7,8 +7,11 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -417,6 +420,27 @@ HTML;
             $image = $mapUrl->image()->getUri())
         {
             return $image;
+        }
+        return null;
+    }
+
+    public static function setOrderTag($orderId, $tagId, $isLog = true): ?AttentionTagModel
+    {
+        /** @var AttentionTagModel $model */
+        $model = AttentionTagModel::objects()->get(['status_id' => $tagId]);
+
+        if ($model) {
+            [$created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
+            $message = "Attention tag added: " . $model->status;
+            if ($isLog && $created) {
+                (new OrderLogModel([
+                    'orderid' => $orderId,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
+                    'log' => $message,
+                    'login' => Xcart::app()->user->login
+                ]))->save();
+                return $model;
+            }
         }
         return null;
     }

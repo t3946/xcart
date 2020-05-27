@@ -5,7 +5,6 @@ namespace Modules\Order\Helpers;
 
 use Exception;
 use Modules\Order\Models\AttentionTagModel;
-use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\PurchaseOrderModel;
@@ -81,18 +80,8 @@ class OrderLogHelper
             Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
         }
 
-        if ($config && $config['order_note_tag'] &&
-            $model = AttentionTagModel::objects()->filter(['status_id' => $config['order_note_tag']])->get()) {
-            [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $model->status_id, 'orderid' => $order->orderid]);
-            $message = "Attention tag added: {$model->status}";
-            if ($created) {
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => $message,
-                    'login' => Xcart::app()->user->login
-                ]))->save();
-            }
+        if ($config && $config['order_note_tag']) {
+            OrderHelper::setOrderTag($order->orderid, $config['order_note_tag']);
         }
     }
 }

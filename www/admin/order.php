@@ -30,20 +30,15 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
-use Modules\Goods\Models\OptionModel;
-use Modules\Goods\Models\OptionNewModel;
-use Modules\Goods\Models\OptionVariantModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
-use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\GroundMapModel;
-use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
-use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -728,24 +723,9 @@ if ($REQUEST_METHOD == "POST") {
         /** @var SiteModel $site_model */
         $site_model = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
         $config = $site_model->getGlobalConfig();
-        if (!in_array($user->id, explode(',', $config['order_note_tag_users']))) {
-            if ($config['order_note_tag']) {
-                /** @var AttentionTagModel $model */
-                if ($model = AttentionTagModel::objects()->filter(['status_id' => $config['order_note_tag']])->get()) {
-                    [$link, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $model->status_id, 'orderid' => $orderid]);
-                    $message = "Attention tag added: {$model->status}";
-                    if ($created) {
-                        (new OrderLogModel([
-                            'orderid' => $orderid,
-                            'type' => OrderLogModel::LOG_TYPE_XCART,
-                            'log' => $message,
-                            'login' => Xcart::app()->user->login
-                        ]))->save();
-                    }
-                }
-            }
+        if (!in_array($user->id, explode(',', $config['order_note_tag_users'])) && $config['order_note_tag']) {
+            OrderHelper::setOrderTag($orderid, $config['order_note_tag']);
         }
-
 
         func_header_location("order.php?orderid=" . $orderid);
     }

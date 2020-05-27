@@ -1,11 +1,7 @@
 <?php
 namespace Modules\Order\Helpers;
 
-use Modules\Order\Models\AttentionTagModel;
-use Modules\Order\Models\OrderAdditionalTagLinkModel;
-use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
-use Xcart\Logs;
 
 class OrderTagEventHelper
 {
@@ -34,28 +30,13 @@ class OrderTagEventHelper
      */
     public static function orderTagEvent($status_id, $order_id, $save_log = true)
     {
-        if ($status_id && $order_id) {
-
-            /** @var AttentionTagModel $model */
-            $model = AttentionTagModel::objects()->filter(['status_id' => $status_id])->get();
-
-            if ($model) {
-                list($link, $created) = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $status_id, 'orderid' => $order_id]);
-
-                $message = "Attention tag added: " . $model->status;
-                if ($save_log && $created) {
-                    (new OrderLogModel([
-                        'orderid' => $order_id,
-                        'type' => OrderLogModel::LOG_TYPE_XCART,
-                        'log' => $message,
-                        'login' => Xcart::app()->user->login
-                    ]))->save();
-                }
-
-                if ($model->events) {
-                    Xcart::app()->event->trigger('order:status.changed', ['order_id' => $order_id, 'message' => $message]);
-                }
-            }
+        if ($status_id &&
+            $order_id &&
+            ($model = OrderHelper::setOrderTag($order_id, $status_id, $save_log)) &&
+            $model->events)
+        {
+            $message = "Attention tag added: " . $model->status;
+            Xcart::app()->event->trigger('order:status.changed', ['order_id' => $order_id, 'message' => $message]);
         }
     }
 }
