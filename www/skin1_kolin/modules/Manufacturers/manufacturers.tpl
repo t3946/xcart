@@ -132,7 +132,6 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 </tr>
 
 {if $manufacturers ne ""}
-
 {foreach from=$manufacturers item=v}
 {assign var=products_count value=$v->products->count()}
 {assign var=active_products_count value=$v->products_active->count()}
@@ -143,7 +142,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
     <td align="center">
         <input type="text" name="records[{$v->manufacturerid}][orderby]" size="5" value="{$v->orderby}"{if !$administrate} disabled="disabled"{/if} />
     </td>
-	<td style="white-space: nowrap;"><b><a href="/admin/distributor/{$v->manufacturerid}/1">{$v->manufacturer}</a></b></td>
+	<td style="white-space: nowrap;"><b><a href="{$v->getAdminUrl()}">{$v}</a></b></td>
 	<td style="white-space: nowrap;" align="center">{$v->code}</td>
     <td style="white-space: nowrap;">
         {foreach from=$v->sites item=site}
