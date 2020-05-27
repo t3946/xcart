@@ -9,6 +9,9 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property PbxAnveoCallModel call
+ */
 class OrdersCallsModel extends Model
 {
     use AutoMetaTrait;
@@ -65,7 +68,7 @@ class OrdersCallsModel extends Model
 
     public function afterSave($owner, $isNew)
     {
-        if ($isNew && ($call = $this->call) && $call->isVoiceMail()) {
+        if ($isNew && ($call = $this->call) && ($call->isVoiceMail() || $call->isLost())) {
             OrderHelper::setOrderTag($this->order_id, 62); //Voicemail left tag
         }
     }
