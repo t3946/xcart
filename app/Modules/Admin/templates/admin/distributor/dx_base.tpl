@@ -59,8 +59,39 @@
                 </td>
             </tr>
             <tr>
-                <td width="100%" valign="top">
-                    <table width="100%">
+                <td width="100%" valign="top" cellspacing="0" cellpadding="0"
+                    style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row dense; grid-gap: 0.5rem;">
+                    {set $section_fileds = Modules\Admin\Forms\Dx\DistributorForm::getSections()}
+                    {set $cnt = count($section_fileds)}
+                    {set $split = round($cnt / 2)}
+                    <div>
+                    {foreach $section_fileds as $fN => $fieldset index=$index first=$f1}
+                        {if $index == $split}
+                            </div><div>
+                        {/if}
+                        <fieldset class="" style="margin-bottom: 0; background:inherit; grid-column-start: {if $cnt/2 > $index}1{else}2{/if};">
+                            <legend><b>{$fN}</b></legend>
+                            <ul class="ul-main" style="margin: 0">
+                                {foreach $fieldset as $key => $item first=$first}
+                                    <li>
+                                        <a href="" class="VertMenuItems"><img alt="" src="/skin1_kolin/images/rarrow.gif"></a>
+                                        {if $item.distributor_section != $section}
+                                        <a style="color: #330000;"
+                                           href="{url 'admin:section' params=['mid' => $distributorModel->pk, 'section' => $item.distributor_section]}">
+                                        {/if}
+                                        {if $item.distributor_section == $section}<b>{/if}
+                                            {$item['title']}
+                                        {if $item.distributor_section == $section}</b>{/if}
+                                        {if $item.distributor_section != $section}
+                                        </a>
+                                        {/if}
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </fieldset>
+                    {/foreach}
+                    </div>
+                    {*<table width="100%">
                         {set $sections = Modules\Admin\Forms\Dx\DistributorForm::getSections()}
                         {foreach $sections as $key => $item index=$index first=$first}
                             {if !$index % 2}
@@ -83,7 +114,7 @@
                                 </tr>
                             {/if}
                         {/foreach}
-                    </table>
+                    </table>*}
                 </td>
 
             </tr>

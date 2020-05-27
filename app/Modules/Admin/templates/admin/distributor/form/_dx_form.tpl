@@ -1,7 +1,7 @@
 <table class="dx_form" cellpadding="3" cellspacing="1" width="100%">
     {var $fieldsets = $form->getFieldsets()}
     {if $fieldsets}
-        {foreach $fieldsets as $name => $fieldsNames}
+        {foreach $fieldsets as $name => $fieldsNames last=$last}
             {if !is_integer($name)}
                 <tr>
                     <td colspan="3"><br>
@@ -34,7 +34,7 @@
                     {raw $field->render()}
                 {/if}
             {/foreach}
-            {if is_integer($name)}
+            {if is_integer($name) && !$last}
                 <tr>
                     <td colspan="3">
                         <hr>

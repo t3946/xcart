@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name='Distributor contacts'}
+    {smarty_admin_block name=$section_title}
         {var $form = $admin->getForm()}
         {raw $form->renderBegin([
         'action' => $admin->getUpdateAllUrl(),

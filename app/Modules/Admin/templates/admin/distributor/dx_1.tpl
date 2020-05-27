@@ -7,7 +7,7 @@
     {else}
         {set $url = $.app->router->url('admin:section', ['mid' => $distributorModel->manufacturerid, 'section' => $section])}
     {/if}
-    {smarty_admin_block name='General distributor information'}
+    {smarty_admin_block name=$section_title}
     {raw $form->renderBegin([
     'action' => $url,
     'method' => 'POST',

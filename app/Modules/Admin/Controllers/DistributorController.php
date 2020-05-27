@@ -30,13 +30,13 @@ class DistributorController extends BackendController
             exit;
         }
 
-        $distributor_sections = DistributorForm::getSections();
+        $distributor_section = DistributorForm::getSection($section);
 
-        if (!$distributor_sections[$section]['form']) {
+        if (!$distributor_section['form']) {
             $this->redirect("/admin/manufacturers.php?manufacturerid={$dx->manufacturerid}&distributor_section={$section}");
         }
 
-        $form = new $distributor_sections[$section]['form'];
+        $form = new $distributor_section['form'];
         if ($dx) {
             $form->setInstance($dx);
         }
@@ -60,15 +60,17 @@ class DistributorController extends BackendController
             }
         }
 
+        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'),  '/admin/manufacturers.php?&word=num');
         if (!$dx) {
             Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Add Distributor'));
         } else {
-            Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'));
+            Xcart::app()->breadcrumbs->add($distributor_section['title']);
         }
 
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,
+            'section_title' => $distributor_section['title'] ?? '',
             'form' => $form,
             'section' => $section,
         ]);

@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name='Distributor feeds info'}
+    {smarty_admin_block name=$section_title}
         <table id="distributor_section_id_17" width="100%" cellspacing="1" cellpadding="3">
             {foreach $distributorModel->feeds as $feed}
                 <tr>
