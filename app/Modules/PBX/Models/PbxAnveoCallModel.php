@@ -190,4 +190,21 @@ class PbxAnveoCallModel extends Model
         return $e164;
     }
 
+    public function getDirection(): string
+    {
+        if ($this->isOutgoing()) {
+            $direction = 'Outbound';
+        }
+        elseif ($this->isLost()) {
+            $direction = 'Miss call';
+        }
+        elseif ($this->isVoiceMail()) {
+            $direction = 'Voice mail';
+        }
+        else {
+            $direction = 'Inbound';
+        }
+        return $direction;
+    }
+
 }

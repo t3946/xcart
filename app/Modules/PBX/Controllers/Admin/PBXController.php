@@ -126,30 +126,19 @@ class PBXController extends BackendController
                     }
                 }
 
-                if ($model->isOutgoing()) {
-                    $mass[ $i ]['direction'] = 'Outbound';
-                }
-                elseif ($model->isLost()) {
-                    $mass[ $i ]['direction'] = 'Miss call';
-                }
-                elseif ($model->isVoiceMail()) {
-                    $mass[ $i ]['direction'] = 'Voice mail';
-                }
-                else {
-                    $mass[ $i ]['direction'] = 'Inbound';
-                }
+                $mass[$i]['direction'] = $model->getDirection();
 
                 if ($model->end_at !== null && $model->start_at !== null) {
                     $datetime1 = new \DateTime($model->end_at);
                     $datetime2 = new \DateTime($model->start_at);
                     $interval = $datetime1->diff($datetime2);
 
-                    $mass[ $i ]['diff'] = $interval->format('%H:%I:%S');
+                    $mass[$i]['diff'] = $interval->format('%H:%I:%S');
 
                     $i++;
                 }
                 else {
-                    $mass[ $i ]['diff'] = 'Not defined';
+                    $mass[$i]['diff'] = 'Not defined';
                 }
 
             }

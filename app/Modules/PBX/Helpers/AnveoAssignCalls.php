@@ -229,6 +229,10 @@ class AnveoAssignCalls
                     $user = $anveo_call_model->options->user->firstname;
                 }
 
+                if ($anveo_call_model->isVoiceMail()) {
+                    $user = 'Voice mail';
+                }
+
                 $mass = [
                    'account' =>  $user,
                    'e164' => $anveo_call_model->getFrontendE164(),
@@ -238,11 +242,7 @@ class AnveoAssignCalls
                    'cname' => $anveo_call_model->cname
                 ];
 
-                if ($anveo_call_model->isOutgoing()){
-                    $mass['direction'] = "Outbound";
-                } else {
-                    $mass['direction'] = "Inbound";
-                }
+                $mass['direction'] = $anveo_call_model->getDirection();
 
                 $datetime1 = new \DateTime($anveo_call_model->end_at);
                 $datetime2 = new \DateTime($anveo_call_model->start_at);
