@@ -232,6 +232,9 @@ class AnveoAssignCalls
                 if ($anveo_call_model->isVoiceMail()) {
                     $user = 'Voice mail';
                 }
+                if ($anveo_call_model->isLost()) {
+                    $user = 'Miss call';
+                }
 
                 $mass = [
                    'account' =>  $user,
