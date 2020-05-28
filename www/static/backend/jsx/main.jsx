@@ -2,8 +2,10 @@
     "use strict";
 
     $(document).ready(function() {
-        $('fieldset.collapsible').mfieldset();
-
+        let f = $('fieldset.collapsible');
+        if (f.length) {
+            f.mfieldset()
+        }
         for (let form of $('form'))
         {
             let $form = $(form);

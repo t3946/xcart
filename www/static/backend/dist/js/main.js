@@ -43602,7 +43602,10 @@ jQuery.fn.tablePositions = function (options) {
     "use strict";
 
     $(document).ready(function () {
-        $('fieldset.collapsible').mfieldset();
+        var f = $('fieldset.collapsible');
+        if (f.length) {
+            f.mfieldset();
+        }
 
         var _loop = function _loop(form) {
             var $form = $(form);

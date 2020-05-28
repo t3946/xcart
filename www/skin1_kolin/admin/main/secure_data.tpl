@@ -49,15 +49,10 @@
 
             </td>
             <td>
-                <div class="ui teal buttons">
-                    <div id="update_button" class="ui button" style="border: 1px solid #808080;" onclick="javascript: submitForm($('form[name=processform]').get(0), 'update');">{$lng.lbl_update|strip_tags:false|escape}</div>
-                    <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item" id="add_new_secure_data">Add new</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="">
+                    <button id="add_new_secure_data" class="" style="border: 1px solid #808080;" >Add new</button>
+                    <button id="update_button" class="" style="border: 1px solid #808080;" onclick="javascript: submitForm($('form[name=processform]').get(0), 'update');">{$lng.lbl_update|strip_tags:false|escape}</button>
+
             </td>
         </tr>
 
@@ -68,14 +63,13 @@
     $(document).ready(function () {
         $(".selectpicker").dropdown().show();
         $('.combo.dropdown').dropdown();
-        $("#add_new_secure_data").on('click','',function(){
+        $("#add_new_secure_data").on('click','',function(e){
+            e.preventDefault();
             var tablerow = $(".secure_data_table").last(),
             tablerowdelimiter = tablerow.next('tr'),
             newtablerow = tablerow.clone(),
             selectuser = $('select',newtablerow),
             secure_data_order = $('.secure_data_order',newtablerow);
-
-
             var new_id = selectuser.data('user-select-id');
             new_id++;
             selectuser.val('').attr('data-user-select-id', new_id).attr('name','secure_data_use['+new_id+'][]');
