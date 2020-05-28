@@ -8,7 +8,7 @@
         plugins: [
             'advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor',
             'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime image imagetools media nonbreaking',
-            'save table contextmenu directionality emoticons template paste textcolor textpattern layer contextmenu'
+            'save table contextmenu directionality emoticons template paste textcolor layer contextmenu'
         ],
         content_css: '/static/frontend/dist/css/main.css?t=' + new Date().getTime(),
         relative_urls: false,
@@ -16,8 +16,6 @@
         inline_boundaries: true,
         {if ($field->disable_forced_root_block)}
             forced_root_block: false,
-            force_br_newlines : true,
-            force_p_newlines : false,
         {/if}
         image_advtab: true,
         file_browser_callback: function(field_name, url, type, win) {
