@@ -27,6 +27,7 @@
                 browser_spellcheck : true,
                 toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image',
                 height : "480",
+                branding: false,
                 file_browser_callback: function(field_name, url, type, win) {
                     window.file_browser_window = win;
                     window.file_browser_field = field_name;
