@@ -8,7 +8,7 @@ use Xcart\App\Form\Fields\TextAreaField;
 class EditorField extends TextAreaField
 {
     public $inputTemplate = 'editor/fields/editor_field_input.tpl';
-    public $disable_forced_root_block = false;
+    public $disable_forced_root_block = true;
 
     public function init()
     {

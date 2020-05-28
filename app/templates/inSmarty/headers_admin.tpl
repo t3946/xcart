@@ -25,6 +25,7 @@
                 // content_css: '/static/frontend/dist/css/main.css?t=' + new Date().getTime(),
                 relative_urls: false,
                 browser_spellcheck : true,
+                forced_root_block: false,
                 height : "480",
                 file_browser_callback: function(field_name, url, type, win) {
                     window.file_browser_window = win;
