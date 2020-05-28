@@ -8,11 +8,12 @@
         plugins: [
             'advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor',
             'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime image imagetools media nonbreaking',
-            'save table contextmenu directionality emoticons template paste textcolor layer contextmenu'
+            'save table contextmenu directionality emoticons template paste textcolor contextmenu'
         ],
         content_css: '/static/frontend/dist/css/main.css?t=' + new Date().getTime(),
         relative_urls: false,
         browser_spellcheck : true,
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image',
         inline_boundaries: true,
         {if ($field->disable_forced_root_block)}
             forced_root_block: false,
