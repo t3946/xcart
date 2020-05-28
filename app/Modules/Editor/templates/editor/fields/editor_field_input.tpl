@@ -16,6 +16,8 @@
         inline_boundaries: true,
         {if ($field->disable_forced_root_block)}
             forced_root_block: false,
+            force_br_newlines : true,
+            force_p_newlines : false,
         {/if}
         image_advtab: true,
         file_browser_callback: function(field_name, url, type, win) {
