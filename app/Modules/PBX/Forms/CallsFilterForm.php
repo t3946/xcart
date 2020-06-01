@@ -31,8 +31,8 @@ class CallsFilterForm extends BaseForm
                     'extension' => 'Choose type',
                     'in' => 'Inbound',
                     'out' => 'Outbound',
-                    'lost' => 'Miss call',
-                    'vm' => 'Voice mail',
+                    'lost' => 'Missed call',
+                    'vm' => 'Voicemail',
                 ],
             ],
 

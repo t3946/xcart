@@ -1,6 +1,7 @@
 <?php
 namespace Modules\PBX\Helpers;
 
+use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
@@ -14,7 +15,9 @@ class AnveoAssignCalls
     public static function eventBindCallToOrder($sender = null, $model)
     {
 
-        self::bindCallToOrder($model) ?: self::bindCallToOrderThird($model);
+        if (!self::bindCallToOrder($model)) {
+            self::bindCallToOrderThird($model);
+        }
         self::bindCallToOrderSecond($model);
 
         if (rand(0, 6) >= 5) {
@@ -23,7 +26,7 @@ class AnveoAssignCalls
     }
 
     /**
-     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     * @param PbxAnveoCallModel $model
      *
      * @return bool
      */
@@ -42,7 +45,7 @@ class AnveoAssignCalls
                 }
             }
 
-            if ($model->anveo_account && $model->options && $user_model = $model->options->user)
+            if (!$model->isVoiceMail() && !$model->isLost() && $model->anveo_account && $model->options && $user_model = $model->options->user)
             {
                 $filter = [
                     'user_id' => $user_model->id,
@@ -79,9 +82,10 @@ class AnveoAssignCalls
     }
 
     /**
-     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     * @param PbxAnveoCallModel $model
+     * @return bool
      */
-    public static function bindCallToOrderSecond($model = null)
+    public static function bindCallToOrderSecond(PbxAnveoCallModel $model = null): bool
     {
         if ( $model->e164 || $model->file ){
 
@@ -91,11 +95,11 @@ class AnveoAssignCalls
 
             /** @var OrderModel $order_model */
             $qs = OrderModel::objects()->getQuerySet();
-            if ( $order_model = OrderModel::objects()
-                                           ->filter([(new Expression("SUBSTRING({$qs->getTableAlias()}.phone, -10)"))->toSQL() => $e164])
-                                           ->order(['-date'])
-                                           ->limit(1)
-                                           ->get() )
+            if ($order_model = OrderModel::objects()
+                ->filter([(new Expression("SUBSTRING({$qs->getTableAlias()}.phone, -10)"))->toSQL() => $e164])
+                ->order(['-date'])
+                ->limit(1)
+                ->get())
             {
                 $relevance_order = 10;
 
@@ -116,19 +120,23 @@ class AnveoAssignCalls
                 $log_category = "anveo_calls";
                 $log_text = "{$e164} - Привязан к заказу - {$order_model->orderid} по второй привязке";
                 func_backprocess_log($log_category, $log_text);
+                return true;
             }
 
             $log_category = "anveo_calls";
             $log_text = "{$e164} - Не привязан к заказу по второй привязке";
             func_backprocess_log($log_category, $log_text);
         }
+        return false;
     }
 
     /**
-     * @param \Modules\PBX\Models\PbxAnveoCallModel $model
+     * @param PbxAnveoCallModel $model
+     * @return bool
      */
-    public static function bindCallToOrderThird($model = null)
+    public static function bindCallToOrderThird(PbxAnveoCallModel $model = null): bool
     {
+        $log_text = '';
         if ($model && $model->start_at && $model->end_at){
 
             if ($model->file) {
@@ -142,7 +150,7 @@ class AnveoAssignCalls
                 }
             }
 
-            if ($model->anveo_account && $model->options && $user_model = $model->options->user) {
+            if (!$model->isVoiceMail() && !$model->isLost() && $model->anveo_account && $model->options && $user_model = $model->options->user) {
 
                 $filter = [
                     'user_id__isnt' => $user_model->id,
@@ -156,12 +164,18 @@ class AnveoAssignCalls
                         $manager = OrdersCallsModel::objects();
 
                         foreach ($oua_models as $oua_model) {
-                            $manager->updateOrCreate(['call_id' => $model->id, 'order_id' => $oua_model->order_id, 'relevance_type' => OrdersCallsModel::TYPE_VIEWING_OTHER_OPERATOR],
-                                                     ['relevance_order' => 20]);
+                            $manager->updateOrCreate([
+                                'call_id' => $model->id,
+                                'order_id' => $oua_model->order_id,
+                                'relevance_type' => OrdersCallsModel::TYPE_VIEWING_OTHER_OPERATOR
+                            ], ['relevance_order' => 20]);
 
                             $log_category = "anveo_calls";
                             $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по третьей связке";
                             func_backprocess_log($log_category, $log_text);
+                        }
+                        if ($log_text) {
+                            return true;
                         }
                     }
                 }
@@ -171,6 +185,7 @@ class AnveoAssignCalls
                 func_backprocess_log($log_category, $log_text);
             }
         }
+        return false;
     }
 
     public static function reValidate()
@@ -230,10 +245,10 @@ class AnveoAssignCalls
                 }
 
                 if ($anveo_call_model->isVoiceMail()) {
-                    $user = 'Voice mail';
+                    $user = 'Voicemail';
                 }
                 if ($anveo_call_model->isLost()) {
-                    $user = 'Miss call';
+                    $user = 'Missed call';
                 }
 
                 $mass = [
@@ -247,8 +262,8 @@ class AnveoAssignCalls
 
                 $mass['direction'] = $anveo_call_model->getDirection();
 
-                $datetime1 = new \DateTime($anveo_call_model->end_at);
-                $datetime2 = new \DateTime($anveo_call_model->start_at);
+                $datetime1 = new DateTime($anveo_call_model->end_at);
+                $datetime2 = new DateTime($anveo_call_model->start_at);
                 $interval = $datetime1->diff($datetime2);
 
                 $mass['diff'] = $interval->format('%H:%I:%S');
@@ -271,7 +286,7 @@ class AnveoAssignCalls
         if ($order_calls = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all()){
 
             $count = count($order_calls);
-            $now = new \DateTime(date("Y-m-d H:i:s"));
+            $now = new DateTime(date("Y-m-d H:i:s"));
             // DateTime::setTime ( int $hour , int $minute [, int $second = 0 [, int $microseconds = 0 ]] )
 
             $now->modify("-1 day");
@@ -280,7 +295,7 @@ class AnveoAssignCalls
 
 //            if ($count > 1){
                 foreach ($order_calls as $order_call){
-                    $time = new \DateTime($order_call->call->start_at);
+                    $time = new DateTime($order_call->call->start_at);
                     $interval = $now->diff($time);
                     if ( $interval->format('%a') < 1) {
                         $new++;
@@ -289,10 +304,6 @@ class AnveoAssignCalls
 //            }
         }
 
-        if ($new > 0) {
-            return " ({$count} + {$new})";
-        } else {
-            return " ({$count})";
-        }
+        return $new > 0 ? " ({$count} + {$new})" : " ({$count})";
     }
 }
