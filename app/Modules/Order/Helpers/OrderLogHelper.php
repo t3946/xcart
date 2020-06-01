@@ -40,7 +40,7 @@ class OrderLogHelper
                 'date' => $call['start_at'],
                 'login' => $call['account'],
                 'type' => 'CA',
-                'log' => $call['direction']. "<audio controls preload='none' style='width: 100%'><source src=\"{$call['url']}\" type='audio/mp3'></audio>",
+                'log' => "{$call['direction']} from {$call['e164']} <audio controls preload='none' style='width: 100%'><source src=\"{$call['url']}\" type='audio/mp3'></audio>",
             ];
         }
         krsort($result);
