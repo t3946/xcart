@@ -19,7 +19,7 @@ class EmailAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['date', 'from_address', 'subject',];
+        return ['date', 'from_address', 'subject'];
     }
 
     public function getSearchColumns()
@@ -57,7 +57,7 @@ class EmailAdmin extends Admin
             'date' => [
                 'title' => 'Date',
                 'template' => $this->columnDefaultTemplate,
-                'order' => '-date'
+                'order' => 'date'
             ],
         ];
     }
@@ -79,7 +79,7 @@ class EmailAdmin extends Admin
 
     public static function getName()
     {
-        return 'Emails';
+        return 'Inbox / Sorting dashboard';
     }
 
     public function getItemProperty(Model $item, $property)

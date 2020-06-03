@@ -4,8 +4,10 @@
 namespace Modules\Mail\Helpers;
 
 
+use Exception;
 use Google_Client;
 use Google_Service_Gmail;
+use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
 use Xcart\App\Helpers\Paths;
 
@@ -54,8 +56,9 @@ class GmailHelper
                 $cnt = count($messages);
                 if (!($cnt % 1000)) {
                     echo "{$cnt}\n";
+                    break;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 print 'An error occurred: ' . $e->getMessage();
             }
         } while ($pageToken);
@@ -68,7 +71,7 @@ class GmailHelper
         try {
             $message = $service->users_messages->get($userId, $messageId);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             print 'An error occurred: ' . $e->getMessage();
         }
         return $message ?? null;
@@ -144,4 +147,28 @@ class GmailHelper
         }
         return null;
     }
+
+    /**
+     * @param Google_Service_Gmail $service
+     * @param $userId
+     * @return Google_Service_Gmail_Label[]
+     */
+    public static function listLabels(Google_Service_Gmail $service, $userId): array
+    {
+        $labels = array();
+
+        try {
+            $labelsResponse = $service->users_labels->listUsersLabels($userId);
+
+            if ($labelsResponse->getLabels()) {
+                $labels = array_merge($labels, $labelsResponse->getLabels());
+            }
+
+        } catch (Exception $e) {
+            print 'An error occurred: ' . $e->getMessage();
+        }
+
+        return $labels;
+    }
+
 }

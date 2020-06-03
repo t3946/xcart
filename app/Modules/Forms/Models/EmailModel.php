@@ -7,7 +7,9 @@ namespace Modules\Forms\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -26,6 +28,11 @@ class EmailModel extends Model
                 'unique' => true,
                 'verboseName' => "MessageId",
                 'required' => true,
+            ],
+            'thread_id' => [
+                'class' => CharField::class,
+                'verboseName' => "ThreadId",
+                'null' => true,
             ],
             'subject' => [
                 'class' => CharField::class,
@@ -73,6 +80,11 @@ class EmailModel extends Model
             'date' => [
                 'class' => DateTimeField::class,
                 'null' => false
+            ],
+            'labels' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => LabelModel::class,
+                'through' => EmailLabelModel::class,
             ]
         ];
     }
@@ -92,6 +104,20 @@ class EmailModel extends Model
         if (trim($this->snippet)) {
             $res .= " - <span style='color:gray;'>{$this->snippet}</span>";
         }
-        return $res;
+        $color = '';
+        $lbl = '';
+        foreach ($this->labels->filter(['type' => 'user']) as $label) {
+            $clr = "color: #666;";
+            if ($label->color) {
+                $clr = "color:{$label->color};";
+            }
+            $bclr = "background: #ddd";
+            if ($label->background_color) {
+                $bclr = "background:{$label->background_color}";
+            }
+            $color = "{$clr}{$bclr}";
+            $lbl .= "<span style='border: 1px solid #DFDFDF; margin: 0 5px 0 0; border-radius: 4px; padding: 0 4px; $color'>{$label}</span>";
+        }
+        return $lbl . $res;
     }
 }
