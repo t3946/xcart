@@ -6,9 +6,13 @@ namespace Modules\Forms\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string|null from_address
+ */
 class EmailModel extends Model
 {
     public static function getFields()
@@ -46,6 +50,11 @@ class EmailModel extends Model
                 'verboseName' => "To",
                 'null' => true,
             ],
+            'delivered_to_address' => [
+                'class' => CharField::class,
+                'verboseName' => "Delivered To",
+                'null' => true,
+            ],
             'reply_to' => [
                 'class' => CharField::class,
                 'verboseName' => "Reply to",
@@ -60,7 +69,29 @@ class EmailModel extends Model
                 ],
                 'null' => false,
                 'default' => 'inbox'
+            ],
+            'date' => [
+                'class' => DateTimeField::class,
+                'null' => false
             ]
         ];
+    }
+
+    public function getFrom()
+    {
+        if (preg_match('/([^<]*)<?(.*)@(.*)>?/', $this->from_address, $m)) {
+            $res = str_replace('"', '', $m[1] ?: $m[2] ?: $this->from_address);
+            return "<span title='{$this->from_address}'>{$res}</span>";
+        }
+        return $this->from_address;
+    }
+
+    public function getSubject()
+    {
+        $res = $this->subject;
+        if (trim($this->snippet)) {
+            $res .= " - <span style='color:gray;'>{$this->snippet}</span>";
+        }
+        return $res;
     }
 }

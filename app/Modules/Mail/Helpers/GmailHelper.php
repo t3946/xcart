@@ -51,6 +51,10 @@ class GmailHelper
                     $messages = array_merge($messages, $messagesResponse->getMessages());
                     $pageToken = $messagesResponse->getNextPageToken();
                 }
+                $cnt = count($messages);
+                if (!($cnt % 1000)) {
+                    echo "{$cnt}\n";
+                }
             } catch (\Exception $e) {
                 print 'An error occurred: ' . $e->getMessage();
             }
@@ -59,7 +63,7 @@ class GmailHelper
         return $messages;
     }
 
-    public static function getMessage($service, $userId, $messageId)
+    public static function getMessage(Google_Service_Gmail $service, $userId, $messageId): ?Google_Service_Gmail_Message
     {
         try {
             $message = $service->users_messages->get($userId, $messageId);

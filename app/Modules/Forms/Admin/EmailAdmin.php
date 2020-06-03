@@ -19,7 +19,7 @@ class EmailAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['id', 'subject', 'body', 'snippet', 'type'];
+        return ['date', 'from_address', 'subject',];
     }
 
     public function getSearchColumns()
@@ -33,22 +33,31 @@ class EmailAdmin extends Admin
             'id' => [
                 'title' => 'ID',
                 'template' => $this->columnDefaultTemplate,
-                'order' => 'id'
+            ],
+            'from_address' => [
+                'title' => 'From',
+                'template' => $this->columnDefaultTemplate,
             ],
             'subject' => [
                 'title' => 'Subject',
                 'template' => $this->columnDefaultTemplate,
-                'order' => 'subject'
             ],
             'body' => [
                 'title' => 'Body',
                 'template' => $this->columnDefaultTemplate,
-                'order' => 'body'
             ],
             'snippet' => [
                 'title' => 'Sippet',
                 'template' => $this->columnDefaultTemplate,
-                'order' => 'snippet'
+            ],
+            'type' => [
+                'title' => 'Type',
+                'template' => $this->columnDefaultTemplate,
+            ],
+            'date' => [
+                'title' => 'Date',
+                'template' => $this->columnDefaultTemplate,
+                'order' => '-date'
             ],
         ];
     }
@@ -71,6 +80,28 @@ class EmailAdmin extends Admin
     public static function getName()
     {
         return 'Emails';
+    }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        if ($property === 'from_address') {
+            return $item->getFrom();
+        }
+        if ($property === 'subject') {
+            return $item->getSubject();
+        }
+        return parent::getItemProperty($item, $property);
+    }
+
+    public function getListItemActions()
+    {
+        return [
+            'view',
+        ];
+    }
+    public function getListGroupActions()
+    {
+        return [];
     }
 
 }
