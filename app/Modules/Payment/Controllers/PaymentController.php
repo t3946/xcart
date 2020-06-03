@@ -221,11 +221,15 @@ class PaymentController extends Controller
 
                         /** @var OrderTransactionModel $txn */
                         if ($order && \in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
+                            $gross = (float) $app->request->request->get('payment_gross');
+                            if (!$gross) {
+                                $gross = (float) $app->request->request->get('mc_gross');
+                            }
                             $txn->setAttributes([
                                 'orderid' => $order->orderid,
                                 'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
                                 'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                                'transaction_amount' => $app->request->request->get('payment_gross'),
+                                'transaction_amount' => $gross,
                                 'login' => $order->login,
                                 'paymentid' => $order->paymentid,
                             ]);
@@ -251,7 +255,7 @@ class PaymentController extends Controller
                                 $transactionLog->save();
                             }
 
-                            if (($payment_gross = (float)$app->request->request->get('payment_gross')) && $payment_gross === (float)$order->total) {
+                            if ($gross && $gross === (float)$order->total) {
                                 $app->event->trigger('order:paid', ['model' => $order]);
                             }
                         }
