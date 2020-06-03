@@ -34,6 +34,11 @@ class EmailModel extends Model
                 'verboseName' => "ThreadId",
                 'null' => true,
             ],
+            'account_id' => [
+                'class' => IntField::class,
+                'verboseName' => "AccountId",
+                'null' => false,
+            ],
             'subject' => [
                 'class' => CharField::class,
                 'verboseName' => "Subject",

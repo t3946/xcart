@@ -16,7 +16,7 @@ class GmailFetchCommand extends Command
 
     public function handle($arguments = [])
     {
-        $userId = 'vr@s3stores.com';
+        $userId = 'vrtest@s3stores.com';
         $client = GmailHelper::getClient($userId);
 
         $service = new Google_Service_Gmail($client);
@@ -50,6 +50,7 @@ class GmailFetchCommand extends Command
 
                 $model->setAttributes([
                     'body' => $body,
+                    'account_id' => 1,
                     'subject' => $subject,
                     'thread_id' => $message->getThreadId(),
                     'snippet' => html_entity_decode($single_message->getSnippet()),
@@ -58,12 +59,12 @@ class GmailFetchCommand extends Command
                     'to_address' => $to,
                     'from_address' => GmailHelper::getHeader($headers, 'From'),
                     'date' => $internalDate,
-                    'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds()]),
-                    /*'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),*/
+                    'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds() ?? []]   ),
+                    'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),
                 ]);
                 $model->save();
 
-                echo("{$message->id} : {$subject} {$single_message->getSnippet()} {$body} \n");
+                echo("{$message->id} : {$subject} {$single_message->getSnippet()} \n");
             }
         }
     }

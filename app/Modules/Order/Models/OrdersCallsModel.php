@@ -69,11 +69,11 @@ class OrdersCallsModel extends Model
     public function afterSave($owner, $isNew)
     {
         $log_category = "Calls_Record_Anveo";
-        $log_text = serialize("After save: ". $this->getAttributes());
+        $log_text = "After save: ". serialize($this->getAttributes());
         func_backprocess_log($log_category, $log_text);
         $call = $this->call;
         if ($call) {
-            $log_text = serialize("After save call: ". $call->getAttributes());
+            $log_text = "After save call: ". serialize($call->getAttributes());
 
         } else {
             $log_text = "After save call: Empty";
