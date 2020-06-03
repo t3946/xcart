@@ -68,6 +68,10 @@ class OrdersCallsModel extends Model
 
     public function afterSave($owner, $isNew)
     {
+        $log_category = "Calls_Record_Anveo";
+        $log_text = serialize($this->getAttributes());
+        func_backprocess_log($log_category, $log_text);
+
         if (($call = $this->call) && ($call->isVoiceMail() || $call->isLost())) {
             OrderHelper::setOrderTag($this->order_id, 62); //Voicemail left tag
         }

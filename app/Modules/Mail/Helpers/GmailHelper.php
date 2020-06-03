@@ -81,6 +81,21 @@ class GmailHelper
         return $decodedMessage;
     }
 
+    public static function getPart($parts, $mime)
+    {
+        foreach ($parts as $part) {
+            if ($part['mimeType'] === $mime) {
+                return $part;
+            }
+            if (isset($part['parts']) && $part['parts']) {
+                if ($r = self::getPart($part['parts'], $mime)) {
+                    return $r;
+                }
+            }
+        }
+        return null;
+    }
+
     public static function getBody($message)
     {
         $payload = $message->getPayload();
@@ -88,9 +103,13 @@ class GmailHelper
         $FOUND_BODY = GmailHelper::decodeBody($body['data']);
         if (!$FOUND_BODY) {
             $parts = $payload->getParts();
+            if (($part = self::getPart($parts, 'text/html')) && $part['body']) {
+                $FOUND_BODY = self::decodeBody($part['body']->data);
+                return $FOUND_BODY;
+            }
             foreach ($parts as $part) {
                 if ($part['body']) {
-                    $FOUND_BODY = GmailHelper::decodeBody($part['body']->data);
+                    $FOUND_BODY = self::decodeBody($part['body']->data);
                     break;
                 }
                 // Last try: if we didn't find the body in the first parts,
@@ -99,7 +118,7 @@ class GmailHelper
                     foreach ($part['parts'] as $p) {
                         // replace 'text/html' by 'text/plain' if you prefer
                         if ($p['mimeType'] === 'text/html' && $p['body']) {
-                            $FOUND_BODY = GmailHelper::decodeBody($p['body']->data);
+                            $FOUND_BODY = self::decodeBody($p['body']->data);
                             break;
                         }
                     }

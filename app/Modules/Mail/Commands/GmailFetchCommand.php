@@ -5,9 +5,9 @@ namespace Modules\Mail\Commands;
 
 
 use Google_Service_Gmail;
+use Modules\Forms\Models\EmailModel;
 use Modules\Mail\Helpers\GmailHelper;
 use Xcart\App\Commands\Command;
-use Xcart\App\Helpers\Paths;
 
 class GmailFetchCommand extends Command
 {
@@ -23,7 +23,19 @@ class GmailFetchCommand extends Command
         foreach ($messages as $message) {
             $single_message =  GmailHelper::getMessage($service, $userId, $message->id);
             $body = GmailHelper::getBody($single_message);
-            $subject = GmailHelper::getHeader($single_message->getPayload()->getHeaders(), 'Subject');
+            $headers = $single_message->getPayload()->getHeaders();
+            $subject = GmailHelper::getHeader($headers, 'Subject');
+            $type = in_array('INBOX', $single_message->getLabelIds()) ? 'inbox' : 'sent';
+            EmailModel::objects()->getOrCreate([
+                'message_id' => $message->id,
+                'body' => $body,
+                'subject' => $subject,
+                'snippet' => $single_message->getSnippet(),
+                'type' => $type,
+                'to_address' => GmailHelper::getHeader($headers, 'To'),
+                'from_address' => GmailHelper::getHeader($headers, 'From'),
+                /*'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),*/
+            ]);
 
             echo("{$message->id} : {$subject} {$single_message->getSnippet()} {$body} \n");
         }
