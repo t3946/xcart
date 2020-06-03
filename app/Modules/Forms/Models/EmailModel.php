@@ -116,7 +116,7 @@ class EmailModel extends Model
                 $bclr = "background:{$label->background_color}";
             }
             $color = "{$clr}{$bclr}";
-            $lbl .= "<span style='border: 1px solid #DFDFDF; margin: 0 5px 0 0; border-radius: 4px; padding: 0 4px; $color'>{$label}</span>";
+            $lbl .= "<span style='font-size: 12px; border: 1px solid #DFDFDF; margin: 0 5px 0 0; border-radius: 4px; padding: 1px 5px; $color'>{$label}</span>";
         }
         return $lbl . $res;
     }
