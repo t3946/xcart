@@ -1377,10 +1377,11 @@ $( document ).ready(function() {
 
 {if $usertype eq 'A' || $usertype eq 'P'}
 
-<script type="text/javascript">
-//<![CDATA[
-$(function() {ldelim}
+<script>
+{literal}
+    $(function() {
         var curTitle = document.title;
+        {/literal}
         {if $smarty.get.tab ne "y" && $smarty.get.tab ne ""}
             var indexTab = $('li a[href="#{$smarty.get.tab}"]').parent().index();
         {else}
@@ -1390,18 +1391,28 @@ $(function() {ldelim}
                 var indexTab = 0;
             {/if}
         {/if}
-  var $tabs = $('#main_order_tabs-container').tabs(
-          {ldelim}
-              activate: function(event, ui) {ldelim}
-                  document.title = "{$order.order_prefix}{$order.orderid}: ("+ui.newTab.text() +") " + curTitle;
-              {rdelim}
-          {rdelim}
-  );
+        {literal}
+        var $tabs = $('#main_order_tabs-container').tabs(
+                {
+                    activate: function (event, ui) {
+                        {/literal}
+                        document.title = "{$order.order_prefix}{$order.orderid}: (" + ui.newTab.text() + ") " + curTitle;
+                        {literal}
+                        $.ajax({
+                        {/literal}
+                            url: '/admin/order/api/activity/' + {$order.orderid},
+                        {literal}
+                        })
+                    }
+                }
+            );
+    {/literal}
     {if $smarty.get.tab ne "y"}
         $tabs.tabs("option","active", indexTab);
     {/if}
-{rdelim});
-//]]>
+    {literal}
+});
+{/literal}
 </script>
 
 {capture name=reference}

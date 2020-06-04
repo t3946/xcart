@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Controllers\Admin\OrderRelatedMessagesController;
+use Modules\Order\Controllers\Api\ActivityController;
 use Modules\Order\Controllers\Api\ReconciliationController;
 
 return [
@@ -58,5 +59,10 @@ return [
         'route' => '/order_note_tag_settings',
         'target' => [OrderRelatedMessagesController::class, 'actionSetOrderNoteTag'],
         'name' => 'order_note_tag_settings'
+    ],
+    [
+        'route' => '/api/activity/{i:order_id}',
+        'target' => [ActivityController::class, 'hook'],
+        'name' => 'activity'
     ],
 ];

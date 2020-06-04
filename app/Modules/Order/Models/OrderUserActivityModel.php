@@ -28,7 +28,7 @@ class OrderUserActivityModel extends AbstractOrderUserActivityModel
         $filter = [
             'user_id'=> $this->user_id,
             'order_id' => $this->order_id,
-            'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
+            'created_at__gte' => (new \DateTime())
         ];
 
         if (!static::objects()->filter($filter)->count()) {
