@@ -6,10 +6,12 @@ namespace Modules\Mail\Commands;
 
 use DateTime;
 use Google_Service_Gmail;
+use Modules\Forms\Models\EmailBodyModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\LabelModel;
 use Modules\Mail\Helpers\GmailHelper;
 use Xcart\App\Commands\Command;
+use Xcart\App\Storage\Files\ResourceFile;
 
 class GmailFetchCommand extends Command
 {
@@ -49,7 +51,6 @@ class GmailFetchCommand extends Command
                 ]);
 
                 $model->setAttributes([
-                    'body' => $body,
                     'account_id' => 1,
                     'subject' => $subject,
                     'thread_id' => $message->getThreadId(),
@@ -59,10 +60,17 @@ class GmailFetchCommand extends Command
                     'to_address' => $to,
                     'from_address' => GmailHelper::getHeader($headers, 'From'),
                     'date' => $internalDate,
-                    'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds() ?? []]   ),
+                    'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds() ?? []]),
                     'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),
                 ]);
                 $model->save();
+
+                [$body] = EmailBodyModel::objects()->getOrNew([
+                    'email_id' => $model->id,
+                    'email_body' => new ResourceFile($body, "body{$model->id}.html")
+                ]);
+
+                $body->save();
 
                 echo("{$message->id} : {$subject} {$single_message->getSnippet()} \n");
             }

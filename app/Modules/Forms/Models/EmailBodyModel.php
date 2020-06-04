@@ -4,20 +4,23 @@
 namespace Modules\Forms\Models;
 
 
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
-class EmailLabelModel extends Model
+class EmailBodyModel extends Model
 {
     public static function getFields()
     {
         return [
-            'label' => [
-                'field' => 'label_id',
-                'class' => ForeignField::class,
-                'modelClass' => LabelModel::class,
-                'link' => ['label_id' => 'id'],
-                'primary' => true,
+            'email_body' => [
+                'field' => 'body',
+                'class' => FileField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'files/email/body',
+                'maxSize' => '35M',
+                'null' => true,
+                'default' => null,
             ],
             'email' => [
                 'field' => 'email_id',

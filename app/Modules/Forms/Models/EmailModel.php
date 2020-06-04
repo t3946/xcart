@@ -8,8 +8,10 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -44,7 +46,10 @@ class EmailModel extends Model
                 'verboseName' => "Subject",
             ],
             'body' => [
-                'class' => CharField::class,
+                'class' => OneToOneField::class,
+                'modelClass' => EmailBodyModel::class,
+                'link' => ['id' => 'email_id'],
+                'to' => 'id',
                 'verboseName' => "Body",
             ],
             'snippet' => [

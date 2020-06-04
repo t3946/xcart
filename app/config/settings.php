@@ -102,6 +102,10 @@ return array_replace_recursive([
                'www' => [
                    'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
                    'root' => 'www',
+               ],
+               'zip' => [
+                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'root' => 'www',
                ]
            ],
        ],

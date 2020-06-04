@@ -139,6 +139,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'L' => 
         array (
+            'League\\Flysystem\\ZipArchive\\' => 28,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
         ),
@@ -380,6 +381,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'MaxMind\\Db\\' => 
         array (
             0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
+        'League\\Flysystem\\ZipArchive\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem-ziparchive/src',
         ),
         'League\\Flysystem\\AwsS3v3\\' => 
         array (
@@ -12403,6 +12408,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'League\\Flysystem\\Util\\ContentListingFormatter' => __DIR__ . '/..' . '/league/flysystem/src/Util/ContentListingFormatter.php',
         'League\\Flysystem\\Util\\MimeType' => __DIR__ . '/..' . '/league/flysystem/src/Util/MimeType.php',
         'League\\Flysystem\\Util\\StreamHasher' => __DIR__ . '/..' . '/league/flysystem/src/Util/StreamHasher.php',
+        'League\\Flysystem\\ZipArchive\\ZipArchiveAdapter' => __DIR__ . '/..' . '/league/flysystem-ziparchive/src/ZipArchiveAdapter.php',
         'MWSCartService_Client' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MWSCartService/Client.php',
         'MWSCartService_Exception' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MWSCartService/Exception.php',
         'MWSCartService_Interface' => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MWSCartService/Interface.php',
@@ -13134,11 +13140,17 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Files\\FilesModule' => __DIR__ . '/../../../..' . '/app/Modules/Files/FilesModule.php',
         'Modules\\Files\\Traits\\UploadTrait' => __DIR__ . '/../../../..' . '/app/Modules/Files/Traits/UploadTrait.php',
         'Modules\\Files\\Validators\\RequiredFilesValidator' => __DIR__ . '/../../../..' . '/app/Modules/Files/Validators/RequiredFilesValidator.php',
+        'Modules\\Forms\\Admin\\EmailAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Admin/EmailAdmin.php',
         'Modules\\Forms\\Admin\\SnippetsAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Admin/SnippetsAdmin.php',
         'Modules\\Forms\\Controllers\\SnippetController' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Controllers/SnippetController.php',
         'Modules\\Forms\\FormsModule' => __DIR__ . '/../../../..' . '/app/Modules/Forms/FormsModule.php',
+        'Modules\\Forms\\Forms\\EmailForm' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Forms/EmailForm.php',
         'Modules\\Forms\\Forms\\SnippetsForm' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Forms/SnippetsForm.php',
         'Modules\\Forms\\Helpers\\SnippetHelper' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Helpers/SnippetHelper.php',
+        'Modules\\Forms\\Models\\EmailBodyModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailBodyModel.php',
+        'Modules\\Forms\\Models\\EmailLabelModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailLabelModel.php',
+        'Modules\\Forms\\Models\\EmailModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailModel.php',
+        'Modules\\Forms\\Models\\LabelModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/LabelModel.php',
         'Modules\\Forms\\Models\\SnippetModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/SnippetModel.php',
         'Modules\\GeoIp\\GeoIpModule' => __DIR__ . '/../../../..' . '/app/Modules/GeoIp/GeoIpModule.php',
         'Modules\\GeoIp\\Helpers\\GeoIpHelper' => __DIR__ . '/../../../..' . '/app/Modules/GeoIp/Helpers/GeoIpHelper.php',
@@ -13238,9 +13250,11 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Landing\\Helpers\\LandingHelper' => __DIR__ . '/../../../..' . '/app/Modules/Landing/Helpers/LandingHelper.php',
         'Modules\\Landing\\LandingModule' => __DIR__ . '/../../../..' . '/app/Modules/Landing/LandingModule.php',
         'Modules\\Landing\\Models\\LandingModel' => __DIR__ . '/../../../..' . '/app/Modules/Landing/Models/LandingModel.php',
+        'Modules\\Mail\\Commands\\GmailFetchCommand' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Commands/GmailFetchCommand.php',
         'Modules\\Mail\\Commands\\TestCommand' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Commands/TestCommand.php',
         'Modules\\Mail\\Components\\MailComponent' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Components/MailComponent.php',
         'Modules\\Mail\\Components\\Mailer' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Components/Mailer.php',
+        'Modules\\Mail\\Helpers\\GmailHelper' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Helpers/GmailHelper.php',
         'Modules\\Mail\\LogHandlers\\MailHandler' => __DIR__ . '/../../../..' . '/app/Modules/Mail/LogHandlers/MailHandler.php',
         'Modules\\Mail\\LogHandlers\\MailProxyHandler' => __DIR__ . '/../../../..' . '/app/Modules/Mail/LogHandlers/MailProxyHandler.php',
         'Modules\\Mail\\MailModule' => __DIR__ . '/../../../..' . '/app/Modules/Mail/MailModule.php',
@@ -13283,6 +13297,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Order\\Commands\\TrackingConvertCommand' => __DIR__ . '/../../../..' . '/app/Modules/Order/Commands/TrackingConvertCommand.php',
         'Modules\\Order\\Controllers\\Admin\\ApiTagsController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Admin/ApiTagsController.php',
         'Modules\\Order\\Controllers\\Admin\\OrderRelatedMessagesController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Admin/OrderRelatedMessagesController.php',
+        'Modules\\Order\\Controllers\\Api\\ActivityController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Api/ActivityController.php',
         'Modules\\Order\\Controllers\\Api\\AfterShipController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Api/AfterShipController.php',
         'Modules\\Order\\Controllers\\Api\\InvoiceConventerController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Api/InvoiceConventerController.php',
         'Modules\\Order\\Controllers\\Api\\ReconciliationController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Api/ReconciliationController.php',
@@ -15437,6 +15452,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Xcart\\App\\Storage\\Adapters\\AdapterExtInterface' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/Adapters/AdapterExtInterface.php',
         'Xcart\\App\\Storage\\Adapters\\AdapterInterface' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/Adapters/AdapterInterface.php',
         'Xcart\\App\\Storage\\Adapters\\LocalAdapter' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/Adapters/LocalAdapter.php',
+        'Xcart\\App\\Storage\\Adapters\\LocalZipAdapter' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/Adapters/LocalZipAdapter.php',
         'Xcart\\App\\Storage\\FileNameHasher\\DefaultHasher' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/FileNameHasher/DefaultHasher.php',
         'Xcart\\App\\Storage\\FileNameHasher\\FileNameHasherInterface' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/FileNameHasher/FileNameHasherInterface.php',
         'Xcart\\App\\Storage\\FileNameHasher\\MD5NameHasher' => __DIR__ . '/../../../..' . '/app/include/Xcart/App/Storage/FileNameHasher/MD5NameHasher.php',
