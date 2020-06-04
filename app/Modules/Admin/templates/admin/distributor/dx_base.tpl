@@ -70,7 +70,7 @@
                             </div><div>
                         {/if}
                         <fieldset class="" style="margin-bottom: 0; background:inherit; grid-column-start: {if $cnt/2 > $index}1{else}2{/if};">
-                            <legend><b>{$fN}</b></legend>
+                            <legend><b style="font-size: 16px;color: red;">{$fN}</b></legend>
                             <ul class="ul-main" style="margin: 0">
                                 {foreach $fieldset as $key => $item first=$first}
                                     <li>
