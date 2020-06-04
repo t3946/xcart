@@ -200,7 +200,7 @@ class DxContactAdmin extends Admin
                     foreach ($values[$f] as $id => $value) {
                         $forms[$id] = array_merge($forms[$id] ?? [], [$f => $value]);
                     }
-                } elseif ($f === 'pq') {
+                } elseif ($f === 'pq' && $values[$f] !== null) {
                     $forms[$values[$f]] = array_merge($forms[$values[$f]] ?? [], [$f => true]);
                 }
             }
