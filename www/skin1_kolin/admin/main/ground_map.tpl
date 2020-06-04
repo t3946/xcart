@@ -74,7 +74,7 @@
                         <tr>
                             <td>
                                 <div class="call_btn_distr_{if $dx->isGoodTimeToSendEmail()}a{else}d{/if}">
-                                    <a target="_blank"
+                                    <a target="_blank" onclick="{literal}$.ajax({{/literal}url: '/admin/order/api/activity/' + {$group->orderid}{literal}}){/literal}"
                                        href="tel:{$dx->getPhoneNormalized()}">
                                         <div style="width: 219px; height: 44px;"></div>
                                     </a>
@@ -92,7 +92,8 @@
                             <tr>
                                 <td>
                                     <div class="call_btn call_btn_shipper">
-                                        <a target="_blank" href="tel:{$group->trackings[0]->carrier->phone}">
+                                        <a target="_blank" onclick="{literal}$.ajax({{/literal}url: '/admin/order/api/activity/' + {$group->orderid}{literal}}){/literal}"
+                                           href="tel:{$group->trackings[0]->carrier->phone}">
                                             <div style="width: 219px; height: 44px;"></div>
                                         </a>
                                     </div>
@@ -115,7 +116,7 @@
                             <td>
 
                                 <div class="call_btn_customer_{if $customer.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}">
-                                    <a target="_blank"
+                                    <a target="_blank" onclick="{literal}$.ajax({{/literal}url: '/admin/order/api/activity/' + {$group->orderid}{literal}}){/literal}"
                                        href="tel:{if $customer.phone_normalized ne ""}{$customer.phone_normalized}{else}{$customer.phone}{/if}">
                                         <div style="width: 219px; height: 44px;"></div>
                                     </a>
