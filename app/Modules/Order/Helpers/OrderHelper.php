@@ -430,7 +430,7 @@ HTML;
         $model = AttentionTagModel::objects()->get(['status_id' => $tagId]);
 
         if ($model) {
-            [$created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
+            [,$created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
             $message = "Attention tag added: " . $model->status;
             if ($isLog && $created) {
                 (new OrderLogModel([

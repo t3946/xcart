@@ -66,7 +66,8 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
         if (!isset($this->archive)) {
             $this->setArchive(new ZipArchive());
             $this->openArchive($location);
-            $this->setPathPrefix(null);
+            $www = Paths::get('www');
+            $this->setPathPrefix($this->getUrl($www));
         }
         return parent::write($location, $contents, $config);
     }
