@@ -114,8 +114,8 @@ class AnveoAssignCalls
 
                 if ($is_created) {
                     $oc_model->relevance_order = $relevance_order;
-                    $oc_model->save();
                 }
+                $oc_model->save();
 
                 $log_category = "anveo_calls";
                 $log_text = "{$e164} - Привязан к заказу - {$order_model->orderid} по второй привязке";
