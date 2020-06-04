@@ -32,6 +32,7 @@ class AnveoAssignCalls
      */
     public static function bindCallToOrder($model = null)
     {
+        $log_category = "anveo_calls";
         if ($model && $model->start_at && $model->end_at)
         {
             if ($model->file) {
@@ -65,14 +66,29 @@ class AnveoAssignCalls
 
                         $oc_model->save();
 
-                        $log_category = "anveo_calls";
                         $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке";
                         func_backprocess_log($log_category, $log_text);
                     }
                     return true;
                 }
 
-                $log_category = "anveo_calls";
+                $filter = [
+                    'user_id' => $user_model->id,
+                    'created_at__lte' => $model->end_at,
+                ];
+
+                if ($model->isOutgoing() && $oua_model = OrderUserActivityModel::objects()->filter($filter)->order(['-created_at'])->limit(1)->get()) {
+                    [$oc_model] = OrdersCallsModel::objects()->getOrNew(
+                        ['call_id' => $model->id, 'order_id' => $oua_model->order_id, 'relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR]);
+                    $oc_model->relevance_order = 10;
+
+                    $oc_model->save();
+
+                    $log_text = "{$e164} - Привязан к заказу - {$oua_model->order_id} по первой связке out";
+                    func_backprocess_log($log_category, $log_text);
+                    return true;
+                }
+
                 $log_text = "{$e164} - Не привязан к заказу по первой привязке";
                 func_backprocess_log($log_category, $log_text);
 
