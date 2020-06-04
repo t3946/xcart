@@ -67,7 +67,7 @@ class GmailFetchCommand extends Command
 
                 [$body] = EmailBodyModel::objects()->getOrNew([
                     'email_id' => $model->id,
-                    'email_body' => new ResourceFile($body, "body{$model->id}.html")
+                    'email_body' => new ResourceFile($body, "body{$model->id}.zip")
                 ]);
 
                 $body->save();

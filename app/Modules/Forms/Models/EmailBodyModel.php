@@ -16,7 +16,7 @@ class EmailBodyModel extends Model
             'email_body' => [
                 'field' => 'body',
                 'class' => FileField::class,
-                'adapterName' => 'www',
+                'adapterName' => 'zip',
                 'uploadTo' => 'files/email/body',
                 'maxSize' => '35M',
                 'null' => true,

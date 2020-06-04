@@ -2,8 +2,12 @@
 namespace Xcart\App\Storage\Adapters;
 
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\Config;
+use League\Flysystem\Util;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
+use SplFileInfo;
 use Xcart\App\Helpers\Paths;
+use ZipArchive;
 
 class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
 {
@@ -37,7 +41,7 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
             $this->relativeBase = substr($base, strlen($www));
         }
 
-        parent::__construct($base);
+        //parent::__construct($base);
     }
 
     public function getUrl($path)
@@ -48,5 +52,22 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
         }
 
         return '/'. $path;
+    }
+
+    public function has($path)
+    {
+        $location = $this->applyPathPrefix($path);
+
+        return file_exists($location);
+    }
+
+    public function write($location, $contents, Config $config)
+    {
+        if (!isset($this->archive)) {
+            $this->setArchive(new ZipArchive());
+            $this->openArchive($location);
+            $this->setPathPrefix(null);
+        }
+        return parent::write($location, $contents, $config);
     }
 }

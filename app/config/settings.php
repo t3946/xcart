@@ -1,4 +1,7 @@
 <?php
+
+use Xcart\App\Storage\Adapters\LocalZipAdapter;
+
 (defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
 
 $local_config = __DIR__ . DS .'settings_local.php';
@@ -104,7 +107,7 @@ return array_replace_recursive([
                    'root' => 'www',
                ],
                'zip' => [
-                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'class' => LocalZipAdapter::class,
                    'root' => 'www',
                ]
            ],
