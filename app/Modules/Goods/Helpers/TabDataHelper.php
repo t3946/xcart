@@ -37,6 +37,7 @@ class TabDataHelper
         $tabs = [];
 
         if ($src) {
+            $src = html_entity_decode($src);
             $t_tabs = explode('<s3-tab>', $src);
 
             if (is_array($t_tabs)) {
