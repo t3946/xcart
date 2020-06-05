@@ -28,7 +28,7 @@
             <table cellpadding="0" cellspacing="0">
                 <tr>
                     {if $config['title_inline']}
-                        <td style="border: none;">
+                        <td style="border: none; padding:0;">
                             <span><b>{$config['title']}</b></span>
                             {if ($config['hint'])}
                                 {include 'admin/distributor/form/hint.tpl' hint=$config['hint']}
@@ -39,7 +39,7 @@
                 </tr>
                 {if $ext_column}
                     <tr>
-                        <td style="border: none;">
+                        <td style="border: none; padding:0;">
                             {set $column = $ext_column}
                             <span><b>{$columns['config'][$ext_column]['title']}</b></span>
                         </td>

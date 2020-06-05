@@ -81,7 +81,7 @@ class DistributorContactForm extends DistributorForm
             'ext' => [
                 'class' => CharField::class,
                 'label' => 'Ext',
-                'html' => ['style' => 'width: 30px;'],
+                'html' => ['style' => 'width: 5rem;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'inputTemplate' => 'admin/distributor/form/input_mult.tpl',
