@@ -47,7 +47,7 @@
   <td width="47%" height="25">
 
 
-{if $order.po_details}
+{if $oOrder->isPurchaseOrder()}
 
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 <tr>
@@ -77,7 +77,7 @@
 <tr>
   <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
   <td><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
-  <td{if $order.po_details} style="font-size:0; height: 2px;"" height="2"{/if}>{if $order.po_details}<img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" />{/if}</td>
+  <td{if $oOrder->isPurchaseOrder()} style="font-size:0; height: 2px;"" height="2"{/if}>{if $oOrder->isPurchaseOrder()}<img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" />{/if}</td>
 </tr>
 <tr>
   <td colspan="3"><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
@@ -106,7 +106,7 @@
 {if $customer.default_fields.firstname}
 <tr>
   <td nowrap="nowrap"><b>{$lng.lbl_first_name}:</b></td>
-  <td width="100%" nowrap="nowrap">{if !$static}<input type="text" name="customer_info[firstname]" value="{$customer.firstname}" style="width: 55%; {if $order.po_details && $customer.firstname|lower eq 'unknown'}background-color: #F4CCCC;{/if}" />{else}{$customer.firstname}{/if}
+  <td width="100%" nowrap="nowrap">{if !$static}<input type="text" name="customer_info[firstname]" value="{$customer.firstname}" style="width: 55%; {if $oOrder->isPurchaseOrder() && $customer.firstname|lower eq 'unknown'}background-color: #F4CCCC;{/if}" />{else}{$customer.firstname}{/if}
 &nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a>
 &nbsp;{if in_array($order.fraud_status, array('E','R'))}
     <a target="_blank" href="http://www.spokeo.com/search?q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Spokeo FN</a>
@@ -128,7 +128,7 @@
           <input type="text"
                  name="customer_info[phone]"
                  value="{$customer.phone}"
-                 style="width: 55%; {if $order.po_details && $customer.phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}"/>
+                 style="width: 55%; {if $oOrder->isPurchaseOrder() && $customer.phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}"/>
       {else}
           {$customer.phone}
       {/if}
@@ -179,7 +179,7 @@
 <tr>
   <td><b>{$lng.lbl_email}:</b></td>
   <td width="100%" nowrap="nowrap">
-  {if !$static}<input type="text" name="customer_info[email]" value="{$customer.email}" style="width: 55%; {if $order.po_details && $customer.email|lower eq 'unknown@unknown.com'}background-color: #F4CCCC;{/if}" />{else}{$customer.email}{/if}
+  {if !$static}<input type="text" name="customer_info[email]" value="{$customer.email}" style="width: 55%; {if $oOrder->isPurchaseOrder() && $customer.email|lower eq 'unknown@unknown.com'}background-color: #F4CCCC;{/if}" />{else}{$customer.email}{/if}
 &nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google @</a>
  {if in_array($order.fraud_status, array('E', 'R'))}
 &nbsp;  <a target="_blank" href="http://www.spokeo.com/email-search/search?e={$customer.email}" style="color: #1F08F8;">Spokeo @</a>
@@ -206,7 +206,7 @@
   </td>
   <td width="5%">&nbsp;</td>
   <td width="47%" style="vertical-align: top;">
-      {if $order.po_details}
+      {if $oOrder->isPurchaseOrder()}
           {assign var=oPOPipeLine value=$oOrder->getPOPipelineInstance()}
           <input type="hidden" name="po_update" value="1"/>
           <table cellspacing="0" cellpadding="0" class="customer-info-edit" width="100%">
@@ -301,7 +301,7 @@
 </tr>
 </table>
 
-{if $order.po_details}
+{if $oOrder->isPurchaseOrder()}
 <br />
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 <tr>

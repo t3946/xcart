@@ -555,4 +555,9 @@ class OrderModel extends Model
 
     }
 
+    public function isPurchaseOrder()
+    {
+        return in_array($this->cb_status, [OrderStatusModel::ORDER_STATUS_UNPAID_PO, OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO], true);
+    }
+
 }
