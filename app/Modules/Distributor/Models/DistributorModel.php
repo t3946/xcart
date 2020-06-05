@@ -217,6 +217,11 @@ class DistributorModel extends Model
                 'null' => true,
                 'default' => null
             ],
+            'disabled_reason' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ],
             'parents' => [
                 'class' => HasManyField::class,
                 'modelClass' => DistributorModel::class,

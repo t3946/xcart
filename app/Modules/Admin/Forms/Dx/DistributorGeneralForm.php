@@ -11,6 +11,7 @@ use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
+use Xcart\App\Form\Fields\TextAreaField;
 use Xcart\App\Form\Fields\UrlField;
 
 class DistributorGeneralForm extends DistributorForm
@@ -27,6 +28,7 @@ class DistributorGeneralForm extends DistributorForm
             'd_specific_instructions',
             'dx_eta_date',
             'avail',
+            'disabled_reason',
         ]];
     }
 
@@ -103,10 +105,19 @@ class DistributorGeneralForm extends DistributorForm
             ],
             'avail' => [
                 'class' => CheckboxField::class,
-                'html' => ['style' =>'width:16px;'],
+                'html' => ['style' =>'width:16px;', 'onchange' => "this.checked ? $('#DistributorGeneralForm_disabled_reason').closest('tr').hide() : $('#DistributorGeneralForm_disabled_reason').closest('tr').show()"],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_activate_text'),
+            ],
+            'disabled_reason' => [
+                'class' => TextAreaField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'label' => 'Why distributor products are disabled?',
+                'html' => ['style' =>'height:100px;'],
+                'hint' => LanguageModel::translate('help_dx_disabled_reason_text') ?? 'help_dx_disabled_reason_text',
+                'hidden' => $dx->avail
             ]
         ];
     }
