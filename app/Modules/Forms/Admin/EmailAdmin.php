@@ -79,7 +79,7 @@ class EmailAdmin extends Admin
 
     public static function getName()
     {
-        return 'Inbox / Sorting dashboard';
+        return 'Inbox/Sorting dashboard';
     }
 
     public function getItemProperty(Model $item, $property)

@@ -6,7 +6,7 @@
     <div class="list-wrapper">
         <div class="list-update-block">
 
-            <table data-list-table {if $admin->sort}data-sorting{/if}>
+            <table data-list-table {if $admin->sort}data-sorting{/if} cellpadding="0" cellspacing="0">
                 {if $admin->editable}
                 <thead>
                     {var $cols = 0}
@@ -43,7 +43,7 @@
                 </thead>
                 {/if}
                 <tbody>
-                    {foreach $objects as $item}
+                    {foreach $objects as $item index=$index}
                         {var $pk = $item->pk}
                         {include $admin->listRowTemplate}
                     {foreachelse}

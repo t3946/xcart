@@ -1,4 +1,4 @@
-<tr data-pk="{$pk}">
+<tr data-pk="{$pk}" style="background-color: {($index %2) === 0 ? "#ffffff" : "#e1e5ed"}">
     {if $admin->sort}
         <td class="sort" style="border: none;">
             <a href="#" class="sort-handler {if $canSort}active{else}not-active{/if}">
@@ -26,7 +26,7 @@
         {var $ext_template = $columns['config'][$ext_column]['template']}
         <td class="col" style="border: none; vertical-align: top; white-space: nowrap; padding: 2px 0px;">
             <table cellpadding="0" cellspacing="0">
-                <tr>
+                <tr style="background-color: {($index %2) === 0? "#ffffff" : "#e1e5ed"}">
                     {if $config['title_inline']}
                         <td style="border: none; padding:0;">
                             <span><b>{$config['title']}</b></span>
@@ -38,7 +38,7 @@
                     <td style="border: none;">{include $template}</td>
                 </tr>
                 {if $ext_column}
-                    <tr>
+                    <tr style="background-color: {($index %2) === 0 ? "#ffffff" : "#e1e5ed"}">
                         <td style="border: none; padding:0;">
                             {set $column = $ext_column}
                             <span><b>{$columns['config'][$ext_column]['title']}</b></span>
