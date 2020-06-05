@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\PBX\Helpers;
 
 use DateTime;
@@ -15,9 +16,7 @@ class AnveoAssignCalls
     public static function eventBindCallToOrder($sender = null, $model)
     {
 
-        if (!self::bindCallToOrder($model)) {
-            self::bindCallToOrderThird($model);
-        }
+        self::bindCallToOrder($model);
         self::bindCallToOrderSecond($model);
 
         if (rand(0, 6) >= 5) {
@@ -33,8 +32,7 @@ class AnveoAssignCalls
     public static function bindCallToOrder($model = null)
     {
         $log_category = "anveo_calls";
-        if ($model && $model->start_at && $model->end_at)
-        {
+        if ($model && $model->start_at && $model->end_at) {
             if ($model->file) {
                 $account = self::parseAccount($model->file);
                 $e164 = self::parseE164($model->file);
@@ -46,8 +44,7 @@ class AnveoAssignCalls
                 }
             }
 
-            if (!$model->isVoiceMail() && !$model->isLost() && $model->anveo_account && $model->options && $user_model = $model->options->user)
-            {
+            if (!$model->isVoiceMail() && !$model->isLost() && $model->anveo_account && $model->options && $user_model = $model->options->user) {
                 $filter = [
                     'user_id' => $user_model->id,
                     'created_at__gte' => $model->start_at,
@@ -55,13 +52,14 @@ class AnveoAssignCalls
                 ];
 
                 /** @var OrderUserActivityModel[] $oua_models */
-                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->all()) {
-                    $manager = OrdersCallsModel::objects();
-
+                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->group(['order_id'])->all()) {
                     foreach ($oua_models as $oua_model) {
-
                         /** @var OrdersCallsModel $oc_model */
-                        [$oc_model] = $manager->getOrNew(['call_id' => $model->id, 'order_id' => $oua_model->order_id, 'relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR]);
+                        [$oc_model] = OrdersCallsModel::objects()->getOrNew([
+                            'call_id' => $model->id,
+                            'order_id' => $oua_model->order_id,
+                            'relevance_type' => OrdersCallsModel::TYPE_VIEWING_SAME_OPERATOR
+                        ]);
                         $oc_model->relevance_order = 10;
 
                         $oc_model->save();
@@ -103,7 +101,7 @@ class AnveoAssignCalls
      */
     public static function bindCallToOrderSecond(PbxAnveoCallModel $model = null): bool
     {
-        if ( $model->e164 || $model->file ){
+        if ($model->e164 || $model->file) {
 
             $e164 = $model->e164 ?: self::parseE164($model->file);
 
@@ -115,8 +113,7 @@ class AnveoAssignCalls
                 ->filter([(new Expression("SUBSTRING({$qs->getTableAlias()}.phone, -10)"))->toSQL() => $e164])
                 ->order(['-date'])
                 ->limit(1)
-                ->get())
-            {
+                ->get()) {
                 $relevance_order = 10;
 
                 $mass = [
@@ -153,7 +150,7 @@ class AnveoAssignCalls
     public static function bindCallToOrderThird(PbxAnveoCallModel $model = null): bool
     {
         $log_text = '';
-        if ($model && $model->start_at && $model->end_at){
+        if ($model && $model->start_at && $model->end_at) {
 
             if ($model->file) {
                 $account = self::parseAccount($model->file);
@@ -174,9 +171,9 @@ class AnveoAssignCalls
                     'created_at__lte' => $model->end_at,
                 ];
 
-                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->order(['-created_at'])->limit(5)->all()) {
+                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->group(['order_id'])->order(['-created_at'])->limit(5)->all()) {
 
-                    if (count($oua_models) > 0 && count($oua_models) < 3){
+                    if (count($oua_models) > 0 && count($oua_models) < 3) {
                         $manager = OrdersCallsModel::objects();
 
                         foreach ($oua_models as $oua_model) {
@@ -206,7 +203,7 @@ class AnveoAssignCalls
 
     public static function reValidate()
     {
-        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(rand(0,1) ?'': '-') .'id'])->limit(20)->all();
+        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(rand(0, 1) ? '' : '-') . 'id'])->limit(20)->all();
 
         foreach ($models as $model) {
             self::bindCallToOrder($model);
@@ -220,8 +217,7 @@ class AnveoAssignCalls
 
         if (empty($file_parts[4]) || $file_parts[4] == "na") {
             return null;
-        }
-        else {
+        } else {
             return $file_parts[4];
         }
     }
@@ -235,8 +231,7 @@ class AnveoAssignCalls
 
             if (preg_match('/(.*)\..*/', $file_parts[5], $matches)) {
                 $e164 = $matches[1];
-            }
-            else {
+            } else {
                 $e164 = $file_parts[5];
             }
         }
@@ -248,7 +243,7 @@ class AnveoAssignCalls
     {
         $result = [];
 
-        if ( $order_calls_models = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->order(['-call_id'])->all() ) {
+        if ($order_calls_models = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->order(['-call_id'])->all()) {
             foreach ($order_calls_models as $order_calls_model) {
 
                 /** @var OrdersCallsModel $order_calls_model */
@@ -268,12 +263,12 @@ class AnveoAssignCalls
                 }
 
                 $mass = [
-                   'account' =>  $user,
-                   'e164' => $anveo_call_model->getFrontendE164(),
-                   'url' => $anveo_call_model->getUrl(),
-                   'start_at' => $anveo_call_model->start_at,
-                   'end_at' => $anveo_call_model->end_at,
-                   'cname' => $anveo_call_model->cname
+                    'account' => $user,
+                    'e164' => $anveo_call_model->getFrontendE164(),
+                    'url' => $anveo_call_model->getUrl(),
+                    'start_at' => $anveo_call_model->start_at,
+                    'end_at' => $anveo_call_model->end_at,
+                    'cname' => $anveo_call_model->cname
                 ];
 
                 $mass['direction'] = $anveo_call_model->getDirection();
@@ -289,7 +284,7 @@ class AnveoAssignCalls
                 $result[] = $mass;
             }
         }
-        if (!empty($result)){
+        if (!empty($result)) {
             return $result;
         }
     }
@@ -299,7 +294,7 @@ class AnveoAssignCalls
         $count = 0;
         $new = 0;
 
-        if ($order_calls = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all()){
+        if ($order_calls = OrdersCallsModel::objects()->filter(['order_id' => $order_id])->all()) {
 
             $count = count($order_calls);
             $now = new DateTime(date("Y-m-d H:i:s"));
@@ -307,16 +302,16 @@ class AnveoAssignCalls
 
             $now->modify("-1 day");
 
-            $now->setTime(0,0,0);
+            $now->setTime(0, 0, 0);
 
 //            if ($count > 1){
-                foreach ($order_calls as $order_call){
-                    $time = new DateTime($order_call->call->start_at);
-                    $interval = $now->diff($time);
-                    if ( $interval->format('%a') < 1) {
-                        $new++;
-                    }
+            foreach ($order_calls as $order_call) {
+                $time = new DateTime($order_call->call->start_at);
+                $interval = $now->diff($time);
+                if ($interval->format('%a') < 1) {
+                    $new++;
                 }
+            }
 //            }
         }
 

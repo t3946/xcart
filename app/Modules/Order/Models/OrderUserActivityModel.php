@@ -45,11 +45,11 @@ class OrderUserActivityModel extends AbstractOrderUserActivityModel
         OrderUserLastActivityModel::objects()->updateOrCreate(['user_id'=> $this->user_id, 'order_id' => $this->order_id], ['created_at' => $this->created_at]);
     }
 
-    public static function userView($owner = null, $order_id)
+    public static function userView($owner = null, $order_id, $action = 'view')
     {
         $user = Xcart::app()->user;
         if (!$user->getIsGuest() && $order_id) {
-            (new static(['user_id' => $user->id, 'order_id' => $order_id]))->save();
+            (new static(['user_id' => $user->id, 'order_id' => $order_id, 'action' => $action]))->save();
         }
     }
 }

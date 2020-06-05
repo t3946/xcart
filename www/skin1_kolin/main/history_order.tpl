@@ -1400,7 +1400,7 @@ $( document ).ready(function() {
                         {literal}
                         $.ajax({
                         {/literal}
-                            url: '/admin/order/api/activity/' + {$order.orderid},
+                            url: '/admin/order/api/activity/{$order.orderid}/tab',
                         {literal}
                         })
                     }

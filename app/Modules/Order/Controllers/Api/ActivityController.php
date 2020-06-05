@@ -9,8 +9,8 @@ use Xcart\App\Main\Xcart;
 
 class ActivityController extends Controller
 {
-    public function hook($order_id)
+    public function hook($order_id, $action)
     {
-        Xcart::app()->event->trigger('order:view', ['order_id' => $order_id]);
+        Xcart::app()->event->trigger('order:view', ['order_id' => $order_id, 'action' => $action]);
     }
 }

@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
@@ -43,6 +44,11 @@ abstract class AbstractOrderUserActivityModel extends Model
                 'default' => (new \DateTime())->modify('+5 seconds'),
                 'autoNowAdd' => true,
                 'autoNow' => true,
+            ],
+            'action' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
             ]
         ];
     }

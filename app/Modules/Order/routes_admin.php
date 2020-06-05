@@ -61,7 +61,7 @@ return [
         'name' => 'order_note_tag_settings'
     ],
     [
-        'route' => '/api/activity/{i:order_id}',
+        'route' => '/api/activity/{i:order_id}/{slug:action}',
         'target' => [ActivityController::class, 'hook'],
         'name' => 'activity'
     ],
