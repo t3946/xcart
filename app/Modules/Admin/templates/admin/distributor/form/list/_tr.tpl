@@ -24,7 +24,7 @@
         {var $template = $config['template']}
         {var $ext_column = $config['extend']}
         {var $ext_template = $columns['config'][$ext_column]['template']}
-        <td class="col" style="border: none; vertical-align: top; white-space: nowrap">
+        <td class="col" style="border: none; vertical-align: top; white-space: nowrap; padding: 2px 0px;">
             <table cellpadding="0" cellspacing="0">
                 <tr>
                     {if $config['title_inline']}
