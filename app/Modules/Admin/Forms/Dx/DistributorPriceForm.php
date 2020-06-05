@@ -37,6 +37,8 @@ class DistributorPriceForm extends DistributorForm
             $choices[$curr->currency_id] = $curr->currency_code;
         }
 
+        $dx = $this->getInstance();
+
         return [
             'd_product_catalog' => [
                 'class' => UrlField::class,
@@ -98,12 +100,13 @@ class DistributorPriceForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
             ],
             'd_map_prices' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'label' => 'MAP prices URL',
                 'hint' => LanguageModel::translate('help_dx_map_price_url_text') ?? 'help_dx_map_price_url_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hidden' => true
+                'hidden' => !$dx->d_map_policy,
+                'extend' => 'Open'
             ],
             'new_map_price_coef_x' => [
                 'class' => CharField::class,
