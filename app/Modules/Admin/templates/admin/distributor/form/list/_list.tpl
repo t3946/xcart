@@ -33,7 +33,7 @@
 
                         {foreach $columns['enabled'] as $column}
                             {var $config = $columns['config'][$column]}
-                            <th class="col" style="text-align: center">
+                            <th class="col" style="text-align: center; white-space: nowrap;">
                                 {include 'admin/distributor/form/list/_th.tpl'}
                                 {var $cols = $cols+1}
                             </th>
