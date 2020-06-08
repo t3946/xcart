@@ -3,6 +3,8 @@
 namespace Modules\Goods\Helpers;
 
 
+use DateInterval;
+use DateTime;
 use Exception;
 use Mindy\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -377,6 +379,7 @@ class ProductHelper
                     'price' => $model->getFrontendPrice(),
                     'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
+                    'priceValidUntil' => (new DateTime())->add(new DateInterval('P7D'))->format('Y-m-d'),
                     'itemCondition' => 'NewCondition',
                     'seller' => [
                         '@type' => 'Organization',
