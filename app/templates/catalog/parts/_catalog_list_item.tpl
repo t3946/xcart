@@ -34,8 +34,9 @@
                     <div class="images images-1">
                         {include "catalog/parts/_item_image.tpl" model=$item}
                     </div>
+                    <meta itemprop="mpn" content="{$item->getMpn()}" />
                     {if $item->upc}
-                    <meta itemprop="upc" content="{$item->upc}" />
+                    <meta itemprop="gtin" content="{$item->upc}" />
                     {/if}
                 {/if}
 
