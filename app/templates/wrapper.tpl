@@ -28,6 +28,7 @@
 
     <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap" as="font" crossorigin>
     <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap">
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
