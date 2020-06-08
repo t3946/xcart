@@ -118,6 +118,7 @@
                 {/if}
 
                 {if !$item->isGroupRoot()}
+                <meta itemprop="url" content="{$item->getAbsoluteUrl()}" />
                 <span class="current">
                     <span class="title">{t 'Price'}:</span>
                     <span class="price">
