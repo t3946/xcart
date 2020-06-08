@@ -365,7 +365,7 @@ class ProductHelper
                 'image' => self::getJsonImages(0, $model),
                 'description' => $descript,
                 'mpn' => $model->getMPN(),
-                'upc' => $model->upc,
+                'gtin' => $model->upc,
                 'sku' => $model->productcode,
                 'brand' => array(
                     '@type' => 'Thing',
