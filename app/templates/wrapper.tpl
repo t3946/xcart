@@ -23,8 +23,10 @@
 
     <link rel="preconnect" href="{$uri}">
     <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
 
 
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap" as="font" crossorigin>
     <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
 
     <meta name="apple-touch-fullscreen" content="yes" />
