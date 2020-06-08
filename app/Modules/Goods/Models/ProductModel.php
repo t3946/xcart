@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Goods\Models;
 
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
@@ -804,6 +806,11 @@ class ProductModel extends Model implements ICartItem
             }
         }
         return !(($c+$b+$d) > 0);
+    }
+
+    public function getPriceValidUntil(): DateTime
+    {
+        return (new DateTime())->add(new DateInterval('P7D'));
     }
 
 }

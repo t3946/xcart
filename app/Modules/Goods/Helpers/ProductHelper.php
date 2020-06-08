@@ -379,7 +379,7 @@ class ProductHelper
                     'price' => $model->getFrontendPrice(),
                     'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
-                    'priceValidUntil' => (new DateTime())->add(new DateInterval('P7D'))->format('Y-m-d'),
+                    'priceValidUntil' => $model->getPriceValidUntil()->format('Y-m-d'),
                     'itemCondition' => 'NewCondition',
                     'seller' => [
                         '@type' => 'Organization',

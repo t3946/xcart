@@ -123,6 +123,7 @@
 
                 {if !$item->isGroupRoot()}
                 <meta itemprop="url" content="{$item->getAbsoluteUrl(true)}" />
+                <meta itemprop="priceValidUntil" content="{$item->getPriceValidUntil()->format('Y-m-d')}" />
                 <span class="current">
                     <span class="title">{t 'Price'}:</span>
                     <span class="price">
