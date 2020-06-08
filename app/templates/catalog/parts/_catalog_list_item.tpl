@@ -34,6 +34,9 @@
                     <div class="images images-1">
                         {include "catalog/parts/_item_image.tpl" model=$item}
                     </div>
+                    {if $item->upc}
+                    <meta itemprop="upc" content="{$item->upc}" />
+                    {/if}
                 {/if}
 
                 {if $item->isNewProduct()}
