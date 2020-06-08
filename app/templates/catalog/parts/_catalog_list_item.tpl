@@ -144,20 +144,20 @@
                     <div>
                         <span class="price-title">{t 'Price from'}:</span>
                         <span {if !$schema_off}itemprop="priceCurrency"{/if} content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
-                        <span {if !$schema_off}itemprop="price"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
+                        <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice(1)}"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
                     </div>
 
                     <div>
                         <span class="price-title">{t 'Price to'}:</span>
                         <span {if !$schema_off}itemprop="priceCurrency"{/if} content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
-                        <span {if !$schema_off}itemprop="price"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>{if $site_currency->after}{$site_currency}{/if}
+                        <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice(2)}"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(2))}</span>{if $site_currency->after}{$site_currency}{/if}
                     </div>
                     {else}
                         <span class="current">
                             <span class="title">{t 'Price'}:</span>
                             <span class="price">
                                 <span {if !$schema_off}itemprop="priceCurrency"{/if} content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>
-                                <span {if !$schema_off}itemprop="price"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
+                                <span {if !$schema_off}itemprop="price" content="{$item->getFrontendPrice(1)}"{/if}>{$site_currency->getCurrencyFormat($item->getFrontendPrice(1))}</span>{if $site_currency->after}{$site_currency}{/if}
                             </span>
                         </span>
                     {/if}
