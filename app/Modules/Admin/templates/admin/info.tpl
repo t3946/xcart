@@ -2,7 +2,7 @@
 
 {block 'heading'}
     <h1>
-        {$.t('Information about', 'admin')}
+        {$.t('Information about')}
         {$admin->name}
 
         {*<a href="{url 'admin:info_print' $moduleName $adminClass $object.pk}"*}
@@ -29,7 +29,7 @@
 
             {else}
                 {if $name == 'id' or $name == 'pk' }
-                    {$.t('Number / identifier', 'admin')}
+                    {$.t('Number / identifier')}
                 {else}
                     {$name|ucfirst}
                 {/if}

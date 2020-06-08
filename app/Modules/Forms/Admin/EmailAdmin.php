@@ -96,7 +96,7 @@ class EmailAdmin extends Admin
     public function getListItemActions()
     {
         return [
-            'view',
+            'info',
         ];
     }
     public function getListGroupActions()

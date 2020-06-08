@@ -18,7 +18,7 @@ class GmailFetchCommand extends Command
 
     public function handle($arguments = [])
     {
-        $userId = 'vrtest@s3stores.com';
+        $userId = 'vr@s3stores.com';
         $client = GmailHelper::getClient($userId);
 
         $service = new Google_Service_Gmail($client);
@@ -46,31 +46,33 @@ class GmailFetchCommand extends Command
                 $type = in_array('SENT', $single_message->getLabelIds(), true) ? 'sent' : 'inbox';
 
                 $internalDate = (new DateTime())->setTimestamp($single_message->getInternalDate() / 1000);
-                [$model] = EmailModel::objects()->getOrNew([
+                [$model, $new] = EmailModel::objects()->getOrNew([
                     'message_id' => $message->id,
                 ]);
 
-                $model->setAttributes([
-                    'account_id' => 1,
-                    'subject' => $subject,
-                    'thread_id' => $message->getThreadId(),
-                    'snippet' => html_entity_decode($single_message->getSnippet()),
-                    'type' => $type,
-                    'delivered_to_address' => GmailHelper::getHeader($headers,'Delivered-To'),
-                    'to_address' => $to,
-                    'from_address' => GmailHelper::getHeader($headers, 'From'),
-                    'date' => $internalDate,
-                    'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds() ?? []]),
-                    'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),
-                ]);
-                $model->save();
+                if ($new) {
+                    $model->setAttributes([
+                        'account_id' => 1,
+                        'subject' => $subject,
+                        'thread_id' => $message->getThreadId(),
+                        'snippet' => html_entity_decode($single_message->getSnippet()),
+                        'type' => $type,
+                        'delivered_to_address' => GmailHelper::getHeader($headers,'Delivered-To'),
+                        'to_address' => $to,
+                        'from_address' => GmailHelper::getHeader($headers, 'From'),
+                        'date' => $internalDate,
+                        'labels' => LabelModel::objects()->all(['label_id__in' => $single_message->getLabelIds() ?? []]),
+                        'reply_to' => GmailHelper::getHeader($headers, 'Reply-To'),
+                    ]);
+                    $model->save();
 
-                [$body] = EmailBodyModel::objects()->getOrNew([
-                    'email_id' => $model->id,
-                    'email_body' => new ResourceFile($body, "body{$model->id}.zip")
-                ]);
+                    [$body, $new] = EmailBodyModel::objects()->getOrNew([
+                        'email_id' => $model->id,
+                        'email_body' => new ResourceFile($body, "body{$model->id}.html")
+                    ]);
 
-                $body->save();
+                    $body->save();
+                }
 
                 echo("{$message->id} : {$subject} {$single_message->getSnippet()} \n");
             }

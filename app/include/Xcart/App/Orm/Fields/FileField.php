@@ -152,6 +152,11 @@ class FileField extends CharField
         return $this->getFilesystem()->delete($this->value);
     }
 
+    public function get()
+    {
+        return $this->getFilesystem()->get($this->getValue());
+    }
+
     /**
      * @return int
      */

@@ -7,7 +7,6 @@ namespace Modules\Forms\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -46,7 +45,7 @@ class EmailModel extends Model
                 'verboseName' => "Subject",
             ],
             'body' => [
-                'class' => OneToOneField::class,
+                'class' => HasToOneField::class,
                 'modelClass' => EmailBodyModel::class,
                 'link' => ['id' => 'email_id'],
                 'to' => 'id',

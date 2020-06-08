@@ -17,7 +17,7 @@ class EmailBodyModel extends Model
                 'field' => 'body',
                 'class' => FileField::class,
                 'adapterName' => 'zip',
-                'uploadTo' => 'files/email/body',
+                'uploadTo' => 'files/email/body/%Y%m',
                 'maxSize' => '35M',
                 'null' => true,
                 'default' => null,
@@ -30,5 +30,11 @@ class EmailBodyModel extends Model
                 'primary' => true,
             ],
         ];
+    }
+
+    public function __toString()
+    {
+        $res = $this->email_body->get();
+        return '';
     }
 }
