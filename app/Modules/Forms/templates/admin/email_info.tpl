@@ -73,9 +73,7 @@
             </td>
         </tr>
         <tr>
-            <td class="first">
-            </td>
-            <td>
+            <td colspan="2">
                 <iframe id="body_5" srcdoc='{$object->getField('body')->getValue()|escape}'
                         frameborder="0"
                         sandbox="allow-same-origin allow-popups"
