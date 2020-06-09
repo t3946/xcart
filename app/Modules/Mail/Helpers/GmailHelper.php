@@ -103,7 +103,7 @@ class GmailHelper
         return null;
     }
 
-    public static function getBody($message)
+    public static function getBody(Google_Service_Gmail_Message $message)
     {
         $payload = $message->getPayload();
         $body = $payload->getBody();
@@ -171,4 +171,15 @@ class GmailHelper
         return $labels;
     }
 
+    public static function getAttachments(Google_Service_Gmail $service, Google_Service_Gmail_Message $message): array
+    {
+        foreach ($message->getPayload()->getParts() as $part) {
+            if (isset($part['filename']) && $part['filename']) {
+                $att = $service->users_messages_attachments->get(
+                    $service->getClient()->getConfig('subject'), $message->getId(), $part['body']['attachmentId']);
+                $res[] = ['filename' => $part['filename'], 'data' => self::decodeBody($att['data'])];
+            }
+        }
+        return $res ?? [];
+    }
 }

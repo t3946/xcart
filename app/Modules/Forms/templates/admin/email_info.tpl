@@ -52,6 +52,22 @@
             </td>
         </tr>
         <tr>
+            <td class="first">
+                {$object->getField('attachments')->getVerboseName()}
+            </td>
+            <td>
+                <table>
+                    {foreach $object->getField('attachments')->getValue() as $model}
+                        <tr>
+                            <td>
+                                <a target="_blank" href="/{$model->attachment}">{$model->filename}</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                </table>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <hr/>
             </td>

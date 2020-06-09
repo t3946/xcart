@@ -6,6 +6,7 @@ namespace Modules\Mail\Commands;
 
 use DateTime;
 use Google_Service_Gmail;
+use Modules\Forms\Models\EmailAttachmentModel;
 use Modules\Forms\Models\EmailBodyModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\LabelModel;
@@ -66,12 +67,25 @@ class GmailFetchCommand extends Command
                     ]);
                     $model->save();
 
-                    [$body, $new] = EmailBodyModel::objects()->getOrNew([
+                    [$emailModel, $isNew] = EmailBodyModel::objects()->getOrNew([
                         'email_id' => $model->id,
-                        'email_body' => new ResourceFile($body, "body{$model->id}.html")
                     ]);
+                    if ($isNew) {
+                        $emailModel->email_body = new ResourceFile($body, "body{$model->id}.html");
+                        $emailModel->save();
 
-                    $body->save();
+                    }
+
+                    foreach (GmailHelper::getAttachments($service, $single_message) as $attachment) {
+                        [$emailAttach, $isNew] = EmailAttachmentModel::objects()->getOrNew([
+                            'email_id' => $model->id,
+                            'filename' => $attachment['filename'],
+                        ]);
+                        if ($isNew) {
+                            $emailAttach->attachment_content = new ResourceFile($attachment['data'], $attachment['filename']);
+                            $emailAttach->save();
+                        }
+                    }
                 }
 
                 echo("{$message->id} : {$subject} {$single_message->getSnippet()} \n");
