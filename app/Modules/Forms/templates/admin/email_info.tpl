@@ -76,7 +76,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <iframe id="body_5" srcdoc='{$object->getField('body')->getValue()|escape}'
+                <iframe id="body_5" srcdoc="{$object->getField('body')->getValue()|htmlentities}"
                         frameborder="0"
                         sandbox="allow-same-origin allow-popups"
                         onload="this.height = (this.contentWindow.document.body.scrollHeight * 1.1) + 'px'"
