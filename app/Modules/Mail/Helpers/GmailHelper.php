@@ -56,6 +56,7 @@ class GmailHelper
                 $cnt = count($messages);
                 if (!($cnt % 1000)) {
                     echo "{$cnt}\n";
+                    break;
                 }
             } catch (Exception $e) {
                 print 'An error occurred: ' . $e->getMessage();

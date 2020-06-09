@@ -35,6 +35,6 @@ class EmailBodyModel extends Model
     public function __toString()
     {
         $res = $this->email_body->get();
-        return '';
+        return (string) ($res->read() ?: '');
     }
 }

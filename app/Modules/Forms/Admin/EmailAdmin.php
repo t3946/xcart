@@ -16,6 +16,7 @@ use Xcart\App\Orm\Model;
 
 class EmailAdmin extends Admin
 {
+    public $infoTemplate = '/admin/email_info.tpl';
 
     public function getListColumns()
     {
@@ -102,6 +103,17 @@ class EmailAdmin extends Admin
     public function getListGroupActions()
     {
         return [];
+    }
+
+    public function info($pk)
+    {
+        $object = $this->getModelOr404($pk);
+
+        $this->setBreadcrumbs('Information');
+        $this->renderInternal($this->infoTemplate, [
+            'object' => $object,
+            'fields' => $this->getForm()->getFields(),
+        ]);
     }
 
 }

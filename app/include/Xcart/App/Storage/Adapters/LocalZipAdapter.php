@@ -95,6 +95,20 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
         }
     }
 
+    public function read($path)
+    {
+        $path_info = pathinfo($path);
+
+        $this->reopenArchive();
+        $location = $this->applyPathPrefix($path);
+
+        if (! $contents = $this->archive->getFromName($path_info['basename'])) {
+            return false;
+        }
+
+        return compact('contents');
+    }
+
     public function write($location, $contents, Config $config)
     {
         $path_info = pathinfo($location);

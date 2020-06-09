@@ -686,7 +686,7 @@ abstract class Admin
     {
         $object = $this->getModelOr404($pk);
 
-        $this->setBreadcrumbs('Информация');
+        $this->setBreadcrumbs('Information');
         $this->renderInternal($this->infoTemplate, [
             'object' => $object,
             'fields' => $object::getFields(),
