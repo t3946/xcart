@@ -62,8 +62,7 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
 
     public function getMetadata($path)
     {
-        $path_info = pathinfo($path);
-        $dirname = Util::dirname($path);
+        $path = Paths::get('www') . '/'. $path;
         $this->openArchive($this->getUrl($path));
         $path_info = pathinfo($path);
         return parent::getMetadata($path_info['basename']);
