@@ -111,6 +111,7 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
 
     public function write($location, $contents, Config $config)
     {
+        $location = Paths::get('www') . '/'. $location;
         $path_info = pathinfo($location);
         $dirname = Util::dirname($location);
         $this->ensureDirectory($dirname);
