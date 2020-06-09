@@ -79,7 +79,7 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
         if ( ! is_dir($root)) {
             $umask = umask(0);
 
-            if ( ! @mkdir($root, $this->permissionMap['dir']['public'], true)) {
+            if ( ! @mkdir($root, self::$permissions['dir']['public'], true)) {
                 $mkdirError = error_get_last();
             }
 
