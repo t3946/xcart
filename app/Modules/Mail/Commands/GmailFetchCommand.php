@@ -37,7 +37,11 @@ class GmailFetchCommand extends Command
 
         $messages = GmailHelper::listMessages($service, $userId);
         foreach ($messages as $message) {
-            if ($single_message =  GmailHelper::getMessage($service, $userId, $message->id)) {
+            [$model, $new] = EmailModel::objects()->getOrNew([
+                'message_id' => $message->id,
+            ]);
+
+            if ($new && $single_message =  GmailHelper::getMessage($service, $userId, $message->id)) {
                 $body = GmailHelper::getBody($single_message);
                 $headers = $single_message->getPayload()->getHeaders();
                 $subject = GmailHelper::getHeader($headers, 'Subject');
@@ -47,9 +51,6 @@ class GmailFetchCommand extends Command
                 $type = in_array('SENT', $single_message->getLabelIds(), true) ? 'sent' : 'inbox';
 
                 $internalDate = (new DateTime())->setTimestamp($single_message->getInternalDate() / 1000);
-                [$model, $new] = EmailModel::objects()->getOrNew([
-                    'message_id' => $message->id,
-                ]);
 
                 if ($new) {
                     $model->setAttributes([
@@ -73,7 +74,6 @@ class GmailFetchCommand extends Command
                     if ($isNew) {
                         $emailModel->email_body = new ResourceFile($body, "body{$model->id}.html");
                         $emailModel->save();
-
                     }
 
                     foreach (GmailHelper::getAttachments($service, $single_message) as $attachment) {
