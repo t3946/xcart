@@ -28,6 +28,26 @@ class EmailAdmin extends Admin
         return ['subject', 'body'];
     }
 
+    public function applyOrder($qs)
+    {
+        $order = $this->getOrder();
+
+        if ($order && isset($order['raw'])) {
+            $qs->order([
+                $order['raw']
+            ]);
+        } else if ($this->sort) {
+            $qs->order([
+                $this->sort
+            ]);
+        } else {
+            $qs->order([
+                '-date'
+            ]);
+        }
+        return $qs;
+    }
+
     public function getAvailableListColumns()
     {
         return [
