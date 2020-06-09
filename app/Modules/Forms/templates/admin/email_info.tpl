@@ -40,7 +40,7 @@
                 {$object->getField('to_address')->getVerboseName()}
             </td>
             <td>
-                {$object->getField('to_address')->getValue()|escape}
+                {$object->getTo()|escape}
             </td>
         </tr>
         <tr>

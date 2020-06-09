@@ -115,6 +115,11 @@ class EmailModel extends Model
         return $this->from_address;
     }
 
+    public function getTo()
+    {
+        return $this->to_address ?: $this->delivered_to_address ;
+    }
+
     public function getSubject()
     {
         $res = $this->subject;

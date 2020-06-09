@@ -105,8 +105,12 @@ class EmailAdmin extends Admin
 
     public function getItemProperty(Model $item, $property)
     {
+        /** @var EmailModel $item */
         if ($property === 'from_address') {
             return $item->getFrom();
+        }
+        if ($property === 'to_address') {
+            return $item->getTo();
         }
         if ($property === 'subject') {
             return $item->getSubject();
