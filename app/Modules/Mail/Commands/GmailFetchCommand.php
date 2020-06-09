@@ -57,7 +57,7 @@ class GmailFetchCommand extends Command
                         'account_id' => 1,
                         'subject' => $subject,
                         'thread_id' => $message->getThreadId(),
-                        'snippet' => html_entity_decode($single_message->getSnippet()),
+                        'snippet' => strip_tags(html_entity_decode($single_message->getSnippet())),
                         'type' => $type,
                         'delivered_to_address' => GmailHelper::getHeader($headers,'Delivered-To'),
                         'to_address' => $to,
