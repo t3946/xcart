@@ -59,7 +59,7 @@
                             </th>
                         {/foreach}
 
-                        <th class="actions">
+                        <th class="actions col full">
                             <div class="columns-list-appender">
                                 <a href="#" class="button-appender appender-columns">
                                     <i class="icon-plus"></i>
@@ -83,12 +83,6 @@
                             {var $cols = $cols+1}
                         </th>
                     </tr>
-
-                    <tr class="delimiter">
-                        {foreach 1..$cols}
-                            <th></th>
-                        {/foreach}
-                    </tr>
                 </thead>
                 <tbody>
                     {foreach $objects as $item}
@@ -97,7 +91,7 @@
                     {foreachelse}
                         <tr class="empty">
                             <td colspan="{$cols}" class="text-center">
-                                Пока здесь нет ни одной записи
+                                No data found
                             </td>
                         </tr>
                     {/foreach}
@@ -107,7 +101,7 @@
                 {if $pagination}
                     <div class="list-footer-block v-align right total">
                         <div>
-                            Всего записей: {$pagination->getTotal()}
+                            Total: {$pagination->getTotal()}
                         </div>
                     </div>
                 {/if}
@@ -115,10 +109,10 @@
                 <div class="list-footer-block v-align left group">
                     <div>
                         <div class="checker-wrapper">
-                            <input type="checkbox" id="{$id}-check-all-bottom" data-checkall-list>
+                            {*<input type="checkbox" id="{$id}-check-all-bottom" data-checkall-list>
                             <label for="{$id}-check-all-bottom">
-                                Для всех
-                            </label>
+                                For all
+                            </label>*}
                         </div>
 
                         {var $actions = $admin->getListGroupActions()}
@@ -142,7 +136,7 @@
                         {if $dropdown}
                             <div class="dropdown-block">
                                 <select name="" id="" data-group-action>
-                                    <option value="" selected disabled>Выберите действие</option>
+                                    <option value="" selected disabled>Selext action</option>
                                     {foreach $dropdown as $key => $item}
                                         <option value="{$key}">
                                             {$item['title']}

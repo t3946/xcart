@@ -142,6 +142,7 @@
                 </span>
                 {else}
                     {if $item->getFrontendPrice() != $item->getFrontendPrice(2)}
+                        <meta itemprop="priceValidUntil" content="{$item->getPriceValidUntil()->format('Y-m-d')}" />
                     <div>
                         <span class="price-title">{t 'Price from'}:</span>
                         <span {if !$schema_off}itemprop="priceCurrency"{/if} content="{$site_currency->currency_code}">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}</span>

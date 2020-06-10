@@ -2,8 +2,7 @@
 
 {block 'heading'}
     <h1>
-        {$.t('Information about')}
-        {$admin->name}
+        {$object->getField('subject')->getValue()|escape}
 
         {*<a href="{url 'admin:info_print' $moduleName $adminClass $object.pk}"*}
            {*target="_blank"*}
