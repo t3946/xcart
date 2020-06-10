@@ -4,6 +4,16 @@
     {parent}
     {smarty_admin_block name=$section_title}
         <table id="distributor_section_id_17" width="100%" cellspacing="1" cellpadding="3">
+            <tr>
+                <td>
+                    <b>All SKUs:</b> {$distributorModel->products->count()}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Active SKUs:</b> {$distributorModel->products_active->count()}
+                </td>
+            </tr>
             {foreach $distributorModel->feeds as $feed}
                 <tr>
                     <td>
@@ -24,16 +34,7 @@
                         <b>Storefront:</b> {$feed->site}
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <b>All SKUs:</b> {$distributorModel->products->count()}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Active SKUs:</b> {$distributorModel->products_active->count()}
-                    </td>
-                </tr>
+
                 <tr>
                     <td>
                         <b>Feed source:</b> {$feed->feed_source}
