@@ -25,7 +25,7 @@ class EmailAdmin extends Admin
 
     public function getSearchColumns()
     {
-        return ['subject', 'body'];
+        return ['subject', 'snippet', 'from_address'];
     }
 
     public function applyOrder($qs)

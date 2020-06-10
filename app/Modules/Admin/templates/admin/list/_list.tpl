@@ -14,7 +14,7 @@
 
         {if $search}
             <div class="top-search-block left">
-                <input type="text" data-list-search placeholder="Поиск...">
+                <input type="text" data-list-search placeholder="Search...">
             </div>
         {/if}
     </div>
