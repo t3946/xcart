@@ -8,4 +8,9 @@ class FormsModule extends Module
 {
     use AdminTrait;
 
+    public static function getVerboseName()
+    {
+        return 'Emails';
+    }
+
 }
