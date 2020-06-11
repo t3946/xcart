@@ -801,6 +801,10 @@ abstract class Admin
         }
 
         $request = Xcart::app()->request;
+        if ($request->getIsGet()) {
+            $form->populate($_GET, $_FILES);
+        }
+
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {

@@ -20,7 +20,7 @@
         {var $fields = $form->getFieldsInit()}
         <div class="fields">
             {foreach $fields as $field}
-                <div class="form-field {$field->name}">
+                <div {if $field->hidden}style="display: none;"{/if} class="form-field {$field->name}">
                     {raw $field->render()}
                 </div>
             {/foreach}

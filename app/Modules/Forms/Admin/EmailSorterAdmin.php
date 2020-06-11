@@ -25,20 +25,20 @@ class EmailSorterAdmin extends Admin
     public function getAvailableListColumns()
     {
         return [
-            'entity' => [
-                'title' => 'entity',
-                'template' => $this->columnDefaultTemplate,
-            ],
             'filter_field' => [
-                'title' => 'filter_field',
+                'title' => 'Field',
                 'template' => $this->columnDefaultTemplate,
             ],
             'condition' => [
-                'title' => 'contains',
+                'title' => 'Condition',
                 'template' => $this->columnDefaultTemplate,
             ],
             'value' => [
-                'title' => 'value',
+                'title' => 'Value',
+                'template' => $this->columnDefaultTemplate,
+            ],
+            'entity' => [
+                'title' => 'Entity',
                 'template' => $this->columnDefaultTemplate,
             ],
         ];
@@ -64,13 +64,6 @@ class EmailSorterAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getListItemActions()
-    {
-        return [
-            'edit',
-            'delete',
-        ];
-    }
     public function getListGroupActions()
     {
         return [];

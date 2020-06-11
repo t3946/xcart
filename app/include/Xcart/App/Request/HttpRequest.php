@@ -540,7 +540,7 @@ class HttpRequest extends Request
      *
      * @return string server name, null if not available
      */
-    public function getServerName(): string
+    public function getServerName(): ?string
     {
         return $_SERVER['SERVER_NAME'] ?? null;
     }
@@ -686,7 +686,7 @@ class HttpRequest extends Request
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17
      * HTTP 1.1 header field definitions
      */
-    public function getContentType(): string
+    public function getContentType(): ?string
     {
         if (isset($_SERVER['CONTENT_TYPE'])) {
             return $_SERVER['CONTENT_TYPE'];
