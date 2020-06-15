@@ -113,7 +113,10 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                                 $orderModel->email,
                                 $subject,
                                 $message,
-                                ['from' => $from]
+                                [
+                                    'from' => $from,
+                                    'bcc' => ['romann@s3stores.com' => ''],
+                                ]
                             );
 
                         } catch (\Exception $exception) {
