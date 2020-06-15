@@ -104,19 +104,16 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     }
 
                     $from = $configFrom ? $configFrom->value : $defaultFrom->value;
-                    $message = $configMessage ? $configMessage->value : $defaultMessage->value;
-                    $subject = $configSubject ? $configSubject->value : $defaultSubject->value;
+                    $message = SnippetHelper::render($configMessage ? $configMessage->value : $defaultMessage->value, ['order' => $orderModel]);
+                    $subject =  SnippetHelper::render($configSubject ? $configSubject->value : $defaultSubject->value, ['order' => $orderModel]);
 
                     if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
                         try {
                             Xcart::app()->mail->raw(
                                 $orderModel->email,
-                                SnippetHelper::render($subject, ['order' => $orderModel]),
-                                SnippetHelper::render($message, ['order' => $orderModel]),
-                                [
-                                    'from' => [$from => ''],
-                                    'bcc' => ['romann@s3stores.com' => ''],
-                                ]
+                                $subject,
+                                $message,
+                                ['from' => $from]
                             );
 
                         } catch (\Exception $exception) {
