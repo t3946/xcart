@@ -109,7 +109,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                                 (empty($configSubject)) ? $defaultSubject->value : $configSubject->value,
                                 (empty($configMessage)) ? $defaultMessage->value : $configMessage->value,
                                 [
-                                    'from' => (empty($configFrom)) ? $defaultFrom->value : $configFrom->value,
+                                    'from' => [(empty($configFrom)) ? $defaultFrom->value : $configFrom->value => ''],
                                     'bcc' => ['romann@s3stores.com' => ''],
                                 ]
                             );
