@@ -3,6 +3,7 @@
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Forms\Models\SnippetModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
 
@@ -156,3 +157,4 @@ if ($aSiteModels) {
 $smarty->assign('global_config', $aModels);
 $smarty->assign('site_config', $storefrontsConfig);
 $smarty->assign('sites', $sites);
+$smarty->assign('snippets', SnippetModel::objects());

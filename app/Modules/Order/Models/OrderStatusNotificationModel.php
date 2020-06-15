@@ -33,7 +33,6 @@ class OrderStatusNotificationModel extends Model
 
     public function render($name, $params)
     {
-        $snippets = SnippetHelper::getSnippets($params);
-        return str_replace(array_keys($snippets),array_values($snippets), $this->{$name});
+        return SnippetHelper::render($this->{$name}, $params);
     }
 }

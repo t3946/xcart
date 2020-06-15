@@ -114,9 +114,9 @@ class OrderGroupModel extends Model
                 'null' => false,
             ],
             'detail_models' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderDetailModel::className(),
-                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'product_model__manufacturerid'],
+                'class' => HasManyField::class,
+                'modelClass' => OrderDetailModel::class,
+                'link' => ['order_group_id' => 'order_group_id'],
             ],
             'trackings' => [
                 'class' => HasManyField::class,
@@ -200,20 +200,6 @@ class OrderGroupModel extends Model
     public function afterFetchDataModel($model)
     {
 
-    }
-
-    private $productModels = null;
-
-    public function getProductModels()
-    {
-        if (is_null($this->productModels)) {
-            $this->productModels = ProductModel::objects()
-                ->getQuerySet()
-                ->join('inner join', 'xcart_order_details', ['productid' => 'od.productid'], 'od')
-                ->filter(['manufacturerid' => $this->manufacturerid, 'od.orderid' => $this->orderid])
-                ->all();
-        }
-        return $this->productModels;
     }
 
     public function getRefunds()

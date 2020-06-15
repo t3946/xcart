@@ -18,4 +18,10 @@ class SnippetHelper
         }
         return $result;
     }
+
+    public static function render($value, $params)
+    {
+        $snippets = self::getSnippets($params);
+        return str_replace(array_keys($snippets),array_values($snippets), $value);
+    }
 }

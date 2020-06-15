@@ -198,6 +198,12 @@ class SiteModel extends Model
         return  'https://';
     }
 
+    public function getCompanyName()
+    {
+        $config = $this->getConfig();
+        return !empty($config['company_name']) ? $config['company_name'] : $this->getName();
+    }
+
     public function getName()
     {
         $name = $this->getBaseDomain();

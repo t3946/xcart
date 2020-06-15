@@ -1,3 +1,10 @@
+{$lng.lbl_order_status_replace_vars}
+{foreach from=$snippets item=snippet}
+{literal}{{{/literal}{$snippet->code}{literal}}}{/literal} = {$snippet->description}
+    <br/>
+{/foreach}
+<br/>
+
 <form method="post">
 {if $global_config}
     <input type="hidden" name="storefront_template[]" value="-1">

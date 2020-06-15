@@ -1,11 +1,13 @@
 <?php
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\CsTipsModel;
+use Xcart\App\Main\Xcart;
 
 define("CIDEV_CRON_START", "CRON");
 global $config, $mail_smarty;
@@ -23,7 +25,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
         $defaultDays = GlobalConfigModel::objects()->get(['name' => 'thank_you_days']);
         $configDays = SiteConfigModel::objects()->get(['name' => 'thank_you_days', 'storefrontid' => $storefrontModel->storefrontid]);
         $thank_you_days = abs(empty($configDays) ? (int)$defaultDays->value : (int)$configDays->value);
-        $days_to_check = 60 * 60 * 24 * $thank_you_days;
+        $days_to_check = 60 * 60 * $thank_you_days;
         $diff_time = time() - $days_to_check;
         $dateTime = new DateTime();
         $dateTime->setTimestamp($diff_time);
@@ -101,18 +103,20 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                     }
 
                     if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
-                        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                        $oMail->init();
-                        $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
-                        $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
-//                        $oMail->addReplaceRule('{{message}}', $message);
-                        $oMail->to = $orderModel->email;
-                        $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
-                        $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;
-                        $oMail->body = (empty($configMessage)) ? $defaultMessage->value : $configMessage->value;
-                        $oMail->sendEmail();
-                        $oMail->to = 'romann@s3stores.com';
-                        $oMail->sendEmail();
+                        try {
+                            Xcart::app()->mail->raw(
+                                $orderModel->email,
+                                (empty($configSubject)) ? $defaultSubject->value : $configSubject->value,
+                                (empty($configMessage)) ? $defaultMessage->value : $configMessage->value,
+                                [
+                                    'from' => (empty($configFrom)) ? $defaultFrom->value : $configFrom->value,
+                                    'bcc' => ['romann@s3stores.com' => ''],
+                                ]
+                            );
+
+                        } catch (\Exception $exception) {
+                            Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
+                        }
 
                         $orderModel->thankyou_for_order_email_sent = 'Y';
                         $orderModel->save();

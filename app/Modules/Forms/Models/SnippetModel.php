@@ -51,6 +51,6 @@ class SnippetModel extends Model
 
     public function render($params)
     {
-        return $this->renderString(html_entity_decode($this->template), $params);
+        return $this->renderString(str_replace(['<!--', '-->'],'', html_entity_decode($this->template)), $params);
     }
 }
