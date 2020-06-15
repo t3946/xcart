@@ -72,10 +72,10 @@
             secure_data_order = $('.secure_data_order',newtablerow);
             var new_id = selectuser.data('user-select-id');
             new_id++;
-            selectuser.val('').attr('data-user-select-id', new_id).attr('name','secure_data_use['+new_id+'][]');
-            secure_data_order.val('').attr('name','secure_data_order['+new_id+']');
-            $('textarea',newtablerow).val('').attr('name','secure_data['+new_id+']');
-            $('.delete_data_checkbox',newtablerow).prop( "checked", false ).attr('name','delete_data_checkbox['+new_id+']');
+            selectuser.val('').attr('data-user-select-id', '').attr('name','secure_data_use[][]');
+            secure_data_order.val('').attr('name','secure_data_order[]');
+            $('textarea',newtablerow).val('').attr('name','secure_data[]');
+            $('.delete_data_checkbox',newtablerow).prop( "checked", false ).attr('name','delete_data_checkbox[]');
             tablerowdelimiter.after(newtablerow,tablerowdelimiter.clone());
             $(".selectpicker",newtablerow).dropdown('clear').show();
         })
