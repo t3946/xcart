@@ -49,6 +49,7 @@ if ($storefrontsModels = SiteModel::objects()->all()){
 
 
         if (!empty($ordersModels)) {
+            /** @var OrderModel $orderModel */
             foreach($ordersModels as $orderModel){
                 $send = true;
 
@@ -110,8 +111,8 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         try {
                             Xcart::app()->mail->raw(
                                 $orderModel->email,
-                                $subject,
-                                $message,
+                                SnippetHelper::render($subject, ['order' => $orderModel]),
+                                SnippetHelper::render($message, ['order' => $orderModel]),
                                 [
                                     'from' => [$from => ''],
                                     'bcc' => ['romann@s3stores.com' => ''],
@@ -119,7 +120,8 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                             );
 
                         } catch (\Exception $exception) {
-                            Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
+                            Xcart::app()->logger->error($exception->getMessage(),
+                                ['from' => $from, 'subject' => $subject, 'message' => $message], 'email');
                         }
 
                         $orderModel->thankyou_for_order_email_sent = 'Y';
