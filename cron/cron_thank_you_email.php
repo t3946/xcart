@@ -102,14 +102,18 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $configMessage = SiteConfigModel::objects()->get(['name' => 'thank_you_message_body_amazon', 'storefrontid' => $orderModel->storefrontid]);
                     }
 
+                    $from = $configFrom ? $configFrom->value : $defaultFrom->value;
+                    $message = $configMessage ? $configMessage->value : $defaultMessage->value;
+                    $subject = $configSubject ? $configSubject->value : $defaultSubject->value;
+
                     if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
                         try {
                             Xcart::app()->mail->raw(
                                 $orderModel->email,
-                                (empty($configSubject)) ? $defaultSubject->value : $configSubject->value,
-                                (empty($configMessage)) ? $defaultMessage->value : $configMessage->value,
+                                $subject,
+                                $message,
                                 [
-                                    'from' => [(empty($configFrom)) ? $defaultFrom->value : $configFrom->value => ''],
+                                    'from' => [$from => ''],
                                     'bcc' => ['romann@s3stores.com' => ''],
                                 ]
                             );
