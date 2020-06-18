@@ -19,7 +19,7 @@
 <div class="row">
     <div class="column large-12">
         { include file="rectangle_top.tpl" }
-{ include file="head_admin.tpl" }
+        { include file="head_admin.tpl" }
 
         {if $login ne ""}
             {include file="cidev_tracking_code.tpl" }

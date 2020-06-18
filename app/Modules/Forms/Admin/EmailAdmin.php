@@ -175,5 +175,26 @@ class EmailAdmin extends Admin
         ]);
     }
 
+    public function renderInternal($view, $params)
+    {
+        $params = array_replace($this->getCommonData(), $params);
+
+        if (
+            Xcart::app()->request->getIsAjax()
+            || Xcart::app()->request->get->has('popup')
+            || $this->innerRender
+        ) {
+            echo $this->render($view, $params);
+        }
+        else {
+            echo $this->renderSmarty("admin/home.tpl", [
+                'single_mode' => true,
+                'width'       => '100%',
+                'main'        => 'raw_html',
+                'content'     =>  $this->render($view, $params),
+            ]);
+        }
+    }
+
 }
 

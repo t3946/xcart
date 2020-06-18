@@ -912,6 +912,7 @@ abstract class Admin
         else {
             echo $this->renderSmarty("admin/home.tpl", [
                 'single_mode' => true,
+                'width'       => 1280,
                 'main'        => 'raw_html',
                 'content'     =>  $this->render($view, $params),
             ]);
