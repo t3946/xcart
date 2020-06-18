@@ -4,6 +4,8 @@
 namespace Modules\Forms\Models;
 
 
+use Modules\Distributor\Models\DistributorModel;
+use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
@@ -21,6 +23,7 @@ class EmailModel extends Model
 {
     public static function getFields()
     {
+        $alias = EmailEntityModel::objects()->getTableAlias();
         return [
             'id' => [
                 'class' => AutoField::class,
@@ -102,6 +105,18 @@ class EmailModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => LabelModel::class,
                 'through' => EmailLabelModel::class,
+            ],
+            'dx_models' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => DistributorModel::class,
+                'through' => EmailEntityModel::class,
+                'extra' => ["{$alias}.model" => DistributorModel::class]
+            ],
+            'order_models' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => OrderModel::class,
+                'through' => EmailEntityModel::class,
+                'extra' => ["{$alias}.model" => OrderModel::class]
             ]
         ];
     }

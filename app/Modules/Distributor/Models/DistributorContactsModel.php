@@ -38,6 +38,15 @@ class DistributorContactsModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
+            'contact_name' => [
+                'class' => CharField::class
+            ],
+            'email' => [
+                'class' => CharField::class
+            ],
+            'phone' => [
+                'class' => CharField::class
+            ],
         ];
     }
 

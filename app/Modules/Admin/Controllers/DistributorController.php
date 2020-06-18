@@ -4,6 +4,7 @@
 namespace Modules\Admin\Controllers;
 
 
+use Modules\Admin\Admin\DxCommunicationAdmin;
 use Modules\Admin\Admin\DxContactAdmin;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
@@ -27,6 +28,13 @@ class DistributorController extends BackendController
             $admin->dxModel = $dx;
             $admin->section = $section;
             $admin->all();
+            exit;
+        }
+        if ($section ==50) {
+            $admin = new DxCommunicationAdmin();
+            //$admin->dxModel = $dx;
+            $admin->section = $section;
+            $admin->all($dx);
             exit;
         }
 

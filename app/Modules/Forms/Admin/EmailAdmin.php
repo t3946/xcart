@@ -11,7 +11,10 @@ use Modules\Forms\Models\SnippetModel;
 use Modules\Pages\Forms\PagesForm;
 use Modules\Pages\Models\Page;
 use Modules\Pages\PagesModule;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
 
 class EmailAdmin extends Admin
@@ -124,6 +127,7 @@ class EmailAdmin extends Admin
             'info',
         ];
     }
+
     public function getListGroupActions()
     {
         return [];
@@ -137,6 +141,36 @@ class EmailAdmin extends Admin
         $this->renderInternal($this->infoTemplate, [
             'object' => $object,
             'fields' => $this->getForm()->getFields(),
+        ]);
+    }
+
+    public function all($pk = null)
+    {
+        $this->setBreadcrumbs();
+        $search = isset($_GET['search']) ? $_GET['search'] : null;
+
+        $qs = $this->getQuerySet()->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
+        $qs = $this->handleSearch($qs, $search);
+        $qs = $this->applyOrder($qs);
+        $qs = $this->fixSort($qs);
+
+        $pagination = new Pagination($qs, [
+            'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
+            'pageSizes' => $this->pageSizes
+        ], new QuerySetDataSource());
+
+        if (Xcart::app()->request->get->has($pagination->getPageSizeKey())) {
+            $this->getConfig()->page_size = Xcart::app()->request->get->get($pagination->getPageSizeKey());
+            $this->getConfig()->save();
+        }
+
+        $this->renderInternal($this->allTemplate, [
+            'objects' => $pagination->paginate(),
+            'pagination' => $pagination,
+            'order' => $this->getOrder(),
+            'search' => $this->getSearchColumns(),
+            'columns' => $this->buildListColumns(),
+            'canSort' => $this->getCanSort($qs),
         ]);
     }
 

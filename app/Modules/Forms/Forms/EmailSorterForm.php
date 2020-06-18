@@ -10,12 +10,13 @@ use Modules\Order\Models\OrderModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\Fields\RelatedField;
 
 class EmailSorterForm extends ModelForm
 {
     private static $entinty_models = [
-        'order' => OrderModel::class,
-        'dx' => DistributorModel::class
+        OrderModel::class => OrderModel::class,
+        DistributorModel::class => DistributorModel::class
     ];
 
     public function getModel()
@@ -37,7 +38,7 @@ class EmailSorterForm extends ModelForm
                     'onchange' => "location=window.location.href.split('?')[0] + '?{$this->getName()}[entity]=' + this.value"
                 ],
             ],
-            'condition' => [
+            'cond' => [
                 'class' => DropDownField::class,
                 'html' => [
                     'onchange' => "(function(e) {
@@ -52,23 +53,41 @@ class EmailSorterForm extends ModelForm
             ],
             'value' => [
                 'class' => CharField::class,
-                'hidden' => $model->condition === 'related',
+                'hidden' => $model->cond === 'related',
             ],
             'related_value' => [
                 'class' => DropDownField::class,
                 'choices' => static function () use ($form) {
-                    $class = static::$entinty_models[$form->getField('entity')->getValue()];
+                    $class = $form->getField('entity')->getValue() ?? DistributorModel::class;
                     $model = new $class;
                     foreach ($model->getFieldsInit() as $f) {
-                        if ($f->getVerboseName()) {
-                            $res[$f->getName()] = $f->getVerboseName();
+                        if ($f instanceof RelatedField) {
+                            foreach ((new $f->modelClass)->getFieldsInit() as $ff) {
+                                if ($ff->getVerboseName()) {
+                                    $res["{$f->getName()}__{$ff->getName()}"] = "{$f->getVerboseName()}->{$ff->getVerboseName()}";
+                                }
+                            }
+                        } else {
+                            if ($f->getVerboseName()) {
+                                $res[$f->getName()] = $f->getVerboseName();
+                            }
                         }
                     }
-                    sort($res);
+                    asort($res);
                     return $res;
                 },
-                'hidden' => $model->condition !== 'related',
+                'hidden' => $model->cond !== 'related',
             ]
         ];
+    }
+
+    public function setAttributes(array $data)
+    {
+        if ($data['cond'] !== 'related') {
+            $data['related_value'] = null;
+        } else {
+            $data['value'] = null;
+        }
+        return parent::setAttributes($data);
     }
 }
