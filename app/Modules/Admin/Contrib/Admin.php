@@ -226,6 +226,9 @@ abstract class Admin
         if (array_key_exists('update', $actions)) {
             unset($actions['update']);
         }
+        if (array_key_exists('add', $actions)) {
+            unset($actions['add']);
+        }
 
         return $actions;
     }
@@ -912,7 +915,6 @@ abstract class Admin
         else {
             echo $this->renderSmarty("admin/home.tpl", [
                 'single_mode' => true,
-                'width'       => 1280,
                 'main'        => 'raw_html',
                 'content'     =>  $this->render($view, $params),
             ]);
