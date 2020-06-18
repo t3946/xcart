@@ -20,6 +20,7 @@ use Xcart\App\Pagination\Pagination;
 class EmailAdmin extends Admin
 {
     public $infoTemplate = '/admin/email_info.tpl';
+    public $listRowTemplate =  'admin/distributor/form/list/_tr_email.tpl';
 
     public function getListColumns()
     {

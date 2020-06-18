@@ -15,6 +15,18 @@ class DxCommunicationAdmin extends EmailAdmin
     public $ownerField = 'manufacturerid';
     public $ownerPk;
 
+
+
+    public function getSearchColumns()
+    {
+        return [];
+    }
+
+    public static function getName()
+    {
+        return 'Communication with distributor';
+    }
+
     public function all($pk = null)
     {
         $this->ownerPk = $pk;

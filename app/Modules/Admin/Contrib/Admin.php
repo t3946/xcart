@@ -131,6 +131,7 @@ abstract class Admin
     public function getListGroupActions()
     {
         return [
+            'add',
             'update',
             'remove'
         ];

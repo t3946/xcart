@@ -1,8 +1,10 @@
 {var $id = $admin->getId()}
 {add $isNested = false}
+{var $actions = $admin->getListGroupActions()}
 
 <div class="list-block" data-list data-id="{$id}-list">
     <div class="list-top clearfix">
+        {if "add" in $actions}
         <div class="top-buttons-block left">
             <a href="{$admin->getCreateUrl()}" class="button round upper pad">
                 <span class="text">
@@ -11,7 +13,7 @@
                 <i class="icon-plus"></i>
             </a>
         </div>
-
+        {/if}
         {if $search}
             <div class="top-search-block left">
                 <input type="text" data-list-search placeholder="Search...">
@@ -115,7 +117,6 @@
                             </label>*}
                         </div>
 
-                        {var $actions = $admin->getListGroupActions()}
                         {if ("update" in $actions) || ("remove" in $actions)}
                             <div class="group-buttons">
                                 {if ("update" in $actions)}
