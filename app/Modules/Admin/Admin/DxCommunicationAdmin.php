@@ -4,6 +4,9 @@
 namespace Modules\Admin\Admin;
 
 
+use Modules\Admin\AdminModule;
+use Modules\Admin\Forms\Dx\DistributorForm;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Admin\EmailAdmin;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -14,8 +17,12 @@ class DxCommunicationAdmin extends EmailAdmin
     public $section;
     public $ownerField = 'manufacturerid';
     public $ownerPk;
+    public $allTemplate = 'admin/distributor/dx_emails.tpl';
 
-
+    public function getForm()
+    {
+        return new DistributorForm();
+    }
 
     public function getSearchColumns()
     {
@@ -26,6 +33,8 @@ class DxCommunicationAdmin extends EmailAdmin
     {
         return 'Communication with distributor';
     }
+
+
 
     public function all($pk = null)
     {
@@ -47,8 +56,13 @@ class DxCommunicationAdmin extends EmailAdmin
             $this->getConfig()->page_size = Xcart::app()->request->get->get($pagination->getPageSizeKey());
             $this->getConfig()->save();
         }
+        $form = $this->getForm();
+        $dx = DistributorModel::objects()->get(['pk' => $this->ownerPk]);
+        $form->setInstance($dx);
 
         $this->renderInternal($this->allTemplate, [
+            'form' => $form,
+            'section' => $this->section,
             'objects' => $pagination->paginate(),
             'pagination' => $pagination,
             'order' => $this->getOrder(),
@@ -56,6 +70,11 @@ class DxCommunicationAdmin extends EmailAdmin
             'columns' => $this->buildListColumns(),
             'canSort' => $this->getCanSort($qs),
         ]);
+    }
+
+    public function getBreadcrumbs()
+    {
+        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],[$this->getName()]];
     }
 
 }

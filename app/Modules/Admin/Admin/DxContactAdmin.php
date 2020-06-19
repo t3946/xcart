@@ -4,6 +4,7 @@
 namespace Modules\Admin\Admin;
 
 
+use Modules\Admin\AdminModule;
 use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Core\Models\LanguageModel;
@@ -121,6 +122,11 @@ class DxContactAdmin extends Admin
                 'template' => $this->columnDefaultTemplate,
             ]
         ];
+    }
+
+    public function getBreadcrumbs()
+    {
+        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],[$this->getName()]];
     }
 
     public function getAllUrl()
