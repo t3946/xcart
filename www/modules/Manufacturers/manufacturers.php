@@ -292,69 +292,8 @@ if ($REQUEST_METHOD === 'POST' || ($mode === 'delete_image' && $manufacturerid))
                 $query_data['allow_dispatch_off_working_hours'] = 'N';
             }
 
-
-
-            $distributorModel->setAttributes(func_array_map('trim', func_array_map('stripcslashes', $query_data)));
-
-            $distributorModel->dx_eta_date = $query_data['dx_eta_date'] ? DateTime::createFromFormat('m/d/Y', $query_data['dx_eta_date'], new DateTimeZone('EST')) : null;
-
-            $distributorModel->save();
             func_array2insert("manufacturers_lng", $query_data_lng, true);
 
-
-
-            if ($contacts = $distributorModel->contacts_model) {
-                $contacts->delete();
-            }
-            if (!empty($distributor_contacts) && is_array($distributor_contacts)) {
-                foreach ($distributor_contacts as $field_code => $v) {
-                    if ($field_code == $pq) {
-                        $v['pq'] = 'Y';
-                        $distributorModel->setAttributes([
-                          'd_product_questions_send_to_name' =>  $v['contact_name'],
-                          'd_product_questions_send_to_phone' =>  $v['phone'],
-                          'd_product_questions_send_to_email' =>  $v['email'],
-                        ]);
-                    } else {
-                        $v['pq'] = '';
-                    }
-                    $contactM = new \Modules\Distributor\Models\DistributorContactsModel([
-                        'manufacturerid' => $distributorModel->manufacturerid,
-                        'distributor_field_name' => $v['distributor_field_name'],
-                        'distributor_field_code' => $field_code,
-                        'contact_name' => $v['contact_name'],
-                        'email' => $v['email'],
-                        'phone' => $v['phone'],
-                        'ext' => $v['ext'],
-                        'fax' => $v['fax'],
-                        'pq' => $v['pq']
-                    ]);
-                    $contactM->save();
-                }
-            }
-
-            if (\Xcart\App\Main\Xcart::app()->request->post->has('distributor_carrier') && $carriers = \Xcart\App\Main\Xcart::app()->request->post->get('distributor_carrier')) {
-                $msa = [];
-                foreach ($carriers as $carrier) {
-                    DistributorCarrierModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'carrier_id' => $carrier]);
-                    $msa[] = $carrier;
-                }
-                if ($msa) {
-                    DistributorCarrierModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['carrier_id__in' => $msa])]);
-                }
-            }
-
-            if (\Xcart\App\Main\Xcart::app()->request->post->has('d_main_sf') && $main_sfs = \Xcart\App\Main\Xcart::app()->request->post->get('d_main_sf')) {
-                $msa = [];
-                foreach ($main_sfs as $main_sf) {
-                    DistributorSiteModel::objects()->getOrCreate(['manufacturer_id' => $distributorModel->manufacturerid, 'site_id' => $main_sf]);
-                    $msa[] = $main_sf;
-                }
-                if ($msa) {
-                    DistributorSiteModel::objects()->delete(['manufacturer_id' => $distributorModel->manufacturerid, new \Mindy\QueryBuilder\Q\QOrNot(['site_id__in' => $msa])]);
-                }
-
-            }
 
             $return_address_ids = func_query("SELECT id FROM $sql_tbl[distributor_return_address] WHERE manufacturerid='$manufacturerid'");
 
