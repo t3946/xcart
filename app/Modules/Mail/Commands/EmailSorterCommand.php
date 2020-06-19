@@ -60,7 +60,18 @@ class EmailSorterCommand extends Command
 
                 switch ($sort->cond) {
                     case 'contains':
-                        $found = stripos($email->$field, $sort->value) !== false;
+                        if (stripos($email->$field, $sort->value) !== false) {
+                            $class = $sort->entity;
+                            /** @var Model $model */
+                            $model = new $class;
+                            if ($t = $model::objects()->get([$model::getPrimaryKeyName() => $sort->target])) {
+                                EmailEntityModel::objects()->getOrCreate([
+                                    'email_id' => $email->id,
+                                    'entity_id' => $t->pk,
+                                    'model' => $sort->entity
+                                ]);
+                            }
+                        }
                         break;
                     case 'equal':
                         $found = strtolower($email->$field) === strtolower($sort->value);

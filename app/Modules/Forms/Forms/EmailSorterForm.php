@@ -5,20 +5,19 @@ namespace Modules\Forms\Forms;
 
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Forms\Admin\EmailSorterAdmin;
 use Modules\Forms\Models\EmailSorterModel;
+use Modules\Goods\Admin\ProductAdmin;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Model;
 
 class EmailSorterForm extends ModelForm
 {
-    private static $entinty_models = [
-        OrderModel::class => OrderModel::class,
-        DistributorModel::class => DistributorModel::class
-    ];
-
     public function getModel()
     {
         return new EmailSorterModel();
@@ -32,17 +31,10 @@ class EmailSorterForm extends ModelForm
             'filter_field' => [
                 'class' => DropDownField::class
             ],
-            'entity' => [
-                'class' => DropDownField::class,
-                'html' => [
-                    'onchange' => "location=window.location.href.split('?')[0] + '?{$this->getName()}[entity]=' + this.value"
-                ],
-            ],
             'cond' => [
                 'class' => DropDownField::class,
                 'html' => [
                     'onchange' => "(function(e) {
-                        console.log(e.value);
                         if (e.value === 'related') {
                             $('#{$this->getName()}_related_value').closest('div').show(); $('#{$this->getName()}_value').closest('div').hide();
                         } else {
@@ -54,6 +46,34 @@ class EmailSorterForm extends ModelForm
             'value' => [
                 'class' => CharField::class,
                 'hidden' => $model->cond === 'related',
+            ],
+            'entity' => [
+                'class' => DropDownField::class,
+                'html' => [
+                    'onchange' => "location=window.location.href.split('?')[0] + '?{$this->getName()}[entity]=' + this.value"
+                ],
+            ],
+            'target' => [
+                'class' => Select2Field::class,
+                'ajaxUrl' => (static function () use ($form) {
+                    return (new EmailSorterAdmin)->getSuggestionUrl($form->getField('entity')->getValue() ?? DistributorModel::class);
+                }),
+                'choices' => static function () use ($form) {
+                    $class = $form->getField('entity')->getValue() ?? DistributorModel::class;
+                    $target = new $class;
+                    return $form->getInstance()->target ?
+                        [$form->getInstance()->target => $target::objects()->get([$target::getPrimaryKeyName() => $form->getInstance()->target])] : [];
+                },
+
+                /*'choices' => static function () use ($form) {
+                    $class = $form->getField('entity')->getValue() ?? DistributorModel::class;
+                    $model = new $class;
+                    foreach ($model::objects() as $m) {
+                        $result[$m->pk] = (string) $m;
+                    }
+                    asort($result);
+                    return $result ?? [];
+                }*/
             ],
             'related_value' => [
                 'class' => DropDownField::class,

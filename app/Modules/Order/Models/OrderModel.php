@@ -559,5 +559,10 @@ class OrderModel extends Model
     {
         return in_array($this->cb_status, [OrderStatusModel::ORDER_STATUS_UNPAID_PO, OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO], true);
     }
+    
+    public function __toString()
+    {
+        return $this->getOrderNumber();
+    }
 
 }

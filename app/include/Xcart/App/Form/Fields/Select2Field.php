@@ -27,6 +27,15 @@ class Select2Field extends DropDownField
 
     public $ajaxUrl = "";
     public $editable = false;
+    public $fieldTemplate = 'forms/field/select2/field.tpl';
+
+    public function getAjaxUrl()
+    {
+        if ($this->ajaxUrl instanceof \Closure) {
+            return $this->ajaxUrl->__invoke();
+        }
+        return $this->ajaxUrl;
+    }
 
     public function render($fieldExtension = null)
     {
@@ -93,7 +102,7 @@ class Select2Field extends DropDownField
         }
 
         if ($this->getChoices()) {
-            return[
+            $options = [
                 'allowClear' => true,
                 'placeholder' => Translate::getInstance()->t('form', $this->placeholder),
                 'multiple' => $multiple,
@@ -111,18 +120,19 @@ class Select2Field extends DropDownField
             ];
         }
 
-        $options = [
-            'width' => 'resolve',
-            'allowClear' => true,
-            'multiple' => $multiple,
-            'closeOnSelect' => !$multiple,
-            'placeholder' => Translate::getInstance()->t('form', $this->placeholder),
-            'minimumInputLength' => 3,
-            'ajax' => [
-                'url' => $this->ajaxUrl,
-                'dataType' => 'json',
-                'delay' => 250,
-                'processResults' => new JavaScriptExpression('function (data, page) {
+        if ($this->getAjaxUrl()) {
+            $options = [
+                'width' => 'resolve',
+                'allowClear' => true,
+                'multiple' => $multiple,
+                'closeOnSelect' => !$multiple,
+                'placeholder' => Translate::getInstance()->t('form', $this->placeholder),
+                'minimumInputLength' => 3,
+                'ajax' => [
+                    'url' => $this->getAjaxUrl(),
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'processResults' => new JavaScriptExpression('function (data, page) {
                     if (data) {
                         return {
                             results: data.items,
@@ -132,12 +142,12 @@ class Select2Field extends DropDownField
                     return { results: { } };
                     
                 }'),
-            ],
-            'escapeMarkup' => new JavaScriptExpression('function (m) {
+                ],
+                'escapeMarkup' => new JavaScriptExpression('function (m) {
                 return m;
             }'),
-        ];
-
+            ];
+        }
         return array_replace_recursive($options, $this->options);
     }
 }
