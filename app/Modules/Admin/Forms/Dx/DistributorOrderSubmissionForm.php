@@ -10,6 +10,7 @@ use Modules\Order\Models\AttentionTagModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\UrlField;
 
 class DistributorOrderSubmissionForm extends DistributorForm
 {
@@ -47,10 +48,11 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
             ],
             'd_url_to_login_to_distributor_website' => [
-                'class' => CharField::class,
+                'class' => UrlField::class,
                 'label' => 'URL to login to distributor website',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'extend' => 'Login URL',
             ],
             'd_login' => [
                 'class' => CharField::class,
