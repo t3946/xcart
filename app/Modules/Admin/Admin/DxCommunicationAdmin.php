@@ -35,7 +35,6 @@ class DxCommunicationAdmin extends EmailAdmin
     }
 
 
-
     public function all($pk = null)
     {
         $this->ownerPk = $pk;
@@ -74,7 +73,27 @@ class DxCommunicationAdmin extends EmailAdmin
 
     public function getBreadcrumbs()
     {
-        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],[$this->getName()]];
+        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],
+            [$this->getName(), Xcart::app()->router->url('admin:section', [
+            'mid' => $this->ownerPk,
+            'section' => 50,
+        ])]];
+    }
+
+    public function getInfoUrl($pk = null)
+    {
+        return Xcart::app()->router->url('admin:info_dx', [
+            'module' => static::getModuleName(),
+            'admin' => static::classNameShort(),
+            'pk' => $pk ?: $this->getModelPk(),
+            'dx' => $this->ownerPk,
+        ]);
+    }
+
+    public function info($pk, $dx)
+    {
+        $this->ownerPk = $dx;
+        parent::info($pk);
     }
 
 }

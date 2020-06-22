@@ -78,6 +78,11 @@ return [
         'name' => 'updateall'
     ],
     [
+        'route' => '/info/{:module}/{:admin}/{:pk}/{:dx}',
+        'target' => [DistributorController::class, 'info'],
+        'name' => 'info_dx'
+    ],
+    [
         'route' => '/info/{:module}/{:admin}/{:pk}',
         'target' => [AdminController::class, 'info'],
         'name' => 'info'

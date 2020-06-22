@@ -138,7 +138,7 @@ class EmailAdmin extends Admin
     {
         $object = $this->getModelOr404($pk);
 
-        $this->setBreadcrumbs('Information');
+        $this->setBreadcrumbs($object->subject);
         $this->renderInternal($this->infoTemplate, [
             'object' => $object,
             'fields' => $this->getForm()->getFields(),

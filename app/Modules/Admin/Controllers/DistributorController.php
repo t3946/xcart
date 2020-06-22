@@ -34,7 +34,7 @@ class DistributorController extends BackendController
             $admin = new DxCommunicationAdmin();
             //$admin->dxModel = $dx;
             $admin->section = $section;
-            $admin->all($dx);
+            $admin->all($dx->pk);
             exit;
         }
 
@@ -82,5 +82,16 @@ class DistributorController extends BackendController
             'form' => $form,
             'section' => $section,
         ]);
+    }
+
+    public function info($module, $admin, $pk, $dx)
+    {
+        $class = "Modules\\{$module}\\Admin\\{$admin}";
+        if (class_exists($class)) {
+            $admin = new $class();
+        } else {
+            $this->error(404);
+        }
+        $admin->info($pk, $dx);
     }
 }
