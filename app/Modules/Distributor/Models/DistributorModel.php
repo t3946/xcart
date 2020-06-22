@@ -135,6 +135,16 @@ class DistributorModel extends Model
                 'null' => false,
                 'default' => 'Y'
             ],
+            'allow_dispatch_off_working_hours' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'N'
+            ],
+            'add_cost_to_us_column_to_dispatch_message' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'N'
+            ],
             'd_sec14_show_items_stock' => [
                 'class' => BooleanCharField::class,
                 'null' => false,

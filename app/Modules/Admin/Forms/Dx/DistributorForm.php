@@ -101,7 +101,8 @@ class DistributorForm extends ModelForm
             8 => [
                 'title' => 'Order submission',
                 'order_by' => '80',
-                'distributor_section' => '8'
+                'distributor_section' => '8',
+                'form' => DistributorOrderSubmissionForm::class
             ],
         ],
         'Shipping order to customer' => [
