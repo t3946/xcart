@@ -125,6 +125,36 @@ class DistributorModel extends Model
                 'null' => false,
                 'default' => 'Y'
             ],
+            'd_availability_must_be_checked' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'N'
+            ],
+            'd_sec14_show_header' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'd_sec14_show_items_stock' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'd_sec14_show_shipto' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'd_sec14_show_items_cost' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
+            'd_sec14_show_footer' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => 'Y'
+            ],
             'update_approximation_shipping_rates' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
