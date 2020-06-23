@@ -81,7 +81,7 @@ class XeroCommand extends Command
                     if (\DateTime::createFromFormat('d.m.Y', '01.06.2019') <= $transaction->getDate()) {
                         echo "{$transaction->getType()}\t{$transaction->getDate()->format('d-m-Y')}\t{$transaction->getBankAccount()->getCode()}\t{$transaction->getBankTransactionID()}\t{$transaction->getTotal()}\t{$transaction->getStatus()}\t{$strippedReference}\n";
 
-                        if ($pre_rec = ReconciliationModel::objects()->get([
+                        if ($pre_rec = ReconciliationModel::objects()->limit(1)->get([
                             'amount_csv' => $rec->amount_csv,
                             'action' => ReconciliationModel::RECONCILIATION_STATUS_PRE_RECONCILED
                         ]))
