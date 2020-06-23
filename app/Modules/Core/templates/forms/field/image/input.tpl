@@ -25,7 +25,7 @@
             input.setAttribute('value', url);
             input.type='hidden';
             let img = document.querySelector('.{$id}_current-image');
-            let blob = await fetch(url).then(r => r.blob());
+            let blob = await fetch('https://cors-anywhere.herokuapp.com/' + url).then(r => r.blob());
             img.style.backgroundImage = 'url(' + URL.createObjectURL(blob) + ')';
             img.style.display = 'inline-block';
         }
