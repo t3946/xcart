@@ -116,6 +116,9 @@ class EmailAdmin extends Admin
         if ($property === 'to_address') {
             return $item->getTo();
         }
+        if ($property === 'date') {
+            return $item->getDate();
+        }
         if ($property === 'subject') {
             return $item->getSubject();
         }
@@ -136,7 +139,9 @@ class EmailAdmin extends Admin
 
     public function info($pk)
     {
+        /** @var EmailModel $object */
         $object = $this->getModelOr404($pk);
+        $object->setViewed();
 
         $this->setBreadcrumbs($object->subject);
         $this->renderInternal($this->infoTemplate, [

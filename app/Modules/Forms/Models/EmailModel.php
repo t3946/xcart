@@ -6,7 +6,10 @@ namespace Modules\Forms\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderModel;
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -21,6 +24,8 @@ use Xcart\App\Orm\Model;
  */
 class EmailModel extends Model
 {
+    private $is_viewed;
+
     public static function getFields()
     {
         $alias = EmailEntityModel::objects()->getTableAlias();
@@ -117,17 +122,44 @@ class EmailModel extends Model
                 'modelClass' => OrderModel::class,
                 'through' => EmailEntityModel::class,
                 'extra' => ["{$alias}.model" => OrderModel::class]
+            ],
+            'viewed' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => UserModel::class,
+                'through' => EmailUserModel::class
             ]
         ];
     }
 
+    public function isViewed()
+    {
+        if ($this->is_viewed === null) {
+            $this->is_viewed = $this->viewed->filter(['id' => Xcart::app()->user->id])->count() > 0;
+        }
+        return $this->is_viewed;
+    }
+
     public function getFrom()
     {
-        if (preg_match('/([^<]*)<?(.*)@(.*)>?/', $this->from_address, $m)) {
-            $res = str_replace('"', '', $m[1] ?: $m[2] ?: $this->from_address);
-            return "<span title='{$this->from_address}'>{$res}</span>";
+        $from = $this->from_address;
+        $res = $from;
+        if (preg_match('/([^<]*)<?(.*)@(.*)>?/', $from, $m)) {
+            $res = str_replace('"', '', $m[1] ?: $m[2] ?: $from);
+            $res = "<span title='{$from}'>{$res}</span>";
         }
-        return $this->from_address;
+        if (!$this->isViewed()) {
+            $res = "<b>{$res}</b>";
+        }
+        return $res;
+    }
+
+    public function getDate()
+    {
+        $res = $this->date;
+        if (!$this->isViewed()) {
+            $res = "<b>{$res}</b>";
+        }
+        return $res;
     }
 
     public function getTo()
@@ -138,10 +170,12 @@ class EmailModel extends Model
     public function getSubject()
     {
         $res = $this->subject;
+        if (!$this->isViewed()) {
+            $res = "<b>{$res}</b>";
+        }
         if (trim($this->snippet)) {
             $res .= " - <span style='color:gray;'>{$this->snippet}</span>";
         }
-        $color = '';
         $lbl = '';
         foreach ($this->labels->filter(['type' => 'user']) as $label) {
             $clr = "color: #666;";
@@ -156,5 +190,11 @@ class EmailModel extends Model
             $lbl .= "<span style='font-size: 12px; border: 1px solid #DFDFDF; margin: 0 5px 0 0; border-radius: 4px; padding: 1px 5px; $color'>{$label}</span>";
         }
         return $lbl . $res;
+    }
+
+    public function setViewed()
+    {
+        $this->getField('viewed')->setValue(Xcart::app()->user);
+        $this->save();
     }
 }
