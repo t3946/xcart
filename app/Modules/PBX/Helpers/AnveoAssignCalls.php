@@ -44,7 +44,8 @@ class AnveoAssignCalls
                 }
             }
 
-            if (!$model->isVoiceMail() && !$model->isLost() && $model->anveo_account && $model->options && $user_model = $model->options->user) {
+            if (!$model->isOutgoing() && !$model->isVoiceMail() && !$model->isLost() &&
+                $model->anveo_account && $model->options && $user_model = $model->options->user) {
                 $filter = [
                     'user_id' => $user_model->id,
                     'created_at__gte' => $model->start_at,
@@ -73,6 +74,11 @@ class AnveoAssignCalls
                 $filter = [
                     'user_id' => $user_model->id,
                     'created_at__lte' => $model->end_at,
+                    'action__in' => [
+                        OrderUserActivityModel::ACTIVITY_TYPE_CALLDX,
+                        OrderUserActivityModel::ACTIVITY_TYPE_CALLCX,
+                        OrderUserActivityModel::ACTIVITY_TYPE_CALLSHIP,
+                    ]
                 ];
 
                 if ($model->isOutgoing() && $oua_model = OrderUserActivityModel::objects()->filter($filter)->order(['-created_at'])->limit(1)->get()) {

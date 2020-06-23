@@ -18,6 +18,12 @@ use Xcart\App\Main\Xcart;
  */
 class OrderUserActivityModel extends AbstractOrderUserActivityModel
 {
+    public const ACTIVITY_TYPE_CALLDX = 'calldx';
+    public const ACTIVITY_TYPE_CALLCX = 'callcx';
+    public const ACTIVITY_TYPE_CALLSHIP = 'callship';
+    public const ACTIVITY_TYPE_VIEW = 'view';
+    public const ACTIVITY_TYPE_TAB = 'tab';
+
     public static function tableName()
     {
         return 'xcart_order_user_actives';
