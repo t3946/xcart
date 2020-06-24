@@ -22,7 +22,7 @@ class ApiImageController extends Controller
             if ($width !== null && is_numeric($width)) {
                 $image->resize($width);
             }
-            $image->toScreen();
+            $image->toScreen('image/webp', 94);
         }
     }
 }
