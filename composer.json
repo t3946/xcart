@@ -20,6 +20,7 @@
         "aws/aws-sdk-php": "^3.0",
         "calcinai/xero-php": "^1.8",
         "caponica/amazon-mws-complete": "dev-master",
+        "claviska/simpleimage": "^3.3",
         "cocur/slugify": "^3.0",
         "dariuszp/cli-progress-bar": "^1.0",
         "fabpot/goutte": "^3.2",

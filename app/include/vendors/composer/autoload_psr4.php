@@ -88,4 +88,5 @@ return array(
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
     'Aveiv\\OpenExchangeRatesApi\\' => array($vendorDir . '/aveiv/open-exchange-rates-api/src'),
     'AfterShip\\' => array($vendorDir . '/aftership/aftership-php-sdk/src'),
+    '' => array($vendorDir . '/league/color-extractor/src'),
 );

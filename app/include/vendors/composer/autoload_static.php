@@ -537,7 +537,18 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
     );
 
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/..' . '/league/color-extractor/src',
+    );
+
     public static $prefixesPsr0 = array (
+        'c' => 
+        array (
+            'claviska' => 
+            array (
+                0 => __DIR__ . '/..' . '/claviska/simpleimage/src',
+            ),
+        ),
         'P' => 
         array (
             'PayPal' => 
@@ -12357,6 +12368,9 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Jobby\\Jobby' => __DIR__ . '/..' . '/hellogerard/jobby/src/Jobby.php',
         'Jobby\\ScheduleChecker' => __DIR__ . '/..' . '/hellogerard/jobby/src/ScheduleChecker.php',
         'Jobby\\SerializerTrait' => __DIR__ . '/..' . '/hellogerard/jobby/src/SerializerTrait.php',
+        'League\\ColorExtractor\\Color' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/Color.php',
+        'League\\ColorExtractor\\ColorExtractor' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/ColorExtractor.php',
+        'League\\ColorExtractor\\Palette' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/Palette.php',
         'League\\Flysystem\\AdapterInterface' => __DIR__ . '/..' . '/league/flysystem/src/AdapterInterface.php',
         'League\\Flysystem\\Adapter\\AbstractAdapter' => __DIR__ . '/..' . '/league/flysystem/src/Adapter/AbstractAdapter.php',
         'League\\Flysystem\\Adapter\\AbstractFtpAdapter' => __DIR__ . '/..' . '/league/flysystem/src/Adapter/AbstractFtpAdapter.php',
@@ -12919,6 +12933,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Mindy\\QueryBuilder\\QueryBuilderFactory' => __DIR__ . '/..' . '/mindy/query_builder/src/QueryBuilderFactory.php',
         'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
         'Modules\\Admin\\AdminModule' => __DIR__ . '/../../../..' . '/app/Modules/Admin/AdminModule.php',
+        'Modules\\Admin\\Admin\\DxCommunicationAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Admin/DxCommunicationAdmin.php',
         'Modules\\Admin\\Admin\\DxContactAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Admin/DxContactAdmin.php',
         'Modules\\Admin\\Contrib\\Admin' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Contrib/Admin.php',
         'Modules\\Admin\\Contrib\\ListViewAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Contrib/ListViewAdmin.php',
@@ -12935,12 +12950,14 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Admin\\Forms\\Dx\\DistributorFrontEndMessagesForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorFrontEndMessagesForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorGeneralForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorGeneralForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorInvoiceForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorInvoiceForm.php',
+        'Modules\\Admin\\Forms\\Dx\\DistributorOrderSubmissionForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorOrderSubmissionForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorOrderTrackingForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorOrderTrackingForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorPaymentToDxForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorPaymentToDxForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorPriceForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorPriceForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorProductQuestionsForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorProductQuestionsForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorProductVerificationForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorProductVerificationForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorQuickLinksForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorQuickLinksForm.php',
+        'Modules\\Admin\\Forms\\Dx\\DistributorRequestAvailForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorRequestAvailForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorShippesFromForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorShippesFromForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorShippingPolicyForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorShippingPolicyForm.php',
         'Modules\\Admin\\Forms\\LoginForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/LoginForm.php',
@@ -13141,15 +13158,21 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Files\\Traits\\UploadTrait' => __DIR__ . '/../../../..' . '/app/Modules/Files/Traits/UploadTrait.php',
         'Modules\\Files\\Validators\\RequiredFilesValidator' => __DIR__ . '/../../../..' . '/app/Modules/Files/Validators/RequiredFilesValidator.php',
         'Modules\\Forms\\Admin\\EmailAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Admin/EmailAdmin.php',
+        'Modules\\Forms\\Admin\\EmailSorterAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Admin/EmailSorterAdmin.php',
         'Modules\\Forms\\Admin\\SnippetsAdmin' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Admin/SnippetsAdmin.php',
         'Modules\\Forms\\Controllers\\SnippetController' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Controllers/SnippetController.php',
         'Modules\\Forms\\FormsModule' => __DIR__ . '/../../../..' . '/app/Modules/Forms/FormsModule.php',
         'Modules\\Forms\\Forms\\EmailForm' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Forms/EmailForm.php',
+        'Modules\\Forms\\Forms\\EmailSorterForm' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Forms/EmailSorterForm.php',
         'Modules\\Forms\\Forms\\SnippetsForm' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Forms/SnippetsForm.php',
         'Modules\\Forms\\Helpers\\SnippetHelper' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Helpers/SnippetHelper.php',
+        'Modules\\Forms\\Models\\EmailAttachmentModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailAttachmentModel.php',
         'Modules\\Forms\\Models\\EmailBodyModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailBodyModel.php',
+        'Modules\\Forms\\Models\\EmailEntityModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailEntityModel.php',
         'Modules\\Forms\\Models\\EmailLabelModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailLabelModel.php',
         'Modules\\Forms\\Models\\EmailModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailModel.php',
+        'Modules\\Forms\\Models\\EmailSorterModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailSorterModel.php',
+        'Modules\\Forms\\Models\\EmailUserModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/EmailUserModel.php',
         'Modules\\Forms\\Models\\LabelModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/LabelModel.php',
         'Modules\\Forms\\Models\\SnippetModel' => __DIR__ . '/../../../..' . '/app/Modules/Forms/Models/SnippetModel.php',
         'Modules\\GeoIp\\GeoIpModule' => __DIR__ . '/../../../..' . '/app/Modules/GeoIp/GeoIpModule.php',
@@ -13166,11 +13189,13 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Goods\\Commands\\CategoryTreeBuildCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/CategoryTreeBuildCommand.php',
         'Modules\\Goods\\Commands\\GoogleShoppingInventoryCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/GoogleShoppingInventoryCommand.php',
         'Modules\\Goods\\Commands\\GoogleShoppingProductCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/GoogleShoppingProductCommand.php',
+        'Modules\\Goods\\Commands\\ImageGeneratorCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/ImageGeneratorCommand.php',
         'Modules\\Goods\\Commands\\ProductFeedCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/ProductFeedCommand.php',
         'Modules\\Goods\\Commands\\ProductUpcByAsinCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/ProductUpcByAsinCommand.php',
         'Modules\\Goods\\Commands\\SurfMetaUserIDAppendCommand' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Commands/SurfMetaUserIDAppendCommand.php',
         'Modules\\Goods\\Controllers\\AbstractCatalogController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/AbstractCatalogController.php',
         'Modules\\Goods\\Controllers\\Api\\ApiAnalyticController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/Api/ApiAnalyticController.php',
+        'Modules\\Goods\\Controllers\\Api\\ApiImageController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/Api/ApiImageController.php',
         'Modules\\Goods\\Controllers\\Api\\ApiProductController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/Api/ApiProductController.php',
         'Modules\\Goods\\Controllers\\CartController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/CartController.php',
         'Modules\\Goods\\Controllers\\CategoryController' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Controllers/CategoryController.php',
@@ -13215,6 +13240,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Goods\\Models\\ImageMModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/ImageMModel.php',
         'Modules\\Goods\\Models\\ImageModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/ImageModel.php',
         'Modules\\Goods\\Models\\ImagePModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/ImagePModel.php',
+        'Modules\\Goods\\Models\\ImageProductModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/ImageProductModel.php',
         'Modules\\Goods\\Models\\ImageTModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/ImageTModel.php',
         'Modules\\Goods\\Models\\NotifyStockModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/NotifyStockModel.php',
         'Modules\\Goods\\Models\\OptionModel' => __DIR__ . '/../../../..' . '/app/Modules/Goods/Models/OptionModel.php',
@@ -13250,6 +13276,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Landing\\Helpers\\LandingHelper' => __DIR__ . '/../../../..' . '/app/Modules/Landing/Helpers/LandingHelper.php',
         'Modules\\Landing\\LandingModule' => __DIR__ . '/../../../..' . '/app/Modules/Landing/LandingModule.php',
         'Modules\\Landing\\Models\\LandingModel' => __DIR__ . '/../../../..' . '/app/Modules/Landing/Models/LandingModel.php',
+        'Modules\\Mail\\Commands\\EmailSorterCommand' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Commands/EmailSorterCommand.php',
         'Modules\\Mail\\Commands\\GmailFetchCommand' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Commands/GmailFetchCommand.php',
         'Modules\\Mail\\Commands\\TestCommand' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Commands/TestCommand.php',
         'Modules\\Mail\\Components\\MailComponent' => __DIR__ . '/../../../..' . '/app/Modules/Mail/Components/MailComponent.php',
@@ -13294,6 +13321,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Meta\\Types\\MetaType' => __DIR__ . '/../../../..' . '/app/Modules/Meta/Types/MetaType.php',
         'Modules\\Order\\Commands\\AbandonedOrderCommand' => __DIR__ . '/../../../..' . '/app/Modules/Order/Commands/AbandonedOrderCommand.php',
         'Modules\\Order\\Commands\\FraudCheckCommand' => __DIR__ . '/../../../..' . '/app/Modules/Order/Commands/FraudCheckCommand.php',
+        'Modules\\Order\\Commands\\ThankYouEmailCommand' => __DIR__ . '/../../../..' . '/app/Modules/Order/Commands/ThankYouEmailCommand.php',
         'Modules\\Order\\Commands\\TrackingConvertCommand' => __DIR__ . '/../../../..' . '/app/Modules/Order/Commands/TrackingConvertCommand.php',
         'Modules\\Order\\Controllers\\Admin\\ApiTagsController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Admin/ApiTagsController.php',
         'Modules\\Order\\Controllers\\Admin\\OrderRelatedMessagesController' => __DIR__ . '/../../../..' . '/app/Modules/Order/Controllers/Admin/OrderRelatedMessagesController.php',
@@ -13374,6 +13402,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Order\\Validation\\PhoneValidator' => __DIR__ . '/../../../..' . '/app/Modules/Order/Validation/PhoneValidator.php',
         'Modules\\Order\\Validation\\StateValidator' => __DIR__ . '/../../../..' . '/app/Modules/Order/Validation/StateValidator.php',
         'Modules\\Order\\Validation\\ZipCodeValidator' => __DIR__ . '/../../../..' . '/app/Modules/Order/Validation/ZipCodeValidator.php',
+        'Modules\\PBX\\Commands\\AssignCallsCommand' => __DIR__ . '/../../../..' . '/app/Modules/PBX/Commands/AssignCallsCommand.php',
         'Modules\\PBX\\Controllers\\Admin\\PBXController' => __DIR__ . '/../../../..' . '/app/Modules/PBX/Controllers/Admin/PBXController.php',
         'Modules\\PBX\\Controllers\\PBXController' => __DIR__ . '/../../../..' . '/app/Modules/PBX/Controllers/PBXController.php',
         'Modules\\PBX\\Forms\\CallsFilterForm' => __DIR__ . '/../../../..' . '/app/Modules/PBX/Forms/CallsFilterForm.php',
@@ -15795,6 +15824,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'XeroPHP\\Traits\\SendEmailTrait' => __DIR__ . '/..' . '/calcinai/xero-php/src/XeroPHP/Traits/SendEmailTrait.php',
         'XeroPHP\\Webhook' => __DIR__ . '/..' . '/calcinai/xero-php/src/XeroPHP/Webhook.php',
         'XeroPHP\\Webhook\\Event' => __DIR__ . '/..' . '/calcinai/xero-php/src/XeroPHP/Webhook/Event.php',
+        'claviska\\SimpleImage' => __DIR__ . '/..' . '/claviska/simpleimage/src/claviska/SimpleImage.php',
         'fpdi_pdf_parser' => __DIR__ . '/..' . '/setasign/fpdi/fpdi_pdf_parser.php',
         'pdf_context' => __DIR__ . '/..' . '/setasign/fpdi/pdf_context.php',
         'phpseclib\\Crypt\\AES' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Crypt/AES.php',
@@ -15828,6 +15858,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixesPsr0;
             $loader->classMap = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$classMap;
 

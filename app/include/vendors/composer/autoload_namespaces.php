@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname($vendorDir)));
 
 return array(
+    'claviska' => array($vendorDir . '/claviska/simpleimage/src'),
     'PayPal' => array($vendorDir . '/paypal/rest-api-sdk-php/lib'),
     'MarketplaceWebService_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
     'MarketplaceWebServiceSellers_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
