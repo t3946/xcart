@@ -221,7 +221,7 @@ export default class ProductImageSlider extends Component {
                     <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={e => {
                         this.clickHndl(e, n, item)
                     }}
-                         style={"background-image: url(" + item.src + ")"}
+                         style={"background-image: url(" + item.thumb + ")"}
                     >
                     </div>
                 );
@@ -303,7 +303,7 @@ export default class ProductImageSlider extends Component {
                     <div className={"slide image type-image" + is_active} key={key} onClick={e => {
                         this.zoomHndl(e, item)
                     }}
-                         style={"background-image: url(" + item.src + ")"}
+                         style={"background-image: url(" + item.thumb + ")"}
                     >
                     </div>
                 );

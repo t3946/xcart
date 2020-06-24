@@ -104,8 +104,8 @@
                             <datalist>
                                 {foreach $images as $image}
                                     {if $image}
-                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
-                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
+                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
                                                 data-id="{$image->imageid}"
                                                 type="image">
                                         </option>
