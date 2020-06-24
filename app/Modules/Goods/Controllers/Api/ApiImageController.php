@@ -12,10 +12,11 @@ class ApiImageController extends Controller
 {
     public function view($image_id, $width = null)
     {
+        $filename = Paths::get('www') . "\default_image.gif";
         if ($imageModel = ImageDModel::objects()->get(['imageid' => $image_id])) {
-            $filename = Paths::get('www') . ltrim($imageModel->image_path, '.');
-            if (!file_exists($filename)) {
-                $filename = Paths::get('www') . "\default_image.gif";
+            $name = Paths::get('www') . ltrim($imageModel->image_path, '.');
+            if (file_exists($name)) {
+                $filename = $name;
             }
         }
         $image = new SimpleImage();
