@@ -17,12 +17,12 @@ class ApiImageController extends Controller
             if (!file_exists($filename)) {
                 $filename = Paths::get('www') . "\default_image.gif";
             }
-            $image = new SimpleImage();
-            $image->fromFile($filename);
-            if ($width !== null && is_numeric($width)) {
-                $image->resize($width);
-            }
-            $image->toScreen('image/webp', 94);
         }
+        $image = new SimpleImage();
+        $image->fromFile($filename);
+        if ($width !== null && is_numeric($width)) {
+            $image->resize($width);
+        }
+        $image->toScreen('image/jpeg', 94);
     }
 }
