@@ -39,7 +39,7 @@
 
                 <tr>
                     <td>
-                        <b>Feed source:</b> {$feed->feed_source} {if $feed->feed_source_date}({$feed->feed_source_date}){/if}
+                        <b>Feed source:</b> {$feed->feed_source} {if $feed->feed_source_date}({$feed->feed_source_date|date_format:'%d-%b-%Y %H:%M'}){/if}
                     </td>
                 </tr>
                 <tr>
@@ -114,7 +114,7 @@
 
                 <tr>
                     <td>
-                        <b>Feed source:</b> {$feed->feed_source} {if $feed->feed_source_date}({$feed->feed_source_date}){/if}
+                        <b>Feed source:</b> {$feed->feed_source} {if $feed->feed_source_date}({$feed->feed_source_date|date_format:'%d-%b-%Y %H:%M'}){/if}
                     </td>
                 </tr>
                 <tr>
