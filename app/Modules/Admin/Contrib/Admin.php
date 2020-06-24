@@ -659,7 +659,7 @@ abstract class Admin
     public function all($pk = null)
     {
         $this->setBreadcrumbs();
-        $search = isset($_GET['search']) ? $_GET['search'] : null;
+        $search = $_GET['search'] ?? null;
 
         $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);

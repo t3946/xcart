@@ -7,15 +7,6 @@ session_start();
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
-/*if ($config["cidev_image_generator"] == "Y"){
-	$log_text = "--- already launched";
-	func_backprocess_log("image generator", $log_text);
-
-        die("Already launched"); // ################################
-}
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_image_generator'");
-//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");*/
-
 $started_at = time();
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log("image generator", $log_text);
@@ -62,51 +53,6 @@ while ($product = db_fetch_array($products)){
 	$image_data['image_path'] = empty($image_data["image_path"]) ?: \Xcart\App\Helpers\Paths::get('www') . DIRECTORY_SEPARATOR . $image_data['image_path'];
 
 	$image_data = func_set_correct_det_img($image_data, true);
-
-/*
-	$file_name = $image_data["image_path"];
-	$width = $image_data["image_x"];
-	$height = $image_data["image_y"];
-
-	if ($width >= 620  || $height >= 800){
-		$im = new Imagick();
-		try {
-		  $im->pingImage($file_name);
-		} catch (ImagickException $e) {
-		  throw new Exception(_('Invalid or corrupted image file, please try uploading another image.'));
-		}
-
-//		$width  = $im->getImageWidth();
-//		$height = $im->getImageHeight();
-
-		  try {
-
-		    $R = MIN(619/$width,799/$height,1);
-
-		    $new_width = abs($R*$width);
-		    $new_height = abs($R*$height);
-
-		    $im->setSize($new_width, $width);
-		    $im->readImage($file_name);
-		    $im->thumbnailImage(abs($R*$width), 0, false);
-
-		    $thumbnail_name = $file_name;
-
-		    $im->setImageFileName($thumbnail_name);
-		    $im->writeImage();
-
-		    db_query("UPDATE $sql_tbl[images_D] SET image_x='$new_width', image_y='$new_height' WHERE imageid='$image_id'");
-
-		  }
-		  catch (ImagickException $e)
-		  {
-		    header('HTTP/1.1 500 Internal Server Error');
-		    throw new Exception(_('An error occured reszing the image.'));
-		  }
-
-        	$im->destroy();
-	}
-*/
 
 	print($product["productid"]."\n\r");
 	if (empty($product["no_image_T"])) {

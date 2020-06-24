@@ -6,7 +6,7 @@ use Xcart\App\Orm\Fields\BlobField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 
-class ImageTModel extends ImageModel
+class ImageTModel extends ImageProductModel
 {
     public static function tableName()
     {

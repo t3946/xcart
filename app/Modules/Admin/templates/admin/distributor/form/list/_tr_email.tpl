@@ -34,5 +34,8 @@
 
     <td class="actions">
         {include $admin->listItemActionsTemplate}
+        <a href="{url 'admin:list_nested' params=['id' => $item->pk, 'admin' => $adminClass, 'module' => $moduleClass]}" class="">
+            <i class="fa fa-folder-open"></i>
+        </a>
     </td>
 </tr>

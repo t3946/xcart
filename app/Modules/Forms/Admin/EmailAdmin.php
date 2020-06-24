@@ -2,15 +2,10 @@
 
 namespace Modules\Forms\Admin;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Admin\Contrib\Admin;
-use Modules\Admin\Contrib\NestedAdmin;
 use Modules\Forms\Forms\EmailForm;
-use Modules\Forms\Forms\SnippetsForm;
 use Modules\Forms\Models\EmailModel;
-use Modules\Forms\Models\SnippetModel;
-use Modules\Pages\Forms\PagesForm;
-use Modules\Pages\Models\Page;
-use Modules\Pages\PagesModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -153,12 +148,17 @@ class EmailAdmin extends Admin
     public function all($pk = null)
     {
         $this->setBreadcrumbs();
-        $search = isset($_GET['search']) ? $_GET['search'] : null;
+        $search = $_GET['search'] ?? null;
 
-        $qs = $this->getQuerySet()->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
+        $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
+        $qs->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
+        $qs2 = $this->getQuerySet();
+        $qs2->select(['id' => new Expression('MAX(id)')]);
+        $qs2->group(['thread_id']);
+        $qs->join('inner join', $qs2->getQueryBuilder(), [$qs->getTableAlias() .'.id' => 'mx.id'], 'mx');
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
