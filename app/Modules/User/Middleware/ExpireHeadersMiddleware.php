@@ -26,6 +26,9 @@ class ExpireHeadersMiddleware extends Middleware
                     $this->noCache();
                     return;
                 }
+                if (in_array($match['name'], ['api:image', 'api:image_resize'])) {
+                    return;
+                }
             }
 
             $this->autoLastModified();
