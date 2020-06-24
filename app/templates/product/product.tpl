@@ -97,15 +97,15 @@
                             <noscript>
                                 {foreach $images as $image}
                                     {if $image}
-                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl()}" alt="{$model->getFrontendName()|escape}"/>
+                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}" alt="{$model->getFrontendName()|escape}"/>
                                     {/if}
                                 {/foreach}
                             </noscript>
                             <datalist>
                                 {foreach $images as $image}
                                     {if $image}
-                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
                                                 data-id="{$image->imageid}"
                                                 type="image">
                                         </option>
