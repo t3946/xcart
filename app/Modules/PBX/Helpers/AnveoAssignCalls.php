@@ -209,7 +209,7 @@ class AnveoAssignCalls
 
     public static function reValidate()
     {
-        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(rand(0, 1) ? '' : '-') . 'id'])->limit(20)->all();
+        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(rand(0, 1) ? '' : '-') . 'id'])->limit(100)->all();
 
         foreach ($models as $model) {
             self::bindCallToOrder($model);
