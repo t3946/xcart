@@ -2,6 +2,7 @@
 
 namespace Modules\User\Middleware;
 
+use DateTime;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Middleware\Middleware;
 
@@ -27,7 +28,7 @@ class ExpireHeadersMiddleware extends Middleware
                     return;
                 }
                 if (in_array($match['name'], ['api:image', 'api:image_resize'])) {
-                    return;
+                    define('SET_EXPIRE', (new DateTime)->add(new \DateInterval('P1Y'))->getTimestamp());
                 }
             }
 
