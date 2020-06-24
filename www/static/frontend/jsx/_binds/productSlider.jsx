@@ -24,6 +24,7 @@ import ProductImageSlider from "../components/ProductImageSlider";
                             alt: option.dataset.alt || null,
                             title: option.dataset.title || null,
                             thumb: option.dataset.thumb || null,
+                            preview: option.dataset.preview || null,
                         })
                     }
 
