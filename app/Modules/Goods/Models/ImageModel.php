@@ -105,12 +105,12 @@ class ImageModel extends Model
         return Xcart::app()->router->url('api:image', ['image_id' => $this->imageid, 'filename' => $filename]);
     }
 
-    public function getCdnURL(): string
+    public function getCdnURL($width = null): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $pref = ($site->getConfig()['Enable_CDN'] === "Y") ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
-        return '//' .$pref . $domain . $this->getURL();
+        return '//' .$pref . $domain . $this->getURL($width);
     }
 
     public function __toString()

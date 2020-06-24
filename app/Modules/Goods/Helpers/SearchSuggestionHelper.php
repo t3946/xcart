@@ -119,16 +119,16 @@ JSON;
             if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
                 foreach($products as $product) {
                     if (!$product->isGroupRoot()) {
-                        $thumb = $product->thumbnail->limit(1)->get();
+                        $thumb = $product->images->order(['orderby'])->limit(1)->get();
                     } else {
-                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->thumbnail->limit(1)->get() : null;
+                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->images->order(['orderby'])->limit(1)->get() : null;
                     }
 
                     $p_suggestions[] = [
                         'id' => $product->productid,
                         'link' => $product->getAbsoluteUrl(),
                         'name' => $product->getFrontendName(),
-                        'image' => $thumb ? (string) $thumb : null
+                        'image' => $thumb ? $thumb->getCdnUrl(180) : null
                     ];
                 }
             }
