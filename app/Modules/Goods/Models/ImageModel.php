@@ -96,13 +96,9 @@ class ImageModel extends Model
         ];
     }
 
-    public function getURL($width = null)
+    public function getURL()
     {
-        $filename = basename($this->image_path);
-        if ($width) {
-            return Xcart::app()->router->url('api:image_resize', ['image_id' => $this->imageid, 'width' => $width, 'filename' => $filename]);
-        }
-        return Xcart::app()->router->url('api:image', ['image_id' => $this->imageid, 'filename' => $filename]);
+        return ltrim($this->image_path, '.');
     }
 
     public function getCdnURL(): string

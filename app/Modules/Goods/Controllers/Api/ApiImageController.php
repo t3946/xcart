@@ -12,17 +12,18 @@ class ApiImageController extends Controller
 {
     public function view($image_id, $width = null)
     {
-        $image = new SimpleImage();
+        $filename = Paths::get('www') . "\default_image.gif";
         if ($imageModel = ImageDModel::objects()->get(['imageid' => $image_id])) {
             $name = Paths::get('www') . ltrim($imageModel->image_path, '.');
             if (file_exists($name)) {
                 $filename = $name;
-                $image->fromFile($filename);
-                if ($width !== null && is_numeric($width)) {
-                    $image->resize($width);
-                }
-                $image->toScreen('image/jpeg', 94);
             }
         }
+        $image = new SimpleImage();
+        $image->fromFile($filename);
+        if ($width !== null && is_numeric($width)) {
+            $image->resize($width);
+        }
+        $image->toScreen('image/jpeg', 94);
     }
 }
