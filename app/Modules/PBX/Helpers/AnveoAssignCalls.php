@@ -44,7 +44,7 @@ class AnveoAssignCalls
                 }
             }
 
-            if (!$model->isOutgoing() && !$model->isVoiceMail() && !$model->isLost() &&
+            if (!$model->isVoiceMail() && !$model->isLost() &&
                 $model->anveo_account && $model->options && $user_model = $model->options->user) {
                 $filter = [
                     'user_id' => $user_model->id,
@@ -53,7 +53,7 @@ class AnveoAssignCalls
                 ];
 
                 /** @var OrderUserActivityModel[] $oua_models */
-                if ($oua_models = OrderUserActivityModel::objects()->filter($filter)->group(['order_id'])->all()) {
+                if (!$model->isOutgoing() && $oua_models = OrderUserActivityModel::objects()->filter($filter)->group(['order_id'])->all()) {
                     foreach ($oua_models as $oua_model) {
                         /** @var OrdersCallsModel $oc_model */
                         [$oc_model] = OrdersCallsModel::objects()->getOrNew([
