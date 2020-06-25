@@ -86,47 +86,48 @@
                     {if $model->isGroupRoot()}
                         {set $images = []}
 
-                            {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
-                            {foreach $childrens as $child}
-                                {set $images[] = $child->images->order(['orderby'])->limit(1)->get()}
+                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
+                        {foreach $childrens as $child}
+                            {set $images[] = $child->images->order(['orderby'])->limit(1)->get()}
+                        {/foreach}
+                    {else}
+                        {set $images = $model->images->order(['orderby'])->all()}
+                    {/if}
+                    {if $images}
+                        <noscript>
+                            {foreach $images as $image}
+                                {if $image}
+                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                         alt="{$model->getFrontendName()|escape}"/>
+                                {/if}
                             {/foreach}
-                        {else}
-                            {set $images = $model->images->order(['orderby'])->all()}
-                        {/if}
-                        {if $images}
-                            <noscript>
-                                {foreach $images as $image}
-                                    {if $image}
-                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}" alt="{$model->getFrontendName()|escape}"/>
-                                    {/if}
-                                {/foreach}
-                            </noscript>
-                            <datalist>
-                                {foreach $images as $image}
-                                    {if $image}
-                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
-                                                data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
-                                                data-id="{$image->imageid}"
-                                                type="image">
-                                        </option>
-                                    {/if}
-                                {/foreach}
-                                {if $videos}
-                                    {foreach $videos as $video}
-                                        <option value="{$video->video}"
-                                                data-thumb=""
-                                                data-id="{$video->id}"
-                                                type="video">
+                        </noscript>
+                        <datalist>
+                            {foreach $images as $image}
+                                {if $image}
+                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
+                                            data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                            data-id="{$image->imageid}"
+                                            type="image">
+                                    </option>
+                                {/if}
+                            {/foreach}
+                            {if $videos}
+                                {foreach $videos as $video}
+                                    <option value="{$video->video}"
+                                            data-thumb=""
+                                            data-id="{$video->id}"
+                                            type="video">
 
                                     </option>
                                 {/foreach}
                             {/if}
 
                             {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
-                                    {*type="video"*}
-                                    {*data-thumb=""*}
-                                    {*data-id="{$video->id}"*}
+                            {*type="video"*}
+                            {*data-thumb=""*}
+                            {*data-id="{$video->id}"*}
                             {*></option>*}
                             {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
                             {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
