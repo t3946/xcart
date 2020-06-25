@@ -80,6 +80,11 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'url' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],
             'manufact_text_displayed' => [
                 'class' => CharField::class,
                 'default' => '',
