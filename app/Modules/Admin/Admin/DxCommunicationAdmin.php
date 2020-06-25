@@ -42,6 +42,7 @@ class DxCommunicationAdmin extends EmailAdmin
         $search = isset($_GET['search']) ? $_GET['search'] : null;
 
         $qs = $this->getAllQuerySet($search);
+        $qs->filter(["dx_models__{$this->ownerField}" => $this->ownerPk]);
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
