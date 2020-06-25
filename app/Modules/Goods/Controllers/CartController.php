@@ -5,6 +5,7 @@ namespace Modules\Goods\Controllers;
 use Modules\Cart\CartModule;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Controllers\BaseCartController;
+use Modules\Goods\Models\ImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Forms\CountShippingForm;
@@ -176,13 +177,10 @@ class CartController extends BaseCartController
     {
         /** @var ProductModel $product */
         $product = $item->getObject();
+        /** @var ImageModel $image */
         $image = null;
         if ($images = $product->getImages()) {
-            $image = $images[0]->getURL();
-
-            /** @var \Modules\Sites\Models\SiteModel $site */
-            $site = $product->sites->limit(1)->get();
-            $image = '//cdn.' . $site->getBaseDomain() . $image;
+            $image = $images[0]->getCdnURL(50);
         }
 
         $price = $product->getFrontendPrice($item->getQuantity());
