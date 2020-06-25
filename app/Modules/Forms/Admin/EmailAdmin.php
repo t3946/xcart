@@ -143,11 +143,8 @@ class EmailAdmin extends Admin
         ]);
     }
 
-    public function all($pk = null)
+    protected function getAllQuerySet($search)
     {
-        $this->setBreadcrumbs();
-        $search = $_GET['search'] ?? null;
-
         $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
@@ -158,6 +155,15 @@ class EmailAdmin extends Admin
         $qs2->select(['dt' => new Expression('MAX(date)'), 'thread_id']);
         $qs2->group(['thread_id']);
         $qs->join('inner join', $qs2->getQueryBuilder(), [$qs->getTableAlias() .'.date' => 'mx.dt', $qs->getTableAlias() .'.thread_id' => 'mx.thread_id'], 'mx');
+        return $qs;
+    }
+
+    public function all($pk = null)
+    {
+        $this->setBreadcrumbs();
+        $search = $_GET['search'] ?? null;
+
+        $qs = $this->getAllQuerySet($search);
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
