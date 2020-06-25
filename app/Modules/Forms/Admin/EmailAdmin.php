@@ -149,7 +149,6 @@ class EmailAdmin extends Admin
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
-        $qs->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
         $qs->group(['thread_id']);
         $qs2 = $this->getQuerySet();
         $qs2->select(['dt' => new Expression('MAX(date)'), 'thread_id']);
@@ -164,6 +163,7 @@ class EmailAdmin extends Admin
         $search = $_GET['search'] ?? null;
 
         $qs = $this->getAllQuerySet($search);
+        $qs->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
