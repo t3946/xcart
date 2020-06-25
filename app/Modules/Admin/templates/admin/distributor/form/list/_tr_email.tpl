@@ -17,7 +17,7 @@
     {if $isNested}
         <td class="nested">
             {if !$item->getIsLeaf()}
-                <a href="{url 'admin:list_nested' params=['id' => $item->pk, 'admin' => $adminClass, 'module' => $moduleClass]}"
+                <a style="width: 100%;" href="{url 'admin:list_nested' params=['id' => $item->pk, 'admin' => $adminClass, 'module' => $moduleClass]}"
                    class="">
                     <i class="fa fa-folder-open"></i>
                 </a>
@@ -45,7 +45,7 @@
     </td>
 </tr>
 {if !$child && $item->message_id !== $item->thread_id}
-    {foreach $item->children->filter(['message_id__isnt' => $item->message_id]) as $child}
+    {foreach $item->children->filter(['message_id__isnt' => $item->message_id])->order(['-date']) as $child}
         {include 'admin/distributor/form/list/_tr_email.tpl' item=$child child=true pk=$child->pk}
     {/foreach}
 
