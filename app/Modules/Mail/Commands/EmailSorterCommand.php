@@ -60,7 +60,9 @@ class EmailSorterCommand extends Command
 
                 switch ($sort->cond) {
                     case 'contains':
+                        print("Find contains {$sort->value} in {$email->$field} \n");
                         if (stripos($email->$field, $sort->value) !== false) {
+                            print("Found contains {$sort->value} in {$email->$field} \n");
                             $class = $sort->entity;
                             /** @var Model $model */
                             $model = new $class;
