@@ -1,4 +1,4 @@
-<tr data-thread-id="{$item->thread_id}" style="cursor: pointer;{if $child}display:none;{/if}" data-pk="{$pk}"
+<tr data-thread-id="{$item->thread_id}" {if $child}class='child'{/if} style="cursor: pointer;" data-pk="{$pk}"
     onclick="window.open('{$admin->getInfoUrl($pk)|escape}')">
 
     <td class="checker">
