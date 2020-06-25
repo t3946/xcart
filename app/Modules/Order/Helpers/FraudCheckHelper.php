@@ -1047,7 +1047,7 @@ class FraudCheckHelper
 
     private static function getAllVariations($string): array
     {
-        $array = explode(' ', $string);
+        $array = explode(' ', $string, 4);
         self::depthPicker($array, "", $collect);
         return array_filter($collect, static function ($a) {
             return strpos(trim($a), ' ') !== false;
