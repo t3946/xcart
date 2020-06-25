@@ -122,9 +122,7 @@ class EmailAdmin extends Admin
 
     public function getListItemActions()
     {
-        return [
-            'info',
-        ];
+        return [];
     }
 
     public function getListGroupActions()
@@ -155,10 +153,11 @@ class EmailAdmin extends Admin
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
         $qs->filter(['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true]);
+        $qs->group(['thread_id']);
         $qs2 = $this->getQuerySet();
-        $qs2->select(['id' => new Expression('MAX(id)')]);
+        $qs2->select(['dt' => new Expression('MAX(date)'), 'thread_id']);
         $qs2->group(['thread_id']);
-        $qs->join('inner join', $qs2->getQueryBuilder(), [$qs->getTableAlias() .'.id' => 'mx.id'], 'mx');
+        $qs->join('inner join', $qs2->getQueryBuilder(), [$qs->getTableAlias() .'.date' => 'mx.dt', $qs->getTableAlias() .'.thread_id' => 'mx.thread_id'], 'mx');
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,

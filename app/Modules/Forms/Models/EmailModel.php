@@ -127,7 +127,12 @@ class EmailModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => UserModel::class,
                 'through' => EmailUserModel::class
-            ]
+            ],
+            'children' => [
+                'class' => HasManyField::class,
+                'modelClass' => __CLASS__,
+                'link' => ['thread_id' => 'thread_id'],
+            ],
         ];
     }
 
