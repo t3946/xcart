@@ -19,7 +19,6 @@ class FraudCheckCommand extends Command
 
     public function handle($arguments = [])
     {
-        ini_set('memory_limit', '4G');
         $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
 
         foreach (OrderModel::objects()->filter([
