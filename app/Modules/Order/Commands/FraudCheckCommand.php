@@ -19,6 +19,9 @@ class FraudCheckCommand extends Command
 
     public function handle($arguments = [])
     {
+        ini_set('memory_limit', '4G');
+        $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
+
         foreach (OrderModel::objects()->filter([
             'groups__cb_status__in' => [
                 OrderStatusModel::ORDER_STATUS_UNPAID_PO,
@@ -65,7 +68,7 @@ class FraudCheckCommand extends Command
             }
             $order->overall_fraud_score = $overallFraudScore;
 
-            $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
+
 
             /** @var FraudStatusModel $new_fraud_status */
             $new_fraud_status = $overallFraudScore > $config['Overall_FC_threshold_for_Clear_status'] ?
