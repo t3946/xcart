@@ -59,6 +59,9 @@ class OrderProcessController extends FrontendController
                 ]);
                 $message = 'Customer would like to continue with the order!';
                 OrderLogHelper::sendOrderNote($order, $message);
+                $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_QUEUED]);
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
+                $order->save();
 
             } else {
                 $this->error(404);
