@@ -71,6 +71,15 @@
         <tr>
             <td colspan="2">
                 <hr/>
+               <span><a href="#"><i class="fa fa-reply"></i><span style="margin-left: 5px">Reply</span></a></span>
+                <span style="margin-left: 5px">
+                   <span>Template</span>
+                   <select>
+                   </select>
+               </span>
+                <span style="margin-left: 10px"><a href="#"><i class="fa fa-angle-double-right"></i><span style="margin-left: 5px" >Forward</span></a></span>
+                <span style="margin-left: 10px"><a href="#"><i class="fa fa-remove"></i><span style="margin-left: 5px">Delete</span></a></span>
+                <hr/>
             </td>
         </tr>
         <tr>

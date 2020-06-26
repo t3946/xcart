@@ -24,7 +24,11 @@ class ApiImageController extends Controller
                     if ($width !== null && is_numeric($width)) {
                         $image->resize($width);
                     }
-                    $image->toScreen('image/jpeg', 94);
+                    if (stripos($this->getRequest()->getHeaderValue('Accept'), 'image/webp') !== false) {
+                        $image->toScreen('image/webp');
+                    } else {
+                        $image->toScreen('image/jpeg', 94);
+                    }
                     die();
                 } catch (Exception $exception) {
                     Xcart::app()->logger->error($exception->getMessage(), [], 'gd');
