@@ -95,7 +95,7 @@ class MetaHelper
         return implode(' - ', $data);
     }
 
-    protected static function cleanString($str)
+    protected static function cleanString($str): string
     {
         $t = preg_replace("/(\r?\n){2,}/", "", $str);
         $t = preg_replace("/(\s+)/", " ", $t);
@@ -104,7 +104,8 @@ class MetaHelper
 
     protected static function fetchMeta($uri)
     {
-        $qs = Meta::objects()->filter(['url' => $uri]);
+        $paths = parse_url($uri);
+        $qs = Meta::objects()->filter(['url' => $paths['path']]);
         if (Xcart::app()->getModule('Meta')->onSite) {
             $qs->filter(['site_code' => Xcart::app()->getModule('Sites')->getSite()->code]);
         }

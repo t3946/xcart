@@ -167,8 +167,8 @@ class PaymentController extends Controller
                     case 'CUSTOMER.DISPUTE.CREATED':
 
                         /** @var OrderTransactionModel $txn */
-                        if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
-
+                        if ($params['buyer_transaction_id'] &&
+                            $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
                             OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
                         }
 
