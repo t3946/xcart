@@ -525,14 +525,30 @@ class ProductModel extends Model implements ICartItem
         if ($this->productid) {
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): '']);
 
-            if ($full && $site = $this->sites->limit(1)->get()) {
-                $url = '//' . $site->domain . $url;
+            if ($full) {
+                $url = '//' . $this->getDomain() . $url;
             }
 
             return $url;
         }
 
         return false;
+    }
+
+    public function getBaseDomain()
+    {
+        if ($site = $this->sites->limit(1)->get()) {
+            $res = $site->getBaseDomain();
+        }
+        return $res ?? '';
+    }
+
+    public function getDomain()
+    {
+        if ($site = $this->sites->limit(1)->get()) {
+            $res = $site->domain;
+        }
+        return $res ?? '';
     }
 
     public function getDistributorUrl()

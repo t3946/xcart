@@ -230,7 +230,7 @@ class GoogleShoppingProductCommand extends Command
                             $batch->setGtin($product->upc);
                         }
                         if (($images = $product->getImages()) && $image_model = reset($images)) {
-                            $batch->setImageLink('https:' . $image_model);
+                            $batch->setImageLink('https://cdn.' . $product->getBaseDomain(). $image_model->getURL());
                         }
                         if ($product->mult_order_quantity && $product->min_amount > 1) {
                             $batch->setMultipack($product->min_amount);
