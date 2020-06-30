@@ -21,12 +21,12 @@ class EmailForm extends ModelForm
     public function getFields()
     {
         return [
-            'date' => ['class' => DateTimeField::class],
             'from_address' => ['class' => CharField::class, 'verboseName' => 'From'],
             'to_address' => ['class' => CharField::class, 'verboseName' => 'To'],
             'subject' => ['class' => CharField::class],
             'attachments' => ['class' => FileField::class],
             'body' => ['class' => EditorField::class, 'verboseName' => ' '],
+            'date' => ['class' => DateTimeField::class],
         ];
     }
 }

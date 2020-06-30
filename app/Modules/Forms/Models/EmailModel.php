@@ -160,7 +160,18 @@ class EmailModel extends Model
 
     public function getDate()
     {
-        $res = $this->date;
+        $oIssueDate = \DateTime::createFromFormat('Y-m-d H:i:s', $res = $this->date, new \DateTimeZone('EST'));
+        $oIssueDate->setTime( 0, 0, 0 );
+        $today = new \DateTime(); // This object represents current date/time
+        $today->setTime( 0, 0, 0 );
+        $diff = $today->diff( $oIssueDate );
+        $diffDays = (integer)$diff->format( "%R%a" );
+        if ($diffDays === 0) {
+            $res = $oIssueDate->format('H:m');
+        } else {
+            $res = $oIssueDate->format('M d');
+        }
+
         if (!$this->isViewed()) {
             $res = "<b>{$res}</b>";
         }

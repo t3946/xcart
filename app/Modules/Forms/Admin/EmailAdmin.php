@@ -20,7 +20,12 @@ class EmailAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['date', 'from_address', 'subject'];
+        return ['from_address', 'subject', 'date'];
+    }
+
+    public function getUserColumns()
+    {
+        return [];
     }
 
     public function getSearchColumns()
