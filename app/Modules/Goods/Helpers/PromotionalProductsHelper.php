@@ -1148,7 +1148,7 @@ class PromotionalProductsHelper
         return null;
     }
 
-    public static function getProductOfTheDayImage(ProductModel $model): string
+    public static function getProductOfTheDayImage(ProductModel $model = null): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $code = strtolower($site->code);
@@ -1158,13 +1158,13 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
-        if ($image = $model->getMainImage()) {
+        if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(250);
         }
         return '';
     }
 
-    public static function getBestSelllerImage(ProductModel $model): string
+    public static function getBestSelllerImage(ProductModel $model = null): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $code = strtolower($site->code);
@@ -1174,13 +1174,13 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
-        if ($image = $model->getMainImage()) {
+        if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(250);
         }
         return '';
     }
 
-    public static function getNewProductImage(ProductModel $model): string
+    public static function getNewProductImage(ProductModel $model = null): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $code = strtolower($site->code);
@@ -1190,7 +1190,7 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
-        if ($image = $model->getMainImage()) {
+        if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(250);
         }
         return '';
