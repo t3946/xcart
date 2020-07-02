@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="columns small-12">
 
-                            {if !$.workingDayTimeNow}
+                            {if true || !$.workingDayTimeNow}
                                 <div class="s3stores-logo">
                                     <img src="" alt="S3 Stores, Inc." class="s3logo lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores.svg">
                                 </div>

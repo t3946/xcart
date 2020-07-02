@@ -110,6 +110,8 @@ class OrderTrackingModel extends Model
             if (($r = OrderTrackingHelper::trackAfterShip($owner)) && isset($r['data']['tracking']['id'])) {
                 $this->aftership_id = $r['data']['tracking']['id'];
                 $this->update(['aftership_id']);
+            } else {
+                //set AttentionTag
             }
         }
     }
