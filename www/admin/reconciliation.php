@@ -509,8 +509,8 @@ if ($REQUEST_METHOD == "POST") {
     } elseif ($mode == "find_orders") {
 
         $_filter = [
-            'date_csv__gte' => $search_data["reconciliation_tab_calculation"]["date_csv"]["start_date"] ?? time(),
-            'date_csv__lte' => $search_data["reconciliation_tab_calculation"]["date_csv"]["end_date"] ?? time(),
+            'date_csv__gte' => $search_data["reconciliation_tab_calculation"]["date_csv"]["start_date"] ?: time(),
+            'date_csv__lte' => $search_data["reconciliation_tab_calculation"]["date_csv"]["end_date"] ?: time(),
             'action' => ''
         ];
 
