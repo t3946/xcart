@@ -60,10 +60,7 @@ class EmailSorterCommand extends Command
             if ($firstInThread = $email->children->filter(['message_id__isnt' => $email->message_id])->limit(1)->order(['date'])->get()) {
                 /** @var EmailEntityModel $link */
                 foreach (EmailEntityModel::objects()->filter(['email_id' => $firstInThread->id]) as $link) {
-                    EmailEntityModel::objects()->updateOrCreate(
-                        ['email_id' => $email->id],
-                        ['entity_id' => $link->entity_id,'model' => $link->model]
-                    );
+                    EmailEntityModel::objects()->getOrCreate(['email_id' => $email->id, 'entity_id' => $link->entity_id, 'model' => $link->model]);
                 }
             }
 
