@@ -53,8 +53,20 @@ class EmailSorterCommand extends Command
 
     public function handle($arguments = [])
     {
-        $f = ['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true];
+        $f = ['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true, 'id' => 3745];
+        /** @var EmailModel $email */
         foreach (EmailModel::objects()->filter($f) as $email) {
+
+            if ($firstInThread = $email->children->filter(['message_id__isnt' => $email->message_id])->limit(1)->order(['date'])->get()) {
+                /** @var EmailEntityModel $link */
+                if ($link = EmailEntityModel::objects()->get(['email_id' => $firstInThread->id])) {
+                    EmailEntityModel::objects()->updateOrCreate(
+                        ['email_id' => $email->id],
+                        ['entity_id' => $link->entity_id,'model' => $link->model]
+                    );
+                }
+            }
+
             foreach (EmailSorterModel::objects()->filter(['type' => $email->type]) as $sort) {
                 $field = $sort->filter_field;
 

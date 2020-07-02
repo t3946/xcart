@@ -12,6 +12,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
@@ -133,6 +134,11 @@ class EmailModel extends Model
                 'modelClass' => __CLASS__,
                 'link' => ['thread_id' => 'thread_id'],
             ],
+            'parent' => [
+                'class' => ForeignField::class,
+                'modelClass' => __CLASS__,
+                'link' => ['thread_id' => 'message_id'],
+            ]
         ];
     }
 
