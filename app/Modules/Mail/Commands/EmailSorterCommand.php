@@ -53,7 +53,7 @@ class EmailSorterCommand extends Command
 
     public function handle($arguments = [])
     {
-        $f = ['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true, 'id' => 3745];
+        $f = ['dx_models__manufacturerid__isnull' => true, 'order_models__orderid__isnull' => true];
         /** @var EmailModel $email */
         foreach (EmailModel::objects()->filter($f) as $email) {
 
