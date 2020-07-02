@@ -38,6 +38,7 @@ class DefaultController extends FrontendController
             'category_new' => $category_new,
             'product' => PromotionalProductsHelper::getProductOfTheDay(),
             'best_seller' => PromotionalProductsHelper::getBestSellerProduct(),
+            'new_product' => PromotionalProductsHelper::getNewProduct(),
 
         ]);
     }

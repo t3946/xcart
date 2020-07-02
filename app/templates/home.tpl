@@ -41,7 +41,7 @@
 
                 <div class="banner whatsnew dark">
                     {if $category_new}
-                        <a href="{$category_new->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="//cdn.{$.getSite->getBaseDomain()}/static/frontend/dist/images/slider/{$.getSite->code|strtolower}/what_is_new.jpg">
+                        <a href="{$category_new->getAbsoluteUrl()}" class="lazy-bg banner__cover" data-src="{Modules\Goods\Helpers\PromotionalProductsHelper::getNewProductImage($new_product)}">
                             <div class="banner__info">
                                 <div class="caption">{t "What's new"}</div>
                             </div>

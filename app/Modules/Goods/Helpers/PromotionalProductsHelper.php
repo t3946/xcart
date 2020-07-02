@@ -32,6 +32,17 @@ class PromotionalProductsHelper
         return $product;
     }
 
+    public static function getNewProduct():? ProductModel
+    {
+        $qs = ProductModel::showed();
+        /** @var ProductModel $product */
+        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['-productid'])->limit(1)->get()) {
+            return $product;
+        }
+        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get();
+        return $product;
+    }
+
 
     public static function getProductsOfTheDaySQ(): \Xcart\App\Orm\Manager
     {
@@ -1158,6 +1169,22 @@ class PromotionalProductsHelper
         $site = Xcart::app()->getModule('Sites')->getSite();
         $code = strtolower($site->code);
         $img = "/static/frontend/dist/images/slider/{$code}/bestsellers.jpg";
+
+        if (file_exists(Paths::get('www').$img)) {
+            return "//cdn.{$site->getBaseDomain()}{$img}";
+        }
+
+        if ($image = $model->getMainImage()) {
+            return $image->getCdnURL(250);
+        }
+        return '';
+    }
+
+    public static function getNewProductImage(ProductModel $model): string
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $code = strtolower($site->code);
+        $img = "/static/frontend/dist/images/slider/{$code}/what_is_new.jpg";
 
         if (file_exists(Paths::get('www').$img)) {
             return "//cdn.{$site->getBaseDomain()}{$img}";
