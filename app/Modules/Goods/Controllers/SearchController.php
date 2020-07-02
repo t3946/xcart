@@ -90,18 +90,17 @@ class SearchController extends AbstractCatalogController
             $this->isSKU = true;
             $tqs = clone $qs;
             $tqs->filter(['productcode__contains' => $this->q]);
-            $count = $tqs->count();
 
-            if ($count && $count == 1) {
+            if (($count = $tqs->count()) && $count == 1) {
                 /** @var ProductModel $product */
                 $product = $tqs->get();
                 $this->redirect($product->getAbsoluteUrl());
             }
         }
 
-        if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
+        /*if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
             $this->redirect($product->getAbsoluteUrl());
-        }
+        }*/
 
         $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
 
