@@ -4,6 +4,8 @@ namespace Modules\Goods\Helpers;
 
 use Modules\Core\Helpers\Cache;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderStatusModel;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 
 class PromotionalProductsHelper
@@ -11,11 +13,23 @@ class PromotionalProductsHelper
     public static function getProductOfTheDay() :? ProductModel
     {
         $qs = self::getProductsOfTheDaySQ();
+        /** @var ProductModel $product */
         if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
             return $product;
         }
+        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
+        return $product;
+    }
 
-        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
+    public static function getBestSellerProduct():? ProductModel
+    {
+        $qs = self::getBestsellersSQ();
+        /** @var ProductModel $product */
+        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
+            return $product;
+        }
+        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
+        return $product;
     }
 
 
@@ -45,7 +59,9 @@ class PromotionalProductsHelper
             $qs->filter(['pk__in' => $arr]);
         }
         else {
-            $qs->limit(20)->order(['?']);
+            $qs->filter([
+                'images__image_path__isnull' => false,
+            ])->limit(20)->order(['?']);
         }
 
         return $qs;
@@ -581,7 +597,7 @@ class PromotionalProductsHelper
 
     public static function getStaticProductsBestsellers($site) :? array
     {
-        $data = [
+        /*$data = [
             'SG' => [
                 '174193',
                 '174198',
@@ -1116,9 +1132,41 @@ class PromotionalProductsHelper
 
         if (isset($data[$code])) {
             return $data[$code];
-        }
+        }*/
 
         return null;
+    }
+
+    public static function getProductOfTheDayImage(ProductModel $model): string
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $code = strtolower($site->code);
+        $img = "/static/frontend/dist/images/slider/{$code}/product_of_day.jpg";
+
+        if (file_exists(Paths::get('www').$img)) {
+            return "//cdn.{$site->getBaseDomain()}{$img}";
+        }
+
+        if ($image = $model->getMainImage()) {
+            return $image->getCdnURL(250);
+        }
+        return '';
+    }
+
+    public static function getBestSelllerImage(ProductModel $model): string
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $code = strtolower($site->code);
+        $img = "/static/frontend/dist/images/slider/{$code}/bestsellers.jpg";
+
+        if (file_exists(Paths::get('www').$img)) {
+            return "//cdn.{$site->getBaseDomain()}{$img}";
+        }
+
+        if ($image = $model->getMainImage()) {
+            return $image->getCdnURL(250);
+        }
+        return '';
     }
 
 }

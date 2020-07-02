@@ -12,6 +12,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Helpers\Paths;
+use Xcart\App\Main\Xcart;
 
 class ProductHelper
 {

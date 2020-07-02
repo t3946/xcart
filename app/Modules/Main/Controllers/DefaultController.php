@@ -37,6 +37,7 @@ class DefaultController extends FrontendController
         $this->display('home.tpl', [
             'category_new' => $category_new,
             'product' => PromotionalProductsHelper::getProductOfTheDay(),
+            'best_seller' => PromotionalProductsHelper::getBestSellerProduct(),
 
         ]);
     }

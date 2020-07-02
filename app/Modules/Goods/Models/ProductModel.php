@@ -459,6 +459,11 @@ class ProductModel extends Model implements ICartItem
         return $images ?: [];
     }
 
+    public function getMainImage():? ImageModel
+    {
+        return ($images = $this->getImages()) ? reset($images) : null;
+    }
+
     public function isSaleSticker()
     {
         if ($this->isOutOfStock()) {
