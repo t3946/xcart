@@ -60,6 +60,18 @@ class SliderLibrary extends TemplateLibrary
 
     private static function getSliderDataByStore($code)
     {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $site_code = strtolower($site->code);
+        $img = "/static/frontend/dist/images/slider/{$site_code}/promo.jpg";
+        if (file_exists($img)) {
+            return [
+                [
+                    'title' => 'Everyday unbeatable',
+                    'description' => 'LOW PRICES up to 50% off',
+                    'image' => $img,
+                ]
+            ];
+        }
         $models = PromotionalProductsHelper::getSliderProduct();
         foreach ($models as $model) {
             $res[] = [
@@ -68,6 +80,6 @@ class SliderLibrary extends TemplateLibrary
                 'image' => PromotionalProductsHelper::getSliderImage($model),
             ];
         }
-        return $res;
+        return $res ?? [];
     }
 }

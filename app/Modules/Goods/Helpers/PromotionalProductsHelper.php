@@ -1211,14 +1211,6 @@ class PromotionalProductsHelper
 
     public static function getSliderImage(ProductModel $model = null): string
     {
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $code = strtolower($site->code);
-        $img = "/static/frontend/dist/images/slider/{$code}/promo.jpg";
-
-        if (file_exists(Paths::get('www').$img)) {
-            return "//cdn.{$site->getBaseDomain()}{$img}";
-        }
-
         if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(730);
         }
