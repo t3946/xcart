@@ -60,13 +60,14 @@ class SliderLibrary extends TemplateLibrary
 
     private static function getSliderDataByStore($code)
     {
-        $model = PromotionalProductsHelper::getSliderProduct();
-        return [
-            [
+        $models = PromotionalProductsHelper::getSliderProduct();
+        foreach ($models as $model) {
+            $res[] = [
                 'title' => 'Everyday unbeatable',
                 'description' => 'LOW PRICES up to 50% off',
                 'image' => PromotionalProductsHelper::getSliderImage($model),
-            ],
-        ];
+            ];
+        }
+        return $res;
     }
 }
