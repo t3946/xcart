@@ -51,7 +51,7 @@
                             <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
                         </div>
                         <div class="phone">
-                            <span class="phone-number"><span class="small-number">(616)</span> 259-5711</span>
+                            <span class="phone-number">{$config.local_phone}</span>
                             <span class="phone-number">{$config.cidev_top_header_code}</span>
                         </div>
                     </div>
