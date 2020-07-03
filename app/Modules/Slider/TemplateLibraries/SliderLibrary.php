@@ -5,6 +5,7 @@ namespace Modules\Slider\TemplateLibraries;
 
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
 use Xcart\App\Traits\RenderTrait;
@@ -63,7 +64,7 @@ class SliderLibrary extends TemplateLibrary
         $site = Xcart::app()->getModule('Sites')->getSite();
         $site_code = strtolower($site->code);
         $img = "/static/frontend/dist/images/slider/{$site_code}/promo.jpg";
-        if (file_exists($img)) {
+        if (file_exists(Paths::get('www').$img)) {
             return [
                 [
                     'title' => 'Everyday unbeatable',
