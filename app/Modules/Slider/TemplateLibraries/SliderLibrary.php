@@ -3,6 +3,7 @@
 namespace Modules\Slider\TemplateLibraries;
 
 
+use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
@@ -59,15 +60,12 @@ class SliderLibrary extends TemplateLibrary
 
     private static function getSliderDataByStore($code)
     {
-        /** @var SiteModel $site */
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $code = strtolower($site->code);
-
+        $model = PromotionalProductsHelper::getSliderProduct();
         return [
             [
                 'title' => 'Everyday unbeatable',
                 'description' => 'LOW PRICES up to 50% off',
-                'image' => "/static/frontend/dist/images/slider/{$code}/promo.jpg",
+                'image' => PromotionalProductsHelper::getSliderImage($model),
             ],
         ];
     }

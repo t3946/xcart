@@ -35,11 +35,24 @@ class PromotionalProductsHelper
     public static function getNewProduct():? ProductModel
     {
         $qs = ProductModel::showed();
+        $qs->filter(['images__image_path__isnull' => false,]);
         /** @var ProductModel $product */
         if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['-productid'])->limit(1)->get()) {
             return $product;
         }
         $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get();
+        return $product;
+    }
+
+    public static function getSliderProduct():? ProductModel
+    {
+        $qs = ProductModel::showed();
+        $qs->filter(['images__image_path__isnull' => false, 'images__image_x__gt' => 730]);
+        /** @var ProductModel $product */
+        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
+            return $product;
+        }
+        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
         return $product;
     }
 
@@ -1192,6 +1205,22 @@ class PromotionalProductsHelper
 
         if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(250);
+        }
+        return '';
+    }
+
+    public static function getSliderImage(ProductModel $model = null): string
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $code = strtolower($site->code);
+        $img = "/static/frontend/dist/images/slider/{$code}/promo.jpg";
+
+        if (file_exists(Paths::get('www').$img)) {
+            return "//cdn.{$site->getBaseDomain()}{$img}";
+        }
+
+        if ($model && $image = $model->getMainImage()) {
+            return $image->getCdnURL(730);
         }
         return '';
     }
