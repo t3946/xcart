@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Order\Helpers\OrderTrackingHelper;
+
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = array('add', 'data');
 
@@ -25,6 +27,7 @@ if ($mode === 'add' && !empty($add['shipping'])) {
         $tracking_links_carrier_arr["link"] = $v["link"];
         $tracking_links_carrier_arr["orderby"] = $v["carrier_orderby"];
         $tracking_links_carrier_arr["phone"] = $v["phone"];
+        $tracking_links_carrier_arr["aftership_code"] = $v["aftership_code"];
         func_array2update("tracking_links_carrier", $tracking_links_carrier_arr, "carrier_id = '$carrier_id'");
 
         if (!empty($v["orderby"]) && is_array($v["orderby"])) {
@@ -80,7 +83,7 @@ if (!empty($links)) {
 # Assign Smarty variables and show template
 #
 $smarty->assign("main", "tracking_links");
-
+$smarty->assign("aftership_carriers", $carriers = OrderTrackingHelper::getCouriers());
 # Assign the current location line
 $smarty->assign("location", $location);
 

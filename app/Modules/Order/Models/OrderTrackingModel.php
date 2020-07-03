@@ -22,6 +22,7 @@ use Xcart\App\Orm\Model;
  * @property TrackingLinksModel link
  * @property mixed tracknum
  * @property mixed shipping_date
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null aftership_id
  */
 class OrderTrackingModel extends Model
 {

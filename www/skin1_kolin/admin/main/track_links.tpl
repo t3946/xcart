@@ -14,37 +14,52 @@
 
 <table cellpadding="2" cellspacing="1" width="100%">
 <tr class="TableHead">
-        <td width="15">&nbsp;</td>
-        <td width="5%">{$lng.lbl_pos}</td>
-        <td width="10%">Carrier</td>
+	<td width="15">&nbsp;</td>
+	<td width="5%">{$lng.lbl_pos}</td>
+	<td width="10%">Carrier</td>
 	<td width="*">{$lng.lbl_tracking_link}</td>
 
 	<td width="15%">Phone</td>
 	<td width="15">&nbsp;</td>
 	<td width="5%">{$lng.lbl_pos}</td>
 	<td width="25%">Shipping method</td>
+	<td width="15">AfterShip</td>
 </tr>
 
 {if $links ne ''}
 {foreach from=$links item=carrier key=k_carrier}
-
-  <tr>
-   <td><input type="checkbox" name="carrier_ids[]" value="{$carrier.carrier_id}" /></td>
-   <td><input type="text" maxlength="32" name="data[{$carrier.carrier_id}][carrier_orderby]" value="{$carrier.orderby|escape}" style="width: 80%;" /></td>
-   <td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][carrier]" value="{$carrier.carrier|escape}" style="width: 90%;" /></td>
-   <td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][link]" value="{$carrier.link|escape}" style="width: 96%;" /></td>
-   <td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][phone]" value="{$carrier.phone|escape}" style="width: 92%;" /></td>
-   <td colspan="3">&nbsp;</td>
-  </tr>
+	<tr>
+		<td><input type="checkbox" name="carrier_ids[]" value="{$carrier.carrier_id}"/></td>
+		<td><input type="text" maxlength="32" name="data[{$carrier.carrier_id}][carrier_orderby]"
+				   value="{$carrier.orderby|escape}" style="width: 80%;"/></td>
+		<td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][carrier]"
+				   value="{$carrier.carrier|escape}" style="width: 90%;"/></td>
+		<td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][link]" value="{$carrier.link|escape}"
+				   style="width: 96%;"/></td>
+		<td><input type="text" maxlength="255" name="data[{$carrier.carrier_id}][phone]" value="{$carrier.phone|escape}"
+				   style="width: 92%;"/></td>
+		<td colspan="3">&nbsp;</td>
+		<td>
+			<select name="data[{$carrier.carrier_id}][aftership_code]" style="max-width: 100px">
+				<option></option>
+			{foreach from=$aftership_carriers item=acarrier}
+				<option {if $carrier.aftership_code === $acarrier.slug}selected{/if} value="{$acarrier.slug}">
+					{$acarrier.name} [{$acarrier.slug}]</option>
+			{/foreach}
+			</select>
+		</td>
+	</tr>
 
 	{if $carrier.shippings ne ""}
 	{foreach from=$carrier.shippings item=v key=k}
-	<tr{cycle values=', class="TableSubHead"'}>
-		<td colspan="5">&nbsp;</td>
-		<td><input type="checkbox" name="ids[]" value="{$v.linkid}" /></td>
-		<td><input type="text" maxlength="32" name="data[{$carrier.carrier_id}][orderby][{$v.linkid}]" value="{$v.orderby|escape}" style="width: 80%;" /></td>
-		<td><input type="text" maxlength="128" name="data[{$carrier.carrier_id}][shipping][{$v.linkid}]" value="{$v.shipping|escape}" style="width: 80%;" /></td>
-	</tr>
+		<tr{cycle values=', class="TableSubHead"'}>
+			<td colspan="5">&nbsp;</td>
+			<td><input type="checkbox" name="ids[]" value="{$v.linkid}"/></td>
+			<td><input type="text" maxlength="32" name="data[{$carrier.carrier_id}][orderby][{$v.linkid}]"
+					   value="{$v.orderby|escape}" style="width: 80%;"/></td>
+			<td><input type="text" maxlength="128" name="data[{$carrier.carrier_id}][shipping][{$v.linkid}]"
+					   value="{$v.shipping|escape}" style="width: 80%;"/></td>
+		</tr>
 	{/foreach}
 	{else}
 	<tr>

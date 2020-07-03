@@ -5,10 +5,12 @@ namespace Modules\Shipping\Models;
 
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
 /**
  * @property mixed carrier
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null aftership_code
  */
 class TrackingLinksCarrierModel extends Model
 {
@@ -25,6 +27,11 @@ class TrackingLinksCarrierModel extends Model
             'carrier_id' => [
                 'class' => AutoField::class
             ],
+            'aftership_code' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ]
         ];
     }
 
