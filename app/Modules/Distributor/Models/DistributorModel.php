@@ -31,6 +31,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
@@ -89,6 +90,9 @@ class DistributorModel extends Model
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
+            ],
+            'shipping_rates_last_update_date' => [
+                'class' => UnixTimestampField::class
             ],
             'mess_body' => [
                 'class' => CharField::class,
