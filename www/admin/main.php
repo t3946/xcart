@@ -209,7 +209,7 @@ $smarty->assign("total_authorized_and_paid", $total_authorized_and_paid);
 $smarty->assign("total_paid", $total_paid);
 
 $smarty->assign("max_top_sellers", $max_top_sellers);
-$smarty->assign("top_sellers", $top_sellers);
-$smarty->assign("top_categories", $top_categories);
+$smarty->assign("top_sellers", array_slice($top_sellers,0, 3));
+$smarty->assign("top_categories", array_slice($top_categories, 0, 3));
 
 $smarty->assign("last_order_model", $lastOrderModel);

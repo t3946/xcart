@@ -275,7 +275,6 @@
 <table cellpadding="3" cellspacing="1" width="100%">
 
 <tr class="TableHead">
-	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_today}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
@@ -325,7 +324,6 @@
 <table cellpadding="3" cellspacing="1" width="100%">
 
 <tr class="TableHead">
-	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_today}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
 	<td width="25%" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
