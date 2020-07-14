@@ -2,7 +2,7 @@
 
 namespace Xcart\App\Orm\Fields;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 use Xcart\App\Orm\ModelInterface;
@@ -48,7 +48,7 @@ class UnixTimestampField extends IntField
     /**
      * {@inheritdoc}
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         if ($this->autoNow || $this->autoNowAdd) {
             return false;
@@ -79,17 +79,10 @@ class UnixTimestampField extends IntField
     /**
      * {@inheritdoc}
      */
-//    public function getValue()
-//    {
-//        $adapter = QueryBuilder::getInstance($this->getModel()->getConnection())->getAdapter();
-//        return $adapter->getDate($this->value);
-//    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    /*public function getValue()
     {
-        return $this->getSqlType()->convertToDatabaseValue($value, $platform);
-    }
+        $value = parent::getValue();
+        return $value ? (new DateTime)->setTimestamp($value) : $value;
+    }*/
+
 }

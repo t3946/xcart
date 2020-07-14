@@ -91,8 +91,8 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
-            'shipping_rates_last_update_date' => [
-                'class' => UnixTimestampField::class
+            'shipping_last_update_date' => [
+                'class' => DateField::class
             ],
             'mess_body' => [
                 'class' => CharField::class,

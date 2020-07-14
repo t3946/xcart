@@ -40,7 +40,7 @@ class DistributorShippingPolicyForm extends DistributorForm
             ],
             [
                 'update_approximation_shipping_rates',
-                'shipping_rates_last_update_date'
+                'shipping_last_update_date'
             ]
         ];
     }
@@ -239,7 +239,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' =>'width:16px;'],
             ],
-            'shipping_rates_last_update_date' => [
+            'shipping_last_update_date' => [
                 'class' => DateField::class,
                 'label' => 'Date and time of the last ASR update',
                 'hint' => LanguageModel::translate('help_dx_date_approximate_shippings_text') ?? 'help_dx_date_approximate_shippings_text',

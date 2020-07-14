@@ -4,6 +4,8 @@
 namespace Modules\Shipping\Commands;
 
 
+use DateTime;
+use DateTimeZone;
 use Mindy\QueryBuilder\Expression;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -84,7 +86,7 @@ class ApproximationShippingCommand extends Command
             }
             $distributor->setAttributes([
                 'update_approximation_shipping_rates' => 'N',
-                'shipping_rates_last_update_date' => time(),
+                'shipping_last_update_date' => new DateTime('now', new DateTimeZone('EST')),
             ]);
             $distributor->save();
         }
