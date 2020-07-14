@@ -37,7 +37,7 @@ if ($REQUEST_METHOD == 'POST' && $mode == "update") {
         }
     }
 
-    $top_message["content"] = 'Done.';
+    $top_message["content"] = 'Changes have been applied.';
     $top_message["type"] = "I";
     func_header_location("configuration.php?option=Secure_data");
 }
