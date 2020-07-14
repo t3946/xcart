@@ -8,6 +8,7 @@
         {assign var=aCustomerSecureData value=$oCustomer->getCustomerSecureData()}
         {foreach from=$aCustomerSecureData item=aSecureData}
             {$aSecureData.data} <br/><br/>
+            <hr/>
         {/foreach}
     {/if}
 {/if}
