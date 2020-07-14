@@ -1917,7 +1917,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 $to = $mv["d_send_to_email_14"];
                 $from = $config['Company']['orders_department'];
                 $mnf_body = func_eol2br(stripslashes($mv["d_message_body_14"]));
-                $mail_smarty->assign("message_body", $mnf_body);
+                $mail_smarty->assign("message_body", html_entity_decode($mnf_body));
                 $mail_smarty->assign('d_email_subject_14', $mv["d_email_subject_14"]);
 
                 $order_notes = "";

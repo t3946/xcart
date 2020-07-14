@@ -39,8 +39,6 @@ use Modules\Order\Models\OrderStatusModel;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: error_message.php?permission_denied"); die("Access denied"); }
 
-x_session_register("previous_login_date");
-
 $location[] = array(func_get_langvar_by_name("lbl_top_info"), "");
 
 $max_top_sellers = 10;
@@ -50,7 +48,6 @@ $max_top_sellers = 10;
 #
 $curtime = time();
 
-$start_dates[] = $previous_login_date;  # Since last login
 $start_dates[] = mktime(0,0,0,date("m",$curtime),date("d",$curtime),date("Y",$curtime))-$config["Appearance"]["timezone_offset"]; # Today
 $start_week = $curtime - (date("w",$curtime))*24*3600; # Week starts since Sunday
 $start_dates[] = mktime(0,0,0,date("m",$start_week),date("d",$start_week),date("Y",$start_week))-$config["Appearance"]["timezone_offset"]; # Current week
@@ -61,16 +58,7 @@ foreach($start_dates as $start_date) {
 
 	$date_condition = "AND $sql_tbl[orders].date>='$start_date' AND $sql_tbl[orders].date<='$curtime'";
 
-	#
-	# Get the orders info
-	#
-    /*$orders['P'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
-        . " WHERE cb_status='P' $date_condition");
-    $orders['F'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
-        . " WHERE (cb_status='F' OR cb_status='D') $date_condition");
-    $orders['I'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='I' $date_condition");
-    $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");*/
-    $aOrderStat = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid) WHERE 1 $date_condition");
+	$aOrderStat = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid) WHERE 1 $date_condition");
 
 	$gross_total[] = array ('value' => price_format($aOrderStat['summa']), 'count' => $aOrderStat['order_count']);
 
@@ -225,5 +213,3 @@ $smarty->assign("top_sellers", $top_sellers);
 $smarty->assign("top_categories", $top_categories);
 
 $smarty->assign("last_order_model", $lastOrderModel);
-
-?>

@@ -122,21 +122,23 @@
 <td><img src="{$ImagesDir}/spacer.gif" width="30" height="1" alt="" /><br /></td>
 <td width="100%">
 <table cellpadding="3" cellspacing="1" width="90%">
-<tr>
-<td class="TableHead">{$lng.lbl_status}</td>
-<td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
-<td class="TableHead" align="center">{$lng.lbl_today}</td>
-<td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
-<td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
-</tr>
+  <tr>
+    <td class="TableHead">{$lng.lbl_status}</td>
+    <td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
+    <td class="TableHead" align="center">{$lng.lbl_today}</td>
+    <td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
+    <td class="TableHead" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
+  </tr>
 {assign var="index" value="0"}
 {foreach key=key item=item from=$orders}
-<tr {if ($index mod 2) eq 0} class="TableLine"{/if}>
-<td nowrap="nowrap">{if $key eq "P"}{$lng.lbl_processed}{elseif $key eq "Q"}{$lng.lbl_queued}{elseif $key eq "F" or $key eq "D"}{$lng.lbl_failed}/{$lng.lbl_declined}{elseif $key eq "I"}{$lng.lbl_not_finished}{/if}:</td>
-{section name=period loop=$item}
-<td align="center">{$item[period]}</td>
-{/section}
-</tr>
+  <tr {if ($index mod 2) eq 0} class="TableLine"{/if}>
+    <td nowrap="nowrap">{if $key eq "P"}{$lng.lbl_processed}{elseif $key eq "Q"}{$lng.lbl_queued}{elseif $key eq "F" or $key eq "D"}{$lng.lbl_failed}/{$lng.lbl_declined}{elseif $key eq "I"}{$lng.lbl_not_finished}{/if}
+      :
+    </td>
+    {section name=period loop=$item}
+      <td align="center">{$item[period]}</td>
+    {/section}
+  </tr>
 {math equation="x+1" x=$index assign="index"}
 {/foreach}
 </table>

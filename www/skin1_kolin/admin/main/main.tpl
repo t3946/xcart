@@ -136,7 +136,6 @@
 
 <tr class="TableHead">
 <td class="borderr-black">{$lng.lbl_status}</td>
-<td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
 <td class="borderr-black" colspan="2" align="center">{$lng.lbl_today}</td>
 <td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
 <td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
