@@ -6,9 +6,9 @@
 {if ($oCustomer)}
     {if $oCustomer->isCustomerUseSecureData()}
         {assign var=aCustomerSecureData value=$oCustomer->getCustomerSecureData()}
-        {foreach from=$aCustomerSecureData item=aSecureData}
+        {foreach from=$aCustomerSecureData key=idx item=aSecureData}
+            {if $idx}<hr style="border: none;background-color: #000;"/>{/if}
             {$aSecureData.data} <br/><br/>
-            <hr style="border: none;background-color: #000;"/>
         {/foreach}
     {/if}
 {/if}
