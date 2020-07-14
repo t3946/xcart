@@ -36,7 +36,11 @@
 
 use Xcart\App\Main\Xcart;
 
-require './auth.php';
+require_once '../app/include/vendors/autoload.php';
+
+$config = include '../app/config/settings.php';
+
+Xcart::init($config);
 
 Xcart::app()->request->redirect('/retrieve-orders', [], 301);
 
