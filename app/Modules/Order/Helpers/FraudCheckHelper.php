@@ -909,7 +909,7 @@ class FraudCheckHelper
                 return $res;
             }
         }
-        throw new \Exception('Melissa has no answer');
+        //throw new \Exception('Melissa has no answer');
     }
 
     private static function fetchMellissaPhone($phone)
@@ -927,7 +927,7 @@ class FraudCheckHelper
                 return $res;
             }
         }
-        throw new \Exception('Melissa has no answer');
+        //throw new \Exception('Melissa has no answer');
     }
 
     private static function fetchMellissaEmail($email)
@@ -945,7 +945,7 @@ class FraudCheckHelper
                 return $res;
             }
         }
-        throw new \Exception('Melissa has no answer');
+        //throw new \Exception('Melissa has no answer');
     }
 
     public static function fetchMelissaIp($ip)
@@ -963,7 +963,7 @@ class FraudCheckHelper
                 return $res;
             }
         }
-        throw new \Exception('Melissa has no answer');
+        //throw new \Exception('Melissa has no answer');
     }
 
     public static function scoreMANUAL_IS_GOOGLE_PHONE_1(OrderModel $order, FraudCheckModel $fraud): array
