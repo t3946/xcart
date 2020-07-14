@@ -904,7 +904,7 @@ class FraudCheckHelper
         ];
         $url = 'https://www.melissa.com/v2/lookups/addresscheck/address/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
-            if ($res = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)) {
+            if ($res = json_decode($response->getBody(), true)) {
                 $res = reset($res);
                 return $res;
             }
@@ -922,7 +922,7 @@ class FraudCheckHelper
         ];
         $url = 'https://www.melissa.com/v2/lookups/phonecheck/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
-            if ($res = json_decode($response->getBody(), true,512, JSON_THROW_ON_ERROR)) {
+            if ($res = json_decode($response->getBody(), true)) {
                 $res = reset($res);
                 return $res;
             }
@@ -940,7 +940,7 @@ class FraudCheckHelper
         ];
         $url = 'https://www.melissa.com/v2/lookups/personator/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
-            if ($res = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)) {
+            if ($res = json_decode($response->getBody(), true)) {
                 $res = reset($res);
                 return $res;
             }
@@ -958,7 +958,7 @@ class FraudCheckHelper
         ];
         $url = 'https://www.melissa.com/v2/lookups/iplocation/ip/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
-            if ($res = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)) {
+            if ($res = json_decode($response->getBody(), true)) {
                 $res = reset($res);
                 return $res;
             }
