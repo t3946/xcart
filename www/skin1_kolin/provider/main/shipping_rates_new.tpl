@@ -377,7 +377,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 		<td></td>
 		<td nowrap="nowrap"></td>
 	</tr>
-{if $type eq "D"}
+
 	<tr>
 		<td></td>
 		<td></td>
@@ -386,7 +386,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 		<td>Max shipping charge ({$dCurrency->symbol_prefix}{$dCurrency}):</td>
 		<td><input type="text" name="max_shipping_charge" size="8" value="{$maxvalue|formatprice}"/></td>
 	</tr>
-{/if}
+
 </table>
 <br />
 <input type="submit" value=" {$lng.lbl_add|strip_tags:false|escape} ">
