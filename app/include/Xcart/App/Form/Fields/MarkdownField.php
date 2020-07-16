@@ -2,8 +2,9 @@
 
 namespace Xcart\App\Form\Fields;
 
-use Mindy\Form\ModelForm;
-use Mindy\Locale\Translate;
+
+use Xcart\App\Form\ModelForm;
+use Xcart\App\Translate\Translate;
 
 /**
  * Class MarkdownField
@@ -41,7 +42,7 @@ class MarkdownField extends TextAreaField
         return $label;
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         $t = Translate::getInstance();
 

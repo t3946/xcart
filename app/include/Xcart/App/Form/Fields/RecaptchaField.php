@@ -31,7 +31,7 @@ class RecaptchaField extends HiddenField
         $this->validators[] = new RecaptchaValidator($this->publicKey, $this->secretKey);
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         return implode("\n", [
             $this->apiUrl,

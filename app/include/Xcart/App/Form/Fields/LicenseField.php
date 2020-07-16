@@ -32,7 +32,7 @@ class LicenseField extends CheckboxField
         parent::init();
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         if(!empty($this->licenseTemplate)) {
             $tpl = self::renderTemplate($this->licenseTemplate);

@@ -32,7 +32,7 @@
                     </tr>
 
                     {foreach from=$order_logs item=item key=key name=log}
-                        {if $key gt "0"}
+                        {if is_numeric($key) && $key gt "0"}
                             {math assign="previous_key" equation="x-1" x=$key}
                         {/if}
 

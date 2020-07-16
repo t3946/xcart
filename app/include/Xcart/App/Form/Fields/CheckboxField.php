@@ -22,7 +22,7 @@ class CheckboxField extends CharField
         return $this->getPrefix() . '[' . $this->name . ']' . ($this->choices ? '[]' : '');
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         if ($this->choices) {
             return $this->renderTemplate($this->fieldListTemplate, [

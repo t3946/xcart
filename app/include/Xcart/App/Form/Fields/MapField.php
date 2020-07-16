@@ -18,7 +18,7 @@ class MapField extends CharField
 
     public $zoom = 12;
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         $center = JavaScript::encode($this->center);
 

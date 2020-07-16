@@ -12,7 +12,7 @@ class DateField extends CharField
 
     public $format = 'Y-m-d H:i:s';
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         $id = $this->getHtmlId();
         $airOptions = $this->getAirDPOptions();

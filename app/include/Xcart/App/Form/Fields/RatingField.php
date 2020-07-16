@@ -45,7 +45,7 @@ class RatingField extends HiddenField
         ]);
     }
 
-    public function render()
+    public function render($fieldExtension = null)
     {
         $jsOptions = JavaScript::encode(array_merge([
             'starType' => 'i',

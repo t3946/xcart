@@ -4,5 +4,5 @@ namespace Modules\Cart\Controllers;
 
 class CartController extends BaseCartController
 {
-    protected function addInternal($uniqueId, $quantity) { }
+    protected function addInternal($uniqueId, $quantity, $data) { }
 }

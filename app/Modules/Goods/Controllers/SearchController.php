@@ -191,7 +191,7 @@ class SearchController extends AbstractCatalogController
         return $count;
     }
 
-    public function getQS($data)
+    public function getQS($data = null)
     {
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
