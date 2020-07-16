@@ -1222,7 +1222,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
             $currect_b_zipcode = "";
             for ($i = 0; $i < $strlen_new_b_zipcode; $i++) {
-                $currect_b_zipcode .= $new_b_zipcode{$i};
+                $currect_b_zipcode .= $new_b_zipcode[$i];
                 if ($i == 2) {
                     $currect_b_zipcode .= " ";
                 }
@@ -1240,7 +1240,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             $currect_s_zipcode    = "";
 
             for ($i = 0; $i < $strlen_new_s_zipcode; $i++) {
-                $currect_s_zipcode .= $new_s_zipcode{$i};
+                $currect_s_zipcode .= $new_s_zipcode[$i];
                 if ($i == 2) {
                     $currect_s_zipcode .= " ";
                 }

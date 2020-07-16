@@ -23,7 +23,7 @@ class ReferrerSearchMiddleware extends Middleware
 
                 if ($query && (!empty($query['q']) || !empty($query['qpvt']))) {
 
-                    $query = !empty($query['q']) ? $query['q'] : $query['qpvt'] ?: null;
+                    $query = !empty($query['q']) ? $query['q'] : ($query['qpvt'] ?: null);
 
                     $request->session->open();
 

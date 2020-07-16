@@ -42,7 +42,7 @@ class ExpireHeadersMiddleware extends Middleware
                 header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT"); // is defined
 
 
-            if (defined('AREA_TYPE') && AREA_TYPE == 'A')
+            if (defined('AREA_TYPE') && AREA_TYPE === 'A')
             {
                 header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
                 defined("SET_EXPIRE") ?:
@@ -66,7 +66,7 @@ class ExpireHeadersMiddleware extends Middleware
     {
         $last_modded = false;
         foreach ( headers_list() as $header) {
-            $last_modded = $last_modded ?: strpos(strtolower($header), 'last-modified:') !== false;
+            $last_modded = $last_modded ?: stripos($header, 'last-modified:') !== false;
         }
 
         ($last_modded) ?:

@@ -2406,8 +2406,8 @@ function func_google_phone_and_area_code($google_phone, $phone_ext)
 
     $google_phone_strlen = strlen($google_phone);
 
-    if ($google_phone_strlen == 11 && $google_phone{0} == "1") {
-        $google_phone{0}     = "";
+    if ($google_phone_strlen == 11 && $google_phone[0] == "1") {
+        $google_phone[0] = "";
         $google_phone        = trim($google_phone);
         $google_phone_strlen = strlen($google_phone);
     }
@@ -2419,10 +2419,10 @@ function func_google_phone_and_area_code($google_phone, $phone_ext)
         for ($i = $google_phone_strlen; $i >= 0; $i--) {
 
             if ($tmp_counter > 7 && $tmp_counter <= 10) {
-                $userinfo_area_code = $google_phone{$i} . $userinfo_area_code;
+                $userinfo_area_code = $google_phone[$i] . $userinfo_area_code;
             }
 
-            $google_phone_new = $google_phone{$i} . $google_phone_new;
+            $google_phone_new = $google_phone[$i] . $google_phone_new;
 
             if ($tmp_counter == 4) {
                 $google_phone_new = "-" . $google_phone_new;
@@ -2479,8 +2479,8 @@ function func_phone_or_fax_area_code_info($po_fax_number)
     $po_fax_number        = preg_replace("/[^0-9]/S", "", $po_fax_number);
     $po_fax_number_strlen = strlen($po_fax_number);
 
-    if ($po_fax_number_strlen == 11 && $po_fax_number{0} == "1") {
-        $po_fax_number{0}     = "";
+    if ($po_fax_number_strlen == 11 && $po_fax_number[0] == "1") {
+        $po_fax_number[0] = "";
         $po_fax_number        = trim($po_fax_number);
         $po_fax_number_strlen = strlen($po_fax_number);
     }
@@ -2489,7 +2489,7 @@ function func_phone_or_fax_area_code_info($po_fax_number)
         $tmp_counter = 0;
         for ($i = $po_fax_number_strlen; $i >= 0; $i--) {
             if ($tmp_counter > 7 && $tmp_counter <= 10) {
-                $po_fax_area_code = $po_fax_number{$i} . $po_fax_area_code;
+                $po_fax_area_code = $po_fax_number[$i] . $po_fax_area_code;
             }
             $tmp_counter++;
         }

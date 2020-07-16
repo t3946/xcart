@@ -33,10 +33,9 @@ class CurrentSiteMiddleware extends Middleware
 
         defined('DEFAULT_SF_DOMAIN') ?: define('DEFAULT_SF_DOMAIN', $domain);
 
-        defined('MAIN_SF_DOMAIN') ?:
-            defined('LOCAL_SF_DOMAIN') ?
-                define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN) :
-                define('MAIN_SF_DOMAIN', $domain);
+        defined('MAIN_SF_DOMAIN') ?: (defined('LOCAL_SF_DOMAIN') ?
+            define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN) :
+            define('MAIN_SF_DOMAIN', $domain));
 
         if (!$sitesModule->getSite()->isWork()) {
             $request->redirect('http://www.s3stores.com', [], 301);
