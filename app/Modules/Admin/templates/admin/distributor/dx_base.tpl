@@ -9,9 +9,9 @@
         {set $approval = $distributorModel->getApprovalProducts()}
         {if $prohibited || $approval}
         <div class="enter_on_site align_left">
-            <div class="enter_on_site__content text_left">
+            <div style="padding: 12px 0 0; ">
                 {if $prohibited}
-                    <span style="margin-left: 1rem;">Dx offers the following products <b>prohibited by PayPal</b></span>
+                    <span style="margin-left: 1rem; font-size: 16px;">Dx offers the following products <b>prohibited by PayPal</b></span>
                     <ul>
                         {foreach $prohibited as $prp}
                         <li>{$prp}</li>
@@ -19,7 +19,7 @@
                     </ul>
                 {/if}
                 {if $approval}
-                    <span style="margin-left: 1rem;">Dx offers the following products requiring <b>approval by PayPal</b></span>
+                    <span style="margin-left: 1rem; font-size: 16px;">Dx offers the following products requiring <b>approval by PayPal</b></span>
                     <ul>
                         {foreach $approval as $prp}
                             <li>{$prp}</li>
