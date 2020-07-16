@@ -23,7 +23,7 @@
                 {foreach $model->getParamList() as $item}
                     {include 'product/tabs/__option.tpl'
                         title=$item.name
-                        value=$item.values|implode:', '
+                        value=', '|implode:$item.values
                     }
                 {/foreach}
 

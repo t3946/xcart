@@ -12309,6 +12309,7 @@ return array(
     'Modules\\Admin\\Forms\\Dx\\DistributorPriceForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorPriceForm.php',
     'Modules\\Admin\\Forms\\Dx\\DistributorProductQuestionsForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorProductQuestionsForm.php',
     'Modules\\Admin\\Forms\\Dx\\DistributorProductVerificationForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorProductVerificationForm.php',
+    'Modules\\Admin\\Forms\\Dx\\DistributorQuestionableProductsForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorQuestionableProductsForm.php',
     'Modules\\Admin\\Forms\\Dx\\DistributorQuickLinksForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorQuickLinksForm.php',
     'Modules\\Admin\\Forms\\Dx\\DistributorRequestAvailForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorRequestAvailForm.php',
     'Modules\\Admin\\Forms\\Dx\\DistributorShippesFromForm' => $baseDir . '/app/Modules/Admin/Forms/Dx/DistributorShippesFromForm.php',

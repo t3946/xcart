@@ -12956,6 +12956,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Admin\\Forms\\Dx\\DistributorPriceForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorPriceForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorProductQuestionsForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorProductQuestionsForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorProductVerificationForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorProductVerificationForm.php',
+        'Modules\\Admin\\Forms\\Dx\\DistributorQuestionableProductsForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorQuestionableProductsForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorQuickLinksForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorQuickLinksForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorRequestAvailForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorRequestAvailForm.php',
         'Modules\\Admin\\Forms\\Dx\\DistributorShippesFromForm' => __DIR__ . '/../../../..' . '/app/Modules/Admin/Forms/Dx/DistributorShippesFromForm.php',

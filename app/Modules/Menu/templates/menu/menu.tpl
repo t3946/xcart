@@ -11,7 +11,7 @@
         {set $classes[] = 'active'}
     {/if}
 
-    <li class="{$classes|implode:' '}">
+    <li class="{' '|implode:$classes}">
         {if $item.url}
             <a href="{$item.url ? $item.url : "#" }">{$item.name}</a>
         {else}

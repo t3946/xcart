@@ -1190,17 +1190,17 @@
     },
     {
         "name": "fenom/fenom",
-        "version": "2.11.8",
-        "version_normalized": "2.11.8.0",
+        "version": "2.12.0",
+        "version_normalized": "2.12.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/tsukasa-mixer/fenom.git",
-            "reference": "2d968ab8d07791eefc5ada419b13fa884cd0d21b"
+            "url": "https://github.com/fenom-template/fenom.git",
+            "reference": "f0cb251843de469b453b15c158cf0d1589d4de6d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/tsukasa-mixer/fenom/zipball/2d968ab8d07791eefc5ada419b13fa884cd0d21b",
-            "reference": "2d968ab8d07791eefc5ada419b13fa884cd0d21b",
+            "url": "https://api.github.com/repos/fenom-template/fenom/zipball/f0cb251843de469b453b15c158cf0d1589d4de6d",
+            "reference": "f0cb251843de469b453b15c158cf0d1589d4de6d",
             "shasum": ""
         },
         "require": {
@@ -1211,7 +1211,7 @@
             "phpunit/phpunit": "<6.0",
             "satooshi/php-coveralls": "*"
         },
-        "time": "2017-06-29T10:49:38+00:00",
+        "time": "2020-07-06T17:02:31+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

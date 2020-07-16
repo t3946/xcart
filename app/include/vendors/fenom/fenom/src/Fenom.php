@@ -19,7 +19,7 @@ use Fenom\Template;
  */
 class Fenom
 {
-    const VERSION = '2.9';
+    const VERSION = '2.12';
     const REV = 1;
     /* Actions */
     const INLINE_COMPILER = 1;
@@ -534,7 +534,7 @@ class Fenom
      * Add modifier
      *
      * @param string $modifier the modifier name
-     * @param string $callback the modifier callback
+     * @param callable $callback the modifier callback
      * @return Fenom
      */
     public function addModifier($modifier, $callback)
