@@ -5,6 +5,30 @@
         {set $distributorModel = $form->getDx()}
     {/if}
     {if $distributorModel && !$distributorModel->getIsNewRecord()}
+        {set $prohibited = $distributorModel->getProhibitedProducts()}
+        {set $approval = $distributorModel->getApprovalProducts()}
+        {if $prohibited || $approval}
+        <div class="enter_on_site align_left">
+            <div class="enter_on_site__content text_left">
+                {if $prohibited}
+                    <span style="margin-left: 1rem;">Dx offers the following products <b>prohibited by PayPal</b></span>
+                    <ul>
+                        {foreach $prohibited as $prp}
+                        <li>{$prp}</li>
+                        {/foreach}
+                    </ul>
+                {/if}
+                {if $approval}
+                    <span style="margin-left: 1rem;">Dx offers the following products requiring <b>approval by PayPal</b></span>
+                    <ul>
+                        {foreach $approval as $prp}
+                            <li>{$prp}</li>
+                        {/foreach}
+                    </ul>
+                {/if}
+            </div>
+        </div>
+        {/if}
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="33%">

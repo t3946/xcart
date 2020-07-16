@@ -23,6 +23,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\FloatField;
@@ -245,6 +246,71 @@ class DistributorModel extends Model
             'warehouse_pickups_are_allowed' => [
                 'class' => BooleanCharField::class,
                 'default' => 'N'
+            ],
+            'd_questionable_1' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>narcotics, steroids,</b> certain controlled substances or other products that present a risk to consumer safety',
+            ],
+            'd_questionable_2' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>drug paraphernalia</b>',
+            ],
+            'd_questionable_3' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>cigarettes</b>',
+            ],
+            'd_questionable_4' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => 'the promotion of <b>hate, violence, racial or other forms of intolerance that is discriminatory</b> or the financial exploitation of a crime',
+            ],
+            'd_questionable_5' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => 'items that are considered <b>obscene</b>',
+            ],
+            'd_questionable_6' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => 'items that <b>infringe or violate any copyright, trademark,</b> right of publicity or privacy or any other proprietary right under the laws of any jurisdiction',
+            ],
+            'd_questionable_7' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>certain sexually oriented materials</b> or services',
+            ],
+            'd_questionable_8' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>ammunition, firearms, or certain firearm parts or accessories</b>',
+            ],
+            'd_questionable_9' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>certain weapons or knives</b> regulated under applicable law',
+            ],
+            'd_questionable_10' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>jewels, precious metals and stones</b>',
+            ],
+            'd_questionable_11' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>alcoholic beverages</b>',
+            ],
+            'd_questionable_12' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>non-cigarette tobacco products, e-cigarettes</b>',
+            ],
+            'd_questionable_13' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => '<b>prescription drugs/devices</b>',
             ],
             'max_extra_margin' => [
                 'class' => FloatField::class,
@@ -518,5 +584,27 @@ class DistributorModel extends Model
         $url = Xcart::app()->router->url('dashboard:search');
         $time_for_request = urlencode(date('m/d/Y', time() - $month * 30 * 24 * 60 * 60) . ' - ' . date('m/d/Y'));
         return "{$url}?search[order][distributor][]={$this->manufacturerid}&search[order][date]={$time_for_request}";
+    }
+
+    public function getProhibitedProducts(): array
+    {
+        foreach (range(1, 9) as $idx) {
+            $prop = "d_questionable_{$idx}";
+            if ($this->$prop) {
+                $res[] = $this->getField($prop)->getVerboseName();
+            }
+        }
+        return $res ?? [];
+    }
+
+    public function getApprovalProducts(): array
+    {
+        foreach (range(10, 13) as $idx) {
+            $prop = "d_questionable_{$idx}";
+            if ($this->$prop) {
+                $res[] = $this->getField($prop)->getVerboseName();
+            }
+        }
+        return $res ?? [];
     }
 }

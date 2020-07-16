@@ -90,6 +90,12 @@ class DistributorForm extends ModelForm
                 'distributor_section' => '40',
                 'form' => DistributorExcludedMarketplacesForm::class,
             ],
+            51 => [
+                'title' => 'Questionable products',
+                'order_by' => '180',
+                'distributor_section' => '51',
+                'form' => DistributorQuestionableProductsForm::class,
+            ],
         ],
         'Submitting order to distributor' => [
             14 => [

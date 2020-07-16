@@ -7551,14 +7551,15 @@ a.ui-button:active,
 .enter_on_site {
   background-color: #FFFFFF;
   width: 100%;
-  height: 50px;
   padding: 1px; }
   .enter_on_site .enter_on_site__content {
     text-align: center;
-    line-height: 44px;
     border: 2px solid #FF0000;
     font-size: 16px;
-    font-weight: 700; }
+    font-weight: 700;
+    padding: 12px 0; }
+    .enter_on_site .enter_on_site__content.text_left {
+      text-align: left; }
     .enter_on_site .enter_on_site__content a {
       font-weight: 700; }
     .enter_on_site .enter_on_site__content.amazon {
