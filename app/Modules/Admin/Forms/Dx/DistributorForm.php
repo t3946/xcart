@@ -146,7 +146,8 @@ class DistributorForm extends ModelForm
             10 => [
                 'title' => 'Return policy',
                 'order_by' => '100',
-                'distributor_section' => '10'
+                'distributor_section' => '10',
+                'form' => DistributorReturnPolicyForm::class
             ],
         ],
 
