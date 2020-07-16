@@ -199,7 +199,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {/if}
 
 <tr>
-<td colspan="6"><br /><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="javascript: self.location = 'manufacturers.php?mode=add';" /></td>
+<td colspan="6"><br /><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="javascript: self.location = '/admin/distributor/add';" /></td>
 </tr>
 
 </table>

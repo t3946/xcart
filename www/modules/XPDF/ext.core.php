@@ -64,10 +64,7 @@ $smarty->assign('x_core_started', true);
 $smarty->assign('x_core_test', 1);
 $mail_smarty->assign('x_core_test', 2);
 if ($smarty->_tpl_vars['x_core_test'] == $mail_smarty->_tpl_vars['x_core_test']) {
-    $x_core_tmp = create_function(
-        '$smarty',
-        'return clone $smarty;'
-    );
+    $x_core_tmp = function ($smarty) {return clone $smarty;};
     $mail_smarty = $x_core_tmp($smarty);
 }
 unset($smarty->_tpl_vars['x_core_test']);
