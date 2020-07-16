@@ -93,7 +93,9 @@ class DistributorModel extends Model
                 'null' => false
             ],
             'shipping_last_update_date' => [
-                'class' => DateField::class
+                'class' => DateField::class,
+                'null' => true,
+                'default' => null
             ],
             'mess_body' => [
                 'class' => CharField::class,

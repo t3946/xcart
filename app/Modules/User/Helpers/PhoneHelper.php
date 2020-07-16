@@ -23,9 +23,9 @@ class PhoneHelper
             $google_phone_new = '';
             for ($i = $google_phone_strlen; $i >= 0; $i--) {
                 if ($tmp_counter > 7 && $tmp_counter <= 10) {
-                    $userinfo_area_code = $google_phone{$i} . $userinfo_area_code;
+                    $userinfo_area_code = $google_phone[$i] . $userinfo_area_code;
                 }
-                $google_phone_new = $google_phone{$i} . $google_phone_new;
+                $google_phone_new = $google_phone[$i] . $google_phone_new;
                 if ($tmp_counter === 4) {
                     $google_phone_new = '-' . $google_phone_new;
                 }

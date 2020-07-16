@@ -181,7 +181,8 @@ class DistributorForm extends ModelForm
 
     ];
 
-    public function getSections() {
+    public static function getSections(): array
+    {
         return self::$distributor_fields;
     }
 
