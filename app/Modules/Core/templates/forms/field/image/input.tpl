@@ -9,8 +9,7 @@
             {if $value}display: inline-block; {else} display: none; {/if}
             width: 200px;
             min-height: 100px;
-            background:  no-repeat center center;
-            background-size: contain; background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
+            background-size: contain; background: #E8E8E8 url('{$field->getSizeImage()}') no-repeat center center;" href="{$field->getCurrentFileUrl()}"></a>
 
 
 {if $field->canClear()}
