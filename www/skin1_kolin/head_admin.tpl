@@ -38,13 +38,10 @@
                 <div style="float:right;">
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>
-                        {php}
-                            if ($holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime))
-                            {
-                                $this->assign('next_holiday', $holiday);
-                                $this->assign('next_holiday_days', $holiday->getDaysUntil());
-                            }
-                        {/php}
+                        {assign var=holiday value=Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')))}
+                        {if $holiday}
+                            {assign var=next_holiday_days value=$holiday->getDaysUntil()}
+                        {/if}
                         {if $next_holiday && $next_holiday_days !== null}
                             <div style="text-align:center; border: 2px solid red;">
                                 {if $next_holiday_days > 0}
