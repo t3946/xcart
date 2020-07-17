@@ -28,35 +28,34 @@ class DistributorShippesFromForm extends DistributorForm
 
     public function getFields()
     {
-        $dx = $this->getInstance();
         return [
             'm_address' => [
                 'class' => CharField::class,
                 'label' => 'Address',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width:200px;'],
+                'html' => ['style' =>'width:200px;'],
             ],
             'm_address_2' => [
                 'class' => CharField::class,
                 'label' => 'Address (line 2)',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width:200px;'],
+                'html' => ['style' =>'width:200px;'],
             ],
             'm_city' => [
                 'class' => CharField::class,
                 'label' => 'City',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width:200px;'],
+                'html' => ['style' =>'width:200px;'],
             ],
             'm_country' => [
                 'class' => DropDownField::class,
                 'label' => 'Country',
-                'html' => ['style' => 'width:200px;'],
+                'html' => ['style' =>'width:200px;'],
                 'choices' => static function () {
-                    foreach (CountryModel::objects()->order(['name']) as $country) {
+                    foreach (CountryModel::objects() as $country) {
                         $result[$country->code] = (string)$country;
                     }
                     return $result ?? [];
@@ -67,9 +66,9 @@ class DistributorShippesFromForm extends DistributorForm
             'm_state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
-                'html' => ['style' => 'width:200px;'],
-                'choices' => static function () use ($dx) {
-                    foreach (StateModel::objects()->filter(['country_code__in' => [$dx->m_country ?? 'US']]) as $state) {
+                'html' => ['style' =>'width:200px;'],
+                'choices' => static function () {
+                    foreach (StateModel::objects()->filter(['country_code__in' => ['US']]) as $state) {
                         $result[$state->code] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
@@ -80,7 +79,7 @@ class DistributorShippesFromForm extends DistributorForm
             'm_zipcode' => [
                 'class' => CharField::class,
                 'label' => 'Zip/Postal Code',
-                'html' => ['style' => 'width:200px;'],
+                'html' => ['style' =>'width:200px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],

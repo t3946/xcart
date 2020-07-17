@@ -49,13 +49,16 @@ if (ini_get("magic_quotes_sybase") && ini_get("magic_quotes_gpc"))
 #
 #
 
+if (get_magic_quotes_runtime()) {
+	@set_magic_quotes_runtime(0);
+}
 if (ini_get('magic_quotes_sybase')) {
 	ini_set("magic_quotes_sybase",0);
 }
 ini_set("session.bug_compat_42",1);
 ini_set("session.bug_compat_warn",0);
 
-$__quotes_qpc = false;
+$__quotes_qpc = function_exists('get_magic_quotes_gpc') ? get_magic_quotes_gpc() : false;
 
 function func_microtime() {
 	list($usec, $sec) = explode(" ",microtime()); 
