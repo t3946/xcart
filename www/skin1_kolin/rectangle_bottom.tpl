@@ -15,7 +15,7 @@
 {if $printable ne ''}
 <hr size="1" noshade="noshade" />
 {/if}
-{ include file="bottom.tpl" }
+{include file="bottom.tpl" }
 	</td>
 </tr>
 </table>

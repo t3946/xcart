@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>{$lng.lbl_shipping_quote} : {$config.Company.company_name}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <script src="{$SkinDir}/US_City_List/jquery-1.4.js" type="text/javascript"></script>
 

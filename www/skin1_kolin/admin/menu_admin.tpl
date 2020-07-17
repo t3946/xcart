@@ -34,7 +34,7 @@
 
 
 {/capture}
-{ include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
+{include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
 
 {capture name=menu}
 
@@ -145,4 +145,4 @@
     {/if}
 
 {/capture}
-{ include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title='Obsolete' menu_content=$smarty.capture.menu }
+{include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title='Obsolete' menu_content=$smarty.capture.menu }

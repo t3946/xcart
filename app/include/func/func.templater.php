@@ -110,7 +110,7 @@ function func_convert_lang_var_callback($matches) {
 function func_tpl_add_hash($tpl_source, &$compiler) {
 	global $config, $override_lng_code, $shop_language;
 
-	$resource_name = $compiler->current_resource_name;
+	$resource_name = $compiler->source->resource;
 
 	if (preg_match_all('!\$this->_tpl_vars\[\'lng\'\]\[\'([\w\d_]+)\'\]!S', $tpl_source, $matches)) {
 		$vars_list = implode(',',$matches[1]);
@@ -593,7 +593,7 @@ function func_webmaster_filter($tpl_source, &$compiler) {
 }
 
 function func_tpl_postfilter($tpl_source, &$compiler) {
-	$x = $compiler->current_resource_name;
+	$x = $compiler->source->resource;
 
 	if (defined("QUICK_START") || rand(1,500) > 3) return $tpl_source;
 

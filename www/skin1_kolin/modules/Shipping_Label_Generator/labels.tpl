@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>{$lng.lbl_shipping_labels}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0" onload="javascript: window.print();" bgcolor="white"{$reading_direction_tag}>
 <table cellspacing="0" cellpadding="0">

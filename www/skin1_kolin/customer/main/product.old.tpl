@@ -95,7 +95,7 @@ style="background-color: #cc3333; color: white; font-size: 15px; font-weight: bo
 <tr><td class="Line" height="1" colspan="2"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt="" /></td></tr>*}
 {*<tr><td colspan="2">&nbsp;</td></tr>*}
 {if $active_modules.Product_Options ne ""}
-{ include file="modules/Product_Options/customer_options.tpl"}
+{include file="modules/Product_Options/customer_options.tpl"}
 {/if}
 <tr><td height="25" width="30%" class="BlackT">{$lng.lbl_quantity}:{if $product.min_amount gt 1}<br /><font class="ProductDetailsTitle">{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}</font>{/if}</td>
 <td>

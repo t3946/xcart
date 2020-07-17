@@ -4,34 +4,34 @@
 <html>
 <head>
 <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Operator: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />
     <link rel="shortcut icon" href="/favicon_O.ico" type="image/x-icon">
     <link rel="icon" href="/favicon_O.ico" type="image/x-icon">
 </head>
 <body{$reading_direction_tag}>
-{ include file="rectangle_top.tpl" }
-{ include file="head_admin.tpl" }
+{include file="rectangle_top.tpl" }
+{include file="head_admin.tpl" }
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
 <td class="VertMenuLeftColumn">
 {if $login eq "" }
 {*
-{ include file="auth.tpl" }
+{include file="auth.tpl" }
 *}
 {else}
-{ include file="provider/menu.tpl" }
+{include file="provider/menu.tpl" }
 {* <br /> *}
 {* include file="provider/menu_orders.tpl" *}
 <!--br /-->
 {*
-{ include file="menu_profile.tpl" }
+{include file="menu_profile.tpl" }
 *}
 {/if}
 <br />
-{ include file="help.tpl" }
+{include file="help.tpl" }
 <img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
 </td>
 <td valign="top">
@@ -167,6 +167,6 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl" }
 </body>
 </html>

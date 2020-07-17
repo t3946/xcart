@@ -100,7 +100,7 @@
 
 <TR>
 <TD colspan="2"><BR>
-{$lng.lbl_csv_delimiter}:<BR>{ include file="provider/main/ie_delimiter.tpl" }
+{$lng.lbl_csv_delimiter}:<BR>{include file="provider/main/ie_delimiter.tpl" }
 </TD>
 </TR>
 

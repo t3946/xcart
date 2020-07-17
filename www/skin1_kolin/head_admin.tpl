@@ -11,14 +11,9 @@
         </td>
         {if $login ne ""}
             <td align="left" width="70%">
-                {php}
-                    $est_time = new DateTime("now", new DateTimeZone('EST') );
-                    $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
-                    $ca_time = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
-                    $this->assign('est_time', $est_time);
-                    $this->assign('ny_time', $ny_time);
-                    $this->assign('ca_time', $ca_time);
-                {/php}
+                {assign var=est_time value=date_create('now', timezone_open('EST'))}
+                {assign var=ny_time value=date_create('now', timezone_open('America/New_York'))}
+                {assign var=ca_time value=date_create('now', timezone_open('America/Los_Angeles'))}
                 <div style="width:44%; float:right">
                     <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">Product questions</a></div>

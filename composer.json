@@ -45,6 +45,7 @@
         "omnipay/paypal": "^3.0",
         "omnipay/stripe": "^3.0",
         "paypal/rest-api-sdk-php": "*",
+        "smarty/smarty": "^3.1",
         "swiftmailer/swiftmailer": "^6",
         "symfony/http-foundation": "^2.8",
         "symfony/polyfill-mbstring": "^1.6",
@@ -67,10 +68,7 @@
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/MarketplaceWebService",
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAInventoryServiceMWS",
-            "app/include/templater/templater.php",
-            "app/include/smarty/Smarty.class.php",
-            "app/include/smarty/Smarty_Compiler.class.php",
-            "app/include/smarty/Config_File.class.php"
+            "app/include/templater/templater.php"
         ],
         "files": [
             "app/include/func/func.core.php",

@@ -80,7 +80,7 @@
 {include file="modules/Fancy_Categories/categories.tpl" cat_start=0 cat_end=500}
 {assign var="fc_cellpadding" value="0"}
 {/capture}
-{ include file="menu.tpl" menu_title=$lng.lbl_category_title menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
+{include file="menu.tpl" menu_title=$lng.lbl_category_title menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
 {else}
 
 
@@ -409,5 +409,5 @@
 {/capture}
 <br />
 {if $smarty.capture.menu ne ""}
-{ include file="menu.tpl" menu_title=$lng.lbl_information menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
+{include file="menu.tpl" menu_title=$lng.lbl_information menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
 {/if}

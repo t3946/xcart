@@ -83,7 +83,7 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
 	$charset = func_query_first_cell ("SELECT charset FROM $sql_tbl[countries] WHERE code='$lng_code'");
 	$override_lng_code = $lng_code;
 
-	$mail_smarty->assign_by_ref ("config", $config);
+	$mail_smarty->assignByRef ("config", $config);
 
 	$lend = (X_DEF_OS_WINDOWS?"\r\n":"\n");
 

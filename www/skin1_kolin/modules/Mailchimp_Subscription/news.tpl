@@ -38,5 +38,5 @@
 {/if}{* $is_subscription_allowed *}
 </div>
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_news.gif" menu_title=$lng.lbl_news menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_news.gif" menu_title=$lng.lbl_news menu_content=$smarty.capture.menu }
 {/if}{* $active_modules.News_Management and $is_news_exist *}

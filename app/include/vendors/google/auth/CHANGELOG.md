@@ -1,3 +1,23 @@
+## 1.10.0 (7/8/2020)
+
+* [feat]: Add support for Guzzle 7 (#256)
+* [fix]: Remove SDK warning (#283)
+* [chore]: Switch to github pages deploy action (#284)
+
+## 1.9.0 (5/14/2020)
+
+* [feat] Add quotaProject param for extensible client options support (#277)
+* [feat] Add signingKeyId param for jwt signing (#270)
+* [docs] Misc documentation improvements (#268, #278, #273)
+* [chore] Switch from Travis to Github Actions (#273)
+
+## 1.8.0 (3/26/2020)
+
+* [feat] Add option to throw exception in AccessToken::verify(). (#265)
+* [feat] Add support for x-goog-user-project. (#254)
+* [feat] Add option to specify issuer in AccessToken::verify(). (#267)
+* [feat] Add getProjectId to credentials types where project IDs can be determined. (#230)
+
 ## 1.7.1 (02/12/2020)
 
 * [fix] Invalid character in iap cert cache key (#263)

@@ -288,8 +288,7 @@
 {assign var="is_top_products" value="1"}
 <table cellpadding="2" cellspacing="1" width="100%">
 {section name=period loop=$item}
-<tr{cycle name=col`%period.index%` values=', class="TableSubHead"'}>
-	<td>{math equation="x+1" x=%period.index%}.</td>
+    <td>{$smarty.section.period.iteration}.</td>
 	<td align="left"><a href="product_modify.php?productid={$item[period].productid}">{$item[period].product|truncate:"20":"..."}</a></td>
 	<td>{$item[period].count}</td>
 </tr>
@@ -335,8 +334,8 @@
 {if $item}
 <table cellpadding="2" cellspacing="1" width="100%">
 {section name=period loop=$item}
-<tr{cycle name=col`%period.index%` values=", class='TableSubHead'"}>
-	<td>{math equation="x+1" x=%period.index%}.</td>
+<tr{cycle name=col values=", class='TableSubHead'"}>
+	<td>{$smarty.section.period.iteration}.</td>
 	<td align="left"><a href="category_modify.php?cat={$item[period].categoryid}">{$item[period].category}</a></td>
 	<td>{$item[period].count}</td>
 </tr>

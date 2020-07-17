@@ -4,36 +4,36 @@
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 <link rel="shortcut icon" href="{$ImagesDir}/favicon.ico" type="image/vnd.microsoft.icon" />
 
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0"{$reading_direction_tag}>
-{ include file="rectangle_top.tpl" }
-{ include file="head_admin.tpl" }
+{include file="rectangle_top.tpl" }
+{include file="head_admin.tpl" }
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
 <td width="3">&nbsp;</td>
 <td width="150" valign="top">
 {if $login eq "" }
-{ include file="auth.tpl"}
+{include file="auth.tpl"}
 {else}
-{ include file="admin/menu.tpl"}
+{include file="admin/menu.tpl"}
 <br />
-{ include file="admin/menu_admin.tpl" }
+{include file="admin/menu_admin.tpl" }
 <br />
-{ include file="provider/menu.tpl" }
+{include file="provider/menu.tpl" }
 <br />
 {if $active_modules.XAffiliate ne ''}
-{ include file="admin/menu_affiliate.tpl" }
+{include file="admin/menu_affiliate.tpl" }
 <br />
 {/if}
-{ include file="single/menu_profile.tpl" }
+{include file="single/menu_profile.tpl" }
 {/if}
 <br />
-{ include file="admin/help.tpl" }
+{include file="admin/help.tpl" }
 <img src="{$ImagesDir}/spacer.gif" width="150" height="1" border="0" />
 </td>
 <td width="20">&nbsp;</td>
@@ -369,6 +369,6 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl" }
 </body>
 </html>

@@ -4,11 +4,11 @@
 <html>
 <head>
 	<title>{$lng.lbl_test_destination_shipping_address}</title>
-	{ include file="meta.tpl" }
+	{include file="meta.tpl" }
 	<link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 </head>
 <body{$reading_direction_tag}>
-{ include file="head_admin.tpl" }
+{include file="head_admin.tpl" }
 <!-- main area -->
 {include file="check_zipcode_js.tpl"}
 

@@ -28,7 +28,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {capture name=dialog}
 {if $mode eq "modify"}
 {assign var="dialog_title" value=$lng.lbl_news_list_details}
-{ include file="modules/Mailchimp_Subscription/news_details.tpl" }
+{include file="modules/Mailchimp_Subscription/news_details.tpl" }
 {/if}
 {/capture}
 

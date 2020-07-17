@@ -26,12 +26,12 @@
 <hr size="1" noshade="noshade" />
 <br />
 {/if}
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 {include file="customer/main/products.tpl" products=$products}
 {else}
 {$lng.txt_no_products_in_man}
 {/if}
 {/capture}
 {include file="dialog.tpl" title=$manufacturer.manufacturer content=$smarty.capture.dialog extra='width="100%"'}
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 

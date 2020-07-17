@@ -89,7 +89,7 @@
 {if $current_category.main_order_by le 500}
 <hr size="1" width="100%" />
 {*
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 *}
 <br />
 
@@ -127,7 +127,7 @@
 {/if}
 {/if}
 {/if}
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 
 {if ( ($navigation_page eq "")||($navigation_page eq "1") ) && $cat_with_one_brand_filter != "Y"}<p><span class="SPItems-description">{$current_category.description}</span><p />{/if}
 

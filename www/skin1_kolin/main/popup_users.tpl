@@ -4,7 +4,7 @@
 <html>
 <head>
 	<title>{$lng.lbl_search_users|escape}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 	<link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 {include file="presets_js.tpl"}
 {include file="main/include_js.tpl" src="common.js"}

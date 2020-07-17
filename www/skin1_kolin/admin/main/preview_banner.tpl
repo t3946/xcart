@@ -3,7 +3,7 @@
 <HTML>
 <HEAD>
 <TITLE>{$lng.lbl_preview_banner}</TITLE>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <LINK rel="stylesheet" href="{$SkinDir}/{#CSSFile#}">
 </HEAD>
 {if $mode eq ''}
@@ -46,7 +46,7 @@
 <TR><TD class="Bottom" height="1"><IMG src="{$ImagesDir}/spacer.gif" width="1" height="1" alt=""><BR></TD></TR>
 <TR><TD height="1"><IMG src="{$ImagesDir}/spacer.gif" width="1" height="1" alt=""><BR></TD></TR>
 <TR height="30" valign="middle" align="right">
-<TD class="Bottom" height="30">{ include file="copyright.tpl" }</TD>
+<TD class="Bottom" height="30">{include file="copyright.tpl" }</TD>
 </TR>
 </TABLE>
 {/if}

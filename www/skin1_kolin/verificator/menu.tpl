@@ -42,7 +42,7 @@
 {/if}
 *}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_products.gif" menu_title=$lng.lbl_products menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_products.gif" menu_title=$lng.lbl_products menu_content=$smarty.capture.menu }
 
 {if $login eq "master"}
 <br />
@@ -75,5 +75,5 @@
 <a href="{$catalogs.provider}/file_manage.php" class="VertMenuItems">{$lng.lbl_files}</a><br />
 {/if}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_products.gif" menu_title=$lng.lbl_inventory menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_products.gif" menu_title=$lng.lbl_inventory menu_content=$smarty.capture.menu }
 {/if}

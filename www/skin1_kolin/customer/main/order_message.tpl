@@ -1,5 +1,5 @@
 {* $Id: order_message.tpl,v 1.35 2005/11/28 14:19:29 max Exp $ *}
-{ include file="ga_code_sales.tpl" } 
+{include file="ga_code_sales.tpl" }
 {if $this_is_printable_version eq ""}
 <br>
 {capture name=dialog}
@@ -17,7 +17,7 @@
 {include file="mail/html/order_invoice.tpl" is_nomail='Y' products=$orders[oi].products giftcerts=$orders[oi].giftcerts userinfo=$orders[oi].userinfo order=$orders[oi].order}
 {* <br /><br /><br /><br /> *}
 {if $active_modules.Interneka ne ""}
-{ include file="modules/Interneka/interneka_tags.tpl" } 
+{include file="modules/Interneka/interneka_tags.tpl"}
 {/if}
 {/section}
 {if $this_is_printable_version eq ""}

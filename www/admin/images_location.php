@@ -177,7 +177,7 @@ foreach ($config['available_images'] as $k => $v) {
 	);
 }
 
-$smarty->assign_by_ref("config", $config);
+$smarty->assignByRef("config", $config);
 #
 # Smarty display code goes here
 #

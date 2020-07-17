@@ -3,30 +3,30 @@
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0"{$reading_direction_tag}>
-{ include file="rectangle_top.tpl" }
-{ include file="head_admin.tpl" }
+{include file="rectangle_top.tpl" }
+{include file="head_admin.tpl" }
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
 <td width="3">&nbsp;</td>
 <td width="150" valign="top">
 {if $login eq "" }
-{ include file="auth.tpl" }
+{include file="auth.tpl" }
 {else}
-{ include file="fulfilment/menu.tpl" }
+{include file="fulfilment/menu.tpl" }
 <br />
 {if $active_modules.Simple_Mode ne ""}
-{ include file="single/menu_profile.tpl" }
+{include file="single/menu_profile.tpl" }
 {else}
-{ include file="menu_profile.tpl" }
+{include file="menu_profile.tpl" }
 {/if}
 {/if}
 <br />
-{ include file="help.tpl" }
+{include file="help.tpl" }
 <img src="{$ImagesDir}/spacer.gif" width="150" height="1" border="0" />
 </td>
 <td width="20">&nbsp;</td>
@@ -84,6 +84,6 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl" }
 </body>
 </html>

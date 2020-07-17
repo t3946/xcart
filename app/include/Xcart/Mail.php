@@ -97,7 +97,7 @@ class Mail extends Data
         $mail_smarty->assign("subj", $this->getSubject());
 
         $lend = (X_DEF_OS_WINDOWS?"\r\n":"\n");
-        $mail_smarty->assign_by_ref ("config", $config);
+        $mail_smarty->assignByRef ("config", $config);
 
         $lng_code = $shop_language;
 

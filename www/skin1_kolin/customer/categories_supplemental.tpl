@@ -62,7 +62,7 @@
 
 
 {/capture}
-{ include file="menu.tpl" menu_title="Supplemental categories" menu_content=$smarty.capture.menu_2 cellpadding=$fc_cellpadding}
+{include file="menu.tpl" menu_title="Supplemental categories" menu_content=$smarty.capture.menu_2 cellpadding=$fc_cellpadding}
 
 
 

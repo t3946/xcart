@@ -6,4 +6,4 @@
 <a class="VertMenuItems" href="{$catalogs.admin}/change_mpassword.php">{$lng.lbl_change_mpassword}</a><br />
 {/if}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_profil.gif" menu_title=$lng.lbl_your_profile menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_profil.gif" menu_title=$lng.lbl_your_profile menu_content=$smarty.capture.menu }

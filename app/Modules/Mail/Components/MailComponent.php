@@ -109,7 +109,7 @@ class MailComponent
         if (isset($mail_smarty)) {
             $mail_smarty->assign("body", $this->body);
             $mail_smarty->assign("subj", $this->subject);
-            $mail_smarty->assign_by_ref("config", $config);
+            $mail_smarty->assignByRef("config", $config);
             $mail_subject = chop(func_display($subject_template, $mail_smarty, false));
             $mail_message = func_display($body_template, $mail_smarty, false);
 

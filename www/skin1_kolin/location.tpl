@@ -23,7 +23,7 @@
 			</div>
 		{/if}
 	{/if}
-	{if not %position.last%}{$lng.lbl_location_delimiter}{/if}
+	{if !$smarty.section.position.last}{$lng.lbl_location_delimiter}{/if}
 {/section}
 {/strip}
 {*</font>*}

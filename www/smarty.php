@@ -10,12 +10,12 @@ umask(0);
 #
 $ds = DIRECTORY_SEPARATOR;
 
-define('SMARTY_DIR', "{$xcart_dir}{$ds}..{$ds}app{$ds}include{$ds}smarty{$ds}");
+/*define('SMARTY_DIR', "{$xcart_dir}{$ds}..{$ds}app{$ds}include{$ds}smarty{$ds}");
 
 ini_set('include_path',
 	$xcart_dir . "/../app/include/templater"
 	. PATH_SEPARATOR . SMARTY_DIR
-	. PATH_SEPARATOR . ini_get('include_path'));
+	. PATH_SEPARATOR . ini_get('include_path'));*/
 
 #
 # Smarty object for processing html templates

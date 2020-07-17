@@ -8,12 +8,12 @@
 {/if}
 {if $total_pages gt 2}
 <br />
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 {/if}
 <hr class="Line" size="1" />
 {include file="customer/main/products.tpl" products=$free_products}
 <hr class="Line" size="1" />
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 {else}{* $free_products ne "" *}
 <br />
 

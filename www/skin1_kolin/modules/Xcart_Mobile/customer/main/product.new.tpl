@@ -313,7 +313,7 @@ var product_avail = 1;
 {/if}
 </td></tr>
 
-{ include file="modules/Product_Options/customer_options.tpl"}
+{include file="modules/Product_Options/customer_options.tpl"}
 
 {if $product.eta_date_in_future eq "Y"}
 <tr><td colspan="2">&nbsp;</td></tr>

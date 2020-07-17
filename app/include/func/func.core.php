@@ -711,24 +711,24 @@ function func_display($tpl, &$templater, $to_display = true, $cache_id = null)
         unset($predefined_lng_variables);
     }
 
-    $templater->register_postfilter("func_tpl_add_hash");
+    $templater->registerFilter('post', "func_tpl_add_hash");
 
     if (isset($templater->webmaster_mode) && $templater->webmaster_mode) {
         $templater->force_compile = true;
-        $templater->register_postfilter("func_webmaster_filter");
-        $templater->register_outputfilter("func_tpl_webmaster");
+        $templater->registerFilter('post',"func_webmaster_filter");
+        $templater->registerFilter("output","func_tpl_webmaster");
     }
 
-    $templater->register_postfilter("func_tpl_postfilter");
-    $templater->register_outputfilter("func_convert_lang_var");
+    $templater->registerFilter('post',"func_tpl_postfilter");
+    $templater->registerFilter("output","func_convert_lang_var");
 
     if (func_constant('AREA_TYPE') == 'C') {
         if ($config['SEO']['clean_urls_enabled'] == 'Y') {
-            $templater->register_outputfilter('func_clean_url_filter_output');
+            $templater->registerFilter("output",'func_clean_url_filter_output');
         }
 
         if ($config['General']['use_cached_templates'] != 'Y') {
-            $templater->register_prefilter('func_tpl_remove_include_cache');
+            $templater->registerFilter("pre",'func_tpl_remove_include_cache');
         }
     }
 

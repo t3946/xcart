@@ -3,7 +3,7 @@
 <HTML>
 <HEAD>
 <TITLE>{$lng.txt_site_title}</TITLE>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <LINK rel="stylesheet" href="{$SkinDir}/{#CSSFile#}">
 </HEAD>
 <BODY leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0" onload="javascript: change_images_width(self.document.documentElement.getElementsByTagName('body')[0].scrollWidth);">

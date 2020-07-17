@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-{ config_load file="$skin_config" }
+{config_load file="$skin_config"}
 <html>
 <head>
     <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
-    { include file="meta.tpl" }
+    {include file="meta.tpl"}
     {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -18,17 +18,10 @@
 
 <div class="row">
     <div class="column large-12">
-        { include file="rectangle_top.tpl" }
-        { include file="head_admin.tpl" }
+        {include file="rectangle_top.tpl"}
+        {include file="head_admin.tpl"}
 
-        {if $login ne ""}
-            {include file="cidev_tracking_code.tpl" }
-            {if !($usertype eq "A" || $usertype eq "P")}
-                <script type="text/javascript">
-            ga('send', 'pageview');
-		</script>
-            {/if}
-        {/if}
+
 
         <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
@@ -43,14 +36,14 @@
 		{if $login eq "" }
             {*{ include file="auth.tpl" }*}
         {else}
-            { include file="admin/menu.tpl" }
+            {include file="admin/menu.tpl"}
 
             {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
-                { include file="admin/menu_admin.tpl" }
+                {include file="admin/menu_admin.tpl"}
             {/if}
 
             {if $active_modules.XAffiliate ne ''}
-                { include file="admin/menu_affiliate.tpl" }
+                {include file="admin/menu_affiliate.tpl"}
             {/if}
 
             {*{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}*}
@@ -698,7 +691,7 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl"}
     </div>
 </div>
 

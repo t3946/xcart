@@ -6,4 +6,4 @@
 <p />
 {$lng.txt_unsubscribe_information} <a href="{$http_location}/mail/unsubscribe.php?email={$smarty.get.email|replace:"\\":""}" class="VertMenuItems"><b>{$lng.lbl_this_url}</b></a>.
 {/capture}
-{ include file="dialog.tpl" title=$lng.txt_thankyou_for_subscription content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$lng.txt_thankyou_for_subscription content=$smarty.capture.dialog extra='width="100%"'}

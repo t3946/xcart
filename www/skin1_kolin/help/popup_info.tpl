@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 {if $usertype ne "C"}
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 {else}
