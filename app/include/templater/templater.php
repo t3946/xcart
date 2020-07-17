@@ -12,6 +12,7 @@ if (!class_exists('Smarty')) {
 class Templater extends Smarty
 {
     private static $_instance = null;
+    public bool $webmaster_mode = false;
 
     public static function getInstance()
     {

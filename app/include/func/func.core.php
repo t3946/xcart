@@ -673,8 +673,6 @@ function func_display($tpl, &$templater, $to_display = true, $cache_id = null)
     global $xcart_dir;
     global $__X_LNG;
 
-    x_load('templater');
-
     __add_mark_smarty();
     if (!empty($config['Security']['compiled_tpl_check_md5']) && $config['Security']['compiled_tpl_check_md5'] == 'Y') {
         $templater->compile_check_md5 = true;
