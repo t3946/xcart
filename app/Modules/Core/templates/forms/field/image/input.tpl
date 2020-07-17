@@ -4,12 +4,15 @@
     <button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image</button>
     <button type="button" onclick="uploadUrl()">Upload from url</button>
     <br>
-    <a target="_blank" class="{$id}_current-image" style="margin: 10px;
+    <a target="_blank" class="{$id}_current-image" style="
+            background-color: #E8E8E8;
+            margin: 10px;
             vertical-align: middle;
             {if $value}display: inline-block; {else} display: none; {/if}
             width: 200px;
             min-height: 100px;
-            background-size: contain; background: #E8E8E8 url('{$field->getSizeImage()}') no-repeat center center;" href="{$field->getCurrentFileUrl()}"></a>
+            background:  no-repeat center center;
+            background-size: contain; background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
 
 
 {if $field->canClear()}
