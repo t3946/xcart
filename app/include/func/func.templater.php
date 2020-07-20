@@ -471,7 +471,7 @@ function func_postprocess_output($tpl_source, &$smarty)
 
 function func_tpl_remove_include_cache($tpl_source, &$smarty)
 {
-    $resource_name = $smarty->current_resource_name;
+    $resource_name = $smarty->source->resource;
 
     // Remove include_cache for products_list* products_t* templates
     if (
@@ -564,7 +564,7 @@ function func_webmaster_filter($tpl_source, &$compiler) {
 	);
 	static $tagHash = array();
 
-	$tpl_file = $compiler->current_resource_name;
+	$tpl_file = $compiler->source->resource;
 
 	$tag = "div";
 	foreach ($tagsTemplates as $tmplt => $t) {

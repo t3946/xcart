@@ -2089,7 +2089,7 @@ if ($source != 'XML_Sitemap') {
         if ($current_area != 'C')
             include $xcart_dir . "/include/categories.php";
 
-        $search_categories = $smarty->get_template_vars("allcategories");
+        $search_categories = $smarty->tpl_vars['allcategories'];
         if ($current_area == "C" && !empty($active_modules["Fancy_Categories"])) {
             if (!function_exists("func_categories_sort_abc")) {
                 function func_categories_sort_abc($a, $b)

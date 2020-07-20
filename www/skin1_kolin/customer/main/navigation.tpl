@@ -11,7 +11,7 @@
 <div class="b-paginator_new" >
 <B>Pages</B>&nbsp;&nbsp;&nbsp;
 {section name=page loop=$total_pages start=$start_page}
-{if %page.first%}
+{if $smarty.section.page.first}
 {if $navigation_page gt 1}
 
 
@@ -52,7 +52,7 @@
 {/if}
 {/if}
 
-{if %page.last%}
+{if $smarty.section.page.last}
 {math equation="pages-1" pages=$total_pages assign="total_pages_minus"}
 {if $navigation_page lt $total_super_pages*$navigation_max_pages}
 
@@ -76,7 +76,7 @@
 {/if}
 
 <div class="b-paginator" {if $featured eq "Y"}style="text-align:left;"{/if}>
- <div class="b-paginator-cell type_content" {if $featured eq "Y"}style="margin-left: 0px;"{/if}>
+ <div class="b-paginator-cell type_content" {if $featured eq "Y"}style="margin-left: 0;"{/if}>
   <div class="b-paginator-cell-scrollbar">
    <div class="b-paginator-cell-scrollbar-h js-paginator-pages">
 
@@ -87,10 +87,10 @@
 
 {section name=page loop=$total_pages start=$start_page}
 
-{if %page.index% eq $navigation_page}
-	<span class="b-paginator-item g-current js-paginator-page-current" {* if $featured eq "Y"}style="width:24px;"{/if *}>{%page.index%}</span>
+{if $smarty.section.page.index eq $navigation_page}
+	<span class="b-paginator-item g-current js-paginator-page-current" {* if $featured eq "Y"}style="width:24px;"{/if *}>{$smarty.section.page.index}</span>
 {else}
-{if %page.index% ge 100}
+{if $smarty.section.page.index ge 100}
 {assign var="suffix" value="Wide"}
 {else}
 {assign var="suffix" value=""}
@@ -98,7 +98,7 @@
 
 
         {assign var="cidev_navigation_script_2" value="$navigation_script"}
-        {assign var="cidev_page" value=%page.index%}
+        {assign var="cidev_page" value=$smarty.section.page.index}
         {if $cidev_page gt 1}
 	        {if $clean_url_data.resource_type eq "K"}
         	        {assign var="cidev_navigation_script_2" value="$cidev_navigation_script_2?page=$cidev_page"}
@@ -129,7 +129,7 @@
 
         {assign var="cidev_navigation_script_2" value=$cidev_navigation_script_2|replace:'?&amp;':'?'}
 
-	<a class="b-paginator-item" href="{$cidev_navigation_script_2}" {* if $featured eq "Y"}style="width:24px;"{/if *}>{%page.index%}</a>
+	<a class="b-paginator-item" href="{$cidev_navigation_script_2}" {* if $featured eq "Y"}style="width:24px;"{/if *}>{$smarty.section.page.index}</a>
 
 {/if}
 {/section}
@@ -168,7 +168,7 @@
 	<td><a href="{$cidev_navigation_script_0}"><img src="{$ImagesDir}/larrow_2.gif" class="NavigationArrow" alt="{$lng.lbl_prev_group_pages|escape}" /></a></td>
 {/if}
 {section name=page loop=$total_pages start=$start_page}
-{if %page.first%}
+{if $smarty.section.page.first}
 {if $navigation_page gt 1}
 
 
@@ -189,10 +189,10 @@
 {/if}
 {/if}
 
-{if %page.index% eq $navigation_page}
-	<td class="NavigationCellSel" title="{$lng.lbl_current_page|escape}: #{%page.index%}">{%page.index%}</td>
+{if $smarty.section.page.index eq $navigation_page}
+	<td class="NavigationCellSel" title="{$lng.lbl_current_page|escape}: #{$smarty.section.page.index}">{$smarty.section.page.index}</td>
 {else}
-{if %page.index% ge 100}
+{if $smarty.section.page.index ge 100}
 {assign var="suffix" value="Wide"}
 {else}
 {assign var="suffix" value=""}
@@ -200,7 +200,7 @@
 
 
         {assign var="cidev_navigation_script_2" value="$navigation_script"}
-	{assign var="cidev_page" value=%page.index%}
+	{assign var="cidev_page" value=$smarty.section.page.index}
 	{if $cidev_page gt 1 || $usertype eq "A" || $usertype eq "P"}
                 {assign var="cidev_navigation_script_2" value="$cidev_navigation_script_2&amp;page=$cidev_page"}
         {/if}
@@ -212,9 +212,9 @@
         {assign var="cidev_navigation_script_2" value=$cidev_navigation_script_2|replace:'.php&amp;':'.php?'}
 
 
-	<td><a href="{$cidev_navigation_script_2}" title="{$lng.lbl_page|escape} #{%page.index%}" class="NavigationCell{$suffix}">{%page.index%}</a><img src="{$ImagesDir}/spacer.gif" alt="" /></td>
+	<td><a href="{$cidev_navigation_script_2}" title="{$lng.lbl_page|escape} #{$smarty.section.page.index}" class="NavigationCell{$suffix}">{$smarty.section.page.index}</a><img src="{$ImagesDir}/spacer.gif" alt="" /></td>
 {/if}
-{if %page.last%}
+{if $smarty.section.page.last}
 {math equation="pages-1" pages=$total_pages assign="total_pages_minus"}
 {if $navigation_page lt $total_super_pages*$config.Appearance.max_nav_pages}
 
@@ -242,7 +242,7 @@
 {/if}
 </tr>
 </table>
-<p />
+<p></p>
 {/if}
 
 {/if}

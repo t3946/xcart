@@ -58,7 +58,7 @@ if (defined('AREA_TYPE') && in_array(constant('AREA_TYPE'), array('A', 'P'))) {
 		} else {
 			$smarty->assign('xmlmap_extra', xmlmap_get_extraurls());
 			$smarty->assign('additional_config', 'modules/XML_Sitemap/config.tpl');
-			$smarty->register_prefilter('xmlmap_prefilter_config');
+			$smarty->registerFilter('pre','xmlmap_prefilter_config');
 		}
 	}
 	

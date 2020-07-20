@@ -19,7 +19,7 @@
 {include file="main/subheader.tpl" title=$lng.xmlmap_generate_section}
 <form name="xmlmap_generate" method="post" action="{$smarty.server.REQUEST_URI|escape}">
 <input type="hidden" name="xmlmap[config]" value="generate" />
-{assign var="xseo_xmlmap_url" value=`$xmlmap_location`/sitemap.xml}
+{assign var="xseo_xmlmap_url" value="`$xmlmap_location`/sitemap.xml"}
 {$lng.xmlmap_generate_note|substitute:"url":$xseo_xmlmap_url}
 <br /><br />
 <input type="submit" value="{$lng.lbl_go|strip_tags:false|escape}" />

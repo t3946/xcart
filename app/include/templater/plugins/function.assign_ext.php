@@ -58,9 +58,9 @@ function smarty_function_assign_ext($params, &$smarty) {
 
 	if (preg_match("/^([^\[]+)\[([^\]]*)\]$/S", $var, $preg)) {
 		if (empty($preg[2])) {
-			$smarty->_tpl_vars[$preg[1]][] = $value;
+			$smarty->tpl_vars[$preg[1]][] = $value;
 		} else {
-			$smarty->_tpl_vars[$preg[1]][$preg[2]] = $value;
+			$smarty->tpl_vars[$preg[1]][$preg[2]] = $value;
 		}
 	} else {
 		$smarty->assign($var, $value);

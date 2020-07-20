@@ -57,7 +57,7 @@
 <tr{cycle values=', class="TableSubHead"'}>
 	<td width="1%"><input type="text" size="3" name="posted_data[{$catid}][order_by]" maxlength="3" value="{$c.order_by}" /></td>
 	<td width="1%"><input type="radio" name="cat" value="{$catid}"{if $cat_selected eq 0} checked="checked"{/if} /></td>
-	<td><a href="info_pages.php?cat={$catid}"><font class="{if $c.avail eq "N"}ItemsListDisabled{else}ItemsList{/if}">{ $c.category|escape }</font></a></td>
+	<td><a href="info_pages.php?cat={$catid}"><font class="{if $c.avail eq "N"}ItemsListDisabled{else}ItemsList{/if}">{$c.category|escape}</font></a></td>
 	<td align="center"><a href="info_pages.php?cat={$catid}">{$c.subcategory_count|default:$lng.txt_not_available}</a></td>
 	<td align="center">
 	<select name="posted_data[{$catid}][avail]">

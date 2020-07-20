@@ -67,7 +67,7 @@
 {section name=col loop=$columns}
 <td width="{$cell_width}%" valign="top">
 
-{math equation="x*y" x=$rows y=%col.index% assign="start_row"}
+{math equation="x*y" x=$rows y=$smarty.section.col.index assign="start_row"}
 
 {section name=dt1 loop=$left start=$start_row max=$rows}
 {include file="dialog_tools_cell.tpl" cell=$left[dt1]}
