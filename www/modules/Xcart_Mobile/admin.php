@@ -100,7 +100,7 @@ if (
     }
     return $tpl_source;
   }
-  $smarty->register_prefilter('func_xcart_mobile_admin_configuration');
+  //$smarty->register_prefilter('func_xcart_mobile_admin_configuration');
 
   /**
    * Orders search postprocessing
