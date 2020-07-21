@@ -126,7 +126,7 @@
                                value=""/>
                     </td>
                     <td>
-                        <input type="submit" value="{$lng.lbl_search}"/>
+                        <input type="submit" value="Search"/>
                     </td>
                 </tr>
             </table>
@@ -167,8 +167,8 @@
         {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
             <div style="float: right;">
                 <input type="button"
-                       name="{$lng.lbl_sf_properties}"
-                       value="{$lng.lbl_sf_properties}"
+                       name="SF properties"
+                       value="SF properties"
                        onclick="location.href='configuration.php?option=Multiple_Storefronts'">
 </div>
         {/if}
