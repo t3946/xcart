@@ -27,7 +27,7 @@ class ApiImageController extends Controller
                     if (stripos($this->getRequest()->getHeaderValue('Accept'), 'image/webp') !== false) {
                         $image->toScreen('image/webp');
                     } else {
-                        $image->toScreen('image/jpeg', 94);
+                        $image->toScreen($imageModel->image_type ?: 'image/jpeg', 94);
                     }
                     die();
                 } catch (Exception $exception) {
