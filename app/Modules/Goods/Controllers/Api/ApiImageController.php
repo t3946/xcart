@@ -24,9 +24,10 @@ class ApiImageController extends Controller
                     if ($width !== null && is_numeric($width)) {
                         $image->resize($width);
                     }
-                    if (stripos($this->getRequest()->getHeaderValue('Accept'), 'image/webp') !== false) {
+                    /*if (stripos($this->getRequest()->getHeaderValue('Accept'), 'image/webp') !== false) {
                         $image->toScreen('image/webp');
-                    } else {
+                    } else */
+                    {
                         $image->toScreen($imageModel->image_type ?: 'image/jpeg', 94);
                     }
                     die();
