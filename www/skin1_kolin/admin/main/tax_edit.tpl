@@ -145,7 +145,7 @@ function ChangeDisplayAlsoStatus() {ldelim}
 {include file="dialog.tpl" title=$lng.lbl_tax_details content=$smarty.capture.dialog extra='width="100%"'}
 
 
-{if $active_modules.Simple_Mode ne "" and $tax_details.taxid ne ""}
+{if $tax_details.taxid ne ""}
 
 <br /><br />
 
