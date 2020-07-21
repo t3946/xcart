@@ -37,22 +37,28 @@ checkboxes = new Array({foreach from=$tax_rates item=v key=k}{if $k > 0},{/if}'t
 
 <tr{cycle values=", class='TableSubHead'"}>
 	<td><input type="checkbox" name="to_delete[{$tax_rates[tax].rateid}]" /></td>
-	<td>{if $tax_rates[tax].zoneid eq 0}{$lng.lbl_zone_default}{else}<a href="{$catalogs.provider}/zones.php?zoneid={$tax_rates[tax].zoneid}">{$tax_rates[tax].zone_name}</a>{/if}</td>
+	<td>{if $tax_rates[tax].zoneid eq 0}{$lng.lbl_zone_default}{else}<a href="/admin/zones.php?zoneid={$tax_rates[tax].zoneid}">{$tax_rates[tax].zone_name}</a>{/if}</td>
 	<td align="center">
-<a href="taxes.php?taxid={$tax_details.taxid}&amp;rateid={$tax_rates[tax].rateid}#rates">{foreach from=$tax_rates[tax].membershipids item=m}
-{$m}<br />
-{foreachelse}
-{$lng.lbl_all}
-{/foreach}</a>
-</td>
-	<td align="center" nowrap="nowrap">
-<input type="text" size="20" maxlength="13" name="posted_data[{$tax_rates[tax].rateid}][rate_value]" value="{$tax_rates[tax].rate_value|formatprice:false:false:3}" />
-<select name="posted_data[{$tax_rates[tax].rateid}][rate_type]">
-	<option value="%"{if $tax_rates[tax].rate_type eq "%"} selected="selected"{/if}>%</option>
-	<option value="$"{if $tax_rates[tax].rate_type eq "$"} selected="selected"{/if}>{$config.General.currency_symbol}</option>
-</select>
+		<a href="taxes.php?taxid={$tax_details.taxid}&amp;rateid={$tax_rates[tax].rateid}#rates">{foreach from=$tax_rates[tax].membershipids item=m}
+				{$m}
+				<br/>
+				{foreachelse}
+				{$lng.lbl_all}
+			{/foreach}</a>
 	</td>
-	<td align="center"><a href="taxes.php?taxid={$tax_details.taxid}&amp;rateid={$tax_rates[tax].rateid}#rates">{if $tax_rates[tax].formula eq ""}{$tax_details.formula}{else}{$tax_rates[tax].formula}{/if}</a></td>
+	<td align="center" nowrap="nowrap">
+		<input type="text" size="20" maxlength="13" name="posted_data[{$tax_rates[tax].rateid}][rate_value]"
+			   value="{$tax_rates[tax].rate_value|formatprice:false:false:3}"/>
+		<select name="posted_data[{$tax_rates[tax].rateid}][rate_type]">
+			<option value="%"{if $tax_rates[tax].rate_type eq "%"} selected="selected"{/if}>%</option>
+			<option value="$"{if $tax_rates[tax].rate_type eq "$"} selected="selected"{/if}>{$config.General.currency_symbol}</option>
+		</select>
+	</td>
+    <td align="center">
+        <a href="taxes.php?taxid={$tax_details.taxid}&amp;rateid={$tax_rates[tax].rateid}#rates">
+            {if $tax_rates[tax].formula eq ""}{$tax_details.formula}{else}{$tax_rates[tax].formula}{/if}
+        </a>
+    </td>
 </tr>
 
 {/section}
