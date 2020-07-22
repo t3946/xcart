@@ -563,10 +563,10 @@ class SupplierFeedHelper
         $group->setAttributes(array_merge($data, ['parent' => $group]));
         if ($is_created) {
             $group->save();
+            $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
+            $group->group_root = $group->productid;
+            $group->save();
         }
-        $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
-        $group->group_root = $group->productid;
-        $group->save();
 
         $childs = [];
         foreach ($data['child_products'] as $key => $child_data) {
