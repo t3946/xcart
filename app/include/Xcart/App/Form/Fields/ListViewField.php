@@ -55,7 +55,7 @@ class ListViewField extends Field
         $model = $this->getForm()->getInstance();
         $field = $model->getField($this->getName());
 
-        if (is_subclass_of($field, "Xcart\App\Orm\Fields\RelatedField")) {
+        if ($field instanceof \Xcart\App\Orm\Fields\RelatedField) {
             /** @var  \Xcart\App\Orm\Fields\RelatedField $field */
             $manager = $field->getManager();
 

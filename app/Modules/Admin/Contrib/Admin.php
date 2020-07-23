@@ -651,7 +651,7 @@ abstract class Admin
         $value = $item;
         $data = explode('__', $property);
         foreach ($data as $name) {
-            $value = $value->{$name};
+            $value = ($value->$name instanceof Model) ? (string)$value->$name : $value->$name;
         }
         return $value;
     }

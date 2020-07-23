@@ -1,11 +1,12 @@
 {extends "admin/base.tpl"}
 
 {block 'heading'}
-    <h1>Creating</h1>
+    <h1>{$form->getName()} {$model}</h1>
 {/block}
 
 {block 'main_block'}
-    <div class="admin-page form-page {block 'page_class'}create{/block}">
+    {smarty_admin_block name=$form->getName()~':'~~$model}
+    <div class="form-page {block 'page_class'}create{/block}">
         <form action="{$.request->getUrl()}" enctype="multipart/form-data" method="post">
             <div class="form-data">
                 {include 'admin/form/_form.tpl'}
@@ -57,4 +58,5 @@
             </div>
         </form>
     </div>
+    {/smarty_admin_block}
 {/block}

@@ -25,4 +25,9 @@ class ZoneModel extends Model
 
         ];
     }
+
+    public function __toString()
+    {
+        return (string) $this->zone_name;
+    }
 }

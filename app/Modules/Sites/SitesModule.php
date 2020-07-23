@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites;
 
+use Modules\Admin\Traits\AdminTrait;
 use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Helpers\Collection;
@@ -9,10 +10,10 @@ use Xcart\App\Module\Module;
 
 class SitesModule extends Module
 {
-//    use AdminTrait;
+    use AdminTrait;
 
     public $defaultStore = 'AR';
-    public $modelClass = 'Modules\Sites\Models\SiteModel';
+    public $modelClass = SiteModel::class;
 
     /**
      * @var \Modules\Sites\Models\SiteModel
@@ -114,5 +115,10 @@ class SitesModule extends Module
         $renderer->addAccessorCallback('getSite', function(){
             return Xcart::app()->getModule('Sites')->getSite();
         });
+    }
+
+    public static function getVerboseName()
+    {
+        return 'Storefronts';
     }
 }
