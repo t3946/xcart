@@ -44,15 +44,12 @@ abstract class Gateway implements GatewayInterface
      * @param ProcessorModel $model
      * @return null|Gateway
      */
-    public static function getGateway($model)
+    public static function getGateway($model): ?Gateway
     {
-        $gateway = null;
-        if ($model) {
-            if (class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
-                $gateway = new $class($model);
-            }
+        if ($model && class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
+            $gateway = new $class($model);
         }
-        return $gateway;
+        return $gateway ?? null;
     }
 
     public function init()

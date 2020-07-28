@@ -4,7 +4,6 @@ namespace Modules\Payment\Gateways;
 
 
 use Modules\Core\Models\GlobalConfigModel;
-use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Xcart\App\Main\Xcart;
 

@@ -38,7 +38,7 @@ return array(
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Omnipay\\Xpay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/Xpay'),
-    'Omnipay\\Stripe\\' => array($vendorDir . '/omnipay/stripe/src'),
+    'Omnipay\\Stripe\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/Stripe', $vendorDir . '/omnipay/stripe/src'),
     'Omnipay\\PayPal\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/PayPal', $vendorDir . '/omnipay/paypal/src'),
     'Omnipay\\Common\\' => array($vendorDir . '/omnipay/common/src/Common'),
     'Omnipay\\BluePay\\' => array($baseDir . '/app/Modules/Payment/Gateways/Omnipay/BluePay'),

@@ -27,6 +27,11 @@ class CoreModule extends Module
             return trim(preg_replace('=<br */?>=i', "\n", $str));
         });
 
+        $template->addModifier('json', function(array $arr)
+        {
+            return htmlentities(json_encode($arr, JSON_THROW_ON_ERROR));
+        });
+
         $template->addModifier('nl2space', function($str)
         {
             return preg_replace("/(\r\n|\n|\r)/", " ", $str);
