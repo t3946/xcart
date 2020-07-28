@@ -59,6 +59,7 @@
 
         form.addEventListener('submit', function(ev) {
             ev.preventDefault();
+            document.querySelector("button").disabled = true;
             stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: card,
@@ -79,10 +80,9 @@
                 return_url: button.dataset.return
             }).then(function(result) {
                 if (result.error) {
-                    console.log(result.error.message);
+                    document.querySelector("button").disabled = false;
                     document.querySelector("#card-errors").textContent = result.error ? result.error.message : "";
                 } else {
-                    console.log(result);
                     if (result.paymentIntent.status === 'requires_capture') {
                         window.location = button.dataset.return;
                     }
