@@ -165,34 +165,40 @@ $(function() {ldelim}
         {assign var=oProduct value=$oProductQuestion->product}
 
         <table border="0" width="100%" cellpadding="3" cellspacing="1">
-
-        <tr>
-        <td><B>Product name:</B></td>
-        <td><a href="{$oProduct->getUrl()}" title="{$oProduct->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$oProduct->getFrontendName()}</a></td>
-        </tr>
-
-        <tr>
-        <td><B>Product SKU:</B></td>
-        <td><a href="{$oProduct->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$oProduct->productcode}</a></td>
-        </tr>
-
-        <tr>
-        <td><B>Product MPN:</B></td>
-        <td>{if $product_info.d_website_search_for_sku_url ne ""}<a href="{$product_info.d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}" style="color: #3A3AFF;" target="_blank">{/if}{$product_info.mpn}{if $product_info.d_website_search_for_sku_url ne ""}</a>{/if}</td>
-        </tr>
-
-        <tr>
-        <td><B>Product distributor:</B></td>
-        <td><a href="manufacturers.php?manufacturerid={$product_info.manufacturerid}&distributor_section=16" style="color: #3A3AFF;" target="_blank">{$product_info.manufacturer}</a></td>
-        </tr>
-
-        <tr>
-        <td><B>Product brand:</B></td>
-        <td><a href="brands.php?brandid={$product_info.brandid}" style="color: #3A3AFF;" target="_blank">{$product_info.brand}</a></td>
-        </tr>
-
+            <tr>
+                <td><B>Product name:</B></td>
+                <td>
+                    <a href="{$oProduct->getUrl()}" title="{$oProduct->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$oProduct->getFrontendName()}</a>
+                </td>
+            </tr>
+            <tr>
+                <td><B>Product SKU:</B></td>
+                <td>
+                    <a href="{$oProduct->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$oProduct->productcode}</a>
+                </td>
+            </tr>
+            <tr>
+                <td><B>Product MPN:</B></td>
+                <td>{if $product_info.d_website_search_for_sku_url ne ""}<a
+                            href="{$product_info.d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}"
+                            style="color: #3A3AFF;"
+                            target="_blank">{/if}{$oProduct->getMpn()}{if $product_info.d_website_search_for_sku_url ne ""}</a>{/if}
+                </td>
+            </tr>
+            {assign var=oDistributor value=$oProduct->distributor}
+            <tr>
+                <td><B>Product distributor:</B></td>
+                <td>
+                    <a href="{$oDistributor->getAdminUrl(16)}" style="color: #3A3AFF;" target="_blank">{$oDistributor}</a>
+                </td>
+            </tr>
+            <tr>
+                <td><B>Product brand:</B></td>
+                <td>
+                    <a href="brands.php?brandid={$product_info.brandid}" style="color: #3A3AFF;" target="_blank">{$product_info.brand}</a>
+                </td>
+            </tr>
         </table>
-
 </td>
 </tr>
 
@@ -344,21 +350,27 @@ $(function() {ldelim}
    </select>
 *}
  <table cellpadding="0" cellspacing="0">
- <tr>
- <td>
-	{if $distributor_info.d_product_questions_send_to_email ne ""}<input type="radio" name="to" value="1" checked="checked">{/if}
-
-<input type="hidden" name="email_to_arr[1]" value="{$distributor_info.d_product_questions_send_to_email}" />
-<input type="hidden" name="name_to_arr[1]" value="{$distributor_info.d_product_questions_send_to_name}" />
-
- </td>
- <td>
-	{if $distributor_info.d_product_questions_send_to_email ne ""}{$distributor_info.d_product_questions_send_to_email} {if $distributor_info.d_product_questions_send_to_name ne ""}({$distributor_info.d_product_questions_send_to_name}){/if} {else}<span style="color: red;">not specified</span>{/if}&nbsp;
- </td>
- <td>
-	<a href="manufacturers.php?manufacturerid={$product_info.manufacturerid}&distributor_section=16" style="color: #3A3AFF;" target="_blank">Product distributor contact</a>
- </td>
- </tr>
+     {assign var=pqContact value=$oDistributor->getProductQuestionsContact()}
+     <tr>
+         <td>
+             {if $pqContact && $pqContact->email}
+                 <input type="radio" name="to" value="1" checked="checked">
+             {/if}
+             <input type="hidden" name="email_to_arr[1]" value="{$pqContact->email}"/>
+             <input type="hidden" name="name_to_arr[1]" value="{$pqContact->contact_name}"/>
+         </td>
+         <td>
+             {if $pqContact && $pqContact->email}
+                {$pqContact->email}
+                {if $pqContact->contact_name}({$pqContact->contact_name}){/if}
+             {else}
+                <span style="color: red;">not specified</span>
+             {/if}&nbsp;
+         </td>
+         <td>
+             <a href="{$oDistributor->getAdminUrl(16)}" style="color: #3A3AFF;" target="_blank">Product distributor contact</a>
+         </td>
+     </tr>
 
  <tr>
  <td>

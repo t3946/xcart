@@ -550,6 +550,11 @@ class DistributorModel extends Model
         return $this->contacts_model->exclude(['phone' => ''])->order(['position'])->limit(1)->get();
     }
 
+    public function getProductQuestionsContact()
+    {
+        return $this->contacts_model->filter(['pq' => 'Y'])->limit(1)->get();
+    }
+
     public function getPhone(): string
     {
         if ($contact = $this->getDefaultContact()) {
