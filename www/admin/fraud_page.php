@@ -174,11 +174,11 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
             $fraud_status_name = $fraud_statuses[$new_fraud_status];
             $log .= "fraud_status: {$current_fraud_status_name} -> {$fraud_status_name}";
 
-            if ($new_fraud_status === FraudStatusModel::STATUS_CLEARED) {
-                if ($orderModel->getRiskScore() <= (float) $config['Overall_RS_threshold_for_Clear_status']) {
-                    $log .= "<br/>fraud_status: {$fraud_status_name} -> {$fraud_statuses[$config['Risk_Score_Threshold_status']]}";
-                    $new_fraud_status = $config['Risk_Score_Threshold_status'];
-                }
+            if ($orderModel->fraud_status === FraudStatusModel::STATUS_NEED_EXPERT &&
+                $new_fraud_status === FraudStatusModel::STATUS_CLEARED &&
+                $orderModel->getRiskScore() <= (float)$config['Overall_RS_threshold_for_Clear_status']) {
+                $log .= "<br/>fraud_status: {$fraud_status_name} -> {$fraud_statuses[$config['Risk_Score_Threshold_status']]}";
+                $new_fraud_status = $config['Risk_Score_Threshold_status'];
             }
 
             $orderModel->fraud_status = $new_fraud_status;

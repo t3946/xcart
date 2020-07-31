@@ -165,9 +165,9 @@
             <tr>
                 <td align="right"><b>Processor:</b></td>
                 <td>
-                    <select style="margin:1px 5px 0 0; float:left;" name="paypal_vt[processor]"
-                            id="paypal_vt_processor">
+                    <select style="margin:1px 5px 0 0; float:left;" name="paypal_vt[processor]" id="paypal_vt_processor">
                         <option value="Paypal VT">Paypal VT</option>
+                        <option value="Stripe VT">Stripe VT</option>
                         <option value="BluePay VT">BluePay VT</option>
                     </select>
                     <a href="#help-5" title="{$lng.help_processor_text|htmlspecialchars}" class="tooltip">

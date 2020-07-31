@@ -9,12 +9,12 @@
                 <div class="columns small-12 medium-8 large-6">
                     <div style="text-align: center">
                         <form id="payment-form">
-                            <h1 style="text-align: center; margin-bottom: 10px">Secure credit card payment</h1>
-                            <div style="font-size:21px; text-align: center; margin-bottom: 1rem;">Total: <span style="font-size:21px">{$site->getCurrency()}{$order->total}</span></div>
+                            <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
+                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site->getCurrency()}{$order->total}</span></div>
                             <div id="card-element">
                             </div>
                             <div id="card-errors" role="alert" style="text-align: center"></div>
-                            <div style="margin-top: 1.25rem;" class="row align-center">
+                            <div style="margin-top: 2rem;" class="row align-center">
                                 <div class="column small-12">
                                     <div class="buttons text-center">
                                         {set $billing_info = $order->getAddressInfo()[1]}
