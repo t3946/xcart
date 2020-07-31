@@ -3,96 +3,118 @@
 <input type="hidden" name="mode" value="Update_Fraud_check">
 
 <table width="100%" cellspacing="1" cellpadding="3">
-<tr>
-<td class="TableSeparator" colspan="3">
-<br>General fraud check options<br><br></td>
-</tr>
+    <tr>
+        <td class="TableSeparator" colspan="3">
+            <br>General fraud check options<br><br></td>
+    </tr>
 
-{*
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Google search negative words:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="fraud_Google_search_negative_words" value="{$config.Fraud_check.fraud_Google_search_negative_words}">
-</td>
-</tr>
-*}
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Domains of free email providers:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="fraud_domains_free_email_provider"
+                   value="{$config.Fraud_check.fraud_domains_free_email_provider}">
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Domains of free email providers:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="fraud_domains_free_email_provider" value="{$config.Fraud_check.fraud_domains_free_email_provider}">
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Overall Risk score threshold for `Clear` status:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="Overall_RS_threshold_for_Clear_status"
+                   value="{$config.Fraud_check.Overall_RS_threshold_for_Clear_status}">
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Overall FC threshold for `Clear` status:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="Overall_FC_threshold_for_Clear_status" value="{$config.Fraud_check.Overall_FC_threshold_for_Clear_status}">
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Below Risk score threshold status:
+        </td>
+        <td width="*" class="TableSubHead">
+            <select name="Risk_Score_Threshold_status">
+                {if $fraud_statuses ne ""}
+                    {foreach from=$fraud_statuses item=item key=key}
+                        <option {if $config.Fraud_check.Risk_Score_Threshold_status eq $key}selected="selected" {/if}
+                                value="{$key}">{$item}</option>
+                    {/foreach}
+                {/if}
+            </select>
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Threshold status:
-</td>
-<td width="*" class="TableSubHead">
-<select name="Threshold_status">
-{if $fraud_statuses ne ""}
-{foreach from=$fraud_statuses item=item key=key}
-<option {if $config.Fraud_check.Threshold_status eq $key}selected="selected" {/if} value="{$key}">{$item}</option>
-{/foreach}
-{/if}
-</select>
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Overall FC threshold for `Clear` status:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="Overall_FC_threshold_for_Clear_status"
+                   value="{$config.Fraud_check.Overall_FC_threshold_for_Clear_status}">
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Below threshold status
-</td>
-<td width="*" class="TableSubHead">
-<select name="below_threshold_status">
-{if $fraud_statuses ne ""}
-{foreach from=$fraud_statuses item=item key=key}
-<option {if $config.Fraud_check.below_threshold_status eq $key}selected="selected" {/if} value="{$key}">{$item}</option>
-{/foreach}
-{/if}
-</select>
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Threshold status:
+        </td>
+        <td width="*" class="TableSubHead">
+            <select name="Threshold_status">
+                {if $fraud_statuses ne ""}
+                    {foreach from=$fraud_statuses item=item key=key}
+                        <option {if $config.Fraud_check.Threshold_status eq $key}selected="selected" {/if}
+                                value="{$key}">{$item}</option>
+                    {/foreach}
+                {/if}
+            </select>
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Google address search exclusions:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="fraud_Google_address_search_exclusions" value="{$config.Fraud_check.fraud_Google_address_search_exclusions}">
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Below threshold status
+        </td>
+        <td width="*" class="TableSubHead">
+            <select name="below_threshold_status">
+                {if $fraud_statuses ne ""}
+                    {foreach from=$fraud_statuses item=item key=key}
+                        <option {if $config.Fraud_check.below_threshold_status eq $key}selected="selected" {/if}
+                                value="{$key}">{$item}</option>
+                    {/foreach}
+                {/if}
+            </select>
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Google phone search exclusions:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="fraud_Google_phone_search_exclusions" value="{$config.Fraud_check.fraud_Google_phone_search_exclusions}">
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Google address search exclusions:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="fraud_Google_address_search_exclusions"
+                   value="{$config.Fraud_check.fraud_Google_address_search_exclusions}">
+        </td>
+    </tr>
 
-<tr>
-<td width="200" class="TableSubHead" nowrap="nowrap">
-Google email search exclusions:
-</td>
-<td width="*" class="TableSubHead">
-<input type="text" style="width: 98%;" name="fraud_Google_email_search_exclusions" value="{$config.Fraud_check.fraud_Google_email_search_exclusions}">
-</td>
-</tr>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Google phone search exclusions:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="fraud_Google_phone_search_exclusions"
+                   value="{$config.Fraud_check.fraud_Google_phone_search_exclusions}">
+        </td>
+    </tr>
+
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
+            Google email search exclusions:
+        </td>
+        <td width="*" class="TableSubHead">
+            <input type="text" style="width: 98%;" name="fraud_Google_email_search_exclusions"
+                   value="{$config.Fraud_check.fraud_Google_email_search_exclusions}">
+        </td>
+    </tr>
 
 </table>
 

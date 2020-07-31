@@ -9,12 +9,13 @@ use Modules\Payment\Models\ProcessorModel;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\RestGateway;
+use Omnipay\Stripe\PaymentIntentsGateway;
 use Xcart\App\Main\Xcart;
 
 abstract class Gateway implements GatewayInterface
 {
 
-    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway $gateway */
+    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway|PaymentIntentsGateway $gateway */
     public $gateway;
 
     /** @var ProcessorModel $model */

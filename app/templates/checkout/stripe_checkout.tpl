@@ -45,6 +45,7 @@
         var style = {
             base: {
                 color: "#32325d",
+                fontSize: '24px',
             }
         };
         var card = elements.create("card", { style: style });
@@ -176,7 +177,7 @@
 
                 border: 1px solid rgba(50, 50, 93, 0.1);
 
-                height: 44px;
+                height: 56px;
 
                 width: 100%;
 

@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Models\FraudCheckModel;
+use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -89,7 +90,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
     $posted_data = Xcart::app()->request->post->get('posted_data');
     if (($mode === 'apply_changes_and_update_fraud_scores' || $mode === 'apply_changes_and_update_fraud_scores_and_change_fraud_check_status') && $posted_data) {
         $manual_action_not_selected = '';
-        $overall_fraud_score = 0;
+        $overall_fraud_score = $bare_fraud_score = 0;
         foreach ($posted_data as $k => $v) {
             $question_code = strtoupper($v['question_code']);
             $manual_action = $v['manual_action'];
@@ -113,6 +114,9 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
                     $orderFraudCheckModel->getScore($fraudCheckModel);
 
                 $overall_fraud_score += $orderFraudCheckModel->fraud_score;
+                if ($fraudCheckModel->question_code !== 'CHECK_TOTAL') {
+                    $bareFraudScore += (float) $orderFraudCheckModel->fraud_score;
+                }
                 $orderFraudCheckModel->save();
 
                 if ($fraudCheckModel->auto !== 'Y' && !$orderFraudCheckModel->manual_action) {
@@ -125,6 +129,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
         $config = $coreModule->getSite()->getGlobalConfig();
 
         $current_overall_fraud_score = $orderModel->overall_fraud_score;
+        $current_bare_fraud_score = $orderModel->bare_fraud_score;
 
         if ($acc_paymentid = Xcart::app()->request->post->get('acc_paymentid')) {
             $orderModel->groups->update(['acc_paymentid' => $acc_paymentid]);
@@ -138,6 +143,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
             }
             $log .= "overall_fraud_score: {$current_overall_fraud_score} -> {$overall_fraud_score}";
             $orderModel->overall_fraud_score = $overall_fraud_score;
+            $orderModel->bare_fraud_score = $bare_fraud_score;
             $orderModel->save();
             $orderModel->recalculateAccounting();
         }
@@ -167,6 +173,14 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
             $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
             $fraud_status_name = $fraud_statuses[$new_fraud_status];
             $log .= "fraud_status: {$current_fraud_status_name} -> {$fraud_status_name}";
+
+            if ($new_fraud_status === FraudStatusModel::STATUS_CLEARED) {
+                if ($orderModel->getRiskScore() <= (float) $config['Overall_RS_threshold_for_Clear_status']) {
+                    $log .= "<br/>fraud_status: {$fraud_status_name} -> {$fraud_statuses[$config['Risk_Score_Threshold_status']]}";
+                    $new_fraud_status = $config['Risk_Score_Threshold_status'];
+                }
+            }
+
             $orderModel->fraud_status = $new_fraud_status;
             $orderModel->save();
         }

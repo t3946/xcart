@@ -246,6 +246,7 @@ class PaymentController extends Controller
                                     'transaction_id' => $txn->transaction_id,
                                     'transaction_status' => $txn->transaction_status,
                                     'transaction_total' => $txn->transaction_amount,
+                                    'transaction_currency' => $txn->transaction_currency,
                                     'login' => $txn->login,
                                     'transaction_log' => $txn->transaction_response
                                 ]
