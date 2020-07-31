@@ -81,6 +81,8 @@ use Xcart\Order;
  * @property StateModel billing_state
  * @property StateModel shipping_state
  * @property SiteModel site
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface currency
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface payment_method_model
  */
 class OrderModel extends Model
 {

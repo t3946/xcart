@@ -4,6 +4,7 @@
 namespace Modules\Payment\Gateways;
 
 
+use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderTransactionStore;
@@ -27,6 +28,7 @@ class Stripe extends Gateway
 
     public function refund($params)
     {
+        $params['payment_intent'] = $params['transactionReference'];
         $this->result = $this->gateway
             ->refund($params)
             ->send();
@@ -81,6 +83,7 @@ class Stripe extends Gateway
                 //'confirm' => false
             ]))->send();
         } else {
+            StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
             $intent = $this->gateway->createPaymentIntent(
                 array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $params['order']->orderid]])
             )->send();

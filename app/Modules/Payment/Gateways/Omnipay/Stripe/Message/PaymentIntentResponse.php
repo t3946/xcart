@@ -29,25 +29,27 @@ abstract class PaymentIntentResponse extends Response
             ];
         }
         $status = $this->getStatus();
-        switch ($status) {
-            case 'requires_capture' :
-                $data['links'] = [
-                    [
-                        'rel' => 'capture',
+        if ($data['object'] === 'payment_intent') {
+            switch ($status) {
+                case 'requires_capture' :
+                    $data['links'] = [
+                        [
+                            'rel' => 'capture',
+                            'method' => 'POST'
+                        ],
+                        [
+                            'rel' => 'void',
+                            'method' => 'POST'
+                        ],
+                    ];
+                    break;
+                case 'succeeded' :
+                    $data['links'] = [[
+                        'rel' => 'refund',
                         'method' => 'POST'
-                    ],
-                    [
-                        'rel' => 'void',
-                        'method' => 'POST'
-                    ],
-                ];
-                break;
-            case 'succeeded' :
-                $data['links'] = [[
-                    'rel' => 'refund',
-                    'method' => 'POST'
-                ]];
-                break;
+                    ]];
+                    break;
+            }
         }
         return $data;
     }
