@@ -10,7 +10,7 @@
                     <div style="text-align: center">
                         <form id="payment-form">
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
-                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site->getCurrency()}{$order->total}</span></div>
+                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
                             <div id="card-element">
                             </div>
                             <div id="card-errors" role="alert" style="text-align: center"></div>

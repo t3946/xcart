@@ -64,6 +64,7 @@ class Stripe extends Gateway
 
     public function authorize($params)
     {
+        $params['paymentMethod'] = $this->gateway->createCard(['card' => $params['card']])->send()->getCardReference();
         $this->result = $this->gateway
             ->authorize($params)
             ->send();
