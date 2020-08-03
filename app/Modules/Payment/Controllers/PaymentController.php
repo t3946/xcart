@@ -162,7 +162,7 @@ class PaymentController extends Controller
             $config = GlobalConfig::getInstance();
             if ($gateway === 'paypal') {
 
-                if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR)) {
+                if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true)) {
 
                     switch ($params['event_type']) {
 
