@@ -31,7 +31,7 @@ class FraudCheckCommand extends Command
             ],
             'fraud_status' => FraudStatusModel::STATUS_NOT_YET_STARTED
         ])->group(['orderid']) as $order) {
-            $overallFraudScore = 0;
+            $overallFraudScore = $bareFraudScore = 0;
             $new_fraud_status = null;
             $log = '';
 
@@ -58,15 +58,21 @@ class FraudCheckCommand extends Command
                 ]);
                 [$orderFraud->fraud_score, $orderFraud->bare_fraud_score, $orderFraud->fraud_result] = $orderFraud->getScore($fraud);
                 $overallFraudScore += (float) $orderFraud->fraud_score;
+                if ($fraud->question_code !== 'CHECK_TOTAL') {
+                    $bareFraudScore += (float) $orderFraud->fraud_score;
+                }
                 $orderFraud->save();
             }
 
             $current_overall_fraud_score = (float) $order->overall_fraud_score;
+            $current_bare_fraud_score = (float) $order->bare_fraud_score;
+
             if ($current_overall_fraud_score !== $overallFraudScore) {
-                $log .= "overall_fraud_score: {$current_overall_fraud_score} -> {$overallFraudScore}";
+                $log .= "overall_fraud_score: {$current_overall_fraud_score} -> {$overallFraudScore}<br/>";
+                $log .= "bare_fraud_score: {$current_bare_fraud_score} -> {$bareFraudScore}";
             }
             $order->overall_fraud_score = $overallFraudScore;
-
+            $order->bare_fraud_score = $bareFraudScore;
 
 
             /** @var FraudStatusModel $new_fraud_status */

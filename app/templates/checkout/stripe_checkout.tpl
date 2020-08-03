@@ -2,41 +2,46 @@
 
 {block 'content'}
     <script src="https://js.stripe.com/v3/"></script>
-    <div class="row align-center">
-        <div class="columns large-6">
-            <form id="payment-form">
-                <h2 style="text-align: center;">Secure credit card payment</h2>
-                <div style="text-align: center; margin-bottom: 1rem;">Total: {$order->total}</div>
-                <div id="card-element">
-                    <!-- Elements will create input elements here -->
-                </div>
-                <!-- We'll put the error messages in this element -->
-                <div id="card-errors" role="alert" style="text-align: center"></div>
-                <div style="margin-top: 1rem;" class="row align-center">
-                    <div class="column small-12">
-                        <div class="buttons text-center">
-                            {set $billing_info = $order->getAddressInfo()[1]}
-                            <button data-secret="{$client_secret}"
-                                    data-name="{$billing_info.firstname}"
-                                    data-address1="{$billing_info.address[0]}"
-                                    data-address2="{$billing_info.address[1]}"
-                                    data-zipcode="{$billing_info.zipcode}"
-                                    data-country="{$billing_info.country->code}"
-                                    data-state="{$billing_info.state->state}"
-                                    data-city="{$billing_info.city}"
-                                    data-email="{$order->email}"
-                                    data-phone="{$order->phone}"
-                                    data-return="{$returnUrl}"
-                                    id="submit"
-                                    class="button submit yellow waves waves-orange waves-effect">Pay now
-                            </button>
-                        </div>
+    <section class="page pages receipt-confirmation bg-dark-blue" style="padding-top: 5em; padding-bottom: 5em;">
+        <div class="vertical-middle">
+            <div class="row w1280 align-middle">
+                <div class="hide-for-small-only columns medium-2 large-3"></div>
+                <div class="columns small-12 medium-8 large-6">
+                    <div style="text-align: center">
+                        <form id="payment-form">
+                            <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
+                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
+                            <div id="card-element">
+                            </div>
+                            <div id="card-errors" role="alert" style="text-align: center"></div>
+                            <div style="margin-top: 2rem;" class="row align-center">
+                                <div class="column small-12">
+                                    <div class="buttons text-center">
+                                        {set $billing_info = $order->getAddressInfo()[1]}
+                                        <button data-secret="{$client_secret}"
+                                                data-name="{$billing_info.firstname}"
+                                                data-address1="{$billing_info.address[0]}"
+                                                data-address2="{$billing_info.address[1]}"
+                                                data-zipcode="{$billing_info.zipcode}"
+                                                data-country="{$billing_info.country->code}"
+                                                data-state="{$billing_info.state->state}"
+                                                data-city="{$billing_info.city}"
+                                                data-email="{$order->email}"
+                                                data-phone="{$order->phone}"
+                                                data-return="{$returnUrl}"
+                                                id="submit"
+                                                class="button submit yellow waves waves-orange waves-effect">Pay now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+                <div class="hide-for-small-only columns medium-2 large-3"></div>
+            </div>
         </div>
-    </div>
-
+    </section>
     <script>
         {ignore}
         var stripe = Stripe('pk_test_aROFDjrZWDxMRE5YKa7keJku00ORq1PbK4');
@@ -45,9 +50,10 @@
         var style = {
             base: {
                 color: "#32325d",
+                fontSize: '24px',
             }
         };
-        var card = elements.create("card", { style: style });
+        var card = elements.create("card", {style: style});
         card.mount("#card-element");
         card.on("change", function (event) {
             document.querySelector("button").disabled = event.empty || event.error;
@@ -57,7 +63,7 @@
         var button = document.querySelector("button");
         var clientSecret = button.dataset.secret;
 
-        form.addEventListener('submit', function(ev) {
+        form.addEventListener('submit', function (ev) {
             ev.preventDefault();
             document.querySelector("button").disabled = true;
             stripe.confirmCardPayment(clientSecret, {
@@ -69,7 +75,7 @@
                             country: button.dataset.country,
                             line1: button.dataset.address1,
                             line2: button.dataset.address2,
-                            postal_code:  button.dataset.zipcode,
+                            postal_code: button.dataset.zipcode,
                             state: button.dataset.state,
                         },
                         name: button.dataset.name,
@@ -78,7 +84,7 @@
                     },
                 },
                 return_url: button.dataset.return
-            }).then(function(result) {
+            }).then(function (result) {
                 if (result.error) {
                     document.querySelector("button").disabled = false;
                     document.querySelector("#card-errors").textContent = result.error ? result.error.message : "";
@@ -94,10 +100,6 @@
     {ignore}
         <style>
             form {
-
-                width: 30vw;
-
-                min-width: 500px;
 
                 align-self: center;
 
@@ -176,7 +178,7 @@
 
                 border: 1px solid rgba(50, 50, 93, 0.1);
 
-                height: 44px;
+                height: 56px;
 
                 width: 100%;
 

@@ -5,6 +5,7 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
 use Xcart\App\Main\Xcart;
 
 class Xpay extends Gateway
@@ -148,6 +149,23 @@ class Xpay extends Gateway
                         }
 
                         $this->txn->save();
+                        $transactionLog = new TransactionLogModel(
+                            [
+                                'orderid' => $this->txn->orderid,
+                                'paymentid' => $this->txn->paymentid,
+                                'order_transaction_id' => $this->txn->id,
+                                'transaction_id' => $this->txn->transaction_id,
+                                'transaction_status' => $this->txn->transaction_status,
+                                'transaction_total' => $this->txn->transaction_amount,
+                                'transaction_currency' => $this->txn->transaction_currency,
+                                'login' => $this->txn->login,
+                                'transaction_log' => $this->txn->transaction_response
+                            ]
+                        );
+
+                        if ($transactionLog->isValid()) {
+                            $transactionLog->save();
+                        }
 
                         break;
 					case self::PAYMENT_STATUS_CHARGED :

@@ -4,9 +4,11 @@
 namespace Modules\Payment\Gateways;
 
 
+use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Order\Models\OrderTransactionModel;
-use Omnipay\Stripe\Message\PaymentIntents\ConfirmPaymentIntentRequest;
-use Omnipay\Stripe\Message\PaymentIntents\Response;
+use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\Stores\OrderTransactionStore;
+use Modules\Payment\Gateways\Omnipay\Stripe\Message\LookupPaymentIntentResponse;
 use Xcart\App\Main\Xcart;
 
 class Stripe extends Gateway
@@ -26,26 +28,43 @@ class Stripe extends Gateway
 
     public function refund($params)
     {
-        // TODO: Implement refund() method.
+        $params['payment_intent'] = $params['transactionReference'];
+        $this->result = $this->gateway
+            ->refund($params)
+            ->send();
+        return $this->result->isSuccessful();
     }
 
     public function void($params)
     {
-        // TODO: Implement void() method.
+        $params['paymentIntentReference'] = $params['transactionReference'];
+        $this->result = $this->gateway
+            ->cancel($params)
+            ->send();
+        return $this->result->isSuccessful();
     }
 
     public function capture($params)
     {
-        // TODO: Implement capture() method.
+        $params['paymentIntentReference'] = $params['transactionReference'];
+        $this->result = $this->gateway
+            ->capture($params)
+            ->send();
+        return $this->result->isSuccessful();
     }
 
     public function lookup($params)
     {
-        // TODO: Implement lookup() method.
+        $params['paymentIntentReference'] = $params['transactionReference'];
+        $this->result = $this->gateway
+            ->fetchPaymentIntent($params)
+            ->send();
+        return $this->result->isSuccessful();
     }
 
     public function authorize($params)
     {
+        $params['paymentMethod'] = $this->gateway->createCard(['card' => $params['card']])->send()->getCardReference();
         $this->result = $this->gateway
             ->authorize($params)
             ->send();
@@ -65,6 +84,7 @@ class Stripe extends Gateway
                 //'confirm' => false
             ]))->send();
         } else {
+            StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
             $intent = $this->gateway->createPaymentIntent(
                 array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $params['order']->orderid]])
             )->send();
@@ -82,24 +102,64 @@ class Stripe extends Gateway
 
     public function getState($mode)
     {
+        $state = null;
+        if (!$this->result->isSuccessful()){
+            return OrderTransactionModel::STATUS_FAILED;
+        }
 
+        if (isset(OrderTransactionStore::$gatewayMethods[$mode]) && $this->result->isSuccessful()){
+            $state = OrderTransactionStore::$gatewayMethods[$mode]['status'];
+        }
+        $data = $this->result->getData();
+        if (!$state) {
+            switch($data['status']) {
+                case 'requires_capture':
+                    $state = OrderTransactionModel::STATUS_AUTHORIZED;
+                    break;
+                case 'succeeded':
+                    $state = OrderTransactionModel::STATUS_COMPLETED;
+                    break;
+                case 'canceled':
+                    $state = OrderTransactionModel::STATUS_VOIDED;
+                    break;
+            }
+        }
+        return $state;
     }
 
     public function success($params): void
     {
         $payload = @file_get_contents('php://input');
         $pay = json_decode($payload, true);
-        $response = new Response($this->gateway->createPaymentIntent($params), json_encode($pay['data']['object']));
+        $response = new LookupPaymentIntentResponse($this->gateway->createPaymentIntent($params), json_encode($pay['data']['object']));
         $data = $response->getData();
         $txn_id = $data['id'] ?? null;
         //Xcart::app()->logger->debug("Stripe callback action", $data ?? [], 'payment');
-        if ($response->isSuccessful() && $txn_id && $this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id])) {
+        if ($pay['type'] === 'payment_intent.amount_capturable_updated' && $txn_id &&
+            $response->isSuccessful() && $this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id])) {
             $this->txn->setAttributes([
                 'transaction_response' => $data,
-                'transaction_id' => $response->getTransactionReference(),
+                'transaction_id' => $txn_id,
             ]);
             $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
             $this->txn->save();
+            $transactionLog = new TransactionLogModel(
+                [
+                    'orderid' => $this->txn->orderid,
+                    'paymentid' => $this->txn->paymentid,
+                    'order_transaction_id' => $this->txn->id,
+                    'transaction_id' => $this->txn->transaction_id,
+                    'transaction_status' => $this->txn->transaction_status,
+                    'transaction_total' => $this->txn->transaction_amount,
+                    'transaction_currency' => $this->txn->transaction_currency,
+                    'login' => $this->txn->login,
+                    'transaction_log' => $this->txn->transaction_response
+                ]
+            );
+
+            if ($transactionLog->isValid()) {
+                $transactionLog->save();
+            }
         }
         parent::success($params);
 

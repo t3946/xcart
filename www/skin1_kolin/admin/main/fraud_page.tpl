@@ -160,8 +160,18 @@
             {/if}
 
             <tr style="background-color: #FFFFFF;">
+                <td colspan="4" align="right"><b>Bare fraud score:</b></td>
+                <td align="right">{if $orderModel->bare_fraud_score eq 0}0{else}{$orderModel->bare_fraud_score|default:"To be calculated"}{/if}</td>
+            </tr>
+
+            <tr style="background-color: #FFFFFF;">
                 <td colspan="4" align="right"><b>Overall fraud score:</b></td>
-                <td align="right">{if $overall_fraud_score eq 0}0{else}{$overall_fraud_score|default:"To be calculated"}{/if}</td>
+                <td align="right">{if $orderModel->overall_fraud_score eq 0}0{else}{$orderModel->overall_fraud_score|default:"To be calculated"}{/if}</td>
+            </tr>
+
+            <tr style="background-color: #FFFFFF;">
+                <td colspan="4" align="right"><b>Risk score:</b></td>
+                <td align="right">{$orderModel->getRiskScore()|default:"To be calculated"}</td>
             </tr>
 
             <tr style="background-color: #FFFFFF;">

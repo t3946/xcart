@@ -4,8 +4,10 @@ namespace Modules\Order\Models;
 
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
 class OrderGroupRefundModel extends Model
@@ -33,6 +35,11 @@ class OrderGroupRefundModel extends Model
                 'modelClass' => DistributorModel::className(),
                 'null' => false,
                 'primary' => true,
+            ],
+            'products' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupRefundProductModel::class,
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ]
         ];
     }

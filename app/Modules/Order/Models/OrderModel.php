@@ -7,6 +7,7 @@ use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
+use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -20,6 +21,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
@@ -79,6 +81,8 @@ use Xcart\Order;
  * @property StateModel billing_state
  * @property StateModel shipping_state
  * @property SiteModel site
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface currency
+ * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface payment_method_model
  */
 class OrderModel extends Model
 {
@@ -346,6 +350,10 @@ class OrderModel extends Model
                     self::ORDER_TYPE_FBA,
                     self::ORDER_TYPE_FB,
                 ]
+            ],
+            'bare_fraud_score' => [
+                'class' => FloatField::class,
+                'default' => 0
             ]
 
         ];
@@ -563,6 +571,11 @@ class OrderModel extends Model
     public function __toString()
     {
         return $this->getOrderNumber();
+    }
+
+    public function getRiskScore()
+    {
+        return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score);
     }
 
 }

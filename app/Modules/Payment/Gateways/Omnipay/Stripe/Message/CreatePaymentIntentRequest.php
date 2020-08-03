@@ -7,7 +7,6 @@ namespace Omnipay\Stripe\Message;
 
 use Modules\Payment\Gateways\Omnipay\Stripe\Message\CreatePaymentIntentResponse;
 use Omnipay\Stripe\Message\PaymentIntents\AbstractRequest;
-use Omnipay\Stripe\Message\PaymentIntents\Response;
 
 class CreatePaymentIntentRequest extends AbstractRequest
 {
@@ -34,7 +33,7 @@ class CreatePaymentIntentRequest extends AbstractRequest
 
     public function getAmount()
     {
-        return (int) parent::getAmount() * 100;
+        return parent::getAmount() * 100;
     }
 
     public function getData()
@@ -45,6 +44,7 @@ class CreatePaymentIntentRequest extends AbstractRequest
             'payment_method_types' => ['card'],
             'capture_method' => 'manual',
             'description' => $this->getDescription(),
+            'receipt_email' => $this->getOrder()->email,
             'metadata' => ['order' => $this->getOrder()->orderid],
         ];
     }

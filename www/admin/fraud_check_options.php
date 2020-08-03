@@ -4,6 +4,8 @@ if ($mode == 'Update_Fraud_check' && $REQUEST_METHOD == 'POST'){
 	db_query("UPDATE $sql_tbl[config] SET value='$fraud_domains_free_email_provider' WHERE name='fraud_domains_free_email_provider'");
 	db_query("UPDATE $sql_tbl[config] SET value='".price_format($Overall_FC_threshold_for_Clear_status)."' WHERE name='Overall_FC_threshold_for_Clear_status'");
 	db_query("UPDATE $sql_tbl[config] SET value='$Threshold_status' WHERE name='Threshold_status'");
+	db_query("UPDATE {$sql_tbl['config']} SET value='{$Risk_Score_Threshold_status}' WHERE name='Risk_Score_Threshold_status'");
+	db_query("UPDATE {$sql_tbl['config']} SET value='{$Overall_RS_threshold_for_Clear_status}' WHERE name='Overall_RS_threshold_for_Clear_status'");
 	db_query("UPDATE $sql_tbl[config] SET value='$below_threshold_status' WHERE name='below_threshold_status'");
 	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_address_search_exclusions' WHERE name='fraud_Google_address_search_exclusions'");
 	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_phone_search_exclusions' WHERE name='fraud_Google_phone_search_exclusions'");

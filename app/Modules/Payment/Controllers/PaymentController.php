@@ -6,7 +6,6 @@ namespace Modules\Payment\Controllers;
 use Exception;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderCxInvoiceModel;
@@ -18,7 +17,6 @@ use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderStore;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
-use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use function json_decode;
@@ -112,7 +110,7 @@ class PaymentController extends Controller
 
                     $gw->success($params);
 
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Xcart::app()->logger->error("{$gateway} callback action error : {$e->getMessage()}", $params, 'payment');
                 }
             }
@@ -155,145 +153,159 @@ class PaymentController extends Controller
      */
     public function endpoint($gateway): void
     {
+        /** @var OrderCxInvoiceModel $invoice */
+        /** @var OrderTransactionModel $txn */
+
         if ($app = Xcart::app()) {
             $params = $order = $order_id = null;
 
             $config = GlobalConfig::getInstance();
+            if ($gateway === 'paypal') {
 
-            if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true)) {
+                if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR)) {
 
-                switch ($params['event_type']) {
+                    switch ($params['event_type']) {
 
-                    case 'CUSTOMER.DISPUTE.CREATED':
+                        case 'CUSTOMER.DISPUTE.CREATED':
 
-                        /** @var OrderTransactionModel $txn */
-                        if ($params['buyer_transaction_id'] &&
-                            $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
-                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
-                        }
+                            if ($params['buyer_transaction_id'] &&
+                                $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
+                                OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
+                            }
 
-                        break;
-                }
-            }
-
-            if (!$params && $app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
-
-                switch ($app->request->request->get('txn_type')) {
-                    case 'invoice_payment':
-                        if ($app->request->request->has('invoice')
-                            && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_number' => $app->request->request->get('invoice')])) {
-                            $order_id = $invoice->orderid;
-                        }
-
-                        break;
-                    case 'web_accept':
-                        if ($app->request->request->has('custom')) {
-                            $order_id = (int)$app->request->request->get('custom');
-                        }
-                        break;
-                    case 'new_case':
-                        if (($txn = OrderTransactionModel::objects()->limit(1)->get(['transaction_id' => $app->request->request->get('txn_id')]))
-                            && $order = $txn->order) {
-                            $order_id = $txn->order->orderid;
-                        }
-                        break;
+                            break;
+                    }
                 }
 
-                /** @var OrderModel $order */
-                if ($order_id && $order = OrderModel::objects()->get(['orderid' => $order_id])) {
-                    $txn_data = [
-                        'transaction_id' => $app->request->request->get('txn_id'),
-                        'orderid' => $order->orderid
-                    ];
+                if (!$params && $app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
 
-                    [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
+                    switch ($app->request->request->get('txn_type')) {
+                        case 'invoice_payment':
+
+                            if ($app->request->request->has('invoice')
+                                && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_number' => $app->request->request->get('invoice')])) {
+                                $order_id = $invoice->orderid;
+                            }
+
+                            break;
+                        case 'web_accept':
+                            if ($app->request->request->has('custom')) {
+                                $order_id = (int)$app->request->request->get('custom');
+                            }
+                            break;
+                        case 'new_case':
+                            if (($txn = OrderTransactionModel::objects()->limit(1)->get(['transaction_id' => $app->request->request->get('txn_id')]))
+                                && $order = $txn->order) {
+                                $order_id = $txn->order->orderid;
+                            }
+                            break;
+                    }
+
+                    /** @var OrderModel $order */
+                    if ($order_id && $order = OrderModel::objects()->get(['orderid' => $order_id])) {
+                        $txn_data = [
+                            'transaction_id' => $app->request->request->get('txn_id'),
+                            'orderid' => $order->orderid
+                        ];
+
+                        [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
+                    }
+
+                    switch ($app->request->request->get('txn_type')) {
+                        case 'new_case':
+
+                            if ($order) {
+                                OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
+                            }
+
+                            break;
+                        case 'web_accept':
+
+                            /** @var OrderTransactionModel $txn */
+                            if ($order && in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
+                                $gross = (float)$app->request->request->get('payment_gross');
+                                if (!$gross) {
+                                    $gross = (float)$app->request->request->get('mc_gross');
+                                }
+                                $txn->setAttributes([
+                                    'orderid' => $order->orderid,
+                                    'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                                    'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                    'transaction_amount' => $gross,
+                                    'login' => $order->login,
+                                    'paymentid' => $order->paymentid,
+                                ]);
+
+                                $txn->save();
+
+                                $txn->transaction_response = $app->request->request->all();
+                                $txn->save();
+                                $transactionLog = new TransactionLogModel(
+                                    [
+                                        'orderid' => $txn->orderid,
+                                        'paymentid' => $txn->paymentid,
+                                        'order_transaction_id' => $txn->id,
+                                        'transaction_id' => $txn->transaction_id,
+                                        'transaction_status' => $txn->transaction_status,
+                                        'transaction_total' => $txn->transaction_amount,
+                                        'transaction_currency' => $txn->transaction_currency,
+                                        'login' => $txn->login,
+                                        'transaction_log' => $txn->transaction_response
+                                    ]
+                                );
+
+                                if ($transactionLog->isValid()) {
+                                    $transactionLog->save();
+                                }
+
+                                if ($gross && $gross === (float)$order->total) {
+                                    $app->event->trigger('order:paid', ['model' => $order]);
+                                }
+                            }
+
+                            break;
+                        case 'invoice_payment':
+                            if ($invoice && $order && $app->request->request->get('payment_status') === 'Completed') {
+                                $txn->setAttributes([
+                                    'orderid' => $order->orderid,
+                                    'type' => OrderTransactionModel::TYPE_CAPTURE,
+                                    'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
+                                    'transaction_amount' => $app->request->request->get('payment_gross'),
+                                    'login' => $order->login,
+                                    'paymentid' => 100,
+                                ]);
+
+                                $txn->save();
+
+                                $txn->transaction_response = $app->request->request->all();
+                                $txn->save();
+
+                                $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
+                                $invoice->save();
+
+                                (new OrderLogModel([
+                                    'orderid' => $order->orderid,
+                                    'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                                    'log' => "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
+                                ])
+                                )->save();
+
+                                if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() == 0) {
+                                    $app->event->trigger('order:paid', ['model' => $order]);
+                                }
+                                OrderTagEventHelper::orderTagEvent(5, $order->orderid);
+
+                            }
+                            break;
+                    }
                 }
-
-                switch ($app->request->request->get('txn_type')) {
-                    case 'new_case':
-
-                        if ($order) {
-                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
-                        }
-
-                        break;
-                    case 'web_accept':
-
-                        /** @var OrderTransactionModel $txn */
-                        if ($order && \in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
-                            $gross = (float) $app->request->request->get('payment_gross');
-                            if (!$gross) {
-                                $gross = (float) $app->request->request->get('mc_gross');
-                            }
-                            $txn->setAttributes([
-                                'orderid' => $order->orderid,
-                                'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
-                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                                'transaction_amount' => $gross,
-                                'login' => $order->login,
-                                'paymentid' => $order->paymentid,
-                            ]);
-
-                            $txn->save();
-
-                            $txn->transaction_response = $app->request->request->all();
-                            $txn->save();
-                            $transactionLog = new TransactionLogModel(
-                                [
-                                    'orderid' => $txn->orderid,
-                                    'paymentid' => $txn->paymentid,
-                                    'order_transaction_id' => $txn->id,
-                                    'transaction_id' => $txn->transaction_id,
-                                    'transaction_status' => $txn->transaction_status,
-                                    'transaction_total' => $txn->transaction_amount,
-                                    'login' => $txn->login,
-                                    'transaction_log' => $txn->transaction_response
-                                ]
-                            );
-
-                            if ($transactionLog->isValid()) {
-                                $transactionLog->save();
-                            }
-
-                            if ($gross && $gross === (float)$order->total) {
-                                $app->event->trigger('order:paid', ['model' => $order]);
-                            }
-                        }
-
-                        break;
-                    case 'invoice_payment':
-                        if ($invoice && $order && $app->request->request->get('payment_status') === 'Completed') {
-                            $txn->setAttributes([
-                                'orderid' => $order->orderid,
-                                'type' => OrderTransactionModel::TYPE_CAPTURE,
-                                'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
-                                'transaction_amount' => $app->request->request->get('payment_gross'),
-                                'login' => $order->login,
-                                'paymentid' => 100,
-                            ]);
-
-                            $txn->save();
-
-                            $txn->transaction_response = $app->request->request->all();
-                            $txn->save();
-
-                            $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
-                            $invoice->save();
-
-                            (new OrderLogModel([
-                                'orderid' => $order->orderid,
-                                'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                                'log' => "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
-                            ])
-                            )->save();
-
-                            if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() ==  0) {
-                                $app->event->trigger('order:paid', ['model' => $order]);
-                            }
-                            OrderTagEventHelper::orderTagEvent(5, $order->orderid);
-
-                        }
-                        break;
+            } elseif ($gateway === 'stripe') {
+                if (($bodyReceived = file_get_contents('php://input')) &&
+                    $params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR)) {
+                    if (isset($params['data']['object']['payment_intent']) &&
+                        $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['data']['object']['payment_intent']])) {
+                        OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
+                    }
                 }
             }
 
