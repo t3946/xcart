@@ -1,58 +1,49 @@
-{*
-$Id: refund_groups.tpl, v 1.0.0 2011/11/07 17:00:00 kate Exp $
-vim: set ts=2 sw=2 sts=2 et:
-*}
-
-{if $order.refund_groups[$mid]}
-<tr class="refund-distr-totals-line"><td style="font-size: 10px;" colspan="11">
-{if $group.cb_status eq "AP"}Adjust{else}Refund{/if} # {$order.order_prefix}{$order.orderid}-REF
-</td></tr>
-
-<tr class="refund-distr-totals-line">
-  <td style="font-size: 12px;">
-  {if $group.cb_status eq "AP"}Adjust for{else}{$lng.lbl_refund_for}{/if} {$group.group_name} {$lng.lbl_items}</td>
-  <td style="font-size: 12px;">{$group.code}</td>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-  <td align="right" nowrap="nowrap" style="font-size: 12px;">
-    {if $order.refund_groups[$mid].total_net ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].total_net}{if $order.refund_groups[$mid].total_net ne 0}){/if}
-  </td>
-  <td align="right" nowrap="nowrap" style="font-size: 12px;">
-    {if $order.refund_groups[$mid].total_gst ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].total_gst hide_zero='Y'}{if $order.refund_groups[$mid].total_gst ne 0}){/if}
-  </td>
-{*
-  <td align="right" nowrap="nowrap" style="font-size: 12px;">
-    {if $order.refund_groups[$mid].total_pst ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].total_pst hide_zero='Y'}{if $order.refund_groups[$mid].total_pst ne 0}){/if}
-  </td>
-*}
-  <td align="right" nowrap="nowrap" style="font-size: 12px;">
-    {if $order.refund_groups[$mid].total_gross ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].total_gross}{if $order.refund_groups[$mid].total_gross ne 0}){/if}
-  </td>
-  <td>&nbsp;</td>
-</tr>
-{foreach from=$order.refund_groups[$mid].products item=product key=prod_num}
+{assign var=refundGroup value=$oOrderGroup->getRefundsModel()}
+{if $refundGroup}
+  <tr class="refund-distr-totals-line">
+    <td style="font-size: 10px;" colspan="11">
+      {if $oOrderGroup->cb_status === 'AP'}Adjust{else}Refund{/if} # {$oOrder->getOrderNumber()}-REF
+    </td>
+  </tr>
+  <tr class="refund-distr-totals-line">
+    <td style="font-size: 12px;">
+      {if $oOrderGroup->cb_status === 'AP'}Adjust for{else}{$lng.lbl_refund_for}{/if} {$oOrderGroup} {$lng.lbl_items}</td>
+    <td style="font-size: 12px;">{$oOrderGroup->manufacturer->code}</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right" nowrap="nowrap" style="font-size: 12px;">
+      {if $refundGroup->total_net != 0}({/if}{include file="currency2.tpl" value=$refundGroup->total_net}{if $refundGroup->total_net != 0}){/if}
+    </td>
+    <td align="right" nowrap="nowrap" style="font-size: 12px;">
+      {if $refundGroup->total_gst != 0}({/if}{include file="currency2.tpl" value=$refundGroup->total_gst hide_zero='Y'}{if $refundGroup->total_gst != 0}){/if}
+    </td>
+    <td align="right" nowrap="nowrap" style="font-size: 12px;">
+      {if $refundGroup->total_gross != 0}({/if}{include file="currency2.tpl" value=$refundGroup->total_gross}{if $refundGroup->total_gross != 0}){/if}
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+{foreach from=$refundGroup->products item=ref_product}
+  {assign var=product value=$ref_product->product}
 <tr class="refund-distr-values-line{cycle values=", TableSubHead" name="cycle_`$mid`"}">
   <td class="refund-prod-title">
-    <a href="{$product.links.customer}&cat={$cats[$product.productid]}" title="" target="_blank">{$product.product}</a>
-    ({if $product.fee eq '0'}{$lng.lbl_no_restocking_fee}{else}{$lng.lbl_x_percents_restocking_fee|substitute:"X":$product.fee}{/if})
+    <a href="{$product->getAbsoluteUrl(true)}" title="{$product->getFrontendName()}" target="_blank">{$product->getFrontendName()}</a>
+    ({if $ref_product->getRestockingFee() eq '0'}{$lng.lbl_no_restocking_fee}{else}{$lng.lbl_x_percents_restocking_fee|substitute:"X":$ref_product->getRestockingFee()}{/if})
 
-{* --------------------- *}
-
-    {if $product.oProduct->options->count()}
-
-      {foreach from=$product.oProduct->options item=option key=key}
+    {if $product->options->count()}
+      {foreach from=$product->options item=option key=key}
         {if $option->active}
           <br/>
           {assign var="p_option" value=$option->option->title}
+          {assign var="orderDetail" value=$ref_product->getOrderDetail()}
           {$p_option}
-          <select name="items[{$product.itemid}][classid_optionid][{$option->id}]">
+          <select name="items[{$ref_product->itemid}][classid_optionid][{$option->id}]">
             <option>No options selected</option>
             {foreach from=$option->variants item=variant}
               <option value="{$variant->id}"
-                      {if $product.oOrderDetail->product_options && $product.oOrderDetail->product_options[$p_option] === $variant->variant->name}
+                      {if $orderDetail && $orderDetail->product_options && $orderDetail->product_options[$p_option] === $variant->variant->name}
                         selected="selected"
                       {/if}
               >{$variant}</option>
@@ -61,58 +52,45 @@ vim: set ts=2 sw=2 sts=2 et:
         {/if}
       {/foreach}
     {/if}
-{* --------------------- *}
-
   </td>
   <td>
     {if $current_membership_flag ne 'FS'}
-      <a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>
+      <a href="{$product->getAdminUrl()}" title="" target="_blank">{$product->productcode}</a>
     {else}
-      {$product.productcode}
+      {$product->productcode}
     {/if}
   </td>
   <td align="right">
     {if !$static}
-{*      <input type="text" size="8" name="ref_products[{$mid}][{$product.productid}][ref_price]" value="{$product.ref_price|price_format}" /> *}
-      <input type="text" size="8" name="ref_products[{$mid}][{$product.itemid}][ref_price]" value="{$product.ref_price|price_format}" />
+      <input type="text" size="8" name="ref_products[{$mid}][{$ref_product->itemid}][ref_price]" value="{$ref_product->ref_price|price_format}" />
     {else}
-      {include file="currency2.tpl" value=$product.ref_price|price_format}
+      {include file="currency2.tpl" value=$ref_product->ref_price|price_format}
     {/if}
-
-      <input type="hidden" name="ref_products[{$mid}][{$product.itemid}][productid]" value="{$product.productid}" />
-
+      <input type="hidden" name="ref_products[{$mid}][{$ref_product->itemid}][productid]" value="{$product->productid}" />
   </td>
   <td align="right" nowrap="nowrap">
-{*    {if $product.ref_qty ne 0}({/if}{if !$static}<input type="text" size="5" name="ref_products[{$mid}][{$product.productid}][ref_qty]" value="{$product.ref_qty}" />{else}{$product.ref_qty}{/if}{if $product.ref_qty ne 0}){/if} *}
-    {if $product.ref_qty ne 0}({/if}{if !$static}<input type="text" size="5" name="ref_products[{$mid}][{$product.itemid}][ref_qty]" value="{$product.ref_qty}" />{else}{$product.ref_qty}{/if}{if $product.ref_qty ne 0}){/if}
-
+    {if $ref_product->ref_qty ne 0}({/if}{if !$static}
+      <input type="text" size="5" name="ref_products[{$mid}][{$ref_product->itemid}][ref_qty]" value="{$ref_product->ref_qty}" />{else}{$ref_product->ref_qty}{/if}{if $ref_product->ref_qty ne 0}){/if}
   </td>
   <td align="right">&nbsp;</td>
   <td align="right">&nbsp;</td>
   <td align="right">&nbsp;</td>
   <td align="right" nowrap="nowrap">
-    {if $product.ref_qty ne 0 && $product.ref_price ne 0}({/if}{include file="currency2.tpl" value=$product.ref_price*$product.ref_qty}{if $product.ref_qty ne 0 && $product.ref_price ne 0}){/if}
+    {if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}({/if}{include file="currency2.tpl" value=$ref_product->getSubtotal()}{if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}){/if}
   </td>
   <td align="right" nowrap="nowrap">
-    {if $product.extra_data.taxes.GST.tax_value && $product.extra_data.taxes.HST.tax_value}
+    {*{if $product.extra_data.taxes.GST.tax_value && $product.extra_data.taxes.HST.tax_value}
       {math equation="x+y" assign="gst_taxes" x=$product.extra_data.taxes.GST.tax_value y=$product.extra_data.taxes.HST.tax_value}
       {if $gst_taxes ne 0}({/if}{include file="currency2.tpl" value=$gst_taxes hide_zero='Y'}{if $gst_taxes ne 0}){/if}
-    {/if}
+    {/if}*}
   </td>
-{*
   <td align="right" nowrap="nowrap">
-    {if $product.extra_data.taxes.PST.tax_value ne 0}({/if}{include file="currency2.tpl" value=$product.extra_data.taxes.PST.tax_value hide_zero='Y'}{if $product.extra_data.taxes.PST.tax_value ne 0}){/if}
-  </td>
-*}
-  <td align="right" nowrap="nowrap">
-    {if $product.subtotal > 0}({/if}{include file="currency2.tpl" value=$product.subtotal}{if $product.subtotal > 0}){/if}
+    {if $ref_product->getSubtotal() > 0}({/if}{include file="currency2.tpl" value=$ref_product->getSubtotal()}{if $ref_product->getSubtotal() > 0}){/if}
   </td>
   <td align="center">
     {if !$static}
-{*      <input type="checkbox" value="Y" name="ref_delete[{$mid}][{$product.productid}]" /> *}
-      <input type="checkbox" value="Y" name="ref_delete[{$mid}][{$product.itemid}]" />
+      <input type="checkbox" value="Y" name="ref_delete[{$mid}][{$ref_product->itemid}]" />
     {else}
-      &nbsp;
     {/if}
   </td>
 </tr>
@@ -120,10 +98,10 @@ vim: set ts=2 sw=2 sts=2 et:
 
 <tr class="refund-distr-values-line {cycle values=", TableSubHead" name="cycle_`$mid`"}">
   <td>
-    {if $order.refund_groups[$mid].shipping eq ""}
-      {assign var=shipping value="`$lng.lbl_adjustment_to` `$order.refund_groups[$mid].shipping`"}
+    {if !$refundGroup->shipping}
+      {assign var=shipping value="`$lng.lbl_adjustment_to` `$refundGroup->shipping`"}
     {else}
-      {assign var=shipping value="`$order.refund_groups[$mid].shipping`"}
+      {assign var=shipping value="`$refundGroup->shipping`"}
     {/if}
 
     {if !$static}
@@ -133,65 +111,47 @@ vim: set ts=2 sw=2 sts=2 et:
     {/if}
   </td>
   <td colspan="6">
-    {*if $order.refund_groups[$mid].tracking}
-      {foreach from=$order.refund_groups[$mid].tracking item=t}
-        {if $t.tracknum ne ""}
-          <a href="{$tracking_links[$t.linkid].link|substitute:"tracknum":$t.tracknum}" target="_blank">{$tracking_links[$t.linkid].shipping}: {$t.tracknum}</a>
-        {else}
-          {$tracking_links[$t.linkid].shipping}: {$tracking_links[$t.linkid].link}
-        {/if}
-        <br />
-      {/foreach}
+  </td>
+  <td align="right" nowrap="nowrap">
+    {if $refundGroup->ref_ship != 0}({/if}
+    {if !$static}
+      <input type="text" size="8" name="ref_groups[{$mid}][ref_ship]" value="{$refundGroup->ref_ship|price_format}"/>
     {else}
-      &nbsp;
-    {/if*}
-    &nbsp;
+      {$refundGroup->ref_ship|price_format}{/if}{if $refundGroup->ref_ship != 0})
+    {/if}
   </td>
   <td align="right" nowrap="nowrap">
-    {if $order.refund_groups[$mid].ref_ship ne 0}({/if}{if !$static}<input type="text" size="8" name="ref_groups[{$mid}][ref_ship]" value="{$order.refund_groups[$mid].ref_ship|price_format}" />{else}{$order.refund_groups[$mid].ref_ship|price_format}{/if}{if $order.refund_groups[$mid].ref_ship ne 0}){/if}
+    {if $refundGroup->shipping_gst != 0}({/if}{include file="currency2.tpl" value=$refundGroup->shipping_gst hide_zero='Y'}{if $refundGroup->shipping_gst != 0}){/if}
   </td>
   <td align="right" nowrap="nowrap">
-    {if $order.refund_groups[$mid].shipping_gst ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].shipping_gst hide_zero='Y'}{if $order.refund_groups[$mid].shipping_gst ne 0}){/if}
-  </td>
-{*
-  <td align="right" nowrap="nowrap">
-    {if $order.refund_groups[$mid].shipping_pst ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].shipping_pst hide_zero='Y'}{if $order.refund_groups[$mid].shipping_pst ne 0}){/if}
-  </td>
-*}
-  <td align="right" nowrap="nowrap">
-    {if $order.refund_groups[$mid].shipping_gross ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].shipping_gross}{if $order.refund_groups[$mid].shipping_gross ne 0}){/if}
+    {if $refundGroup->shipping_gross != 0}({/if}{include file="currency2.tpl" value=$refundGroup->shipping_gross}{if $refundGroup->shipping_gross != 0}){/if}
   </td>
   <td align="center">
-<input type="checkbox" value="Y" name="ref_groups[{$mid}][delete]" />
+    <input type="checkbox" value="Y" name="ref_groups[{$mid}][delete]"/>
   </td>
 </tr>
 
-<tr id="refund_group_{$mid}" {if $group.cb_status eq "3" || $group.cb_status eq "V"}style="background: #F4CCCC;"{elseif $group.cb_status eq "H" || $group.cb_status eq "R"}style="background: #fff2cc;"{else}style="display: none;"{/if}>
+<tr id="refund_group_{$mid}" {if $oOrderGroup->cb_status eq "3" || $oOrderGroup->cb_status eq "V"}style="background: #F4CCCC;"{elseif $oOrderGroup->cb_status eq "H" || $oOrderGroup->cb_status eq "R"}style="background: #fff2cc;"{else}style="display: none;"{/if}>
   <td colspan="11">
 
-{*
-    {if $group.cb_status ne "3" && $group.cb_status ne "V"}
-    <input type="button" value="Update C2B status" onclick="javascript: $('#ref_notify_button_clicked').val('Update_C2B_status'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
-    {/if}
-*}
-
-  {if $order.refund_groups[$mid].refund_reason ne ""}
-    <B>Refund reason:</B> {$order.refund_groups[$mid].refund_reason}
-    <br />
-    <br />
-  {/if}
-
-  {if $group.cb_status eq "3" || $group.cb_status eq "V"}
+  {if $oOrderGroup->cb_status eq "3" || $oOrderGroup->cb_status eq "V"}
     <B>Refund reason:</B><br />
-    <textarea id="refund_reason_{$mid}"  name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{$order.refund_groups[$mid].refund_reason|escape:"html"}</textarea>
-
-    <input type="button" value="Issue refund and Send refund notification" onclick="javascript: if ($('#refund_reason_{$mid}').val() != ''){ldelim} $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit(); {rdelim} else {ldelim} func_refund_reason_message(); {rdelim}" />&nbsp;&nbsp;
-  {elseif $group.cb_status eq "H" || $group.cb_status eq "R"}
-    <input type="button" value="Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
+    <textarea id="refund_reason_{$mid}"  name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{$refundGroup->refund_reason|escape:"html"}</textarea>
+    <input type="button" value="Issue refund and Send refund notification"
+           onclick="if ($('#refund_reason_{$mid}').val() != ''){ldelim} $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification');
+           $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit(); {rdelim} else {ldelim} func_refund_reason_message(); {rdelim}" />&nbsp;&nbsp;
+  {elseif $oOrderGroup->cb_status eq "H" || $oOrderGroup->cb_status eq "R"}
+    {if $refundGroup->refund_reason != ''}
+      <B>Refund reason:</B> {$refundGroup->refund_reason|escape:"html"}
+      <br />
+      <br />
+    {/if}
+    <input type="button" value="Send refund notification" onclick="$('#ref_notify_button_clicked').val('Send_refund_notification');
+    $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
   {/if}
 
     {$lng.lbl_ref_notify_status|cat:":"}
-    {if $order.refund_groups[$mid].notify_status eq 'S'}
+    {if $refundGroup->notify_status === 'S'}
       <span style="color: green; font-weight: bold">{$lng.lbl_sent}</span>
     {else}
       <span style="color: green;">{$lng.lbl_queued}</span>
