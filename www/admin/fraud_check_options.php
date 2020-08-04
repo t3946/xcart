@@ -28,10 +28,12 @@ if ($mode === 'Update_Fraud_check' && $REQUEST_METHOD === 'POST') {
     }
     if ($fraud_checks !== null && is_array($fraud_checks)) {
         foreach ($fraud_checks as $k => $v) {
+            $qc = strtoupper($v["question_code"]);
             FraudCheckModel::objects()->updateOrCreate(['question_code' => strtoupper($v["question_code"])],
                 ['auto' => $v['auto'], 'importance_factor' => $v['importance_factor'], 'orderby' => $v['orderby'], 'question_template_body' => stripslashes($v['question_template_body'])]);
-
+            $qq[] = $qc;
         }
+        FraudCheckModel::objects()->exclude(['question_code__in' => $qq])->delete();
     }
 
     $top_message["content"] = 'Done.';
@@ -51,7 +53,6 @@ $smarty->assign("users", $users);
 $site = Xcart::app()->getModule('Sites')->getSite();
 $smarty->assign('global_config', $site->getGlobalConfig());
 
-$row_max_index = count($fraud_checks);
-$smarty->assign("row_max_index", $row_max_index);
+$smarty->assign("row_max_index", $fraud_checks->count());
 
 ?>
