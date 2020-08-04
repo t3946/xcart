@@ -65,6 +65,8 @@ class Stripe extends Gateway
     public function authorize($params)
     {
         $params['paymentMethod'] = $this->gateway->createCard(['card' => $params['card']])->send()->getCardReference();
+        $params['confirm'] = true;
+        $params['returnUrl'] = Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => 'stripe']);
         $this->result = $this->gateway
             ->authorize($params)
             ->send();
@@ -78,21 +80,15 @@ class Stripe extends Gateway
 
     public function purchase($params)
     {
-        if (Xcart::app()->request->getIsPost()) {
-            $this->result = $this->gateway->authorize(array_merge($params, [
-                'token' => Xcart::app()->request->post->get('token'),
-                //'confirm' => false
-            ]))->send();
-        } else {
-            StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
-            $intent = $this->gateway->createPaymentIntent(
-                array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $params['order']->orderid]])
-            )->send();
-            Xcart::app()->template->display('checkout/stripe_checkout.tpl',
-                array_merge($params, ['client_secret' => $intent->getData() ? $intent->getData()['client_secret'] : '']));
-            $this->result = $intent;
-            return $intent->isSuccessful();
-        }
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
+        $intent = $this->gateway->createPaymentIntent(
+            array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $params['order']->orderid]])
+        )->send();
+        Xcart::app()->template->display('checkout/stripe_checkout.tpl',
+            array_merge($params, ['client_secret' => $intent->getData() ? $intent->getData()['client_secret'] : '']));
+        $this->result = $intent;
+
+        return $intent->isSuccessful();
     }
 
     public function complete($params)
@@ -103,16 +99,16 @@ class Stripe extends Gateway
     public function getState($mode)
     {
         $state = null;
-        if (!$this->result->isSuccessful()){
+        if (!$this->result->isSuccessful()) {
             return OrderTransactionModel::STATUS_FAILED;
         }
 
-        if (isset(OrderTransactionStore::$gatewayMethods[$mode]) && $this->result->isSuccessful()){
+        if (isset(OrderTransactionStore::$gatewayMethods[$mode]) && $this->result->isSuccessful()) {
             $state = OrderTransactionStore::$gatewayMethods[$mode]['status'];
         }
         $data = $this->result->getData();
         if (!$state) {
-            switch($data['status']) {
+            switch ($data['status']) {
                 case 'requires_capture':
                     $state = OrderTransactionModel::STATUS_AUTHORIZED;
                     break;

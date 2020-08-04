@@ -6,6 +6,7 @@ namespace Omnipay\Stripe;
 use Modules\Payment\Gateways\Omnipay\Stripe\Message\CancelPaymentIntentRequest;
 use Modules\Payment\Gateways\Omnipay\Stripe\Message\LookupPaymentIntentRequest;
 use Modules\Payment\Gateways\Omnipay\Stripe\Message\RefundPaymentIntentRequest;
+use Omnipay\Stripe\Message\AuthorizePaymentIntentRequest;
 use Omnipay\Stripe\Message\CapturePaymentIntentRequest;
 use Omnipay\Stripe\Message\CreatePaymentIntentRequest;
 
@@ -19,6 +20,11 @@ class Gateway extends PaymentIntentsGateway
     public function capture(array $parameters = [])
     {
         return $this->createRequest(CapturePaymentIntentRequest::class, $parameters);
+    }
+
+    public function authorize(array $parameters = [])
+    {
+        return $this->createRequest(AuthorizePaymentIntentRequest::class, $parameters);
     }
 
     public function cancel(array $parameters = [])
