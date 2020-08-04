@@ -46,6 +46,29 @@
 
     <tr>
         <td width="200" class="TableSubHead" nowrap="nowrap">
+            Under review users:
+        </td>
+        <td width="*" class="TableSubHead">
+            <select style="width:230px;" id="o_users" multiple class="select2" name="Under_review_users[]">
+                <option></option>
+                {foreach from=$users item=item_u key=key_k}
+                    <option {if in_array($item_u->id, ','|explode:$global_config.Under_review_users)}selected="selected"{/if}
+                            value="{$item_u->id}">{$item_u}</option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
+    <script type="text/javascript">
+        {literal}
+        $('#o_users').select2({
+            allowClear: false,
+            closeOnSelect: false,
+            placeholder: 'Click to select Users'
+        });
+        {/literal}
+    </script>
+    <tr>
+        <td width="200" class="TableSubHead" nowrap="nowrap">
             Overall FC threshold for `Clear` status:
         </td>
         <td width="*" class="TableSubHead">

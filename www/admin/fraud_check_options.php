@@ -1,36 +1,55 @@
 <?php
-if ($mode == 'Update_Fraud_check' && $REQUEST_METHOD == 'POST'){
 
-	db_query("UPDATE $sql_tbl[config] SET value='$fraud_domains_free_email_provider' WHERE name='fraud_domains_free_email_provider'");
-	db_query("UPDATE $sql_tbl[config] SET value='".price_format($Overall_FC_threshold_for_Clear_status)."' WHERE name='Overall_FC_threshold_for_Clear_status'");
-	db_query("UPDATE $sql_tbl[config] SET value='$Threshold_status' WHERE name='Threshold_status'");
-	db_query("UPDATE {$sql_tbl['config']} SET value='{$Risk_Score_Threshold_status}' WHERE name='Risk_Score_Threshold_status'");
-	db_query("UPDATE {$sql_tbl['config']} SET value='{$Overall_RS_threshold_for_Clear_status}' WHERE name='Overall_RS_threshold_for_Clear_status'");
-	db_query("UPDATE $sql_tbl[config] SET value='$below_threshold_status' WHERE name='below_threshold_status'");
-	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_address_search_exclusions' WHERE name='fraud_Google_address_search_exclusions'");
-	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_phone_search_exclusions' WHERE name='fraud_Google_phone_search_exclusions'");
-	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_email_search_exclusions' WHERE name='fraud_Google_email_search_exclusions'");
-//	db_query("UPDATE $sql_tbl[config] SET value='$fraud_Google_search_negative_words' WHERE name='fraud_Google_search_negative_words'");
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Order\Models\FraudCheckModel;
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 
-	db_query("DELETE FROM $sql_tbl[fraud_check]");
+global $smarty, $mode, $REQUEST_METHOD, $sql_tbl, $fraud_domains_free_email_provider, $Overall_FC_threshold_for_Clear_status;
+global $Threshold_status, $Risk_Score_Threshold_status, $Overall_RS_threshold_for_Clear_status, $below_threshold_status;
+global $fraud_Google_address_search_exclusions, $fraud_Google_phone_search_exclusions, $fraud_Google_email_search_exclusions, $fraud_checks;
 
-        if (!empty($fraud_checks) && is_array($fraud_checks)){
-                foreach ($fraud_checks as $k => $v){
-                        db_query("INSERT INTO $sql_tbl[fraud_check] (question_code, auto, importance_factor, orderby, question_template_body) VALUES ('".strtoupper($v["question_code"])."', '$v[auto]', '$v[importance_factor]', '$v[orderby]', '$v[question_template_body]')");
-                }
+if ($mode === 'Update_Fraud_check' && $REQUEST_METHOD === 'POST') {
+
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'fraud_domains_free_email_provider'], ['value' => $fraud_domains_free_email_provider]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'Overall_FC_threshold_for_Clear_status'], ['value' => price_format($Overall_FC_threshold_for_Clear_status)]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'Threshold_status'], ['value' => $Threshold_status]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'Risk_Score_Threshold_status'], ['value' => $Risk_Score_Threshold_status]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'Overall_RS_threshold_for_Clear_status'], ['value' => $Overall_RS_threshold_for_Clear_status]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'below_threshold_status'], ['value' => $below_threshold_status]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'fraud_Google_address_search_exclusions'], ['value' => $fraud_Google_address_search_exclusions]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'fraud_Google_phone_search_exclusions'], ['value' => $fraud_Google_phone_search_exclusions]);
+    GlobalConfigModel::objects()->updateOrCreate(['name' => 'fraud_Google_email_search_exclusions'], ['value' => $fraud_Google_email_search_exclusions]);
+
+    if ($users = Xcart::app()->request->post->get('Under_review_users')) {
+        GlobalConfigModel::objects()->updateOrCreate(['name' => 'Under_review_users'], ['value' => implode(',', $users)]);
+    } else {
+        GlobalConfigModel::objects()->updateOrCreate(['name' => 'Under_review_users'], ['value' => '']);
+    }
+    if ($fraud_checks !== null && is_array($fraud_checks)) {
+        foreach ($fraud_checks as $k => $v) {
+            FraudCheckModel::objects()->updateOrCreate(['question_code' => strtoupper($v["question_code"])],
+                ['auto' => $v['auto'], 'importance_factor' => $v['importance_factor'], 'orderby' => $v['orderby'], 'question_template_body' => stripslashes($v['question_template_body'])]);
+
         }
+    }
 
-        $top_message["content"] = 'Done.';
-        $top_message["type"] = "I";
+    $top_message["content"] = 'Done.';
+    $top_message["type"] = "I";
 
-	func_header_location("configuration.php?option=Fraud_check");
+    func_header_location("configuration.php?option=Fraud_check");
 }
 
-$fraud_checks = func_query("SELECT * FROM $sql_tbl[fraud_check] ORDER BY orderby");
-if (empty($fraud_checks)){
-	$fraud_checks[0]["id"] = "0";
+$fraud_checks = FraudCheckModel::objects()->asArray();
+if (!$fraud_checks) {
+    $fraud_checks[0]["id"] = "0";
 }
+
 $smarty->assign("fraud_checks", $fraud_checks);
+$users = UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->order(['firstname'])->all();
+$smarty->assign("users", $users);
+$site = Xcart::app()->getModule('Sites')->getSite();
+$smarty->assign('global_config', $site->getGlobalConfig());
 
 $row_max_index = count($fraud_checks);
 $smarty->assign("row_max_index", $row_max_index);
