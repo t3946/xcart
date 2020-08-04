@@ -84,7 +84,7 @@
                                         {t '27 Joseph St.' }
                                     </div>
                                     <div class="text-item">
-                                        {t 'Chatham, Ontario, N7L 3G4' }
+                                        {t 'Chatham, Ontario, N7L 3G5' }
                                     </div>
                                     <div class="text-item">
                                         {t 'Canada' }

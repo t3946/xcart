@@ -85,7 +85,7 @@
                                         <strong>Canadian Address</strong><br/>
                                         S3 Stores, Inc.<br/>
                                         27 Joseph St.<br/>
-                                        Chatham, Ontario N7L 3G4<br/>
+                                        Chatham, Ontario N7L 3G5<br/>
                                         Canada
                                     </div>
                                 </div>
