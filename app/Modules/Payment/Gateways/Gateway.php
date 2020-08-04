@@ -63,9 +63,9 @@ abstract class Gateway implements GatewayInterface
         return null;
     }
 
-    public static function isPartiallyCaptureEnabled()
+    public static function isPartiallyCaptureEnabled(): bool
     {
-        return true;
+        return false;
     }
 
     public function success($params)
