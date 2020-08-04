@@ -165,7 +165,7 @@
             </tr>
 
             <tr style="background-color: #FFFFFF;">
-                <td colspan="4" align="right"><b>Overall fraud score:</b></td>
+                <td colspan="4" align="right"><b>Effective fraud score:</b></td>
                 <td align="right">{if $orderModel->overall_fraud_score eq 0}0{else}{$orderModel->overall_fraud_score|default:"To be calculated"}{/if}</td>
             </tr>
 
