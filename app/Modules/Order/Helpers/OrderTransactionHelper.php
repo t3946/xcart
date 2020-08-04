@@ -145,12 +145,10 @@ class OrderTransactionHelper
                 }
 
                 if ($isAdditional) {
+                    $value = 0;
                     if (($payment = $model->payment_method_model) && $payment->maximum_re_authorization_multiplier > 0) {
-                        $value = min(
-                            $payment->maximum_re_authorization_increase, $value * $payment->maximum_re_authorization_multiplier - $value
-                        );
-                    } else {
-                        $value = 0;
+                        $value = min($payment->maximum_re_authorization_increase,
+                            $value * $payment->maximum_re_authorization_multiplier - $value);
                     }
                 }
             }

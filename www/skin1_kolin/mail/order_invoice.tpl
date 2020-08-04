@@ -21,7 +21,7 @@
 {/if}
 {if $order.reg_numbers}
 {section name=rn loop=$order.reg_numbers}
-{if %rn.first%}
+{if $smarty.section.rn.first}
 {$lng.lbl_registration_number}:
 {/if}
 {$order.reg_numbers[rn]}
