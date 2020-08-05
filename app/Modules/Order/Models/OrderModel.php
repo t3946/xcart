@@ -573,9 +573,9 @@ class OrderModel extends Model
         return $this->getOrderNumber();
     }
 
-    public function getRiskScore()
+    public function getRiskScore(): float
     {
-        return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score);
+        return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
     }
 
 }

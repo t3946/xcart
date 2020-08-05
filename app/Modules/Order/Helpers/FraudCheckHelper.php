@@ -1246,9 +1246,9 @@ HTML;
         return $aProductLinks ?? [];
     }
 
-    public static function getRiskScore($total, $bare_score)
+    public static function getRiskScore($total, $bare_score, $overall_fraud_score): float
     {
-        return 0;
+        return $overall_fraud_score;
     }
 
 

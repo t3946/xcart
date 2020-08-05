@@ -20,7 +20,7 @@
 
     <tr>
         <td width="200" class="TableSubHead" nowrap="nowrap">
-            Overall Risk score threshold for `Clear` status:
+            Risk score threshold for `Clear` status:
         </td>
         <td width="*" class="TableSubHead">
             <input type="text" style="width: 98%;" name="Overall_RS_threshold_for_Clear_status"
@@ -69,7 +69,7 @@
     </script>
     <tr>
         <td width="200" class="TableSubHead" nowrap="nowrap">
-            Overall FC threshold for `Clear` status:
+            Effective FC threshold for `Clear` status:
         </td>
         <td width="*" class="TableSubHead">
             <input type="text" style="width: 98%;" name="Overall_FC_threshold_for_Clear_status"
