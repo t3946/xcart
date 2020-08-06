@@ -44,7 +44,7 @@
     </section>
     <script>
         {ignore}
-        var stripe = Stripe('pk_test_aROFDjrZWDxMRE5YKa7keJku00ORq1PbK4');
+        var stripe = Stripe('pk_live_xGjQySYgrPwFCGtRsaSDARu300rNZiNptC');
         var elements = stripe.elements();
 
         var style = {
