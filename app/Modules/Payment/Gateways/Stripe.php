@@ -22,7 +22,7 @@ class Stripe extends Gateway
     {
         parent::init();
         $this->gateway->initialize([
-            'apiKey' => 'sk_test_51FmjzfBBFmepO8dOYfc0LN8QImGbPGfIq2gu95ZffQPLJcTwdZzir7Kndz5oggnWNerV7Q9aPxvagWxEKwkCZAKT00SRojdCTt',
+            'apiKey' => $this->model->param02,
         ]);
     }
 
