@@ -332,20 +332,19 @@ class OrderHelper
 
     public static function getCartOrder() :? OrderModel
     {
+        /** @var OrderModel $res */
         $cart = Xcart::app()->cart;
-
         if ($cart->getCartNumber() && !$cart->getIsEmpty()) {
-            return OrderModel::objects()->get([
+            $res = OrderModel::objects()->order(['-orderid'])->limit(1)->get([
                 'cart_number' => $cart->getCartNumber(),
             ]);
         }
-
-        return null;
+        return $res ?? null;
     }
 
     public static function OrderStepsReset($cart_number): void
     {
-        if ($order = OrderModel::objects()->get(['cart_number' => $cart_number])) {
+        if ($order = OrderModel::objects()->order(['-orderid'])->limit(1)->get(['cart_number' => $cart_number])) {
             $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1;
             $order->save();
         }

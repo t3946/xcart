@@ -100,8 +100,7 @@
                                     <li>
                                         <a href="" class="VertMenuItems"><img alt="" src="/skin1_kolin/images/rarrow.gif"></a>
                                         {if $item.distributor_section != $section}
-                                        <a style="color: #330000;"
-                                           href="{url 'admin:section' params=['mid' => $distributorModel->pk, 'section' => $item.distributor_section]}">
+                                        <a style="color: #330000;" href="{$distributorModel->getAdminUrl($item.distributor_section)}">
                                         {/if}
                                         {if $item.distributor_section == $section}<b>{/if}
                                             {$item['title']}
@@ -115,32 +114,7 @@
                         </fieldset>
                     {/foreach}
                     </div>
-                    {*<table width="100%">
-                        {set $sections = Modules\Admin\Forms\Dx\DistributorForm::getSections()}
-                        {foreach $sections as $key => $item index=$index first=$first}
-                            {if !$index % 2}
-                                <tr>
-                            {/if}
-                            <td class="NavDialogCell">
-                                <a href="" class="VertMenuItems"><img alt="" src="/skin1_kolin/images/rarrow.gif"></a>
-                                {if $item.distributor_section != $section}
-                                <a style="color: #330000;"
-                                   href="{url 'admin:section' params=['mid' => $distributorModel->pk, 'section' => $item.distributor_section]}">
-                                    {/if}
-                                    {if $item.distributor_section == $section}<b>{/if}
-                                        {$item.title}
-                                        {if $item.distributor_section == $section}</b>{/if}
-                                    {if $item.distributor_section != $section}
-                                </a>
-                                {/if}
-                            </td>
-                            {if ($index % 2)}
-                                </tr>
-                            {/if}
-                        {/foreach}
-                    </table>*}
                 </td>
-
             </tr>
         </table>
         <br/>

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 30.07.2018
- * Time: 18:31
- */
 
 namespace Xcart\App\Form;
 
