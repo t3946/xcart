@@ -6,6 +6,7 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Order\Helpers\OrderInvoiceHelper;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderTransactionStore;
@@ -88,7 +89,13 @@ class Stripe extends Gateway
         Xcart::app()->template->display('checkout/stripe_checkout.tpl',
             array_merge($params, ['client_secret' => $intent->getData() ? $intent->getData()['client_secret'] : '']));
         $this->result = $intent;
+        
+        $params['order']->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
+        $params['order']->save();
+        $params['order']->groups->update(['cb_status' => $params['order']->cb_status]);
+
         OrderInvoiceHelper::sendOrderStatusNotification($params['order']);
+
         return $intent->isSuccessful();
     }
 
