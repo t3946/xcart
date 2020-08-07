@@ -99,7 +99,7 @@
                     "insertdatetime media table contextmenu paste fullpage"
                 ],
                 toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                forced_root_block : false,
+                forced_root_block : true,
                 force_br_newlines : true,
                 force_p_newlines : false,
                 convert_urls: false,
