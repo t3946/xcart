@@ -815,7 +815,7 @@ abstract class Admin
                     $this->jsonResponse(['state' => 'success']);
                 }
                 else {
-                    Xcart::app()->flash->success('Изменения сохранены');
+                    Xcart::app()->flash->success('Changes have been successfully applied.');
 
                     $next = isset($_POST['save']) ? $_POST['save']: 'save';
                     if ($next == 'save') {
