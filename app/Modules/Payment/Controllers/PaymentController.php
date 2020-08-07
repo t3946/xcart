@@ -77,10 +77,7 @@ class PaymentController extends Controller
 
                 }
 
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_NOT_FINISHED;
-                $order->save();
-
-                $order->groups->update(['cb_status' => $order->cb_status]);
+                OrderHelper::changeOrderStatus($order, OrderStatusModel::ORDER_STATUS_NOT_FINISHED, 'cb', false);
 
                 if ($gw->result && $gw->result->isRedirect()) {
                     $gw->result->redirect();

@@ -450,7 +450,7 @@ HTML;
         $sts = "{$status}_status";
         $order->$sts = $value;
         $order->save();
-        $order->groups->update(['cb_status' => $value]);
+        $order->groups->update([$sts => $value]);
         if ($sendNotification) {
             OrderInvoiceHelper::sendOrderStatusNotification($order);
         }
