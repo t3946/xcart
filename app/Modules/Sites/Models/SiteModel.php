@@ -163,17 +163,17 @@ class SiteModel extends Model
     public function isWork()
     {
         if ($config = $this->getConfig()) {
-            return (empty($config['shop_closed']) || $config['shop_closed'] == 'N');
+            return (empty($config['shop_closed']) || $config['shop_closed'] === 'N');
         }
 
-        return ($this->status != 'D');
+        return ($this->status !== 'D');
     }
 
     public function showInLists()
     {
         if ($this->isWork()) {
             if ($config = $this->getConfig()) {
-                return (empty($config['search_all_website_show']) || $config['search_all_website_show'] == 'Y');
+                return (empty($config['search_all_website_show']) || $config['search_all_website_show'] === 'Y');
             }
         }
 

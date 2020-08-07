@@ -334,7 +334,8 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'Omnipay\\Stripe\\' => 
         array (
-            0 => __DIR__ . '/..' . '/omnipay/stripe/src',
+            0 => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Omnipay/Stripe',
+            1 => __DIR__ . '/..' . '/omnipay/stripe/src',
         ),
         'Omnipay\\PayPal\\' => 
         array (
@@ -13269,6 +13270,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Modules\\Payment\\Gateways\\OfflineRequest' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Offline.php',
         'Modules\\Payment\\Gateways\\OfflineResponse' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Offline.php',
         'Modules\\Payment\\Gateways\\PayPal' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/PayPal.php',
+        'Modules\\Payment\\Gateways\\Stripe' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Stripe.php',
         'Modules\\Payment\\Gateways\\Xpay' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Xpay.php',
         'Modules\\Payment\\Helpers\\PaymentEventHelper' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Helpers/PaymentEventHelper.php',
         'Modules\\Payment\\Helpers\\PaymentHelper' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Helpers/PaymentHelper.php',
@@ -13796,7 +13798,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Omnipay\\PayPal\\Support\\InstantUpdateApi\\BillingAgreement' => __DIR__ . '/..' . '/omnipay/paypal/src/Support/InstantUpdateApi/BillingAgreement.php',
         'Omnipay\\PayPal\\Support\\InstantUpdateApi\\ShippingOption' => __DIR__ . '/..' . '/omnipay/paypal/src/Support/InstantUpdateApi/ShippingOption.php',
         'Omnipay\\Stripe\\AbstractGateway' => __DIR__ . '/..' . '/omnipay/stripe/src/AbstractGateway.php',
-        'Omnipay\\Stripe\\Gateway' => __DIR__ . '/..' . '/omnipay/stripe/src/Gateway.php',
+        'Omnipay\\Stripe\\Gateway' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Omnipay/Stripe/Gateway.php',
         'Omnipay\\Stripe\\Message\\AbstractRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/AbstractRequest.php',
         'Omnipay\\Stripe\\Message\\AttachSourceRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/AttachSourceRequest.php',
         'Omnipay\\Stripe\\Message\\AuthorizeRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/AuthorizeRequest.php',
@@ -13806,6 +13808,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Omnipay\\Stripe\\Message\\CreateCardRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreateCardRequest.php',
         'Omnipay\\Stripe\\Message\\CreateCustomerRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreateCustomerRequest.php',
         'Omnipay\\Stripe\\Message\\CreateInvoiceItemRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreateInvoiceItemRequest.php',
+        'Omnipay\\Stripe\\Message\\CreatePaymentIntentRequest' => __DIR__ . '/../../../..' . '/app/Modules/Payment/Gateways/Omnipay/Stripe/Message/CreatePaymentIntentRequest.php',
         'Omnipay\\Stripe\\Message\\CreatePlanRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreatePlanRequest.php',
         'Omnipay\\Stripe\\Message\\CreateSourceRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreateSourceRequest.php',
         'Omnipay\\Stripe\\Message\\CreateSubscriptionRequest' => __DIR__ . '/..' . '/omnipay/stripe/src/Message/CreateSubscriptionRequest.php',

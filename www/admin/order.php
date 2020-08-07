@@ -1461,7 +1461,7 @@ if ($mode === 'ref_notify')
         }
 
         foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
-            $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['extra_data']['price'], $product['ref_price']);
+            $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['oOrderDetail']->price, $product['ref_price']);
         }
 
         func_update_refunded_groups($order['refund_groups'], $orderid, true, true);

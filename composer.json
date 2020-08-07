@@ -52,7 +52,8 @@
         "symfony/validator": "^3.0",
         "theiconic/php-ga-measurement-protocol": "^2.7",
         "tinymce/tinymce": "^5.3",
-        "true/punycode": "^2.1"
+        "true/punycode": "^2.1",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
@@ -62,7 +63,8 @@
             "Xcart\\External_Marketplaces\\": "www/modules/External_Marketplaces/include",
             "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
             "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal",
-            "Omnipay\\Xpay\\" : "app/Modules/Payment/Gateways/Omnipay/Xpay"
+            "Omnipay\\Xpay\\" : "app/Modules/Payment/Gateways/Omnipay/Xpay",
+            "Omnipay\\Stripe\\" : "app/Modules/Payment/Gateways/Omnipay/Stripe"
         },
         "classmap": [
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",

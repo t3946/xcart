@@ -11,6 +11,7 @@ use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\Fields\TextAreaField;
 use Xcart\App\Form\ModelForm;
 
@@ -71,22 +72,20 @@ class PagesForm extends ModelForm
             'file' => ImageField::className(),
 //            'published_at' => DateTimeField::className()
             'sites' => [
-                'class' => DropDownField::className(),
+                'class' => Select2Field::class,
                 'multiple' => true,
                 'choices' => function() {
-                    $models = SiteModel::objects()->all();
                     $mass = [];
-                    $mass[''] = '';
                     /** @var SiteModel $model */
-                    foreach ($models as $model) {
+                    foreach (SiteModel::objects()->all() as $model) {
                         if ($model->isWork()) {
-                            $mass[ $model->storefrontid ] = $model;
+                            $mass[ $model->storefrontid ] = (string) $model;
                         }
                     }
-
                     return $mass;
                 },
-                'required' => true
+                'empty' => 'All storefronts',
+                'required' => true,
             ],
             'language' => [
                 'class' => DropDownField::class,

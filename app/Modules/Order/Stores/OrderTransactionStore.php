@@ -3,13 +3,11 @@
 namespace Modules\Order\Stores;
 
 
-use Modules\Order\Helpers\OrderHelper;
+use Exception;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
-use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
-use Modules\Order\OrderModule;
 use Modules\Payment\Helpers\PaymentHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Store\BaseStore;
@@ -20,10 +18,10 @@ use Xcart\App\Store\BaseStore;
 class OrderTransactionStore extends BaseStore
 {
     public $params = [];
-    public $model = null;
-    public $gateway = null;
-    public $order = null;
-    public $log = null;
+    public $model;
+    public $gateway;
+    public $order;
+    public $log;
     public $failed = false;
 
     public static $gatewayMethods = [
@@ -93,11 +91,11 @@ class OrderTransactionStore extends BaseStore
         $type = null;
         $result = [];
 
-        extract(self::$gatewayMethods[$method]);
+        extract(self::$gatewayMethods[$method], EXTR_OVERWRITE);
 
         try {
             /** @var OrderTransactionModel $model */
-            list($model, $this->gateway) = OrderTransactionHelper::action($method, $this->params);
+            [$model, $this->gateway] = OrderTransactionHelper::action($method, $this->params);
 
             if ($model) {
 
@@ -106,10 +104,12 @@ class OrderTransactionStore extends BaseStore
                         [
                             'orderid' => $this->params['order']->orderid,
                             'parent_id' => $this->params['orderTransaction']->id,
-                            'type' => $type
                         ]
                     );
                     $this->log .= 'Transaction:' . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} <br/>";
+                }
+                if ($type) {
+                    $model->type = $type;
                 }
 
                 $model->save();
@@ -143,7 +143,7 @@ class OrderTransactionStore extends BaseStore
                 }
                 $this->log .= "<br/>{$result['name']}<br/>{$result['message']}";
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log .= $e->getMessage() . "\n";
             $this->failed = true;
             $logStatus = OrderTransactionModel::STATUS_FAILED;
@@ -152,7 +152,7 @@ class OrderTransactionStore extends BaseStore
         $transactionLog = new TransactionLogModel(
             [
                 'orderid' => $this->params['order']->orderid,
-                'paymentid' => $this->params['new_method_model']->paymentid,
+                'paymentid' => $this->params['new_method_model']->paymentid ?? $model->paymentid,
                 'order_transaction_id' => isset($model) ? $model->id : (isset($this->params['orderTransaction']) ? $this->params['orderTransaction']->id : null),
                 'transaction_id' => isset($model) ? $model->transaction_id : (isset($params['orderTransaction']) ? $this->params['orderTransaction']->transaction_id : ''),
                 'transaction_status' => $logStatus,
@@ -188,7 +188,7 @@ class OrderTransactionStore extends BaseStore
      */
     public static function lookupSelf($model)
     {
-        list($model_o) = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($model));
+        [$model_o] = OrderTransactionHelper::action('lookup', PaymentHelper::getPaymentParams($model));
         if ($model_o) {
             $model_o->save();
         }

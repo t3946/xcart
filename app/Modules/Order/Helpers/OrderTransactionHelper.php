@@ -48,7 +48,7 @@ class OrderTransactionHelper
             [
                 'transaction_id' => $gw->result->getTransactionReference(),
                 'transaction_status' => $gw->getState($params['mode']),
-                'transaction_currency' => $result['amount']["currency"],
+                'transaction_currency' => $result['amount']['currency'],
                 'transaction_amount' => $result['amount']['total'],
                 'transaction_response' => $result,
                 'paymentid' => $params['payment_method_model']->paymentid,

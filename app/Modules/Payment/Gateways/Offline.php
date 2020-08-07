@@ -4,7 +4,6 @@ namespace Modules\Payment\Gateways;
 
 
 use Modules\Order\Models\OrderStatusModel;
-use Modules\Order\Models\OrderTransactionModel;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\AbstractResponse;

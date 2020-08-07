@@ -15,16 +15,16 @@ class PagesStorefrontLink extends Model
 
             'page' => [
                 'field' => 'page_id',
-                'class' => ForeignField::className(),
-                'modelClass' => Page::className(),
+                'class' => ForeignField::class,
+                'modelClass' => Page::class,
                 'link' => ['page_id' => 'id'],
                 'null' => false,
             ],
 
             'storefront' => [
                 'field' => 'storefront_id',
-                'class' => ForeignField::className(),
-                'modelClass' => SiteModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
                 'link' => ['storefront_id' => 'storefrontid'],
                 'null' => false,
             ]

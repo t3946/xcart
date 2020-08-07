@@ -16,6 +16,11 @@ class PayPal extends Gateway
         return 'PayPal';
     }
 
+    public static function isPartiallyCaptureEnabled(): bool
+    {
+        return true;
+    }
+
     public function init()
     {
         parent::init();

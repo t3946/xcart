@@ -9,12 +9,13 @@ use Modules\Payment\Models\ProcessorModel;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\RestGateway;
+use Omnipay\Stripe\PaymentIntentsGateway;
 use Xcart\App\Main\Xcart;
 
 abstract class Gateway implements GatewayInterface
 {
 
-    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway $gateway */
+    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway|PaymentIntentsGateway $gateway */
     public $gateway;
 
     /** @var ProcessorModel $model */
@@ -44,15 +45,12 @@ abstract class Gateway implements GatewayInterface
      * @param ProcessorModel $model
      * @return null|Gateway
      */
-    public static function getGateway($model)
+    public static function getGateway($model): ?Gateway
     {
-        $gateway = null;
-        if ($model) {
-            if (class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
-                $gateway = new $class($model);
-            }
+        if ($model && class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
+            $gateway = new $class($model);
         }
-        return $gateway;
+        return $gateway ?? null;
     }
 
     public function init()
@@ -65,9 +63,9 @@ abstract class Gateway implements GatewayInterface
         return null;
     }
 
-    public static function isPartiallyCaptureEnabled()
+    public static function isPartiallyCaptureEnabled(): bool
     {
-        return true;
+        return false;
     }
 
     public function success($params)

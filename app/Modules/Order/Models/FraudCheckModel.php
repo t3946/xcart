@@ -40,8 +40,8 @@ class FraudCheckModel extends Model
             ],
             'question_template_body' => [
                 'class' => CharField::className(),
-                'null' => false,
-                'default' => ''
+                'null' => true,
+                'default' => null
             ]
         ];
     }

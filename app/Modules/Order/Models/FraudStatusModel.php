@@ -17,6 +17,7 @@ class FraudStatusModel extends Model
 
     public const STATUS_NOT_YET_STARTED = 'N';
     public const STATUS_ORDER_DECLINED = 'T';
+    public const STATUS_NEED_EXPERT = 'E';
     public const STATUS_UNDER_REVIEW = 'R';
     public const STATUS_UNDEFINED = 'U';
     public const STATUS_FRAUD_PROBABLY = 'B';

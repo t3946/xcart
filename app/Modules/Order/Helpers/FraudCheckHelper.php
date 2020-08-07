@@ -6,7 +6,6 @@ namespace Modules\Order\Helpers;
 
 use GuzzleHttp\Client;
 use Modules\Core\Models\TelephoneAreaModel;
-use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\OrderFraudCheckModel;
@@ -428,15 +427,15 @@ class FraudCheckHelper
         $fraud_score = -1;
         $names = [];
 
-        if ($firstname = FraudCheckHelper::correct($order->firstname)) {
+        if ($firstname = self::correct($order->firstname)) {
             $names[] = $firstname;
         }
 
-        if ($b_firstname = FraudCheckHelper::correct($order->b_firstname)) {
+        if ($b_firstname = self::correct($order->b_firstname)) {
             $names[] = $b_firstname;
         }
 
-        if ($s_firstname = FraudCheckHelper::correct($order->s_firstname)) {
+        if ($s_firstname = self::correct($order->s_firstname)) {
             $names[] = $s_firstname;
         }
         $names = array_unique($names);
@@ -843,7 +842,8 @@ class FraudCheckHelper
 
     public static function scoreCHECK_TOTAL(OrderModel $order, FraudCheckModel $fraud): array
     {
-        $order_total_div = 50 / $order->total;
+        $total = $order->total;
+        $order_total_div = 50 / $total;
 
         if ($order_total_div >= 1) {
             $fraud_result = 'positive';
@@ -851,7 +851,7 @@ class FraudCheckHelper
             $fraud_result = 'negative';
         }
 
-        $num = 50 - $order->total;
+        $num = 50 - $total;
 
         if (!$num) {
             $num = 1;
@@ -859,7 +859,7 @@ class FraudCheckHelper
 
         $sign = $num / abs($num);
 
-        $fraud_score = ((max(50, $order->total) / min(50, $order->total)) - 1) * $sign;
+        $fraud_score = ((max(50, $total) / min(50, $total)) - 1) * $sign;
 
         return [$fraud_result, round($fraud_score, 2), null];
     }
@@ -1245,5 +1245,11 @@ HTML;
         }
         return $aProductLinks ?? [];
     }
+
+    public static function getRiskScore($total, $bare_score, $overall_fraud_score): float
+    {
+        return $overall_fraud_score;
+    }
+
 
 }
