@@ -47,7 +47,6 @@ class AddressesForm extends CorporatesForm
 
     public function getFields()
     {
-        $entity = $this->getInstance();
         return [
             'formal_country_model' => [
                 'class' => DropDownField::class,

@@ -13,6 +13,8 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 class CorporateModel extends Model
@@ -141,7 +143,7 @@ class CorporateModel extends Model
             ],
             'physical_country_model' => [
                 'field' => 'physical_country',
-                'class' => CharField::class,
+                'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'sqlType' => Type::STRING,
                 'link' => ['physical_country' => 'code'],
@@ -181,7 +183,7 @@ class CorporateModel extends Model
             ],
             'mailing_country_model' => [
                 'field' => 'mailing_country',
-                'class' => CharField::class,
+                'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'link' => ['mailing_country' => 'code'],
                 'sqlType' => Type::STRING,
@@ -201,6 +203,105 @@ class CorporateModel extends Model
                 'default' => null,
                 'verboseName' => 'Zip/Postal code',
             ],
+            'inc_company_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company name',
+            ],
+            'inc_street_address' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Street address',
+            ],
+            'inc_street_address_line2' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Street address (line 2)',
+            ],
+            'inc_city' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'City',
+            ],
+            'inc_country_model' => [
+                'field' => 'inc_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'link' => ['inc_country' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Country',
+            ],
+            'inc_state' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'State/Province',
+            ],
+            'inc_zip' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Zip/Postal code',
+            ],
+            'inc_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Inc service company phone #',
+            ],
+            'inc_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Inc service company email',
+            ],
+            'inc_representative_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Representative name',
+            ],
+            'inc_representative_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Representative phone #',
+            ],
+            'inc_representative_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Representative email',
+            ],
+            'inc_login_url' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login URL',
+            ],
+            'inc_login' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login/username',
+            ],
+            'inc_password' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Password',
+            ],
+            'bank_accounts' => [
+                'class' => HasManyField::class,
+                'modelClass' => BankAccountModel::class,
+                'link' => ['id' => 'corporate_id']
+            ]
         ];
     }
 
@@ -216,5 +317,10 @@ class CorporateModel extends Model
             );
         }
         return '';
+    }
+
+    public function __toString()
+    {
+        return (string) $this->name;
     }
 }

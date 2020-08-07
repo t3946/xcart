@@ -55,11 +55,13 @@ class CorporatesAdmin extends Admin
     {
         $query = [];
 
+        $sections = CorporatesForm::getSections()[0];
+
         return Xcart::app()->router->url('admin:update_section', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
             'pk' => $pk ?: $this->getModelPk(),
-            'section' => $this->section
+            'section' => $this->section ?? key($sections)
         ], $query);
     }
 }

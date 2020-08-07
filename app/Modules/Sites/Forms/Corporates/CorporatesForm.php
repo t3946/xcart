@@ -10,6 +10,7 @@ use Modules\Sites\Models\CorporateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\ModelForm;
 
 class CorporatesForm extends ModelForm

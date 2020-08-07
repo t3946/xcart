@@ -30,13 +30,13 @@
                             {foreach $fieldset as $key => $item first=$first}
                                 <li>
                                     <a href="" class="VertMenuItems"><img alt="right arrow" src="/skin1_kolin/images/rarrow.gif"></a>
-                                    {if $key == $section}
+                                    {if $key == $admin->section}
                                         <b>
                                     {else}
                                         <a style="color: #330000;" href="{$form->getInstance()->getAdminUrl($key)}">
                                     {/if}
                                     {$item['title']}
-                                    {if $key == $section}
+                                    {if $key == $admin->section}
                                         </b>
                                     {else}
                                         </a>

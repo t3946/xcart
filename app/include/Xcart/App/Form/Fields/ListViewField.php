@@ -14,6 +14,7 @@ class ListViewField extends Field
     public $rowTemplate = 'forms/field/list_view/row.tpl';
     public $emptyTemplate = 'forms/field/list_view/empty.tpl';
     public $fieldType = 'list_view';
+    public $fieldTemplate = 'forms/field/list_view/field.tpl';
 
     /** @var \Modules\Admin\Contrib\Admin|null  */
     public $adminClass = null;
