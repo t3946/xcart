@@ -444,4 +444,15 @@ HTML;
         }
         return null;
     }
+
+    public static function changeOrderStatus(OrderModel $order, $value, $status = 'cb', $sendNotification = false): void
+    {
+        $sts = "{$status}_status";
+        $order->$sts = $value;
+        $order->save();
+        $order->groups->update(['cb_status' => $value]);
+        if ($sendNotification) {
+            OrderInvoiceHelper::sendOrderStatusNotification($order);
+        }
+    }
 }
