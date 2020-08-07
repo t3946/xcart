@@ -42,7 +42,7 @@ class PrototypeAdminController extends Controller
         $model = $form->getInstance();
         if (array_key_exists('save_continue', $data)) {
             return ['admin:update', [
-                'module' => $this-> getModule()->getId(),
+                'module' => $this->getModule()->getId(),
                 'adminClass' => $this->classNameShort(),
                 'id' => $model->pk
             ]];

@@ -573,7 +573,10 @@ class DistributorModel extends Model
 
     public function getAdminUrl($section = 1): string
     {
-        return Xcart::app()->router->url('admin:section', ['mid' => $this->manufacturerid, 'section' => $section]);
+        if ($section !== null) {
+            return Xcart::app()->router->url('admin:section', ['mid' => $this->manufacturerid, 'section' => $section]);
+        }
+        return '';
     }
 
     public function isUserPriveded($login)

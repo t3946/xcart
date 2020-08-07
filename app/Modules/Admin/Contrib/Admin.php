@@ -24,9 +24,11 @@ abstract class Admin
 {
     use SmartProperties, ClassNames, Renderer, SmartyRenderTrait;
 
-    protected $parent_pk = null;
+    protected $parent_pk;
 
-    private $admin_config = null;
+    private $admin_config;
+
+    public $section;
 
     public static $public = true;
 
