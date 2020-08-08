@@ -178,7 +178,7 @@
 
                 border: 1px solid rgba(50, 50, 93, 0.1);
 
-                height: 56px;
+                height: 46px;
 
                 width: 100%;
 
