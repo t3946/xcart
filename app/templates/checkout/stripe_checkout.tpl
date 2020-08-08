@@ -8,7 +8,7 @@
                 <div class="hide-for-small-only columns medium-2 large-3"></div>
                 <div class="columns small-12 medium-8 large-6">
                     <div style="text-align: center">
-                        <form id="payment-form">
+                        <form id="payment-form" style="width:100%;">
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
                             <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
                             <div id="card-element">
@@ -18,7 +18,7 @@
                                 <div class="column small-12">
                                     <div class="buttons text-center">
                                         {set $billing_info = $order->getAddressInfo()[1]}
-                                        <button data-secret="{$client_secret}"
+                                        <button style="min-width:230px;" data-secret="{$client_secret}"
                                                 data-name="{$billing_info.firstname}"
                                                 data-address1="{$billing_info.address[0]}"
                                                 data-address2="{$billing_info.address[1]}"
@@ -50,7 +50,7 @@
         var style = {
             base: {
                 color: "#32325d",
-                fontSize: '24px',
+                
             }
         };
         var card = elements.create("card", {style: style});
