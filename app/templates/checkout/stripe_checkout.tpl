@@ -43,10 +43,9 @@
         </div>
     </section>
     <script>
-        {ignore}
-        var stripe = Stripe('pk_live_xGjQySYgrPwFCGtRsaSDARu300rNZiNptC');
+        var stripe = Stripe('{$public_key}');
         var elements = stripe.elements();
-
+        {ignore}
         var style = {
             base: {
                 color: "#32325d",

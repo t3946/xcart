@@ -7,6 +7,7 @@ namespace Modules\Payment\Gateways;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
@@ -84,11 +85,34 @@ class Stripe extends Gateway
     public function purchase($params)
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
-        $intent = $this->gateway->createPaymentIntent(
-            array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $params['order']->orderid]])
-        )->send();
+
+        /** @var OrderModel $order */
+        $order = $params['order'];
+        if ($transaction = $order->transactions->filter([
+            'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+            'transaction_amount' => $params['amount'],
+            'transaction_currency' => $params['currency'],
+            'paymentid' => $order->payment_method_model->paymentid
+        ])->limit(1)->get()) {
+            $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
+        } else {
+            $intent = $this->gateway->createPaymentIntent(
+                array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $order->orderid]])
+            )->send();
+            $transaction_id = $intent->getData() ? $intent->getData()['client_secret'] : '';
+        }
+
         Xcart::app()->template->display('checkout/stripe_checkout.tpl',
-            array_merge($params, ['client_secret' => $intent->getData() ? $intent->getData()['client_secret'] : '']));
+            array_merge($params, [
+                'client_secret' => $transaction_id,
+                'public_key' => $params['processor_model']['param01'] ?? ''
+            ])
+        );
+
+        if ($transaction) {
+            return false;
+        }
+
         $this->result = $intent;
 
         OrderHelper::changeOrderStatus($params['order'], OrderStatusModel::ORDER_STATUS_NOT_FINISHED, 'cb', true);

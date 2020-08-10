@@ -52,7 +52,8 @@ class PaymentController extends Controller
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
                     'currency' => $order->currency,
-                    'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}"
+                    'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}",
+                    'processor_model' => $pm
                 ];
 
                 if ($gw->purchase($params)) {
