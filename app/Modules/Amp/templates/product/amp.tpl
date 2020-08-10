@@ -237,7 +237,7 @@
                         "on": "visible",
                         "request": "pageview",
                         "vars": {
-                            "title": "{$model->getFrontendName()|escape:$type = 'js'}"
+                            "title": "{$model->getFrontendName()|escape:'js'}"
                         }
                     },
 
