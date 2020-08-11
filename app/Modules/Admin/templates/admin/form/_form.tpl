@@ -17,7 +17,7 @@
     {var $fieldsets = $form->getFieldsets()}
     {if $fieldsets}
         {foreach $fieldsets as $name => $fieldsNames last=$last}
-            {if !is_integer($name)}
+            {if !is_integer($name) && $name}
                 <tr>
                     <td colspan="3"><br>
                         <table class="SubHeader" cellspacing="0">

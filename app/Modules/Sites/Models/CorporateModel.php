@@ -14,6 +14,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
@@ -297,11 +298,187 @@ class CorporateModel extends Model
                 'default' => null,
                 'verboseName' => 'Password',
             ],
+            'shares' => [
+                'class' => IntField::class,
+                'default' => 100000,
+                'verboseName' => 'Total number of shares',
+            ],
+            'federal_tax_id_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Federal tax ID name',
+            ],
+            'federal_tax_id' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Federal tax ID',
+            ],
+            'federal_tax_url' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login URL',
+            ],
+            'federal_tax_login' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login/username',
+            ],
+            'federal_tax_password' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Password',
+            ],
+            'federal_tax_year' => [
+                'class' => DateField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Federal tax year starts',
+            ],
+            'state_tax_id_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'State/Province tax ID name',
+            ],
+            'state_tax_id' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'State/Province tax ID',
+            ],
+            'state_tax_url' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login URL',
+            ],
+            'state_tax_login' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Login/username',
+            ],
+            'state_tax_password' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Password',
+            ],
+            'state_tax_year' => [
+                'class' => DateField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'State/Province tax year starts',
+            ],
+            'accounting_company_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company name',
+            ],
+            'accounting_company_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company phone #',
+            ],
+            'accounting_company_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company email',
+            ],
+            'accountant_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Accountant name',
+            ],
+            'accountant_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Accountant phone #',
+            ],
+            'accountant_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Accountant email',
+            ],
+            'secretary_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Secretary name',
+            ],
+            'secretary_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Secretary phone',
+            ],
+            'secretary_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Secretary email',
+            ],
+            'accounting_company_address' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Street address',
+            ],
+            'accounting_company_address_line2' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Street address (line 2)',
+            ],
+            'accounting_company_city' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'City',
+            ],
+            'accounting_company_country_model' => [
+                'field' => 'accounting_company_country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'link' => ['accounting_company_country' => 'code'],
+                'sqlType' => Type::STRING,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Country',
+            ],
+            'accounting_company_state' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'State/Province',
+            ],
+            'accounting_company_zip' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Zip/Postal code',
+            ],
             'bank_accounts' => [
                 'class' => HasManyField::class,
                 'modelClass' => BankAccountModel::class,
                 'link' => ['id' => 'corporate_id']
-            ]
+            ],
+            'shareholders' => [
+                'class' => HasManyField::class,
+                'modelClass' => ShareHolderModel::class,
+                'link' => ['id' => 'corporate_id']
+            ],
         ];
     }
 
