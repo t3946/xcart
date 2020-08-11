@@ -15,7 +15,7 @@
         browser_spellcheck : true,
         toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image',
         inline_boundaries: true,
-        {if ($field->disable_forced_root_block)}
+        {if (true || $field->disable_forced_root_block)}
             forced_root_block: false,
         {/if}
         branding: false,

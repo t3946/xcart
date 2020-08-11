@@ -1,7 +1,9 @@
 <?php
+
 namespace Modules\Goods\Helpers;
 
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Core\Helpers\Cache;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -10,46 +12,46 @@ use Xcart\App\Main\Xcart;
 
 class PromotionalProductsHelper
 {
-    public static function getProductOfTheDay() :? ProductModel
+    public static function getProductOfTheDay(): ?ProductModel
     {
         $qs = self::getProductsOfTheDaySQ();
         /** @var ProductModel $product */
-        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
+        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get()) {
             return $product;
         }
         $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
         return $product;
     }
 
-    public static function getBestSellerProduct():? ProductModel
+    public static function getBestSellerProduct(): ?ProductModel
     {
         $qs = self::getBestsellersSQ();
         /** @var ProductModel $product */
-        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->get()) {
+        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get()) {
             return $product;
         }
         $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
         return $product;
     }
 
-    public static function getNewProduct():? ProductModel
+    public static function getNewProduct(): ?ProductModel
     {
         $qs = ProductModel::showed();
         $qs->filter(['images__image_path__isnull' => false,]);
         /** @var ProductModel $product */
-        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['-productid'])->limit(1)->get()) {
+        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get()) {
             return $product;
         }
         $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get();
         return $product;
     }
 
-    public static function getSliderProduct():? array
+    public static function getSliderProduct(): ?array
     {
         $qs = ProductModel::showed();
         $qs->filter(['images__image_path__isnull' => false, 'images__image_x__gt' => 730]);
         /** @var ProductModel $product */
-        if ($product = $qs->cache(Cache::CACHE_DAY) ->order(['?'])->limit(1)->all()) {
+        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->all()) {
             return $product;
         }
         $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->all();
@@ -62,11 +64,9 @@ class PromotionalProductsHelper
         $qs = ProductModel::showed();
 
         if ($arr = self::getStaticProductsOfTheDay(
-            Xcart::app()->getModule('Sites')->getSite()))
-        {
+            Xcart::app()->getModule('Sites')->getSite())) {
             $qs->filter(['pk__in' => $arr]);
-        }
-        else {
+        } else {
             $qs->limit(20)->order(['?']);
         }
 
@@ -77,21 +77,13 @@ class PromotionalProductsHelper
     {
         $qs = ProductModel::showed();
 
-        if ($arr = self::getStaticProductsBestsellers(
-            Xcart::app()->getModule('Sites')->getSite()))
-        {
+        if ($arr = self::getStaticProductsBestsellers(Xcart::app()->getModule('Sites')->getSite())) {
             $qs->filter(['pk__in' => $arr]);
         }
-        else {
-            $qs->filter([
-                'images__image_path__isnull' => false,
-            ])->limit(20)->order(['?']);
-        }
-
         return $qs;
     }
 
-    public static function getStaticProductsOfTheDay($site) :? array
+    public static function getStaticProductsOfTheDay($site): ?array
     {
         $data = [
             'SG' => [
@@ -619,8 +611,16 @@ class PromotionalProductsHelper
         return null;
     }
 
-    public static function getStaticProductsBestsellers($site) :? array
+    public static function getStaticProductsBestsellers($site): ?array
     {
+        return ProductModel::showed()->filter([
+            'order_details__order_group__cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+            'order_details__order_group__order__storefrontid' => $site->storefrontid,
+            new Expression("date >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 30 DAY))"),
+        ])
+            ->cache(Cache::CACHE_DAY)
+            ->order([new Expression('SUM(amount) DESC')])->group(['order_details__orderid', 'productid'])->valuesList('pk', true);
+
         /*$data = [
             'SG' => [
                 '174193',
@@ -1167,7 +1167,7 @@ class PromotionalProductsHelper
         $code = strtolower($site->code);
         $img = "/static/frontend/dist/images/slider/{$code}/product_of_day.jpg";
 
-        if (file_exists(Paths::get('www').$img)) {
+        if (file_exists(Paths::get('www') . $img)) {
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
@@ -1183,7 +1183,7 @@ class PromotionalProductsHelper
         $code = strtolower($site->code);
         $img = "/static/frontend/dist/images/slider/{$code}/bestsellers.jpg";
 
-        if (file_exists(Paths::get('www').$img)) {
+        if (file_exists(Paths::get('www') . $img)) {
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
@@ -1199,7 +1199,7 @@ class PromotionalProductsHelper
         $code = strtolower($site->code);
         $img = "/static/frontend/dist/images/slider/{$code}/what_is_new.jpg";
 
-        if (file_exists(Paths::get('www').$img)) {
+        if (file_exists(Paths::get('www') . $img)) {
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 

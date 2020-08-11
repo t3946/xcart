@@ -8,7 +8,7 @@
                 <div class="hide-for-small-only columns medium-2 large-3"></div>
                 <div class="columns small-12 medium-8 large-6">
                     <div style="text-align: center">
-                        <form id="payment-form">
+                        <form id="payment-form" style="width:100%;">
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
                             <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
                             <div id="card-element">
@@ -17,8 +17,9 @@
                             <div style="margin-top: 2rem;" class="row align-center">
                                 <div class="column small-12">
                                     <div class="buttons text-center">
+                                        {set $shipping_info = $order->getAddressInfo()[0]}
                                         {set $billing_info = $order->getAddressInfo()[1]}
-                                        <button data-secret="{$client_secret}"
+                                        <button style="min-width:230px;" data-secret="{$client_secret}"
                                                 data-name="{$billing_info.firstname}"
                                                 data-address1="{$billing_info.address[0]}"
                                                 data-address2="{$billing_info.address[1]}"
@@ -26,6 +27,13 @@
                                                 data-country="{$billing_info.country->code}"
                                                 data-state="{$billing_info.state->state}"
                                                 data-city="{$billing_info.city}"
+                                                data-s_name="{$shipping_info.firstname}"
+                                                data-s_address1="{$shipping_info.address[0]}"
+                                                data-s_address2="{$shipping_info.address[1]}"
+                                                data-s_zipcode="{$shipping_info.zipcode}"
+                                                data-s_country="{$shipping_info.country->code}"
+                                                data-s_state="{$shipping_info.state->state}"
+                                                data-s_city="{$shipping_info.city}"
                                                 data-email="{$order->email}"
                                                 data-phone="{$order->phone}"
                                                 data-return="{$returnUrl}"
@@ -43,14 +51,13 @@
         </div>
     </section>
     <script>
-        {ignore}
-        var stripe = Stripe('pk_live_xGjQySYgrPwFCGtRsaSDARu300rNZiNptC');
+        var stripe = Stripe('{$public_key}');
         var elements = stripe.elements();
-
+        {ignore}
         var style = {
             base: {
                 color: "#32325d",
-                fontSize: '24px',
+                
             }
         };
         var card = elements.create("card", {style: style});
@@ -83,7 +90,18 @@
                         phone: button.dataset.phone,
                     },
                 },
-                return_url: button.dataset.return
+                return_url: button.dataset.return,
+                shipping: {
+                    address: {
+                        line1: button.dataset.s_address1,
+                        line2: button.dataset.s_address2,
+                        city: button.dataset.s_city,
+                        country: button.dataset.s_country,
+                        postal_code: button.dataset.s_zipcode,
+                        state: button.dataset.s_state,
+                    },
+                    name: button.dataset.s_name,
+                }
             }).then(function (result) {
                 if (result.error) {
                     document.querySelector("button").disabled = false;
@@ -178,7 +196,7 @@
 
                 border: 1px solid rgba(50, 50, 93, 0.1);
 
-                height: 56px;
+                height: 46px;
 
                 width: 100%;
 
