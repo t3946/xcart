@@ -844,17 +844,16 @@ class FraudCheckHelper
     {
         $score = -1;
         $fraud_result = 'negative';
-        $manual_action = 'N';
-
+        
         if (($oTransaction = $fraud->getFirstTransaction($order))) {
-            if (isset($oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score'])) {
-				$risk_score = (int) $oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score']; 
-			    $score = 65 - $risk_score;
+            if (isset($oTransaction->transaction_response['charges']['data'][0]['outcome'])) {
+				$risk_score = (int)$oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score']; 
+			    $score = (65 - $risk_score);
                 $additional = $oTransaction->transaction_response['charges']['data'][0]['outcome'];
-                $fraud_result = ($score >= 0) ? 'positive' : 'negative';
+				$fraud_result = 'positive';
 			}
         }
-        return [$fraud_result, $score, $additional ?? [], $manual_action];
+        return [$fraud_result, $score, $additional ?? []];
     }
 
     public static function scoreCHECK_TOTAL(OrderModel $order, FraudCheckModel $fraud): array
