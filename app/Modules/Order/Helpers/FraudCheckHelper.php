@@ -848,7 +848,7 @@ class FraudCheckHelper
 
         if (($oTransaction = $fraud->getFirstTransaction($order))) {
             if (isset($oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score'])) {
-				$risk_score = (int) $oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score'] 
+				$risk_score = (int) $oTransaction->transaction_response['charges']['data'][0]['outcome']['risk_score']; 
 			    $score = 65 - $risk_score;
                 $additional = $oTransaction->transaction_response['charges']['data'][0]['outcome'];
                 $fraud_result = ($score >= 0) ? 'positive' : 'negative';
