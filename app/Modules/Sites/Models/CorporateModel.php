@@ -469,6 +469,36 @@ class CorporateModel extends Model
                 'default' => null,
                 'verboseName' => 'Zip/Postal code',
             ],
+            'income_tax_period_starts_day' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'income_tax_period_starts_month' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'sales_tax_period_starts_day' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'sales_tax_period_starts_month' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'vat_tax_period_starts_day' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'vat_tax_period_starts_month' => [
+                'class' => IntField::class,
+                'null' => true,
+                'default' => null,
+            ],
             'bank_accounts' => [
                 'class' => HasManyField::class,
                 'modelClass' => BankAccountModel::class,
