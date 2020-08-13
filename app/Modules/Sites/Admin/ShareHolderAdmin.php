@@ -5,10 +5,10 @@ namespace Modules\Sites\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
-use Modules\Sites\Forms\Corporates\BankAccountsForm;
-use Modules\Sites\Forms\Corporates\ShareholdersForm;
-use Modules\Sites\Models\BankAccountModel;
+use Modules\Sites\Forms\Corporates\ShareholderForm;
 use Modules\Sites\Models\ShareHolderModel;
+use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Form\Fields\PercentField;
 
 class ShareHolderAdmin extends ListViewAdmin
 {
@@ -27,7 +27,13 @@ class ShareHolderAdmin extends ListViewAdmin
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'name'
             ],
+            'shares' => [
+                'class' => NumberField::class,
+                'title' => 'Shares',
+                'template' => $this->columnDefaultTemplate,
+            ],
             'percent' => [
+                'class' => PercentField::class,
                 'title' => 'Percentage',
                 'template' => $this->columnDefaultTemplate,
             ],
@@ -36,7 +42,7 @@ class ShareHolderAdmin extends ListViewAdmin
 
     public function getForm()
     {
-        return new ShareholdersForm;
+        return new ShareholderForm;
     }
 
     public function getModel()

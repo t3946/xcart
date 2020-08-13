@@ -20,13 +20,4 @@ class NumberField extends CharField
         $this->validators[] = new NumberValidator();
     }
 
-    public function getValue()
-    {
-        $value = parent::getValue();
-
-        if ($value instanceof \Xcart\App\Orm\Manager) {
-            throw new Exception("Value must be a string, not a manager");
-        }
-        return $this->value;
-    }
 }

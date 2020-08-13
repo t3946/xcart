@@ -5,12 +5,8 @@ namespace Modules\Sites\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
-use Modules\Sites\Forms\Corporates\BankAccountsForm;
-use Modules\Sites\Forms\Corporates\MerchantAccountsForm;
-use Modules\Sites\Forms\Corporates\ShareholdersForm;
-use Modules\Sites\Models\BankAccountModel;
+use Modules\Sites\Forms\Corporates\MerchantAccountForm;
 use Modules\Sites\Models\MerchantAccountModel;
-use Modules\Sites\Models\ShareHolderModel;
 
 class MerchantAccountAdmin extends ListViewAdmin
 {
@@ -38,7 +34,7 @@ class MerchantAccountAdmin extends ListViewAdmin
 
     public function getForm()
     {
-        return new MerchantAccountsForm;
+        return new MerchantAccountForm;
     }
 
     public function getModel()

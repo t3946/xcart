@@ -8,3 +8,6 @@
             {/foreach}
         </select>
 </span>
+{if $extended}
+        {$field->getForm()->getField($extended)->renderInput()}
+{/if}

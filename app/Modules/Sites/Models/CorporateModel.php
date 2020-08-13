@@ -479,6 +479,17 @@ class CorporateModel extends Model
                 'null' => true,
                 'default' => null,
             ],
+            'income_period_duration' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'year' => '1 year',
+                    'quarter' => '1 quarter (3 months)',
+                    'month' => '1 month',
+                ],
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Income tax period duration'
+            ],
             'sales_tax_period_starts_day' => [
                 'class' => IntField::class,
                 'null' => true,
@@ -488,6 +499,17 @@ class CorporateModel extends Model
                 'class' => IntField::class,
                 'null' => true,
                 'default' => null,
+            ],
+            'sales_period_duration' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'year' => '1 year',
+                    'quarter' => '1 quarter (3 months)',
+                    'month' => '1 month',
+                ],
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Sales tax period duration'
             ],
             'vat_tax_period_starts_day' => [
                 'class' => IntField::class,
@@ -499,6 +521,17 @@ class CorporateModel extends Model
                 'null' => true,
                 'default' => null,
             ],
+            'vat_period_duration' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'year' => '1 year',
+                    'quarter' => '1 quarter (3 months)',
+                    'month' => '1 month',
+                ],
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'VAT tax period duration'
+            ],
             'bank_accounts' => [
                 'class' => HasManyField::class,
                 'modelClass' => BankAccountModel::class,
@@ -508,6 +541,24 @@ class CorporateModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => ShareHolderModel::class,
                 'link' => ['id' => 'corporate_id']
+            ],
+            'income_tax_returns' => [
+                'class' => HasManyField::class,
+                'modelClass' => TaxReturnModel::class,
+                'link' => ['id' => 'corporate_id'],
+                'extra' => ['tax_type' => 'Income']
+            ],
+            'sales_tax_returns' => [
+                'class' => HasManyField::class,
+                'modelClass' => TaxReturnModel::class,
+                'link' => ['id' => 'corporate_id'],
+                'extra' => ['tax_type' => 'Sales']
+            ],
+            'vat_tax_returns' => [
+                'class' => HasManyField::class,
+                'modelClass' => TaxReturnModel::class,
+                'link' => ['id' => 'corporate_id'],
+                'extra' => ['tax_type' => 'VAT']
             ],
         ];
     }

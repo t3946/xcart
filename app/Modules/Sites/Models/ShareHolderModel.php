@@ -25,15 +25,16 @@ class ShareHolderModel extends Model
             'name' => [
                 'class' => CharField::class,
                 'null' => true,
-                'default' => null
+                'default' => null,
+                'verboseName' => 'Company/Person name',
             ],
             'shares' => [
                 'class' => IntField::class,
-                'default' => 0,
+                'verboseName' => 'Shares',
             ],
             'percent' => [
                 'class' => DecimalField::class,
-                'default' => 0,
+                'verboseName' => 'Percentage',
             ]
         ];
     }

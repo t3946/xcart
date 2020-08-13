@@ -31,7 +31,7 @@
 <tr> 
 	<td height="10" width="176" align="right" class="FormButton"></td>
 	<td width="18" height="10">&nbsp;</td>
-	<td width="282" height="10" class="ErrorMessage">{ if $main eq "login_incorrect"}{$lng.err_invalid_login}{/if}</td>
+	<td width="282" height="10" class="ErrorMessage">{if $main eq "login_incorrect"}{$lng.err_invalid_login}{/if}</td>
 </tr>
 {/if}
 

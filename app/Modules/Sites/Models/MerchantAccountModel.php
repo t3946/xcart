@@ -4,6 +4,7 @@
 namespace Modules\Sites\Models;
 
 
+use Xcart\App\Form\Fields\LinkField;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
