@@ -9,7 +9,7 @@
                 <div class="columns small-12 medium-8 large-6">
                     <div style="text-align: center">
                         <form id="payment-form" style="width:100%; background-color:#efefef;">
-                            {*<div id="payment-request-button"></div>*}
+                            <div id="payment-request-button"></div>
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
                             <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
                             <div id="card-element">
@@ -55,6 +55,9 @@
     <script>
         var stripe = Stripe('{$public_key}');
         var elements = stripe.elements();
+        var form = document.getElementById('payment-form');
+        var button = document.querySelector("button");
+        var clientSecret = button.dataset.secret;
 
         var style = {
             base: {
@@ -68,9 +71,40 @@
             total: {
                 label: 'Total',
                 amount: {$order->total * 100}
-            }
+            },
+            requestPayerName: true,
+            requestPayerEmail: true,
         });
+
         {ignore}
+        paymentRequest.on('paymentmethod', function(ev) {
+            // Confirm the PaymentIntent without handling potential next actions (yet).
+            stripe.confirmCardPayment(
+                clientSecret,
+                    {payment_method: ev.paymentMethod.id},
+                    {handleActions: false}
+            ).then(function(confirmResult) {
+                if (confirmResult.error) {
+                    // Report to the browser that the payment failed, prompting it to
+                    // re-show the payment interface, or show an error message and close
+                    // the payment interface.
+                    ev.complete('fail');
+                } else {
+                    // Report to the browser that the confirmation was successful, prompting
+                    // it to close the browser payment method collection interface.
+                    ev.complete('success');
+                    // Let Stripe.js handle the rest of the payment flow.
+                    stripe.confirmCardPayment(clientSecret).then(function(result) {
+                        if (result.error) {
+                            // The payment failed -- ask your customer for a new payment method.
+                            document.querySelector("#card-errors").textContent = result.error ? result.error.message : "";
+                        } else {
+                            window.location = button.dataset.return;
+                        }
+                    });
+                }
+            });
+        });
         var prButton = elements.create('paymentRequestButton', {
             paymentRequest: paymentRequest
         });
@@ -87,9 +121,6 @@
             document.querySelector("button").disabled = event.empty || event.error;
             document.querySelector("#card-errors").textContent = event.error ? event.error.message : "";
         });
-        var form = document.getElementById('payment-form');
-        var button = document.querySelector("button");
-        var clientSecret = button.dataset.secret;
 
         form.addEventListener('submit', function (ev) {
             ev.preventDefault();
