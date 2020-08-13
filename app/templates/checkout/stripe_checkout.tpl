@@ -14,6 +14,7 @@
                             <div id="card-element">
                             </div>
                             <div id="card-errors" role="alert" style="text-align: center"></div>
+                            <div id="payment-request-button"></div>
                             <div style="margin-top: 2rem;" class="row align-center">
                                 <div class="column small-12">
                                     <div class="buttons text-center">
@@ -53,13 +54,32 @@
     <script>
         var stripe = Stripe('{$public_key}');
         var elements = stripe.elements();
-        {ignore}
+
         var style = {
             base: {
                 color: "#32325d",
                 
             }
         };
+        var paymentRequest = stripe.paymentRequest({
+            country: '{$billing_info.country->code}',
+            currency: '{$site_currency->currency_code|strtolower}',
+            total: {
+                label: 'Total',
+                amount: {$order->total * 100}
+            }
+        });
+        {ignore}
+        var prButton = elements.create('paymentRequestButton', {
+            paymentRequest: paymentRequest
+        });
+        paymentRequest.canMakePayment().then(function(result) {
+            if (result) {
+                prButton.mount('#payment-request-button');
+            } else {
+                document.getElementById('payment-request-button').style.display = 'none';
+            }
+        });
         var card = elements.create("card", {style: style});
         card.mount("#card-element");
         card.on("change", function (event) {
