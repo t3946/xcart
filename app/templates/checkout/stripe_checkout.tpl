@@ -8,7 +8,7 @@
                 <div class="hide-for-small-only columns medium-2 large-3"></div>
                 <div class="columns small-12 medium-8 large-6">
                     <div style="text-align: center">
-                        <form id="payment-form" style="width:100%;">
+                        <form id="payment-form" style="width:100%; background-color:#efefef;">
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
                             <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
                             <div id="card-element">
