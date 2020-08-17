@@ -106,7 +106,7 @@
 
                         <tr>
                             <td width="219">
-                                <B>Customer time:</B> {$customer.customer_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                                <B>Customer time:</B> {$group->order->getCxDateTime()|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                                 <br/>
                                 <B>Customer phone:</B> {$customer.phone}
                             </td>
