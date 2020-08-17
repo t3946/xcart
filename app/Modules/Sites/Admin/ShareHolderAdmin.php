@@ -9,6 +9,7 @@ use Modules\Sites\Forms\Corporates\ShareholderForm;
 use Modules\Sites\Models\ShareHolderModel;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\PercentField;
+use Xcart\App\Orm\Model;
 
 class ShareHolderAdmin extends ListViewAdmin
 {
@@ -54,4 +55,14 @@ class ShareHolderAdmin extends ListViewAdmin
     {
         return 'Shareholders';
     }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        if ($property === 'percent') {
+            return parent::getItemProperty($item, $property) . "%";
+        }
+        return parent::getItemProperty($item, $property);
+    }
+
+
 }

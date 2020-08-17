@@ -7,6 +7,7 @@ namespace Modules\Sites\Forms\Corporates;
 use Modules\Sites\Admin\ShareHolderAdmin;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\ListViewField;
+use Xcart\App\Form\Fields\NumberField;
 
 class ShareholdersForm extends CorporatesForm
 {
@@ -22,7 +23,7 @@ class ShareholdersForm extends CorporatesForm
     {
         return [
             'shares' => [
-                'class' => CharField::class,
+                'class' => NumberField::class,
                 'html' => ['style' => 'width:100px;'],
             ],
             'shareholders' => [

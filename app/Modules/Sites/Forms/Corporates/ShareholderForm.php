@@ -4,10 +4,9 @@
 namespace Modules\Sites\Forms\Corporates;
 
 
-use Modules\Sites\Admin\ShareHolderAdmin;
 use Modules\Sites\Models\ShareHolderModel;
-use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\ListViewField;
+use Xcart\App\Form\Fields\NumberField;
+use Xcart\App\Form\Fields\PercentField;
 use Xcart\App\Form\ModelForm;
 
 class ShareholderForm extends ModelForm
@@ -19,6 +18,20 @@ class ShareholderForm extends ModelForm
             'shares',
             'percent',
         ]];
+    }
+
+    public function getFields()
+    {
+        return [
+            'shares' => [
+                'class' => NumberField::class,
+                'html' => ['style' => 'width: 100px;'],
+            ],
+            'percent' => [
+                'class' => PercentField::class,
+                'html' => ['style' => 'width: 70px;'],
+            ]
+        ];
     }
 
     public function getModel()

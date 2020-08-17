@@ -5,6 +5,7 @@ namespace Modules\Sites\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
+use Modules\Sites\Forms\Corporates\BankAccountForm;
 use Modules\Sites\Forms\Corporates\BankAccountsForm;
 use Modules\Sites\Models\BankAccountModel;
 
@@ -34,7 +35,7 @@ class BankAccountAdmin extends ListViewAdmin
 
     public function getForm()
     {
-        return new BankAccountsForm;
+        return new BankAccountForm;
     }
 
     public function getModel()
