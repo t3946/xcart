@@ -107,7 +107,7 @@
                         <tr>
                             <td width="219">
                                 {assign var=cs_date value=$group->order->getCxDateTime()}
-                                <B>Customer time:</B> {$cs_date->format('d-M-Y H:i')}
+                                <B>Customer time:</B> {if $cs_date}{$cs_date->format('d-M-Y H:i')}{/if}
                                 <br/>
                                 <B>Customer phone:</B> {$customer.phone}
                             </td>
