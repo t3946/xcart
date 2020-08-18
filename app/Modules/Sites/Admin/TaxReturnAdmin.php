@@ -50,4 +50,18 @@ class TaxReturnAdmin extends ListViewAdmin
     {
         return new TaxReturnModel;
     }
+
+    public function getAllUrl()
+    {
+        $admin = new CorporatesAdmin;
+        $admin->section = 'tax_returns_outstanding';
+        if ($this->ownerPk->id) {
+            return $admin->getUpdateUrl($this->ownerPk->id);
+        }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return $admin->getUpdateUrl($this->ownerPk);
+        }
+
+        return parent::getAllUrl();
+    }
 }

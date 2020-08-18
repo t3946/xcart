@@ -17,20 +17,20 @@ class MerchantAccountAdmin extends ListViewAdmin
         return ['issuer', 'number'];
     }
 
-    /*public function getAvailableListColumns()
+    public function getAvailableListColumns()
     {
         return [
-            'name' => [
-                'title' => 'Company/Person name',
+            'issuer' => [
+                'title' => 'Merchant account issuer',
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'name'
             ],
-            'percent' => [
-                'title' => 'Percentage',
+            'number' => [
+                'title' => 'Merchant account #',
                 'template' => $this->columnDefaultTemplate,
             ],
         ];
-    }*/
+    }
 
     public function getForm()
     {
@@ -45,5 +45,19 @@ class MerchantAccountAdmin extends ListViewAdmin
     public static function getName()
     {
         return 'Merchant Accounts';
+    }
+
+    public function getAllUrl()
+    {
+        $admin = new CorporatesAdmin;
+        $admin->section = 'merchant_accounts';
+        if ($this->ownerPk->id) {
+            return $admin->getUpdateUrl($this->ownerPk->id);
+        }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return $admin->getUpdateUrl($this->ownerPk);
+        }
+
+        return parent::getAllUrl();
     }
 }

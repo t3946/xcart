@@ -47,4 +47,18 @@ class BankAccountAdmin extends ListViewAdmin
     {
         return 'Bank accounts';
     }
+
+    public function getAllUrl()
+    {
+        $admin = new CorporatesAdmin;
+        $admin->section = 'bank_accounts';
+        if ($this->ownerPk->id) {
+            return $admin->getUpdateUrl($this->ownerPk->id);
+        }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return $admin->getUpdateUrl($this->ownerPk);
+        }
+
+        return parent::getAllUrl();
+    }
 }

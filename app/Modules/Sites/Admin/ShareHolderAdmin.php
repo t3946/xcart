@@ -9,6 +9,7 @@ use Modules\Sites\Forms\Corporates\ShareholderForm;
 use Modules\Sites\Models\ShareHolderModel;
 use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\PercentField;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
 class ShareHolderAdmin extends ListViewAdmin
@@ -62,6 +63,20 @@ class ShareHolderAdmin extends ListViewAdmin
             return parent::getItemProperty($item, $property) . "%";
         }
         return parent::getItemProperty($item, $property);
+    }
+
+    public function getAllUrl()
+    {
+        $admin = new CorporatesAdmin;
+        $admin->section = 'shareholders';
+        if ($this->ownerPk->id) {
+            return $admin->getUpdateUrl($this->ownerPk->id);
+        }
+        if ($this->ownerPk && is_numeric($this->ownerPk)) {
+            return $admin->getUpdateUrl($this->ownerPk);
+        }
+
+        return parent::getAllUrl();
     }
 
 
