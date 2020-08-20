@@ -1,7 +1,10 @@
 <?php
 namespace Modules\Order\Models;
 
-use Doctrine\DBAL\Types\Type;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
+use Doctrine\DBAL\Types\Types;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
@@ -21,11 +24,14 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\Field;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\ModelFieldInterface;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
@@ -75,14 +81,17 @@ use Xcart\Order;
  * @property mixed tracking_all_filled
  * @property int tracking_fill_time
  * @property bool track_sms
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null date
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null b_country
+ * @property mixed|Field|FileField|ModelFieldInterface|null date
+ * @property mixed|Field|FileField|ModelFieldInterface|null b_country
  * @property OrderExtraModel extra_model
  * @property StateModel billing_state
  * @property StateModel shipping_state
  * @property SiteModel site
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface currency
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface payment_method_model
+ * @property mixed|Field|FileField|ModelFieldInterface currency
+ * @property mixed|Field|FileField|ModelFieldInterface payment_method_model
+ * @property mixed|Field|FileField|ModelFieldInterface overall_fraud_score
+ * @property mixed|Field|FileField|ModelFieldInterface bare_fraud_score
+ * @property mixed|Field|FileField|ModelFieldInterface dc_status
  */
 class OrderModel extends Model
 {
@@ -93,10 +102,10 @@ class OrderModel extends Model
     public const ORDER_TYPE_MFN = 'MFN';
     public const ORDER_TYPE_FB = 'FB';
 
-    const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
-    const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
-    const ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS = 'IP';
-    const ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED = 'NS';
+    public const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
+    public const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
+    public const ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS = 'IP';
+    public const ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED = 'NS';
 
     public $last_activity;
     public $last_message;
@@ -165,7 +174,7 @@ class OrderModel extends Model
                 'field' => 's_state',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'link' => [
                     's_state' => 'code',
                     's_country' => 'country_code'
@@ -175,14 +184,14 @@ class OrderModel extends Model
                 'field' => 's_country',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'link' => ['s_country' => 'code']
             ],
             'billing_state' => [
                 'field' => 'b_state',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'link' => [
                     'b_state' => 'code',
                     'b_country' => 'country_code'
@@ -192,7 +201,7 @@ class OrderModel extends Model
                 'field' => 'b_country',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'link' => ['b_country' => 'code']
             ],
             'cb_status_model' => [
@@ -200,7 +209,7 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['cb_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true,
             ],
             'dc_status_model' => [
@@ -208,7 +217,7 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['dc_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true,
             ],
             'bd_status_model' => [
@@ -216,7 +225,7 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['bd_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true,
             ],
             'd2a_status_model' => [
@@ -224,7 +233,7 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['d2a_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true,
             ],
             'fraud_status_model' => [
@@ -232,7 +241,7 @@ class OrderModel extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => FraudStatusModel::className(),
                 'link' => ['fraud_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => false,
             ],
             'notification' => [
@@ -240,7 +249,7 @@ class OrderModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderStatusNotificationModel::class,
                 'link' => ['cb_status' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'site' => [
                 'field' => 'storefrontid',
@@ -483,9 +492,9 @@ class OrderModel extends Model
         return $shipping['country']->code === 'CA' && $this->groups->exclude(['manufacturer__m_country' => 'CA'])->count();
     }
 
-    public function getEstimatedDeliveryDate():? \DateTime
+    public function getEstimatedDeliveryDate():? DateTime
     {
-        $result = $max_day = null;
+        $max_day = null;
 
         foreach($this->groups as $group){
             /** @var ShippingModel $shipping */
@@ -499,11 +508,9 @@ class OrderModel extends Model
             $max_day = 14;
         }
 
-        $order_date = (new \DateTime)->setTimestamp($this->date);
+        $order_date = (new DateTime)->setTimestamp($this->date);
 
-        $result = $order_date->add(new \DateInterval("P{$max_day}D"));
-
-        return $result;
+        return $order_date->add(new DateInterval("P{$max_day}D"));
     }
 
     public function getOrderHash()
@@ -511,10 +518,10 @@ class OrderModel extends Model
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
 
-    public function getCxDateTime():? \DateTime
+    public function getCxDateTime():? DateTime
     {
         if ($time_zone = $this->billing_state->timezone) {
-            return new \DateTime('now', new \DateTimeZone($time_zone));
+            return new DateTime('now', new DateTimeZone($time_zone));
         }
         return null;
     }
@@ -576,6 +583,17 @@ class OrderModel extends Model
     public function getRiskScore(): float
     {
         return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
+    }
+
+    public function getTrackingNumbers(): array
+    {
+        $tracks = [];
+        foreach ($this->groups as $group) {
+            foreach ($group->trackings as $track) {
+                $tracks[] = $track;
+            }
+        }
+        return $tracks;
     }
 
 }

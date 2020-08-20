@@ -129,4 +129,15 @@ class OrderTrackingModel extends Model
         OrderHelper::checkOrderTrackedAll($this->order_group->order);
         OrderTrackingHelper::deleteAfterShip($owner);
     }
+
+    public function __toString()
+    {
+        if ($this->tracknum) {
+            $carrier = $this->carrier;
+            $link = $carrier->link;
+            $sl = $link ? $link->shipping : '';
+            $str = "Shipped on ". $this->getField('shipping_date')->getValue()->format('M d, Y'). " by {$carrier} {$sl} : {$this->tracknum}";
+        }
+        return $str ?? '';
+    }
 }
