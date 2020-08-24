@@ -2,12 +2,7 @@
 
 namespace Modules\Amp\Models;
 
-use Modules\Amp\Helpers\AmpHelper;
-use Modules\Core\Models\GlobalConfigModel;
-use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
-use Modules\Sites\Models\SiteConfigModel;
-use Xcart\App\Main\Xcart;
 
 class AmpProductModel extends ProductModel
 {
@@ -43,7 +38,7 @@ class AmpProductModel extends ProductModel
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $this->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $pref = ($site->getConfig()['Enable_CDN'] === "Y") ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//" .$pref . $domain;
 
@@ -72,45 +67,37 @@ class AmpProductModel extends ProductModel
             if(!$flag){
                 return $images;
             }
-            else {
-                return json_encode($images);
-            }
+
+            return json_encode($images);
         }
 
-        else {
-            $images_model = $this->getImages();
+        $images_model = $this->getImages();
 
-            if ($images_model)
-            {
-                $image_model = reset($images_model);
-            }
-            else
-            {
-                $image_model = $this->getThumbnail();
-            }
-
-            if($image_model)
-            {
-                $for_image = ltrim($image_model->image_path, ".");
-                $images[] = $domain . $for_image;
-            }
-
-            if (!$flag) {
-                return $images;
-            }
-            else {
-                return json_encode($images);
-            }
+        if ($images_model)
+        {
+            $image_model = reset($images_model);
         }
+        else
+        {
+            $image_model = $this->getThumbnail();
+        }
+
+        if($image_model)
+        {
+            $for_image = ltrim($image_model->image_path, ".");
+            $images[] = $domain . $for_image;
+        }
+
+        if (!$flag) {
+            return $images;
+        }
+
+        return json_encode($images);
     }
 
     public function isDescrHasIframe(){
-        $fulldescr = $this->getFrontendDescription();
-        if ( (strpos( strtolower($fulldescr), "<iframe") !== false)  || (strpos( strtolower($fulldescr), "<video") !== false) ){
-            return true;
-        } else {
-            return false;
-        }
+        $full_description = $this->getFrontendDescription();
+        return (stripos($full_description, "<iframe") !== false) || (stripos($full_description, "<video") !== false);
     }
 
     public function getAmpFrontendDescription()
@@ -207,12 +194,12 @@ class AmpProductModel extends ProductModel
         return $fulldescr;
     }
 
-    public function isNeedForm(){
-        if (!$this->isGroupRoot() && !$this->isOutOfStock()){
+    public function isNeedForm(): bool
+    {
+        if (!$this->isGroupRoot()){
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
 }
