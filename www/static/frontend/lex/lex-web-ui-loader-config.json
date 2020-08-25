@@ -1,0 +1,40 @@
+{
+  "region": "us-west-2",
+  "cognito": {
+    "poolId": "us-west-2:7fd52568-2f7d-4518-8e03-0d4bcb866326",
+    "appUserPoolClientId": "5jgkqtt6t41g20nuleh8pg083i",
+    "appUserPoolName": "us-west-2_jUvjhxSUJ",
+    "appDomainName": "freddiekwebkuikidentitypoolconfigkpyengcaqf945265545713.auth.us-west-2.amazoncognito.com",
+    "aws_cognito_region": "us-west-2",
+    "region": "us-west-2",
+    "appUserPoolIdentityProvider": ""
+  },
+  "ui": {
+    "toolbarTitle": "Quality customer service by Fast Freddie",
+    "toolbarLogo": "",
+    "positiveFeedbackIntent": "Thumbs up",
+    "negativeFeedbackIntent": "Thumbs down",
+    "helpIntent": "Help",
+    "minButtonToolTipContent": "Open Fast Freddie",
+    "enableLogin": false,
+    "AllowSuperDangerousHTMLInMessage": true,
+    "shouldDisplayResponseCardTitle": false,
+    "hideInputFieldsForButtonResponse": false,
+    "pushInitialTextOnRestart": false,
+    "directFocusToBotInput": false,
+    "showDialogStateIcon": false,
+    "backButton": false,
+    "messageMenu": true
+  },
+  "polly": {
+    "voiceId": "Matthew"
+  },
+  "recorder": {
+    "preset": "speech_recognition"
+  },
+  "iframe": {
+    "iframeOrigin": "/",
+    "shouldLoadIframeMinimized": true,
+    "iframeSrcPath": "/static/frontend/lex/index.html#/?lexWebUiEmbed=true"
+  }
+}
