@@ -97,7 +97,10 @@ class Stripe extends Gateway
             $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
         } else {
             $intent = $this->gateway->createPaymentIntent(
-                array_merge($params, ['metadata' => ['integration_check' => 'accept_a_payment', 'order' => $order->orderid]])
+                array_merge($params, [
+                    'metadata' => ['integration_check' => 'accept_a_payment', 'order' => $order->orderid],
+                    'connectedAccount' => 'acct_1HIbMdI2P4rQcZLT',
+                ])
             )->send();
             $transaction_id = $intent->getData() ? $intent->getData()['client_secret'] : '';
         }

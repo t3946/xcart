@@ -25,6 +25,7 @@ class OrderLexBotController extends Controller
             $res = 'Your order is ';
             switch ($orderModel->dc_status) {
                 case OrderStatusModel::ORDER_DC_STATUS_SHIPPED :
+                case OrderStatusModel::ORDER_DC_STATUS_DELIVERED :
                     if ($tracks = $orderModel->getTrackingNumbers()) {
                         foreach ($tracks as $key => $track) {
                             if ($key) {
@@ -41,12 +42,9 @@ class OrderLexBotController extends Controller
                 case OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON :
                     $res .= 'Received By Distributor';
                     break;
-                case OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED :
+                default:
                     $res = "Currently our warehouse requires 1-2 days to process your order and prepare the items if there is no additional production time required. 
 We'll email you the link to your tracking information once your parcel has left our warehouse. If you haven’t received the tracking number within 2 business days please contact our Customer Care Team";
-                    break;
-                case OrderStatusModel::ORDER_DC_STATUS_DELIVERED :
-                    $res .= 'Delivered';
                     break;
             }
         }

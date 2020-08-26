@@ -36,6 +36,16 @@ class CreatePaymentIntentRequest extends AbstractRequest
         return parent::getAmount() * 100;
     }
 
+    public function setConnectedAccount($value)
+    {
+        return $this->setParameter('connectedAccount', $value);
+    }
+
+    public function getConnectedAccount()
+    {
+        return $this->getParameter('connectedAccount');
+    }
+
     public function getData()
     {
         return [
@@ -45,7 +55,8 @@ class CreatePaymentIntentRequest extends AbstractRequest
             'capture_method' => 'manual',
             'description' => $this->getDescription(),
             'receipt_email' => $this->getOrder()->email,
-            'metadata' => ['order' => $this->getOrder()->orderid],
+            'metadata' => $this->getMetadata(),
+            'transfer_data' => $this->getConnectedAccount() ? ['destination' => $this->getConnectedAccount()] : []
         ];
     }
 
