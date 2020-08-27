@@ -2,6 +2,7 @@
 
 use Modules\Order\Controllers\Api\AfterShipController;
 use Modules\Order\Controllers\Api\InvoiceConventerController;
+use Modules\Order\Controllers\Api\OrderLexBotController;
 use Modules\Order\Controllers\OrderProcessController;
 
 return [
@@ -35,5 +36,10 @@ return [
         'route' => '/continue/success',
         'target' => [OrderProcessController::class, 'success'],
         'name' => 'success'
+    ],
+    [
+        'route' => '/api/bot',
+        'target' => [OrderLexBotController::class, 'index'],
+        'name' => 'order_bot'
     ],
 ];

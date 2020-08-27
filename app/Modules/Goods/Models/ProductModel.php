@@ -804,10 +804,10 @@ class ProductModel extends Model implements ICartItem
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($fPrice > $this->cost_to_us && $this->isOutOfStock() && $this->isSupplierFeedsEnabled()) {
+        /*if ($fPrice > $this->cost_to_us && $this->isOutOfStock() && $this->isSupplierFeedsEnabled()) {
             $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
             $fPrice = max((float) $this->new_map_price, $fPrice);
-        }
+        }*/
 
         $fPrice = CurrencyHelper::convert($this->distributor->currency, $fPrice);
 

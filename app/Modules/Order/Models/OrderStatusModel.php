@@ -64,13 +64,13 @@ class OrderStatusModel extends Model
     {
         return [
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true
             ],
         ];
     }
     public function __toString()
     {
-        return $this->name;
+        return (string) $this->name;
     }
 }

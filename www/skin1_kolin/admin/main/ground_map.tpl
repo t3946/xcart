@@ -64,10 +64,10 @@
                     <table>
                         <tr>
                             <td width="320">
-                                <B>{$dx->manufacturer}
-                                    time:</B> {$dx->getDistributorTime()|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                                {assign var=dx_date value=$dx->getDistributorTime()}
+                                <b>{$dx->manufacturer} time:</b> {$dx_date->format('d-M-Y H:i')}
                                 <br/>
-                                <B>{$dx->manufacturer} phone:</B> {$dx->getPhone()}
+                                <b>{$dx->manufacturer} phone:</b> {$dx->getPhone()}
                                 {if $dx->getPhoneExt()}<b> ext {$dx->getPhoneExt()}</b>{/if}
                             </td>
                         </tr>
@@ -106,7 +106,8 @@
 
                         <tr>
                             <td width="219">
-                                <B>Customer time:</B> {$customer.customer_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                                {assign var=cs_date value=$group->order->getCxDateTime()}
+                                <B>Customer time:</B> {if $cs_date}{$cs_date->format('d-M-Y H:i')}{/if}
                                 <br/>
                                 <B>Customer phone:</B> {$customer.phone}
                             </td>
