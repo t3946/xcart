@@ -241,8 +241,9 @@ abstract class Admin
      */
     public function getUserColumns()
     {
-        $config = $this->getConfig();
-        return $config->getColumnsList();
+        return [];
+        /*$config = $this->getConfig();
+        return $config->getColumnsList();*/
     }
 
 

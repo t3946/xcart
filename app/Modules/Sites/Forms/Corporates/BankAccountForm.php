@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\BankAccountModel;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\ModelForm;
@@ -43,6 +44,8 @@ class BankAccountForm extends ModelForm
 
     public function getFields()
     {
+        $entity = $this->getInstance();
+
         return [
             'country' => [
                 'class' => DropDownField::class,
@@ -51,6 +54,17 @@ class BankAccountForm extends ModelForm
                 'choices' => static function () {
                     foreach (CountryModel::objects()->order(['name']) as $country) {
                         $result[$country->code] = (string)$country;
+                    }
+                    return $result ?? [];
+                },
+            ],
+            'state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },

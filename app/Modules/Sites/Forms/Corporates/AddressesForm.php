@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\DropDownField;
 
 class AddressesForm extends CorporatesForm
@@ -47,6 +48,7 @@ class AddressesForm extends CorporatesForm
 
     public function getFields()
     {
+        $entity = $this->getInstance();
         return [
             'formal_country_model' => [
                 'class' => DropDownField::class,
@@ -55,6 +57,17 @@ class AddressesForm extends CorporatesForm
                 'choices' => static function () {
                     foreach (CountryModel::objects()->order(['name']) as $country) {
                         $result[$country->code] = (string)$country;
+                    }
+                    return $result ?? [];
+                },
+            ],
+            'formal_state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->formal_country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },
@@ -70,6 +83,17 @@ class AddressesForm extends CorporatesForm
                     return $result ?? [];
                 },
             ],
+            'physical_state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->physical_country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
+                    }
+                    return $result ?? [];
+                },
+            ],
             'mailing_country_model' => [
                 'class' => DropDownField::class,
                 'label' => 'Country',
@@ -81,6 +105,18 @@ class AddressesForm extends CorporatesForm
                     return $result ?? [];
                 },
             ],
+            'mailing_state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->mailing_country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
+                    }
+                    return $result ?? [];
+                },
+            ],
+
         ];
     }
 

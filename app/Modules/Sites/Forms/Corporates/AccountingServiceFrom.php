@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\DropDownField;
 
 class AccountingServiceFrom extends CorporatesForm
@@ -38,6 +39,8 @@ class AccountingServiceFrom extends CorporatesForm
 
     public function getFields()
     {
+        $entity = $this->getInstance();
+
         return [
             'accounting_company_country' => [
                 'class' => DropDownField::class,
@@ -49,7 +52,18 @@ class AccountingServiceFrom extends CorporatesForm
                     }
                     return $result ?? [];
                 },
-            ]
+            ],
+            'accounting_company_state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->accounting_company_country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
+                    }
+                    return $result ?? [];
+                },
+            ],
         ];
     }
 

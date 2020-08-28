@@ -15,7 +15,7 @@ class BankAccountAdmin extends ListViewAdmin
 
     public function getListColumns()
     {
-        return ['bank_name', 'account_number'];
+        return ['bank_name', 'account_type', 'account_number'];
     }
 
     public function getAvailableListColumns()
@@ -25,6 +25,10 @@ class BankAccountAdmin extends ListViewAdmin
                 'title' => 'Bank name',
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'bank_name'
+            ],
+            'account_type' => [
+                'title' => 'Account type',
+                'template' => $this->columnDefaultTemplate,
             ],
             'account_number' => [
                 'title' => 'Account number',

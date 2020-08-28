@@ -4,6 +4,7 @@
 namespace Modules\Sites\Models;
 
 
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -72,6 +73,7 @@ class BankAccountModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'link' => ['country' => 'code'],
+                'sqlType' => Types::STRING,
                 'null' => true,
                 'default' => null,
                 'verboseName' => 'Country',

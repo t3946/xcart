@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\LinkField;
@@ -41,7 +42,7 @@ class IncorporationForm extends CorporatesForm
 
     public function getFields()
     {
-        $fields = parent::getFields();
+        $entity = $this->getInstance();
         return [
             'inc_city' => [
                 'class' => CharField::class,
@@ -82,6 +83,17 @@ class IncorporationForm extends CorporatesForm
                 'choices' => static function () {
                     foreach (CountryModel::objects()->order(['name']) as $country) {
                         $result[$country->code] = (string)$country;
+                    }
+                    return $result ?? [];
+                },
+            ],
+            'inc_state' => [
+                'class' => DropDownField::class,
+                'label' => 'State/Province',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => static function () use ($entity) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$entity->inc_country ?? 'US']]) as $state) {
+                        $result[$state->code] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },
