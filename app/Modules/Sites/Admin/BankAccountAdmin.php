@@ -12,6 +12,7 @@ use Modules\Sites\Models\BankAccountModel;
 class BankAccountAdmin extends ListViewAdmin
 {
     public $ownerField = 'corporate';
+    public static $public = false;
 
     public function getListColumns()
     {

@@ -10,6 +10,7 @@ use Modules\Sites\Models\MerchantAccountModel;
 
 class MerchantAccountAdmin extends ListViewAdmin
 {
+    public static $public = false;
     public $ownerField = 'corporate';
 
     public function getListColumns()

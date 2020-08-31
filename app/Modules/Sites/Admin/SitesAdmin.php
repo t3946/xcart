@@ -8,7 +8,7 @@ use Modules\Admin\Contrib\Admin;
 
 class SitesAdmin extends Admin
 {
-
+    public static $public = false;
     public function getForm()
     {
 

@@ -10,6 +10,7 @@ use Modules\Sites\Models\TaxReturnModel;
 
 class TaxReturnAdmin extends ListViewAdmin
 {
+    public static $public = false;
     public $ownerField = 'corporate';
 
     public function getUserColumns()

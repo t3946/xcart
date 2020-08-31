@@ -11,6 +11,8 @@ use Modules\Sites\Models\TaxReturnModel;
 
 class VatTaxReturnAdmin extends TaxReturnAdmin
 {
+    public static $public = false;
+
     public function getForm()
     {
         return new VatTaxReturnForm;

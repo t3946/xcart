@@ -14,6 +14,7 @@ use Xcart\App\Orm\Model;
 
 class ShareHolderAdmin extends ListViewAdmin
 {
+    public static $public = false;
     public $ownerField = 'corporate';
 
     public function getListColumns()
