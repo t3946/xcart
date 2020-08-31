@@ -6,6 +6,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 
 class AccountingServiceFrom extends CorporatesForm
@@ -63,6 +64,10 @@ class AccountingServiceFrom extends CorporatesForm
                     }
                     return $result ?? [];
                 },
+            ],
+            'accounting_company_zip' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:100px;'],
             ],
         ];
     }

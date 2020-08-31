@@ -6,6 +6,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 
 class AddressesForm extends CorporatesForm
@@ -116,7 +117,18 @@ class AddressesForm extends CorporatesForm
                     return $result ?? [];
                 },
             ],
-
+            'formal_zip' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:100px;'],
+            ],
+            'physical_zip' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:100px;'],
+            ],
+            'mailing_zip' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:100px;'],
+            ],
         ];
     }
 
