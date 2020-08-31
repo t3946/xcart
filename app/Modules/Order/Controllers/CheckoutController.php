@@ -356,6 +356,10 @@ class CheckoutController extends FrontendController
 
             $data = $app->request->post->all();
 
+            if (!$app->request->post->has('payment_method')) {
+                $this->redirect('checkout:options');
+            }
+
             $order->setAttributes([
                 'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
             ]);
