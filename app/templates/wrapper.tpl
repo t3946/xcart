@@ -70,7 +70,11 @@
     {block 'noindex'}{/block}
 
     <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
-
+<style>
+    #lex-web-ui-iframe{
+        display: none;
+    }
+</style>
     <script>
         window.app = {
             assets: {
@@ -349,6 +353,9 @@
     iframeLoader.load(chatbotUiConfig)
         .then(function () {
             console.log('iframe loaded');
+            setTimeout(()=>{
+                document.getElementById('lex-web-ui-iframe').style.display = "flex";
+            }, 1000);
         })
         .catch(function (err) {
             console.error(err);
