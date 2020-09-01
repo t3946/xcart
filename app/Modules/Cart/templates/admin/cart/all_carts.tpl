@@ -62,7 +62,10 @@
                 <td>
                     <hr>
                     {foreach $model->data['cart'] as $p}
-                        <img src="{$p->_object->getThumbnail()}"><br>
+                        {set $mImage = $p->_object->getMainImage()}
+                        {if $mImage}
+                            <img src="{$mImage->getCdnURL(200)}"><br>
+                        {/if}
                         SKU: {$p->_object->productcode}<br>
                         Name: {$p->_object->product}<br>
                         Price: {$p->_object->getPrice()}<br>
