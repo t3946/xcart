@@ -596,7 +596,7 @@ class OrderModel extends Model
         return $tracks;
     }
 
-    public function getLastAuthorizationTransaction(): OrderTransactionModel
+    public function getLastAuthorizationTransaction():? OrderTransactionModel
     {
         return $this->transactions
             ->filter([
