@@ -47,4 +47,12 @@ class ProcessorModel extends Model
 
         ];
     }
+
+    public function getAuthorizeDays(): int
+    {
+        if ($this->processor_name === 'Stripe') {
+            return 7;
+        }
+        return 30;
+    }
 }

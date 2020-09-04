@@ -1133,18 +1133,14 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
                         {if $oOrderGroup->cb_status !== null}
                             <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
 
-                            <script type="text/javascript">
-                                <!--
+                            <script>
                                 {literal}
                                 $(function () {
                                     $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function () {
                                         func_check_cb_statuses();
-
-
                                     });
                                 });
                                 {/literal}
-                                -->
                             </script>
 
                             <b>{$lng.lbl_cust_bus_payment_status}:</b><br/>
@@ -1161,9 +1157,26 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
                                 {assign var=bCanAcceptCoupon value='Y'}
                             {/if}
 
-                            <br/>
-                            <B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span
-                                style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+                            {if $oOrderGroup->cb_status == 'AP'}
+                                {assign var=latsAuth value=$oOrderGroup->order->getLastAuthorizationTransaction()}
+                                {if $latsAuth}
+                                    {assign var=authLeft value=$latsAuth->getAuthorizationLeft()}
+                                    {if $authLeft}
+                                        <div>
+                                            <b>Authorization:</b>
+                                            {if $authLeft->invert}
+                                                {$authLeft->format('%d days %h hours left')}
+                                            {else}
+                                                <span style="color:red">Expired</span>
+                                            {/if}
+                                        </div>
+                                    {/if}
+                                {/if}
+                            {/if}
+
+                            <div>
+                            <b>Payment date:</b>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+                            </div>
 
                         </td>
                         {elseif $oOrderGroup->c2a_status !== null}
