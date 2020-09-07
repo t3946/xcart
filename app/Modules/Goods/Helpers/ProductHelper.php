@@ -461,6 +461,9 @@ class ProductHelper
 
     public static function isGoogleShoppingEnabled(ProductModel $product)
     {
-        return $product->forsale === 'Y' && $product->isMarketPlaceEnabled(1);
+        return
+            $product->forsale === 'Y' &&
+            $product->isMarketPlaceEnabled(1) &&
+            $product->getMainImage();
     }
 }
