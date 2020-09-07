@@ -1786,7 +1786,7 @@ if ($REQUEST_METHOD === 'POST')
                                 $t_invdate = empty($t_invdate) ? new \DateTime() : \DateTime::createFromFormat('m/d/Y', $t_invdate);
                                 $invoice_model->invoice_date = $t_invdate;
                                 $invoice_model->save();
-                                if ($t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"]) {
+                                if ($t_invdate && $t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"]) {
                                     $log .= "<br />invoice_number-" . $invoice_number . ': Invoice date: ' . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"] . ' -> ' . $t_invdate->format('Y-m-d');
                                 }
                             }
