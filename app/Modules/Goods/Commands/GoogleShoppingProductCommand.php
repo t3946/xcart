@@ -93,7 +93,7 @@ class GoogleShoppingProductCommand extends Command
                         $batch->setTargetCountry($marketplace->countries);
 
                         $currency = $dX->currency;
-                        $sprice = $product->getFrontendPrice();
+                        $sprice = $product->getFrontendPrice($product->min_amount ?? 1);
                         $price = new Google_Service_ShoppingContent_Price();
                         $price->setCurrency($currency->currency_code ?? 'USD');
                         $price->setValue($sprice);
