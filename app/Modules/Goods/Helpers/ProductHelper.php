@@ -338,8 +338,8 @@ class ProductHelper
                     'PriceSpecification' => [
                         '@type' => 'PriceSpecification',
                         'priceCurrency' => 'USD',
-                        'price' => $model->getFrontendPrice($model->min_amount ?? 1),
-                        'minPrice' => $model->getFrontendPrice($model->min_amount ?? 1),
+                        'price' => $model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1),
+                        'minPrice' => $model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1),
                         'maxPrice' => $model->getFrontendPrice(2),
                     ],
                     'url' => $model->getAbsoluteUrl(true),
