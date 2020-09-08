@@ -70,4 +70,8 @@
             {/if}
         {/if}
     {/if}
+    {if $model->manufacturerid == 85}
+        {set $lbl}{t 'All sales are final. No returns or exchanges are allowed.'}{/set}
+        {include "product/messages/_p_label.tpl" cls=$class ~~ "out-of-stock" text=$lbl}
+    {/if}
 {/if}
