@@ -338,8 +338,8 @@ class ProductHelper
                     'PriceSpecification' => [
                         '@type' => 'PriceSpecification',
                         'priceCurrency' => 'USD',
-                        'price' => $model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1),
-                        'minPrice' => $model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1),
+                        'price' => $model->getFrontendPrice(),
+                        'minPrice' => $model->getFrontendPrice(),
                         'maxPrice' => $model->getFrontendPrice(2),
                     ],
                     'url' => $model->getAbsoluteUrl(true),
@@ -377,7 +377,7 @@ class ProductHelper
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'USD',
-                    'price' => $model->getFrontendPrice(),
+                    'price' =>  $model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1),
                     'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
                     'priceValidUntil' => $model->getPriceValidUntil()->format('Y-m-d'),
