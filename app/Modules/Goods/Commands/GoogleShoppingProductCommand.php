@@ -93,7 +93,7 @@ class GoogleShoppingProductCommand extends Command
                         $batch->setTargetCountry($marketplace->countries);
 
                         $currency = $dX->currency;
-                        $sprice = $product->getFrontendPrice($product->min_amount ?? 1);
+                        $sprice = $product->getFrontendPrice($product->min_amount ?? 1) * ($product->min_amount ?? 1);
                         $price = new Google_Service_ShoppingContent_Price();
                         $price->setCurrency($currency->currency_code ?? 'USD');
                         $price->setValue($sprice);
@@ -150,7 +150,7 @@ class GoogleShoppingProductCommand extends Command
                                 /** @var StateModel $state */
                                 foreach ($states as $state) {
                                     $states[$state->stateid] = $state;
-                                    $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
+                                    $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, $product->min_amount ?? 1, $state);
                                     $rate = reset($rates[$state->stateid]);
                                     if ($rate && $sModel = $rate->shipping) {
                                         $shipping = new Google_Service_ShoppingContent_ProductShipping();
