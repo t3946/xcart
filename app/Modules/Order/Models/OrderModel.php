@@ -608,4 +608,9 @@ class OrderModel extends Model
             ->get();
     }
 
+    public function getTransactionDescription(): string
+    {
+        return "S3 Stores, Inc. Order # {$this->getOrderNumber()}";
+    }
+
 }

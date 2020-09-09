@@ -41,11 +41,21 @@ abstract class PaymentIntentResponse extends Response
                             'rel' => 'void',
                             'method' => 'POST'
                         ],
+                        [
+                            'rel' => 'reauthorize',
+                            'method' => 'POST'
+                        ]
                     ];
                     break;
                 case 'succeeded' :
                     $data['links'] = [[
                         'rel' => 'refund',
+                        'method' => 'POST'
+                    ]];
+                    break;
+                case 'canceled' :
+                    $data['links'] = [[
+                        'rel' => 'reauthorize',
                         'method' => 'POST'
                     ]];
                     break;

@@ -46,9 +46,39 @@ class CreatePaymentIntentRequest extends AbstractRequest
         return $this->getParameter('connectedAccount');
     }
 
+    public function setOffSession($value)
+    {
+        return $this->setParameter('offSession', $value);
+    }
+
+    public function getOffSession()
+    {
+        return $this->getParameter('offSession');
+    }
+
+    public function setConfirm($value)
+    {
+        return $this->setParameter('confirm', $value);
+    }
+
+    public function getConfirm()
+    {
+        return $this->getParameter('confirm');
+    }
+
+    public function setSetupFutureUsage($value)
+    {
+        return $this->setParameter('setupFutureUsage', $value);
+    }
+
+    public function getSetupFutureUsage()
+    {
+        return $this->getParameter('setupFutureUsage');
+    }
+
     public function getData()
     {
-        return [
+        $data = [
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrency(),
             'payment_method_types' => ['card'],
@@ -56,8 +86,19 @@ class CreatePaymentIntentRequest extends AbstractRequest
             'description' => $this->getDescription(),
             'receipt_email' => $this->getOrder()->email,
             'metadata' => $this->getMetadata(),
+            'off_session' => $this->getOffSession() ?? 'false',
+            'confirm' => $this->getConfirm() ?? 'false',
+            'customer' => $this->getCustomerReference(),
             'transfer_data' => $this->getConnectedAccount() ? ['destination' => $this->getConnectedAccount()] : []
         ];
+        if ($this->getSetupFutureUsage()) {
+            $data['setup_future_usage'] = $this->getSetupFutureUsage();
+        }
+        if ($this->getPaymentMethod()) {
+            $data['payment_method'] = $this->getPaymentMethod();
+        }
+
+        return $data;
     }
 
     /**
