@@ -132,6 +132,11 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'dcad_swift' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
