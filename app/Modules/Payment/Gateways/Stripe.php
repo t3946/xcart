@@ -130,6 +130,7 @@ class Stripe extends Gateway
                     'metadata' => ['order' => $order->orderid],
                     'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
                     'setupFutureUsage' => 'off_session',
+                    'captureMethod' => 'manual',
                     'customerReference' => $customer->getCustomerReference()
                 ])
             )->send();

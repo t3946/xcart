@@ -76,6 +76,17 @@ class CreatePaymentIntentRequest extends AbstractRequest
         return $this->getParameter('setupFutureUsage');
     }
 
+    public function setCaptureMethod($value)
+    {
+        return $this->setParameter('captureMethod', $value);
+    }
+
+    public function getCaptureMethod()
+    {
+        return $this->getParameter('captureMethod');
+    }
+
+
     public function getData()
     {
         $data = [
@@ -96,6 +107,9 @@ class CreatePaymentIntentRequest extends AbstractRequest
         }
         if ($this->getPaymentMethod()) {
             $data['payment_method'] = $this->getPaymentMethod();
+        }
+        if ($this->getCaptureMethod()) {
+            $data['capture_method'] = $this->getCaptureMethod();
         }
 
         return $data;
