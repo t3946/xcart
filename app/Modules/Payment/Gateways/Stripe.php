@@ -87,22 +87,24 @@ class Stripe extends Gateway
             ->fetchPaymentIntent($params)
             ->send();
         $data = $paymentIntent->getData();
-        $customer = $data['customer'];
-        $payment_method = $data['payment_method'];
+        if ($customer = $data['customer']) {
+            $payment_method = $data['payment_method'];
 
-        $intent = $this->gateway->createPaymentIntent(
-            array_merge($params, [
-                'metadata' => ['order' => $order->orderid],
-                'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
-                'customerReference' => $customer,
-                'paymentMethod' => $payment_method,
-                'description' => $order->getTransactionDescription(),
-                'offSession' => 'true',
-                'confirm' => 'true'
-            ])
-        )->send();
-        $this->result = $intent;
-        return $intent->isSuccessful();
+            $intent = $this->gateway->createPaymentIntent(
+                array_merge($params, [
+                    'metadata' => ['order' => $order->orderid],
+                    'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
+                    'customerReference' => $customer,
+                    'paymentMethod' => $payment_method,
+                    'description' => $order->getTransactionDescription(),
+                    'offSession' => 'true',
+                    'confirm' => 'true'
+                ])
+            )->send();
+            $this->result = $intent;
+            return $intent->isSuccessful();
+        }
+        return false;
     }
 
     public function purchase($params)
