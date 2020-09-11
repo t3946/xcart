@@ -377,7 +377,7 @@ class ProductHelper
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'USD',
-                    'price' =>  number_format($model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1), 2),
+                    'price' =>  number_format($model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1), 2, '.', ''),
                     'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
                     'priceValidUntil' => $model->getPriceValidUntil()->format('Y-m-d'),
