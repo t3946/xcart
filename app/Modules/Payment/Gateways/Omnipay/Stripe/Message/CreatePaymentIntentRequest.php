@@ -93,7 +93,6 @@ class CreatePaymentIntentRequest extends AbstractRequest
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrency(),
             'payment_method_types' => ['card'],
-            'capture_method' => 'manual',
             'description' => $this->getDescription(),
             'receipt_email' => $this->getOrder()->email,
             'metadata' => $this->getMetadata(),
