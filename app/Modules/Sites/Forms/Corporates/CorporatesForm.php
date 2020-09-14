@@ -4,13 +4,16 @@
 namespace Modules\Sites\Forms\Corporates;
 
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\CorporateModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
 class CorporatesForm extends ModelForm
@@ -23,6 +26,7 @@ class CorporatesForm extends ModelForm
             'state',
             'registration_number',
             'incorporation_date',
+            'storefronts',
         ]];
     }
 
@@ -104,9 +108,32 @@ class CorporatesForm extends ModelForm
             ],
             'incorporation_date' => [
                 'class' => DateField::class,
-                'html' => ['style' =>'width:100px;'],
+                'html' => ['style' => 'width:100px;'],
             ],
+            'storefronts' => [
+                'class' => Select2Field::class,
+                'choices' => static function () use($entity) {
+                    $mass = [];
+                    $filter = ['corporates__id__isnull' => true];
+                    if ($entity && $entity->id) {
+                        $filter['corporates__id'] = $entity->id;
+                    }
+                    /** @var SiteModel $model */
+                    foreach (SiteModel::objects()->filter([new QOr($filter)])->order(['code']) as $model) {
+                        if ($model->isWork()) {
+                            $mass[$model->storefrontid] = (string)$model;
+                        }
+                    }
+                    return $mass;
+                },
+                'html' => ['style' => 'width:300px;'],
+            ]
         ];
+    }
+
+    public function getName()
+    {
+        return 'Corporation';
     }
 
 }

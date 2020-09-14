@@ -561,12 +561,18 @@ class CorporateModel extends Model
                 'link' => ['id' => 'corporate_id'],
                 'extra' => ['tax_type' => 'VAT']
             ],
+            'storefronts' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => CorporateStorefrontsModel::class,
+                'verboseName' => 'Storefronts'
+            ],
         ];
     }
 
     public function getAdminUrl($section = 1): string
     {
-        if ($section !== null) {
+        if ($section !== null && $this->pk !== null) {
             return Xcart::app()->router->url('admin:update_section', [
                     'pk' => $this->pk,
                     'section' => $section,

@@ -27,7 +27,7 @@ class Select2Field extends DropDownField
 
     public $ajaxUrl = "";
     public $editable = false;
-    public $fieldTemplate = 'forms/field/select2/field.tpl';
+    //public $fieldTemplate = 'forms/field/select2/field.tpl';
 
     public function getAjaxUrl()
     {
