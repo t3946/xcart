@@ -93,6 +93,7 @@ class Stripe extends Gateway
             $intent = $this->gateway->createPaymentIntent(
                 array_merge($params, [
                     'metadata' => ['order' => $order->orderid],
+                    'captureMethod' => 'manual',
                     'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
                     'customerReference' => $customer,
                     'paymentMethod' => $payment_method,
