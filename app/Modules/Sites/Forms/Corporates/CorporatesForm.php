@@ -27,6 +27,7 @@ class CorporatesForm extends ModelForm
             'registration_number',
             'incorporation_date',
             'storefronts',
+            'taxes'
         ]];
     }
 
@@ -126,6 +127,10 @@ class CorporatesForm extends ModelForm
                     }
                     return $mass;
                 },
+                'html' => ['style' => 'width:300px;'],
+            ],
+            'taxes' => [
+                'class' => Select2Field::class,
                 'html' => ['style' => 'width:300px;'],
             ]
         ];

@@ -43,7 +43,7 @@ class CorporatesAdmin extends Admin
 
     public static function getName()
     {
-        return 'Corporates';
+        return 'Corporations';
     }
 
     public function getModel()

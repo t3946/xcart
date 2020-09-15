@@ -567,6 +567,12 @@ class CorporateModel extends Model
                 'through' => CorporateStorefrontsModel::class,
                 'verboseName' => 'Storefronts'
             ],
+            'taxes' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => TaxModel::class,
+                'through' => CorporateTaxesModel::class,
+                'verboseName' => 'Taxes'
+            ],
         ];
     }
 
