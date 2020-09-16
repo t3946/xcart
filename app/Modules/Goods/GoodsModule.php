@@ -3,6 +3,7 @@
 namespace Modules\Goods;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\FeedAdmin;
 use Modules\Goods\Admin\OptionAdmin;
 use Modules\Goods\Admin\ProductAdmin;
 use Xcart\App\Main\Xcart;
@@ -84,7 +85,15 @@ class GoodsModule extends Module
                             'route' => $router->url('product:group_list'),
                         ],
                     ] : false,
-                ]]]
+                ]]],
+            [
+                'name' => 'Feeds',
+                'icon' => 'fa fa-list',
+                'route' => $router->url('admin:list', [
+                    'module' => static::getModuleName(),
+                    'admin' => FeedAdmin::classNameShort()
+                ]),
+            ]
         ];
 
         return $items;

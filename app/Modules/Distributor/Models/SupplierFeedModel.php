@@ -6,10 +6,12 @@ use DateTime;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -33,6 +35,10 @@ class SupplierFeedModel extends Model
                 'class' => AutoField::class,
                 'primary' => true,
                 'null' => false,
+            ],
+            'feed_name' => [
+                'class' => CharField::class,
+                'verboseName' => 'Name'
             ],
             'last_feed_fields' => [
                 'class' => SerializeField::class,
@@ -58,8 +64,10 @@ class SupplierFeedModel extends Model
                     'P' => 'product',
                     'I' => 'inventory',
                 ],
-                'default' => 'I'
+                'default' => 'P',
+                'verboseName' => 'Type'
             ],
+
             'feed_source' => [
                 'class' => CharField::class,
                 'choices' => [
@@ -68,13 +76,24 @@ class SupplierFeedModel extends Model
                 ],
                 'default' => 'site'
             ],
+            'feed_file_name' => [
+                'class' => CharField::class,
+                'verboseName' => 'File name',
+                'default' => ''
+            ],
+            'last_update_time' => [
+                'class' => UnixTimestampField::class,
+            ],
             'feed_source_date' => [
                 'class' => DateTimeField::class,
+            ],
+            'enabled' => [
+                'class' => BooleanCharField::class,
             ],
         ];
     }
 
-    public function getAverageUpdatePeriod()
+    public function getAverageUpdatePeriod(): string
     {
         $cur_time = time();
         $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
@@ -91,8 +110,9 @@ class SupplierFeedModel extends Model
             sprintf('%1$02d', $hours) . ':' .
             sprintf('%1$02d', $mins) . ' hours';
     }
+
     public function __toString()
     {
-        return (string) $this->feed_name;
+        return (string)$this->feed_name;
     }
 }
