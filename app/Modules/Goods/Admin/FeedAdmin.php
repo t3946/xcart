@@ -8,6 +8,7 @@ use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Forms\FeedForm;
+use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
@@ -144,6 +145,21 @@ class FeedAdmin extends Admin
     public static function getName()
     {
         return 'Feeds';
+    }
+
+    public function getSuggestionColumns()
+    {
+        return [
+            'category' => [
+                'class' => CategoryModel::class,
+                'columns' => [
+                    'category', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y'
+                ]
+            ],
+        ];
     }
 
 }
