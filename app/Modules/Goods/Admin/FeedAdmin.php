@@ -13,7 +13,8 @@ use Xcart\App\Orm\Model;
 
 class FeedAdmin extends Admin
 {
-    public $listRowTemplate =  '/admin/list/_tr_feed.tpl';
+    public $listRowTemplate = '/admin/list/_tr_feed.tpl';
+
     public function getForm()
     {
         return new FeedForm;
@@ -26,7 +27,12 @@ class FeedAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['feed_id', 'distributor', 'feed_name', 'feed_type', 'site', 'feed_file_name', 'last_update_time', 'average_update_period', 'last_update_items_count', 'enabled'];
+        return ['feed_id', 'distributor', 'feed_name', 'feed_type', 'site', 'feed_file_name', 'last_update_time', 'average_update_period', 'last_update_items_count', 'add_new_only', 'enabled'];
+    }
+
+    public function getSearchColumns()
+    {
+        return ['distributor__code'];
     }
 
     public function getAvailableListColumns()
@@ -40,7 +46,6 @@ class FeedAdmin extends Admin
             'distributor' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'DX',
-                'order' => 'distributor'
             ],
             'feed_name' => [
                 'template' => $this->columnDefaultTemplate,
@@ -69,6 +74,10 @@ class FeedAdmin extends Admin
             'last_update_items_count' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'Items'
+            ],
+            'add_new_only' => [
+                'template' => $this->columnDefaultTemplate,
+                'title' => 'New'
             ],
             'enabled' => [
                 'template' => $this->columnDefaultTemplate,
@@ -102,14 +111,39 @@ class FeedAdmin extends Admin
             || $this->innerRender
         ) {
             echo $this->render($view, $params);
-        }
-        else {
+        } else {
             echo $this->renderSmarty("admin/home.tpl", [
                 'single_mode' => true,
-                'width'       => '100%',
-                'main'        => 'raw_html',
-                'content'     =>  $this->render($view, $params),
+                'width' => '100%',
+                'main' => 'raw_html',
+                'content' => $this->render($view, $params),
             ]);
         }
     }
+
+    public function applyOrder($qs)
+    {
+        $order = $this->getOrder();
+
+        if ($order && isset($order['raw'])) {
+            $qs->order([
+                $order['raw']
+            ]);
+        } else if ($this->sort) {
+            $qs->order([
+                $this->sort
+            ]);
+        } else {
+            $qs->order([
+                '-feed_id'
+            ]);
+        }
+        return $qs;
+    }
+
+    public static function getName()
+    {
+        return 'Feeds';
+    }
+
 }

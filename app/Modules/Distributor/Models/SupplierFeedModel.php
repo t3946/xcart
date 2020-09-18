@@ -3,6 +3,7 @@
 namespace Modules\Distributor\Models;
 
 use DateTime;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -49,7 +50,8 @@ class SupplierFeedModel extends Model
                 'field' => 'storefront_id',
                 'class' => ForeignField::class,
                 'modelClass' => SiteModel::class,
-                'link' => ['storefront_id' => 'storefrontid']
+                'link' => ['storefront_id' => 'storefrontid'],
+                'verboseName' => 'Storefront'
             ],
             'distributor' => [
                 'field' => 'manufacturerid',
@@ -57,6 +59,13 @@ class SupplierFeedModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
+            ],
+            'base_category' => [
+                'class' => ForeignField::class,
+                'modelClass' => CategoryModel::class,
+                'link' => ['base_category_id' => 'categoryid'],
+                'null' => true,
+                'default' => null
             ],
             'feed_type' => [
                 'class' => CharField::class,
@@ -67,7 +76,6 @@ class SupplierFeedModel extends Model
                 'default' => 'P',
                 'verboseName' => 'Type'
             ],
-
             'feed_source' => [
                 'class' => CharField::class,
                 'choices' => [
@@ -83,10 +91,17 @@ class SupplierFeedModel extends Model
             ],
             'last_update_time' => [
                 'class' => UnixTimestampField::class,
+                'default' => 0
+            ],
+            'add_new_only' => [
+                'class' => BooleanCharField::class,
+                'default' => false,
+                'verboseName' => 'Add new only',
             ],
             'feed_source_date' => [
                 'class' => DateTimeField::class,
             ],
+
             'enabled' => [
                 'class' => BooleanCharField::class,
             ],
@@ -109,6 +124,13 @@ class SupplierFeedModel extends Model
             ($days !== 0 ? $days . ' days, ' : '') .
             sprintf('%1$02d', $hours) . ':' .
             sprintf('%1$02d', $mins) . ' hours';
+    }
+
+    public function beforeSave($owner, $isNew)
+    {
+        if ($isNew && !$this->feed_file_name) {
+            $this->feed_file_name = strtolower("feed{$this->manufacturerid}{$this->feed_type}.txt");
+        }
     }
 
     public function __toString()
