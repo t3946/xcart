@@ -9,6 +9,7 @@ use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Admin\FeedAdmin;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
@@ -64,6 +65,10 @@ class FeedForm extends ModelForm
                 'class' => CharField::class,
                 'html' => ['style' => 'width:200px;']
             ],
+            'threshold' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:100px;']
+            ]
         ];
     }
 

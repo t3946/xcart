@@ -10,6 +10,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
@@ -65,7 +66,8 @@ class SupplierFeedModel extends Model
                 'modelClass' => CategoryModel::class,
                 'link' => ['base_category_id' => 'categoryid'],
                 'null' => true,
-                'default' => null
+                'default' => null,
+                'verboseName' => 'Base category',
             ],
             'feed_type' => [
                 'class' => CharField::class,
@@ -97,6 +99,11 @@ class SupplierFeedModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => false,
                 'verboseName' => 'Add new only',
+            ],
+            'threshold' => [
+                'class' => FloatField::class,
+                'default' => 0.8,
+                'null' => false
             ],
             'feed_source_date' => [
                 'class' => DateTimeField::class,

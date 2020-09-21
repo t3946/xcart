@@ -4,7 +4,6 @@
 namespace Modules\Goods\Commands;
 
 
-use DateTime;
 use Exception;
 use Google_Client;
 use Google_Service_ShoppingContent;
@@ -32,6 +31,7 @@ use Xcart\App\Helpers\Paths;
 
 class GoogleShoppingProductCommand extends Command
 {
+    public const MAX_WEIGHT = 2000;
 
     public function handle($arguments = []): void
     {
@@ -41,7 +41,6 @@ class GoogleShoppingProductCommand extends Command
 
             func_backprocess_log('incremental product feed', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
             echo "{$l}\n";
-
 
             $config = $site->getConfig();
 
@@ -242,7 +241,9 @@ class GoogleShoppingProductCommand extends Command
 
                         $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
 
-                        if ($shippingValues && ProductHelper::isGoogleShoppingEnabled($product)) {
+                        if ($shippingValues &&
+                            ProductHelper::isGoogleShoppingEnabled($product) &&
+                            $batch->getShippingWeight() < self::MAX_WEIGHT) {
                             $method = 'insert';
                         } else {
                             $method = 'delete';
