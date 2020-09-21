@@ -797,8 +797,7 @@
                                         <div style="float:left;">
                                         &nbsp;<a style="text-decoration: none; border-bottom: 1px dashed #000000;"
                                                  href="javascript: void(0)"
-                                                 onclick="document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{
-                                            $product.price|formatprice|default:$zero}</a>
+                                                 onclick="document.getElementById('cidev_box2').style.display=''; document.getElementById('cidev_box1').style.display='none';">{$product.price|formatprice|default:$zero}</a>
                                         </div>
                                         <div class="tablebordernone"></div>
                                         <div>
