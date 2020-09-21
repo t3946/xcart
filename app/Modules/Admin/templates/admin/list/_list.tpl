@@ -3,23 +3,13 @@
 {var $actions = $admin->getListGroupActions()}
 
 <div class="list-block" data-list data-id="{$id}-list">
-    <div class="list-top clearfix">
-        {if "add" in $actions}
-        <div class="top-buttons-block left">
-            <a href="{$admin->getCreateUrl()}" class="button round upper pad">
-                <span class="text">
-                    Add
-                </span>
-                <i class="icon-plus"></i>
-            </a>
-        </div>
-        {/if}
-        {if $search}
+    {if $search}
+        <div class="list-top clearfix">
             <div class="top-search-block left">
                 <input type="text" data-list-search placeholder="Search...">
             </div>
-        {/if}
-    </div>
+        </div>
+    {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
             <table data-list-table {if $admin->sort}data-sorting{/if}>
@@ -111,10 +101,16 @@
                 <div class="list-footer-block v-align left group">
                     <div>
                         <div class="checker-wrapper">
-                            {*<input type="checkbox" id="{$id}-check-all-bottom" data-checkall-list>
-                            <label for="{$id}-check-all-bottom">
-                                For all
-                            </label>*}
+                            {if "add" in $actions}
+                                <div class="top-buttons-block left">
+                                    <a href="{$admin->getCreateUrl()}" class="button round upper pad">
+                                    <span class="text">
+                                        Add
+                                    </span>
+                                        <i class="icon-plus"></i>
+                                    </a>
+                                </div>
+                            {/if}
                         </div>
 
                         {if ("update" in $actions) || ("remove" in $actions)}
@@ -160,6 +156,7 @@
             {/if}
         </div>
     </div>
+
 </div>
 
 <script>

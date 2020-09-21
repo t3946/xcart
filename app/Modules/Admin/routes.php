@@ -73,6 +73,11 @@ return [
         'name' => 'update'
     ],
     [
+        'route' => '/update/{:module}/{:admin}/{:pk}/{:section}',
+        'target' => [AdminController::class, 'update_section'],
+        'name' => 'update_section'
+    ],
+    [
         'route' => '/update/{:module}/{:admin}',
         'target' => [AdminController::class, 'updateall'],
         'name' => 'updateall'

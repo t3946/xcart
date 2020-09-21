@@ -21,7 +21,7 @@
 {/section}
 {/if}
 </title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/modules/Fast_Lane_Checkout/{#CSSFile#}" />
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
@@ -42,8 +42,8 @@
 {include file="cidev_tracking_code.tpl" }
 
 
-{ include file="head.tpl" }
-{ include file="rectangle_top.tpl" }
+{include file="head.tpl" }
+{include file="rectangle_top.tpl" }
 {if $active_modules.SnS_connector}
 {include file="modules/SnS_connector/header.tpl"}
 {/if}
@@ -132,8 +132,8 @@
 *}
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
-{ include file="ga_code.tpl" }
+{include file="rectangle_bottom.tpl" }
+{include file="ga_code.tpl" }
 
 {* ------------------- *}
 {if $config.Company.cidev_google_adwords ne ""}

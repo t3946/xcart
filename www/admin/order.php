@@ -1,34 +1,4 @@
 <?php
-/*****************************************************************************\
- * +-----------------------------------------------------------------------------+
- * | X-Cart                                                                      |
- * | Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
- * | All rights reserved.                                                        |
- * +-----------------------------------------------------------------------------+
- * | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
- * | FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
- * | AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
- * |                                                                             |
- * | THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
- * | THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
- * | FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
- * | AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
- * | PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
- * | CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
- * | COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
- * | (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
- * | LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
- * | AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
- * | OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
- * | AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
- * | THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
- * | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
- * |                                                                             |
- * | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
- * | Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
- * | Ruslan R. Fazliev. All Rights Reserved.                                     |
- * +-----------------------------------------------------------------------------+
- * \*****************************************************************************/
 
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
@@ -40,18 +10,14 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
-use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
-use Modules\Goods\Models\OptionValueModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
-use Xcart\GroundMap;
 use Xcart\Customer;
 
-global $login;
+global $login, $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
 
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['update', 'mnf_body'];
@@ -77,7 +43,7 @@ if (!$order_model) {
    Xcart::app()->request->redirect('/admin/');
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "unlock_order")
+if ($REQUEST_METHOD === "POST" && $mode === "unlock_order")
 {
     db_query("UPDATE $sql_tbl[orders] SET time_last_opened_or_saved='0' WHERE orderid='" . addslashes($orderid) . "'");
 
@@ -85,7 +51,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "unlock_order")
     $smarty->assign("order_unlocked", "Y");
     $smarty->assign("unlock_message", $unlock_message);
 }
-elseif ($REQUEST_METHOD == "POST" && $mode == "unlock_orders") {
+elseif ($REQUEST_METHOD === "POST" && $mode === "unlock_orders") {
 
     db_query("UPDATE $sql_tbl[orders] SET time_last_opened_or_saved='0' WHERE login_last_opened_or_saved='" . addslashes($login) . "'");
 
@@ -125,7 +91,7 @@ else {
 
     if (!$you_have_right_to_change_order)
     {
-        if ($REQUEST_METHOD == "POST")
+        if ($REQUEST_METHOD === "POST")
         {
             $top_message["content"] = func_get_langvar_by_name("txt_order_not_saved");
             $top_message["type"]    = "E";
@@ -163,9 +129,9 @@ If you need to make urgent changes to the order, ask $operator_firstname to unlo
     }
 }
 
-if ($REQUEST_METHOD == "GET")
+if ($REQUEST_METHOD === "GET")
 {
-    if ($mode == "clone_order" && !empty($orderid))
+    if ($mode === "clone_order" && !empty($orderid))
     {
         $order_table = func_query_first("SELECT * FROM $sql_tbl[orders] WHERE orderid='$orderid'");
         $details = '';
@@ -443,13 +409,13 @@ if ($REQUEST_METHOD === "POST")
     }
 }
 
-if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode == "rma_update_request") && !empty($rma_id) && !empty($orderid))
+if ($REQUEST_METHOD === "POST" && ($mode === "rma_send_email_to_customer" || $mode === "rma_update_request") && !empty($rma_id) && !empty($orderid))
 {
     $rma_query_data = [
         "explanation" => $post_rma["explanation"],
         "order_email" => $post_rma["order_email"],
     ];
-    if ($mode == "rma_send_email_to_customer" && !empty($post_rma["order_email"])) {
+    if ($mode === "rma_send_email_to_customer" && !empty($post_rma["order_email"])) {
         $rma_query_data["status"] = '4';
     }
     func_array2update("rmas", $rma_query_data, "rma_id='$rma_id'");
@@ -530,7 +496,7 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
         }
     }
 
-    if ($mode == "rma_send_email_to_customer" && !empty($post_rma["order_email"]))
+    if ($mode === "rma_send_email_to_customer" && !empty($post_rma["order_email"]))
     {
         $signature           = func_get_signature($order_data["order"]["storefrontid"], false, $order_data["order"]);
         $cur_storefront_info = func_get_storefront_info($order_data["order"]["storefrontid"]);
@@ -557,7 +523,7 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
     func_header_location("order.php?orderid=" . $orderid . "&target_rma=" . $rma_id . "&tab=y#main_order_tabs-RMA");
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderid))
+if ($REQUEST_METHOD === "POST" && $mode === "create_rma_request" && !empty($orderid))
 {
     $order_data = func_order_data($orderid);
     $rma_number = func_query_first_cell("SELECT MAX(rma_number) FROM $sql_tbl[rmas] WHERE orderid='$orderid'") + 1;
@@ -576,14 +542,14 @@ if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderi
     func_header_location("order.php?orderid=" . $orderid . "&target_rma=" . $rma_id . "&tab=y#main_order_tabs-RMA");
 }
 
-if ($REQUEST_METHOD == "POST" && $mode == "delete_rma_request" && !empty($orderid) && !empty($rma_id)) {
+if ($REQUEST_METHOD === "POST" && $mode === "delete_rma_request" && !empty($orderid) && !empty($rma_id)) {
 
     db_query("DELETE FROM $sql_tbl[rmas] WHERE rma_id='$rma_id'");
     db_query("DELETE FROM $sql_tbl[rma_details] WHERE rma_id='$rma_id'");
 
     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-RMA");
 }
-if ($REQUEST_METHOD == "POST" && $mode == "note_is_taken_care_of") {
+if ($REQUEST_METHOD === "POST" && $mode === "note_is_taken_care_of") {
 
     $log = "'Customer notes' removed<br /><B>Customer notes:</B> ";
     $log .= func_query_first_cell("SELECT customer_notes FROM $sql_tbl[orders] WHERE orderid='$orderid'");
@@ -655,7 +621,7 @@ if (empty($ticket_resolver_link)) {
     $smarty->assign('ticket_resolver_link', $ticket_resolver_link);
 }
 
-if ($REQUEST_METHOD == "POST") {
+if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'submit_message' && $type === 'empty') {
 
@@ -979,13 +945,13 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
     }
-    elseif ($mode == "table_accounting_apply") {
+    elseif ($mode === "table_accounting_apply") {
         $log = "'Update' at 'Accounting' pressed";
         func_log_order($orderid, 'X', $log, $login);
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
     }
-    elseif ($mode == "add_additional_tag" && isset($additional_tag_status)) {
+    elseif ($mode === "add_additional_tag" && isset($additional_tag_status)) {
 
         $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$additional_tag_status'");
         $allowed_logins = func_query("SELECT login FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$additional_tag_status' AND action='set'");
@@ -995,7 +961,7 @@ if ($REQUEST_METHOD == "POST") {
         {
             foreach ($allowed_logins as $k => $v)
             {
-                if ($v["login"] == $login || $v["login"] == "_ANY_") {
+                if ($v["login"] == $login || $v["login"] === "_ANY_") {
                     $allowed_to_set_flag = true;
                     break;
                 }
@@ -1018,7 +984,7 @@ if ($REQUEST_METHOD == "POST") {
             func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-order_details");
         }
     }
-    elseif ($mode == "del_additional_tag" && !empty($del_status_id)) {
+    elseif ($mode === "del_additional_tag" && !empty($del_status_id)) {
 
         $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$del_status_id'");
         $allowed_logins = func_query("SELECT login FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$del_status_id' AND action='unset'");
@@ -1028,7 +994,7 @@ if ($REQUEST_METHOD == "POST") {
         {
             foreach ($allowed_logins as $k => $v)
             {
-                if ($v["login"] == $login || $v["login"] == "_ANY_") {
+                if ($v["login"] == $login || $v["login"] === "_ANY_") {
                     $allowed_to_unset_flag = true;
                     break;
                 }
@@ -1059,7 +1025,7 @@ if ($REQUEST_METHOD == "POST") {
     }
 } //if ($REQUEST_METHOD == "POST")
 
-if ($mode == "update" && $user_account["flag"] != "FS")
+if ($mode === "update" && $user_account["flag"] !== "FS")
 {
     #
     # Update orders info (status)
@@ -1074,7 +1040,7 @@ if ($mode == "update" && $user_account["flag"] != "FS")
         func_header_location("orders.php" . (empty($qrystring) ? "" : "?$qrystring"));
     }
 }
-elseif ($mode == 'prolong_ttl' && $orderid && !empty($active_modules["Egoods"])) {
+elseif ($mode === 'prolong_ttl' && $orderid && !empty($active_modules["Egoods"])) {
     #
     # Prolong TTL
     #
@@ -1122,7 +1088,7 @@ elseif ($mode == 'prolong_ttl' && $orderid && !empty($active_modules["Egoods"]))
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'send_ip' && $orderid) {
+elseif ($mode === 'send_ip' && $orderid) {
     #
     # Send customer IP address to Anti Fraud server
     #
@@ -1185,13 +1151,13 @@ if (!empty($ids)) {
 
 $smarty->assign("orderid", $orderid);
 
-if ($REQUEST_METHOD == "POST") {
+if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'map_incorrect' && !empty($zipcode)) {
         GroundMapModel::objects()->delete(['zipcode' => $zipcode]);
         func_header_location("order.php?orderid=" . $orderid);
     }
-    elseif ($mode == "invoice_received") {
+    elseif ($mode === "invoice_received") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
@@ -1247,7 +1213,7 @@ if ($REQUEST_METHOD == "POST") {
 
             if (empty($is_such_record)) {
 
-                if ($order["amazon_fulfillment_channel"] == "AFN") {
+                if ($order["amazon_fulfillment_channel"] === "AFN") {
                     $status = "R";
                 }
                 else {
@@ -1260,7 +1226,7 @@ if ($REQUEST_METHOD == "POST") {
 
         func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
     }
-    elseif ($mode == "additional_invoice_received") {
+    elseif ($mode === "additional_invoice_received") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
@@ -1272,7 +1238,7 @@ if ($REQUEST_METHOD == "POST") {
                 db_query("INSERT INTO $sql_tbl[order_group_invoices_products] (orderid, manufacturerid, invoice_number, itemid) VALUES ('$orderid', '$certain_mid', '$invoice_number', '$product[itemid]')");
             }
 
-            if ($order["amazon_fulfillment_channel"] == "AFN") {
+            if ($order["amazon_fulfillment_channel"] === "AFN") {
                 $status = "R";
             }
             else {
@@ -1284,7 +1250,7 @@ if ($REQUEST_METHOD == "POST") {
 
         func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
     }
-    elseif ($mode == "delete_invoice") {
+    elseif ($mode === "delete_invoice") {
 
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
@@ -1296,11 +1262,11 @@ if ($REQUEST_METHOD == "POST") {
 
         func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
     }
-    elseif ($mode == "memo_received" && !empty($certain_mid)) {
+    elseif ($mode === "memo_received" && !empty($certain_mid)) {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
-        if ($order["amazon_fulfillment_channel"] == "AFN") {
+        if ($order["amazon_fulfillment_channel"] === "AFN") {
             $status = "R";
         }
         else {
@@ -1311,13 +1277,13 @@ if ($REQUEST_METHOD == "POST") {
 
         func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
     }
-    elseif ($mode == "additional_memo_received" && !empty($certain_mid)) {
+    elseif ($mode === "additional_memo_received" && !empty($certain_mid)) {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
         $memo_number = func_query_first_cell("SELECT MAX(memo_number) FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$certain_mid'") + 1;
 
-        if ($order["amazon_fulfillment_channel"] == "AFN") {
+        if ($order["amazon_fulfillment_channel"] === "AFN") {
             $status = "R";
         }
         else {
@@ -1343,7 +1309,7 @@ if (!empty($attention_tags_values) && is_array($attention_tags_values)) {
 
         if (!empty($operators)) {
             foreach ($operators as $kk => $vv) {
-                if ($vv["action"] == "set" && ($vv["login"] == "_ANY_" || $vv["login"] == $login)) {
+                if ($vv["action"] === "set" && ($vv["login"] === "_ANY_" || $vv["login"] == $login)) {
                     $set_active = true;
                     break;
                 }
@@ -1362,7 +1328,7 @@ require $xcart_dir . "/include/order_edit.php";
 require $xcart_dir . "/include/transaction_logs.php";
 require $xcart_dir . "/include/order_transactions.php";
 
-if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid))
+if ($mode === 'pending_order_message2_done_clicked' && !empty($notify_mid))
 {
     $log = "'Done' clicked. <br /><B>" . $order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"] . "</B>: order_entry_flag: " . $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
 
@@ -1388,12 +1354,12 @@ if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid))
     func_header_location("order.php?orderid=" . $orderid);
 }
 
-if ($mode == 'ref_notify')
+if ($mode === 'ref_notify')
 {
-    if ($ref_notify_button_clicked == "Update_C2B_status") {
+    if ($ref_notify_button_clicked === "Update_C2B_status") {
         $log = "'Update C2B status' at 'Refund'";
     }
-    elseif ($ref_notify_button_clicked == "Send_refund_notification") {
+    elseif ($ref_notify_button_clicked === "Send_refund_notification") {
         $log = "'Send refund notification' at 'Refund'";
     }
     else {
@@ -1418,7 +1384,7 @@ if ($mode == 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'tatyanap', 'roman_n', 'dmitry_s'], true)) {
+        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'tatyanap', 'roman_nn', 'dmitry_s'], true)) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1589,7 +1555,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
     #
     # Send manufacturer notification and update order's manufacturer notified status
     #
-    if (!empty($active_modules['Product_Verification']) && $order['product_verification_status_code'] != 'PV') {
+    if (!empty($active_modules['Product_Verification']) && $order['product_verification_status_code'] !== 'PV') {
         $top_message = [
             'content' => func_get_langvar_by_name('lbl_dispatch_deny_before_product_verification'),
             'type'    => 'I',
@@ -1607,17 +1573,17 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
     $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
     $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
 
-    if ($mode == "cidev_send_email_to_operator") {
+    if ($mode === "cidev_send_email_to_operator") {
         $log = "'Submit to order entry operator' at '" . $manufacturer_name . ": Order entry'";
         func_log_order($orderid, 'X', $log, $login);
     }
 
-    if ($mode == "mnf_notify" && $set_status_K == "Y") {
+    if ($mode === "mnf_notify" && $set_status_K === "Y") {
         $log = "'Send (Request availability)' at '" . $manufacturer_name . ": Request availability'";
         func_log_order($orderid, 'X', $log, $login);
     }
 
-    if ($mode == 'mnf_notify')
+    if ($mode === 'mnf_notify')
     {
         if (!empty($d_shipping_options_name)) {
             $mnf_body = str_replace("{{shipping_method}}", $d_shipping_options_name, $mnf_body);
@@ -1731,17 +1697,17 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    if ($set_status_K == "Y" || $cidev_hide_invoice == "Y") {
+    if ($set_status_K === "Y" || $cidev_hide_invoice === "Y") {
         $mail_smarty->assign('cidev_hide_invoice', "Y");
     }
 
     $mail_smarty->assign('show_s3stores_site_in_invoice', $show_s3stores_site_in_invoice);
 
-    if ($mode == 'mnf_notify')
+    if ($mode === 'mnf_notify')
     {
         $mail_smarty->assign("message_body", $mnf_body);
 
-        if ($submit_to_operator == 'through_distributor_website') {
+        if ($submit_to_operator === 'through_distributor_website') {
             $mail_smarty->assign('order', $order);
             $mail_smarty->assign('mnf_operator_notify', 'Y');
             $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
@@ -1794,7 +1760,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         $all_sent = false;
         foreach ($order['shipping_groups'] as $v)
         {
-            $all_sent = ($v['notify_sent'] == 'Y');
+            $all_sent = ($v['notify_sent'] === 'Y');
             if (!$all_sent) {
                 break;
             }
@@ -1803,9 +1769,9 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
 
-        if ($set_status_K == "Y") {
+        if ($set_status_K === "Y") {
 
-            if ($current_dc_status != "K") {
+            if ($current_dc_status !== "K") {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
                 $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
                 func_log_order($orderid, 'X', $log, $login);
@@ -1823,7 +1789,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         else {
             $order_group = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id]);
 
-            if ($current_dc_status != "C") {
+            if ($current_dc_status !== "C") {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='C'");
                 $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
                 func_log_order($orderid, 'X', $log, $login);
@@ -1844,11 +1810,11 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         }
 
         if ($all_sent) {
-            if ($set_status_K == "Y") {
+            if ($set_status_K === "Y") {
 //				func_change_order_status($orderid, 'K');
             }
             else {
-                if ($submit_to_operator == 'through_distributor_website') {
+                if ($submit_to_operator === 'through_distributor_website') {
                     func_change_order_status($orderid, 'E', '', $mnf_id);
                 }
                 else {
@@ -1859,7 +1825,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
         $top_message = ["content" => func_get_langvar_by_name("txt_mnf_notification_sent")];
     }
-    elseif ($mode == 'cidev_send_email_to_operator') {
+    elseif ($mode === 'cidev_send_email_to_operator') {
 
         $d_order_entry_operator_email = func_query_first_cell('SELECT d_order_entry_operator_email FROM ' . $sql_tbl['manufacturers'] . ' WHERE manufacturerid = "' . $mnf_id . '"');
 
@@ -1903,7 +1869,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
         $code                    = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
 
-        if ($current_dc_status != "E") {
+        if ($current_dc_status !== "E") {
             $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='E'");
             $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
             func_log_order($orderid, 'X', $log, $login);
@@ -1918,7 +1884,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'request_additional_shipping_charge') {
+elseif ($mode === 'request_additional_shipping_charge') {
 
     $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
     $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
@@ -1953,7 +1919,7 @@ elseif ($mode == 'request_additional_shipping_charge') {
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'request_missing_information')
+elseif ($mode === 'request_missing_information')
 {
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
@@ -1985,7 +1951,7 @@ elseif ($mode == 'request_missing_information')
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'backorder_decision_request') {
+elseif ($mode === 'backorder_decision_request') {
 
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
@@ -2017,7 +1983,7 @@ elseif ($mode == 'backorder_decision_request') {
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'waive') {
+elseif ($mode === 'waive') {
 
     $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
     $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
@@ -2029,7 +1995,7 @@ elseif ($mode == 'waive') {
 
     $current_additional_shipping_status = $order["shipping_groups"][$mnf_id]["additional_shipping_status"];
 
-    if ($current_additional_shipping_status != "W") {
+    if ($current_additional_shipping_status !== "W") {
         $log = "<B>" . $code . ":</B> additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> Waive";
         func_log_order($orderid, 'X', $log, $login);
 
@@ -2042,7 +2008,7 @@ elseif ($mode == 'waive') {
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif ($mode == 'mode_info_request_survey') {
+elseif ($mode === 'mode_info_request_survey') {
 
     $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
     $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
@@ -2082,12 +2048,12 @@ elseif ($mode == 'mode_info_request_survey') {
 
             $actual_shipping_gross = $actual_shipping_net;
 
-            if ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_all_orders") {
+            if ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_select'] === "applies_to_all_orders") {
                 if (!empty($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
                     $actual_shipping_gross += $order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
                 }
             }
-            elseif ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_orders_below_minimum_order_amount_only") {
+            elseif ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_select'] === "applies_to_orders_below_minimum_order_amount_only") {
                 if (!empty($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
 
                     $sum_cost_to_us = 0;
@@ -2184,7 +2150,7 @@ elseif ($mode == 'mode_info_request_survey') {
                         $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
                         $current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
-                        if ($vs == "some_in_stock" || $vs == "out_of_stock") {
+                        if ($vs === "some_in_stock" || $vs === "out_of_stock") {
 
                             if ($current_eta_date_mm_dd_yyyy != $eta_date) {
                                 $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
@@ -2194,7 +2160,7 @@ elseif ($mode == 'mode_info_request_survey') {
 
                             $eta_date_lock = $v[$eta_date_lock];
 
-                            if ($v["manufacturer_feed_fields"]["eta_date_mm_dd_yyyy"]["disable"] == "Y") {
+                            if ($v["manufacturer_feed_fields"]["eta_date_mm_dd_yyyy"]["disable"] === "Y") {
 
                                 if ($eta_date) {
                                     $eta_date_lock = "Y";
@@ -2211,18 +2177,18 @@ elseif ($mode == 'mode_info_request_survey') {
 
                             db_query("UPDATE $sql_tbl[order_details] SET offer_backorder='$p_offer_backorder' WHERE productid='$productid' AND orderid='$orderid'");
 
-                            if ($current_forsale == 'N') {
+                            if ($current_forsale === 'N') {
                                 $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> Y <br />";
                                 db_query("UPDATE $sql_tbl[products] SET forsale='Y', r_avail='0' WHERE productid='$productid'");
                             }
                         }
-                        elseif ($vs == "discontinued") {
+                        elseif ($vs === "discontinued") {
 
                             if ($current_eta_date_mm_dd_yyyy != '') {
                                 $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> <br />";
                             }
 
-                            if ($current_forsale != 'N') {
+                            if ($current_forsale !== 'N') {
                                 $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> N <br />";
                             }
 
@@ -2244,7 +2210,7 @@ elseif ($mode == 'mode_info_request_survey') {
                     {
                         $productid = $v["productid"];
 
-                        if ($vs == "all_in_stock")
+                        if ($vs === "all_in_stock")
                         {
                             if (!empty($v["eta_date_mm_dd_yyyy"]) || $v["r_avail"] == "0")
                             {
@@ -2274,9 +2240,9 @@ elseif ($mode == 'mode_info_request_survey') {
                                     db_query("UPDATE $sql_tbl[products] SET r_avail='1000000' WHERE productid='$productid'");
                                 }
 
-                                if ($v["forsale"] == "N") {
+                                if ($v["forsale"] === "N") {
 
-                                    if ($current_forsale != 'Y') {
+                                    if ($current_forsale !== 'Y') {
                                         $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> Y <br />";
                                     }
 
@@ -2301,8 +2267,7 @@ elseif ($mode == 'mode_info_request_survey') {
             }
             $v = trim($v);
             if ($v != "") {
-                $v = str_replace(",", ".", $v);
-                $v = str_replace(" ", "", $v);
+                $v = str_replace([",", " "], [".", ""], $v);
 
                 $current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
 
@@ -2316,7 +2281,7 @@ elseif ($mode == 'mode_info_request_survey') {
         }
     }
 
-    if ($current_dc_status != "M") {
+    if ($current_dc_status !== "M") {
         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
         $new_value               = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='M'");
         $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
@@ -2339,21 +2304,21 @@ elseif ($mode == 'mode_info_request_survey') {
 #
 # Delete order
 #
-if ($mode == "printable") {
+if ($mode === "printable") {
     func_display("provider/order_printable.tpl", $smarty);
     exit;
 }
-elseif ($mode == "delete") {
+elseif ($mode === "delete") {
     func_delete_order($orderid);
     func_header_location("orders.php?" . $query_string);
 }
 
 $smarty->assign("main", "history_order");
 
-if (!empty($active_modules["Advanced_Order_Management"]) && $mode == "edit") {
+if (!empty($active_modules["Advanced_Order_Management"]) && $mode === "edit") {
     include $xcart_dir . "/modules/Advanced_Order_Management/order_edit.php";
 }
-elseif (!empty($active_modules["Anti_Fraud"]) && $mode == "anti_fraud") {
+elseif (!empty($active_modules["Anti_Fraud"]) && $mode === "anti_fraud") {
     if ($order['extra']) {
         $userinfo           = $order_data["userinfo"];
         $extra              = $order['extra'];
@@ -2365,7 +2330,7 @@ elseif (!empty($active_modules["Anti_Fraud"]) && $mode == "anti_fraud") {
 
     func_header_location("order.php?orderid=" . $orderid);
 }
-elseif (!empty($active_modules["Stop_List"]) && $mode == "block_ip") {
+elseif (!empty($active_modules["Stop_List"]) && $mode === "block_ip") {
     func_add_ip_to_slist($order['extra']['ip']);
     $top_message["content"] = func_get_langvar_by_name("msg_stoplist_ip_added");
     $top_message["type"]    = "I";
@@ -2374,7 +2339,7 @@ elseif (!empty($active_modules["Stop_List"]) && $mode == "block_ip") {
 
 $mnfs = func_get_order_manufacturers($orderid);
 
-if ($mnfs["reload_page"] == "Y") {
+if ($mnfs["reload_page"] === "Y") {
     func_header_location("order.php?orderid=" . $orderid);
 }
 
@@ -2387,11 +2352,11 @@ if (!empty($mnfs) && is_array($mnfs)) {
     $find_one_IO_status                                            = false;
 
     foreach ($mnfs as $k => $v) {
-        if ($v["dc_status"] == "K" || $v["dc_status"] == "E" || $v["dc_status"] == "M" || $v["dc_status"] == "T") {
+        if ($v["dc_status"] === "K" || $v["dc_status"] === "E" || $v["dc_status"] === "M" || $v["dc_status"] === "T") {
             $find_one_DC_Pending_availability_check_OR_Pending_order_entry = true;
         }
 
-        if ($v["cb_status"] == "IO") {
+        if ($v["cb_status"] === "IO") {
             $find_one_IO_status = true;
         }
     }
@@ -2478,7 +2443,7 @@ if (!empty($productids_for_outofstock_disc_cat_urls)) {
 
         $count_cats_for_outofstock_disc_cat_urls = count($cats_for_outofstock_disc_cat_urls);
         foreach ($cats_for_outofstock_disc_cat_urls as $k_o => $v_o) {
-            $tmp_cat_str = "http://";
+            $tmp_cat_str = "https://";
 
             if ($v_o["sfid"] > 0) {
                 $tmp_cat_str .= func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$v_o[sfid]'");
@@ -2506,8 +2471,7 @@ $backorder_decision_request_message = str_replace("{{signature}}", $signature, $
 $firstname       = trim($userinfo["firstname"]);
 $c_firstname_arr = explode(" ", $firstname);
 $c_firstname     = array_shift($c_firstname_arr);
-$backorder_decision_request_message = str_replace("{{userfirstname}}", $userfirstname, $backorder_decision_request_message);
-$backorder_decision_request_message = str_replace("{{userfullname}}", $userfullname, $backorder_decision_request_message);
+$backorder_decision_request_message = str_replace(['{{userfirstname}}', '{{userfullname}}'], [$userfirstname, $userfullname], $backorder_decision_request_message);
 
 $smarty->assign("backorder_decision_request_subject_line", $backorder_decision_request_subject_line);
 $smarty->assign("backorder_decision_request_message", $backorder_decision_request_message);
@@ -2517,7 +2481,7 @@ if ($find_one_IO_status) {
     $request_missing_information_message = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $request_missing_information_message);
 
     $customer_firstname = $userinfo["firstname"];
-    if (strtolower($customer_firstname) == "unknown") {
+    if (strtolower($customer_firstname) === "unknown") {
         $customer_firstname = "Sir/Madam";
     }
 
@@ -2525,56 +2489,56 @@ if ($find_one_IO_status) {
 
     $missing_information_replace_text = "";
 
-    if ($userinfo["phone"] == "(000) 000-0000" || strtolower($userinfo["email"]) == "unknown@unknown.com" || strtolower($userinfo["firstname"]) == "unknown") {
+    if ($userinfo["phone"] === "(000) 000-0000" || strtolower($userinfo["email"]) === "unknown@unknown.com" || strtolower($userinfo["firstname"]) === "unknown") {
         $missing_information_replace_text .= "<B>Contact information</B><br />";
 
-        if (strtolower($userinfo["firstname"]) == "unknown") {
+        if (strtolower($userinfo["firstname"]) === "unknown") {
             $missing_information_replace_text .= "Full Name is missing<br />";
         }
-        if ($userinfo["phone"] == "(000) 000-0000") {
+        if ($userinfo["phone"] === "(000) 000-0000") {
             $missing_information_replace_text .= "Phone number is missing<br />";
         }
-        if (strtolower($userinfo["email"]) == "unknown@unknown.com") {
+        if (strtolower($userinfo["email"]) === "unknown@unknown.com") {
             $missing_information_replace_text .= "Email address is missing<br />";
         }
     }
 
-    if (strtolower($order["po_details"]["name_of_purchaser"]) == "unknown" || $order["po_details"]["purchase_manager_phone"] == "(000) 000-0000" || $order["po_details"]["po_fax"] == "(000) 000-0000" || strtolower($order["po_details"]["purchase_manager_email"]) == "unknown@unknown.com") {
+    if (strtolower($order["po_details"]["name_of_purchaser"]) === "unknown" || $order["po_details"]["purchase_manager_phone"] === "(000) 000-0000" || $order["po_details"]["po_fax"] === "(000) 000-0000" || strtolower($order["po_details"]["purchase_manager_email"]) === "unknown@unknown.com") {
         if (!empty($missing_information_replace_text)) {
             $missing_information_replace_text .= "<br />";
         }
 
         $missing_information_replace_text .= "<B>Purchase manager</B><br />";
-        if (strtolower($order["po_details"]["name_of_purchaser"]) == "unknown") {
+        if (strtolower($order["po_details"]["name_of_purchaser"]) === "unknown") {
             $missing_information_replace_text .= "Full name is missing<br />";
         }
-        if ($order["po_details"]["purchase_manager_phone"] == "(000) 000-0000") {
+        if ($order["po_details"]["purchase_manager_phone"] === "(000) 000-0000") {
             $missing_information_replace_text .= "Phone number is missing<br />";
         }
-        if ($order["po_details"]["po_fax"] == "(000) 000-0000") {
+        if ($order["po_details"]["po_fax"] === "(000) 000-0000") {
             $missing_information_replace_text .= "Fax number is missing<br />";
         }
-        if (strtolower($order["po_details"]["purchase_manager_email"]) == "unknown@unknown.com") {
+        if (strtolower($order["po_details"]["purchase_manager_email"]) === "unknown@unknown.com") {
             $missing_information_replace_text .= "Email is missing<br />";
         }
     }
 
-    if (strtolower($order["po_details"]["accounts_payable_full_name"]) == "unknown" || $order["po_details"]["accounts_payable_phone"] == "(000) 000-0000" || $order["po_details"]["accounts_payable_fax"] == "(000) 000-0000" || strtolower($order["po_details"]["accounts_payable_email"]) == "unknown@unknown.com") {
+    if (strtolower($order["po_details"]["accounts_payable_full_name"]) === "unknown" || $order["po_details"]["accounts_payable_phone"] === "(000) 000-0000" || $order["po_details"]["accounts_payable_fax"] === "(000) 000-0000" || strtolower($order["po_details"]["accounts_payable_email"]) === "unknown@unknown.com") {
         if (!empty($missing_information_replace_text)) {
             $missing_information_replace_text .= "<br />";
         }
 
         $missing_information_replace_text .= "<B>Accounts payable</B><br />";
-        if (strtolower($order["po_details"]["accounts_payable_full_name"]) == "unknown") {
+        if (strtolower($order["po_details"]["accounts_payable_full_name"]) === "unknown") {
             $missing_information_replace_text .= "Full name is missing<br />";
         }
-        if ($order["po_details"]["accounts_payable_phone"] == "(000) 000-0000") {
+        if ($order["po_details"]["accounts_payable_phone"] === "(000) 000-0000") {
             $missing_information_replace_text .= "Phone number is missing<br />";
         }
-        if ($order["po_details"]["accounts_payable_fax"] == "(000) 000-0000") {
+        if ($order["po_details"]["accounts_payable_fax"] === "(000) 000-0000") {
             $missing_information_replace_text .= "Fax number is missing<br />";
         }
-        if (strtolower($order["po_details"]["accounts_payable_email"]) == "unknown@unknown.com") {
+        if (strtolower($order["po_details"]["accounts_payable_email"]) === "unknown@unknown.com") {
             $missing_information_replace_text .= "Email is missing<br />";
         }
     }
@@ -2589,19 +2553,14 @@ if ($find_one_IO_status) {
     $shipping_difference = $shipping_original - $shipping_on_po;
     $shipping_difference = price_format($shipping_difference);
 
-    $request_missing_information_message = str_replace("{{shipping_original}}", $shipping_original, $request_missing_information_message);
-    $request_missing_information_message = str_replace("{{shipping_on_po}}", $shipping_on_po, $request_missing_information_message);
-    $request_missing_information_message = str_replace("{{shipping_difference}}", $shipping_difference, $request_missing_information_message);
-
-    $request_missing_information_message = str_replace("{{missing_information}}", $missing_information_replace_text, $request_missing_information_message);
-    $request_missing_information_message = str_replace("{{po_number}}", $order["po_number"], $request_missing_information_message);
+    $request_missing_information_message = str_replace(['{{shipping_original}}', '{{shipping_on_po}}', '{{shipping_difference}}', '{{missing_information}}', '{{po_number}}'],
+        [$shipping_original, $shipping_on_po, $shipping_difference, $missing_information_replace_text, $order['po_number']], $request_missing_information_message);
 
     $smarty->assign("request_missing_information_message", $request_missing_information_message);
 
-    $request_missing_information_subject_line = $config["Purchase_Order"]["po_missing_subject_line"];
-    $request_missing_information_subject_line = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $request_missing_information_subject_line);
-    $request_missing_information_subject_line = str_replace("{{fullname}}", $userinfo["firstname"], $request_missing_information_subject_line);
-    $request_missing_information_subject_line = str_replace("{{po_number}}", $order["po_number"], $request_missing_information_subject_line);
+    $request_missing_information_subject_line = $config['Purchase_Order']['po_missing_subject_line'];
+    $request_missing_information_subject_line = str_replace(['{{orderid}}', '{{fullname}}', '{{po_number}}'],
+        [$order['order_prefix'] . $orderid, $userinfo['firstname'], $order['po_number']], $request_missing_information_subject_line);
     $smarty->assign("request_missing_information_subject_line", $request_missing_information_subject_line);
 }
 
@@ -2621,23 +2580,19 @@ if (!empty($userinfo)) {
 
     $fraud_Google_address_search_exclusions = trim($config["Fraud_check"]["fraud_Google_address_search_exclusions"]);
     if (!empty($fraud_Google_address_search_exclusions)) {
-        $fraud_Google_address_search_exclusions = str_replace(",", "+-", $fraud_Google_address_search_exclusions);
-        $fraud_Google_address_search_exclusions = str_replace(" ", "+", $fraud_Google_address_search_exclusions);
+        $fraud_Google_address_search_exclusions = str_replace([",", " "], ["+-", "+"], $fraud_Google_address_search_exclusions);
         $fraud_Google_address_search_exclusions = "+-" . $fraud_Google_address_search_exclusions;
     }
 
     $fraud_Google_email_search_exclusions = trim($config["Fraud_check"]["fraud_Google_email_search_exclusions"]);
     if (!empty($fraud_Google_email_search_exclusions)) {
-        $fraud_Google_email_search_exclusions = str_replace(",", "+-", $fraud_Google_email_search_exclusions);
-        $fraud_Google_email_search_exclusions = str_replace(" ", "+", $fraud_Google_email_search_exclusions);
+        $fraud_Google_email_search_exclusions = str_replace([",", " "], ["+-", "+"], $fraud_Google_email_search_exclusions);
         $fraud_Google_email_search_exclusions = "+-" . $fraud_Google_email_search_exclusions;
         $smarty->assign("fraud_Google_email_search_exclusions", $fraud_Google_email_search_exclusions);
     }
 
     $google_billing_address = $userinfo["b_address"] . (!empty($userinfo["b_address_2"]) ? " $userinfo[b_address_2]" : "") . " " . $userinfo["b_city"] . " " . $userinfo["b_state"] . " " . $userinfo["b_zipcode"];
-    $google_billing_address = str_replace(" ", "+", $google_billing_address);
-    $google_billing_address = str_replace("#", "", $google_billing_address);
-    $google_billing_address = str_replace("&", "and", $google_billing_address);
+    $google_billing_address = str_replace([" ", "#", "&"], ["+", "", "and"], $google_billing_address);
     $spokeo_billing_address = $google_billing_address;
     $google_billing_address .= $fraud_Google_address_search_exclusions;
 
@@ -2645,9 +2600,7 @@ if (!empty($userinfo)) {
     $smarty->assign("spokeo_billing_address", $spokeo_billing_address);
 
     $google_shipping_address = $userinfo["s_address"] . (!empty($userinfo["s_address_2"]) ? " $userinfo[s_address_2]" : "") . " " . $userinfo["s_city"] . " " . $userinfo["s_state"] . " " . $userinfo["s_zipcode"];
-    $google_shipping_address = str_replace(" ", "+", $google_shipping_address);
-    $google_shipping_address = str_replace("#", "", $google_shipping_address);
-    $google_shipping_address = str_replace("&", "and", $google_shipping_address);
+    $google_shipping_address = str_replace([" ", "#", "&"], ["+", "", "and"], $google_shipping_address);
 
     $spokeo_shipping_address = $google_shipping_address;
     $google_shipping_address .= $fraud_Google_address_search_exclusions;
@@ -2777,7 +2730,7 @@ $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
 
-if ($allowed_elements["email_tab_1"] != "N") {
+if ($allowed_elements["email_tab_1"] !== "N") {
     $main_order_tabs[$tabs_key]["title"]   = "Email comm";
     $main_order_tabs[$tabs_key]["section"] = "email_communications";
     $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
@@ -2864,7 +2817,7 @@ if (!empty($order_logs) && is_array($order_logs)) {
 
         $log = stripslashes($v["log"]);
 
-        if ($v["type"] == 'PP') {
+        if ($v["type"] === 'PP') {
             $unserialized_transaction_log = unserialize($log);
             if (is_array($unserialized_transaction_log)) {
 
@@ -2884,11 +2837,11 @@ if (!empty($order_logs) && is_array($order_logs)) {
             $log = "checks_deposited_orders";
         }
 
-        if (substr($log, 0, 12) == "<br /><br />") {
+        if (substr($log, 0, 12) === "<br /><br />") {
             $log = substr_replace($log, '', 0, 12);
         }
 
-        if (substr($log, 0, 6) == "<br />") {
+        if (substr($log, 0, 6) === "<br />") {
             $log = substr_replace($log, '', 0, 6);
         }
 
@@ -2936,7 +2889,7 @@ if (!empty($order["shipping_groups"]))
 {
     foreach ($order["shipping_groups"] as $k => $v)
     {
-        if ($v["cb_status"] == "P") {
+        if ($v["cb_status"] === "P") {
             $cb_status_eq_P_found = true;
         }
         else {
@@ -2950,21 +2903,21 @@ if (!empty($order["shipping_groups"]))
             $all_cb_status_eq_3 = false;
         }
 
-        if ($v["cb_status"] == "V") {
+        if ($v["cb_status"] === "V") {
             $cb_status_eq_V_found = true;
         }
         else {
             $all_cb_status_eq_V = false;
         }
 
-        if ($v["cb_status"] == "H") {
+        if ($v["cb_status"] === "H") {
             $cb_status_eq_H_found = true;
         }
         else {
             $all_cb_status_eq_H = false;
         }
 
-        if ($v["cb_status"] == "R") {
+        if ($v["cb_status"] === "R") {
             $cb_status_eq_R_found = true;
         }
         else {
@@ -3000,7 +2953,7 @@ if (!empty($checks_deposited_order)) {
 }
 
 if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])) {
-    if ($order["unfreeze_cb_status"] == "Y") {
+    if ($order["unfreeze_cb_status"] === "Y") {
         $allowed_to_modify_cb_status_IO_O = true;
     }
     else {
@@ -3010,7 +2963,7 @@ if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])) {
         if (!empty($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"])) {
             foreach ($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"] as
                      $k => $v) {
-                if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")) {
+                if ($v["action"] === "unset" && ($v["login"] == $login || $v["login"] === "_ANY_")) {
                     $allowed_to_modify_cb_status_IO_O = true;
                     break;
                 }
@@ -3052,7 +3005,7 @@ if (!empty($order["refund_groups"])) {
         if (isset($order["refund_groups"][$k]["total_gross"])) {
             $TOTAL_refund_groups_total_gross += $order["refund_groups"][$k]["total_gross"];
 
-            if ($v["cb_status"] != "AP") {
+            if ($v["cb_status"] !== "AP") {
                 $show_cancel_message = false;
             }
         }

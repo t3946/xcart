@@ -27,7 +27,7 @@ class Select2Field extends DropDownField
 
     public $ajaxUrl = "";
     public $editable = false;
-    public $fieldTemplate = 'forms/field/select2/field.tpl';
+    //public $fieldTemplate = 'forms/field/select2/field.tpl';
 
     public function getAjaxUrl()
     {
@@ -149,5 +149,13 @@ class Select2Field extends DropDownField
             ];
         }
         return array_replace_recursive($options, $this->options);
+    }
+
+    public function getChoices()
+    {
+        if ($this->getAjaxUrl()) {
+            return [];
+        }
+        return parent::getChoices();
     }
 }

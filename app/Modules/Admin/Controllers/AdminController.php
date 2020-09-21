@@ -30,6 +30,13 @@ class AdminController extends BackendController
         $admin->update($pk);
     }
 
+    public function update_section($module, $admin, $pk, $section = null)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->section = $section;
+        $admin->update($pk);
+    }
+
     public function updateall($module, $admin)
     {
         $admin = $this->getAdmin($module, $admin);

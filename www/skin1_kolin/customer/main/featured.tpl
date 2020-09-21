@@ -10,7 +10,7 @@
 {include file="customer/main/products.tpl" products=$f_products featured="Y"}
 {if $total_pages gt 2}
 <br />
-{ include file="customer/main/navigation.tpl" featured="Y"}
+{include file="customer/main/navigation.tpl" featured="Y"}
 {/if}
 {else}
 {$lng.txt_no_featured}

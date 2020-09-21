@@ -11,14 +11,9 @@
         </td>
         {if $login ne ""}
             <td align="left" width="70%">
-                {php}
-                    $est_time = new DateTime("now", new DateTimeZone('EST') );
-                    $ny_time = new DateTime("now", new DateTimeZone('America/New_York'));
-                    $ca_time = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
-                    $this->assign('est_time', $est_time);
-                    $this->assign('ny_time', $ny_time);
-                    $this->assign('ca_time', $ca_time);
-                {/php}
+                {assign var=est_time value=date_create('now', timezone_open('EST'))}
+                {assign var=ny_time value=date_create('now', timezone_open('America/New_York'))}
+                {assign var=ca_time value=date_create('now', timezone_open('America/Los_Angeles'))}
                 <div style="width:44%; float:right">
                     <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">Product questions</a></div>
@@ -43,13 +38,10 @@
                 <div style="float:right;">
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>
-                        {php}
-                            if ($holiday = Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(new DateTime))
-                            {
-                                $this->assign('next_holiday', $holiday);
-                                $this->assign('next_holiday_days', $holiday->getDaysUntil());
-                            }
-                        {/php}
+                        {assign var=holiday value=Modules\Main\Helpers\WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')))}
+                        {if $holiday}
+                            {assign var=next_holiday_days value=$holiday->getDaysUntil()}
+                        {/if}
                         {if $next_holiday && $next_holiday_days !== null}
                             <div style="text-align:center; border: 2px solid red;">
                                 {if $next_holiday_days > 0}
@@ -134,7 +126,7 @@
                                value=""/>
                     </td>
                     <td>
-                        <input type="submit" value="{$lng.lbl_search}"/>
+                        <input type="submit" value="Search"/>
                     </td>
                 </tr>
             </table>
@@ -175,8 +167,8 @@
         {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
             <div style="float: right;">
                 <input type="button"
-                       name="{$lng.lbl_sf_properties}"
-                       value="{$lng.lbl_sf_properties}"
+                       name="SF properties"
+                       value="SF properties"
                        onclick="location.href='configuration.php?option=Multiple_Storefronts'">
 </div>
         {/if}

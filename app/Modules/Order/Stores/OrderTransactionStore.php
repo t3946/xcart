@@ -122,8 +122,7 @@ class OrderTransactionStore extends BaseStore
 
                 self::lookupParentTransactions($model);
 
-            } else {
-
+            } else if ($this->gateway) {
                 $state = $this->gateway->getState($this->params['mode']);
                 $result = $this->gateway->result->getData();
 

@@ -6,6 +6,6 @@
 <a href="product.php?productid={$bestsellers[num].productid}&amp;cat={$cat}&amp;bestseller=Y" class="VertMenuItems">{$bestsellers[num].product}</a><br />
 {/section}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_bestsellers menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_bestsellers menu_content=$smarty.capture.menu }
 <br />
 {/if}

@@ -118,7 +118,7 @@ function checkDrops(f) {
 
 <tr>
 	<td valign="top" width="50%">
-	<b>{$lng.lbl_csv_delimiter}:</b><br />{ include file="provider/main/ie_delimiter.tpl" saved_delimiter=$import_data.delimiter}
+	<b>{$lng.lbl_csv_delimiter}:</b><br />{include file="provider/main/ie_delimiter.tpl" saved_delimiter=$import_data.delimiter}
 	</td>
 </tr>
 

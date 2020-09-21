@@ -3,7 +3,7 @@
 
 	{include file="customer/main/products.tpl" products=$products}
 
-	{ include file="customer/main/navigation.tpl" }
+	{include file="customer/main/navigation.tpl" }
 
 {else}
 	<br />

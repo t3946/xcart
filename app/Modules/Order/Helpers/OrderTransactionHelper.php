@@ -129,29 +129,26 @@ class OrderTransactionHelper
         return round(array_sum(array_map(function ($model) use ($isAdditional) {
             /** @var OrderTransactionModel $model */
             $value = 0;
-            if ($model->type === OrderTransactionModel::TYPE_AUTHORIZATION && !\in_array($model->transaction_status,
-                    [
-                        OrderTransactionModel::STATUS_FAILED,
-                        OrderTransactionModel::STATUS_VOIDED,
-                        OrderTransactionModel::STATUS_DECLINED,
-                    ]
-                ))
+            if ($model->type === OrderTransactionModel::TYPE_AUTHORIZATION &&
+                !in_array($model->transaction_status, [
+                    OrderTransactionModel::STATUS_FAILED,
+                    OrderTransactionModel::STATUS_VOIDED,
+                    OrderTransactionModel::STATUS_DECLINED,
+                ], true))
             {
                 $value = $model->getAvailAmount();
 
-                if (!Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled()) {
-                    if ($value < $model->transaction_amount) {
-                        $value = 0;
-                    }
+                if ($value < $model->transaction_amount &&
+                    ($gateway = Gateway::getGateway($model->payment_method_model->processor)) &&
+                    !$gateway::isPartiallyCaptureEnabled()) {
+                    $value = 0;
                 }
 
                 if ($isAdditional) {
+                    $value = 0;
                     if (($payment = $model->payment_method_model) && $payment->maximum_re_authorization_multiplier > 0) {
-                        $value = min(
-                            $payment->maximum_re_authorization_increase, $value * $payment->maximum_re_authorization_multiplier - $value
-                        );
-                    } else {
-                        $value = 0;
+                        $value = min($payment->maximum_re_authorization_increase,
+                            $value * $payment->maximum_re_authorization_multiplier - $value);
                     }
                 }
             }

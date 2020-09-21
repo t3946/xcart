@@ -26,7 +26,7 @@ window.name="prodmodwin";
 {if $products && $geid}
 <br />
 {capture name=dialog}
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 
 <table cellpadding="3" cellspacing="1" width="100%">
 
@@ -52,7 +52,7 @@ window.name="prodmodwin";
 {/foreach}
 
 </table>
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 
 {/capture}
 {include file="dialog.tpl" content=$smarty.capture.dialog title=$lng.lbl_product_list extra="width='100%'"}

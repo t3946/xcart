@@ -8,7 +8,9 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignCharField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -123,7 +125,12 @@ class SiteModel extends Model
                 'modelClass' => SiteMarketplaceModel::class,
                 'link' => ['storefrontid' => 'storefront_id']
             ],
-            'short_name' => CharField::class
+            'short_name' => CharField::class,
+            'corporates' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => CorporateModel::class,
+                'through' => CorporateStorefrontsModel::class,
+            ]
         ];
     }
 

@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 </head>
 <body onload="javascript: window.print();"{$reading_direction_tag}>
 <table>

@@ -56,7 +56,7 @@
 <tr>
 	<td valign="top">
 	<b>{$lng.lbl_csv_delimiter}:</b><br />
-	{ include file="provider/main/ie_delimiter.tpl" field_name="data[delimiter]" saved_delimiter=$export_data.delimiter}
+	{include file="provider/main/ie_delimiter.tpl" field_name="data[delimiter]" saved_delimiter=$export_data.delimiter}
 	</td>
 </tr>
 

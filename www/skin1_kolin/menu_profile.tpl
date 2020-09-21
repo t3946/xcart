@@ -14,4 +14,4 @@
 {/if}
 {/if}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_profil.gif" menu_title=$lng.lbl_your_profile menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_profil.gif" menu_title=$lng.lbl_your_profile menu_content=$smarty.capture.menu }

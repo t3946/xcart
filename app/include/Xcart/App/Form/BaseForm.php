@@ -8,7 +8,6 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use RuntimeException;
-use Xcart\App\Behaviours\Interfaces\IObjectBehavior;
 use Xcart\App\Helpers\Accessors;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;

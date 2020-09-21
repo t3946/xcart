@@ -8,6 +8,7 @@ abstract class ListViewAdmin extends Admin
 {
     public $ownerPk = null;
     public $ownerField = null;
+    public $ownerAdmin = null;
     public $instance;
 
     public function getInstance()
@@ -65,10 +66,10 @@ abstract class ListViewAdmin extends Admin
                     $this->jsonResponse(['state' => 'success']);
                 }
                 else {
-                    Xcart::app()->flash->success('Изменения сохранены');
+                    Xcart::app()->flash->success('Changes have been successfully applied.');
 
-                    $next = isset($_POST['save']) ? $_POST['save']: 'save';
-                    if ($next == 'save-stay') {
+                    $next = $_POST['save'] ?? 'save';
+                    if ($next === 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
                     }
                     else {
@@ -76,7 +77,7 @@ abstract class ListViewAdmin extends Admin
                             echo $this->render('admin/popup_close.tpl');
                             Xcart::app()->end();
                         }
-                        if ($next == 'save') {
+                        if ($next === 'save') {
                             $request->redirect($this->getAllUrl());
                         }
                     }

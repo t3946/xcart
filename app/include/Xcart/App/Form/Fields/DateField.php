@@ -18,12 +18,9 @@ class DateField extends CharField
         $airOptions = $this->getAirDPOptions();
         $airOptions = json_encode($airOptions);
 
-        $js = "<script type='text/javascript'>(function(){
-    $('#$id')
-        .airdate({$airOptions})
-        .data('airdate')
-        .selectDate({$this->getJSDate()});
-})()</script>";
+        $js = "<script>
+        (function(){ $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) })()
+        </script>";
         return parent::render() . $js;
     }
 

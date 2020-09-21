@@ -4,4 +4,4 @@
 {$lng.txt_unsubscribed_msg}<br />
 {$lng.lbl_email}: <b>{$smarty.get.email|replace:"\\":""}</b>
 {/capture}
-{ include file="dialog.tpl" title=$lng.txt_thankyou_for_unsubscription content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$lng.txt_thankyou_for_unsubscription content=$smarty.capture.dialog extra='width="100%"'}

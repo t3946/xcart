@@ -78,7 +78,7 @@ vim: set ts=2 sw=2 sts=2 et:
           </span>
         {elseif not $product.appearance.force_1_amount and $product.forsale ne "B"}
 
-{ include file="modules/Product_Options/customer_options.tpl"}
+{include file="modules/Product_Options/customer_options.tpl"}
   <script>
       {defer_echo type="js_inline"}
   </script>

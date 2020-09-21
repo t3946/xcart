@@ -110,16 +110,16 @@ function func_convert_lang_var_callback($matches) {
 function func_tpl_add_hash($tpl_source, &$compiler) {
 	global $config, $override_lng_code, $shop_language;
 
-	$resource_name = $compiler->current_resource_name;
+	$resource_name = $compiler->source->resource;
 
-	if (preg_match_all('!\$this->_tpl_vars\[\'lng\'\]\[\'([\w\d_]+)\'\]!S', $tpl_source, $matches)) {
+	if (preg_match_all('!\$_smarty_tpl->tpl_vars\[\'lng\'\]->value\[\'([\w\d_]+)\'\]!S', $tpl_source, $matches)) {
 		$vars_list = implode(',',$matches[1]);
 
 		$hash_file = func_get_tpl_hash_name($compiler, $resource_name, $lng_code);
 
 		func_tpl_build_lang($hash_file, $matches[1], $lng_code);
 
-		$tpl_source = '<?php func_load_lang($this, "'.$resource_name.'","'.$vars_list.'"); ?>'.$tpl_source;
+		$tpl_source = '<?php func_load_lang($_smarty_tpl, "'.$resource_name.'","'.$vars_list.'"); ?>'.$tpl_source;
 	}
 
 	return $tpl_source;
@@ -135,8 +135,7 @@ function func_get_tpl_hash_name(&$smarty, $resource_name, &$lng_code) {
 	if (empty($lng_code)) {
 		$lng_code = $shop_language;
 	}
-
-	$hash_filename = $smarty->_get_compile_path($resource_name).'.hash.'.$lng_code.'.php';
+	$hash_filename = $smarty->getCompileDir().basename($resource_name).'.hash.'.$lng_code.'.php';
 
 	return $hash_filename;
 }
@@ -183,7 +182,7 @@ function func_load_lang(&$smarty, $resource_name, $vars_list) {
 	$var_names = explode(',',$vars_list);
 
 	$vars = false;
-	if (!$smarty->webmaster_mode)
+	if (!($smarty->webmaster_mode ?? false))
 		$vars = func_tpl_read_lng_hash($hash_file);
 
 	if ($vars === false) {
@@ -201,17 +200,18 @@ function func_load_lang(&$smarty, $resource_name, $vars_list) {
 	if ($smarty->webmaster_mode) {
 		$web_vars = $vars;
 		foreach ($vars as $k=>$v) {
-			$vars[$k] = func_webmaster_label($smarty->_tpl_vars['user_agent'],$k,$v);
+			$vars[$k] = func_webmaster_label($smarty->tpl_vars['user_agent'],$k,$v);
 
 			$copy = $v;
 			$copy = addcslashes($copy, "\0..\37\\");
 			$copy = htmlspecialchars($copy,ENT_QUOTES);
 			$web_vars[$k] = $copy;
 		}
-		$smarty->_tpl_webmaster_vars = func_array_merge($smarty->_tpl_webmaster_vars, $web_vars);
+		$smarty->assign('tpl_webmaster_vars', func_array_merge($smarty->tpl_webmaster_vars, $web_vars));
 	}
 
-	$smarty->_tpl_vars['lng'] = func_array_merge($smarty->_tpl_vars['lng'], $vars);
+    /** @var Templater $smarty */
+    $smarty->assign('lng', func_array_merge($smarty->tpl_vars['lng'], $vars));
 }
 
 function func_tpl_read_lng_hash($hash_file) {
@@ -471,7 +471,7 @@ function func_postprocess_output($tpl_source, &$smarty)
 
 function func_tpl_remove_include_cache($tpl_source, &$smarty)
 {
-    $resource_name = $smarty->current_resource_name;
+    $resource_name = $smarty->source->resource;
 
     // Remove include_cache for products_list* products_t* templates
     if (
@@ -564,7 +564,7 @@ function func_webmaster_filter($tpl_source, &$compiler) {
 	);
 	static $tagHash = array();
 
-	$tpl_file = $compiler->current_resource_name;
+	$tpl_file = $compiler->source->resource;
 
 	$tag = "div";
 	foreach ($tagsTemplates as $tmplt => $t) {
@@ -593,7 +593,7 @@ function func_webmaster_filter($tpl_source, &$compiler) {
 }
 
 function func_tpl_postfilter($tpl_source, &$compiler) {
-	$x = $compiler->current_resource_name;
+	$x = $compiler->source->resource;
 
 	if (defined("QUICK_START") || rand(1,500) > 3) return $tpl_source;
 

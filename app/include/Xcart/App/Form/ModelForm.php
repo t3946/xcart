@@ -29,6 +29,8 @@ class ModelForm extends MixinBaseForm
      */
     private $_model;
 
+    protected static array $sections = [];
+
     /**
      * Initialize fields
      * @void
@@ -372,5 +374,10 @@ class ModelForm extends MixinBaseForm
     public function getLinkModels(array $attributes)
     {
         return $this->getModel()->objects()->filter($attributes);
+    }
+
+    public static function getSections(): array
+    {
+        return static::$sections;
     }
 }

@@ -119,7 +119,7 @@
     height="20"
     style="color:#0072bb; font-size: 12px; font-family: VerdanaBold; padding: 3px 9px;"
     align="center">
-{assign var="d_minimum_order_amount_in_us" value=$`$d_minimum_order_amount_in_us`}
+    {assign var="d_minimum_order_amount_in_us" value=$d_minimum_order_amount_in_us}
     {$lng.lbl_minimum_order_amount_message_product|substitute:'minimum_order_amount':$d_minimum_order_amount_in_us}
 </td>
 </tr>

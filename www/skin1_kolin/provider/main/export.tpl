@@ -13,7 +13,7 @@
 
 <INPUT type="hidden" name="mode" value="Export products">
 
-{$lng.lbl_csv_delimiter}: { include file="provider/main/ie_delimiter.tpl" }
+{$lng.lbl_csv_delimiter}: {include file="provider/main/ie_delimiter.tpl" }
 
 {if $config.Images.thumbnails_location eq "DB" || $config.Images.thumbnails_location eq "FS"}
 

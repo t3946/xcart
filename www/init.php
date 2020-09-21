@@ -310,7 +310,7 @@ foreach ($var_dirs_web as $k => $v) {
     $var_dirs_web[$k] = $current_location . $v;
 }
 
-$smarty->assign_by_ref("var_dirs_web", $var_dirs_web);
+$smarty->assignByRef("var_dirs_web", $var_dirs_web);
 
 $xcart_catalogs = [
     "admin"       => $current_location . DIR_ADMIN,
@@ -669,8 +669,8 @@ if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area != 'C') 
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/config.php";
 }
 
-$smarty->assign_by_ref("active_modules", $active_modules);
-$mail_smarty->assign_by_ref("active_modules", $active_modules);
+$smarty->assignByRef("active_modules", $active_modules);
+$mail_smarty->assignByRef("active_modules", $active_modules);
 
 Profiler::getInstance()->addPoint();
 /* speed optimizations */
@@ -851,9 +851,9 @@ if (false && !function_exists('fn_shutdown')) {
 
 Profiler::getInstance()->addPoint();
 
-$smarty->register_function('getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
-$smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
-$smarty->register_function('getPricingArray', ['Modules\Goods\Helpers\ProductHelper', 'getPricingArray']);
+$smarty->registerPlugin('function','getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
+$smarty->registerPlugin('function','getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
+$smarty->registerPlugin('function','getPricingArray', ['Modules\Goods\Helpers\ProductHelper', 'getPricingArray']);
 
 $smarty->assign('_meta_helper', Modules\Meta\Helpers\MetaExtHelper::getInstance());
 $smarty->assign('recaptcha_enable', $recaptcha_enable);

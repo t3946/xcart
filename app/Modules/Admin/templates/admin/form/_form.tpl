@@ -1,55 +1,67 @@
-{var $fieldsets = $admin->getFormFieldsets()}
-{if $fieldsets}
-    {foreach $fieldsets as $name => $fieldsNames}
-        <fieldset>
-            <div class="fieldset-title">
-                {$name}
-            </div>
-            <div class="fields">
-                {foreach $fieldsNames as $fieldName}
+<style type="text/css">
+    a.admin_link {
+        color: blue;
+    }
+    a.admin_link:hover {
+        text-decoration: none !important;
+        color: red;
+    }
+    .x_form input, .x_form textarea {
+        width: 100%;
+    }
+    .admin .required {
+        color: inherit;
+    }
+</style>
+<table class="x_form" cellpadding="3" cellspacing="1" width="100%">
+    {var $fieldsets = $form->getFieldsets()}
+    {if $fieldsets}
+        {foreach $fieldsets as $name => $fieldsNames last=$last}
+            {if !is_integer($name) && $name}
+                <tr>
+                    <td colspan="3"><br>
+                        <table class="SubHeader" cellspacing="0">
+                            <tbody>
+                            <tr>
+                                <td class="Green2">
+                                    {$name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="SubHeaderLine">
+                                    <img src="/skin1_kolin/images/spacer.gif" class="Spc"><br/></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                {if $fieldsNames['hint']}
+                    <tr>
+                        <td colspan="3">
+                            {$fieldsNames['hint'][0]}
+                        </td>
+                    </tr>
+                {/if}
+            {/if}
+            {foreach $fieldsNames as $fieldName}
+                {if !is_array($fieldName)}
                     {var $field = $form->getField($fieldName)}
-                    <div class="form-field {$fieldName}">
-                        {raw $field->render()}
-                    </div>
-                {/foreach}
-            </div>
-        </fieldset>
-    {/foreach}
-{else}
-    <fieldset>
-        {var $fields = $form->getFieldsInit()}
-        <div class="fields">
-            {foreach $fields as $field}
-                <div {if $field->hidden}style="display: none;"{/if} class="form-field {$field->name}">
                     {raw $field->render()}
-                </div>
+                {/if}
             {/foreach}
-        </div>
-    </fieldset>
-{/if}
+            {if is_integer($name) && !$last}
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
+            {/if}
+        {/foreach}
+    {else}
+        {var $fields = $form->getFieldsInit()}
+        {foreach $fields as $field}
+            {raw $field->render()}
+        {/foreach}
+    {/if}
+</table>
 
-{*{set $inlines = $form->renderInlines()}*}
-{*{if $inlines}*}
-    {*<hr>*}
-    {*<h2>Inline forms</h2>*}
-    {*<br>*}
-    {*{foreach $inlines as $name => $iforms}*}
-        {*{foreach $iforms as $inline}*}
-            {*<fieldset>*}
-                {*<div class="fieldset-title">*}
-                    {*{$name}*}
-                {*</div>*}
-
-                {*{var $fields = $inline->getFieldsInit()}*}
-                {*<div class="fields">*}
-                    {*{foreach $fields as $field}*}
-                        {*<div class="form-field {$field->name}">*}
-                            {*{raw $field->render()}*}
-                        {*</div>*}
-                    {*{/foreach}*}
-                    {*</div>*}
-                {*</fieldset>*}
-        {*{/foreach}*}
-
-    {*{/foreach}*}
-{*{/if}*}

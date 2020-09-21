@@ -28,7 +28,7 @@
 <hr size="1" noshade="noshade" />
 <br />
 {/if}
-{* { include file="customer/main/navigation.tpl" } *}
+{* {include file="customer/main/navigation.tpl" } *}
 
 {if $brand.SEO_h2 ne ""}
 <h2>{$brand.SEO_h2}</h2>
@@ -48,5 +48,5 @@
 {/if}
 
 {include file="dialog.tpl" title=$brand_name_title content=$smarty.capture.dialog extra='width="100%"'  use_h1="Y"}
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 

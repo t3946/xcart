@@ -454,7 +454,7 @@ function xmlmap_get_extraurls()
  */
 function xmlmap_prefilter_config($source, &$smarty)
 {
-	if ($smarty->current_resource_name == 'admin/main/configuration.tpl') {
+	if ($smarty->source->resource === 'admin/main/configuration.tpl') {
 		$search[] = '{/capture}' . "\n" . '{include file="dialog.tpl" content=$smarty.capture.dialog extra=\'width="100%"\'}';
 		$search[] = '{/capture}' . "\n" . '{include file="dialog.tpl" title=$lng.lbl_general_settings content=$smarty.capture.dialog extra=\'width="100%"\'}';
 		$include = '{if $additional_config}' . "\n" . '{include file=$additional_config}' . "\n" . '{/if}';

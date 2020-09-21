@@ -49,7 +49,7 @@
 {/if}
 
 {*
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 <br />
 <table cellspacing="5">
 {foreach from=$brands item=v}
@@ -59,7 +59,7 @@
 {/foreach}
 </table>
 <br /><br />
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 *}
 
 {/capture}

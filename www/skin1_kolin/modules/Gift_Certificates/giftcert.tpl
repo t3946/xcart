@@ -374,20 +374,20 @@ function switchPreview() {
 {if $smarty.get.gcindex ne "" or ($usertype eq "A" and $smarty.get.mode eq "modify_gc")}
 <td>
 {if $active_modules.Wishlist ne "" and $action eq "wl"}
-{ include file="buttons/gc_update.tpl" href="javascript: document.gccreate.mode.value='addgc2wl'; formSubmit();" js_to_href="Y"}
+{include file="buttons/gc_update.tpl" href="javascript: document.gccreate.mode.value='addgc2wl'; formSubmit();" js_to_href="Y"}
 {else}
-{ include file="buttons/gc_update.tpl" href="javascript: formSubmit();" js_to_href="Y"}
+{include file="buttons/gc_update.tpl" href="javascript: formSubmit();" js_to_href="Y"}
 {/if}
 </td>
 {else}
-<td>{ include file="buttons/button.tpl" button_title=$lng.lbl_gc_add_to_cart href="javascript: formSubmit();" js_to_href="Y"}</td>
+<td>{include file="buttons/button.tpl" button_title=$lng.lbl_gc_add_to_cart href="javascript: formSubmit();" js_to_href="Y"}</td>
 {if $active_modules.Wishlist and $login ne ""}
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>{ include file="buttons/add_to_wishlist.tpl" href="javascript: orig_mode = 'addgc2wl'; formSubmit();" js_to_href="Y"}</td>
+<td>{include file="buttons/add_to_wishlist.tpl" href="javascript: orig_mode = 'addgc2wl'; formSubmit();" js_to_href="Y"}</td>
 {/if}
 {/if}
 {else}
-<td>{ include file="buttons/button.tpl" button_title=$lng.lbl_gc_create href="javascript: formSubmit();" js_to_href="Y"}</td>
+<td>{include file="buttons/button.tpl" button_title=$lng.lbl_gc_create href="javascript: formSubmit();" js_to_href="Y"}</td>
 {/if}
 </tr>
 </table>

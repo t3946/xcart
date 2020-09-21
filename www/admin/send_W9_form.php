@@ -54,7 +54,7 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
 $location[] = array('Send W-9 form', '');
 
 $smarty->assign("main", "w9_send");
-$smarty->assign_by_ref("config", $config);
+$smarty->assignByRef("config", $config);
 $smarty->assign("location", $location);
 
 @include $xcart_dir . "/modules/gold_display.php";

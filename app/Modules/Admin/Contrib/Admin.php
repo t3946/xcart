@@ -24,9 +24,11 @@ abstract class Admin
 {
     use SmartProperties, ClassNames, Renderer, SmartyRenderTrait;
 
-    protected $parent_pk = null;
+    protected $parent_pk;
 
-    private $admin_config = null;
+    private $admin_config;
+
+    public $section;
 
     public static $public = true;
 
@@ -189,7 +191,7 @@ abstract class Admin
         $result = call_user_func($callback, $qs, $pkList);
 
         $success = true;
-        $message = 'Изменения успешно применены';
+        $message = 'Changes have been successfully applied.';
 
         if (is_array($result) && count($result) == 2 && is_bool($result[0]) && is_string($result[1])) {
             $success = $result[0];
@@ -239,8 +241,9 @@ abstract class Admin
      */
     public function getUserColumns()
     {
-        $config = $this->getConfig();
-        return $config->getColumnsList();
+        return [];
+        /*$config = $this->getConfig();
+        return $config->getColumnsList();*/
     }
 
 
@@ -651,7 +654,7 @@ abstract class Admin
         $value = $item;
         $data = explode('__', $property);
         foreach ($data as $name) {
-            $value = $value->{$name};
+            $value = ($value->$name instanceof Model) ? (string)$value->$name : $value->$name;
         }
         return $value;
     }
@@ -817,11 +820,11 @@ abstract class Admin
                 else {
                     Xcart::app()->flash->success('Changes have been successfully applied.');
 
-                    $next = isset($_POST['save']) ? $_POST['save']: 'save';
-                    if ($next == 'save') {
+                    $next = $_POST['save'] ?? 'save';
+                    if ($next === 'save') {
                         $request->redirect(($this->parent_pk) ? $this->getParentAllUrl():$this->getAllUrl());
                     }
-                    elseif ($next == 'save-stay') {
+                    elseif ($next === 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
                     }
                     else {

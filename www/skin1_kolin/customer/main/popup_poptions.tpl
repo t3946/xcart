@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
@@ -65,7 +65,7 @@ function FormValidation() {
 		<td>
 
 	<table cellspacing="3" cellpadding="0">
-{ include file="modules/Product_Options/customer_options.tpl"}
+{include file="modules/Product_Options/customer_options.tpl"}
 	<tr>
 		<td>&nbsp;</td>
 		<td class="SubmitBox"><input type="submit" value="{$lng.lbl_update|strip_tags:false|escape}" /></td>

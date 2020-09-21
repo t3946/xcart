@@ -7,7 +7,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 </head>
 <body class="OrderReport">

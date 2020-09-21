@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>{$lng.txt_site_title}</title>
-    { include file="meta.tpl" }
+    {include file="meta.tpl" }
 
     <script src="{$SkinDir}/js/highcharts.js"></script>
     <script src="{$SkinDir}/js/data.js"></script>

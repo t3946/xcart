@@ -3,6 +3,6 @@
 {capture name=dialog}
 {$lng.txt_login_incorrect}
 <br><br>
-{include file="main/login_form.tpl}
+{include file="main/login_form.tpl"}
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_authentication content=$smarty.capture.dialog extra='width="100%"'}

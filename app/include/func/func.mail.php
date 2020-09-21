@@ -83,7 +83,7 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
 	$charset = func_query_first_cell ("SELECT charset FROM $sql_tbl[countries] WHERE code='$lng_code'");
 	$override_lng_code = $lng_code;
 
-	$mail_smarty->assign_by_ref ("config", $config);
+	$mail_smarty->assignByRef ("config", $config);
 
 	$lend = (X_DEF_OS_WINDOWS?"\r\n":"\n");
 
@@ -127,7 +127,7 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
 
 	global $active_modules;
 	if ($config["Email"]["html_mail"] == "Y" && !$encrypt_mail) {
-		if (file_exists($mail_smarty->template_dir."/mail/html/".basename($body_template))) {
+		if (file_exists($mail_smarty->getTemplateVars('template_dir')[0]."/mail/html/".basename($body_template))) {
 			$mail_smarty->assign("mail_body_template","mail/html/".basename($body_template));
 			if (!$only_html) {
 				$mail_message = func_display("mail/html/html_message_template.tpl", $mail_smarty, false);

@@ -26,7 +26,7 @@ vim: set ts=2 sw=2 sts=2 et:
         {/if}
 *}
 
-        { include file="customer/main/navigation.tpl" }
+        {include file="customer/main/navigation.tpl" }
 
 {else}
 

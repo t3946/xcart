@@ -28,12 +28,12 @@
 {$lng.txt_subtitle_giftcerts}
 {/if}
 </title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_printable.css" />
 </head>
 <body{$reading_direction_tag}>
-{ include file="rectangle_top.tpl" width="700" }
-{ include file="head_printable.tpl" }
+{include file="rectangle_top.tpl" width="700"}
+{include file="head_printable.tpl"}
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr>
@@ -49,6 +49,6 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl"}
 </body>
 </html>

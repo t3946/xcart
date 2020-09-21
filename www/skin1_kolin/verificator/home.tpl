@@ -4,12 +4,12 @@
 <html>
 <head>
 <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Operator: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
-{ include file="meta.tpl" }
+{include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 </head>
 <body{$reading_direction_tag}>
-{ include file="rectangle_top.tpl" }
-{ include file="head_admin.tpl" }
+{include file="rectangle_top.tpl" }
+{include file="head_admin.tpl" }
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
@@ -36,6 +36,6 @@
 </td>
 </tr>
 </table>
-{ include file="rectangle_bottom.tpl" }
+{include file="rectangle_bottom.tpl" }
 </body>
 </html>

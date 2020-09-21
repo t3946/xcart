@@ -323,7 +323,7 @@
                                 </td>
                             </tr>
 
-                            { include file="modules/Product_Options/customer_options.tpl"}
+                            {include file="modules/Product_Options/customer_options.tpl"}
 
                             {if $product.eta_date_in_future eq "Y"}
                                 <tr>

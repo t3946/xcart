@@ -7,4 +7,4 @@
 {if $main eq "help" && $usertype eq "C" && $smarty.get.section eq "contactus"}<font class="VertMenuItems">{else}<a href="help.php?section=contactus&amp;mode=update" class="VertMenuItems">{/if}{$lng.lbl_contact_us}{if $main eq "help" && $usertype eq "C" && $smarty.get.section eq "contactus"}</font>{else}</a>{/if}<br />
 {include file="pages_menu.tpl"}
 {/capture}
-{ include file="menu.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu }
+{include file="menu.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu }

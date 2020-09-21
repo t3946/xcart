@@ -109,7 +109,7 @@ class MailComponent
         if (isset($mail_smarty)) {
             $mail_smarty->assign("body", $this->body);
             $mail_smarty->assign("subj", $this->subject);
-            $mail_smarty->assign_by_ref("config", $config);
+            $mail_smarty->assignByRef("config", $config);
             $mail_subject = chop(func_display($subject_template, $mail_smarty, false));
             $mail_message = func_display($body_template, $mail_smarty, false);
 
@@ -147,7 +147,7 @@ class MailComponent
                 )
             );
 
-            if (file_exists($mail_smarty->template_dir . "/mail/html/" . basename($body_template))) {
+            if (file_exists($mail_smarty->getTemplateVars('template_dir')[0] . "/mail/html/" . basename($body_template))) {
                 $mail_smarty->assign("mail_body_template", "mail/html/" . basename($body_template));
                 $mail_message = func_display("mail/html/html_message_template.tpl", $mail_smarty, false);
 

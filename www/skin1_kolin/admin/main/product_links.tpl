@@ -81,7 +81,7 @@
 </tr>
 
 {if $active_modules.Product_Options ne ""}
-{ include file="modules/Product_Options/customer_options.tpl"}
+{include file="modules/Product_Options/customer_options.tpl"}
 {/if}
 
 <tr>
@@ -255,7 +255,7 @@ var product_avail = {$product.avail|default:"0"};
 {/if}
 
 {if $active_modules.Product_Options ne ""}
-{ include file="modules/Product_Options/customer_options.tpl" nojs="Y"}
+{include file="modules/Product_Options/customer_options.tpl" nojs="Y"}
 {/if}
 <tr>
 	<td height="25" width="30%">

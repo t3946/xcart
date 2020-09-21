@@ -85,7 +85,7 @@
                             <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 {assign var=invoice_url value=$xcartApp->router->url('convert:print')}
                                 <a target="_blank" style="color: blue; font-weight: bold;"
-                                   href="{$invoice_url}?orderid={$order.orderid}&p={$oOrder->getOrderHash()}&mode=print">{$lng.lbl_print_invoice target}</a>
+                                   href="{$invoice_url}?orderid={$order.orderid}&p={$oOrder->getOrderHash()}&mode=print">{$lng.lbl_print_invoice_target}</a>
                             </td>
                             {if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) and $active_modules.Advanced_Order_Management}
                                 <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">

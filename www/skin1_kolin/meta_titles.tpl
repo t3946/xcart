@@ -28,12 +28,12 @@
                             {capture name=title}
                                 {if $config.SEO.page_title_format eq "A"}
                                     {section name=position loop=$location}
-                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {if not $smarty.section.position.first}&nbsp;::&nbsp;{/if}
                                         {$location[position].0|strip_tags|escape}
                                     {/section}
                                 {else}
                                     {section name=position loop=$location step=-1}
-                                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                                        {if not $smarty.section.position.first}&nbsp;::&nbsp;{/if}
                                         {$location[position].0|strip_tags|escape}
                                     {/section}
                                 {/if}

@@ -5,7 +5,7 @@
 
 {if $total_pages gt 2}
 <br />
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 {/if}
 
 <script type="text/javascript" language="JavaScript 1.2">
@@ -48,7 +48,7 @@ checkboxes = new Array({foreach from=$subscribers item=v key=k}{if $k > 0},{/if}
 <tr>
 <td colspan="3">
 <br />
-{ include file="customer/main/navigation.tpl" }
+{include file="customer/main/navigation.tpl" }
 </td>
 </tr>
 {/if}
