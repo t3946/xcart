@@ -1,7 +1,7 @@
 <tr data-pk="{$pk}"
         {if $item->enabled}
-            {if $item->last_update_late == 0}style="background-color:#00ff00;"
-                {elseif $item->last_update_late == 1}style="background-color:#fbef7e;"
+            {if intval($item->last_update_late) == 0}style="background-color:#00ff00;"
+                {elseif intval($item->last_update_late) == 1}style="background-color:#fbef7e;"
                 {elseif $item->last_update_late >= 2}style="background-color:#ff0000;"
             {/if}
         {/if}>
