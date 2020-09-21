@@ -249,6 +249,7 @@ class DashboardController extends PrototypeAdminController
 
             echo $this->render('dashboard/subscription.tpl', [
                 'id' => $id,
+                'filter' => DashboardFilter::objects()->get(['id' => $id]),
                 'class' => $class,
                 'ids' => $u_ids,
                 'users' => $users,

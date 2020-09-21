@@ -21,7 +21,6 @@ class DashboardFilter extends Model
 
     public static function tableName()
     {
-//        return "{{dashboard_filters}}";
         return "xcart_dashboard_filters";
     }
 
@@ -29,64 +28,69 @@ class DashboardFilter extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'group' => [
                 'field' => 'group_id',
-                'class' => ForeignField::className(),
-                'modelClass' => GroupModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => GroupModel::class,
                 'verboseName' => 'Order filter group',
                 'null' => true,
             ],
             'users' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => UserModel::className(),
-                'through' => UserFiltersLinkModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => UserModel::class,
+                'through' => UserFiltersLinkModel::class,
                 'verboseName' => 'In users dashboard',
             ],
             'enabled' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => 1,
             ],
             'bold' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'verboseName' => 'Filter name',
             ],
             'position_row' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'verboseName' => 'Row position',
             ],
             'position_column' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'verboseName' => 'Column position',
             ],
             'tag' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 5,
                 'null' => true,
                 'verboseName' => 'Tag symbol (obsolete)',
             ],
             'color' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => 'Tag color',
             ],
+            'manual_url' => [
+                'class' => CharField::class,
+                'null' => true,
+                'verboseName' => 'Link to manual',
+            ],
             'direct_url' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => 'Direct link',
             ],
             'sorting' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'length' => 2,
                 'null' => true,
                 'verboseName' => 'Order list sorting rule',
@@ -98,7 +102,7 @@ class DashboardFilter extends Model
                 ],
             ],
             'form_data' => [
-                'class' => JsonField::className(),
+                'class' => JsonField::class,
                 'null' => false,
                 'verboseName' => 'Filter condition',
             ],
@@ -107,7 +111,7 @@ class DashboardFilter extends Model
 
     public function __toString()
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function getAdminUrl()
@@ -115,9 +119,8 @@ class DashboardFilter extends Model
         if ($this->isNewRecord) {
             return Xcart::app()->router->url('dashboard:create_filter');
         }
-        else {
-            return Xcart::app()->router->url('dashboard:update_filter', ['id' => $this->id]);
-        }
+
+        return Xcart::app()->router->url('dashboard:update_filter', ['id' => $this->id]);
     }
 
     public function getAbsoluteUrl()

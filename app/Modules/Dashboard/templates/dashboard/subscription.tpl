@@ -1,8 +1,17 @@
 <div class="subscription-container">
     {if $users|count}
+        {if $filter->manual_url}
         <div class="row">
             <div class="columns large-12">
-                <div class="title item">
+                <div class="title item" style="text-align: left;margin-left: 24px;">
+                    <a href="{$filter->manual_url}" target="_blank" style="color: #140BFC;">Link to manual</a>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="row">
+            <div class="columns large-12">
+                <div class="title item" style="text-align: left;margin-left: 24px;">
                     Operators responsible
                 </div>
             </div>
@@ -25,7 +34,7 @@
     <div class="item">
         <div class="row">
             <div class="columns large-12">
-                    <div class="title item">
+                    <div class="title item" style="text-align: left;margin-left: 24px;">
                         Take responsibility
                     </div>
             </div>
