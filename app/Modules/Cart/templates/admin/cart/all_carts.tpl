@@ -34,9 +34,11 @@
 
         <fieldset class="collapsible expanded " rel="0">
             <legend>Filter</legend>
+            <table width="100%">
             {$form->render($form->getTemplateFromType('ul'))}
             <input type="submit" value="Find">&emsp;
             <a href="{url 'admin_cart:show'}">Clean filter</a>
+            </table>
         </fieldset>
     </form>
 
