@@ -809,14 +809,14 @@
                                     </div>
                                     <div id="cidev_box2" style="display: none;">
                                     <input type="text" name="price" id="price" size="18"
-                                           value="{ $product.price|formatprice|default:$zero}"
+                                           value="{$product.price|formatprice|default:$zero}"
                                            {if $manufacturer_feed_fields.price.disable eq "Y"}readonly="readonly"{/if} />
                                     &nbsp;
                                 {else}
                                     <font style="color: #580404">&nbsp;{
                                         $product.price|formatprice|default:$zero}</font>
                                     <input type="hidden" name="price" id="price"
-                                           value="{ $product.price|formatprice|default:$zero}"/>
+                                           value="{$product.price|formatprice|default:$zero}"/>
                                 {/if}
 
 
@@ -953,7 +953,7 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_lowlimit_in_stock}</td>
                 <td class="ProductDetails">
                     <input type="text" name="low_avail_limit" size="18"
-                           value="{if $product.productid eq ""}1000{else}{ $product.low_avail_limit }{/if}"
+                           value="{if $product.productid eq ""}1000{else}{$product.low_avail_limit}{/if}"
                            {if $manufacturer_feed_fields.low_avail_limit.disable eq "Y"}readonly="readonly"{/if} />
                     {if $top_message.fillerror ne "" and $product.low_avail_limit le 0}
                         <font class="Star">&lt;&lt;</font>
@@ -1077,7 +1077,7 @@
                         <b>{$lng.lbl_note}:</b>
                         {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
                     {else}
-                        <input type="text" name="weight" size="18" value="{ $product.weight|formatprice|default:$zero }"
+                        <input type="text" name="weight" size="18" value="{$product.weight|formatprice|default:$zero}"
                                {if $manufacturer_feed_fields.weight.disable eq "Y" || $product.weight_lock == "Y"}readonly="readonly"{/if}
                                 {if $product.weight_lock == "Y"} class="ch_disabled" {/if}/>
                     {/if}
@@ -1153,7 +1153,7 @@
                             <b>{$lng.lbl_note}:</b>
                             {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
                         {else}
-                            <input type="text" name="shippingweight" size="18" value="{ $product.shipping_weight|formatprice|default:$zero }"
+                            <input type="text" name="shippingweight" size="18" value="{$product.shipping_weight|formatprice|default:$zero}"
                                    {if $product.shipping_weight_lock == "Y"}readonly="readonly" class="ch_disabled" {/if}/>
                         {/if}
 

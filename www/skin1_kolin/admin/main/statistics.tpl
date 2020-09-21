@@ -114,7 +114,7 @@
 
 <tr> 
 	<td valign="top" width="343" class="Text">{$lng.lbl_new_customers}</td>
-	<td valign="top" width="67" class="Text" align="right">{ $statistics.clients_last_month }</td>
+	<td valign="top" width="67" class="Text" align="right">{$statistics.clients_last_month}</td>
 </tr>
 
 <tr> 
@@ -123,7 +123,7 @@
 
 <tr> 
 	<td valign="top" width="343" class="Text">{$lng.lbl_new_providers}</td>
-	<td valign="top" width="67" class="Text" align="right">{ $statistics.providers_last_month }</td>
+	<td valign="top" width="67" class="Text" align="right">{$statistics.providers_last_month}</td>
 </tr>
 
 <tr> 
@@ -132,7 +132,7 @@
 
 <tr> 
 	<td valign="top" width="343" class="Text">{$lng.lbl_new_products}</td>
-	<td valign="top" width="67" class="Text" align="right">{ $statistics.products_last_month }</td>
+	<td valign="top" width="67" class="Text" align="right">{$statistics.products_last_month}</td>
 </tr>
 
 <tr> 
@@ -141,7 +141,7 @@
 
 <tr> 
 	<td valign="top" width="343" class="Text">{$lng.lbl_new_orders}</td>
-	<td valign="top" width="67" class="Text" align="right">{ $statistics.orders_last_month }</td>
+	<td valign="top" width="67" class="Text" align="right">{$statistics.orders_last_month}</td>
 </tr>
 
 </table>
