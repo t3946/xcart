@@ -34,6 +34,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'dcad_state',
                 'dcad_zipcode',
                 'dcad_bank_name',
+                'dcad_swift',
                 'dcad_routing_number',
                 'dcad_account_number',
             ],
@@ -199,6 +200,14 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],
+            'dcad_swift' => [
+                'class' => CharField::class,
+                'label' => 'Swift / BIC',
+                'html' => ['style' => 'width:300px'],
+                'hint' => LanguageModel::translate('help_dx_dcad_swift') ?? 'help_dx_dcad_swift',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+            ],
             'dcad_routing_number' => [
                 'class' => CharField::class,
                 'label' => 'Routing number',
@@ -209,7 +218,7 @@ class DistributorPaymentToDxForm extends DistributorForm
             ],
             'dcad_account_number' => [
                 'class' => CharField::class,
-                'label' => 'Account number',
+                'label' => 'Account number / IBAN',
                 'html' => ['style' => 'width:300px'],
                 'hint' => LanguageModel::translate('help_dx_dcad_account_number') ?? 'help_dx_dcad_account_number',
                 'fieldTemplate' => $this->fieldTemplate,

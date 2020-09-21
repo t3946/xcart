@@ -52,7 +52,7 @@ class PaymentController extends Controller
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
                     'currency' => $order->currency,
-                    'description' => "S3 Stores, Inc. Order # {$order->getOrderNumber()}",
+                    'description' => $order->getTransactionDescription(),
                     'processor_model' => $pm
                 ];
 

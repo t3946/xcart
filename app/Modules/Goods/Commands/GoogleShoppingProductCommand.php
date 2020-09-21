@@ -93,7 +93,7 @@ class GoogleShoppingProductCommand extends Command
                         $batch->setTargetCountry($marketplace->countries);
 
                         $currency = $dX->currency;
-                        $sprice = $product->getFrontendPrice();
+                        $sprice = $product->getFrontendPrice($product->min_amount ?? 1) * ($product->min_amount ?? 1);
                         $price = new Google_Service_ShoppingContent_Price();
                         $price->setCurrency($currency->currency_code ?? 'USD');
                         $price->setValue($sprice);
@@ -140,8 +140,8 @@ class GoogleShoppingProductCommand extends Command
                         if ($h->getValue() > 0) {
                             $batch->setShippingHeight($h);
                         }*/
+                        $shippingValues = [];
                         if (ProductHelper::isGoogleShoppingEnabled($product)) {
-                            $sa = [];
                             if ($states = StateModel::objects()
                                 ->filter(['country_code' => 'US'])
                                 ->exclude(['base_state_zipcode' => ''])
@@ -150,7 +150,7 @@ class GoogleShoppingProductCommand extends Command
                                 /** @var StateModel $state */
                                 foreach ($states as $state) {
                                     $states[$state->stateid] = $state;
-                                    $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, 1, $state);
+                                    $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, $product->min_amount ?? 1, $state);
                                     $rate = reset($rates[$state->stateid]);
                                     if ($rate && $sModel = $rate->shipping) {
                                         $shipping = new Google_Service_ShoppingContent_ProductShipping();
@@ -161,14 +161,14 @@ class GoogleShoppingProductCommand extends Command
                                         $price->setCurrency($currency->currency_code ?? 'USD');
                                         $price->setValue($rate->getShippingCharge());
                                         $shipping->setPrice($price);
-                                        $sa[] = $shipping;
+                                        $shippingValues[] = $shipping;
                                     }
                                 }
                             }
 
                             $batch->setCustomLabel2('UPS rates');
 
-                            $batch->setShipping($sa);
+                            $batch->setShipping($shippingValues);
                         }
 
                         $ats = [
@@ -242,7 +242,13 @@ class GoogleShoppingProductCommand extends Command
 
                         $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
 
-                        $entry->setMethod((ProductHelper::isGoogleShoppingEnabled($product)) ? 'insert' : 'delete');
+                        if ($shippingValues && ProductHelper::isGoogleShoppingEnabled($product)) {
+                            $method = 'insert';
+                        } else {
+                            $method = 'delete';
+                        }
+
+                        $entry->setMethod($method);
                         if ($entry->getMethod() === 'delete') {
                             $entry->setProductId("online:{$lang}:{$marketplace->countries}:{$product->productid}");
                         } else {

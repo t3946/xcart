@@ -4,6 +4,7 @@ namespace Modules\Payment\Helpers;
 
 
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Omnipay\Common\CreditCard;
 
@@ -66,7 +67,18 @@ class PaymentHelper
 
         if ($groups = $model->groups) {
             foreach ($groups as $group) {
-                if (!in_array($group->cb_status, ['Q', 'N', 'I', 'D', 'S1', 'S2', 'S3', 'S4',  'F'])) {
+                if (!in_array($group->cb_status, [
+                    OrderStatusModel::ORDER_STATUS_QUEUED,
+                    OrderStatusModel::ORDER_STATUS_UNPAID,
+                    OrderStatusModel::ORDER_STATUS_NOT_FINISHED,
+                    OrderStatusModel::ORDER_STATUS_DECLINED,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
+                    OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                    OrderStatusModel::ORDER_STATUS_FAILED,
+                    OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                ], true)) {
                     return false;
                 }
             }

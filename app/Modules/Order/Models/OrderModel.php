@@ -596,4 +596,21 @@ class OrderModel extends Model
         return $tracks;
     }
 
+    public function getLastAuthorizationTransaction():? OrderTransactionModel
+    {
+        return $this->transactions
+            ->filter([
+                'transaction_status' => OrderTransactionModel::STATUS_AUTHORIZED,
+                'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+            ])
+            ->order(['-id'])
+            ->limit(1)
+            ->get();
+    }
+
+    public function getTransactionDescription(): string
+    {
+        return "S3 Stores, Inc. Order # {$this->getOrderNumber()}";
+    }
+
 }

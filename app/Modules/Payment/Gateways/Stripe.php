@@ -17,6 +17,8 @@ use Xcart\App\Main\Xcart;
 
 class Stripe extends Gateway
 {
+    private const CONNECTED_ACCOUNT_ID = 'acct_1HIbMdI2P4rQcZLT';
+
     public static function getProcessorName()
     {
         return 'Stripe';
@@ -79,7 +81,31 @@ class Stripe extends Gateway
 
     public function reauthorize($params)
     {
-        // TODO: Implement reauthorize() method.
+        $params['paymentIntentReference'] = $params['transactionReference'];
+        $order = $params['order'];
+        $paymentIntent = $this->gateway
+            ->fetchPaymentIntent($params)
+            ->send();
+        $data = $paymentIntent->getData();
+        if ($customer = $data['customer']) {
+            $payment_method = $data['payment_method'];
+
+            $intent = $this->gateway->createPaymentIntent(
+                array_merge($params, [
+                    'metadata' => ['order' => $order->orderid],
+                    'captureMethod' => 'manual',
+                    'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
+                    'customerReference' => $customer,
+                    'paymentMethod' => $payment_method,
+                    'description' => $order->getTransactionDescription(),
+                    'offSession' => 'true',
+                    'confirm' => 'true'
+                ])
+            )->send();
+            $this->result = $intent;
+            return $intent->isSuccessful();
+        }
+        return false;
     }
 
     public function purchase($params)
@@ -96,10 +122,19 @@ class Stripe extends Gateway
         ])->limit(1)->get()) {
             $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
         } else {
+            $customer = $this->gateway->createCustomer([
+                'email' => $order->email,
+                'name' => $order->b_firstname ?: $order->firstname,
+                'description' => $order->orderid,
+            ])->send();
+
             $intent = $this->gateway->createPaymentIntent(
                 array_merge($params, [
-                    'metadata' => ['integration_check' => 'accept_a_payment', 'order' => $order->orderid],
-                    'connectedAccount' => 'acct_1HIbMdI2P4rQcZLT',
+                    'metadata' => ['order' => $order->orderid],
+                    'connectedAccount' => self::CONNECTED_ACCOUNT_ID,
+                    'setupFutureUsage' => 'off_session',
+                    'captureMethod' => 'manual',
+                    'customerReference' => $customer->getCustomerReference()
                 ])
             )->send();
             $transaction_id = $intent->getData() ? $intent->getData()['client_secret'] : '';

@@ -377,7 +377,7 @@ class ProductHelper
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'USD',
-                    'price' => $model->getFrontendPrice(),
+                    'price' =>  number_format($model->getFrontendPrice($model->min_amount ?? 1) * ($model->min_amount ?? 1), 2, '.', ''),
                     'url' => $model->getAbsoluteUrl(true),
                     'availability' => $availability,
                     'priceValidUntil' => $model->getPriceValidUntil()->format('Y-m-d'),
@@ -461,6 +461,9 @@ class ProductHelper
 
     public static function isGoogleShoppingEnabled(ProductModel $product)
     {
-        return $product->forsale === 'Y' && $product->isMarketPlaceEnabled(1);
+        return
+            $product->forsale === 'Y' &&
+            $product->isMarketPlaceEnabled(1) &&
+            $product->getMainImage();
     }
 }

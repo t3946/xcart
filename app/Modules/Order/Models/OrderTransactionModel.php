@@ -2,6 +2,8 @@
 
 namespace Modules\Order\Models;
 
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -22,6 +24,7 @@ use Xcart\App\Orm\Model;
  * @property mixed paymentid
  * @property mixed payment_method_model
  * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null transaction_response
+ * @property mixed date
  */
 class OrderTransactionModel extends Model
 {
@@ -93,7 +96,7 @@ class OrderTransactionModel extends Model
                 'null' => false,
             ],
             'date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
                 'autoNow' => false,
             ],
@@ -160,5 +163,24 @@ class OrderTransactionModel extends Model
         }
 
         return $avail;
+    }
+
+    public function getAuthorizationLeft(): ?DateInterval
+    {
+        if ($this->date) {
+            $tDate = new DateTime();
+            $tDate->setTimestamp($this->date);
+
+            $days = 30;
+
+            if ($processor = $this->payment_method_model->processor) {
+                $days = $processor->getAuthorizeDays();
+            }
+
+            $tDate->add(new DateInterval("P{$days}D"));
+            $now = new DateTime;
+            $result = $tDate->diff($now);
+        }
+        return $result ?? null;
     }
 }

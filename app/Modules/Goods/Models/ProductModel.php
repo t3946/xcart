@@ -96,6 +96,8 @@ class ProductModel extends Model implements ICartItem
 
     public const NO_ASIN_FOUND = 'No ASIN found';
 
+    private $priceArray;
+
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
     public static function getDataModelClass(): string
@@ -626,7 +628,21 @@ class ProductModel extends Model implements ICartItem
 
     public function getPrice($quantity = 1)
     {
-        return $this->getDataModel()->getPrice($quantity);
+        $fPrice = 0;
+        $prices = $this->getPrices();
+        if ($prices) {
+            foreach ($prices as $key => $price) {
+                if ($quantity >= (float) $key) {
+                    $fPrice = (float) $price;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        $fMapPrice = (float) $this->new_map_price;
+        $fPrice = max($fPrice, $fMapPrice);
+        return $fPrice;
     }
 
     public function recalculate($quantity, $type, $data)
@@ -667,15 +683,16 @@ class ProductModel extends Model implements ICartItem
         return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
     }
 
-    public function getPrices()
+    public function getPrices(): array
     {
-        $t = [];
-        $curr = $this->distributor->currency;
-        foreach ($this->pricing as $price) {
-            $t[$price->quantity] = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
+        if ($this->priceArray === null) {
+            $this->priceArray = [];
+            $curr = $this->distributor->currency;
+            foreach ($this->pricing as $price) {
+                $this->priceArray[$price->quantity] = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
+            }
         }
-
-        return $t;
+        return $this->priceArray ?? [];
     }
 
     public function getActualQuantity($quantity)
@@ -809,7 +826,7 @@ class ProductModel extends Model implements ICartItem
             $fPrice = max((float) $this->new_map_price, $fPrice);
         }*/
 
-        $fPrice = CurrencyHelper::convert($this->distributor->currency, $fPrice);
+        //$fPrice = CurrencyHelper::convert($this->distributor->currency, $fPrice);
 
         return $fPrice;
     }

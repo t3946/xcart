@@ -2,6 +2,10 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+
+ini_set('memory_limit', '1024M');
+set_time_limit(0);
+
 $location[] = array("Operators activity report", "");
 
 if ($REQUEST_METHOD=="POST") {

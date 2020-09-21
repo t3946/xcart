@@ -70,7 +70,11 @@
     {block 'noindex'}{/block}
 
     <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
-
+<style>
+    #lex-web-ui-iframe{
+        display: none;
+    }
+</style>
     <script>
         window.app = {
             assets: {
@@ -316,45 +320,5 @@
 
 <div id="containerUpDown" class="show-for-large" data-lng_up="{t 'UP'}" data-lng_down="{t 'DOWN'}"></div>
 
-<script src="/static/frontend/lex/lex-web-ui-loader.js"></script>
-{ignore}
-<script>
-    var loaderOptions = {
-        baseUrl: '/static/frontend/lex/',
-        iframeSrcPath: '/static/frontend/lex/index.html#/?lexWebUiEmbed=true'
-    };
-    var iframeLoader = new ChatBotUiLoader.IframeLoader(loaderOptions);
-    var chatbotUiConfig = {
-        ui: {
-            parentOrigin: window.location.origin,
-        },
-        iframe: {
-            iframeOrigin: window.location.origin,
-            shouldLoadIframeMinimized: true,
-            iframeSrcPath: "/static/frontend/lex/index.html#/?lexWebUiEmbed=true"
-        },
-        cognito: {
-            poolId: 'us-west-2:7fd52568-2f7d-4518-8e03-0d4bcb866326'
-        },
-        lex: {
-            botName: 'Fast_Freddie',
-            botAlias: 'Fast_Freddie',
-            initialText: "Hello, this is Fast Freddie, how can I assist you today?",
-            initialSpeechInstruction: "Say 'Freddie' to get started.",
-            reInitSessionAttributesOnRestart: false,
-            region: 'us-west-2'
-        },
-    };
-
-    iframeLoader.load(chatbotUiConfig)
-        .then(function () {
-            console.log('iframe loaded');
-        })
-        .catch(function (err) {
-            console.error(err);
-        });
-
-</script>
-{/ignore}
 </body>
 </html>

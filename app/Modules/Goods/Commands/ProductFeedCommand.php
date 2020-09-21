@@ -78,7 +78,7 @@ class ProductFeedCommand extends Command
 
             /** @var SupplierFeedStore $supplierFeed */
             if (!$supplierFeed->isValid()) {
-                $log = implode($supplierFeed->errors, PHP_EOL);
+                $log = implode(PHP_EOL, $supplierFeed->errors);
                 Xcart::app()->logger->error($log, [], 'feed');
                 continue;
             }

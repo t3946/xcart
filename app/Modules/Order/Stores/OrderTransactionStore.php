@@ -103,7 +103,7 @@ class OrderTransactionStore extends BaseStore
                     $model->setAttributes(
                         [
                             'orderid' => $this->params['order']->orderid,
-                            'parent_id' => $this->params['orderTransaction']->id,
+                            'parent_id' => $method !== 'reauthorize' ? $this->params['orderTransaction']->id : null,
                         ]
                     );
                     $this->log .= 'Transaction:' . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} <br/>";
