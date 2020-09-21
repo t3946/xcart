@@ -2,28 +2,29 @@
 {block "heading"}
     <h1>{$page_title}</h1>
     <style type="text/css">
-        .radio-container{
+        .radio-container {
             display: inline-block;
         }
     </style>
 {/block}
 {block "content"}
-    {smarty_admin_block name='Calls'}
-
-
+    {smarty_admin_block name='Filter'}
+    {raw $form->renderBegin([
+    'action' => $.app->router->url('admin_pbx:view'),
+    'method' => 'GET',
+    'class' => "search-form",
+    ])}
 
         <form method="get" action="{url 'admin_pbx:view'}" class="search-form">
+        <table width="100%">
+            {raw $form->render()}
+        </table>
+        <input type="submit" value="Find">
+        <a href="{url 'admin_pbx:view'}">Clean filter</a>
+    {raw $form->renderEnd()}
+    {/smarty_admin_block}
 
-            <fieldset class="collapsible expanded " rel="0">
-                <legend>Filter</legend>
-               {$form->render($form->getTemplateFromType('ul'))}
-                <input type="submit" value="Find">
-                <a href="{url 'admin_pbx:view'}">Clean filter</a>
-            </fieldset>
-        </form>
-
-        <hr>
-
+    {smarty_admin_block name='Calls'}
         <table width="100%" border="1" cellpadding="14" cellspacing="0" style="table-layout: auto;">
             <thead>
             <tr>
@@ -58,7 +59,8 @@
                 <tr>
                     <td align="center">
                         {foreach $value.order as $order}
-                            <a href="{$order.order_url}" target="_blank">{$order.order_id}</a><hr>
+                            <a href="{$order.order_url}" target="_blank">{$order.order_id}</a>
+                            <hr>
                         {/foreach}
                     </td>
                     <td align="center">
@@ -81,9 +83,10 @@
                     </td>
                     <td align="center" id="{$value.call_id}">
                         {if $value.url?}
-                            <a href="{$value.url}" target="_blank" ">Listen</a>
+                            <a href="{$value.url}" target="_blank"
+                            ">Listen</a>
                         {else}
-                        Not defined
+                            Not defined
                         {/if}
                     </td>
                 </tr>
