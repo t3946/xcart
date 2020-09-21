@@ -98,7 +98,7 @@ class CorporatesForm extends ModelForm
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->country ?? 'US']]) as $state) {
-                        $result[$state->code] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },

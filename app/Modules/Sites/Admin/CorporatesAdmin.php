@@ -24,6 +24,14 @@ class CorporatesAdmin extends Admin
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'name'
             ],
+            'country' => [
+                'title' => 'Contry',
+                'template' => $this->columnDefaultTemplate,
+            ],
+            'state' => [
+                'title' => 'State',
+                'template' => $this->columnDefaultTemplate,
+            ],
         ];
     }
 

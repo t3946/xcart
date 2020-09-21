@@ -45,6 +45,7 @@ class CorporateModel extends Model
                 'field' => 'state',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
+                'link' => ['state' => 'statid'],
                 'null' => true,
                 'default' => null,
                 'verboseName' => 'State/Province of incorporation',
