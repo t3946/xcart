@@ -32,6 +32,7 @@ use Xcart\App\Helpers\Paths;
 class GoogleShoppingProductCommand extends Command
 {
     public const MAX_WEIGHT = 2000;
+    public const MAX_PRICE = 20000;
 
     public function handle($arguments = []): void
     {
@@ -243,7 +244,8 @@ class GoogleShoppingProductCommand extends Command
 
                         if ($shippingValues &&
                             ProductHelper::isGoogleShoppingEnabled($product) &&
-                            $batch->getShippingWeight() < self::MAX_WEIGHT) {
+                            $batch->getShippingWeight() < self::MAX_WEIGHT &&
+                            $batch->getPrice() < self::MAX_PRICE) {
                             $method = 'insert';
                         } else {
                             $method = 'delete';
