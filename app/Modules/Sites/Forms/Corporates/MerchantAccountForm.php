@@ -30,7 +30,8 @@ class MerchantAccountForm extends ModelForm
         return array_replace(
             parent::getFields(), [
                 'url' => [
-                    'class' => UrlField::class
+                    'class' => UrlField::class,
+                    'extend' => 'Login URL'
                 ]
             ]
         );

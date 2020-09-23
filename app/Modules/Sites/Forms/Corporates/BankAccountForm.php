@@ -8,6 +8,8 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\BankAccountModel;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\PhoneField;
+use Xcart\App\Form\Fields\UrlField;
 use Xcart\App\Form\ModelForm;
 
 class BankAccountForm extends ModelForm
@@ -68,6 +70,16 @@ class BankAccountForm extends ModelForm
                     }
                     return $result ?? [];
                 },
+            ],
+            'phone' => [
+                'class' => PhoneField::class
+            ],
+            'account_manager_phone' => [
+                'class' => PhoneField::class
+            ],
+            'url' => [
+                'class' => UrlField::class,
+                'extend' => 'Login URL'
             ],
         ];
     }

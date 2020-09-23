@@ -4,12 +4,13 @@
 namespace Modules\Forms\Models;
 
 
+use DateTime;
+use DateTimeZone;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -17,7 +18,6 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -166,9 +166,9 @@ class EmailModel extends Model
 
     public function getDate()
     {
-        $oIssueDate = \DateTime::createFromFormat('Y-m-d H:i:s', $res = $this->date, new \DateTimeZone('EST'));
+        $oIssueDate = DateTime::createFromFormat('Y-m-d H:i:s', $res = $this->date, new DateTimeZone('EST'));
         $oIssueDate->setTime( 0, 0, 0 );
-        $today = new \DateTime(); // This object represents current date/time
+        $today = new DateTime(); // This object represents current date/time
         $today->setTime( 0, 0, 0 );
         $diff = $today->diff( $oIssueDate );
         $diffDays = (integer)$diff->format( "%R%a" );

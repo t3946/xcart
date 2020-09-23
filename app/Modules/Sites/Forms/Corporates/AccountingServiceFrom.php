@@ -8,11 +8,12 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\PhoneField;
 
 class AccountingServiceFrom extends CorporatesForm
 {
     public $exclude = ['storefronts', 'taxes'];
-    
+
     public function getFieldsets()
     {
         return [
@@ -70,6 +71,15 @@ class AccountingServiceFrom extends CorporatesForm
             'accounting_company_zip' => [
                 'class' => CharField::class,
                 'html' => ['style' => 'width:100px;'],
+            ],
+            'accounting_company_phone' => [
+                'class' => PhoneField::class,
+            ],
+            'accountant_phone' => [
+                'class' => PhoneField::class,
+            ],
+            'secretary_phone' => [
+                'class' => PhoneField::class,
             ],
         ];
     }

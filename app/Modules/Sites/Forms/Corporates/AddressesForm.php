@@ -8,6 +8,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\PhoneField;
 
 class AddressesForm extends CorporatesForm
 {
@@ -130,6 +131,9 @@ class AddressesForm extends CorporatesForm
             'mailing_zip' => [
                 'class' => CharField::class,
                 'html' => ['style' => 'width:100px;'],
+            ],
+            'agent_phone' => [
+                'class' => PhoneField::class
             ],
         ];
     }

@@ -9,6 +9,7 @@ use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\LinkField;
+use Xcart\App\Form\Fields\PhoneField;
 use Xcart\App\Form\Fields\UrlField;
 
 class IncorporationForm extends CorporatesForm
@@ -55,11 +56,11 @@ class IncorporationForm extends CorporatesForm
                 'html' => ['style' => 'width:100px;'],
             ],
             'inc_phone' => [
-                'class' => CharField::class,
+                'class' => PhoneField::class,
                 'html' => ['style' => 'width:200px;'],
             ],
             'inc_representative_phone' => [
-                'class' => CharField::class,
+                'class' => PhoneField::class,
                 'html' => ['style' => 'width:200px;'],
             ],
             'inc_email' => [
@@ -102,6 +103,7 @@ class IncorporationForm extends CorporatesForm
             ],
             'inc_login_url' => [
                 'class' => UrlField::class,
+                'extend' => 'Login URL'
             ],
         ];
     }

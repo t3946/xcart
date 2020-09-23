@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Xcart\App\Form\Fields\DateField;
+use Xcart\App\Form\Fields\UrlField;
 
 class TaxAuthoritiesForm extends CorporatesForm
 {
@@ -40,7 +41,15 @@ class TaxAuthoritiesForm extends CorporatesForm
             ],
             'state_tax_year' => [
                 'class' => DateField::class,
-            ]
+            ],
+            'federal_tax_url' => [
+                'class' => UrlField::class,
+                'extend' => 'Login URL'
+            ],
+            'state_tax_url' => [
+                'class' => UrlField::class,
+                'extend' => 'Login URL'
+            ],
         ];
     }
 
