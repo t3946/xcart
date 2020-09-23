@@ -42,8 +42,10 @@ class Select2Field extends DropDownField
         $extension = implode("\n",
             [
                 '<script type="text/javascript">',
-                '$("#' . $this->getHtmlId() . '").select2(' . JavaScript::encode($this->getJSOptions()) . ');',
+                '$("#' . $this->getHtmlId() . '").select2(' . JavaScript::encode($this->getJSOptions()) . ')',
+                '.on("select2:unselecting", function(e){if (!e.params.args.originalEvent) {return false;}e.params.args.originalEvent.stopPropagation();})',
                 '</script>',
+                '<style>.select2-results__option[aria-selected=true] {display: none;}</style>',
             ]
         );
         return parent::render($extension);
