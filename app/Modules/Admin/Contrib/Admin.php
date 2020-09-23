@@ -134,8 +134,6 @@ abstract class Admin
     {
         return [
             'add',
-            'update',
-            'remove'
         ];
     }
 

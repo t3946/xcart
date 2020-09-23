@@ -35,6 +35,14 @@ class CorporatesAdmin extends Admin
         ];
     }
 
+    public function getListItemActions()
+    {
+        return [
+            'update',
+            'view',
+        ];
+    }
+
     public function getForm()
     {
         if ($this->section) {
