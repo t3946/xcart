@@ -11,6 +11,7 @@ use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
+use Xcart\App\Orm\TreeModel;
 use Xcart\App\Translate\Translate;
 
 /**
@@ -19,13 +20,13 @@ use Xcart\App\Translate\Translate;
  */
 class ModelForm extends MixinBaseForm
 {
-    public $ormClass = '\Xcart\App\Orm\Model';
+    public $ormClass = Model::class;
     /**
-     * @var \Xcart\App\Orm\Model
+     * @var Model
      */
     protected $_instance;
     /**
-     * @var \Xcart\App\Orm\Model
+     * @var Model
      */
     private $_model;
 
@@ -157,11 +158,10 @@ class ModelForm extends MixinBaseForm
     }
 
     /**
-     * @param $model \Xcart\App\Orm\Model
-     * @return $this
-     * @throws \Exception
+     * @param $model Model
+     * @return void
      */
-    public function setInstance(\Xcart\App\Orm\Model $model)
+    public function setInstance(Model $model)
     {
         $this->_instance = $model;
 
@@ -182,7 +182,8 @@ class ModelForm extends MixinBaseForm
     }
 
     /**
-     * @return \Xcart\App\Orm\Model|\Xcart\App\Orm\TreeModel|null
+     * @return Model|TreeModel|null
+     * @throws Exception
      */
     public function getInstance()
     {
@@ -249,8 +250,8 @@ class ModelForm extends MixinBaseForm
     }
 
     /**
-     * @throws \Exception
-     * @return \Xcart\App\Orm\Model
+     * @return Model
+     *@throws \Exception
      */
     public function getModel()
     {
@@ -268,6 +269,7 @@ class ModelForm extends MixinBaseForm
     /**
      * @param null|int $extra count of the extra inline forms for render
      * @return array of inline forms
+     * @throws Exception
      */
     public function renderInlines($extra = 1)
     {
@@ -346,7 +348,7 @@ class ModelForm extends MixinBaseForm
         return $inlines;
     }
 
-    protected function populateFromInstance(\Xcart\App\Orm\Model $model)
+    protected function populateFromInstance(Model $model)
     {
         $fields = $this->getFieldsInit();
 
@@ -369,7 +371,7 @@ class ModelForm extends MixinBaseForm
 
     /**
      * @param array $attributes
-     * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
+     * @return Manager|QuerySet
      */
     public function getLinkModels(array $attributes)
     {

@@ -1,13 +1,17 @@
 {extends "admin/base.tpl"}
-
 {block 'wrapper_block_class'}admin{/block}
 
 {block 'heading'}
-    <h1>{$form->getName()} {$model}</h1>
+    {if $model->pk !== null}
+        {set $actionTitle=$form->getName()~':'~~$model}
+    {else}
+        {set $actionTitle='Adding a ' ~ $model|strtolower}
+    {/if}
+    <h1>{$actionTitle}</h1>
 {/block}
 
 {block 'content'}
-    {smarty_admin_block name=$form->getName()~':'~~$model}
+    {smarty_admin_block name=$actionTitle}
         <div class="form-page {block 'page_class'}create{/block}">
             <form action="{$.request->getUrl()}" enctype="multipart/form-data" method="post">
                 <div class="form-data">

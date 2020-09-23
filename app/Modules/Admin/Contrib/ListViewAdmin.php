@@ -88,8 +88,8 @@ abstract class ListViewAdmin extends Admin
                 }
             }
         }
-
-        $this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
+        $breadName = ($pk) ? $model : 'Adding a ' . strtolower($model);
+        $this->setBreadcrumbs($breadName);
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,

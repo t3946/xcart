@@ -38,4 +38,9 @@ class ShareHolderModel extends Model
             ]
         ];
     }
+
+    public function __toString()
+    {
+        return (string)($this->name ?? 'ShareHolder');
+    }
 }

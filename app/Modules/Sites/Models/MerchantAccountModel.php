@@ -53,4 +53,9 @@ class MerchantAccountModel extends Model
             ],
         ];
     }
+
+    public function __toString()
+    {
+        return (string)($this->issuer ?? 'Merchant account');
+    }
 }

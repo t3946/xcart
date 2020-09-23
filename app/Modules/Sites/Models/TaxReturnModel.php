@@ -57,6 +57,6 @@ class TaxReturnModel extends Model
 
     public function __toString()
     {
-        return (string)$this->tax_type;
+        return (string)$this->getField('tax_type')->getValue();
     }
 }

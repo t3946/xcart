@@ -140,4 +140,9 @@ class BankAccountModel extends Model
             ],
         ];
     }
+
+    public function __toString()
+    {
+        return (string)($this->bank_name ?? 'Bank account');
+    }
 }
