@@ -16,7 +16,6 @@ class ShareholderForm extends ModelForm
         return [[
             'name',
             'shares',
-            'percent',
         ]];
     }
 
@@ -27,10 +26,6 @@ class ShareholderForm extends ModelForm
                 'class' => NumberField::class,
                 'html' => ['style' => 'width: 100px;'],
             ],
-            'percent' => [
-                'class' => PercentField::class,
-                'html' => ['style' => 'width: 70px;'],
-            ]
         ];
     }
 

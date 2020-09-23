@@ -61,7 +61,8 @@ class ShareHolderAdmin extends ListViewAdmin
     public function getItemProperty(Model $item, $property)
     {
         if ($property === 'percent') {
-            return parent::getItemProperty($item, $property) . "%";
+            $shares = $item->corporate->shares;
+            return number_format(round($item->shares / $shares * 100, 2), 2) . "%";
         }
         return parent::getItemProperty($item, $property);
     }

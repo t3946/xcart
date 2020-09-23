@@ -34,6 +34,8 @@ class ShareHolderModel extends Model
             ],
             'percent' => [
                 'class' => DecimalField::class,
+                'default' => null,
+                'null' => true,
                 'verboseName' => 'Percentage',
             ]
         ];
