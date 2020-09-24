@@ -153,11 +153,4 @@ class Select2Field extends DropDownField
         return array_replace_recursive($options, $this->options);
     }
 
-    public function getChoices()
-    {
-        if ($this->getAjaxUrl()) {
-            return [];
-        }
-        return parent::getChoices();
-    }
 }

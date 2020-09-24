@@ -62,6 +62,7 @@ class SupplierFeedModel extends Model
                 'null' => false,
             ],
             'base_category' => [
+                'field' => 'base_category_id',
                 'class' => ForeignField::class,
                 'modelClass' => CategoryModel::class,
                 'link' => ['base_category_id' => 'categoryid'],

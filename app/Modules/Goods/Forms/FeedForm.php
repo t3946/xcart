@@ -7,6 +7,7 @@ namespace Modules\Goods\Forms;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Admin\FeedAdmin;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\NumberField;
@@ -29,6 +30,9 @@ class FeedForm extends ModelForm
 
     public function getFields()
     {
+        if ($feed = $this->getInstance()) {
+            $choices[$feed->base_category_id] = (string)$feed->base_category;
+        }
         return [
             'feed_name' => [
                 'class' => CharField::class,
@@ -36,7 +40,7 @@ class FeedForm extends ModelForm
             ],
             'distributor' => [
                 'class' => Select2Field::class,
-                'choices' => static function() {
+                'choices' => static function () {
                     $res[] = '';
                     foreach (DistributorModel::objects()->order(['code']) as $dx) {
                         $res[$dx->manufacturerid] = "[{$dx->code}] {$dx}";
@@ -47,7 +51,7 @@ class FeedForm extends ModelForm
             ],
             'site' => [
                 'class' => Select2Field::class,
-                'choices' => static function() {
+                'choices' => static function () {
                     $res[-1] = '';
                     foreach (SiteModel::objects()->order(['code']) as $site) {
                         $res[$site->storefrontid] = $site;
@@ -59,6 +63,8 @@ class FeedForm extends ModelForm
             'base_category' => [
                 'class' => Select2Field::class,
                 'ajaxUrl' => (new FeedAdmin)->getSuggestionUrl('category'),
+                'choices' => $choices ?? [],
+                //'selected' => $choices ?? [],
                 'html' => ['style' => 'width:300px;']
             ],
             'feed_file_name' => [
