@@ -32,6 +32,11 @@ $(function() {ldelim}
 //]]>
 </script>
 
+{assign var=productModel value=$oProductQuestion->product}
+{assign var=mImage value=$productModel->getMainImage()}
+{assign var=brandModel value=$productModel->brand}
+{assign var=oDistributor value=$productModel->distributor}
+
 <table width="100%">
 <tr>
 <td width="*">
@@ -39,7 +44,7 @@ $(function() {ldelim}
  <tr>
 
  <td style="font-size: 15px; {* font-weight: bold; *}">
-        <a target="_blank" style="color: #140BFC; font-weight: bold;{* text-decoration: none;*}" href="{$product_info.customer_url}">Product</a>
+        <a target="_blank" style="color: #140BFC; font-weight: bold;" href="{$productModel->getAbsoluteUrl(true)}">Product</a>
  </td>
 
  <td>
@@ -47,7 +52,7 @@ $(function() {ldelim}
  </td>
 
  <td style="font-size: 15px; {* font-weight: bold; *}">
-        <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}" href="product_modify.php?productid={$product_info.productid}">{$product_info.productcode}</a>
+        <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}" href="{$productModel->getAdminUrl()}">{$productModel->productcode}</a>
  </td>
 
 {*
@@ -145,36 +150,36 @@ $(function() {ldelim}
 </td>
 </tr>
 
+
 <tr>
 <td valign="top" width="48%">
-
-        <table border="0" width="100%" cellpadding="3" cellspacing="1">
-
+    <table border="0" width="100%" cellpadding="3" cellspacing="1">
         <tr>
-        <td><B>Product thumbnail:</B></td>
-        <td>
-<a href="{$product_info.customer_url}" target="_blank">
-{include file="product_thumbnail.tpl" productid=$product_info.productid image_x=$product_info.tmbn_x|default:$config.Appearance.thumbnail_width image_y=$product_info.tmbn_y product=$product_info.product tmbn_url=$product_info.tmbn_url}
-</a>
-        </td>
+            <td><B>Product thumbnail:</B></td>
+            <td>
+                {if $mImage}
+                    <a href="{$productModel->getAdminUrl()}" target="_blank">
+                        <img src="{$mImage->getCdnURL(200)}"/>
+                    </a>
+                {/if}
+            </td>
         </tr>
-	</table>
+    </table>
 </td>
 <td></td>
 <td valign="top" width="48%">
-        {assign var=oProduct value=$oProductQuestion->product}
 
         <table border="0" width="100%" cellpadding="3" cellspacing="1">
             <tr>
                 <td><B>Product name:</B></td>
                 <td>
-                    <a href="{$oProduct->getUrl()}" title="{$oProduct->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$oProduct->getFrontendName()}</a>
+                    <a href="{$productModel->getUrl()}" title="{$productModel->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$productModel->getFrontendName()}</a>
                 </td>
             </tr>
             <tr>
                 <td><B>Product SKU:</B></td>
                 <td>
-                    <a href="{$oProduct->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$oProduct->productcode}</a>
+                    <a href="{$productModel->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$productModel->productcode}</a>
                 </td>
             </tr>
             <tr>
@@ -182,10 +187,9 @@ $(function() {ldelim}
                 <td>{if $product_info.d_website_search_for_sku_url ne ""}<a
                             href="{$product_info.d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}"
                             style="color: #3A3AFF;"
-                            target="_blank">{/if}{$oProduct->getMpn()}{if $product_info.d_website_search_for_sku_url ne ""}</a>{/if}
+                            target="_blank">{/if}{$productModel->getMpn()}{if $product_info.d_website_search_for_sku_url ne ""}</a>{/if}
                 </td>
             </tr>
-            {assign var=oDistributor value=$oProduct->distributor}
             <tr>
                 <td><B>Product distributor:</B></td>
                 <td>
@@ -195,7 +199,9 @@ $(function() {ldelim}
             <tr>
                 <td><B>Product brand:</B></td>
                 <td>
-                    <a href="brands.php?brandid={$product_info.brandid}" style="color: #3A3AFF;" target="_blank">{$product_info.brand}</a>
+                    {if $brandModel}
+                    <a href="{$brandModel->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">{$brandModel->brand}</a>
+                    {/if}
                 </td>
             </tr>
         </table>
@@ -384,7 +390,9 @@ $(function() {ldelim}
  	{if $product_info.brand_email ne ""}{$product_info.brand_email} {if $product_info.brand_customer_service_name ne ""}({$product_info.brand_customer_service_name}){/if} {else}<span style="color: red;">not specified</span>{/if}&nbsp;
  </td>
  <td>
-	<a href="brands.php?brandid={$product_info.brandid}" style="color: #3A3AFF;" target="_blank">Product brand contact</a>
+     {if $brandModel}
+	    <a href="{$brandModel->getAdminUrl()}" style="color: #3A3AFF;" target="_blank">Product brand contact</a>
+     {/if}
  </td>
  </tr>
  </table>
@@ -513,19 +521,18 @@ $(function() {ldelim}
 <td width="49%" valign="top">
 
         <table>
-
           <tr>
             <td width="219">
-                <B>{* Distributor *}{$distributor_info.manufacturer} time:</B> {$distributor_info.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                <B>{$oDistributor} time:</B> {$oDistributor->getDistributorTime()->format('d-M-Y H:i')}
                 <br />
-                <B>{* Distributor *}{$distributor_info.manufacturer} phone:</B> {$distributor_info.distributor_phone}
+                <B>{$oDistributor} phone:</B> {$oDistributor->getPhone()} {if $oDistributor->getPhoneExt()}<b> ext {$oDistributor->getPhoneExt()}</b>{/if}
             </td>
           </tr>
 
           <tr>
             <td>
-                <div class="call_btn call_btn_distr_{if $distributor_info.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" style=""></div>
-                <a target="_blank" href="tel:{if $distributor_info.distributor_phone_phone_normalized ne ""}{$distributor_info.distributor_phone_phone_normalized}{else}{$distributor_info.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+                <div class="call_btn call_btn_distr_{if $oDistributor->isGoodTimeToSendEmail()}a{else}d{/if}" style=""></div>
+                <a target="_blank" href="tel:{$oDistributor->getPhoneNormalized()}"><div style="width: 219px; height: 44px;"></div></a>
             </td>
           </tr>
 	
