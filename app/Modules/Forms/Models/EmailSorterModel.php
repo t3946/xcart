@@ -31,18 +31,7 @@ class EmailSorterModel extends Model
 
             'filter_field' => [
                 'class' => CharField::class,
-                'choices' => function(){
-                    $res = [];
-                    $model = new EmailModel;
-                    /** @var Field $f */
-                    foreach ($model->getFieldsInit() as $f) {
-                        if ($f->getVerboseName()) {
-                            $res[$f->getName()] = $f->getVerboseName();
-                        }
-                    }
-                    asort($res);
-                    return $res;
-                },
+                'choices' => EmailModel::getFieldsName(),
                 'verboseName' => 'Email Field',
             ],
             'cond' => [

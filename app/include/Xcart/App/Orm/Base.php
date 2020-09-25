@@ -869,4 +869,18 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
             $this->attributesNotField = $us['attributesNotField'];
         }
     }
+
+    public static function getFieldsName(): array
+    {
+        $m = static::class;
+        $model = new $m;
+        /** @var Field $f */
+        foreach ($model->getFieldsInit() as $f) {
+            if ($f->getVerboseName()) {
+                $res[$f->getName()] = $f->getVerboseName();
+            }
+        }
+        asort($res);
+        return $res ?? [];
+    }
 }

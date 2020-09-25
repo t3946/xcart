@@ -53,10 +53,19 @@
                     <li>
                         {include 'core/form/model_form_field.tpl' model=$model field='group_id' type='select' selected=$model->group_id choises=$groups class='big'}
                     </li>
+                    <li>
+                        {include 'core/form/model_form_field.tpl' model=$model field='entity' type='select' selected=$model->entity choises=$entities class='big'}
+                    </li>
                 </ul>
             </fieldset>
 
-            {include 'dashboard/_filter_fields.tpl' full_expanded = true}
+            {if $model->entity === null || $model->entity === 'Modules\Order\Models\OrderModel'}
+                {include 'dashboard/_filter_fields.tpl' full_expanded = true}
+            {/if}
+            {if $model->entity === 'Modules\Forms\Models\EmailModel'}
+                {include 'dashboard/_filter_emails_fields.tpl' full_expanded = true}
+            {/if}
+
             {include 'core/form/buttons.tpl'}
         </form>
     {/smarty_admin_block}

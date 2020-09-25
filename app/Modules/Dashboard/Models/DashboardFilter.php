@@ -2,7 +2,10 @@
 namespace Modules\Dashboard\Models;
 
 use Mindy\QueryBuilder\Aggregation\Max;
+use Modules\Dashboard\Stores\EmailSearchStore;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Forms\Models\EmailModel;
+use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
@@ -34,7 +37,7 @@ class DashboardFilter extends Model
                 'field' => 'group_id',
                 'class' => ForeignField::class,
                 'modelClass' => GroupModel::class,
-                'verboseName' => 'Order filter group',
+                'verboseName' => 'Filter group',
                 'null' => true,
             ],
             'users' => [
@@ -93,13 +96,21 @@ class DashboardFilter extends Model
                 'class' => IntField::class,
                 'length' => 2,
                 'null' => true,
-                'verboseName' => 'Order list sorting rule',
+                'verboseName' => 'List sorting rule',
                 'default' => 1,
                 'choices' => [
                     11 => 'Reverse chronological order (Date DESC)',
                     10 => 'Chronological order (Date ASC)',
                     1 => 'Priority shipping, Events count, Date',
                 ],
+            ],
+            'entity' => [
+                'class' => CharField::class,
+                'default' => OrderModel::class,
+                'choices' => [
+                    OrderModel::class => 'Order',
+                    EmailModel::class => 'Email',
+                ]
             ],
             'form_data' => [
                 'class' => JsonField::class,
@@ -138,11 +149,15 @@ class DashboardFilter extends Model
     public function getSearchStorage(array $form_data = [])
     {
         if (!$this->s_store) {
+            $sData = $this->form_data;
             if (!empty($form_data)) {
-                $this->s_store = new OrderSearchStore(array_merge_recursive($this->form_data, $form_data));
+                $sData = array_merge_recursive($sData, $form_data);
             }
-            else {
-                $this->s_store = new OrderSearchStore($this->form_data, $this);
+            if ($this->entity === null || $this->entity === OrderModel::class) {
+                $this->s_store = new OrderSearchStore($sData, empty($form_data) ? $this : null);
+            }
+            if ($this->entity === EmailModel::class) {
+                $this->s_store = new EmailSearchStore($sData, empty($form_data) ? $this : null);
             }
         }
 

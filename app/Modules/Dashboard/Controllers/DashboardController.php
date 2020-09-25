@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Exception;
 use Mindy\QueryBuilder\Expression;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Dashboard\Helpers\SearchHelper;
@@ -27,7 +28,7 @@ class DashboardController extends PrototypeAdminController
     {
         /** check hide_no_orders_test_checkout form */
 
-        if (!empty($_POST['mode']) && $_POST['mode'] == 'hide_no_orders_test_checkout_message') {
+        if (!empty($_POST['mode']) && $_POST['mode'] === 'hide_no_orders_test_checkout_message') {
             Xcart::app()->request->session->add("no_orders_test_checkout_hide_time", time());
 
             $log_text = Xcart::app()->user->firstname . " (" . Xcart::app()->user->login . ") clicked 'Done'.";
@@ -41,7 +42,7 @@ class DashboardController extends PrototypeAdminController
         [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($this->getRequest()->getIsAjax()) {
-            $mIds = array_map(function($model){ return $model->pk; }, $myModels);
+            $mIds = array_map(static function($model){ return $model->pk; }, $myModels);
             $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
@@ -104,7 +105,7 @@ class DashboardController extends PrototypeAdminController
         [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($user_ids = UserFiltersLinkModel::objects()->filter(['user__status' => 'Y'])->cache(60)->valuesList(['user_id'], true)) {
-            $users = UserModel::objects()->cache(60)->all(['id__in' => \array_unique($user_ids)]);
+            $users = UserModel::objects()->cache(60)->all(['id__in' => array_unique($user_ids)]);
         }
 
         echo $this->renderInternal('dashboard/index.tpl',
@@ -134,7 +135,7 @@ class DashboardController extends PrototypeAdminController
         return [$models, $myModels, $questionModels, $inquiries, $inquiries_tags];
     }
 
-    public function filter($id)
+    public function filter($id): void
     {
         /** @var DashboardFilter $model */
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
@@ -176,7 +177,7 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
-    public function settings()
+    public function settings(): void
     {
         $models = DashboardFilter::objects()->all();
 
@@ -189,7 +190,7 @@ class DashboardController extends PrototypeAdminController
         );
     }
 
-    public function sort()
+    public function sort(): void
     {
         /** @var Model|ModelInterface $model */
         if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']])) {
@@ -203,14 +204,14 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
-    public function mySort()
+    public function mySort(): void
     {
         /** @var Model|ModelInterface $model */
         if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
             $user = Xcart::app()->user;
-            list($model) = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
+            [$model] = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
             $model->setAttributes($_POST);
@@ -222,7 +223,7 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
-    public function subscription($id)
+    public function subscription($id): void
     {
         $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
@@ -259,12 +260,12 @@ class DashboardController extends PrototypeAdminController
     }
 
 
-    public function create()
+    public function create(): void
     {
         $this->createOrUpdate(new DashboardFilter());
     }
 
-    public function update($id = null)
+    public function update($id = null): void
     {
         if (!is_null($id) && $model = DashboardFilter::objects()->get(['id' => $id])) {
             $this->createOrUpdate($model);
@@ -274,14 +275,15 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
-    /** @param Model|ModelInterface $model */
-    private function createOrUpdate($model)
+    /**
+     * @param Model|ModelInterface $model
+     * @throws Exception
+     */
+    private function createOrUpdate($model): void
     {
         $class = DashboardFilter::classNameShort();
-        if (isset($_POST['delete'])) {
-            if ($model->delete()) {
-                $this->autoRedirect($model);
-            }
+        if (isset($_POST['delete']) && $model->delete()) {
+            $this->autoRedirect($model);
         }
 
         if ($_POST[$class] && $_POST['search']) {
@@ -305,22 +307,22 @@ class DashboardController extends PrototypeAdminController
         );
     }
 
-    private function autoRedirect($model)
+    private function autoRedirect($model): void
     {
-        list($url, $params) = $this->autoActions($model);
+        [$url, $params] = $this->autoActions($model);
         $this->redirect($url, $params, 303);
     }
 
-    private function autoActions($model)
+    private function autoActions($model): array
     {
         if (array_key_exists('save_continue', $_POST)) {
             return ['dashboard:update_filter', ['id' => $model->id]];
         }
-        else if (array_key_exists('save_create', $_POST)) {
+
+        if (array_key_exists('save_create', $_POST)) {
             return ['dashboard:create_filter', []];
         }
-        else {
-            return ['dashboard:admin_filters', []];
-        }
+
+        return ['dashboard:admin_filters', []];
     }
 }
