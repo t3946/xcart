@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
 
 @set_time_limit(0);
@@ -320,7 +321,9 @@ $oProductQuestion = ProductQuestionModel::objects()->get(['id' => $id]);
 $product_question = $oProductQuestion->getAttributes();
 $prefix_product_question_id = "PRQN-".sprintf('%1$05d', $id);
 
-$use_current_storefront = $oProductQuestion->product->getStoreFront()->getStoreFrontId();
+/** @var ProductModel $product */
+$product = $oProductQuestion->product;
+$use_current_storefront = $product->sites->limit(1)->storefrontid;
 
 $product_info = func_select_product($product_question["productid"], 0, false, false, false, false, $use_current_storefront);
 
@@ -342,7 +345,7 @@ $product_info["customer_service_phone"] = $some_brand_info["customer_service_pho
 $distributor_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
 
 /** @var DistributorModel $distributor_model */
-$distributor_model = DistributorModel::objects()->get(['manufacturerid' => $product_info['manufacturerid']]);
+$distributor_model = $product->distributor;
 
 $distributor_info["good_time_to_send_email_to_distributor"] = $distributor_model->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
