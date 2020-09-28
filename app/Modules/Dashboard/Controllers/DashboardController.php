@@ -159,7 +159,7 @@ class DashboardController extends PrototypeAdminController
                 $model->getSearchStorage()->clearCache();
             }
 
-            if ($model->entity === OrderModel::class) {
+            if (!$model->entity || $model->entity === OrderModel::class) {
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE,
                     array_merge(
                         SearchHelper::getFormAndListData(),
