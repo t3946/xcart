@@ -89,7 +89,7 @@ class CronModel extends Model
 
     public function __toString()
     {
-        return $this->name;
+        return (string) ($this->name ?? 'Cron');
     }
 
     public function getNextRunning()
