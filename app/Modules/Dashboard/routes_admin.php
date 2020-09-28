@@ -1,79 +1,83 @@
 <?php
 
+use Modules\Dashboard\Controllers\SearchController;
+use Modules\Dashboard\Controllers\DashboardGroupController;
+use Modules\Dashboard\Controllers\DashboardController;
+
 return [
     [
         'route' => '',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'index'],
+        'target' => [DashboardController::class, 'index'],
         'name' => 'index'
     ],
     [
         'route' => '/operators',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'operators'],
+        'target' => [DashboardController::class, 'operators'],
         'name' => 'operators'
     ],
     [
         'route' => '/assignments',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'assignments'],
+        'target' => [DashboardController::class, 'assignments'],
         'name' => 'assignments'
     ],
     [
         'route' => '/subscription/{i:id}',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'subscription'],
+        'target' => [DashboardController::class, 'subscription'],
         'name' => 'filter_subscription'
     ],
     [
         'route' => '/create/filter',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'create'],
+        'target' => [DashboardController::class, 'create'],
         'name' => 'create_filter'
     ],
     [
         'route' => '/update/filter/{i:id}',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'update'],
+        'target' => [DashboardController::class, 'update'],
         'name' => 'update_filter'
     ],
     [
         'route' => '/admin/filters',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'settings'],
+        'target' => [DashboardController::class, 'settings'],
         'name' => 'admin_filters'
     ],
     [
         'route' => '/admin/filters/sort',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'sort'],
+        'target' => [DashboardController::class, 'sort'],
         'name' => 'sort_filters'
     ],
     [
         'route' => '/my/filters/sort',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'mySort'],
+        'target' => [DashboardController::class, 'mySort'],
         'name' => 'sort_my_filters'
     ],
     [
         'route' => '/create/group',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'create'],
+        'target' => [DashboardGroupController::class, 'create'],
         'name' => 'create_group'
     ],
     [
         'route' => '/update/group/{i:id}',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'update'],
+        'target' => [DashboardGroupController::class, 'update'],
         'name' => 'update_group'
     ],
     [
         'route' => '/admin/groups',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'settings'],
+        'target' => [DashboardGroupController::class, 'settings'],
         'name' => 'admin_groups'
     ],
     [
         'route' => '/filter/{i:id}',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'filter'],
+        'target' => [DashboardController::class, 'filter'],
         'name' => 'filter'
     ],
     [
         'route' => '/search',
-        'target' => ['\Modules\Dashboard\Controllers\SearchController', 'index'],
+        'target' => [SearchController::class, 'index'],
         'name' => 'search'
     ],
     [
         'route' => '/search_suggestion',
-        'target' => ['\Modules\Dashboard\Controllers\SearchController', 'search_ajax_suggestion'],
+        'target' => [SearchController::class, 'search_ajax_suggestion'],
         'name' => 'search_suggestion'
     ],
 ];

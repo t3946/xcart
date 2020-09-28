@@ -32,6 +32,8 @@ class OrderSearchStore extends BaseStore
     const CONST_CACHE_KEY_EVENT = 'order_search_store_events_count_';
     const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
 
+    public const VIEW_TEMPLATE = 'dashboard/filter_view.tpl';
+
 
     protected $form_data = [];
     private $where = [];

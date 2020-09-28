@@ -32,6 +32,7 @@ class EmailSearchStore extends BaseStore
 
     const CONST_CACHE_KEY_EVENT = 'order_search_store_events_count_';
     const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
+    public const VIEW_TEMPLATE = '/admin/email_all.tpl';
 
 
     protected $form_data = [];
@@ -327,13 +328,6 @@ class EmailSearchStore extends BaseStore
         $joins = $qs->getQueryBuilder()->getJoins();
         $joins = array_keys($joins);
 
-        if (!in_array('group', $joins)) {
-            $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-        }
-
-        $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-
-
         if (!$this->sort && $this->model instanceof DashboardFilter) {
             $this->sort = $this->model->sorting;
         }
@@ -461,42 +455,6 @@ class EmailSearchStore extends BaseStore
         if (!$models) {
             return [];
         }
-
-        $connection = Connection::getInstance();
-
-        $order_ids = array_map(function ($model) { return $model->orderid; }, $models);
-        $order_ids = array_filter($order_ids);
-
-        if (empty($order_ids)) {
-            return [];
-        }
-
-        $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S', 'EL']])->toSQL();
-        $lo_messages = $connection->fetchAll($lom_sql);
-
-        $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Max('date')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
-        $lo_activity = $connection->fetchAll($loa_sql);
-
-        OrderHelper::getMaxEtaTimeByOrder($order_ids);
-        OrderHelper::getCountEvents($order_ids);
-
-        foreach ($models as $model) {
-
-            foreach ($lo_activity as $activity) {
-                if ($activity['orderid'] == $model->orderid) {
-                    $model->last_activity = $activity['date'];
-                    break;
-                }
-            }
-
-            foreach ($lo_messages as $message) {
-                if ($model->orderid == $message['orderid']) {
-                    $model->last_message = $message;
-                    break;
-                }
-            }
-        }
-
         return $models;
     }
 }

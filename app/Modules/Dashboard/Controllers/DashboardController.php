@@ -12,7 +12,10 @@ use Modules\Dashboard\Models\InquiryAttentionTagModel;
 use Modules\Dashboard\Models\InquiryTypeModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Forms\Admin\EmailAdmin;
+use Modules\Forms\Models\EmailModel;
 use Modules\Goods\Models\ProductQuestionModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
@@ -141,15 +144,13 @@ class DashboardController extends PrototypeAdminController
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
             $modify = false;
             $form_data = [];
+            $orderStore = $model->getSearchStorage($form_data);
 
             if (!empty($_GET['search'])) {
-                $form_data = OrderSearchStore::getClearedData($_GET['search']);
+                $form_data = $orderStore::getClearedData($_GET['search']);
                 $modify = true;
-
             }
 
-
-            $orderStore = $model->getSearchStorage($form_data);
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
             $form_data = array_merge_recursive($model->form_data, $form_data);
@@ -158,19 +159,29 @@ class DashboardController extends PrototypeAdminController
                 $model->getSearchStorage()->clearCache();
             }
 
-            echo $this->renderInternal('dashboard/filter_view.tpl',
-                array_merge(
-                    SearchHelper::getFormAndListData(),
-                    [
-                        'modify'        => $modify,
-                        'model'         => $model,
-                        'pager'         => $pager,
-                        'models'        => $models,
-                        'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
-                        'form_collapse' => true,
-                    ]
-                )
-            );
+            if ($model->entity === OrderModel::class) {
+                echo $this->renderInternal($orderStore::VIEW_TEMPLATE,
+                    array_merge(
+                        SearchHelper::getFormAndListData(),
+                        [
+                            'modify'        => $modify,
+                            'model'         => $model,
+                            'pager'         => $pager,
+                            'models'        => $models,
+                            'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                            'form_collapse' => true,
+                        ]
+                    )
+                );
+            } else if ($model->entity === EmailModel::class) {
+                $admin = new EmailAdmin;
+                echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
+                    'objects' => $pager->paginate(),
+                    'pagination' => $pager,
+                    'admin' => $admin,
+                    'columns' => $admin->buildListColumns(),
+                ]);
+            }
         }
         else {
             $this->redirect('dashboard:index');
