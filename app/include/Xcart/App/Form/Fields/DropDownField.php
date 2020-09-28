@@ -98,7 +98,7 @@ class DropDownField extends Field
             }
 
             $value = $this->getValue();
-            if ($value) {
+            if ($value !== null) {
                 if ($value instanceof Manager) {
                     $selected = $value->valuesList(['pk'], true);
                 }
