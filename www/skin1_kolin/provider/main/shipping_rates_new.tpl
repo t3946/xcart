@@ -7,7 +7,7 @@
 	{$lng.txt_shipping_markups_note|substitute:"weight_symbol":$config.General.weight_symbol}
 {/if}
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 //<![CDATA[
 {literal}
 function func_hide_show_real_drop_ship_fee(id_rate, id_real_drop_ship_fee){
@@ -116,7 +116,7 @@ checkboxes = new Array({section name=zone loop=$zones_list}{foreach key=shipid i
 								<td>
 									<table cellpadding="2" cellspacing="0">
 										<script>
-checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=rate loop=$shipping_method.rates}{if not %rate.first%},{/if}'posted_data[{$shipping_method.rates[rate].rateid}][to_delete]'{/section});
+checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=rate loop=$shipping_method.rates}{if !$smarty.section.rate.first},{/if}'posted_data[{$shipping_method.rates[rate].rateid}][to_delete]'{/section});
 										</script>
 										<tr>
 											<td>
@@ -237,7 +237,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 														   value="{$shipping_rate.max_shipping_charge|formatprice}"/>
 												</td>
 												</tr>
-											{if not %rate.last%}
+											{if !$smarty.section.rate.last}
 												<tr>
 													<td colspan="7" class="SubHeaderGreyLine">
 														<img src="{$ImagesDir}/spacer.gif" class="Spc" alt=""/>
