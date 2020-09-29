@@ -67,7 +67,7 @@
 {math equation="x+y" assign="mq" x=$product.amount y=1}
 <select name="post_rma[products][{$prod_num}][amount]">
 {section name=quantity loop=$mq start=0 step=1}
-<option value="{%quantity.index%}" {if $rma_info ne "" && $rma_info.products[$prod_num].amount eq %quantity.index%}selected="selected"{/if}>{%quantity.index%}</option>
+<option value="{$smarty.section.quantity.index}" {if $rma_info ne "" && $rma_info.products[$prod_num].amount eq $smarty.section.quantity.index}selected="selected"{/if}>{$smarty.section.quantity.index}</option>
 {/section}
 </select>
 
