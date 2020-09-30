@@ -9,6 +9,7 @@ use Modules\Admin\Contrib\Admin;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Forms\FeedForm;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
@@ -89,7 +90,15 @@ class FeedAdmin extends Admin
     public function getItemProperty(Model $item, $property)
     {
         if ($property === 'distributor') {
-            return $item->$property->code;
+            if ($distributor = $item->$property) {
+                return "<a href='{$distributor->getAdminUrl()}' target='_blank'>{$distributor->code}</a>";
+            }
+        }
+        if ($property === 'last_update_items_count' && $item->$property > 0) {
+            /** @var ProductModel $product */
+            if ($product = ProductModel::showed()->filter(['manufacturerid' => $item->manufacturerid])->limit(1)->get()) {
+                return "<a href='{$product->getAbsoluteUrl(true)}' target='_blank'>{$item->$property}</a>";
+            }
         }
         if ($property === 'average_update_period') {
             return $item->getAverageUpdatePeriod();
