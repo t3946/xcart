@@ -11,10 +11,11 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Commands\Command;
-use Xcart\App\Main\Xcart;
 
 class AbandonedOrderCommand extends Command
 {
+    private const ORDER_TOTAL_THRESHOLD = 40;
+    private const GOOGLE_BOT_PHONE = '6502530000';
 
     public function handle($arguments = [])
     {
@@ -31,7 +32,9 @@ class AbandonedOrderCommand extends Command
                 OrderStatusModel::ORDER_STATUS_FAILED,
             ]])->order(['-orderid']) as $order) {
 
-            if ($order->total < 40 || OrderHelper::hasCustomerSiblingsOrders($order)) {
+            if ($order->total < self::ORDER_TOTAL_THRESHOLD ||
+                trim($order->phone) === self::GOOGLE_BOT_PHONE ||
+                OrderHelper::hasCustomerSiblingsOrders($order)) {
                 $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_DECLINED]);
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_DECLINED;
                 $order->save();
