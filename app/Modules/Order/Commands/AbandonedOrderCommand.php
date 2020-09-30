@@ -32,11 +32,14 @@ class AbandonedOrderCommand extends Command
                 OrderStatusModel::ORDER_STATUS_FAILED,
             ]])->order(['-orderid']) as $order) {
 
+            $isGoogle = trim($order->phone) === self::GOOGLE_BOT_PHONE;
+
             if ($order->total < self::ORDER_TOTAL_THRESHOLD ||
-                trim($order->phone) === self::GOOGLE_BOT_PHONE ||
+                $isGoogle ||
                 OrderHelper::hasCustomerSiblingsOrders($order)) {
-                $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_DECLINED]);
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_DECLINED;
+                $status = $isGoogle ? OrderStatusModel::ORDER_STATUS_DECLINED : OrderStatusModel::ORDER_STATUS_CANCELED;
+                $order->groups->update(['cb_status' => $status]);
+                $order->cb_status = $status;
                 $order->save();
                 (new OrderLogModel([
                     'orderid' => $order->orderid,
