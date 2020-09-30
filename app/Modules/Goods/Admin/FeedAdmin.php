@@ -96,7 +96,7 @@ class FeedAdmin extends Admin
         }
         if ($property === 'last_update_items_count' && $item->$property > 0) {
             /** @var ProductModel $product */
-            if ($product = ProductModel::showed()->filter(['manufacturerid' => $item->manufacturerid])->limit(1)->get()) {
+            if ($product = ProductModel::objects()->filter(['forsale' => 'Y', 'manufacturerid' => $item->manufacturerid])->order(['?'])->limit(1)->get()) {
                 return "<a href='{$product->getAbsoluteUrl(true)}' target='_blank'>{$item->$property}</a>";
             }
         }
