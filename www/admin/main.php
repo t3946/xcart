@@ -58,7 +58,7 @@ foreach($start_dates as $start_date) {
 
 	$date_condition = "AND $sql_tbl[orders].date>='$start_date' AND $sql_tbl[orders].date<='$curtime'";
 
-	$aOrderStat = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid) WHERE 1 $date_condition");
+	$aOrderStat = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid) WHERE 1 $date_condition AND og.cb_status != 'D'");
 
 	$gross_total[] = array ('value' => price_format($aOrderStat['summa']), 'count' => $aOrderStat['order_count']);
 
