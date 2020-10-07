@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\UserModel;
 
 x_load('cart', 'mail', 'order', 'product', 'taxes');
@@ -643,11 +644,14 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                                              . ' FROM ' . $sql_tbl['order_groups']
                                              . ' WHERE orderid = "' . $cart['orderid'] . '" AND manufacturerid = "' . $mid . '"');
 
-            if ($v['oOrderGroup'] && $v['oOrderGroup']->trackings && $v['oOrderGroup']->trackings->count()) {
+            if ($v['oOrderGroup'] &&
+                $v['dc_status'] !== OrderStatusModel::ORDER_DC_STATUS_DELIVERED &&
+                $v['oOrderGroup']->trackings &&
+                $v['oOrderGroup']->trackings->count()) {
                 if ($back_products[$mid] >= 1) {
-                    $v['dc_status'] = \Modules\Order\Models\OrderStatusModel::ORDER_DC_STATUS_SHIPPED_BACKORDERED;
+                    $v['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED_BACKORDERED;
                 } elseif ($back_products[$mid] == 0) {
-                    $v['dc_status'] = \Modules\Order\Models\OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
+                    $v['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
                 }
             }
 

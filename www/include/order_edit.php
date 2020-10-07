@@ -548,7 +548,7 @@ if ($REQUEST_METHOD === 'POST')
 
                 $order['shipping_groups'][$m_id]['po_status'] = $v['po_status'];
 
-                if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
+                if ($orderGroupModel->dc_status !== OrderStatusModel::ORDER_DC_STATUS_DELIVERED && OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
                     $order['shipping_groups'][$m_id]['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
                     define('TRACKING_ADDED', 1);
                 }

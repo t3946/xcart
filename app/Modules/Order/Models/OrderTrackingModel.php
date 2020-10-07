@@ -94,7 +94,7 @@ class OrderTrackingModel extends Model
             $log = "<b>Tracking numbers:</b>\n<b>Added:</b> ";
             $log .= "{$owner->carrier->carrier} {$owner->link->shipping}: {$owner->tracknum}\n";
 
-            if ($current_dc_status->dc_status !== OrderStatusModel::ORDER_DC_STATUS_SHIPPED) {
+            if (!in_array($current_dc_status->dc_status, [OrderStatusModel::ORDER_DC_STATUS_SHIPPED, OrderStatusModel::ORDER_DC_STATUS_DELIVERED], true)) {
                 $current_dc_status_value = $current_dc_status->dc_status_model->name;
                 $current_dc_status->dc_status = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
                 $new_value = $current_dc_status->dc_status_model->name;

@@ -2078,49 +2078,47 @@ function func_get_order_manufacturers($orderid)
                         if ($order_group->detail_models->count()) {
 
                             /** @var OrderDetailModel $detail_model */
+                            /** @var ProductModel $product_model */
                             foreach ($order_group->detail_models as $detail_model) {
+                                if ($product_model = $detail_model->product_model) {
+                                    $v = $product_model->getAttributes();
+                                    $selected_product_options = null;
 
-                                /** @var ProductModel $product_model */
-                                $product_model = $detail_model->product_model;
-                                $v = $product_model->getAttributes();
-                                $selected_product_options = null;
-
-                                if ($detail_model->product_options) {
-                                    $selected_product_options = '<br/> <b>Options:</b> ';
-                                    foreach ($detail_model->getOptions() as $name => $value) {
-                                       $selected_product_options .= "{$name}: {$value} <br/>";
+                                    if ($detail_model->product_options) {
+                                        $selected_product_options = '<br/> <b>Options:</b> ';
+                                        foreach ($detail_model->getOptions() as $name => $value) {
+                                            $selected_product_options .= "{$name}: {$value} <br/>";
+                                        }
                                     }
-                                }
 
-                                if ($department === 'distributor' || empty($department)){
-                                    $tmp_sku = $product_model->getMPN();
-                                }
-                                else {
-                                    $tmp_sku = $product_model->productcode;
-                                }
-
-
-                                $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
-
-                                $instock_items = $detail_model->amount - $detail_model->back;
-                                $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
-
-                                $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
-
-                                $order_products_amount = $detail_model->amount;
-
-                                if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
-                                    $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
-                                    $order_products_amount -= $tmp_ref_qty;
-                                }
-
-                                if ($order_products_amount > 0) {
-                                    $order_products_counter++;
-
-                                    if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
-                                        $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
+                                    if ($product_model && ($department === 'distributor' || empty($department))) {
+                                        $tmp_sku = $product_model->getMPN();
                                     } else {
-                                        $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                        $tmp_sku = $product_model->productcode;
+                                    }
+
+                                    $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
+
+                                    $instock_items = $detail_model->amount - $detail_model->back;
+                                    $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
+
+                                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
+
+                                    $order_products_amount = $detail_model->amount;
+
+                                    if (!empty($order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"])) {
+                                        $tmp_ref_qty = $order["refund_groups"][$m_id]["products"][$detail_model->itemid]["ref_qty"];
+                                        $order_products_amount -= $tmp_ref_qty;
+                                    }
+
+                                    if ($order_products_amount > 0) {
+                                        $order_products_counter++;
+
+                                        if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
+                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
+                                        } else {
+                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                        }
                                     }
                                 }
                             }

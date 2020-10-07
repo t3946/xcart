@@ -914,13 +914,25 @@ class Order extends Data
 
         foreach ($aOrderGroups as $oOrderGroup) {
 
-            if ($this->getOrderGroupsCount() == 1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;
+            if ($this->getOrderGroupsCount() === 1 && $oOrderGroup->checkFBAProductsAvailToShipping()) {
+                continue;
+            }
 
             if (
-                in_array($oOrderGroup->getOrderGroupStatusCB(), ['P', 'O', '3', 'H', 'AP'], true) &&
-                in_array($oOrderGroup->getOrderGroupStatusDC(), ['T', 'K', 'M'], true) &&
-                $this->getField('vn_status') === self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
-            ) {
+                $this->getField('vn_status') === self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED &&
+                in_array($oOrderGroup->getOrderGroupStatusCB(), [
+                    OrderStatusModel::ORDER_STATUS_COMPLETED,
+                    OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                    OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
+                    OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                    OrderStatusModel::ORDER_STATUS_AUTHORIZED
+                ], true) &&
+                in_array($oOrderGroup->getOrderGroupStatusDC(), [
+                    OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    OrderStatusModel::ORDER_DC_STATUS_PENDING_AVAIL_CHECK,
+                    OrderStatusModel::ORDER_DC_STATUS_PENDING_ADDL_PAYMENT
+                ], true))
+            {
                 $d_instructions_to_order_entry_operator = $oOrderGroup->getManufacturerEntity()->getField('d_instructions_to_order_entry_operator');
                 $d_order_entry_operator_subject_line_8 = $oOrderGroup->getManufacturerEntity()->getField('d_order_entry_operator_subject_line_8');
                 $d_order_entry_operator_email = $oOrderGroup->getManufacturerEntity()->getField('d_order_entry_operator_email');
@@ -950,12 +962,12 @@ class Order extends Data
                 $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $oMail->getSubject();
                 Logs::model()->_log('orders', $this->getOrderId(), 'S', $log, $login);
 
-                if ($oOrderGroup->getOrderGroupStatusDC() != "E") {
-                    $log = "<B>" . $oOrderGroup->getManufacturerEntity()->getManufacturerCode() . ":</B> dc_status: " . $oOrderGroup->getOrderGroupStatusDC() . " -> " . \Xcart\OrderStatus::model(['code' => 'E'])->getName();
+                if ($oOrderGroup->getOrderGroupStatusDC() !== OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY) {
+                    $log = "<B>" . $oOrderGroup->getManufacturerEntity()->getManufacturerCode() . ":</B> dc_status: " . $oOrderGroup->getOrderGroupStatusDC() . " -> " . \Xcart\OrderStatus::model(['code' => OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY])->getName();
                     Logs::model()->_log('orders', $this->getOrderId(), 'X', $log, $login);
                 }
 
-                $oOrderGroup->updateField('dc_status', 'E');
+                $oOrderGroup->updateField('dc_status', OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY);
             }
 
         }
