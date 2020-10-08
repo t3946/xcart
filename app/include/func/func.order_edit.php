@@ -525,12 +525,12 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             if ($product['itemid']) {
                 [$dm, $created] = OrderDetailModel::objects()->getOrCreate(['itemid' => $product['itemid']]);
             } else {
-                $dm = new OrderDetailModel([
+                [$dm, $created] = OrderDetailModel::objects()->getOrCreate([
                     'order_group_id' => $cart['order_group_id'],
                     'orderid' => $cart['orderid'],
                     'productid' => $product['productid'],
+                    'productcode' => $product['productcode'],
                 ]);
-                $created = true;
             }
 
             if ($product['deleted']) {
