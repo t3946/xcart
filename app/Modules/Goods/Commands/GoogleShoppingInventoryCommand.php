@@ -68,7 +68,7 @@ class GoogleShoppingInventoryCommand extends Command
                         $entry->setStoreCode('online');
                         $inventory = new Google_Service_ShoppingContent_Inventory();
                         $currency = $dX->currency;
-                        $sprice = $product->getFrontendPrice();
+                        $sprice = $product->getFrontendPrice($product->min_amount ?? 1) * ($product->min_amount ?? 1);
                         $price = new Google_Service_ShoppingContent_Price();
                         $price->setCurrency($currency->currency_code ?? 'USD');
                         $price->setValue($sprice);
