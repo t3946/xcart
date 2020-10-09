@@ -9,7 +9,7 @@ if (empty($login)) {
 /** @var \Modules\User\Models\RoleModel $role */
 if (($uModel = \Modules\User\Models\UserModel::objects()->get(['login' => $login])) && $role = $uModel->role) {
     if (!$role->canRequest(\Xcart\App\Main\Xcart::app()->request)) {
-        \Xcart\App\Main\Xcart::app()->request->redirect('error_message.php?access_denied&id=25');
+        \Xcart\App\Main\Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
     }
 }
 

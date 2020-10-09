@@ -3,58 +3,78 @@
     {include file="modules/CIDEV_Best_Search_Filter/single/menu_box.tpl"}
 
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/configuration.php"
            class="VertMenuItems">{$lng.lbl_general_settings}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
-    {/if}
-
-    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-        <a href="{$catalogs.admin}/languages.php" class="VertMenuItems">{$lng.lbl_languages}</a>
-    {/if}
-
-    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-        <a href="{$catalogs.admin}/memberships.php" class="VertMenuItems">{$lng.lbl_membership_levels}</a>
-    {/if}
-
-    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-        <a href="{$catalogs.admin}/modules.php" class="VertMenuItems">{$lng.lbl_modules}</a>
-    {/if}
-
-    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-        {if $active_modules.Multiple_Storefronts}
-            <a href="{$catalogs.admin}/multiple_storefronts.php"
-               class="VertMenuItems">{$lng.lbl_multiple_storefronts}</a>
         {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+        <a href="{$catalogs.admin}/languages.php" class="VertMenuItems">{$lng.lbl_languages}</a>
+        {/if}
+    {/if}
+
+    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+        <a href="{$catalogs.admin}/memberships.php" class="VertMenuItems">{$lng.lbl_membership_levels}</a>
+        {/if}
+    {/if}
+
+    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+        <a href="{$catalogs.admin}/modules.php" class="VertMenuItems">{$lng.lbl_modules}</a>
+        {/if}
+    {/if}
+
+    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if $active_modules.Multiple_Storefronts}
+            {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+            <a href="{$catalogs.admin}/multiple_storefronts.php"
+               class="VertMenuItems">{$lng.lbl_multiple_storefronts}</a>
+            {/if}
+        {/if}
+    {/if}
+
+    {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/payment_methods.php" class="VertMenuItems">{$lng.lbl_payment_methods}</a>
+        {/if}
     {/if}
 
 
 
 
 {/capture}
-{include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
+{if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+    {include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
+{/if}
 
 {capture name=menu}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
         {if $current_membership_flag ne 'FS'}
-            <a href="{$catalogs.admin}/seed_categories.php"
-               class="VertMenuItems">{$lng.lbl_seed_categories}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+            {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+            <a href="{$catalogs.admin}/seed_categories.php" class="VertMenuItems">{$lng.lbl_seed_categories}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+            {/if}
         {/if}
     {/if}
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/order_reports.php" class="VertMenuItems">{$lng.lbl_order_reports}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
-        <a href="{$catalogs.admin}/grandfathered_products.php"
-           class="VertMenuItems">{$lng.lbl_grandfathered_products}</a>
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+        <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/shipping_quotes_log.php?mode=search" class="VertMenuItems">Shipping quotes log</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
@@ -145,4 +165,6 @@
     {/if}
 
 {/capture}
+{if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
 {include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title='Obsolete' menu_content=$smarty.capture.menu }
+{/if}

@@ -10,6 +10,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Customer;
@@ -37,13 +38,11 @@ class UserModel extends Model
             'id' => [
                 'class' => AutoField::className(),
             ],
-
             'pbx_extension' => [
                 'class' => CharField::className(),
                 'null' => false,
                 'default' => ''
             ],
-
             'login' => [
                 'class' => CharField::className(),
                 'null' => false,
@@ -85,7 +84,12 @@ class UserModel extends Model
                 'class' => HasManyField::class,
                 'sqlType' => Type::STRING,
                 'link' => ['login' => 'provider']
-            ]
+            ],
+            'childs' => [
+                'class' => HasManyField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['id' => 'parent_user_id']
+            ],
         ];
     }
 
@@ -125,11 +129,27 @@ class UserModel extends Model
     public function getShortSurname():? string
     {
         if ($name = explode(' ', $this->firstname)) {
-            $length = \count($name)-1;
+            $length = count($name)-1;
             $last_name = (string) $name[$length];
             $name[$length] = $last_name[0];
             return implode(' ', $name);
         }
         return null;
+    }
+
+    public function hasRole($slug): bool
+    {
+        if ($role = $this->role) {
+            return $role->slug === $slug;
+        }
+        return false;
+    }
+
+    public function hasRoles($roles): bool
+    {
+        if ($role = $this->role) {
+            return $role->getObjects()->filter(['slug__in' => $roles])->count() > 0;
+        }
+        return false;
     }
 }

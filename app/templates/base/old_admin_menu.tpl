@@ -1,3 +1,4 @@
+{if $.admin_menu|count > 0}
 <div class="VertMenuBorder main-menu-modules">
     <div class="VertMenuTitle">
         Modules menu
@@ -23,3 +24,4 @@
             </div>
     </div>
 </div>
+{/if}

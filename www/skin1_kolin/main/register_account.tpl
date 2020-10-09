@@ -1,4 +1,3 @@
-{* $Id: register_account.tpl,v 1.19.2.5 2006/12/25 13:32:08 max Exp $ *}
 {if $hide_account_section ne "Y"}
 
 {if $hide_header eq ""}
@@ -49,31 +48,55 @@
 <td align="right">User permissions</td>
 <td></td>
 <td>
-{foreach from=$all_memberships item=vm key=km}
-
-{*  {if $vm.membershipid ne $userinfo.membershipid} *}
-	<input type="checkbox" name="allow_operate_as_membership[{$vm.membershipid}]" value="Y"
-{if $userinfo.allow_operate_as_membership_arr ne ""}
-{foreach from=$userinfo.allow_operate_as_membership_arr item=v_a key=k_a}
-{if $v_a eq $vm.membershipid} checked="checked"{/if} 
-{/foreach}
-{/if}
-	/> {if $vm.area eq "A"}Admin{elseif $vm.area eq "P"}Provider{/if}/{$vm.membership}<br />
-{*  {/if} *}
-
-{/foreach}
+	{foreach from=$all_memberships item=vm key=km}
+		<input type="checkbox" name="allow_operate_as_membership[{$vm.membershipid}]" value="Y"
+				{if $userinfo.allow_operate_as_membership_arr ne ""}
+					{foreach from=$userinfo.allow_operate_as_membership_arr item=v_a key=k_a}
+						{if $v_a eq $vm.membershipid} checked="checked"{/if}
+					{/foreach}
+				{/if}
+		/>
+		{if $vm.area eq "A"}Admin{elseif $vm.area eq "P"}Provider{/if}/{$vm.membership}
+		<br/>
+	{/foreach}
 
 </td>
 </tr>
 
 
 {if $config.General.membership_signup eq "Y" and ($usertype eq "C" or ($active_modules.Simple_Mode ne "" and $usertype eq "P") or $usertype eq "A" or $usertype eq "B") && $membership_levels}
-{include file="admin/main/membership_signup.tpl"}
+	{include file="admin/main/membership_signup.tpl"}
 {/if}
 
 {if $usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode ne "") && $membership_levels}
-{include file="admin/main/membership.tpl"}
+	{include file="admin/main/membership.tpl"}
 {/if}
+<tr>
+	<td align="right">
+		Child users
+	</td>
+	<td></td>
+	<td>
+		{assign var=childs value=$oCustomer->childs->valuesList(['id'], true)}
+		<select name="child_users[]" class="child_users" multiple="multiple" style="width: 285px">
+			<option></option>
+			{foreach Modules\User\Models\UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->order(['firstname']) as $uModel}
+				<option {if in_array($uModel->id, $childs)}selected="selected"{/if} value="{$uModel->id}">{$uModel}</option>
+			{/foreach}
+		</select>
+	</td>
+	{literal}
+	<script type="text/javascript">
+		$('.child_users').select2({
+			allowClear: false,
+			closeOnSelect: false,
+			placeholder: 'Click to select Users'
+		}).on("select2:unselecting", function(e){if (!e.params.args.originalEvent) {return false;}e.params.args.originalEvent.stopPropagation();});
+
+	</script>
+	<style>.select2-results__option[aria-selected=true] {display: none;}</style>
+	{/literal}
+</tr>
 
 {if $usertype eq "A" and $smarty.get.usertype eq "P" and $userinfo.login ne ''}
 {if $active_modules.Manufacturers ne ""}

@@ -39,7 +39,7 @@
 </tr>
 
 			{if $vv ne ""}
-				{foreach from=$vv item=vvv ke=kkk}
+				{foreach from=$vv item=vvv key=kkk}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 					<td colspan="2">&nbsp;</td>
 					<td>{$vvv.login}</td>

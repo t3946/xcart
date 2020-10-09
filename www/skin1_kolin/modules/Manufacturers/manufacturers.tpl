@@ -185,8 +185,6 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <tr>
 	<td colspan="6" class="SubmitBox">
-	<input type="button" value="{$lng.lbl_delete_selected|strip_tags:false|escape}" onclick="javascript: if (checkMarks(this.form, new RegExp('^to_delete\\[.+\\]', 'gi'))) if (confirm('{$lng.txt_manufacturers_delete_msg|strip_tags}')) {ldelim} document.manufform.mode.value='delete'; document.manufform.submit(); {rdelim}" />
-	<input type="submit" value="{$lng.lbl_update|strip_tags:false|escape}" />
 	</td>
 </tr>
 
@@ -211,10 +209,6 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 <br />
 <br />
 <hr />
-<form action="manufacturers.php" method="post" name="manufform">
-<input type="hidden" name="mode" value="export_emails" />
-<input type="submit" value="Export emails">
-</form>
 
 	{if $distributor_contacts_file ne ""}
 		<br />

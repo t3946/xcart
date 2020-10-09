@@ -18,8 +18,12 @@ class DistributorController extends BackendController
 
     public function index($mid = null, $section = 1)
     {
-        if ($mid) {
-            $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+        $user = Xcart::app()->user;
+        if ($mid && ($dx = DistributorModel::objects()->get(['manufacturerid' => $mid])) && $dx->provider !== $user->login) {
+            if (($user->hasRole('vrs')) ||
+                (Xcart::app()->user->hasRole('vrv') && $user->childs->filter(['login' => $dx->provider])->count() === 0)) {
+                Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
+            }
         }
 
         /** @var DistributorForm $form */

@@ -35,6 +35,8 @@
 # $Id: user_modify.php,v 1.38.2.2 2006/10/02 08:02:31 twice Exp $
 #
 
+use Modules\User\Models\UserModel;
+
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
@@ -150,6 +152,9 @@ if ($active_modules['Manufacturers'] && $login_type == 'P') {
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 require $xcart_dir."/include/register.php";
 
+$oCustomer = UserModel::objects()->get(['login'=>$login]);
+$smarty->assign("oCustomer",$oCustomer);
+
 switch ($login_type) {
 	case "A" : $tpldir = "admin";
 		break;
@@ -158,8 +163,6 @@ switch ($login_type) {
 	case "C" : $tpldir = "customer";
 		break;
 	case "V" : $tpldir = "verificator";
-			   $oCustomer = new Xcart\Customer(['login'=>$login]);
-			   $smarty->assign("oCustomer",$oCustomer);
 		break;
 	default: $tpldir = "partner";
 }

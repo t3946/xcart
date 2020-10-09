@@ -34,8 +34,9 @@
 # $Id: quick_menu.php,v 1.5 2006/01/11 06:55:58 mclap Exp $
 #
 
-if ( !defined('XCART_SESSION_START') ) { header("Location: error_message.php?permission_denied"); die("Access denied"); }
+use Xcart\App\Main\Xcart;
 
+if ( !defined('XCART_SESSION_START') ) { header("Location: error_message.php?permission_denied"); die("Access denied"); }
 #
 # GENERATE ITEMS FOR QUICK MENU
 #

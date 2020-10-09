@@ -5,20 +5,26 @@
 
     {if $allowed_elements.LeftLink_Users eq "Y"}
         {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+            {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
             <a href="{$catalogs.admin}/users.php" class="VertMenuItems">{$lng.lbl_users}</a>
+            {/if}
         {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/categories.php"
            class="VertMenuItems">{$lng.lbl_categories}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
-        <a href="{$catalogs.admin}/classification.php" class="VertMenuItems">Classification</a>
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+            <a href="{$catalogs.admin}/classification.php" class="VertMenuItems">Classification</a>
+        {/if}
     {/if}
 
-    {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
+    {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE") && !$xcartApp->user->hasRoles(['vrs','vrv'])}
         <a href="{$catalogs.admin}/empty_categories.php" class="VertMenuItems">Empty
             categories{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
     {/if}
@@ -27,21 +33,29 @@
         <a href="{$catalogs.admin}/manufacturers.php?word=num" class="VertMenuItems">{$lng.lbl_manufacturers}</a>
     {/if}
     {if $active_modules.Brands}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/brands.php?word=num" class="VertMenuItems">{$lng.lbl_brands}</a>
+        {/if}
     {/if}
     {if $active_modules.Wishlist}
         <a href="{$catalogs.admin}/wishlists.php" class="VertMenuItems">{$lng.lbl_wish_lists}</a>
     {/if}
-    {if $active_modules.Simple_Mode eq ""}<a href="{$catalogs.admin}/search.php"
-                                             class="VertMenuItems">{$lng.lbl_admin_menu_products}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>{/if}
-
-
-    <a href="{$catalogs.admin}/az_operators.php" class="VertMenuItems">Amazon verification</a>
+    {if $active_modules.Simple_Mode eq ""}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+            <a href="{$catalogs.admin}/search.php" class="VertMenuItems">{$lng.lbl_admin_menu_products}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+        {/if}
+    {/if}
+    {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+        <a href="{$catalogs.admin}/az_operators.php" class="VertMenuItems">Amazon verification</a>
+    {/if}
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/checks_deposited.php" class="VertMenuItems">Checks deposited</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/product_question_search.php?mode=search&status=all&from_dashboard=Y"
            class="VertMenuItems">Product questions</a>
         <a href="{$catalogs.admin}/reconciliation.php" class="VertMenuItems">Reconciliation</a>
@@ -50,33 +64,43 @@
                 <a href="{$catalogs.admin}/reports.php" class="VertMenuItems">Reports</a>
             {/if}
         {/if}
-
+        {/if}
     {/if}
 
-
-
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/shipping.php" class="VertMenuItems">{$lng.lbl_shipping_methods}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/track_links.php" class="VertMenuItems">{$lng.lbl_tracking_links}</a>
+        {/if}
     {/if}
 
     {if $active_modules.Customer_Reviews ne ""}
-        <a href="{$catalogs.admin}/ratings_edit.php" class="VertMenuItems">{$lng.lbl_edit_ratings}</a>
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+            <a href="{$catalogs.admin}/ratings_edit.php" class="VertMenuItems">{$lng.lbl_edit_ratings}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/countries.php" class="VertMenuItems">{$lng.lbl_countries}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/states.php" class="VertMenuItems">{$lng.lbl_states}</a>
+        {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+        {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
         <a href="{$catalogs.admin}/taxes.php" class="VertMenuItems">Taxes</a>
+        {/if}
     {/if}
 
     {if $active_modules.Stop_List ne ""}

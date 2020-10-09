@@ -42,12 +42,12 @@
                         {if $holiday}
                             {assign var=next_holiday_days value=$holiday->getDaysUntil()}
                         {/if}
-                        {if $next_holiday && $next_holiday_days !== null}
+                        {if $holiday && $next_holiday_days !== null}
                             <div style="text-align:center; border: 2px solid red;">
                                 {if $next_holiday_days > 0}
                                     <div>{$next_holiday_days} day{if $next_holiday_days > 1}s{/if} until</div>
                                 {/if}
-                                <div>{$next_holiday}</div>
+                                <div>{$holiday}</div>
                             </div>
                         {/if}
                     </div>
@@ -84,7 +84,7 @@
         {/if}
     </tr>
 </table>
-
+{if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="headSearchLine">
 <tr>
     <td class="HeadLine" height="22" width="33%">
@@ -198,3 +198,4 @@
 
 </tr>
 </table>
+{/if}

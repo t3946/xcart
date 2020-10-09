@@ -9,6 +9,10 @@ class PBXModule extends Module
 {
     public static function getAdminMenu()
     {
+        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+            return [];
+        }
+
         $router = Xcart::app()->router;
 
         return [

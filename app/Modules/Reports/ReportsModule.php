@@ -8,6 +8,10 @@ class ReportsModule extends Module
 {
     public static function getAdminMenu()
     {
+        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+            return [];
+        }
+
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
 

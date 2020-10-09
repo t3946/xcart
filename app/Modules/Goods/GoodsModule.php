@@ -55,6 +55,9 @@ class GoodsModule extends Module
 
     public static function getAdminMenu(): array
     {
+        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+            return [];
+        }
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
 

@@ -22,16 +22,18 @@ trait AdminTrait
         $adminClasses = static::getAdminClasses();
         foreach ($adminClasses as $adminClass) {
             if (is_a($adminClass, Admin::className(), true) && $adminClass::$public) {
-                $menu[] = [
-                    'adminClassName' => $adminClass::className(),
-                    'adminClassNameShort' => $adminClass::classNameShort(),
-                    'moduleName' => static::getName(),
-                    'name' => $adminClass::getName(),
-                    'route' => Xcart::app()->router->url('admin:list', [
-                        'module' => static::getName(),
-                        'admin' => $adminClass::classNameShort()
-                    ])
-                ];
+                if (!Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+                    $menu[] = [
+                        'adminClassName' => $adminClass::className(),
+                        'adminClassNameShort' => $adminClass::classNameShort(),
+                        'moduleName' => static::getName(),
+                        'name' => $adminClass::getName(),
+                        'route' => Xcart::app()->router->url('admin:list', [
+                            'module' => static::getName(),
+                            'admin' => $adminClass::classNameShort()
+                        ])
+                    ];
+                }
             }
         }
         return $menu;
