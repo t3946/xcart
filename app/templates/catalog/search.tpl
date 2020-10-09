@@ -13,10 +13,10 @@
             <div class="columns large-10">
                 <div class="search-header">
                     {if $searched}
-                        <h1 class="title">{t 'Showing result for'} "<span class="highlight">{$q}</span>"</h1>
+                        <h1 class="title">{t 'Showing result for'} "<span class="highlight">{$q|escape}</span>"</h1>
                     {else}
-                        <h1 class="title">{t 'Your search'} "<span class="bad">{$q_original}</span>" {t 'did NOT match any products'}</h1>
-                        <h2 class="subtitle">{t 'Showing results for'} "<span class="highlight">{$q}</span>"</h2>
+                        <h1 class="title">{t 'Your search'} "<span class="bad">{$q_original|escape}</span>" {t 'did NOT match any products'}</h1>
+                        <h2 class="subtitle">{t 'Showing results for'} "<span class="highlight">{$q|escape}</span>"</h2>
                     {/if}
 
                     {if $suggestion && $suggestion['phrase_suggestions'] }
