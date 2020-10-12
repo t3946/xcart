@@ -1233,9 +1233,9 @@ $( document ).ready(function() {
  {/if}
 
 
-{if ($order.po_details && ($order.orig_po eq "" || ($order.po_issued_to eq 'A' || $order.po_issued_to eq "") || $order.total_shipping_charge_on_orig_po lte 0 || $order.po_details.name_of_purchaser eq 'unknown' || $order.po_details.purchase_manager_phone eq '(000) 000-0000' || $order.po_details.po_fax eq '(000) 000-0000' || $order.po_details.purchase_manager_email eq 'unknown@unknown.com' || $order.po_details.accounts_payable_full_name eq 'unknown' || $order.po_details.accounts_payable_phone eq '(000) 000-0000' || $order.po_details.accounts_payable_fax eq '(000) 000-0000' || $order.po_details.accounts_payable_email eq 'unknown@unknown.com')) || ($v.dc_status eq "DP")}
+    {if $v.dc_status eq "DP"}
         {assign var="show_dispatch_to_distributor" value="N"}
-{/if}
+    {/if}
 
  {if $show_dispatch_to_distributor eq "Y" && $order.fraud_status eq "C" && $order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0}
 
