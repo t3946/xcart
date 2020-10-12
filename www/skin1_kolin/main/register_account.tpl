@@ -77,11 +77,13 @@
 	</td>
 	<td></td>
 	<td>
+		{if $oCustomer}
 		{assign var=childs value=$oCustomer->childs->valuesList(['id'], true)}
+		{/if}
 		<select name="child_users[]" class="child_users" multiple="multiple" style="width: 285px">
 			<option></option>
 			{foreach Modules\User\Models\UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->order(['firstname']) as $uModel}
-				<option {if in_array($uModel->id, $childs)}selected="selected"{/if} value="{$uModel->id}">{$uModel}</option>
+				<option {if $childs && in_array($uModel->id, $childs)}selected="selected"{/if} value="{$uModel->id}">{$uModel}</option>
 			{/foreach}
 		</select>
 	</td>
