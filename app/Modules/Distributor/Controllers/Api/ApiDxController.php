@@ -5,17 +5,21 @@ namespace Modules\Distributor\Controllers\Api;
 
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\SupplierFeedModel;
 use Xcart\App\Controller\Controller;
 
 class ApiDxController extends Controller
 {
-    public function getDxInfo($code)
+    public function getDxInfo($code): void
     {
         /** @var DistributorModel $dx */
+        /** @var SupplierFeedModel $feed */
 
         if ($dx = DistributorModel::objects()->get(['code' => $code])) {
-            foreach ($feeds = $dx->feeds as $feed) {
+            $feedData = [];
+            foreach ($dx->feeds as $feed) {
                 $feedData[] = [
+                    'type' => ($type = $feed->getField('type')) ? $type->toText() : null,
                     'feed_source' => $feed->feed_source,
                     'feed_file_name' => $feed->feed_file_name,
                     'md5' => $feed->last_md5,
