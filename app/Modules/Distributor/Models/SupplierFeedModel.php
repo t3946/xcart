@@ -137,7 +137,7 @@ class SupplierFeedModel extends Model
     public function beforeSave($owner, $isNew)
     {
         if ($isNew && !$this->feed_file_name) {
-            $this->feed_file_name = strtolower("feed{$this->manufacturerid}{$this->feed_type}.txt");
+            $this->feed_file_name = strtolower("feed{$this->manufacturerid}{$this->feed_type}.json");
         }
     }
 
