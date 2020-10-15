@@ -19,7 +19,7 @@ class ApiDxController extends Controller
                     'feed_source' => $feed->feed_source,
                     'feed_file_name' => $feed->feed_file_name,
                     'md5' => $feed->last_md5,
-                    'enabled' => $feed->enabled === 'Y',
+                    'enabled' => $feed->enabled,
                     'source_date' => $feed->feed_source_date
                 ];
             }
