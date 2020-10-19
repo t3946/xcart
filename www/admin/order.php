@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
@@ -2413,6 +2414,11 @@ $backorder_decision_request_subject_line = str_replace(array('{{orderid}}', '{{c
 
 $backorder_decision_request_message = str_replace(array('{{orderid}}', '{{c-fullname}}', '{{instock}}', '{{outofstock}}', '{{discontinued}}', '{{po_number}}'),
     array($order["order_prefix"] . $orderid, $userinfo["firstname"], $cidev_instock_items_table, $cidev_outofstock_items_table, $cidev_discontinued_items_table, $order["po_number"]), $backorder_decision_request_message);
+
+if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
+    $backorder_decision_request_subject_line = SnippetHelper::render($backorder_decision_request_subject_line, ['order' => $orderModel]);
+    $backorder_decision_request_message = SnippetHelper::render($backorder_decision_request_message, ['order' => $orderModel]);
+}
 
 $outofstock_disc_cat_urls                = "";
 $productids_for_outofstock_disc_cat_urls = [];
