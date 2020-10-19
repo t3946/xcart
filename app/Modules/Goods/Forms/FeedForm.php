@@ -74,6 +74,10 @@ class FeedForm extends ModelForm
             'threshold' => [
                 'class' => CharField::class,
                 'html' => ['style' => 'width:100px;']
+            ],
+            'schedule' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width:200px;']
             ]
         ];
     }
