@@ -157,8 +157,7 @@ function func_trans_tbl_name($data, $added = array()) {
 $location[] = array(func_get_langvar_by_name("lbl_tools"), "");
 
 if ($_GET["mode"] == "templates") {
-	$smarty->clear_all_cache();
-	$smarty->clear_compiled_tpl();
+	$smarty->clearAllCache();
 	$top_message["content"] = func_get_langvar_by_name("msg_adm_summary_templates_del")." '".$smarty->compile_dir."'";
 	func_header_location("tools.php");
 }

@@ -103,8 +103,7 @@ if ($mode == "update_charset") {
 		"content" => func_get_langvar_by_name("lbl_lng_variable_updated")
 	);
 
-	$smarty->clear_all_cache();
-	$smarty->clear_compiled_tpl();
+	$smarty->clearAllCache();
 
 	func_header_location("languages.php?language=$language&page=$page&filter=".urlencode($filter)."&topic=$topic");
 

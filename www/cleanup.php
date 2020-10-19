@@ -5,8 +5,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . "./init.php";
 
 if (empty($_GET['only_cdn'])) {
 
-    $smarty->clear_all_cache();
-    $smarty->clear_compiled_tpl();
+    $smarty->clearAllCache();
 
     \Xcart\App\Main\Xcart::app()->cache->cleanUp(true, ['html']);
     \Xcart\App\Main\Xcart::app()->template->getRenderer()->clearAllCompiles();
