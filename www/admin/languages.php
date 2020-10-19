@@ -104,6 +104,7 @@ if ($mode == "update_charset") {
 	);
 
 	$smarty->clearAllCache();
+	$smarty->clearCompiledTemplate();
 
 	func_header_location("languages.php?language=$language&page=$page&filter=".urlencode($filter)."&topic=$topic");
 
