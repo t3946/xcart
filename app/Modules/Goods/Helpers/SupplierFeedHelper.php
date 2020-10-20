@@ -676,6 +676,7 @@ class SupplierFeedHelper
         $skippedProductsCount = $params['skippedProductsCount'];
         $duplicate_sku = $params['duplicate_sku'];
         $start_supplier_time = $params['start_supplier_time'];
+        $process_time = $params['process_time'];
 
         $last_update_period = time() - $feed->last_update_time;
         $average_update_period = round(($feed->average_update_period + $last_update_period) / 2, 0);
@@ -689,6 +690,7 @@ class SupplierFeedHelper
             "last_update_items_count" => $feedProductCount,
             'feed_source' => $params['feed_source'],
             'feed_source_date' => $params['feed_source_date'],
+            'process_time' => $params['process_time'],
         ]);
         $feed->save();
 

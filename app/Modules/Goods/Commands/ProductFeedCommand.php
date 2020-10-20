@@ -196,6 +196,7 @@ class ProductFeedCommand extends Command
                 'start_supplier_time' => $start_supplier_time,
                 'feed_source' => $supplierFeed->feed_source,
                 'feed_source_date' => $supplierFeed->feed_source_date,
+                'process_time' => $supplierFeed->process_time,
             ];
 
             Xcart::app()->logger->debug(SupplierFeedHelper::feedStatistic($feed, $params, $supplierFeed->products_in_feed), [], 'feed');

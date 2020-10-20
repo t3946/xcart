@@ -15,6 +15,7 @@ class SupplierFeedStore extends BaseStore
     public $feed_type;
     public $feed_source;
     public $feed_source_date;
+    public $process_time;
     public $products_in_feed = null;
     public $defaults = [];
     public $dont_update_fields = [];
@@ -79,6 +80,7 @@ class SupplierFeedStore extends BaseStore
         $this->create_date = $feed['create_date'];
         $this->feed_type = $feed['feed_type'];
         $this->feed_source = $feed['feed_source'];
+        $this->process_time = $feed['process_time'];
         $this->feed_source_date = $feed['feed_source_date'];
         $this->products_in_feed = $feed['products_in_feed'];
         $this->defaults = $feed['defaults'];

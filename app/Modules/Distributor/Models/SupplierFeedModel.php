@@ -125,6 +125,7 @@ class SupplierFeedModel extends Model
             ],
             'run_force' => [
                 'class' => BooleanField::class,
+                'verboseName' => 'Run force',
             ],
         ];
     }
