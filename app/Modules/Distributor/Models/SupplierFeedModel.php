@@ -12,6 +12,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
@@ -115,6 +116,9 @@ class SupplierFeedModel extends Model
             ],
             'schedule' => [
                 'class' => CharField::class,
+            ],
+            'process_time' => [
+                'class' => IntField::class
             ],
             'run_force' => [
                 'class' => BooleanCharField::class,

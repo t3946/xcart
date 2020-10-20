@@ -48,6 +48,8 @@ class ApiDxController extends Controller
             if (CronExpression::isValidExpression($schedule) &&
                 CronExpression::factory($schedule)->isDue()) {
                 $nextRunning[] = $feed;
+                $feed->run_force = false;
+                $feed->save();
             }
         }
         if ($nextRunning) {
