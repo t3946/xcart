@@ -8,6 +8,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FloatField;
@@ -123,7 +124,7 @@ class SupplierFeedModel extends Model
                 'verboseName' => 'Process time (sec)',
             ],
             'run_force' => [
-                'class' => BooleanCharField::class,
+                'class' => BooleanField::class,
             ],
         ];
     }
