@@ -113,6 +113,9 @@ class SupplierFeedModel extends Model
             'enabled' => [
                 'class' => BooleanCharField::class,
             ],
+            'schedule' => [
+                'class' => CharField::class,
+            ],
             'run_force' => [
                 'class' => BooleanCharField::class,
             ],
