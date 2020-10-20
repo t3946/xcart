@@ -118,7 +118,9 @@ class SupplierFeedModel extends Model
                 'class' => CharField::class,
             ],
             'process_time' => [
-                'class' => IntField::class
+                'class' => IntField::class,
+                'default' => 0,
+                'verboseName' => 'Process time (sec)',
             ],
             'run_force' => [
                 'class' => BooleanCharField::class,
