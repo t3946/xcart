@@ -21,6 +21,7 @@ class FeedForm extends ModelForm
         'feed_source',
         'last_update_time',
         'feed_source_date',
+        'process_time',
     ];
 
     public function getModel()

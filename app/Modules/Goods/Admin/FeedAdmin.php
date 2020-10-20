@@ -29,7 +29,20 @@ class FeedAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['feed_id', 'distributor', 'feed_name', 'feed_type', 'site', 'feed_file_name', 'last_update_time', 'average_update_period', 'schedule', 'last_update_items_count', 'add_new_only', 'enabled'];
+        return [
+            'feed_id',
+            'distributor',
+            'feed_name',
+            'feed_type',
+            'site',
+            'feed_file_name',
+            'last_update_time',
+            'schedule',
+            'process_time',
+            'last_update_items_count',
+            'add_new_only',
+            'enabled'
+        ];
     }
 
     public function getSearchColumns()
@@ -80,6 +93,10 @@ class FeedAdmin extends Admin
             'last_update_items_count' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'Items'
+            ],
+            'process_time' => [
+                'template' => $this->columnDefaultTemplate,
+                'title' => 'Process time'
             ],
             'add_new_only' => [
                 'template' => $this->columnDefaultTemplate,
