@@ -49,6 +49,7 @@
             Unfreeze C2B payment status for order #
 
             <input type="text" name="unfreeze_orderid" value="" size="9"/>
+            <input type="hidden" name="mode" value=""/>
             <br/>
             <input type="button" value="Do it" onclick="javascript: submitForm(this, 'unfreeze_order');"/>
         </form>
