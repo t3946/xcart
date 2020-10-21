@@ -77,7 +77,11 @@ class FeedForm extends ModelForm
                     'fulldescr' => 'Description',
                     'images' => 'Images',
                     'cost_to_us' => 'Cost To Us',
+                    'list_price' => 'List Price',
                     'min_amount' => 'Min Order Amount',
+                    'brand_name' => 'Brand name',
+                    'brand_normalized' => 'Brand normalized',
+                    'r_avail' => 'Avail',
                 ],
                 'selected' => json_decode($feed->dont_update_fields, true),
                 'html' => ['style' => 'width:300px;']
