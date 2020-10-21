@@ -23,6 +23,7 @@ class ApiDxController extends Controller
                     'type' => ($type = $feed->getField('type')) ? $type->toText() : null,
                     'feed_source' => $feed->feed_source,
                     'feed_file_name' => $feed->feed_file_name,
+                    'dont_update_fields' => json_decode($feed->dont_update_fields, true),
                     'md5' => $feed->last_md5,
                     'enabled' => $feed->enabled,
                     'source_date' => $feed->feed_source_date,
