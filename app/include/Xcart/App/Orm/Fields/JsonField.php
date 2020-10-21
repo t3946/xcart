@@ -58,6 +58,8 @@ class JsonField extends TextField
              } else {
                  $value = json_encode($value, $opts);
              }
+         } elseif (is_array($value)) {
+            $value = json_encode($value, $opts);
          }
 
          return parent::convertToDatabaseValue($value, $platform);

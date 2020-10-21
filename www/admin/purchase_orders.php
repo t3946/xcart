@@ -1,6 +1,11 @@
 <?php
 global $xcart_dir;
 
+use Modules\Order\Models\PurchaseOrderModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\Logs;
+use Xcart\POPipeline;
+
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
@@ -51,13 +56,14 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
     } elseif (!empty($purchase_order_enter_submit)) {
-        if (!empty($po_selected) && is_array($po_selected)) {
-            $oPoPipeline = Xcart\POPipeline::model(['po_id' => reset($po_selected)]);
-            $iPoPipe = $oPoPipeline->getPOId();
-            if ($iPoPipe) {
-                $aResult = $oPoPipeline->selectOrderForEntry();
-                if (!empty($aResult)) {
-                    func_header_location($aResult['frontend_url']);
+        if (!empty($po_selected)) {
+            if ($pop = PurchaseOrderModel::objects()->get(['po_id' => $po_selected])) {
+                Logs::_log('purchase_orders', $pop->po_id, Logs::LOG_TYPE_CLIENT,
+                    sprintf(POPipeline::PO_HAS_BEEN_SELECTED, "{$pop->PO_number} ({$pop->original_po_file})"));
+                if ($site = SiteModel::objects()->get(['storefrontid' => $purchase_order_storefront[$po_selected]])) {
+                    $pop->storefront_id = $site->storefrontid;
+                    $pop->save();
+                    \Xcart\App\Main\Xcart::app()->request->redirect($site->getAbsoluteUrl()."/?purchase_order_selected=" . $pop->po_id);
                 }
             }
         }

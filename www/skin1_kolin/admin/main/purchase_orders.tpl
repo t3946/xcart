@@ -125,7 +125,7 @@
                                 </select
                             </td>
                             <td align="center" nowrap="nowrap">{$oPendingOrder->getReceivedByName()}</td>
-                            <td align="center"><input autocomplete="off" name="po_selected[]" type="radio" value="{$oPendingOrder->getPOId()}"/></td>
+                            <td align="center"><input autocomplete="off" name="po_selected" type="radio" value="{$oPendingOrder->getPOId()}"/></td>
                         </tr>
                     {/foreach}
                 {/if}

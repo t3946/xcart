@@ -14,6 +14,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
@@ -72,6 +73,12 @@ class SupplierFeedModel extends Model
                 'default' => null,
                 'verboseName' => 'Base category',
             ],
+            'dont_update_fields' => [
+                'class' => JsonField::class,
+                'default' => [],
+                'null' => true,
+                'verboseName' => "Don't update fields",
+            ],
             'feed_type' => [
                 'class' => CharField::class,
                 'choices' => [
@@ -98,11 +105,6 @@ class SupplierFeedModel extends Model
                 'class' => UnixTimestampField::class,
                 'default' => 0
             ],
-            'add_new_only' => [
-                'class' => BooleanCharField::class,
-                'default' => false,
-                'verboseName' => 'Add new only',
-            ],
             'threshold' => [
                 'class' => FloatField::class,
                 'default' => 0.8,
@@ -110,10 +112,6 @@ class SupplierFeedModel extends Model
             ],
             'feed_source_date' => [
                 'class' => DateTimeField::class,
-            ],
-
-            'enabled' => [
-                'class' => BooleanCharField::class,
             ],
             'schedule' => [
                 'class' => CharField::class,
@@ -125,7 +123,17 @@ class SupplierFeedModel extends Model
             ],
             'run_force' => [
                 'class' => BooleanField::class,
+                'default' => false,
                 'verboseName' => 'Run force',
+            ],
+            'add_new_only' => [
+                'class' => BooleanCharField::class,
+                'default' => false,
+                'verboseName' => 'Add new only',
+            ],
+            'enabled' => [
+                'class' => BooleanCharField::class,
+                'default' => false,
             ],
         ];
     }

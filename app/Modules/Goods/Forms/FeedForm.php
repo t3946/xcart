@@ -8,6 +8,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Admin\FeedAdmin;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\NumberField;
@@ -65,7 +66,20 @@ class FeedForm extends ModelForm
                 'class' => Select2Field::class,
                 'ajaxUrl' => (new FeedAdmin)->getSuggestionUrl('category'),
                 'choices' => $choices ?? [],
-                //'selected' => $choices ?? [],
+                'html' => ['style' => 'width:300px;']
+            ],
+            'dont_update_fields' => [
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'choices' => [
+                    'productcode' => 'SKU',
+                    'product' => 'Product Name',
+                    'fulldescr' => 'Description',
+                    'images' => 'Images',
+                    'cost_to_us' => 'Cost To Us',
+                    'min_amount' => 'Min Order Amount',
+                ],
+                'selected' => json_decode($feed->dont_update_fields, true),
                 'html' => ['style' => 'width:300px;']
             ],
             'feed_file_name' => [
@@ -79,7 +93,7 @@ class FeedForm extends ModelForm
             'schedule' => [
                 'class' => CharField::class,
                 'html' => ['style' => 'width:200px;']
-            ]
+            ],
         ];
     }
 
