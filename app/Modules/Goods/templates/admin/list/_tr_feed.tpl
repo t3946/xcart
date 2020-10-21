@@ -1,8 +1,8 @@
 <tr data-pk="{$pk}"
         {if $item->enabled}
-            {if intval($item->last_update_late) == 0}style="background-color:#00ff00;"
-                {elseif intval($item->last_update_late) == 1}style="background-color:#fbef7e;"
-                {elseif $item->last_update_late >= 2}style="background-color:#ff0000;"
+            {if intval($item->last_update_late) == 0}style="background-color:#beffbe;"
+                {elseif intval($item->last_update_late) == 1}style="background-color:#fff7b0;"
+                {elseif $item->last_update_late >= 2}style="background-color:#ffd6d6;"
             {/if}
         {/if}>
     <td class="checker">

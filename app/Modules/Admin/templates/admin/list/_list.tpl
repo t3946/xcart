@@ -12,7 +12,7 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
-            <table data-list-table {if $admin->sort}data-sorting{/if}>
+            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap;font-family: monospace;">
                 <thead>
                     {var $cols = 0}
 

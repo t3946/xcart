@@ -36,9 +36,9 @@ class FeedAdmin extends Admin
             'feed_type',
             'site',
             'feed_file_name',
+            'process_time',
             'last_update_time',
             'schedule',
-            'process_time',
             'last_update_items_count',
             'add_new_only',
             'enabled'
@@ -96,7 +96,8 @@ class FeedAdmin extends Admin
             ],
             'process_time' => [
                 'template' => $this->columnDefaultTemplate,
-                'title' => 'Process time'
+                'title' => 'Process time',
+                'order' => 'process_time',
             ],
             'add_new_only' => [
                 'template' => $this->columnDefaultTemplate,
