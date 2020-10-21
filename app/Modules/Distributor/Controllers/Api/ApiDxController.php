@@ -11,14 +11,17 @@ use Xcart\App\Controller\Controller;
 
 class ApiDxController extends Controller
 {
-    public function getDxInfo($code): void
+    public function getDxInfo($code, $sfId = null): void
     {
         /** @var DistributorModel $dx */
         /** @var SupplierFeedModel $feed */
 
         if ($dx = DistributorModel::objects()->get(['code' => $code])) {
             $feedData = [];
-            foreach ($dx->feeds as $feed) {
+            if ($sfId !== null) {
+                $filter = ['storefront_id' => $sfId];
+            }
+            foreach ($dx->feeds->filter($filter ?? []) as $feed) {
                 $feedData[$feed->storefront_id] = [
                     'type' => ($type = $feed->getField('type')) ? $type->toText() : null,
                     'feed_source' => $feed->feed_source,

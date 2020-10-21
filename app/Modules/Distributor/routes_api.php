@@ -10,8 +10,14 @@ return [
         'name' => 'dx_schedule'
     ],
     [
+        'route' => 'dx/{slug:code}/{i:sfId}',
+        'target' => [ApiDxController::class, 'getDxInfo'],
+        'name' => 'dx_sf_info'
+    ],
+    [
         'route' => 'dx/{slug:code}',
         'target' => [ApiDxController::class, 'getDxInfo'],
         'name' => 'dx_info'
     ],
+
 ];
