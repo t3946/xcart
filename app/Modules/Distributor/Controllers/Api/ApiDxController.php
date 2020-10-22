@@ -99,8 +99,8 @@ class ApiDxController extends Controller
         $start->setTime($h, $m);
 
         if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
-            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $offset = 32401;
+            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static function ($id) use($feeds) {
                 $dx = $feeds[$id]->distributor;
                 $code = str_replace('-', '_', $dx->code);
