@@ -72,19 +72,6 @@ class ApiDxController extends Controller
         }
     }
 
-    private function printer( int $end_circle_time, array $feeds, array $schedule )
-    {
-        $scale = 0.001;
-        echo '|' . str_repeat( ' ', $end_circle_time * $scale ) . '|' . PHP_EOL;
-        foreach ( $schedule as $i => $time ) {
-            $head = str_repeat( ' ', $schedule[ $i ] * $scale );
-            $count = ($end_circle_time - $feeds[ $i ] - $schedule[ $i ]) * $scale;
-
-            $tail = str_repeat( ' ', $count >= 0 ? $count : 0 );
-            echo '|' . $head . str_repeat( '_', $feeds[ $i ] ) . $tail . '|' . PHP_EOL;
-        }
-    }
-
     public function scheduleDynamic(): void
     {
         $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
@@ -99,15 +86,12 @@ class ApiDxController extends Controller
         $start->setTime($h, $m);
 
         if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
-            $offset = 32401;
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static function ($id) use($feeds) {
                 $dx = $feeds[$id]->distributor;
                 $code = str_replace('-', '_', $dx->code);
                 return $dx->feeds->count() === 1 ? $code : "{$code}__{$feeds[$id]->storefront_id}";
             }, $idsToLaunch);
-            //print_r($schedule);
-            //$this->printer( self::TIME_FRAME_SEC, $times, $schedule );
             $this->jsonResponse($nextRunning);
         }
     }
