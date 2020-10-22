@@ -36,7 +36,6 @@ class ApiDxController extends Controller
                     'md5' => $feed->last_md5,
                     'enabled' => $feed->enabled,
                     'source_date' => $feed->feed_source_date,
-                    'schedule' => $feed->schedule
                 ];
             }
             $this->jsonResponse([
