@@ -83,7 +83,7 @@ class FeedForm extends ModelForm
                     'brand_normalized' => 'Brand normalized',
                     'r_avail' => 'Avail',
                 ],
-                'selected' => json_decode($feed->dont_update_fields, true),
+                'selected' => $feed->dont_update_fields,
                 'html' => ['style' => 'width:300px;']
             ],
             'feed_file_name' => [
