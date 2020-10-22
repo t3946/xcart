@@ -74,7 +74,7 @@ class ApiDxController extends Controller
 
     private function printer( int $end_circle_time, array $feeds, array $schedule )
     {
-        $scale = 0.01;
+        $scale = 0.001;
         echo '|' . str_repeat( ' ', $end_circle_time * $scale ) . '|' . PHP_EOL;
         foreach ( $schedule as $i => $time ) {
             $head = str_repeat( ' ', $schedule[ $i ] * $scale );
