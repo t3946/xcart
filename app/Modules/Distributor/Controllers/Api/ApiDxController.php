@@ -15,6 +15,7 @@ use Xcart\App\Controller\Controller;
 class ApiDxController extends Controller
 {
     private const FEEDS_START_TIME = '23:00';
+    private const TIME_FRAME_SEC = 32400;
 
     public function getDxInfo($code, $sfId = null): void
     {
@@ -71,11 +72,26 @@ class ApiDxController extends Controller
         }
     }
 
-    /*public function scheduleDynamic(): void
+    private function printer( int $end_circle_time, array $feeds, array $schedule )
+    {
+        $scale = 0.01;
+        echo '|' . str_repeat( ' ', $end_circle_time * $scale ) . '|' . PHP_EOL;
+        foreach ( $schedule as $i => $time ) {
+            $head = str_repeat( ' ', $schedule[ $i ] * $scale );
+            $count = ($end_circle_time - $feeds[ $i ] - $schedule[ $i ]) * $scale;
+
+            $tail = str_repeat( ' ', $count >= 0 ? $count : 0 );
+            echo '|' . $head . str_repeat( '_', $feeds[ $i ] ) . $tail . '|' . PHP_EOL;
+        }
+    }
+
+    public function scheduleDynamic(): void
     {
         $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
         $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
-        $schedule = SchedulerHelper::algorithm(32400, $times);
+
+        $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
         $now = new DateTime();
@@ -83,8 +99,14 @@ class ApiDxController extends Controller
         $start->setTime($h, $m);
 
         if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
-            array_filter($schedule, static fn($o) => $o === $offset);
+            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
+            $nextRunning = array_map(static function ($id) use($feeds) {
+                $dx = $feeds[$id]->distributor;
+                $code = str_replace('-', '_', $dx->code);
+                return $dx->feeds->count() === 1 ? $code : "{$code}__{$feeds[$id]->storefront_id}";
+            }, $idsToLaunch);
+            $this->printer( self::TIME_FRAME_SEC, $times, $schedule );
+            //$this->jsonResponse($nextRunning);
         }
-
-    }*/
+    }
 }
