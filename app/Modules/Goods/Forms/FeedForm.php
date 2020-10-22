@@ -94,10 +94,6 @@ class FeedForm extends ModelForm
                 'class' => CharField::class,
                 'html' => ['style' => 'width:100px;']
             ],
-            'schedule' => [
-                'class' => CharField::class,
-                'html' => ['style' => 'width:200px;']
-            ],
         ];
     }
 

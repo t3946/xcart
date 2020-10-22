@@ -113,9 +113,6 @@ class SupplierFeedModel extends Model
             'feed_source_date' => [
                 'class' => DateTimeField::class,
             ],
-            'schedule' => [
-                'class' => CharField::class,
-            ],
             'process_time' => [
                 'class' => IntField::class,
                 'default' => 0,

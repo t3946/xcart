@@ -38,7 +38,6 @@ class FeedAdmin extends Admin
             'feed_file_name',
             'process_time',
             'last_update_time',
-            'schedule',
             'last_update_items_count',
             'add_new_only',
             'enabled'
@@ -85,10 +84,6 @@ class FeedAdmin extends Admin
             'average_update_period' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'Average update time'
-            ],
-            'schedule' => [
-                'template' => $this->columnDefaultTemplate,
-                'title' => 'Schedule'
             ],
             'last_update_items_count' => [
                 'template' => $this->columnDefaultTemplate,
