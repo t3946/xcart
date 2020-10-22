@@ -105,7 +105,8 @@ class ApiDxController extends Controller
                 $code = str_replace('-', '_', $dx->code);
                 return $dx->feeds->count() === 1 ? $code : "{$code}__{$feeds[$id]->storefront_id}";
             }, $idsToLaunch);
-            $this->printer( self::TIME_FRAME_SEC, $times, $schedule );
+            print_r($schedule);
+            //$this->printer( self::TIME_FRAME_SEC, $times, $schedule );
             //$this->jsonResponse($nextRunning);
         }
     }
