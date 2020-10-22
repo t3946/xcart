@@ -79,7 +79,8 @@ class FeedAdmin extends Admin
             ],
             'last_update_time' => [
                 'template' => $this->columnDefaultTemplate,
-                'title' => 'Update time'
+                'title' => 'Update time',
+                'order' => 'last_update_time'
             ],
             'average_update_period' => [
                 'template' => $this->columnDefaultTemplate,
