@@ -5,12 +5,17 @@ namespace Modules\Distributor\Controllers\Api;
 
 
 use Cron\CronExpression;
+use DateInterval;
+use DateTime;
+use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Xcart\App\Controller\Controller;
 
 class ApiDxController extends Controller
 {
+    private const FEEDS_START_TIME = '23:00';
+
     public function getDxInfo($code, $sfId = null): void
     {
         /** @var DistributorModel $dx */
@@ -26,7 +31,7 @@ class ApiDxController extends Controller
                     'type' => ($type = $feed->getField('type')) ? $type->toText() : null,
                     'feed_source' => $feed->feed_source,
                     'feed_file_name' => $feed->feed_file_name,
-                    'dont_update_fields' => json_decode($feed->dont_update_fields, true),
+                    'dont_update_fields' => $feed->dont_update_fields,
                     'md5' => $feed->last_md5,
                     'enabled' => $feed->enabled,
                     'source_date' => $feed->feed_source_date,
@@ -65,4 +70,21 @@ class ApiDxController extends Controller
             $this->jsonResponse($nextRunning);
         }
     }
+
+    /*public function scheduleDynamic(): void
+    {
+        $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
+        $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
+        $schedule = SchedulerHelper::algorithm(32400, $times);
+        [$h, $m] = explode(':', self::FEEDS_START_TIME);
+
+        $now = new DateTime();
+        $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
+        $start->setTime($h, $m);
+
+        if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
+            array_filter($schedule, static fn($o) => $o === $offset);
+        }
+
+    }*/
 }
