@@ -72,10 +72,18 @@ class ApiDxController extends Controller
         }
     }
 
+    private static function getCode($feed)
+    {
+        $dx = $feed->distributor;
+        $code = str_replace('-', '_', $dx->code);
+        return $dx->feeds->count() === 1 ? $code : "{$code}__{$feed->storefront_id}";
+    }
+
     public function scheduleDynamic(): void
     {
         $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
         $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
+        $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
 
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
 
@@ -87,11 +95,12 @@ class ApiDxController extends Controller
 
         if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
-            $nextRunning = array_map(static function ($id) use($feeds) {
-                $dx = $feeds[$id]->distributor;
-                $code = str_replace('-', '_', $dx->code);
-                return $dx->feeds->count() === 1 ? $code : "{$code}__{$feeds[$id]->storefront_id}";
-            }, $idsToLaunch);
+            $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
+            $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
+                $feed->run_force = false;
+                $feed->save();
+                return self::getCode($feed);
+            }, $runForces));
             $this->jsonResponse($nextRunning);
         }
     }
