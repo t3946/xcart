@@ -119,7 +119,7 @@ class ApiDxController extends Controller
         $start->setTime($h, $m);
         $offset = $now->getTimestamp() - $start->getTimestamp();
         echo $offset;
-        var_dump($times);
+        var_dump($schedule);
         if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
