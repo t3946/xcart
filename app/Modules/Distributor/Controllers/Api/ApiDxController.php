@@ -116,6 +116,8 @@ class ApiDxController extends Controller
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
         $now = new DateTime();
+        $now->setTime(23, 0);
+
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
 
