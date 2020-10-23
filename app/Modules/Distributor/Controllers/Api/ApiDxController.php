@@ -103,4 +103,32 @@ class ApiDxController extends Controller
             $this->jsonResponse($nextRunning);
         }
     }
+
+    public function scheduleDynamic2(): void
+    {
+        $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
+        $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
+        $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
+
+        $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+        print_r($schedule);
+
+        [$h, $m] = explode(':', self::FEEDS_START_TIME);
+
+        $now = new DateTime();
+        $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
+        $start->setTime($h, $m);
+
+        if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
+            echo $offset . PHP_EOL;
+            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
+            $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
+            $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
+                $feed->run_force = false;
+                $feed->save();
+                return self::getCode($feed);
+            }, $runForces));
+            //$this->jsonResponse($nextRunning);
+        }
+    }
 }
