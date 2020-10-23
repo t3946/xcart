@@ -120,9 +120,11 @@ class ApiDxController extends Controller
 
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
+        $offset = $now->getTimestamp() - $start->getTimestamp();
+        echo $offset . PHP_EOL;
 
         if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
-            echo $offset . PHP_EOL;
+
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
             $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
