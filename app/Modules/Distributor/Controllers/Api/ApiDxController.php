@@ -85,13 +85,14 @@ class ApiDxController extends Controller
         $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
 
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+        $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
 
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
         $now = new DateTime();
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
-        $offset = $now->getTimestamp() - $start->getTimestamp();
+        $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
         if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
@@ -118,10 +119,8 @@ class ApiDxController extends Controller
         $now = new DateTime();
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
-        $offset = $now->getTimestamp() - $start->getTimestamp();
-        $offset = (int)($offset / 60);
+        $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
         echo $offset;
-        var_dump($schedule);
         if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
