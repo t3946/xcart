@@ -111,6 +111,7 @@ class ApiDxController extends Controller
         $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
 
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+        $schedule = array_map(static fn($sh) => $sh / 60, $schedule);
 
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
@@ -118,6 +119,7 @@ class ApiDxController extends Controller
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
         $offset = $now->getTimestamp() - $start->getTimestamp();
+        $offset /= 60;
         echo $offset;
         var_dump($schedule);
         if ($offset >= 0) {
