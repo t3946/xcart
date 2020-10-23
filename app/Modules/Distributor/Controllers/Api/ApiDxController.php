@@ -80,7 +80,7 @@ class ApiDxController extends Controller
 
     public function scheduleDynamic(): void
     {
-        $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
+        $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])->order(['-process_time'])->all();
         $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
         $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
 
