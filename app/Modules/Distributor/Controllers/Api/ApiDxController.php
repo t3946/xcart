@@ -111,7 +111,6 @@ class ApiDxController extends Controller
         $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
 
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
-        print_r($schedule);
 
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
@@ -123,8 +122,7 @@ class ApiDxController extends Controller
         $offset = $now->getTimestamp() - $start->getTimestamp();
         echo $offset . PHP_EOL;
 
-        if (($offset = $now->getTimestamp() - $start->getTimestamp()) && $offset >= 0) {
-
+        if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
             $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
