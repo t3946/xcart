@@ -14,7 +14,7 @@ use Xcart\App\Controller\Controller;
 
 class ApiDxController extends Controller
 {
-    private const FEEDS_START_TIME = '23:00';
+    private const FEEDS_START_TIME = '00:00';
     private const TIME_FRAME_SEC = 32400;
 
     public function getDxInfo($code, $sfId = null): void
@@ -92,6 +92,34 @@ class ApiDxController extends Controller
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
         $offset = $now->getTimestamp() - $start->getTimestamp();
+        if ($offset >= 0) {
+            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
+            $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
+            $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
+                $feed->run_force = false;
+                $feed->save();
+                return self::getCode($feed);
+            }, $runForces));
+            $this->jsonResponse($nextRunning);
+        }
+    }
+
+    public function scheduleDynamic2(): void
+    {
+        $feeds = SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y'])->order(['-process_time'])->all();
+        $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
+        $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
+
+        $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+
+        [$h, $m] = explode(':', self::FEEDS_START_TIME);
+
+        $now = new DateTime();
+        $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
+        $start->setTime($h, $m);
+        $offset = $now->getTimestamp() - $start->getTimestamp();
+        echo $offset;
+        var_dump($times);
         if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
