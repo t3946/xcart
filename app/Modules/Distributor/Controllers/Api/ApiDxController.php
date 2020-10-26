@@ -12,6 +12,7 @@ use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class ApiDxController extends Controller
 {
@@ -81,21 +82,25 @@ class ApiDxController extends Controller
 
     public function scheduleDynamic(): void
     {
-        $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])->order(['-process_time'])->cache(Cache::CACHE_DAY)->all();
-        $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
-
-        $runForces = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'run_force' => true])->all();
-
-        $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
-        $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
-
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
-
         $now = new DateTime();
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
         $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
+
         if ($offset >= 0) {
+            $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])
+                ->order(['-process_time'])
+                ->cache($start->add(new DateInterval('P1D'))->getTimestamp() - $now->getTimestamp())
+                ->all();
+
+            $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
+
+            $runForces = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'run_force' => true])->all();
+
+            $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
+            $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
+
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
             $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
