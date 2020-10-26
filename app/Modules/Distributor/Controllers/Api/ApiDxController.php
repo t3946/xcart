@@ -114,15 +114,13 @@ class ApiDxController extends Controller
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
         $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
 
-        var_dump($schedule);
-        dd();
-
         [$h, $m] = explode(':', self::FEEDS_START_TIME);
 
         $now = new DateTime();
         $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
         $start->setTime($h, $m);
         $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
+        $offset = 0;
         if ($offset >= 0) {
             $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
             $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
