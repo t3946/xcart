@@ -7,6 +7,7 @@ namespace Modules\Distributor\Controllers\Api;
 use Cron\CronExpression;
 use DateInterval;
 use DateTime;
+use Modules\Core\Helpers\Cache;
 use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
@@ -80,9 +81,10 @@ class ApiDxController extends Controller
 
     public function scheduleDynamic(): void
     {
-        $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])->order(['-process_time'])->all();
+        $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])->order(['-process_time'])->cache(Cache::CACHE_DAY)->all();
         $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
-        $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
+
+        $runForces = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'run_force' => true])->all();
 
         $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
         $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
