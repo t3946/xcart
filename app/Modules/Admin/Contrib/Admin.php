@@ -65,23 +65,12 @@ abstract class Admin
      */
     public function getAvailableListColumns()
     {
-        return [
-            'id' => [
-                'title' => 'ID',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'id'
-            ],
-            '(string)' => [
-                'title' => $this->getItemName(),
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'id'
-            ],
-        ];
+        return [];
     }
 
     public function getListColumns()
     {
-        return ['id', '(string)'];
+        return [];
     }
 
     public function getExcludedColumns()
@@ -290,12 +279,12 @@ abstract class Admin
             }
         }
         foreach ($fields as $name => $field) {
-            if (in_array($name, $excluded) || array_key_exists($name, $config)) {
+            if (in_array($name, $excluded)) {
                 continue;
             }
 
             if (is_array($field)) {
-                $columnConfig = isset($config[$name]) ? $config[$name] : [];
+                $columnConfig = $config[$name] ?? [];
                 if (!isset($columnConfig['title']) && ( isset($field['label']) || isset($field['verboseName']) )) {
                     if (!empty($field['label'])) {
                         $columnConfig['title'] = $field['label'];

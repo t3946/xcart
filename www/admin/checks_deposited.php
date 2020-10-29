@@ -307,7 +307,7 @@ if (isset($_GET['checks_deposited_id'])) {
     $smarty->assign('single_mode', $checks_deposited);
     $smarty->assign('main', 'raw_html');
 
-    $pager = new Pagination( \Modules\Order\Models\CheckDeposited::objects()->order(['-date'])->getQuerySet(), ['pageSize' => 50], new QuerySetDataSource());
+    $pager = new Pagination( \Modules\Order\Models\CheckDepositedModel::objects()->order(['-date'])->getQuerySet(), ['pageSize' => 50], new QuerySetDataSource());
 
     $params = [
         'checks' => $pager->paginate(),

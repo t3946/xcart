@@ -12,16 +12,16 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
-            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap;font-family: monospace;">
+            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap;font-family: monospace; border-collapse: collapse;">
                 <thead>
                     {var $cols = 0}
 
                     <tr class="list-head">
-                        <th class="checker full">
+                        {*<th class="checker full">
                             <input type="checkbox" id="{$id}-check-all" data-checkall-list>
                             <label for="{$id}-check-all" class="alone"></label>
                             {var $cols = $cols+1}
-                        </th>
+                        </th>*}
 
                         {if $admin->sort}
                             <th class="sort full" data-sort-column>
@@ -45,14 +45,14 @@
 
                         {foreach $columns['enabled'] as $column}
                             {var $config = $columns['config'][$column]}
-                            <th class="col full">
+                            <th class="col full" {$config['th']|http_build_query:':'}>
                                 {include 'admin/list/_th.tpl'}
                                 {var $cols = $cols+1}
                             </th>
                         {/foreach}
-
+                        {if $admin->getListItemActions()}
                         <th class="actions col full">
-                            <div class="columns-list-appender">
+                            {*<div class="columns-list-appender">
                                 <a href="#" class="button-appender appender-columns">
                                     <i class="icon-plus"></i>
                                 </a>
@@ -70,10 +70,11 @@
                                         {/foreach}
                                     </ul>
                                 </div>
-                            </div>
+                            </div>*}
 
                             {var $cols = $cols+1}
                         </th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -89,6 +90,7 @@
                     {/foreach}
                 </tbody>
             </table>
+            {if $pagination || $actions}
             <div class="list-footer clearfix">
                 {if $pagination}
                     <div class="list-footer-block v-align right total">
@@ -97,7 +99,7 @@
                         </div>
                     </div>
                 {/if}
-
+                {if $actions}
                 <div class="list-footer-block v-align left group">
                     <div>
                         <div class="checker-wrapper">
@@ -147,7 +149,9 @@
                         {/if}
                     </div>
                 </div>
+                {/if}
             </div>
+            {/if}
 
             {if $pagination}
                 <div class="pagination-block">

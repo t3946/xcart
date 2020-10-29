@@ -14,12 +14,10 @@
 
 <tr data-pk="{$pk}" style="{if $item->is_run} background: linear-gradient(to bottom, #fff 85%, {$color} 100%); ; {/if} {if !$item->active} color: gray;{/if} {if $item->run_force} border-bottom: 2px solid orange; {/if} ">
 
-    <td class="checker">
+    {*<td class="checker">
         <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
         <label for="{$id}-{$pk}-check" class="alone"></label>
-
-
-    </td>
+    </td>*}
 
     {if $admin->sort}
         <td class="sort">

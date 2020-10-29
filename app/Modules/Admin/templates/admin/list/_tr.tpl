@@ -1,10 +1,10 @@
 <tr data-pk="{$pk}">
 
-    <td class="checker">
+    {*<td class="checker">
         <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
         <label for="{$id}-{$pk}-check" class="alone"></label>
     </td>
-
+*}
     {if $admin->sort}
         <td class="sort">
             <a href="#" class="sort-handler {if $canSort}active{else}not-active{/if}">
@@ -31,8 +31,9 @@
             {include $template}
         </td>
     {/foreach}
-
-    <td class="actions">
-        {include $admin->listItemActionsTemplate}
-    </td>
+    {if $admin->getListItemActions()}
+        <td class="actions">
+            {include $admin->listItemActionsTemplate}
+        </td>
+   {/if}
 </tr>
