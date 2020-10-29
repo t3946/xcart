@@ -1,35 +1,36 @@
 {if $supplemental_category_section ne "Y"}
 
-{if ($smarty.get.mode ne "info")}
-{include file="page_title.tpl" title="PRODUCT VERIFICATION"}
-{else}
-{include file="page_title.tpl" title=$lng.lbl_info_pages}
-{/if}
+    {if ($smarty.get.mode ne "info")}
+        {include file="page_title.tpl" title="PRODUCT VERIFICATION"}
+    {else}
+        {include file="page_title.tpl" title=$lng.lbl_info_pages}
+    {/if}
 
-{if ($smarty.get.mode ne "info")}
-{$lng.txt_product_verification_top_text}
-{assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
-<br /><br />
-{else}
-{assign var="capture_dialog_name" value=$lng.lbl_info_pages}
-{/if}
+    {if ($smarty.get.mode ne "info")}
+        {$lng.txt_product_verification_top_text}
+        {assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
+        <br/>
+        <br/>
+    {else}
+        {assign var="capture_dialog_name" value=$lng.lbl_info_pages}
+    {/if}
 
 {else}
-<br /><br />
-{assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
+    <br/>
+    <br/>
+    {assign var="capture_dialog_name" value="PRODUCT VERIFICATION"}
 {/if}
 
 {$pager}
 
 {capture name=dialog}
-	<div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px;">
         {$lng.lbl_product_verification_explanation}
-	</div>
-
+    </div>
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
-        <input id="verified_product_id" type="hidden" value="" />
-        <input id="verified_order_id" type="hidden" value="" />
-        <input id="verified_product_status_id" type="hidden" value="" />
+        <input id="verified_product_id" type="hidden" value=""/>
+        <input id="verified_order_id" type="hidden" value=""/>
+        <input id="verified_product_status_id" type="hidden" value=""/>
         <textarea rows="3" style="width: 100%;" cols="70" name="payment_note" id="notes"></textarea><br>
         <div style="margin-top:10px">
             <input type="button" id="post_message" value="Send">
@@ -37,130 +38,162 @@
         </div>
 
     </div>
-<table cellpadding="3" cellspacing="1" width="100%">
+    <table cellpadding="3" cellspacing="1" width="100%">
 
-<tr class="TableHead">
-	<td width="100">DISTRIBUTOR</td>
-	<td width="60" nowrap="nowrap" align="center">ORDER #</td>
-	<td width="100" align="center">BACK END</td>
-	<td align="center">FRONT END</td>
-	<td width="100" nowrap="nowrap" align="center">DISTR WEBSITE</td>
-	<td width="100" nowrap="nowrap" align="center">LAST VERIF DATE</td>
-	<td width="100" align="center">VERIFIED?</td>
-    <td width="100" align="center">ASIN</td>
-</tr>
+        <tr class="TableHead">
+            <td width="100">DISTRIBUTOR</td>
+            <td width="60" nowrap="nowrap" align="center">ORDER #</td>
+            <td width="100" align="center">BACK END</td>
+            <td align="center">FRONT END</td>
+            <td width="100" nowrap="nowrap" align="center">DISTR WEBSITE</td>
+            <td width="100" nowrap="nowrap" align="center">LAST VERIF DATE</td>
+            <td width="100" align="center">VERIFIED?</td>
+        </tr>
+        {foreach from=$orders item=order key=idxOdrer}
+            {foreach from=$order->detail_models item=detail}
+                {assign var=product value=$detail->product_model}
+                {assign var=dx value=$detail->order_group->manufacturer}
+                {if $product && $dx && $product->verification_statusid != 3}
+                    {assign var=oHTMLShot value=$product->getHTMLShot($order->orderid)}
+                    {assign var=oVerifyDate value=$product->getProductLastVerifyDate()}
+                    <tr{cycle values=', class="TableSubHead"'}>
+                        <td width="1%">
+                            <a style="font-weight: bold;" href="{$dx->getAdminUrl(8)}" target="_blank"> {$dx->code}</a>
+                        </td>
+                        <td nowrap="nowrap"><a target="_blank"
+                                               href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
+                        <td nowrap="nowrap"><a target="_blank"
+                                               href="{$product->getAdminUrl()}">{$product->productcode}</a></td>
+                        <td><a target="_blank" href="{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a>
+                            {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
+                                <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;"
+                                   href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
+                                    <img src="{$ImagesDir}/html-shot.png"/>
+                                </a>
+                            {/if}
+                        </td>
+                        <td nowrap="nowrap"><a target="_blank"
+                                               href="{$product->getDistributorUrl()}">{$product->getMPN()}</a></td>
+                        <td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
+                        <td align="center" {if !$product->verification_statusid}class="bg__red"{/if}>
+                            <select title="{$product->getProductVerificationHistoryLastNote()}"
+                                    data-order-id="{$order->orderid}"
+                                    data-product-verification-id="{$product->productid}"
+                                    class="change_product_verify_status"
+                                    name="product_verify_status" data-prev-val="{$product->verification_statusid}">
+                                {foreach from=$aVerifyStatuses item=aVerifyStatus}
+                                    <option value="{$aVerifyStatus->statusid}" {if $product->verification_statusid == $aVerifyStatus->statusid} selected="selected"{/if}>
+                                        {$aVerifyStatus->name}
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </td>
+                    </tr>
+                {/if}
+            {/foreach}
+        {/foreach}
+
+        {*{foreach from=$aManufacturers name=manufacturerFirst item=aManufacturer key=iManufacturerId}
+            {assign var='showManufacturer' value=true}
+            {foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
+                {foreach from=$oOrderManufacturer->getProducts() item=oProduct name=manufacturerThird}
+                    {if ($oProduct->manufacturerid == $iManufacturerId && ($oProduct->verification_statusid < 3 || $oProduct->amazon_verified != 'Y'))}
+                        {assign var='oManufacturer' value = $oProduct->distributor}
+                        {assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
+                        {assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->orderid)}
+                        <tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->manufacturerid}"{/if}>
+                            <td width="1%">
+                                {if $showManufacturer}
+                                    <a style="font-weight: bold;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
+                                    {assign var='showManufacturer' value=false}
+                                {else}
+                                    <a style="font-weight: bold; display:none;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
+                                {/if}
+                            </td>
+                            <td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getAdminUrl()}">{$oOrderManufacturer->getOrderNumber()}</a></td>
+                            <td nowrap="nowrap"><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->productcode}</a></td>
+                            <td><a target="_blank" href="{$oProduct->getAbsoluteUrl(true)}">{$oProduct->getFrontendName()}</a>
+                                {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
+                                    <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
+                                        <img src="{$ImagesDir}/html-shot.png" />
+                                    </a>
+                                {/if}
+                            </td>
+                            <td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
+                            <td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
+                            <td align="center" {if !$oProduct->verification_statusid}class="bg__red"{/if}>
+                            <select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->orderid}" data-product-verification-id="{$oProduct->productid}"
+                                    class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->verification_statusid}">
+                                {foreach from=$aVerifyStatuses item=aVerifyStatus}
+                                    <option value="{$aVerifyStatus->statusid}"  {if $oProduct->verification_statusid == $aVerifyStatus->statusid} selected="selected"{/if}>
+                                        {$aVerifyStatus->name}
+                                    </option>
+                                {/foreach}
+                            </select>
+                            </td>
+                        </tr>
+                    {/if}
+                {/foreach}
+                {if ($smarty.foreach.manufacturerSecond.last)}
+                    {assign var='showManufacturer' value=true}
+                {/if}
+            {/foreach}
+
+        {foreachelse}
+
+        <tr>
+            <td colspan="10" align="center">No products</td>
+        </tr>
+
+        {/foreach}*}
+
+        <tr id="click_to_back_changes" style="display:none;">
+            <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;"
+                                                                                 onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">View
+                    already verified products</a></td>
+        </tr>
 
 
-{foreach from=$aManufacturers name=manufacturerFirst item=aManufacturer key=iManufacturerId}
-	{assign var='showManufacturer' value=true}
-	{foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
-		{foreach from=$oOrderManufacturer->getProducts() item=oProduct name=manufacturerThird}
-			{if ($oProduct->manufacturerid == $iManufacturerId && ($oProduct->verification_statusid < 3 || $oProduct->amazon_verified != 'Y'))}
-				{assign var='oManufacturer' value = $oProduct->distributor}
-				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
-				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->orderid)}
-				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->manufacturerid}"{/if}>
-					<td width="1%">
-						{if $showManufacturer}
-							<a style="font-weight: bold;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
-							{assign var='showManufacturer' value=false}
-                        {else}
-                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getAdminUrl()}&distributor_section=8" target="_blank"> {$oManufacturer->manufacturer}</a>
-						{/if}
-					</td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getAdminUrl()}">{$oOrderManufacturer->getOrderNumber()}</a></td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->productcode}</a></td>
-					<td><a target="_blank" href="{$oProduct->getAbsoluteUrl(true)}">{$oProduct->getFrontendName()}</a>
-                        {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
-                            <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
-                                <img src="{$ImagesDir}/html-shot.png" />
-                            </a>
-                        {/if}
-                    </td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
-					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
-					<td align="center" {if !$oProduct->verification_statusid}class="bg__red"{/if}>
-					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->orderid}" data-product-verification-id="{$oProduct->productid}"
-                            class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->verification_statusid}">
-						{foreach from=$aVerifyStatuses item=aVerifyStatus}
-							<option value="{$aVerifyStatus->statusid}"  {if $oProduct->verification_statusid == $aVerifyStatus->statusid} selected="selected"{/if}>
-								{$aVerifyStatus->name}
-							</option>
-						{/foreach}
-					</select>
-					</td>
-                    <td align="center" {if $oProduct->amazon_verified != 'Y'}class="bg__red color__white"{/if}>
-                        <a target="_blank" href="/admin/amazon/verification/{$oProduct->productid}/{$oOrderManufacturer->orderid}">
-                            {$oProduct->ASIN|default:'N/A'}
-                        </a>
-                        
-                    </td>
-				</tr>
-			{/if}
-		{/foreach}
-		{if ($smarty.foreach.manufacturerSecond.last)}
-			{assign var='showManufacturer' value=true}
-		{/if}
-	{/foreach}
-
-{foreachelse}
-
-<tr>
-	<td colspan="10" align="center">No products</td>
-</tr>
-
-{/foreach}
-
-
-
-    <tr id="click_to_back_changes" style="display:none;">
-        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
-    </tr>
-
-
-
-</table>
-
-
-
+    </table>
 {/capture}
 {include file="dialog.tpl" title=$capture_dialog_name content=$smarty.capture.dialog extra='width="100%"'}
 
 {literal}
-<script>
+    <script>
 
-    function submitChanges(obj){
-        var product = $('#verified_product_id',obj),
-            order = $('#verified_order_id',obj),
-            status = $('#verified_product_status_id',obj),
-            selectchanged = $('select[data-product-verification-id='+product.val()+']'),
-            rowtohide = selectchanged.parent().parent();
-            rowtohide.css('opacity',0.5);
+        function submitChanges(obj) {
+            var product = $('#verified_product_id', obj),
+                order = $('#verified_order_id', obj),
+                status = $('#verified_product_status_id', obj),
+                selectchanged = $('select[data-product-verification-id=' + product.val() + ']'),
+                rowtohide = selectchanged.closest('tr');
+            rowtohide.css('opacity', 0.5);
             obj.hide();
 
-        $.post('ajax_admin.php',{
-                    product_id : product.val(),
-                    order_id : order.val(),
+            $.post('ajax_admin.php', {
+                    product_id: product.val(),
+                    order_id: order.val(),
                     verify_status_id: status.val(),
-                    note_text: $('textarea',obj).val(),
+                    note_text: $('textarea', obj).val(),
                     ajax_action: 'change_verify_product_status'
                 },
                 function (data) {
+                    console.log(data)
                     if (data) {
                         if (data.result) {
-                            rowtohide.css('opacity',1);
-                            selectchanged.attr("data-prev-val",status.val());
-                            selectchanged.attr("title",$('textarea',obj).val());
-                            /*if (status.val() == 3) {
+                            rowtohide.css('opacity', 1);
+                            selectchanged.attr("data-prev-val", status.val());
+                            selectchanged.attr("title", $('textarea', obj).val());
+                            if (status.val() == 3) {
 
                                 rowtohide.fadeOut('slow', function () {
-                                    if (rowtohide.data('manufacturer-id')){
+                                    if (rowtohide.data('manufacturer-id')) {
                                         var nextrow = rowtohide.next('tr:visible');
                                         if (nextrow.data('manufacturer-id') > 0) {
 
                                         } else {
-                                            nextrow.attr('data-manufacturer-id',rowtohide.data('manufacturer-id'));
-                                            $('td:first-child > a',nextrow).show();
+                                            nextrow.attr('data-manufacturer-id', rowtohide.data('manufacturer-id'));
+                                            $('td:first-child > a', nextrow).show();
                                         }
                                     }
                                     if ($('#click_to_back_changes').next('tr').is(':visible')) {
@@ -169,12 +202,12 @@
 
                                     $('#click_to_back_changes').after(rowtohide);
 
-                                    $('td:first-child > a',rowtohide).show();
+                                    $('td:first-child > a', rowtohide).show();
                                     $('#click_to_back_changes').show();
                                 });
 
-                            }*/
-                            $('textarea',obj).val('');
+                            }
+                            $('textarea', obj).val('');
                             product.val('');
                             status.val('');
 
@@ -184,65 +217,64 @@
                         }
                     }
                 }, 'json');
-    }
+        }
 
-    $( document ).ready(function() {
+        $(document).ready(function () {
 
-        var supervise = {};
-        $('select.change_product_verify_status').each(function() {
-            var id = $(this).data('product-verification-id');
-            if (supervise[id]) {
-                //$(this).parent().parent().remove();
-            }
-            else {
-                supervise[id] = [];
-            }
-            supervise[id].push($(this).data('order-id'));
+            var supervise = {};
+            $('select.change_product_verify_status').each(function () {
+                var id = $(this).data('product-verification-id');
+                if (supervise[id]) {
+                    //$(this).parent().parent().remove();
+                } else {
+                    supervise[id] = [];
+                }
+                supervise[id].push($(this).data('order-id'));
 
+            });
+
+            $.each(supervise, function (key, value) {
+                $('select[data-product-verification-id=' + key + ']:visible').attr('data-order-id', value);
+            });
+
+            $('#send_note_for_product').next('table').find('tr:even').removeClass('TableSubHead');
+            $('#send_note_for_product').next('table').find('tr:odd').addClass('TableSubHead');
+
+            $('.change_product_verify_status').on('change', '', function () {
+                var statusid = $(this).val();
+                $('#verified_product_id').val($(this).data('product-verification-id'));
+                $('#verified_order_id').val($(this).attr('data-order-id'));
+                $('#verified_product_status_id').val(statusid);
+                if (statusid > 0 && statusid < 3) {
+                    var position = $(this).offset(),
+                        note_form = $('#send_note_for_product'),
+                        textarea = note_form.find('textarea');
+                    note_form.css('left', position.left - 342).css('top', position.top);
+
+                    if (statusid == 1)
+                        textarea.attr('placeholder', "Please describe the problem and explain why you didn't fix it.");
+                    if (statusid == 2)
+                        textarea.attr('placeholder', "Please describe what was the problem and how did you fix it.");
+                    note_form.show();
+                    textarea.focus();
+                } else {
+                    submitChanges($('#send_note_for_product'));
+                }
+
+            });
+            $('#cancel_message_button').on('click', '', function () {
+                var divform = $(this).parents('#send_note_for_product'),
+                    productid = $('#verified_product_id', divform).val(),
+                    curselect = $('select[data-product-verification-id=' + productid + ']'),
+                    prevval = curselect.data('prev-val');
+                curselect.val(prevval);
+                divform.find('textarea').val('');
+                divform.hide();
+            });
+
+            $('#post_message').on('click', '', function () {
+                submitChanges($(this).parents('#send_note_for_product'))
+            })
         });
-
-        $.each( supervise, function( key, value ) {
-            $('select[data-product-verification-id='+key+']:visible').attr('data-order-id',value);
-        });
-
-        $('#send_note_for_product').next('table').find('tr:even').removeClass('TableSubHead');
-        $('#send_note_for_product').next('table').find('tr:odd').addClass('TableSubHead');
-
-        $('.change_product_verify_status').on('change','', function () {
-            var statusid = $(this).val();
-            $('#verified_product_id').val($(this).data('product-verification-id'));
-            $('#verified_order_id').val($(this).attr('data-order-id'));
-            $('#verified_product_status_id').val(statusid);
-            if (statusid > 0 && statusid < 3) {
-                var position = $(this).offset(),
-                note_form = $('#send_note_for_product'),
-                textarea = note_form.find('textarea');
-                note_form.css('left', position.left - 342).css('top', position.top);
-
-                if (statusid == 1)
-                    textarea.attr('placeholder',"Please describe the problem and explain why you didn't fix it.");
-                if (statusid == 2)
-                    textarea.attr('placeholder',"Please describe what was the problem and how did you fix it.");
-                note_form.show();
-                textarea.focus();
-            } else {
-                submitChanges($('#send_note_for_product'));
-            }
-
-        });
-        $('#cancel_message_button').on('click','', function() {
-            var divform = $(this).parents('#send_note_for_product'),
-            productid = $('#verified_product_id',divform).val(),
-            curselect = $('select[data-product-verification-id='+productid+']'),
-            prevval = curselect.data('prev-val');
-            curselect.val(prevval);
-            divform.find('textarea').val('');
-            divform.hide();
-        });
-
-        $('#post_message').on('click','', function() {
-            submitChanges($(this).parents('#send_note_for_product'))
-        })
-    });
-</script>
+    </script>
 {/literal}
