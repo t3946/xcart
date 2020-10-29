@@ -12,9 +12,7 @@ $orders = AmazonVerificationHelper::getAmazonVerifyOrders();
 $pager = new Pagination( $orders->getQuerySet(), ['pageSize' => 50], new QuerySetDataSource());
 
 if ($orders = $pager->paginate()) {
-
-    /** @var OrderModel[] $aManufacturers */
-    $aManufacturers = [];
+    /*$aManufacturers = [];
     foreach ($orders as $oOrder) {
         if ($aOrderProducts = $oOrder->getProducts())
         foreach ($aOrderProducts as $oProduct) {
@@ -32,19 +30,19 @@ if ($orders = $pager->paginate()) {
             foreach ($aOrderManufacturerProducts as $oProduct) {
                 if ($oProduct->forsale === 'Y') {
                     if ($oProduct->manufacturerid == $iManufacturerId) {
-                        if (!\in_array($oProduct->productid, $aProducts)) {
+                        if (!in_array($oProduct->productid, $aProducts)) {
                             $aProducts[] = $oProduct->productid;
                         }
                     }
                 }
             }
         }
-    }
+    }*/
 
     $aVerifyStatuses = VerificationStatusModel::objects()->all();
 
     $smarty->assign('aVerifyStatuses',$aVerifyStatuses);
-    $smarty->assign('aManufacturers',$aManufacturers);
+    $smarty->assign('orders',$orders);
     $smarty->assign('pager', $pager);
 
 }

@@ -115,10 +115,10 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $bResult = Product::model(['productid' => $iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
+        $bResult = ProductModel::objects()->get(['productid' => $iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
-                Order::model(['orderid' => $iOrderId])->updateVerificationStatus();
+                OrderModel::objects()->get(['orderid' => $iOrderId])->updateVerificationStatus();
             }
         }
     }
@@ -354,13 +354,13 @@ function enterVerificationArbitrageFull($aParams = [])
             switch ($aArbitrageValues['action']) {
                 case 'action':
                     if (!is_null($sAmazonAsin)) {
-                        continue;
+                        continue 2;
                     }
                     $sExternalVerificationProductsAction = 'arbitrage_confirmation';
                     break;
                 case 'qty':
                     if (!is_null($iAmazonQty) && !is_null($iOurSiteQty)) {
-                        continue;
+                        continue 2;
                     }
                     $sExternalVerificationProductsAction = 'arbitrage_confirmation_qty';
                     break;

@@ -149,7 +149,7 @@ class AmazonVerificationHelper
                         [
                             'vn_status__isnt' => OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED,
                             new QAnd([
-                                'detail_models__product_model__amazon_verified__isnt' => 'Y',
+                                //'detail_models__product_model__amazon_verified__isnt' => 'Y',
                                 'detail_models__product_model__forsale' => 'Y',
                                 'detail_models__product_model__verification_statusid__isnt' => 3,
                             ]),
@@ -158,9 +158,10 @@ class AmazonVerificationHelper
                     'cb_status__in' => [
                         OrderStatusModel::ORDER_STATUS_AUTHORIZED,
                         OrderStatusModel::ORDER_STATUS_QUEUED,
-                    ]
+                    ],
                 ]
-            )->order(['-orderid']);
+            )->group(['orderid'])
+            ->order(['-orderid']);
     }
 
     public static function getNextAmazonProduct()
