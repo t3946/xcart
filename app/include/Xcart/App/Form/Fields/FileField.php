@@ -70,6 +70,15 @@ class FileField extends Field
         }
     }
 
+    public function getCurrentFileName()
+    {
+        if ($value = $this->getValue()) {
+            $a = pathinfo($value);
+            $name = $a['basename'];
+        }
+        return $name ?? '';
+    }
+
     public function getCurrentFileUrl()
     {
         $value = $this->getValue();
