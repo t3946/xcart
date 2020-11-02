@@ -876,7 +876,7 @@ if ($REQUEST_METHOD === 'POST')
             }
         }
 
-        if ($order['paymentid'] == PAYMENT_PURCHASE_ID)
+        if ($oOrder->isPurchaseOrder())
         {
             # Get PO data from order details text
             $data = explode("\n", $order["details"]);
@@ -940,7 +940,8 @@ if ($REQUEST_METHOD === 'POST')
                     $extra->purchase_order = array_merge(
                         $orderDetailsForm->getAttributes(),
                         $purchasingManagerForm->getAttributes(),
-                        $accountsPayableForm->getAttributes()
+                        $accountsPayableForm->getAttributes(),
+                        ['purchase_order_received_status' => \Xcart\App\Main\Xcart::app()->request->post->get('purchase_order_received_status')]
                     );
 
                     $extra->save();

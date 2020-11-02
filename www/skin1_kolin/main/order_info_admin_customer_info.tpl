@@ -214,7 +214,7 @@
                   <td width="24%"><b>Received by:</b></td>
                   <td width="76%">
                       <select name="purchase_order_received_status">
-                        {html_options options=$oPOPipeLine->getRecievedStatuses() selected=$oPOPipeLine->getField('received_by')}
+                        {html_options options=$oPOPipeLine->getRecievedStatuses() selected=$order.po_details.purchase_order_received_status|default:$oPOPipeLine->received_by}
                       </select>
                   </td>
               </tr>
@@ -236,24 +236,24 @@
               {/if}
               <tr>
                   <td width="24%"><b>{$lng.lbl_company_name}:</b></td>
-                  <td width="76%"><input type="text" name="po_company_name" id="po_company_name"
-                                         value="{$order.po_details.company_name|escape}"/></td>
+                  <td width="76%"><input type="text" name="organization_name" id="po_company_name"
+                                         value="{$order.po_details.organization_name|escape}"/></td>
               </tr>
 
               {* --- *}
               <tr>
                   <td><b>Link to original PO:</b></td>
                   <td width="100%" nowrap="nowrap">
-                      <input type="text" name="orig_po" id="orig_po" value="{$order.orig_po|escape}"
-                             style="width: 60%; {if $order.orig_po eq ""}background-color: #F4CCCC;{/if}"/>
+                      <input type="text"
+                             name="orig_po"
+                             id="orig_po"
+                             value="{$order.orig_po|escape}"
+                             style="width: 60%; {if !$order.orig_po && !$oPOPipeLine->getOrderFileLink()}background-color: #F4CCCC;{/if}"/>
                       {if $oPOPipeLine->getPOId()}
-                        <a target="_blank" href="{$oPOPipeLine->getOrderFileLink()}" style="color: #1F08F8;">View original PO</a>
-                      {else}
-                        {if $order.orig_po ne ""}
-                            <a target="_blank" href="{$order.orig_po}" style="color: #1F08F8;">{/if}View original PO{if $order.orig_po ne ""}</a>
-                        {/if}
+                          <a target="_blank" href="{$oPOPipeLine->getOrderFileLink()}" style="color: #1F08F8;">Download</a>
+                      {elseif $order.orig_po}
+                              <a target="_blank" href="{$order.orig_po}" style="color: #1F08F8;">Link</a>
                       {/if}
-
                   </td>
               </tr>
               <tr>

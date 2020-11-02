@@ -360,21 +360,21 @@ function func_select_order($orderid)
     #
     # Assign the display_* vars for displaying in the invoice
     #
-    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] == "Y" && !empty($order["extra"]["tax_info"]["taxed_subtotal"])) {
+    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] === "Y" && !empty($order["extra"]["tax_info"]["taxed_subtotal"])) {
         $order["display_subtotal"] = $order["extra"]["tax_info"]["taxed_subtotal"];
     }
     else {
         $order["display_subtotal"] = $order["subtotal"];
     }
 
-    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] == "Y" && !empty($order["extra"]["tax_info"]["taxed_discounted_subtotal"])) {
+    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] === "Y" && !empty($order["extra"]["tax_info"]["taxed_discounted_subtotal"])) {
         $order["display_discounted_subtotal"] = $order["extra"]["tax_info"]["taxed_discounted_subtotal"];
     }
     else {
         $order["display_discounted_subtotal"] = $order["discounted_subtotal"];
     }
 
-    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] == "Y" && !empty($order["extra"]["tax_info"]["taxed_shipping"])) {
+    if (@$order["extra"]["tax_info"]["display_taxed_order_totals"] === "Y" && !empty($order["extra"]["tax_info"]["taxed_shipping"])) {
         $order["display_shipping_cost"] = $order["extra"]["tax_info"]["taxed_shipping"];
     }
     else {
@@ -390,17 +390,14 @@ function func_select_order($orderid)
     $order["s_statename"]   = func_get_state($order["s_state"], $order["s_country"]);
     $order["s_countryname"] = func_get_country($order["s_country"]);
 
-    if ($config["General"]["use_counties"] == "Y") {
+    if ($config["General"]["use_counties"] === "Y") {
         $order["b_countyname"] = func_get_county($order["b_county"]);
         $order["s_countyname"] = func_get_county($order["s_county"]);
     }
 
-    if ($order["paymentid"] == 2) {
-        # Get PO data from order details text
-        if ($order_extra_data = OrderExtraModel::objects()->get(['order_id' => $order['orderid']])) {
-            $order["po_details"] = $order_extra_data->purchase_order;
-        }
-
+    # Get PO data from order details text
+    if ($order_extra_data = OrderExtraModel::objects()->get(['order_id' => $order['orderid']])) {
+        $order["po_details"] = $order_extra_data->purchase_order;
     }
     return $order;
 }

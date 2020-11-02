@@ -1,21 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 29.05.2018
- * Time: 10:30
- */
 
 namespace Modules\Order\Forms;
 
 
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
-use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\FileField;
-use Xcart\App\Form\Fields\NumberField;
 
 class PurchaseOrderDetailsForm extends FrontendForm
 {

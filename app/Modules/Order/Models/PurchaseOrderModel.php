@@ -17,6 +17,9 @@ use Xcart\App\Orm\Model;
  */
 class PurchaseOrderModel extends Model
 {
+    public const PO_STATUS_ENTERED = 'entered';
+    public const PO_STATUS_UPLOADED = 'uploaded';
+
     use AutoMetaTrait;
 
     public static function tableName()

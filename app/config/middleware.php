@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Core\Middleware\CorsMiddleware;
+use Modules\Order\Middleware\PurchaseOrderMiddleware;
 use Modules\User\Middleware\ExpireHeadersMiddleware;
 use Modules\User\Middleware\ReferrerSearchMiddleware;
 use Modules\User\Middleware\BotsMiddleware;
@@ -34,5 +35,8 @@ return [
     ],
     'DiscountMiddleware' => [
         'class' => UserDiscountMiddleware::class
+    ],
+    'PurchaseOrderMiddleware' => [
+        'class' => PurchaseOrderMiddleware::class
     ],
 ];
