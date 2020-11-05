@@ -942,39 +942,47 @@ HST charged
         <table cellpadding="0" cellspacing="0">
         {if $all_distributor_links.$m_id.distributor_links.$invoice_number}
                 {foreach from=$all_distributor_links.$m_id.distributor_links.$invoice_number item="distributor_link" key=key name="depforeach"}
-
-                <tr id="distributor_link_row_{$m_id}_{$invoice_number}_{$key}">
-                        <td style="padding: 2px 0px;">
-
-Link to distributor invoice&nbsp;<input type="text" size="40" name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][{$key}][link_to_distributor_invoice]" value="{$distributor_link.link_to_distributor_invoice|escape}" />
-
-&nbsp;<a href="javascript: void(0);" onclick="javascript: add_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
-&nbsp;<a href="javascript: void(0);" onclick="javascript: remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_remove_row|escape:'javascript'}" /></a>
-
-&nbsp;&nbsp;<a style="color: #3A3AFF; font-weight: normal;" href='{$distributor_link.link_to_distributor_invoice}' target="_blank">View invoice</a>
-
+                    <tr id="distributor_link_row_{$m_id}_{$invoice_number}_{$key}">
+                        <td style="padding: 2px 0">Link to distributor invoice
+                            <input type="text" size="40"
+                                   name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][{$key}][link_to_distributor_invoice]"
+                                   value="{$distributor_link.link_to_distributor_invoice|escape}"/>&nbsp;
+                            <a href="javascript: void(0);"onclick="javascript: add_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/></a>
+                            &nbsp;<a href="javascript: void(0);"
+                                     onclick="javascript: remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');">
+                                <img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_remove_row|escape:'javascript'}"/></a>
+                            &nbsp;&nbsp;<a style="color: #3A3AFF; font-weight: normal;"
+                                           href='{$distributor_link.link_to_distributor_invoice}' target="_blank">
+                                View invoice
+                            </a>
                         </td>
-                </tr>
-
+                    </tr>
                 {/foreach}
         {else}
-                <tr id="distributor_link_row_{$m_id}_{$invoice_number}_1">
-                        <td style="padding: 2px 0px;">
-                                Link to distributor invoice&nbsp;<input type="text" size="40" name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][1][link_to_distributor_invoice]" value="" />
-&nbsp;<a href="javascript: void(0);" onclick="javascript: add_distributor_link_row(1, '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
-
-                        </td>
-                </tr>
+            <tr id="distributor_link_row_{$m_id}_{$invoice_number}_1">
+                <td style="padding: 2px 0">
+                    Link to distributor invoice
+                    <input type="text" size="40"
+                           name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][1][link_to_distributor_invoice]"
+                           value=""/>
+                    &nbsp;<a href="javascript: void(0);"
+                             onclick="javascript: add_distributor_link_row(1, '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/>
+                    </a>
+                </td>
+            </tr>
         {/if}
+            <tr>
+                <td>
+                Distributor invoice #
+                <input style="margin-left:34px;" type="text" size="40"
+                       name="distributor_invoice_number[{$m_id}][{$invoice_number}]"
+                       value="{$invoice.dx_invoice_number}"/>
+                </td>
+            </tr>
         </table>
 
-
-
-
-
-
 {if $order_manufacturers[$m_id].d_bulk_or_individual_order_payments eq "distributor_may_charge_for_several_orders_at_once"}
-  <table cellpadding="0" cellspacing="0">
+  <table cellpadding="0" cellspacing="0"  style="margin-top: 5px">
   <tr>
   <td>This invoice is a part of the total transaction in the amount of&nbsp;</td>
   <td>

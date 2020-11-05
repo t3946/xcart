@@ -8,6 +8,7 @@ use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderModel;
@@ -883,6 +884,21 @@ if ($REQUEST_METHOD === "POST") {
 
                         unset($current_links_for_diff);
                         unset($new_links_for_diff);
+                    }
+                }
+            }
+        }
+
+        if ($distributor_invoice_number) {
+            foreach ($distributor_invoice_number as $manufacturerid => $invoice_numbers) {
+                foreach ($invoice_numbers as $invoice_number => $invoice_number_value) {
+                    if ($invoiceModel = OrderGroupInvoiceModel::objects()->get([
+                        'orderid' => $orderid,
+                        'manufacturerid' => $manufacturerid,
+                        'invoice_number' => $invoice_number
+                    ])) {
+                        $invoiceModel->dx_invoice_number = $invoice_number_value;
+                        $invoiceModel->save();
                     }
                 }
             }
