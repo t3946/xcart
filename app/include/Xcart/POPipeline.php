@@ -152,6 +152,8 @@ class POPipeline extends Data
             } else {
                 throw new \Exception("PO#$purchase_order_number_upload upload failed");
             }
+        } else {
+            throw new \Exception("PO#$purchase_order_number_upload upload failed. Invalid file type");
         }
         return $this;
     }
