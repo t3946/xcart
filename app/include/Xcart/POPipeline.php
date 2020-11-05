@@ -133,7 +133,7 @@ class POPipeline extends Data
         $aPathInfo = pathinfo($_FILES["purchase_order_file"]['name']);
         $sFileName = $purchase_order_number_upload . '.' . $aPathInfo['extension'];
         $sNewFilePath = $xcart_dir . sprintf(self::PO_FILE_LINK, $sFileName);
-        $allow_extensions = ['pdf'];
+        $allow_extensions = ['pdf', 'jpg', 'png'];
         if (in_array($aPathInfo['extension'], $allow_extensions)) {
             if (move_uploaded_file($_FILES["purchase_order_file"]['tmp_name'], $sNewFilePath)) {
                 $this->setField('PO_number', $purchase_order_number_upload);
