@@ -43,7 +43,7 @@ if ($REQUEST_METHOD == "POST") {
         if (empty($oPoPipeline) || $oPoPipeline->getStatus() == Xcart\POPipeline::PO_STATUS_DROPED || !$oPoPipeline->getPOId()) {
             $top_message["content"] = sprintf(Xcart\POPipeline::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
-            func_header_location("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search#po_upload");
+            \Xcart\App\Main\Xcart::app()->request->redirect("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search#po_upload");
         } else {
             $oOrder = $oPoPipeline->getOrderInstance();
             if (!empty($oOrder)) {
@@ -52,7 +52,7 @@ if ($REQUEST_METHOD == "POST") {
             } else {
                 $top_message["content"] = sprintf(Xcart\POPipeline::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
                 $top_message["type"] = "I";
-                func_header_location("purchase_orders.php#pending_po");
+                \Xcart\App\Main\Xcart::app()->request->redirect("purchase_orders.php#pending_po");
             }
         }
     } elseif (!empty($purchase_order_enter_submit)) {
@@ -69,15 +69,13 @@ if ($REQUEST_METHOD == "POST") {
         }
 
     } elseif (!empty($purchase_order_drop_submit)) {
-        if (!empty($po_selected)) {
-            foreach ($po_selected as $sOrderNumber) {
-                $oPoPipeline = new Xcart\POPipeline(['po_id' => reset($po_selected)]);
-                $pOID = $oPoPipeline->getPOId();
-                if (!empty($pOID)) {
-                    $oPoPipeline->updateOrderStatus(Xcart\POPipeline::PO_STATUS_DROPED);
-                    Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), Xcart\Logs::LOG_TYPE_CLIENT, sprintf(Xcart\POPipeline::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
-                }
-            }
+        if (!empty($po_selected) && $pipe = PurchaseOrderModel::objects()->get(['po_id' => $po_selected])) {
+            $pipe->status = Xcart\POPipeline::PO_STATUS_DROPED;
+            $pipe->save();
+            $pMessage = sprintf(Xcart\POPipeline::PO_HAS_BEEN_DROPPED, $pipe->PO_number . " (" . $pipe->original_po_file . ")");
+            $top_message = ['content' => $pMessage, 'type' => 'I'];
+            Xcart\Logs::_log('purchase_orders', $pipe->po_id, Xcart\Logs::LOG_TYPE_CLIENT, $pMessage);
+            \Xcart\App\Main\Xcart::app()->request->redirect("purchase_orders.php#pending_po");
         }
     }
 
