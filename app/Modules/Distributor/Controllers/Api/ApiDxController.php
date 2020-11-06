@@ -31,7 +31,7 @@ class ApiDxController extends Controller
             }
             foreach ($dx->feeds->filter($filter ?? []) as $feed) {
                 $feedData[$feed->storefront_id] = [
-                    'type' => ($type = $feed->getField('type')) ? $type->toText() : null,
+                    'type' => ($type = $feed->getField('feed_type')) ? $type->toText() : null,
                     'feed_source' => $feed->feed_source,
                     'feed_file_name' => $feed->feed_file_name,
                     'dont_update_fields' => $feed->dont_update_fields,
