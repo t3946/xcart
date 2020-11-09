@@ -559,7 +559,7 @@ to
                           </td>
                           <td width="90" align="center">
                               <a style="position: relative; bottom: 3px; left:22px;"
-                                 href="manufacturers.php?manufacturerid={$distributor->manufacturerid}&distributor_section=11"
+                                 href="{$distributor->getAdminUrl(11)}"
                                  target="_blank">{$distributor->code}
                               </a>
                           </td>
@@ -585,7 +585,7 @@ to
                               {$vo->ref_to_us_total}
                           </td>
                           <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
-                                                           href="manufacturers.php?manufacturerid={$distributor->manufacturerid}&distributor_section=11"
+                                                           href="{$distributor->getAdminUrl(11)}"
                                                            target="_blank">{$distributor->code}</a>
                           </td>
                           <td width="90" align="center">
