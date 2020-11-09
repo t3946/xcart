@@ -3,7 +3,7 @@
 namespace Modules\Distributor\Models;
 
 use DateTime;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Goods\Models\ImageMModel;
@@ -32,7 +32,6 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
@@ -254,6 +253,15 @@ class DistributorModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => 'N'
             ],
+            'd_bulk_or_individual_order_payments' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'distributor_charges_for_each_order_separately' => "distributor charges for each order separately",
+                    'distributor_may_charge_for_several_orders_at_once' => 'distributor may charge for several orders at once',
+                    'distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping' => 'distributor charges for each order twice: one charge for products and one charge for shipping',
+                ],
+                'default' => 'distributor_charges_for_each_order_separately'
+            ],
             'd_questionable_1' => [
                 'class' => BooleanField::class,
                 'default' => false,
@@ -370,14 +378,14 @@ class DistributorModel extends Model
             'country_model' => [
                 'field' => 'm_country',
                 'class' => ForeignField::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => CountryModel::class,
                 'link' => ['m_country' => 'code']
             ],
             'state_model' => [
                 'field' => 'm_state',
                 'class' => ForeignField::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => StateModel::class,
                 'link' => [
                     'm_state' => 'code',
@@ -387,7 +395,7 @@ class DistributorModel extends Model
             'provider_model' => [
                 'field' => 'provider',
                 'class' => ForeignField::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => UserModel::class,
                 'link' => ['provider' => 'login'],
             ],
