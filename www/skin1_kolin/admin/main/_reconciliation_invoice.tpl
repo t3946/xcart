@@ -29,7 +29,7 @@
             {$distributor->code}-C-{$model->memo_number}
         {/if}
         <br/>
-        {if $v.model->dx_invoice_number}
+        {if $model->dx_invoice_number}
             {$model->dx_invoice_number}
         {/if}
     </td>
