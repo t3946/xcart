@@ -318,305 +318,216 @@ to
 
 <table cellpadding="3" cellspacing="1" {* width="100%" *}>
 
-{if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
-<tr class="TableHead">
-<td style="background-color: #D9EAD3;" width="90">TR Date</td>
-<td nowrap="nowrap" style="background-color: #D9EAD3;" width="200">Transaction Description</td>
-<td style="background-color: #D9EAD3;" width="50">Amount</td>
-<td class="bg__yelow" width="90">Action</td>
-<td style="background-color: #F4CCCC;" width="90">Amount</td>
-<td style="background-color: #F4CCCC;" width="90">Distr</td>
-<td style="background-color: #F4CCCC;" width="90">Order #</td>
-<td style="background-color: #F4CCCC;" width="100">Invoice #</td>
-<td style="background-color: #F4CCCC;" width="90">Invoice Date</td>
-{if $tab eq "unreconciled"}
-        <td style="background-color: #D9EAD3;" width="20">Untie</td>
-{/if}
-</tr>
-{/if}
+    {if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
+        <tr class="TableHead">
+            <td nowrap style="background-color: #D9EAD3;" width="90">TR Date</td>
+            <td nowrap style="background-color: #D9EAD3;" width="*">Transaction Description</td>
+            <td style="background-color: #D9EAD3;" width="50">Amount</td>
+            <td class="bg__yelow" width="90">Action</td>
+            <td style="background-color: #F4CCCC;" width="90">Amount</td>
+            <td style="background-color: #F4CCCC;" width="90">Distr</td>
+            <td style="background-color: #F4CCCC;" width="90">Order #</td>
+            <td nowrap style="background-color: #F4CCCC;" width="100">Invoice #<br/>Dx Inv #</td>
+            <td nowrap style="background-color: #F4CCCC;" width="90">Invoice Date</td>
+            {if $tab === "unreconciled"}
+                <td style="background-color: #D9EAD3;" width="20">Untie</td>
+            {/if}
+        </tr>
+    {/if}
 
-{if $reconciliations ne ""}
-{foreach from=$reconciliations item=v key=k}
-    {assign var=distributor value=$v.model->distributor}
-    {assign var=invoices_total value=0}
-    {foreach from=$v.model->invoices->order('invoice_date') item=vo key=ko}
-        {math equation="x-y" x=$invoices_total y=$vo->invoice_total assign="invoices_total"}
-    {/foreach}
-    {foreach from=$v.model->memos->order('memo_date') item=vo key=ko}
-        {math equation="x+y" x=$invoices_total y=$vo->ref_to_us_total assign="invoices_total"}
-    {/foreach}
-
-{if $v.row ne "2"}
-
-<tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-
-<td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
-	{$v.model->date_csv|date_format:'%d-%b-%Y'}
-</td>
-
-<td width="200" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}">
-  {$v.model->getDescriptionBold()}{if $v.transaction_type eq "P"} (PayPal){/if}<br>
-    {if ($v.model->account)}({$v.model->account}){/if}
-  {if $v.model->getLookupLink()}
-      (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.model->getLookupLink()}" target="_blank">lookup Gmail</a>)
-  {/if}
-</td>
-
-<td width="50" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
-   {if $v.model->amount_csv < 0}({/if}{$v.model->amount_csv|abs|price_format}{if $v.model->amount_csv < 0}){/if}
-</td>
-
-<td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
-  {if $tab eq "reconciled" || (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total, 2) != 0) || (!$distributor && $v.model->isExpense()) }
-      <select name="action[{$v.model->id}]">
-      {if $v.model->action != "P"}
-          <option value=""></option>
-      {/if}
-          {if $tab eq "reconciled"}
-              <option value="UR">Unreconcile</option>
-          {else}
-              {if $v.model->action != "D"}
-                  {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action == "R"}
-                      {if $v.model->action == "P"}
-                          <option value="P" selected="selected">Pre-reconciled</option>
-                      {else}
-                          <option value="R" selected="selected">Reconcile</option>
-                      {/if}
-                  {/if}
-              {/if}
-              {if !$distributor && $v.model->isExpense()}
-                  <option value="D"{if $v.model->action eq "D"} selected="selected"{/if}>Drop</option>
-              {/if}
-          {/if}
-      </select>
-
-  {elseif $tab eq "unreconciled"}
-
-	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
-
-	{if round($invoices_total,2) != $v.model->amount_csv && round($invoices_total, 2) !=0}
-		<br />
-		<br />
-		<input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
-	{/if}
-
-  {/if}
-
-</td>
-
-<td {if $tab eq "unreconciled"}colspan="6"{else}colspan="5"{/if} valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}">
-
- <table width="100%" cellpadding="0" cellspacing="0">
-
-
-   {foreach from=$v.model->invoices->order('invoice_date') item=vo key=ko}
-       <tr>
-           <td width="90" align="center" nowrap="nowrap">
-               ({$vo->invoice_total})
-           </td>
-           <td width="90" align="center">
-               <a href="manufacturers.php?manufacturerid={$vo->manufacturerid}&distributor_section=11" target="_blank">{$vo->manufacturer->code}</a></td>
-           <td width="90" align="center">
-               <a href="order.php?orderid={$vo->orderid}" target="_blank">{$vo->order->getOrderNumber()}</a><br/>
-           </td>
-           <td nowrap="nowrap" width="100" align="center">
-               {$vo}
-               <br/>
-           </td>
-           <td width="90" align="center">
-               {assign var=invoice_order value=$vo->order}
-               {math equation="(x-y)/(60*60*24)" x=$v.model->date_csv y=$invoice_order->date assign="date_diff"}
-               {if $date_diff >= 30}
-               <span style="background-color: #F4CCCC;">
-               {/if}
-                   {$vo->invoice_date|date_format:'%d-%b-%Y'}
-               {if $date_diff >= 30}
-               </span>
-               {/if}
-           </td>
-           {if $tab eq "unreconciled"}
-               <td align="center" width="20">
-                   <input type="checkbox"
-                          name="clear_invoices_memos[I_{$v.model->id}_{$vo->invoice_number}_{$vo->manufacturerid}_{$vo->orderid}]"
-                          value="Y"/>
-               </td>
-           {/if}
-       </tr>
-   {/foreach}
-   {foreach from=$v.model->memos->order('memo_date') item=vo key=ko}
-         <tr>
-             <td width="90" align="center" nowrap="nowrap">
-                 {$vo->ref_to_us_total}
-             </td>
-             <td width="90" align="center">
-                 <a href="manufacturers.php?manufacturerid={$vo->manufacturerid}&distributor_section=11" target="_blank">{$vo->manufacturer->code}</a></td>
-             <td width="90" align="center">
-                 <a href="order.php?orderid={$vo->orderid}" target="_blank">{$vo->order->getOrderNumber()}</a><br/>
-             </td>
-             <td nowrap="nowrap" width="100" align="center">
-                 {$vo}
-                 <br/>
-             </td>
-             <td width="90" align="center">
-                 <span style="background-color: #F4CCCC;">
-                     {$vo->memo_date|date_format:'%d-%b-%Y'}
-                 </span>
-             </td>
-
-             {if $tab eq "unreconciled"}
-                 <td align="center" width="20">
-                     <input type="checkbox"
-                            name="clear_invoices_memos[M_{$v.model->id}_{$vo->memo_number}_{$vo->manufacturerid}_{$vo->orderid}]"
-                            value="Y"/>
-                 </td>
-             {/if}
-
-         </tr>
-     {/foreach}
-
-
-   {if round($invoices_total,2) != $v.model->amount_csv && round($invoices_total,2) !=0}
-       {math equation="x-y" x=$v.model->amount_csv y=$invoices_total assign="invoices_diff"}
-   <tr>
-        <td align="center">
-            <span style="color: red;">{if $invoices_diff < 0}({/if}{$invoices_diff|abs|price_format}{if $invoices_diff < 0}){/if} </span>
-        </td>
-        <td {if $tab eq "unreconciled"}colspan="5"{else}colspan="4"{/if}></td>
-   </tr>
-   {/if}
-
- {if round($invoices_total,2) == 0}
-	<tr>
-	<td width="90"></td>
-	<td width="90" align="center">
-
-        {foreach from=$v.model->distributors item=dx}
-	        <a href="{$dx->getAdminUrl()}&distributor_section=11" target="_blank">{$dx->code}</a><br/>
+{if $reconciliations}
+    {foreach from=$reconciliations item=v key=k}
+        {assign var=invoices_total value=0}
+        {assign var=invoices_array value=$v.model->invoices->order('invoice_date')->all()}
+        {assign var=memo_array value=$v.model->memos->order('memo_date')->all()}
+        {assign var=all_array value=array_merge($invoices_array, $memo_array)}
+        {assign var=all_array_cnt value=count($all_array)}
+        {foreach from=$invoices_array item=vo key=ko}
+            {math equation="x-y" x=$invoices_total y=$vo->invoice_total assign="invoices_total"}
         {/foreach}
-	</td>
-	<td width="90"></td>
-	<td width="100"></td>
-	<td width="90"></td>
-	{if $tab eq "unreconciled"}
-	<td width="20"></td>
-	{/if}
-	</tr>
- {/if}
+        {foreach from=$memo_array item=vo key=ko}
+            {math equation="x+y" x=$invoices_total y=$vo->ref_to_us_total assign="invoices_total"}
+        {/foreach}
+        {if $v.row != 2}
+            {cycle values=", class='TableSubHead'" name="cycle_totals" assign=cycle}
+            <tr {$cycle}>
+                {assign var=first_invoice value=array_shift($all_array)}
+                <td rowspan="{if $all_array_cnt}{$all_array_cnt}{else}1{/if}" nowrap valign="{if empty($all_array)}middle{else}top{/if}" align="center">
+                    {$v.model->date_csv|date_format:'%d-%b-%Y'}
+                </td>
+                <td rowspan="{if $all_array_cnt}{$all_array_cnt}{else}1{/if}" valign="{if empty($all_array)}middle{else}top{/if}">
+                    {$v.model->getDescriptionBold()}{if $v.transaction_type eq "P"} (PayPal){/if}<br>
+                    {if ($v.model->account)}({$v.model->account}){/if}
+                    {if $v.model->getLookupLink()}
+                        (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.model->getLookupLink()}" target="_blank">lookup Gmail</a>)
+                    {/if}
+                </td>
+                <td rowspan="{if $all_array_cnt}{$all_array_cnt}{else}1{/if}" valign="{if empty($all_array)}middle{else}top{/if}" align="center">
+                    {if $v.model->amount_csv < 0}({/if}{$v.model->amount_csv|abs|price_format}{if $v.model->amount_csv < 0}){/if}
+                </td>
+                <td rowspan="{if $all_array_cnt}{$all_array_cnt}{else}1{/if}" valign="{if empty($all_array)}middle{else}top{/if}" align="center">
+                  {if $tab eq "reconciled" || (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total, 2) != 0) || (!$distributor && $v.model->isExpense()) }
+                      <select name="action[{$v.model->id}]">
+                      {if $v.model->action != "P"}
+                          <option value=""></option>
+                      {/if}
+                          {if $tab eq "reconciled"}
+                              <option value="UR">Unreconcile</option>
+                          {else}
+                              {if $v.model->action != "D"}
+                                  {if (round($invoices_total,2) == $v.model->amount_csv && round($invoices_total,2) !=0) || $v.model->action == "R"}
+                                      {if $v.model->action == "P"}
+                                          <option value="P" selected="selected">Pre-reconciled</option>
+                                      {else}
+                                          <option value="R" selected="selected">Reconcile</option>
+                                      {/if}
+                                  {/if}
+                              {/if}
+                              {if !$distributor && $v.model->isExpense()}
+                                  <option value="D"{if $v.model->action eq "D"} selected="selected"{/if}>Drop</option>
+                              {/if}
+                          {/if}
+                      </select>
+                  {elseif $tab eq "unreconciled"}
+                    <a href="javascript: void(0);" style="color: blue;" onclick="$('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
+                    {if round($invoices_total,2) != $v.model->amount_csv && round($invoices_total, 2) !=0}
+                        <br />
+                        <br />
+                        <input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
+                    {/if}
+                  {/if}
+                </td>
 
- {if $tab eq "unreconciled"}
-  <tr id="add_orders_section_{$v.id}" style="display: none;">
-	<td colspan="6" align="left">
-	<hr />
-        <input type="hidden" id="row_max_index_{$v.id}" name="row_max_index_{$v.id}" value="1" />
-        <table cellpadding="0" cellspacing="0">
-            <tr id="order_manually_row_{$v.id}_1">
-            <td width="90">{if !empty($v.aManufacturersEntities)}
-                    {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer2}
-                        <input {if $smarty.foreach.radioManufacturer2.first}checked = "checked"{/if} style="margin:0; cursor:pointer;" type="radio" name="manufacturer_selected[{$v.id}]" value="{$oManufacturer->getField('manufacturerid')}">
-                        <a style="position: relative; bottom: 3px;" href="{$oManufacturer->getAdminUrl()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
-                    {/foreach}
-	            {/if}
-	        </td>
-			<td width="70" align="right">Add order #</td>
-            <td width="90" align="center"><input type="text" size="9" name="add_order_manually[{$v.id}][1][orderid]" value="" /></td>
-			<td width="30"><a href="javascript: void(0);" onclick="javascript: add_order_manually_row(1, '{$v.id}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
-            </td>
+                {if $first_invoice}
+                    {include file="admin/main/_reconciliation_invoice.tpl" model=$first_invoice last=empty($all_array)}
+                {else}
+                    <td width="90"></td>
+                    <td width="90" align="center">
+                        {foreach from=$v.model->distributors item=dx}
+                            <a href="{$dx->getAdminUrl(11)}" target="_blank">{$dx->code}</a><br/>
+                        {/foreach}
+                    </td>
+                    <td width="90"></td>
+                    <td width="100"></td>
+                    <td width="90"></td>
+                    {if $tab eq "unreconciled"}
+                        <td width="20"></td>
+                    {/if}
+                {/if}
             </tr>
-        </table>
+           {foreach from=$all_array item=vo key=ko name=invoices}
+               <tr {$cycle}>
+                    {include file="admin/main/_reconciliation_invoice.tpl" model=$vo last=$smarty.foreach.invoices.last}
+               </tr>
+           {/foreach}
 
-	</td>
-  </tr>
- {/if}
-
- </table>
-
-</td>
-
-</tr>
+           {if $tab eq "unreconciled"}
+              <tr id="add_orders_section_{$v.id}" style="display: none;">
+                  <td colspan="4"></td>
+                  <td colspan="6" align="left">
+                      <hr />
+                      <input type="hidden" id="row_max_index_{$v.id}" name="row_max_index_{$v.id}" value="1" />
+                      <table cellpadding="0" cellspacing="0">
+                            <tr id="order_manually_row_{$v.id}_1">
+                                <td width="90">{if !empty($v.aManufacturersEntities)}
+                                        {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer2}
+                                            <input {if $smarty.foreach.radioManufacturer2.first}checked="checked"{/if}
+                                                   style="margin:0; cursor:pointer;" type="radio"
+                                                   name="manufacturer_selected[{$v.id}]"
+                                                   value="{$oManufacturer->getField('manufacturerid')}">
+                                            <a style="position: relative; bottom: 3px;"
+                                               href="{$oManufacturer->getAdminUrl()}&distributor_section=11"
+                                               target="_blank">{$oManufacturer->getField('code')}</a>
+                                            <br/>
+                                        {/foreach}
+                                    {/if}
+                                </td>
+                            <td width="70" align="right">Add order #</td>
+                            <td width="90" align="center"><input type="text" size="9" name="add_order_manually[{$v.id}][1][orderid]" value="" /></td>
+                            <td width="30">
+                                <a href="javascript: void(0);" onclick="add_order_manually_row(1, '{$v.id}');">
+                                    <img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" />
+                                </a>
+                            </td>
+                            </tr>
+                        </table>
+                  </td>
+              </tr>
+         {/if}
+        {/if}
+    {/foreach}
 {/if}
-{/foreach}
-{/if}
 
-{if $tab eq "unreconciled" && $unreconciled_orders ne ""}
+{if $tab === "unreconciled" && $unreconciled_orders}
 	{if $reconciliations ne ""}
 		<tr><td colspan="10"><hr /></td></tr>
 	{/if}
-
- {foreach from=$unreconciled_orders item=v key=k}
+    {foreach from=$unreconciled_orders item=v key=k}
      {assign var=order_model value=$v->order}
      {assign var=distributor value=$v->manufacturer}
-  <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-	<td colspan="4"></td>
-
-      {if $v->invoices->count() || $v->memos->count()}
-          <td colspan="6">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                  {foreach from=$v->invoices item=vo key=ko}
-                      {if $vo->status === 'U'}
-                      <tr>
-                          <td width="90" align="center" nowrap="nowrap">
-                              ({$vo->invoice_total})
-                          </td>
-                          <td width="90" align="center">
-                              <a style="position: relative; bottom: 3px; left:22px;"
-                                 href="{$distributor->getAdminUrl(11)}"
-                                 target="_blank">{$distributor->code}
-                              </a>
-                          </td>
-                          <td width="90" align="center">
-                              <a href="{$order_model->getAdminUrl()}"
-                                 target="_blank">{$order_model->getOrderNumber()}</a><br/>
-                          </td>
-                          <td width="100" align="center">
-                              {$vo}
-                              <br/>
-                          </td>
-                          <td width="90" align="center">
-                              {$vo->invoice_date|date_format:'%d-%b-%Y'}
-                          </td>
-                      </tr>
-                      {/if}
-                  {/foreach}
-
-                  {foreach from=$v->memos item=vo key=ko}
-                      {if $vo->status === 'U'}
-                      <tr>
-                          <td width="90" align="center" nowrap="nowrap">
-                              {$vo->ref_to_us_total}
-                          </td>
-                          <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;"
-                                                           href="{$distributor->getAdminUrl(11)}"
-                                                           target="_blank">{$distributor->code}</a>
-                          </td>
-                          <td width="90" align="center">
-                              <a href="{$order_model->getAdminUrl()}"
-                                 target="_blank">{$order_model->getOrderNumber()}</a><br/>
-                          </td>
-                          <td width="100" align="center">
-                              {$vo}
-                              <br/>
-                          </td>
-                          <td width="90" align="center">
-                              {$vo->memo_date|date_format:'%d-%b-%Y'}
-                          </td>
-                      </tr>
-                      {/if}
-                  {/foreach}
-
-              </table>
-          </td>
-      {else}
-          <td align="center"><B>N/A</B></td>
-          <td align="center">{$distributor->code}</td>
-          <td align="center"><a href="{$order_model->getAdminUrl()}"
-                                target="_blank">{$order_model->getOrderNumber()}</a><br/></td>
-          <td align="center"><B>Not received</B></td>
-          <td align="center">{$order_model->date|date_format:'%d-%b-%Y'}</td>
-      {/if}
-
-	<td></td>
-
-  </tr>
+      <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+        <td colspan="4"></td>
+          {if $v->invoices->count() || $v->memos->count()}
+              {foreach from=$v->invoices item=vo key=ko}
+                  {if $vo->status === 'U'}
+                      <td width="90" align="center" nowrap="nowrap">
+                          ({$vo->invoice_total})
+                      </td>
+                      <td width="90" align="center">
+                          <a href="{$distributor->getAdminUrl(11)}" target="_blank">
+                              {$distributor->code}
+                          </a>
+                      </td>
+                      <td width="90" align="center">
+                          <a href="{$order_model->getAdminUrl()}" target="_blank">
+                              {$order_model->getOrderNumber()}
+                          </a>
+                          <br/>
+                      </td>
+                      <td width="100" align="center">
+                          {$vo->manufacturer->code}-I-{$vo->invoice_number}
+                          <br/>
+                      </td>
+                      <td width="90" align="center">
+                          {$vo->invoice_date|date_format:'%d-%b-%Y'}
+                      </td>
+                  {/if}
+              {/foreach}
+              {foreach from=$v->memos item=vo key=ko}
+                  {if $vo->status === 'U'}
+                      <td width="90" align="center" nowrap="nowrap">
+                          {$vo->ref_to_us_total}
+                      </td>
+                      <td width="90" align="center">
+                          <a href="{$distributor->getAdminUrl(11)}" target="_blank">
+                              {$distributor->code}
+                          </a>
+                      </td>
+                      <td width="90" align="center">
+                          <a href="{$order_model->getAdminUrl()}" target="_blank">
+                              {$order_model->getOrderNumber()}
+                          </a><br/>
+                      </td>
+                      <td width="100" align="center">
+                          {$vo->manufacturer->code}-C-{$vo->memo_number}
+                          <br/>
+                      </td>
+                      <td width="90" align="center">
+                          {$vo->memo_date|date_format:'%d-%b-%Y'}
+                      </td>
+                  {/if}
+              {/foreach}
+          {else}
+              <td align="center"><B>N/A</B></td>
+              <td align="center">{$distributor->code}</td>
+              <td align="center">
+                  <a href="{$order_model->getAdminUrl()}" target="_blank">{$order_model->getOrderNumber()}</a><br/>
+              </td>
+              <td align="center"><B>Not received</B></td>
+              <td align="center">{$order_model->date|date_format:'%d-%b-%Y'}</td>
+          {/if}
+        <td></td>
+      </tr>
  {/foreach}
 {/if}
 

@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -53,6 +54,11 @@ class OrderGroupMemoModel extends Model
                 'class' => DateField::className(),
                 'null' => true
             ],
+            'dx_invoice_number' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ]
         ];
     }
 

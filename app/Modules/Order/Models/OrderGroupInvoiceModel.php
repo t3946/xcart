@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Order\Models;
 
+use DateInterval;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
@@ -31,28 +32,28 @@ class OrderGroupInvoiceModel extends Model
         return [
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
                 'primary' => true,
             ],
             'invoice_number' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'primary' => true,
                 'default' => 0
             ],
             'invoice_date' => [
-                'class' => DateField::className(),
+                'class' => DateField::class,
                 'null' => true
             ],
             'dx_invoice_number' => [
@@ -70,7 +71,7 @@ class OrderGroupInvoiceModel extends Model
 
     public function getPaymentDueDate()
     {
-        $date = $this->getField('invoice_date')->getValue()->add(new \DateInterval("P{$this->manufacturer->d_net_payment_terms_in_days}D"));
+        $date = $this->getField('invoice_date')->getValue()->add(new DateInterval("P{$this->manufacturer->d_net_payment_terms_in_days}D"));
         return $date;
     }
 }
