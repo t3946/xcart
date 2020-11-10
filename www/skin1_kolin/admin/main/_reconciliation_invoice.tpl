@@ -30,7 +30,7 @@
         {/if}
         <br/>
         {if $v.model->dx_invoice_number}
-            {$v.model->dx_invoice_number}
+            {$model->dx_invoice_number}
         {/if}
     </td>
     <td width="90" align="center">
