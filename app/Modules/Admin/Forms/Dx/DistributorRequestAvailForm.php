@@ -34,14 +34,14 @@ class DistributorRequestAvailForm extends DistributorForm
                 'label' => 'Availability must be checked before order is dispatched for fulfillment',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;', 'onchange' => "this.checked ? $('.click_hide').show().closest('tr').show() : $('.click_hide').hide().closest('tr').hide()"],
+                'html' => ['style' =>'width:50px;', 'onchange' => "this.checked ? $('.click_hide').closest('tr').show() : $('.click_hide').closest('tr').hide()"],
             ],
             'd_send_to_email_14' => [
                 'class' => CharField::class,
                 'label' => '\'Send to\' email',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hidden' => !$dx->d_availability_must_be_checked,
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'html' => ['class' => 'click_hide']
             ],
             'd_email_subject_14' => [
@@ -49,7 +49,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'label' => 'Subject line',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hidden' => !$dx->d_availability_must_be_checked,
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'html' => ['class' => 'click_hide']
             ],
             'd_message_body_14' => [
@@ -57,7 +57,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'label' => 'Message body',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hidden' => !$dx->d_availability_must_be_checked,
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'html' => ['class' => 'click_hide']
             ],
             'add_ca_status_id' => [
@@ -74,7 +74,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hidden' => !$dx->d_availability_must_be_checked,
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'html' => ['class' => 'click_hide']
             ],
             'd_sec14_show_header' => [
