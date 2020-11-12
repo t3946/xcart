@@ -121,7 +121,7 @@ SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt, CASE ZE.field_type WHEN 'S' THE
 FROM xcart_zone_element AS ZE
 INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
 INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$oManufacturer->manufacturerid} AND ZE.zoneid = SR.zoneid
-WHERE (ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}') OR (ZE.field_type = 'C' AND ZE.field = '{$cs_country}') 
+WHERE (ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}') OR (ZE.field != 'US' AND ZE.field_type = 'C' AND ZE.field = '{$cs_country}') 
 GROUP BY ZE.zoneid, ZE.field_type 
 UNION
 SELECT zoneid, 999999999, 999999999
