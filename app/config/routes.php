@@ -86,6 +86,11 @@ return array_merge($admin_routes, [
         'namespace' => 'retrieve'
     ],
     [
+        'route' => '/rma',
+        'path' => 'Modules.Order.routes_rma',
+        'namespace' => 'rma'
+    ],
+    [
         'route' => '',
         'path' => 'Modules.Pages.routes',
         'namespace' => 'page'
