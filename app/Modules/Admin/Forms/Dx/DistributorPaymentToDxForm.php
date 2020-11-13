@@ -243,7 +243,7 @@ class DistributorPaymentToDxForm extends DistributorForm
             ],
             'distributor_charges_for_each_order_twice_and_split_invoices' => [
                 'class' => CheckboxField::class,
-                'label' => 'Split invoices (by Cost + Tax and Shipping)',
+                'label' => 'Split invoices as follows: 1) Cost and tax, 2) Shipping',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $this->getInstance()->d_bulk_or_individual_order_payments !== 'distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping',
