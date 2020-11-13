@@ -8,6 +8,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
@@ -40,6 +41,7 @@ class DistributorPaymentToDxForm extends DistributorForm
             ],
             'Reconciliation settings' => [
                 'd_bulk_or_individual_order_payments',
+                'distributor_charges_for_each_order_twice_and_split_invoices',
                 'd_search_keyphrase_for_reconciliation',
                 'hint' => [LanguageModel::translate('help_dx_reconciliation_settings') ?? 'help_dx_reconciliation_settings'],
             ]
@@ -234,7 +236,17 @@ class DistributorPaymentToDxForm extends DistributorForm
                     'distributor_may_charge_for_several_orders_at_once' => 'distributor may charge for several orders at once',
                     'distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping' => 'distributor charges for each order twice: one charge for products and one charge for shipping',
                 ],
+                'html' => ['onchange' => "this.value === 'distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping' 
+                ? $('[id$=distributor_charges_for_each_order_twice_and_split_invoices]').closest('tr').show() 
+                : $('[id$=distributor_charges_for_each_order_twice_and_split_invoices]').closest('tr').hide()"],
                 'hint' => LanguageModel::translate('help_dx_d_bulk_or_individual_order_payments') ?? 'help_dx_d_bulk_or_individual_order_payments',
+            ],
+            'distributor_charges_for_each_order_twice_and_split_invoices' => [
+                'class' => CheckboxField::class,
+                'label' => 'Split invoices (by Cost + Tax and Shipping)',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $this->getInstance()->d_bulk_or_individual_order_payments !== 'distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping',
             ],
             'd_search_keyphrase_for_reconciliation' => [
                 'class' => Select2Field::class,
