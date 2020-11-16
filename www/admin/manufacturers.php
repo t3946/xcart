@@ -58,6 +58,7 @@ $smarty->assign('main', 'manufacturers');
 $smarty->assign('search_site', Xcart::app()->request->get->get('search_site'));
 $smarty->assign('search_vrs', Xcart::app()->request->get->get('search_vrs'));
 $smarty->assign('search', Xcart::app()->request->get->get('search'));
+$smarty->assign('r_search', Xcart::app()->request->get->get('r_search'));
 $smarty->assign('sites', SiteModel::objects()->order(['code']));
 $smarty->assign('vrs', UserModel::objects()->distinct()->filter(['distributors__manufacturerid__isnull' => false])->order(['firstname']));
 if ($distributorModel) {

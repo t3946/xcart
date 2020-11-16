@@ -8,7 +8,7 @@
 <form action="manufacturers.php" method="get" name="search_manufacturer">
 <table cellpadding="3" cellspacing="1" width="100%">
     <tr>
-        <td width="100">
+        <td width="200">
             <b>Dx name</b>
         </td>
         <td>
@@ -16,7 +16,15 @@
         </td>
     </tr>
     <tr>
-        <td width="100">
+        <td width="200">
+            <b>Reconciliation keyphrase</b>
+        </td>
+        <td>
+            <input style="min-width: 290px;" name="r_search" type="text" {if $r_search}value="{$r_search}"{/if}/>
+        </td>
+    </tr>
+    <tr>
+        <td width="200">
             <b>Main SF</b>
         </td>
         <td>
@@ -30,7 +38,7 @@
         </td>
     </tr>
     <tr>
-        <td width="100">
+        <td width="200">
             <b>VRS</b>
         </td>
         <td>

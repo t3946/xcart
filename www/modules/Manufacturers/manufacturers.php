@@ -616,6 +616,10 @@ if ($mode === "add" or !empty($manufacturerid)) {
         $qs->filter(['provider__in' => $search_vrs]);
     }
 
+    if ($r_search = \Xcart\App\Main\Xcart::app()->request->get->get('r_search')) {
+        $qs->filter(['d_search_keyphrase_for_reconciliation__contains' => $r_search]);
+    }
+
     $qs->order(['orderby', 'manufacturer']);
 
     $objects_per_page = $config['Manufacturers']['manufacturers_per_page'];
