@@ -66,9 +66,11 @@ class CleanUrlModel extends Model
         parent::beforeSave($owner, $isNew);
     }
 
-    public function getSlugPart():string
+    public function getSlugPart(): string
     {
-        return end(explode('/', $this->clean_url));
+        $array = explode('/', $this->clean_url);
+        $slug = end($array);
+        return $slug ?: $this->resource_type;
     }
 
     public function urlFromCode($code = null, $absolute = false, SiteModel $site = null):string

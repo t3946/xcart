@@ -195,34 +195,17 @@ class SupplierFeedHelper
         }
 
         if ($is_created) {
-
             $model->source_sfid = $feed->storefront_id;
-
             if ($defaults) {
                 $model->setAttributes(array_merge($data, $defaults));
             }
-
             (new ProductStorefrontModel([
                 'productid' => $model->productid,
                 'sfid' => $feed->storefront_id]))
                 ->save();
-
-            /*(new PricingModel([
-                'productid' => $model->productid,
-                'quantity' => 1,
-                'price' => $model->distributor->calculatePrice($model)]))
-                ->save();*/
-
-
-
             [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'P', 'resource_id' => $model->productid]);
             $url->clean_url = func_clean_url_autogenerate('P', $model->productid, ['product' => $model->getFrontendName(), 'productcode' => $model->productcode]);
             $url->save();
-
-            //func_clean_url_add($clean_url, 'P', $model->productid);
-            //func_build_quick_flags($model->productid);
-            //func_build_quick_prices($model->productid);
-
         }
 
         self::feedImages($model, $feed, $data);
