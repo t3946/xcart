@@ -54,56 +54,58 @@ class PbxAnveoCallModel extends Model
             'id' => AutoField::className(),
 
             'account' => [
-                'class' => ForeignField::className(),
+                'class' => ForeignField::class,
                 'field' => 'anveo_account',
                 'sqlType' => Types::STRING,
-                'modelClass' => PbxOptionsModel::className(),
+                'modelClass' => PbxOptionsModel::class,
                 'link' => [ 'anveo_account' => 'anveo_account'],
             ],
 
             'orders' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => OrderModel::className(),
-                'through' => OrdersCallsModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => OrderModel::class,
+                'through' => OrdersCallsModel::class,
             ],
 
             'bind_calls' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrdersCallsModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrdersCallsModel::class,
                 'link' => ['id' => 'call_id'],
             ],
 
             'options' => [
-                'class' => HasToOneField::className(),
-                'modelClass' => PbxOptionsModel::className(),
+                'class' => HasToOneField::class,
+                'modelClass' => PbxOptionsModel::class,
                 'link' => ['anveo_account' => 'anveo_account'],
             ],
 
             'session' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
             ],
 
             'file' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
 
             'cname' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
-                'default' => null
+                'default' => null,
+                'verboseName' => 'Party Details'
             ],
 
             'e164' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
-                'default' => null
+                'default' => null,
+                'verboseName' => 'Party Tel #'
             ],
 
             'rdnis' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
