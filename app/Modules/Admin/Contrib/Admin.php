@@ -8,11 +8,13 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -40,6 +42,7 @@ abstract class Admin
     public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
     public $updateTemplate = 'admin/update.tpl';
+    public $filterTemplate = 'admin/filter.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
     public $columnDefaultTemplate = 'admin/list/columns/default.tpl';
 
@@ -328,6 +331,11 @@ abstract class Admin
         ];
     }
 
+    public function getFilterForm()
+    {
+        return null;
+    }
+
     public function getSearchColumns()
     {
         return [];
@@ -429,6 +437,30 @@ abstract class Admin
             }
             $filter = [new QOr($orData)];
             $qs = $qs->filter($filter);
+        }
+        return $qs;
+    }
+
+    public function handleFilter($qs)
+    {
+        if ($class = $this->getFilterForm()) {
+            $form = new $class;
+            $form->populate($_GET);
+            foreach ($form->getAttributes() as $key => $value){
+                if ($value) {
+                    $model_field = $this->getModel()->getFieldsInit()[$key];
+                    if ($model_field instanceof ForeignField) {
+                        $from = $model_field->getFrom();
+                        $to = $model_field->getTo();
+                        $qs->filter(["account__{$to}__in" => $value]);
+                    } else
+                        if (is_array($value)) {
+                            $qs->filter(["{$key}__in" => $value]);
+                        } else {
+                            $qs->filter([$key => $value]);
+                        }
+                }
+            }
         }
         return $qs;
     }
@@ -653,6 +685,7 @@ abstract class Admin
 
         $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);
+        $qs = $this->handleFilter($qs);
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
 

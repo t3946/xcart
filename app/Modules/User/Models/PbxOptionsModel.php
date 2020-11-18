@@ -29,34 +29,39 @@ class PbxOptionsModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
 
             'user' => [
-                'class' => HasToOneField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => HasToOneField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['extension' => 'pbx_extension'],
                 'extra' => ['user__usertype__in' => ['A', 'P'], 'user__status' => 'Y']
             ],
 
             'extension' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
 
             'anveo_account' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
 
             'anveo_password' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ]
 
         ];
+    }
+
+    public function __toString()
+    {
+        return (string)$this->user;
     }
 
 

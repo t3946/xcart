@@ -5,6 +5,9 @@
 {/block}
 
 {block 'main_block'}
+    <div class="admin-filter">
+        {include $admin->filterTemplate form=$admin->getFilterForm()}
+    </div>
     <div class="admin-page all-page">
         {include 'admin/list/_list.tpl'}
     </div>

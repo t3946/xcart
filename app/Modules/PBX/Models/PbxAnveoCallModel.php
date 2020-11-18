@@ -2,7 +2,10 @@
 
 namespace Modules\PBX\Models;
 
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Exception;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\PBX\Helpers\AnveoAssignCalls;
@@ -24,8 +27,8 @@ use Xcart\App\Orm\Model;
  * @property (string) $login
  * @property (string) $session
  * @property (string) $anveo_account
- * @property \DateTime $start_at
- * @property \DateTime $end_at
+ * @property DateTime $start_at
+ * @property DateTime $end_at
  * @property (boolean) $is_lost
  * @property (boolean) $is_outgoing
  * @property (boolean) $is_voice_mail
@@ -34,7 +37,7 @@ use Xcart\App\Orm\Model;
  * @property (string) $file
  * @property (string) $cname
  *
- * @property OrderModel[]| $orders
+ * @property OrderModel[] $orders
  * @property PbxOptionsModel|null $options
  *
  * @package Modules\Anveo\Models
@@ -51,7 +54,7 @@ class PbxAnveoCallModel extends Model
     {
         return [
 
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
 
             'account' => [
                 'class' => ForeignField::class,
@@ -111,31 +114,31 @@ class PbxAnveoCallModel extends Model
             ],
 
             'start_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => false,
                 'verboseName' => 'Starting Time'
             ],
 
             'end_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true,
                 'default' => null,
             ],
 
             'is_lost' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
 
             'is_outgoing' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
 
             'is_voice_mail' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
@@ -143,46 +146,47 @@ class PbxAnveoCallModel extends Model
         ];
     }
 
-    public function isIncoming(){
+    public function isIncoming(): bool
+    {
         return !$this->isOutgoing();
     }
 
-    public function isOutgoing(){
+    public function isOutgoing(): bool
+    {
         return $this->is_outgoing;
     }
 
-    public function isLost(){
+    public function isLost(): bool
+    {
         return $this->is_lost;
     }
 
-    public function isVoiceMail(){
+    public function isVoiceMail(): bool
+    {
         return $this->is_voice_mail;
     }
 
-    public function getUrl()
+    public function getUrl(): string
     {
         if (!empty($this->file)) {
             if ($this->isOutgoing()) {
                 $account = AnveoAssignCalls::parseAccount($this->file);
+                return "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
+            }
 
-                return $url = "https://s3.amazonaws.com/anveo-{$account}/{$this->file}";
-            }
-            else {
-                return $url = "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
-            }
+            return "https://s3.amazonaws.com/incoming_business_hours/{$this->file}";
         }
-        else {
-            return '';
-        }
+
+        return '';
     }
 
-    public function getFrontendE164()
+    public function getFrontendE164(): string
     {
         $e164 = "Not defined";
         if ($this->e164){
             $e164 = "+" . $this->e164;
             if (strlen($e164) > 10){
-                $first_section = substr($e164,1,1);
+                $first_section = $e164[1];
                 $second_section = substr($e164, 2, 3);
                 $third_section = substr($e164, 5, 3);
                 $forth_section = substr($e164, 8);
@@ -210,4 +214,12 @@ class PbxAnveoCallModel extends Model
         return $direction;
     }
 
+    /**
+     * @return DateInterval|false
+     * @throws Exception
+     */
+    public function getDuration()
+    {
+        return (new DateTime($this->end_at))->diff(new DateTime($this->start_at));
+    }
 }

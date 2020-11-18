@@ -18,6 +18,10 @@ use Xcart\App\Exceptions\UnknownPropertyException;
 
 trait ClassNames
 {
+    /**
+     * @deprecated use ::class instead
+     * @return false|string
+     */
     public static function className()
     {
         return get_called_class();
