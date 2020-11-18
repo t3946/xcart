@@ -80,7 +80,6 @@ class CallsFilterForm extends BaseForm
                     $filter = [
                         'usertype' => 'A',
                         'status' => 'Y',
-                        //            'login__isnt' => 'sergey2',
                         new Expression("trim(pbx_extension) != '' ")
                     ];
 
