@@ -1,11 +1,6 @@
 <tr data-thread-id="{$item->thread_id}" {if $child}class='child'{/if} style="cursor: pointer;" data-pk="{$pk}"
     onclick="window.open('{$admin->getInfoUrl($pk)|escape}')">
 
-    <td class="checker" style="width: 30px; min-width: 30px; white-space: nowrap">
-        <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
-        <label for="{$id}-{$pk}-check" class="alone"></label>
-    </td>
-
     {foreach $columns['enabled'] as $column}
         {var $config = $columns['config'][$column]}
         {var $template = $config['template']}

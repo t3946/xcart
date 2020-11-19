@@ -299,4 +299,19 @@ class SearchHelper
 
         return "{$str_from} - {$str_now}";
     }
+
+    public static function getDateRange(string $range, string $field): array
+    {
+        $date = explode(' - ', $range);
+
+        $tmp = [];
+        if (isset($date[1])) {
+            $tmp["{$field}__gte"] = strtotime($date[0]);
+            $tmp["{$field}__lte"] = strtotime($date[1]) + 24 * 60 * 60;
+        }
+        else {
+            $tmp["{$field}__gte"] = strtotime($date[0]);
+        }
+        return $tmp;
+    }
 }

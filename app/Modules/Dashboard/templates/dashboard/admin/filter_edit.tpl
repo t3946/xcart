@@ -65,6 +65,9 @@
             {if $model->entity === 'Modules\Forms\Models\EmailModel'}
                 {include 'dashboard/_filter_emails_fields.tpl' full_expanded = true}
             {/if}
+            {if $model->entity === 'Modules\PBX\Models\PbxAnveoCallModel'}
+                {include 'dashboard/_filter_calls_fields.tpl' full_expanded = true}
+            {/if}
 
             {include 'core/form/buttons.tpl'}
         </form>

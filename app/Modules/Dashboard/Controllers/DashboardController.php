@@ -45,16 +45,17 @@ class DashboardController extends PrototypeAdminController
         [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($this->getRequest()->getIsAjax()) {
-            $mIds = array_map(static function($model){ return $model->pk; }, $myModels);
+            $mIds = array_map(static fn($model) => $model->pk, $myModels);
             $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
+                $storage = $model->getSearchStorage();
                 $data['filters'][$model->id] = [
                     'count' => [
-                        'orders' => $model->getSearchStorage()->getCashedCount(),
-                        'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
-                        'events' => (in_array($model->pk, $mIds)) ? $model->getSearchStorage()->getCachedEventsCount() : null,
+                        'orders' => $storage->getCashedCount(),
+                        'priority' => method_exists($storage,'getCachedPriorityShippingCount') ? $storage->getCachedPriorityShippingCount() : null,
+                        'events' => in_array($model->pk, $mIds) && method_exists('getCachedEventsCount', $storage) ? $storage->getCachedEventsCount() : null,
                     ]
                 ];
             }

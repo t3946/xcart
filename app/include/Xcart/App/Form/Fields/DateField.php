@@ -10,22 +10,21 @@ use DateTime;
  */
 class DateField extends CharField
 {
-//    public $type = 'hidden';
-    public bool $range = false;
     public string $format = 'Y-m-d H:i:s';
 
     public function render($fieldExtension = null)
     {
-        $id = $this->getHtmlId();
-        $airOptions = json_encode($this->getAirDPOptions());
+        return parent::render() . $this->getJsCode($this->getHtmlId(), json_encode($this->getAirDPOptions()));
+    }
 
-        $js = "
+    protected function getJsCode($id, $airOptions): string
+    {
+        return "
 <script>
     (function(){ 
         $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) 
     })()
 </script>";
-        return parent::render() . $js;
     }
 
     public function getRenderValue()
@@ -49,8 +48,6 @@ class DateField extends CharField
         return [
             'language' => 'en',
             'position' => 'top left',
-            'range' => $this->range,
-            'multipleDatesSeparator' => ' - '
         ];
     }
 

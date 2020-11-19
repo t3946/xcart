@@ -10,6 +10,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\PBX\Helpers\AnveoAssignCalls;
 use Modules\User\Models\PbxOptionsModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -62,6 +63,14 @@ class PbxAnveoCallModel extends Model
                 'sqlType' => Types::STRING,
                 'modelClass' => PbxOptionsModel::class,
                 'link' => [ 'anveo_account' => 'anveo_account'],
+            ],
+
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'id'],
+                'verboseName' => 'Operator'
             ],
 
             'orders' => [

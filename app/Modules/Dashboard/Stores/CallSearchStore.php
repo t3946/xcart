@@ -2,14 +2,13 @@
 
 namespace Modules\Dashboard\Stores;
 
-use Modules\Forms\Models\EmailModel;
-
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Store\BaseStore;
 
-class EmailSearchStore extends BaseStore
+class CallSearchStore extends BaseStore
 {
-    public const VIEW_TEMPLATE = '/admin/email_all.tpl';
+    public const VIEW_TEMPLATE = '/admin/all.tpl';
 
     /**
      * @param array $data
@@ -36,10 +35,10 @@ class EmailSearchStore extends BaseStore
 
     public static function getManager(): Manager
     {
-        return EmailModel::objects();
+        return PbxAnveoCallModel::objects();
     }
 
-    protected function getCacheCountKey($prefix = 'email_search_store_count_', array $params = [])
+    protected function getCacheCountKey($prefix = 'call_search_store_count_', array $params = [])
     {
         if ($this->model) {
             $id = $this->model::classNameShort() . $this->model->pk;

@@ -444,12 +444,11 @@ abstract class Admin
 
         foreach ($form->getAttributes() as $key => $value) {
             if ($value && $model_field = $this->getModel()->getFieldsInit()[$key]) {
-                if ($model_field instanceof RelatedField) {
-                    foreach ($model_field->getJoin($qs->getQueryBuilder(), $qs->getTableAlias()) as $join) {
-                        [$type, $table, $on, $alias] = $join;
-                        $qs->join($type, $table, $on, $alias);
-                        $key = reset($on);
-                    }
+                if ($model_field instanceof ManyToManyField) {
+                    $key = "{$model_field->getName()}__{$model_field->getRelatedModelPk()}";
+                }
+                if ($model_field instanceof ForeignField) {
+                    $key = "{$model_field->getName()}__{$model_field->getTo()}";
                 }
                 if (is_array($value)) {
                     $qs->filter(["{$key}__in" => $value]);

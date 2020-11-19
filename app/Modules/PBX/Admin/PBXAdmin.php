@@ -4,8 +4,11 @@
 namespace Modules\PBX\Admin;
 
 
+use DateTime;
+use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
+use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Models\PbxAnveoCallModel;
@@ -24,7 +27,7 @@ class PBXAdmin extends Admin
             'e164',
             'cname',
             'direction',
-            'account',
+            'user',
             'start_at',
             'duration',
             'audio',
@@ -66,6 +69,11 @@ class PBXAdmin extends Admin
                 return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
                 return ($url = $item->getUrl()) ? "<a href='{$url}' target='_blank'>Listen</a>" : 'Not defined';
+            case 'user':
+                if ($item->isLost() || $item->isVoiceMail()) {
+                    return '';
+                }
+                break;
         }
 
         return parent::getItemProperty($item, $property);
@@ -132,7 +140,14 @@ class PBXAdmin extends Admin
             $order_field->setValue(substr($order, 3));
         }
 
-        $qs = parent::handleFilter($qs, $form);
+        if (($phone_field = $form->getField('e164')) && $phone = $phone_field->getValue()) {
+            $phone_field->setValue(preg_replace('/\D/', '', $phone));
+        }
+
+        if (($date_field = $form->getField('date_from')) && $date_range = $date_field->getValue()) {
+            $range = SearchHelper::getDateRange($date_range, 'start_at');
+            $qs->filter(array_map(static fn($q) => (new DateTime())->setTimestamp($q), $range));
+        }
 
         $directions = $form->getField('direction')->getValue();
 
@@ -141,32 +156,31 @@ class PBXAdmin extends Admin
             switch ($direction) {
                 case 'in':
                     $or[] = [
-                        'is_outgoing' => false,
-                        'is_lost' => false,
-                        'is_voice_mail' => false
+                        'is_outgoing' => 0,
+                        'is_lost' => 0,
+                        'is_voice_mail' => 0
                     ];
                     break;
                 case 'out':
                     $or[] = [
-                        'is_outgoing' => true,
-                        'is_lost' => false,
-                        'is_voice_mail' => false
+                        'is_outgoing' => 1,
+                        'is_lost' => 0,
+                        'is_voice_mail' => 0
                     ];
                     break;
                 case 'lost':
-                    $or[] = ['is_lost' => true];
+                    $or[] = ['is_lost' => 1];
                     break;
                 case 'vm':
-                    $or[] = ['is_voice_mail' => true];
+                    $or[] = ['is_voice_mail' => 1];
                     break;
             }
         }
         if ($or) {
-            $qs->filter([new QOr($or)]);
+            $qs->filter([new QOr(array_map(static fn($a) => new QAnd($a), $or))]);
         }
 
-        /*echo $qs->getSql();
-        dd();*/
+        $qs = parent::handleFilter($qs, $form);
 
         return $qs;
     }

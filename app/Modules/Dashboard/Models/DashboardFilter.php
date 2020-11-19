@@ -2,10 +2,12 @@
 namespace Modules\Dashboard\Models;
 
 use Mindy\QueryBuilder\Aggregation\Max;
+use Modules\Dashboard\Stores\CallSearchStore;
 use Modules\Dashboard\Stores\EmailSearchStore;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderModel;
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
@@ -110,6 +112,7 @@ class DashboardFilter extends Model
                 'choices' => [
                     OrderModel::class => 'Order',
                     EmailModel::class => 'Email',
+                    PbxAnveoCallModel::class => 'Call',
                 ]
             ],
             'form_data' => [
@@ -158,6 +161,9 @@ class DashboardFilter extends Model
             }
             if ($this->entity === EmailModel::class) {
                 $this->s_store = new EmailSearchStore($sData, empty($form_data) ? $this : null);
+            }
+            if ($this->entity === PbxAnveoCallModel::class) {
+                $this->s_store = new CallSearchStore($sData, empty($form_data) ? $this : null);
             }
         }
 
