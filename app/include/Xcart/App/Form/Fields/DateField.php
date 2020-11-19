@@ -2,6 +2,8 @@
 
 namespace Xcart\App\Form\Fields;
 
+use DateTime;
+
 /**
  * Class DateField
  * @package Mindy\Form
@@ -9,18 +11,20 @@ namespace Xcart\App\Form\Fields;
 class DateField extends CharField
 {
 //    public $type = 'hidden';
-
-    public $format = 'Y-m-d H:i:s';
+    public bool $range = false;
+    public string $format = 'Y-m-d H:i:s';
 
     public function render($fieldExtension = null)
     {
         $id = $this->getHtmlId();
-        $airOptions = $this->getAirDPOptions();
-        $airOptions = json_encode($airOptions);
+        $airOptions = json_encode($this->getAirDPOptions());
 
-        $js = "<script>
-        (function(){ $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) })()
-        </script>";
+        $js = "
+<script>
+    (function(){ 
+        $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) 
+    })()
+</script>";
         return parent::render() . $js;
     }
 
@@ -32,25 +36,25 @@ class DateField extends CharField
     }
 
 
-    public function getJSDate()
+    public function getJSDate(): string
     {
-        if ($this->getValue()) {
-            $date = $this->getDateFromValue();
+        if ($this->getValue() && $date = $this->getDateFromValue()) {
             return "new Date({$date->format('Y')}, {$date->format('m')}-1, {$date->format('d')}, {$date->format('H')}, {$date->format('i')})";
         }
-
-        return;
+        return '';
     }
 
-    public function getAirDPOptions()
+    public function getAirDPOptions(): array
     {
         return [
             'language' => 'en',
             'position' => 'top left',
+            'range' => $this->range,
+            'multipleDatesSeparator' => ' - '
         ];
     }
 
-    public function getDateFromValue():?\DateTime
+    public function getDateFromValue():?DateTime
     {
         $value = $this->getValue();
 
@@ -60,15 +64,15 @@ class DateField extends CharField
         else if (is_int($value)) {
             $time = $value;
         }
-        else if ($value instanceof \DateTime) {
+        else if ($value instanceof DateTime) {
             $date = $value;
         }
 
         if (isset($time)) {
-            $date = new \DateTime();
+            $date = new DateTime();
             $date->setTimestamp($time);
         }
 
-        return $date;
+        return $date ?? null;
     }
 }

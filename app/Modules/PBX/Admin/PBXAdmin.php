@@ -4,15 +4,16 @@
 namespace Modules\PBX\Admin;
 
 
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
 use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Models\PbxAnveoCallModel;
-use Xcart\App\Form\Form;
 use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ModelFieldInterface;
 use Xcart\App\Orm\Model;
+use Xcart\App\Orm\QuerySet;
 
 class PBXAdmin extends Admin
 {
@@ -121,6 +122,53 @@ class PBXAdmin extends Admin
     public function getFilterForm()
     {
         return new CallsFilterForm;
+    }
+
+    public function handleFilter(QuerySet $qs, $form): QuerySet
+    {
+        if (($order_field = $form->getField('orders'))
+            && ($order = $order_field->getValue())
+            && preg_match('/^([a-zA-Z]{2,4}-).++/i', $order)) {
+            $order_field->setValue(substr($order, 3));
+        }
+
+        $qs = parent::handleFilter($qs, $form);
+
+        $directions = $form->getField('direction')->getValue();
+
+        $or = [];
+        foreach ($directions as $direction) {
+            switch ($direction) {
+                case 'in':
+                    $or[] = [
+                        'is_outgoing' => false,
+                        'is_lost' => false,
+                        'is_voice_mail' => false
+                    ];
+                    break;
+                case 'out':
+                    $or[] = [
+                        'is_outgoing' => true,
+                        'is_lost' => false,
+                        'is_voice_mail' => false
+                    ];
+                    break;
+                case 'lost':
+                    $or[] = ['is_lost' => true];
+                    break;
+                case 'vm':
+                    $or[] = ['is_voice_mail' => true];
+                    break;
+            }
+        }
+        if ($or) {
+            $qs->filter([new QOr($or)]);
+        }
+
+        /*echo $qs->getSql();
+        dd();*/
+
+        return $qs;
     }
 
 }

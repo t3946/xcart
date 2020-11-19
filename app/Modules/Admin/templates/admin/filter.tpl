@@ -13,10 +13,20 @@
                     <div class="row" style="margin-top: 15px;">
                         <div class="column">
                             <button name="filter" type="submit" value="filter">Filter</button>
+                            <button id="clear_filter" name="clear" type="submit" value="clear">Clear filter</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
+        <script>
+            (() => {
+                document.getElementById('clear_filter')
+                    .addEventListener('click', e => {
+                        e.preventDefault()
+                        location.href = location.href.split('?')[0]
+                    })
+            })()
+        </script>
     {/smarty_admin_block}
 {/block}

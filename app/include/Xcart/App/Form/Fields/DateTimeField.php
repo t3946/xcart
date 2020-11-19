@@ -10,7 +10,7 @@ class DateTimeField extends DateField
 {
 //    public $type = 'datetime-local';
 
-    public function getAirDPOptions()
+    public function getAirDPOptions(): array
     {
         return array_replace_recursive(parent::getAirDPOptions(), [
             'timepicker' => true,

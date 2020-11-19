@@ -15,6 +15,8 @@ use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -37,7 +39,7 @@ abstract class Admin
     public $allTemplate = 'admin/all.tpl';
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
-    public $listRowTemplate =  'admin/list/_tr.tpl';
+    public $listRowTemplate = 'admin/list/_tr.tpl';
 
     public $infoTemplate = 'admin/info.tpl';
     public $createTemplate = 'admin/create.tpl';
@@ -186,8 +188,7 @@ abstract class Admin
         if (is_array($result) && count($result) == 2 && is_bool($result[0]) && is_string($result[1])) {
             $success = $result[0];
             $message = $result[1];
-        }
-        elseif ($result !== true) {
+        } elseif ($result !== true) {
             $success = false;
             if (is_string($result)) {
                 $message = $result;
@@ -202,8 +203,7 @@ abstract class Admin
                 'message' => $message
             ]);
             Xcart::app()->end();
-        }
-        else {
+        } else {
             $flash->add($message, $success ? 'success' : 'error');
             $request->redirect($this->getAllUrl());
         }
@@ -237,7 +237,7 @@ abstract class Admin
     }
 
 
-    public function getConfig():AdminConfig
+    public function getConfig(): AdminConfig
     {
         if (!$this->admin_config) {
             $this->admin_config = AdminConfig::fetch(static::getModuleName(), static::classNameShort());
@@ -272,8 +272,7 @@ abstract class Admin
             } elseif (is_string($value) && !array_key_exists($value, $config)) {
                 $config[$value] = [];
 
-                if ($field = $this->getModel()->getField($value))
-                {
+                if ($field = $this->getModel()->getField($value)) {
                     $config[$value] = [
                         'title' => $field->getVerboseName(),
                         'template' => $this->columnDefaultTemplate,
@@ -288,11 +287,10 @@ abstract class Admin
 
             if (is_array($field)) {
                 $columnConfig = $config[$name] ?? [];
-                if (!isset($columnConfig['title']) && ( isset($field['label']) || isset($field['verboseName']) )) {
+                if (!isset($columnConfig['title']) && (isset($field['label']) || isset($field['verboseName']))) {
                     if (!empty($field['label'])) {
                         $columnConfig['title'] = $field['label'];
-                    }
-                    elseif (!empty($field['verboseName'])) {
+                    } elseif (!empty($field['verboseName'])) {
                         $columnConfig['title'] = $field['verboseName'];
                     }
                 }
@@ -441,24 +439,22 @@ abstract class Admin
         return $qs;
     }
 
-    public function handleFilter($qs)
+    public function handleFilter(QuerySet $qs, $form): QuerySet
     {
-        if ($class = $this->getFilterForm()) {
-            $form = new $class;
-            $form->populate($_GET);
-            foreach ($form->getAttributes() as $key => $value){
-                if ($value) {
-                    $model_field = $this->getModel()->getFieldsInit()[$key];
-                    if ($model_field instanceof ForeignField) {
-                        $from = $model_field->getFrom();
-                        $to = $model_field->getTo();
-                        $qs->filter(["account__{$to}__in" => $value]);
-                    } else
-                        if (is_array($value)) {
-                            $qs->filter(["{$key}__in" => $value]);
-                        } else {
-                            $qs->filter([$key => $value]);
-                        }
+
+        foreach ($form->getAttributes() as $key => $value) {
+            if ($value && $model_field = $this->getModel()->getFieldsInit()[$key]) {
+                if ($model_field instanceof RelatedField) {
+                    foreach ($model_field->getJoin($qs->getQueryBuilder(), $qs->getTableAlias()) as $join) {
+                        [$type, $table, $on, $alias] = $join;
+                        $qs->join($type, $table, $on, $alias);
+                        $key = reset($on);
+                    }
+                }
+                if (is_array($value)) {
+                    $qs->filter(["{$key}__in" => $value]);
+                } else {
+                    $qs->filter([$key => $value]);
                 }
             }
         }
@@ -489,8 +485,7 @@ abstract class Admin
                 $filter = [new QOr($orData)];
                 $qs = $qs->filter($filter);
             }
-        }
-        else {
+        } else {
             throw new \UnexpectedValueException("Entity: {$entity} not set in suggestion columns");
         }
 
@@ -680,12 +675,18 @@ abstract class Admin
 
     public function all($pk = null)
     {
+        $request = Xcart::app()->request;
+
         $this->setBreadcrumbs();
         $search = $_GET['search'] ?? null;
 
+        if ($request->getIsGet() && $filter_form = $this->getFilterForm()) {
+            $filter_form->populate($_GET, $_FILES);
+        }
+
         $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);
-        $qs = $this->handleFilter($qs);
+        $qs = $this->handleFilter($qs, $filter_form);
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
 
@@ -694,8 +695,8 @@ abstract class Admin
             'pageSizes' => $this->pageSizes
         ], new QuerySetDataSource());
 
-        if (Xcart::app()->request->get->has($pagination->getPageSizeKey())) {
-            $this->getConfig()->page_size = Xcart::app()->request->get->get($pagination->getPageSizeKey());
+        if ($request->get->has($pagination->getPageSizeKey())) {
+            $this->getConfig()->page_size = $request->get->get($pagination->getPageSizeKey());
             $this->getConfig()->save();
         }
 
@@ -706,6 +707,7 @@ abstract class Admin
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
             'canSort' => $this->getCanSort($qs),
+            'filter_form' => $filter_form ?? null,
         ]);
     }
 
@@ -726,8 +728,7 @@ abstract class Admin
 
         if ($qs = $this->handleSuggestion($entity, $search)) {
             $data = [];
-            foreach ($qs->all() as $v)
-            {
+            foreach ($qs->all() as $v) {
                 $data[] = ['id' => $v->pk, 'text' => (string)$v];
             }
 
@@ -810,8 +811,7 @@ abstract class Admin
             if ($parent_id) {
                 $model->parent_id = $parent_id;
             }
-        }
-        else {
+        } else {
             $model = $this->getModelOr404($pk);
             $form = $this->getUpdateForm();
         }
@@ -823,8 +823,8 @@ abstract class Admin
         $this->model = $model;
         $form->setInstance($model);
 
-        if ((string) $model !== '') {
-            $this->setBreadcrumbs((string) $model);
+        if ((string)$model !== '') {
+            $this->setBreadcrumbs((string)$model);
         }
 
         $request = Xcart::app()->request;
@@ -836,23 +836,19 @@ abstract class Admin
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
                     $this->jsonResponse(['state' => 'success']);
-                }
-                else {
+                } else {
                     Xcart::app()->flash->success('Changes have been successfully applied.');
 
                     $next = $_POST['save'] ?? 'save';
                     if ($next === 'save') {
-                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl():$this->getAllUrl());
-                    }
-                    elseif ($next === 'save-stay') {
+                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl() : $this->getAllUrl());
+                    } elseif ($next === 'save-stay') {
                         $request->redirect($this->getUpdateUrl($model->pk));
-                    }
-                    else {
+                    } else {
                         $request->redirect($this->getCreateUrl());
                     }
                 }
-            }
-            else {
+            } else {
                 if (!$request->getIsAjax()) {
                     Xcart::app()->flash->error('Please, fix errors');
                 }
@@ -934,12 +930,11 @@ abstract class Admin
             || $this->innerRender
         ) {
             echo $this->render($view, $params);
-        }
-        else {
+        } else {
             echo $this->renderSmarty("admin/home.tpl", [
                 'single_mode' => true,
-                'main'        => 'raw_html',
-                'content'     =>  $this->render($view, $params),
+                'main' => 'raw_html',
+                'content' => $this->render($view, $params),
             ]);
         }
     }

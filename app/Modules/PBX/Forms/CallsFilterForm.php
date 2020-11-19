@@ -5,6 +5,7 @@ namespace Modules\PBX\Forms;
 use Mindy\QueryBuilder\Expression;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\NumberField;
@@ -22,54 +23,48 @@ class CallsFilterForm extends Form
                 'multiple' => true,
                 'label' => 'Direction',
                 'choices' => [
-                    'extension' => 'Choose type',
                     'in' => 'Inbound',
                     'out' => 'Outbound',
                     'lost' => 'Missed call',
                     'vm' => 'Voicemail',
                 ],
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
 
-            'order' => [
+            'orders' => [
                 'class' => CharField::class,
-                'label' => 'Order',
-                'attributes' => [
-                    'pattern' => '\d+',
-                    'placeholder' => 'Numbers only'
-                ]
+                'label' => 'Order #',
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
             ],
 
             'e164' => [
-                'class' => NumberField::class,
+                'class' => CharField::class,
                 'label' => 'Party Tel #',
-                'attributes' => [
-                    'pattern' => '\d+',
-                    'placeholder' => 'Numbers only'
-                ]
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
             ],
 
             'date_from' => [
-                'class' => DateTimeField::class,
-                'label' => 'Date from',
-                'attributes' => [
-                    'placeholder' => 'mm/dd/YY'
-                ]
+                'class' => DateField::class,
+                'label' => 'Date range',
+                'range' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
             ],
-
-            'date_to' => [
-                'class' => DateTimeField::class,
-                'label' => 'Date to',
-                'attributes' => [
-                    'placeholder' => 'mm/dd/YY'
-                ]
-            ],
-
             'account' => [
                 'class' => Select2Field::class,
                 'label' => 'Operator',
                 'multiple' => true,
-                'choices' => function() {
-
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+                'choices' => function () {
                     $op = [];
                     $filter = [
                         'usertype' => 'A',
@@ -78,10 +73,10 @@ class CallsFilterForm extends Form
                     ];
 
                     $operators = UserModel::objects()
-                                          ->filter($filter)
-                                          ->all();
+                        ->filter($filter)
+                        ->all();
 
-                    foreach ($operators as $operator){
+                    foreach ($operators as $operator) {
                         $op[$operator->id] = $operator->firstname;
                     }
 
