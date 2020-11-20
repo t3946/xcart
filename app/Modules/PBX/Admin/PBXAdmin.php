@@ -5,6 +5,7 @@ namespace Modules\PBX\Admin;
 
 
 use DateTime;
+use Exception;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
@@ -13,6 +14,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ModelFieldInterface;
@@ -54,9 +56,11 @@ class PBXAdmin extends Admin
      * @param Model|PbxAnveoCallModel $item
      * @param $property
      * @return mixed|string|Field|FileField|ModelFieldInterface|Model
+     * @throws Exception
      */
     public function getItemProperty(Model $item, $property)
     {
+        $route = Xcart::app()->router;
         switch ($property) {
             case 'orders':
                 return implode('<br/>', array_unique(array_map(
@@ -69,8 +73,13 @@ class PBXAdmin extends Admin
             case 'duration':
                 return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
-                //return ($url = $item->getUrl()) ? "<a href='{$url}' target='_blank'>Listen</a>" : 'Not defined';
-                return ($url = $item->getUrl()) ? "<audio data-call-id='{$item->id}' style='width: 212px;' controls preload='none' src='{$url}'></audio>" : 'Not defined';
+                return ($url = $item->getUrl())
+                    ? "<audio style='width: 212px;' controls preload='none' src='{$url}' 
+                            onplay=\"fetch('{$route->url('admin_pbx:listen')}', {
+                                method: 'POST',
+                                body: JSON.stringify({'call_id': this.dataset.callId})
+                            })\" data-call-id='{$item->id}'></audio>"
+                    : 'Not defined';
             case 'user':
                 if ($item->isLost() || $item->isVoiceMail()) {
                     return '';

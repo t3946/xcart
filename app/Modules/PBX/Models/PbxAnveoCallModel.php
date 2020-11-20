@@ -56,7 +56,6 @@ class PbxAnveoCallModel extends Model
         return [
 
             'id' => AutoField::class,
-
             'account' => [
                 'class' => ForeignField::class,
                 'field' => 'anveo_account',
@@ -64,7 +63,6 @@ class PbxAnveoCallModel extends Model
                 'modelClass' => PbxOptionsModel::class,
                 'link' => [ 'anveo_account' => 'anveo_account'],
             ],
-
             'user' => [
                 'field' => 'user_id',
                 'class' => ForeignField::class,
@@ -72,86 +70,77 @@ class PbxAnveoCallModel extends Model
                 'link' => ['user_id' => 'id'],
                 'verboseName' => 'Operator'
             ],
-
             'orders' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => OrderModel::class,
                 'through' => OrdersCallsModel::class,
             ],
-
             'bind_calls' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrdersCallsModel::class,
                 'link' => ['id' => 'call_id'],
             ],
-
             'options' => [
                 'class' => HasToOneField::class,
                 'modelClass' => PbxOptionsModel::class,
                 'link' => ['anveo_account' => 'anveo_account'],
             ],
-
             'session' => [
                 'class' => CharField::class,
                 'null' => false,
             ],
-
             'file' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
-
             'cname' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
                 'verboseName' => 'Party Details'
             ],
-
             'e164' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
                 'verboseName' => 'Party Tel #'
             ],
-
             'rdnis' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],
-
             'start_at' => [
                 'class' => DateTimeField::class,
                 'null' => false,
                 'verboseName' => 'Starting Time'
             ],
-
             'end_at' => [
                 'class' => DateTimeField::class,
                 'null' => true,
                 'default' => null,
             ],
-
             'is_lost' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
-
             'is_outgoing' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
-
             'is_voice_mail' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
             ],
-
+            'listens' => [
+                'class' => HasManyField::class,
+                'modelClass' => AnveoListensModel::class,
+                'link' => ['id' => 'call_id']
+            ]
         ];
     }
 
@@ -230,5 +219,10 @@ class PbxAnveoCallModel extends Model
     public function getDuration()
     {
         return (new DateTime($this->end_at))->diff(new DateTime($this->start_at));
+    }
+
+    public function setListened(bool $value): void
+    {
+
     }
 }
