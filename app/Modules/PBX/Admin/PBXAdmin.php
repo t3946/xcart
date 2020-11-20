@@ -11,6 +11,7 @@ use Modules\Admin\Contrib\Admin;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\CallsFilterForm;
+use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\FileField;
@@ -68,7 +69,8 @@ class PBXAdmin extends Admin
             case 'duration':
                 return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
-                return ($url = $item->getUrl()) ? "<a href='{$url}' target='_blank'>Listen</a>" : 'Not defined';
+                //return ($url = $item->getUrl()) ? "<a href='{$url}' target='_blank'>Listen</a>" : 'Not defined';
+                return ($url = $item->getUrl()) ? "<audio style='width: 212px;' controls preload='none' src='{$url}'></audio>" : 'Not defined';
             case 'user':
                 if ($item->isLost() || $item->isVoiceMail()) {
                     return '';
@@ -151,32 +153,7 @@ class PBXAdmin extends Admin
 
         $directions = $form->getField('direction')->getValue();
 
-        $or = [];
-        foreach ($directions as $direction) {
-            switch ($direction) {
-                case 'in':
-                    $or[] = [
-                        'is_outgoing' => 0,
-                        'is_lost' => 0,
-                        'is_voice_mail' => 0
-                    ];
-                    break;
-                case 'out':
-                    $or[] = [
-                        'is_outgoing' => 1,
-                        'is_lost' => 0,
-                        'is_voice_mail' => 0
-                    ];
-                    break;
-                case 'lost':
-                    $or[] = ['is_lost' => 1];
-                    break;
-                case 'vm':
-                    $or[] = ['is_voice_mail' => 1];
-                    break;
-            }
-        }
-        if ($or) {
+        if ($or = PBXHelper::getCallDirectionFilter($directions)) {
             $qs->filter([new QOr(array_map(static fn($a) => new QAnd($a), $or))]);
         }
 

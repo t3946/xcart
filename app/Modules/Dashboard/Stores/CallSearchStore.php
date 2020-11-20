@@ -2,6 +2,9 @@
 
 namespace Modules\Dashboard\Stores;
 
+use Mindy\QueryBuilder\Q\QAnd;
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Store\BaseStore;
@@ -20,14 +23,9 @@ class CallSearchStore extends BaseStore
     {
         $qs = $this->getQuerySet();
 
-        if (!empty($data['email'])) {
-            $filter = [];
-            $field = $data['email']['field'];
-            if ($data['email']['condition'] === 'contains') {
-                $field .= '__contains';
-            }
-            $filter[$field] = $data['email']['value'];
-            $this->where = $filter;
+        if (!empty($data['call'])) {
+            $filter = PBXHelper::getCallDirectionFilter($data['call']['direction'] ?? []);
+            $this->where = [new QOr(array_map(static fn($a) => new QAnd($a), $filter))];
         }
         $qs->filter($this->where)->having($this->having);
         $this->qs = $qs;

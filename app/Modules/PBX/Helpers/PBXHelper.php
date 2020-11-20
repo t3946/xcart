@@ -64,4 +64,33 @@ class PBXHelper
 
         return $op;
     }
+
+    public static function getCallDirectionFilter($directions)
+    {
+        foreach ($directions as $direction) {
+            switch ($direction) {
+                case 'in':
+                    $or[] = [
+                        'is_outgoing' => 0,
+                        'is_lost' => 0,
+                        'is_voice_mail' => 0
+                    ];
+                    break;
+                case 'out':
+                    $or[] = [
+                        'is_outgoing' => 1,
+                        'is_lost' => 0,
+                        'is_voice_mail' => 0
+                    ];
+                    break;
+                case 'lost':
+                    $or[] = ['is_lost' => 1];
+                    break;
+                case 'vm':
+                    $or[] = ['is_voice_mail' => 1];
+                    break;
+            }
+        }
+        return $or ?? [];
+    }
 }

@@ -16,6 +16,8 @@ use Modules\Forms\Admin\EmailAdmin;
 use Modules\Forms\Models\EmailModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Models\OrderModel;
+use Modules\PBX\Admin\PBXAdmin;
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
@@ -176,6 +178,14 @@ class DashboardController extends PrototypeAdminController
                 );
             } else if ($model->entity === EmailModel::class) {
                 $admin = new EmailAdmin;
+                echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
+                    'objects' => $pager->paginate(),
+                    'pagination' => $pager,
+                    'admin' => $admin,
+                    'columns' => $admin->buildListColumns(),
+                ]);
+            } else if ($model->entity === PbxAnveoCallModel::class) {
+                $admin = new PBXAdmin;
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,
