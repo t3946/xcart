@@ -70,7 +70,7 @@ class PBXAdmin extends Admin
                 return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
                 //return ($url = $item->getUrl()) ? "<a href='{$url}' target='_blank'>Listen</a>" : 'Not defined';
-                return ($url = $item->getUrl()) ? "<audio style='width: 212px;' controls preload='none' src='{$url}'></audio>" : 'Not defined';
+                return ($url = $item->getUrl()) ? "<audio data-call-id='{$item->id}' style='width: 212px;' controls preload='none' src='{$url}'></audio>" : 'Not defined';
             case 'user':
                 if ($item->isLost() || $item->isVoiceMail()) {
                     return '';

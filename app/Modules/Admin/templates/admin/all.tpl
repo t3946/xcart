@@ -11,6 +11,6 @@
         </div>
     {/if}
     <div class="admin-page all-page">
-        {include 'admin/list/_list.tpl'}
+        {include $admin->allList}
     </div>
 {/block}

@@ -12,7 +12,7 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
-            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap;font-family: monospace; border-collapse: collapse;">
+            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap; border-collapse: collapse;">
                 <thead>
                     {var $cols = 0}
 
@@ -52,26 +52,6 @@
                         {/foreach}
                         {if $admin->getListItemActions()}
                         <th class="actions col full">
-                            {*<div class="columns-list-appender">
-                                <a href="#" class="button-appender appender-columns">
-                                    <i class="icon-plus"></i>
-                                </a>
-                                <div class="popup-block">
-                                    <ul class="columns-list">
-                                        {foreach $columns['config'] as $name => $column}
-                                            <li>
-                                                <div class="checker">
-                                                    <input type="checkbox" id="{$id}-{$name}-column" name="columns_list[]" value="{$name}" {if $name in $columns['enabled']}checked="checked"{/if}>
-                                                    <label for="{$id}-{$name}-column">
-                                                        {$column['title']}
-                                                    </label>
-                                                </div>
-                                            </li>
-                                        {/foreach}
-                                    </ul>
-                                </div>
-                            </div>*}
-
                             {var $cols = $cols+1}
                         </th>
                         {/if}

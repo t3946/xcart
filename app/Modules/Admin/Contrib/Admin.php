@@ -37,6 +37,7 @@ abstract class Admin
     public static $public = true;
 
     public $allTemplate = 'admin/all.tpl';
+    public string $allList = 'admin/list/_list.tpl';
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
     public $listRowTemplate = 'admin/list/_tr.tpl';
@@ -678,14 +679,14 @@ abstract class Admin
 
         $this->setBreadcrumbs();
         $search = $_GET['search'] ?? null;
+        $qs = $this->getQuerySet();
 
         if ($request->getIsGet() && $filter_form = $this->getFilterForm()) {
             $filter_form->populate($_GET, $_FILES);
+            $qs = $this->handleFilter($qs, $filter_form);
         }
 
-        $qs = $this->getQuerySet();
         $qs = $this->handleSearch($qs, $search);
-        $qs = $this->handleFilter($qs, $filter_form);
         $qs = $this->applyOrder($qs);
         $qs = $this->fixSort($qs);
 
