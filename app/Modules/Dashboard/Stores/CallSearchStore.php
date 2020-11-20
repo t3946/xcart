@@ -25,8 +25,19 @@ class CallSearchStore extends BaseStore
 
         if (!empty($data['call'])) {
             $filter = PBXHelper::getCallDirectionFilter($data['call']['direction'] ?? []);
-            $this->where = [new QOr(array_map(static fn($a) => new QAnd($a), $filter))];
+            $condition[] = new QOr(array_map(static fn($a) => new QAnd($a), $filter));
         }
+        if (!empty($data['listened'])) {
+            switch($data['listened']) {
+                case 'true':
+                    $condition['listens__id__isnull'] = false;
+                    break;
+                case 'false':
+                    $condition['listens__id__isnull'] = true;
+                    break;
+            }
+        }
+        $this->where = $condition ?? [];
         $qs->filter($this->where)->having($this->having);
         $this->qs = $qs;
     }

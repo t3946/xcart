@@ -26,9 +26,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[call][listened]" id="call_listened_value" class="big">
-                        <option {if $form_data.call.listened === 'listened'}selected{/if} value="listened">Listened</option>
-                        <option {if $form_data.call.listened === 'not_listened'}selected{/if} value="not_listened">Not listened</option>
+                    <select name="search[listened]" id="call_listened_value" class="big">
+                        <option {if $form_data.listened === 'true'}selected{/if} value="true">Listened</option>
+                        <option {if $form_data.listened === 'false'}selected{/if} value="false">Not listened</option>
                     </select>
                 </div>
             </div>

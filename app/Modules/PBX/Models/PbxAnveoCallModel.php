@@ -221,8 +221,4 @@ class PbxAnveoCallModel extends Model
         return (new DateTime($this->end_at))->diff(new DateTime($this->start_at));
     }
 
-    public function setListened(bool $value): void
-    {
-
-    }
 }

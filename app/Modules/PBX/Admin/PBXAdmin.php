@@ -74,11 +74,20 @@ class PBXAdmin extends Admin
                 return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
                 return ($url = $item->getUrl())
-                    ? "<audio style='width: 212px;' controls preload='none' src='{$url}' 
-                            onplay=\"fetch('{$route->url('admin_pbx:listen')}', {
-                                method: 'POST',
-                                body: JSON.stringify({'call_id': this.dataset.callId})
-                            })\" data-call-id='{$item->id}'></audio>"
+                    ? "<audio 
+                            style='width: 212px;' 
+                            controls 
+                            preload='none' 
+                            data-call-id='{$item->id}'
+                            src='{$url}' 
+                            onplay=\"
+                                [...document.getElementsByTagName('audio')]
+                                    .filter((a) => a.dataset.callId !== this.dataset.callId)
+                                    .forEach((audio) => audio.pause())
+                                fetch('{$route->url('admin_pbx:listen')}', {
+                                    method: 'POST',
+                                    body: JSON.stringify({'call_id': this.dataset.callId})
+                            })\"/>"
                     : 'Not defined';
             case 'user':
                 if ($item->isLost() || $item->isVoiceMail()) {
