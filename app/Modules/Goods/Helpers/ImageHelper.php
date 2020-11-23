@@ -64,11 +64,11 @@ class ImageHelper
         /** @var ImageDModel $imageModel */
         $client = new Client(['verify' => false, 'timeout' => 30]);
         try {
+            $image_path = Paths::get('www') . $upload_image;
             $res = $client->get($image, [
-                'save_to' => Paths::get('www') . $upload_image,
+                'save_to' => $image_path,
                 'http_errors' => false,
             ]);
-            $image_path = Paths::get('www') . $upload_image;
 
             if ($res->getStatusCode() === 200 && $img_info = getimagesize($image_path)) {
                 $imageModel = new ImageDModel([
