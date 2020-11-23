@@ -13,6 +13,7 @@ class CleanImagesCommand extends Command
 
     public function handle($arguments = [])
     {
+        ini_set('memory_limit', '4G');
         if ($storage = Xcart::app()->storage->getFilesystem('www')) {
             foreach ($storage->listContents('images/D') as $file) {
                 if ($images = ImageDModel::objects()->all(['image_path' => './' . $file['path']])) {
