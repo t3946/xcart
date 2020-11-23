@@ -1,5 +1,29 @@
 <?php
 
+use Xcart\App\Main\ErrorHandler;
+use Modules\User\Components\Auth;
+use Modules\Mail\Components\Mailer;
+use Modules\Mail\Components\MailComponent;
+use Xcart\App\Cache\Drivers\Redis;
+use Xcart\App\Cache\Drivers\Memory;
+use Xcart\App\Cache\Drivers\File;
+use Xcart\App\Cache\Cache;
+use Xcart\App\Orm\ConnectionManager;
+use Xcart\App\Orm\Cache\FilesystemCache;
+use Xcart\App\Orm\Cache\RedisCache;
+use Xcart\App\Event\EventManager;
+use Xcart\App\Components\Breadcrumbs;
+use Xcart\App\Components\Flash;
+use Xcart\App\Finder\FinderFactory;
+use Xcart\App\Middleware\MiddlewareManager;
+use Xcart\App\Request\RequestManager;
+use Xcart\App\Request\HttpRequest;
+use Modules\User\Components\XcartSession;
+use Xcart\App\Request\CliRequest;
+use Xcart\App\Router\Router;
+use Xcart\App\Template\TemplateManager;
+use Xcart\App\Storage\Storage;
+use Xcart\App\Storage\Adapters\LocalAdapter;
 use Xcart\App\Storage\Adapters\LocalZipAdapter;
 
 (defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
@@ -28,7 +52,7 @@ return array_replace_recursive([
    ],
    'components' => [
        'db' => [
-           'class' => '\\Xcart\\App\\Orm\\ConnectionManager',
+           'class' => ConnectionManager::class,
            'connections' => [
                'default' => [
                    'memory' => true,
@@ -43,10 +67,10 @@ return array_replace_recursive([
                        'enum' => 'string'
                    ],
                    'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
-                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
+                       'class' => FilesystemCache::class,
                        'directory' => 'base.runtime.query_cache'
                    ] : [ //PRODUCTION CACHE
-                       'class' => '\Xcart\App\Orm\Cache\RedisCache',
+                       'class' => RedisCache::class,
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
@@ -58,36 +82,36 @@ return array_replace_recursive([
        ],
 
        'event' => [
-           'class' => '\\Xcart\\App\\Event\\EventManager',
+           'class' => EventManager::class,
            'events' => include __DIR__ . DS .  'events.php'
        ],
 
-       'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
-       'flash' => ['class' => '\Xcart\App\Components\Flash'],
-       'finder' => ['class' => '\Xcart\App\Finder\FinderFactory'],
+       'breadcrumbs' => ['class' => Breadcrumbs::class],
+       'flash' => ['class' => Flash::class],
+       'finder' => ['class' => FinderFactory::class],
 
        'middleware' => [
-           'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
+           'class' => MiddlewareManager::class,
            'middleware' => include __DIR__ . DS . 'middleware.php',
        ],
        'request' => [
-           'class' => '\\Xcart\\App\\Request\\RequestManager',
+           'class' => RequestManager::class,
            'httpRequest' => [
-               'class' => '\\Xcart\\App\\Request\\HttpRequest',
+               'class' => HttpRequest::class,
                'session' => [
-                   'class' => '\\Modules\\User\\Components\\XcartSession'
+                   'class' => XcartSession::class
                ]
            ],
            'cliRequest' => [
-               'class' => '\\Xcart\\App\\Request\\CliRequest',
+               'class' => CliRequest::class,
            ]
        ],
        'router' => [
-           'class' => '\\Xcart\\App\\Router\\Router',
+           'class' => Router::class,
            'pathRoutes' => 'base.config.routes'
        ],
        'template' => [
-           'class' => '\\Xcart\\App\\Template\\TemplateManager',
+           'class' => TemplateManager::class,
            'forceCompile' => false,
            'forceInclude' => true,
            'autoReload' => false,
@@ -95,15 +119,15 @@ return array_replace_recursive([
        ],
 
        'storage' => [
-           'class' => '\\Xcart\\App\\Storage\\Storage',
+           'class' => Storage::class,
            'default' => 'local',
            'adapters' => [
                'local' => [
-                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'class' => LocalAdapter::class,
                    'root' => 'www.media',
                ],
                'www' => [
-                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'class' => LocalAdapter::class,
                    'root' => 'www',
                ],
                'zip' => [
@@ -114,19 +138,19 @@ return array_replace_recursive([
        ],
 
        'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
-           'class' => '\\Xcart\\App\\Cache\\Cache',
+           'class' => Cache::class,
            'saveInMemory' => true,
            'memoryDriver' => 'memory',
            'drivers' => [
                'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'class' => File::class,
                ],
                'memory' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
+                   'class' => Memory::class,
                    'numCacheQuery' => 30,
                ],
                'html' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'class' => File::class,
                    'extension' => '.html',
                    'path' => 'root.html_cache',
                    'autoGC' => false,
@@ -134,13 +158,13 @@ return array_replace_recursive([
                ]
            ]
        ] : [ //PRODUCTION CACHE
-           'class' => '\Xcart\App\Cache\Cache',
+           'class' => Cache::class,
            'drivers' => [
                'default' =>  [
-                   'class' => '\Xcart\App\Cache\Drivers\Redis',
+                   'class' => Redis::class,
                ],
                'html' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File',
+                   'class' => File::class,
                    'extension' => '.html',
                    'autoGC' => false,
                    'path' => 'root.html_cache',
@@ -148,19 +172,19 @@ return array_replace_recursive([
            ]
        ],
 
-       'oldMail' => '\Modules\Mail\Components\MailComponent',
+       'oldMail' => MailComponent::class,
        'mail' => [
-           'class' => '\Modules\Mail\Components\Mailer',
+           'class' => Mailer::class,
            'defaultFrom' => 'robot@s3stores.com',
        ],
 
        'auth' => [
-           'class' => '\\Modules\\User\\Components\\Auth'
+           'class' => Auth::class
        ],
 
        'logger' => include __DIR__. DS . 'logger.php',
        'errorHandler' => [
-           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'class' => ErrorHandler::class,
            'debug' => false,
            'useTemplate' => true,
            'ignoringTypes' => [
