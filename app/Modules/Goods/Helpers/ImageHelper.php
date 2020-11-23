@@ -56,10 +56,11 @@ class ImageHelper
     /**
      * @param string $image
      * @param string $upload_image
-     * @param string $name
+     * @param string|null $name
      * @return ImageDModel|null
+     * @throws \Exception
      */
-    public static function uploadMainImage(string $image, string $upload_image, string $name): ?ImageDModel
+    public static function uploadMainImage(string $image, string $upload_image, string $name = null): ?ImageDModel
     {
         /** @var ImageDModel $imageModel */
         $client = new Client(['verify' => false, 'timeout' => 30]);
