@@ -87,6 +87,8 @@ use Xcart\Product;
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
+ * @method static Manager forsale($instance = null)
+ * @method static Manager without_group($instance = null)
  */
 class ProductModel extends Model implements ICartItem
 {
@@ -737,10 +739,19 @@ class ProductModel extends Model implements ICartItem
         return ($this->pc_classify_status === 'ACC' || $this->pc_classify_status === 'MC');
     }
 
+    public static function forsaleManager($instance = null): Manager
+    {
+        return static::objects($instance)->filter(['forsale' => 'Y']);
+    }
+
+    public static function without_groupManager($instance = null): Manager
+    {
+        return static::objects($instance)->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])]);
+    }
+
     public static function showedManager($instance = null) : Manager
     {
-        return static::objects($instance)->filter([
-            'forsale' => 'Y',
+        return static::forsale($instance)->filter([
             'sites__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
             new QOr([
                 ['group_root__isnull' => true],

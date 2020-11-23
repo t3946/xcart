@@ -69,7 +69,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function convertToPrimaryKeyName($name)
     {
-        return $name == 'pk' ? $this->getPrimaryKeyName() : $name;
+        return $name === 'pk' ? $this->getPrimaryKeyName() : $name;
     }
 
     /**

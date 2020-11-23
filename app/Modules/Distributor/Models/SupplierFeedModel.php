@@ -23,6 +23,7 @@ use Xcart\App\Orm\Model;
  * @property mixed disable_search_of_discontinued_items
  * @property mixed manufacturerid
  * @property mixed feed_file_name
+ * @property DistributorModel distributor
  */
 class SupplierFeedModel extends Model
 {
@@ -158,6 +159,11 @@ class SupplierFeedModel extends Model
         if ($isNew && !$this->feed_file_name) {
             $this->feed_file_name = strtolower("feed{$this->manufacturerid}{$this->feed_type}.json");
         }
+    }
+
+    public function isMultiStore(): bool
+    {
+        return $this->distributor->feed_P_E->count() > 1;
     }
 
     public function __toString()

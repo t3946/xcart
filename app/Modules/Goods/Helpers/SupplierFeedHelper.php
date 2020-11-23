@@ -4,6 +4,7 @@ namespace Modules\Goods\Helpers;
 
 
 use DateTime;
+use Exception;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -14,7 +15,6 @@ use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
 use Modules\Goods\Models\ImageDModel;
-use Modules\Goods\Models\PricingModel;
 use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
@@ -30,11 +30,11 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @return ProductModel
      */
-    public static function getEtaDate($model)
+    public static function getEtaDate(ProductModel $model): ProductModel
     {
         $todayDate = strtotime(date("Y-m-d"));
 
-        if (($model->eta_date_lock == "Y")
+        if (($model->eta_date_lock === "Y")
             && ($model->getOldAttribute('eta_date_mm_dd_yyyy') > $todayDate)
             && (($model->getOldAttribute('eta_date_mm_dd_yyyy') > $model->eta_date_mm_dd_yyyy) || empty($model->eta_date_mm_dd_yyyy))
         ) {
@@ -50,15 +50,15 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @return ProductModel
      */
-    public static function getWeightOptions($model)
+    public static function getWeightOptions(ProductModel $model): ProductModel
     {
-        if ($model->weight_lock == 'Y' || (!$model->weight && $model->getOldAttribute('weight'))) {
+        if ($model->weight_lock === 'Y' || (!$model->weight && $model->getOldAttribute('weight'))) {
             $model->weight = $model->getOldAttribute('weight');
         }
-        if ($model->shipping_weight_lock == 'Y' || (!$model->shipping_weight && $model->getOldAttribute('shipping_weight'))) {
+        if ($model->shipping_weight_lock === 'Y' || (!$model->shipping_weight && $model->getOldAttribute('shipping_weight'))) {
             $model->shipping_weight = $model->getOldAttribute('shipping_weight');
         }
-        if ($model->dim_lock == 'Y') {
+        if ($model->dim_lock === 'Y') {
             $model->dim_x = $model->getOldAttribute('dim_x');
             $model->dim_y = $model->getOldAttribute('dim_y');
             $model->dim_z = $model->getOldAttribute('dim_z');
@@ -71,7 +71,7 @@ class SupplierFeedHelper
             $model->dim_y = empty($aDimFeed[1]) ? $aDimOld[1] : $aDimFeed[1];
             $model->dim_z = empty($aDimFeed[2]) ? $aDimOld[2] : $aDimFeed[2];
         }
-        if ($model->shipping_dim_lock == 'Y') {
+        if ($model->shipping_dim_lock === 'Y') {
             $model->shipping_dim_x = $model->getOldAttribute('shipping_dim_x');
             $model->shipping_dim_y = $model->getOldAttribute('shipping_dim_y');
             $model->shipping_dim_z = $model->getOldAttribute('shipping_dim_z');
@@ -92,7 +92,7 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @return array
      */
-    public static function getUPC($model)
+    public static function getUPC(ProductModel $model): array
     {
         $newUPC = ProductHelper::calculateUPC($model->upc);
         $oldUPC = $model->getOldAttribute('upc');
@@ -108,7 +108,7 @@ class SupplierFeedHelper
     /**
      * @param ProductModel $model
      */
-    public static function getVideos($model)
+    public static function getVideos(ProductModel $model): void
     {
         /** @var ProductVideosModel $video_model */
         if ($model->videos) {
@@ -118,7 +118,7 @@ class SupplierFeedHelper
                     $filter[$key] = $value;
                 }
                 $filter['product_id'] = $model->productid;
-                list($video_model, $is_created) = ProductVideosModel::objects()->getOrNew($filter);
+                [$video_model, $is_created] = ProductVideosModel::objects()->getOrNew($filter);
 
                 if ($is_created) {
                     $video_model->save();
@@ -135,10 +135,9 @@ class SupplierFeedHelper
      * @param array $dont_update_fields
      * @param array $defaults
      * @return ProductModel
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults)
+    public static function feedProduct($model, $is_created, $feed, $data, $dont_update_fields, $defaults): ProductModel
     {
 
         $model->manufacturerid = $feed->manufacturerid;
@@ -159,15 +158,15 @@ class SupplierFeedHelper
             $model->fulldescr = ProductHelper::cleanProductFullDescription($model->fulldescr);
         }
 
-        $model = SupplierFeedHelper::getEtaDate($model);
+        $model = self::getEtaDate($model);
 
-        $model = SupplierFeedHelper::getWeightOptions($model);
+        $model = self::getWeightOptions($model);
 
         self::getVideos($model);
 
-        [$model, $upc_different] = SupplierFeedHelper::getUPC($model);
+        [$model, $upc_different] = self::getUPC($model);
         if ($upc_different) {
-            list($upcModel) = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
+            [$upcModel] = ProductUpcChangesModel::objects()->getOrNew(['productid' => $model->productid]);
             /** @var ProductUpcChangesModel $upcModel */
             $upcModel->setAttributes(
                 [
@@ -180,7 +179,7 @@ class SupplierFeedHelper
         }
 
         if (!$is_created) {
-            if ($model->isGroupChild() && empty($data['feed_child'])) {
+            if (empty($data['feed_child']) && $model->isGroupChild()) {
                 $model->product = $model->getOldAttribute('product');
             }
 
@@ -229,7 +228,7 @@ class SupplierFeedHelper
      * @param array $data
      * @throws \Exception
      */
-    public static function feedImages($model, $feed, $data)
+    public static function feedImages($model, $feed, $data): void
     {
         $aImages = $data['supplier_images'];
         $aAltImageNames = $data['alt_names'];
@@ -238,17 +237,13 @@ class SupplierFeedHelper
 
             foreach ($aImages as $k => $v) {
                 if (empty($v)) {
-                    unset($aImages[$k]);
-                    unset($aAltImageNames[$k]);
+                    unset($aImages[$k], $aAltImageNames[$k]);
                 }
             }
 
-            $uploads = array_filter(array_map(function ($v) use ($feed) {
-                if (empty($v)) return null;
-                return '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid);
-            }, $aImages), function ($v) {
-                return !empty($v);
-            });
+            $uploads = array_filter(
+                array_map(static fn($v) => !empty($v) ? '.' . ImageHelper::getImageFileName($v, $feed->manufacturerid) : null, $aImages),
+            );
 
             if ($uploads) {
 
@@ -292,8 +287,9 @@ class SupplierFeedHelper
     /**
      * @param ProductModel $model
      * @param array $data
+     * @throws Exception
      */
-    public static function feedFiles($model, $data)
+    public static function feedFiles($model, $data): void
     {
         $aFiles = $data['product_files'];
         if (!empty($aFiles) && is_array($aFiles)) {
@@ -314,7 +310,7 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @param array $data
      */
-    public static function feedRelated($model, $data)
+    public static function feedRelated($model, $data): void
     {
         $params = [];
         $aRelatedInternalId = $data['related_internal_id'];
@@ -330,7 +326,7 @@ class SupplierFeedHelper
 
         if (!empty($params)) {
             /** @var ProductModel[] $aRelatedProducts */
-            if ($aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all()) {
+            if ($aRelatedProducts = ProductModel::objects()->filter([new QOr($params)])->all()) {
                 foreach ($aRelatedProducts as $relatedProductModel) {
                     ProductLinksModel::objects()->getOrCreate(['productid1' => $model->productid, 'productid2' => $relatedProductModel->productid]);
                     ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $model->productid]);
@@ -344,9 +340,9 @@ class SupplierFeedHelper
      * @param SupplierFeedModel $feed
      * @param string $data
      * @return ProductModel
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function feedBrand($model, $feed, $data)
+    public static function feedBrand($model, $feed, $data): ProductModel
     {
         if (!empty($data)) {
 
@@ -357,8 +353,8 @@ class SupplierFeedHelper
                 $brand = new BrandModel([
                     'brand' => $data,
                     'orderby' => 10,
-                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
                     'avail' => true
                 ]);
 
@@ -397,7 +393,7 @@ class SupplierFeedHelper
      * @param array $data
      * @return ProductModel
      */
-    public static function feedAttributes($model, $feed, $data)
+    public static function feedAttributes($model, $feed, $data): ProductModel
     {
         //Attributes section
         FilterProductModel::objects()->delete(['productid' => $model->productid, 'is_feed' => 1]);
@@ -405,11 +401,11 @@ class SupplierFeedHelper
         if (!empty($data)) {
             foreach ($data as $f_name => $fv_name_arr) {
                 if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
-                    list($filterModel) = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
+                    [$filterModel] = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
                     foreach ($fv_name_arr as $fv_name) {
                         $fv_name = trim($fv_name);
                         if (!empty($fv_name)) {
-                            list($filterValueModel) = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                            [$filterValueModel] = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
                             FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $model->productid, 'is_feed' => 1]);
                         }
                     }
@@ -426,9 +422,9 @@ class SupplierFeedHelper
      * @param SupplierFeedModel $feed
      * @param array $categories
      * @return ProductModel
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function feedCategories($model, $is_created, $feed, $categories)
+    public static function feedCategories($model, $is_created, $feed, $categories): ProductModel
     {
         $product_sfid = null;
 
@@ -459,7 +455,7 @@ class SupplierFeedHelper
 
             $cats_arr = $categories;
 
-            if (count($categories) == 1) {
+            if (count($categories) === 1) {
                 $cats_arr = explode("/", reset($categories));
             }
 
@@ -468,7 +464,7 @@ class SupplierFeedHelper
                 foreach ($cats_arr as $v_cat) {
 
                     /** @var CategoryModel $modelCat */
-                    list($modelCat, $is_cat_created) = CategoryModel::objects()->getOrCreate(
+                    [$modelCat, $is_cat_created] = CategoryModel::objects()->getOrCreate(
                         [
                             'parentid' => $parent_id ?: 0,
                             'category' => $v_cat,
@@ -477,8 +473,8 @@ class SupplierFeedHelper
 
                     if ($is_cat_created) {
                         $modelCat->setAttributes([
-                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
-                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page == 'Y' ? 'Y' : 'N',
+                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
                             'is_bold' => 'Y',
                             'order_by' => 10
                         ]);
@@ -516,11 +512,11 @@ class SupplierFeedHelper
      * @param array $data
      * @param SupplierFeedStore $feed
      * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
      * @return ProductModel
+     * @throws Exception
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public static function feedChilds($data, $feed)
+    public static function feedChilds($data, $feed): array
     {
         /** @var ProductModel $child */
 
@@ -546,7 +542,7 @@ class SupplierFeedHelper
         $group->setAttributes(array_merge($data, ['parent' => $group]));
         if ($is_created) {
             $group->save();
-            $group = SupplierFeedHelper::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
+            $group = self::feedProduct($group, $is_created, $feed->feed_model, $data, $feed->dont_update_fields, $feed->defaults);
             $group->group_root = $group->productid;
             $group->save();
         }
@@ -581,31 +577,7 @@ class SupplierFeedHelper
     }
 
 
-    public static function getFileFtp($file_name, $config)
-    {
-        $home_ftp = $config["Supplier_feeds"]["Feeds_storage_path"];
-        $login = $config["Supplier_feeds"]["Feeds_storage_login"];
-        $pass = $config["Supplier_feeds"]["Feeds_storage_password"];
-
-        $ftp_connect = ftp_connect($home_ftp);
-
-        if (!ftp_login($ftp_connect, $login, $pass)) {
-            return false;
-        }
-
-        ftp_pasv($ftp_connect, true);
-
-        $temp_file = tmpfile();
-        ftp_fget($ftp_connect, $temp_file, $file_name, FTP_ASCII);
-        $content = stream_get_contents($temp_file, -1, 0);
-        fclose($temp_file);
-
-        ftp_close($ftp_connect);
-
-        return $content;
-    }
-
-    public static function getChanged(ProductModel $model)
+    public static function getChanged(ProductModel $model): array
     {
         if ($data = $model->getChangedAttributes()) {
             foreach ($data as $k => $v) {
@@ -617,7 +589,7 @@ class SupplierFeedHelper
         return $data;
     }
 
-    public static function discontinueProducts($all_feed_productcodes, $feed): int
+    public static function discontinueProducts($all_feed_productcodes, SupplierFeedModel $feed): int
     {
         $discontinued_products_count = 0;
 
@@ -626,17 +598,22 @@ class SupplierFeedHelper
 
             $i = 0;
             $d_products = [];
-            while ($discountinued_products = ProductModel::objects()->filter(
-                [
-                    'manufacturerid' => $feed->manufacturerid,
-                    'forsale' => 'Y',
-                    new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
-                ])
+
+            $filter = [
+                'manufacturerid' => $feed->manufacturerid,
+                'forsale' => 'Y'
+            ];
+
+            if ($feed->isMultiStore()) {
+                $filter['sites__storefrontid'] = $feed->storefront_id;
+            }
+
+            while ($discountinued_products = ProductModel::without_group()
+                ->filter($filter)
                 ->paginate(++$i, 10000)
                 ->valuesList('productcode', true)) {
-
                 foreach ($discountinued_products as $productcode) {
-                    if (!\in_array($productcode, $all_feed_productcodes, true)) {
+                    if (!in_array($productcode, $all_feed_productcodes, true)) {
                         $discontinued_products_count++;
                         $d_products[] = $productcode;
                     }
@@ -650,7 +627,7 @@ class SupplierFeedHelper
         return $discontinued_products_count;
     }
 
-    public static function feedStatistic(SupplierFeedModel $feed,  $params, $feedProductCount = 0): string
+    public static function feedStatistic(SupplierFeedModel $feed, $params, $feedProductCount = 0): string
     {
         $new_products_count = $params['new_products_count'];
         $updated_products_count = $params['updated_products_count'];
@@ -659,7 +636,6 @@ class SupplierFeedHelper
         $skippedProductsCount = $params['skippedProductsCount'];
         $duplicate_sku = $params['duplicate_sku'];
         $start_supplier_time = $params['start_supplier_time'];
-        $process_time = $params['process_time'];
 
         $last_update_period = time() - $feed->last_update_time;
         $average_update_period = round(($feed->average_update_period + $last_update_period) / 2, 0);

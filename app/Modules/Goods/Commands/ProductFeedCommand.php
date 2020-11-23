@@ -57,7 +57,7 @@ class ProductFeedCommand extends Command
                 continue;
             }
 
-            if (($md5_value = $md5->read()) === $feed->last_md5) {
+            if ($md5 && ($md5_value = $md5->read()) === $feed->last_md5) {
                 $log = "manufacturerid: {$feed->manufacturerid}. md5 = last_md5. Feed skipped. md5file: {$md5_value} - md5db: {$feed->last_md5} \n";
                 Xcart::app()->logger->error($log, [], 'feed');
                 continue;
@@ -76,14 +76,11 @@ class ProductFeedCommand extends Command
 
             $supplierFeed = new SupplierFeedStore($feed, $content->read());
 
-            /** @var SupplierFeedStore $supplierFeed */
             if (!$supplierFeed->isValid()) {
                 $log = implode(PHP_EOL, $supplierFeed->errors);
                 Xcart::app()->logger->error($log, [], 'feed');
                 continue;
             }
-
-            //$create_date_time_diff = time() - $supplierFeed->getFeedDate();
 
             $log = "manufacturerid: {$feed->manufacturerid}. Started. ({$feed->feed_type})\n";
             Xcart::app()->logger->debug($log, [], 'feed');
@@ -93,7 +90,6 @@ class ProductFeedCommand extends Command
 
             foreach ($supplierFeed->products as $kp => $prod) {
                 $products = [];
-
                 if (isset($prod['is_group']) && $prod['is_group'] === true && $supplierFeed->supplier_name !== 'Amazon') {
                     if ($prod['child_products']) {
                         $products = SupplierFeedHelper::feedChilds($prod, $supplierFeed);

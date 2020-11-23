@@ -25,71 +25,71 @@ class ImageModel extends Model
     {
         return [
             'imageid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'image' => [
-                'class' => BlobField::className(),
+                'class' => BlobField::class,
                 'null' => false,
                 'default' => '',
             ],
             'image_path' => [
-                'class' => FileField::className(),
+                'class' => FileField::class,
                 'adapterName' => 'www',
                 'null' => false,
                 'default' => '',
             ],
             'image_type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'image_x' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'image_y' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'image_size' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'filename' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'date' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'alt' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'avail' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'Y',
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'md5' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 0,
             ],

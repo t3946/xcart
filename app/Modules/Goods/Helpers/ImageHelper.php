@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
+use GuzzleHttp\Client;
 use Modules\Goods\Models\ImageDModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Exceptions\Exception;
@@ -58,31 +59,31 @@ class ImageHelper
      * @param string $name
      * @return ImageDModel|null
      */
-    public static function uploadMainImage($image, $upload_image, $name)
+    public static function uploadMainImage(string $image, string $upload_image, string $name): ?ImageDModel
     {
         /** @var ImageDModel $imageModel */
-        $imageModel = null;
-
-        $client = new \GuzzleHttp\Client(['verify' => false, 'timeout' => 30]);
+        $client = new Client(['verify' => false, 'timeout' => 30]);
         try {
             $res = $client->get($image, [
                 'save_to' => Paths::get('www') . $upload_image,
                 'http_errors' => false,
             ]);
+            $image_path = Paths::get('www') . $upload_image;
 
-            if ($res->getStatusCode() === 200 && $img_info = getimagesize(Paths::get('www') . $upload_image)) {
+            if ($res->getStatusCode() === 200 && $img_info = getimagesize($image_path)) {
                 $imageModel = new ImageDModel([
                     'date' => time(),
                     'image_path' => '.' . $upload_image,
                     'image_type' => $img_info["mime"],
                     'image_x' => $img_info[0],
                     'image_y' => $img_info[1],
-                    'image_size' => filesize(Paths::get('www') . $upload_image),
+                    'image_size' => filesize($image_path),
+                    'md5' => md5_file($image_path),
                     'alt' => $name,
                     'avail' => 'Y'
                 ]);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             print $e->getMessage();
             $imageModel = null;
         }
