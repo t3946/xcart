@@ -11,6 +11,7 @@ use Modules\Core\Helpers\Cache;
 use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
@@ -47,6 +48,12 @@ class ApiDxController extends Controller
                 'source' => $dx->url,
                 'feeds' => $feedData
             ]);
+        }
+    }
+    public function getDxInfoSfCode($code, $sfCode = null): void
+    {
+        if ($sfCode && $site = SiteModel::objects()->get(['code' => $sfCode])) {
+            $this->getDxInfo($code, $site->storefrontid);
         }
     }
 
