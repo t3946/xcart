@@ -38,7 +38,7 @@ class CallSearchStore extends BaseStore
             }
         }
         $this->where = $condition ?? [];
-        $qs->filter($this->where)->having($this->having);
+        $qs->filter($this->where)->having($this->having)->order('-id');
         $this->qs = $qs;
     }
 
