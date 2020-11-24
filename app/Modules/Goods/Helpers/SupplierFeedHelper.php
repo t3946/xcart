@@ -259,7 +259,7 @@ class SupplierFeedHelper
 
                     if (!preg_grep("/{$url_q}/i", $p_images)) {
 
-                        $name = empty($aAltImageNames[$key]) ? $model->product : $aAltImageNames[$key];
+                        $name = $aAltImageNames[$key] ?? $model->getFrontendName();
 
                         /** @var ImageDModel $image */
                         $image = ImageHelper::uploadMainImage($aImages[$key], ltrim($url, '.'), $name);
