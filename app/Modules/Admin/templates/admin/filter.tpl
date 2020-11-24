@@ -11,10 +11,8 @@
                 <div class="form-data">
                     {include 'admin/form/_form.tpl'}
                     <div class="row" style="margin-top: 15px;">
-                        <div class="column">
-                            <button name="filter" type="submit" value="filter">Filter</button>
-                            <button id="clear_filter" name="clear" type="submit" value="clear">Clear filter</button>
-                        </div>
+                        <button name="filter" type="submit" value="filter">Filter</button>
+                        <button id="clear_filter" name="clear" type="submit" value="clear">Clear filter</button>
                     </div>
                 </div>
             </form>
