@@ -246,4 +246,9 @@ abstract class BaseStore
         return $qs;
     }
 
+    public function getCachedPriorityShippingCount()
+    {
+        return 0;
+    }
+
 }
