@@ -20,6 +20,11 @@ return [
         'name' => 'dx_sf_info'
     ],
     [
+        'route' => 'dx/{slug:code}/{slug:sfCode}',
+        'target' => [ApiDxController::class, 'getDxInfoSfCode'],
+        'name' => 'dx_sf_info_code'
+    ],
+    [
         'route' => 'dx/{slug:code}',
         'target' => [ApiDxController::class, 'getDxInfo'],
         'name' => 'dx_info'
