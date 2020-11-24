@@ -5,10 +5,7 @@
                 {elseif $item->last_update_late >= 2}style="background-color:#ffd6d6;"
             {/if}
         {/if}>
-    <td class="checker">
-        <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
-        <label for="{$id}-{$pk}-check" class="alone"></label>
-    </td>
+
 
     {if $admin->sort}
         <td class="sort">
@@ -37,7 +34,9 @@
         </td>
     {/foreach}
 
-    <td class="actions">
-        {include $admin->listItemActionsTemplate}
-    </td>
+    {if $admin->getListItemActions()}
+        <td class="actions">
+            {include $admin->listItemActionsTemplate}
+        </td>
+    {/if}
 </tr>

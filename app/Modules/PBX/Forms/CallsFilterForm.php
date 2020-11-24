@@ -1,81 +1,63 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 12/19/2017
- * Time: 2:05 PM
- */
 
 namespace Modules\PBX\Forms;
 
 use Mindy\QueryBuilder\Expression;
-use Modules\PBX\Helpers\PBXHelper;
 use Modules\User\Models\UserModel;
-use Xcart\App\Form\BaseForm;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\DateTimeField;
-use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\NumberField;
-use Xcart\App\Form\Fields\RadioField;
+use Xcart\App\Form\Fields\DateRangeField;
+use Xcart\App\Form\Fields\Select2Field;
+use Xcart\App\Form\Form;
 
-class CallsFilterForm extends BaseForm
+class CallsFilterForm extends Form
 {
     public function getFields()
     {
         return [
-
+            'date_from' => [
+                'class' => DateRangeField::class,
+                'label' => 'Date range',
+                'range' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+            ],
             'direction' => [
-                'class' => DropDownField::className(),
+                'class' => Select2Field::class,
+                'multiple' => true,
                 'label' => 'Direction',
                 'choices' => [
-                    'extension' => 'Choose type',
                     'in' => 'Inbound',
                     'out' => 'Outbound',
                     'lost' => 'Missed call',
                     'vm' => 'Voicemail',
                 ],
-            ],
-
-            'order' => [
-                'class' => CharField::className(),
-                'label' => 'Order',
-                'attributes' => [
-                    'pattern' => '\d+',
-                    'placeholder' => 'Numbers only'
+                'html' => [
+                    'style' => 'width: 300px'
                 ]
             ],
-
+            'orders' => [
+                'class' => CharField::class,
+                'label' => 'Order #',
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+            ],
             'e164' => [
-                'class' => NumberField::className(),
+                'class' => CharField::class,
                 'label' => 'Party Tel #',
-                'attributes' => [
-                    'pattern' => '\d+',
-                    'placeholder' => 'Numbers only'
-                ]
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
             ],
-
-            'date_from' => [
-                'class' => DateTimeField::className(),
-                'label' => 'Date from',
-                'attributes' => [
-                    'placeholder' => 'mm/dd/YY'
-                ]
-            ],
-
-            'date_to' => [
-                'class' => DateTimeField::className(),
-                'label' => 'Date to',
-                'attributes' => [
-                    'placeholder' => 'mm/dd/YY'
-                ]
-            ],
-
-            'operator' => [
-                'class' => DropDownField::className(),
+            'user' => [
+                'class' => Select2Field::class,
                 'label' => 'Operator',
                 'multiple' => true,
-                'choices' => function() {
-
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+                'choices' => function () {
                     $op = [];
                     $filter = [
                         'usertype' => 'A',
@@ -84,17 +66,16 @@ class CallsFilterForm extends BaseForm
                     ];
 
                     $operators = UserModel::objects()
-                                          ->filter($filter)
-                                          ->all();
+                        ->filter($filter)
+                        ->all();
 
-                    foreach ($operators as $operator){
+                    foreach ($operators as $operator) {
                         $op[$operator->id] = $operator->firstname;
                     }
 
                     return $op;
                 }
             ],
-
         ];
     }
 }

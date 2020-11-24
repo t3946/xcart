@@ -31,8 +31,8 @@ class OrdersCallsModel extends Model
 
             'call' => [
                 'field' => 'call_id',
-                'class' => ForeignField::className(),
-                'modelClass' => PbxAnveoCallModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => PbxAnveoCallModel::class,
                 'link' => ['call_id' => 'id'],
                 'null' => false,
                 'primary' => true
@@ -40,14 +40,14 @@ class OrdersCallsModel extends Model
 
             'order' => [
                 'field' => 'order_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
                 'null' => false,
             ],
 
             'relevance_type' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'length' => 1,
                 'null' => false,
                 'default' => 0,
@@ -59,7 +59,7 @@ class OrdersCallsModel extends Model
             ],
 
             'relevance_order' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false
             ],
 

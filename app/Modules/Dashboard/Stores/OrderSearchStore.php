@@ -11,42 +11,21 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
-use Modules\Dashboard\Pagination\Pagination;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Goods\Models\ProductQuestionModel;
-use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Model;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\QuerySet;
-use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
 
 class OrderSearchStore extends BaseStore
 {
-    const CONST_MANUAL_STRING      = '=> ';
-    const CONST_MANUAL_VIEW_STTINR = '-> ';
-
-    const CONST_CACHE_KEY_EVENT = 'order_search_store_events_count_';
-    const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
-
     public const VIEW_TEMPLATE = 'dashboard/filter_view.tpl';
-
-
-    protected $form_data = [];
-    private $where = [];
-    private $having = [];
-    /** @var QuerySet */
-    private $qs;
-    /** @var Pagination */
-    protected $pager;
-    private $order;
-    private $sort;
-    private $model = null;
-
-    public $defaultPagerPageSize = 25;
+    public const CONST_CACHE_KEY_EVENT = 'order_search_store_events_count_';
+    public const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
 
     public static function getFeatures()
     {
@@ -86,42 +65,6 @@ class OrderSearchStore extends BaseStore
     public static function getQuestionStatuses()
     {
         return ProductQuestionModel::getFields()['status']['choices'];
-    }
-
-    public function __construct($data, Model $model = null)
-    {
-        $this->form_data = $data;
-
-        if ($model) {
-            $this->model = $model;
-        }
-
-        $this->sort = isset($_GET['PageSort']) ? (int)$_GET['PageSort'] : null;
-
-        $this->populate($data);
-    }
-
-    public function __clone()
-    {
-        $clone = clone $this;
-        $clone->qs = clone $this->qs;
-        return $clone;
-    }
-
-    public function setOrder(array $order = [])
-    {
-        $this->order = $order;
-        return $this;
-    }
-
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-    }
-
-    public function getOrder()
-    {
-        return $this->order;
     }
 
     /**
@@ -170,16 +113,7 @@ class OrderSearchStore extends BaseStore
         if (!empty($data['order']) || $this->checkNot('order'))
         {
             if (!empty($data['order']['date'])) {
-                $date = explode(' - ', $data['order']['date']);
-
-                $tmp = [];
-                if (isset($date[1])) {
-                    $tmp['date__gte'] = strtotime($date[0]);
-                    $tmp['date__lte'] = strtotime($date[1]) + 86400; //24 * 60 * 60;;
-                }
-                else {
-                    $tmp['date__gte'] = strtotime($date[0]);
-                }
+                $tmp = SearchHelper::getDateRange($data['order']['date'], 'date');
 
                 $this->getQ($tmp, 'order.date');
             }
@@ -795,91 +729,9 @@ class OrderSearchStore extends BaseStore
         return $data;
     }
 
-    public static function explodeInOrLike($data, $clean = true)
+    public static function getManager(): Manager
     {
-        $tmp_like = [];
-        $tmp_in = [];
-        $len_prefix = strlen(self::CONST_MANUAL_STRING);
-
-        if (!empty($data))
-        {
-            if (is_array($data))
-            {
-                foreach ($data as $v) {
-                    $v = html_entity_decode($v);
-
-                    if (strpos($v, self::CONST_MANUAL_STRING) === 0) {
-                        $tmp_like[] = $clean ? substr($v, $len_prefix) : $v;
-                    }
-                    else {
-                        $tmp_in[] = $v;
-                    }
-                }
-            }
-            else {
-                if (strpos($data, self::CONST_MANUAL_STRING) === 0) {
-                    $tmp_like[] = $clean ? substr($data, $len_prefix) : $data;
-                }
-                else {
-                    $tmp_like[] = $data;
-                }
-            }
-        }
-
-        return [$tmp_in, $tmp_like];
-    }
-
-    public static function getClearedData($data)
-    {
-        return self::clearRecursive($data);
-    }
-
-    private static function clearRecursive($data)
-    {
-        if (is_array($data) )
-        {
-            if (!empty($data))
-            {
-                $ta = [];
-                foreach ($data as $k=>$v)
-                {
-                    $t = self::clearRecursive($v);
-
-                    if (!is_null($t)) {
-                        $ta[$k] = $t;
-                    }
-                }
-
-                if ($ta) {
-                    return $ta;
-                }
-            }
-        }
-        elseif (is_string($data)) {
-            if ($data === '0' || !empty($data)) {
-                return str_replace(['\\n', '\\r'], ["\n", "\r"], $data);
-            }
-        }
-        elseif (is_numeric($data)) {
-            return $data;
-        }
-        elseif ($data === 0 || !empty($data)) {
-            return $data;
-        }
-
-        return null;
-    }
-
-    public function getQuerySet()
-    {
-        if (!$this->qs) {
-            $this->qs = OrderModel::objects()->getQuerySet();
-        }
-        return $this->qs;
-    }
-
-    public function setQuerySet($qs) {
-        $this->qs = $qs;
+        return OrderModel::objects();
     }
 
     public function setSorting($sorting, $qs)
@@ -942,25 +794,6 @@ class OrderSearchStore extends BaseStore
         return $qs;
     }
 
-    public function getPager()
-    {
-        if (!$this->pager) {
-            $this->pager = new Pagination($this->getQSWithSorting(),[
-                    'pageSize' => $this->defaultPagerPageSize,
-                    'view' => 'dashboard/parts/_pager.tpl',
-                    'sorting_filter'       => (new DashboardFilter)->getField('sorting')->choices,
-                    'sort' => $this->sort,
-                ], new QuerySetDataSource());
-        }
-
-        return $this->pager;
-    }
-
-    public function getModels()
-    {
-        return $this->prepareModels($this->getPager()->paginate());
-    }
-
     public function getPriorityShippingCount()
     {
         $qs = clone $this->qs;
@@ -989,12 +822,7 @@ class OrderSearchStore extends BaseStore
         return $count;
     }
 
-    public function getCount()
-    {
-        return $this->qs->count();
-    }
-
-    private function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
+    protected function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
         if ($this->model) {
             $id = $this->model::classNameShort() . $this->model->pk;
@@ -1012,11 +840,6 @@ class OrderSearchStore extends BaseStore
         return $prefix.$id;
     }
 
-    public function getCacheKeyCount()
-    {
-        return $this->getCacheCountKey();
-    }
-
     public function getCacheKeyPriority()
     {
         return $this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY);
@@ -1032,25 +855,6 @@ class OrderSearchStore extends BaseStore
         Xcart::app()->cache->set($this->getCacheKeyCount(), null);
         Xcart::app()->cache->set($this->getCacheKeyPriority(), null);
         Xcart::app()->cache->set($this->getCacheKeyEvent(), null);
-    }
-
-    public function getCashedCount()
-    {
-        $key = $this->getCacheCountKey();
-        $count = Xcart::app()->cache->get($key);
-
-        if (is_null($count))
-        {
-            $count = $this->getCount();
-            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
-        }
-
-        return $count;
-    }
-
-    public function getCacheLifeTime($min = 20)
-    {
-        return $min + rand(1, $min * rand(1, round($min/2)));
     }
 
     public function getEventsCount(array $ids = [])

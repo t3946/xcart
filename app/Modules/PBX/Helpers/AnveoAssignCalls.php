@@ -209,7 +209,7 @@ class AnveoAssignCalls
 
     public static function reValidate()
     {
-        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(rand(0, 1) ? '' : '-') . 'id'])->limit(100)->all();
+        $models = PbxAnveoCallModel::objects()->filter(['orders__through__order_id__isnull' => true])->order([(random_int(0, 1) ? '' : '-') . 'id'])->limit(100)->all();
 
         foreach ($models as $model) {
             self::bindCallToOrder($model);
@@ -221,11 +221,11 @@ class AnveoAssignCalls
         $account = null;
         $file_parts = explode('-', $file);
 
-        if (empty($file_parts[4]) || $file_parts[4] == "na") {
+        if (empty($file_parts[4]) || $file_parts[4] === "na") {
             return null;
-        } else {
-            return $file_parts[4];
         }
+
+        return $file_parts[4];
     }
 
     public static function parseE164($file)

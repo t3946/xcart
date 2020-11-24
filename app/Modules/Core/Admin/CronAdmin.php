@@ -5,11 +5,17 @@ namespace Modules\Core\Admin;
 use Modules\Admin\Contrib\Admin;
 use Modules\Core\Forms\CronForm;
 use Modules\Core\Forms\StaticNotificationForm;
+use Modules\Core\Models\CronModel;
 use Modules\Core\Models\StaticNotificationModel;
 
 class CronAdmin extends Admin
 {
     public $listRowTemplate = 'admin/cron/tr.tpl';
+
+    public function getListColumns()
+    {
+        return ['name', 'active', 'is_run', 'run_force', 'run_start', 'run_end', 'run_next'];
+    }
 
     public static function getName()
     {

@@ -15,6 +15,7 @@
         <span class="text">
             {$config['title']}
         </span>
+        {if $active}
         <span class="order {if $active}active{/if}">
             {if $order && $order['desc'] && $active}
                 <i class="icon-triangle rotate"></i>
@@ -22,6 +23,7 @@
                 <i class="icon-triangle"></i>
             {/if}
         </span>
+        {/if}
     </a>
 
 {else}

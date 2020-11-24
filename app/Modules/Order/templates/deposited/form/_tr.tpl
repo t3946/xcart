@@ -1,24 +1,10 @@
-{set $color = 'green'}
-
-{if $item->is_run}
-    {if $item->run_start}
-        {if (time() - date_create($item->run_start)->getTimestamp()) > 43200}
-            {set $color = "#f3b51a"}
-        {/if}
-        {if (time() - date_create($item->run_start)->getTimestamp()) > 86400}
-            {set $color = "#d83054"}
-        {/if}
-    {/if}
-{/if}
-
-
-<tr data-pk="{$pk}" style="{if $item->is_run} background: linear-gradient(to bottom, #fff 85%, {$color} 100%); ; {/if} {if !$item->active} color: gray;{/if} {if $item->run_force} border-bottom: 2px solid orange; {/if} ">
+<tr data-pk="{$pk}">
 
     {*<td class="checker">
         <input type="checkbox" id="{$id}-{$pk}-check" name="pk_list[]" value="{$pk}">
         <label for="{$id}-{$pk}-check" class="alone"></label>
-    </td>*}
-
+    </td>
+*}
     {if $admin->sort}
         <td class="sort">
             <a href="#" class="sort-handler {if $canSort}active{else}not-active{/if}">
@@ -45,8 +31,9 @@
             {include $template}
         </td>
     {/foreach}
-
-    <td class="actions">
-        {include $admin->listItemActionsTemplate}
-    </td>
+    {if $admin->getListItemActions()}
+        <td class="actions">
+            {include $admin->listItemActionsTemplate}
+        </td>
+    {/if}
 </tr>

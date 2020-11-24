@@ -2,11 +2,14 @@
 namespace Modules\Order;
 
 use DateTime;
+use Modules\Admin\Traits\AdminTrait;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
 class OrderModule extends Module
 {
+    use AdminTrait;
+
     public static function onApplicationRun()
     {
         $template = Xcart::app()->template->getRenderer();

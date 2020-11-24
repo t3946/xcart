@@ -15,7 +15,8 @@ use Xcart\App\Orm\Model;
 
 class FeedAdmin extends Admin
 {
-    public $listRowTemplate = '/admin/list/_tr_feed.tpl';
+    public $listRowTemplate = '/feeds/_tr_feed.tpl';
+    public string $allList = '/feeds/_list.tpl';
 
     public function getForm()
     {

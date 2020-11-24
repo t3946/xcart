@@ -16,6 +16,8 @@ use Modules\Forms\Admin\EmailAdmin;
 use Modules\Forms\Models\EmailModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Models\OrderModel;
+use Modules\PBX\Admin\PBXAdmin;
+use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
@@ -45,16 +47,17 @@ class DashboardController extends PrototypeAdminController
         [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
 
         if ($this->getRequest()->getIsAjax()) {
-            $mIds = array_map(static function($model){ return $model->pk; }, $myModels);
+            $mIds = array_map(static fn($model) => $model->pk, $myModels);
             $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
+                $storage = $model->getSearchStorage();
                 $data['filters'][$model->id] = [
                     'count' => [
-                        'orders' => $model->getSearchStorage()->getCashedCount(),
-                        'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
-                        'events' => (in_array($model->pk, $mIds)) ? $model->getSearchStorage()->getCachedEventsCount() : null,
+                        'orders' => $storage->getCashedCount(),
+                        'priority' => method_exists($storage,'getCachedPriorityShippingCount') ? $storage->getCachedPriorityShippingCount() : null,
+                        'events' => in_array($model->pk, $mIds) && method_exists('getCachedEventsCount', $storage) ? $storage->getCachedEventsCount() : null,
                     ]
                 ];
             }
@@ -175,6 +178,14 @@ class DashboardController extends PrototypeAdminController
                 );
             } else if ($model->entity === EmailModel::class) {
                 $admin = new EmailAdmin;
+                echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
+                    'objects' => $pager->paginate(),
+                    'pagination' => $pager,
+                    'admin' => $admin,
+                    'columns' => $admin->buildListColumns(),
+                ]);
+            } else if ($model->entity === PbxAnveoCallModel::class) {
+                $admin = new PBXAdmin;
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,

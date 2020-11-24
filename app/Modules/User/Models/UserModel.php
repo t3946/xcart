@@ -36,20 +36,20 @@ class UserModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'pbx_extension' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'login' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'unique' => true,
             ],
             'show_events' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'length' => 1,
                 'default' => 0,
                 'choices' => [
@@ -58,11 +58,11 @@ class UserModel extends Model
                 ]
             ],
             'show_events_min_date' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true
             ],
             'usertype' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'C',
                 'choices' => [
