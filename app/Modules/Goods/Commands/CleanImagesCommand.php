@@ -28,9 +28,9 @@ class CleanImagesCommand extends Command
                                 $image->update(['md5' => $md5]);
                             }
                         });
-
                     } else {
-                        $storage->delete($file['path']);
+                        echo "Delete: {$file['path']}". PHP_EOL;
+                        //$storage->delete($file['path']);
                     }
                 } catch (Throwable $e) {
                     echo $e->getMessage() . PHP_EOL;
