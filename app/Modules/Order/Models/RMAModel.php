@@ -7,6 +7,7 @@ namespace Modules\Order\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 class RMAModel extends Model
@@ -42,7 +43,7 @@ class RMAModel extends Model
                 'null' => false
             ],
             'date' => [
-                'class' => Un
+                'class' => UnixTimestampField::class
             ]
 
         ];
