@@ -75,7 +75,7 @@ class FeedForm extends ModelForm
                     'productcode' => 'SKU',
                     'product' => 'Product Name',
                     'fulldescr' => 'Description',
-                    'images' => 'Images',
+                    'supplier_images' => 'Images',
                     'cost_to_us' => 'Cost To Us',
                     'list_price' => 'List Price',
                     'min_amount' => 'Min Order Amount',
