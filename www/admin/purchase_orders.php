@@ -38,7 +38,7 @@ if ($REQUEST_METHOD == "POST") {
                         throw new UploadException($_FILES['file']['error']);
                     }
                 } catch (Throwable $ex) {
-                    dd($_FILES['file']);
+                    dd($_FILES);
                     $top_message["content"] = $ex->getMessage();
                     $top_message["type"] = "E";
                 }
