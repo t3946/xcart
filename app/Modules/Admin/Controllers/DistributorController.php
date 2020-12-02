@@ -36,7 +36,7 @@ class DistributorController extends BackendController
             $admin->all();
             exit;
         }
-        if ($section ==50) {
+        if ($section == 50) {
             $admin = new DxCommunicationAdmin();
             //$admin->dxModel = $dx;
             $admin->section = $section;

@@ -38,7 +38,7 @@ class DistributorForm extends ModelForm
             ],
             50 => [
                 'title' => 'Communication with distributor',
-                'order_by' => '40',
+                'distributor_section' => '50',
                 'form' => DistributorContactForm::class,
             ],
         ],
