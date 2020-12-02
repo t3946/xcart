@@ -12,6 +12,7 @@ use Modules\Admin\Forms\Dx\DistributorForm;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
 use Throwable;
+use Xcart\App\Exceptions\Exception;
 use Xcart\App\Main\Xcart;
 
 class DistributorController extends BackendController
@@ -64,13 +65,15 @@ class DistributorController extends BackendController
                     Xcart::app()->flash->error('Distributor code you entered already exists in the database.');
                 }
             }
-            if ($dx && $form->isValid()) {
+            if ($dx) {
                 try {
-                    $form->save();
-                    $this->redirect( Xcart::app()->router->url('admin:section', [
-                        'mid' => $dx->manufacturerid,
-                        'section' => $section,
-                    ]));
+                    if ($form->isValid()) {
+                        $form->save();
+                        $this->redirect( Xcart::app()->router->url('admin:section', [
+                            'mid' => $dx->manufacturerid,
+                            'section' => $section,
+                        ]));
+                    }
                 }
                 catch (Throwable $e) {
                     Xcart::app()->flash->error($e->getMessage());
