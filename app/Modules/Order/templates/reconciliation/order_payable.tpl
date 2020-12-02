@@ -17,7 +17,10 @@
         <td>Distributor</td>
         <td>Order #</td>
         <td>Profit <br/>Margin</td>
-        <td>Invoice # <br/>Credit memo #</td>
+        <td>
+            Invoice/Credit memo # <br/>
+            Distributor invoice #
+        </td>
         <td>Invoice <br/>amount</td>
         <td>Credit memo <br/>amount</td>
         <td>Balance <br/>due</td>
@@ -33,6 +36,8 @@
         {set $order = $order_group->order}
         {set $invoices = $order_group->invoices->filter(['status' => 'U'])}
         {set $memos = $order_group->memos->filter(['status' => 'U'])}
+        {set $profit = $order_group->getProfitMargin()}
+        {set $dx = $order_group->manufacturer}
         {foreach $invoices as $invoice}
             <tr data-total="{$invoice->invoice_total}" class="net__row">
                 <td>
@@ -42,10 +47,16 @@
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$invoice->invoice_date|date_format:'%d-%b-%Y'}</td>
                 <td>{$invoice->getPaymentDueDate()->format('d-M-Y')}</td>
-                <td><a target="_blank" href="{$order_group->manufacturer->getAdminUrl()}&distributor_section=11">{$order_group->manufacturer}</a></td>
+                <td><a target="_blank" href="{$dx->getAdminUrl(11)}">{$dx}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
-                <td align="right">{if $order_group->getProfitMargin() < 0}({/if}{$order_group->getProfitMargin()|abs}%{if $order_group->getProfitMargin() < 0}){/if}</td>
-                <td align="center">{$invoice}</td>
+                <td align="right">{if $profit < 0}({/if}{$profit|abs}%{if $profit < 0}){/if}</td>
+                <td align="center">
+                    {$dx->code}-I-{$invoice->invoice_number}
+                    {if $invoice->dx_invoice_number}
+                        <br/>
+                        {$invoice->dx_invoice_number}
+                    {/if}
+                </td>
                 <td align="right">{$invoice->invoice_total|number_format:2:'.':','}</td>
                 <td></td>
                 <td align="right">
@@ -64,10 +75,16 @@
                 <td>{$order->date|date_format:'%d-%b-%Y'}</td>
                 <td>{$memo->memo_date|date_format:'%d-%b-%Y'}</td>
                 <td>{$memo->getPaymentDueDate()->format('d-M-Y')}</td>
-                <td><a target="_blank" href="{$order_group->manufacturer->getAdminUrl()}&distributor_section=11">{$order_group->manufacturer}</a></td>
+                <td><a target="_blank" href="{$dx->getAdminUrl(11)}">{$dx}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
-                <td align="right">{if $order_group->getProfitMargin() < 0}({/if}{$order_group->getProfitMargin()|abs}%{if $order_group->getProfitMargin() < 0}){/if}</td>
-                <td align="center">{$memo}</td>
+                <td align="right">{if $profit < 0}({/if}{$profit|abs}%{if $profit < 0}){/if}</td>
+                <td align="center">
+                    {$dx->code}-C-{$memo->memo_number}
+                    {if $memo->dx_invoice_number}
+                        <br/>
+                        {$memo->dx_invoice_number}
+                    {/if}
+                </td>
                 <td></td>
                 <td align="right">{$memo->ref_to_us_total|number_format:2:'.':','}</td>
                 <td align="right">
@@ -111,7 +128,7 @@
 
 <script>
     function calc_total(){
-        var total = 0;
+        let total = 0;
 
         $('.table__net .net__row.selected').each(function(){
             total += parseFloat($(this).data('total'));
@@ -136,8 +153,8 @@
     });
 
     $('.net__pay__button').click(function(){
-        var table = $('.table__net');
-        var button = $(this);
+        const table = $('.table__net');
+        const button = $(this);
         table.css('opacity', 0.4);
         button.prop('disabled', true);
         $.ajax({
