@@ -3,6 +3,7 @@ global $xcart_dir;
 
 use Modules\Order\Models\PurchaseOrderModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Exceptions\UploadException;
 use Xcart\Logs;
 use Xcart\POPipeline;
 
@@ -26,13 +27,17 @@ if ($REQUEST_METHOD == "POST") {
                 $top_message["type"] = "E";
             }
         } else {
-            if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
+            if (!empty($_FILES['purchase_order_file'])) {
                 try {
-                    Xcart\POPipeline::model()->uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status);
-                    $top_message["content"] = sprintf(Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $purchase_order_number_upload);
-                    $top_message["type"] = "I";
-                    func_header_location("purchase_orders.php#pending_po");
-                } catch (Exception $ex) {
+                    if ($_FILES['purchase_order_file']['error'] === UPLOAD_ERR_OK) {
+                        Xcart\POPipeline::model()->uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status);
+                        $top_message["content"] = sprintf(Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $purchase_order_number_upload);
+                        $top_message["type"] = "I";
+                        func_header_location("purchase_orders.php#pending_po");
+                    } else {
+                        throw new UploadException($_FILES['file']['error']);
+                    }
+                } catch (Throwable $ex) {
                     $top_message["content"] = $ex->getMessage();
                     $top_message["type"] = "E";
                 }

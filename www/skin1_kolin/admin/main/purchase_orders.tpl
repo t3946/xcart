@@ -44,31 +44,30 @@
 {/if}
 <br/>
 
-<div id="po-tabs-container">
+<div id="po-tabs-container" style="display: none">
     <ul>
         <li><a href="#po_check">PO# check</a></li>
         <li><a href="#po_upload">Upload PO</a></li>
         <li><a href="#pending_po">Pending entry POs</a></li>
         <li><a href="#po_pipeline_log">PO pipeline log</a></li>
-
     </ul>
 
 
 {capture name=dialog}
-<div id="po_check">
+<div style="display: none" id="po_check">
     <form method="POST" action="purchase_orders.php" name="purchase_order_search">
         <div style="margin-bottom: 20px;">
             First check - maybe PO has already been entered or it is pending entry.
         </div>
         <div>
-            <b>PO#</b> <input type="text" id="purchase_order_number_search" name="purchase_order_number_search"/> <input
-                    id="purchase_order_search_submit" name="purchase_order_search_submit" type="submit" value="Search"/>
+            <b>PO#</b> <input type="text" id="purchase_order_number_search" name="purchase_order_number_search"/>
+            <input id="purchase_order_search_submit" name="purchase_order_search_submit" type="submit" value="Search"/>
         </div>
     </form>
  </div>
 {/capture}
 {capture name=dialog_upload}
-    <div id="po_upload">
+    <div style="display: none" id="po_upload">
     <form method="POST" action="purchase_orders.php" name="purchase_order_upload" enctype="multipart/form-data">
         <div style="margin-bottom: 20px;">
             Enter PO# indicated on the original PO.
@@ -100,7 +99,7 @@
     </div>
 {/capture}
 {capture name=dialog_pending}
-<div id="pending_po">
+<div style="display: none" id="pending_po">
     <form method="POST" action="purchase_orders.php" name="purchase_order_enter">
         <div style="margin-bottom: 20px;" id="purchase_order_pending_anchor">
         </div>
@@ -146,7 +145,7 @@
 {/capture}
 
 {capture name=dialog_log}
-<div id="po_pipeline_log">
+<div style="display: none" id="po_pipeline_log">
         <div style="margin-bottom: 20px;">
             <table width="100%" class="order_log_table">
 
@@ -181,16 +180,16 @@
     <script>
         {literal}
         $(document).ready(function () {
-            var el = $('#purchase_order_number_upload');{/literal}
+            const el = $('#purchase_order_number_upload');{/literal}
             {if (!empty($po_number))}{literal}
                 el.val("{/literal}{$po_number}{literal}").focus();{/literal}
             {/if}
             {literal}
 
-            var elOffset = el.offset().top;
-            var elHeight = el.height();
-            var windowHeight = $(window).height();
-            var offset;
+            const elOffset = el.offset().top;
+            const elHeight = el.height();
+            const windowHeight = $(window).height();
+            let offset;
 
             if (elHeight < windowHeight) {
                 offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
@@ -198,7 +197,7 @@
             else {
                 offset = elOffset;
             }
-            var speed = 700;
+            const speed = 700;
             setTimeout(function() {$('html, body').animate({scrollTop: offset}, speed)}, 100);
         });
         {/literal}
@@ -207,10 +206,10 @@
 <script>
     {literal}
     $(document).ready(function () {
-        $('#po-tabs-container').tabs();
+        $('#po-tabs-container').tabs().show();
         $("#purchase_order_enter_submit").click(function () {
-            var ordernumber = $("input[name^='po_selected']:checked");
-            if (ordernumber.length != 0) {
+            const order_number = $("input[name^='po_selected']:checked");
+            if (order_number.length !== 0) {
                 $(this).closest('form').attr('target', '_blank');
                 return true;
 
