@@ -91,10 +91,7 @@
         <td align="right"><b>{$profit_margin|number_format:2:'.':','}%</b></td>
         <td></td>
         <td></td>
-        <td align="right"><b>Total due:</b></td>
-        <td colspan="11" align="right">
-            <b>${$balance_total|number_format:2:'.':','}</b>
-        </td>
+        <td colspan="2" align="right"><b>Total due: ${$balance_total|number_format:2:'.':','}</b></td>
     </tr>
 
 </table>
