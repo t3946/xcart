@@ -6,6 +6,7 @@ namespace Modules\Goods\Helpers;
 use GuzzleHttp\Client;
 use Modules\Goods\Models\ImageDModel;
 use Modules\Goods\Models\ProductModel;
+use Throwable;
 use Xcart\App\Exceptions\Exception;
 use Xcart\App\Helpers\Paths;
 
@@ -84,7 +85,7 @@ class ImageHelper
                     'avail' => 'Y'
                 ]);
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             print $e->getMessage();
             $imageModel = null;
         }
