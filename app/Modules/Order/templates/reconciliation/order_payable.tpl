@@ -17,7 +17,6 @@
         <td>Distributor</td>
         <td>Order #</td>
         <td>Profit <br/>Margin</td>
-        <td>Invoice <br/>Credit memo #</td>
         <td>Dx Invoice #</td>
         <td>Invoice <br/>amount</td>
         <td>Credit memo <br/>amount</td>
@@ -48,7 +47,6 @@
                 <td><a target="_blank" href="{$dx->getAdminUrl(11)}">{$dx}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
                 <td align="right">{if $profit < 0}({/if}{$profit|abs}%{if $profit < 0}){/if}</td>
-                <td align="center">{$dx->code}-I-{$invoice->invoice_number}</td>
                 <td align="center">{$invoice->dx_invoice_number}</td>
                 <td align="right">{$invoice->invoice_total|number_format:2:'.':','}</td>
                 <td></td>
@@ -71,7 +69,6 @@
                 <td><a target="_blank" href="{$dx->getAdminUrl(11)}">{$dx}</a></td>
                 <td align="center"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
                 <td align="right">{if $profit < 0}({/if}{$profit|abs}%{if $profit < 0}){/if}</td>
-                <td align="center">{$dx->code}-C-{$memo->memo_number}</td>
                 <td align="center">{$memo->dx_invoice_number}</td>
                 <td></td>
                 <td align="right">{$memo->ref_to_us_total|number_format:2:'.':','}</td>
