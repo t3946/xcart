@@ -11,6 +11,7 @@ use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Admin\Forms\Dx\DistributorForm;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
+use Throwable;
 use Xcart\App\Main\Xcart;
 
 class DistributorController extends BackendController
@@ -64,11 +65,16 @@ class DistributorController extends BackendController
                 }
             }
             if ($dx && $form->isValid()) {
-                $form->save();
-                $this->redirect( Xcart::app()->router->url('admin:section', [
-                    'mid' => $dx->manufacturerid,
-                    'section' => $section,
-                ]));
+                try {
+                    $form->save();
+                    $this->redirect( Xcart::app()->router->url('admin:section', [
+                        'mid' => $dx->manufacturerid,
+                        'section' => $section,
+                    ]));
+                }
+                catch (Throwable $e) {
+                    Xcart::app()->flash->error($e->getMessage());
+                }
             }
         }
 
