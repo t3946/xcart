@@ -35,10 +35,10 @@ if ($REQUEST_METHOD == "POST") {
                         $top_message["type"] = "I";
                         func_header_location("purchase_orders.php#pending_po");
                     } else {
-                        print_r($_FILES['file']);
                         throw new UploadException($_FILES['file']['error']);
                     }
                 } catch (Throwable $ex) {
+                    dd($_FILES['file']);
                     $top_message["content"] = $ex->getMessage();
                     $top_message["type"] = "E";
                 }
