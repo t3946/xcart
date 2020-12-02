@@ -35,7 +35,7 @@ class UploadException extends Exception
                 break;
 
             default:
-                $message = "Unknown upload error";
+                $message = "Unknown upload error {$code}";
                 break;
         }
         return $message;
