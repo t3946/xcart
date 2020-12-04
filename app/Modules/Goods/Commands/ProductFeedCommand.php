@@ -163,7 +163,7 @@ class ProductFeedCommand extends Command
                         $inserted_products_count++;
                         $modelProduct->save();
                     } else if ($changed = SupplierFeedHelper::getChanged($modelProduct)) {
-                        print($kp . ' --> ' . $aProduct['productcode'] . . PHP_EOL);
+                        print($kp . ' --> ' . $aProduct['productcode'] . PHP_EOL);
                         print_r($changed);
                         $updated_products_count++;
                         $modelProduct->save();
