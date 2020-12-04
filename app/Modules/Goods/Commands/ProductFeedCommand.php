@@ -220,5 +220,6 @@ class ProductFeedCommand extends Command
             }
 
         }
+        echo "DONE!" . PHP_EOL;
     }
 }
