@@ -23,9 +23,10 @@ class CleanImagesCommand extends Command
                 try {
                     if ($images = ImageDModel::objects()->all(['image_path' => './' . $file['path']])) {
                         $md5 = md5($storage->read($file['path']));
-                        array_walk($images, static function ($image) use ($md5) {
+                        array_walk($images, static function ($image) use ($md5, $file) {
                             if ($image->md5 !== $md5) {
-                                $image->update(['md5' => $md5]);
+                                echo "{$file['path']} new md5: " . $md5 . PHP_EOL;
+                                $image->update(['md5' => $md5 ?: null]);
                             }
                         });
                     } else {

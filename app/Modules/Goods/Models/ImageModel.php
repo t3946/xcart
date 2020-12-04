@@ -90,8 +90,8 @@ class ImageModel extends Model
             ],
             'md5' => [
                 'class' => CharField::class,
-                'null' => false,
-                'default' => 0,
+                'null' => true,
+                'default' => null,
             ],
         ];
     }
