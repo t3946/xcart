@@ -47,8 +47,6 @@ class ProductFeedCommand extends Command
         /** @var SupplierFeedModel $feed */
         foreach ($suppliers as $feed) {
 
-            echo "Start feed {$feed->feed_name}" . PHP_EOL;
-
             $last_feed_fields_arr_vals = null;
             $info = pathinfo($feed->feed_file_name);
 
@@ -87,6 +85,8 @@ class ProductFeedCommand extends Command
 
             $all_feed_productcodes = $duplicate_sku = $lastFeedFields = [];
             $inserted_products_count = $skippedProductsCount = $new_products_count = $updated_products_count = $discontinued_products_count = 0;
+
+            echo "Start feed {$feed->feed_name}" . PHP_EOL;
 
             foreach ($supplierFeed->products as $kp => $prod) {
                 $products = [];
