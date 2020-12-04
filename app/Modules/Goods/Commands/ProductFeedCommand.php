@@ -46,6 +46,9 @@ class ProductFeedCommand extends Command
 
         /** @var SupplierFeedModel $feed */
         foreach ($suppliers as $feed) {
+
+            echo "Start feed {$feed->feed_name}" . PHP_EOL;
+
             $last_feed_fields_arr_vals = null;
             $info = pathinfo($feed->feed_file_name);
 
@@ -82,18 +85,13 @@ class ProductFeedCommand extends Command
                 continue;
             }
 
-            $log = "manufacturerid: {$feed->manufacturerid}. Started. ({$feed->feed_type})\n";
-            Xcart::app()->logger->debug($log, [], 'feed');
-
             $all_feed_productcodes = $duplicate_sku = $lastFeedFields = [];
             $inserted_products_count = $skippedProductsCount = $new_products_count = $updated_products_count = $discontinued_products_count = 0;
 
             foreach ($supplierFeed->products as $kp => $prod) {
                 $products = [];
-                if (isset($prod['is_group']) && $prod['is_group'] === true && $supplierFeed->supplier_name !== 'Amazon') {
-                    if ($prod['child_products']) {
+                if ($prod['is_group'] && $prod['child_products'] && $supplierFeed->supplier_name !== 'Amazon' ) {
                         $products = SupplierFeedHelper::feedChilds($prod, $supplierFeed);
-                    }
                 } else {
                     $products[] = $prod;
                 }
@@ -123,8 +121,6 @@ class ProductFeedCommand extends Command
                         }
                     }
 
-                    print($kp . ' --> ' . $aProduct['productcode'] . "\n");
-
                     switch ($feed->feed_type) {
                         case 'I' :
 
@@ -139,12 +135,12 @@ class ProductFeedCommand extends Command
 
                             if (!isset($aProduct['is_group'])) {
                                 if (!isset($aProduct['cost_to_us'])) {
-                                    print("Skip product --> 'No cost_to_us' \n");
+                                    print("Skip product --> 'No cost_to_us'" . PHP_EOL);
                                     $skippedProductsCount++;
                                     continue 2;
                                 }
                                 if (!$is_created && $feed->add_new_only === 'Y') {
-                                    print("Skip product --> 'Add new only' \n");
+                                    print("Skip product --> 'Add new only' " . PHP_EOL);
                                     $skippedProductsCount++;
                                     continue 2;
                                 }
@@ -153,7 +149,7 @@ class ProductFeedCommand extends Command
                             if ($is_created) {
                                 $modelProduct->setAttributes($aProduct);
                                 $modelProduct->save();
-                                print 'Add product --> OK' . PHP_EOL;
+                                print "Add product {$aProduct['productcode']} --> OK" . PHP_EOL;
                             }
                             break;
                     }
@@ -167,6 +163,7 @@ class ProductFeedCommand extends Command
                         $inserted_products_count++;
                         $modelProduct->save();
                     } else if ($changed = SupplierFeedHelper::getChanged($modelProduct)) {
+                        print($kp . ' --> ' . $aProduct['productcode'] . . PHP_EOL);
                         print_r($changed);
                         $updated_products_count++;
                         $modelProduct->save();
@@ -178,7 +175,7 @@ class ProductFeedCommand extends Command
             }
 
             $discontinued_products_count = SupplierFeedHelper::discontinueProducts($all_feed_productcodes, $feed);
-            print "Discontinued {$discontinued_products_count} products \n";
+            print "Discontinued {$discontinued_products_count} products " . PHP_EOL;
 
             $params = [
                 'md5' => $md5_value,
