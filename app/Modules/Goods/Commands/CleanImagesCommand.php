@@ -26,7 +26,8 @@ class CleanImagesCommand extends Command
                         array_walk($images, static function ($image) use ($md5, $file) {
                             if ($image->md5 !== $md5) {
                                 echo "{$file['path']} new md5: " . $md5 . PHP_EOL;
-                                $image->update(['md5' => $md5 ?: null]);
+                                $image->md5 = $md5 ?? null;
+                                $image->save();
                             }
                         });
                     } else {
