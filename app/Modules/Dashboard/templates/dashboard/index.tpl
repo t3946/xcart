@@ -18,10 +18,10 @@
         <div class="tabs">
             <ul>
                 <li>
-                    <a href="#my_responsibilities" class="link {if $myModels|count > 0}active{/if}">My responsibilities</a>
+                    <a href="#my_responsibilities" class="link">My responsibilities</a>
                 </li>
                 <li>
-                    <a href="#dashboard" class="link {if $myModels|count == 0}active{/if}">Order dashboard</a>
+                    <a href="#dashboard" class="link active">Order dashboard</a>
                 </li>
                 <li>
                     <a href="#pending_po" class="link">Pending PO entry</a>
@@ -45,10 +45,10 @@
             </ul>
 
             <div class="tabs-content">
-                <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_responsibilities">
+                <div class="tab my_dashboard white-back orange-border content-block" id="my_responsibilities">
                     {include 'dashboard/_dashboard_my.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
                 </div>
-                <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
+                <div class="tab white-back orange-border content-block active" id="dashboard">
                     <div class="row view_sets">
                         <div class="column text-right">
                             <select class="viewer" name="mode">
