@@ -30,8 +30,9 @@ return [
 - Static files build:
     - install `bower`
     - install `node.js` and `npm`
-    - run `bower install && npm instal` in `/www/static/`
-    - run `npm run gupl watch:frontend` or `npm run gulp watch:backend` for building distribution static files.
+    - go in `/www/static/`
+    - run `bower install && npm instal`
+    - run `npm run gulp watch:frontend` or `npm run gulp watch:backend` for building distribution static files.
 
 ---
 #Соглашение о разработке
