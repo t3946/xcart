@@ -55,4 +55,17 @@ class EmailSearchStore extends BaseStore
 
         return $prefix . $id;
     }
+
+    public function getQSWithSorting()
+    {
+        $qs = clone $this->qs;
+
+        $qs = $this->sort ? $this->setSorting($this->sort, $qs) : $qs->order(['-date']);
+
+        if ($this->order) {
+            $qs->order($this->order);
+        }
+
+        return $qs;
+    }
 }
