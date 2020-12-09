@@ -9,7 +9,7 @@
     {set $config  = $site->getConfig()}
     {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
-    {set $uri = $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $uri = constant('APP_LOCAL') ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">

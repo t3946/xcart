@@ -813,6 +813,16 @@
   }
 }
 
+.quantity-group input[name="quantity"] {
+  border: none;
+  height: 1.75rem;
+  line-height: 1.6875rem;
+}
+
+.quantity-group input[name="quantity"]:focus {
+  border: none;
+}
+
 //.mobile, .tablet {
 html{
   &.touchevents,

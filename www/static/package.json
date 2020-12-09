@@ -7,7 +7,8 @@
     "watch": "gulp watch",
     "webpack:frontend": "webpack --config ./config/webpack.frontend.js ",
     "webpack:frontend:watch": "webpack --config ./config/webpack.frontend.js --watch --progress",
-    "webpack:frontend:hot": "webpack --config ./config/webpack.frontend.hot.js "
+    "webpack:frontend:hot": "webpack --config ./config/webpack.frontend.hot.js",
+    "dev": "npm run gulp watch:frontend"
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",

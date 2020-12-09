@@ -41,26 +41,7 @@ const cont = new class PhotoSwipeContainer
             if (!!d) {
                 let pswp = this.pswp;
                 let cIndex = pswp.getCurrentIndex();
-                let maxPos = pswp.items.length -1;
-                let pIndex = d;
-
-                if (d === -1 && cIndex === maxPos) {
-                    pIndex = 0;
-                }
-                else if (d === 1 && cIndex === maxPos) {
-                    pIndex = maxPos -1;
-                }
-                else if (d === 1 && cIndex === 0) {
-                    pIndex = maxPos;
-                }
-                else if (d === -1) {
-                    pIndex = cIndex +1;
-                }
-                else if (d === 1) {
-                    pIndex = cIndex -1;
-                }
-
-                let prevItem = pswp.items[pIndex];
+                let prevItem = pswp.items[cIndex];
 
                 if (prevItem.onBlur) {
                     prevItem.onBlur(prevItem, this.pswp);
