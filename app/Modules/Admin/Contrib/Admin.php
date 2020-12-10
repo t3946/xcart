@@ -391,6 +391,7 @@ abstract class Admin
     }
 
     /**
+     * get sql query builder based on current model
      * @return QuerySet
      */
     public function getQuerySet()
