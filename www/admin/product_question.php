@@ -404,7 +404,7 @@ $signature = func_get_signature($use_current_storefront);
 $product_question_subject_line_to_distr = $config["product_question_email"]["product_question_subject_line_to_distr"];
 $product_question_message_body_to_distr = func_eol2br(stripslashes($config["product_question_email"]["product_question_message_body_to_distr"]));
 
-$product_question_subject_line_to_distr = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_subject_line_to_distr);
+$product_question_subject_line_to_distr = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product->getMpn(),$product_info["supplier_internal_id"]], $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{productname}}", $product_info["product"], $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{brand_email}}", $product_info["brand_email"], $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{brand_phone}}", $product_info["customer_service_phone"], $product_question_subject_line_to_distr);
@@ -418,7 +418,7 @@ $product_question_subject_line_to_distr = str_replace("{{prqnid}}", $prefix_prod
 $product_question_subject_line_to_distr = str_replace("{{signature}}", $signature, $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{userfullname}}", $userfullname, $product_question_subject_line_to_distr);
 
-$product_question_message_body_to_distr = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_distr);
+$product_question_message_body_to_distr = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product->getMpn(),$product_info["supplier_internal_id"]], $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace("{{brand_email}}", $product_info["brand_email"], $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace("{{brand_phone}}", $product_info["customer_service_phone"], $product_question_message_body_to_distr);
