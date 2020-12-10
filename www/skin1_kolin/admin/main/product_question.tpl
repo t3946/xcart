@@ -184,10 +184,11 @@ $(function() {ldelim}
             </tr>
             <tr>
                 <td><B>Product MPN:</B></td>
-                <td>{if $product_info.d_website_search_for_sku_url ne ""}<a
-                            href="{$product_info.d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}"
-                            style="color: #3A3AFF;"
-                            target="_blank">{/if}{$productModel->getMpn()}{if $product_info.d_website_search_for_sku_url ne ""}</a>{/if}
+                <td>
+                    {set $dx_url = $productModel->getDistributorUrl()}
+                    {if $dx_url}<a href="{$dx_url}" style="color: #3A3AFF;" target="_blank">{/if}
+                        {$productModel->getMpn()}
+                    {if $dx_url}</a>{/if}
                 </td>
             </tr>
             <tr>
