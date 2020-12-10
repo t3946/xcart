@@ -3,8 +3,6 @@
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
 use Xcart\App\Orm\Exception\MultipleObjectsReturned;
 use Mindy\QueryBuilder\Aggregation\Aggregation;
 use Mindy\QueryBuilder\Aggregation\Avg;
@@ -19,6 +17,7 @@ use Xcart\App\Orm\Fields\RelatedField;
 
 /**
  * Class QuerySet
+ * Sql query builder. Builds and sends sql queries.
  * @package Xcart\App\Orm
  */
 class QuerySet extends QuerySetBase
