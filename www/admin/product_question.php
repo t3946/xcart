@@ -342,6 +342,7 @@ $product_info["customer_service_phone"] = $some_brand_info["customer_service_pho
 /** @var DistributorModel $distributor_model */
 $distributor_model = $product->distributor;
 $distributor_info = $distributor_model->getAttributes();
+$dx_contact = $distributor_model->getProductQuestionsContact();
 
 $distributor_info["good_time_to_send_email_to_distributor"] = $distributor_model->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
@@ -417,7 +418,9 @@ $product_question_subject_line_to_distr = str_replace("{{product_answer}}", $pro
 $product_question_subject_line_to_distr = str_replace("{{prqnid}}", $prefix_product_question_id, $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{signature}}", $signature, $product_question_subject_line_to_distr);
 $product_question_subject_line_to_distr = str_replace("{{userfullname}}", $userfullname, $product_question_subject_line_to_distr);
+$product_question_subject_line_to_distr = str_replace("{{distributor_or_brand_contact_name}}", $distributor_or_brand_contact_name, $product_question_subject_line_to_distr);
 
+$product_question_message_body_to_distr = str_replace("{{distributor_or_brand_contact_name}}", $dx_contact->contact_name ?? '', $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product->getMpn(),$product_info["supplier_internal_id"]], $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_distr);
 $product_question_message_body_to_distr = str_replace("{{brand_email}}", $product_info["brand_email"], $product_question_message_body_to_distr);
