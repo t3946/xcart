@@ -3,3 +3,6 @@
         {$question->getField('status')->toText()} ({$question->id})
     </a>
 {/foreach}
+<a target="_blank" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">
+    All
+</a>
