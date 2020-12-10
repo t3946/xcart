@@ -185,7 +185,7 @@ $(function() {ldelim}
             <tr>
                 <td><B>Product MPN:</B></td>
                 <td>
-                    {set $dx_url = $productModel->getDistributorUrl()}
+                    {assign var=dx_url value=$productModel->getDistributorUrl()}
                     {if $dx_url}<a href="{$dx_url}" style="color: #3A3AFF;" target="_blank">{/if}
                         {$productModel->getMpn()}
                     {if $dx_url}</a>{/if}
