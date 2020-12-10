@@ -325,7 +325,7 @@ $prefix_product_question_id = "PRQN-".sprintf('%1$05d', $id);
 $product = $oProductQuestion->product;
 $use_current_storefront = $product->sites->limit(1)->storefrontid;
 
-$product_info = func_select_product($product_question["productid"], 0, false, false, false, false, $use_current_storefront);
+$product_info = $product->getAttributes();
 
 
 //$some_distributor_info = func_query_first("SELECT d_product_questions_send_to_email, d_product_questions_send_to_name FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
@@ -339,13 +339,9 @@ $product_info["brand_customer_service_name"] = $some_brand_info["customer_servic
 $product_info["brand"] = $some_brand_info["brand"];
 $product_info["customer_service_phone"] = $some_brand_info["customer_service_phone"];
 
-
-#
-##
-$distributor_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-
 /** @var DistributorModel $distributor_model */
 $distributor_model = $product->distributor;
+$distributor_info = $distributor_model->getAttributes();
 
 $distributor_info["good_time_to_send_email_to_distributor"] = $distributor_model->isGoodTimeToSendEmail() ? 'Y' : 'N';
 
@@ -356,8 +352,6 @@ $phone_normalized = preg_replace("/[^0-9]/S","", $distributor_info["distributor_
 if (strlen($phone_normalized) == "10"){
 	$distributor_info["distributor_phone_phone_normalized"] = "+1".$phone_normalized;
 }
-
-
 
 $tmp_cur_time_sec = time();
 if (!empty($product_question["state"])){
