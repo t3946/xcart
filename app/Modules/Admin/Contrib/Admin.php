@@ -424,8 +424,10 @@ abstract class Admin
     }
 
     /**
+     * add filter conditions to query set
      * @param $qs QuerySet
      * @return QuerySet
+     * @throws \Exception
      */
     public function handleSearch($qs, $search)
     {
