@@ -1,9 +1,6 @@
 <?php
 
-
 namespace Modules\Translate\Helpers;
-
-
 
 use Gettext\Extractors\PhpCode;
 use Gettext\Generators\Po;
@@ -23,7 +20,7 @@ class TranslateHelper
      * @var Translations
      */
     private $_translations;
-
+//TODO: тут сохраняются переводы
     public function __construct()
     {
         $this->_translations = new Translations();

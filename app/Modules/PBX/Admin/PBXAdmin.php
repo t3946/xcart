@@ -11,7 +11,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Models\OrderModel;
-use Modules\PBX\Forms\CallsFilterForm;
+use Modules\PBX\Forms\TranslatesFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Main\Xcart;
@@ -149,7 +149,7 @@ class PBXAdmin extends Admin
 
     public function getFilterForm()
     {
-        return new CallsFilterForm;
+        return new TranslatesFilterForm;
     }
 
     public function handleFilter(QuerySet $qs, $form): QuerySet
