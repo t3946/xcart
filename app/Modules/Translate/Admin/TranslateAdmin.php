@@ -60,16 +60,14 @@ class TranslateAdmin extends Admin
     private function readPO( string $lang_code ): Translations
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        $file = "$path\\lang\\$lang_code.po";
-        return Translations::fromPoFile( $file );
+        return Translations::fromPoFile( "$path/lang/$lang_code.po" );
 
     }
 
     private function writePO( Translations $translations, string $lang_code ): void
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        $file = "$path\\lang\\$lang_code.po";
-        Po::toFile( $translations, "$path\\lang\\$lang_code.po" );
+        Po::toFile( $translations, "$path/lang/$lang_code.po" );
     }
 
     private function getCreateForm()
