@@ -47,7 +47,6 @@ class TranslatesFilterForm extends Form
                 'class' => CheckboxField::class,
                 'label' => 'Case-sensitivity',
             ],
-//            'поиск по непереведённым'
         ];
     }
 }
