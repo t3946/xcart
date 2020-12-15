@@ -66,7 +66,9 @@ class TranslateAdmin extends Admin
     private function writePO( Translations $translations, string $lang_code ): void
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        Po::toFile( $translations, "$path/lang/$lang_code.po" );
+        if (!Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
+            Xcart::app()->flash->error( "Can\'t write file $path/lang/$lang_code.po please check chmod" );
+        }
     }
 
     private function getCreateForm()
