@@ -61,7 +61,6 @@ class TranslateAdmin extends Admin
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
         return Translations::fromPoFile( "$path/lang/$lang_code.po" );
-
     }
 
     private function writePO( Translations $translations, string $lang_code ): void
@@ -124,11 +123,37 @@ class TranslateAdmin extends Admin
 
     public function getUpdateUrl( $pk = null )
     {
-        return parent::getUpdateUrl( urlencode($pk) );
+        $query = [ 'msgid' => $msgid = substr( $pk, 3 ) ];
+
+        if ( Xcart::app()->request->get->has( 'popup' ) ) {
+            $query[ 'popup' ] = true;
+        }
+
+        return Xcart::app()->router->url( 'admin:update', [
+            'module' => static::getModuleName(),
+            'admin' => static::classNameShort(),
+            'pk' => substr( $pk, 0, 2 ),
+        ], $query );
+    }
+
+    public function getRemoveUrl( $pk = null )
+    {
+        $query = [ 'msgid' => $msgid = substr( $pk, 3 ) ];
+
+        if ( Xcart::app()->request->get->has( 'popup' ) ) {
+            $query[ 'popup' ] = true;
+        }
+
+        return Xcart::app()->router->url( 'admin:remove', [
+            'module' => static::getModuleName(),
+            'admin' => static::classNameShort(),
+            'pk' => substr( $pk, 0, 2 ),
+        ], $query );
     }
 
     public function remove( $pk = null )
     {
+        $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
         //get new translation
         $model = $this->fetchTranslateByKey( $pk );
         $remove_translations = new Translations;
@@ -159,6 +184,8 @@ class TranslateAdmin extends Admin
      */
     public function update( $pk = null, $parent_id = null ): void
     {
+        $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
+
         $this->setBreadcrumbs();
         $req_method = Xcart::app()->request->getMethod();
         $form = $pk ? $this->getUpdateForm() : $this->getCreateForm();
