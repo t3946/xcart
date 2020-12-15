@@ -176,6 +176,8 @@ class TranslateAdmin extends Admin
                 $translate_model = $form->getInstance();
                 $this->updateTranslation( $translate_model );
                 Xcart::app()->flash->success( 'Changes have been successfully applied.' );
+                $pk = $translate_model->getAttribute( 'lang_code' ) . '-' . $translate_model->getAttribute( 'msgid' );
+                Xcart::app()->request->redirect( $this->getUpdateUrl( urlencode( $pk ) ) );
             }
             else {
                 Xcart::app()->flash->error( 'Please, fix errors' );
