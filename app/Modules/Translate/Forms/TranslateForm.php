@@ -35,9 +35,7 @@ class TranslateForm extends ModelForm
             'msgstr' => [
                 'class' => CharField::class,
                 'label' => 'Message',
-                'required' => true,
                 'html' => [
-                    'required' => true,
                     'autocomplete' => 'off',
                 ],
             ],
