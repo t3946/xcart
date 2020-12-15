@@ -184,7 +184,9 @@ class TranslateAdmin extends Admin
      */
     public function update( $pk = null, $parent_id = null ): void
     {
-        $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
+        if ($pk !== null) {
+            $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
+        }
 
         $this->setBreadcrumbs();
         $req_method = Xcart::app()->request->getMethod();
