@@ -174,7 +174,6 @@ class TranslateAdmin extends Admin
             }
             else {
                 Xcart::app()->flash->error( 'Please, fix errors' );
-                dd( $form->getErrors() );
             }
         }
 
