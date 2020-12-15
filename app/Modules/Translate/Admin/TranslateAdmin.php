@@ -154,6 +154,7 @@ class TranslateAdmin extends Admin
      */
     public function update( $pk = null, $parent_id = null ): void
     {
+        $this->setBreadcrumbs();
         $req_method = Xcart::app()->request->getMethod();
         $form = $pk ? $this->getUpdateForm() : $this->getCreateForm();
 
