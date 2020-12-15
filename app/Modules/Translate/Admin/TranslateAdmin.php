@@ -66,7 +66,7 @@ class TranslateAdmin extends Admin
     private function writePO( Translations $translations, string $lang_code ): void
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        if (!Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
+        if ( !Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
             Xcart::app()->flash->error( "Can\'t write file $path/lang/$lang_code.po please check chmod" );
         }
     }
@@ -155,7 +155,7 @@ class TranslateAdmin extends Admin
 
     public function remove( $pk = null )
     {
-        $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
+        $pk = $pk . '-' . Xcart::app()->request->get->get( 'msgid' );
         //get new translation
         $model = $this->fetchTranslateByKey( $pk );
         $remove_translations = new Translations;
@@ -186,8 +186,8 @@ class TranslateAdmin extends Admin
      */
     public function update( $pk = null, $parent_id = null ): void
     {
-        if ($pk !== null) {
-            $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
+        if ( $pk !== null ) {
+            $pk = $pk . '-' . Xcart::app()->request->get->get( 'msgid' );
         }
 
         $this->setBreadcrumbs();
@@ -205,6 +205,7 @@ class TranslateAdmin extends Admin
         ) {
             if ( $form->isValid() ) {
                 $translate_model = $form->getInstance();
+                $translate_model->setAttribute( 'msgid', $translate_model->getAttribute( 'msgctxt' ) );
                 $this->updateTranslation( $translate_model );
                 Xcart::app()->flash->success( 'Changes have been successfully applied.' );
                 $pk = $translate_model->getAttribute( 'lang_code' ) . '-' . $translate_model->getAttribute( 'msgid' );

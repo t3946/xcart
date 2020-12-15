@@ -10,6 +10,8 @@ use Xcart\App\Form\ModelForm;
 
 class TranslateCreateForm extends ModelForm
 {
+    public array $exclude = [ 'msgid' ];
+
     public function getName(): string
     {
         return 'Edit Translate';
@@ -33,15 +35,6 @@ class TranslateCreateForm extends ModelForm
                 },
                 'html' => [
                     'style' => 'width: 300px',
-                ],
-            ],
-            'msgid' => [
-                'class' => CharField::class,
-                'label' => 'Context',
-                'required' => true,
-                'html' => [
-                    'required' => true,
-                    'autocomplete' => 'off',
                 ],
             ],
             'msgctxt' => [
