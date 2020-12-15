@@ -2,6 +2,7 @@
 
 namespace Modules\Translate\Admin;
 
+use Gettext\Generators\Mo;
 use Gettext\Generators\Po;
 use Gettext\Merge;
 use Gettext\Translations;
@@ -69,6 +70,7 @@ class TranslateAdmin extends Admin
         if ( !Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
             Xcart::app()->flash->error( "Can\'t write file $path/lang/$lang_code.po please check chmod" );
         }
+        Mo::toFile($translations, "$path/lang/$lang_code.mo");
     }
 
     private function getCreateForm()

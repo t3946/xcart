@@ -34,24 +34,13 @@ class TranslateHelper
         $this->processSave();
     }
 
-    private function saveAdminTranslates()
-    {
-        $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        foreach ( LanguageModel::objects()->all() as $lang ) {
-            $file = "{$path}\\lang\\{$lang->lang_code}.po";
-            $translations_o = file_exists( $file ) ? Translations::fromPoFile( $file ) : new Translations;
-            $translations_o->mergeWith( $this->_translations, Merge::DEFAULTS );
-            Po::toFile( $translations_o, $file );
-        }
-    }
-
     public function processSave()
     {
         $path = Xcart::app()->getModule('Translate')->getPath();
         foreach (LanguageModel::objects()->all() as $lang) {
             $file = "{$path}\\lang\\{$lang->lang_code}.po";
             $translations_o = file_exists($file) ? Translations::fromPoFile($file) : new Translations;
-            $translations_o->mergeWith($this->_translations, Merge::DEFAULTS | Merge::REMOVE);
+            $translations_o->mergeWith($this->_translations, Merge::DEFAULTS);
             Po::toFile($translations_o, $file);
         }
     }
