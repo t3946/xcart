@@ -184,11 +184,10 @@ class TranslateAdmin extends Admin
 
         $form->setInstance( $translate_model );
 
-        //создание или редактирование
+        //create or update
         $is_new = is_null( $pk );
         $template = $is_new ? $this->createTemplate : $this->updateTemplate;
 
-        // вывод
         $this->renderInternal( $template, [
             'form' => $form,
             'model' => $translate_model,
