@@ -122,6 +122,11 @@ class TranslateAdmin extends Admin
         ] );
     }
 
+    public function getUpdateUrl( $pk = null )
+    {
+        return parent::getUpdateUrl( urlencode($pk) );
+    }
+
     public function remove( $pk = null )
     {
         //get new translation
