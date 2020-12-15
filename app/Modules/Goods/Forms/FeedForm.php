@@ -17,7 +17,7 @@ use Xcart\App\Form\ModelForm;
 
 class FeedForm extends ModelForm
 {
-    public $exclude = [
+    public array $exclude = [
         'last_feed_fields',
         'feed_source',
         'last_update_time',

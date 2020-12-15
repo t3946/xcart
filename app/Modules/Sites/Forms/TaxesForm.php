@@ -12,7 +12,7 @@ use Xcart\App\Form\ModelForm;
 
 class TaxesForm extends ModelForm
 {
-    public $exclude = ['position'];
+    public array $exclude = ['position'];
 
     public function getModel()
     {

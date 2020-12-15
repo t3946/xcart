@@ -65,7 +65,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @var array
      */
-    public $exclude = [];
+    public array $exclude = [];
 
     /**
      * @var array

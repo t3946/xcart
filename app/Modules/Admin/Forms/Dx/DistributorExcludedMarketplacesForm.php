@@ -9,7 +9,7 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorExcludedMarketplacesForm extends DistributorForm
 {
-    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model'];
 
     public function getFieldsets()
     {

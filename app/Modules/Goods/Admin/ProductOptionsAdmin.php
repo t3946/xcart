@@ -13,7 +13,7 @@ use Xcart\App\Orm\Model;
 class ProductOptionsAdmin extends ListViewAdmin
 {
     public $ownerField = 'product_id';
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getExcludedColumns()
     {

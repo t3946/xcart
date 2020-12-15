@@ -15,7 +15,7 @@ use Xcart\App\Form\ModelForm;
 
 class ProductOptionsAdminForm extends ModelForm
 {
-    public $exclude = ['product'];
+    public array $exclude = ['product'];
 
     public function getFields()
     {

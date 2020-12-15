@@ -515,7 +515,6 @@ abstract class Field implements IValidateField
 
         return $this->innerRender($this->inputTemplate, [
             'field' => $this,
-//            'html' => $this->getHtmlAttributes(),
             'html' => $this->buildAttributesInput(),
             'id' => $this->getHtmlId(),
             'value' => $this->getRenderValue(),

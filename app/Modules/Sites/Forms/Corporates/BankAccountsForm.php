@@ -9,7 +9,7 @@ use Xcart\App\Form\Fields\ListViewField;
 
 class BankAccountsForm extends CorporatesForm
 {
-    public $exclude = ['storefronts', 'taxes'];
+    public array $exclude = ['storefronts', 'taxes'];
 
     public function getFieldsets()
     {

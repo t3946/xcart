@@ -10,6 +10,15 @@ use Xcart\App\Orm\Model;
 
 class InfoBlockAdmin extends Admin
 {
+    public function getListColumns()
+    {
+        return [
+            'language',
+            'name',
+            'tag',
+        ];
+    }
+
     public function getSearchColumns()
     {
         return ['name', 'tag'];

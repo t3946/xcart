@@ -15,11 +15,14 @@ use Xcart\App\Orm\Model;
  */
 class PageAdmin extends Admin
 {
-//    public $linkColumn = 'name';
 
     public function getListColumns()
     {
-        return [];
+        return [
+            'name',
+            'url',
+            'is_published',
+        ];
     }
 
     public function getSearchColumns()

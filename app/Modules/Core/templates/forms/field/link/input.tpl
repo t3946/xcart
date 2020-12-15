@@ -1,1 +1,1 @@
-<a href="{$value}" {raw $html}>Call</a>
+<a href="{$value}" {raw $html}>{$link_content}</a>

@@ -8,7 +8,6 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
-use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
@@ -16,7 +15,6 @@ use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -57,7 +55,7 @@ abstract class Admin
      *
      * @var null|string
      */
-    public $sort = null;
+    public ?string $sort = null;
 
     public $innerRender = false;
 
@@ -880,14 +878,15 @@ abstract class Admin
 
     public function sort($pkList, $to, $prev, $next)
     {
+        $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
-        $positions = $qs->filter(['pk__in' => $pkList])->valuesList(['position'], true);
+        $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);
         asort($positions);
         $result = array_combine($pkList, $positions);
 
         $model = $qs->getModel();
         foreach ($result as $pk => $position) {
-            $model::objects()->filter(['pk' => $pk])->update(['position' => $position]);
+            $model::objects()->filter(['pk' => $pk])->update([$sort => $position]);
         }
         $this->jsonResponse([
             'success' => true

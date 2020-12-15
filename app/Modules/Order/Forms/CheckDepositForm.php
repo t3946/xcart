@@ -14,7 +14,7 @@ use Xcart\App\Form\ModelForm;
 
 class CheckDepositForm extends ModelForm
 {
-    public $exclude = ['date'];
+    public array $exclude = ['date'];
 
     public function getModel()
     {

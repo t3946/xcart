@@ -26,7 +26,7 @@ class DxContactAdmin extends Admin
     public $createTemplate = 'admin/distributor/form/create.tpl';
     public $updateTemplate = 'admin/distributor/form/update.tpl';
 
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getModel()
     {

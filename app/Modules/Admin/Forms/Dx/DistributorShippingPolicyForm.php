@@ -15,7 +15,7 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorShippingPolicyForm extends DistributorForm
 {
-    public $exclude = ['provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
 
     public function getFieldsets()
     {

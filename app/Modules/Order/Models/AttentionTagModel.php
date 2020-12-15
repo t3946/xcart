@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
@@ -57,5 +58,10 @@ class AttentionTagModel extends Model
                 'default' => ''
             ],
         ];
+    }
+
+    public function __toString()
+    {
+        return (string)$this->status;
     }
 }

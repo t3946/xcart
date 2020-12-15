@@ -14,7 +14,7 @@ use Xcart\App\Validation\EmailValidator;
 
 class NotifyStockForm extends FrontendModelForm
 {
-    public $exclude  = ['site', 'sent', 'date'];
+    public array $exclude = ['site', 'sent', 'date'];
 
     public function getModel()
     {

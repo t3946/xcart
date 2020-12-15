@@ -19,7 +19,7 @@ class DiscountRestrictionForm extends ModelForm
 {
     protected static $class = 'Modules\Cart\Forms\DiscountRestrictionForm';
 
-    public $exclude = ['data', 'class'];
+    public array $exclude = ['data', 'class'];
 
     public static function getRestrictClass() { return; }
 

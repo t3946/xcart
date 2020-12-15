@@ -188,7 +188,7 @@ class DropDownField extends Field
                     $data[$item->pk] = (string)$item;
                 }
             }
-            elseif (is_a($field, ForeignField::className())) {
+            elseif (is_a($field, ForeignField::class)) {
                 //@TODO: CHECK FOR CORRECTLY;
                 /** @var ForeignField $from */
                 $from = $field->getFrom();

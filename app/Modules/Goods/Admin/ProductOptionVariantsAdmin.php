@@ -11,7 +11,7 @@ use Xcart\App\Form\ModelForm;
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
     public $ownerField = 'product_option_id';
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getModel()
     {

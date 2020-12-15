@@ -11,7 +11,7 @@ use Xcart\App\Orm\Model;
 
 class TaxesAdmin extends Admin
 {
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getListColumns()
     {

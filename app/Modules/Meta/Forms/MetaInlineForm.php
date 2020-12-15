@@ -26,7 +26,7 @@ class MetaInlineForm extends ModelForm
 {
     public $max = 1;
 
-    public $exclude = [];
+    public array $exclude = [];
 
     public function getName()
     {

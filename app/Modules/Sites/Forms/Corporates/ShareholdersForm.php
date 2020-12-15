@@ -11,7 +11,7 @@ use Xcart\App\Form\Fields\NumberField;
 
 class ShareholdersForm extends CorporatesForm
 {
-    public $exclude = ['storefronts', 'taxes'];
+    public array $exclude = ['storefronts', 'taxes'];
 
     public function getFieldsets()
     {

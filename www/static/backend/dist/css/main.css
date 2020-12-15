@@ -8029,8 +8029,6 @@ h1 {
     height: 15px; }
   .list-block .list-wrapper table th.checker, .list-block .list-wrapper table th.nested, .list-block .list-wrapper table th.sort, .list-block .list-wrapper table td.checker, .list-block .list-wrapper table td.nested, .list-block .list-wrapper table td.sort {
     width: 40px;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
     text-align: center; }
   .list-block .list-wrapper table th.sort a, .list-block .list-wrapper table td.sort a {
     text-decoration: none;
@@ -8054,9 +8052,7 @@ h1 {
       font-size: 13px;
       vertical-align: middle; }
       .list-block .list-wrapper table tbody tr td.actions {
-        text-align: center;
-        padding-left: 0 !important;
-        padding-right: 0 !important; }
+        text-align: center; }
         .list-block .list-wrapper table tbody tr td.actions a {
           font-size: 15px;
           text-decoration: none;
@@ -8657,7 +8653,7 @@ i.icon.m {
   box-shadow: 0 0 5px 2px #fff; }
 
 .all-page {
-  padding: 25px 30px; }
+  padding: 10px 10px; }
 
 .list-block .list-wrapper table tbody tr {
   border-bottom: 1px solid #DFDFDF; }
@@ -8668,7 +8664,7 @@ i.icon.m {
     display: none; }
 
 .info-page {
-  padding: 25px 30px; }
+  padding: 10px 10px; }
   .info-page .object-info {
     table-layout: auto;
     width: 100%; }
