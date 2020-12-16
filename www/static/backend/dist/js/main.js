@@ -44960,13 +44960,29 @@ jQuery.fn.tablePositions = function (options) {
     }
 
     $( document ).ready( function () {
-        const $uploadTranslatesForm = $( '.upload-translations-form' );
         const lang_code = getLangCode();
 
         if ( lang_code === null ) {
-            alert( 'Filter translates by lang and try again' );
             return;
         }
+
+        const $downloadTranslationsButton = $( '.download-translations-button' );
+
+        $downloadTranslationsButton.click( function () {
+            $.ajax( {
+                url: `/admin/translates/upload-translates?lang_code=${ lang_code }`,
+                method: "POST",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                error() {
+                    alert( 'Something went wrong' );
+                }
+            } );
+        } );
+
+        const $uploadTranslatesForm = $( '.upload-translations-form' );
 
         $uploadTranslatesForm.submit( function ( e ) {
             e.preventDefault();

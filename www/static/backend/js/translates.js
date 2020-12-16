@@ -8,9 +8,14 @@
 
     $( document ).ready( function () {
         const lang_code = getLangCode();
+
+        if ( lang_code === null ) {
+            return;
+        }
+
         const $downloadTranslationsButton = $( '.download-translations-button' );
 
-        $downloadTranslationsButton.click(function () {
+        $downloadTranslationsButton.click( function () {
             $.ajax( {
                 url: `/admin/translates/upload-translates?lang_code=${ lang_code }`,
                 method: "POST",
@@ -22,14 +27,9 @@
                     alert( 'Something went wrong' );
                 }
             } );
-        });
+        } );
 
         const $uploadTranslatesForm = $( '.upload-translations-form' );
-
-        if ( lang_code === null ) {
-            alert( 'Filter translates by lang and try again' );
-            return;
-        }
 
         $uploadTranslatesForm.submit( function ( e ) {
             e.preventDefault();
