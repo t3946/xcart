@@ -21,13 +21,19 @@
                         </a>
                     {/if}
                     {var $lang_code = $filter_form->getField('name')->getValue()[0]}
-                    <form class="upload-translations-form">
-                        <label>Upload {$lang_code}.po translates file: <input type="file" name="translates-list" value="upload_translates" /></label>
-                        <button>Upload</button>
-                    </form>
-                    <a class="download-translations-button" href="{url 'admin_translate:download'}?lang_code={$lang_code}">
-                        <span class="text">Download {$lang_code}.po</span>
-                    </a>
+                    {if $lang_code}
+                        <form class="upload-translations-form">
+                            <label>
+                                Upload {$lang_code}.po translates file:
+                                <input type="file" name="translates-list" value="upload_translates"/>
+                            </label>
+                            <button>Upload</button>
+                        </form>
+                        <a class="download-translations-button"
+                           href="{url 'admin_translate:download'}?lang_code={$lang_code}">
+                            <span class="text">Download {$lang_code}.po</span>
+                        </a>
+                    {/if}
                 </div>
             </div>
             <table data-list-table {if $admin->sort}data-sorting{/if} class="translates-table">
