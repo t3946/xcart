@@ -12,6 +12,24 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
+            <div class="checker-wrapper">
+                <div class="top-buttons-block left">
+                    {if "add" in $actions}
+                        <a href="{$admin->getCreateUrl()}" class="button round upper pad">
+                            <span class="text">Add</span>
+                            <i class="icon-plus"></i>
+                        </a>
+                    {/if}
+                    {var $lang_code = $filter_form->getField('name')->getValue()[0]}
+                    <form class="upload-translations-form">
+                        <label>Upload {$lang_code}.po translates file: <input type="file" name="translates-list" value="upload_translates" /></label>
+                        <button>Upload</button>
+                    </form>
+                    <a class="download-translations-button" href="{url 'admin_translate:download'}?lang_code={$lang_code}">
+                        <span class="text">Download {$lang_code}.po</span>
+                    </a>
+                </div>
+            </div>
             <table data-list-table {if $admin->sort}data-sorting{/if} class="translates-table">
                 <thead>
                 {var $cols = 0}

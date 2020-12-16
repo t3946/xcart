@@ -125,6 +125,16 @@ class TranslateAdmin extends Admin
         ] );
     }
 
+    public function downloadPoFile()
+    {
+        return '12';
+    }
+
+    public function uploadPoFile()
+    {
+
+    }
+
     public function getUpdateUrl( $pk = null )
     {
         $query = [ 'msgid' => $msgid = substr( $pk, 3 ) ];

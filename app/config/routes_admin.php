@@ -1,6 +1,11 @@
 <?php
 return [
     [
+        'route' => '/admin/translates',
+        'path' => 'Modules.Translate.routes_admin',
+        'namespace' => 'admin_translate'
+    ],
+    [
         'route' => '/admin/cart',
         'path' => 'Modules.Cart.routes_admin',
         'namespace' => 'admin_cart'
