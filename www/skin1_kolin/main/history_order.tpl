@@ -460,85 +460,108 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-	<td>
-                    <select name="select_department" id="select_department" onchange="javascript: $('#td_customer_department').hide(); $('#amazonorderid_contact_link').hide(); $('#td_distributor_department').hide(); $('#td_our_customer_service_department').hide(); $('#td_third_party_department').hide(); if (this.value!='') $('#'+this.value).show(); if (this.value=='td_customer_department') $('#amazonorderid_contact_link').show();">
-                        <option value="">Select receiving party</option>
-                        <option value="td_customer_department">Compose email to customer</option>
-                        <option value="td_distributor_department">Compose email to distributor</option>
-                        <option value="td_our_customer_service_department">Compose email to our customer service</option>
-                        <option value="td_third_party_department">Compose email to third party</option>
-                    </select>
-	</td>
-
-        <td id="td_customer_department" nowrap="nowrap" style="display: none;">
-                {if $department_full_arr.customer ne ""}
-                <form name="customer_department_form" action="#" method="POST">
-
-                    <select name="customer_department" id="customer_department" {* style="width: 70%;" *}>
-                        {foreach from=$department_full_arr.customer item=item key=key}
+    <td>
+        <select name="select_department" id="select_department"
+                onchange="$('#td_customer_department').hide();
+                $('#amazonorderid_contact_link').hide();
+                $('#td_distributor_department').hide();
+                $('#td_our_customer_service_department').hide();
+                $('#td_third_party_department').hide();
+                if (this.value !== '') $('#'+this.value).show();
+                if (this.value === 'td_customer_department') $('#amazonorderid_contact_link').show();">
+            <option value="">Select receiving party</option>
+            <option value="td_customer_department">Compose email to customer</option>
+            {foreach from=$oOrder->groups item=group}
+                {assign var=manufacturer_model value=$group->manufacturer}
+                <option data-id="{$manufacturer_model->manufacturerid}" value="td_distributor_department">Compose email to {$manufacturer_model->code} distributor</option>
+            {/foreach }
+            <option value="td_our_customer_service_department">Compose email to our customer service</option>
+            <option value="td_third_party_department">Compose email to third party</option>
+        </select>
+    </td>
+    <td id="td_customer_department" nowrap="nowrap" style="display: none;">
+        {if $department_full_arr.customer}
+            <form name="customer_department_form" action="#" method="POST">
+                <select name="customer_department" id="customer_department">
+                    {foreach from=$department_full_arr.customer item=item key=key}
                         <option value="{$item.id}">{$item.template_name}</option>
-                        {/foreach}
-                    </select>
-                    <input type="button" name="Compose" value="Compose" onclick="javascript: $('#td_customer_department').hide(); $('#amazonorderid_contact_link').hide(); $('#td_distributor_department').hide(); $('#td_our_customer_service_department').hide(); $('#td_third_party_department').hide(); $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=customer&template_id='+$('#customer_department').val());">
-                </form>
-                {/if}
-        </td>
-
-        <td id="td_distributor_department" nowrap="nowrap" style="display: none;">
-                {if $department_full_arr.distributor ne "" && $order_manufacturers ne ""}
-                <form name="distributor_department_form" action="#" method="POST">
-
-                    <select name="distributor_department" id="distributor_department" {* style="width: 70%;" *} >
-
-                        {foreach from=$order_manufacturers item=v key=k}
-
-                                <optgroup label="{$v.manufacturer}">
-
-                                {foreach from=$department_full_arr.distributor item=item key=key}
-                                        <option value="{$k}-{$item.id}">{$item.template_name}</option>
-                                {/foreach}
-
-                        {/foreach}
-                    </select>
-                    <input type="button" name="Compose" value="Compose" onclick="javascript: $('#td_customer_department').hide(); $('#amazonorderid_contact_link').hide(); $('#td_distributor_department').hide(); $('#td_our_customer_service_department').hide(); $('#td_third_party_department').hide(); $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=distributor&mid_templateid='+$('#distributor_department').val());">
-                </form>
-                {/if}
-        </td>
-
-        <td id="td_our_customer_service_department" nowrap="nowrap" style="display: none;">
-                {if $department_full_arr.our_customer_service ne ""}
-                <form name="our_customer_service_form" action="#" method="POST">
-
-                    <select name="our_customer_service_department" id="our_customer_service_department" {* style="width: 70%;" *}>
-                        {foreach from=$department_full_arr.our_customer_service item=item key=key}
+                    {/foreach}
+                </select>
+                <input type="button" name="Compose" value="Compose"
+                       onclick="$('#td_customer_department').hide();
+                       $('#amazonorderid_contact_link').hide();
+                       $('#td_distributor_department').hide();
+                       $('#td_our_customer_service_department').hide();
+                       $('#td_third_party_department').hide();
+                       $('#select_department').val('');
+                       window.open('compose_message.php?orderid={$order.orderid}&department=customer&template_id='+$('#customer_department').val());">
+            </form>
+        {/if}
+    </td>
+    <td id="td_distributor_department" nowrap="nowrap" style="display: none;">
+        {if $department_full_arr.distributor && $order_manufacturers}
+            <form name="distributor_department_form" action="#" method="POST">
+                <select name="distributor_department" id="distributor_department">
+                    {foreach from=$department_full_arr.distributor item=item}
                         <option value="{$item.id}">{$item.template_name}</option>
-                        {/foreach}
-                    </select>
-                    <input type="button" name="Compose" value="Compose" onclick="javascript: $('#td_customer_department').hide(); $('#td_distributor_department').hide(); $('#td_our_customer_service_department').hide(); $('#td_third_party_department').hide(); $('#amazonorderid_contact_link').hide(); $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=our_customer_service&template_id='+$('#our_customer_service_department').val());">
-                </form>
-                {/if}
-        </td>
-
-        <td id="td_third_party_department" nowrap="nowrap" style="display: none;">
-                {if $department_full_arr.third_party ne ""}
-                <form name="third_party_form" action="#" method="POST">
-
-                    <select name="third_party_department" id="third_party_department" {* style="width: 70%;" *}>
-                        {foreach from=$department_full_arr.third_party item=item key=key}
+                    {/foreach}
+                </select>
+                <input type="button" name="Compose" value="Compose"
+                       onclick="let mid = $('#select_department option:selected').data('id');
+                       $('#td_customer_department').hide();
+                       $('#amazonorderid_contact_link').hide();
+                       $('#td_distributor_department').hide();
+                       $('#td_our_customer_service_department').hide();
+                       $('#td_third_party_department').hide();
+                       $('#select_department').val('');
+                       window.open('compose_message.php?orderid={$order.orderid}&department=distributor&mid_templateid='+mid+'-'+$('#distributor_department').val());">
+            </form>
+        {/if}
+    </td>
+    <td id="td_our_customer_service_department" nowrap="nowrap" style="display: none;">
+        {if $department_full_arr.our_customer_service ne ""}
+            <form name="our_customer_service_form" action="#" method="POST">
+                <select name="our_customer_service_department"
+                        id="our_customer_service_department">
+                    {foreach from=$department_full_arr.our_customer_service item=item key=key}
                         <option value="{$item.id}">{$item.template_name}</option>
-                        {/foreach}
-                    </select>
-                    <input type="button" name="Compose" value="Compose" onclick="javascript: $('#td_customer_department').hide(); $('#td_distributor_department').hide(); $('#td_our_customer_service_department').hide(); $('#td_third_party_department').hide(); $('#amazonorderid_contact_link').hide(); $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=third_party&template_id='+$('#third_party_department').val());">
-                </form>
-                {/if}
-        </td>
-
-	<td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right" width="200">
-{if $order.amazonorderid ne ""}
-	<a target="_blank" href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}" style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
-{/if}
-	</td>
-
+                    {/foreach}
+                </select>
+                <input type="button" name="Compose" value="Compose"
+                       onclick="$('#td_customer_department').hide();
+                       $('#td_distributor_department').hide();
+                       $('#td_our_customer_service_department').hide();
+                       $('#td_third_party_department').hide();
+                       $('#amazonorderid_contact_link').hide();
+                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=our_customer_service&template_id='+$('#our_customer_service_department').val());">
+            </form>
+        {/if}
+    </td>
+    <td id="td_third_party_department" nowrap="nowrap" style="display: none;">
+        {if $department_full_arr.third_party ne ""}
+            <form name="third_party_form" action="#" method="POST">
+                <select name="third_party_department" id="third_party_department">
+                    {foreach from=$department_full_arr.third_party item=item key=key}
+                        <option value="{$item.id}">{$item.template_name}</option>
+                    {/foreach}
+                </select>
+                <input type="button" name="Compose" value="Compose"
+                       onclick="$('#td_customer_department').hide();
+                       $('#td_distributor_department').hide();
+                       $('#td_our_customer_service_department').hide();
+                       $('#td_third_party_department').hide();
+                       $('#amazonorderid_contact_link').hide();
+                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=third_party&template_id='+$('#third_party_department').val());">
+            </form>
+        {/if}
+    </td>
+    <td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right" width="200">
+        {if $order.amazonorderid ne ""}
+            <a target="_blank"
+               href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}"
+               style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
+        {/if}
+    </td>
 </tr>
 
 </table>
