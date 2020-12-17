@@ -10,7 +10,7 @@ class RefundPaymentIntentRequest extends \Omnipay\Stripe\Message\RefundRequest
     {
         return array_merge(parent::getData(), [
             'payment_intent' => $this->getTransactionReference(),
-            'reverse_transfer' => true
+            'reverse_transfer' => 'true'
         ]);
     }
 
