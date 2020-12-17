@@ -91,6 +91,7 @@ class CreatePaymentIntentRequest extends AbstractRequest
     {
         $data = [
             'amount' => $this->getAmount(),
+            'application_fee_amount' => round($this->getAmount() * 0.05), //fee for main account
             'currency' => $this->getCurrency(),
             'payment_method_types' => ['card'],
             'description' => $this->getDescription(),
