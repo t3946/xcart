@@ -23,12 +23,6 @@
         <a href="{$order->getAdminUrl()}" target="_blank">{$order->getOrderNumber()}</a><br/>
     </td>
     <td nowrap="nowrap" width="100" align="center">
-        {if $model instanceof Modules\Order\Models\OrderGroupInvoiceModel}
-            {$distributor->code}-I-{$model->invoice_number}
-        {else}
-            {$distributor->code}-C-{$model->memo_number}
-        {/if}
-        <br/>
         {if $model->dx_invoice_number}
             {$model->dx_invoice_number}
         {/if}

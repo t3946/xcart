@@ -327,7 +327,7 @@ to
             <td style="background-color: #F4CCCC;" width="90">Amount</td>
             <td style="background-color: #F4CCCC;" width="90">Distr</td>
             <td style="background-color: #F4CCCC;" width="90">Order #</td>
-            <td nowrap style="background-color: #F4CCCC;" width="100">Invoice #<br/>Dx Inv #</td>
+            <td nowrap style="background-color: #F4CCCC;" width="100">Dx Inv #</td>
             <td nowrap style="background-color: #F4CCCC;" width="90">Invoice Date</td>
             {if $tab === "unreconciled"}
                 <td style="background-color: #D9EAD3;" width="20">Untie</td>
