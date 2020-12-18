@@ -17,6 +17,8 @@ use Xcart\App\Orm\QuerySet;
 class TemplateCategoryAdmin extends Admin
 {
 
+    public static $public = false;
+
     public ?string $sort = 'pos';
 
     public function getListColumns()

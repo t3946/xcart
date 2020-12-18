@@ -18,6 +18,8 @@ class TemplatesAdmin extends Admin
 
     public ?string $sort = 'pos';
 
+    public static $public = false;
+
     public $createTemplate = 'template/_create.tpl';
     public $updateTemplate = 'template/_update.tpl';
 
