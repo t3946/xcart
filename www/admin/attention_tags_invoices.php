@@ -1,4 +1,7 @@
 <?php
+
+use Modules\User\Models\UserModel;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 if ($REQUEST_METHOD == 'POST' && $mode == 'Update_Attention_tags_invoices'){
@@ -33,6 +36,9 @@ $attention_tags_values = func_query("SELECT * FROM $sql_tbl[attention_tags_value
 
 $smarty->assign("attention_tags_values", $attention_tags_values);
 
-//func_print_r($attention_tags_values);
-
-?>
+$ca_statuses = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' AND status!='' ORDER BY orderby");
+$smarty->assign('ca_statuses', $ca_statuses);
+$users = UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->all();
+$smarty->assign('users', $users);
+$site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+$smarty->assign('global_config', $site->getGlobalConfig());
