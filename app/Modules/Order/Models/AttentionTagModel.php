@@ -10,6 +10,8 @@ use Xcart\App\Orm\Model;
 
 class AttentionTagModel extends Model
 {
+    public const RESUME_ORDER_TAG = 63;
+
     public static function tableName()
     {
         return 'xcart_attention_tags_values';
