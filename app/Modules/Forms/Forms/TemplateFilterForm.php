@@ -27,7 +27,7 @@ class TemplateFilterForm extends Form
             'category' => [
                 'class' => DropDownField::class,
                 'choices' => function () {
-                    $res[''] = 'Please select';
+                    $res[''] = 'None';
                     foreach (TemplateCategoryModel::objects() as $category) {
                         $res[$category->id] = $category;
                     }
