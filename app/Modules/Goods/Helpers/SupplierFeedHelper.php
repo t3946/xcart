@@ -464,7 +464,7 @@ class SupplierFeedHelper
                 foreach ($cats_arr as $v_cat) {
 
                     /** @var CategoryModel $modelCat */
-                    [$modelCat, $is_cat_created] = CategoryModel::objects()->getOrCreate(
+                    [$modelCat, $is_cat_created] = CategoryModel::objects()->limit(1)->getOrCreate(
                         [
                             'parentid' => $parent_id ?: 0,
                             'category' => $v_cat,
