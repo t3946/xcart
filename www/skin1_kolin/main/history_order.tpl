@@ -483,8 +483,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         {if $department_full_arr.customer}
             <form name="customer_department_form" action="#" method="POST">
                 <select name="customer_department" id="customer_department">
-                    {foreach from=$department_full_arr.customer item=item key=key}
-                        <option value="{$item.id}">{$item.template_name}</option>
+                    {foreach from=$department_full_arr.customer item=category_items key=key}
+                        <optgroup label="{$key}">
+                            {foreach $category_items as $item}
+                                <option value="{$item->id}">{$item->template_name}</option>
+                            {/foreach}
+                        </optgroup>
                     {/foreach}
                 </select>
                 <input type="button" name="Compose" value="Compose"
@@ -502,8 +506,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         {if $department_full_arr.distributor && $order_manufacturers}
             <form name="distributor_department_form" action="#" method="POST">
                 <select name="distributor_department" id="distributor_department">
-                    {foreach from=$department_full_arr.distributor item=item}
-                        <option value="{$item.id}">{$item.template_name}</option>
+                    {foreach from=$department_full_arr.distributor item=category_items key=key}
+                        <optgroup label="{$key}">
+                            {foreach $category_items as $item}
+                                <option value="{$item->id}">{$item->template_name}</option>
+                            {/foreach}
+                        </optgroup>
                     {/foreach}
                 </select>
                 <input type="button" name="Compose" value="Compose"
@@ -523,8 +531,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <form name="our_customer_service_form" action="#" method="POST">
                 <select name="our_customer_service_department"
                         id="our_customer_service_department">
-                    {foreach from=$department_full_arr.our_customer_service item=item key=key}
-                        <option value="{$item.id}">{$item.template_name}</option>
+                    {foreach from=$department_full_arr.our_customer_service item=category_items key=key}
+                        <optgroup label="{$key}">
+                            {foreach $category_items as $item}
+                                <option value="{$item->id}">{$item->template_name}</option>
+                            {/foreach}
+                        </optgroup>
                     {/foreach}
                 </select>
                 <input type="button" name="Compose" value="Compose"
@@ -541,8 +553,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         {if $department_full_arr.third_party ne ""}
             <form name="third_party_form" action="#" method="POST">
                 <select name="third_party_department" id="third_party_department">
-                    {foreach from=$department_full_arr.third_party item=item key=key}
-                        <option value="{$item.id}">{$item.template_name}</option>
+                    {foreach from=$department_full_arr.third_party item=category_items key=key}
+                        <optgroup label="{$key}">
+                            {foreach $category_items as $item}
+                                <option value="{$item->id}">{$item->template_name}</option>
+                            {/foreach}
+                        </optgroup>
                     {/foreach}
                 </select>
                 <input type="button" name="Compose" value="Compose"
