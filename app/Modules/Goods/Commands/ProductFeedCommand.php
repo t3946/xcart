@@ -158,6 +158,10 @@ class ProductFeedCommand extends Command
 
                     $modelProduct = SupplierFeedHelper::feedProduct($modelProduct, $is_created, $feed, $aProduct, $supplierFeed->dont_update_fields, $supplierFeed->defaults);
 
+                    if (!($aProduct['is_group'] ?? false)) {
+                        $modelProduct->group_root = null;
+                    }
+
                     if ($is_created) {
                         $new_products_count++;
                         $inserted_products_count++;
