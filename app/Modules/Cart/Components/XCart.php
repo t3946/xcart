@@ -51,7 +51,7 @@ class XCart extends Cart
 
         parent::onChange();
 
-        OrderHelper::OrderStepsReset($this->getCartNumber());
+        OrderHelper::orderStepsReset($this->getCartNumber());
     }
 
     public function isValid():bool

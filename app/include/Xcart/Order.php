@@ -256,7 +256,7 @@ class Order extends Data
                     $iMinStatus = min($iMinStatus, $iVerifyStatus);
                 }
             }
-            if ($this->getAmazonChanell() == 'AFN') {
+            if ($this->getAmazonChanell() === 'AFN') {
                 $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
             } elseif ($iMinStatus == $iMaxStatus) {
                 switch ($iMaxStatus) {

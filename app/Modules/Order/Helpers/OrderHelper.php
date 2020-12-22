@@ -60,7 +60,6 @@ class OrderHelper
         return $result;
     }
 
-
     public static function getCountEvents(array $ids, $user_id = null, $group = true)
     {
         $need_request = false;
@@ -342,7 +341,7 @@ class OrderHelper
         return $res ?? null;
     }
 
-    public static function OrderStepsReset($cart_number): void
+    public static function orderStepsReset($cart_number): void
     {
         if ($order = OrderModel::objects()->order(['-orderid'])->limit(1)->get(['cart_number' => $cart_number])) {
             $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1;
