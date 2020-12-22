@@ -125,6 +125,10 @@
                 }
                 &.false {
                     background-color: rgb(254, 227, 230);
+
+                    &.information {
+                        background-color: rgb(228, 242, 253);
+                    }
                 }
             }
 

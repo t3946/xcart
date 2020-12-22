@@ -8860,6 +8860,8 @@ i.icon.m {
       background-color: #e6fde4; }
     .admin .dashboard-filters .dashboard-item.check-owner.false {
       background-color: #fee3e6; }
+      .admin .dashboard-filters .dashboard-item.check-owner.false.information {
+        background-color: #e4f2fd; }
     .admin .dashboard-filters .dashboard-item .tag {
       position: absolute;
       top: 0;

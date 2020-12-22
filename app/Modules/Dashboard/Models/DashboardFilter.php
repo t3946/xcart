@@ -58,6 +58,12 @@ class DashboardFilter extends Model
                 'null' => false,
                 'default' => 0,
             ],
+            'information' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => 0,
+                'verboseName' => 'Information filter'
+            ],
             'name' => [
                 'class' => CharField::class,
                 'null' => false,
