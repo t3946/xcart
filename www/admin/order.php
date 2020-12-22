@@ -1439,15 +1439,14 @@ if ($mode === 'ref_notify')
                             $trStore = new OrderTransactionStore($params, $ref_tr);
                             $model = $trStore->refund();
                             if ($model->type == OrderTransactionModel::TYPE_REFUND
-                                && in_array($model->transaction_status, [OrderTransactionModel::STATUS_COMPLETED, OrderTransactionModel::STATUS_REFUNDED]))
-                            {
+                                && in_array($model->transaction_status, [OrderTransactionModel::STATUS_COMPLETED, OrderTransactionModel::STATUS_REFUNDED])) {
                                 $ref_sum -= $model->transaction_amount;
                             } else {
                                 $error_message = "Transaction {$ref_tr->transaction_id} in wrong status after refund";
                                 break;
                             }
 
-                            $order_log .= $trStore->log."\n";
+                            $order_log .= $trStore->log . "\n";
 
                             if ($ref_sum <= 0) {
                                 break;
@@ -1461,19 +1460,18 @@ if ($mode === 'ref_notify')
                     } catch (\Exception $e) {
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
-                } else {
-                        $error_message = 'This transaction(s) has already been refunded.';
+                    if ($error_message) {
+                        func_log_order($orderid, 'PP', $error_message, $login);
+                        $top_message = [
+                            'content' => $error_message,
+                            'type' => 'E',
+                        ];
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
+                        func_header_location("order.php?orderid=" . $orderid);
                     }
-
-                if ($error_message) {
-                    func_log_order($orderid, 'PP', $error_message, $login);
-                    $top_message = [
-                        'content' => $error_message,
-                        'type' => 'E',
-                    ];
-                    $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
-                    func_header_location("order.php?orderid=" . $orderid);
+                } else {
+                    $error_message = 'This transaction(s) has already been refunded.';
                 }
             }
         }
