@@ -52,7 +52,11 @@
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
-                {set $title = $item->getFrontendName()}
+                {if $item->isGroupChild()}
+                    {set $title = $item->product}
+                {else}
+                    {set $title = $item->getFrontendName()}
+                {/if}
 
                 <a href="{$item->getAbsoluteUrl()}" title="{$title}">
                     {if $q!}
