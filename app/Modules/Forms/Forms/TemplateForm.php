@@ -28,7 +28,6 @@ class TemplateForm extends ModelForm
         return [
             'message_body' => [
                 'class' => EditorField::class,
-                'required' => true,
             ],
             'department' => [
                 'class' => DropDownField::class,

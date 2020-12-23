@@ -23,7 +23,10 @@ class TemplateModel extends Model
     {
         return [
             'id' => AutoField::class,
-            'pos' => IntField::class,
+            'pos' => [
+                'class' => IntField::class,
+                'default' => 0
+            ],
             'category' => [
                 'field' => 'category_id',
                 'class' => ForeignField::class,
@@ -77,7 +80,7 @@ class TemplateModel extends Model
             ],
             'active' => [
                 'class' => BooleanCharField::class,
-                'default' => false
+                'default' => true
             ],
         ];
     }
