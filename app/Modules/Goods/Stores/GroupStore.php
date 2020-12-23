@@ -22,9 +22,9 @@ class GroupStore extends BaseStore
     public $defaultPagerPageSize = 50;
     public $data = null;
     public $level = null;
-    private $pager = null;
-    private $model = null;
-    private $qs = null;
+    protected $pager = null;
+    protected $model = null;
+    protected $qs = null;
 
     public function __construct($data = [], $model = null)
     {
