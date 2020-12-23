@@ -47,7 +47,7 @@ if ($department === 'distributor' && !empty($mid_templateid)) {
 
 if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
-    $body = func_eol2br(stripslashes($body));
+    $body = func_eol2br(stripslashes(html_entity_decode($body)));
 
     $order_number = $order['order_prefix'] . $order['orderid'];
 
@@ -164,7 +164,7 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
         if ($template_id == $v['id']) {
 
             $subject = $v['subject_line'];
-            $body = $v['message_body'];
+            $body = html_entity_decode($v['message_body']);
             $to = '';
             $attach_pdf_invoice = $v['attach_pdf_invoice'];
 
