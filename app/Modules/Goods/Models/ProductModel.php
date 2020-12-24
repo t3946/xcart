@@ -100,6 +100,11 @@ class ProductModel extends Model implements ICartItem
 
     private $priceArray;
 
+    public const PRODUCT_STATUS_NOT_VERIFY = 0;
+    public const PRODUCT_STATUS_PROBLEM_NOT_FIXED = 1;
+    public const PRODUCT_STATUS_PROBLEM_FIXED = 2;
+    public const PRODUCT_STATUS_VERIFY = 3;
+
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
     public static function getDataModelClass(): string
@@ -385,6 +390,12 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
+            ],
+            'verification_status' => [
+                'field' => 'verification_statusid',
+                'class' => ForeignField::class,
+                'modelClass' => VerificationStatusModel::class,
+                'link' => ['verification_statusid' => 'statusid'],
             ],
             'markets_disabled' => [
                 'class' => HasManyField::class,

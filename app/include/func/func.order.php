@@ -1556,7 +1556,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             unset($group_total);
             unset($insert_data);
         }
-        $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
+        $oOrder = OrderModel::objects()->get(['orderid' => $orderid]);
         $oOrder->updateVerificationStatus();
 
         $oSurfPath = SurfPathModel::objects()

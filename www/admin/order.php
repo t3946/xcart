@@ -1472,6 +1472,7 @@ if ($mode === 'ref_notify')
                     }
                 } else {
                     $error_message = 'This transaction(s) has already been refunded.';
+                    func_log_order($orderid, 'PP', $error_message, $login);
                 }
             }
         }

@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
@@ -14,12 +15,8 @@ use Xcart\External_Product_Verification\ExternalVerificationProducts;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Images\Splash;
-use Xcart\Order;
-use Xcart\OrderCxInvoice;
-use Xcart\PaymentMethod;
 use Xcart\Paypal;
 use Xcart\ProductsAmazonFields;
-use Xcart\ShippingRate;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
@@ -70,8 +67,6 @@ switch ($_POST['ajax_action']) {
         getReceivablesOrders($_POST);
         break;
     case "get_payable_orders":
-        getPayablesOrders($_POST);
-        break;
     case "get_payable_manufacturers":
         getPayablesOrders($_POST);
         break;
@@ -130,8 +125,10 @@ function changeVerifyOrderStatus($aPostParam = [])
     $bResult = [];
     $iOrderId = (int)$aPostParam['order_id'];
     $sOrderStatus = $aPostParam['order_verify_status'];
-    if (!empty($iOrderId)) {
-        $bResult = Order::model(['orderid' => $iOrderId])->changeVerificationStatus($sOrderStatus);
+    /** @var OrderModel $order */
+    if ($iOrderId && $order = OrderModel::objects()->get(['orderid' => $iOrderId])) {
+        OrderHelper::changeOrderVerificationStatus($order, $sOrderStatus);
+        $bResult['result'] = true;
     }
     print(json_encode($bResult));
 }
@@ -151,7 +148,6 @@ function shipOrderByAmazon($aPostParam = [])
     if (!empty($sAmazonShippingMethodSelect))
         $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
 }
-
 
 function changeVerifyBatchStatus($aPostParam = [])
 {

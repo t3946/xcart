@@ -3,6 +3,8 @@ namespace Xcart;
 
 use Modules\Cart\Models\CouponOrderModel;
 use Modules\Order\Helpers\OrderEventHelper;
+use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\ReferrerModel;
 use Xcart\App\Main\Xcart;
@@ -226,60 +228,21 @@ class Order extends Data
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
 
-    public function changeVerificationStatus($sNewStatus)
+    public function changeOrderVerificationStatus($sNewStatus)
     {
         $bResult['result'] = true;
         $oNewStatus = OrderStatus::model(['code' => $sNewStatus]);
         $oOldStatus = OrderStatus::model(['code' => $this->getField('vn_status')]);
-        if ($oNewStatus->getField('code') != $oOldStatus->getField('code')) {
+        if ($oNewStatus->getField('code') !== $oOldStatus->getField('code')) {
             $this->updateField('vn_status', $sNewStatus);
-            $log = "vn_status: " . $oOldStatus->getField('name') . " -> " . $oNewStatus->getField('name');
+            $log = "vn_status: {$oOldStatus->getField('name')} -> {$oNewStatus->getField('name')}";
             func_log_order($this->getOrderId(), 'X', $log);
-            if ($sNewStatus == self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED) {
+            if ($sNewStatus === self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED) {
                 $this->submitOrderEntry();
             }
         }
         $this->setField('vn_status', $sNewStatus);
         return $bResult;
-    }
-
-    public function updateVerificationStatus()
-    {
-        $aOrderProducts = $this->getOrderProducts();
-        if (!empty($aOrderProducts) && is_array($aOrderProducts)) {
-            $iMaxStatus = $iMinStatus = null;
-            foreach ($aOrderProducts as $oOrderProduct) {
-                if ($oOrderProduct instanceof Product) {
-                    $iVerifyStatus = $oOrderProduct->getField('verification_statusid');
-                    if (is_null($iMinStatus)) $iMinStatus = $iVerifyStatus;
-                    $iMaxStatus = max($iMaxStatus, $iVerifyStatus);
-                    $iMinStatus = min($iMinStatus, $iVerifyStatus);
-                }
-            }
-            if ($this->getAmazonChanell() === 'AFN') {
-                $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
-            } elseif ($iMinStatus == $iMaxStatus) {
-                switch ($iMaxStatus) {
-                    case (Product::PRODUCT_STATUS_NOT_VERIFY) :
-                        $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED);
-                        break;
-                    case (Product::PRODUCT_STATUS_PROBLEM_NOT_FIXED) :
-                    case (Product::PRODUCT_STATUS_PROBLEM_FIXED) :
-                        $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND);
-                        break;
-                    case (Product::PRODUCT_STATUS_VERIFY):
-                        $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
-                        break;
-                }
-
-            } elseif ($iMinStatus == Product::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > Product::PRODUCT_STATUS_NOT_VERIFY) {
-                $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS);
-            } elseif ($iMinStatus > Product::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > Product::PRODUCT_STATUS_NOT_VERIFY) {
-                $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND);
-            }
-
-        }
-        return $this;
     }
 
     public function isOrderAmazon()
@@ -829,15 +792,15 @@ class Order extends Data
         if (!$this->isOrderAmazon()) {
 
             $allow_send_to_operator = true;
-            if ($this->getField('fraud_status') != 'C') {
+            if ($this->getField('fraud_status') !== 'C') {
                 $allow_send_to_operator = false;
             }
 
-            if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] == "Y" && $this->getOTRSTicketMessages() != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
+            if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] === "Y" && $this->getOTRSTicketMessages() != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
                 $allow_send_to_operator = false;
             }
 
-            if ($config["Autosubmit_orderentry_operator"]["ETA_date_is_present_for_at_least_one_of_the_items"] == "Y") {
+            if ($config["Autosubmit_orderentry_operator"]["ETA_date_is_present_for_at_least_one_of_the_items"] === "Y") {
                 foreach ($order['shipping_groups'] as $k_group => $v_group) {
                     foreach ($v_group["products"] as $kk_group => $vv_group) {
                         if (!empty($vv_group["eta_date_mm_dd_yyyy"])) {
@@ -849,7 +812,7 @@ class Order extends Data
                     }
                 }
             }
-            if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
+            if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] === "Y") {
                 foreach ($order['shipping_groups'] as $k_group => $v_group) {
                     $classShipping = Shipping::model(['shippingid' => $v_group['shippingid']]);
                     if ($classShipping->isAmazonShipping()) {
@@ -859,7 +822,7 @@ class Order extends Data
                 }
             }
 
-            if ($config["Autosubmit_orderentry_operator"]["Customer_notes_field_is_NOT_empty"] == "Y" && !empty($order["customer_notes"])) {
+            if ($config["Autosubmit_orderentry_operator"]["Customer_notes_field_is_NOT_empty"] === "Y" && !empty($order["customer_notes"])) {
                 $allow_send_to_operator = false;
             }
         }
@@ -974,7 +937,7 @@ class Order extends Data
         return $this;
     }
 
-    public function getOTRSTicketMessages()
+    public function getOTRSTicketMessages(): int
     {
         $ticket_resolver_messages = 0;
 
@@ -1015,7 +978,7 @@ class Order extends Data
                 }
             }
         }
-        return $ticket_resolver_messages;
+        return (int) $ticket_resolver_messages;
     }
 
     public function getDetails()

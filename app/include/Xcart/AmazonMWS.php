@@ -1335,8 +1335,8 @@ SQL;
                 foreach ($aOrdersEntries as $k => $orderNode) {
                     $sAmazonOrderId = $orderNode->getElementsByTagName('AmazonOrderId')->item(0)->nodeValue;
                     $sOrderStatus = $orderNode->getElementsByTagName('OrderStatus')->item(0)->nodeValue;
-                    $oOrder = Order::model()->find(SQLBuilder::getInstance()->addCondition("amazonorderid='" . $sAmazonOrderId . "'"));
-                    if (!$oOrder->getOrderId()) {
+                    $oOrder = OrderModel::objects()->get(['amazonorderid' => $sAmazonOrderId]);
+                    if ($oOrder) {
                         if (in_array($sOrderStatus, ['Unshipped', 'Shipped'])) {
                             $oOrder->setField('amazonorderid', $sAmazonOrderId);
                             $this->oOrder = $oOrder;
@@ -1526,7 +1526,8 @@ SQL;
                                     continue;
                                 }
 
-                                $oOrder->updateVerificationStatus()->reCalculateTotals();
+                                $oOrder->updateVerificationStatus();
+                                $oOrder->reCalculateTotals();
                                 $oOrder->recalculateAccounting();
 
 
