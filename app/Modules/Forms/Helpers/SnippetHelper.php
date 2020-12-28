@@ -12,7 +12,7 @@ class SnippetHelper
     {
         $result = [];
 
-        if (preg_match_all('/{{(.*)}}/', $value, $matches) && $matches[1]) {
+        if (preg_match_all('/{{(.*)}}/U', $value, $matches) && $matches[1]) {
             /** @var SnippetModel $snippet */
             foreach (SnippetModel::objects()->filter(['code__in' => $matches[1]]) as $snippet) {
                 $result["{{{$snippet->code}}}"] = $snippet->render($params);
