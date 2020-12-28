@@ -537,17 +537,19 @@ HTML;
                     ]
                 ))->save();
 
+                $params = ['from' => $config['orders_department']];
+                
                 $emails = explode(',', $dx->d_order_entry_operator_email);
                 $email_to = array_shift($emails);
+                if ($emails) {
+                    $params['bcc'] = $emails;
+                }
 
                 Xcart::app()->mail->raw(
                     $email_to,
                     $subject,
                     $message,
-                    [
-                        'from' => $config['orders_department'],
-                        'bcc' => $emails ?: null
-                    ]
+                    $params
                 );
 
                 /** @var OrderStatusModel $new_status */
