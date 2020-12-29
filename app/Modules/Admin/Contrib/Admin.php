@@ -301,7 +301,7 @@ abstract class Admin
                         $columnConfig['order'] = $attribute;
                     }
                 }
-                $columnConfig['template'] = $this->columnDefaultTemplate;
+                $columnConfig['template'] ??= $this->columnDefaultTemplate;
                 $config[$name] = $columnConfig;
             }
         }

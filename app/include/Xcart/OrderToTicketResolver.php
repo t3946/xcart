@@ -93,19 +93,21 @@ class OrderToTicketResolver {
         }
     }
 
-    public function fetch_ticket_info($title) {
+    public function fetch_ticket_info($title): array
+    {
         $info = $this->fetch_ticket_info_array_by_orderno($title);
-        if (count($info) == 0) {
+
+        if (count($info) === 0) {
             $info = $this->fetch_ticket_info_array_by_title($title);
         }
-        $count = count($info);
-        $result = array();
-        for ($i = 0; $i < $count; $i++) {
-            $ticket_info = (array)$info[$i];
-            array_push($result, array(
-                'url'           => $this->fmt_ticket_url($ticket_info['TicketID']),
-                'messages'      => $ticket_info['Articles'],
-            ));
+
+        $result = [];
+        foreach ($info as $value) {
+            $ticket_info = (array)$value;
+            $result[] = [
+                'url' => $this->fmt_ticket_url($ticket_info['TicketID']),
+                'messages' => $ticket_info['Articles'],
+            ];
         }
         return $result;
     }

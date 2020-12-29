@@ -322,10 +322,11 @@ class OrderHelper
                         $ticket_resolver_messages = $ticket_resolver[0]['messages'];
 
                         $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
-                        $t_arr [$model->orderid] = $ticket_resolver_messages;
+                        $t_arr[$model->orderid] = $ticket_resolver_messages;
                         Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
                     }
-                    $model->otrs_ticket = $ticket_resolver_link;
+                    $model->update(['otrs_ticket' => $ticket_resolver_link]);
+                    $model->save();
                 }
             }
         }
@@ -461,9 +462,9 @@ HTML;
     {
         $max = $min = null;
         foreach ($order->getProducts() as $product) {
-            $min ??= ($status_id = $product->verification_statusid);
+            $status_id = (int)$product->verification_statusid;
             $max = max($max, $status_id);
-            $min = min($min, $status_id);
+            $min = min($min ?? $status_id, $status_id);
         }
 
         if ($order->amazon_fulfillment_channel === 'AFN') {
@@ -538,7 +539,7 @@ HTML;
                 ))->save();
 
                 $params = ['from' => $config['orders_department']];
-                
+
                 $emails = explode(',', $dx->d_order_entry_operator_email);
                 $email_to = array_shift($emails);
                 if ($emails) {
@@ -594,7 +595,7 @@ HTML;
             return false;
         }
 
-        $otrs_messages = $order->getOTRSTicketMessages();
+        $otrs_messages = self::getOTRSMessages($order);
 
         if ($config["number_of_OTRS_messages"] === 'Y' && $otrs_messages !== (int)$config["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
             return false;

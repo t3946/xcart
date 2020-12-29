@@ -84,6 +84,9 @@ use Xcart\Product;
  * @property mixed brand
  * @property mixed r_avail
  * @property mixed list_price
+ * @property mixed verification_statusid
+ * @property VerificationStatusModel verification_status
+ * @property int last_verify_date
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -243,6 +246,12 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => ''
             ],
+            'productcode' => [
+                'class' => CharField::class,
+                'null' => false,
+                'unique' => true,
+                'verboseName' => 'SKU'
+            ],
             'group_mask' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -276,6 +285,10 @@ class ProductModel extends Model implements ICartItem
                 'class' => UnixTimestampField::class,
                 'autoNow' => true,
                 'autoNowAdd' => true,
+            ],
+            'last_verify_date' => [
+                'class' => UnixTimestampField::class,
+                'verboseName' => 'Last verif date'
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixTimestampField::class,
@@ -396,6 +409,8 @@ class ProductModel extends Model implements ICartItem
                 'class' => ForeignField::class,
                 'modelClass' => VerificationStatusModel::class,
                 'link' => ['verification_statusid' => 'statusid'],
+                'verboseName' => 'Verified',
+                'default' => 0
             ],
             'markets_disabled' => [
                 'class' => HasManyField::class,
