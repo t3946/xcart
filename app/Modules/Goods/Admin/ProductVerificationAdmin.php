@@ -52,7 +52,8 @@ class ProductVerificationAdmin extends Admin
         $filter = [
             'order_details__order_group__cb_status__in' => self::ORDER_CB_STATUSES,
             'order_details__order_group__order__vn_status__isnt' => OrderStatusModel::ORDER_VN_STATUS_VERIFIED,
-            'verification_statusid__isnt' => ProductModel::PRODUCT_STATUS_VERIFY
+            'order_details__order_group__order__order_type' => OrderModel::ORDER_TYPE_XCART,
+            'verification_statusid__isnt' => ProductModel::PRODUCT_STATUS_VERIFY,
         ];
         return parent::getQuerySet()->filter($filter)->group(['productid']);
     }
