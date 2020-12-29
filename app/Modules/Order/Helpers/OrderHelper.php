@@ -543,7 +543,7 @@ HTML;
                 $emails = explode(',', $dx->d_order_entry_operator_email);
                 $email_to = array_shift($emails);
                 if ($emails) {
-                    $params['bcc'] = $emails;
+                    $params['bcc'] = array_map(static fn($e) => trim($e), $emails);
                 }
 
                 Xcart::app()->mail->raw(
