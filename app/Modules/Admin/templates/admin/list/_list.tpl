@@ -54,6 +54,9 @@
                             <th class="actions col full">
                                 {var $cols = $cols+1}
                                 {foreach $admin->getListItemActions() as $action last=$last}
+                                    {if $action === 'update'}
+                                        {set $action = 'edit'}
+                                    {/if}
                                     <span class="title">{$action} {if !$last}/{/if}</span>
                                 {/foreach}
                             </th>
