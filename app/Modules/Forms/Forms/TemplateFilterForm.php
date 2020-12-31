@@ -39,7 +39,7 @@ class TemplateFilterForm extends Form
             'active' => [
                 'class' => DropDownField::class,
                 'choices' => [
-                    '' => '',
+                    '' => 'All',
                     'Y' => 'Yes',
                     'N' => 'No',
                 ],
