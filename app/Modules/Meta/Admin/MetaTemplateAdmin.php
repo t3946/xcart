@@ -8,6 +8,13 @@ use Modules\Meta\Models\MetaTemplate;
 
 class MetaTemplateAdmin extends Admin
 {
+    public function getListColumns()
+    {
+        return [
+            'code',
+        ];
+    }
+
     public function getSearchColumns()
     {
         return ['code', 'title', 'description'];

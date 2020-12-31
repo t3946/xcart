@@ -11,6 +11,16 @@ use Xcart\App\Orm\Model;
 
 class MetaAdmin extends Admin
 {
+    public function getListColumns()
+    {
+        return [
+            'title',
+            'url',
+            'site',
+            'is_custom'
+        ];
+    }
+
     public function getSearchColumns()
     {
         return ['url', 'title', 'description', 'keywords'];
