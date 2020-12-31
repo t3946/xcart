@@ -124,9 +124,9 @@ class DxContactAdmin extends Admin
         ];
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
-        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],[$this->getName()]];
+        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],[static::getName()]];
     }
 
     public function getAllUrl()

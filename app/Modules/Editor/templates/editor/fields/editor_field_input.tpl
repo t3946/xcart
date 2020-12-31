@@ -1,9 +1,18 @@
 <textarea id="{$id}" name="{$name}" {raw $html}>{$value}</textarea>
 
 <script>
+    {if $.request->getIsAjax()}
+        tinymce.remove();
+    {/if}
+
     tinymce.init({
         selector: '#{$id}',
         readonly: {$field->readonly ?: 'false'},
+        setup: editor => {
+            editor.on('change', function () {
+                tinymce.triggerSave();
+            });
+        },
 //        language: 'ru',
         plugins: [
             'advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor',
@@ -51,4 +60,5 @@
             xhr.send(formData);
         }
     });
+
 </script>

@@ -9,6 +9,7 @@ use Modules\Admin\Traits\AdminTrait;
 use Modules\Forms\Forms\TemplateFilterForm;
 use Modules\Forms\Forms\TemplateForm;
 use Modules\Forms\Models\TemplateModel;
+use Xcart\App\Form\Form;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 
@@ -20,6 +21,7 @@ class TemplatesAdmin extends Admin
 
     public static $public = false;
 
+    public $allTemplate = 'template/all.tpl';
     public $createTemplate = 'template/_create.tpl';
     public $updateTemplate = 'template/_update.tpl';
 
@@ -33,19 +35,19 @@ class TemplatesAdmin extends Admin
         ];
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return array_merge([['General settings', '/admin/configuration.php']], parent::getBreadcrumbs());
     }
 
     public function getForm()
     {
-        return new TemplateForm;
+        return new TemplateForm();
     }
 
     public function getModel()
     {
-        return new TemplateModel;
+        return new TemplateModel();
     }
 
     public static function getName()
@@ -53,16 +55,23 @@ class TemplatesAdmin extends Admin
         return 'Templates for order-related messages';
     }
 
-    public function getFilterForm()
+    public function getFilterForm(): Form
     {
-        return new TemplateFilterForm;
+        return new TemplateFilterForm();
     }
 
     public function handleFilter(QuerySet $qs, $form): QuerySet
     {
+        if ($form->category->getValue() === $form->category->empty) {
+            $form->category->setValue(null);
+        }
         $qs = parent::handleFilter($qs, $form);
+
         if ($form->department->getValue() === null) {
             $qs->filter(['department__isnull' => true]);
+        }
+        if ($form->category->getValue() === '') {
+            $qs->filter(['category_id__isnull' => true]);
         }
         return $qs;
     }
@@ -80,5 +89,10 @@ class TemplatesAdmin extends Admin
         return [
             'update',
         ];
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
     }
 }

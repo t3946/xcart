@@ -51,9 +51,12 @@
                             </th>
                         {/foreach}
                         {if $admin->getListItemActions()}
-                        <th class="actions col full">
-                            {var $cols = $cols+1}
-                        </th>
+                            <th class="actions col full">
+                                {var $cols = $cols+1}
+                                {foreach $admin->getListItemActions() as $action last=$last}
+                                    <span class="title">{$action} {if !$last}/{/if}</span>
+                                {/foreach}
+                            </th>
                         {/if}
                     </tr>
                 </thead>
@@ -85,7 +88,7 @@
                         <div class="checker-wrapper">
                             {if "add" in $actions}
                                 <div class="top-buttons-block left">
-                                    <a href="{$admin->getCreateUrl()}" class="button round upper pad">
+                                    <a href="{$admin->getCreateUrl()}" class="button round upper pad" target="_blank">
                                     <span class="text">
                                         Add
                                     </span>
@@ -115,7 +118,7 @@
                         {if $dropdown}
                             <div class="dropdown-block">
                                 <select name="" id="" data-group-action>
-                                    <option value="" selected disabled>Selext action</option>
+                                    <option value="" selected disabled>Select action</option>
                                     {foreach $dropdown as $key => $item}
                                         <option value="{$key}">
                                             {$item['title']}

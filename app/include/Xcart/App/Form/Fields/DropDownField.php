@@ -40,7 +40,7 @@ class DropDownField extends Field
      * @var array
      */
     public $disabled = [];
-    public $selected =[];
+    public $selected = [];
 
     public function getCommonData()
     {
@@ -84,16 +84,14 @@ class DropDownField extends Field
 
         if ($this->choices) {
             $choices = $this->choices;
-        }
-        elseif ($this->getForm() instanceof ModelForm) {
+        } elseif ($this->getForm() instanceof ModelForm) {
             $choices = $this->getForm()->getInstance()->getField($this->name)->choices;
         }
 
         if ($choices) {
             if ($choices instanceof Closure) {
                 $data = $choices->__invoke();
-            }
-            else {
+            } else {
                 $data = $choices;
             }
 
@@ -101,58 +99,49 @@ class DropDownField extends Field
             if ($value !== null) {
                 if ($value instanceof Manager) {
                     $selected = $value->valuesList(['pk'], true);
-                }
-                else if ($value instanceof Model) {
+                } elseif ($value instanceof Model) {
                     $selected[] = $value->pk;
-                }
-                else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     $selected = $value;
-                }
-                else {
+                } else {
                     $selected[] = $value;
                 }
             }
 
-            if ($this->form instanceof ModelForm) {
-                $model = $this->getForm()->getInstance();
-
-                $field = $model->getField($this->name);
+            if ($this->form instanceof ModelForm
+                && ($model = $this->getForm()->getInstance())
+                && $field = $model->getField($this->name)) {
                 if ($field->null && !$this->multiple) {
                     $data = ['' => ''] + $data;
                 }
 
-                if (is_a($field, ForeignField::className())) {
+                if (is_a($field, ForeignField::class)) {
                     $from = $field->getFrom();
                     $to = $field->getTo();
                     $related = $model->{$from};
                     if ($related) {
                         $selected[] = $related;
                     }
-                }
-                else if (is_a($field, ManyToManyField::className())) {
+                } elseif (is_a($field, ManyToManyField::class)) {
                     $this->multiple = true;
 
                     $selectedTmp = $field->getManager()->all();
                     foreach ($selectedTmp as $model) {
                         $selected[] = $model->pk;
                     }
+                } elseif ($model->hasAttribute($this->name)) {
+                    $selected[] = $model->{$this->name};
                 }
-                else {
-                    if ($model->hasAttribute($this->name)) {
-                        $selected[] = $model->{$this->name};
-                    }
-                }
-            }
-            elseif ($this->getForm() instanceof Form) {
+            } elseif ($this->getForm() instanceof Form) {
                 if ($selected !== null && !is_array($selected)) {
                     $selected = [$selected];
                 }
             }
-        }
-        elseif  ($this->form instanceof ModelForm && $this->form->getModel()->hasField($this->name)) {
-            $model = $this->form->getModel();
-            $field = $model->getField($this->name);
-
+        } elseif ($this->form instanceof ModelForm
+            && $this->form->getModel()->hasField($this->name)
+            && ($model = $this->form->getModel())
+            && $field = $model->getField($this->name)
+        ) {
             if (is_a($field, ManyToManyField::className())) {
                 $this->multiple = true;
 
@@ -175,8 +164,7 @@ class DropDownField extends Field
                 foreach ($models as $item) {
                     $data[$item->pk] = (string)$item;
                 }
-            }
-            elseif (is_a($field, HasManyField::className())) {
+            } elseif (is_a($field, HasManyField::class)) {
                 $this->multiple = true;
 
                 $modelClass = $field->modelClass;
@@ -187,8 +175,7 @@ class DropDownField extends Field
                 foreach ($models as $item) {
                     $data[$item->pk] = (string)$item;
                 }
-            }
-            elseif (is_a($field, ForeignField::class)) {
+            } elseif (is_a($field, ForeignField::class)) {
                 //@TODO: CHECK FOR CORRECTLY;
                 /** @var ForeignField $from */
                 $from = $field->getFrom();
@@ -199,7 +186,7 @@ class DropDownField extends Field
                 if (get_class($model) == $modelClass && $model->getIsNewRecord() === false) {
                     $qs = $qs->exclude([$to => $model->{$to}]);
                 }
-                /* @var $modelClass \Xcart\App\Orm\Model */
+                /* @var $modelClass Model */
                 if (!$this->required) {
                     $data[''] = $this->empty;
                 }
@@ -209,13 +196,11 @@ class DropDownField extends Field
                 foreach ($qs->all() as $item) {
                     $data[$item->{$to}] = (string)$item;
                 }
+            } else {
+                $data = $this->getValue();
             }
-            else {
-                $data = parent::getValue();
-            }
-        }
-        else {
-            $data = parent::getValue();
+        } else {
+            $data = $this->getValue();
         }
 
         if ($this->multiple) {

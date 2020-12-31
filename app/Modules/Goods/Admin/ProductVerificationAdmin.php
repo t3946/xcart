@@ -96,6 +96,9 @@ class ProductVerificationAdmin extends Admin
     public function getAvailableListColumns()
     {
         return [
+            'product' => [
+                'title' => 'Front End'
+            ],
             'orders' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'Orders',

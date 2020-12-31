@@ -32,9 +32,8 @@ class TemplateModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TemplateCategoryModel::class,
                 'link' => ['category_id' => 'id'],
-                'null' => true,
-                'default' => null,
-                'verboseName' => 'Category'
+                'null' => false,
+                'verboseName' => 'Template category'
             ],
             'template_name' => [
                 'class' => CharField::class,
@@ -60,7 +59,7 @@ class TemplateModel extends Model
                     'our_customer_service' => 'Our customer service',
                     'third_party' => 'Third party',
                 ],
-                'verboseName' => 'Templates for communicating to'
+                'verboseName' => 'Template to communicate to'
             ],
             'ca_status' => [
                 'class' => CharField::class,
@@ -87,6 +86,6 @@ class TemplateModel extends Model
 
     public function __toString()
     {
-        return (string) $this->template_name;
+        return (string) ($this->template_name ?? 'Template');
     }
 }

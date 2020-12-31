@@ -267,10 +267,19 @@ $(function () {
 
     $(document).on('click', '.list-block a.ajax, .ajax a', function (e) {
         e.preventDefault();
-        var $this = $(this);
+        const $this = $(this);
 
         if (typeof this.dataset.prevention === 'undefined') {
-            showPopup($this);
+            const list = getList($this)
+            list.setLoading();
+            $this.mmodal({
+                onSubmit: function (element)  {
+                    list.setLoading();
+                    this._submitHandlerDefault.call(this, element);
+                },
+                onAfterOpen: () => list.unsetLoading(),
+                onSuccess: () => list.update(),
+            });
         }
 
         return false;

@@ -22,7 +22,7 @@ class TemplateCategoryModel extends Model
             'id' => AutoField::class,
             'name' => [
                 'class' => CharField::class,
-                'verboseName' => 'Name'
+                'verboseName' => 'Template category'
             ],
             'pos' => [
                 'class' => IntField::class,

@@ -8,6 +8,7 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
@@ -90,7 +91,6 @@ abstract class Admin
     {
         return [
             'update',
-            'view',
             'remove'
         ];
     }
@@ -328,7 +328,7 @@ abstract class Admin
         ];
     }
 
-    public function getFilterForm()
+    public function getFilterForm(): ?Form
     {
         return null;
     }
@@ -606,6 +606,11 @@ abstract class Admin
         ], $query);
     }
 
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
+
     public function getInfoUrl($pk = null)
     {
         return Xcart::app()->router->url('admin:info', [
@@ -821,8 +826,9 @@ abstract class Admin
         $this->model = $model;
         $form->setInstance($model);
 
-        if ((string)$model !== '') {
-            $this->setBreadcrumbs((string)$model);
+        if ((string)$model) {
+            $bread = $new ? sprintf("Adding a new %s", strtolower($model)) : (string)$model;
+            $this->setBreadcrumbs($bread);
         }
 
         $request = Xcart::app()->request;
@@ -833,33 +839,36 @@ abstract class Admin
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
-                    $this->jsonResponse(['state' => 'success']);
-                } else {
-                    Xcart::app()->flash->success('Changes have been successfully applied.');
+                    $this->jsonResponse(['status' => 'success', 'close' => true]);
+                    return;
+                }
+                Xcart::app()->flash->success('Changes have been successfully applied.');
 
-                    $next = $_POST['save'] ?? 'save';
-                    if ($next === 'save') {
-                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl() : $this->getAllUrl());
-                    } elseif ($next === 'save-stay') {
-                        $request->redirect($this->getUpdateUrl($model->pk));
-                    } else {
-                        $request->redirect($this->getCreateUrl());
-                    }
-                }
-            } else {
-                if (!$request->getIsAjax()) {
-                    Xcart::app()->flash->error('Please, fix errors');
-                }
+                $this->redirectAfterSave($model, $_POST['save'] ?? 'save');
+
+            } elseif (!$request->getIsAjax()) {
+                Xcart::app()->flash->error('Please, fix errors');
             }
         }
 
-        //$this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,
             'model' => $model,
             'new' => $new
         ]);
+    }
+
+    public function redirectAfterSave(Model $model, $next): void
+    {
+        $request = Xcart::app()->request;
+        if ($next === 'save') {
+            $request->redirect(($this->parent_pk) ? $this->getParentAllUrl() : $this->getAllUrl());
+        } elseif ($next === 'save-stay') {
+            $request->redirect($this->getUpdateUrl($model->pk));
+        } else {
+            $request->redirect($this->getCreateUrl());
+        }
     }
 
     /**
@@ -939,18 +948,18 @@ abstract class Admin
     }
 
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
-        return [[$this->getName(), $this->getAllUrl()]];
+        return [[static::getName(), $this->getAllUrl()]];
     }
 
     /**
      * @param $admin Admin
      */
-    public function setBreadcrumbs($last = null)
+    public function setBreadcrumbs($last = null): void
     {
         foreach ($this->getBreadcrumbs() as $bread) {
-            list ($name, $url) = $bread;
+            [$name, $url] = $bread;
             Xcart::app()->breadcrumbs->add($name, $url);
         }
 

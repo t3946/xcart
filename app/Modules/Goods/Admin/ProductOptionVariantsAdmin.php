@@ -64,7 +64,7 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
         return parent::getAllUrl();
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return [];
     }

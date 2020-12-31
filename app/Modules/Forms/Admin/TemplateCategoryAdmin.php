@@ -43,15 +43,15 @@ class TemplateCategoryAdmin extends Admin
         return 'Template categories';
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return array_merge([['General settings', '/admin/configuration.php']], parent::getBreadcrumbs());
     }
 
-    /*public function getListItemActions()
+    public function getListItemActions()
     {
         return [
             'update',
         ];
-    }*/
+    }
 }

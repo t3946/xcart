@@ -3,7 +3,7 @@
 
 {block 'heading'}
     {if $model->pk === null}
-        {set $actionTitle='Adding a ' ~ $model|strtolower}
+        {set $actionTitle='Adding a new' ~~ $model|strtolower}
     {else}
         {set $actionTitle=$form->getName()~':'~~$model}
     {/if}

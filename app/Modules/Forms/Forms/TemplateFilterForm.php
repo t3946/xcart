@@ -15,24 +15,26 @@ class TemplateFilterForm extends Form
         return [
             'department' => [
                 'class' => DropDownField::class,
-                'label' => 'Templates for communicating to',
+                'label' => 'Templates to communicate to',
                 'choices' => [
-                    '' => 'Please select',
+                    '' => 'All',
                     'customer' => 'Customer',
                     'distributor' => 'Distributor',
                     'our_customer_service' => 'Our customer service',
                     'third_party' => 'Third party',
-                ]
+                ],
             ],
             'category' => [
                 'class' => DropDownField::class,
+                'empty' => 'All',
                 'choices' => function () {
-                    $res[''] = 'None';
                     foreach (TemplateCategoryModel::objects() as $category) {
                         $res[$category->id] = $category;
                     }
+                    $res[''] = 'Not assigned';
                     return $res ?? [];
-                }
+                },
+                'label' => 'Template category'
             ],
             'active' => [
                 'class' => DropDownField::class,
@@ -41,6 +43,7 @@ class TemplateFilterForm extends Form
                     'Y' => 'Yes',
                     'N' => 'No',
                 ],
+                'label' => 'Active?'
             ]
         ];
     }
