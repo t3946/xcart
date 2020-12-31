@@ -608,7 +608,7 @@ abstract class Admin
 
     public function isAjaxUpdate(): bool
     {
-        return true;
+        return false;
     }
 
     public function getInfoUrl($pk = null)
