@@ -13,6 +13,7 @@ $(function () {
 
         _searchTimer: undefined,
         _searchQuery: undefined,
+        _searchRequest: undefined,
 
         init: function (options) {
             this.options = $.extend(this.options, options);
@@ -77,8 +78,11 @@ $(function () {
             var me = this;
             me.setLoading();
 
-            $.ajax({
+            this._searchRequest = $.ajax({
                 url: this.currentUrl,
+                beforeSend: () => {
+                    this._searchRequest?.abort()
+                },
                 success: function (page) {
                     var $page = $('<div/>').append(page);
                     var ubSelector = me.getUpdateBlockSelector();
@@ -125,7 +129,7 @@ $(function () {
         },
         search: function (search) {
             var me = this;
-            if (me._searchQuery != search) {
+            if (me._searchQuery !== search) {
                 me._searchQuery = search;
                 me.setLoading();
                 clearTimeout(me._searchTimer);
