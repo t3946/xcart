@@ -79,6 +79,6 @@ class TaxModel extends Model
 
     public function __toString()
     {
-        return (string)$this->tax_name;
+        return (string)($this->tax_name ?: 'Tax');
     }
 }

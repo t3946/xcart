@@ -5317,7 +5317,7 @@ $grid: (
   width: 100%;
   background: black;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 8888;
+  z-index: 2;
   display: none;
   top: 0;
   left: 0;

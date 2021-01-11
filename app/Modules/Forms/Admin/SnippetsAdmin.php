@@ -72,5 +72,15 @@ class SnippetsAdmin extends Admin
         return 'Snippets';
     }
 
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
+
 }
 

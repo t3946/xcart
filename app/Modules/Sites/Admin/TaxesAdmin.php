@@ -68,4 +68,9 @@ class TaxesAdmin extends Admin
     {
         return ['add'];
     }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }
