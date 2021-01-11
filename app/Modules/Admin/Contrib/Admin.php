@@ -60,7 +60,7 @@ abstract class Admin
 
     public $innerRender = false;
 
-    public $autoFixSort = true;
+    public $autoFixSort = false;
 
     /** @var Model */
     public $model;
