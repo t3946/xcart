@@ -91,7 +91,7 @@
                         <div class="checker-wrapper">
                             {if "add" in $actions}
                                 <div class="top-buttons-block left">
-                                    <a href="{$admin->getCreateUrl()}" class="button round upper pad" target="_blank">
+                                    <a href="{$admin->getCreateUrl()}" class="{if $admin->isAjaxCreate()}ajax {/if}button round upper pad" target="_blank">
                                     <span class="text">
                                         Add
                                     </span>

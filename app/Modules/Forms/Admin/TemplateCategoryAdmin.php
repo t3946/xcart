@@ -54,4 +54,14 @@ class TemplateCategoryAdmin extends Admin
             'update',
         ];
     }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }

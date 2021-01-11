@@ -611,6 +611,11 @@ abstract class Admin
         return false;
     }
 
+    public function isAjaxCreate(): bool
+    {
+        return false;
+    }
+
     public function getInfoUrl($pk = null)
     {
         return Xcart::app()->router->url('admin:info', [

@@ -95,4 +95,9 @@ class TemplatesAdmin extends Admin
     {
         return true;
     }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }
