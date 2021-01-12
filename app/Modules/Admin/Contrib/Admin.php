@@ -58,9 +58,9 @@ abstract class Admin
      */
     public ?string $sort = null;
 
-    public $innerRender = false;
+    public bool $innerRender = false;
 
-    public $autoFixSort = false;
+    public bool $autoFixSort = true;
 
     /** @var Model */
     public $model;
@@ -521,8 +521,9 @@ abstract class Admin
     /**
      * @param $qs QuerySet
      * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function fixSort($qs)
+    public function fixSort(QuerySet $qs): QuerySet
     {
         if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
             $newQs = clone($qs);
@@ -533,11 +534,16 @@ abstract class Admin
                 $connection->query('SET @position = 0;');
 
                 $model = $this->getModel();
-                $pk = $model->getPrimaryKeyName();
+                $newQs->order([$this->sort, $model::getPrimaryKeyName()]);
 
-                $newQs->order([$this->sort, $pk])->update([
-                    $this->sort => new Expression("@position := (@position + 1)")
+                $qb = $newQs->getQueryBuilder();
+                $qb->setAlias(null);
+                $sql = strtr('{update}{where}{order}', [
+                    '{update}' => $qb->getAdapter()->sqlUpdate($model::tableName(), [$this->sort => new Expression("@position := (@position + 10)")]),
+                    '{where}' => $qb->buildWhere(),
+                    '{order}' => $qb->buildOrder()
                 ]);
+                $connection->query($sql);
             }
         }
         return $qs;
@@ -880,17 +886,17 @@ abstract class Admin
      * @param $qs QuerySet
      * @return bool
      */
-    public function getCanSort($qs)
+    public function getCanSort(QuerySet $qs): bool
     {
         if ($this->sort) {
             $order = $qs->getOrder();
-            return $order == [$this->sort];
-        } else {
-            return false;
+            return $order === [$this->sort];
         }
+
+        return false;
     }
 
-    public function sort($pkList, $to, $prev, $next)
+    public function sort($pkList, $to, $prev, $next): void
     {
         $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
@@ -907,7 +913,7 @@ abstract class Admin
         ]);
     }
 
-    public function setColumns($columns)
+    public function setColumns($columns): void
     {
         $config = AdminConfig::fetch(static::getModuleName(), static::classNameShort());
         $config->setColumnsList($columns);

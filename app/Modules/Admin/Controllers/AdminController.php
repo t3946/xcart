@@ -57,9 +57,9 @@ class AdminController extends BackendController
         $admin = $this->getAdmin($module, $admin);
 
         $pkList = isset($_POST['pk_list']) && is_array($_POST['pk_list']) ? $_POST['pk_list'] : [];
-        $to = isset($_POST['to']) ? $_POST['to'] : null;
-        $prev = isset($_POST['prev']) ? $_POST['prev'] : null;
-        $next = isset($_POST['next']) ? $_POST['next'] : null;
+        $to = $_POST['to'] ?? null;
+        $prev = $_POST['prev'] ?? null;
+        $next = $_POST['next'] ?? null;
 
         $admin->sort($pkList, $to , $prev, $next);
     }

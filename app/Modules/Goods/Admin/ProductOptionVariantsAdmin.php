@@ -7,6 +7,7 @@ use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Goods\Forms\ProductOptionVariantsAdminForm;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\QuerySet;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
@@ -47,7 +48,7 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
         ];
     }
 
-    public function getCanSort($qs)
+    public function getCanSort(QuerySet $qs): bool
     {
         return true;
     }
