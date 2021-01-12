@@ -321,7 +321,7 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['distributor']) || $this->checkNot('order.distributor')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
 
-                $val = ($data['order']['distributor']) ? $data['order']['distributor'] : [''];
+                $val = $data['order']['distributor'] ?: [''];
 
                 $this->getQ(['group.manufacturerid__in' => $val], 'order.distributor');
             }

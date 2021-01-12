@@ -161,7 +161,7 @@ abstract class BaseStore
             $this->pager = new Pagination($this->getQSWithSorting(),[
                 'pageSize' => $this->defaultPagerPageSize,
                 'view' => 'dashboard/parts/_pager.tpl',
-                'sorting_filter'       => (new DashboardFilter)->getField('sorting')->choices,
+                'sorting_filter'       => (new DashboardFilter())->getField('sorting')->choices,
                 'sort' => $this->sort,
             ], new QuerySetDataSource());
         }
