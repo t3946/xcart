@@ -512,20 +512,20 @@ function check_r_fields(){
 {if $m_id gt 0}
     <tr class="distributor-totals-line">
         <td>
-            <a target="_blank" style="color: green;"
-               href="{$v.oOrderGroup->manufacturer->getAdminUrl(3)}">{$v.group_name}</a>
+            {assign var=distributor value=$v.oOrderGroup->manufacturer}
+            <a target="_blank" style="color: green;" href="{$distributor->getAdminUrl(3)}">{$v.group_name}</a>
             {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
                 <span style="color: #000000; font-weight: normal;">ships by USPS</span>
             {/if}
-            {if $v.all_distributor_info.d_specific_instructions ne ""}
+            {if $distributor->d_specific_instructions}
                 <span style="margin-left: 1em;">
-                    <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();"
+                    <a onclick="$('#d_specific_instructions_note_{$m_id}').toggle();"
                        style="color: blue; border-bottom:1px dotted; text-decoration: none;"
                        href="javascript: void(0);">Dx notes</a>
 
                     <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox"
-                         style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
-                        {$v.all_distributor_info.d_specific_instructions}
+                         style="display: none; margin-left: 0; color: #550000; text-align: left; border: 1px solid #ff6600;">
+                        {$distributor->d_specific_instructions|html_entity_decode}
                     </div>
                 </span>
             {/if}
