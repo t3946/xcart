@@ -176,16 +176,16 @@ class DashboardController extends PrototypeAdminController
                         ]
                     )
                 );
-            } else if ($model->entity === EmailModel::class) {
-                $admin = new EmailAdmin;
+            } elseif ($model->entity === EmailModel::class) {
+                $admin = new EmailAdmin();
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,
                     'admin' => $admin,
                     'columns' => $admin->buildListColumns(),
                 ]);
-            } else if ($model->entity === PbxAnveoCallModel::class) {
-                $admin = new PBXAdmin;
+            } elseif ($model->entity === PbxAnveoCallModel::class) {
+                $admin = new PBXAdmin();
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,
@@ -308,10 +308,11 @@ class DashboardController extends PrototypeAdminController
             $this->autoRedirect($model);
         }
 
-        if ($_POST[$class] && $_POST['search']) {
+        if ($_POST[$class]) {
+            if ($_POST['search']) {
+                $model->form_data = OrderSearchStore::getClearedData($_POST['search']);
+            }
             $model->setAttributes($_POST[$class]);
-            $model->form_data = OrderSearchStore::getClearedData($_POST['search']);
-
             if ($model->isValid() && $model->save()) {
                 $this->autoRedirect($model);
             }
