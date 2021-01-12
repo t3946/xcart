@@ -534,7 +534,7 @@ abstract class Admin
                 $connection->query('SET @position = 0;');
 
                 $model = $this->getModel();
-                $newQs->order([$this->sort, $model::getPrimaryKeyName()]);
+                $newQs->order([$this->sort, "-{$model::getPrimaryKeyName()}"]);
 
                 $qb = $newQs->getQueryBuilder();
                 $qb->setAlias(null);
