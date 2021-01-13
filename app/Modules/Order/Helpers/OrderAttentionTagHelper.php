@@ -27,7 +27,12 @@ class OrderAttentionTagHelper
             $filter += ['users__action' => $action];
         }
         $and = new QAnd($filter);
-        $or = new QOr([$and, ['status_id__in' => $order->tags->valuesList(['pk'], true)]]);
+        if ($order->tags->count()) {
+            $or = new QOr([$and, ['status_id__in' => $order->tags->valuesList(['pk'], true)]]);
+        } else {
+            $or = $and;
+        }
+
         return AttentionTagModel::ordered()->filter([$or])->group(['status_id']);
     }
 }
