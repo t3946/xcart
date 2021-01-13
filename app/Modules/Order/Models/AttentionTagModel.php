@@ -4,10 +4,16 @@ namespace Modules\Order\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\TextField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
+/**
+ * @method static Manager active($instance = null)
+ * @method static Manager ordered($instance = null)
+ */
 class AttentionTagModel extends Model
 {
     public const RESUME_ORDER_TAG = 63;
@@ -59,11 +65,26 @@ class AttentionTagModel extends Model
                 'null' => false,
                 'default' => ''
             ],
+            'users' => [
+                'class' => HasManyField::class,
+                'modelClass' => AttentionTagUserModel::class,
+                'link' => ['status_id' => 'status_id']
+            ]
         ];
     }
 
     public function __toString()
     {
         return (string)$this->status;
+    }
+
+    public static function activeManager($instance = null): Manager
+    {
+        return static::objects($instance)->filter(['active' => 'Y']);
+    }
+
+    public static function orderedManager($instance = null): Manager
+    {
+        return static::active($instance)->order(['orderby']);
     }
 }

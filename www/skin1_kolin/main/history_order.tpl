@@ -183,187 +183,155 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 </td>
 
-{*
-<td align="right" width="33%">
-{if $usertype ne "C"}
-{if $orderid_next ne ""}<a href="order.php?orderid={$orderid_next}">{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_next}{$orderid_next}&nbsp;&gt;&gt;</a>{/if}
-{/if}
-</td>
-*}
-
 <td align="right" width="40%" style="position:relative;">
 <div>
                  <table cellspacing="0" cellpadding="0" border="0" width="100%">
                  <tr>
                  <td valign="top">
                      <div>
-                         Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;
+                         Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="$('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;
                      </div>
 
+                     <div style="margin-top: -3px;">
+                         <div class="order_additional_tags">
+                             {assign var=tag_lsit value=Modules\Order\Helpers\OrderAttentionTagHelper::getOrderAttentionTagsListForUser($oOrder, $xcartApp->user, 'set')->all()}
+                             <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
+                                 {foreach from=$tag_lsit item=item key=key}
+                                         <option
+                                                 value="{$item->status_id}"
+                                                 data-color="{$item->color}"
+                                                 data-order="{$oOrder->orderid}"
+                                                 {if in_array($item->status_id, $oOrder->tags->valuesList(['pk'], true))}
+                                                     selected
+                                                 {/if}
+                                         >{$item}</option>
+                                 {/foreach}
+                             </select>
 
-                  <div style="margin-top: -3px;">
-                  <div class="order_additional_tags">
-                        {assign var='string_tags_idx' value=''}
-                      {foreach from=$attention_tags_values item=item key=key}
-                          {if $item.active eq "Y"}
+                             <script>
+                                 {literal}
+                                 (function () {
 
-                              {assign var='string_tags_idx' value="`$string_tags_idx`,`$item.status_id`"}
-                          {/if}
-                      {/foreach}
+                                     $(document).ready(function () {
+                                         let $select = $('select[name=additional_tag_status]');
+                                         let fncS2selections = function (e, action, callback) {
 
-                      {foreach from=$attention_tags_values item=item key=key}
-                          {foreach from=$order.attention_tags item=item2 key=key2}
+                                             e.stopPropagation();
+                                             $select.select2('close');
 
-                              {if ($item.status_id == $item2.status_id && $item.active ne "Y")}
+                                             let order_id = e.params.args.data.element.dataset.order;
+                                             let status_id = e.params.args.data.element.value;
 
-                                  {assign var='string_tags_idx' value="`$string_tags_idx`,`$item.status_id`"}
-                              {/if}
+                                             $.ajax({
+                                                 url: '/admin/order/api/tag/' + action + '/' + order_id + '/' + status_id,
+                                                 success: (data) => {
 
-                          {/foreach}
-                      {/foreach}
+                                                     window.addFlashMessage(data.content, data.type);
 
-                  <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
+                                                     if (callback) {
+                                                         callback(data, status_id);
+                                                     }
+                                                 },
+                                             });
+                                         };
 
-                      {foreach from=$attention_tags_values item=item key=key}
-                      {if strpos($string_tags_idx, ",`$item.status_id`") !== false}
-                          <option
-                                  value="{$item.status_id}"
-                                  data-color="{$item.color}"
-                                  data-order="{$order.orderid}"
-                                  {foreach from=$order.attention_tags item=item2 key=key2}
-                                  {if $item.status_id == $item2.status_id}
-                                      selected
-                                  {/if}
-                                  {/foreach}
-                          >{$item.status}</option>
-                      {/if}
-                      {/foreach}
-                    </select>
+                                         $select
+                                             .on('select2:selecting', function (e) {
+                                                 fncS2selections(e, 'add', function (data, status_id) {
+                                                     if (data.type === 'success') {
+                                                         let values = $select.val();
+                                                         values.push(status_id);
+                                                         $select.val(values);
+                                                         $select.trigger('change');
+                                                     }
+                                                 });
 
-                      <script>
-                          {literal}
-                          (function(){
+                                                 return false;
+                                             })
+                                             .on('select2:unselecting', function (e) {
+                                                 if (!e.params.args.originalEvent) {
+                                                     return false;
+                                                 }
+                                                 e.params.args.originalEvent.stopPropagation();
 
-                              $(document).ready(function(){
-                                  let $select = $('select[name=additional_tag_status]');
+                                                 fncS2selections(e, 'del', function (data, status_id) {
+                                                     if (data.type === 'success') {
+                                                         let values = $select.val();
+                                                         let index = values.indexOf(status_id);
+                                                         if (index > -1) {
+                                                             values.splice(index, 1);
+                                                             $select.val(values);
+                                                             $select.trigger('change');
+                                                         }
+                                                     }
+                                                 });
 
+                                                 return false;
+                                             });
 
-                                  let fncS2selections = function(e, action, callback){
+                                         $select.select2({
+                                             width: '100%',
+                                             matcher: function (params, data) {
+                                                 if (!params.term) {
+                                                     return data;
+                                                 }
 
-                                      e.stopPropagation();
-                                      $select.select2('close');
+                                                 let re = new RegExp('^.*' + params.term + '.*$', 'i');
 
-                                      let order_id = e.params.args.data.element.dataset.order;
-                                      let status_id = e.params.args.data.element.value;
+                                                 if (re.test(data.text)) {
+                                                     return data;
+                                                 }
 
-                                      $.ajax({
-                                          url: '/admin/order/api/tag/'+action+'/' + order_id + '/' + status_id,
-                                          success: (data) => {
+                                                 return null;
+                                             },
+                                             templateResult: function (state) {
+                                                 if (state) {
+                                                     if (!state.id) {
+                                                         return state.text;
+                                                     }
 
-                                              window.addFlashMessage(data.content, data.type);
+                                                     if (state.element) {
+                                                         return $("<div class='option-result' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</div>");
+                                                     }
 
-                                              if (callback) {
-                                                  callback(data, status_id);
-                                              }
-                                          },
-                                      });
-                                  };
+                                                     return $("<span class='option-result'>" + state.text + "</span>");
+                                                 }
+                                             },
+                                             templateSelection: function (state) {
+                                                 if (!state.id) {
+                                                     return state.text;
+                                                 }
 
-                                  $select
-                                      .on('select2:selecting', function(e){
-                                          fncS2selections(e, 'add', function(data, status_id) {
-                                              if (data.type === 'success') {
-                                                  let values = $select.val();
-                                                  values.push(status_id);
-                                                  $select.val(values);
-                                                  $select.trigger('change');
-                                              }
-                                          });
+                                                 if (state.element.dataset.color) {
+                                                     return $("<span class='option-selected' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</span>");
+                                                 }
 
-                                          return false;
-                                      })
-                                      .on('select2:unselecting', function(e){
-                                          if (!e.params.args.originalEvent) {
-                                              return false;
-                                          }
-                                          e.params.args.originalEvent.stopPropagation();
+                                                 return $("<span class='option-selected'>" + state.text + "</span>");
+                                             }
 
-                                          fncS2selections(e, 'del', function(data, status_id) {
-                                              if (data.type === 'success') {
-                                                  let values = $select.val();
-                                                  let index = values.indexOf(status_id);
-                                                  if (index > -1) {
-                                                      values.splice(index, 1);
-                                                      $select.val(values);
-                                                      $select.trigger('change');
-                                                  }
-                                              }
-                                          });
+                                         }).addClass('order_additional_tags');
+                                     })
+                                 })($);
+                                 {/literal}
+                             </script>
 
-                                          return false;
-                                      });
-
-                                  $select.select2({
-                                      width: '100%',
-                                      matcher: function(params, data) {
-                                          if (!params.term) {
-                                              return data;
-                                          }
-
-                                          let re = new RegExp('^.*' + params.term + '.*$', 'i');
-
-                                          if (re.test(data.text)) {
-                                              return data;
-                                          }
-
-                                          return null;
-                                      },
-                                      templateResult: function(state) {
-                                          if (state) {
-                                              if (!state.id) {
-                                                  return state.text;
-                                              }
-
-                                              if (state.element) {
-                                                  return $("<div class='option-result' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</div>");
-                                              }
-
-                                              return $("<span class='option-result'>"+state.text+"</span>");
-                                          }
-                                      },
-                                      templateSelection: function(state) {
-                                          if (!state.id) {
-                                              return state.text;
-                                          }
-
-                                          if (state.element.dataset.color) {
-                                              return $("<span class='option-selected' style='background-color: "+state.element.dataset.color+";'>"+state.text+"</span>");
-                                          }
-
-                                          return $("<span class='option-selected'>"+state.text+"</span>");
-                                      }
-
-                                  }).addClass('order_additional_tags');
-
-
-                              })
-                          })($);
-                          {/literal}
-                      </script>
-
-                      <div id="block_tag_notes_desctiption" style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;" class="cidev_NoteBox">
-                      </div>
-                      <div id="block_tag_notes_desctiption_all" style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;" class="cidev_NoteBox">
-                          {foreach from=$attention_tags_values item=item key=key}
-                              {if $item.active eq "Y" && $item.description ne ""}
-                                  <p>
-                                    <span style="text-transform: uppercase; font-weight: bold;">{$item.status}</span><br>{$item.description}
-                                  </p>
-                              {/if}
-                          {/foreach}
-                      </div>
-                  </div>
-                  </div>
+                             <div id="block_tag_notes_desctiption"
+                                  style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;"
+                                  class="cidev_NoteBox">
+                             </div>
+                             <div id="block_tag_notes_desctiption_all"
+                                  style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;"
+                                  class="cidev_NoteBox">
+                                 {foreach from=$tag_lsit item=item key=key}
+                                     {if $item->description}
+                                         <p>
+                                             <span style="text-transform: uppercase; font-weight: bold;">{$item}</span><br>{$item->description}
+                                         </p>
+                                     {/if}
+                                 {/foreach}
+                             </div>
+                         </div>
+                     </div>
 
                  </td>
                  </tr>

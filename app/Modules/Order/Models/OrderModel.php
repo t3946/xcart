@@ -157,9 +157,9 @@ class OrderModel extends Model
                 'link' => ['orderid' => 'orderid'],
             ],
             'tags' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => AttentionTagModel::className(),
-                'through' => OrderAdditionalTagLinkModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => AttentionTagModel::class,
+                'through' => OrderAdditionalTagLinkModel::class,
             ],
             'transactions' => [
                 'class' => HasManyField::className(),

@@ -1314,34 +1314,6 @@ if ($REQUEST_METHOD === "POST") {
     }
 }
 
-$attention_tags_values = func_query_hash("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' ORDER BY orderby, status", "status_id", false);
-
-if (!empty($attention_tags_values) && is_array($attention_tags_values)) {
-    foreach ($attention_tags_values as $k => $v) {
-        $v["status_id"]                         = $k;
-        $attention_tags_values[$k]["status_id"] = $k;
-
-        $operators = func_query("SELECT * FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$v[status_id]'");
-
-        $set_active = false;
-
-        if (!empty($operators)) {
-            foreach ($operators as $kk => $vv) {
-                if ($vv["action"] === "set" && ($vv["login"] === "_ANY_" || $vv["login"] == $login)) {
-                    $set_active = true;
-                    break;
-                }
-            }
-
-            $attention_tags_values[$k]["operators"] = $operators;
-        }
-
-        if (!$set_active) {
-            $attention_tags_values[$k]["active"] = "N";
-        }
-    }
-}
-
 require $xcart_dir . "/include/order_edit.php";
 require $xcart_dir . "/include/transaction_logs.php";
 require $xcart_dir . "/include/order_transactions.php";
