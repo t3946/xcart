@@ -1,32 +1,25 @@
-{* $Id: history_order.tpl,v 1.83.2.17 2006/12/25 11:53:29 svowl Exp $ *}
 
 {if $current_membership_flag eq 'FS'}
-{assign var="membership_static" value="F"}
+    {assign var="membership_static" value="F"}
 {else}
-{assign var="membership_static" value=""}
+    {assign var="membership_static" value=""}
 {/if}
-{include file="main/multirow.tpl"}
 
+{include file="main/multirow.tpl"}
 
 <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-<!--
 multirowInputSets['track'] = [];
 multirowInputSets['track'].noCloneContent = 1;
--->
 </script>
 
-
-<script type="text/javascript" language="JavaScript 1.2">
-//<![CDATA[
+<script type="text/javascript">
 {literal}
-
 function func_refund_reason_message(){
 	var refund_reason_not_entered_message = {/literal}'{$lng.lbl_refund_reason_not_entered_message|replace:"\r\n":" "}'{literal}; 
 	alert(refund_reason_not_entered_message);
 }
-
 function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
         if (!form)
@@ -35,8 +28,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         var textarea_field = fefix_field + field + '_' + mnf_id;
         var hidden_field = field;
         var textarea_field_value = "";
-
-//	disableEditor(textarea_field, textarea_field); 
 
         for (var i = 0; i < form.elements.length; i++) {
                 if (form.elements[i].name == textarea_field){
@@ -52,9 +43,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 	form.submit();
 }
-
 {/literal}
-//]]>
 </script>
 
 <script>
@@ -89,914 +78,737 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 {assign var="order_details_name" value="Order # `$order.order_prefix``$order.orderid`"}
 
 <table width="100%">
-<tr>
-{*
-<td align="left" width="33%">
-{if $usertype ne "C"}
-{if $orderid_prev ne ""}<a href="order.php?orderid={$orderid_prev}">&lt;&lt;&nbsp;{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_prev}{$orderid_prev}</a>{/if}
-{/if}
-</td>
-*}
+    <tr>
+        <td align="left" width="*" nowrap="nowrap">
+            <table align="left">
+                <tr>
+                    <td>
+                        {if $order.amazonorderid ne ""}
+                            {if $order.amazon_fulfillment_channel eq "AFN"}
+                                <img src="{$SkinDir}/images/Amazon-com-FBA.png" alt=""/>
+                            {else}
+                                <img src="{$SkinDir}/images/Amazon-com.gif" alt=""/>
+                            {/if}
+                        {else}
 
-<td align="left" width="*" nowrap="nowrap">
+                            {if $order.is_mobile_checkout eq "Y"}
+                                <img src="{$SkinDir}/images/mobile_xcart.png"
+                                     alt="Order received throught mobile checkout"/>
+                            {else}
+                                <img src="{$SkinDir}/images/desktop_xcart.png"
+                                     alt="Order received throught desktop checkout"/>
+                            {/if}
+                            &nbsp;&nbsp;
+                        {/if}
+                    </td>
+                    <td>
+                        {include file="page_title.tpl" title=$order_details_name}
+                    </td>
+                    {if $ticket_resolver_link ne ""}
+                        <td style="font-size: 15px; {* font-weight: bold; *}">
+                            / <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}"
+                                 href="{$ticket_resolver_link}">OTRS
+                                ticket{if $ticket_resolver_messages ne ""} ({$ticket_resolver_messages}){/if}</a>
+                        </td>
+                    {/if}
+                    <td>
+                        / <a target="_blank" style="color: #140BFC"
+                             href="https://mail.google.com/mail/u/0/#search/{$order.order_prefix}{$order.orderid}+OR+%22SFP-{$order.orderid}%22">Gmail</a>
+                    </td>
+                    <td style="position: relative;">
+                        /
+                        <div style="position: relative; display: inline-block; vertical-align: middle;">
+                            <a href="#"
+                               onclick="{if $you_have_right_to_change_order}$('#send_note_form_js').toggle();{/if} return false;">
+                                {if $you_have_right_to_change_order}
+                                    <img src="{$ImagesDir}/noteicon.png"/>
+                                {else}
+                                    <img src="{$ImagesDir}/noteicon_disable.png"/>
+                                {/if}
+                            </a>
+                        </div>
 
- <table align="left">
- <tr>
+                        <div id="send_note_form_js">
+                            <form action="order.php" method="post" name="ordernotesformnewjs">
+                                <input type="hidden" name="mode" value="submit_message"/>
+                                <input type="hidden" name="send_email" value="N"/>
+                                <input type="hidden" name="orderid" value="{$order.orderid}"/>
+                                {$cidev_firstname} ({$login}) note:<br/>
+                                Write a note below or
+                                <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
+                                        value="empty"
+                                        name="type">
+                                    click this link to empty 'Last CS message' in the order list
+                                </button>
+                                . <br/>
 
-<td>
-{if $order.amazonorderid ne ""}
-	{if $order.amazon_fulfillment_channel eq "AFN"}
-		<img src="{$SkinDir}/images/Amazon-com-FBA.png" alt="" />
-	{else}
-		<img src="{$SkinDir}/images/Amazon-com.gif" alt="" />
-	{/if}
-{else}
+                                <div>
+                                    <p><b>Subject line(optional):</b</p>
+                                    <input style="width: 360px;" type="text" name="subject_line"/>
+                                </div>
+                                <p><b>Message body:</b></p>
+                                <textarea id="notes" name="notes" cols="70" style="width: 100%;"
+                                          rows="6"></textarea><br/>
+                                <div style="margin-top:10px">
 
-	{if $order.is_mobile_checkout eq "Y"}
-		<img src="{$SkinDir}/images/mobile_xcart.png" alt="Order received throught mobile checkout" />
-	{else}
-		<img src="{$SkinDir}/images/desktop_xcart.png" alt="Order received throught desktop checkout" />
-	{/if}
-&nbsp;&nbsp;
-{/if}
-</td>
+                                    <button value="message" name="type" onclick="javascript:
+                                    {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                                            document.ordernotesformnewjs.submit();">
+                                        Post message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td align="right" width="40%" style="position:relative;">
+            <div>
+                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                        <td valign="top">
+                            <div>
+                                Add <a href="javascript: void(0);"
+                                       style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;"
+                                       onclick="$('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;
+                            </div>
 
- <td>
- {include file="page_title.tpl" title=$order_details_name}
- </td>
+                            <div style="margin-top: -3px;">
+                                <div class="order_additional_tags">
+                                    {assign var=tag_lsit value=Modules\Order\Helpers\OrderAttentionTagHelper::getOrderAttentionTagsListForUser($oOrder, $xcartApp->user, 'set')->all()}
+                                    <select id="additional_tag_status" name="additional_tag_status" multiple
+                                            style="width: 100%">
+                                        {foreach from=$tag_lsit item=item key=key}
+                                            <option
+                                                    value="{$item->status_id}"
+                                                    data-color="{$item->color}"
+                                                    data-order="{$oOrder->orderid}"
+                                                    {if in_array($item->status_id, $oOrder->tags->valuesList(['pk'], true))}
+                                                        selected
+                                                    {/if}
+                                            >{$item}</option>
+                                        {/foreach}
+                                    </select>
 
- {if $ticket_resolver_link ne ""}
- <td style="font-size: 15px; {* font-weight: bold; *}">
-        / <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}" href="{$ticket_resolver_link}">OTRS ticket{if $ticket_resolver_messages ne ""} ({$ticket_resolver_messages}){/if}</a>
- </td>
- {/if}
- <td>
-	/ <a target="_blank" style="color: #140BFC" href="https://mail.google.com/mail/u/0/#search/{$order.order_prefix}{$order.orderid}+OR+%22SFP-{$order.orderid}%22">Gmail</a>
- </td>
-     <td style="position: relative;">
-         / <div style="position: relative; display: inline-block; vertical-align: middle;">
-             <a href="#" onclick="{if $you_have_right_to_change_order}$('#send_note_form_js').toggle();{/if} return false;">
-                 {if $you_have_right_to_change_order}
-                     <img src="{$ImagesDir}/noteicon.png"/>
-                 {else}
-                     <img src="{$ImagesDir}/noteicon_disable.png"/>
-                 {/if}
-             </a>
-         </div>
+                                    <script>
+                                        {literal}
+                                        (function () {
 
-         <div id="send_note_form_js">
-             <form action="order.php" method="post" name="ordernotesformnewjs">
-                 <input type="hidden" name="mode" value="submit_message"/>
-                 <input type="hidden" name="send_email" value="N"/>
-                 <input type="hidden" name="orderid" value="{$order.orderid}"/>
-                 {$cidev_firstname} ({$login}) note:<br/>
-                 Write a note below or
-                 <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
-                         value="empty"
-                         name="type">
-                     click this link to empty 'Last CS message' in the order list
-                 </button>. <br/>
+                                            $(document).ready(function () {
+                                                let $select = $('select[name=additional_tag_status]');
+                                                let fncS2selections = function (e, action, callback) {
 
-                 <div>
-                     <p><b>Subject line(optional):</b</p>
-                     <input style="width: 360px;" type="text" name="subject_line"/>
-                 </div>
-                 <p><b>Message body:</b></p>
-                 <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
+                                                    e.stopPropagation();
+                                                    $select.select2('close');
 
-                 {* <input type="submit" value="Post message" id="post_message" /> *}
+                                                    let order_id = e.params.args.data.element.dataset.order;
+                                                    let status_id = e.params.args.data.element.value;
 
-                 <div style="margin-top:10px">
+                                                    $.ajax({
+                                                        url: '/admin/order/api/tag/' + action + '/' + order_id + '/' + status_id,
+                                                        success: (data) => {
 
-                     <button value="message" name="type" onclick="javascript:
-                     {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
-                             document.ordernotesformnewjs.submit();">
-                         Post message
-                     </button>
+                                                            window.addFlashMessage(data.content, data.type);
 
-                 </div>
-             </form>
-         </div>
-     </td>
- </tr>
- </table>
+                                                            if (callback) {
+                                                                callback(data, status_id);
+                                                            }
+                                                        },
+                                                    });
+                                                };
 
-</td>
+                                                $select
+                                                    .on('select2:selecting', function (e) {
+                                                        fncS2selections(e, 'add', function (data, status_id) {
+                                                            if (data.type === 'success') {
+                                                                let values = $select.val();
+                                                                values.push(status_id);
+                                                                $select.val(values);
+                                                                $select.trigger('change');
+                                                            }
+                                                        });
 
-<td align="right" width="40%" style="position:relative;">
-<div>
-                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                 <tr>
-                 <td valign="top">
-                     <div>
-                         Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="$('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;
-                     </div>
+                                                        return false;
+                                                    })
+                                                    .on('select2:unselecting', function (e) {
+                                                        if (!e.params.args.originalEvent) {
+                                                            return false;
+                                                        }
+                                                        e.params.args.originalEvent.stopPropagation();
 
-                     <div style="margin-top: -3px;">
-                         <div class="order_additional_tags">
-                             {assign var=tag_lsit value=Modules\Order\Helpers\OrderAttentionTagHelper::getOrderAttentionTagsListForUser($oOrder, $xcartApp->user, 'set')->all()}
-                             <select id="additional_tag_status" name="additional_tag_status" multiple style="width: 100%">
-                                 {foreach from=$tag_lsit item=item key=key}
-                                         <option
-                                                 value="{$item->status_id}"
-                                                 data-color="{$item->color}"
-                                                 data-order="{$oOrder->orderid}"
-                                                 {if in_array($item->status_id, $oOrder->tags->valuesList(['pk'], true))}
-                                                     selected
-                                                 {/if}
-                                         >{$item}</option>
-                                 {/foreach}
-                             </select>
+                                                        fncS2selections(e, 'del', function (data, status_id) {
+                                                            if (data.type === 'success') {
+                                                                let values = $select.val();
+                                                                let index = values.indexOf(status_id);
+                                                                if (index > -1) {
+                                                                    values.splice(index, 1);
+                                                                    $select.val(values);
+                                                                    $select.trigger('change');
+                                                                }
+                                                            }
+                                                        });
 
-                             <script>
-                                 {literal}
-                                 (function () {
+                                                        return false;
+                                                    });
 
-                                     $(document).ready(function () {
-                                         let $select = $('select[name=additional_tag_status]');
-                                         let fncS2selections = function (e, action, callback) {
+                                                $select.select2({
+                                                    width: '100%',
+                                                    matcher: function (params, data) {
+                                                        if (!params.term) {
+                                                            return data;
+                                                        }
 
-                                             e.stopPropagation();
-                                             $select.select2('close');
+                                                        let re = new RegExp('^.*' + params.term + '.*$', 'i');
 
-                                             let order_id = e.params.args.data.element.dataset.order;
-                                             let status_id = e.params.args.data.element.value;
+                                                        if (re.test(data.text)) {
+                                                            return data;
+                                                        }
 
-                                             $.ajax({
-                                                 url: '/admin/order/api/tag/' + action + '/' + order_id + '/' + status_id,
-                                                 success: (data) => {
+                                                        return null;
+                                                    },
+                                                    templateResult: function (state) {
+                                                        if (state) {
+                                                            if (!state.id) {
+                                                                return state.text;
+                                                            }
 
-                                                     window.addFlashMessage(data.content, data.type);
+                                                            if (state.element) {
+                                                                return $("<div class='option-result' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</div>");
+                                                            }
 
-                                                     if (callback) {
-                                                         callback(data, status_id);
-                                                     }
-                                                 },
-                                             });
-                                         };
+                                                            return $("<span class='option-result'>" + state.text + "</span>");
+                                                        }
+                                                    },
+                                                    templateSelection: function (state) {
+                                                        if (!state.id) {
+                                                            return state.text;
+                                                        }
 
-                                         $select
-                                             .on('select2:selecting', function (e) {
-                                                 fncS2selections(e, 'add', function (data, status_id) {
-                                                     if (data.type === 'success') {
-                                                         let values = $select.val();
-                                                         values.push(status_id);
-                                                         $select.val(values);
-                                                         $select.trigger('change');
-                                                     }
-                                                 });
+                                                        if (state.element.dataset.color) {
+                                                            return $("<span class='option-selected' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</span>");
+                                                        }
 
-                                                 return false;
-                                             })
-                                             .on('select2:unselecting', function (e) {
-                                                 if (!e.params.args.originalEvent) {
-                                                     return false;
-                                                 }
-                                                 e.params.args.originalEvent.stopPropagation();
+                                                        return $("<span class='option-selected'>" + state.text + "</span>");
+                                                    }
 
-                                                 fncS2selections(e, 'del', function (data, status_id) {
-                                                     if (data.type === 'success') {
-                                                         let values = $select.val();
-                                                         let index = values.indexOf(status_id);
-                                                         if (index > -1) {
-                                                             values.splice(index, 1);
-                                                             $select.val(values);
-                                                             $select.trigger('change');
-                                                         }
-                                                     }
-                                                 });
+                                                }).addClass('order_additional_tags');
+                                            })
+                                        })($);
+                                        {/literal}
+                                    </script>
 
-                                                 return false;
-                                             });
-
-                                         $select.select2({
-                                             width: '100%',
-                                             matcher: function (params, data) {
-                                                 if (!params.term) {
-                                                     return data;
-                                                 }
-
-                                                 let re = new RegExp('^.*' + params.term + '.*$', 'i');
-
-                                                 if (re.test(data.text)) {
-                                                     return data;
-                                                 }
-
-                                                 return null;
-                                             },
-                                             templateResult: function (state) {
-                                                 if (state) {
-                                                     if (!state.id) {
-                                                         return state.text;
-                                                     }
-
-                                                     if (state.element) {
-                                                         return $("<div class='option-result' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</div>");
-                                                     }
-
-                                                     return $("<span class='option-result'>" + state.text + "</span>");
-                                                 }
-                                             },
-                                             templateSelection: function (state) {
-                                                 if (!state.id) {
-                                                     return state.text;
-                                                 }
-
-                                                 if (state.element.dataset.color) {
-                                                     return $("<span class='option-selected' style='background-color: " + state.element.dataset.color + ";'>" + state.text + "</span>");
-                                                 }
-
-                                                 return $("<span class='option-selected'>" + state.text + "</span>");
-                                             }
-
-                                         }).addClass('order_additional_tags');
-                                     })
-                                 })($);
-                                 {/literal}
-                             </script>
-
-                             <div id="block_tag_notes_desctiption"
-                                  style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;"
-                                  class="cidev_NoteBox">
-                             </div>
-                             <div id="block_tag_notes_desctiption_all"
-                                  style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;"
-                                  class="cidev_NoteBox">
-                                 {foreach from=$tag_lsit item=item key=key}
-                                     {if $item->description}
-                                         <p>
-                                             <span style="text-transform: uppercase; font-weight: bold;">{$item}</span><br>{$item->description}
-                                         </p>
-                                     {/if}
-                                 {/foreach}
-                             </div>
-                         </div>
-                     </div>
-
-                 </td>
-                 </tr>
-                 </table>
-</div>
-
-
-</td>
-
-</tr>
+                                    <div id="block_tag_notes_desctiption"
+                                         style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;"
+                                         class="cidev_NoteBox">
+                                    </div>
+                                    <div id="block_tag_notes_desctiption_all"
+                                         style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;"
+                                         class="cidev_NoteBox">
+                                        {foreach from=$tag_lsit item=item key=key}
+                                            {if $item->description}
+                                                <p>
+                                                    <span style="text-transform: uppercase; font-weight: bold;">{$item}</span><br>{$item->description}
+                                                </p>
+                                            {/if}
+                                        {/foreach}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
 </table>
 
-
 {if $order.lng_order_contains_FBA_items eq "Y"}
-  <table width="100%">
-  <tr>
-  <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
-        {$lng.lng_order_contains_FBA_items}
-  </td>
-  </tr>
-  </table>
-{/if}
-
-{if $you_cannot_modify_order eq "Y"}
-{* <br /> *}
-
- {if $warning_message ne ""}
-
-  <table width="100%">
-  <tr>
-  <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
-	{$warning_message}
-  </td>
-  </tr>
-  </table>
- {/if}
-
-{else}
     <table width="100%">
-    <tr>
-    <td align="center" style="border: solid 1px #000000; background: {if $order_unlocked eq "Y"}#fff2cc;{else}#D9EAD3;{/if}">
-    {if $order_unlocked eq "Y"}
-	{$unlock_message}
-    {else}
-	<form action="order.php?orderid={$orderid}" method="post" name="unlockorderform">
-	<input type="hidden" name="mode" value="" id="id_mode_unlock" />
-	{$lock_message}<input type="button" value="Unlock it now" onclick="javascript: $('#id_mode_unlock').val('unlock_order'); this.form.submit();" />.
-	
-	{if $count_locked_orders gt "1"}
-		<input type="button" value="Unlock all orders locked by me" onclick="javascript: $('#id_mode_unlock').val('unlock_orders'); this.form.submit();" />
-	{/if}
-
-	</form>
-    {/if}
-    </td>
-    </tr>
+        <tr>
+            <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
+                {$lng.lng_order_contains_FBA_items}
+            </td>
+        </tr>
     </table>
 {/if}
 
-{*
-<br /><br />
-{$lng.txt_order_details_top_text}
-*}
+{if $you_cannot_modify_order eq "Y"}
+    {if $warning_message ne ""}
+        <table width="100%">
+            <tr>
+                <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
+                    {$warning_message}
+                </td>
+            </tr>
+        </table>
+    {/if}
+{else}
+    <table width="100%">
+        <tr>
+            <td align="center"
+                style="border: solid 1px #000000; background: {if $order_unlocked eq "Y"}#fff2cc;{else}#D9EAD3;{/if}">
+                {if $order_unlocked eq "Y"}
+                    {$unlock_message}
+                {else}
+                    <form action="order.php?orderid={$orderid}" method="post" name="unlockorderform">
+                        <input type="hidden" name="mode" value="" id="id_mode_unlock"/>
+                        {$lock_message}<input type="button" value="Unlock it now"
+                                              onclick="javascript: $('#id_mode_unlock').val('unlock_order'); this.form.submit();"/>.
+                        {if $count_locked_orders gt "1"}
+                            <input type="button" value="Unlock all orders locked by me"
+                                   onclick="javascript: $('#id_mode_unlock').val('unlock_orders'); this.form.submit();"/>
+                        {/if}
+                    </form>
+                {/if}
+            </td>
+        </tr>
+    </table>
+{/if}
 
 {if $usertype eq 'A' && $is_merchant_password ne 'Y' && $config.Security.blowfish_enabled eq 'Y'}
-{capture name=dialog}
-<form action="{$catalogs.admin}/merchant_password.php" method="post" name="mpasswordform">
-<input type="hidden" name="orderid" value="{$orderid}" />
-{$lng.txt_enter_merchant_password_note}
-<br /><br />
-<table>
-<tr>
-	<td><font class="VertMenuItems">{$lng.lbl_merchant_password}</font></td>
-	<td><input type="password" name="mpassword" size="16" /></td>
-	<td><input type="submit" value="{$lng.lbl_enter_mpassword|strip_tags:false|escape}" /></td>
-</tr>
-</table>
-</form>
-{/capture}
-{include file="dialog.tpl" title=$lng.lbl_enter_merchant_password content=$smarty.capture.dialog extra='width="100%"'}
-{* <br /> *}
+    {capture name=dialog}
+    <form action="{$catalogs.admin}/merchant_password.php" method="post" name="mpasswordform">
+    <input type="hidden" name="orderid" value="{$orderid}" />
+    {$lng.txt_enter_merchant_password_note}
+    <br /><br />
+    <table>
+    <tr>
+        <td><font class="VertMenuItems">{$lng.lbl_merchant_password}</font></td>
+        <td><input type="password" name="mpassword" size="16" /></td>
+        <td><input type="submit" value="{$lng.lbl_enter_mpassword|strip_tags:false|escape}" /></td>
+    </tr>
+    </table>
+    </form>
+    {/capture}
+    {include file="dialog.tpl" title=$lng.lbl_enter_merchant_password content=$smarty.capture.dialog extra='width="100%"'}
 {/if}
-
 
 {if $usertype ne "C"}
-{capture name=compose_email}
-
-<table width="100%" style="background-color: #d9ead3;">
-<tr>
-<td><B>Compose emails:</B></td>
-</tr>
-<tr>
-<td>
-
-<table cellspacing="0" cellpadding="0" border="0">
-<tr>
-    <td>
-        <select name="select_department" id="select_department"
-                onchange="$('#td_customer_department').hide();
-                $('#amazonorderid_contact_link').hide();
-                $('#td_distributor_department').hide();
-                $('#td_our_customer_service_department').hide();
-                $('#td_third_party_department').hide();
-                if (this.value !== '') $('#'+this.value).show();
-                if (this.value === 'td_customer_department') $('#amazonorderid_contact_link').show();">
-            <option value="">Select receiving party</option>
-            <option value="td_customer_department">Compose email to customer</option>
-            {foreach from=$oOrder->groups item=group}
-                {assign var=manufacturer_model value=$group->manufacturer}
-                <option data-id="{$manufacturer_model->manufacturerid}" value="td_distributor_department">Compose email to {$manufacturer_model->code} distributor</option>
-            {/foreach }
-            <option value="td_our_customer_service_department">Compose email to our customer service</option>
-            <option value="td_third_party_department">Compose email to third party</option>
-        </select>
-    </td>
-    <td id="td_customer_department" nowrap="nowrap" style="display: none;">
-        {if $department_full_arr.customer}
-            <form name="customer_department_form" action="#" method="POST">
-                <select name="customer_department" id="customer_department">
-                    {foreach from=$department_full_arr.customer item=category_items key=key}
-                        <optgroup label="{$key}">
-                            {foreach $category_items as $item}
-                                <option value="{$item->id}">{$item->template_name}</option>
-                            {/foreach}
-                        </optgroup>
-                    {/foreach}
-                </select>
-                <input type="button" name="Compose" value="Compose"
-                       onclick="$('#td_customer_department').hide();
-                       $('#amazonorderid_contact_link').hide();
-                       $('#td_distributor_department').hide();
-                       $('#td_our_customer_service_department').hide();
-                       $('#td_third_party_department').hide();
-                       $('#select_department').val('');
-                       window.open('compose_message.php?orderid={$order.orderid}&department=customer&template_id='+$('#customer_department').val());">
-            </form>
-        {/if}
-    </td>
-    <td id="td_distributor_department" nowrap="nowrap" style="display: none;">
-        {if $department_full_arr.distributor && $order_manufacturers}
-            <form name="distributor_department_form" action="#" method="POST">
-                <select name="distributor_department" id="distributor_department">
-                    {foreach from=$department_full_arr.distributor item=category_items key=key}
-                        <optgroup label="{$key}">
-                            {foreach $category_items as $item}
-                                <option value="{$item->id}">{$item->template_name}</option>
-                            {/foreach}
-                        </optgroup>
-                    {/foreach}
-                </select>
-                <input type="button" name="Compose" value="Compose"
-                       onclick="let mid = $('#select_department option:selected').data('id');
-                       $('#td_customer_department').hide();
-                       $('#amazonorderid_contact_link').hide();
-                       $('#td_distributor_department').hide();
-                       $('#td_our_customer_service_department').hide();
-                       $('#td_third_party_department').hide();
-                       $('#select_department').val('');
-                       window.open('compose_message.php?orderid={$order.orderid}&department=distributor&mid_templateid='+mid+'-'+$('#distributor_department').val());">
-            </form>
-        {/if}
-    </td>
-    <td id="td_our_customer_service_department" nowrap="nowrap" style="display: none;">
-        {if $department_full_arr.our_customer_service ne ""}
-            <form name="our_customer_service_form" action="#" method="POST">
-                <select name="our_customer_service_department"
-                        id="our_customer_service_department">
-                    {foreach from=$department_full_arr.our_customer_service item=category_items key=key}
-                        <optgroup label="{$key}">
-                            {foreach $category_items as $item}
-                                <option value="{$item->id}">{$item->template_name}</option>
-                            {/foreach}
-                        </optgroup>
-                    {/foreach}
-                </select>
-                <input type="button" name="Compose" value="Compose"
-                       onclick="$('#td_customer_department').hide();
-                       $('#td_distributor_department').hide();
-                       $('#td_our_customer_service_department').hide();
-                       $('#td_third_party_department').hide();
-                       $('#amazonorderid_contact_link').hide();
-                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=our_customer_service&template_id='+$('#our_customer_service_department').val());">
-            </form>
-        {/if}
-    </td>
-    <td id="td_third_party_department" nowrap="nowrap" style="display: none;">
-        {if $department_full_arr.third_party ne ""}
-            <form name="third_party_form" action="#" method="POST">
-                <select name="third_party_department" id="third_party_department">
-                    {foreach from=$department_full_arr.third_party item=category_items key=key}
-                        <optgroup label="{$key}">
-                            {foreach $category_items as $item}
-                                <option value="{$item->id}">{$item->template_name}</option>
-                            {/foreach}
-                        </optgroup>
-                    {/foreach}
-                </select>
-                <input type="button" name="Compose" value="Compose"
-                       onclick="$('#td_customer_department').hide();
-                       $('#td_distributor_department').hide();
-                       $('#td_our_customer_service_department').hide();
-                       $('#td_third_party_department').hide();
-                       $('#amazonorderid_contact_link').hide();
-                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=third_party&template_id='+$('#third_party_department').val());">
-            </form>
-        {/if}
-    </td>
-    <td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right" width="200">
-        {if $order.amazonorderid ne ""}
-            <a target="_blank"
-               href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}"
-               style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
-        {/if}
-    </td>
-</tr>
-
-</table>
-</td>
-</tr>
-</table>
-{/capture}
-{*
-{include file="dialog.tpl" title="Email templates" content=$smarty.capture.dialog extra='width="100%"'}
-<br />
-*}
-{/if}
-
-
-{if $usertype ne "C"}
-
-{capture name=order_progress}
- <table width="100%" cellspacing="0" cellpadding="0" border="0">
-  <tr>
-   <td width="34%" valign="top">
-        <table cellspacing="0" cellpadding="0" border="0">
-        <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
-        <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
-        <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
-        <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="{$xcartApp->router->url('admin:list', ['module' => 'Goods', 'admin' => 'ProductVerificationAdmin'])}" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
-                <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
-                    {foreach from=$order.product_verification_statuses item=product_verification_sts}
-                        <option {if $order.product_verification_status == $product_verification_sts->getField('name')} selected="selected" {/if} value="{$product_verification_sts->getField('code')}">{$product_verification_sts->getField('name')}</option>
-                    {/foreach}
-                </select>
-            </td></tr>
-
-{if $order.product_question_status_code ne ""}
-	<tr><td nowrap="nowrap"><B>Product question status:</B>&nbsp;</td><td><a href="product_question.php?id={$order.product_question_status_id}" target="_blank" style="color: #140BFC">{$product_question_statuses[$order.product_question_status_code]}</a></td></tr>
-{/if}
-
+    {capture name=compose_email}
+        <table width="100%" style="background-color: #d9ead3;">
+            <tr>
+                <td><B>Compose emails:</B></td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td>
+                                <select name="select_department" id="select_department"
+                                        onchange="$('#td_customer_department').hide();
+                                                $('#amazonorderid_contact_link').hide();
+                                                $('#td_distributor_department').hide();
+                                                $('#td_our_customer_service_department').hide();
+                                                $('#td_third_party_department').hide();
+                                                if (this.value !== '') $('#'+this.value).show();
+                                                if (this.value === 'td_customer_department') $('#amazonorderid_contact_link').show();">
+                                    <option value="">Select receiving party</option>
+                                    <option value="td_customer_department">Compose email to customer</option>
+                                    {foreach from=$oOrder->groups item=group}
+                                        {assign var=manufacturer_model value=$group->manufacturer}
+                                        <option data-id="{$manufacturer_model->manufacturerid}"
+                                                value="td_distributor_department">Compose email
+                                            to {$manufacturer_model->code} distributor
+                                        </option>
+                                    {/foreach }
+                                    <option value="td_our_customer_service_department">Compose email to our customer
+                                        service
+                                    </option>
+                                    <option value="td_third_party_department">Compose email to third party</option>
+                                </select>
+                            </td>
+                            <td id="td_customer_department" nowrap="nowrap" style="display: none;">
+                                {if $department_full_arr.customer}
+                                    <form name="customer_department_form" action="#" method="POST">
+                                        <select name="customer_department" id="customer_department">
+                                            {foreach from=$department_full_arr.customer item=category_items key=key}
+                                                <optgroup label="{$key}">
+                                                    {foreach $category_items as $item}
+                                                        <option value="{$item->id}">{$item->template_name}</option>
+                                                    {/foreach}
+                                                </optgroup>
+                                            {/foreach}
+                                        </select>
+                                        <input type="button" name="Compose" value="Compose"
+                                               onclick="$('#td_customer_department').hide();
+                                                       $('#amazonorderid_contact_link').hide();
+                                                       $('#td_distributor_department').hide();
+                                                       $('#td_our_customer_service_department').hide();
+                                                       $('#td_third_party_department').hide();
+                                                       $('#select_department').val('');
+                                                       window.open('compose_message.php?orderid={$order.orderid}&department=customer&template_id='+$('#customer_department').val());">
+                                    </form>
+                                {/if}
+                            </td>
+                            <td id="td_distributor_department" nowrap="nowrap" style="display: none;">
+                                {if $department_full_arr.distributor && $order_manufacturers}
+                                    <form name="distributor_department_form" action="#" method="POST">
+                                        <select name="distributor_department" id="distributor_department">
+                                            {foreach from=$department_full_arr.distributor item=category_items key=key}
+                                                <optgroup label="{$key}">
+                                                    {foreach $category_items as $item}
+                                                        <option value="{$item->id}">{$item->template_name}</option>
+                                                    {/foreach}
+                                                </optgroup>
+                                            {/foreach}
+                                        </select>
+                                        <input type="button" name="Compose" value="Compose"
+                                               onclick="let mid = $('#select_department option:selected').data('id');
+                                                       $('#td_customer_department').hide();
+                                                       $('#amazonorderid_contact_link').hide();
+                                                       $('#td_distributor_department').hide();
+                                                       $('#td_our_customer_service_department').hide();
+                                                       $('#td_third_party_department').hide();
+                                                       $('#select_department').val('');
+                                                       window.open('compose_message.php?orderid={$order.orderid}&department=distributor&mid_templateid='+mid+'-'+$('#distributor_department').val());">
+                                    </form>
+                                {/if}
+                            </td>
+                            <td id="td_our_customer_service_department" nowrap="nowrap" style="display: none;">
+                                {if $department_full_arr.our_customer_service ne ""}
+                                    <form name="our_customer_service_form" action="#" method="POST">
+                                        <select name="our_customer_service_department"
+                                                id="our_customer_service_department">
+                                            {foreach from=$department_full_arr.our_customer_service item=category_items key=key}
+                                                <optgroup label="{$key}">
+                                                    {foreach $category_items as $item}
+                                                        <option value="{$item->id}">{$item->template_name}</option>
+                                                    {/foreach}
+                                                </optgroup>
+                                            {/foreach}
+                                        </select>
+                                        <input type="button" name="Compose" value="Compose"
+                                               onclick="$('#td_customer_department').hide();
+                                                       $('#td_distributor_department').hide();
+                                                       $('#td_our_customer_service_department').hide();
+                                                       $('#td_third_party_department').hide();
+                                                       $('#amazonorderid_contact_link').hide();
+                                                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=our_customer_service&template_id='+$('#our_customer_service_department').val());">
+                                    </form>
+                                {/if}
+                            </td>
+                            <td id="td_third_party_department" nowrap="nowrap" style="display: none;">
+                                {if $department_full_arr.third_party ne ""}
+                                    <form name="third_party_form" action="#" method="POST">
+                                        <select name="third_party_department" id="third_party_department">
+                                            {foreach from=$department_full_arr.third_party item=category_items key=key}
+                                                <optgroup label="{$key}">
+                                                    {foreach $category_items as $item}
+                                                        <option value="{$item->id}">{$item->template_name}</option>
+                                                    {/foreach}
+                                                </optgroup>
+                                            {/foreach}
+                                        </select>
+                                        <input type="button" name="Compose" value="Compose"
+                                               onclick="$('#td_customer_department').hide();
+                                                       $('#td_distributor_department').hide();
+                                                       $('#td_our_customer_service_department').hide();
+                                                       $('#td_third_party_department').hide();
+                                                       $('#amazonorderid_contact_link').hide();
+                                                       $('#select_department').val(''); window.open('compose_message.php?orderid={$order.orderid}&department=third_party&template_id='+$('#third_party_department').val());">
+                                    </form>
+                                {/if}
+                            </td>
+                            <td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right"
+                                width="200">
+                                {if $order.amazonorderid ne ""}
+                                    <a target="_blank"
+                                       href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}"
+                                       style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
+                                {/if}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </table>
-   </td>
+    {/capture}
+{/if}
 
-   <td width="*" valign="top">
+{if $usertype ne "C"}
+    {capture name=order_progress}
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td width="34%" valign="top">
+            <table cellspacing="0" cellpadding="0" border="0">
+            <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
+            <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
+            <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
+            <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="{$xcartApp->router->url('admin:list', ['module' => 'Goods', 'admin' => 'ProductVerificationAdmin'])}" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
+                    <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
+                        {foreach from=$order.product_verification_statuses item=product_verification_sts}
+                            <option {if $order.product_verification_status == $product_verification_sts->getField('name')} selected="selected" {/if} value="{$product_verification_sts->getField('code')}">{$product_verification_sts->getField('name')}</option>
+                        {/foreach}
+                    </select>
+                </td></tr>
 
-	{if ($transaction_logs.0.usertype eq "C" || $link_to_virtual_terminal_transaction ne "") && $order.amazonorderid eq ""}
-		<B>Customer to business payments:</B><br />
-	{/if}
-
-
-{* --- First transaction from customer --- 
-        {if $transaction_logs.0.usertype eq "C" && $order.amazonorderid eq ""}
-
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
-		<br />
-        {/if}
- --- End --- *}
-
-{* --- First transaction --- *}
-	{if $transaction_logs ne "" && $order.amazonorderid eq ""}
-		{assign var="first_transaction_found" value=""}
-
-		{foreach from=$transaction_logs item=transaction_log key=k_transaction_logs}
-			{if $transaction_log.transaction_status ne "voided" && $transaction_log.transaction_id ne "" && $first_transaction_found eq ""}
-				{if $transaction_log.transaction_id_link ne ""}<a target="_blank" href="{$transaction_log.transaction_id_link|substitute:'trans-id':$transaction_log.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_log.transaction_link_anchor ne ""}{$transaction_log.transaction_link_anchor}{else}{$transaction_log.transaction_id}{/if} {if $transaction_log.transaction_link_anchor ne ""}({$transaction_log.transaction_id}){/if}{if $transaction_log.transaction_id_link ne ""}</a>{/if}
-				{assign var="first_transaction_found" value="Y"}
-				<br />
-			{/if}
-		{/foreach}
-	{/if}
-{* --- End --- *}
-
-	{if $link_to_virtual_terminal_transaction ne "" && $order.amazonorderid eq ""}
-		{foreach from=$link_to_virtual_terminal_transaction item=vl key=kl}
-			{$vl}<br />
-		{/foreach}
-	{/if}
-
-	{if $order.amazonorderid ne ""}
-<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID={$order.amazonorderid}" target="_blank">Amazon order # {$order.amazonorderid}</a><br />
-	{/if}
-       {if $oOrder->order_type == 'FB' && $oOrder->fba_shipment}
-        <a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$oOrder->fba_shipment->shipment_id}" target="_blank">Amazon FBA Shipment # {$oOrder->fba_shipment->shipment_name}</a><br />
+    {if $order.product_question_status_code ne ""}
+        <tr><td nowrap="nowrap"><B>Product question status:</B>&nbsp;</td><td><a href="product_question.php?id={$order.product_question_status_id}" target="_blank" style="color: #140BFC">{$product_question_statuses[$order.product_question_status_code]}</a></td></tr>
     {/if}
 
-	{if $checks_deposited_order ne ""}
-                <table cellspacing="0" cellpadding="0" border="0">
-                {foreach from=$checks_deposited_order item=vc key=kc}
-                <tr>
-                        <td>{$vc.date|date_format:'%d-%b-%Y'}</td>
-                        <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td>Check# {$vc.check_number}</td>
-                        <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td>{$vc.currency}&nbsp;{$vc.amount}</td>
-                </tr>
-                {/foreach}
-                <tr>
-                        <td colspan="4"><B>Total deposited amount:</B>&nbsp;</td>
-                        <td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.currency}&nbsp;{$vc.total_deposit_amount}</B></a></td>
-                </table>
-	{/if}
-
-   </td>
-
-   <td width="25%" valign="top" align="right">
-
-   </td>
-
-  </tr>
- </table>
-{/capture}
-{*
-{include file="dialog.tpl" title="Order ticket" content=$smarty.capture.dialog extra='width="100%"'}
-<br />
-*}
+            </table>
+       </td>
+                <td width="*" valign="top">
+                    {if ($transaction_logs[0].usertype eq "C" || $link_to_virtual_terminal_transaction ne "") && $order.amazonorderid eq ""}
+                        <b>Customer to business payments:</b><br />
+                    {/if}
+                    {if $transaction_logs ne "" && $order.amazonorderid eq ""}
+                        {assign var="first_transaction_found" value=""}
+                        {foreach from=$transaction_logs item=transaction_log key=k_transaction_logs}
+                            {if $transaction_log.transaction_status ne "voided" && $transaction_log.transaction_id ne "" && $first_transaction_found eq ""}
+                                {if $transaction_log.transaction_id_link ne ""}<a target="_blank" href="{$transaction_log.transaction_id_link|substitute:'trans-id':$transaction_log.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_log.transaction_link_anchor ne ""}{$transaction_log.transaction_link_anchor}{else}{$transaction_log.transaction_id}{/if} {if $transaction_log.transaction_link_anchor ne ""}({$transaction_log.transaction_id}){/if}{if $transaction_log.transaction_id_link ne ""}</a>{/if}
+                                {assign var="first_transaction_found" value="Y"}
+                                <br />
+                            {/if}
+                        {/foreach}
+                    {/if}
+                    {if $link_to_virtual_terminal_transaction ne "" && $order.amazonorderid eq ""}
+                        {foreach from=$link_to_virtual_terminal_transaction item=vl key=kl}
+                            {$vl}<br />
+                        {/foreach}
+                    {/if}
+                    {if $order.amazonorderid ne ""}
+                        <a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID={$order.amazonorderid}" target="_blank">Amazon order # {$order.amazonorderid}</a><br />
+                    {/if}
+                    {if $oOrder->order_type == 'FB' && $oOrder->fba_shipment}
+                        <a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$oOrder->fba_shipment->shipment_id}" target="_blank">Amazon FBA Shipment # {$oOrder->fba_shipment->shipment_name}</a><br />
+                    {/if}
+                    {if $checks_deposited_order ne ""}
+                        <table cellspacing="0" cellpadding="0" border="0">
+                            {foreach from=$checks_deposited_order item=vc key=kc}
+                            <tr>
+                                    <td>{$vc.date|date_format:'%d-%b-%Y'}</td>
+                                    <td>&nbsp;&nbsp;&nbsp;</td>
+                                    <td>Check# {$vc.check_number}</td>
+                                    <td>&nbsp;&nbsp;&nbsp;</td>
+                                    <td>{$vc.currency}&nbsp;{$vc.amount}</td>
+                            </tr>
+                        {/foreach}
+                            <tr>
+                                <td colspan="4"><B>Total deposited amount:</B>&nbsp;</td>
+                                <td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.currency}&nbsp;{$vc.total_deposit_amount}</B></a></td>
+                            </tr>
+                        </table>
+                    {/if}
+                </td>
+                <td width="25%" valign="top" align="right"></td>
+            </tr>
+        </table>
+    {/capture}
 {/if}
 
 {if $usertype eq 'A' && $order_manufacturers && $current_membership_flag ne 'FS'}
-{assign var=found_show_stock_availability_form value=""}
-{foreach from=$order_manufacturers item=v key=mnf_id}
- {if $v.dc_status eq 'K' || $v.dc_status eq 'E' || $v.dc_status eq 'M' || $v.dc_status eq 'T'}
-  {assign var=found_show_stock_availability_form value="Y"}
- {/if}
-{/foreach}
-
-{if $found_show_stock_availability_form eq "Y"}
- {capture name=stock_request}
-  {foreach from=$order_manufacturers item=v key=mnf_id}
-
-   {assign var=show_stock_availability_form value=""}
-   {if $v.dc_status eq 'K' || $v.dc_status eq 'E' || $v.dc_status eq 'M' || $v.dc_status eq 'T'}
-        {assign var=show_stock_availability_form value="Y"}
-   {/if}
-
-   {if $show_stock_availability_form eq "Y"}
-
-        <a name="information_request_{$mnf_id}"></a>
-
-        <div class="ProductTitle" align="center">{$v.manufacturer}: Stock request</div>
-        {include file="customer/main/stock_availability.tpl" o=$order.orderid m=$mnf_id products=$products order=$order admin_area_uses="Y"}
-        <br /><br />
-        <hr /><br />
-   {/if}
-
-  {/foreach}
- {/capture}
-{* <br /> *}
+    {assign var=found_show_stock_availability_form value=""}
+    {foreach from=$order_manufacturers item=v key=mnf_id}
+        {if $v.dc_status eq 'K' || $v.dc_status eq 'E' || $v.dc_status eq 'M' || $v.dc_status eq 'T'}
+            {assign var=found_show_stock_availability_form value="Y"}
+        {/if}
+    {/foreach}
+    {if $found_show_stock_availability_form eq "Y"}
+        {capture name=stock_request}
+            {foreach from=$order_manufacturers item=v key=mnf_id}
+                {assign var=show_stock_availability_form value=""}
+                {if $v.dc_status eq 'K' || $v.dc_status eq 'E' || $v.dc_status eq 'M' || $v.dc_status eq 'T'}
+                    {assign var=show_stock_availability_form value="Y"}
+                {/if}
+                {if $show_stock_availability_form eq "Y"}
+                    <a name="information_request_{$mnf_id}"></a>
+                    <div class="ProductTitle" align="center">{$v.manufacturer}: Stock request</div>
+                    {include file="customer/main/stock_availability.tpl" o=$order.orderid m=$mnf_id products=$products order=$order admin_area_uses="Y"}
+                    <br/>
+                    <br/>
+                    <hr/>
+                    <br/>
+                {/if}
+            {/foreach}
+        {/capture}
+    {/if}
 {/if}
-{/if}
-
-
-
-
-
 
 {assign var=colspan value=10}
 
 <table width="100%">
-<tr> 
-	<td valign="top" colspan="{$colspan}">
+    <tr>
+        <td valign="top" colspan="{$colspan}">
+            {if $usertype eq "C"}
+                <p class="prev-next-links">
+                    {if $orderid_prev ne ""}<a href="order.php?orderid={$orderid_prev}">&lt;&lt;
+                        &nbsp;{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_prev}{$orderid_prev}</a>{/if}
+                    {if $orderid_next ne ""}{if $orderid_prev ne ""} | {/if}<a
+                        href="order.php?orderid={$orderid_next}">{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_next}{$orderid_next}
+                        &nbsp;&gt;&gt;</a>{/if}
+                </p>
+                <table cellspacing="1" cellpadding="2" class="ButtonsRow">
+                    <tr>
+                        {if $usertype eq "P" || $usertype eq 'A'}
+                            <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_print_order target="_blank" href="order.php?orderid=`$order.orderid`&mode=printable"}</td>
+                        {/if}
+                        {if $active_modules.RMA ne '' && $current_membership_flag ne 'FS'}
+                            {if ($usertype eq  'C' || $usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $return_products ne ''}
+                                <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_create_return href="#returns"}</td>
+                            {/if}
+                            {if ($usertype eq  'C' || $usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $order.is_returns}
+                                <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_order_returns href="returns.php?mode=search&search[orderid]=`$order.orderid`"}</td>
+                            {/if}
+                        {/if}
+                        {if $active_modules.Shipping_Label_Generator ne '' && ($usertype eq 'A' || $usertype eq 'P')}
+                            <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_shipping_label href="generator.php?orderid=`$order.orderid`"}</td>
+                        {/if}
+                        <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_print_invoice target="_blank" href="order.php?orderid=`$order.orderid`&mode=invoice"}</td>
+                        {if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) and $active_modules.Advanced_Order_Management}
+                            <td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_modify href="order.php?orderid=`$order.orderid`&mode=edit"}</td>
+                        {/if}
+                    </tr>
+                </table>
+            {/if}
+            {if $usertype eq "C"}
+                <hr/>
+                {include file="mail/html/order_invoice.tpl" is_nomail='Y'}
+            {elseif $usertype eq "A" || ($usertype eq 'P' && $active_modules.Simple_Mode)}
+                {capture name=order_details}
+                    {$smarty.capture.order_progress}
+                    <br/>
+                    {include file="main/order_info_admin.tpl" static=$membership_static}
+                {/capture}
 
-{if $usertype eq "C"}
-<p class="prev-next-links">
-{if $orderid_prev ne ""}<a href="order.php?orderid={$orderid_prev}">&lt;&lt;&nbsp;{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_prev}{$orderid_prev}</a>{/if}
-{if $orderid_next ne ""}{if $orderid_prev ne ""} | {/if}<a href="order.php?orderid={$orderid_next}">{$lng.lbl_order} {if $usertype eq 'A' || $usertype eq 'P'}# {/if}{$order_prefix_next}{$orderid_next}&nbsp;&gt;&gt;</a>{/if}
-</p>
+                {capture name=customer_info}
+                    {include file="main/order_info_admin_customer_info.tpl" static=$membership_static}
+                {/capture}
 
-<table cellspacing="1" cellpadding="2" class="ButtonsRow">
-<tr>
-{if $usertype eq "P" || $usertype eq 'A'}
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_print_order target="_blank" href="order.php?orderid=`$order.orderid`&mode=printable"}</td>
-{/if}
-{if $active_modules.RMA ne '' && $current_membership_flag ne 'FS'} 
-{if ($usertype eq  'C' || $usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $return_products ne ''}
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_create_return href="#returns"}</td>
-{/if}
-{if ($usertype eq  'C' || $usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $order.is_returns}
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_order_returns href="returns.php?mode=search&search[orderid]=`$order.orderid`"}</td>
-{/if}
-{/if}
-{if $active_modules.Shipping_Label_Generator ne '' && ($usertype eq 'A' || $usertype eq 'P')} 
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_shipping_label href="generator.php?orderid=`$order.orderid`"}</td>
-{/if}
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_print_invoice target="_blank" href="order.php?orderid=`$order.orderid`&mode=invoice"}</td>
-{if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) and $active_modules.Advanced_Order_Management}
-<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_modify href="order.php?orderid=`$order.orderid`&mode=edit"}</td>
-{/if}
-</tr>
-</table>
-{/if}
+                {capture name=alt_items}
+                    {include file="main/order_info_admin_alt_items.tpl"}
+                {/capture}
 
-{if $usertype eq "C"}
-<hr />
-{include file="mail/html/order_invoice.tpl" is_nomail='Y'}
-{elseif $usertype eq "A" || ($usertype eq 'P' && $active_modules.Simple_Mode)}
-
-	{capture name=order_details}
-
-	{$smarty.capture.order_progress}
-	<br />
-
-	{include file="main/order_info_admin.tpl" static=$membership_static}
-	{/capture}
-
-	{capture name=customer_info}
-	{include file="main/order_info_admin_customer_info.tpl" static=$membership_static}
-	{/capture}
-
-        {capture name=alt_items}
-        {include file="main/order_info_admin_alt_items.tpl"}
-        {/capture}
-
-{else}
-{include file="main/order_info.tpl"}
-{/if}
-	</td>
-</tr>
-<tr>
-	<td height="1" valign="top">
-<script type="text/javascript">
-<!--
-var details_mode = false;
-var details_fields_labels = new Object();
-{foreach from=$order_details_fields_labels key=dfield item=dlabel}
-details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascript}";
-{/foreach}
--->
-</script>
-{include file="main/include_js.tpl" src="main/history_order.js"}
-<form action="order.php" method="post" name="ordernotesform">
-<input type="hidden" name="send_email" value="N" />
-
-{*
-{if $usertype ne "C"}
-<p />
-{$lng.lbl_customer_notes}:<br />
-<textarea name="customer_notes" cols="70" rows="8" style="width: 520px;"{if $current_membership_flag eq 'FS'} readonly="readonly"{/if}>{$order.customer_notes}</textarea>
-<p />
-{/if}
-
-{if $usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)}
-
-{if $order.extra.ip ne ''}
-<p />
-{$lng.lbl_ip_address}: {$order.extra.ip}{if $order.extra.proxy_ip ne ''} ({$order.extra.proxy_ip}){/if}<br />
-{if $active_modules.Stop_List ne ''}
-{if $order.blocked eq 'Y'}
-<font class="Star">{$lng.lbl_ip_address_blocked}</font><br />
-{else}
-<input type="button" value="{$lng.lbl_block_ip_address|strip_tags:false|escape}" onclick="javascript: self.location='order.php?mode=block_ip&amp;orderid={$orderid}'" />
-{/if}
-{/if}
-
-{/if}
-
-{if $active_modules.Anti_Fraud ne ''}
-<input type="button" value="{$lng.lbl_af_lookup_address|strip_tags:false|escape}" onclick="javascript: window.open('{$catalogs.admin}/anti_fraud.php?mode=popup&amp;ip={$order.extra.ip}&amp;proxy_ip={$order.extra.proxy_ip}','AFLOOKUP','width=600,height=460,toolbar=no,status=no,scrollbars=yes,resizable=no,menubar=no,location=no,direction=no');" />
-{/if}
-
-<p />
-{$lng.lbl_order_details}:
-{if !$order.details_encrypted}
-<div style="text-align: right; width: 520px; padding-bottom: 3px;">
-<a id="view_mode" href="javascript: void(0);" onclick="javascript: switch_details_mode(false, this, document.getElementById('edit_mode'));" style="font-weight: bold;">{$lng.lbl_view_mode}</a>
-&nbsp;&nbsp;&nbsp;
-<a id="edit_mode" href="javascript: void(0);" onclick="javascript: switch_details_mode(true, this, document.getElementById('view_mode'));">{$lng.lbl_edit_mode}</a>
-</div>
-{/if}
-<table cellspacing="0" cellpadding="0" border="0">
-<tr>
-<td>
-<textarea id="details_view" cols="70" style="color: #666666; background-color:#EEEEEE; width: 520px;" readonly="readonly" rows="12"{if $order.details_encrypted} disabled="disabled"{/if}>{$order.details|func_order_details_translate|escape:quotes}</textarea>
-</td>
-
-
-{if $transaction_logs.0.usertype eq "C"}
-<td>
-&nbsp; 
-
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
-{if $transaction_logs.0.transaction_link_anchor ne ""}
-{$transaction_logs.0.transaction_link_anchor}
-{else}
-{$transaction_logs.0.transaction_id}
-{/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
-
-</td>
-{/if}
-
-
-</tr>
-</table>
-{if $order.details_encrypted eq ''}
-<textarea id="details_edit" style="display: none; width: 520px;" name="details" cols="70" rows="12">{$order.details|escape:quotes}</textarea>
-{/if}
-{/if}
-
-{if $usertype ne "C"}
-<p />
-{$lng.lbl_order_notes}:<br />
-<textarea name="notes" cols="70" style="width: 520px;" rows="8">{$order.notes}</textarea>
-{/if}
-
-{if $usertype eq "A" || $usertype eq "P"}
-<p />
-<input type="submit" value="{$lng.lbl_apply_changes|strip_tags:false|escape}" />
-{if $current_membership_flag ne 'FS'}
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type="submit" value="{$lng.lbl_apply_changes_send_email|strip_tags:false|escape}" onclick="javascript: document.ordernotesform.send_email.value = 'Y'; document.ordernotesform.submit();" /><br />
-{/if}
-{if $usertype neq "A"}
-{$lng.txt_apply_changes}	
-{/if}
-{/if}
-
-*}
-
-{if $active_modules.Special_Offers ne "" && ($usertype eq "A" or $usertype eq "P")}
-<br /><br /><br />
-{include file="modules/Special_Offers/order_extra_data.tpl" data=$order.extra}
-{/if}
-
-{if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) && $active_modules.Anti_Fraud}
-<br /><br /><br />
-{include file="modules/Anti_Fraud/extra_data.tpl" data=$order.extra.Anti_Fraud}
-{/if}
-
-{if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $order.is_egood ne '' && $active_modules.Egoods}
-<p />
-<input type="button" value="{if $order.is_egood eq 'Y'}{$lng.lbl_prolong_ttl|strip_tags:false|escape}{else}{$lng.lbl_regenerate_ttl|strip_tags:false|escape}{/if}" onclick="javascript: self.location='order.php?mode=prolong_ttl&amp;orderid={$orderid}'" /><br />
-{$lng.txt_prolong_ttl}
-{/if}
-
-<input type="hidden" name="mode" value="status_change" />
-<input type="hidden" name="orderid" value="{$order.orderid}" />
-</form>
-
-{if $usertype eq "P" and $order.dc_status ne "C"}
-<br />
-<form action="order.php" method="post">
-<input type="hidden" name="mode" value="complete_order" />
-<input type="submit" value="{$lng.lbl_complete_order|strip_tags:false|escape}" /><br />
-{$lng.txt_complete_order}
-<input type="hidden" name="orderid" value="{$order.orderid}" />
-</form>
-{/if}
-
-{if $active_modules.Order_Tracking ne "" and $order.tracking ne ""}
-
-<br /><br /><br />
-
-{include file="main/subheader.tpl" title=$lng.lbl_tracking_order}
-
-{assign var="postal_service" value=$order.shipping|truncate:3:"":true}
-{$lng.lbl_tracking_number}: {$order.tracking}
-<br /><br />
-
-{if $postal_service eq "UPS"}
-{include file="modules/Order_Tracking/ups.tpl"}
-{elseif $postal_service eq "USP"}
-{include file="modules/Order_Tracking/usps.tpl"}
-{elseif $postal_service eq "Fed"}
-{include file="modules/Order_Tracking/fedex.tpl"}
-{elseif $postal_service eq "Aus"}
-{include file="modules/Order_Tracking/australia_post.tpl"}
-{/if}
-
-{/if}
-
-	</td>
-</tr>
+            {else}
+                {include file="main/order_info.tpl"}
+            {/if}
+        </td>
+    </tr>
+    <tr>
+        <td height="1" valign="top">
+            <script type="text/javascript">
+                var details_mode = false;
+                var details_fields_labels = new Object();
+                {foreach from=$order_details_fields_labels key=dfield item=dlabel}
+                details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascript}";
+                {/foreach}
+            </script>
+            {include file="main/include_js.tpl" src="main/history_order.js"}
+            <form action="order.php" method="post" name="ordernotesform">
+                <input type="hidden" name="send_email" value="N"/>
+                {if $active_modules.Special_Offers ne "" && ($usertype eq "A" or $usertype eq "P")}
+                    <br/>
+                    <br/>
+                    <br/>
+                    {include file="modules/Special_Offers/order_extra_data.tpl" data=$order.extra}
+                {/if}
+                {if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) && $active_modules.Anti_Fraud}
+                    <br/>
+                    <br/>
+                    <br/>
+                    {include file="modules/Anti_Fraud/extra_data.tpl" data=$order.extra.Anti_Fraud}
+                {/if}
+                {if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $order.is_egood ne '' && $active_modules.Egoods}
+                    <p/>
+                    <input type="button"
+                           value="{if $order.is_egood eq 'Y'}{$lng.lbl_prolong_ttl|strip_tags:false|escape}{else}{$lng.lbl_regenerate_ttl|strip_tags:false|escape}{/if}"
+                           onclick="javascript: self.location='order.php?mode=prolong_ttl&amp;orderid={$orderid}'"/>
+                    <br/>
+                    {$lng.txt_prolong_ttl}
+                {/if}
+                <input type="hidden" name="mode" value="status_change"/>
+                <input type="hidden" name="orderid" value="{$order.orderid}"/>
+            </form>
+            {if $usertype eq "P" and $order.dc_status ne "C"}
+                <br/>
+                <form action="order.php" method="post">
+                    <input type="hidden" name="mode" value="complete_order"/>
+                    <input type="submit" value="{$lng.lbl_complete_order|strip_tags:false|escape}"/><br/>
+                    {$lng.txt_complete_order}
+                    <input type="hidden" name="orderid" value="{$order.orderid}"/>
+                </form>
+            {/if}
+            {if $active_modules.Order_Tracking ne "" and $order.tracking ne ""}
+                <br/>
+                <br/>
+                <br/>
+                {include file="main/subheader.tpl" title=$lng.lbl_tracking_order}
+                {assign var="postal_service" value=$order.shipping|truncate:3:"":true}
+                {$lng.lbl_tracking_number}: {$order.tracking}
+                <br/>
+                <br/>
+                {if $postal_service eq "UPS"}
+                    {include file="modules/Order_Tracking/ups.tpl"}
+                {elseif $postal_service eq "USP"}
+                    {include file="modules/Order_Tracking/usps.tpl"}
+                {elseif $postal_service eq "Fed"}
+                    {include file="modules/Order_Tracking/fedex.tpl"}
+                {elseif $postal_service eq "Aus"}
+                    {include file="modules/Order_Tracking/australia_post.tpl"}
+                {/if}
+            {/if}
+        </td>
+    </tr>
 </table>
 
-
-{* ---------------- *}
 {if $usertype eq 'A' || $usertype eq 'P'}
-{capture name=logs}
-{include file="main/order_logs.tpl"}
-{/capture}
+    {capture name=logs}
+        {include file="main/order_logs.tpl"}
+    {/capture}
 {/if}
-{* ---------------- *}
-
-
-
 
 {if $active_modules.RMA ne '' && ($usertype eq  'C' || ($usertype eq 'A' && $current_membership_flag ne 'FS') || ($usertype eq 'P' && $active_modules.Simple_Mode))}
-<br />
-<a name="returns"></a>
-{include file="modules/RMA/add_returns.tpl"}
+    <br />
+    <a name="returns"></a>
+    {include file="modules/RMA/add_returns.tpl"}
 {/if}
 
-
 {if $usertype eq 'A' && $order_manufacturers && $current_membership_flag ne 'FS'}
-{*
-<a name="mnf_notify">
-<br /> 
-*}
 
-{capture name=email_communications}
+    {capture name=email_communications}
 
-{$smarty.capture.compose_email}
-<hr />
-{*
-<br />
-<br />
-*}
+    {$smarty.capture.compose_email}
+    <hr />
 
-{if $request_missing_information_message ne ""}
+    {if $request_missing_information_message ne ""}
   <a name="request_missing_information"></a>
   <br />
   <form action="order.php" method="post" name="request_missing_information_form">
-  <input type="hidden" name="orderid" value="{$order.orderid}" />
-  <input type="hidden" name="mode" id="mode_request_missing_information" value="request_missing_information" />
-  <div class="ProductTitle" align="center">Request missing information</div>
-  <B>{$lng.lbl_from}:</B><br />
-  <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_to}:</B><br />
-  <input type="text" name="mnf_to" value="{$customer.email}{if $config.Purchase_Order.po_missing_copy_to_email ne ""}, {$config.Purchase_Order.po_missing_copy_to_email}{/if}" style="width: 80%;" /><br /><br />
-  <B>Subject line:</B><br />
-  <input type="text" name="d_email_subject_14" value="{$request_missing_information_subject_line}" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_message_body}:</B><br />
-  <textarea rows="30" cols="60" name="mnf_body" style="width: 80%;" class="new_editor">{$request_missing_information_message|replace:"\n":"<br />"}</textarea>
+      <input type="hidden" name="orderid" value="{$order.orderid}" />
+      <input type="hidden" name="mode" id="mode_request_missing_information" value="request_missing_information" />
+      <div class="ProductTitle" align="center">Request missing information</div>
+      <B>{$lng.lbl_from}:</B><br />
+      <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly" style="width: 80%;" /><br /><br />
+      <B>{$lng.lbl_to}:</B><br />
+      <input type="text" name="mnf_to" value="{$customer.email}{if $config.Purchase_Order.po_missing_copy_to_email ne ""}, {$config.Purchase_Order.po_missing_copy_to_email}{/if}" style="width: 80%;" /><br /><br />
+      <B>Subject line:</B><br />
+      <input type="text" name="d_email_subject_14" value="{$request_missing_information_subject_line}" style="width: 80%;" /><br /><br />
+      <B>{$lng.lbl_message_body}:</B><br />
+      <textarea rows="30" cols="60" name="mnf_body" style="width: 80%;" class="new_editor">{$request_missing_information_message|replace:"\n":"<br />"}</textarea>
 
-  <INPUT type="button" value="Send (Request missing information)" onclick="tinyMCE.triggerSave(); document.request_missing_information_form.submit();">
+      <INPUT type="button" value="Send (Request missing information)" onclick="tinyMCE.triggerSave(); document.request_missing_information_form.submit();">
 
-  <br /><br />
-  <hr /><br /><br />
+      <br /><br />
+      <hr /><br /><br />
   </form>
 {/if}
 
-{if $backorder_decision_request_message ne ""}
+    {if $backorder_decision_request_message ne ""}
 
- {if $show_backorder_decision_request_message ne "Y"}
+    {if $show_backorder_decision_request_message ne "Y"}
 
-<script type="text/javascript" language="JavaScript 1.2">
-//<![CDATA[
+    <script type="text/javascript">
 {literal}
-
-  $(document).ready(function() {  
-
+  $(document).ready(function() {
         $('#backorder_decision_request_link').click(function() {
-                $('#show_backorder_decision_request_message').toggle('slow', function() {
-                // Animation complete.
-                });
+                $('#show_backorder_decision_request_message').toggle('slow', function() {});
         });
   });
-
 {/literal}
-//]]>
 </script>
 
-
-
-  <div align="center">
+    <div align="center">
 	<a href="#" id="backorder_decision_request_link" class="ProductTitle" style="text-decoration: none;">Backorder decision request [&#177;]</a>
   </div>
  {/if}
@@ -1365,26 +1177,19 @@ $( document ).ready(function() {
 {/if}
 
 {if $usertype eq 'A' or ($usertype eq "P" and $active_modules.Simple_Mode)}
-{*
-<br />
-<a name="accounting"></a>
-*}
-{capture name=accounting}
-{include file="main/order_accounting.tpl" static=$membership_static}
-{/capture}
+    {capture name=accounting}
+        {include file="main/order_accounting.tpl" static=$membership_static}
+    {/capture}
 {/if}
 
 {if ($usertype eq 'A' or $usertype eq 'P') and $active_modules.Google_Checkout ne '' and $order.extra.goid ne ''}
-<br />
-<a name="gcheckout"></a>
-{include file="modules/Google_Checkout/gcheckout_order.tpl"}
+    <br />
+    <a name="gcheckout"></a>
+    {include file="modules/Google_Checkout/gcheckout_order.tpl"}
 {/if}
 
-
-
 {if $usertype eq 'A' || $usertype eq 'P'}
-
-<script>
+    <script>
 {literal}
     $(function() {
         var curTitle = document.title;
@@ -1422,64 +1227,59 @@ $( document ).ready(function() {
 {/literal}
 </script>
 
-{capture name=reference}
-<table>
-<tr>
-<td>
-{$config.Reference_tab.reference_text}
-</td>
-</tr>
-</table>
-{/capture}
+    {capture name=reference}
+        <table>
+            <tr>
+                <td>
+                    {$config.Reference_tab.reference_text}
+                </td>
+            </tr>
+        </table>
+    {/capture}
 
-{capture name=secure_data}
-    {include file="admin/main/secure_data_tab.tpl"}
-{/capture}
+    {capture name=secure_data}
+        {include file="admin/main/secure_data_tab.tpl"}
+    {/capture}
 
+    {capture name=ground_map}
+    {include file="admin/main/ground_map.tpl"}
+    {/capture}
 
-{capture name=ground_map}
-{include file="admin/main/ground_map.tpl"}
-{/capture}
+    {capture name=RMA}
+    {include file="admin/main/rma.tpl"}
+    {/capture}
 
-{capture name=RMA}
-{include file="admin/main/rma.tpl"}
-{/capture}
+    {capture name=VT}
+    {include file="admin/main/paypal_vt.tpl"}
+    {/capture}
 
-{capture name=VT}
-{include file="admin/main/paypal_vt.tpl"}
-{/capture}
+    {capture name=paypal_request}
+    {include file="admin/main/paypal_request.tpl"}
+    {/capture}
 
-{capture name=paypal_request}
-{include file="admin/main/paypal_request.tpl"}
-{/capture}
-
-<div id="main_order_tabs-container">
-  <ul>
-  {foreach from=$main_order_tabs item=tab key=ind}
-    <li class="hide"
-	{if $tab.anchor eq "reference" || $tab.anchor eq "ground_map" || $tab.anchor eq "RMA"}
-		style="float: right"
-	{/if}
-    >
-	<a {if $tab.anchor eq "order_details"}style=" font-weight: bold;"{elseif $tab.anchor eq "customer_info" && (($order.note_is_taken_care_of eq "N" && $order.customer_notes ne "") || $other_customer_orders ne "")}style="font-weight: bold;"{/if} href="#main_order_tabs-{$tab.anchor}">{$tab.title}</a>
-    </li>
-  {/foreach}
-  </ul>
-
-  {foreach from=$main_order_tabs item=tab key=ind}
-      <div id="main_order_tabs-{$tab.anchor}" class="hide">
-        {assign var=tab_section value=$tab.section}
-       	{$smarty.capture.$tab_section}
-      </div>
-  {/foreach}
-</div>
+    <div id="main_order_tabs-container">
+      <ul>
+        {foreach from=$main_order_tabs item=tab key=ind}
+        <li class="hide"
+        {if $tab.anchor eq "reference" || $tab.anchor eq "ground_map" || $tab.anchor eq "RMA"}
+            style="float: right"
+        {/if}
+        >
+        <a {if $tab.anchor eq "order_details"}style=" font-weight: bold;"{elseif $tab.anchor eq "customer_info" && (($order.note_is_taken_care_of eq "N" && $order.customer_notes ne "") || $other_customer_orders ne "")}style="font-weight: bold;"{/if} href="#main_order_tabs-{$tab.anchor}">{$tab.title}</a>
+        </li>
+      {/foreach}
+      </ul>
+      {foreach from=$main_order_tabs item=tab key=ind}
+          <div id="main_order_tabs-{$tab.anchor}" class="hide">
+            {assign var=tab_section value=$tab.section}
+            {$smarty.capture.$tab_section}
+          </div>
+      {/foreach}
+    </div>
 {/if}
 
 {if $show_cancel_message eq "Y"}
-<script type="text/javascript">
-<!--
-alert('You are trying to fully decrease order amount. Instead of using RQTY, RNET - please change all CB statuses to "Cancelled"');
--->
-
-</script>
+    <script type="text/javascript">
+        alert('You are trying to fully decrease order amount. Instead of using RQTY, RNET - please change all CB statuses to "Cancelled"');
+    </script>
 {/if}
