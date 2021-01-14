@@ -153,7 +153,7 @@
                         </button>
                     </div>
                     <div id="refund_disclaimer_{$mid}" class="enter_on_site__content" style="padding: 0 0 10px 0; color: red; display: none;">
-                        <b>{$lng.refund_not_confirmed_text|default:'refund_confirmation_no_text'}</b>
+                        <b>{$lng.refund_not_confirmed_text}</b>
                     </div>
                 </div>
             </td>
