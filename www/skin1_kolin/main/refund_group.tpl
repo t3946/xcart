@@ -171,9 +171,7 @@
             {if $oOrderGroup->cb_status|in_array:["3","V"]}
                 <b>Refund reason:</b>
                 <br/>
-                <textarea {if $disable_refund}disabled{/if} id="refund_reason_{$mid}" name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">
-                    {$refundGroup->refund_reason|escape:"html"}
-                </textarea>
+                <textarea {if $disable_refund}disabled{/if} id="refund_reason_{$mid}" name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{$refundGroup->refund_reason|escape:"html"}</textarea>
                 <input {if $disable_refund}disabled{/if} type="button"
                        value="Issue refund and Send refund notification"
                        onclick="if ($('#refund_reason_{$mid}').val() !== ''){ldelim} $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification');
