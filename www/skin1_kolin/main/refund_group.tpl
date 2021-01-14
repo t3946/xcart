@@ -145,14 +145,14 @@
                         {$lng.refund_confirmation_text}
                     </div>
                     <div style="text-align: center; padding: 0 0 10px 0">
-                        <button onclick="$('#refund_disclaimer').hide();$('#refund_reason_{$mid}').attr('disabled', false).siblings('input').attr('disabled', false);return false;">
+                        <button onclick="$('#refund_disclaimer_{$mid}').hide();$('#refund_reason_{$mid}').attr('disabled', false).siblings('input').attr('disabled', false);return false;">
                             Yes
                         </button>
-                        <button onclick="$('#refund_disclaimer').show();$('#refund_reason_{$mid}').attr('disabled', true).siblings('input').attr('disabled', true);return false;">
+                        <button onclick="$('#refund_disclaimer_{$mid}').show();$('#refund_reason_{$mid}').attr('disabled', true).siblings('input').attr('disabled', true);return false;">
                             No
                         </button>
                     </div>
-                    <div id="refund_disclaimer" class="enter_on_site__content" style="padding: 0 0 10px 0; color: red; display: none;">
+                    <div id="refund_disclaimer_{$mid}" class="enter_on_site__content" style="padding: 0 0 10px 0; color: red; display: none;">
                         <b>{$lng.refund_not_confirmed_text|default:'refund_confirmation_no_text'}</b>
                     </div>
                 </div>
