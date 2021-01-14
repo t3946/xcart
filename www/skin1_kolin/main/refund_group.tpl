@@ -142,7 +142,7 @@
         <td colspan="11">
             <div class="enter_on_site">
                 <div class="enter_on_site__content">
-                    {$lng.refund_confirmation_text|default:refund_confirmation_text}
+                    {$lng.refund_confirmation_text}
                 </div>
                 <div style="text-align: center; padding: 0 0 10px 0">
                     <button onclick="$('#refund_reason_{$mid}').attr('disabled', false).siblings('input').attr('disabled', false);return false;">
