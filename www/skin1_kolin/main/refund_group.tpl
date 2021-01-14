@@ -1,4 +1,5 @@
 {assign var=refundGroup value=$oOrderGroup->getRefundsModel()}
+{assign var=disable_refund value=$oOrderGroup->dc_status|in_array:['C', 'L', 'DA', 'G', 'S', 'Z']}
 {if $refundGroup}
     <tr class="refund-distr-totals-line">
         <td style="font-size: 10px;" colspan="11">
@@ -138,23 +139,25 @@
         </td>
     </tr>
 
-    <tr>
-        <td colspan="11">
-            <div class="enter_on_site">
-                <div class="enter_on_site__content">
-                    {$lng.refund_confirmation_text}
+    {if $disable_refund}
+        <tr>
+            <td colspan="11">
+                <div class="enter_on_site">
+                    <div class="enter_on_site__content">
+                        {$lng.refund_confirmation_text}
+                    </div>
+                    <div style="text-align: center; padding: 0 0 10px 0">
+                        <button onclick="$('#refund_reason_{$mid}').attr('disabled', false).siblings('input').attr('disabled', false);return false;">
+                            Yes
+                        </button>
+                        <button onclick="$('#refund_reason_{$mid}').attr('disabled', true).siblings('input').attr('disabled', true);return false;">
+                            No
+                        </button>
+                    </div>
                 </div>
-                <div style="text-align: center; padding: 0 0 10px 0">
-                    <button onclick="$('#refund_reason_{$mid}').attr('disabled', false).siblings('input').attr('disabled', false);return false;">
-                        Yes
-                    </button>
-                    <button onclick="$('#refund_reason_{$mid}').attr('disabled', true).siblings('input').attr('disabled', true);return false;">
-                        No
-                    </button>
-                </div>
-            </div>
-        </td>
-    </tr>
+            </td>
+        </tr>
+    {/if}
 
     <tr id="refund_group_{$mid}"
             {if $oOrderGroup->cb_status|in_array:["3","V"]}
@@ -168,10 +171,10 @@
             {if $oOrderGroup->cb_status|in_array:["3","V"]}
                 <b>Refund reason:</b>
                 <br/>
-                <textarea disabled id="refund_reason_{$mid}" name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">
+                <textarea {if $disable_refund}disabled{/if} id="refund_reason_{$mid}" name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">
                     {$refundGroup->refund_reason|escape:"html"}
                 </textarea>
-                <input disabled type="button"
+                <input {if $disable_refund}disabled{/if} type="button"
                        value="Issue refund and Send refund notification"
                        onclick="if ($('#refund_reason_{$mid}').val() !== ''){ldelim} $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification');
                                $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit(); {rdelim} else {ldelim} func_refund_reason_message(); {rdelim}"/>
