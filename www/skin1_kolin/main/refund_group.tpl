@@ -84,9 +84,7 @@
             <td align="right">&nbsp;</td>
             <td align="right">&nbsp;</td>
             <td align="right" nowrap="nowrap">
-                {if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}({/if}
-                {include file="currency2.tpl" value=$ref_product->getSubtotal()}
-                {if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}){/if}
+                {if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}({/if}{include file="currency2.tpl" value=$ref_product->getSubtotal()}{if $ref_product->ref_qty ne 0 && $ref_product->ref_price ne 0}){/if}
             </td>
             <td align="right" nowrap="nowrap">
             </td>
