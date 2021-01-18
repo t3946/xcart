@@ -1,5 +1,5 @@
 {assign var=refundGroup value=$oOrderGroup->getRefundsModel()}
-{assign var=disable_refund value=$oOrderGroup->dc_status|in_array:['C', 'L', 'DA', 'G', 'S', 'Z']}
+{assign var=disable_refund value=$oOrderGroup->dc_status|in_array:['C', 'L', 'DA', 'G', 'S', 'Z'] && $oOrderGroup->cb_status|in_array:['3', 'V']}
 {if $refundGroup}
     <tr class="refund-distr-totals-line">
         <td style="font-size: 10px;" colspan="11">
