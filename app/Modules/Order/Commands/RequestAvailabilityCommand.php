@@ -48,8 +48,6 @@ class RequestAvailabilityCommand extends Command
 
                 $to .= ',orders@s3stores.com';
 
-                $to = 'romann@s3stores.com';
-
                 SendMailHelper::sendTemplate($to, $template, $group);
 
                 $current_notify = $group->notify_sent ? 'Y' : 'N';
@@ -59,8 +57,8 @@ class RequestAvailabilityCommand extends Command
                 $log .= "<b>{$manufacturer->code}:</b> dc_status: {$group->dc_status_model} -> {$new_status} \n";
                 $log .= "<b>{$manufacturer->code}:</b> notify_sent: {$current_notify} -> Y \n";
 
-                //$group->setAttributes(['notify_sent' => true, 'dc_status' => OrderStatusModel::ORDER_DC_STATUS_PENDING_AVAIL_CHECK]);
-                //$group->save();
+                $group->setAttributes(['notify_sent' => true, 'dc_status' => OrderStatusModel::ORDER_DC_STATUS_PENDING_AVAIL_CHECK]);
+                $group->save();
 
                 (new OrderLogModel(
                     [
