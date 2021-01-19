@@ -68,7 +68,8 @@ class DistributorRequestAvailForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide', 'style' => 'width:400px;']
+                'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
+                'required' => true
             ],
 
             'd_email_subject_14' => [
