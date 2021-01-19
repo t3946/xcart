@@ -36,14 +36,14 @@ class RequestAvailabilityCommand extends Command
             'manufacturer__d_availability_must_be_checked' => 'Y',
             'order__order_type__in' => self::REQUEST_AVAILABILITY_ORDER_TYPES,
             'notify_sent' => 'N'
-        ])->limit(1);
+        ]);
 
         /** @var OrderGroupModel $group */
         foreach ($m as $group) {
             $manufacturer = $group->manufacturer;
             if (($template = $manufacturer->request_avail_template)
                 && ($to = $manufacturer->d_send_to_email_14)
-                //&& $manufacturer->isGoodTimeToSendEmail()
+                && $manufacturer->isGoodTimeToSendEmail()
             ) {
 
                 $to .= ',orders@s3stores.com';
