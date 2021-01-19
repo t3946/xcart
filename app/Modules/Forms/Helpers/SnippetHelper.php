@@ -8,7 +8,7 @@ use Modules\Forms\Models\SnippetModel;
 
 class SnippetHelper
 {
-    public static function getSnippets($value, $params): array
+    public static function getSnippets(string $value, array $params): array
     {
         $result = [];
 
@@ -21,9 +21,13 @@ class SnippetHelper
         return $result;
     }
 
-    public static function render($value, $params)
+    public static function renderSnippets(string $value, array $snippets)
     {
-        $snippets = self::getSnippets($value, $params);
         return str_replace(array_keys($snippets), array_values($snippets), $value);
+    }
+
+    public static function render(string $value, array $params)
+    {
+        return self::renderSnippets($value, self::getSnippets($value, $params));
     }
 }

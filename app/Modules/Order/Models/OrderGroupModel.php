@@ -10,6 +10,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -34,6 +35,7 @@ use Xcart\OrderGroup;
  * @property OrderModel order
  * @property OrderStatusModel|null dc_status_model
  * @property mixed refunds
+ * @property bool notify_sent
  */
 class OrderGroupModel extends Model
 {
@@ -173,7 +175,11 @@ class OrderGroupModel extends Model
                 'default' => 1,
                 'null' => false,
             ],
-
+            'notify_sent' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false
+            ]
         ];
     }
 

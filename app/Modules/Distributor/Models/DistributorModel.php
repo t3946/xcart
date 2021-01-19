@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
@@ -43,6 +44,9 @@ use Xcart\Manufacturer;
  * @property string code
  * @property string submit_to_operator
  * @property mixed currency
+ * @property string d_contact_name_for_templates
+ * @property TemplateModel request_avail_template
+ * @property string d_send_to_email_14
  */
 class DistributorModel extends Model
 {
@@ -111,7 +115,19 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
-            'd_message_body_14' => [
+            'request_avail_template' => [
+                'field' => 'request_avail_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['request_avail_template_id' => 'id'],
+                'null' => false,
+                'default' => TemplateModel::REQUEST_AVAILABILITY_TEMPLATE_ID,
+            ],
+            'd_email_subject_14' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],'d_message_body_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
@@ -629,5 +645,10 @@ class DistributorModel extends Model
             }
         }
         return $res ?? [];
+    }
+
+    public function getContactNameForTemplates(): string
+    {
+        return explode(' ', $this->d_contact_name_for_templates)[0] ?? '';
     }
 }

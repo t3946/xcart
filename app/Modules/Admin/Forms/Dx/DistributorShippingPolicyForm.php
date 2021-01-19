@@ -58,7 +58,7 @@ class DistributorShippingPolicyForm extends DistributorForm
             return $result ?? [];
         })->__invoke();
 
-        $countries = (function () {
+        $countries = (static function () {
             $opts = CountryModel::objects()->order(['name']);
             $result = [
                 'All regions' => 'All regions',

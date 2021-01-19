@@ -10,10 +10,19 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string message_body
+ * @property string subject_line
+ * @property AttentionTagModel status
+ * @method static Manager distributors()
+ */
 class TemplateModel extends Model
 {
+    public const REQUEST_AVAILABILITY_TEMPLATE_ID = 9614;
+
     public static function tableName()
     {
         return 'xcart_templates_for_communication';
@@ -84,8 +93,15 @@ class TemplateModel extends Model
         ];
     }
 
+    public static function distributorsManager($instance = null)
+    {
+        return static::objects($instance)
+            ->filter(['department' => 'distributor', 'active' => 'Y'])
+            ->order(['pos', 'template_name']);
+    }
+
     public function __toString()
     {
-        return (string) ($this->template_name ?? 'Template');
+        return (string)($this->template_name ?? 'Template');
     }
 }

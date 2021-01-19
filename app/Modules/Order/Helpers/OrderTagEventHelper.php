@@ -28,7 +28,7 @@ class OrderTagEventHelper
      *
      * @throws
      */
-    public static function orderTagEvent($status_id, $order_id, $save_log = true)
+    public static function orderTagEvent($status_id, $order_id, $save_log = true): void
     {
         if ($status_id &&
             $order_id &&
