@@ -13,7 +13,7 @@ use Xcart\App\Main\Xcart;
 
 class SendMailHelper
 {
-    public static function sendTemplate(string $to, TemplateModel $template, OrderGroupModel $group): void
+    public static function sendTemplate(string $to, TemplateModel $template, OrderGroupModel $group, UserModel $user = null): void
     {
         $order = $group->order;
         $site = $order->site;
@@ -21,8 +21,9 @@ class SendMailHelper
         $params = [
             'order' => $order,
             'site' => $site,
-            'user' => new UserModel(['firstname' => 'Amy']),
+            'user' => $user ?? new UserModel(['firstname' => 'Amy']),
             'distributor' => $group->manufacturer,
+            'group' => $group
         ];
 
         $message = SnippetHelper::render($template->message_body, $params);
