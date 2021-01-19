@@ -649,6 +649,6 @@ class DistributorModel extends Model
 
     public function getContactNameForTemplates(): string
     {
-        return explode(' ', $this->d_contact_name_for_templates)[0] ?? '';
+        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? ''));
     }
 }
