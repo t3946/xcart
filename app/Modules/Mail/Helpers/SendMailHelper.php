@@ -26,7 +26,7 @@ class SendMailHelper
             'group' => $group
         ];
 
-        $message = SnippetHelper::render($template->message_body, $params);
+        $message = SnippetHelper::render(html_entity_decode($template->message_body), $params);
         $subject = SnippetHelper::render($template->subject_line, $params);
 
         $config = $site->getGlobalConfig();
