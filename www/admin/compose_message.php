@@ -173,12 +173,14 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
             }
 
             if (in_array($department, ['customer', 'our_customer_service', 'third_party'], true)) {
-                $body = str_replace(['{{items}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                $body = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                    $all__items_table__,
                     $all__items_table__,
                     $all__shipto_table__,
                     $all__shipto_table_full__
                 ], $body);
-                $subject = str_replace(['{{items}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                $subject = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                    $all__items_table__,
                     $all__items_table__,
                     $all__shipto_table__,
                     $all__shipto_table_full__
@@ -193,16 +195,18 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 
                     $to .= $vv['compose_email_to_distributor'];
 
-                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}'], [
+                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
+                        $vv['__items_table__'],
                         $vv['__items_table__']
                     ], $body);
 
-                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}'], [
+                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
-                        $vv['__items_table__']
+                        $vv['__items_table__'],
+                        $vv['__items_table__'],
                     ], $subject);
 
                     $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);
