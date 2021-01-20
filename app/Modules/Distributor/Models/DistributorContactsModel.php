@@ -89,7 +89,7 @@ class DistributorContactsModel extends Model
 
     public function __toString()
     {
-        return $this->id ? $this->contact_name : 'Contact';
+        return $this->id ? $this->contact_name ?? '' : 'Contact';
     }
 
     public function getEmail(): string

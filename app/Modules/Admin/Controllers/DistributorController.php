@@ -123,4 +123,13 @@ class DistributorController extends BackendController
 
         $admin->sort($pkList, $to , $prev, $next);
     }
+
+    public function contact_create ($mid): void
+    {
+        /** @var DistributorModel $dx */
+        $dx = DistributorModel::objects()->get(['pk' => $mid]);
+        $admin = new DxContactsAdmin();
+        $admin->dxModel = $dx;
+        $admin->create();
+    }
 }

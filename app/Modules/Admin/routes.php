@@ -122,4 +122,9 @@ return [
         'target' => [DistributorController::class, 'contact_sort'],
         'name' => 'dx_contact_sort'
     ],
+    [
+        'route' => '/distributor/contact_create/{i:mid}',
+        'target' => [DistributorController::class, 'contact_create'],
+        'name' => 'dx_contact_create'
+    ],
 ];
