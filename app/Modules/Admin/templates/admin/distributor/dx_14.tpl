@@ -10,7 +10,7 @@
         <table class="dx_form" cellpadding="3" cellspacing="1" width="100%">
             {raw $form->getField('d_availability_must_be_checked')->render()}
 
-            {raw $form->getField('d_send_to_email_14')->render()}
+            {raw $form->getField('request_avail_emails')->render()}
 
             {raw $form->getField('request_avail_template')->render()}
 

@@ -17,7 +17,7 @@ class DistributorForm extends ModelForm
     public $fieldTemplate = 'admin/distributor/form/field.tpl';
     public $hintTemplate = 'admin/distributor/form/hint.tpl';
 
-    public static array $distributor_fields = [
+    public static array $sections = [
         'General' => [
             1 => [
                 'title' => 'General distributor information',
@@ -163,11 +163,6 @@ class DistributorForm extends ModelForm
         ],
 
     ];
-
-    public static function getSections(): array
-    {
-        return self::$distributor_fields;
-    }
 
     public static function getSection($section = null)
     {

@@ -6,6 +6,7 @@ namespace Modules\Admin\Controllers;
 
 use Modules\Admin\Admin\DxCommunicationAdmin;
 use Modules\Admin\Admin\DxContactAdmin;
+use Modules\Admin\Admin\DxContactsAdmin;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Admin\Forms\Dx\DistributorForm;
@@ -21,6 +22,7 @@ class DistributorController extends BackendController
     public function index($mid = null, $section = 1)
     {
         $user = Xcart::app()->user;
+        /** @var DistributorModel $dx */
         if ($mid && ($dx = DistributorModel::objects()->get(['manufacturerid' => $mid])) && $dx->provider !== $user->login) {
             if (($user->hasRole('vrs')) ||
                 (Xcart::app()->user->hasRole('vrv') && $user->childs->filter(['login' => $dx->provider])->count() === 0)) {
@@ -30,7 +32,7 @@ class DistributorController extends BackendController
 
         /** @var DistributorForm $form */
         if ($section == 3) {
-            $admin = new DxContactAdmin();
+            $admin = new DxContactsAdmin();
             $admin->dxModel = $dx;
             $admin->section = $section;
             $admin->all();
@@ -106,5 +108,19 @@ class DistributorController extends BackendController
             $this->error(404);
         }
         $admin->info($pk, $dx);
+    }
+
+    public function contact_sort ($mid): void
+    {
+        /** @var DistributorModel $dx */
+        $dx = DistributorModel::objects()->get(['pk' => $mid]);
+        $admin = new DxContactsAdmin();
+        $admin->dxModel = $dx;
+        $pkList = isset($_POST['pk_list']) && is_array($_POST['pk_list']) ? $_POST['pk_list'] : [];
+        $to = $_POST['to'] ?? null;
+        $prev = $_POST['prev'] ?? null;
+        $next = $_POST['next'] ?? null;
+
+        $admin->sort($pkList, $to , $prev, $next);
     }
 }

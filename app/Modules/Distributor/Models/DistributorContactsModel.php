@@ -10,8 +10,14 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string contact_name
+ * @property int id
+ * @property string email
+ */
 class DistributorContactsModel extends Model
 {
     use AutoMetaTrait;
@@ -41,6 +47,12 @@ class DistributorContactsModel extends Model
             'contact_name' => [
                 'class' => CharField::class,
                 'default' => '',
+                'verboseName' => 'Contact name'
+            ],
+            'distributor_field_name' => [
+                'class' => CharField::class,
+                'default' => '',
+                'verboseName' => 'Position'
             ],
             'email' => [
                 'class' => CharField::class,
@@ -50,6 +62,20 @@ class DistributorContactsModel extends Model
                 'class' => CharField::class,
                 'default' => '',
             ],
+            'ext' => [
+                'class' => CharField::class,
+                'default' => '',
+            ],
+            'fax' => [
+                'class' => CharField::class,
+                'default' => '',
+            ],
+            'utility' => [
+                'field' => 'utility_id',
+                'class' => ManyToManyField::class,
+                'modelClass' => DistributorUtilityModel::class,
+                'through' => DistributorContactUtilityModel::class,
+            ]
         ];
     }
 
@@ -59,5 +85,16 @@ class DistributorContactsModel extends Model
             return PhoneHelper::getPhonePrefix($this->distributor->m_country) . $phone_normalized;
         }
         return $this->phone;
+    }
+
+    public function __toString()
+    {
+        return $this->id ? $this->contact_name : 'Contact';
+    }
+
+    public function getEmail(): string
+    {
+        $email = ($this->contact_name ? "<" : '') . $this->email . ($this->contact_name ? ">" : '');
+        return htmlentities("{$this->contact_name} {$email}");
     }
 }

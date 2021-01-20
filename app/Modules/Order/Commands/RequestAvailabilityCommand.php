@@ -4,13 +4,13 @@
 namespace Modules\Order\Commands;
 
 
+use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Mail\Helpers\SendMailHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Commands\Command;
-use Xcart\App\Main\Xcart;
 
 class RequestAvailabilityCommand extends Command
 {
@@ -42,11 +42,13 @@ class RequestAvailabilityCommand extends Command
         foreach ($m as $group) {
             $manufacturer = $group->manufacturer;
             if (($template = $manufacturer->request_avail_template)
-                && ($to = $manufacturer->d_send_to_email_14)
                 && $manufacturer->isGoodTimeToSendEmail()
             ) {
+                $to = $manufacturer->contacts_model->filter([
+                    'utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
+                ])->valuesList('email', true);
 
-                $to .= ',orders@s3stores.com';
+                $to[] = 'orders@s3stores.com';
 
                 SendMailHelper::sendTemplate($to, $template, $group);
 

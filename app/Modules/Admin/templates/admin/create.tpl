@@ -5,7 +5,11 @@
     {if $model->pk === null}
         {set $actionTitle='Adding a new' ~~ $model|strtolower}
     {else}
-        {set $actionTitle=$form->getName()~':'~~$model}
+        {if $form->getName()}
+            {set $actionTitle=$form->getName()~':'~~$model}
+        {else}
+            {set $actionTitle=$model}
+        {/if}
     {/if}
     <h1>{$actionTitle}</h1>
 {/block}

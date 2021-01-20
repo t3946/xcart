@@ -13,7 +13,7 @@ use Xcart\App\Main\Xcart;
 
 class SendMailHelper
 {
-    public static function sendTemplate(string $to, TemplateModel $template, OrderGroupModel $group, UserModel $user = null): void
+    public static function sendTemplate(array $to, TemplateModel $template, OrderGroupModel $group, UserModel $user = null): void
     {
         $order = $group->order;
         $site = $order->site;
@@ -32,10 +32,8 @@ class SendMailHelper
         $config = $site->getGlobalConfig();
         $from = trim($config['orders_department']);
 
-        $toa = array_unique(array_filter(array_map('trim', explode(',' , $to))));
-
         Xcart::app()->mail->raw(
-            $toa,
+            array_unique(array_filter(array_map('trim', $to))),
             $subject,
             $message,
             [
