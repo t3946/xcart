@@ -142,6 +142,8 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
             if (!empty($v['__shipto_full_table__'])) {
                 $all__shipto_full_table__arr[$mid] = $v['__shipto_full_table__'];
             }
+
+            $dealer_account_number[$mid] = $v['dealer_account_number'] ?: 'S3 Stores, Inc.';
         }
 
         if (is_array($all__items_table__arr) && !empty($all__items_table__arr)) {
@@ -195,18 +197,20 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 
                     $to .= $vv['compose_email_to_distributor'];
 
-                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}'], [
+                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
                         $vv['__items_table__'],
-                        $vv['__items_table__']
+                        $vv['__items_table__'],
+                        $vv['dealer_account_number']
                     ], $body);
 
-                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}'], [
+                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
                         $vv['__items_table__'],
                         $vv['__items_table__'],
+                        $vv['dealer_account_number']
                     ], $subject);
 
                     $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);
