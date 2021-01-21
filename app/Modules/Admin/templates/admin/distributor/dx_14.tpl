@@ -14,6 +14,10 @@
 
             {raw $form->getField('request_avail_template')->render()}
 
+            {raw $form->getField('template_1')->render()}
+
+            {raw $form->getField('d_message_body_14')->render()}
+
             <tr>
                 <td colspan="3">
                     <table cellpadding="0" cellspacing="0" width="100%">

@@ -6,6 +6,7 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorUtilityModel;
+use Modules\Editor\Fields\EditorField;
 use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
@@ -22,6 +23,7 @@ class DistributorRequestAvailForm extends DistributorForm
             'd_availability_must_be_checked',
             'request_avail_emails',
             'request_avail_template',
+            'd_message_body_14'
         ]];
     }
 
@@ -66,6 +68,19 @@ class DistributorRequestAvailForm extends DistributorForm
                     return $result ?? [];
                 }
             ],
+            'template_1' => [
+                'class' => EditorField::class,
+                'value' => $dx->request_avail_template->message_body,
+                'label' => 'Availability request template body'
+            ],
+            'd_message_body_14' => [
+                'class' => EditorField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
+                'html' => ['class' => 'click_hide'],
+                'label' => 'Old template body'
+            ],
             'd_server_min_distributor_time' => [
                 'class' => CharField::class,
                 'label' => 'Server time - Distributor time',
@@ -75,4 +90,5 @@ class DistributorRequestAvailForm extends DistributorForm
             ],
         ];
     }
+
 }
