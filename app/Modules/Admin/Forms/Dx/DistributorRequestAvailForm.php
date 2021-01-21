@@ -71,7 +71,8 @@ class DistributorRequestAvailForm extends DistributorForm
             'template_1' => [
                 'class' => EditorField::class,
                 'value' => $dx->request_avail_template->message_body,
-                'label' => 'Availability request template body'
+                'label' => 'Availability request template body',
+                'html' => ['class' => 'click_hide'],
             ],
             'd_message_body_14' => [
                 'class' => EditorField::class,
