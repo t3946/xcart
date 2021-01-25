@@ -11,7 +11,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Models\OrderModel;
-use Modules\PBX\Forms\TranslatesFilterForm;
+use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Form\Form;

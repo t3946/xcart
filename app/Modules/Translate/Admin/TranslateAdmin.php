@@ -15,6 +15,7 @@ use Modules\Translate\Models\TranslateModel;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Translation\Translator;
 use Throwable;
+use Xcart\App\Form\Form;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -245,9 +246,9 @@ class TranslateAdmin extends Admin
         ] );
     }
 
-    public function getFilterForm()
+    public function getFilterForm(): ?Form
     {
-        return new TranslatesFilterForm;
+        return new TranslatesFilterForm();
     }
 
     public function getAvailableListColumns()
