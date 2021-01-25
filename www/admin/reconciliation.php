@@ -968,7 +968,7 @@ $smarty->assign("config_reconciliation_search_keyphrases", $config_reconciliatio
 
 $smarty->assign("search_prefilled", $search_data["reconciliation_tab_" . $tab]);
 
-$manufacturers = func_query_hash("SELECT manufacturerid, manufacturer, code FROM $sql_tbl[manufacturers] WHERE avail='Y' ORDER BY manufacturer, orderby", "manufacturerid", false);
+$manufacturers = func_query_hash("SELECT manufacturerid, manufacturer, code FROM $sql_tbl[manufacturers] ORDER BY manufacturer, orderby", "manufacturerid", false);
 $smarty->assign('manufacturers', $manufacturers);
 
 $smarty->assign("search_keyphrase_list", $search_keyphrase_list);

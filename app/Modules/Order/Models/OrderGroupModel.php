@@ -2,15 +2,15 @@
 
 namespace Modules\Order\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Distributor\Models\DistributorModel;
-use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -34,6 +34,8 @@ use Xcart\OrderGroup;
  * @property mixed actual_shipping_net
  * @property OrderModel order
  * @property OrderStatusModel|null dc_status_model
+ * @property mixed refunds
+ * @property bool notify_sent
  */
 class OrderGroupModel extends Model
 {
@@ -57,28 +59,28 @@ class OrderGroupModel extends Model
             ],
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'null' => false,
                 'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'null' => false,
                 'primary' => true,
             ],
             'shippingModel' => [
                 'field' => 'shippingid',
-                'class' => ForeignField::className(),
-                'modelClass' => ShippingModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ShippingModel::class,
                 'null' => false,
             ],
             'cb_status_model' => [
                 'class' => ForeignField::class,
                 'field' => 'cb_status',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['cb_status' => 'code'],
                 'null' => true,
@@ -86,7 +88,7 @@ class OrderGroupModel extends Model
             'dc_status_model' => [
                 'class' => ForeignField::class,
                 'field' => 'dc_status',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['dc_status' => 'code'],
                 'null' => true,
@@ -94,7 +96,7 @@ class OrderGroupModel extends Model
             'bd_status_model' => [
                 'class' => ForeignField::class,
                 'field' => 'bd_status',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['bd_status' => 'code'],
                 'null' => true,
@@ -102,7 +104,7 @@ class OrderGroupModel extends Model
             'd2a_status_model' => [
                 'class' => ForeignField::class,
                 'field' => 'd2a_status',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => OrderStatusModel::class,
                 'link' => ['d2a_status' => 'code'],
                 'null' => true,
@@ -125,55 +127,59 @@ class OrderGroupModel extends Model
                 'link' => ['order_group_id' => 'order_group_id'],
             ],
             'invoices' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderGroupInvoiceModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupInvoiceModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'memos' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderGroupMemoModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupMemoModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'refunds' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderGroupRefundModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupRefundModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'tracking' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => '',
             ],
             'accounting' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'manufacturer_data' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'OLD_accounting' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'amz_customer_notes' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'shipping_quote' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => true,
             ],
             'distributor_price_multiplier' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'default' => 1,
                 'null' => false,
             ],
-
+            'notify_sent' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false
+            ]
         ];
     }
 
@@ -206,9 +212,7 @@ class OrderGroupModel extends Model
     public function getRefunds()
     {
         $refs = $this->refunds->all();
-        return $refs ? array_sum(array_map(function ($a) {
-            return $a->total_gross;
-        }, $refs)) : 0;
+        return $refs ? array_sum(array_map(static fn($a) => $a->total_gross, $refs)) : 0;
     }
 
     public function getRefundsModel()
@@ -306,7 +310,6 @@ class OrderGroupModel extends Model
     public function showPendingOrderMessage()
     {
         $enter_on_amazon = '';
-        /** @var DistributorModel $distributor */
         $distributor = $this->manufacturer;
 
         if ($is_amazon = $this->isEnterOnAmazon()) {
@@ -332,7 +335,7 @@ class OrderGroupModel extends Model
         return str_replace('{enter_this_on_website}', $enter_on_amazon, $pending_order_message);
     }
 
-    public function getProfitMargin()
+    public function getProfitMargin(): ?float
     {
         $profit_margin = null;
 

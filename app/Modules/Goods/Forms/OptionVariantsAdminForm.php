@@ -11,7 +11,7 @@ use Xcart\App\Form\ModelForm;
 
 class OptionVariantsAdminForm extends ModelForm
 {
-    public $exclude = ['option'];
+    public array $exclude = ['option'];
 
     public function getModel()
     {

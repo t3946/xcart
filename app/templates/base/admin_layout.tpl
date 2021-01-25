@@ -20,7 +20,9 @@
         {block 'content-header'}
             <div class="content-header">
                 {block 'breadcrumbs'}
-                    {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
+                    {if !$.request->getIsAjax()}
+                        {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
+                    {/if}
                 {/block}
                 <div class="row">
                     <div class="column large-12">

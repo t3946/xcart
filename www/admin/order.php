@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Forms\Helpers\SnippetHelper;
+use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
@@ -1313,34 +1314,6 @@ if ($REQUEST_METHOD === "POST") {
     }
 }
 
-$attention_tags_values = func_query_hash("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' ORDER BY orderby, status", "status_id", false);
-
-if (!empty($attention_tags_values) && is_array($attention_tags_values)) {
-    foreach ($attention_tags_values as $k => $v) {
-        $v["status_id"]                         = $k;
-        $attention_tags_values[$k]["status_id"] = $k;
-
-        $operators = func_query("SELECT * FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$v[status_id]'");
-
-        $set_active = false;
-
-        if (!empty($operators)) {
-            foreach ($operators as $kk => $vv) {
-                if ($vv["action"] === "set" && ($vv["login"] === "_ANY_" || $vv["login"] == $login)) {
-                    $set_active = true;
-                    break;
-                }
-            }
-
-            $attention_tags_values[$k]["operators"] = $operators;
-        }
-
-        if (!$set_active) {
-            $attention_tags_values[$k]["active"] = "N";
-        }
-    }
-}
-
 require $xcart_dir . "/include/order_edit.php";
 require $xcart_dir . "/include/transaction_logs.php";
 require $xcart_dir . "/include/order_transactions.php";
@@ -1401,7 +1374,7 @@ if ($mode === 'ref_notify')
             }
         }
 
-        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'roman_n'], true)) {
+        if ($ref_notify_button_clicked === 'Update_C2B_status_and_Send_refund_notification' && in_array($login, ['sergey2', 'roman_n', 'artyom'], true)) {
             if ($orderModel = OrderModel::objects()->get(['orderid' => $orderid])) {
                 $error_message = $ref_sum = null;
 
@@ -1438,15 +1411,14 @@ if ($mode === 'ref_notify')
                             $trStore = new OrderTransactionStore($params, $ref_tr);
                             $model = $trStore->refund();
                             if ($model->type == OrderTransactionModel::TYPE_REFUND
-                                && in_array($model->transaction_status, [OrderTransactionModel::STATUS_COMPLETED, OrderTransactionModel::STATUS_REFUNDED]))
-                            {
+                                && in_array($model->transaction_status, [OrderTransactionModel::STATUS_COMPLETED, OrderTransactionModel::STATUS_REFUNDED])) {
                                 $ref_sum -= $model->transaction_amount;
                             } else {
                                 $error_message = "Transaction {$ref_tr->transaction_id} in wrong status after refund";
                                 break;
                             }
 
-                            $order_log .= $trStore->log."\n";
+                            $order_log .= $trStore->log . "\n";
 
                             if ($ref_sum <= 0) {
                                 break;
@@ -1460,19 +1432,19 @@ if ($mode === 'ref_notify')
                     } catch (\Exception $e) {
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
-                } else {
-                        $error_message = 'This transaction(s) has already been refunded.';
+                    if ($error_message) {
+                        func_log_order($orderid, 'PP', $error_message, $login);
+                        $top_message = [
+                            'content' => $error_message,
+                            'type' => 'E',
+                        ];
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
+                        func_header_location("order.php?orderid=" . $orderid);
                     }
-
-                if ($error_message) {
+                } else {
+                    $error_message = 'This transaction(s) has already been refunded.';
                     func_log_order($orderid, 'PP', $error_message, $login);
-                    $top_message = [
-                        'content' => $error_message,
-                        'type' => 'E',
-                    ];
-                    $section_name_top_message = $top_message;
-                    x_session_save("section_name_top_message");
-                    func_header_location("order.php?orderid=" . $orderid);
                 }
             }
         }
@@ -2691,17 +2663,12 @@ if (!empty($mnfs) && is_array($mnfs)) {
 $smarty->assign('all_distributor_memo_links', $all_distributor_memo_links);
 $smarty->assign('current_date', time());
 
-$department_arr      = [
-    "customer"             => "Customer",
-    "distributor"          => "Distributor",
-    "our_customer_service" => "Our customer service",
-    "third_party"          => "Compose email to third party",
-];
-$department_arr_keys = array_keys($department_arr);
+$department_arr = (new TemplateModel)->getField('department')->choices;
 
 foreach ($department_arr as $department => $department_name) {
-    $department_info                  = func_query("SELECT * FROM $sql_tbl[templates_for_communication] WHERE department='$department' AND active='Y' ORDER BY pos");
-    $department_full_arr[$department] = $department_info;
+    foreach (TemplateModel::objects()->filter(['department' => $department, 'active' => 'Y'])->order(['category__pos', 'pos']) as $template) {
+        $department_full_arr[$department][(string)$template->category][] = $template;
+    }
 }
 
 $smarty->assign("department_full_arr", $department_full_arr);

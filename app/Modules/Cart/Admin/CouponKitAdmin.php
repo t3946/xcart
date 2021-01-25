@@ -9,6 +9,14 @@ use Xcart\App\Main\Xcart;
 
 class CouponKitAdmin extends Admin
 {
+    public function getListColumns()
+    {
+        return [
+            'code',
+            'name',
+        ];
+    }
+
     public function getExcludedColumns()
     {
         return ['orders'];

@@ -4,121 +4,92 @@
 namespace Modules\Admin\Forms\Dx;
 
 
-use Modules\Core\Models\LanguageModel;
+use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Editor\Fields\EditorField;
-use Modules\Order\Models\AttentionTagModel;
+use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorRequestAvailForm extends DistributorForm
 {
-    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
 
     public function getFieldsets()
     {
         return [[
             'd_availability_must_be_checked',
-            'd_send_to_email_14',
-            'd_email_subject_14',
-            'd_message_body_14',
+            'request_avail_emails',
+            'request_avail_template',
+            'd_message_body_14'
         ]];
     }
 
     public function getFields()
     {
+        /** @var DistributorModel $dx */
         $dx = $this->getInstance();
+
         return [
             'd_availability_must_be_checked' => [
                 'class' => CheckboxField::class,
                 'label' => 'Availability must be checked before order is dispatched for fulfillment',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;', 'onchange' => "this.checked ? $('.click_hide').closest('tr').show() : $('.click_hide').closest('tr').hide()"],
+                'html' => ['style' => 'width:50px;', 'onchange' => "this.checked ? $('.click_hide').closest('tr').show() : $('.click_hide').closest('tr').hide()"],
             ],
-            'd_send_to_email_14' => [
-                'class' => CharField::class,
-                'label' => '\'Send to\' email',
+            'request_avail_emails' => [
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'choices' => function () use ($dx): array {
+                    foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
+                        $result[$contact->id] = $contact->getEmail();
+                    }
+                    return $result ?? [];
+                },
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY])->valuesList('id', true),
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide']
+                'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
+                'label' => 'Availability request contact'
             ],
-            'd_email_subject_14' => [
-                'class' => CharField::class,
-                'label' => 'Subject line',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
+            'request_avail_template' => [
+                'class' => DropDownField::class,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide']
+                'label' => 'Availability request template',
+                'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
+                'choices' => static function () {
+                    foreach (TemplateModel::distributors() as $template) {
+                        $result[$template->id] = (string)$template;
+                    }
+                    return $result ?? [];
+                }
+            ],
+            'template_1' => [
+                'class' => EditorField::class,
+                'value' => $dx->request_avail_template->message_body,
+                'label' => 'Availability request template body',
+                'html' => ['class' => 'click_hide'],
             ],
             'd_message_body_14' => [
                 'class' => EditorField::class,
-                'label' => 'Message body',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide']
-            ],
-            'add_ca_status_id' => [
-                'class' => DropDownField::class,
-                'label' => ' ',
-                'extends' => 'Add the following Attention tag',
-                'choices' => static function () {
-                    $res[] = 'add nothing';
-                    foreach (AttentionTagModel::objects()->order(['status']) as $tag) {
-                        $res[$tag->pk] = $tag->status;
-                    }
-                    return $res ?? [];
-                },
-                'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide']
-            ],
-            'd_sec14_show_header' => [
-                'class' => CheckboxField::class,
-                'label' => 'Show header',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;'],
-            ],
-            'd_sec14_show_items_stock' => [
-                'class' => CheckboxField::class,
-                'label' => 'Show {{items-stock}}',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;'],
-            ],
-            'd_sec14_show_shipto' => [
-                'class' => CheckboxField::class,
-                'label' => 'Show {{shipto}}',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;'],
-            ],
-            'd_sec14_show_items_cost' => [
-                'class' => CheckboxField::class,
-                'label' => 'Show {{items-cost}}',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;'],
-            ],
-            'd_sec14_show_footer' => [
-                'class' => CheckboxField::class,
-                'label' => 'Show footer',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:50px;'],
+                'html' => ['class' => 'click_hide'],
+                'label' => 'Old template body'
             ],
             'd_server_min_distributor_time' => [
                 'class' => CharField::class,
                 'label' => 'Server time - Distributor time',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' =>'width:100px;'],
+                'html' => ['style' => 'width:100px;'],
             ],
         ];
     }
+
 }

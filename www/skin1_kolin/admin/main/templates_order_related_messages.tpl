@@ -134,55 +134,5 @@ Selected: {$department_arr[$department]}
 		<INPUT type="button" value="Save" onclick="tinyMCE.triggerSave(); document.osnotificform2.submit();">
 	</td>
 </tr>
-
-
-
 </table>
 </form>
-<form name="tag_settings_form" action="{$xcartApp->router->url('order:order_note_tag_settings')}" method="POST">
-    <input type="hidden" name="option" value="Templates_OrderRelatedMessages_Tags">
-<table width="100%">
-    <tr>
-        <td>Add the following Attention tag when order note is left:</td>
-        <td>
-            <select id="o_status" style="width:230px;" class="select2"  name="order_note_tag">
-                <option></option>
-                {foreach from=$ca_statuses item=item_v key=key_k}
-                    <option {if $global_config.order_note_tag == $item_v.status_id}selected="selected"{/if}value="{$item_v.status_id}">{$item_v.status}</option>
-                {/foreach}
-            </select>
-        </td>
-        <td width="40%"></td>
-    </tr>
-    <tr>
-        <td>Do NOT apply Attention tag when order note is left by:</td>
-        <td>
-            <select style="width:230px;" id="o_users" multiple class="select2" name="order_note_tag_users[]">
-                <option></option>
-                {foreach from=$users item=item_u key=key_k}
-                    <option {if in_array($item_u->id, ','|explode:$global_config.order_note_tag_users)}selected="selected"{/if} value="{$item_u->id}">{$item_u}</option>
-                {/foreach}
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3" align="center">
-            <button type="submit">Save</button>
-        </td>
-    </tr>
-
-</table>
-</form>
-<script type="text/javascript">
-    {literal}
-    $('#o_status').select2({
-        allowClear: false,
-        placeholder: 'Click to select Attention Tag'
-    });
-    $('#o_users').select2({
-        allowClear: false,
-        closeOnSelect: false,
-        placeholder: 'Click to select Users'
-    });
-    {/literal}
-</script>

@@ -22,9 +22,9 @@ class GroupStore extends BaseStore
     public $defaultPagerPageSize = 50;
     public $data = null;
     public $level = null;
-    private $pager = null;
-    private $model = null;
-    private $qs = null;
+    protected $pager = null;
+    protected $model = null;
+    protected $qs = null;
 
     public function __construct($data = [], $model = null)
     {
@@ -67,6 +67,7 @@ class GroupStore extends BaseStore
             $this->qs->filter([
                 'forsale' => 'Y',
                 'sites__through__sfid' => $this->data['sfid'],
+                'distributor__avail' => 'Y',
                 'group_root__isnull' => true
             ]);
 

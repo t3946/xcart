@@ -48,7 +48,7 @@ class OrderLogHelper
         return $result;
     }
 
-    public static function sendOrderNote(OrderModel $order, $message)
+    public static function sendOrderNote(OrderModel $order, $message, $tag_id = null)
     {
         /** @var OrderModel $order */
         /** @var AttentionTagModel $model */
@@ -79,9 +79,8 @@ class OrderLogHelper
         } catch (Exception $exception) {
             Xcart::app()->logger->error($exception->getMessage(), $config ?? [], 'email');
         }
-
-        if ($config && $config['order_note_tag']) {
-            OrderHelper::setOrderTag($order->orderid, $config['order_note_tag']);
+        if ($tag_id) {
+            OrderHelper::setOrderTag($order->orderid, $tag_id);
         }
     }
 }

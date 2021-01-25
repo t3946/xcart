@@ -9,7 +9,7 @@ use Xcart\App\Form\Fields\UrlField;
 
 class TaxAuthoritiesForm extends CorporatesForm
 {
-    public $exclude = ['storefronts', 'taxes'];
+    public array $exclude = ['storefronts', 'taxes'];
 
     public function getFieldsets()
     {

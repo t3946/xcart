@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
@@ -190,16 +191,11 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
 
             $orderModel->fraud_status = $new_fraud_status;
             $orderModel->save();
-        }
 
-        /*if ($overall_fraud_score > $config['Overall_FC_threshold_for_Clear_status'] &&
-            $old_fraud_status !== 'C' &&
-            $new_fraud_status === 'C' &&
-            $manual_action_not_selected === 'Y')
-        {
-            $orderModel->submitOrderEntry();
-        }*/
-        //TODO check this submit order logic
+            if (OrderHelper::isAllowSendToOrderEntry($orderModel)) {
+                OrderHelper::submitOrderEntry($orderModel);
+            }
+        }
 
         if ($log) {
             func_log_order($orderid, 'X', $log, $login);

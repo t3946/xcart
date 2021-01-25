@@ -6,6 +6,7 @@ namespace Modules\Order\Controllers;
 
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
+use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -43,10 +44,10 @@ class OrderProcessController extends FrontendController
     {
         /** @var OrderModel $order */
         if ($order = OrderModel::objects()->get(['orderid' => $order_id])) {
-            if ($order->getOrderHash() === $slug && $order->cb_status === OrderStatusModel::ORDER_STATUS_UNPAID) {
+            if ($order->cb_status === OrderStatusModel::ORDER_STATUS_UNPAID && $order->getOrderHash() === $slug) {
                 if ($this->getRequest()->getIsPost()) {
                     if ($message = $this->getRequest()->post->get('message')) {
-                        OrderLogHelper::sendOrderNote($order, $message);
+                        OrderLogHelper::sendOrderNote($order, $message, AttentionTagModel::RESUME_ORDER_TAG);
                     }
                     $this->redirect('order:success');
                 }
@@ -58,7 +59,7 @@ class OrderProcessController extends FrontendController
                     'content' => "We'll get back to you shortly.<br/>Have a lovely day!"
                 ]);
                 $message = 'Customer would like to continue with the order!';
-                OrderLogHelper::sendOrderNote($order, $message);
+                OrderLogHelper::sendOrderNote($order, $message, AttentionTagModel::RESUME_ORDER_TAG);
                 $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_QUEUED]);
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
                 $order->save();

@@ -5,7 +5,9 @@ use Mindy\QueryBuilder\Aggregation\Max;
 use Modules\Dashboard\Stores\CallSearchStore;
 use Modules\Dashboard\Stores\EmailSearchStore;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Dashboard\Stores\ProductVerificationSearchStore;
 use Modules\Forms\Models\EmailModel;
+use Modules\Goods\Models\VerificationStatusModel;
 use Modules\Order\Models\OrderModel;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\UserModel;
@@ -57,6 +59,12 @@ class DashboardFilter extends Model
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => 0,
+            ],
+            'information' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => 0,
+                'verboseName' => 'Information filter'
             ],
             'name' => [
                 'class' => CharField::class,
@@ -113,6 +121,7 @@ class DashboardFilter extends Model
                     OrderModel::class => 'Order',
                     EmailModel::class => 'Email',
                     PbxAnveoCallModel::class => 'Call',
+                    VerificationStatusModel::class => 'Product Verification',
                 ]
             ],
             'form_data' => [
@@ -159,11 +168,14 @@ class DashboardFilter extends Model
             if ($this->entity === null || $this->entity === OrderModel::class) {
                 $this->s_store = new OrderSearchStore($sData, empty($form_data) ? $this : null);
             }
-            if ($this->entity === EmailModel::class) {
+            elseif ($this->entity === EmailModel::class) {
                 $this->s_store = new EmailSearchStore($sData, empty($form_data) ? $this : null);
             }
-            if ($this->entity === PbxAnveoCallModel::class) {
+            elseif ($this->entity === PbxAnveoCallModel::class) {
                 $this->s_store = new CallSearchStore($sData, empty($form_data) ? $this : null);
+            }
+            if ($this->entity === VerificationStatusModel::class) {
+                $this->s_store = new ProductVerificationSearchStore($sData, empty($form_data) ? $this : null);
             }
         }
 

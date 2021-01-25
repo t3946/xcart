@@ -8,20 +8,26 @@ use Modules\Forms\Models\SnippetModel;
 
 class SnippetHelper
 {
-    public static function getSnippets($params): array
+    public static function getSnippets(string $value, array $params): array
     {
         $result = [];
-        /** @var SnippetModel $snippet */
-        foreach (SnippetModel::objects() as $snippet)
-        {
-            $result["{{{$snippet->code}}}"] = $snippet->render($params);
+
+        if (preg_match_all('/{{(.*)}}/U', $value, $matches) && $matches[1]) {
+            /** @var SnippetModel $snippet */
+            foreach (SnippetModel::objects()->filter(['code__in' => $matches[1]]) as $snippet) {
+                $result["{{{$snippet->code}}}"] = $snippet->render($params);
+            }
         }
         return $result;
     }
 
-    public static function render($value, $params)
+    public static function renderSnippets(string $value, array $snippets)
     {
-        $snippets = self::getSnippets($params);
-        return str_replace(array_keys($snippets),array_values($snippets), $value);
+        return str_replace(array_keys($snippets), array_values($snippets), $value);
+    }
+
+    public static function render(string $value, array $params)
+    {
+        return self::renderSnippets($value, self::getSnippets($value, $params));
     }
 }

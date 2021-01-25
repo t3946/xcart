@@ -13,6 +13,7 @@ $(function () {
 
         _searchTimer: undefined,
         _searchQuery: undefined,
+        _searchRequest: undefined,
 
         init: function (options) {
             this.options = $.extend(this.options, options);
@@ -77,8 +78,11 @@ $(function () {
             var me = this;
             me.setLoading();
 
-            $.ajax({
+            this._searchRequest = $.ajax({
                 url: this.currentUrl,
+                beforeSend: () => {
+                    this._searchRequest?.abort()
+                },
                 success: function (page) {
                     var $page = $('<div/>').append(page);
                     var ubSelector = me.getUpdateBlockSelector();
@@ -125,7 +129,7 @@ $(function () {
         },
         search: function (search) {
             var me = this;
-            if (me._searchQuery != search) {
+            if (me._searchQuery !== search) {
                 me._searchQuery = search;
                 me.setLoading();
                 clearTimeout(me._searchTimer);
@@ -142,11 +146,12 @@ $(function () {
             var me = this;
             var $table = me.getTable();
 
-            if (typeof $table.attr('data-sorting') != typeof undefined)
+            if (typeof $table.attr('data-sorting') !== typeof undefined)
             {
                 $table.find("tbody").sortable({
                     axis: 'y',
                     placeholder: "highlight",
+                    handle: ".sort",
                     start: function(e, ui){
                         ui.placeholder.height(ui.item.height());
                     },
@@ -267,10 +272,19 @@ $(function () {
 
     $(document).on('click', '.list-block a.ajax, .ajax a', function (e) {
         e.preventDefault();
-        var $this = $(this);
+        const $this = $(this);
 
         if (typeof this.dataset.prevention === 'undefined') {
-            showPopup($this);
+            const list = getList($this)
+            list.setLoading();
+            $this.mmodal({
+                onSubmit: function (element)  {
+                    list.setLoading();
+                    this._submitHandlerDefault.call(this, element);
+                },
+                onAfterOpen: () => list.unsetLoading(),
+                onSuccess: () => list.update(),
+            });
         }
 
         return false;

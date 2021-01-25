@@ -47,7 +47,7 @@ if ($department === 'distributor' && !empty($mid_templateid)) {
 
 if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
-    $body = func_eol2br(stripslashes($body));
+    $body = func_eol2br(stripslashes(html_entity_decode($body)));
 
     $order_number = $order['order_prefix'] . $order['orderid'];
 
@@ -164,7 +164,7 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
         if ($template_id == $v['id']) {
 
             $subject = $v['subject_line'];
-            $body = $v['message_body'];
+            $body = html_entity_decode($v['message_body']);
             $to = '';
             $attach_pdf_invoice = $v['attach_pdf_invoice'];
 
@@ -173,12 +173,14 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
             }
 
             if (in_array($department, ['customer', 'our_customer_service', 'third_party'], true)) {
-                $body = str_replace(['{{items}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                $body = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                    $all__items_table__,
                     $all__items_table__,
                     $all__shipto_table__,
                     $all__shipto_table_full__
                 ], $body);
-                $subject = str_replace(['{{items}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                $subject = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+                    $all__items_table__,
                     $all__items_table__,
                     $all__shipto_table__,
                     $all__shipto_table_full__
@@ -193,16 +195,20 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 
                     $to .= $vv['compose_email_to_distributor'];
 
-                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}'], [
+                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
-                        $vv['__items_table__']
+                        $vv['__items_table__'],
+                        $vv['__items_table__'],
+                        $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
                     ], $body);
 
-                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}'], [
+                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
                         $vv['__shipto_table__'],
                         $vv['__shipto_full_table__'],
-                        $vv['__items_table__']
+                        $vv['__items_table__'],
+                        $vv['__items_table__'],
+                        $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
                     ], $subject);
 
                     $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);

@@ -6,6 +6,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\FeedAdmin;
 use Modules\Goods\Admin\OptionAdmin;
 use Modules\Goods\Admin\ProductAdmin;
+use Modules\Goods\Admin\ProductVerificationAdmin;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 use Xcart\App\Traits\RenderTrait;
@@ -20,32 +21,35 @@ class GoodsModule extends Module
 
         $template->addAccessorSmart('get_warehouse', self::class . '::getWarehouse', $template::ACCESSOR_CALL);
 
-        $template->addBlockFunction('p_label', function ($params, $html) {
+        $template->addBlockFunction(
+            'p_label',
+            function ($params, $html) {
+                $params['text'] = $html;
 
-            $params['text'] = $html;
-
-            return self::renderTemplate('product/messages/_p_label.tpl', $params);
-        });
-
-        $template->addModifier('createByLine', function ($name, $date, $manager = false): string {
-
-            if (empty($name)) {
-                return '';
+                return self::renderTemplate('product/messages/_p_label.tpl', $params);
             }
+        );
 
-            if (!$manager) {
-                $byLine = self::t('asked by ') . $name;
-            } else {
-                $byLine = self::t('answered by ') . $name . self::t(' (Staff)');
+        $template->addModifier(
+            'createByLine',
+            function ($name, $date, $manager = false): string {
+                if (empty($name)) {
+                    return '';
+                }
+
+                if (!$manager) {
+                    $byLine = self::t('asked by ') . $name;
+                } else {
+                    $byLine = self::t('answered by ') . $name . self::t(' (Staff)');
+                }
+
+                if (!empty($date)) {
+                    $byLine .= self::t(' on ') . static::createTextDate($date);
+                }
+
+                return $byLine;
             }
-
-            if (!empty($date)) {
-                $byLine .= self::t(' on ') . static::createTextDate($date);
-            }
-
-            return $byLine;
-        });
-
+        );
     }
 
     public static function getWarehouse($id)
@@ -55,51 +59,68 @@ class GoodsModule extends Module
 
     public static function getAdminMenu(): array
     {
-        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+        if (Xcart::app()->user->hasRoles(['vrs', 'vrv'])) {
             return [];
         }
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
 
-        $items = [[
-            'icon' => 'fa fa-list',
-            'name' => 'Products',
-            'route' => $router->url('admin:list', [
-                'module' => static::getModuleName(),
-                'admin' => ProductAdmin::classNameShort()
-            ]),
-            'items' => [
-                [
-                    'icon' => 'fa',
-                    'name' => 'Options',
-                    'route' => $router->url('admin:list', [
+        return [
+            [
+                'icon' => 'fa fa-list',
+                'name' => 'Products',
+                'route' => $router->url(
+                    'admin:list',
+                    [
                         'module' => static::getModuleName(),
-                        'admin' => OptionAdmin::classNameShort()
-                    ]),
-                ],
-                [
-                    'icon' => 'fa fa-object-group',
-                    'name' => 'Group products',
-                    'route' => $router->url('product:group_products'),
-                    'items' => ($user && $user->getIsSuperuser()) ? [
-                        [
-                            'icon' => 'fa fa-pencil-square-o',
-                            'name' => 'Grouping products',
-                            'route' => $router->url('product:group_list'),
-                        ],
-                    ] : false,
-                ]]],
+                        'admin' => ProductAdmin::classNameShort()
+                    ]
+                ),
+                'items' => [
+                    [
+                        'icon' => 'fa fa-filter',
+                        'name' => 'Options',
+                        'route' => $router->url(
+                            'admin:list',
+                            [
+                                'module' => static::getModuleName(),
+                                'admin' => OptionAdmin::classNameShort()
+                            ]
+                        ),
+                    ],
+                    [
+                        'icon' => 'fa fa-object-group',
+                        'name' => 'Group products',
+                        'route' => $router->url('product:group_list'),
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Verification',
+                'icon' => 'fa fa-binoculars',
+                'adminClassName' => ProductVerificationAdmin::class,
+                'adminClassNameShort' => ProductVerificationAdmin::classNameShort(),
+                'moduleName' => static::getName(),
+                'route' => Xcart::app()->router->url(
+                    'admin:list',
+                    [
+                        'module' => static::getName(),
+                        'admin' => ProductVerificationAdmin::classNameShort()
+                    ]
+                )
+            ],
             [
                 'name' => 'Feeds',
                 'icon' => 'fa fa-list',
-                'route' => $router->url('admin:list', [
-                    'module' => static::getModuleName(),
-                    'admin' => FeedAdmin::classNameShort()
-                ]),
+                'route' => $router->url(
+                    'admin:list',
+                    [
+                        'module' => static::getModuleName(),
+                        'admin' => FeedAdmin::classNameShort()
+                    ]
+                ),
             ]
         ];
-
-        return $items;
     }
 
     /**
@@ -111,5 +132,10 @@ class GoodsModule extends Module
     {
         $dateTimeObj = (new \DateTime())->setTimestamp($date);
         return $dateTimeObj->format('M d, Y');
+    }
+
+    public static function getVerboseName()
+    {
+        return 'Products';
     }
 }

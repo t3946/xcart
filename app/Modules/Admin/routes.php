@@ -117,4 +117,14 @@ return [
         'target' => [DistributorController::class, 'index'],
         'name' => 'dx_add'
     ],
+    [
+        'route' => '/distributor/contact_sort/{i:mid}',
+        'target' => [DistributorController::class, 'contact_sort'],
+        'name' => 'dx_contact_sort'
+    ],
+    [
+        'route' => '/distributor/contact_create/{i:mid}',
+        'target' => [DistributorController::class, 'contact_create'],
+        'name' => 'dx_contact_create'
+    ],
 ];

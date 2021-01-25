@@ -80,4 +80,9 @@ class CorporatesAdmin extends Admin
             'section' => $this->section ?? key($sections)
         ], $query);
     }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }

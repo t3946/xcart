@@ -7,11 +7,12 @@ use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Goods\Forms\ProductOptionVariantsAdminForm;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\QuerySet;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
     public $ownerField = 'product_option_id';
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getModel()
     {
@@ -47,7 +48,7 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
         ];
     }
 
-    public function getCanSort($qs)
+    public function getCanSort(QuerySet $qs): bool
     {
         return true;
     }
@@ -64,7 +65,7 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
         return parent::getAllUrl();
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return [];
     }

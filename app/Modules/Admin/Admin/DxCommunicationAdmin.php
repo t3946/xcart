@@ -69,10 +69,10 @@ class DxCommunicationAdmin extends EmailAdmin
         ]);
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],
-            [$this->getName(), Xcart::app()->router->url('admin:section', [
+            [static::getName(), Xcart::app()->router->url('admin:section', [
             'mid' => $this->ownerPk,
             'section' => 50,
         ])]];

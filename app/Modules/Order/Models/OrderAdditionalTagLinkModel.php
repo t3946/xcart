@@ -15,21 +15,18 @@ class OrderAdditionalTagLinkModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
-//            'id' => [
-//                ''
-//            ],
+            'id' => AutoField::class,
             'status' => [
                 'field' => 'status_id',
-                'class' => ForeignField::className(),
-                'modelClass' => AttentionTagModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => AttentionTagModel::class,
                 'link' => ['status_id' => 'status_id'],
                 'primary' => true,
             ],
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'primary' => true,
             ],

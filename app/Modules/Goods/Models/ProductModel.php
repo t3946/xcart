@@ -84,6 +84,9 @@ use Xcart\Product;
  * @property mixed brand
  * @property mixed r_avail
  * @property mixed list_price
+ * @property mixed verification_statusid
+ * @property VerificationStatusModel verification_status
+ * @property int last_verify_date
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -99,6 +102,11 @@ class ProductModel extends Model implements ICartItem
     public const NO_ASIN_FOUND = 'No ASIN found';
 
     private $priceArray;
+
+    public const PRODUCT_STATUS_NOT_VERIFY = 0;
+    public const PRODUCT_STATUS_PROBLEM_NOT_FIXED = 1;
+    public const PRODUCT_STATUS_PROBLEM_FIXED = 2;
+    public const PRODUCT_STATUS_VERIFY = 3;
 
     use DataModelTrait, AutoMetaTrait, SlugifyTrait;
 
@@ -238,6 +246,12 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => ''
             ],
+            'productcode' => [
+                'class' => CharField::class,
+                'null' => false,
+                'unique' => true,
+                'verboseName' => 'SKU'
+            ],
             'group_mask' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -271,6 +285,10 @@ class ProductModel extends Model implements ICartItem
                 'class' => UnixTimestampField::class,
                 'autoNow' => true,
                 'autoNowAdd' => true,
+            ],
+            'last_verify_date' => [
+                'class' => UnixTimestampField::class,
+                'verboseName' => 'Last verif date'
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixTimestampField::class,
@@ -385,6 +403,14 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
+            ],
+            'verification_status' => [
+                'field' => 'verification_statusid',
+                'class' => ForeignField::class,
+                'modelClass' => VerificationStatusModel::class,
+                'link' => ['verification_statusid' => 'statusid'],
+                'verboseName' => 'Verified',
+                'default' => 0
             ],
             'markets_disabled' => [
                 'class' => HasManyField::class,

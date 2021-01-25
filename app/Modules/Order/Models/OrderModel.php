@@ -19,6 +19,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -156,9 +157,9 @@ class OrderModel extends Model
                 'link' => ['orderid' => 'orderid'],
             ],
             'tags' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => AttentionTagModel::className(),
-                'through' => OrderAdditionalTagLinkModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => AttentionTagModel::class,
+                'through' => OrderAdditionalTagLinkModel::class,
             ],
             'transactions' => [
                 'class' => HasManyField::className(),
@@ -431,7 +432,7 @@ class OrderModel extends Model
     /**
      * @return ProductModel[]
      */
-    public function getProducts()
+    public function getProducts(): array
     {
         return ProductModel::objects()
             ->filter(['order_details__orderid' => $this->orderid])
@@ -574,7 +575,7 @@ class OrderModel extends Model
     {
         return in_array($this->cb_status, [OrderStatusModel::ORDER_STATUS_UNPAID_PO, OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO], true);
     }
-    
+
     public function __toString()
     {
         return $this->getOrderNumber();
@@ -612,5 +613,15 @@ class OrderModel extends Model
     {
         return "S3 Stores, Inc. Order # {$this->getOrderNumber()}";
     }
+
+
+
+    public function updateVerificationStatus(): void
+    {
+        if ($this->vn_status !== ($new_status = OrderHelper::getOrderVerificationStatus($this))) {
+            OrderHelper::changeOrderVerificationStatus($this, $new_status);
+        }
+    }
+
 
 }

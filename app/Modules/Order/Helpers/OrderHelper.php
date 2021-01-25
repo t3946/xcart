@@ -7,6 +7,8 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Forms\Helpers\SnippetHelper;
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
@@ -18,6 +20,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
@@ -59,7 +62,6 @@ class OrderHelper
 
         return $result;
     }
-
 
     public static function getCountEvents(array $ids, $user_id = null, $group = true)
     {
@@ -320,10 +322,11 @@ class OrderHelper
                         $ticket_resolver_messages = $ticket_resolver[0]['messages'];
 
                         $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
-                        $t_arr [$model->orderid] = $ticket_resolver_messages;
+                        $t_arr[$model->orderid] = $ticket_resolver_messages;
                         Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
                     }
-                    $model->otrs_ticket = $ticket_resolver_link;
+                    $model->update(['otrs_ticket' => $ticket_resolver_link]);
+                    $model->save();
                 }
             }
         }
@@ -342,7 +345,7 @@ class OrderHelper
         return $res ?? null;
     }
 
-    public static function OrderStepsReset($cart_number): void
+    public static function orderStepsReset($cart_number): void
     {
         if ($order = OrderModel::objects()->order(['-orderid'])->limit(1)->get(['cart_number' => $cart_number])) {
             $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1;
@@ -452,6 +455,190 @@ HTML;
         $order->groups->update([$sts => $value]);
         if ($sendNotification) {
             OrderInvoiceHelper::sendOrderStatusNotification($order);
+        }
+    }
+
+    public static function getOrderVerificationStatus(OrderModel $order): string
+    {
+        $max = $min = null;
+        foreach ($order->getProducts() as $product) {
+            $status_id = (int)$product->verification_statusid;
+            $max = max($max, $status_id);
+            $min = min($min ?? $status_id, $status_id);
+        }
+
+        if ($order->amazon_fulfillment_channel === 'AFN') {
+            return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED;
+        }
+
+        if ($min === $max) {
+            switch ($max) {
+                case (ProductModel::PRODUCT_STATUS_NOT_VERIFY) :
+                    return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED;
+                case (ProductModel::PRODUCT_STATUS_PROBLEM_NOT_FIXED) :
+                case (ProductModel::PRODUCT_STATUS_PROBLEM_FIXED) :
+                    return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND;
+                case (ProductModel::PRODUCT_STATUS_VERIFY):
+                    return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED;
+            }
+        } elseif ($min === ProductModel::PRODUCT_STATUS_NOT_VERIFY && $max > ProductModel::PRODUCT_STATUS_NOT_VERIFY) {
+            return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS;
+        } elseif ($min > ProductModel::PRODUCT_STATUS_NOT_VERIFY && $max > ProductModel::PRODUCT_STATUS_NOT_VERIFY) {
+            return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND;
+        }
+
+        return OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED;
+    }
+
+    public static function submitOrderEntry(OrderModel $order): void
+    {
+        foreach ($order->groups as $group) {
+            $dx = $group->manufacturer;
+            if (($dx->submit_to_operator === 'through_distributor_website') && in_array(
+                    $group->cb_status,
+                    [
+                        OrderStatusModel::ORDER_STATUS_COMPLETED,
+                        OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                        OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
+                        OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                        OrderStatusModel::ORDER_STATUS_AUTHORIZED
+                    ],
+                    true
+                ) &&
+                in_array(
+                    $group->dc_status,
+                    [
+                        OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                        OrderStatusModel::ORDER_DC_STATUS_PENDING_AVAIL_CHECK,
+                        OrderStatusModel::ORDER_DC_STATUS_PENDING_ADDL_PAYMENT
+                    ],
+                    true
+                )) {
+                $message = SnippetHelper::render(
+                    $dx->d_instructions_to_order_entry_operator,
+                    ['order' => $order, 'user' => Xcart::app()->user, 'group' => $group]
+                );
+                $subject = SnippetHelper::render(
+                    $dx->d_order_entry_operator_subject_line_8,
+                    ['order' => $order, 'user' => Xcart::app()->user, 'group' => $group]
+                );
+
+                /** @var SiteModel $site */
+                $site = Xcart::app()->getModule('Sites')->getSite();
+                $config = $site->getGlobalConfig();
+
+                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><b>From: </b>{$config['orders_department']}<br /><b>To: </b>{$dx->d_order_entry_operator_email}<br /><b>Subject: </b>{$subject}";
+
+                (new OrderLogModel(
+                    [
+                        'orderid' => $order->orderid,
+                        'type' => OrderLogModel::LOG_TYPE_SYSTEM,
+                        'log' => $log,
+                        'login' => Xcart::app()->user->login
+                    ]
+                ))->save();
+
+                $params = ['from' => $config['orders_department']];
+
+                $emails = explode(',', $dx->d_order_entry_operator_email);
+                $email_to = array_shift($emails);
+                if ($emails) {
+                    $params['bcc'] = array_map(static fn($e) => trim($e), $emails);
+                }
+
+                Xcart::app()->mail->raw(
+                    $email_to,
+                    $subject,
+                    $message,
+                    $params
+                );
+
+                /** @var OrderStatusModel $new_status */
+                $new_status = OrderStatusModel::objects()->get(['code' =>  OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY]);
+                $log = "<b>{$dx->code}:</b> dc_status: {$group->dc_status_model} -> {$new_status}";
+                (new OrderLogModel(
+                    [
+                        'orderid' => $order->orderid,
+                        'type' => OrderLogModel::LOG_TYPE_XCART,
+                        'log' => $log,
+                        'login' => Xcart::app()->user->login
+                    ]
+                ))->save();
+
+                $group->dc_status = OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY;
+                $group->save();
+            }
+        }
+    }
+
+    /**
+     * Check possibility to dispatch order entry operator
+     * @param OrderModel $order
+     * @return bool
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public static function isAllowSendToOrderEntry(OrderModel $order): bool
+    {
+        if ($order->isAmazon()) {
+            return false;
+        }
+
+        if ($order->fraud_status !== OrderStatusModel::ORDER_FRAUD_CHECK_STATUS_CLEARED) {
+            return false;
+        }
+
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $config = $site->getGlobalConfig();
+
+        if ($config["Customer_notes_field_is_NOT_empty"] === 'Y' && $order->customer_notes) {
+            return false;
+        }
+
+        $otrs_messages = self::getOTRSMessages($order);
+
+        if ($config["number_of_OTRS_messages"] === 'Y' && $otrs_messages !== (int)$config["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
+            return false;
+        }
+
+        if ($config["ETA_date_is_present_for_at_least_one_of_the_items"] === 'Y') {
+            foreach ($order->getProducts() as $product) {
+                if ($product->eta_date_mm_dd_yyyy > time()) {
+                    return false;
+                }
+            }
+        }
+
+        if ($config["Order_shipping_method_carrier"] === 'Y') {
+            foreach ($order->groups as $group) {
+                if (($group->shippingModel->code ?? '') === 'Amazon') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static function changeOrderVerificationStatus(OrderModel $order, string $new_status): void
+    {
+        /** @var OrderStatusModel $new */
+        /** @var OrderStatusModel $old */
+        $new = OrderStatusModel::objects()->get(['code' => $new_status]);
+        $old = OrderStatusModel::objects()->get(['code' => $order->vn_status]);
+        if ($new && $old && $new->code !== $old->code) {
+            $order->vn_status = $new->code;
+            $order->save();
+            (new OrderLogModel(
+                [
+                    'orderid' => $order->orderid,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
+                    'log' => "Verification status: {$old->name} -> {$new->name}",
+                    'login' => Xcart::app()->user->login
+                ]
+            ))->save();
+            if ($new_status === OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED && self::isAllowSendToOrderEntry($order)) {
+                self::submitOrderEntry($order);
+            }
         }
     }
 }

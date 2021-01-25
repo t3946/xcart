@@ -25,7 +25,7 @@ use Xcart\App\Form\ModelForm;
 class ProductAdminForm extends ModelForm
 {
 
-    public $exclude = [
+    public array $exclude = [
         'categories',
         'product_categories',
         'prices',

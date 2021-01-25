@@ -13,6 +13,7 @@ use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\Fields\TextAreaField;
 use Xcart\App\Form\Fields\UrlField;
+use Xcart\App\Main\Xcart;
 
 class DistributorGeneralForm extends DistributorForm
 {
@@ -35,15 +36,16 @@ class DistributorGeneralForm extends DistributorForm
     public function getFields()
     {
         $dx = $this->getInstance();
+        $user = Xcart::app()->user;
         return [
             'provider_name' => [
                 'class' => CharField::class,
                 'label' => 'Added by',
                 'hint' => LanguageModel::translate('help_dx_provider_text'),
                 'html' => [
-                    'style' => 'border: none;'
+                    'style' => 'border: none; width: 100%'
                 ],
-                'value' => $dx ? "{$dx->provider_model} ({$dx->provider})" : '',
+                'value' => $dx->pk ? "{$dx->provider_model} ({$dx->provider})" : "{$user} ({$user->login})",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],

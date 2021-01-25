@@ -1,5 +1,7 @@
 <a href="{$model->getAbsoluteUrl()}"
-   class="empty dashboard-item {if $check_owners?}check-owner {$model->getTextClassOwner()}{/if}"
+   class="empty dashboard-item
+        {if $model->information === true}information{/if}
+        {if $check_owners?} check-owner {$model->getTextClassOwner()}{/if}"
    target="_blank"
    data-id="{$model->id}"
    data-tooltip-action="{url 'dashboard:filter_subscription' id=$model->id}"

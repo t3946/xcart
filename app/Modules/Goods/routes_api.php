@@ -17,6 +17,11 @@ return [
         'name' => 'gmpn'
     ],
     [
+        'route' => 'products/verify',
+        'target' => [ApiProductController::class, 'verify'],
+        'name' => 'verify'
+    ],
+    [
         'route' => 'analytics',
         'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'

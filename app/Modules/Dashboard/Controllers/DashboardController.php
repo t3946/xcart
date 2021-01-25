@@ -24,6 +24,7 @@ use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
+use Xcart\App\Store\BaseStore;
 
 class DashboardController extends PrototypeAdminController
 {
@@ -147,18 +148,19 @@ class DashboardController extends PrototypeAdminController
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
             $modify = false;
             $form_data = [];
-            $orderStore = $model->getSearchStorage($form_data);
 
             if (!empty($_GET['search'])) {
-                $form_data = $orderStore::getClearedData($_GET['search']);
+                $form_data = BaseStore::getClearedData($_GET['search']);
                 $modify = true;
             }
+
+            $orderStore = $model->getSearchStorage($form_data);
 
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
             $form_data = array_merge_recursive($model->form_data, $form_data);
 
-            if (!$modify && $pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+            if (!$modify && $pager->getTotal() !== $model->getSearchStorage()->getCashedCount()) {
                 $model->getSearchStorage()->clearCache();
             }
 
@@ -176,16 +178,16 @@ class DashboardController extends PrototypeAdminController
                         ]
                     )
                 );
-            } else if ($model->entity === EmailModel::class) {
-                $admin = new EmailAdmin;
+            } elseif ($model->entity === EmailModel::class) {
+                $admin = new EmailAdmin();
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,
                     'admin' => $admin,
                     'columns' => $admin->buildListColumns(),
                 ]);
-            } else if ($model->entity === PbxAnveoCallModel::class) {
-                $admin = new PBXAdmin;
+            } elseif ($model->entity === PbxAnveoCallModel::class) {
+                $admin = new PBXAdmin();
                 echo $this->renderInternal($orderStore::VIEW_TEMPLATE, [
                     'objects' => $pager->paginate(),
                     'pagination' => $pager,
@@ -308,10 +310,11 @@ class DashboardController extends PrototypeAdminController
             $this->autoRedirect($model);
         }
 
-        if ($_POST[$class] && $_POST['search']) {
+        if ($_POST[$class]) {
+            if ($_POST['search']) {
+                $model->form_data = OrderSearchStore::getClearedData($_POST['search']);
+            }
             $model->setAttributes($_POST[$class]);
-            $model->form_data = OrderSearchStore::getClearedData($_POST['search']);
-
             if ($model->isValid() && $model->save()) {
                 $this->autoRedirect($model);
             }

@@ -1,7 +1,7 @@
 {var $actions = $admin->getListItemActions()}
 
 {if "update" in $actions}
-    <a href="{$admin->getUpdateUrl($pk)}">
+    <a {if $admin->isAjaxUpdate()}class="ajax"{/if} href="{$admin->getUpdateUrl($pk)}">
         <i class="icon-edit"></i>
     </a>
 {/if}

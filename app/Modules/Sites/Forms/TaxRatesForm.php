@@ -11,7 +11,7 @@ use Xcart\App\Form\ModelForm;
 
 class TaxRatesForm extends ModelForm
 {
-    public $exclude = ['tax'];
+    public array $exclude = ['tax'];
 
     public function getFieldsets()
     {

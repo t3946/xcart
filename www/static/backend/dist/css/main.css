@@ -5314,7 +5314,7 @@ $grid: (
   width: 100%;
   background: black;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 8888;
+  z-index: 2;
   display: none;
   top: 0;
   left: 0;
@@ -7789,62 +7789,66 @@ form[name=hide_no_orders_test_checkoutform] input {
 a.button, a.button:visited, a.button:hover {
   color: #fff; }
 
-.admin-page table, .modal-content table {
-  border-collapse: collapse; }
-
-.admin-page ul.errors, .modal-content ul.errors {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #e27a2b; }
-  .admin-page ul.errors li, .modal-content ul.errors li {
-    margin-bottom: 5px; }
-
-.admin-page input[type=text], .admin-page input[type=search], .admin-page input[type=email], .admin-page input[type=date], .admin-page input[type=datetime-local], .admin-page input[type=number], .admin-page textarea, .modal-content input[type=text], .modal-content input[type=search], .modal-content input[type=email], .modal-content input[type=date], .modal-content input[type=datetime-local], .modal-content input[type=number], .modal-content textarea {
-  background: #FFFFFF;
-  border: 1px solid #DFDFDF;
-  padding: 0 10px;
-  height: 40px;
-  font-size: 14px;
-  /* Firefox 19+ */
-  /* Firefox 18- */ }
-  .admin-page input[type=text]::-webkit-input-placeholder, .admin-page input[type=search]::-webkit-input-placeholder, .admin-page input[type=email]::-webkit-input-placeholder, .admin-page input[type=date]::-webkit-input-placeholder, .admin-page input[type=datetime-local]::-webkit-input-placeholder, .admin-page input[type=number]::-webkit-input-placeholder, .admin-page textarea::-webkit-input-placeholder, .modal-content input[type=text]::-webkit-input-placeholder, .modal-content input[type=search]::-webkit-input-placeholder, .modal-content input[type=email]::-webkit-input-placeholder, .modal-content input[type=date]::-webkit-input-placeholder, .modal-content input[type=datetime-local]::-webkit-input-placeholder, .modal-content input[type=number]::-webkit-input-placeholder, .modal-content textarea::-webkit-input-placeholder {
+.admin-page, .modal-content {
+  /*select {
+    border: 1px solid #DFDFDF;
+    border-radius: 0;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     font-size: 14px;
-    color: #797979; }
-  .admin-page input[type=text]::-moz-placeholder, .admin-page input[type=search]::-moz-placeholder, .admin-page input[type=email]::-moz-placeholder, .admin-page input[type=date]::-moz-placeholder, .admin-page input[type=datetime-local]::-moz-placeholder, .admin-page input[type=number]::-moz-placeholder, .admin-page textarea::-moz-placeholder, .modal-content input[type=text]::-moz-placeholder, .modal-content input[type=search]::-moz-placeholder, .modal-content input[type=email]::-moz-placeholder, .modal-content input[type=date]::-moz-placeholder, .modal-content input[type=datetime-local]::-moz-placeholder, .modal-content input[type=number]::-moz-placeholder, .modal-content textarea::-moz-placeholder {
-    font-size: 14px;
-    color: #797979; }
-  .admin-page input[type=text]:-moz-placeholder, .admin-page input[type=search]:-moz-placeholder, .admin-page input[type=email]:-moz-placeholder, .admin-page input[type=date]:-moz-placeholder, .admin-page input[type=datetime-local]:-moz-placeholder, .admin-page input[type=number]:-moz-placeholder, .admin-page textarea:-moz-placeholder, .modal-content input[type=text]:-moz-placeholder, .modal-content input[type=search]:-moz-placeholder, .modal-content input[type=email]:-moz-placeholder, .modal-content input[type=date]:-moz-placeholder, .modal-content input[type=datetime-local]:-moz-placeholder, .modal-content input[type=number]:-moz-placeholder, .modal-content textarea:-moz-placeholder {
-    font-size: 14px;
-    color: #797979; }
-  .admin-page input[type=text]:-ms-input-placeholder, .admin-page input[type=search]:-ms-input-placeholder, .admin-page input[type=email]:-ms-input-placeholder, .admin-page input[type=date]:-ms-input-placeholder, .admin-page input[type=datetime-local]:-ms-input-placeholder, .admin-page input[type=number]:-ms-input-placeholder, .admin-page textarea:-ms-input-placeholder, .modal-content input[type=text]:-ms-input-placeholder, .modal-content input[type=search]:-ms-input-placeholder, .modal-content input[type=email]:-ms-input-placeholder, .modal-content input[type=date]:-ms-input-placeholder, .modal-content input[type=datetime-local]:-ms-input-placeholder, .modal-content input[type=number]:-ms-input-placeholder, .modal-content textarea:-ms-input-placeholder {
-    font-size: 14px;
-    color: #797979; }
+    color: #000000;
+    height: $button-height;
+    padding: 0 26px 0 10px;
+    background-size: (18px/2) (14px/2);
+    background: #FFFFFF url('../images/forms/select-bg.png') no-repeat right 10px center;
+    font-family: $font;
 
-.admin-page textarea, .modal-content textarea {
-  padding-top: 10px;
-  padding-bottom: 10px; }
+    &[multiple] {
+      height: auto;
+      min-height: $button-height * 4;
+      background-image: none;
 
-.admin-page select, .modal-content select {
-  border: 1px solid #DFDFDF;
-  border-radius: 0;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  font-size: 14px;
-  color: #000000;
-  height: 40px;
-  padding: 0 26px 0 10px;
-  background-size: 9px 7px;
-  background: #FFFFFF url("../images/forms/select-bg.png") no-repeat right 10px center;
-  font-family: GothamPro, Arial, sans-serif; }
-  .admin-page select[multiple], .modal-content select[multiple] {
-    height: auto;
-    min-height: 160px;
-    background-image: none; }
-    .admin-page select[multiple] option, .modal-content select[multiple] option {
-      padding: .2em;
-      vertical-align: middle; }
-      .admin-page select[multiple] option[selected], .modal-content select[multiple] option[selected] {
-        background: #f1f1f1; }
+      option {
+        padding: .2em;
+        vertical-align: middle;
+
+        &[selected] {
+          background: #f1f1f1;
+        }
+      }
+    }
+  }*/ }
+  .admin-page table, .modal-content table {
+    border-collapse: collapse; }
+  .admin-page ul.errors, .modal-content ul.errors {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #e27a2b; }
+    .admin-page ul.errors li, .modal-content ul.errors li {
+      margin-bottom: 5px; }
+  .admin-page input[type=text], .admin-page input[type=search], .admin-page input[type=email], .admin-page input[type=date], .admin-page input[type=datetime-local], .admin-page input[type=number], .admin-page textarea, .modal-content input[type=text], .modal-content input[type=search], .modal-content input[type=email], .modal-content input[type=date], .modal-content input[type=datetime-local], .modal-content input[type=number], .modal-content textarea {
+    background: #FFFFFF;
+    border: 1px solid #DFDFDF;
+    padding: 0 10px;
+    height: 40px;
+    font-size: 14px;
+    /* Firefox 19+ */
+    /* Firefox 18- */ }
+    .admin-page input[type=text]::-webkit-input-placeholder, .admin-page input[type=search]::-webkit-input-placeholder, .admin-page input[type=email]::-webkit-input-placeholder, .admin-page input[type=date]::-webkit-input-placeholder, .admin-page input[type=datetime-local]::-webkit-input-placeholder, .admin-page input[type=number]::-webkit-input-placeholder, .admin-page textarea::-webkit-input-placeholder, .modal-content input[type=text]::-webkit-input-placeholder, .modal-content input[type=search]::-webkit-input-placeholder, .modal-content input[type=email]::-webkit-input-placeholder, .modal-content input[type=date]::-webkit-input-placeholder, .modal-content input[type=datetime-local]::-webkit-input-placeholder, .modal-content input[type=number]::-webkit-input-placeholder, .modal-content textarea::-webkit-input-placeholder {
+      font-size: 14px;
+      color: #797979; }
+    .admin-page input[type=text]::-moz-placeholder, .admin-page input[type=search]::-moz-placeholder, .admin-page input[type=email]::-moz-placeholder, .admin-page input[type=date]::-moz-placeholder, .admin-page input[type=datetime-local]::-moz-placeholder, .admin-page input[type=number]::-moz-placeholder, .admin-page textarea::-moz-placeholder, .modal-content input[type=text]::-moz-placeholder, .modal-content input[type=search]::-moz-placeholder, .modal-content input[type=email]::-moz-placeholder, .modal-content input[type=date]::-moz-placeholder, .modal-content input[type=datetime-local]::-moz-placeholder, .modal-content input[type=number]::-moz-placeholder, .modal-content textarea::-moz-placeholder {
+      font-size: 14px;
+      color: #797979; }
+    .admin-page input[type=text]:-moz-placeholder, .admin-page input[type=search]:-moz-placeholder, .admin-page input[type=email]:-moz-placeholder, .admin-page input[type=date]:-moz-placeholder, .admin-page input[type=datetime-local]:-moz-placeholder, .admin-page input[type=number]:-moz-placeholder, .admin-page textarea:-moz-placeholder, .modal-content input[type=text]:-moz-placeholder, .modal-content input[type=search]:-moz-placeholder, .modal-content input[type=email]:-moz-placeholder, .modal-content input[type=date]:-moz-placeholder, .modal-content input[type=datetime-local]:-moz-placeholder, .modal-content input[type=number]:-moz-placeholder, .modal-content textarea:-moz-placeholder {
+      font-size: 14px;
+      color: #797979; }
+    .admin-page input[type=text]:-ms-input-placeholder, .admin-page input[type=search]:-ms-input-placeholder, .admin-page input[type=email]:-ms-input-placeholder, .admin-page input[type=date]:-ms-input-placeholder, .admin-page input[type=datetime-local]:-ms-input-placeholder, .admin-page input[type=number]:-ms-input-placeholder, .admin-page textarea:-ms-input-placeholder, .modal-content input[type=text]:-ms-input-placeholder, .modal-content input[type=search]:-ms-input-placeholder, .modal-content input[type=email]:-ms-input-placeholder, .modal-content input[type=date]:-ms-input-placeholder, .modal-content input[type=datetime-local]:-ms-input-placeholder, .modal-content input[type=number]:-ms-input-placeholder, .modal-content textarea:-ms-input-placeholder {
+      font-size: 14px;
+      color: #797979; }
+  .admin-page textarea, .modal-content textarea {
+    padding-top: 10px;
+    padding-bottom: 10px; }
 
 .breadcrumbs-block ul {
   font-size: 14px;
@@ -8026,8 +8030,6 @@ h1 {
     height: 15px; }
   .list-block .list-wrapper table th.checker, .list-block .list-wrapper table th.nested, .list-block .list-wrapper table th.sort, .list-block .list-wrapper table td.checker, .list-block .list-wrapper table td.nested, .list-block .list-wrapper table td.sort {
     width: 40px;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
     text-align: center; }
   .list-block .list-wrapper table th.sort a, .list-block .list-wrapper table td.sort a {
     text-decoration: none;
@@ -8051,9 +8053,7 @@ h1 {
       font-size: 13px;
       vertical-align: middle; }
       .list-block .list-wrapper table tbody tr td.actions {
-        text-align: center;
-        padding-left: 0 !important;
-        padding-right: 0 !important; }
+        text-align: center; }
         .list-block .list-wrapper table tbody tr td.actions a {
           font-size: 15px;
           text-decoration: none;
@@ -8088,10 +8088,11 @@ h1 {
 .list-block .list-wrapper .list-footer {
   background-color: #fff;
   border: 1px solid #DFDFDF;
+  border-top: none;
   font-size: 13px;
   color: #000000; }
   .list-block .list-wrapper .list-footer .list-footer-block {
-    height: 60px; }
+    height: 30px; }
     .list-block .list-wrapper .list-footer .list-footer-block.total {
       margin-right: 36px; }
     .list-block .list-wrapper .list-footer .list-footer-block.group {
@@ -8654,7 +8655,7 @@ i.icon.m {
   box-shadow: 0 0 5px 2px #fff; }
 
 .all-page {
-  padding: 25px 30px; }
+  padding: 10px 10px; }
 
 .list-block .list-wrapper table tbody tr {
   border-bottom: 1px solid #DFDFDF; }
@@ -8665,7 +8666,7 @@ i.icon.m {
     display: none; }
 
 .info-page {
-  padding: 25px 30px; }
+  padding: 10px 10px; }
   .info-page .object-info {
     table-layout: auto;
     width: 100%; }
@@ -8861,6 +8862,8 @@ i.icon.m {
       background-color: #e6fde4; }
     .admin .dashboard-filters .dashboard-item.check-owner.false {
       background-color: #fee3e6; }
+      .admin .dashboard-filters .dashboard-item.check-owner.false.information {
+        background-color: #e4f2fd; }
     .admin .dashboard-filters .dashboard-item .tag {
       position: absolute;
       top: 0;

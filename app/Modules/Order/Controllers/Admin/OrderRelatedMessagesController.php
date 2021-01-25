@@ -21,6 +21,6 @@ class OrderRelatedMessagesController extends Controller
         } else {
             GlobalConfigModel::objects()->updateOrCreate(['name' => 'order_note_tag_users'], ['value' => '']);
         }
-        $this->redirect('/admin/configuration.php?option=Templates_OrderRelatedMessages');
+        $this->redirect('/admin/configuration.php?option=Attention_tags_invoices');
     }
 }

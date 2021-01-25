@@ -7,7 +7,6 @@ use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\CreateProductPageFormHelper;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
-use Modules\Goods\Helpers\TabDataHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Goods\Models\ProductVideosModel;
@@ -78,6 +77,7 @@ class DefaultController extends FrontendController
      * @param ProductModel|null $model
      *
      * @throws \Xcart\App\Exceptions\HttpException
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     private function view_internal($model = null): void
@@ -122,7 +122,7 @@ class DefaultController extends FrontendController
             'model' => $model,
             'form' => $productPageForm->getForm(),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
-            'tabs' => TabDataHelper::getTabsFromManufacturer($model->manufacturerid),
+            'tabs' => $model->distributor->tabs,
             'category' => $category,
             'helper' => new ProductHelper(),
         ];

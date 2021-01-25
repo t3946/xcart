@@ -53,17 +53,14 @@ abstract class ListViewAdmin extends Admin
             $model->{$this->ownerField} = $this->ownerPk;
         }
 
-//        if (isset($model->parent_id)) {
-//            $this->parent_pk = $model->parent_id;
-//        }
-
         $form->setInstance($model);
 
         $request = Xcart::app()->request;
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
-                    $this->jsonResponse(['state' => 'success']);
+                    $this->jsonResponse(['status' => 'success', 'close' => true]);
+                    return;
                 }
                 else {
                     Xcart::app()->flash->success('Changes have been successfully applied.');
@@ -105,5 +102,15 @@ abstract class ListViewAdmin extends Admin
             'admin' => static::classNameShort(),
             'id' => $this->ownerPk,
         ]);
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
     }
 }

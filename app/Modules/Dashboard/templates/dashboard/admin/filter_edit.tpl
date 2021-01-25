@@ -36,6 +36,9 @@
                         {include 'core/form/model_form_field.tpl' model=$model field='bold' type='checkbox'}
                     </li>
                     <li>
+                        {include 'core/form/model_form_field.tpl' model=$model field='information' type='checkbox'}
+                    </li>
+                    <li>
                         {include 'core/form/model_form_field.tpl' model=$model field='tag'}
                     </li>
                     <li>

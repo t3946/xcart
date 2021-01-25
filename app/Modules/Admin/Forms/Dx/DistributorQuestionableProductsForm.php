@@ -8,7 +8,7 @@ use Xcart\App\Form\Fields\CheckboxField;
 
 class DistributorQuestionableProductsForm extends DistributorForm
 {
-    public $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
     public $fieldTemplate = 'admin/distributor/form/checkbox_field.tpl';
 
     public function getFieldsets()

@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
@@ -43,6 +44,10 @@ use Xcart\Manufacturer;
  * @property string code
  * @property string submit_to_operator
  * @property mixed currency
+ * @property string d_contact_name_for_templates
+ * @property TemplateModel request_avail_template
+ * @property string d_send_to_email_14
+ * @property DistributorTabModel[] tabs
  */
 class DistributorModel extends Model
 {
@@ -111,7 +116,19 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
-            'd_message_body_14' => [
+            'request_avail_template' => [
+                'field' => 'request_avail_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['request_avail_template_id' => 'id'],
+                'null' => false,
+                'default' => TemplateModel::REQUEST_AVAILABILITY_TEMPLATE_ID,
+            ],
+            'd_email_subject_14' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ],'d_message_body_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
@@ -139,52 +156,52 @@ class DistributorModel extends Model
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'd_availability_must_be_checked' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N'
+                'default' => false
             ],
             'd_sec14_show_header' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'allow_dispatch_off_working_hours' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N'
+                'default' => false
             ],
             'add_cost_to_us_column_to_dispatch_message' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N'
+                'default' => false
             ],
             'd_sec14_show_items_stock' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'd_sec14_show_shipto' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'd_sec14_show_items_cost' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'd_sec14_show_footer' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y'
+                'default' => true
             ],
             'update_approximation_shipping_rates' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N'
+                'default' => false
             ],
             'shipping_rates' => [
                 'class' => HasManyField::className(),
@@ -211,47 +228,47 @@ class DistributorModel extends Model
             ],
             'distributor_charges_for_each_order_twice_and_split_invoices' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_available_on_distributor_site_checkbox' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_sent_by_email_to' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_put_on_the_invoices' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_invoices_sent_by_email_to' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_invoices_sent_by_fax_to' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_invoices_mailed_to_our_checkbox' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'allow_pre_orders' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'calculate_shipping' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'products_always_verify' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'warehouse_pickups_are_allowed' => [
                 'class' => BooleanCharField::class,
-                'default' => 'N'
+                'default' => false
             ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
@@ -456,6 +473,11 @@ class DistributorModel extends Model
                 'modelClass' => ImageMModel::class,
                 'link' => ['manufacturerid' => 'id'],
             ],
+            'tabs' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorTabModel::class,
+                'link' => ['manufacturerid' => 'distributor_id'],
+            ],
             'carriers' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => TrackingLinksCarrierModel::class,
@@ -629,5 +651,10 @@ class DistributorModel extends Model
             }
         }
         return $res ?? [];
+    }
+
+    public function getContactNameForTemplates(): string
+    {
+        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
     }
 }

@@ -61,19 +61,19 @@ class BrandModel extends Model
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'Y',
+                'default' => true,
                 'verboseName' => 'Availability'
             ],
             'prevent_search_indexing_of_all_brand_products' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N',
+                'default' => false,
                 'verboseName' => 'Prevent search indexing of all brand products'
             ],
             'prevent_search_indexing_brand_page' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => 'N',
+                'default' => false,
                 'verboseName' => 'Prevent search indexing brand page'
             ],
             'disclaimer_text' => [

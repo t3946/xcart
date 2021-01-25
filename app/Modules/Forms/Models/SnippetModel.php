@@ -10,6 +10,9 @@ use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\RenderTrait;
 
+/**
+ * @property string code
+ */
 class SnippetModel extends Model
 {
     use RenderTrait;

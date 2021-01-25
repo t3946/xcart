@@ -74,7 +74,7 @@ class MenuLibrary extends TemplateLibrary
                         return [
                             'url' => "/{$model->url}",
                             'name' => $model->name,
-                            'class' => $model->url === 'purchase-orders' && $site_model->code === 'HC' ? 'stop-corona' : '',
+                            'class' => '',
                             'items' => [],
                         ];
                     }

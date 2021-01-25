@@ -268,7 +268,7 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                         <b>One day tag Unset time</b>:
                 </td>
                 <td width="40%">
-                        <input style="height: 12px;" size="3" type="text" id="one_day_unset_time_box" name="one_day_unset_time" value="{$config.Attention_tags_invoices.one_day_unset_time}"/>
+                        <input size="3" type="text" id="one_day_unset_time_box" name="one_day_unset_time" value="{$config.Attention_tags_invoices.one_day_unset_time}"/>
                         <select  style="max-width: 194px;" name="tag_one_day_unset">
                                 <option value="">None</option>
                                 {foreach from=$attention_tags_values item=v key=k}
@@ -276,13 +276,9 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                                 {/foreach}
                         </select>
                         {literal}
-
-                                <script type="text/javascript" language="JavaScript 1.2">
-                                        <!--
+                                <script>
                                         $('#one_day_unset_time_box').timepicker()();
-                                        -->
                                 </script>
-
                         {/literal}
                 </td>
         </tr>
@@ -302,26 +298,73 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                         <b>Customer service tips tag</b>:
                 </td>
                 <td width="40%">
-                        <select  style="max-width: 194px;" name="tag_customer_tips">
+                        <select style="max-width: 194px;" name="tag_customer_tips">
                                 <option value="">None</option>
-                            {foreach from=$attention_tags_values item=v key=k}
-                                    <option value="{$v.status_id}" {if $v.status_id eq $config.Order_related_tags.tag_customer_tips}selected="selected"{/if}>{$v.status}</option>
-                            {/foreach}
+                                {foreach from=$attention_tags_values item=v key=k}
+                                        <option value="{$v.status_id}"
+                                                {if $v.status_id eq $config.Order_related_tags.tag_customer_tips}selected="selected"{/if}>{$v.status}</option>
+                                {/foreach}
                         </select>
-                    {literal}
-
-                            <script type="text/javascript" language="JavaScript 1.2">
-                                    <!--
-                                    $('#one_day_unset_time_box').timepicker()();
-                                    -->
-                            </script>
-
-                    {/literal}
+                        {literal}
+                                <script>
+                                        $('#one_day_unset_time_box').timepicker()();
+                                </script>
+                        {/literal}
                 </td>
         </tr>
-
+        <tr>
+                <td colspan="3" align="center">
+                        <input type="submit" value=" Save ">
+                </td>
+        </tr>
 </table>
-
-<br />
-<input type="submit" value=" Save ">
 </form>
+<br/>
+<br/>
+<form name="tag_settings_form" action="{$xcartApp->router->url('order:order_note_tag_settings')}" method="POST">
+        <input type="hidden" name="option" value="Templates_OrderRelatedMessages_Tags">
+        <table width="100%">
+                <tr>
+                        <td>Add the following Attention tag when order note is left:</td>
+                        <td>
+                                <select id="o_status" style="width:230px;" class="select2"  name="order_note_tag">
+                                        <option></option>
+                                        {foreach from=$ca_statuses item=item_v key=key_k}
+                                                <option {if $global_config.order_note_tag == $item_v.status_id}selected="selected"{/if}value="{$item_v.status_id}">{$item_v.status}</option>
+                                        {/foreach}
+                                </select>
+                        </td>
+                        <td width="40%"></td>
+                </tr>
+                <tr>
+                        <td>Do NOT apply Attention tag when order note is left by:</td>
+                        <td>
+                                <select style="width:230px;" id="o_users" multiple class="select2" name="order_note_tag_users[]">
+                                        <option></option>
+                                        {foreach from=$users item=item_u key=key_k}
+                                                <option {if in_array($item_u->id, ','|explode:$global_config.order_note_tag_users)}selected="selected"{/if} value="{$item_u->id}">{$item_u}</option>
+                                        {/foreach}
+                                </select>
+                        </td>
+                </tr>
+                <tr>
+                        <td colspan="3" align="center">
+                                <button type="submit">Save</button>
+                        </td>
+                </tr>
+        </table>
+</form>
+<script type="text/javascript">
+        {literal}
+        $('#o_status').select2({
+                allowClear: false,
+                placeholder: 'Click to select Attention Tag'
+        });
+        $('#o_users').select2({
+                allowClear: false,
+                closeOnSelect: false,
+                placeholder: 'Click to select Users'
+        });
+        {/literal}
+</script>
+

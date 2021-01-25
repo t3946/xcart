@@ -14,6 +14,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\TranslatesFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
+use Xcart\App\Form\Form;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\FileField;
@@ -147,9 +148,9 @@ class PBXAdmin extends Admin
         return [];
     }
 
-    public function getFilterForm()
+    public function getFilterForm(): ?Form
     {
-        return new TranslatesFilterForm;
+        return new CallsFilterForm();
     }
 
     public function handleFilter(QuerySet $qs, $form): QuerySet

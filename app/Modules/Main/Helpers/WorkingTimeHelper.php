@@ -93,18 +93,20 @@ class WorkingTimeHelper
     }
 
     /**
-     * Следующий прадничный день
+     * Следующий праздничный день
      * @param DateTime $dateTime
      * @return RequestAvailabilityOptionModel|null
      */
     public static function getNextHoliday(DateTime $dateTime):? RequestAvailabilityOptionModel
     {
-        return RequestAvailabilityOptionModel::objects()
+        /** @var RequestAvailabilityOptionModel $model */
+        $model =  RequestAvailabilityOptionModel::objects()
             ->order([new Expression("STR_TO_DATE(date_mm_dd_yyyy, '%c/%e/%Y')")])
             ->limit(1)
             ->get([
                 new Expression("STR_TO_DATE(date_mm_dd_yyyy, '%c/%e/%Y') >= '{$dateTime->format('Y-m-d')}'"),
                 'active' => 'Y'
             ]);
+        return $model;
     }
 }

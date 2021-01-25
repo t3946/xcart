@@ -16,7 +16,6 @@ use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -57,11 +56,11 @@ abstract class Admin
      *
      * @var null|string
      */
-    public $sort = null;
+    public ?string $sort = null;
 
-    public $innerRender = false;
+    public bool $innerRender = false;
 
-    public $autoFixSort = true;
+    public bool $autoFixSort = true;
 
     /** @var Model */
     public $model;
@@ -92,7 +91,6 @@ abstract class Admin
     {
         return [
             'update',
-            'view',
             'remove'
         ];
     }
@@ -303,13 +301,16 @@ abstract class Admin
                         $columnConfig['order'] = $attribute;
                     }
                 }
-                $columnConfig['template'] = $this->columnDefaultTemplate;
+                $columnConfig['template'] ??= $this->columnDefaultTemplate;
                 $config[$name] = $columnConfig;
             }
         }
         foreach ($config as $key => $item) {
             if (!isset($item['title'])) {
                 $config[$key]['title'] = ucfirst($key);
+            }
+            if (!isset($item['template'])) {
+                $config[$key]['template'] = $this->columnDefaultTemplate;
             }
         }
         if ($userColumns) {
@@ -330,7 +331,7 @@ abstract class Admin
         ];
     }
 
-    public function getFilterForm()
+    public function getFilterForm(): ?Form
     {
         return null;
     }
@@ -526,8 +527,9 @@ abstract class Admin
     /**
      * @param $qs QuerySet
      * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function fixSort($qs)
+    public function fixSort(QuerySet $qs): QuerySet
     {
         if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
             $newQs = clone($qs);
@@ -538,11 +540,16 @@ abstract class Admin
                 $connection->query('SET @position = 0;');
 
                 $model = $this->getModel();
-                $pk = $model->getPrimaryKeyName();
+                $newQs->order([$this->sort, "-{$model::getPrimaryKeyName()}"]);
 
-                $newQs->order([$this->sort, $pk])->update([
-                    $this->sort => new Expression("@position := (@position + 1)")
+                $qb = $newQs->getQueryBuilder();
+                $qb->setAlias(null);
+                $sql = strtr('{update}{where}{order}', [
+                    '{update}' => $qb->getAdapter()->sqlUpdate($model::tableName(), [$this->sort => new Expression("@position := (@position + 10)")]),
+                    '{where}' => $qb->buildWhere(),
+                    '{order}' => $qb->buildOrder()
                 ]);
+                $connection->query($sql);
             }
         }
         return $qs;
@@ -609,6 +616,16 @@ abstract class Admin
             'admin' => static::classNameShort(),
             'pk' => $pk ?: $this->getModelPk(),
         ], $query);
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return false;
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return false;
     }
 
     public function getInfoUrl($pk = null)
@@ -826,8 +843,9 @@ abstract class Admin
         $this->model = $model;
         $form->setInstance($model);
 
-        if ((string)$model !== '') {
-            $this->setBreadcrumbs((string)$model);
+        if ((string)$model) {
+            $bread = $new ? sprintf("Adding a new %s", strtolower($model)) : (string)$model;
+            $this->setBreadcrumbs($bread);
         }
 
         $request = Xcart::app()->request;
@@ -838,27 +856,18 @@ abstract class Admin
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
             if ($form->isValid() && $form->save()) {
                 if ($request->getIsAjax()) {
-                    $this->jsonResponse(['state' => 'success']);
-                } else {
-                    Xcart::app()->flash->success('Changes have been successfully applied.');
+                    $this->jsonResponse(['status' => 'success', 'close' => true]);
+                    return;
+                }
+                Xcart::app()->flash->success('Changes have been successfully applied.');
 
-                    $next = $_POST['save'] ?? 'save';
-                    if ($next === 'save') {
-                        $request->redirect(($this->parent_pk) ? $this->getParentAllUrl() : $this->getAllUrl());
-                    } elseif ($next === 'save-stay') {
-                        $request->redirect($this->getUpdateUrl($model->pk));
-                    } else {
-                        $request->redirect($this->getCreateUrl());
-                    }
-                }
-            } else {
-                if (!$request->getIsAjax()) {
-                    Xcart::app()->flash->error('Please, fix errors');
-                }
+                $this->redirectAfterSave($model, $_POST['save'] ?? 'save');
+
+            } elseif (!$request->getIsAjax()) {
+                Xcart::app()->flash->error('Please, fix errors');
             }
         }
 
-        //$this->setBreadcrumbs(($pk)? 'Edit' : 'Add');
         $template = $new ? $this->createTemplate : $this->updateTemplate;
         $this->renderInternal($template, [
             'form' => $form,
@@ -867,37 +876,50 @@ abstract class Admin
         ]);
     }
 
+    public function redirectAfterSave(Model $model, $next): void
+    {
+        $request = Xcart::app()->request;
+        if ($next === 'save') {
+            $request->redirect(($this->parent_pk) ? $this->getParentAllUrl() : $this->getAllUrl());
+        } elseif ($next === 'save-stay') {
+            $request->redirect($this->getUpdateUrl($model->pk));
+        } else {
+            $request->redirect($this->getCreateUrl());
+        }
+    }
+
     /**
      * @param $qs QuerySet
      * @return bool
      */
-    public function getCanSort($qs)
+    public function getCanSort(QuerySet $qs): bool
     {
         if ($this->sort) {
             $order = $qs->getOrder();
-            return $order == [$this->sort];
-        } else {
-            return false;
+            return $order === [$this->sort];
         }
+
+        return false;
     }
 
-    public function sort($pkList, $to, $prev, $next)
+    public function sort($pkList, $to, $prev, $next): void
     {
+        $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
-        $positions = $qs->filter(['pk__in' => $pkList])->valuesList(['position'], true);
+        $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);
         asort($positions);
         $result = array_combine($pkList, $positions);
 
         $model = $qs->getModel();
         foreach ($result as $pk => $position) {
-            $model::objects()->filter(['pk' => $pk])->update(['position' => $position]);
+            $model::objects()->filter(['pk' => $pk])->update([$sort => $position]);
         }
         $this->jsonResponse([
             'success' => true
         ]);
     }
 
-    public function setColumns($columns)
+    public function setColumns($columns): void
     {
         $config = AdminConfig::fetch(static::getModuleName(), static::classNameShort());
         $config->setColumnsList($columns);
@@ -943,18 +965,18 @@ abstract class Admin
     }
 
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
-        return [[$this->getName(), $this->getAllUrl()]];
+        return [[static::getName(), $this->getAllUrl()]];
     }
 
     /**
      * @param $admin Admin
      */
-    public function setBreadcrumbs($last = null)
+    public function setBreadcrumbs($last = null): void
     {
         foreach ($this->getBreadcrumbs() as $bread) {
-            list ($name, $url) = $bread;
+            [$name, $url] = $bread;
             Xcart::app()->breadcrumbs->add($name, $url);
         }
 

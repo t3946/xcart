@@ -11,7 +11,7 @@ use Xcart\App\Orm\Model;
 
 class TaxesAdmin extends Admin
 {
-    public $sort = 'position';
+    public ?string $sort = 'position';
 
     public function getListColumns()
     {
@@ -67,5 +67,10 @@ class TaxesAdmin extends Admin
     public function getListGroupActions()
     {
         return ['add'];
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
     }
 }

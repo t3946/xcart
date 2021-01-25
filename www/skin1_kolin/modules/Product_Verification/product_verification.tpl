@@ -148,9 +148,11 @@
         {/foreach}*}
 
         <tr id="click_to_back_changes" style="display:none;">
-            <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;"
-                                                                                 onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">View
-                    already verified products</a></td>
+            <td colspan="7" style="padding: 10px 3px; background-color:#FFF;">
+                <a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">
+                    View already verified products
+                </a>
+            </td>
         </tr>
 
 

@@ -51,7 +51,7 @@ abstract class NestedAdmin extends Admin
         return ($this->parent_pk) ? $manager->children() : $manager->roots();
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         $bread = parent::getBreadcrumbs();
         $model = $this->getInstance();

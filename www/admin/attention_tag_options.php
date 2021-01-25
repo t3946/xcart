@@ -61,7 +61,3 @@ if (!empty($attention_tags_values) && is_array($attention_tags_values)){
 
 $smarty->assign("attention_tags_values", $attention_tags_values);
 $smarty->assign("allowed_operators", $allowed_operators);
-
-//func_print_r($attention_tags_values);
-
-?>
