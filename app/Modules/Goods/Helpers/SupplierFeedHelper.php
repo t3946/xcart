@@ -415,8 +415,11 @@ class SupplierFeedHelper
                 }
             }
         }
-        $exclude = $fv_ids ? ['fv_id__in' => $fv_ids] : [];
-        FilterProductModel::objects()->exclude($exclude)->delete(['productid' => $model->productid, 'is_feed' => 1]);
+        $qs = FilterProductModel::objects();
+        if ($fv_ids) {
+            $qs->exclude(['fv_id__in' => $fv_ids]);
+        }
+        $qs->delete(['productid' => $model->productid, 'is_feed' => 1]);
 
         return $model;
     }
