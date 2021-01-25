@@ -146,11 +146,12 @@ $(function () {
             var me = this;
             var $table = me.getTable();
 
-            if (typeof $table.attr('data-sorting') != typeof undefined)
+            if (typeof $table.attr('data-sorting') !== typeof undefined)
             {
                 $table.find("tbody").sortable({
                     axis: 'y',
                     placeholder: "highlight",
+                    handle: ".sort",
                     start: function(e, ui){
                         ui.placeholder.height(ui.item.height());
                     },

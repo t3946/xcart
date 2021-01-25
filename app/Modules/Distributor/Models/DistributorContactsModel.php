@@ -17,6 +17,7 @@ use Xcart\App\Orm\Model;
  * @property string contact_name
  * @property int id
  * @property string email
+ * @property string phone
  */
 class DistributorContactsModel extends Model
 {
@@ -84,7 +85,7 @@ class DistributorContactsModel extends Model
         if (strlen($phone_normalized = PhoneHelper::phoneNormalize($this->phone)) === 10){
             return PhoneHelper::getPhonePrefix($this->distributor->m_country) . $phone_normalized;
         }
-        return $this->phone;
+        return $this->phone ?? '';
     }
 
     public function __toString()

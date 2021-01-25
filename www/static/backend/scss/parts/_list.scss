@@ -296,10 +296,11 @@
     }
 
     .list-footer {
-      $list-footer-height: 60px;
+      $list-footer-height: 30px;
       background-color: #fff;
 
       border: 1px solid #DFDFDF;
+      border-top : none;
 
       font-size: 13px;
       color: #000000;

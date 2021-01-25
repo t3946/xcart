@@ -1,7 +1,8 @@
 <?php
 namespace Xcart\App\Form\Fields;
 
-use Xcart\App\Orm\ManagerBase;
+use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Model;
 
 class ListViewField extends Field
 {
@@ -52,12 +53,12 @@ class ListViewField extends Field
 
     public function getRenderValue()
     {
-        /** @var \Xcart\App\Orm\Model $model */
+        /** @var Model $model */
         $model = $this->getForm()->getInstance();
         $field = $model->getField($this->getName());
 
-        if ($field instanceof \Xcart\App\Orm\Fields\RelatedField) {
-            /** @var  \Xcart\App\Orm\Fields\RelatedField $field */
+        if ($field instanceof RelatedField) {
+            /** @var  RelatedField $field */
             $manager = $field->getManager();
 
             return $manager->order($this->defaultOrder)->all();
@@ -67,7 +68,7 @@ class ListViewField extends Field
 
     public function renderInput()
     {
-        /** @var \Xcart\App\Orm\Model $model */
+        /** @var Model $model */
         $model = $this->getForm()->getInstance();
         if ($model->getIsNewRecord()) {
             return $this->innerRender($this->emptyTemplate, []);
@@ -79,9 +80,6 @@ class ListViewField extends Field
         $admin->ownerField = $this->getName();
         $qs = $admin->getQuerySet();
         $qs = $admin->fixSort($qs);
-//        $admin->innerRender = true;
-//        $admin->all();
-
 
         return $this->innerRender($this->listTemplate, [
             'field' => $this,

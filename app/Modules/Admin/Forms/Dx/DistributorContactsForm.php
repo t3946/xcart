@@ -6,7 +6,6 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Distributor\Models\DistributorContactsModel;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;

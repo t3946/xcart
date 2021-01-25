@@ -8091,10 +8091,11 @@ h1 {
 .list-block .list-wrapper .list-footer {
   background-color: #fff;
   border: 1px solid #DFDFDF;
+  border-top: none;
   font-size: 13px;
   color: #000000; }
   .list-block .list-wrapper .list-footer .list-footer-block {
-    height: 60px; }
+    height: 30px; }
     .list-block .list-wrapper .list-footer .list-footer-block.total {
       margin-right: 36px; }
     .list-block .list-wrapper .list-footer .list-footer-block.group {

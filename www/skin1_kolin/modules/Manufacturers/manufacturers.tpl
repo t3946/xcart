@@ -205,7 +205,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {/if}
 
 <tr>
-<td colspan="6"><br /><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="javascript: self.location = '/admin/distributor/add';" /></td>
+<td colspan="6"><br /><input type="button" value="Add new distributor" onclick="self.location = '/admin/distributor/add';" /></td>
 </tr>
 
 </table>
@@ -228,7 +228,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {$pager}
 
 {/capture}
-
+    <br/>
     {include file="dialog.tpl" title="Search distributor" content=$smarty.capture.dialogsearch extra='width="100%"'}
     <br/>
     <br/>

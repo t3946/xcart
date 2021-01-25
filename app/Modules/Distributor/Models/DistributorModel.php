@@ -47,6 +47,7 @@ use Xcart\Manufacturer;
  * @property string d_contact_name_for_templates
  * @property TemplateModel request_avail_template
  * @property string d_send_to_email_14
+ * @property DistributorTabModel[] tabs
  */
 class DistributorModel extends Model
 {
@@ -472,6 +473,11 @@ class DistributorModel extends Model
                 'modelClass' => ImageMModel::class,
                 'link' => ['manufacturerid' => 'id'],
             ],
+            'tabs' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorTabModel::class,
+                'link' => ['manufacturerid' => 'distributor_id'],
+            ],
             'carriers' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => TrackingLinksCarrierModel::class,
@@ -649,6 +655,6 @@ class DistributorModel extends Model
 
     public function getContactNameForTemplates(): string
     {
-        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Partners'));
+        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
     }
 }

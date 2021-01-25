@@ -4,25 +4,17 @@
           <a href="#description" aria-selected="true">{t 'Description'}</a>
         </li>
 
-        {*<li class="tabs-title">*}
-          {*<a href="#brand" aria-selected="false">Brand</a>*}
-        {*</li>*}
-
         <li class="tabs-title">
           <a href="#shipping" aria-selected="false">{t 'Shipping'}</a>
         </li>
 
         {foreach $tabs as $tab}
-            {if $tab.code == '__shipping__'}{continue}{/if}
+            {if $tab->name === 'Shipping'}{continue}{/if}
 
             <li class="tabs-title">
-              <a href="#{$tab.code}" aria-selected="false">{$tab.name}</a>
+              <a href="#{$tab->tab_id}" aria-selected="false">{$tab->name}</a>
             </li>
         {/foreach}
-
-        {*<li class="tabs-title">*}
-          {*<a href="#reviews" aria-selected="false">Product reviews</a>*}
-        {*</li>*}
 
         <li class="tabs-title">
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
@@ -37,38 +29,24 @@
             </div>
         </div>
 
-        {*<div class="tabs-panel " id="brand">*}
-            {*<div class="tab-brand tab-content">*}
-                {*{include 'product/tabs/_brand.tpl' model=$model}*}
-            {*</div>*}
-        {*</div>*}
-
         <div class="tabs-panel" id="shipping">
             <div class="tab-shipping tab-content">
-                {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs['__shipping__']!:null}
+                {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs->filter(['name' => 'shipping'])!:null}
             </div>
         </div>
 
         {foreach $tabs as $tab}
-            {if $tab.code == '__shipping__'}{continue}{/if}
+            {if $tab->name === 'Shipping'}{continue}{/if}
 
-            <div class="tabs-panel tab-{$tab.code}" id="{$tab.code}">
+            <div class="tabs-panel tab-{$tab->name}" id="{$tab->tab_id}">
                 <div class="tab-s3 tab-content">
-                    <div class="h2">{$tab.name}</div>
+                    <div class="h2">{$tab->name}</div>
                     <div class="content">
-                        {raw $tab.content}
+                        {raw $tab->content}
                     </div>
                 </div>
             </div>
         {/foreach}
-
-        {*<div class="tabs-panel" id="reviews">*}
-            {*<div class="tab-content tab-reviews">*}
-                {*{include 'product/tabs/_reviews.tpl' model=$model}*}
-            {*</div>*}
-        {*</div>*}
-
-
 
         <div class="tabs-panel" id="questions" data-productid="{$model->productid}">
             <div class="tab-content tab-questions">

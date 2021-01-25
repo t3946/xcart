@@ -4,12 +4,13 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Admin\Admin\DxTabsAdmin;
 use Modules\Core\Models\LanguageModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\HiddenField;
+use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\RadioField;
-use Xcart\App\Form\Fields\TextAreaField;
 
 class DistributorFrontEndMessagesForm extends DistributorForm
 {
@@ -18,7 +19,7 @@ class DistributorFrontEndMessagesForm extends DistributorForm
     public function getFieldsets()
     {
         return [[
-            'cart_manufact_text_displayed',
+            'tabs',
             'lead_time_message',
             'products_quantity_behavior',
             'calculate_shipping',
@@ -29,13 +30,14 @@ class DistributorFrontEndMessagesForm extends DistributorForm
     public function getFields()
     {
         return [
-            'cart_manufact_text_displayed' => [
-                'class' => TextAreaField::class,
+            'tabs' => [
+                'class' => ListViewField::class,
+                'adminClass' => DxTabsAdmin::class,
                 'label' => 'Front-end product page tabs',
                 'hint' => LanguageModel::translate('help_dx_front_page_tabs_text') ?? 'help_dx_front_page_tabs_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['rows' => 5, 'cols' => 60]
+
             ],
             'lead_time_message' => [
                 'class' => CharField::class,

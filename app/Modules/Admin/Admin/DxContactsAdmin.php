@@ -16,6 +16,7 @@ class DxContactsAdmin extends Admin
     public DistributorModel $dxModel;
 
     public $allTemplate = 'admin/distributor/dx_3.tpl';
+    public $listItemActionsTemplate = 'admin/distributor/form/list/_item_actions.tpl';
     public ?string $sort = 'position';
 
     public function getForm()
@@ -129,5 +130,10 @@ class DxContactsAdmin extends Admin
             'model' => $model,
             'new' => $new
         ]);
+    }
+
+    public function getListItemActions()
+    {
+        return array_merge( ['call'], parent::getListItemActions());
     }
 }

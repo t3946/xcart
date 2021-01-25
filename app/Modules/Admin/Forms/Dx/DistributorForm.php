@@ -22,12 +22,8 @@ class DistributorForm extends ModelForm
             1 => [
                 'title' => 'General distributor information',
                 'distributor_section' => '1',
-                'form' => DistributorGeneralForm::class
-            ],
-            15 => [
-                'title' => 'Quick links',
-                'distributor_section' => '15',
-                'form' => DistributorQuickLinksForm::class,
+                'form' => DistributorGeneralForm::class,
+                'required' => true,
             ],
         ],
         'Communication with distributor' => [
@@ -35,6 +31,7 @@ class DistributorForm extends ModelForm
                 'title' => 'Distributor contacts',
                 'distributor_section' => '3',
                 'form' => DistributorContactForm::class,
+                'required' => true,
             ],
             50 => [
                 'title' => 'Communication with distributor',
@@ -47,6 +44,7 @@ class DistributorForm extends ModelForm
                 'title' => 'Front-end product page behavior',
                 'distributor_section' => '2',
                 'form' => DistributorFrontEndMessagesForm::class,
+                'required' => true,
             ],
         ],
         'Product and inventory management' => [
@@ -54,16 +52,12 @@ class DistributorForm extends ModelForm
                 'title' => 'Distributor pricing equations',
                 'order_by' => '50',
                 'distributor_section' => '5',
-                'form' => DistributorPriceForm::class
+                'form' => DistributorPriceForm::class,
+                'required' => true,
             ],
             22 => [
                 'title' => 'Product page locked fields',
                 'distributor_section' => '22'
-            ],
-            16 => [
-                'title' => 'Product questions',
-                'distributor_section' => '16',
-                'form' => DistributorProductQuestionsForm::class,
             ],
             31 => [
                 'title' => 'Product verification settings',
@@ -79,23 +73,27 @@ class DistributorForm extends ModelForm
                 'title' => 'External marketplaces',
                 'distributor_section' => '40',
                 'form' => DistributorExcludedMarketplacesForm::class,
+                'required' => true,
             ],
             51 => [
                 'title' => 'Questionable products',
                 'distributor_section' => '51',
                 'form' => DistributorQuestionableProductsForm::class,
+                'required' => true,
             ],
         ],
         'Submitting order to distributor' => [
             14 => [
                 'title' => 'Requesting availability / shipping quote / cost to us',
                 'distributor_section' => '14',
-                'form' => DistributorRequestAvailForm::class
+                'form' => DistributorRequestAvailForm::class,
+                'required' => true,
             ],
             8 => [
                 'title' => 'Order submission',
                 'distributor_section' => '8',
-                'form' => DistributorOrderSubmissionForm::class
+                'form' => DistributorOrderSubmissionForm::class,
+                'required' => true,
             ],
         ],
         'Shipping order to customer' => [
@@ -103,24 +101,27 @@ class DistributorForm extends ModelForm
                 'title' => 'Distributor ships from',
                 'distributor_section' => '6',
                 'form' => DistributorShippesFromForm::class,
+                'required' => true,
             ],
             7 => [
                 'title' => 'Distributor shipping policy',
                 'distributor_section' => '7',
-                'form' => DistributorShippingPolicyForm::class
+                'form' => DistributorShippingPolicyForm::class,
+                'required' => true,
             ],
             19 => [
                 'title' => 'Shipping server markups',
-                'distributor_section' => '19'
+                'distributor_section' => '19',
             ],
             21 => [
                 'title' => 'Flat rate shipping markups',
-                'distributor_section' => '21'
+                'distributor_section' => '21',
             ],
             12 => [
                 'title' => 'Order tracking',
                 'distributor_section' => '12',
                 'form' => DistributorOrderTrackingForm::class,
+                'required' => true,
             ],
         ],
 
@@ -129,7 +130,8 @@ class DistributorForm extends ModelForm
                 'title' => 'Return policy',
                 'order_by' => '100',
                 'distributor_section' => '10',
-                'form' => DistributorReturnPolicyForm::class
+                'form' => DistributorReturnPolicyForm::class,
+                'required' => true,
             ],
         ],
 
@@ -139,29 +141,23 @@ class DistributorForm extends ModelForm
                 'title' => 'Distributor invoices',
                 'order_by' => '110',
                 'distributor_section' => '13',
-                'form' => DistributorInvoiceForm::class
+                'form' => DistributorInvoiceForm::class,
+                'required' => true,
             ],
             11 => [
                 'title' => 'Payment to distributor arrangement',
                 'order_by' => '120',
                 'distributor_section' => '11',
                 'form' => DistributorPaymentToDxForm::class,
+                'required' => true,
             ],
             9 => [
                 'title' => 'Tax policy',
                 'order_by' => '90',
-                'distributor_section' => '9'
+                'distributor_section' => '9',
+                'required' => true,
             ],
         ],
-
-        'Bulk operations' => [
-            30 => [
-                'title' => 'Clone distributor to another storefront',
-                'order_by' => '170',
-                'distributor_section' => '30'
-            ],
-        ],
-
     ];
 
     public static function getSection($section = null)

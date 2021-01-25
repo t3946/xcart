@@ -309,6 +309,9 @@ abstract class Admin
             if (!isset($item['title'])) {
                 $config[$key]['title'] = ucfirst($key);
             }
+            if (!isset($item['template'])) {
+                $config[$key]['template'] = $this->columnDefaultTemplate;
+            }
         }
         if ($userColumns) {
             $safeUserColumns = [];

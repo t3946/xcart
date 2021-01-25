@@ -97,16 +97,24 @@
                             <legend><b style="font-size: 15px;color: red;">{$fN}</b></legend>
                             <ul class="ul-main" style="margin: 0">
                                 {foreach $fieldset as $key => $item first=$first}
+                                    {if $item.distributor_section == $section}
+                                        {set $current_section = $item}
+                                    {/if}
                                     <li>
-                                        <a href="" class="VertMenuItems"><img alt="" src="/skin1_kolin/images/rarrow.gif"></a>
+                                        <a href="" class="VertMenuItems">
+                                            <img alt="" src="/skin1_kolin/images/rarrow.gif">
+                                        </a>
                                         {if $item.distributor_section != $section}
-                                        <a style="color: #330000;" href="{$distributorModel->getAdminUrl($item.distributor_section)}">
+                                            <a style="color: #330000;" href="{$distributorModel->getAdminUrl($item.distributor_section)}">
                                         {/if}
                                         {if $item.distributor_section == $section}<b>{/if}
-                                            {$item['title']}
+                                        {$item['title']}
                                         {if $item.distributor_section == $section}</b>{/if}
                                         {if $item.distributor_section != $section}
-                                        </a>
+                                            </a>
+                                        {/if}
+                                        {if $item['required']}
+                                            <span style="color: red;font-size:1.8em;line-height: 10px;top: 7px;position: relative;">*</span>
                                         {/if}
                                     </li>
                                 {/foreach}
@@ -117,8 +125,6 @@
                 </td>
             </tr>
         </table>
-        <br/>
-        <br/>
     {/if}
 {/block}
 
@@ -142,19 +148,7 @@
             color: inherit;
         }
     </style>
-    <div align="right">
-        <table cellspacing="0" cellpadding="0">
-            <tr>
-                <td>
-                    <a class="admin_link" href="/admin/manufacturers.php?&word=num">Distributor list</a>
-                </td>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td>
-                    <a class="admin_link" href="{url 'admin:dx_add'}">Add Distributor</a>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <h1 style="text-align: center">{$current_section[title]}</h1>
 {/block}
 
 {block 'js'}
