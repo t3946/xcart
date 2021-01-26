@@ -192,10 +192,7 @@ abstract class BasePagination
             $this->paginated = true;
             $this->total = $this->dataSource->getTotal($this->source);
 
-            if (
-//                ($this->total > $this->getPageSize()) &&
-                ceil($this->total / $this->getPageSize()) < $this->getPage()
-            ) {
+            if (ceil($this->total / $this->getPageSize()) < $this->getPage()) {
                 $this->handler->wrongPageCallback();
             }
 

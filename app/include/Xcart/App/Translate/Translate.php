@@ -43,21 +43,17 @@ class Translate
         return $this->stringReplacement($text, $params);
     }
 
-
     public function stringReplacement($str, array $params = [])
     {
-        if ($params) {
-            //$str = $this->translator->trans($str, $params);
-        }
-
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getConfig();
 
         $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language'] ?? 'en');
+
         if ($str_o === '') {
             $str_o = $str;
         }
+
         return $str_o;
     }
-
 }

@@ -9163,6 +9163,13 @@ i.icon.m {
   padding: 0 15px;
   font-weight: 500; }
 
+.translates-table-actions {
+  white-space: nowrap;
+  padding: 5px !important; }
+
+.translates-table {
+  white-space: normal; }
+
 .admin form {
   position: relative; }
 

@@ -7,7 +7,7 @@ namespace Modules\Goods\Admin;
 use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Goods\Forms\FeedForm;
+use Modules\Goods\Forms\LanguageForm;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
@@ -20,7 +20,7 @@ class FeedAdmin extends Admin
 
     public function getForm()
     {
-        return new FeedForm;
+        return new LanguageForm;
     }
 
     public function getModel()

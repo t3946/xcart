@@ -392,6 +392,7 @@ abstract class Admin
     }
 
     /**
+     * get sql query builder based on current model
      * @return QuerySet
      */
     public function getQuerySet()
@@ -424,8 +425,10 @@ abstract class Admin
     }
 
     /**
+     * add filter conditions to query set
      * @param $qs QuerySet
      * @return QuerySet
+     * @throws \Exception
      */
     public function handleSearch($qs, $search)
     {
