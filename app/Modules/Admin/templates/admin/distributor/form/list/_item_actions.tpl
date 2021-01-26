@@ -9,7 +9,7 @@
 {/if}
 
 {if "update" in $actions}
-    <a title="Edit" href="{$admin->getUpdateUrl($pk)}">
+    <a title="Edit" {if $admin->isAjaxUpdate()}class="ajax"{/if} href="{$admin->getUpdateUrl($pk)}">
         <i class="icon-edit"></i>
     </a>
 {/if}
