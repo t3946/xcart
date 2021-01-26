@@ -6,7 +6,7 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Admin\Controllers\BackendController;
 use Modules\Order\Models\OrderModel;
-use Modules\PBX\Forms\TranslatesFilterForm;
+use Modules\PBX\Forms\CallsFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\AnveoListensModel;
 use Modules\PBX\Models\PbxAnveoCallModel;
@@ -19,7 +19,7 @@ class PBXController extends BackendController
 {
     public function index()
     {
-        $form = new TranslatesFilterForm();
+        $form = new CallsFilterForm();
         $form->populate($_GET);
 
         $qs = PbxAnveoCallModel::objects()->order(['-start_at']);

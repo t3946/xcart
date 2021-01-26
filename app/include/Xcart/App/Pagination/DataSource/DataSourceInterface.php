@@ -8,9 +8,6 @@
 
 namespace Xcart\App\Pagination\DataSource;
 
-use Xcart\App\Orm\Manager;
-use Xcart\App\Orm\QuerySet;
-
 interface DataSourceInterface
 {
     /**
@@ -20,10 +17,9 @@ interface DataSourceInterface
     public function getTotal($source);
 
     /**
-     * select rows for one pagination page
-     * @param Manager|QuerySet $source query builder
-     * @param int $page pagination page number
-     * @param int $pageSize number objects on pagination page
+     * @param $source
+     * @param $page
+     * @param $pageSize
      * @return array
      */
     public function applyLimit($source, $page, $pageSize);

@@ -1,13 +1,7 @@
 # xcart
-# Project hierarchy
-
-|--xcart
-|--app
-|  |--include
-|     |--Xcart
-|        |--App (Mindy engine)
-
 Before work on Branches setup these files:
+
+- /app/config/settings_local.php
 ```php
 <?php
 return [
@@ -26,6 +20,13 @@ return [
 ];
 ```
 
+- Create folders:
+    - /app/runtime
+    - /www/media/
+    - /www/files/
+    - /www/product_files/
+    - /www/images/
+
 - Static files build:
     - install `bower`
     - install `node.js` and `npm`
@@ -34,17 +35,10 @@ return [
     - run `npm run gulp watch:frontend` or `npm run gulp watch:backend` for building distribution static files.
 
 ---
+#Соглашение о разработке
 
-
-#Development Agreements
-##Layout
-- Use BEM methodology form yandex company
-- For BEM blocks and BEM elements to create new directory 
-- Don't use scss many-level css rules (rule inside rule)
-- Don't use !important in styles
-
-##Naming
-> Module hierarchy example
+##Именование
+> Иерархия папок отдельно взятого модуля 
 ```xslt
 ModuleName
 

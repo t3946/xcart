@@ -1,6 +1,9 @@
 <?php
 
+
 namespace Modules\Translate\Helpers;
+
+
 
 use Gettext\Extractors\PhpCode;
 use Gettext\Generators\Po;
@@ -20,7 +23,7 @@ class TranslateHelper
      * @var Translations
      */
     private $_translations;
-//TODO: тут сохраняются переводы
+
     public function __construct()
     {
         $this->_translations = new Translations();
@@ -40,7 +43,7 @@ class TranslateHelper
         foreach (LanguageModel::objects()->all() as $lang) {
             $file = "{$path}\\lang\\{$lang->lang_code}.po";
             $translations_o = file_exists($file) ? Translations::fromPoFile($file) : new Translations;
-            $translations_o->mergeWith($this->_translations, Merge::DEFAULTS);
+            $translations_o->mergeWith($this->_translations, Merge::DEFAULTS | Merge::REMOVE);
             Po::toFile($translations_o, $file);
         }
     }

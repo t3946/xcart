@@ -5,9 +5,6 @@ namespace Xcart\App\Pagination\DataSource;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\QuerySet;
 
-/**
- *
-*/
 class QuerySetDataSource implements DataSourceInterface
 {
     /**
