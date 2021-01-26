@@ -1,5 +1,7 @@
 {extends "admin/base.tpl"}
 
+{block 'wrapper_block_class'}admin{/block}
+
 {block 'heading'}
     <h1>{$admin->name}</h1>
 {/block}
