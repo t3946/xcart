@@ -1,70 +1,40 @@
 <?php
 
-
 namespace Modules\Sites\Forms;
 
-
-use Modules\Editor\Fields\EditorField;
-use Modules\Forms\Admin\TemplateCategoryAdmin;
-use Modules\Forms\Models\TemplateCategoryModel;
-use Modules\Forms\Models\TemplateModel;
-use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\LinkField;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\ModelForm;
 
 class SiteForm extends ModelForm
 {
-//    public array $exclude = [
-//        'pos',
-//        'ca_status',
-//    ];
-//
-//    public function getModel()
-//    {
-//        return new TemplateModel;
-//    }
-//
-//    public function getFields()
-//    {
-//        return [
-//            'message_body' => [
-//                'class' => EditorField::class,
-//            ],
-//            'department' => [
-//                'class' => DropDownField::class,
-//                'choices' => [
-//                    'customer' => 'Customer',
-//                    'distributor' => 'Distributor',
-//                    'our_customer_service' => 'Our customer service',
-//                    'third_party' => 'Third party',
-//                ],
-//            ],
-//            'category' => [
-//                'class' => DropDownField::class,
-//                'required' => true,
-//                'extend' => 'category_link',
-//                'choices' => function () {
-//                    foreach (TemplateCategoryModel::objects()->order(['pos']) as $category) {
-//                        $result[$category->id] = (string)$category;
-//                    }
-//                    return $result ?? [];
-//                },
-//            ],
-//            'category_link' => [
-//                'hidden' => true,
-//                'class' => LinkField::class,
-//                'link_content' => 'Edit template categories',
-//                'html' => ['class' => 'admin_link', 'target' => '_blank'],
-//                'value' => (new TemplateCategoryAdmin())->getAllUrl(),
-//            ],
-//            'status' => [
-//                'class' => DropDownField::class,
-//            ],
-//        ];
-//    }
-//
-//    public function getName()
-//    {
-//        return '';
-//    }
+    public array $exclude = [
+        'images',
+        'link',
+        'favicons',
+        'link',
+        'config',
+        'link',
+        'list_config',
+        'link',
+        'storefrontid',
+        'prefix',
+        'choices',
+        'orderby',
+        'static_page',
+        'link',
+        'marketplaces',
+        'link',
+        'corporates',
+        'short_name',
+    ];
+
+    public function getModel()
+    {
+        return new SiteModel();
+    }
+
+    public function getName()
+    {
+        return 'Edit Site';
+    }
 }

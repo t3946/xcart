@@ -4,24 +4,21 @@ namespace Modules\Sites\Admin;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Traits\AdminTrait;
-use Modules\Forms\Forms\TemplateForm;
-use Modules\Forms\Models\TemplateModel;
 use Modules\Sites\Forms\SiteForm;
 use Modules\Sites\Models\SiteModel;
 
 class SitesAdmin extends Admin
 {
+    public ?string $sort = 'orderby';
+
     use AdminTrait;
-
-//    public static $public = false;
-
 
     public function getListColumns()
     {
         return [
             'code',
             'domain',
-            'prefix'
+            'status',
         ];
     }
 
@@ -40,13 +37,13 @@ class SitesAdmin extends Admin
         return 'Sites here';
     }
 
-//    public function isAjaxUpdate(): bool
-//    {
-//        return true;
-//    }
-//
-//    public function isAjaxCreate(): bool
-//    {
-//        return true;
-//    }
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }
