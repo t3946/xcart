@@ -146,9 +146,7 @@ class UPS extends ShippingProcessor
         if ($volume = $oShippingRate->getCartShippingVolume()) {
             $weight = ceil($volume > 1728 ? max($weight, $volume / 139) : max($weight, $volume / 166));
         }
-        $mid = $this->getManufacturer()->manufacturerid;
-        $ave = ShippingHelper::getAverageShippingCharge($weight, $mid, $oShippingRate->shippingid);
-        return ShippingHelper::getApproximateShippingCharge($ave, $mid);
+        return ShippingHelper::getAverageShippingCharge($weight, $this->getManufacturer()->manufacturerid, $oShippingRate->shippingid);
     }
     public function getApproximationCharge($oShippingRate)
     {

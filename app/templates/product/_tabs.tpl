@@ -42,7 +42,7 @@
                 <div class="tab-s3 tab-content">
                     <div class="h2">{$tab->name}</div>
                     <div class="content">
-                        {raw $tab->content|html_entity_decode}
+                        {raw $tab->content}
                     </div>
                 </div>
             </div>
