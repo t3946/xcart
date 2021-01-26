@@ -34,7 +34,7 @@ class SitesAdmin extends Admin
 
     public static function getName()
     {
-        return 'Sites here';
+        return 'Sites';
     }
 
     public function isAjaxUpdate(): bool
