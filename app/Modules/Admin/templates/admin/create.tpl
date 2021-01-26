@@ -34,5 +34,5 @@
 {/block}
 
 {block 'before-content'}
-    {include 'admin/sections.tpl'}
+    {include 'admin/sections.tpl' current_section=$admin->section sections=$form->getSections()}
 {/block}

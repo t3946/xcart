@@ -6,6 +6,7 @@ namespace Modules\Admin\Admin;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Forms\Dx\DistributorContactsForm;
+use Modules\Admin\Forms\Dx\DistributorForm;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
@@ -61,10 +62,17 @@ class DxContactsAdmin extends Admin
 
     public function renderInternal($view, $params)
     {
-        parent::renderInternal($view, array_merge($params, [
+        $params = array_merge($params, [
             'distributorModel' => $this->dxModel ?? null,
             'section' => $this->section,
-        ]));
+        ]);
+
+        if (($this->dxModel ?? null) && empty($params['form'])) {
+            $form = new DistributorForm();
+            $form->setInstance($this->dxModel);
+            $params['form'] = $form;
+        }
+        parent::renderInternal($view, $params);
     }
 
     public function getSortUrl()
@@ -136,4 +144,6 @@ class DxContactsAdmin extends Admin
     {
         return array_merge( ['call'], parent::getListItemActions());
     }
+
+
 }

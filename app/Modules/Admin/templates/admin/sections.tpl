@@ -1,6 +1,5 @@
-{set $sections = $form->getSections()}
 {if $sections}
-    {set $cnt = count($section_fileds)}
+    {set $cnt = count($sections)}
     {set $multiple = false}
     {if $cnt > 1}
         {set $multiple = true}
@@ -28,20 +27,25 @@
                     {/if}
                         <ul class="ul-main" style="{if $multiple}margin: 0{else}columns:2{/if}">
                             {foreach $fieldset as $key => $item first=$first}
+                                {if !$item['hidden']}
                                 <li>
                                     <a href="" class="VertMenuItems"><img alt="right arrow" src="/skin1_kolin/images/rarrow.gif"></a>
-                                    {if $key == $admin->section}
+                                    {if $key == $current_section}
                                         <b>
                                     {else}
                                         <a style="color: #330000;" href="{$form->getInstance()->getAdminUrl($key)}">
                                     {/if}
                                     {$item['title']}
-                                    {if $key == $admin->section}
+                                    {if $key == $current_section}
                                         </b>
                                     {else}
                                         </a>
                                     {/if}
+                                    {if $item['required']}
+                                        <span style="color: red;font-size:1.8em;line-height: 10px;top: 7px;position: relative;">*</span>
+                                    {/if}
                                 </li>
+                                {/if}
                             {/foreach}
                         </ul>
                     {if $multiple}

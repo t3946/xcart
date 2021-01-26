@@ -3,6 +3,8 @@
 {block "before-content"}
     {if $form}
         {set $distributorModel = $form->getDx()}
+        {set $sections = $form->getSections()}
+        {set $selected_section = $form->getSection($section)}
     {/if}
     {if $distributorModel && !$distributorModel->getIsNewRecord()}
         {set $prohibited = $distributorModel->getProhibitedProducts()}
@@ -75,56 +77,7 @@
         </table>
         <br/>
         <br/>
-        <table cellspacing="0" cellpadding="0" width="100%" class="NavDialogBox" style="BORDER: #FFCC33 1px solid;">
-            <tr>
-                <td class="NavDialogBorder" height="15"><B>Distributor sections:</B></td>
-                <td class="NavDialogBorder" height="15" align="right">
-                    <a href="" target="_blank" style="color: #0101F7"></a>
-                </td>
-            </tr>
-            <tr>
-                <td width="100%" valign="top" cellspacing="0" cellpadding="0"
-                    style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row dense; grid-gap: 0.5rem;">
-                    {set $section_fileds = Modules\Admin\Forms\Dx\DistributorForm::getSections()}
-                    {set $cnt = count($section_fileds)}
-                    {set $split = round($cnt / 2)}
-                    <div>
-                    {foreach $section_fileds as $fN => $fieldset index=$index first=$f1}
-                        {if $index == $split}
-                            </div><div>
-                        {/if}
-                        <fieldset class="" style="margin-bottom: 0; background:inherit; grid-column-start: {if $cnt/2 > $index}1{else}2{/if};">
-                            <legend><b style="font-size: 15px;color: red;">{$fN}</b></legend>
-                            <ul class="ul-main" style="margin: 0">
-                                {foreach $fieldset as $key => $item first=$first}
-                                    {if $item.distributor_section == $section}
-                                        {set $current_section = $item}
-                                    {/if}
-                                    <li>
-                                        <a href="" class="VertMenuItems">
-                                            <img alt="" src="/skin1_kolin/images/rarrow.gif">
-                                        </a>
-                                        {if $item.distributor_section != $section}
-                                            <a style="color: #330000;" href="{$distributorModel->getAdminUrl($item.distributor_section)}">
-                                        {/if}
-                                        {if $item.distributor_section == $section}<b>{/if}
-                                        {$item['title']}
-                                        {if $item.distributor_section == $section}</b>{/if}
-                                        {if $item.distributor_section != $section}
-                                            </a>
-                                        {/if}
-                                        {if $item['required']}
-                                            <span style="color: red;font-size:1.8em;line-height: 10px;top: 7px;position: relative;">*</span>
-                                        {/if}
-                                    </li>
-                                {/foreach}
-                            </ul>
-                        </fieldset>
-                    {/foreach}
-                    </div>
-                </td>
-            </tr>
-        </table>
+        {include 'admin/sections.tpl' current_section=$section sections=$sections}
     {/if}
 {/block}
 
@@ -148,7 +101,7 @@
             color: inherit;
         }
     </style>
-    <h1 style="text-align: center">{$current_section[title]}</h1>
+    <h1 style="text-align: center">{$selected_section['title']}</h1>
 {/block}
 
 {block 'js'}

@@ -62,9 +62,12 @@ $smarty->assign('r_search', Xcart::app()->request->get->get('r_search'));
 $smarty->assign('sites', SiteModel::objects()->order(['code']));
 $smarty->assign('vrs', UserModel::objects()->distinct()->filter(['distributors__manufacturerid__isnull' => false])->order(['firstname']));
 if ($distributorModel) {
+	$form = new \Modules\Admin\Forms\Dx\DistributorForm();
+	$form->setInstance($distributorModel ?? null);
 	$smarty->assign('sectionMenu', Xcart::app()->template->render('admin/distributor/dx_base.tpl', [
 		'distributorModel' => $distributorModel ?? null,
-		'section' => $distributor_section
+		'section' => $distributor_section,
+		'form' => $form
 	]));
 }
 
