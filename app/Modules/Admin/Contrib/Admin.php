@@ -614,7 +614,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk ?: $this->getModelPk(),
+            'pk' => $pk ?? $this->getModelPk(),
         ], $query);
     }
 
@@ -633,7 +633,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:info', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk ?: $this->getModelPk(),
+            'pk' => $pk ?? $this->getModelPk(),
         ]);
     }
 
@@ -642,7 +642,7 @@ abstract class Admin
         return Xcart::app()->router->url('admin:remove', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => $pk ?: $this->getModelPk(),
+            'pk' => $pk ?? $this->getModelPk(),
         ]);
     }
 
