@@ -8,9 +8,17 @@ use Modules\Core\Models\CountryModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\Field;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\ModelFieldInterface;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property mixed|Field|FileField|ModelFieldInterface name
+ * @property mixed|Field|FileField|ModelFieldInterface lang_id
+ * @property mixed|Field|FileField|ModelFieldInterface lang_code
+ */
 class LanguageModel extends Model
 {
 

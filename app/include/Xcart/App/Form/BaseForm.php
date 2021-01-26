@@ -63,6 +63,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     public $defaultTemplateType = 'default';
 
     /**
+     * not printable fields
      * @var array
      */
     public array $exclude = [];
@@ -711,6 +712,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     }
 
     /**
+     * fill form from $data
      * @param array|Collection $data
      * @param array|Collection $files
      * @return $this

@@ -62,7 +62,7 @@ class ModelForm extends MixinBaseForm
             else {
                 $modelField = $field->setModel($instance)->getFormField($this);
 
-                if ($modelField) {
+                    if ($modelField) {
                     $this->_fields[$name] = $modelField;
                 }
             }
