@@ -333,4 +333,14 @@ class TranslateAdmin extends Admin
             'filter_form' => $filter_form ?? null,
         ] );
     }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
 }
