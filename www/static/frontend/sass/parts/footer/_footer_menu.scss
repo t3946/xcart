@@ -90,15 +90,28 @@ footer {
     }
 
     .payment-methods {
+      margin: -3px;
+
+      @include breakpoint(large) {
+        margin: -5px;
+      }
+
       img {
         width: 46px;
         height: 28px;
+        padding: 3px;
+        box-sizing: content-box;
 
         @include breakpoint(large) {
-          width: 62px;
-          height: 38px;
+          width: 54px;
+          height: 36px;
+          padding: 5px;
         }
       }
+    }
+
+    .payment-methods img:last-child {
+      margin: 0;
     }
 
     .all-times {
