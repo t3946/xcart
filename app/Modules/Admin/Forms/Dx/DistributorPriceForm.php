@@ -17,6 +17,7 @@ class DistributorPriceForm extends DistributorForm
     public function getFieldsets()
     {
         return [[
+            'd_website_search_for_sku_url',
             'd_product_catalog',
             'd_price_list',
             'd_currency',
@@ -40,6 +41,13 @@ class DistributorPriceForm extends DistributorForm
         $dx = $this->getInstance();
 
         return [
+            'd_website_search_for_sku_url' => [
+                'class' => CharField::class,
+                'label' => 'Link to product on distributor website (use {{mpn}})',
+                'hint' => LanguageModel::translate('help_dx_search_for_sku_url_text') ?? 'help_dx_search_for_sku_url_text',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+            ],
             'd_product_catalog' => [
                 'class' => UrlField::class,
                 'label' => 'Product catalog URL',
