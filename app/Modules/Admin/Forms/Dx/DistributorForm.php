@@ -163,15 +163,12 @@ class DistributorForm extends ModelForm
         return new DistributorModel();
     }
 
-    /*public static function getSections(): array
+    public static function getSections(): array
     {
         $vrs = Xcart::app()->user->hasRoles(['vrs', 'vrv']);
         foreach (parent::getSections() as $key => $section) {
-            $res[$key] = array_filter($section, static function ($s) use ($vrs) {
-                return !($s['hidden'] === true && $vrs === true);
-            });
-
+            $res[$key] = array_filter($section, static fn($s) => !(($vrs === true) && $s['hidden'] ?? false === true));
         }
         return $res ?? [];
-    }*/
+    }
 }
