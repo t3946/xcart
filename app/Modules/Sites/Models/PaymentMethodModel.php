@@ -9,6 +9,7 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 class PaymentMethodModel extends Model
@@ -40,6 +41,11 @@ class PaymentMethodModel extends Model
                 'default' => 0
             ]
         ];
+    }
+
+    public static function activeManager( $instance = null ): Manager
+    {
+        return static::objects( $instance )->filter( [ 'is_active' => 1 ] )->order( 'position' );
     }
 
     public function __toString()
