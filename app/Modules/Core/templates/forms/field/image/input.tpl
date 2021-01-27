@@ -23,22 +23,29 @@
 {/if}
 <script>
     async function uploadUrl() {
-        let url = prompt('Enter file url');
-        if (url) {
-            let input = document.querySelector('#{$id}');
-            input.setAttribute('value', url);
-            input.type='hidden';
-            let img = document.querySelector('.{$id}_current-image');
-            let blob = await fetch('https://cors-anywhere.herokuapp.com/' + url).then(r => r.blob());
-            img.style.backgroundImage = 'url(' + URL.createObjectURL(blob) + ')';
-            img.style.display = 'inline-block';
+        const url = prompt( 'Enter file url' );
+
+        if ( url ) {
+            const $input = $( '#{$id}' );
+
+            $input.val( url );
+            $input[ 0 ].type = 'hidden';
+
+            const $link = $( '.{$id}_current-image' );
+            const blob = await fetch( 'https://cors-anywhere.herokuapp.com/' + url ).then( r => r.blob() );
+
+            $link.css( 'display', 'inline-block' );
+            $img.attr( 'src', URL.createObjectURL(blob) );
         }
     }
-    document.querySelector('#{$id}').addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            var img = document.querySelector('.{$id}_current-image');
-            img.style.backgroundImage = 'url('+ URL.createObjectURL(this.files[0]) + ')';
-            img.style.display = 'inline-block';
+
+    document.querySelector( '#{$id}' ).addEventListener( 'change', function () {
+        if ( this.files && this.files[ 0 ] ) {
+            const $link = $( '.{$id}_current-image' );
+            const $img = $link.find( 'img' );
+
+            $link.css( 'display', 'inline-block' );
+            $img.attr( 'src', URL.createObjectURL( this.files[ 0 ] ) );
         }
-    });
+    } );
 </script
