@@ -598,7 +598,8 @@ class DistributorModel extends Model
 
     public function getProductQuestionsContact()
     {
-        return $this->contacts_model->filter(['pq' => 'Y'])->limit(1)->get();
+        return $this->contacts_model
+            ->filter(['utility__utility_id' => DistributorUtilityModel::REQUEST_PRODUCT_QUESTIONS_UTILITY])->limit(1)->get();
     }
 
     public function getPhone(): string
