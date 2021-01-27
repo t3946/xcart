@@ -1,15 +1,8 @@
 <?php
 
-
 namespace Modules\Sites\Models;
 
-
-use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BooleanField;
-use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\ImageField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class SitePaymentMethodModel extends Model
