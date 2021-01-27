@@ -11,7 +11,7 @@ use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class SitePaymentMethodModel extends Model
+class PaymentMethodModel extends Model
 {
     public static function tableName(): string
     {

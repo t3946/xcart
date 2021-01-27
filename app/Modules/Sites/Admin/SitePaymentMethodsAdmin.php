@@ -5,7 +5,7 @@ namespace Modules\Sites\Admin;
 use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Sites\Forms\SitePaymentMethodForm;
-use Modules\Sites\Models\SitePaymentMethodModel;
+use Modules\Sites\Models\PaymentMethodModel;
 use Xcart\App\Orm\Model;
 
 class SitePaymentMethodsAdmin extends Admin
@@ -30,7 +30,7 @@ class SitePaymentMethodsAdmin extends Admin
 
     public function getModel()
     {
-        return new SitePaymentMethodModel();
+        return new PaymentMethodModel();
     }
 
     public static function getName()

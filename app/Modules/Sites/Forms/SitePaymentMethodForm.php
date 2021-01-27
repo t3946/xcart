@@ -2,7 +2,7 @@
 
 namespace Modules\Sites\Forms;
 
-use Modules\Sites\Models\SitePaymentMethodModel;
+use Modules\Sites\Models\PaymentMethodModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\ImageField;
@@ -32,7 +32,7 @@ class SitePaymentMethodForm extends ModelForm
 
     public function getModel()
     {
-        return new SitePaymentMethodModel();
+        return new PaymentMethodModel();
     }
 
     public function getName()
