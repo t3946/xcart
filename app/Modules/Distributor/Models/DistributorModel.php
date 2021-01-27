@@ -270,6 +270,14 @@ class DistributorModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => false
             ],
+            'days_before_verify' => [
+                'class' => IntField::class,
+                'default' => 60
+            ],
+            'd_order_entry_operator_email' => [
+                'class' => CharField::class,
+                'default' => 'order.entry@s3stores.com'
+            ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
                 'choices' => [
@@ -397,7 +405,8 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'sqlType' => Types::STRING,
                 'modelClass' => CountryModel::class,
-                'link' => ['m_country' => 'code']
+                'link' => ['m_country' => 'code'],
+                'default' => 'US'
             ],
             'state_model' => [
                 'field' => 'm_state',
@@ -408,6 +417,7 @@ class DistributorModel extends Model
                     'm_state' => 'code',
                     'm_country' => 'country_code'
                 ],
+                'default' => 'NY',
             ],
             'provider_model' => [
                 'field' => 'provider',
@@ -656,5 +666,35 @@ class DistributorModel extends Model
     public function getContactNameForTemplates(): string
     {
         return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        if ($isNew) {
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 10,
+                'name' => 'Shipping',
+                'content' => '{{distributor_shipped_from}}'
+            ]);
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 20,
+                'name' => 'Our guarantee',
+                'content' => "This product is brand new and includes the manufacturer's warranty, so you can buy with confidence."
+            ]);
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 30,
+                'name' => 'Return policy',
+                'content' => "A 25% handling charge is levied against all authorized returns except those due to our error. Unauthorized returns are subject to a 40% handling charge. Damages & defects must be reported to us within 14 days."
+            ]);
+            ShippingRateModel::objects()->getOrCreate([
+                'shippingid' => 1,
+                'zoneid' => 11,
+                'manufacturerid' => $owner->pk,
+                'type' => 'R'
+            ]);
+        }
     }
 }
