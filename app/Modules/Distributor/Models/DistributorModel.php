@@ -156,7 +156,8 @@ class DistributorModel extends Model
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => true
+                'default' => true,
+                'verboseName' => 'Activate distributor products'
             ],
             'd_availability_must_be_checked' => [
                 'class' => BooleanCharField::class,
