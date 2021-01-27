@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -62,6 +63,11 @@ class SiteModel extends Model
     public static function getFields() :array
     {
         return [
+            'payment_methods' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'through' => SitePaymentMethodModel::class,
+            ],
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageSModel::class,

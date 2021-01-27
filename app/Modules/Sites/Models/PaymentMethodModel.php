@@ -15,7 +15,7 @@ class PaymentMethodModel extends Model
 {
     public static function tableName(): string
     {
-        return 'sites_payment_methods';
+        return 'payment_methods';
     }
 
     public static function getFields(): array
@@ -40,5 +40,10 @@ class PaymentMethodModel extends Model
                 'default' => 0
             ]
         ];
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 }

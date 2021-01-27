@@ -3,6 +3,8 @@
 namespace Modules\Sites\Forms;
 
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
 class SiteForm extends ModelForm
@@ -27,6 +29,17 @@ class SiteForm extends ModelForm
         'corporates',
         'short_name',
     ];
+
+    public function getFields()
+    {
+        return [
+            'payment_methods' => [
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'label' => 'Payment methods',
+            ],
+        ];
+    }
 
     public function getModel()
     {
