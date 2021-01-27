@@ -693,7 +693,8 @@ class DistributorModel extends Model
                 'shippingid' => 1,
                 'zoneid' => 11,
                 'manufacturerid' => $owner->pk,
-                'type' => 'R'
+                'type' => 'R',
+                'cost_marcup' => 1
             ]);
         }
     }
