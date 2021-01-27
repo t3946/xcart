@@ -8,10 +8,13 @@
             margin: 10px;
             vertical-align: middle;
             {if $value}display: inline-block; {else} display: none; {/if}
-            width: 200px;
             min-height: 100px;
             background: #E8E8E8 no-repeat center center;
-            background-size: contain; background-image: url('{$field->getSizeImage()}')" href="{$field->getCurrentFileUrl()}"></a>
+            border: 1px solid #ff8600;
+            " href="{$field->getCurrentFileUrl()}
+    ">
+        <img style="display: block" src="{$field->getSizeImage()}" width="200" alt="">
+    </a>
 
 
 {if $field->canClear()}
