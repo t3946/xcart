@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers;
 
 use Mindy\QueryBuilder\Q\QOr;
+use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\CategoryModel;
@@ -104,7 +105,7 @@ abstract class AbstractCatalogController extends FrontendController
     public function getAdvancedData($data = null): array { return []; }
 
     /**
-     * @param CategoryModel|null $model
+     * @param CategoryModel|BrandModel|null $model
      *
      * @throws \Exception
      * @throws \Xcart\App\Exceptions\HttpException
@@ -148,7 +149,7 @@ abstract class AbstractCatalogController extends FrontendController
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::getOrderBy(),
                 'breadcrumbs' => $this->getBreadcrumbsFromData($model),
-                'filters' => $fh->getFilterStructure($this->filters, $model->level),
+                'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
             ], $this->getAdvancedData($model)));
         }
     }
