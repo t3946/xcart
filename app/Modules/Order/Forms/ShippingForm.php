@@ -18,8 +18,8 @@ class ShippingForm extends FrontendModelForm
 {
     use AddressAttributesReplacement;
 
-    private $_shippingFields;
-    private $_contactFields;
+    protected $_shippingFields;
+    protected $_contactFields;
 
     public $replacement = 's_';
 
