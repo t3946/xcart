@@ -111,7 +111,7 @@ class ProductFilterHelper
                 $filters = FilterModel::objects()
                                       ->filter(['f_active' => 'Y',
                                                 'f_id__in' => $f_ids])
-                                      ->order(['f_order_by'])
+                                      ->order(['f_name'])
                                       ->valuesList([]);
 
                 if ($filters) {

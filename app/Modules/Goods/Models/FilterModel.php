@@ -19,29 +19,29 @@ class FilterModel extends Model
     {
         return [
             'f_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'f_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'f_order_by' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 10
             ],
             'f_active' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'Y'
             ],
             'storefront' => [
                 'field' => 'storefrontid',
-                'class' => ForeignField::className(),
-                'modelClass' => SiteModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
                 'link' => ['storefrontid' => 'storefrontid'],
                 'null' => false,
                 'default' => 0
