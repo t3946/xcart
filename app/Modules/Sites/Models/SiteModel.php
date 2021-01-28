@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -34,6 +35,11 @@ class SiteModel extends Model
     {
         $str = '';
         $attr = [];
+
+        if ($this->pk === null) {
+            return 'Site';
+        }
+
         if (!$this->showInLists()) {
             $attr[] = 'Hidden';
         }
@@ -57,12 +63,16 @@ class SiteModel extends Model
     public static function getFields() :array
     {
         return [
+            'payment_methods' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'through' => SitePaymentMethodModel::class,
+            ],
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageSModel::class,
                 'link' => ['storefrontid' => 'id'],
             ],
-
             'favicons' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageFModel::class,
@@ -73,15 +83,12 @@ class SiteModel extends Model
                 'modelClass' => SiteConfigModel::class,
                 'link' => ['storefrontid' => 'storefrontid'],
             ],
-
             'list_config' => [
                 'field' => 'code',
                 'class' => ForeignCharField::class,
                 'modelClass' => ListConfigModel::class,
                 'link' => ['code' => 'sf_code'],
             ],
-
-
             'storefrontid' => [
                 'class' => AutoField::class,
             ],
@@ -125,7 +132,10 @@ class SiteModel extends Model
                 'modelClass' => SiteMarketplaceModel::class,
                 'link' => ['storefrontid' => 'storefront_id']
             ],
-            'short_name' => CharField::class,
+            'short_name' => [
+                'class' => CharField::class,
+                'default' => '',
+            ],
             'corporates' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => CorporateModel::class,

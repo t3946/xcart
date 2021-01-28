@@ -1,14 +1,8 @@
 <?php
 
-
 namespace Modules\Sites\Models;
 
-
-use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BooleanField;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\ImageField;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 class SitePaymentMethodModel extends Model
@@ -21,23 +15,21 @@ class SitePaymentMethodModel extends Model
     public static function getFields(): array
     {
         return [
-            'payment_method_id' => AutoField::class,
-            'name' => [
-                'class' => CharField::class
+            'site' => [
+                'field' => 'site_id',
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
+                'link' => [
+                    'site_id' => 'storefrontid'
+                ],
             ],
-            'logo' => [
-                'class' => ImageField::class,
-                'adapterName' => 'www',
-                'uploadTo' => 'images/payment_methods/',
-                'required' => true
-            ],
-            'is_active' => [
-                'class' => BooleanField::class,
-                'default' => true,
-            ],
-            'position' => [
-                'class' => IntField::class,
-                'default' => 0
+            'payment_method' => [
+                'field' => 'payment_method_id',
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'link' => [
+                    'payment_method_id' => 'payment_method_id'
+                ]
             ]
         ];
     }

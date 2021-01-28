@@ -273,7 +273,7 @@ gulp.task('watch:frontend', ['build:frontend'], function() {
     gulp.start('frontend:jsx');
 });
 
-gulp.task('watch:backend', ['build:backend'], function() {
+gulp.task('watch:backend', function() {
     livereload({ start: true, quiet: true });
 
     gulp.watch(backend.src.raw, ['backend:raw']);
@@ -281,7 +281,6 @@ gulp.task('watch:backend', ['build:backend'], function() {
     gulp.watch(backend.src.js, ['backend:js']);
     gulp.watch(backend.src.scss, ['backend:css']);
     gulp.watch(backend.src.css, ['backend:css']);
-    gulp.watch(backend.src.images, ['backend:images']);
     gulp.watch(backend.src.fonts, ['backend:fonts']);
 });
 
@@ -304,7 +303,6 @@ gulp.task('watch', ['build'], function() {
         'watch:backend' , 'watch:frontend'
     );
 });
-
 
 gulp.task('clear:frontend', function() {
     return gulp.src(['frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss]).pipe(rimraf());

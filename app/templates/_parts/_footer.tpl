@@ -93,15 +93,16 @@
                                     {t 'Payment Methods'}
                                 </li>
                                 <li class="payment-methods">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/visa.png" alt="Visa icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/mastercard.png" alt="MasterCard icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/amex.png" alt="AmericanExpress icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/discover_network.png" alt="Discover Network icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/visadebit.png" alt="Visa Debit icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/paypal.png" alt="PayPal icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/echeck.png" alt="eCheck icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/check.png" alt="Check icon">
-                                    <img src="" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/p_methods/po.png" alt="Purchase Order request icon">
+                                    {set $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
+                                    {if $payment_methods }
+                                        {foreach $payment_methods as $key => $method }
+                                            <img src="" width="54" height="36" class="lazy-img" data-src="/{$method->logo}" alt="{$method->name}">
+                                        {/foreach}
+                                    {else}
+                                        {foreach Modules\Sites\Models\PaymentMethodModel::active() as $key => $method}
+                                            <img src="" width="54" height="36" class="lazy-img" data-src="/{$method->logo}" alt="{$method->name}">
+                                        {/foreach}
+                                    {/if}
                                 </li>
                                 <li class="fraud-orders">
                                     <a href="/ecomerce-fraud">{t 'Combating eCommerce Fraud'}</a>
