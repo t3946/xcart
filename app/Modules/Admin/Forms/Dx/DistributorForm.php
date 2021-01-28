@@ -47,7 +47,7 @@ class DistributorForm extends ModelForm
         ],
         'Product and inventory management' => [
             5 => [
-                'title' => 'Distributor pricing equations',
+                'title' => 'Distributor pricing',
                 'form' => DistributorPriceForm::class,
                 'required' => true,
             ],
