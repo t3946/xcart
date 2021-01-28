@@ -148,7 +148,7 @@ abstract class AbstractCatalogController extends FrontendController
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::getOrderBy(),
                 'breadcrumbs' => $this->getBreadcrumbsFromData($model),
-                'filters' => $fh->getFilterStructure($this->filters),
+                'filters' => $fh->getFilterStructure($this->filters, $model->level),
             ], $this->getAdvancedData($model)));
         }
     }

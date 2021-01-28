@@ -39,7 +39,7 @@ class ProductFilterHelper
      * @return array
      * @throws \Exception
      */
-    public function getFilterStructure(array $types = ['price', 'brand', 'filter']): array
+    public function getFilterStructure(array $types = ['price', 'brand', 'filter'], $level): array
     {
         $cache_key = implode('-',$types) .';sql:' . (clone $this->qs)->allSql();
         $list = [];
@@ -49,7 +49,7 @@ class ProductFilterHelper
             return $list;
         }*/
 
-        if (\in_array('price', $types, true)) {
+        if (in_array('price', $types, true)) {
             $tqs = clone $this->qs;
             $tqs->filter(['quick_prices__price__isnull' => false])
                 ->select([new Min('quick_prices__price', 'min'),
@@ -77,7 +77,7 @@ class ProductFilterHelper
             ];
         }
 
-        if (\in_array('brand', $types, true)) {
+        if (in_array('brand', $types, true)) {
             $tqs = clone $this->qs;
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
@@ -100,8 +100,7 @@ class ProductFilterHelper
             ];
         }
 
-
-        if (\in_array('filter', $types, true)) {
+        if ($level > 1 && in_array('filter', $types, true)) {
             $ftqs = clone $this->getFiltrateQS();
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
