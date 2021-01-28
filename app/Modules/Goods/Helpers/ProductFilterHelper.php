@@ -112,6 +112,7 @@ class ProductFilterHelper
                                       ->filter(['f_active' => 'Y',
                                                 'f_id__in' => $f_ids])
                                       ->order(['f_name'])
+                                     ->limit(30)
                                       ->valuesList([]);
 
                 if ($filters) {
