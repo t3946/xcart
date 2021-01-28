@@ -12,6 +12,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Core\Models\ZipCodeModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\BillingForm;
+use Modules\Order\Forms\CheckoutForm;
 use Modules\Order\Forms\CheckoutReviewForm;
 use Modules\Order\Forms\CustomerNotesForm;
 use Modules\Order\Forms\ShippingForm;
@@ -33,10 +34,116 @@ use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Storage\Files\LocalFile;
 
 class CheckoutController extends FrontendController
 {
+    public function actionCheckoutOnePage (): void {
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
+        /** @var OrderModel $order */
+        /** @var SiteModel $site */
+        /** @var Application $app */
+        $app = Xcart::app();
+        $site = $app->getModule('Sites')->getSite();
+        $cart = $app->cart;
+        $shipping = null;
+        $shippingForm = new CheckoutForm();
+
+        if ($site && $app->request->getIsPost()) {
+            $shippingForm->populate($app->request->post);
+
+            if ($shippingForm->isValid()) {
+
+                [$order, $is_created] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
+
+                $order->subtotal = 0;
+
+                $order->setAttributes(array_merge($shippingForm->getAttributes(), [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                    'currency'  => $site->getCurrency()->currency_code ?? 'USD'
+                ]));
+
+                if ($order->save()) {
+
+                    if ($cart_groups = $cart->getItemsGroupedBy()) {
+                        $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
+
+                        foreach ($cart_groups as $g => $cart_group)
+                        {
+                            /** @var OrderGroupModel $group */
+                            [$group] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+
+                            $group->setAttributes([
+                                'shippingid' => null,
+                                'shipping' => '',
+                                'cb_status' => $order->cb_status,
+                                'dc_status' => $order->dc_status,
+                                'bd_status' => $order->bd_status,
+                                'total_gross' => $cart_group['subtotal'],
+                                'total_net' => $cart_group['subtotal'],
+                                'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
+                            ]);
+                            $order->subtotal += $group->total_gross;
+                            $order->total = $order->subtotal;
+                            $order->shipping_cost = 0;
+
+                            $group->save();
+
+                            OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+
+                            /** @var CartItem $item */
+                            foreach ($cart_group['items'] as $item)
+                            {
+                                /** @var ProductModel $product */
+                                $product = $item->getObject();
+                                $detail = new OrderDetailModel([
+                                    'orderid' => $group->orderid,
+                                    'productid' => $product->productid,
+                                    'order_group_id' => $group->order_group_id,
+                                    'price' => $product->getFrontendPrice($item->getQuantity()),
+                                    'amount' => $item->getQuantity(),
+                                    'productcode' => $product->productcode,
+                                    'product' => $product->getFrontendName(),
+                                    'provider' => $product->provider,
+                                    'original_provider' => $product->original_provider,
+                                    'item_cost_to_us' => $product->cost_to_us,
+                                    'product_options' => $item->data ?? null,
+                                ]);
+                                $detail->save();
+                            }
+                        }
+
+                    } else {
+                        $order->groups->delete();
+                    }
+
+                    $order->save();
+
+                    if ($is_created) {
+                        $app->event->trigger('order:created', ['model' => $order]);
+                    }
+
+                    $this->redirect('checkout:options');
+                }
+            }
+        }
+
+        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
+
+        if ($order && !$app->request->getIsPost()) {
+            $shippingForm->setAttributes($order->getAttributes());
+        }
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
+        $this->display('checkout/shipping1.tpl', [
+            'order' => $order,
+            'shippingForm' => $shippingForm,
+        ]);
+    }
 
     public function beforeAction($action, $params): void
     {
