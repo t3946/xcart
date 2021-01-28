@@ -1,0 +1,78 @@
+.checkout-arrow-right {
+  height: 2.1875rem;
+  overflow: hidden;
+  width: .625rem;
+  position: absolute;
+  top: -1px;
+  right: -.625rem;
+}
+
+@media screen and (min-width: 64em) {
+  .checkout-arrow-right {
+    height: 2.5rem;
+    width: .75rem;
+    right: -.75rem;
+    top: -2px;
+  }
+}
+
+@media screen and (min-width: 45em) {
+  .checkout-arrow-right {
+    height: 3.5rem;
+    width: 1.0625rem;
+    right: -1.0625rem;
+    top: -2px;
+  }
+}
+
+@media screen and (min-width: 23.125em) {
+  .checkout-arrow-right {
+    height: 2.8125rem;
+    width: .8125rem;
+    right: -.8125rem;
+    top: -2px;
+  }
+}
+
+.checkout-arrow-right:after {
+  content: "";
+  display: block;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 2.1875rem;
+  height: 2.1875rem;
+  transform: matrix(.37, .7, -.6, 1.21, 0, 0);
+  background: #fff;
+  z-index: 1;
+}
+
+@media screen and (min-width: 45em) {
+  .checkout-arrow-right:after {
+    border-width: 2px;
+    width: 3.5rem;
+    height: 3.5rem;
+    top: 13px;
+  }
+}
+
+@include breakpoint(large up) {
+  .checkout-arrow-right:after {
+    border-width: 2px;
+    width: 2.5rem;
+    height: 2.5rem;
+    top: 10px;
+  }
+}
+
+@media screen and (min-width: 23.125em) {
+  .checkout-arrow-right:after {
+    border-width: 2px;
+    border-right-width: 3px !important;
+    width: 2.8125rem;
+    height: 2.8125rem;
+    top: 10px;
+  }
+}
