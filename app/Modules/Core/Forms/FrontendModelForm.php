@@ -35,6 +35,7 @@ abstract class FrontendModelForm extends EventsModelForm
     }
 
     /**
+     * Field behaviour strategies.
      * The higher the position, the higher the priority
      * @return array
      */
