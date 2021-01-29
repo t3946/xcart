@@ -5,6 +5,8 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Distributor\Models\DistributorContactsModel;
+use Modules\Distributor\Models\DistributorContactUtilityModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Editor\Fields\EditorField;
@@ -107,4 +109,26 @@ class DistributorRequestAvailForm extends DistributorForm
         ];
     }
 
+    public function afterInstanceSave($instance)
+    {
+        if ($contacts = $this->request_avail_emails->getValue()) {
+            foreach ($contacts as $contact_id) {
+                if ($contact_id) {
+                    DistributorContactUtilityModel::objects()->getOrCreate([
+                        'contact_id' => $contact_id,
+                        'utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
+                    ]);
+                }
+            }
+            if ($contacts_to_delete = DistributorContactUtilityModel::objects()
+                ->filter(['contact__manufacturerid' => $this->getDx()])
+                ->exclude(['contact_id__in' => $contacts])
+                ->valuesList(['contact_id'], true)) {
+                DistributorContactUtilityModel::objects()->delete([
+                        'contact_id__in' => $contacts_to_delete,
+                        'utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY]
+                );
+            }
+        }
+    }
 }
