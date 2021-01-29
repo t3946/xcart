@@ -125,9 +125,9 @@ class DistributorRequestAvailForm extends DistributorForm
                 ->exclude(['contact_id__in' => $contacts])
                 ->valuesList(['contact_id'], true)) {
                 DistributorContactUtilityModel::objects()->delete([
-                        'contact_id__in' => $contacts_to_delete,
-                        'utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY]
-                );
+                    'contact_id__in' => $contacts_to_delete,
+                    'utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
+                ]);
             }
         }
     }
