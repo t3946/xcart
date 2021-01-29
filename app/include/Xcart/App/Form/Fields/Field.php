@@ -125,6 +125,11 @@ abstract class Field implements IValidateField
     /**
      * @var string
      */
+    public string $fieldClass = '';
+
+    /**
+     * @var string
+     */
     public $inputTemplate = 'forms/field/default/input.tpl';
 
     /**
@@ -321,7 +326,7 @@ abstract class Field implements IValidateField
         return array_replace($this->_attributes, $t);
     }
 
-    public function getCommonClasses($defClasses = [])
+    public function getCommonClasses(?array $defClasses = [])
     {
 
         $errors = [];
@@ -360,7 +365,7 @@ abstract class Field implements IValidateField
     public function getAttributesInput()
     {
         $attributes = $this->getAttributes();
-        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses());
+        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses( [ $this->fieldClass ] ));
         return $attributes;
     }
 
