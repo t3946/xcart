@@ -29,7 +29,7 @@ class CheckoutShippingAddressForm extends AddressForm
 
         $fields = [
             'firstname' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Full Name' ),
                 'hint' => OrderModule::t( 'The order will be shipped under this name' ),
                 'required' => true,
@@ -40,7 +40,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'company' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Company' ),
                 'hint' => OrderModule::t( 'Fill in if shipping to a corporate or university address' ),
                 'html' => [
@@ -49,7 +49,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'address' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
                 'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
@@ -59,7 +59,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'address_2' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address (line 2)' ),
                 'hint' => OrderModule::t( 'Apartment, suite, floor, etc.' ),
                 'html' => [
@@ -68,7 +68,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'country' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Country' ),
                 'required' => true,
                 'validators' => [
@@ -90,7 +90,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'zipcode' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Zip/Postal Code' ),
                 'required' => true,
                 'validators' => [
@@ -104,7 +104,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'state' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'State/Province' ),
                 'required' => true,
                 'validators' => [
@@ -124,7 +124,7 @@ class CheckoutShippingAddressForm extends AddressForm
             ],
 
             'city' => [
-                'class' => CheckoutCharCleanField::class,
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'City' ),
                 'required' => true,
                 'html' => [
