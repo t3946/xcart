@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Editor\Fields\EditorField;
@@ -11,6 +12,7 @@ use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorRequestAvailForm extends DistributorForm
@@ -38,6 +40,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'label' => 'Availability must be checked before order is dispatched for fulfillment',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_d_availability_must_be_checked_text'),
                 'html' => ['style' => 'width:50px;', 'onchange' => "this.checked ? $('.click_hide').closest('tr').show() : $('.click_hide').closest('tr').hide()"],
             ],
             'request_avail_emails' => [
@@ -54,10 +57,13 @@ class DistributorRequestAvailForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
-                'label' => 'Availability request contact'
+                'label' => 'Availability request contact',
+                'hint' => LanguageModel::translate('help_dx_request_avail_emails_text'),
             ],
             'request_avail_template' => [
                 'class' => DropDownField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'label' => 'Availability request template',
                 'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
@@ -66,7 +72,8 @@ class DistributorRequestAvailForm extends DistributorForm
                         $result[$template->id] = (string)$template;
                     }
                     return $result ?? [];
-                }
+                },
+                'hint' => LanguageModel::translate('help_dx_request_avail_template_text'),
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -88,6 +95,14 @@ class DistributorRequestAvailForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:100px;'],
+            ],
+            'd_availability_request_schedule' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'label' => 'Availability request schedule',
+                'html' => ['style' => 'display:none;'],
+                'hint' => LanguageModel::translate('help_dx_availability_request_schedule_text'),
             ],
         ];
     }

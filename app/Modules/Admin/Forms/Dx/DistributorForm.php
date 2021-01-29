@@ -78,7 +78,7 @@ class DistributorForm extends ModelForm
         ],
         'Submitting order to distributor' => [
             14 => [
-                'title' => 'Requesting availability / shipping quote / cost to us',
+                'title' => 'Requesting availability / cost to us / shipping cost',
                 'form' => DistributorRequestAvailForm::class,
                 'required' => true,
             ],
