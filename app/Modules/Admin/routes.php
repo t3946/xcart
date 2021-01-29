@@ -4,6 +4,7 @@ use Modules\Admin\Controllers\AuthController;
 use Modules\Admin\Controllers\AdminController;
 use Modules\Admin\Controllers\CommonController;
 use Modules\Admin\Controllers\DistributorController;
+use Modules\Admin\Controllers\FieldController;
 
 return [
     [
@@ -126,5 +127,10 @@ return [
         'route' => '/distributor/contact_create/{i:mid}',
         'target' => [DistributorController::class, 'contact_create'],
         'name' => 'dx_contact_create'
+    ],
+    [
+        'route' => '/field/reload/',
+        'target' => [FieldController::class, 'field_reload'],
+        'name' => 'field_reload'
     ],
 ];

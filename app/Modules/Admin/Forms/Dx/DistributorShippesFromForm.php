@@ -63,6 +63,7 @@ class DistributorShippesFromForm extends DistributorForm
                 },
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'depends' => ['m_state']
             ],
             'm_state' => [
                 'class' => DropDownField::class,

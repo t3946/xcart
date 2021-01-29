@@ -17,6 +17,7 @@ class EmailAdmin extends Admin
     public $infoTemplate = '/admin/email_info.tpl';
     public $allTemplate = '/admin/email_all.tpl';
     public $listRowTemplate =  'admin/distributor/form/list/_tr_email.tpl';
+    public string $allList = 'admin/list/_email_list.tpl';
 
     public function getListColumns()
     {

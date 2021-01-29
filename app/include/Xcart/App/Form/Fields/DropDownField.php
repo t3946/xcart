@@ -22,6 +22,7 @@ class DropDownField extends Field
      */
     public $choices = [];
     private $_selected = [];
+    public array $depends = [];
     /**
      * Span tag needed because: http://stackoverflow.com/questions/23920990/firefox-30-is-not-hiding-select-box-arrows-anymore
      * @var string
