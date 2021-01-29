@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Modules\Marketplace\Models\ExternalMarketPlaceModel;
 use Xcart\App\Form\Fields\Select2Field;
 
@@ -23,11 +24,12 @@ class DistributorExcludedMarketplacesForm extends DistributorForm
         return [
             'disabled_marketplaces' => [
                 'class' => Select2Field::class,
-                'label' => 'Excluded marketplaces',
+                'label' => 'Forbidden API interactions',
                 'placeholder' => 'Click to select',
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_disabled_marketplaces_text'),
                 'html' => ['style' => 'width:400px;']
             ],
         ];
