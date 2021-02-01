@@ -1395,7 +1395,7 @@ if ($mode === 'ref_notify')
                         foreach ($completed_transactions as $ref_tr) {
 
                             $amount = [
-                                'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2),
+                                'amount' => number_format(min($ref_sum, $ref_tr->transaction_amount), 2, '.', ''),
                                 'currency' => $ref_tr->transaction_currency,
                             ];
                             $params = array_merge(PaymentHelper::getPaymentParams($ref_tr, $amount),
