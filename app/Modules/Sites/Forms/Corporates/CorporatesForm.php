@@ -74,7 +74,7 @@ class CorporatesForm extends ModelForm
 
     public function getModel()
     {
-        return new CorporateModel;
+        return new CorporateModel();
     }
 
     public function getFields()
@@ -91,6 +91,7 @@ class CorporatesForm extends ModelForm
                     }
                     return $result ?? [];
                 },
+                'depends' => ['state']
             ],
             'state' => [
                 'class' => DropDownField::class,

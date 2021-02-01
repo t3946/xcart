@@ -14,22 +14,27 @@
 {/if}
 <script>
     {if $field->depends}
-    async function reloadForm(form , form_class) {
+    function reloadForm(form , form_class, field) {
         let data = form.serialize();
-        data += (data.length ? "&" : "") + "form_class="+form_class;
+        data += (data.length ? "&" : "") + "form_class="+form_class+"&depend_field="+field;
         console.log(form);
         $.ajax({
             type: "POST",
             url: "{url route='admin:field_reload'}",
             data: data,
             success: function(data) {
-                form.find('>table').html(data.html);
+                for(const index in data) {
+                    if (data.hasOwnProperty(index)) {
+                        const attr = data[index];
+                        $('[id$=_'+index+']', form).closest('tr').replaceWith(attr);
+                    }
+                }
             }
         });
     }
     {/if}
 
-    $('#{$id}').change(function () {
+    $(document).on('change', '#{$id}', function () {
         const form = $(this).closest('form')
         const dummy_input = form.find("input[name='{$name}']")
         if (($(this).val() || []).length === 0) {
@@ -40,7 +45,7 @@
             dummy_input.remove()
         }
         {if $field->depends}
-            reloadForm(form, {$field->getForm()|get_class|json_encode});
+            reloadForm(form, {$field->getForm()|get_class|json_encode}, '{$field->depends|implode:','}');
         {/if}
     });
 

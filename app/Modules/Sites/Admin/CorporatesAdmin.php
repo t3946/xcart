@@ -49,7 +49,7 @@ class CorporatesAdmin extends Admin
             if ($sections = CorporatesForm::getSections()) {
                 foreach ($sections as $section) {
                     if (isset($section[$this->section]) && $section[$this->section]['form']) {
-                        return new $section[$this->section]['form'];
+                        return new $section[$this->section]['form']();
                     }
                 }
             }
