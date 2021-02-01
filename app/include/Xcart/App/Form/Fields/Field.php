@@ -122,6 +122,8 @@ abstract class Field implements IValidateField
      */
     public $labelClass = 'label';
 
+    public $labelCommentClass = 'comment';
+
     /**
      * @var string
      */
