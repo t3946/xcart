@@ -9,7 +9,7 @@ use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
-use Xcart\App\Form\Fields\CheckoutCharCleanField;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutShippingAddressForm extends AddressForm
@@ -35,8 +35,12 @@ class CheckoutShippingAddressForm extends AddressForm
                 'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'autocomplete' => 'new-password'
-                ]
+                    'autocomplete' => 'first',
+                ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'company' => [
@@ -46,6 +50,10 @@ class CheckoutShippingAddressForm extends AddressForm
                 'html' => [
                     'placeholder' => OrderModule::t( 'Eureka Inc.' )
                 ],
+                'labelClass' => 'common-label',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
+                'labelCommentClass' => 'common-comment',
             ],
 
             'address' => [
@@ -56,6 +64,10 @@ class CheckoutShippingAddressForm extends AddressForm
                 'html' => [
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
                 ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'address_2' => [
@@ -65,6 +77,10 @@ class CheckoutShippingAddressForm extends AddressForm
                 'html' => [
                     'placeholder' => OrderModule::t( 'Apt 1' )
                 ],
+                'labelClass' => 'common-label',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
+                'labelCommentClass' => 'common-comment',
             ],
 
             'country' => [
@@ -84,9 +100,12 @@ class CheckoutShippingAddressForm extends AddressForm
                     'placeholder' => $country->name ?? 'United States',
                     'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'address-level1',
                 ],
-
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'zipcode' => [
@@ -99,8 +118,12 @@ class CheckoutShippingAddressForm extends AddressForm
                 'html' => [
                     'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
                     'class' => 'auto-complete zip',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'postal-code'
                 ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'state' => [
@@ -119,8 +142,11 @@ class CheckoutShippingAddressForm extends AddressForm
                         ? $state->state
                         : 'New Jersey',
                     'class' => 'auto-complete state',
-                    'autocomplete' => 'new-password'
                 ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'city' => [
@@ -130,9 +156,12 @@ class CheckoutShippingAddressForm extends AddressForm
                 'html' => [
                     'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
                     'class' => 'auto-complete city',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'address-level2'
                 ],
-
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
         ];
 
