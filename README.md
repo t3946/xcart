@@ -5,7 +5,12 @@
 |--app
 |  |--include
 |     |--Xcart
-|        |--App (Mindy engine)
+|        |--App (Mindy framework engine)
+|           |--Behaviours (Field Behaviours)
+
+#Mindy framework engine
+##Field Behaviours
+Determine strategy of form fields behaviour as what can and can't field does, his template rendering and validation. This is similar to controllers but for fields.
 
 Before work on Branches setup these files:
 ```php
