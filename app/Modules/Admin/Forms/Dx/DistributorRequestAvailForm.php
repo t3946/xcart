@@ -58,7 +58,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
+                'html' => ['class' => 'click_hide', 'style' => 'width:100%;'],
                 'label' => 'Availability request contact',
                 'hint' => LanguageModel::translate('help_dx_request_avail_emails_text'),
             ],
@@ -68,7 +68,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'label' => 'Availability request template',
-                'html' => ['class' => 'click_hide', 'style' => 'width:400px;'],
+                'html' => ['class' => 'click_hide', 'style' => 'width:100%;'],
                 'choices' => static function () {
                     foreach (TemplateModel::distributors() as $template) {
                         $result[$template->id] = (string)$template;
