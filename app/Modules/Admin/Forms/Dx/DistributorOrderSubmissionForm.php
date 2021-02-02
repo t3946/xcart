@@ -5,6 +5,7 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Editor\Fields\EditorField;
 use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
@@ -27,6 +28,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
 
     public function getFields()
     {
+        /** @var DistributorModel $dx */
         $dx = $this->getInstance();
         return [
             'd_our_dealer_account_n' => [
@@ -53,6 +55,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'URL to login to distributor website',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_d_url_to_login_to_distributor_website_text'),
                 'extend' => 'Login URL',
             ],
             'd_login' => [
@@ -125,6 +128,15 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     return $result ?? [];
                 },
             ],
+            'template_1_subj' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'value' => $dx->order_entry_template->subject_line,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'label' => 'Order entry template template subject',
+                'html' => ['class' => 'by_site'],
+            ],
             'template_1' => [
                 'class' => EditorField::class,
                 'fieldTemplate' => $this->fieldTemplate,
@@ -167,16 +179,10 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'hint' => LanguageModel::translate('help_dx_email_text'),
                 'html' => ['class' => 'by_email'],
             ],
-            'd_subject_line_8' => [
-                'class' => CharField::class,
-                'label' => "'Dispatch to' email subject line",
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'html' => ['class' => 'by_email'],
-            ],
+
             'order_submit_template' => [
                 'class' => DropDownField::class,
                 'fieldTemplate' => $this->fieldTemplate,
@@ -191,6 +197,15 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     return $result ?? [];
                 },
             ],
+            'template_2_subj' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'value' => $dx->order_submit_template->subject_line,
+                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'label' => 'Message to distributor template subject',
+                'html' => ['class' => 'by_email'],
+            ],
             'template_2' => [
                 'class' => EditorField::class,
                 'fieldTemplate' => $this->fieldTemplate,
@@ -198,6 +213,14 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'value' => $dx->order_submit_template->message_body,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => 'Message to distributor template body',
+                'html' => ['class' => 'by_email'],
+            ],
+            'd_subject_line_8' => [
+                'class' => CharField::class,
+                'label' => "'Dispatch to' email subject line",
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'html' => ['class' => 'by_email'],
             ],
             'mess_body' => [

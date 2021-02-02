@@ -38,10 +38,11 @@
                 id="order_submission_by_email_or_and_fax7">
                 <td class="by_site" colspan="3">{Modules\Core\Models\LanguageModel::translate('txt_distributor_section_82')}</td>
             </tr>
-            {raw $form->getField('d_order_entry_operator_subject_line_8')->render()}
             {raw $form->getField('d_order_entry_operator_email')->render()}
             {raw $form->getField('order_entry_template')->render()}
+            {raw $form->getField('template_1_subj')->render()}
             {raw $form->getField('template_1')->render()}
+            {raw $form->getField('d_order_entry_operator_subject_line_8')->render()}
             {raw $form->getField('d_instructions_to_order_entry_operator')->render()}
             {raw $form->getField('order_entry_special_instructions')->render()}
 
@@ -57,9 +58,10 @@
             {raw $form->getField('allow_dispatch_off_working_hours')->render()}
             {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}
             {raw $form->getField('email')->render()}
-            {raw $form->getField('d_subject_line_8')->render()}
             {raw $form->getField('order_submit_template')->render()}
+            {raw $form->getField('template_2_subj')->render()}
             {raw $form->getField('template_2')->render()}
+            {raw $form->getField('d_subject_line_8')->render()}
             {raw $form->getField('mess_body')->render()}
             {raw $form->getField('order_submit_special_instructions')->render()}
             {raw $form->getField('d_shipping_options')->render()}

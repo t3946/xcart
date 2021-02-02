@@ -48,6 +48,8 @@ use Xcart\Manufacturer;
  * @property TemplateModel request_avail_template
  * @property string d_send_to_email_14
  * @property DistributorTabModel[] tabs
+ * @property TemplateModel order_entry_template
+ * @property TemplateModel order_submit_template
  */
 class DistributorModel extends Model
 {
