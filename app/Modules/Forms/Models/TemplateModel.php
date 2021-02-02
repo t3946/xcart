@@ -18,10 +18,12 @@ use Xcart\App\Orm\Model;
  * @property string subject_line
  * @property AttentionTagModel status
  * @method static Manager distributors()
+ * @method static Manager customer_service()
  */
 class TemplateModel extends Model
 {
     public const REQUEST_AVAILABILITY_TEMPLATE_ID = 9614;
+    public const ORDER_ENTRY_TEMPLATE_ID = 8974;
 
     public static function tableName()
     {
@@ -97,6 +99,13 @@ class TemplateModel extends Model
     {
         return static::objects($instance)
             ->filter(['department' => 'distributor', 'active' => 'Y'])
+            ->order(['pos', 'template_name']);
+    }
+
+    public static function customer_serviceManager($instance = null)
+    {
+        return static::objects($instance)
+            ->filter(['department' => 'our_customer_service', 'active' => 'Y'])
             ->order(['pos', 'template_name']);
     }
 

@@ -4,9 +4,8 @@
 namespace Modules\Admin\Forms\Dx;
 
 
-use Modules\Core\Models\LanguageModel;
 use Modules\Editor\Fields\EditorField;
-use Modules\Order\Models\AttentionTagModel;
+use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -107,6 +106,29 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'html' => ['class' => 'by_site'],
             ],
+            'order_entry_template' => [
+                'class' => DropDownField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'label' => 'Order entry template',
+                'html' => ['class' => 'by_site', 'style' => 'width:400px;'],
+                'choices' => static function () {
+                    foreach (TemplateModel::customer_service() as $template) {
+                        $result[$template->id] = (string)$template;
+                    }
+                    return $result ?? [];
+                },
+            ],
+            'template_1' => [
+                'class' => EditorField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'value' => $dx->order_entry_template->message_body,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'label' => 'Order entry template template body',
+                'html' => ['class' => 'by_site'],
+            ],
             'allow_dispatch_off_working_hours' => [
                 'class' => CheckboxField::class,
                 'label' => 'Allow dispatch off working hours',
@@ -138,6 +160,29 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'html' => ['class' => 'by_email'],
+            ],
+            'order_submit_template' => [
+                'class' => DropDownField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'label' => 'Message to distributor template',
+                'html' => ['class' => 'by_email', 'style' => 'width:400px;'],
+                'choices' => static function () {
+                    foreach (TemplateModel::distributors() as $template) {
+                        $result[$template->id] = (string)$template;
+                    }
+                    return $result ?? [];
+                },
+            ],
+            'template_2' => [
+                'class' => EditorField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'value' => $dx->order_submit_template->message_body,
+                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'label' => 'Message to distributor template body',
                 'html' => ['class' => 'by_email'],
             ],
             'mess_body' => [

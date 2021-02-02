@@ -38,22 +38,27 @@
                 id="order_submission_by_email_or_and_fax7">
                 <td class="by_site" colspan="3">{Modules\Core\Models\LanguageModel::translate('txt_distributor_section_82')}</td>
             </tr>
-            {raw $form->getField('d_order_entry_operator_email')->render()}
             {raw $form->getField('d_order_entry_operator_subject_line_8')->render()}
+            {raw $form->getField('d_order_entry_operator_email')->render()}
+            {raw $form->getField('order_entry_template')->render()}
+            {raw $form->getField('template_1')->render()}
             {raw $form->getField('d_instructions_to_order_entry_operator')->render()}
+
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
                 id="order_submission_by_email_or_and_fax1">
                 <td class="by_email" colspan="3" align="center"><B>Order submission by e-mail or/and fax</B></td>
             </tr>
-
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
                 id="order_submission_by_email_or_and_fax3">
                 <td class="by_email" colspan="3">{Modules\Core\Models\LanguageModel::translate('txt_distributor_section_8')}</td>
             </tr>
+
             {raw $form->getField('allow_dispatch_off_working_hours')->render()}
             {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}
             {raw $form->getField('email')->render()}
             {raw $form->getField('d_subject_line_8')->render()}
+            {raw $form->getField('order_submit_template')->render()}
+            {raw $form->getField('template_2')->render()}
             {raw $form->getField('mess_body')->render()}
             {raw $form->getField('d_shipping_options')->render()}
         </table>

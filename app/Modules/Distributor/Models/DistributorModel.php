@@ -124,6 +124,22 @@ class DistributorModel extends Model
                 'null' => false,
                 'default' => TemplateModel::REQUEST_AVAILABILITY_TEMPLATE_ID,
             ],
+            'order_entry_template' => [
+                'field' => 'order_entry_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['order_entry_template_id' => 'id'],
+                'null' => true,
+                'default' => TemplateModel::ORDER_ENTRY_TEMPLATE_ID,
+            ],
+            'order_submit_template' => [
+                'field' => 'order_submit_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['order_submit_template_id' => 'id'],
+                'null' => true,
+                'default' => null,
+            ],
             'd_email_subject_14' => [
                 'class' => CharField::class,
                 'default' => '',
