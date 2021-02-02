@@ -57,6 +57,7 @@ class DistributorPaymentToDxForm extends DistributorForm
             }
             return $result ?? [];
         })->__invoke();
+        $dx = $this->getInstance();
 
         return [
             'd_we_pay_to_distributor_by' => [
@@ -172,13 +173,14 @@ class DistributorPaymentToDxForm extends DistributorForm
                 },
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'depends' => ['dcad_state'],
             ],
             'dcad_state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:300px;'],
-                'choices' => static function () {
-                    foreach (StateModel::objects()->filter(['country_code__in' => ['US']]) as $state) {
+                'choices' => static function () use ($dx) {
+                    foreach (StateModel::objects()->filter(['country_code__in' => [$dx->dcad_country ?? 'US']]) as $state) {
                         $result[$state->code] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];

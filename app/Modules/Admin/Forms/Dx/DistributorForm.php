@@ -66,7 +66,7 @@ class DistributorForm extends ModelForm
                 'hidden' => true
             ],
             40 => [
-                'title' => 'External marketplaces',
+                'title' => 'Forbidden API interactions',
                 'form' => DistributorExcludedMarketplacesForm::class,
                 'required' => true,
             ],

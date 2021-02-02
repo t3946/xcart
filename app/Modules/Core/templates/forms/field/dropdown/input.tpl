@@ -17,7 +17,6 @@
     function reloadForm(form , form_class, field) {
         let data = form.serialize();
         data += (data.length ? "&" : "") + "form_class="+form_class+"&depend_field="+field;
-        console.log(form);
         $.ajax({
             type: "POST",
             url: "{url route='admin:field_reload'}",
