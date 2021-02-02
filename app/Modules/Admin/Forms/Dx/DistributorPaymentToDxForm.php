@@ -21,23 +21,26 @@ class DistributorPaymentToDxForm extends DistributorForm
     {
         return [
             'Payment to distributor arrangements' => [
-                'd_we_pay_to_distributor_by',
                 'd_pay_to_distributor_by',
                 'd_net_payment_terms_in_days',
+                'd_we_pay_to_distributor_by',
             ],
             'Distributor checking account details' => [
                 'dcad_company_name',
                 'dcad_address_caption',
                 'dcad_address',
                 'dcad_address_2',
-                'dcad_city',
-                'dcad_country',
                 'dcad_state',
+                'dcad_city',
                 'dcad_zipcode',
+                'dcad_country',
                 'dcad_bank_name',
                 'dcad_swift',
                 'dcad_routing_number',
                 'dcad_account_number',
+            ],
+            'Distributor PayPal account details' => [
+                'dx_paypal_account_email',
             ],
             'Reconciliation settings' => [
                 'd_bulk_or_individual_order_payments',
@@ -64,7 +67,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'class' => DropDownField::class,
                 'label' => 'We pay to distributor by',
                 'choices' => [
-                    'credit_card' => 'credit card',
+                    'credit_card' => 'credit / debit card',
                     'paypal_balance' => 'PayPal balance',
                     'check' => 'check',
                 ],
@@ -106,6 +109,13 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
                 'extend' => 'd_we_can_save_after',
+            ],
+            'dx_paypal_account_email' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_paypal_account_email_text'),
+                'html' => ['style' => 'width:300px'],
             ],
             'd_we_can_save_after' => [
                 'class' => HiddenField::class,
@@ -206,7 +216,7 @@ class DistributorPaymentToDxForm extends DistributorForm
             ],
             'dcad_swift' => [
                 'class' => CharField::class,
-                'label' => 'Swift / BIC',
+                'label' => 'SWIFT / BIC',
                 'html' => ['style' => 'width:300px'],
                 'hint' => LanguageModel::translate('help_dx_dcad_swift') ?? 'help_dx_dcad_swift',
                 'fieldTemplate' => $this->fieldTemplate,

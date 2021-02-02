@@ -19,10 +19,10 @@ class DistributorShippesFromForm extends DistributorForm
         return [[
             'm_address',
             'm_address_2',
-            'm_country',
-            'm_state',
             'm_city',
+            'm_state',
             'm_zipcode',
+            'm_country',
         ]];
     }
 

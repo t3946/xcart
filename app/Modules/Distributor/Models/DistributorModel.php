@@ -177,6 +177,12 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'dx_paypal_account_email' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true,
+                'verboseName' => 'Distributor PayPal account email'
+            ],
             'dcad_swift' => [
                 'class' => CharField::class,
                 'default' => null,

@@ -31,8 +31,8 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'class' => DropDownField::class,
                 'label' => 'Warranty period starts when the order is',
                 'choices' => [
-                    'shipped' => 'shipped',
                     'received_by_customer' => 'received by the customer',
+                    'shipped' => 'shipped',
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
