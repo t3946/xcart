@@ -406,7 +406,7 @@ abstract class Admin
      */
     public function getOrder()
     {
-        $order = isset($_GET['order']) ? $_GET['order'] : null;
+        $order = $_GET['order'] ?? null;
         if ($order) {
             $clean = $order;
             $asc = true;

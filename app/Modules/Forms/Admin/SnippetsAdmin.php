@@ -3,18 +3,12 @@
 namespace Modules\Forms\Admin;
 
 use Modules\Admin\Contrib\Admin;
-use Modules\Admin\Contrib\NestedAdmin;
 use Modules\Forms\Forms\SnippetsForm;
 use Modules\Forms\Models\SnippetModel;
-use Modules\Pages\Forms\PagesForm;
-use Modules\Pages\Models\Page;
-use Modules\Pages\PagesModule;
-use Xcart\App\Orm\Model;
 
 
 class SnippetsAdmin extends Admin
 {
-//    public $linkColumn = 'name';
 
     public function getListColumns()
     {

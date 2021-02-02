@@ -36,6 +36,7 @@ class DistributorReturnPolicyForm extends DistributorForm
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_d_warranty_starts_when_order_is_text'),
                 'inputTemplate' => 'admin/distributor/form/dropdown.tpl',
                 'extend' => 'd_warranty_last_day'
             ],
@@ -64,6 +65,7 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
                 'extend' => 'd_re_stocking_fee_for_authorized_returns_after',
+                'hint' => LanguageModel::translate('help_d_re_stocking_fee_for_authorized_returns_text'),
             ],
             'd_re_stocking_fee_for_authorized_returns_after' => [
                 'class' => HiddenField::class,
@@ -80,6 +82,7 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
                 'extend' => 'd_re_stocking_fee_for_unauthorized_returns_after',
+                'hint' => LanguageModel::translate('help_d_re_stocking_fee_for_unauthorized_returns_text'),
             ],
             'd_re_stocking_fee_for_unauthorized_returns_after' => [
                 'class' => HiddenField::class,
@@ -93,6 +96,7 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'label' => 'Distributor return policy',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_d_distributor_return_policy_text'),
             ]
         ];
     }
