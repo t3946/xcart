@@ -140,11 +140,22 @@ class DistributorModel extends Model
                 'null' => true,
                 'default' => null,
             ],
+            'order_entry_special_instructions' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
+            'order_submit_special_instructions' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
             'd_email_subject_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
-            ],'d_message_body_14' => [
+            ],
+            'd_message_body_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false

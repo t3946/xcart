@@ -129,6 +129,14 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Order entry template template body',
                 'html' => ['class' => 'by_site'],
             ],
+            'order_entry_special_instructions' => [
+                'class' => EditorField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'label' => 'Order entry special instructions',
+                'html' => ['class' => 'by_site'],
+            ],
             'allow_dispatch_off_working_hours' => [
                 'class' => CheckboxField::class,
                 'label' => 'Allow dispatch off working hours',
@@ -191,6 +199,14 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'html' => ['class' => 'by_email'],
+            ],
+            'order_submit_special_instructions' => [
+                'class' => EditorField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'through_distributor_website',
+                'label' => 'Order submit special instructions',
                 'html' => ['class' => 'by_email'],
             ],
             'd_dispatch_instructions' => [

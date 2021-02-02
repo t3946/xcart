@@ -43,6 +43,7 @@
             {raw $form->getField('order_entry_template')->render()}
             {raw $form->getField('template_1')->render()}
             {raw $form->getField('d_instructions_to_order_entry_operator')->render()}
+            {raw $form->getField('order_entry_special_instructions')->render()}
 
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
                 id="order_submission_by_email_or_and_fax1">
@@ -60,6 +61,7 @@
             {raw $form->getField('order_submit_template')->render()}
             {raw $form->getField('template_2')->render()}
             {raw $form->getField('mess_body')->render()}
+            {raw $form->getField('order_submit_special_instructions')->render()}
             {raw $form->getField('d_shipping_options')->render()}
         </table>
         <div class="row" style="margin-top: 15px;">
