@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Modules\Editor\Fields\EditorField;
 use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
@@ -33,6 +34,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Our dealer account #',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_d_our_dealer_account_n_text'),
             ],
             'd_contact_name_for_templates' => [
                 'class' => CharField::class,
@@ -55,10 +57,11 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'd_login' => [
                 'class' => CharField::class,
-                'label' => 'Login/username',
+                'label' => 'Login/Username',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => true,
+                'hint' => LanguageModel::translate('help_d_login_text'),
                 'html' => ['class' => 'unhide']
             ],
             'd_password' => [
@@ -67,6 +70,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => true,
+                'hint' => LanguageModel::translate('help_d_password_text'),
                 'html' => ['class' => 'unhide']
             ],
             'submit_to_operator' => [
@@ -78,6 +82,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_submit_to_operator_text'),
                 'html' => ['onchange' => "(this.value === 'by_email_or_and_fax')
                 ? $('.by_email').closest('tr').show().closest('form').find('.by_site').closest('tr').hide()
                 : $('.by_site').closest('tr').show().closest('form').find('.by_email').closest('tr').hide()"]
@@ -142,6 +147,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Allow dispatch off working hours',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_allow_dispatch_off_working_hours_text'),
                 'html' => ['style' =>'width:50px;', 'class' => 'by_email'],
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
 
@@ -151,12 +157,13 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Add \'Cost to us\' column to dispatch message',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_add_cost_to_us_column_to_dispatch_message_text'),
                 'html' => ['style' =>'width:50px;', 'class' => 'by_email'],
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
             ],
             'email' => [
                 'class' => CharField::class,
-                'label' => 'Distributor email',
+                'label' => "'Dispatch to' email contact",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
@@ -164,7 +171,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'd_subject_line_8' => [
                 'class' => CharField::class,
-                'label' => 'Distributor subject line',
+                'label' => "'Dispatch to' email subject line",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
@@ -195,7 +202,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'mess_body' => [
                 'class' => EditorField::class,
-                'label' => 'Message to distributor',
+                'label' => "'Dispatch to' email message",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
@@ -224,6 +231,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'html' => ['class' => 'by_email'],
+                'hint' => LanguageModel::translate('help_d_shipping_options_text'),
             ]
         ];
     }
