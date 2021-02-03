@@ -5,11 +5,12 @@
 
     {block 'seo'}{meta controller=$this!:null}{/block}
 
+    {set $is_dev_mode = constant('APP_LOCAL') != false}
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
     {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
-    {set $uri = constant('APP_LOCAL') ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $uri = $is_dev_mode ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -153,23 +154,27 @@
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}
       class="loading loading-active"
 >
+{if $is_dev_mode}
+    {*save spacing on development*}
+    {autoescape true}
+        {block 'preloader'}{/block}
 
-{filter|strip:true}
-{autoescape true}
-{block 'preloader'}
-    {*<div class="loader-bg waves waves-dark">
-        <div class="loader-wrapper">
-            <div class="loader-spinner"></div>
-            <div class="loader-container"></div>
-        </div>
-    </div>*}
-{/block}
+        {block "wrapper"}
+            {block "content"}{/block}
+        {/block}
+    {/autoescape}
+{else}
+    {*remove spacing on production*}
+    {filter|strip:true}
+        {autoescape true}
+            {block 'preloader'}{/block}
 
-{block "wrapper"}
-    {block "content"}{/block}
-{/block}
-{/autoescape}
-{/filter}
+            {block "wrapper"}
+                {block "content"}{/block}
+            {/block}
+        {/autoescape}
+    {/filter}
+{/if}
 
 
 {block 'js'}{/block}
