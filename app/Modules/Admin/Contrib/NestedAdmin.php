@@ -143,4 +143,16 @@ abstract class NestedAdmin extends Admin
 
         return parent::getCreateUrl();
     }
+
+    public function getSortUrl()
+    {
+        if ($this->parent_pk) {
+            return Xcart::app()->router->url('admin:sort_nested', [
+                'module' => static::getModuleName(),
+                'admin' => static::classNameShort(),
+                'id' => $this->parent_pk
+            ]);
+        }
+        return parent::getSortUrl();
+    }
 }

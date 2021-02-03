@@ -67,9 +67,6 @@ class TemplatesAdmin extends Admin
         }
         $qs = parent::handleFilter($qs, $form);
 
-        if ($form->department->getValue() === null) {
-            $qs->filter(['department__isnull' => true]);
-        }
         if ($form->category->getValue() === '') {
             $qs->filter(['category_id__isnull' => true]);
         }

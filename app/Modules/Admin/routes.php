@@ -58,6 +58,11 @@ return [
         'name' => 'sort'
     ],
     [
+        'route' => '/sort/{:module}/{:admin}/{:id}',
+        'target' => [AdminController::class, 'sort'],
+        'name' => 'sort_nested'
+    ],
+    [
         'route' => '/columns/{:module}/{:admin}',
         'target' => [AdminController::class, 'columns'],
         'name' => 'columns'

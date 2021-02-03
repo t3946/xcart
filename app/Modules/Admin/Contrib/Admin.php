@@ -16,6 +16,7 @@ use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
@@ -453,14 +454,27 @@ abstract class Admin
             if ($value && $model_field = $this->getModel()->getFieldsInit()[$key]) {
                 if ($model_field instanceof ManyToManyField) {
                     $key = "{$model_field->getName()}__{$model_field->getRelatedModelPk()}";
+                    if (is_array($value)) {
+                        $qs->filter(["{$key}__in" => $value]);
+                    } else {
+                        $qs->filter([$key => $value]);
+                    }
                 }
-                if ($model_field instanceof ForeignField) {
+                elseif ($model_field instanceof TreeForeignField) {
+                    [$lft, $rgt, $root] = $model_field->getRelatedModel()::objects()->filter(['pk' => $value])->valuesList(['lft', 'rgt', 'root'], true);
+                    $qs->filter([
+                        "{$model_field->getName()}__lft__gte" => $lft,
+                        "{$model_field->getName()}__rgt__lte" => $rgt,
+                        "{$model_field->getName()}__root" => $root,
+                    ]);
+                }
+                elseif ($model_field instanceof ForeignField) {
                     $key = "{$model_field->getName()}__{$model_field->getTo()}";
-                }
-                if (is_array($value)) {
-                    $qs->filter(["{$key}__in" => $value]);
-                } else {
-                    $qs->filter([$key => $value]);
+                    if (is_array($value)) {
+                        $qs->filter(["{$key}__in" => $value]);
+                    } else {
+                        $qs->filter([$key => $value]);
+                    }
                 }
             }
         }
@@ -904,8 +918,12 @@ abstract class Admin
         return false;
     }
 
-    public function sort($pkList, $to, $prev, $next): void
+    public function sort($pkList, $to, $prev, $next, $id = null): void
     {
+        if ($id) {
+            $this->parent_pk = $id;
+        }
+
         $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
         $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);

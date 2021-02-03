@@ -14,7 +14,7 @@ class TreeForeignField extends ForeignField
     {
         $relatedModel = $this->getRelatedModel();
 
-        $choices = function () use ($relatedModel) {
+        $choices = static function () use ($relatedModel) {
             $list = ['' => ''];
 
             $qs = $relatedModel->objects()->order(['root', 'lft']);
@@ -42,7 +42,7 @@ class TreeForeignField extends ForeignField
         $model = $this->getModel();
         $disabled = [];
 
-        if ($model->className() == $relatedModel->className() && $model->getIsNewRecord() === false) {
+        if ($model->className() === $relatedModel->className() && $model->getIsNewRecord() === false) {
             $disabled[] = $model->pk;
         }
 

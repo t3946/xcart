@@ -515,7 +515,7 @@ HTML;
                     true
                 )) {
                 $message = SnippetHelper::render(
-                    $dx->d_instructions_to_order_entry_operator,
+                    html_entity_decode($dx->d_instructions_to_order_entry_operator),
                     ['order' => $order, 'user' => Xcart::app()->user, 'group' => $group]
                 );
                 $subject = SnippetHelper::render(

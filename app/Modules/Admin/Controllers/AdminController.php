@@ -52,7 +52,7 @@ class AdminController extends BackendController
         $admin->remove($pk);
     }
 
-    public function sort($module, $admin)
+    public function sort($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);
 
@@ -61,7 +61,7 @@ class AdminController extends BackendController
         $prev = $_POST['prev'] ?? null;
         $next = $_POST['next'] ?? null;
 
-        $admin->sort($pkList, $to , $prev, $next);
+        $admin->sort($pkList, $to , $prev, $next, $id);
     }
 
     public function columns($module, $admin)

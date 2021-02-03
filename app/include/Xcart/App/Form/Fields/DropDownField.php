@@ -37,6 +37,7 @@ class DropDownField extends Field
      * @var string
      */
     public $empty = '';
+    public bool $not_assigned = false;
     /**
      * @var array
      */
