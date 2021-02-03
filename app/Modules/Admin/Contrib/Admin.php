@@ -475,6 +475,10 @@ abstract class Admin
                     } else {
                         $qs->filter([$key => $value]);
                     }
+                } elseif (is_array($value)) {
+                    $qs->filter(["{$key}__in" => $value]);
+                } else {
+                    $qs->filter([$key => $value]);
                 }
             }
         }
