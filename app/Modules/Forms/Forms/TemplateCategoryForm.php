@@ -13,7 +13,7 @@ class TemplateCategoryForm extends ModelForm
 
     public function getModel()
     {
-        return new TemplateCategoryModel;
+        return new TemplateCategoryModel();
     }
 
     public function getName()

@@ -16,7 +16,7 @@ class TemplateFilterForm extends Form
             'category' => [
                 'class' => DropDownField::class,
                 'empty' => 'All',
-                'not_assigned' => true,
+                'inputTemplate' => 'forms/field/dropdown/input_nested.tpl',
                 'choices' => function () {
                     foreach (TemplateCategoryModel::objects()->order(['root', 'lft', 'pos']) as $category) {
                         $level = $category['level'] ? $category['level'] - 1 : $category['level'];

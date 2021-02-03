@@ -31,7 +31,7 @@ class TemplateCategoryAdmin extends NestedAdmin
 
     public function getForm()
     {
-        return new TemplateCategoryForm;
+        return new TemplateCategoryForm();
     }
 
     public function getModel()
