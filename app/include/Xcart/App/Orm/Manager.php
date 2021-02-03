@@ -272,4 +272,9 @@ class Manager extends ManyToManyManager
         $this->getQuerySet()->cache($ttl);
         return $this;
     }
+
+    public function getOrder()
+    {
+        return $this->getQuerySet()->getOrder();
+    }
 }

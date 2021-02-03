@@ -16,8 +16,10 @@ use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
+use Xcart\App\Orm\TreeManager;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Template\Renderer;
@@ -525,11 +527,11 @@ abstract class Admin
     }
 
     /**
-     * @param $qs QuerySet
-     * @return mixed
+     * @param $qs QuerySet|Manager
+     * @return QuerySet|Manager
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function fixSort(QuerySet $qs): QuerySet
+    public function fixSort($qs)
     {
         if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
             $newQs = clone($qs);
@@ -889,10 +891,10 @@ abstract class Admin
     }
 
     /**
-     * @param $qs QuerySet
+     * @param $qs QuerySet|Manager
      * @return bool
      */
-    public function getCanSort(QuerySet $qs): bool
+    public function getCanSort($qs): bool
     {
         if ($this->sort) {
             $order = $qs->getOrder();
