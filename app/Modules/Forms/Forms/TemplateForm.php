@@ -36,7 +36,7 @@ class TemplateForm extends ModelForm
                 'required' => true,
                 'extend' => 'category_link',
                 'choices' => function () {
-                    foreach (TemplateCategoryModel::objects()->order(['root', 'lft', 'pos']) as $category) {
+                    foreach (TemplateCategoryModel::objects()->order(['root', 'level', 'pos']) as $category) {
                         $level = $category['level'] ? $category['level'] - 1 : $category['level'];
                         $list[$category['id']] = $level ? str_repeat("..", $level) . ' ' . $category['name'] : $category['name'];
                     }
