@@ -108,6 +108,8 @@ class TemplatesAdmin extends Admin
             ]);
         } else if ($this->sort) {
             $qs->order([
+                'category__root',
+                'category__level',
                 'category__pos',
                 $this->sort
             ]);
