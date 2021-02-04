@@ -75,8 +75,8 @@ class TemplatesAdmin extends Admin
 
     public function getItemProperty(Model $item, $property)
     {
-        if ($property === 'department') {
-            return ($field = $item->getField($property)) ? $field->toText() : '';
+        if ($property === 'category') {
+            return implode(" > ", $item->category->getObjects()->ancestors(true)->order(['lft'])->all());
         }
         return parent::getItemProperty($item, $property);
     }
