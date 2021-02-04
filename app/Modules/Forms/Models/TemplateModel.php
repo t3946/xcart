@@ -63,16 +63,6 @@ class TemplateModel extends Model
                 'class' => CharField::class,
                 'verboseName' => "Message body"
             ],
-            'department' => [
-                'class' => CharField::class,
-                'choices' => [
-                    'customer' => 'Customer',
-                    'distributor' => 'Distributor',
-                    'our_customer_service' => 'Our customer service',
-                    'third_party' => 'Third party',
-                ],
-                'verboseName' => 'Template to communicate to'
-            ],
             'ca_status' => [
                 'class' => CharField::class,
                 'default' => ''

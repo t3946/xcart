@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Forms\Helpers\SnippetHelper;
+use Modules\Forms\Models\TemplateCategoryModel;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
@@ -2663,15 +2664,26 @@ if (!empty($mnfs) && is_array($mnfs)) {
 $smarty->assign('all_distributor_memo_links', $all_distributor_memo_links);
 $smarty->assign('current_date', time());
 
-$department_arr = (new TemplateModel)->getField('department')->choices;
+$department_arr = [
+    'customer' => 27,
+    'distributor' => 28,
+    'our_customer_service' => 29,
+    'third_party' => 30,
+];
 
-foreach ($department_arr as $department => $department_name) {
-    foreach (TemplateModel::objects()->filter(['department' => $department, 'active' => 'Y'])->order(['category__pos', 'pos']) as $template) {
+foreach ($department_arr as $department => $category_id) {
+    [$lft, $rgt, $root] = TemplateCategoryModel::objects()->filter(['pk' => $category_id])->valuesList(['lft', 'rgt', 'root'], true);
+    foreach (TemplateModel::objects()->filter([
+        'category__lft__gte' => $lft,
+        'category__rgt__lte' => $rgt,
+        'category__root' => $root,
+        'active' => 'Y'
+    ])->order(['category__pos','pos']) as $template) {
         $department_full_arr[$department][(string)$template->category][] = $template;
     }
 }
 
-$smarty->assign("department_full_arr", $department_full_arr);
+$smarty->assign("department_full_arr", $department_full_arr ?? []);
 
 if (!empty($order["po_number"])) {
     $count_po_number = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE po_number='" . addslashes($order["po_number"]) . "'");
