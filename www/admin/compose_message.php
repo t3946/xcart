@@ -1,9 +1,9 @@
 <?php
 
+use Modules\Forms\Models\TemplateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
-use Xcart\App\Main\Xcart;
 
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['subject', 'body'];
@@ -44,6 +44,8 @@ if ($department === 'distributor' && !empty($mid_templateid)) {
     $manufacturerid = $mid_templateid_arr[0];
     $template_id = $mid_templateid_arr[1];
 }
+
+$template_model = TemplateModel::objects()->get(['id' => $template_id]);
 
 if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
@@ -111,12 +113,10 @@ if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
     func_header_location('compose_message.php?orderid=' . $orderid . '&department=' . $department . ($department === 'distributor' ? '&mid_templateid=' . $mid_templateid : '&template_id=' . $template_id) . '&sent=Y');
 }
 
-$department_info = func_query("SELECT * FROM $sql_tbl[templates_for_communication] WHERE department='$department' AND active='Y' ORDER BY pos");
-
 $mnfs = func_get_order_manufacturers($orderid);
 $smarty->assign('order_manufacturers', $mnfs);
 
-if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)) {
+if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)) {
 
     if (in_array($department, ['customer', 'our_customer_service', 'third_party'], true)) {
         $all__items_table__ = '';
@@ -160,75 +160,73 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
         $shipfrom = implode('/', $shipfrom_arr);
     }
 
-    foreach ($department_info as $k => $v) {
-        if ($template_id == $v['id']) {
+    $subject = $template_model->subject_line;
+    $body = html_entity_decode($template_model->message_body);
+    $to = '';
+    $attach_pdf_invoice = $v['attach_pdf_invoice'];
 
-            $subject = $v['subject_line'];
-            $body = html_entity_decode($v['message_body']);
-            $to = '';
-            $attach_pdf_invoice = $v['attach_pdf_invoice'];
+    if ($department === 'customer') {
+        $to = $userinfo['email'];
+    }
 
-            if ($department === 'customer') {
-                $to = $userinfo['email'];
-            }
+    if (in_array($department, ['customer', 'our_customer_service', 'third_party'], true)) {
+        $body = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+            $all__items_table__,
+            $all__items_table__,
+            $all__shipto_table__,
+            $all__shipto_table_full__
+        ], $body);
+        $subject = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
+            $all__items_table__,
+            $all__items_table__,
+            $all__shipto_table__,
+            $all__shipto_table_full__
+        ], $subject);
+    }
 
-            if (in_array($department, ['customer', 'our_customer_service', 'third_party'], true)) {
-                $body = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
-                    $all__items_table__,
-                    $all__items_table__,
-                    $all__shipto_table__,
-                    $all__shipto_table_full__
-                ], $body);
-                $subject = str_replace(['{{items}}', '{{items_quantity_only}}', '{{shipto}}', '{{shipto_full_address}}'], [
-                    $all__items_table__,
-                    $all__items_table__,
-                    $all__shipto_table__,
-                    $all__shipto_table_full__
-                ], $subject);
-            }
-
-            foreach ($mnfs as $mid => $vv) {
-                if (((int)$manufacturerid === (int)$mid) && $department === 'distributor') {
-                    if (!empty($to)) {
-                        $to .= ', ';
-                    }
-
-                    $to .= $vv['compose_email_to_distributor'];
-
-                    $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
-                        $vv['__shipto_table__'],
-                        $vv['__shipto_full_table__'],
-                        $vv['__items_table__'],
-                        $vv['__items_table__'],
-                        $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
-                    ], $body);
-
-                    $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
-                        $vv['__shipto_table__'],
-                        $vv['__shipto_full_table__'],
-                        $vv['__items_table__'],
-                        $vv['__items_table__'],
-                        $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
-                    ], $subject);
-
-                    $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);
-                    $subject = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $subject);
-                }
-            }
-
+    foreach ($mnfs as $mid => $vv) {
+        if (((int)$manufacturerid === (int)$mid) && $department === 'distributor') {
             if (!empty($to)) {
                 $to .= ', ';
             }
 
-            $to .= $v['send_to_email'];
+            $to .= $vv['compose_email_to_distributor'];
 
-            $body = str_replace(['{{orderid}}', '{{c-fullname}}'], ["{$order['order_prefix']}{$orderid}", $userinfo['firstname']], $body);
+            $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
+                $vv['__shipto_table__'],
+                $vv['__shipto_full_table__'],
+                $vv['__items_table__'],
+                $vv['__items_table__'],
+                $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
+            ], $body);
 
-            $subject = str_replace(['{{orderid}}', '{{c-fullname}}'], [
-                $order['order_prefix'] . $orderid, $userinfo['firstname']
+            $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
+                $vv['__shipto_table__'],
+                $vv['__shipto_full_table__'],
+                $vv['__items_table__'],
+                $vv['__items_table__'],
+                $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
             ], $subject);
+
+            $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);
+            $subject = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $subject);
+
+            $body = str_replace('{{distributorname}}', $vv['manufacturer'], $body);
+            $subject = str_replace('{{distributorname}}', $vv['manufacturer'], $subject);
         }
     }
+
+    if (!empty($to)) {
+        $to .= ', ';
+    }
+
+    $to .= $v['send_to_email'];
+
+    $body = str_replace(['{{orderid}}', '{{c-fullname}}'], ["{$order['order_prefix']}{$orderid}", $userinfo['firstname']], $body);
+
+    $subject = str_replace(['{{orderid}}', '{{c-fullname}}'], [
+        $order['order_prefix'] . $orderid, $userinfo['firstname']
+    ], $subject);
 
     $instock_and_outofstock_items_table = func_instock_and_outofstock_items_table($products, 'compose_message_page');
     $cidev_instock_items_table = $instock_and_outofstock_items_table['instock'];
