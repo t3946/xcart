@@ -97,4 +97,21 @@ class TemplatesAdmin extends Admin
     {
         return true;
     }
+
+    public function applyOrder($qs)
+    {
+        $order = $this->getOrder();
+
+        if ($order && isset($order['raw'])) {
+            $qs->order([
+                $order['raw']
+            ]);
+        } else if ($this->sort) {
+            $qs->order([
+                'category__pos',
+                $this->sort
+            ]);
+        }
+        return $qs;
+    }
 }
