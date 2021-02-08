@@ -620,10 +620,10 @@ class OrderModel extends Model
         }
     }
 
-    public function getAltItems()
+    public function getAltItems(): array
     {
         if ($this->alt_items && $a = explode(',', $this->alt_items)) {
-            return ProductModel::forsale()->filter(['productcode__in' => $a]);
+            return ProductModel::forsale()->filter(['productcode__in' => $a])->all();
         }
         return [];
     }
