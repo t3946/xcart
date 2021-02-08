@@ -1,0 +1,8 @@
+.common-label_required:after {
+  content: "*";
+  display: inline;
+  vertical-align: top;
+  color: red;
+  position: static;
+  font-weight: 400;
+}

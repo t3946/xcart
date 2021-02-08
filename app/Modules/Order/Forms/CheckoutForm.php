@@ -35,11 +35,11 @@ class CheckoutForm extends ShippingForm
     protected function beforeConstruct()
     {
         $shippingForm = new CheckoutShippingAddressForm();
-//        $contactForm = new ContactInfoForm();
+        $contactForm = new CheckoutContactInfoForm();
 
         $this->_shippingFields = $shippingForm->getFields();
         $this->_shippingFields[ $shippingForm->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_firstname';
-        $this->_contactFields = [];
+        $this->_contactFields = $contactForm->getFields();
     }
 
     public function getFieldsets()

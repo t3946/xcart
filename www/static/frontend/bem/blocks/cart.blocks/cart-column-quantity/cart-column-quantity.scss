@@ -1,0 +1,11 @@
+.cart-column-quantity {
+  width: 135px;
+  text-align: center;
+  padding-right: 40px;
+}
+
+@media screen and (min-width: 45em) {
+  .cart-item-name-quantity {
+    justify-content: space-between;
+  }
+}

@@ -3,11 +3,11 @@
 import _ from 'lodash';
 
 (()=>{
-    let page_cart = document.querySelector('.cart-page');
+    let page_cart = document.querySelector('.cart-page, .checkout-page');
     if (page_cart) {
         let n_request = 0;
         let recalc = () => {
-            page_cart = document.querySelector('.cart-page');
+            page_cart = document.querySelector('.cart-page, .checkout-page');
 
             let products = page_cart.querySelectorAll('[data-product]');
             if (products) {

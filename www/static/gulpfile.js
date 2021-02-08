@@ -258,19 +258,17 @@ gulp.task('backend:raw', function() {
         .pipe(gulp.dest(backend.dst.raw)).pipe(livereload());
 });
 
-gulp.task('watch:frontend', ['build:frontend'], function() {
-    watch = true;
-    livereload({ start: true, quiet: true});
-    // const js_watch = frontend.src.js.concat(frontend.src.jsx);
-
-    gulp.watch(frontend.src.raw, ['frontend:raw']);
-    gulp.watch(frontend.src.scss, ['frontend:css']);
-    gulp.watch(frontend.src.css, ['frontend:css']);
-    // gulp.watch(frontend.src.js, ['frontend:js']);
-    gulp.watch(frontend.src.images, ['frontend:images']);
-    gulp.watch(frontend.src.fonts, ['frontend:fonts']);
-
-    gulp.start('frontend:jsx');
+gulp.task('watch:frontend', ['frontend:jsx'], function() {
+    // watch = true;
+    // livereload({ start: true, quiet: true});
+    // // const js_watch = frontend.src.js.concat(frontend.src.jsx);
+    //
+    // gulp.watch(frontend.src.raw, ['frontend:raw']);
+    // gulp.watch(frontend.src.scss, ['frontend:css']);
+    // gulp.watch(frontend.src.css, ['frontend:css']);
+    gulp.watch(frontend.src.jsx, ['frontend:jsx']);
+    // gulp.watch(frontend.src.images, ['frontend:images']);
+    // gulp.watch(frontend.src.fonts, ['frontend:fonts']);
 });
 
 gulp.task('watch:backend', function() {

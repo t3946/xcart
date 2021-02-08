@@ -1,0 +1,23 @@
+.common-hint {
+  font-size: .8125rem;
+  color: #959595;
+}
+
+@media screen and (min-width: 23.125em) {
+  .common-hint {
+    font-size: .875rem;
+  }
+}
+
+@media screen and (min-width: 45em) {
+  .common-hint {
+    font-size: .875rem;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .common-hint {
+    font-size: .75rem;
+    line-height: 105%;
+  }
+}

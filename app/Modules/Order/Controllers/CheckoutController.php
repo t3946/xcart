@@ -139,9 +139,10 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        $this->display('checkout/shipping1.tpl', [
+        $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
             'shippingForm' => $shippingForm,
+            'shipping_rates' => OrderProcessController::getShippingRates($order),
         ]);
     }
 

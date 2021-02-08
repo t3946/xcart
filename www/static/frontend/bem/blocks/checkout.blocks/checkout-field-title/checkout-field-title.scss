@@ -1,0 +1,16 @@
+.checkout-field-title {
+  line-height: 110%;
+  margin-bottom: .33rem;
+}
+
+@media screen and (min-width: 45em) {
+  .checkout-field-title {
+    line-height: 2.5rem;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .checkout-field-title {
+    line-height: 1.5rem;
+  }
+}

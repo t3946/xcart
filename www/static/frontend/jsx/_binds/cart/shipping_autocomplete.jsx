@@ -24,26 +24,22 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                 let inputCity = document.querySelector(selectorPrefix + '.city');
 
                 if (inputCountry) {
-                    //console.info(inputCountry);
                     new autoComplete({
                         selector: inputCountry,
                         cache: false,
                         offsetTop: 0,
                         minChars: 1,
                         renderItem: function (item, search) {
-                            //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                            //var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                             return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="'
                                 + item.code + '">' + item.name + '</div>';
                         },
                         source: function (term, suggest) {
-                            //console.info(term);
                             $.getJSON('/checkout/auto_complete_country/', {search: term}, function (data) {
-                                //console.info(data);
                                 suggest(data);
                             });
                         },
                         onSelect: function (e, term, item) {
+                            console.log('onSelect');
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputCountry.setAttribute('data-code', code);
@@ -58,8 +54,6 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         cache: false,
                         minChars: 1,
                         renderItem: function (item, search) {
-                            //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                            // let re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                             let html = '<span class="zip">' + item.zip + '</span>';
                             html += ' <span class="city">' + item.primary_city + ', ';
                             html += item.state + '</span>';
@@ -96,8 +90,6 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                         cache: false,
                         minChars: 1,
                         renderItem: function (item, search) {
-                            //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                            //var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                             return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">'
                                 + item.state + '</div>';
                         },
@@ -134,8 +126,6 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
                             });
                         },
                         renderItem: function (item, search){
-                            //search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                            //var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                             return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item + '</div>';
                         },
                         onSelect: function (e, term, item) {

@@ -644,7 +644,7 @@ $remove: (
         &:before {
           margin-right: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
+          background: url("/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
 
           @include breakpoint(sm) {
             margin-right: rem-calc(16);
@@ -667,7 +667,7 @@ $remove: (
         &:after {
           margin-left: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_right_checkout.svg") 0 0 no-repeat;
+          background: url("/static/frontend/dist/images/icons/cart/arrow_right_checkout.svg") 0 0 no-repeat;
 
           @include breakpoint(sm) {
             margin-left: rem-calc(16);

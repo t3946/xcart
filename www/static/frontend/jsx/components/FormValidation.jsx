@@ -78,7 +78,6 @@ class FormValidation {
     }
 
     checkForm(inputElement){
-
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }

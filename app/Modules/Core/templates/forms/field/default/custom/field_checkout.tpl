@@ -1,10 +1,9 @@
 {set $hasHint = $field->hasHint()}
-<p>checkout field</p>
 <div class="hide-for-large mobile-errors-content">
     {raw $errors}
 </div>
-<div class="field-row">
-    <div class="field-title">
+<div class="checkout-field__row">
+    <div class="checkout-field-title">
         {if $hasHint}
             <div class="medium-multiline">
                 {raw $label}

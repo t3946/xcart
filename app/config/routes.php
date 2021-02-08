@@ -3,6 +3,10 @@ $admin_routes = include 'routes_admin.php';
 return array_merge($admin_routes, [
     [
         'route' => '',
+        'path' => 'Modules.Order.routes_api'
+    ],
+    [
+        'route' => '',
         'path' => 'Modules.Main.routes',
         'namespace' => 'main'
     ],

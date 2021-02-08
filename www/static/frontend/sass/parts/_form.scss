@@ -11,10 +11,6 @@ $field-height-large: rem-calc(24);
 
 form {
   label {
-    .required {
-      color: #ff2626;
-    }
-
     &.required {
       &:after {
         color: #ff2626;
