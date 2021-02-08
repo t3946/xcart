@@ -165,15 +165,18 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $subject = $template_model->subject_line;
     $body = html_entity_decode($template_model->message_body);
 
+    $group = reset($order['shipping_groups'])['oOrderGroup'];
     $subject = SnippetHelper::render($subject, [
         'site' => Xcart::app()->getModule('Sites')->getSite(),
-        'group' => reset($order['shipping_groups'])['oOrderGroup'],
-        'order' => reset($order['shipping_groups'])['oOrderGroup']->order
+        'distributor' => $group->manufacturer,
+        'group' => $group,
+        'order' => $group->order
     ]);
     $body = SnippetHelper::render($body, [
         'site' => Xcart::app()->getModule('Sites')->getSite(),
-        'group' => reset($order['shipping_groups'])['oOrderGroup'],
-        'order' => reset($order['shipping_groups'])['oOrderGroup']->order
+        'distributor' => $group->manufacturer,
+        'group' => $group,
+        'order' => $group->order
     ]);
 
     $to = '';
