@@ -168,6 +168,7 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $group = reset($order['shipping_groups'])['oOrderGroup'];
     $subject = SnippetHelper::render($subject, [
         'site' => Xcart::app()->getModule('Sites')->getSite(),
+        'user' => Xcart::app()->user,
         'distributor' => $group->manufacturer,
         'group' => $group,
         'order' => $group->order
@@ -175,6 +176,7 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $body = SnippetHelper::render($body, [
         'site' => Xcart::app()->getModule('Sites')->getSite(),
         'distributor' => $group->manufacturer,
+        'user' => Xcart::app()->user,
         'group' => $group,
         'order' => $group->order
     ]);
