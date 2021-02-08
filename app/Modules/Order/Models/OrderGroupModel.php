@@ -3,6 +3,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Types;
+use Mindy\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -36,6 +37,7 @@ use Xcart\OrderGroup;
  * @property OrderStatusModel|null dc_status_model
  * @property mixed refunds
  * @property bool notify_sent
+ * @property Manager|OrderDetailModel[] detail_models
  */
 class OrderGroupModel extends Model
 {
@@ -363,5 +365,19 @@ URL;
     public function __toString(): string
     {
         return (string) $this->manufacturer;
+    }
+
+    public function getInStockDetails()
+    {
+        return $this->detail_models->filter([
+            'items_stock__gt' => 0
+        ]);
+    }
+
+    public function getOutOfStockDetails()
+    {
+        return $this->detail_models->filter([
+            'back__gt' => 0
+        ]);
     }
 }

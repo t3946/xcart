@@ -409,6 +409,11 @@ if ($group_model) {
     $body = str_replace('{{received}}', OrderHelper::genReceivedConfirmation($group_model), $body);
 }
 
+/*$body = \Modules\Forms\Helpers\SnippetHelper::render($body, [
+    'group' => reset($order['shipping_groups'])['oOrderGroup'],
+    'order' => reset($order['shipping_groups'])['oOrderGroup']->order
+]);*/
+
 $from = 'orders@s3stores.com';
 
 $smarty->assign('to', $to);
