@@ -121,7 +121,7 @@ class TemplateManager
             return !array_key_exists($variable, $array);
         });
 
-        $this->_renderer->addModifier('site_currency', function($variable, $param, $default = '') {
+        $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
             /** @var SiteModel $site */
             if (($site = Xcart::app()->getModule('Sites')->getSite()) && $site_currency = $site->getCurrency()) {
                 $arr = [
