@@ -1,9 +1,11 @@
 <?php
 
+use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['subject', 'body'];
@@ -162,6 +164,18 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
 
     $subject = $template_model->subject_line;
     $body = html_entity_decode($template_model->message_body);
+
+    $subject = SnippetHelper::render($subject, [
+        'site' => Xcart::app()->getModule('Sites')->getSite(),
+        'group' => reset($order['shipping_groups'])['oOrderGroup'],
+        'order' => reset($order['shipping_groups'])['oOrderGroup']->order
+    ]);
+    $body = SnippetHelper::render($body, [
+        'site' => Xcart::app()->getModule('Sites')->getSite(),
+        'group' => reset($order['shipping_groups'])['oOrderGroup'],
+        'order' => reset($order['shipping_groups'])['oOrderGroup']->order
+    ]);
+
     $to = '';
     $attach_pdf_invoice = $v['attach_pdf_invoice'];
 
@@ -409,10 +423,6 @@ if ($group_model) {
     $body = str_replace('{{received}}', OrderHelper::genReceivedConfirmation($group_model), $body);
 }
 
-/*$body = \Modules\Forms\Helpers\SnippetHelper::render($body, [
-    'group' => reset($order['shipping_groups'])['oOrderGroup'],
-    'order' => reset($order['shipping_groups'])['oOrderGroup']->order
-]);*/
 
 $from = 'orders@s3stores.com';
 
