@@ -57,8 +57,8 @@ class DashboardController extends PrototypeAdminController
                 $data['filters'][$model->id] = [
                     'count' => [
                         'orders' => $storage->getCashedCount(),
-                        'priority' => method_exists($storage,'getCachedPriorityShippingCount') ? $storage->getCachedPriorityShippingCount() : null,
-                        'events' => in_array($model->pk, $mIds) && method_exists('getCachedEventsCount', $storage) ? $storage->getCachedEventsCount() : null,
+                        'priority' => $storage->getCachedPriorityShippingCount(),
+                        'events' => in_array($model->pk, $mIds) ? $storage->getCachedEventsCount() : null,
                     ]
                 ];
             }
