@@ -5,6 +5,7 @@ namespace Modules\Forms\Helpers;
 
 
 use Modules\Forms\Models\SnippetModel;
+use Xcart\App\Main\Xcart;
 
 class SnippetHelper
 {
@@ -28,6 +29,10 @@ class SnippetHelper
 
     public static function render(string $value, array $params)
     {
+        $params = array_merge($params , [
+            'site' => Xcart::app()->getModule('Sites')->getSite(),
+            'user' => Xcart::app()->user,
+        ]);
         return self::renderSnippets($value, self::getSnippets($value, $params));
     }
 }
