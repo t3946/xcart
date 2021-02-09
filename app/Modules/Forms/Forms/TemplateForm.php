@@ -21,7 +21,7 @@ class TemplateForm extends ModelForm
 
     public function getModel()
     {
-        return new TemplateModel;
+        return new TemplateModel();
     }
 
     public function getFields()
