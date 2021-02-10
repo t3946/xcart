@@ -29,10 +29,10 @@ class SnippetHelper
 
     public static function render(string $value, array $params)
     {
-        $params = array_merge($params , [
+        $params = array_merge([
             'site' => Xcart::app()->getModule('Sites')->getSite(),
             'user' => Xcart::app()->user,
-        ]);
+        ], $params);
         return self::renderSnippets($value, self::getSnippets($value, $params));
     }
 }
