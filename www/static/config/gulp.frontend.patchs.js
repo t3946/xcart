@@ -36,7 +36,6 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
-            // 'temp/frontend/js/**/*.js'
         ],
         scss: [
             'frontend/sass/**/*.scss'

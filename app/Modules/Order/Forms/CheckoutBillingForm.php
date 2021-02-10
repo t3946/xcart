@@ -14,7 +14,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Traits\AddressAttributesReplacement;
 use Xcart\App\Form\Fields\SpaceField;
 
-class BillingForm extends FrontendModelForm
+class CheckoutBillingForm extends FrontendModelForm
 {
     use AddressAttributesReplacement;
 
@@ -22,11 +22,16 @@ class BillingForm extends FrontendModelForm
 
     public $replacement = 'b_';
 
-    //public $include = ['cb_status'];
+    protected $fieldsSettings = [
+        'fieldTemplate' => 'forms/field/default/custom/one_field_checkout.tpl',
+        'errorsTemplate' => 'forms/field/default/custom/errors.tpl',
+        'hintTemplate' => 'forms/field/default/custom/hint.tpl',
+        'labelTemplate' => 'forms/field/default/custom/label.tpl',
+    ];
 
     protected function beforeConstruct()
     {
-        $billingForm = new BillingAddressForm();
+        $billingForm = new CheckoutBillingAddressForm();
         $this->_billingFields = $billingForm->getFields();
     }
 
@@ -41,5 +46,4 @@ class BillingForm extends FrontendModelForm
     {
         return $this->_billingFields;
     }
-
 }

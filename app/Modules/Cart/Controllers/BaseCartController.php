@@ -6,6 +6,7 @@ use Modules\Cart\CartModule;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\OptionVariantModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
+use Modules\Order\Helpers\OrderHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
@@ -42,12 +43,18 @@ abstract class BaseCartController extends FrontendController
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
-
+        $order = OrderHelper::getCartOrder();
+        dd([
+            $order->shipping_cost,
+            $order->shipping_cost + $order->total,
+        ]);
         if ($isAjax) {
             $this->jsonResponse([
                 'status' => true,
                 'total' => $cart->getTotal(),
                 'quantity' => $cart->getQuantity(),
+                'shipping_total' => 0,
+                'grand_total' => 0,
             ]);
             Xcart::app()->end();
         }

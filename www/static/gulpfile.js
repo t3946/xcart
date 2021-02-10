@@ -166,13 +166,13 @@ gulp.task('frontend:js:includes', function(done){
 
 // gulp.task('frontend:js', ['frontend:js:includes'], function() {
 gulp.task('frontend:js', function(done) {
-    // let pipe = gulp.src(frontend.src.js);
-    //
-    // return pipe
-    //     .pipe(concat(frontend.config.name + '.js'))
-    //     .pipe(gulp.dest(frontend.dst.js))
-    //     .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
-    //     .pipe(livereload());
+    let pipe = gulp.src(frontend.src.js);
+
+    return pipe
+        .pipe(concat(frontend.config.name + '.js'))
+        .pipe(gulp.dest(frontend.dst.js))
+        .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
+        .pipe(livereload());
 
     done();
 });
@@ -266,7 +266,10 @@ gulp.task('watch:frontend', ['frontend:jsx'], function() {
     // gulp.watch(frontend.src.raw, ['frontend:raw']);
     // gulp.watch(frontend.src.scss, ['frontend:css']);
     // gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(frontend.src.jsx, ['frontend:jsx']);
+    gulp.watch([
+        frontend.src.jsx,
+        frontend.src.js
+    ], ['frontend:jsx']);
     // gulp.watch(frontend.src.images, ['frontend:images']);
     // gulp.watch(frontend.src.fonts, ['frontend:fonts']);
 });
@@ -342,7 +345,14 @@ gulp.task('default', function(){
  * build bem styles for frontend
  */
 gulp.task('frontend:bem', function () {
-    return gulp.src('frontend/bem/blocks/**/*.scss')
+    //TODO: тут должна быть система расстановки приоритетов загрузки, но её нет
+    return gulp.src([
+        'frontend/bem/blocks/common.blocks/**/*.scss',
+        'frontend/bem/blocks/cart.blocks/**/*.scss',
+        'frontend/bem/blocks/checkout.blocks/**/*.scss',
+        'frontend/bem/blocks/payment.blocks/**/*.scss',
+        'frontend/bem/blocks/shipping.blocks/**/*.scss',
+    ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));
 });

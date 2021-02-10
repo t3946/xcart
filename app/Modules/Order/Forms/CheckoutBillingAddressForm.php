@@ -4,7 +4,7 @@ namespace Modules\Order\Forms;
 
 use Modules\Order\Traits\AddressAttributesReplacement;
 
-class BillingAddressForm extends AddressForm
+class CheckoutBillingAddressForm extends CheckoutAddressForm
 {
 
     use AddressAttributesReplacement;
@@ -15,13 +15,13 @@ class BillingAddressForm extends AddressForm
     public function getFields()
     {
         $fields = parent::getFields();
-        $newFields = [];
+        $new_fields = [];
 
-        foreach ($fields as $name => $oneField) {
-            $newName = $this->replacement . $name;
-            $newFields[$newName] = $oneField;
+        foreach ( $fields as $name => $one_field ) {
+            $new_name = $this->replacement . $name;
+            $new_fields[ $new_name ] = $one_field;
         }
 
-        return $newFields;
+        return $new_fields;
     }
 }

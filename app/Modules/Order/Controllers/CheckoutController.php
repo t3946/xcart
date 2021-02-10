@@ -12,6 +12,7 @@ use Modules\Core\Models\StateModel;
 use Modules\Core\Models\ZipCodeModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\BillingForm;
+use Modules\Order\Forms\CheckoutBillingForm;
 use Modules\Order\Forms\CheckoutForm;
 use Modules\Order\Forms\CheckoutReviewForm;
 use Modules\Order\Forms\CustomerNotesForm;
@@ -46,18 +47,18 @@ class CheckoutController extends FrontendController
         $site = $app->getModule('Sites')->getSite();
         $cart = $app->cart;
         $shipping = null;
-        $shippingForm = new CheckoutForm();
+        $checkout_form = new CheckoutForm();
 
         if ($site && $app->request->getIsPost()) {
-            $shippingForm->populate($app->request->post);
+            $checkout_form->populate($app->request->post);
 
-            if ($shippingForm->isValid()) {
+            if ($checkout_form->isValid()) {
 
                 [$order, $is_created] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
 
                 $order->subtotal = 0;
 
-                $order->setAttributes(array_merge($shippingForm->getAttributes(), [
+                $order->setAttributes(array_merge($checkout_form->getAttributes(), [
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
                     'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
                     'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
@@ -132,17 +133,30 @@ class CheckoutController extends FrontendController
         $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
 
         if ($order && !$app->request->getIsPost()) {
-            $shippingForm->setAttributes($order->getAttributes());
+            $checkout_form->setAttributes($order->getAttributes());
         }
 
         if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
             $this->redirect('cart:list');
         }
 
+        if (!$order) {
+            $order = new OrderModel();
+        }
+
+        //get payment methods
+        $site = Xcart::app()->getModule( 'Sites' )->getSite();
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
+            ->order( [ 'is_cod', 'orderby' ] )
+            ->all();
+
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
-            'shippingForm' => $shippingForm,
-            'shipping_rates' => OrderProcessController::getShippingRates($order),
+            'checkout_form' => $checkout_form,
+            'shipping_rates' => OrderProcessController::getShippingRates( $order ),
+            'payment_methods' => $payment_methods,
         ]);
     }
 

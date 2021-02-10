@@ -1,0 +1,53 @@
+<?php
+
+namespace Modules\Order\Forms;
+
+
+use Modules\Core\Forms\FrontendForm;
+use Modules\Order\OrderModule;
+use Xcart\App\Form\Fields\CharCleanField;
+
+class CheckoutPurchaseOrderDetailsForm extends FrontendForm
+{
+    protected array $fieldsSettings = [
+        'fieldTemplate' => 'forms/field/default/custom/one_field_checkout.tpl',
+        'errorsTemplate' => 'forms/field/default/custom/errors.tpl',
+        'hintTemplate' => 'forms/field/default/custom/hint.tpl',
+        'labelTemplate' => 'forms/field/default/custom/label.tpl',
+    ];
+
+    public function getFields(): array
+    {
+        return [
+            'po_number' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t('PO number'),
+                'required' => true,
+                'hint' => OrderModule::t('PO number or internal order code in your system'),
+                'html' => [
+                    'class' => 'po_number',
+                    'placeholder' => OrderModule::t('14031879'),
+                    'data-correct' => 'common-field__correct',
+                    'data-wrong' => 'common-field__wrong',
+                ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
+            ],
+            'organization_name' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t('Organization Name'),
+                'required' => true,
+                'hint' => OrderModule::t('The name of your organization'),
+                'html' => [
+                    'placeholder' => OrderModule::t('Eureka Inc.'),
+                    'data-correct' => 'common-field__correct',
+                    'data-wrong' => 'common-field__wrong',
+                ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
+            ],
+        ];
+    }
+}

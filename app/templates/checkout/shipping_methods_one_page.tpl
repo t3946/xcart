@@ -12,7 +12,7 @@
                 {foreach $shipping as $quote first=$first}
                     {set $shipping_model = $quote->shipping}
                     {if $shipping_model}
-                        <div class="payment-method-row">
+                        <label class="shipping-method-row" for="shipping_{$quote->rateid}">
                             <input
                                     {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
                                     id="shipping_{$quote->rateid}"
@@ -22,21 +22,21 @@
                                     value="{$quote->rateid}"
                             />
 
-                            <label class="methods-label common-radio-label payment-radio-label payment-method-row__label" for="shipping_{$quote->rateid}">
-                                        <span class="methods-text">
-                                            <span class="payment-method-name">{$shipping_model->getFrontendName()}</span>
-                                            <span class="payment-method-comment">- {$shipping_model->shipping_time}</span>
-                                        </span>
+                            <label class="methods-label common-radio-label shipping-radio-label shipping-method-row__label" for="shipping_{$quote->rateid}">
+                                <span class="methods-text">
+                                    <span class="shipping-method-name">{$shipping_model->getFrontendName()}</span>
+                                    <span class="shipping-method-comment">- {$shipping_model->shipping_time}</span>
+                                </span>
                                 <div class="methods-cell delivery-item-price">
                                     <span class="cost">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($quote->getShippingCharge())}</span>
                                 </div>
                             </label>
-                        </div>
+                        </label>
                     {/if}
                 {/foreach}
             </div>
         </div>
-    {else}
+    {elseif !isset($silent) || $silent===false}
         {add $phone_order_only = true}
         <div class="row">
             <div class="columns small-12">

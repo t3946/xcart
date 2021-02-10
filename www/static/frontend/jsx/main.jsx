@@ -1,5 +1,6 @@
 'use strict';
 
+import '../js/main';
 import '../../temp/frontend/js/vendors';
 import '_head';
 

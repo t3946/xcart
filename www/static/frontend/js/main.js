@@ -1,15 +1,5 @@
-const Checkout = ( function () {
-    class Checkout {
-        constructor() {
-            this.$otherFields = $('.checkout-shipping-other-fields');
-        }
-        showOtherFields() {
-            this.$otherFields.slideDown();
-        }
-        hideOtherFields() {
-            this.$otherFields.slideUp();
-        }
-    }
-
-    return new Checkout();
-} )();
+import "./Components/checkout/BillingForm";
+import "./Components/checkout/BillingSameShipping";
+import "./Components/checkout/DistributorCart";
+import "./Components/checkout/PaymentMethods";
+import "./Components/checkout/ShippingForm";

@@ -18,8 +18,12 @@ class ShippingForm extends FrontendModelForm
 {
     use AddressAttributesReplacement;
 
-    protected $_shippingFields;
-    protected $_contactFields;
+    protected array $_shippingFields;
+    protected array $_contactFields;
+    protected array $_billingFields;
+    protected array $_purchase_order_details_form;
+    protected array $_purchasing_manager_form;
+    protected array $_accounts_payable_form;
 
     public $replacement = 's_';
 

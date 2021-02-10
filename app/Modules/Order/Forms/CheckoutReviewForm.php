@@ -1,21 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 23.07.2018
- * Time: 9:47
- */
 
 namespace Modules\Order\Forms;
 
-
 use Modules\Core\Forms\FrontendForm;
-use Modules\Order\OrderModule;
-use Xcart\App\Form\Fields\TextField;
 
 class CheckoutReviewForm extends FrontendForm
 {
-
     private $_orderDetailsForm;
     private $_purchasingManagerForm;
     private $_accountsPayableForm;
@@ -33,7 +23,6 @@ class CheckoutReviewForm extends FrontendForm
         $this->_accountsPayableForm = $accountsPayableForm->renamedFields();
         $this->_customerNotesForm = $customerNotesForm->getFields();
     }
-
 
     public function getFieldsets()
     {

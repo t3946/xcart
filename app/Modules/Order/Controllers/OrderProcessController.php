@@ -10,6 +10,7 @@ use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
@@ -116,8 +117,8 @@ class OrderProcessController extends FrontendController
 
     /**
      * get html off all shipping methods for passed address
-    */
-    public function getShippingMethods():void
+     */
+    public function getShippingMethods(): void
     {
         //address params
         $get_params = Xcart::app()->request->get->all();
@@ -130,11 +131,25 @@ class OrderProcessController extends FrontendController
             's_city' => $get_params[ 'city' ] ?? '',
         ] );
 
-        $sh_rates = self::getShippingRates($order);
+        $sh_rates = self::getShippingRates( $order );
 
         $this->display( 'checkout/all_shipping_methods_one_page.tpl', [
             'order' => $order,
             'shipping_rates' => $sh_rates ?? []
+        ] );
+    }
+
+    public function getPaymentMethods(): void
+    {
+        $site = Xcart::app()->getModule( 'Sites' )->getSite();
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
+            ->order( [ 'is_cod', 'orderby' ] )
+            ->all();
+
+        $this->display( 'checkout/payment_methods_one_page.tpl', [
+            'payment_methods' => $payment_methods
         ] );
     }
 }

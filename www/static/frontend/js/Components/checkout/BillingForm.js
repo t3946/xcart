@@ -1,0 +1,37 @@
+import { SwitcherButton } from "../../Classes/SwitcherButton";
+import { ShippingGoogleAutoComplete } from "../../Classes/ShippingGoogleAutoComplete";
+
+export const BillingForm = ( function () {
+    // no checkout page
+    if ( document.querySelector( '.checkout-page' ) === null ) {
+        return;
+    }
+
+    const $otherFields = $( '.checkout-billing-other-fields' );
+
+    new SwitcherButton( '.checkout-billing-form__other-fields-switcher', function () {
+        $otherFields.stop( true, false ).slideDown();
+    }, function () {
+        $otherFields.stop( true, false ).slideUp();
+    } );
+
+    const componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'short_name',
+        administrative_area_level_1: 'long_name',
+        country: 'long_name',
+        postal_code: 'short_name',
+    };
+
+    const billing_fields = {
+        locality: '#CheckoutForm_b_city',
+        administrative_area_level_1: '#CheckoutForm_b_state',
+        country: '#CheckoutForm_b_country',
+        postal_code: '#CheckoutForm_b_zipcode',
+    };
+
+    if ( $( '#CheckoutForm_b_address' ).length ) {
+        new ShippingGoogleAutoComplete( '#CheckoutForm_b_address', componentForm, billing_fields );
+    }
+} )();

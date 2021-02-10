@@ -1,11 +1,15 @@
 {extends "checkout/base_one_page.tpl"}
 {block 'content'}
-    {raw $shippingForm->renderBegin([
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {raw $checkout_form->renderBegin([
     'action' => $.app->router->url('checkout:shipping'),
     'method' => 'POST',
     'class' => 'checkout-shipping-form'
     ])}
-    <section class="checkout-shipping">
+    <section
+            class="checkout-shipping checkout-page"
+            data-product-removed="{t 'The selected product has been removed successfully' }"
+    >
         <div class="row">
             <div class="columns small-12 large-4">
                 <div class="row">
@@ -21,12 +25,15 @@
                         </div>
 
                         {* shipping address form -- fields *}
-                        {set $fieldsets = $shippingForm->createFieldsets()}
+                        {set $fieldsets = $checkout_form->createFieldsets()}
                         {foreach array_slice($fieldsets['shipping'], 0, 3) as $field}
                             {if $field->getName() === 's_address' }
                                 <div class="tumbler-field-wrapper">
                                     {raw $field->render()}
-                                    <span class="toggle-other-fields tumbler-field-wrapper_button">+</span>
+                                    <span class="switcher-button switcher-button_shipping-form shipping-form__other-fields-switcher">
+                                        <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-plus"></use></svg>
+                                        <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-minus"></use></svg>
+                                    </span>
                                 </div>
                             {else}
                                 {raw $field->render()}
@@ -52,35 +59,6 @@
                 </div>
             </div>
             <div class="columns small-12 large-8">
-                <style>
-                    .cart-table-caption {
-                        padding: 1.375rem 0;
-                        text-align: center;
-                        font-size: .9375rem;
-                        font-weight: 700;
-                    }
-
-
-                    @media print, screen and (min-width: 23.125em) {
-                        .cart-table-caption {
-                            font-size: 1.125rem;
-                        }
-                    }
-
-                    @media print, screen and (min-width: 45em) {
-                        .cart-table-caption {
-                            font-size: 1.25rem;
-                            padding: 2.125rem 0 1.5rem;
-                        }
-                    }
-
-                    @media print, screen and (min-width: 64em) {
-                        .cart-table-caption {
-                            font-size: 1.125rem;
-                            padding: 1.875rem 0 1.375rem;
-                        }
-                    }
-                </style>
                 {* distributor carts *}
                 {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                     {set $items = $group.items}
@@ -91,10 +69,13 @@
                                 <span class="cart-show-switcher cart-show-switcher_text">{t 'The items'}</span> {t 'below will be shipped from warehouse in'} {$warehouse->m_city},
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
-                                <span class="cart__button-switcher cart-show-switcher cart-show-switcher_button">+</span>
+                                <span class="cart__switcher-button switcher-button">
+                                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-plus"></use></svg>
+                                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-minus"></use></svg>
+                                </span>
                             </div>
-                            <div class="table">
-                                <div class="table-row table-row__head table-head show-for-large">
+                            <div class="table cart-table_checkout">
+                                <div class="cart-table-row cart-table-row__head table-head show-for-large">
                                     <div class="table-column cart-column-image"></div>
                                     <div class="table-column cart-column-name cart-column-name__header">
                                         {t 'Item name / SKU' }
@@ -116,7 +97,7 @@
                                 <div class="table-body">
                                     {foreach $items as $key=>$position}
                                         <div
-                                                class="table-row table-row_checkout"
+                                                class="cart-table-row cart-table-row_checkout"
                                                 data-key="{$key}"
                                                 data-wh="{$gi}"
                                                 data-product='{$position->object->productid}'
@@ -148,7 +129,7 @@
                                             </div>
 
                                             <div class="cart-item-remove-button cart-column-remove show-for-large">
-                                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart_remove" onclick="loader.load(this)">
+                                                <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart_remove shipping-cart-remove">
                                                     {include 'cart/_close_icon.tpl'}
                                                 </a>
                                             </div>
@@ -185,350 +166,87 @@
                                     {/foreach}
                                 </div>
                             </div>
-                            {include 'checkout/shipping_methods_one_page.tpl'}
+                            {include 'checkout/shipping_methods_one_page.tpl' silent=true}
                         </div>
-                    </div>
-                    <div class="warehouse_subtotal wh_{$gi}"
-                         data-wh="{$gi}"
-                         data-minamount="{$warehouse->getMinimalAmount()}"
-                    >
-                        <div class="table">
-                            <div class="table-body">
-                                <div class="table-row table-row_subtotal">
-                                    <div class="table-column extended_remove format_price">
-                                        {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                        <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                        <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}" data-minamount="{$warehouse->getMinimalAmount()}">
+                            <div class="table">
+                                <div class="table-body">
+                                    <div class="cart-table-row cart-table-row_subtotal">
+                                        <div class="table-column extended_remove format_price">
+                                            {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="errors">
-                            {if $warehouse->getMinimalAmount()}
-                                {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
-                                {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}&nbsp;{$site_currency}{/if}
-                                {/p_label}
-                            {/if}
-                            {set $only_one_country = $warehouse->getShippingOnlyOneCountry()}
-                            {if $only_one_country}
-                                {p_label cls="err fill last-items"}
-                                {t 'This product line can only be shipped to a'} {$only_one_country} {t 'address.'}
-                                {/p_label}
-                            {/if}
-                        </div>
                     </div>
                 {/foreach}
-            </div>
-        </div>
-
-        <div class="row show-for-large">
-            <div class="small-12 columns">
-                <div class="hr"></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="columns small-12">
-                <div class="subscription-options">
-                    <h5 class="title">{t 'Privacy Policy' }</h5>
-                    <div class="private-claim">
-                        123
+                <div class="order-total">
+                    <div class="total">
+                        <span class="sum-info-label">{t 'Total' }:</span>
+                        <span class="sum">
+                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                            <span class="price cart_subtotal">{$site_currency->getCurrencyFormat($order->subtotal)}</span>
+                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                        </span>
                     </div>
+                    <div class="shipping-total">
+                        <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
+                        <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
+                            <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span>
+                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                        </span>
+                    </div>
+                    <div class="grand-total order-total__grand">
+                        <span class="label">{t 'Grand Total' }</span>
+                        <span class="sum">
+                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
+                            <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span>
+                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                        </span>
+                    </div>
+                    {if $hst}
+                        <div>
+                            <span class="label">{t 'Including 13% HST' }</span>
+                            <span class="sum">
+                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
+                                <span class="price">{$site_currency->getCurrencyFormat($order->tax)}</span>
+                                {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                            </span>
+                        </div>
+                    {/if}
                 </div>
             </div>
         </div>
 
         <div class="row align-center">
             <div class="column small-12">
-                <div class="buttons text-center">
-                    <button type="submit" class="button submit yellow waves waves-orange waves-effect">
-                        {t 'Submit' }
-                    </button>
-                </div>
+                {include 'checkout/payment_methods_one_page.tpl'}
+            </div>
+        </div>
+
+        <div class="row checkout-customer-notes__row">
+            <div class="column small-4">
+                <h2>Customers notes</h2>
+            </div>
+            <div class="column small-8">
+                <textarea name="customer_notes" class="checkout-customer-notes"></textarea>
             </div>
         </div>
 
         <div class="row align-center">
             <div class="column small-12">
-                <div class="submit-notes text-center hint">
-                    {t 'Submit and proceed to shipping & payment options.' }
+                <div class="buttons text-center checkout-form__submit-button">
+                    <button type="submit" class="button submit yellow waves waves-orange waves-effect submit_big">Submit order</button>
                 </div>
             </div>
         </div>
-
     </section>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <style>
-        /*cart item*/
-        .cart-item-image {
-            max-height: 6.25rem;
-            max-width: 100%;
-        }
-
-        .cart-item-sku {
-            color: #28862f;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        .cart-item-title-link {
-            color: black;
-        }
-
-        .cart-item-remove-button {
-            display: flex;
-        }
-
-        /*car columns*/
-        .cart-column-image {
-            width: 100px;
-        }
-
-        .cart-column-name {
-            width: 250px;
-        }
-
-        .cart-column-name__header {
-            text-align: center;
-        }
-
-        .cart-column-remove {
-            width: 100px
-        }
-
-        .cart-column-multiply-sign {
-            text-align: center;
-            width: 10px;
-        }
-
-        .cart-column-quantity {
-            width: 135px;
-            text-align: center;
-            padding-right: 40px;
-        }
-
-        .cart-column-price {
-            width: 110px;
-            text-align: right;
-        }
-
-        /*table row*/
-        .table-row {
-            padding: .75rem 45px .75rem 0;
-            min-height: 6.5625rem;
-            border-top: 1px solid #e1e1e1;
-            border-bottom: 1px solid #e1e1e1;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .table-row_subtotal {
-            justify-content: flex-end;
-            color: #83132B;
-            border: none;
-            padding: 28px 45px 38px 0;
-            height: initial;
-            min-height: initial;
-        }
-
-        .table-row_checkout {
-            border-bottom: none;
-        }
-
-        .table-row__head {
-            height: 40px;
-            line-height: 40px;
-            background: #ebebeb;
-            min-height: initial;
-            padding: 0 45px 0 0;
-        }
-
-        .cart-show-switcher {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .cart-show-switcher_text {
-            color: #055A93;
-            border-bottom: 2px dashed #055A93;
-        }
-
-        .cart-show-switcher_button {
-            width: 10px;
-            display: inline-block;
-        }
-
-        .cart__button-switcher {
-            position: absolute;
-            right: 45px;
-            font-size: 24px;
-            line-height: 24px;
-        }
-
-        .cart-table-caption {
-            position: relative;
-        }
-
-        @media screen and (min-width: 45em) {
-            .cart-item-name-quantity {
-                justify-content: space-between;
-            }
-        }
-    </style>
-    {raw $shippingForm->renderEnd()}
+    {raw $checkout_form->renderEnd()}
 {/block}
 
 {block 'js'}
-    <script>
-        /* переключатели */
-        class Switcher {
-            _isOn = false;
-
-            constructor( elem, onAction, offAction, callback ) {
-                this.$button = typeof elem === 'string' ? $( elem ) : elem;
-                this.onAction = onAction;
-                this.offAction = offAction;
-                this.callback = callback;
-
-                const self = this;
-
-                this.$button.click( function ( event ) {
-                    self.toggle( event );
-                } );
-            }
-
-            set isOn( value ) {
-                if ( typeof value !== 'boolean' ) {
-                    throw new Error( 'isOn expected type boolean, passed ' + typeof value );
-                }
-
-                this._isOn = value;
-            }
-
-            get isOn() {
-                return this._isOn;
-            }
-
-            toggle( event ) {
-                this._isOn = !this._isOn;
-
-                if ( this._isOn === true ) {
-                    this.$button.addClass( 'tumbler-button__on' );
-                    this.$button.removeClass( 'tumbler-button__off' );
-                    this.onAction();
-                } else {
-                    this.$button.addClass( 'tumbler-button__off' );
-                    this.$button.removeClass( 'tumbler-button__on' );
-                    this.offAction();
-                }
-
-                if ( this.callback ) {
-                    this.callback();
-                }
-            }
-        }
-
-        class TumblerButton extends Switcher {
-            /**
-             * @param elem - string or jquery object
-             * @param onAction
-             * @param offAction
-             * @param callback
-             */
-            constructor( elem, onAction, offAction, callback ) {
-                super( elem, onAction, offAction, callback );
-                this.toggleCaption();
-            }
-
-            set isOn( value ) {
-                this._isOn = value;
-                this.toggleCaption();
-            }
-
-            get isOn() {
-                return this._isOn;
-            }
-
-            toggleCaption() {
-                this.$button.text( this._isOn === true ? '–' : '+' );
-            }
-
-            toggle( event ) {
-                super.toggle( event );
-                this.toggleCaption();
-            }
-        }
-
-        /* shipping форма */
-        $( function () {
-            ( function () {
-                class Checkout {
-                    constructor() {
-                        const self = this;
-
-                        this.$otherFields = $( '.checkout-shipping-other-fields' );
-
-                        new TumblerButton( '.toggle-other-fields', function () {
-                            self.$otherFields.stop( true, false ).slideDown();
-                        }, function () {
-                            self.$otherFields.stop( true, false ).slideUp();
-                        } );
-
-                        /* change delivery address */
-                        $( '#CheckoutForm_s_state, #CheckoutForm_s_zipcode, #CheckoutForm_s_city, #CheckoutForm_s_country' ).change( function () {
-                            Pace.ignore( function () {
-                                $.ajax( {
-                                    method: 'GET',
-                                    url: '/api/shipping-methods',
-                                    data: {
-                                        state: $( '#CheckoutForm_s_state' ).attr( 'data-code' ),
-                                        zipcode: $( '#CheckoutForm_s_zipcode' ).val(),
-                                        city: $( '#CheckoutForm_s_city' ).val(),
-                                        country: $( '#CheckoutForm_s_country' ).attr( 'data-code' ),
-                                    },
-                                    success: function ( res ) {
-                                        console.log( res );
-                                    },
-                                    error: function ( err ) {
-                                        console.log( err );
-                                    }
-                                } );
-                            } );
-                        } );
-                    }
-                }
-
-                return new Checkout();
-            } )();
-        } );
-    </script>
-    <script>
-        /* корзины для разных dx */
-        $( '.distributor-cart' ).each( function ( i, e ) {
-            const $cart = $( e );
-            const $table = $cart.find( '.table' ).hide();
-            const $textSwitcher = $cart.find( '.cart-show-switcher_text' );
-            const $buttonSwitcher = $cart.find( '.cart-show-switcher_button' );
-            const $images = $( '.cart-item-image' );
-
-            const showTable = function () {
-                $images.each( function ( i, e ) {
-                    LazyLoad.load( e );
-                } );
-                $table.stop( true, false ).slideDown();
-            };
-
-            const hideTable = function () {
-                $table.stop( true, false ).slideUp();
-            };
-
-            const switcherButton = new TumblerButton( $buttonSwitcher, showTable, hideTable, function () {
-                switcherText.isOn = switcherButton.isOn;
-            } );
-
-            const switcherText = new Switcher( $textSwitcher, showTable, hideTable, function () {
-                switcherButton.isOn = switcherText.isOn;
-            } );
-        } );
-    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQERMkixIWZNodbqoI5vFYt7IxuGQGdpk&libraries=places&language=en" defer></script>
 {/block}

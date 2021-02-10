@@ -12,7 +12,7 @@
 
     <div class="form-field {$name}{$hasErrorsExt}{$successExt}{$displayClass} compound-field">
 
-        {insert 'forms/field/default/custom/field_compound.tpl'}
+        {insert 'forms/field/default/custom/field_compound_one_page.tpl'}
 
     </div>
 

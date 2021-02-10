@@ -3,132 +3,153 @@
 namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
-use Modules\Core\Forms\FrontendModelForm;
-use Modules\Core\Models\StateModel;
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Main\Xcart;
 
-abstract class AddressForm extends FrontendForm
+abstract class CheckoutAddressForm extends FrontendForm
 {
     public $replacement;
 
     public function getFields()
     {
-        $geoIp = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP());
+        $geoIp = GeoipHelper::getGeoipLocation( Xcart::app()->request->getUserIP() );
 
         return [
             'firstname' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Full Name'),
-                'hint' => OrderModule::t('The order will be shipped under this name'),
+                'label' => OrderModule::t( 'Full Name' ),
+                'hint' => OrderModule::t( 'The order will be shipped under this name' ),
                 'required' => true,
                 'html' => [
-                    'placeholder' => OrderModule::t('Albert H. Einstein'),
+                    'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
                     'autocomplete' => 'new-password'
-                ]
+                ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'company' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Company'),
-                'hint' => OrderModule::t('Fill in if shipping to a corporate or university address'),
+                'label' => OrderModule::t( 'Company' ),
+                'hint' => OrderModule::t( 'Fill in if shipping to a corporate or university address' ),
                 'html' => [
-                    'placeholder' => OrderModule::t('Eureka Inc.')
+                    'placeholder' => OrderModule::t( 'Eureka Inc.' )
                 ],
+                'labelClass' => 'common-label common-label',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'address' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Address'),
+                'label' => OrderModule::t( 'Address' ),
                 'required' => true,
-                'hint' => OrderModule::t("Street address please, we don't ship to P.O. boxes"),
+                'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
                 'html' => [
-                    'placeholder' => OrderModule::t('112 Mercer Street'),
+                    'placeholder' => OrderModule::t( '112 Mercer Street' ),
                 ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'address_2' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Address (line 2)'),
-                'hint' => OrderModule::t('Apartment, suite, floor, etc.'),
+                'label' => OrderModule::t( 'Address (line 2)' ),
+                'hint' => OrderModule::t( 'Apartment, suite, floor, etc.' ),
                 'html' => [
-                    'placeholder' => OrderModule::t('Apt 1')
+                    'placeholder' => OrderModule::t( 'Apt 1' )
                 ],
+                'labelClass' => 'common-label common-label',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'country' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Country'),
+                'label' => OrderModule::t( 'Country' ),
                 'required' => true,
                 'validators' => [
                     new CountryValidator()
                 ],
-                'value' => ($geoIp && $country = CountryModel::objects()->get(
+                'value' => ( $geoIp && $country = CountryModel::objects()->get(
                         [
-                            'code' => $geoIp['country'] ?? '',
-                        ]))
-                        ? $country->name
-                        : null,
-				'html' => [
+                            'code' => $geoIp[ 'country' ] ?? '',
+                        ] ) )
+                    ? $country->name
+                    : null,
+                'html' => [
                     'placeholder' => $country->name ?? 'United States',
                     'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
                     'autocomplete' => 'new-password'
                 ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
 
             ],
 
             'zipcode' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Zip/Postal Code'),
+                'label' => OrderModule::t( 'Zip/Postal Code' ),
                 'required' => true,
                 'validators' => [
                     new ZipCodeValidator()
                 ],
                 'html' => [
-                    'placeholder' => $geoIp['postalCode'] ?? '08540',
+                    'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
                     'class' => 'auto-complete zip',
                     'autocomplete' => 'new-password'
                 ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'state' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('State/Province'),
+                'label' => OrderModule::t( 'State/Province' ),
                 'required' => true,
                 'validators' => [
-                    new StateValidator(['country' => 'country'])
+                    new StateValidator( [ 'country' => 'country' ] )
                 ],
                 'html' => [
-                    'placeholder' => ($geoIp && $state = StateModel::objects()->get(
-                        [
-                            'code' => $geoIp['region'] ?? '',
-                            'country_code' => $geoIp['country'] ?? ''
-                        ]))
+                    'placeholder' => ( $geoIp && $state = StateModel::objects()->get(
+                            [
+                                'code' => $geoIp[ 'region' ] ?? '',
+                                'country_code' => $geoIp[ 'country' ] ?? ''
+                            ] ) )
                         ? $state->state
                         : 'New Jersey',
                     'class' => 'auto-complete state',
                     'autocomplete' => 'new-password'
                 ],
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
 
             'city' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('City'),
+                'label' => OrderModule::t( 'City' ),
                 'required' => true,
                 'html' => [
-                    'placeholder' => $geoIp['city'] ?? 'Princeton',
+                    'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
                     'class' => 'auto-complete city',
                     'autocomplete' => 'new-password'
                 ],
-
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'common-field',
             ],
         ];
     }
