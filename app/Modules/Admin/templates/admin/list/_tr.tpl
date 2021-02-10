@@ -27,7 +27,7 @@
         {var $config = $columns['config'][$column]}
         {var $template = $config['template']}
 
-        <td class="col">
+        <td class="col {$config['class']}">
             {include $template}
         </td>
     {/foreach}
