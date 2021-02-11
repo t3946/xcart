@@ -16,11 +16,11 @@ class DashboardFilterStatisticCommand extends Command
         $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
         foreach ($models as $model) {
             $storage = $model->getSearchStorage();
-            DashboardFilterStatisticModel::objects()->getOrCreate([
-                'filter' => $model,
+            (new DashboardFilterStatisticModel[
+                'filter_id' => $model->id,
                 'hour' => (int)date('H'),
                 'count' => $storage->getCashedCount()
-            ]);
+            ])->save();
         }
     }
 }
