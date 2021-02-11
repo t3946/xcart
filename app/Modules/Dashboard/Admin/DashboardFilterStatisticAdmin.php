@@ -16,7 +16,7 @@ class DashboardFilterStatisticAdmin extends Admin
 
     public function getListColumns()
     {
-        $dates_data = DashboardFilterStatisticModel::objects()->asArray()->all();
+        $dates_data = DashboardFilterStatisticModel::objects()->order(['-date', '-hour'])->asArray()->all();
 
         foreach ($dates_data as $d) {
             $this->filter_data[$d['filter_id']][$d['date'] . ' ' . $d['hour'] . ':00'] = (int)$d['count'];
