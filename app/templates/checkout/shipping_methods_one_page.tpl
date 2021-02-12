@@ -12,7 +12,7 @@
                 {foreach $shipping as $quote first=$first}
                     {set $shipping_model = $quote->shipping}
                     {if $shipping_model}
-                        <label class="shipping-method-row" for="shipping_{$quote->rateid}">
+                        <label class="checkout-shipping-method-row checkout__shipping-method-item" for="shipping_{$quote->rateid}">
                             <input
                                     {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
                                     id="shipping_{$quote->rateid}"

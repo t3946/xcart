@@ -15,14 +15,14 @@
         {/if}
     </div>
     <div class="field compound-input">
-            <div class="input-block">
+            <div class="input-block {$field->containerClass}">
                 <div class="input-container {$field->className} {$hasClose}" {if $field->userClear}data-clear="true"{/if}>
                     {raw $input}
                 </div>
-                <div class="compound-field-container">
-                    <label class="display-inline hide-for-medium">X</label>
+                <div class="compound-field-container {$fieldExt->containerClass}">
+                    <label class="display-inline hide-for-medium {$fieldExt->shortHintClass}">X</label>
                     <label class="display-inline show-for-medium common-hint">{t 'ext' }</label>
-                    <div class="input-container {$field->className} {$hasCloseExt}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
+                    <div class="input-container {$fieldExt->className} {$hasCloseExt}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                         {raw $fieldExt->renderInput()}
                     </div>
                 </div>

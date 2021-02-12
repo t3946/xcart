@@ -15,7 +15,6 @@
                                 <div class="s3stores-logo">
                                     <img src="" alt="S3 Stores, Inc." class="s3logo lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/s3stores.svg">
                                 </div>
-
                                 <div class="all-times">
                                     <img src="" alt="{t 'Web order 24/7'}" class="lazy-img" data-src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/icons/footer/web_order.svg">
                                     <div class="content">
@@ -52,17 +51,13 @@
             </div>
 
             <div class="column small-12 medium-5 large-5 right-side">
-
                 <div class="socials show-for-medium">
                     <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
                     <a href="https://www.twitter.com/s3stores/" target="_blank" rel="nofollow" class="twitter"></a>
                     <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
                     <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
-                    {*<a href="https://www.instagram.com/s3stores/" target="_blank" ""class="instagram"></a>*}
                     <a href="https://plus.google.com/118379608603424325840" target="_blank" rel="nofollow" class="googleplus"></a>
-                    {*<a href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268" target="_blank" class="bbb"></a>*}
                 </div>
-
                 <ul class="no-bullet menu-list">
                     <li class="title-menu">
                         {t 'Join our newsletter'}
@@ -78,6 +73,14 @@
                     </li>
                 </ul>
 
+                <div class="column small-12">
+                    <button class="footer-scroll-up-button footer__scroll-up-button" type="button">
+                        <svg class="footer-scroll-up-icon">
+                            <use xlink:href="/static/frontend/dist/images/icons/sprite.svg#corner-white"></use>
+                        </svg>
+                        <span class="footer-scroll-up-title">{t 'up'}</span>
+                    </button>
+                </div>
             </div>
         </div>
 

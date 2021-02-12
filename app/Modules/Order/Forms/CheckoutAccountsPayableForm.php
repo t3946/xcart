@@ -36,7 +36,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
                 'successClass' => 'common-field__success'
             ],
@@ -57,8 +57,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 ],
                 'extend' => 'ap_phone_ext',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-compound__phone-main-field',
+                'className' => 'checkout-compound-main-container',
+                'containerClass' => 'checkout-compound-phone-container',
             ],
 
             'ap_phone_ext' => [
@@ -72,8 +74,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     new PhoneExtValidator(),
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-phone-ext-field',
+                'containerClass' => 'checkout-phone-ext-container',
+                'shortHintClass' => 'checkout-phone-ext-short-hint',
             ],
 
             'ap_track_sms' => [
@@ -82,7 +86,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-checkbox',
             ],
 
@@ -100,7 +104,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -111,7 +115,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'hint' => OrderModule::t( 'Alternatively fax PO to 1-800-929-2835' ),
                 'types' => [ '.pdf' ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
         ];

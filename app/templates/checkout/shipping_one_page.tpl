@@ -11,67 +11,64 @@
             data-product-removed="{t 'The selected product has been removed successfully' }"
     >
         <div class="row">
-            <div class="columns small-12 large-4">
-                <div class="row">
-                    <div class="columns small-12">
-                        {* shipping address form *}
-                        {* shipping address form -- header *}
-                        <div class="options">
-                            <h2 class="title">{t 'Shipping Address' }</h2>
-                        </div>
-                        <div class="checkout-mandatory checkout__mandatory">
-                            {t 'The fields marked with' }
-                            <span class="common-label_required checkout-mandatory__required"></span> {t 'are mandatory.' }
-                        </div>
-
-                        {* shipping address form -- fields *}
-                        {set $fieldsets = $checkout_form->createFieldsets()}
-                        {foreach array_slice($fieldsets['shipping'], 0, 3) as $field}
-                            {if $field->getName() === 's_address' }
-                                <div class="tumbler-field-wrapper">
-                                    {raw $field->render()}
-                                    <span class="switcher-button switcher-button_shipping-form shipping-form__other-fields-switcher">
-                                        <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-plus"></use></svg>
-                                        <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-minus"></use></svg>
-                                    </span>
-                                </div>
-                            {else}
-                                {raw $field->render()}
-                            {/if}
-                        {/foreach}
-                        <div class="checkout-shipping-other-fields">
-                            {foreach array_slice($fieldsets['shipping'], 3) as $field}
-                                {if $field->getName() === 's_address_2' }{/if}
-                                {raw $field->render()}
-                            {/foreach}
-                        </div>
-
-                        {* contact information form *}
-                        {* contact information form -- header *}
-                        <div class="contact-options">
-                            <h2 class="title">{t 'Contact Information' }</h2>
-                        </div>
-                        {* contact information form -- fields *}
-                        {foreach $fieldsets['contact'] as $field}
-                            {raw $field->render()}
-                        {/foreach}
-                    </div>
+            <div class="columns small-12 large-4 checkout-left-column">
+                {* shipping address form *}
+                {* shipping address form -- header *}
+                <div class="options">
+                    <h2 class="title checkout-second-header checkout__second-header text-center large-text-left">{t 'Shipping Address' }</h2>
                 </div>
+                <div class="checkout-mandatory checkout__mandatory text-center large-text-left">
+                    {t 'The fields marked with' }
+                    <span class="common-label_required checkout-mandatory__required"></span> {t 'are mandatory.' }
+                </div>
+
+                {* shipping address form -- fields *}
+                {set $fieldsets = $checkout_form->createFieldsets()}
+                {foreach array_slice($fieldsets['shipping'], 0, 3) as $field}
+                    {if $field->getName() === 's_address' }
+                        <div class="tumbler-field-wrapper">
+                            {raw $field->render()}
+                            <span class="switcher-button switcher-button_shipping-form shipping-form__other-fields-switcher">
+                                <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
+                                <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
+                            </span>
+                        </div>
+                    {else}
+                        {raw $field->render()}
+                    {/if}
+                {/foreach}
+                <div class="checkout-shipping-other-fields">
+                    {foreach array_slice($fieldsets['shipping'], 3) as $field}
+                        {if $field->getName() === 's_address_2' }{/if}
+                        {raw $field->render()}
+                    {/foreach}
+                </div>
+
+                {* contact information form *}
+                {* contact information form -- header *}
+                <div class="contact-options">
+                    <h2 class="title text-center checkout__second-header checkout-second-header large-text-left">{t 'Contact Information' }</h2>
+                </div>
+                {* contact information form -- fields *}
+                {foreach $fieldsets['contact'] as $field}
+                    {raw $field->render()}
+                {/foreach}
             </div>
             <div class="columns small-12 large-8">
+                <h2 class="title checkout-second-header checkout__second-header text-center large-text-left checkout__delivery-methods-header">{t 'Delivery Methods' }</h2>
                 {* distributor carts *}
                 {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                     {set $items = $group.items}
                     {set $warehouse = $.get_warehouse($gi) }
                     <div class="warehouse_products">
                         <div class="distributor-cart">
-                            <div class="cart-table-caption">
+                            <div class="cart-table-caption checkout__cart-table-caption">
                                 <span class="cart-show-switcher cart-show-switcher_text">{t 'The items'}</span> {t 'below will be shipped from warehouse in'} {$warehouse->m_city},
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                                 <span class="cart__switcher-button switcher-button">
-                                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-plus"></use></svg>
-                                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-minus"></use></svg>
+                                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
+                                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
                                 </span>
                             </div>
                             <div class="table cart-table_checkout">
@@ -226,24 +223,128 @@
             </div>
         </div>
 
-        <div class="row checkout-customer-notes__row">
-            <div class="column small-4">
-                <h2>Customers notes</h2>
+        <div class="row checkout-customer-notes__row checkout-customer-notes-row">
+            <div class="column small-12 medium-6 large-4">
+                <h2 class="customer-notes-header">Customers notes</h2>
             </div>
-            <div class="column small-8">
-                <textarea name="customer_notes" class="checkout-customer-notes"></textarea>
+            <div class="column small-12 medium-6 large-8">
+                <textarea name="customer_notes" class="checkout-customer-notes" placeholder="Put order related instructions here"></textarea>
             </div>
         </div>
 
         <div class="row align-center">
-            <div class="column small-12">
-                <div class="buttons text-center checkout-form__submit-button">
+            <div class="column show-for-large large-4"></div>
+            <div class="column small-12 large-8">
+                <div class="buttons checkout-form__submit-button">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect submit_big">Submit order</button>
                 </div>
             </div>
         </div>
     </section>
     {raw $checkout_form->renderEnd()}
+    <style>
+        .checkout__second-header {
+            margin: 20px 0;
+        }
+
+        .checkout-left-column {
+            padding: 0 20px;
+        }
+
+        @media (min-width: 720px) {
+            .checkout-left-column {
+                padding-right: .625rem;
+                padding-left: .625rem;
+            }
+        }
+
+        .shipping-form__other-fields-switcher {
+            background: none;
+            border: 1px solid #c4c4c4;
+            border-left: none;
+            height: 36px;
+        }
+
+        @media (min-width: 720px) {
+            .shipping-form__other-fields-switcher {
+                background: #f4f4f4;
+            }
+        }
+
+        .form-field__hint {
+            margin: 2px 0 0 0;
+        }
+    </style>
+    <style>
+        .checkout-compound-phone-container {
+            display: flex;
+        }
+
+        .checkout-phone-ext-container {
+            display: flex;
+            max-width: 30%;
+        }
+
+        .checkout-compound-main-container {
+            width: 70%;
+        }
+
+        .checkout-phone-ext-short-hint {
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .checkout-canada-cods-checkbox {
+            flex-shrink: 0;
+            flex-grow: 1;
+        }
+
+        .canada-cods-field-group {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .checkout__canada_cods_field {
+            margin: 6px 0 0 0;
+        }
+
+        .checkout__canada-cods-checkbox {
+            margin: 0 15px 0 0;
+        }
+
+        .checkout__canada-cods-hint {
+            position: relative;
+            top: -4px;
+        }
+
+
+        @media (min-width: 720px) {
+            .checkout__canada-cods-checkbox {
+                margin: 0 25px 0 0;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .checkout__canada-cods-checkbox {
+                margin: 0 38px 0 0;
+            }
+        }
+
+        @media (min-width: 1200px){
+            .checkout__delivery-methods-header {
+                margin: 20px 0 0;
+            }
+        }
+
+        .shipping-method-name {
+            padding: 0 0 0 17px;
+        }
+
+        .shipping-method-comment {
+            display: none;
+        }
+    </style>
 {/block}
 
 {block 'js'}

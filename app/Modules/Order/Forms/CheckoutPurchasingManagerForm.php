@@ -34,7 +34,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -52,13 +52,15 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-correct' => 'common-field__correct',
                     'data-wrong' => 'common-field__wrong',
                 ],
-                'extend' => 'pm_phone_ext1',
+                'extend' => 'pm_phone_ext',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-compound__phone-main-field',
+                'className' => 'checkout-compound-main-container',
+                'containerClass' => 'checkout-compound-phone-container',
             ],
 
-            'pm_phone_ext1' => [
+            'pm_phone_ext' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('ext'),
                 'html' => [
@@ -69,8 +71,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     new PhoneExtValidator(),
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-phone-ext-field',
+                'containerClass' => 'checkout-phone-ext-container',
+                'shortHintClass' => 'checkout-phone-ext-short-hint',
             ],
 
             'pm_track_sms' => [
@@ -79,7 +83,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-checkbox',
             ],
 
@@ -97,7 +101,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -113,7 +117,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'class' => 'phone'
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
         ];

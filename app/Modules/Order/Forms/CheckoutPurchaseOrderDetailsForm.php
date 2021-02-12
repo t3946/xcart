@@ -31,7 +31,7 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
             'organization_name' => [
@@ -45,7 +45,7 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                     'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
         ];

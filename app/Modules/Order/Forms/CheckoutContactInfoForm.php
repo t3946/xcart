@@ -30,11 +30,11 @@ class CheckoutContactInfoForm extends FrontendForm
                 'hint' => OrderModule::t( 'First and last name of the order contact person' ),
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'data-correct'=>'common-field__correct',
-                    'data-wrong'=>'common-field__wrong',
+                    'data-correct' => 'common-field__correct',
+                    'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -49,13 +49,15 @@ class CheckoutContactInfoForm extends FrontendForm
                 'html' => [
                     'placeholder' => OrderModule::t( '(609) 924-8399' ),
                     'class' => 'phone',
-                    'data-correct'=>'common-field__correct',
-                    'data-wrong'=>'common-field__wrong',
+                    'data-correct' => 'common-field__correct',
+                    'data-wrong' => 'common-field__wrong',
                 ],
                 'extend' => 'ci_phone_ext',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-compound__phone-main-field',
+                'className' => 'checkout-compound-main-container',
+                'containerClass' => 'checkout-compound-phone-container',
             ],
 
             'ci_phone_ext' => [
@@ -69,8 +71,10 @@ class CheckoutContactInfoForm extends FrontendForm
                     new PhoneExtValidator(),
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'common-field',
+                'hintClass' => 'common-hint form-field__hint',
+                'fieldClass' => 'common-field checkout-phone-ext-field',
+                'containerClass' => 'checkout-phone-ext-container',
+                'shortHintClass' => 'checkout-phone-ext-short-hint',
             ],
 
             'ci_track_sms' => [
@@ -79,7 +83,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-checkbox',
             ],
 
@@ -93,12 +97,22 @@ class CheckoutContactInfoForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
-                    'data-correct'=>'common-field__correct',
-                    'data-wrong'=>'common-field__wrong',
+                    'data-correct' => 'common-field__correct',
+                    'data-wrong' => 'common-field__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
+            ],
+
+            'ci_canada_email_confirmation' => [
+                'class' => CheckboxField::class,
+                'hint' => OrderModule::t( 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with brining to Canada. All prices are in USD. ' ),
+                'labelTemplate' => 'forms/field/checkbox/label.tpl',
+                'fieldTemplate' => 'forms/field/checkbox/field_canada_cods_confirmation.tpl',
+                'hintClass' => 'common-hint checkout__canada-cods-hint',
+                'fieldClass' => 'common-checkbox checkout-canada-cods-checkbox checkout__canada-cods-checkbox',
+                'containerClass' => 'checkout__canada_cods_field',
             ],
         ];
     }

@@ -1,14 +1,14 @@
 <div class="payment-methods-container">
     {if $payment_methods}
-        <h2 class="checkout-payment-methods__header">{t 'Payment Methods' }</h2>
+        <h2 class="text-center large-text-left checkout__second-header checkout-payment-methods__header">{t 'Payment Methods' }</h2>
         {if $payment_methods}
-            <div class="checkout-payment-methods">
+            <div class="checkout-payment-methods checkout__payment-methods-container">
                 {foreach $payment_methods as $method first=$first}
                     {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Ordering')}
                         <div class="">
                             <label class="payment-method-item {cycle ["payment-method-item_odd", ""]}" for="payment_{$method->paymentid}">
                                 <div class="row">
-                                    <div class="columns small-4">
+                                    <div class="columns small-12 large-4">
                                         <div class="payment-method-name">
                                             <input
                                                     {if $first || $phone_order_only || ($method->paymentid == $order->paymentid)}checked{/if}
@@ -21,7 +21,7 @@
                                             <div class="common-radio-label payment-radio-label payment-method-title">{$method->payment_method}</div>
                                         </div>
                                     </div>
-                                    <div class="payment-method-description columns small-8">
+                                    <div class="payment-method-description columns small-12 large-8">
                                         <div class="payment-method-description-preview">{$method->payment_details}</div>
                                         <div class="payment-method-description-long">
                                             {if stripos($method->payment_method, 'Pay by Credit or Debit card') !== false}
@@ -47,8 +47,8 @@
                                                                 <div class="checkout-billing-switcher-field-wrapper">
                                                                     {raw $field->render()}
                                                                     <span class="switcher-button switcher-button_white switcher-button_shipping-form checkout-billing-form__other-fields-switcher">
-                                                                        <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-plus"></use></svg>
-                                                                        <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/switcher/switcher-plus-minus.svg#switcher-minus"></use></svg>
+                                                                        <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
+                                                                        <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
                                                                     </span>
                                                                 </div>
                                                             {else}
@@ -104,6 +104,6 @@
     }
 
     .purchase-order-wrapper {
-        width: 360px;
+        max-width: 360px;
     }
 </style>

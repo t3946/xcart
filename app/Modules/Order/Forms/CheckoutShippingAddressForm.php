@@ -39,7 +39,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -51,7 +51,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     'placeholder' => OrderModule::t( 'Eureka Inc.' )
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
                 'labelCommentClass' => 'common-comment',
             ],
@@ -66,7 +66,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -78,7 +78,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     'placeholder' => OrderModule::t( 'Apt 1' )
                 ],
                 'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
                 'labelCommentClass' => 'common-comment',
             ],
@@ -104,7 +104,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -122,7 +122,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -145,7 +145,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -160,7 +160,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
         ];

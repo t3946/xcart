@@ -128,6 +128,8 @@ abstract class Field implements IValidateField
      * @var string
      */
     public string $fieldClass = '';
+    public string $containerClass = '';
+    public string $shortHintClass = '';
 
     /**
      * @var string

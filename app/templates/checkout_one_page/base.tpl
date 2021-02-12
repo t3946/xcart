@@ -68,10 +68,18 @@
             {set $breadcrumbs = $.getCartBreadcrumbs}
             {if $breadcrumbs}
                 <div class="row cart-steps-container">
-
+                    {if !$breadcrumbs->isFirstStage()}
+                        <a class="columns shrink cart-steps-back hide-for-large"
+                           href="{$breadcrumbs->getPrevStage().url}">
+                            <span class="img">
+                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                            </span>
+                            <span class="text">{t 'BACK'}</span>
+                        </a>
+                    {/if}
                     <section class="padding-0 overflow-hidden columns">
                         <ul class="checkout-steps-list no-bullet">
-                            <li class="checkout-step checkout-step_one-page checkout-step_inactive">
+                            <li class="checkout-step checkout-step_one-page checkout-step_inactive show-for-medium">
                                 <a href="#" class="checkout-step-link checkout-step-link_inactive">
                                     <span class="step-label">Shopping cart</span>
                                 </a>

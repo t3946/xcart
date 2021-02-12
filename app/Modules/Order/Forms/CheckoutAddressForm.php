@@ -32,7 +32,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password'
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -44,8 +44,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'placeholder' => OrderModule::t( 'Eureka Inc.' )
                 ],
                 'labelClass' => 'common-label common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
+                'labelCommentClass' => 'common-comment',
             ],
 
             'address' => [
@@ -57,7 +58,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -69,8 +70,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'placeholder' => OrderModule::t( 'Apt 1' )
                 ],
                 'labelClass' => 'common-label common-label',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
+                'labelCommentClass' => 'common-comment',
             ],
 
             'country' => [
@@ -93,7 +95,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password'
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
 
             ],
@@ -111,7 +113,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password'
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -134,7 +136,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password'
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
 
@@ -148,7 +150,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password'
                 ],
                 'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
+                'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'common-field',
             ],
         ];
