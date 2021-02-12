@@ -6,7 +6,9 @@ footer {
 
 
     .contacts-presentations {
-      margin-bottom: 40px;
+      @include breakpoint(md up) {
+        margin-bottom: 40px;
+      }
 
       @include breakpoint(large) {
         margin-bottom: 10px;

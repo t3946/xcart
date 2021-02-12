@@ -352,6 +352,7 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/checkout.blocks/**/*.scss',
         'frontend/bem/blocks/payment.blocks/**/*.scss',
         'frontend/bem/blocks/shipping.blocks/**/*.scss',
+        'frontend/bem/blocks/footer.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));
@@ -360,6 +361,15 @@ gulp.task('frontend:bem', function () {
 /**
  * build bem styles for frontend when updated
  */
-gulp.task('watch:frontend:bem', function () {
-    gulp.watch('frontend/bem/blocks/**/*.scss', ['frontend:bem']);
-});
+gulp.task( 'watch:frontend:bem', function () {
+    gulp.watch( 'frontend/bem/blocks/**/*.scss', [ 'frontend:bem' ] );
+} );
+
+gulp.task( 'watch:frontend:css', function () {
+    gulp.watch( ['frontend/bem/bem.scss' ], [ 'frontend:css' ] );
+    // console.log(frontend.src.css);
+    // gulp.watch( [
+    //     frontend.src.css,
+    //     'frontend/bem/bem.scss'
+    // ], [ 'frontend:css' ] );
+} );

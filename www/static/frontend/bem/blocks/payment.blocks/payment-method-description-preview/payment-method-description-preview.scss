@@ -1,6 +1,12 @@
 .payment-method-description-preview {
   display: flex;
   align-items: center;
-  height: 40px;
   color: #4a4949;
+  padding: 0 0 0 34px;
+}
+
+@include breakpoint(lg up) {
+  .payment-method-description-preview {
+    padding: 40px;
+  }
 }

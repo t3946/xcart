@@ -5,6 +5,11 @@
   align-items: center;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 0 46px 0 63px;
   height: 100%;
+}
+
+@include breakpoint(lg up) {
+  .shipping-radio-label {
+    padding: 0 46px 0 63px;
+  }
 }

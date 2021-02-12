@@ -1,4 +1,9 @@
 .billing-form-address-fields {
   display: none;
-  padding: 0 0 20px 0;
+}
+
+@include breakpoint(lg up) {
+  .billing-form-address-fields {
+    padding: 0 0 20px 0;
+  }
 }

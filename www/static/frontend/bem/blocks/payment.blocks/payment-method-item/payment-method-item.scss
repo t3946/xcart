@@ -1,5 +1,11 @@
 .payment-method-item {
   display: block;
-  padding: 20px 32px;
+  padding: 8px 20px;
   cursor: pointer;
+}
+
+@include breakpoint (lg up){
+  .payment-method-item {
+    padding: 20px 32px;
+  }
 }

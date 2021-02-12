@@ -2,5 +2,16 @@
   width: 100%;
   resize: vertical;
   min-height: 90px;
+  padding: 8px;
   border: 1px solid #c4c4c4;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes {
+    padding: 8px 10px;
+  }
+}
+
+.checkout-customer-notes::placeholder {
+  font-style: italic;
 }

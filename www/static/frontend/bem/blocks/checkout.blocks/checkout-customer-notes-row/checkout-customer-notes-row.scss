@@ -1,0 +1,9 @@
+.checkout-customer-notes-row {
+  padding: 0 10px;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes-row {
+    padding: 0;
+  }
+}

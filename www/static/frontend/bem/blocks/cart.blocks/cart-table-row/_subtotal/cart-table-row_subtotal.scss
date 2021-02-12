@@ -2,7 +2,13 @@
   justify-content: flex-end;
   color: #83132B;
   border: none;
-  padding: 28px 45px 38px 0;
+  padding: 15px 10px;
   height: initial;
   min-height: initial;
+}
+
+@include breakpoint (lg up) {
+  .cart-table-row_subtotal {
+    padding: 28px 45px 38px 0;
+  }
 }
