@@ -431,6 +431,10 @@ if ($group_model) {
 
 $from = 'orders@s3stores.com';
 
+$a_to = array_map('trim', explode(',', $to));
+$a_to[] = 'orders@s3stores.com';
+$to = implode(',', array_unique($a_to));
+
 $smarty->assign('to', $to);
 $smarty->assign('subject', $subject);
 $smarty->assign('body', $body);
