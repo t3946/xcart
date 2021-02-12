@@ -359,6 +359,11 @@
   overflow: hidden;
 }
 
+.grand-total {
+  color: #9a1524;
+  text-transform: uppercase;
+  font-weight: 700;
+}
 .order-total {
   padding: .5rem 16px 0 0;
   border-top: 2px solid #959595;
@@ -391,11 +396,6 @@
 
 .shipping-total {
   color: #28862f;
-}
-.grand-total {
-  color: #9a1524;
-  text-transform: uppercase;
-  font-weight: 700;
 }
 .cart__switcher-button {
   position: absolute;
@@ -608,6 +608,15 @@
   padding: 0 36px 0 0;
 }
 
+.checkout-customer-notes-row {
+  padding: 0 10px;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes-row {
+    padding: 0;
+  }
+}
 .checkout-customer-notes {
   width: 100%;
   resize: vertical;
@@ -626,15 +635,6 @@
   font-style: italic;
 }
 
-.checkout-customer-notes-row {
-  padding: 0 10px;
-}
-
-@include breakpoint(md up) {
-  .checkout-customer-notes-row {
-    padding: 0;
-  }
-}
 .checkout-field-title {
   line-height: 110%;
   margin-bottom: 7px;
@@ -825,9 +825,6 @@
   margin: 12px 0 0 0;
 }
 
-.checkout__cart-table-caption {
-  margin: 0 -10px 5px;
-}
 .checkout__mandatory {
   margin: 0 0 10px 0;
 }
@@ -836,6 +833,9 @@
   .checkout__mandatory {
     margin: 0 0 20px 0;
   }
+}
+.checkout__cart-table-caption {
+  margin: 0 -10px 5px;
 }
 .checkout__payment-methods-container {
   margin: 0 -10px;
@@ -871,22 +871,6 @@
   bottom: 0;
 }
 
-.checkout-customer-notes__row {
-  margin: 22px auto 0;
-}
-
-@include breakpoint(md up) {
-  .checkout-customer-notes__row {
-    margin: 40px auto 0;
-  }
-}
-
-@include breakpoint(lg up) {
-  .checkout-customer-notes__row {
-    margin: 50px auto 0;
-  }
-}
-
 .checkout-field__row {
   margin: 0 0 12px 0;
 }
@@ -912,6 +896,22 @@
 
 .checkout-payment-methods__header {
   margin: 0 0 24px 0;
+}
+
+.checkout-customer-notes__row {
+  margin: 22px auto 0;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes__row {
+    margin: 40px auto 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout-customer-notes__row {
+    margin: 50px auto 0;
+  }
 }
 
 .checkout-step_active {
@@ -1044,6 +1044,9 @@
   background: #f4f4f4;
 }
 
+.payment-method-item_selected {
+  cursor: default;
+}
 .payment-method-row__label:after {
   position: absolute;
   left: 25px;

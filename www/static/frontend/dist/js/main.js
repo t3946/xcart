@@ -35090,6 +35090,8 @@ var DistributorCart = exports.DistributorCart = function () {
 
 exports.__esModule = true;
 var PaymentMethods = exports.PaymentMethods = function () {
+    var selectedClass = 'payment-method-item_selected';
+
     if (document.querySelector('.checkout-page') === null) {
         return;
     }
@@ -35098,10 +35100,27 @@ var PaymentMethods = exports.PaymentMethods = function () {
     var $paymentMethods = $root.find('.payment-method-item');
     var $radioInputMethods = $root.find('input[name=payment_method]');
 
+    $paymentMethods.click(function (e) {
+        var $this = $(this);
+
+        if ($this.hasClass(selectedClass)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
     $radioInputMethods.change(function () {
         var $this = $(this);
+
+        $paymentMethods.removeClass(selectedClass);
+
         $root.find('.payment-method-description-long').slideUp();
-        $this.parent().parent().parent().find('.payment-method-description-long').slideDown();
+
+        var $description = $this.parent().parent().parent();
+        $description.find('.payment-method-description-long').slideDown();
+
+        var $paymentMethod = $description.parent();
+        $paymentMethod.addClass(selectedClass);
     });
 
     $radioInputMethods.filter(':checked').parent().parent().parent().find('.payment-method-description-long').show();
