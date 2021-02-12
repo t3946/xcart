@@ -433,7 +433,7 @@ $from = 'orders@s3stores.com';
 
 $a_to = array_map(static fn($s) => trim(str_replace(',', '', $s)), explode(',', $to));
 $a_to[] = 'orders@s3stores.com';
-$to = implode(',', array_unique($a_to));
+$to = implode(',', array_unique(array_filter($a_to)));
 
 $smarty->assign('to', $to);
 $smarty->assign('subject', $subject);
