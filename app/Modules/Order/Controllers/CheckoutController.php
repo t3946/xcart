@@ -28,6 +28,7 @@ use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
+use Modules\Sites\Helpers\TaxHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
@@ -325,6 +326,9 @@ class CheckoutController extends FrontendController
                     $order->shipping_cost += $charge;
                     $group->total_gross += $charge;
                     $group->total_net += $charge;
+
+                    $tax = TaxHelper::getTaxValue($group, $site);
+
                     $group->save();
                 }
             }

@@ -11,28 +11,29 @@ class SiteForm extends ModelForm
 {
     public array $exclude = [
         'images',
-        'link',
-        'favicons',
-        'link',
         'config',
-        'link',
         'list_config',
-        'link',
-        'storefrontid',
         'prefix',
         'choices',
         'orderby',
         'static_page',
-        'link',
         'marketplaces',
-        'link',
-        'corporates',
         'short_name',
     ];
 
     public function getFields()
     {
         return [
+            'corporates' => [
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'label' => 'Corporations',
+            ],
+            'taxes' => [
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'label' => 'Taxes',
+            ],
             'payment_methods' => [
                 'class' => Select2Field::class,
                 'multiple' => true,

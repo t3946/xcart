@@ -12,6 +12,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 /**
@@ -21,8 +22,9 @@ use Xcart\App\Orm\Model;
  *
  * @property int|null storefrontid
  *
- * @property null|\Xcart\App\Orm\Manager favicons
+ * @property null|Manager favicons
  * @property string code
+ * @property Manager|TaxModel[] taxes
  */
 class SiteModel extends Model
 {
@@ -63,11 +65,7 @@ class SiteModel extends Model
     public static function getFields() :array
     {
         return [
-            'payment_methods' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => PaymentMethodModel::class,
-                'through' => SitePaymentMethodModel::class,
-            ],
+
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageSModel::class,
@@ -107,16 +105,7 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => '',
             ],
-            'status' => [
-                'class' => CharField::class,
-                'null' => false,
-                'default' => 'D',
-                'choices' => [
-                    'Y' => 'Enabled',
-                    'E' => 'Service',
-                    'D' => 'Disabled'
-                ],
-            ],
+
             'orderby' => [
                 'class' => IntField::class,
                 'null' => false,
@@ -140,7 +129,49 @@ class SiteModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => CorporateModel::class,
                 'through' => CorporateStorefrontsModel::class,
-            ]
+            ],
+            'taxes' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => TaxModel::class,
+                'through' => SiteTaxModel::class,
+            ],
+            'payment_methods' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'through' => SitePaymentMethodModel::class,
+            ],
+            'status' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => 'D',
+                'choices' => [
+                    'Y' => 'Enabled',
+                    'E' => 'Service',
+                    'D' => 'Disabled'
+                ],
+            ],
+            /*'company_name',
+            'company_website',
+            'cidev_top_header_code',
+            'local_phone',
+            'fax_number',
+            'cidev_footer_code',
+            'cidev_header_code',
+            'customer_service_working_time',
+            'cidev_ga_code_number',
+            'cidev_yandex_code_number',
+            'opt_order_prefix',
+            'newsletter_email',
+            'start_year',
+            'search_all_website_show',
+            'shop_closed_method',
+            'shop_closed',
+            'Enable_CDN',
+            'CDN_domain',
+            'Enable_surf_stats',
+            'Preferred_served_country',
+            'Preferred_language',
+            'currency',*/
         ];
     }
 
