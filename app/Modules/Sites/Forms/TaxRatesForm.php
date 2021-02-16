@@ -23,7 +23,7 @@ class TaxRatesForm extends ModelForm
 
     public function getModel()
     {
-        return new TaxRatesModel;
+        return new TaxRatesModel();
     }
 
     public function getName()
@@ -36,7 +36,7 @@ class TaxRatesForm extends ModelForm
         return [
             'zone' => [
                 'class' => DropDownField::class,
-                'label' => 'View',
+                'label' => 'Zone',
             ],
             'rate_value' => [
                 'class' => CharField::class,

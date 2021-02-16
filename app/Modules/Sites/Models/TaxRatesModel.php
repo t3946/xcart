@@ -4,6 +4,7 @@
 namespace Modules\Sites\Models;
 
 
+use Modules\Shipping\Models\ZoneElementModel;
 use Modules\Shipping\Models\ZoneModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -11,6 +12,13 @@ use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property TaxModel tax
+ * @property string rate_type
+ * @property float rate_value
+ * @property integer taxid
+ * @property integer rateid
+ */
 class TaxRatesModel extends Model
 {
     public static function tableName(): string
@@ -34,6 +42,7 @@ class TaxRatesModel extends Model
                 'modelClass' => ZoneModel::class,
                 'link' => ['zoneid' => 'zoneid'],
             ],
+
             'rate_value' => [
                 'class' => DecimalField::class,
                 'requires' => true,

@@ -93,13 +93,13 @@
                                 </span>
                         </div>
                     {/if}
-                    {*<div class="sum-info shipping">*}
-                                {*<span class="sum-info-label underline">*}
-                                    {*{t 'Shipping by' } dsfsdfsdsddf:*}
-                                {*</span><span class="sum underline">*}
-                                    {*US$ <span class="price">123.45</span>*}
-                        {*</span>*}
-                    {*</div>*}
+                    {if $order_group->total_tax}
+                        {foreach $order_group->tax_rates as $group_tax}
+                            <div class="sum-info tax-info">
+                                <div class="sum">{$group_tax->tax_rate->tax}: {$group_tax->value|site_currency}</div>
+                            </div>
+                        {/foreach}
+                    {/if}
                     <div class="sum-info sum-price-info">
                         <span class="sum-info-label">
                             {t 'Subtotal' }:

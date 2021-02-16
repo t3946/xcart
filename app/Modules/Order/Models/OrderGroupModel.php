@@ -16,6 +16,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
@@ -38,6 +39,7 @@ use Xcart\OrderGroup;
  * @property mixed refunds
  * @property bool notify_sent
  * @property Manager|OrderDetailModel[] detail_models
+ * @property float total_tax
  */
 class OrderGroupModel extends Model
 {
@@ -138,6 +140,11 @@ class OrderGroupModel extends Model
                 'modelClass' => OrderGroupMemoModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
+            'tax_rates' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupTaxModel::class,
+                'link' => ['order_group_id' => 'order_group_id'],
+            ],
             'refunds' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupRefundModel::class,
@@ -169,6 +176,10 @@ class OrderGroupModel extends Model
                 'default' => '',
             ],
             'shipping_quote' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'total_tax' => [
                 'class' => DecimalField::class,
                 'null' => true,
             ],
