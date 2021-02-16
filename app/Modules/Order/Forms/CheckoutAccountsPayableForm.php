@@ -32,12 +32,12 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'hint' => OrderModule::t( 'First and last name of the order contact person' ),
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
                 'successClass' => 'common-field__success'
             ],
 
@@ -52,8 +52,8 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'html' => [
                     'placeholder' => OrderModule::t( '(609) 924-8399' ),
                     'class' => 'phone',
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'extend' => 'ap_phone_ext',
                 'labelClass' => 'common-label common-label_required',
@@ -87,7 +87,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-checkbox',
+                'inputClass' => 'common-checkbox',
             ],
 
             'ap_email' => [
@@ -100,12 +100,12 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'purchase_order_file' => [
@@ -116,7 +116,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'types' => [ '.pdf' ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
         ];
     }

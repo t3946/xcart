@@ -1,0 +1,9 @@
+.quantity-group-inc {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .quantity-group-inc {
+    display: block;
+  }
+}

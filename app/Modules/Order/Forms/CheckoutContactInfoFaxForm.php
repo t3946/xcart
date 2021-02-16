@@ -27,7 +27,7 @@ class CheckoutContactInfoFaxForm extends CheckoutContactInfoForm
             ],
             'labelClass' => 'common-label',
             'hintClass' => 'common-hint',
-            'fieldClass' => 'common-field',
+            'inputClass' => 'common-input',
         ];
 
         return $fields;

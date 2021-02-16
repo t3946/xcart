@@ -1,3 +1,15 @@
+.common-checkbox {
+  position: relative;
+  border: 1px solid #d4d4d4;
+  width: 22px;
+  appearance: none;
+  height: 22px;
+  display: block;
+  cursor: pointer;
+  background: white;
+  flex-shrink: 0;
+}
+
 .common-checkbox:after {
   content: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
   position: absolute;
@@ -13,15 +25,4 @@
 
 .common-checkbox:checked:after {
   opacity: 1;
-}
-
-.common-checkbox {
-  position: relative;
-  border: 1px solid #d4d4d4;
-  width: 22px;
-  appearance: none;
-  height: 22px;
-  display: block;
-  cursor: pointer;
-  background: white;
 }

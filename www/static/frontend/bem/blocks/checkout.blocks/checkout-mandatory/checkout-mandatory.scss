@@ -1,4 +1,10 @@
 .checkout-mandatory {
-  font-size: .8125rem;
+  font-size: 14px;
   color: #959595;
+}
+
+@include breakpoint(lg up) {
+  .checkout-mandatory {
+    font-size: 12px;
+  }
 }

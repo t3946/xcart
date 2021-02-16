@@ -16,6 +16,7 @@ export const DistributorCart = ( function () {
         const $textSwitcher = $cart.find( '.cart-show-switcher_text' );
         const $buttonSwitcher = $cart.find( '.switcher-button' );
         const $images = $( '.cart-item-image' );
+        const $cartCaption = $cart.find( '.cart-table-caption' );
 
         function getAnimationDuration() {
             return $table.find( '.cart-table-row' ).length <= 7 ? 500 : 750;
@@ -32,15 +33,22 @@ export const DistributorCart = ( function () {
             $table.stop( true, false ).slideUp( getAnimationDuration() );
         };
 
-        const switcherButton = new SwitcherButton( $buttonSwitcher, showTable, hideTable, function () {
-            switcherText.isOn = switcherButton.isOn;
+        const switcherButton = new SwitcherButton( $buttonSwitcher, showTable, hideTable, function ( e ) {
+            e.stopPropagation();
+            switcherCaption.isOn = switcherText.isOn = switcherButton.isOn;
         } );
-        switcherButton.isOn = true;
 
-        const switcherText = new Switcher( $textSwitcher, showTable, hideTable, function () {
-            switcherButton.isOn = switcherText.isOn;
+        const switcherText = new Switcher( $textSwitcher, showTable, hideTable, function ( e ) {
+            e.stopPropagation();
+            switcherCaption.isOn = switcherButton.isOn = switcherText.isOn;
         } );
-        switcherText.isOn = true;
+
+        const switcherCaption = new Switcher( $cartCaption, showTable, hideTable, function ( e ) {
+            e.stopPropagation();
+            switcherButton.isOn = switcherText.isOn = switcherCaption.isOn;
+        } );
+
+        switcherCaption.isOn = switcherButton.isOn = switcherText.isOn = true;
     } );
 
     /**
@@ -82,7 +90,7 @@ export const DistributorCart = ( function () {
     /**
      * remove item from cart handler
      */
-    $( 'a.shipping-cart-remove' ).click( function ( e ) {
+    $( 'a.cart-remove-item-button' ).click( function ( e ) {
         e.preventDefault();
 
         Pace.ignore( function () {

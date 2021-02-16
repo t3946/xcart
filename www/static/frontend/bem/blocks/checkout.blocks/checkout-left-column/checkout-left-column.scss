@@ -1,0 +1,10 @@
+.checkout-left-column {
+  padding: 0 20px;
+}
+
+@include breakpoint(md up) {
+  .checkout-left-column {
+    padding-right: .625rem;
+    padding-left: .625rem;
+  }
+}

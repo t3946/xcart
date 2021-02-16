@@ -4,6 +4,12 @@
   cursor: pointer;
 }
 
+@include breakpoint (md up){
+  .payment-method-item {
+    padding: 13px 44px;
+  }
+}
+
 @include breakpoint (lg up){
   .payment-method-item {
     padding: 20px 32px;

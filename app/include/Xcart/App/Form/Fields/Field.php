@@ -127,9 +127,11 @@ abstract class Field implements IValidateField
     /**
      * @var string
      */
-    public string $fieldClass = '';
+    public string $fieldClass = 'common-field';
+    public string $inputClass = 'common-input';
     public string $containerClass = '';
     public string $shortHintClass = '';
+    public string $longHintClass = '';
 
     /**
      * @var string
@@ -369,7 +371,7 @@ abstract class Field implements IValidateField
     public function getAttributesInput()
     {
         $attributes = $this->getAttributes();
-        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses( [ $this->fieldClass ] ));
+        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses( [ $this->inputClass ] ));
         return $attributes;
     }
 

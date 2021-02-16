@@ -1,15 +1,19 @@
 .checkout-field-title {
   line-height: 110%;
-  margin-bottom: 7px;
 }
 
-@media screen and (min-width: 45em) {
+@include breakpoint(md up) {
   .checkout-field-title {
-    line-height: 2.5rem;
+    line-height: initial;
+    text-align: right;
+    padding: 0 16px 0 0;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 
-@media screen and (min-width: 64em) {
+@include breakpoint(lg up) {
   .checkout-field-title {
     line-height: 1.5rem;
   }

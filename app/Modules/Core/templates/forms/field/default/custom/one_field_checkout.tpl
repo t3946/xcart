@@ -20,7 +20,7 @@
 
     <div class="form-field {$name}{$hasErrors}{$success}{$displayClass}">
 
-        {insert 'forms/field/default/custom/field_checkout.tpl'}
+        {insert "forms/field/default/custom/field_checkout.tpl"}
 
     </div>
 

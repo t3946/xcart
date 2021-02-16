@@ -1,0 +1,12 @@
+.shipping-form__other-fields-switcher {
+  background: none;
+  border: 1px solid #c4c4c4;
+  border-left: none;
+  height: 36px;
+}
+
+@media (min-width: 720px) {
+  .shipping-form__other-fields-switcher {
+    background: #f4f4f4;
+  }
+}

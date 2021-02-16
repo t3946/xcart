@@ -30150,7 +30150,7 @@ var Switcher = exports.Switcher = function () {
         }
 
         if (this.callback) {
-            this.callback();
+            this.callback(event);
         }
     };
 
@@ -34964,6 +34964,7 @@ var DistributorCart = exports.DistributorCart = function () {
         var $textSwitcher = $cart.find('.cart-show-switcher_text');
         var $buttonSwitcher = $cart.find('.switcher-button');
         var $images = $('.cart-item-image');
+        var $cartCaption = $cart.find('.cart-table-caption');
 
         function getAnimationDuration() {
             return $table.find('.cart-table-row').length <= 7 ? 500 : 750;
@@ -34980,15 +34981,22 @@ var DistributorCart = exports.DistributorCart = function () {
             $table.stop(true, false).slideUp(getAnimationDuration());
         };
 
-        var switcherButton = new _SwitcherButton.SwitcherButton($buttonSwitcher, showTable, hideTable, function () {
-            switcherText.isOn = switcherButton.isOn;
+        var switcherButton = new _SwitcherButton.SwitcherButton($buttonSwitcher, showTable, hideTable, function (e) {
+            e.stopPropagation();
+            switcherCaption.isOn = switcherText.isOn = switcherButton.isOn;
         });
-        switcherButton.isOn = true;
 
-        var switcherText = new _Switcher.Switcher($textSwitcher, showTable, hideTable, function () {
-            switcherButton.isOn = switcherText.isOn;
+        var switcherText = new _Switcher.Switcher($textSwitcher, showTable, hideTable, function (e) {
+            e.stopPropagation();
+            switcherCaption.isOn = switcherButton.isOn = switcherText.isOn;
         });
-        switcherText.isOn = true;
+
+        var switcherCaption = new _Switcher.Switcher($cartCaption, showTable, hideTable, function (e) {
+            e.stopPropagation();
+            switcherButton.isOn = switcherText.isOn = switcherCaption.isOn;
+        });
+
+        switcherCaption.isOn = switcherButton.isOn = switcherText.isOn = true;
     });
 
     function recalc() {
@@ -35025,7 +35033,7 @@ var DistributorCart = exports.DistributorCart = function () {
         }
     }
 
-    $('a.shipping-cart-remove').click(function (e) {
+    $('a.cart-remove-item-button').click(function (e) {
         e.preventDefault();
 
         Pace.ignore(function () {
@@ -35099,28 +35107,21 @@ var PaymentMethods = exports.PaymentMethods = function () {
     var $root = $('.checkout-payment-methods');
     var $paymentMethods = $root.find('.payment-method-item');
     var $radioInputMethods = $root.find('input[name=payment_method]');
+    var $allLongDescriptions = $paymentMethods.find('.payment-method-description-long');
 
     $paymentMethods.click(function (e) {
-        var $this = $(this);
+        var $paymentMethodItem = $(this);
+        var $input = $paymentMethodItem.find('[name=payment_method]');
 
-        if ($this.hasClass(selectedClass)) {
-            e.preventDefault();
-            e.stopPropagation();
+        if ($input.prop('checked') === false) {
+            $paymentMethods.removeClass(selectedClass);
+
+            $allLongDescriptions.stop(false, true).slideUp();
+
+            $paymentMethodItem.addClass(selectedClass).find('.payment-method-description-long').stop(false, true).slideDown();
         }
-    });
 
-    $radioInputMethods.change(function () {
-        var $this = $(this);
-
-        $paymentMethods.removeClass(selectedClass);
-
-        $root.find('.payment-method-description-long').slideUp();
-
-        var $description = $this.parent().parent().parent();
-        $description.find('.payment-method-description-long').slideDown();
-
-        var $paymentMethod = $description.parent();
-        $paymentMethod.addClass(selectedClass);
+        $input.prop('checked', true);
     });
 
     $radioInputMethods.filter(':checked').parent().parent().parent().find('.payment-method-description-long').show();

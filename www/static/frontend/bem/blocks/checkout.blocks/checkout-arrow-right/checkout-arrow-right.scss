@@ -7,7 +7,7 @@
   right: -.625rem;
 }
 
-@media screen and (min-width: 64em) {
+@include breakpoint(lg up) {
   .checkout-arrow-right {
     height: 2.5rem;
     width: .75rem;
@@ -16,7 +16,7 @@
   }
 }
 
-@media screen and (min-width: 45em) {
+@include breakpoint(md up) {
   .checkout-arrow-right {
     height: 3.5rem;
     width: 1.0625rem;
@@ -49,7 +49,7 @@
   z-index: 1;
 }
 
-@media screen and (min-width: 45em) {
+@include breakpoint(md up) {
   .checkout-arrow-right:after {
     border-width: 2px;
     width: 3.5rem;

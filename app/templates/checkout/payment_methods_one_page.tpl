@@ -5,7 +5,7 @@
             <div class="checkout-payment-methods checkout__payment-methods-container">
                 {foreach $payment_methods as $method first=$first}
                     {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Ordering')}
-                        <label class="payment-method-item {cycle ["payment-method-item_odd", ""]}" for="payment_{$method->paymentid}">
+                        <div class="payment-method-item {cycle ["payment-method-item_odd", ""]}" for="payment_{$method->paymentid}">
                             <div class="row">
                                 <div class="columns small-12 large-4">
                                     <div class="payment-method-name">
@@ -66,11 +66,11 @@
                                         {elseif stripos($method->payment_method, 'Phone Ordering') !== false }
                                             <h3 class="payment-method-title">Please call us 1-800-929-2431 to finalize your order over the phone.</h3>
                                         {elseif stripos($method->payment_method, 'Purchase Order') !== false }
-                                            <div class="purchase-order-wrapper">
-                                                <h2 class="checkout-payment-methods__purchase-order-header">Purchase Order Details</h2>
-                                                <div class="checkout-mandatory checkout__mandatory">
+                                            <div class="form-purchase-order-details">
+                                                <h2 class="checkout-payment-methods__purchase-order-header text-center large-text-left">Purchase Order Details</h2>
+                                                <div class="checkout-mandatory checkout__mandatory text-center large-text-left">
                                                     {t 'The fields marked with' }
-                                                    <span class="common-label_required checkout-mandatory__required"></span> {t 'are mandatory.' }
+                                                    <span class="mandatory-star">*</span> {t 'are mandatory.' }
                                                 </div>
                                                 {foreach $fieldsets['purchase_order_details'] as $field}
                                                     {raw $field->render()}
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </label>
+                        </div>
                     {/if}
                 {/foreach}
             </div>
@@ -99,9 +99,5 @@
 <style>
     .checkout-payment-methods__purchase-order-header {
         margin: 0 0 16px;
-    }
-
-    .purchase-order-wrapper {
-        max-width: 360px;
     }
 </style>

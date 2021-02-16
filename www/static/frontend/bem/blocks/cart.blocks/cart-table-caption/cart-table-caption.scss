@@ -4,6 +4,7 @@
   font-size: 1.125rem;
   font-weight: 700;
   background: $grey_e4;
+  cursor: pointer;
 }
 
 @include breakpoint (md up) {

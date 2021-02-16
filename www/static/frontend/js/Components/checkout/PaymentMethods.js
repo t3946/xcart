@@ -9,28 +9,27 @@ export const PaymentMethods = ( function () {
     const $root = $( '.checkout-payment-methods' );
     const $paymentMethods = $root.find( '.payment-method-item' );
     const $radioInputMethods = $root.find( 'input[name=payment_method]' );
+    const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
 
     $paymentMethods.click( function ( e ) {
-        const $this = $( this );
+        const $paymentMethodItem = $( this );
+        const $input = $paymentMethodItem.find( '[name=payment_method]' );
 
-        if ( $this.hasClass( selectedClass ) ) {
-            e.preventDefault();
-            e.stopPropagation();
+        if ( $input.prop( 'checked' ) === false ) {
+            $paymentMethods.removeClass( selectedClass );
+
+            $allLongDescriptions
+                .stop( false, true )
+                .slideUp();
+
+            $paymentMethodItem
+                .addClass( selectedClass )
+                .find( '.payment-method-description-long' )
+                .stop( false, true )
+                .slideDown();
         }
-    } );
 
-    $radioInputMethods.change( function () {
-        const $this = $( this );
-
-        $paymentMethods.removeClass( selectedClass );
-
-        $root.find( '.payment-method-description-long' ).clear( false, true ).slideUp();
-
-        const $description = $this.parent().parent().parent();
-        $description.find( '.payment-method-description-long' ).clear( false, true ).slideDown();
-
-        const $paymentMethod = $description.parent();
-        $paymentMethod.addClass( selectedClass );
+        $input.prop( 'checked', true );
     } );
 
     $radioInputMethods.filter( ':checked' ).parent().parent().parent().find( '.payment-method-description-long' ).show();

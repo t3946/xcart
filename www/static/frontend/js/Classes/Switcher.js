@@ -39,7 +39,7 @@ export class Switcher {
         }
 
         if ( this.callback ) {
-            this.callback();
+            this.callback( event );
         }
     }
 }

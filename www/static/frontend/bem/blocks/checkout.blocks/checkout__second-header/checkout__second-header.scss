@@ -1,0 +1,9 @@
+.checkout__second-header {
+  margin: 25px 0 20px;
+}
+
+@include breakpoint(md up) {
+  .checkout__second-header {
+    margin: 35px 0 30px;
+  }
+}

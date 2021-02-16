@@ -1,3 +1,5 @@
-.billing-form-fields {
-  max-width: 360px;
+@include breakpoint(lg up) {
+  .billing-form-fields {
+    max-width: 360px;
+  }
 }

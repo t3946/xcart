@@ -1,0 +1,9 @@
+.quantity-group-dec {
+  display: none;
+}
+
+@include breakpoint(md up) {
+  .quantity-group-dec {
+    display: block;
+  }
+}

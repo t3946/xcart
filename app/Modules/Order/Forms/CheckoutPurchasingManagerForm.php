@@ -30,12 +30,12 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'hint' => OrderModule::t( 'First and last name of the order contact person' ),
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'pm_phone' => [
@@ -49,8 +49,8 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'html' => [
                     'placeholder' => OrderModule::t( '(609) 924-8399' ),
                     'class' => 'phone',
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'extend' => 'pm_phone_ext',
                 'labelClass' => 'common-label common-label_required',
@@ -84,7 +84,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-checkbox',
+                'inputClass' => 'common-checkbox',
             ],
 
             'pm_email' => [
@@ -97,12 +97,12 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'pm_fax' => [
@@ -118,7 +118,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
         ];
     }

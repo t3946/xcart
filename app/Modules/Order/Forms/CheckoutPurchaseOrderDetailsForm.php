@@ -27,12 +27,12 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                 'html' => [
                     'class' => 'po_number',
                     'placeholder' => OrderModule::t('14031879'),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
             'organization_name' => [
                 'class' => CharCleanField::class,
@@ -41,12 +41,12 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                 'hint' => OrderModule::t('The name of your organization'),
                 'html' => [
                     'placeholder' => OrderModule::t('Eureka Inc.'),
-                    'data-correct' => 'common-field__correct',
-                    'data-wrong' => 'common-field__wrong',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
         ];
     }

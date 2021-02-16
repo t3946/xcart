@@ -1,0 +1,12 @@
+.cart-remove-icon {
+  width: 16px;
+  height: 16px;
+  fill: #959595;
+}
+
+@include breakpoint(md up) {
+  .cart-remove-icon {
+    width: 32px;
+    height: 32px;
+  }
+}

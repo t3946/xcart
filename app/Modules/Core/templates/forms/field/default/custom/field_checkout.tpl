@@ -2,7 +2,7 @@
 <div class="hide-for-large mobile-errors-content">
     {raw $errors}
 </div>
-<div class="checkout-field__row">
+<div class="checkout-field__row checkout-field-row">
     <div class="checkout-field-title">
         {if $hasHint}
             <div class="medium-multiline">
@@ -13,7 +13,7 @@
             {raw $label}
         {/if}
     </div>
-    <div class="field">
+    <div class="field {$field->fieldClass}">
         <div class="input-container {$field->className} {$hasClose}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
             {raw $input}
         </div>

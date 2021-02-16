@@ -1,4 +1,4 @@
-.common-field {
+.common-input {
   width: 100%;
   box-shadow: none;
   border: 1px solid #c4c4c4;
@@ -16,7 +16,7 @@
   border-radius: 0;
 }
 
-.common-field::placeholder {
+.common-input::placeholder {
   font-style: italic;
   color: #969696;
 }

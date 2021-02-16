@@ -1,4 +1,10 @@
 .cart-column-multiply-sign {
   text-align: center;
-  width: 10px;
+  width: 100%;
+}
+
+@include breakpoint(lg up) {
+  .cart-column-multiply-sign {
+    width: 10px;
+  }
 }

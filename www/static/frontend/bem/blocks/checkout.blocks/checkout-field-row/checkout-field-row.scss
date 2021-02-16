@@ -1,0 +1,11 @@
+@include breakpoint(md up) {
+  .checkout-field-row {
+    display: flex;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout-field-row {
+    display: block;
+  }
+}

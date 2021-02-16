@@ -1,11 +1,16 @@
 .cart-column-quantity {
-  width: 135px;
   text-align: center;
-  padding-right: 40px;
 }
 
-@media screen and (min-width: 45em) {
+@include breakpoint(md up) {
   .cart-item-name-quantity {
     justify-content: space-between;
+  }
+}
+
+@include breakpoint(lg up) {
+  .cart-item-name-quantity {
+    width: 135px;
+    padding-right: 40px;
   }
 }

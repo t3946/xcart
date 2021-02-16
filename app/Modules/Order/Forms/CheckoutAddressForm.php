@@ -33,7 +33,8 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'company' => [
@@ -45,8 +46,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
                 'labelCommentClass' => 'common-comment',
+                'fieldClass' => 'checkout-field', //TODO: менять классы полей
             ],
 
             'address' => [
@@ -59,7 +61,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'address_2' => [
@@ -71,7 +73,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
                 'labelCommentClass' => 'common-comment',
             ],
 
@@ -96,7 +98,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
 
             ],
 
@@ -114,7 +116,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'state' => [
@@ -137,7 +139,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
 
             'city' => [
@@ -151,7 +153,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field',
+                'inputClass' => 'common-input',
             ],
         ];
     }

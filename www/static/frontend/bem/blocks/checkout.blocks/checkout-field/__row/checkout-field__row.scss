@@ -1,3 +1,15 @@
 .checkout-field__row {
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
+}
+
+@include breakpoint(md up) {
+  .checkout-field__row {
+    margin: 0 0 23px 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout-field__row {
+    margin: 0 0 20px 0;
+  }
 }
