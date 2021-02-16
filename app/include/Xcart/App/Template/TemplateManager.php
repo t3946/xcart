@@ -127,7 +127,7 @@ class TemplateManager
                 $arr = [
                     $site_currency->symbol_prefix,
                     !$site_currency->after ? $site_currency : '',
-                    " {$site_currency->getCurrencyFormat($variable)}",
+                    " <span class=\"price\">{$site_currency->getCurrencyFormat($variable)}</span>",
                     $site_currency->after ? $site_currency : '',
                 ];
                 return trim(implode('', $arr));

@@ -428,6 +428,11 @@
       &.total-shipping {
         color: $forest_green;
       }
+
+      &.tax-info {
+        color: #154159;
+      }
+
       &.grand-total {
         color: #9a1524;
         text-transform: uppercase;
