@@ -35,7 +35,7 @@ class TaxRatesAdmin extends ListViewAdmin
 
     public function getForm()
     {
-        return new TaxRatesForm;
+        return new TaxRatesForm();
     }
 
     public function getModel()

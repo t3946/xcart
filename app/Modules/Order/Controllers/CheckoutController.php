@@ -21,6 +21,7 @@ use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderGroupTaxModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\PurchaseOrderModel;
@@ -28,6 +29,7 @@ use Modules\Order\OrderModule;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
+use Modules\Sites\Helpers\TaxHelper;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
@@ -275,7 +277,7 @@ class CheckoutController extends FrontendController
         if ($cart_groups = $cart->getItemsGroupedBy()) {
             $rates = $app->request->post->get('shipping_rates');
 
-            $order->subtotal = $order->shipping_cost = 0;
+            $order->subtotal = $order->shipping_cost = $order->tax = 0;
 
             $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
 
@@ -293,11 +295,9 @@ class CheckoutController extends FrontendController
                         /** @var ShippingRateModel $rate */
                         $rate = reset($shipping_rates);
 
-                        if ($group->shippingid && $rate = array_filter($shipping_rates, function ($a) use ($group) {
-                                return (int) $a->shippingid === (int) $group->shippingid;
-                            })) {
-                                $rate = reset($rate);
-                            }
+                        if ($group->shippingid && $rate = array_filter($shipping_rates, static fn($a) => (int)$a->shippingid === (int)$group->shippingid)) {
+                            $rate = reset($rate);
+                        }
 
                         if ($rates[$g]) {
                             $rate = ShippingRateModel::objects()->get(['rateid' => $rates[$g]]);
@@ -321,16 +321,33 @@ class CheckoutController extends FrontendController
                             'total_net' => $cart_group['subtotal'],
                         ]);
                     }
+
+                    $tax_value_total = 0;
+                    if ($tax_rates = TaxHelper::getTaxRate($site, $order->s_country, $order->s_state)) {
+                        foreach ($tax_rates as $tax_rate) {
+                            $tax_value = TaxHelper::getTaxValue($tax_rate, $group->total_net, $group->shipping_net);
+                            OrderGroupTaxModel::objects()->getOrCreate([
+                                'order_group_id' => $group->order_group_id,
+                                'tax_rate_id' => $tax_rate->rateid,
+                                'value' => $tax_value
+                            ]);
+                            $tax_value_total += $tax_value;
+                        }
+                    }
+
                     $order->subtotal += $group->total_gross;
                     $order->shipping_cost += $charge;
-                    $group->total_gross += $charge;
+                    $order->tax += $tax_value_total;
+                    $group->total_tax = $tax_value_total;
+                    $group->total_gross += $charge + $tax_value_total;
                     $group->total_net += $charge;
+
                     $group->save();
                 }
             }
 
             $order->setAttributes([
-                'total' => $order->subtotal + $order->shipping_cost,
+                'total' => $order->subtotal + $order->shipping_cost + $order->tax,
             ]);
 
         } else {
@@ -395,7 +412,6 @@ class CheckoutController extends FrontendController
             ->all();
 
         [$shipping_address] = $order->getAddressInfo();
-
 
         if (!$app->request->getIsPost()){
             if (!$app->request->post->get('billing_same') && $order->b_firstname) {

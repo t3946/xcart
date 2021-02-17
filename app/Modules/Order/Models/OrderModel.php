@@ -18,6 +18,8 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Models\TaxModel;
+use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -631,5 +633,20 @@ class OrderModel extends Model
     public function getShippingCost(): float
     {
         return array_reduce($this->groups->all(), static fn($c, $i) => $c + $i->shipping_gross);
+    }
+
+    /**
+     * @return array
+     */
+    public function getTaxes(): array
+    {
+        $res = [];
+        $groups = array_map(static fn($group) => $group->tax_rates->all(), $this->groups->all());
+        foreach ($groups as $group) {
+            foreach ($group as $tax_rate) {
+                $res[(string)$tax_rate->tax_rate->tax] += $tax_rate->value;
+            }
+        }
+        return $res;
     }
 }

@@ -38,7 +38,7 @@
                 <b>
                     {t 'The items below are shipped from'} {$distributor->m_city},
                     {if $site_config.show_full_state_country === 'Y'}{$distributor->state_model}{else}{$distributor->m_state}{/if},
-                    {if $site_config.show_full_state_country === 'Y'}{$distributor->country_model}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()} {t 'shipping'}, {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($group->shipping_gross)}{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                    {if $site_config.show_full_state_country === 'Y'}{$distributor->country_model}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()} {t 'shipping'}, {$group->shipping_gross|site_currency}{/if}
                 </b>
             </td>
         </tr>
@@ -51,9 +51,9 @@
                     <span style="font-size: 11px"><a href="https:{$product->getAbsoluteUrl(true)}">{$product->getFrontendName()}</a></span>
                     {include "mail/_parts/_product_options.tpl"}
                 </td>
-                <td align="center" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order_detail->price)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+                <td align="center" nowrap="nowrap">{$order_detail->price|site_currency}</td>
                 <td align="center">{$order_detail->amount}</td>
-                <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order_detail->price * $order_detail->amount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+                <td align="right" nowrap="nowrap">{($order_detail->price * $order_detail->amount)|site_currency}</td>
             </tr>
         {/foreach}
         <tr>
@@ -86,19 +86,19 @@
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td align="right" width="100%" height="20"><b>{t 'Total'}:</b>&nbsp;</td>
-        <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->subtotal)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+        <td align="right" nowrap="nowrap">{$order->subtotal|site_currency}</td>
     </tr>
     {if $order->discount > 0}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Discount'}:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+            <td align="right" nowrap="nowrap">{$order->discount|site_currency}</td>
         </tr>
     {/if}
 
     {if $order->coupon}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Coupon Savings'}:</b>&nbsp;</td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->coupon_discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+            <td align="right" nowrap="nowrap">{$order->coupon_discount|site_currency}</td>
         </tr>
     {/if}
 
@@ -106,15 +106,25 @@
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Discounted Total'}:</b>&nbsp;</td>
             <td align="right"
-                nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->total - $this->coupon_discount)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+                nowrap="nowrap">{($order->total - $this->coupon_discount)|site_currency}</td>
         </tr>
     {/if}
 
     {if $config.disable_shipping != 'Y'}
         <tr>
             <td align="right" width="100%" height="20"><b>{t 'Total Shipping Cost'}:</b></td>
-            <td align="right" nowrap="nowrap">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->shipping_cost)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</td>
+            <td align="right" nowrap="nowrap">{$order->shipping_cost|site_currency}</td>
         </tr>
+    {/if}
+
+    {set $order_taxes = $order->getTaxes()}
+    {if $order_taxes}
+        {foreach $order_taxes as $tax_name => $tax_rate}
+            <tr>
+                <td align="right" width="100%" height="20"><b>{t 'Total'} {$tax_name}:</b></td>
+                <td align="right" nowrap="nowrap">{$tax_rate|site_currency}</td>
+            </tr>
+        {/foreach}
     {/if}
 
     <tr>
@@ -127,7 +137,7 @@
         <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{t 'Grand Total'}:</b>&nbsp;
         </td>
         <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
-            <b>{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($order->total)}{if $site_currency->after}&nbsp;{$site_currency}{/if}</b>
+            <b>{$order->total|site_currency}</b>
         </td>
     </tr>
 

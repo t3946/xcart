@@ -163,25 +163,21 @@
     <td class="HeadLine" align="right" height="22" width="33%">
 
     {if $active_modules.Multiple_Storefronts && $usertype eq "A" && $login && $current_membership_flag ne 'FS'}
-
         {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
             <div style="float: right;">
                 <input type="button"
                        name="SF properties"
                        value="SF properties"
-                       onclick="location.href='configuration.php?option=Multiple_Storefronts'">
-</div>
+                       onclick="location.href='/admin/configuration.php?option=Multiple_Storefronts'">
+            </div>
         {/if}
-
-    {else}
-        &nbsp;
     {/if}
 
         {if $active_modules.Multiple_Storefronts && ($usertype eq 'A' && $current_membership_flag ne 'FS' || $usertype eq 'P') && $login}
             <div style="float: right;">
 	<form action="{$smarty.server.REQUEST_URI|amp}" method="post" name="storefrontsform">
 	<input type="hidden" name="mode" value="change_storefront"/>
-		<select name="cur_sf" onchange="javascript: document.storefrontsform.submit();">
+		<select name="cur_sf" onchange="document.storefrontsform.submit();">
             {foreach from=$sd_selects key=key item=sf}
                 <option value="{$key}"{if $current_storefront eq $key} selected="selected" disabled="disabled" {/if}>{$sf}</option>
             {/foreach}
