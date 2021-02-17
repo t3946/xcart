@@ -1,28 +1,18 @@
-const webpack = require('webpack');
-const _ = require('lodash');
-const path = require('path');
-// const WebpackSweetEntry = require('webpack-sweet-entry');
-const BowerResolvePlugin = require("bower-resolve-webpack-plugin");
-const paths = require('./gulp.frontend.patchs');
-// const conf_dev = require('./webpack/webpack.develop');
-// const conf_base = require('./webpack/webpack.base');
-
+const webpack = require( 'webpack' );
+const path = require( 'path' );
+const BowerResolvePlugin = require( "bower-resolve-webpack-plugin" );
+const paths = require( './gulp.frontend.patchs' );
 
 config = {
-    // devtool: 'source-map',
     entry: paths.src.jsx_bundles,
-    // entry: _.merge(
-    //     paths.src.jsx_bundles,
-    //     WebpackSweetEntry(path.resolve("./temp/frontend/", 'js/**/*.js*'), 'js', 'js')
-    // ),
     output: {
-        path: path.resolve('./' + paths.dst.jsx),
+        path: path.resolve( './' + paths.dst.jsx ),
         filename: '[name].js'
     },
     target: "web",
     resolve: {
         alias: {
-            modernizr$: path.resolve(__dirname, "./support/modernizrrc.js"),
+            modernizr$: path.resolve( __dirname, "./support/modernizrrc.js" ),
             'jQuery': 'jquery',
             'react': 'preact-compat',
             'react-dom': 'preact-compat',
@@ -32,19 +22,19 @@ config = {
         modules: [
             'frontend/jsx',
             paths.modules.jsx,
-            path.resolve('./' + paths.modules.jsx),
+            path.resolve( './' + paths.modules.jsx ),
             'node_modules',
             'bower_components',
         ],
-        plugins: [new BowerResolvePlugin({
-            modulesDirectories: ["bower_components"],
-            includes:           /.*/,
-            excludes:           [],
+        plugins: [ new BowerResolvePlugin( {
+            modulesDirectories: [ "bower_components" ],
+            includes: /.*/,
+            excludes: [],
             searchResolveModulesDirectories: true
-        })],
-        descriptionFiles: ['bower.json', 'package.json'],
-        mainFields: ['browser', 'main'],
-        extensions: ['.js', '.jsx', '.json']
+        } ) ],
+        descriptionFiles: [ 'bower.json', 'package.json' ],
+        mainFields: [ 'browser', 'main' ],
+        extensions: [ '.js', '.jsx', '.json' ]
     },
     module: {
         rules: [
@@ -59,30 +49,29 @@ config = {
                             [ "react" ],
                             [ "env", {
                                 "targets": {
-                                    "browsers": ["last 10 versions", "safari >= 8"],
+                                    "browsers": [ "last 10 versions", "safari >= 8" ],
                                     "uglify": true,
                                 },
                                 "production": {
-                                    "presets": ["minify"]
+                                    "presets": [ "minify" ]
                                 },
                                 // "modules": false,
                                 "loose": true,
-                            }],
+                            } ],
                         ],
                         plugins: [
-                            ["transform-object-rest-spread", { "useBuiltIns": true }],
-                            ["transform-react-jsx", {
-                                "pragma":"h" // default pragma is React.createElement
-                            }],
-                            ["module-resolver", {
-                                "root": ["."],
+                            [ "transform-object-rest-spread", { "useBuiltIns": true } ],
+                            [ "transform-react-jsx", {
+                                "pragma": "h" // default pragma is React.createElement
+                            } ],
+                            [ "module-resolver", {
+                                "root": [ "." ],
                                 "alias": {
                                     "react": "preact-compat",
                                     "react-dom": "preact-compat",
-                                    // Not necessary unless you consume a module using `createClass`
                                     "create-react-class": "preact-compat/lib/create-react-class"
                                 }
-                            }],
+                            } ],
                         ]
                     }
                 }
@@ -92,31 +81,30 @@ config = {
                 use: [
                     {
                         loader: 'modernizr-loader',
-                        options: require(__dirname + '/support/modernizrrc.js'),
+                        options: require( __dirname + '/support/modernizrrc.js' ),
                     },
                 ]
             },
         ]
     },
     plugins: [
-        new webpack.ProvidePlugin({
-        //     'Promise': 'bluebird'
+        new webpack.ProvidePlugin( {
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery'
-        }),
-        new webpack.LoaderOptionsPlugin({
+        } ),
+        new webpack.LoaderOptionsPlugin( {
             minimize: true,
             debug: false,
             options: {
                 context: __dirname
             }
-        }),
-        new webpack.DefinePlugin({
+        } ),
+        new webpack.DefinePlugin( {
             'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+                NODE_ENV: JSON.stringify( process.env.NODE_ENV || 'development' )
             }
-        }),
+        } ),
     ],
     watchOptions: {
         aggregateTimeout: 300,
@@ -124,17 +112,12 @@ config = {
     }
 };
 
-if (process.env.NODE_ENV == 'production') {
+if ( process.env.NODE_ENV === 'production' ) {
     config.plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
+        new webpack.optimize.UglifyJsPlugin( {
             ie8: false,
             ecma: 6,
             sourceMap: false,
-            // mangle: {
-            //     // safari10: true,
-            //     toplevel: true,
-            //     eval: true,
-            // },
             output: {
                 comments: false,
                 beautify: false,
@@ -148,7 +131,6 @@ if (process.env.NODE_ENV == 'production') {
                 cascade: true,
 
                 loops: true,
-                // typeofs: true,
                 comparisons: true,
                 sequences: true,
                 properties: true,
@@ -159,15 +141,14 @@ if (process.env.NODE_ENV == 'production') {
                 unused: true,
                 if_return: true,
                 join_vars: true,
-                // drop_console: true,
                 warnings: true
             },
             parallel: {
                 cache: true,
             },
 
-            warningsFilter: (src) => true
-        })
+            warningsFilter: ( src ) => true
+        } )
     );
 }
 
