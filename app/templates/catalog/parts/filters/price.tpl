@@ -9,7 +9,7 @@
                min="{$values.prices.min}"
                max="{$values.prices.max}"
                step="{$values.prices.step}"
-               value="{$values.selected.min}"/>
+               value="{$values.selected.min|htmlentities}"/>
         &mdash;
         <input type="number"
                id="filter_{$key}_max"
@@ -18,7 +18,7 @@
                min="{$values.prices.min}"
                max="{$values.prices.max}"
                step="{$values.prices.step}"
-               value="{$values.selected.max}"/>
+               value="{$values.selected.max|htmlentities}"/>
     </div>
 
 
