@@ -75,6 +75,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'switcherClass' => 'shipping-switcher-button switcher-button_other-fields-switcher',
             ],
 
             'address_2' => [

@@ -35,10 +35,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
-                'successClass' => 'common-field__success'
+                'fieldClass' => 'checkout-field',
             ],
 
             'ap_phone' => [
@@ -55,12 +55,13 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
-                'extend' => 'ap_phone_ext',
+                'extend' => 'ci_phone_ext',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field checkout-compound__phone-main-field',
+                'fieldClass' => 'checkout-compound__phone-main-field checkout-field',
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
+                'inputClass' => 'common-input common-input_checkout-phone',
             ],
 
             'ap_phone_ext' => [
@@ -75,9 +76,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field checkout-phone-ext-field',
+                'fieldClass' => 'checkout-phone-ext-field',
                 'containerClass' => 'checkout-phone-ext-container',
                 'shortHintClass' => 'checkout-phone-ext-short-hint',
+                'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
             'ap_track_sms' => [
@@ -103,9 +105,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'purchase_order_file' => [
@@ -114,9 +117,10 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'required' => false,
                 'hint' => OrderModule::t( 'Alternatively fax PO to 1-800-929-2835' ),
                 'types' => [ '.pdf' ],
-                'labelClass' => 'common-label',
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
         ];
     }

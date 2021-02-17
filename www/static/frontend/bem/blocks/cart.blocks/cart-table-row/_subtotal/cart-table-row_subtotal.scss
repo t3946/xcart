@@ -7,7 +7,7 @@
   min-height: initial;
 }
 
-@include breakpoint (lg up) {
+@include breakpoint(lg up) {
   .cart-table-row_subtotal {
     padding: 28px 45px 38px 0;
   }

@@ -9,7 +9,7 @@ export const BillingForm = ( function () {
 
     const $otherFields = $( '.checkout-billing-other-fields' );
 
-    new SwitcherButton( '.checkout-billing-form__other-fields-switcher', function () {
+    new SwitcherButton( '.address-switcher-button', function () {
         $otherFields.stop( true, false ).slideDown();
     }, function () {
         $otherFields.stop( true, false ).slideUp();

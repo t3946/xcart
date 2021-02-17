@@ -1,3 +1,9 @@
 .quantity-group {
-  border: 1px solid #ffe296;
+  border: 1px solid #aaaaaa;
+}
+
+@include breakpoint(md up) {
+  .quantity-group {
+    border: 1px solid #ffe296;
+  }
 }

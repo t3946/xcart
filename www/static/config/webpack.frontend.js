@@ -83,7 +83,6 @@ config = {
                                     "create-react-class": "preact-compat/lib/create-react-class"
                                 }
                             }],
-                            // TODO: ['@babel/plugin-proposal-object-rest-spread'] - не работает без babel ^7.0.0
                         ]
                     }
                 }

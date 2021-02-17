@@ -3,13 +3,13 @@
 }
 
 @include breakpoint(medium up) {
-    .checkout-second-header {
-      font-size: 30px;
-    }
+  .checkout-second-header {
+    font-size: 30px;
+  }
 }
 
 @include breakpoint(large up) {
-    .checkout-second-header {
-      font-size: 24px;
-    }
+  .checkout-second-header {
+    font-size: 24px;
+  }
 }

@@ -58,6 +58,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'fieldClass' => 'checkout-compound__phone-main-field checkout-field',
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
+                'inputClass' => 'common-input common-input_checkout-phone'
             ],
 
             'ci_phone_ext' => [

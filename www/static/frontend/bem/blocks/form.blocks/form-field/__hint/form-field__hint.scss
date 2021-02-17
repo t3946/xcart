@@ -1,3 +1,16 @@
 .form-field__hint {
-  margin: 2px 0 0 0;
+  margin: 2px 0 8px 0;
 }
+
+@include breakpoint(md up) {
+  .form-field__hint {
+    margin: 2px 0 0 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .form-field__hint {
+    margin: 2px 0 8px 0;
+  }
+}
+

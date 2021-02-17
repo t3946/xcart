@@ -19,10 +19,10 @@
                 {raw $label}
             {/if}
         </div>
-        <div class="field switcher-field">
+        <div class="field switcher-field {$field->fieldClass}">
             <div class="input-container switcher-input-container {$field->className} {$hasClose}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                 {raw $input}
-                <span class="switcher-button switcher-button_shipping-form shipping-form__other-fields-switcher">
+                <span class="switcher-button field__switcher-button {$field->switcherClass}">
                     <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
                     <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
                 </span>

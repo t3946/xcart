@@ -7,7 +7,7 @@
   cursor: pointer;
 }
 
-@include breakpoint (md up) {
+@include breakpoint(md up) {
   .cart-table-caption {
     font-size: 1.25rem;
     padding: 20px 0 24px;
@@ -16,13 +16,13 @@
   }
 }
 
-@include breakpoint (ml up) {
+@include breakpoint(ml up) {
   .cart-table-caption {
     padding: 20px 62px 24px;
   }
 }
 
-@include breakpoint (lg up) {
+@include breakpoint(lg up) {
   .cart-table-caption {
     font-size: 1.125rem;
     padding: 30px 0 22px;

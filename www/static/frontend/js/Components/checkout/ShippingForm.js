@@ -41,7 +41,7 @@ export const ShippingForm = ( function () {
         this.$otherFields = $( '.checkout-shipping-other-fields' );
         this.addressField = document.getElementById( 'CheckoutForm_s_address' );
 
-        new SwitcherButton( '.shipping-form__other-fields-switcher', function () {
+        new SwitcherButton( '.shipping-switcher-button', function () {
             self.$otherFields.stop( true, false ).slideDown();
         }, function () {
             self.$otherFields.stop( true, false ).slideUp();

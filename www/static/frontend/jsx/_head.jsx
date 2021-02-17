@@ -12,7 +12,7 @@ import FontFaceObserver from 'fontfaceobserver';
 import Waves from 'Waves';
 import whatInput from 'what-input';
 import formValidate from 'validate.js';
-import noUiSlider from 'noUiSlider';
+import noUiSlider from 'nouislider';
 import Loader from "./components/Loader";
 import FilterPriceSlider from "./components/FilterPriceSlider";
 import 'sly/dist/sly';

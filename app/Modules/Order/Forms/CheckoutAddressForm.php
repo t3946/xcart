@@ -11,6 +11,7 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
+use Xcart\App\Form\Fields\CharSwitcherField;
 use Xcart\App\Main\Xcart;
 
 abstract class CheckoutAddressForm extends FrontendForm
@@ -48,20 +49,23 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'labelCommentClass' => 'common-comment',
-                'fieldClass' => 'checkout-field', //TODO: менять классы полей
+                'fieldClass' => 'checkout-field',
             ],
 
             'address' => [
-                'class' => CharCleanField::class,
+                'class' => CharSwitcherField::class,
+                'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
                 'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
                 'html' => [
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
+                'switcherClass' => 'address-switcher-button switcher-button_other-fields-switcher',
             ],
 
             'address_2' => [
@@ -71,9 +75,10 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => OrderModule::t( 'Apt 1' )
                 ],
-                'labelClass' => 'common-label common-label',
+                'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
                 'labelCommentClass' => 'common-comment',
             ],
 
@@ -99,7 +104,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
-
+                'fieldClass' => 'checkout-field',
             ],
 
             'zipcode' => [
@@ -117,6 +122,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'state' => [
@@ -140,6 +146,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'city' => [
@@ -154,6 +161,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
         ];
     }

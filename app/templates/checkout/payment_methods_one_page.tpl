@@ -29,30 +29,18 @@
                                                 <label for="">Credit / Debit card details *<input type="text"></label>
                                                 <div class="billing-same-shipping">
                                                     <h3 class="payment-method-title billing-same-shipping__header">{t 'Is Billing Address the same as Shipping Address?' }</h3>
-                                                    <div class="billing-same-shipping-variants billing-same-shipping__variants">
-                                                        <label class="billing-same-shipping-radio-group" for="billing_yes">
-                                                            <input class="common-input-radio" id="billing_yes" type="radio" name="billing_same" value="1" checked/>
-                                                            <span class="common-radio-label billing-same-shipping-variant-label">{t 'Yes' }</span>
-                                                        </label>
-                                                        <label class="billing-same-shipping-radio-group" for="billing_no">
-                                                            <input class="common-input-radio" id="billing_no" type="radio" name="billing_same" value="0"/>
-                                                            <span class="common-radio-label billing-same-shipping-variant-label">{t 'No' }</span>
-                                                        </label>
+
+                                                    <div class="switcher-slider billing-same-shipping-switcher billing__switcher">
+                                                        <div class="switcher-slider-label">
+                                                            <b class="switcher-slider-caption switcher-slider-disable-caption switcher-slider-caption_disabled">{t 'no'}</b>
+                                                            <span class="switcher-slider-ball"></span>
+                                                            <b class="switcher-slider-caption switcher-slider-caption_enabled">{t 'yes'}</b>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="billing-form-address-fields">
                                                     {foreach array_slice($fieldsets['billing'], 0, 3) as $field}
-                                                        {if $field->getName() === 'b_address' }
-                                                            <div class="checkout-billing-switcher-field-wrapper">
-                                                                {raw $field->render()}
-                                                                <span class="switcher-button switcher-button_white switcher-button_shipping-form checkout-billing-form__other-fields-switcher">
-                                                                        <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
-                                                                        <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
-                                                                    </span>
-                                                            </div>
-                                                        {else}
-                                                            {raw $field->render()}
-                                                        {/if}
+                                                        {raw $field->render()}
                                                     {/foreach}
                                                     <div class="checkout-billing-other-fields">
                                                         {foreach array_slice( $fieldsets['billing'], 3 ) as $field}

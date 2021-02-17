@@ -7,3 +7,9 @@
     margin: 35px 0 30px;
   }
 }
+
+@include breakpoint(lg up) {
+  .checkout__second-header {
+    margin: 25px 0 20px;
+  }
+}

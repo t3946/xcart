@@ -33,9 +33,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'pm_phone' => [
@@ -52,12 +53,13 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
-                'extend' => 'pm_phone_ext',
+                'extend' => 'ci_phone_ext',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field checkout-compound__phone-main-field',
+                'fieldClass' => 'checkout-compound__phone-main-field checkout-field',
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
+                'inputClass' => 'common-input common-input_checkout-phone',
             ],
 
             'pm_phone_ext' => [
@@ -72,9 +74,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
-                'fieldClass' => 'common-field checkout-phone-ext-field',
+                'fieldClass' => 'checkout-phone-ext-field',
                 'containerClass' => 'checkout-phone-ext-container',
                 'shortHintClass' => 'checkout-phone-ext-short-hint',
+                'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
             'pm_track_sms' => [
@@ -100,9 +103,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'pm_fax' => [
@@ -116,9 +120,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'placeholder' => OrderModule::t( '(609) 924-8399' ),
                     'class' => 'phone'
                 ],
-                'labelClass' => 'common-label',
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
         ];
     }

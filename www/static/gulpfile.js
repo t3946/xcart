@@ -131,15 +131,18 @@ gulp.task('backend:css', ['backend:scss'], function () {
 gulp.task('frontend:jsx', function(done){
 
     let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
+
     if (isProduction()) {
         args.push('-p');
     }
+
     if (watch) {
         args.push('--progress');
         args.push('-w');
     }
 
     let cmd = spawn('node', args, {stdio: 'inherit'});
+
     cmd.on('close', function (code) {
         console.log('frontend:jsx exited with code ' + code);
         done(code);
@@ -167,6 +170,8 @@ gulp.task('frontend:js:includes', function(done){
 // gulp.task('frontend:js', ['frontend:js:includes'], function() {
 gulp.task('frontend:js', function(done) {
     let pipe = gulp.src(frontend.src.js);
+
+    console.log(frontend.config.name + '.js');
 
     return pipe
         .pipe(concat(frontend.config.name + '.js'))
@@ -356,6 +361,7 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/mandatory.blocks/**/*.scss',
         'frontend/bem/blocks/form.blocks/**/*.scss',
         'frontend/bem/blocks/product.blocks/**/*.scss',
+        'frontend/bem/blocks/billing.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));

@@ -23,3 +23,11 @@
     fill: #fe1104;
   }
 }
+
+@include breakpoint(lg up) {
+  .cart-remove-item-button {
+    width: 29px;
+    height: 29px;
+  }
+}
+

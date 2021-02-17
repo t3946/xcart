@@ -30,9 +30,10 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
             'organization_name' => [
                 'class' => CharCleanField::class,
@@ -44,9 +45,10 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
-                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
         ];
     }

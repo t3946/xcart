@@ -6,15 +6,18 @@
   .checkout-field-title {
     line-height: initial;
     text-align: right;
+    justify-content: flex-end;
     padding: 0 16px 0 0;
     align-items: center;
     display: flex;
-    justify-content: flex-end;
   }
 }
 
 @include breakpoint(lg up) {
   .checkout-field-title {
-    line-height: 1.5rem;
+    line-height: 1.5rem;;
+    text-align: left;
+    justify-content: flex-start;
+    width: 320px;
   }
 }
