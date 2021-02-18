@@ -19,6 +19,7 @@ use Modules\Core\Forms\FrontendForm;
 use Modules\Main\MainModule;
 use Modules\Main\Validation\ProductOrOrderValidator;
 use Xcart\App\Form\BaseForm;
+use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\NumberField;
@@ -44,7 +45,7 @@ class ContactUsForm extends FrontendForm
         return [
 
             'full_name' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'required' => true,
                 'label' => MainModule::t('Full name'),
                 'hint' => MainModule::t('Your first and last name'),
@@ -54,7 +55,7 @@ class ContactUsForm extends FrontendForm
 
             ],
             'company_name' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => MainModule::t('Your company name'),
                 'html' => [
                     'placeholder' => MainModule::t('Eureka Inc.'),
@@ -65,7 +66,7 @@ class ContactUsForm extends FrontendForm
                 'label' => MainModule::t('Your zip/postal code'),
             ],
             'phone_number' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => MainModule::t('Your phone number'),
                 'hint' => MainModule::t('Phone number you can be reached at'),
                 'type' => 'tel',
@@ -74,7 +75,7 @@ class ContactUsForm extends FrontendForm
                 ],
             ],
             'email' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => MainModule::t('Your email address'),
                 'hint' => MainModule::t('Valid email address is a must'),
                 'type' => 'email',
@@ -95,7 +96,7 @@ class ContactUsForm extends FrontendForm
                 'required' => true,
             ],
             'product_sku' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'required' => true,
                 'label' => MainModule::t('Product SKU or your order #'),
                 'hint' => MainModule::t('SKU of product you are interested in or your order #'),
@@ -107,7 +108,7 @@ class ContactUsForm extends FrontendForm
                 ],
             ],
             'subject_line' => [
-                'class' => CharField::class,
+                'class' => CharCleanField::class,
                 'label' => MainModule::t('Subject line'),
                 'required' => true,
                 'html' => [
