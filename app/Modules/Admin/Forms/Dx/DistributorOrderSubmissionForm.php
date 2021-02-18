@@ -134,8 +134,8 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'value' => $dx->order_entry_template->subject_line,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'label' => 'Order entry template template subject',
-                'html' => ['class' => 'by_site'],
+                'label' => 'Order entry message subject line',
+                'html' => ['class' => 'by_site', 'readonly' => true, 'style' => 'border: none'],
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -143,7 +143,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'value' => $dx->order_entry_template->message_body,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'label' => 'Order entry template template body',
+                'label' => 'Order entry message body',
                 'html' => ['class' => 'by_site'],
             ],
             'order_entry_special_instructions' => [
@@ -160,7 +160,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_allow_dispatch_off_working_hours_text'),
-                'html' => ['style' =>'width:50px;', 'class' => 'by_email'],
+                'html' => ['style' => 'width:50px;', 'class' => 'by_email'],
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
 
             ],
@@ -170,7 +170,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_add_cost_to_us_column_to_dispatch_message_text'),
-                'html' => ['style' =>'width:50px;', 'class' => 'by_email'],
+                'html' => ['style' => 'width:50px;', 'class' => 'by_email'],
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
             ],
             'email' => [
@@ -188,7 +188,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => 'Message to distributor template',
+                'label' => 'Dispatch template',
                 'html' => ['class' => 'by_email', 'style' => 'width:400px;'],
                 'choices' => static function () {
                     foreach (TemplateModel::distributors() as $template) {
@@ -203,8 +203,8 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'value' => $dx->order_submit_template->subject_line,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => 'Message to distributor template subject',
-                'html' => ['class' => 'by_email'],
+                'label' => 'Dispatch subject line',
+                'html' => ['class' => 'by_email', 'readonly' => true, 'style' => 'border: none'],
             ],
             'template_2' => [
                 'class' => EditorField::class,
@@ -212,7 +212,8 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'value' => $dx->order_submit_template->message_body,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => 'Message to distributor template body',
+                'label' => 'Dispatch message body',
+                'readonly' => true,
                 'html' => ['class' => 'by_email'],
             ],
             'd_subject_line_8' => [
@@ -236,7 +237,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => 'Order submit special instructions',
+                'label' => 'Dispatch special instructions',
                 'html' => ['class' => 'by_email'],
             ],
             'd_dispatch_instructions' => [

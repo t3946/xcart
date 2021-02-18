@@ -77,11 +77,19 @@ class DistributorRequestAvailForm extends DistributorForm
                 },
                 'hint' => LanguageModel::translate('help_dx_request_avail_template_text'),
             ],
+            'template_1_subj' => [
+                'class' => CharField::class,
+                'value' => $dx->request_avail_template->subject_line,
+                'label' => 'Availability request subject line',
+                'html' => ['class' => 'click_hide', 'readonly' => true, 'style' => 'border: none'],
+                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
+            ],
             'template_1' => [
                 'class' => EditorField::class,
                 'value' => $dx->request_avail_template->message_body,
-                'label' => 'Availability request template body',
+                'label' => 'Availability request message body',
                 'html' => ['class' => 'click_hide'],
+                'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
             ],
             'd_message_body_14' => [

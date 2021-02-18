@@ -14,6 +14,8 @@
 
             {raw $form->getField('request_avail_template')->render()}
 
+            {raw $form->getField('template_1_subj')->render()}
+
             {raw $form->getField('template_1')->render()}
 
             {raw $form->getField('d_message_body_14')->render()}
