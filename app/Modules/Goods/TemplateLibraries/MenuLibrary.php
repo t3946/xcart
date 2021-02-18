@@ -38,6 +38,7 @@ class MenuLibrary extends TemplateLibrary
                     'avail' => 'Y',
                     'active_product_count__gt' => 0,
                 ])
+                ->cache(3600)
                 ->order(['order_by']);
 
 
