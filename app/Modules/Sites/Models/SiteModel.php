@@ -179,7 +179,7 @@ class SiteModel extends Model
     {
         if (!$this->_config) {
 
-            $config = $this->config->valuesList(['name', 'value']);
+            $config = $this->config->cache(60)->valuesList(['name', 'value']);
             foreach ($config as $item) {
                 $this->_config[$item['name']] = $item['value'];
             }

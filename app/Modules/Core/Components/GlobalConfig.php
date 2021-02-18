@@ -95,7 +95,7 @@ class GlobalConfig implements ArrayAccess, Iterator
 
     public function getAllData()
     {
-        $data = GlobalConfigModel::objects()->exclude(['type' => 'separator'])->valuesList(['name', 'value', 'category']);
+        $data = GlobalConfigModel::objects()->exclude(['type' => 'separator'])->cache(60)->valuesList(['name', 'value', 'category']);
 
         $this->prepareData($data);
 
