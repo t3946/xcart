@@ -166,19 +166,20 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $body = html_entity_decode($template_model->message_body);
 
     $group = reset($order['shipping_groups'])['oOrderGroup'];
+    $order_model = $group->order;
     $subject = SnippetHelper::render($subject, [
-        'site' => Xcart::app()->getModule('Sites')->getSite(),
+        'site' => $order_model->site,
         'user' => Xcart::app()->user,
         'distributor' => $group->manufacturer,
         'group' => $group,
-        'order' => $group->order
+        'order' => $order_model
     ]);
     $body = SnippetHelper::render($body, [
-        'site' => Xcart::app()->getModule('Sites')->getSite(),
+        'site' => $order_model->site,
         'distributor' => $group->manufacturer,
         'user' => Xcart::app()->user,
         'group' => $group,
-        'order' => $group->order
+        'order' => $order_model
     ]);
 
     $to = '';
