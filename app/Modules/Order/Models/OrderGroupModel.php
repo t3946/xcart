@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Mindy\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
@@ -390,5 +391,10 @@ URL;
         return $this->detail_models->filter([
             'back__gt' => 0
         ]);
+    }
+
+    public function genReceivedConfirmationButton(): string
+    {
+        return OrderHelper::genReceivedConfirmation($this);
     }
 }
