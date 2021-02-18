@@ -128,8 +128,8 @@ gulp.task('backend:css', ['backend:scss'], function () {
         .pipe(livereload());
 });
 
+// build react from frontend/jsx
 gulp.task('frontend:jsx', function(done){
-
     let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
 
     if (isProduction()) {
@@ -138,9 +138,9 @@ gulp.task('frontend:jsx', function(done){
 
     if (watch) {
         args.push('--progress');
-        args.push('-w');
     }
 
+    args.push('-w');
     let cmd = spawn('node', args, {stdio: 'inherit'});
 
     cmd.on('close', function (code) {
@@ -148,6 +148,29 @@ gulp.task('frontend:jsx', function(done){
         done(code);
     });
 });
+
+// build native javascript from frontend/js
+gulp.task( 'frontend:js', function ( done ) {
+
+    const args = [
+        './node_modules/webpack/bin/webpack.js',
+        '--config',
+        './config/webpack.frontend-js.js',
+        '--progress',
+        '-w',
+    ];
+
+    if ( isProduction() ) {
+        args.push( '-p' );
+    }
+
+    const command = spawn( 'node', args, { stdio: 'inherit' } );
+
+    command.on( 'close', function ( code ) {
+        console.log( 'frontend:jsx exited with code ' + code );
+        done( code );
+    } );
+} );
 
 let fjsinc_builded = false;
 gulp.task('frontend:js:includes', function(done){
@@ -167,20 +190,6 @@ gulp.task('frontend:js:includes', function(done){
     done();
 });
 
-// gulp.task('frontend:js', ['frontend:js:includes'], function() {
-gulp.task('frontend:js', function(done) {
-    let pipe = gulp.src(frontend.src.js);
-
-    console.log(frontend.config.name + '.js');
-
-    return pipe
-        .pipe(concat(frontend.config.name + '.js'))
-        .pipe(gulp.dest(frontend.dst.js))
-        .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
-        .pipe(livereload());
-
-    done();
-});
 
 
 gulp.task('backend:jsx', function() {

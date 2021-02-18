@@ -37,6 +37,7 @@ class CheckoutForm extends ShippingForm
         $this->_purchase_order_details_form = ( new CheckoutPurchaseOrderDetailsForm() )->getFields();
         $this->_purchasing_manager_form = ( new CheckoutPurchasingManagerForm() )->getFields();
         $this->_accounts_payable_form = ( new CheckoutAccountsPayableForm() )->getFields();
+        $this->_pay_by_card_form = ( new PayByCardForm() )->getFields();
 
     }
 
@@ -49,6 +50,7 @@ class CheckoutForm extends ShippingForm
             'purchase_order_details' => array_keys( $this->_purchase_order_details_form ),
             'purchasing_manager' => array_keys( $this->_purchasing_manager_form ),
             'accounts_payable' => array_keys( $this->_accounts_payable_form ),
+            'pay_by_card' => array_keys( $this->_pay_by_card_form ),
         ];
     }
 
@@ -61,6 +63,7 @@ class CheckoutForm extends ShippingForm
             $this->_purchase_order_details_form,
             $this->_purchasing_manager_form,
             $this->_accounts_payable_form,
+            $this->_pay_by_card_form,
         );
     }
 }

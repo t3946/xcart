@@ -1,5 +1,5 @@
-import { SwitcherButton } from "../../Classes/SwitcherButton";
-import { Switcher } from "../../Classes/Switcher";
+import { SwitcherButton } from "Classes/SwitcherButton";
+import { Switcher } from "Classes/Switcher";
 
 export const DistributorCart = ( function () {
     // no checkout page

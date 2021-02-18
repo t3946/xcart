@@ -2,3 +2,14 @@
   display: none;
   padding: 20px 0 0 0;
 }
+
+@include breakpoint(md up) {
+  .payment-method-description-long {
+    padding: 0 0 0 53px;
+  }
+}
+@include breakpoint(lg up) {
+  .payment-method-description-long {
+    padding: 0;
+  }
+}

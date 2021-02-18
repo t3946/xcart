@@ -11,7 +11,8 @@
 }
 
 .common-checkbox:after {
-  content: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
+  content: '';
+  background: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
   position: absolute;
   display: block;
   width: 12px;

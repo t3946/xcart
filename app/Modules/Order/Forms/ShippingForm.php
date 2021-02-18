@@ -24,6 +24,7 @@ class ShippingForm extends FrontendModelForm
     protected array $_purchase_order_details_form;
     protected array $_purchasing_manager_form;
     protected array $_accounts_payable_form;
+    protected array $_pay_by_card_form;
 
     public $replacement = 's_';
 

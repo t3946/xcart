@@ -1,4 +1,4 @@
-import { SwitcherSlider } from "../../Classes/SwitcherSlider";
+import { SwitcherSlider } from "Classes/SwitcherSlider";
 
 export const BillingSameShipping = ( function () {
     // no checkout page

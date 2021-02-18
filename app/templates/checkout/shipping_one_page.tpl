@@ -64,7 +64,7 @@
                                 <div class="cart-table-row cart-table-head cart-table-row__head table-head show-for-large">
                                     <div class="table-column cart-column-image"></div>
 
-                                    <div class="table-column grid-title cart-column-name cart-column-name__header">{t 'Item name / SKU' }</div>
+                                    <div class="table-column grid-title">{t 'Item name / SKU' }</div>
 
                                     <div class="table-column cart-column-remove"></div>
 
@@ -109,7 +109,7 @@
                                                 {include 'catalog/parts/_item_image.tpl' model=$position->object class='cart-item-image'}
                                             </div>
 
-                                            <div class="grid-title table-column cart-column-name">
+                                            <div class="grid-title table-column">
                                                 <a class="cart-item-title-link" href="{$position->object->getAbsoluteUrl()}">
                                                     {$position->object}
                                                 </a>
@@ -167,6 +167,16 @@
                             <div class="table">
                                 <div class="table-body">
                                     <div class="cart-table-row cart-table-row_subtotal">
+                                        <div class="total-tax">
+                                            {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                        </div>
+
+                                        <div class="total-tax">
+                                            {t 'VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                        </div>
+
                                         <div class="table-column extended_remove format_price">
                                             {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                                             <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
@@ -193,16 +203,33 @@
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
+                    <div class="total-tax checkout__total-tax">
+                        <div class="total-tax-sum">
+                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix} 1.80
+                        </div>
+                        <div class="total-tax-sum">
+                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix} 1.80
+                        </div>
+                    </div>
+
                     <div class="grand-total order-total__grand">
                         <span class="label">{t 'Grand Total' }</span>
                         <span class="sum">
-                            {t 'Sales Tax' }: {$site_currency->symbol_prefix} 1.80
-                            {t 'VAT Tax' }: {$site_currency->symbol_prefix} 1.80
                             {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
                             <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span>
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
+                    <div class="show-for-large">
+                        {foreach $fieldsets['contact'] as $field}
+                            {if $field->name === 'ci_canada_email_confirmation'}
+                                {set $field->containerClass = 'checkout__canada-cods-field'}
+                                {set $field->hintClass = 'common-hint text-left'}
+                                {raw $field->render()}
+                            {/if}
+                        {/foreach}
+                    </div>
+
                     {if $hst}
                         <div>
                             <span class="label">{t 'Including 13% HST' }</span>
@@ -245,6 +272,17 @@
 {/block}
 
 {block 'js'}
+    <script>
+        const $checkboxList = $( '[type="checkbox"][name="CheckoutForm[ci_canada_email_confirmation]"]' );
+
+        $checkboxList.change( function () {
+            const self = this;
+
+            $checkboxList.each( function ( i, e ) {
+                e.checked = self.checked;
+            } );
+        } );
+    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQERMkixIWZNodbqoI5vFYt7IxuGQGdpk&libraries=places&language=en" defer></script>
 {/block}

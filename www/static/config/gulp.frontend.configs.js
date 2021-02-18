@@ -6,7 +6,7 @@ module.exports = {
     inline_image: {
         baseDir: './frontend/css'
     },
-    webpack: require('./webpack.frontend'),
+    webpack: require('./webpack.frontend-jsx'),
     imagemin: [
         imagemin.gifsicle({
             interlaced: true

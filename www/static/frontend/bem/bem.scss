@@ -21,7 +21,8 @@
 }
 
 .common-checkbox:after {
-  content: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
+  content: '';
+  background: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
   position: absolute;
   display: block;
   width: 12px;
@@ -83,6 +84,9 @@
     line-height: 105%;
   }
 }
+.common-input-radio {
+  display: none;
+}
 .common-input {
   width: 100%;
   box-shadow: none;
@@ -104,9 +108,6 @@
 .common-input::placeholder {
   font-style: italic;
   color: #969696;
-}
-.common-input-radio {
-  display: none;
 }
 .common-label {
   font-size: 1.0625rem;
@@ -246,6 +247,10 @@
         overflow: hidden;
     }
 
+.common-input__wrong {
+  border: 1px solid #ee2a31;
+}
+
 .common-input__correct {
   border: 1px solid #a7d198;
 }
@@ -254,10 +259,6 @@
   .common-input_checkout-phone {
     width: 138px;
   }
-}
-
-.common-input__wrong {
-  border: 1px solid #ee2a31;
 }
 
 .common-label_required:after {
@@ -519,6 +520,19 @@
   overflow: hidden;
 }
 
+.checkout-customer-notes::placeholder {
+  font-style: italic;
+}
+
+.checkout-customer-notes{
+  padding: 8px;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes {
+    padding: 8px 1011px;
+  }
+}
 .grand-total {
   color: #9a1524;
   text-transform: uppercase;
@@ -556,6 +570,18 @@
 
 .shipping-total {
   color: #28862f;
+}
+.cart-table-row {
+  display: flex;
+  padding: .75rem 45px .75rem 0;
+  border-top: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.total-tax {
+  color: $blue_a;
 }
 .cart__switcher-button {
   position: absolute;
@@ -602,6 +628,15 @@
   border-bottom: 1px dashed #055A93;
 }
 
+.cart-table-row__head {
+  height: 40px;
+  line-height: 40px;
+  background: #F4F4F4;
+  min-height: 0;
+  border: none;
+  padding: 0 45px 0 0;
+}
+
 .cart-table-row_checkout {
   border-bottom: none;
 }
@@ -614,7 +649,7 @@
   display: grid;
   grid-template-areas: "grid-image grid-title cell12 cell13 grid-remove" "cell21 grid-counter grid-multiplier grid-price cell25";
   padding: 10px 0;
-  grid-template-columns: auto 50px 26px 1fr 1fr;
+  grid-template-columns: auto 50px 26px 1fr 22px;
   grid-row-gap: 7px;
   grid-column-gap: 5px;
   border-bottom: 1px solid #e1e1e1;
@@ -628,7 +663,7 @@
 
 .grid-title {
   grid-area: grid-title;
-  grid-column: 2/4;
+  grid-column: 2/5;
   align-self: flex-start;
 }
 
@@ -677,9 +712,12 @@
     justify-self: center;
     align-self: center;
   }
+
   .grid-title {
     align-self: center;
+    grid-column: auto;
   }
+
   .grid-multiplier {
     justify-content: center;
   }
@@ -688,10 +726,10 @@
 @include breakpoint(lg up) {
   .cart-table-row_product {
     grid-template-columns: 100px 1fr 111px 95px 66px 100px;
-    padding: 10px 45px 0 0;
+    padding: 10px 45px 10px 0;
   }
   .cart-table-row_product:first-child {
-    padding: 0 45px 10px 0;
+    padding: 10px 45px 10px 0;
   }
 
   .cart-table-row_product:last-child {
@@ -704,12 +742,20 @@
 }
 
 .cart-table-row_subtotal {
-  justify-content: flex-end;
   color: #83132B;
   border: none;
   padding: 15px 10px;
   height: initial;
   min-height: initial;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@include breakpoint(md up) {
+  .cart-table-row_subtotal {
+    padding: 30px 45px 30px 0;
+  }
 }
 
 @include breakpoint(lg up) {
@@ -717,15 +763,6 @@
     padding: 28px 45px 38px 0;
   }
 }
-.cart-table-row__head {
-  height: 40px;
-  line-height: 40px;
-  background: #F4F4F4;
-  min-height: 0;
-  border: none;
-  padding: 0 45px 0 0;
-}
-
 .order-total__grand {
   margin-top: 1rem;
 }
@@ -1124,6 +1161,22 @@
   }
 }
 
+.payment-methods-header {
+  font-size: 22px;
+}
+
+@include breakpoint(md up) {
+  .payment-methods-header {
+    font-size: 30px;
+  }
+}
+
+@include breakpoint(md up) {
+  .payment-methods-header {
+    font-size: 24px;
+  }
+}
+
 .toggle-other-fields {
   display: inline-block;
   background: #f4f4f4;
@@ -1160,10 +1213,6 @@
   margin: 0 15px 0 0;
 }
 
-.checkout__canada-cods-field {
-  margin: 6px 0 0 0;
-}
-
 @include breakpoint(md up) {
   .checkout__canada-cods-checkbox {
     margin: 0 25px 0 0;
@@ -1175,9 +1224,17 @@
     margin: 0 38px 0 0;
   }
 }
+.checkout__canada-cods-field {
+  margin: 6px 0 0 0;
+}
+
+@include breakpoint(lg up) {
+  .checkout__canada-cods-field {
+    margin: 25px 0 0 0;
+  }
+}
+
 .checkout__canada-cods-hint {
-  position: relative;
-  top: -4px;
 }
 
 .checkout__cart-table-caption {
@@ -1226,14 +1283,40 @@
 .checkout__shipping-method-item:first-child:last-child {
   margin: 2px -10px 0;
 }
-.checkout-billing-form__other-fields-switcher {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+.checkout__single-common-label {
+  margin: 0 0 7px 0;
+}
+
+@include breakpoint(lg up) {
+  .checkout__single-common-label {
+    margin: 0 0 12px 0;
+  }
+}
+
+.checkout__total-tax{
+  margin: 10px 0;
+}
+
+@include breakpoint(md up) {
+  .checkout__total-tax{
+    margin: 25px 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout__total-tax{
+    margin: 7px 0;
+  }
 }
 
 .checkout-arrow-right_active:after {
   background-color: #d9ead3;
+}
+
+.checkout-billing-form__other-fields-switcher {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .checkout-customer-notes__row {
@@ -1289,7 +1372,7 @@
 }
 
 .checkout-payment-methods__header {
-  margin: 0 0 24px 0;
+  margin: 25px 0;
 }
 
 @include breakpoint(lg up) {
@@ -1340,6 +1423,17 @@
   padding: 20px 0 0 0;
 }
 
+@include breakpoint(md up) {
+  .payment-method-description-long {
+    padding: 0 0 0 53px;
+  }
+}
+@include breakpoint(lg up) {
+  .payment-method-description-long {
+    padding: 0;
+  }
+}
+
 .payment-method-description-preview {
   display: flex;
   align-items: center;
@@ -1347,9 +1441,16 @@
   padding: 0 0 0 34px;
 }
 
+@include breakpoint(md up) {
+  .payment-method-description-preview {
+    min-height: 40px;
+    padding: 0 0 0 54px;
+  }
+}
+
 @include breakpoint(lg up) {
   .payment-method-description-preview {
-    padding: 40px;
+    padding: 0;
   }
 }
 
@@ -1505,6 +1606,16 @@
 .footer-scroll-up-button:active {
   background: #3d5c6c;
 }
+.footer__scroll-up-button {
+  margin: 20px 0 10px;
+}
+
+@include breakpoint(md up) {
+  .footer__scroll-up-button {
+    display: none;
+  }
+}
+
 .footer-scroll-up-icon {
   width: 20px;
   height: 16px;
@@ -1514,9 +1625,6 @@
   text-transform: uppercase;
   color: #ffffff;
   font-size: 18px;
-}
-.footer__scroll-up-button {
-  margin: 20px 0 10px;
 }
 .canada-cods-field-group {
   display: flex;
@@ -1618,5 +1726,20 @@
 @media (min-width: 720px) {
   .quantity-group-inc {
     display: block;
+  }
+}
+.billing__switcher{
+  margin: 0 0 14px 0;
+}
+
+@include breakpoint(md up) {
+  .billing__switcher{
+    margin: 0 0 24px 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .billing__switcher{
+    margin: 0 0 29px 0;
   }
 }

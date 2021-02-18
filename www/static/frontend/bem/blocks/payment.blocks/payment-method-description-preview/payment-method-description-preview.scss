@@ -5,8 +5,15 @@
   padding: 0 0 0 34px;
 }
 
+@include breakpoint(md up) {
+  .payment-method-description-preview {
+    min-height: 40px;
+    padding: 0 0 0 54px;
+  }
+}
+
 @include breakpoint(lg up) {
   .payment-method-description-preview {
-    padding: 40px;
+    padding: 0;
   }
 }

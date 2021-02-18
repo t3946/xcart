@@ -1,6 +1,6 @@
-import { ShippingPixabayAutocomplete } from "../../Classes/ShippingPixabayAutocomplete";
-import { ShippingGoogleAutoComplete } from "../../Classes/ShippingGoogleAutoComplete";
-import { SwitcherButton } from "../../Classes/SwitcherButton";
+import { ShippingPixabayAutocomplete } from "Classes/ShippingPixabayAutocomplete";
+import { ShippingGoogleAutoComplete } from "Classes/ShippingGoogleAutoComplete";
+import { SwitcherButton } from "Classes/SwitcherButton";
 
 export const ShippingForm = ( function () {
     // no checkout page

@@ -1,3 +1,9 @@
 .footer__scroll-up-button {
   margin: 20px 0 10px;
 }
+
+@include breakpoint(md up) {
+  .footer__scroll-up-button {
+    display: none;
+  }
+}

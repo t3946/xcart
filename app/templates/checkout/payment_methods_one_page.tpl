@@ -1,6 +1,6 @@
 <div class="payment-methods-container">
     {if $payment_methods}
-        <h2 class="text-center large-text-left checkout__second-header checkout-payment-methods__header">{t 'Payment Methods' }</h2>
+        <h2 class="text-center large-text-left checkout__second-header checkout-payment-methods__header payment-methods-header">{t 'Payment Methods' }</h2>
         {if $payment_methods}
             <div class="checkout-payment-methods checkout__payment-methods-container">
                 {foreach $payment_methods as $method first=$first}
@@ -25,8 +25,10 @@
                                     <div class="payment-method-description-long">
                                         {if stripos($method->payment_method, 'Pay by Credit or Debit card') !== false}
                                             <div class="billing-form-fields">
-                                                <label for="">Cardholder name *<input type="text"></label><br>
-                                                <label for="">Credit / Debit card details *<input type="text"></label>
+                                                {foreach $fieldsets['pay_by_card'] as $field}
+                                                    {raw $field->render()}
+                                                {/foreach}
+
                                                 <div class="billing-same-shipping">
                                                     <h3 class="payment-method-title billing-same-shipping__header">{t 'Is Billing Address the same as Shipping Address?' }</h3>
 
@@ -38,6 +40,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="billing-form-address-fields">
                                                     {foreach array_slice($fieldsets['billing'], 0, 3) as $field}
                                                         {raw $field->render()}
@@ -50,7 +53,7 @@
                                                 </div>
                                             </div>
                                         {elseif stripos($method->payment_method, 'Pay by PayPal Balance') !== false }
-                                            <h3 class="payment-method-title">You will be transferred to PayPal website to complete your payment.</h3>
+                                            <h3 class="payment-method-title payment-method-">You will be transferred to PayPal website to complete your payment.</h3>
                                         {elseif stripos($method->payment_method, 'Phone Ordering') !== false }
                                             <h3 class="payment-method-title">Please call us 1-800-929-2431 to finalize your order over the phone.</h3>
                                         {elseif stripos($method->payment_method, 'Purchase Order') !== false }

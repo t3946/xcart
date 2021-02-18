@@ -17,7 +17,8 @@ config = {
             'react': 'preact-compat',
             'react-dom': 'preact-compat',
             // Not necessary unless you consume a module using `createClass`
-            'create-react-class': 'preact-compat/lib/create-react-class'
+            'create-react-class': 'preact-compat/lib/create-react-class',
+            'Classes': path.resolve('./frontend/js/Classes'),
         },
         modules: [
             'frontend/jsx',
@@ -34,7 +35,7 @@ config = {
         } ) ],
         descriptionFiles: [ 'bower.json', 'package.json' ],
         mainFields: [ 'browser', 'main' ],
-        extensions: [ '.js', '.jsx', '.json' ]
+        extensions: [ '.js', '.jsx', '.json' ],
     },
     module: {
         rules: [

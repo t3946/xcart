@@ -112,9 +112,9 @@ class CheckoutContactInfoForm extends FrontendForm
                 'hint' => OrderModule::t( 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with brining to Canada. All prices are in USD. ' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
                 'fieldTemplate' => 'forms/field/checkbox/field_canada_cods_confirmation.tpl',
-                'hintClass' => 'common-hint checkout__canada-cods-hint',
+                'hintClass' => 'common-hint',
                 'fieldClass' => 'common-checkbox checkout-canada-cods-checkbox checkout__canada-cods-checkbox',
-                'containerClass' => 'checkout__canada-cods-field',
+                'containerClass' => 'checkout__canada-cods-field hide-for-large',
                 'inputClass' => 'common-checkbox checkout__canada-cods-checkbox',
             ],
         ];

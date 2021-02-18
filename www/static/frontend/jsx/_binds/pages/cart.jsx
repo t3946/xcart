@@ -55,6 +55,11 @@ import _ from 'lodash';
                         $.get('/cart/?_=' + (new Date).getTime(), {})
                             .done(data => {
                                 if (number_request === n_request) {
+                                    //do not update checkout one page
+                                    if ($('.checkout-page').length ) {
+                                        return;
+                                    }
+
                                     $(page_cart).html(data.content || data);
                                     window.LazyLoad.update();
                                 }

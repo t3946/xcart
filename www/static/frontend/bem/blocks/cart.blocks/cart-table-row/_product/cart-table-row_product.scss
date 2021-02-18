@@ -2,10 +2,9 @@
   display: grid;
   grid-template-areas: "grid-image grid-title cell12 cell13 grid-remove" "cell21 grid-counter grid-multiplier grid-price cell25";
   padding: 10px 0;
-  grid-template-columns: auto 50px 26px 1fr 1fr;
+  grid-template-columns: auto 50px 26px 1fr 22px;
   grid-row-gap: 7px;
   grid-column-gap: 5px;
-  border-bottom: 1px solid #e1e1e1;
 }
 
 /*grid-* -- grid cell classes*/
@@ -16,7 +15,7 @@
 
 .grid-title {
   grid-area: grid-title;
-  grid-column: 2/4;
+  grid-column: 2/5;
   align-self: flex-start;
 }
 
@@ -65,9 +64,12 @@
     justify-self: center;
     align-self: center;
   }
+
   .grid-title {
     align-self: center;
+    grid-column: 2;
   }
+
   .grid-multiplier {
     justify-content: center;
   }
@@ -76,10 +78,10 @@
 @include breakpoint(lg up) {
   .cart-table-row_product {
     grid-template-columns: 100px 1fr 111px 95px 66px 100px;
-    padding: 10px 45px 0 0;
+    padding: 10px 45px 10px 0;
   }
   .cart-table-row_product:first-child {
-    padding: 0 45px 10px 0;
+    padding: 10px 45px 10px 0;
   }
 
   .cart-table-row_product:last-child {

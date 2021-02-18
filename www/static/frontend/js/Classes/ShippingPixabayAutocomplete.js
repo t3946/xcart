@@ -1,4 +1,4 @@
-import AutoComplete from 'bower_components/javascript-auto-complete/auto-complete.js';
+import AutoComplete from 'bower_components/javascript-auto-complete/auto-complete';
 
 export class ShippingPixabayAutocomplete {
     constructor( elem, autocompleteOptions ) {
@@ -43,20 +43,42 @@ export class ShippingPixabayAutocomplete {
 
         const $input = $( this.input );
 
+        // force select when nothing selected
         function forceUpdate() {
+            console.log('force');
             self.forceCompleted = true;
 
             // use first autocomplete variant as selected
-            const variant = self.variants[ 0 ];
+            let variant = self.variants[ 0 ];
 
             if ( autocompleteOptions.onSelect ) {
                 autocompleteOptions.onSelect( variant, null, null, self );
                 return;
             }
 
+            let i = 0;
+
             if ( typeof variant === 'string' ) {
+                //search compatible variant if it exists
+                while ( i < self.variants.length ) {
+                    if (self.input.value === self.variants[i]) {
+                        variant = self.variants[i];
+                    }
+
+                    i++;
+                }
+
                 self.input.value = variant;
             } else {
+                //search compatible variant if it exists
+                while ( i < self.variants.length ) {
+                    if (self.input.value === self.variants[i]['name']) {
+                        variant = self.variants[i];
+                    }
+
+                    i++;
+                }
+
                 self.input.value = variant.name;
                 self.input.dataset.code = variant.code;
             }

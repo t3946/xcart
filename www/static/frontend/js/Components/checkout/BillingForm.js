@@ -1,5 +1,5 @@
-import { SwitcherButton } from "../../Classes/SwitcherButton";
-import { ShippingGoogleAutoComplete } from "../../Classes/ShippingGoogleAutoComplete";
+import { SwitcherButton } from "Classes/SwitcherButton";
+import { ShippingGoogleAutoComplete } from "Classes/ShippingGoogleAutoComplete";
 
 export const BillingForm = ( function () {
     // no checkout page
