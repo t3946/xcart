@@ -10,7 +10,7 @@
         var textarea = $('#textarea_{$id}');
 
         editor.setTheme("ace/theme/{$field->theme}");
-        editor.getSession().setUseWrapMode(true);
+        //editor.getSession().setUseWrapMode(true);
         editor.getSession().setWrapLimit(80);
         editor.session.setMode(new mode());
 
@@ -27,6 +27,6 @@
     #{$id} {
         position: relative;
         width: 770px;
-        min-height: 200px;
+        min-height: 500px;
     }
 </style>
