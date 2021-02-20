@@ -62,7 +62,7 @@
                             </div>
                             <div class="table cart-table_checkout">
                                 <div class="cart-table-row cart-table-head cart-table-row__head table-head show-for-large">
-                                    <div class="table-column cart-column-image"></div>
+                                    <div class="table-column"></div>
 
                                     <div class="table-column grid-title">{t 'Item name / SKU' }</div>
 
@@ -105,7 +105,7 @@
                                                 data-prices='{$position->object->getPrices()|json_encode}'
                                                 data-cart-action="{url 'cart:quantity:set:post' key=$key}"
                                         >
-                                            <div class="grid-image table-column cart-column-image image">
+                                            <div class="grid-image table-column image">
                                                 {include 'catalog/parts/_item_image.tpl' model=$position->object class='cart-item-image'}
                                             </div>
 

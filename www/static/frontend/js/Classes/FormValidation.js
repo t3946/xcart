@@ -43,6 +43,9 @@ export default class FormValidation {
             this.fields[inputElementName] = field;
 
             inputElement.addEventListener('blur', this.processChange);
+
+            inputElement.addEventListener( 'change', this.processChange );
+
             inputElement.addEventListener('js.change.event', this.processJsChange);
         }
     }
@@ -135,6 +138,8 @@ export default class FormValidation {
     }
 
     checkAllForm(){
+        console.log( 'checkAllForm' );
+
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }
@@ -143,7 +148,10 @@ export default class FormValidation {
         this.hasErrors = false;
         this.errors = [];
 
-        const fields = this.getValidatingFields();
+        const fields = {
+            'CheckoutForm[ci_canada_email_confirmation]': this.fields[ 'CheckoutForm[ ci_canada_email_confirmation ]' ],
+        }
+        //this.getValidatingFields();
 
         for (let inputElementName in fields) {
             let field = this.fields[inputElementName];
@@ -193,9 +201,12 @@ export default class FormValidation {
      * Destruct form validator
      */
     destructor(){
+        const self = this;
+
         for (let i = 0; i < this.inputs.length; ++i) {
             let inputElement = this.inputs.item(i);
             inputElement.removeEventListener('blur', this.processChange);
+            inputElement.removeEventListener( 'change', this.processChange );
             inputElement.removeEventListener('js.change.event', this.processJsChange);
         }
 

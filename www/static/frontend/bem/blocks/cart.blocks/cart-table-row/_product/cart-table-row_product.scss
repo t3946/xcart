@@ -11,6 +11,7 @@
 
 .grid-image {
   grid-area: grid-image;
+  text-align: center;
 }
 
 .grid-title {
@@ -53,7 +54,7 @@
 @include breakpoint(md up) {
   .cart-table-row_product {
     grid-template-areas: "grid-image grid-title grid-remove grid-counter grid-multiplier grid-price";
-    grid-template-columns: auto 1fr 111px auto 46px 1fr;
+    grid-template-columns: 100px 1fr 111px auto 46px 1fr;
   }
 
   .grid-image {

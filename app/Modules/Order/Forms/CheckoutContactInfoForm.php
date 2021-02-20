@@ -4,6 +4,7 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
+use Modules\Order\Validation\CanadaCODSValidator;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CheckboxField;
@@ -94,7 +95,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'label' => OrderModule::t( 'Email' ),
                 'hint' => OrderModule::t( 'Order progress notifications will be sent here' ),
                 'validators' => [
-                    new EmailValidator()
+                    new EmailValidator(),
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
@@ -110,10 +111,11 @@ class CheckoutContactInfoForm extends FrontendForm
                 'class' => CheckboxField::class,
                 'hint' => OrderModule::t( 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with brining to Canada. All prices are in USD. ' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
-                'required' => true,
                 'fieldTemplate' => 'forms/field/checkbox/field_canada_cods_confirmation.tpl',
                 'hintClass' => 'common-hint',
-
+                'validators' => [
+                    new CanadaCODSValidator(),
+                ],
                 'html' => [
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',

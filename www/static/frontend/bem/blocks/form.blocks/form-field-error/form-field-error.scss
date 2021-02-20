@@ -9,3 +9,9 @@
   width: 100%;
   text-align: center;
 }
+
+@include breakpoint(lg up) {
+  .form-field-error {
+    max-width: 400px;
+  }
+}
