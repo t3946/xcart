@@ -64,14 +64,16 @@ class AddressesForm extends CorporatesForm
                     }
                     return $result ?? [];
                 },
+                'depends' => ['formal_state']
             ],
             'formal_state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
+                    $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->formal_country ?? 'US']]) as $state) {
-                        $result[$state->code] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },
@@ -86,14 +88,16 @@ class AddressesForm extends CorporatesForm
                     }
                     return $result ?? [];
                 },
+                'depends' => ['physical_state']
             ],
             'physical_state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
+                    $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->physical_country ?? 'US']]) as $state) {
-                        $result[$state->code] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },
@@ -108,14 +112,16 @@ class AddressesForm extends CorporatesForm
                     }
                     return $result ?? [];
                 },
+                'depends' => ['mailing_state']
             ],
             'mailing_state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
+                    $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->mailing_country ?? 'US']]) as $state) {
-                        $result[$state->code] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },
