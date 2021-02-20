@@ -140,7 +140,7 @@ class DistributorModel extends Model
                 'modelClass' => TemplateModel::class,
                 'link' => ['order_submit_template_id' => 'id'],
                 'null' => true,
-                'default' => null,
+                'default' => TemplateModel::DISPATCH_ORDER_TEMPLATE_ID,
             ],
             'order_entry_special_instructions' => [
                 'class' => CharField::class,

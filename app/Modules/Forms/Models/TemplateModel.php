@@ -25,6 +25,7 @@ class TemplateModel extends Model
 {
     public const REQUEST_AVAILABILITY_TEMPLATE_ID = 9614;
     public const ORDER_ENTRY_TEMPLATE_ID = 8974;
+    public const DISPATCH_ORDER_TEMPLATE_ID = 9621;
 
     public static function tableName()
     {

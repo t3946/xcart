@@ -384,7 +384,7 @@ class OrderHelper
 
         $result = <<<HTML
 <a href="{$url}?{$query}" style="cursor: pointer; text-decoration: none; background: #FFB500; border-radius: 5px; padding: 13px 26px; font-family: Lato; font-style: normal; font-weight: bold; font-size: 22px; color: #000000;">
-Please click to confirm that you received this order
+Please click this button to confirm that you received the order
 </a>
 HTML;
         return $result;
