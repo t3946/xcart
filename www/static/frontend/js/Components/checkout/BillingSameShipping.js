@@ -9,7 +9,7 @@ export const BillingSameShipping = ( function () {
     const $addressFields = $( '.billing-form-address-fields' );
 
     new SwitcherSlider(
-        $( '.billing-same-shipping-switcher' ),
+        $( '.switcher-slider-label' ),
         function () {
             $addressFields.stop( true, false ).slideDown();
         },

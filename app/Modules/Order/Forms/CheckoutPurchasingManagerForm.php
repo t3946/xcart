@@ -37,6 +37,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'pm_phone' => [
@@ -60,6 +61,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
                 'inputClass' => 'common-input common-input_checkout-phone',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'pm_phone_ext' => [
@@ -107,6 +109,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'pm_fax' => [
@@ -121,9 +124,10 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'class' => 'phone'
                 ],
                 'requiredClass' => 'common-required',
-                'labelClass' => 'common-label common-label_required',
+                'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
         ];
     }

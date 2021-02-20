@@ -38,6 +38,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'company' => [
@@ -70,6 +71,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
                 'switcherClass' => 'address-switcher-button switcher-button_other-fields-switcher',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'address_2' => [
@@ -111,6 +113,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'zipcode' => [
@@ -131,6 +134,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'state' => [
@@ -157,6 +161,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'city' => [
@@ -174,6 +179,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
         ];
     }

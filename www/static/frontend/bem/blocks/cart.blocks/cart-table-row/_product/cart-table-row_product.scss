@@ -2,7 +2,7 @@
   display: grid;
   grid-template-areas: "grid-image grid-title cell12 cell13 grid-remove" "cell21 grid-counter grid-multiplier grid-price cell25";
   padding: 10px 0;
-  grid-template-columns: auto 50px 26px 1fr 22px;
+  grid-template-columns: 110px 50px 26px 1fr 22px;
   grid-row-gap: 7px;
   grid-column-gap: 5px;
 }
@@ -12,6 +12,8 @@
 .grid-image {
   grid-area: grid-image;
   text-align: center;
+  grid-row: 1/3;
+  padding: 0 10px 0 0;
 }
 
 .grid-title {
@@ -54,7 +56,7 @@
 @include breakpoint(md up) {
   .cart-table-row_product {
     grid-template-areas: "grid-image grid-title grid-remove grid-counter grid-multiplier grid-price";
-    grid-template-columns: 100px 1fr 111px auto 46px 1fr;
+    grid-template-columns: 110px 1fr 111px auto 46px 100px;
   }
 
   .grid-image {
@@ -78,7 +80,7 @@
 
 @include breakpoint(lg up) {
   .cart-table-row_product {
-    grid-template-columns: 100px 1fr 111px 95px 66px 100px;
+    grid-template-columns: 110px 1fr 111px 95px 66px 100px;
     padding: 20px 45px 20px 0;
   }
 
@@ -92,5 +94,9 @@
 
   .grid-multiplier {
     justify-self: center;
+  }
+
+  .grid-title_header {
+    grid-column: 2/4;
   }
 }

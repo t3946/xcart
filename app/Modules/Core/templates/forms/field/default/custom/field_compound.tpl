@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="show-for-mediun input-info">
+        <div class="input-info">
             <span class="show-success"></span>
             <span class="show-error"></span>
         </div>

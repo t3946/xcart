@@ -1,0 +1,11 @@
+@include breakpoint(md up) {
+  .checkout__error {
+    left: 50%;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout__error {
+    left: auto;
+  }
+}

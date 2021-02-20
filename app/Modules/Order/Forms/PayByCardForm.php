@@ -31,12 +31,12 @@ class PayByCardForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required checkout__single-common-label',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'pbc_card_details' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Credit / Debit card details' ),
-//                'hint' => OrderModule::t( 'Your cart will be charged in the amount of USA of <b>US$ 427.06</b> by S3 Stores, Inc.' ),
                 'required' => true,
                 'validators' => [
                     new EmailValidator()
@@ -48,6 +48,7 @@ class PayByCardForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required checkout__single-common-label',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
         ];
     }

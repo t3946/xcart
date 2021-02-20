@@ -39,6 +39,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'ap_phone' => [
@@ -62,6 +63,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
                 'inputClass' => 'common-input common-input_checkout-phone',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'ap_phone_ext' => [
@@ -109,6 +111,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'purchase_order_file' => [

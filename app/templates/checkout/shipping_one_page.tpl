@@ -64,7 +64,7 @@
                                 <div class="cart-table-row cart-table-head cart-table-row__head table-head show-for-large">
                                     <div class="table-column"></div>
 
-                                    <div class="table-column grid-title">{t 'Item name / SKU' }</div>
+                                    <div class="table-column grid-title_header">{t 'Item name / SKU' }</div>
 
                                     <div class="table-column cart-column-remove"></div>
 
@@ -83,7 +83,7 @@
                                         .cart-table-head {
                                             display: grid;
                                             grid-template-areas: "cell1 grid-title cell3 grid-quantity cell4 grid-price";
-                                            grid-template-columns: 100px 1fr 111px 95px 66px 100px;
+                                            grid-template-columns: 110px 1fr 111px 95px 66px 100px;
                                             grid-column-gap: 5px;
                                         }
 

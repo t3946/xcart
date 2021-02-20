@@ -37,6 +37,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'ci_phone' => [
@@ -59,7 +60,8 @@ class CheckoutContactInfoForm extends FrontendForm
                 'fieldClass' => 'checkout-compound__phone-main-field checkout-field',
                 'className' => 'checkout-compound-main-container',
                 'containerClass' => 'checkout-compound-phone-container',
-                'inputClass' => 'common-input common-input_checkout-phone'
+                'inputClass' => 'common-input common-input_checkout-phone',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'ci_phone_ext' => [
@@ -102,9 +104,11 @@ class CheckoutContactInfoForm extends FrontendForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
-                'labelClass' => 'common-label common-label_required',
+                'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'labelCommentClass' => 'common-comment',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'ci_canada_email_confirmation' => [

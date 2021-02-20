@@ -1,20 +1,21 @@
 {set $allErrors = array_merge($field->getErrors(), $fieldExt->getErrors())}
 {set $hasHint = $field->hasHint()}
-<div class="checkout-field__row checkout-field-row">
+<div class="checkout-field__row">
     <div class="common-field-error-wrapper">
         {raw $field->renderErrors($allErrors)}
     </div>
-    <div class="checkout-field-title">
-        {if $hasHint}
-            <div class="medium-multiline">
+    <div class="checkout-field-row">
+        <div class="checkout-field-title">
+            {if $hasHint}
+                <div class="medium-multiline">
+                    {raw $label}
+                    {raw $hint}
+                </div>
+            {else}
                 {raw $label}
-                {raw $hint}
-            </div>
-        {else}
-            {raw $label}
-        {/if}
-    </div>
-    <div class="field compound-input {$field->fieldClass}">
+            {/if}
+        </div>
+        <div class="field compound-input {$field->fieldClass}">
         <div class="input-block {$field->containerClass}">
             <div class="input-container {$field->className} {$hasClose}" {if $field->userClear}data-clear="true"{/if}>
                 {raw $input}
@@ -31,5 +32,6 @@
             <span class="show-success"></span>
             <span class="show-error"></span>
         </div>
+    </div>
     </div>
 </div>

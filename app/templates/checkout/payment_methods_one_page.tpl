@@ -5,7 +5,7 @@
             <div class="checkout-payment-methods checkout__payment-methods-container">
                 {foreach $payment_methods as $method first=$first}
                     {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Ordering')}
-                        <div class="payment-method-item {cycle ["payment-method-item_odd", ""]}" for="payment_{$method->paymentid}">
+                        <div class="payment-method-item {cycle ["payment-method-item_odd", ""]} {if $first }payment-method-item_selected{/if}" for="payment_{$method->paymentid}">
                             <div class="row">
                                 <div class="columns small-12 large-4">
                                     <div class="payment-method-name">

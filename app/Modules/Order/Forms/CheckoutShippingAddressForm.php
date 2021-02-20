@@ -43,6 +43,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'company' => [
@@ -76,6 +77,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'switcherClass' => 'shipping-switcher-button switcher-button_other-fields-switcher',
                 'inputClass' => 'common-input switcher-input',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'address_2' => [
@@ -111,11 +113,13 @@ class CheckoutShippingAddressForm extends AddressForm
                     'autocomplete' => 'address-level1',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'zipcode' => [
@@ -131,11 +135,13 @@ class CheckoutShippingAddressForm extends AddressForm
                     'autocomplete' => 'postal-code',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'state' => [
@@ -161,6 +167,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
             'city' => [
@@ -178,6 +185,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
         ];
 
