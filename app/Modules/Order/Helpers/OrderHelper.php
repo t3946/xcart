@@ -383,8 +383,8 @@ class OrderHelper
         $query = http_build_query($params);
 
         $result = <<<HTML
-<a href='{$url}?{$query}'>
-<img src='https://{$orderGroup->order->site->domain}/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/>
+<a href="{$url}?{$query}" style="cursor: pointer; text-decoration: none; width: 134px; background: #FFB500; border-radius: 5px; padding: 13px 26px; font-family: Lato; font-style: normal; font-weight: bold; font-size: 26px; color: #000000;">
+Please click to confirm that you received this order
 </a>
 HTML;
         return $result;
