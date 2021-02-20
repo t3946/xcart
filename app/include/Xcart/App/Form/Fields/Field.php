@@ -132,6 +132,8 @@ abstract class Field implements IValidateField
     public string $containerClass = '';
     public string $shortHintClass = '';
     public string $longHintClass = '';
+    public string $errorClass = 'form-field-error form-field__error';
+    public string $errorTextClass = 'form-field-error-text';
 
     /**
      * @var string

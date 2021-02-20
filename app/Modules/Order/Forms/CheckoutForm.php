@@ -31,7 +31,7 @@ class CheckoutForm extends ShippingForm
         $shipping_form = new CheckoutShippingAddressForm();
 
         $this->_shippingFields = $shipping_form->getFields();
-        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_firstname';
+        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_ci_firstname';
         $this->_contactFields = ( new CheckoutContactInfoForm() )->getFields();
         $this->_billingFields = ( new CheckoutBillingForm() )->getFields();
         $this->_purchase_order_details_form = ( new CheckoutPurchaseOrderDetailsForm() )->getFields();
@@ -65,5 +65,25 @@ class CheckoutForm extends ShippingForm
             $this->_accounts_payable_form,
             $this->_pay_by_card_form,
         );
+    }
+
+    public function renderBegin( $params = [], $template = null )
+    {
+        $params['action'] = '/checkout/';
+        $prefix = $this->getFormId();
+        $this->onBeforeRenderBegin( $prefix, $template );
+
+        if ( !$template ) {
+            $template = $this->formBeginTemplate;
+        }
+
+        if ( empty( $template ) ) {
+            return '';
+        }
+
+        return $this->renderInternal( $template, array_merge( [
+            'form' => $this,
+            'prefix' => $prefix
+        ], $params ) );
     }
 }

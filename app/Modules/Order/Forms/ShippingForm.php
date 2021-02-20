@@ -30,7 +30,6 @@ class ShippingForm extends FrontendModelForm
 
     public $include = ['cb_status'];
 
-
     protected function beforeConstruct()
     {
         $shippingForm = new ShippingAddressForm();
@@ -40,7 +39,6 @@ class ShippingForm extends FrontendModelForm
         $this->_shippingFields[$shippingForm->replacement.'firstname']['html']['data-duplicate'] = $this->getName().'_firstname';
         $this->_contactFields = $contactForm->getFields();
     }
-
 
     public function getModel()
     {
@@ -59,5 +57,4 @@ class ShippingForm extends FrontendModelForm
     {
         return array_merge($this->_shippingFields, $this->_contactFields);
     }
-
 }

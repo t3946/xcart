@@ -36,7 +36,6 @@ class CheckoutShippingAddressForm extends AddressForm
                 'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'autocomplete' => 'first',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
@@ -76,6 +75,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'hintClass' => 'common-hint form-field__hint',
                 'fieldClass' => 'checkout-field',
                 'switcherClass' => 'shipping-switcher-button switcher-button_other-fields-switcher',
+                'inputClass' => 'common-input switcher-input',
             ],
 
             'address_2' => [

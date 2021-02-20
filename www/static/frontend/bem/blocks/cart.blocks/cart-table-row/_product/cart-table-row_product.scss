@@ -78,14 +78,15 @@
 @include breakpoint(lg up) {
   .cart-table-row_product {
     grid-template-columns: 100px 1fr 111px 95px 66px 100px;
-    padding: 10px 45px 10px 0;
+    padding: 20px 45px 20px 0;
   }
+
   .cart-table-row_product:first-child {
-    padding: 10px 45px 10px 0;
+    padding: 20px 45px 20px 0;
   }
 
   .cart-table-row_product:last-child {
-    padding: 10px 45px 20px 0;
+    padding: 20px 45px 0 0;
   }
 
   .grid-multiplier {

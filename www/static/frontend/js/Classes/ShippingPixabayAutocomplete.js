@@ -45,7 +45,6 @@ export class ShippingPixabayAutocomplete {
 
         // force select when nothing selected
         function forceUpdate() {
-            console.log('force');
             self.forceCompleted = true;
 
             // use first autocomplete variant as selected

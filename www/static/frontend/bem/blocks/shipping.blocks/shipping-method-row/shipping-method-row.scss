@@ -1,0 +1,20 @@
+.shipping-method-row {
+  font-size: 16px;
+  height: 38px;
+  padding: 0 20px;
+  display: block;
+  background: #f5f5f5;
+}
+
+@include breakpoint(md up) {
+  .shipping-method-row {
+    padding: 0 53px 0 44px;
+  }
+}
+
+@include breakpoint(lg up) {
+  .shipping-method-row {
+    padding: 0 0 0 15px;
+    background: none;
+  }
+}

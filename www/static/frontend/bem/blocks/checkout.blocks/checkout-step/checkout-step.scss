@@ -1,16 +1,16 @@
 .checkout-step {
   display: block;
   position: relative;
-  height: 2.1875rem;
-  min-width: 2.1875rem;
-  line-height: 2.0625rem;
-  font-size: .6875rem;
+  height: 35px;
+  min-width: 35px;
+  line-height: 33px;
+  font-size: 11px;
   text-align: center;
-  border: 1px solid #ddd;
-  border-right: 0;
   vertical-align: middle;
   flex-grow: 2;
-  background-color: #fefefe;
+  background-color: $white;
+  border: 1px solid $thead_color;
+  border-right: none;
 }
 
 @media screen and (min-width: 64em) {
@@ -18,7 +18,6 @@
     height: 2.5rem;
     min-width: 2.5rem;
     line-height: 2.25rem;
-    border-width: 2px;
     font-size: .875rem;
     justify-content: space-around;
   }
@@ -29,7 +28,6 @@
     height: 3.5rem;
     min-width: 3.5rem;
     line-height: 3.25rem;
-    border-width: 2px;
     font-size: 1.125rem;
   }
 }
@@ -39,7 +37,6 @@
     height: 2.8125rem;
     min-width: 2.8125rem;
     line-height: 2.5625rem;
-    border-width: 2px;
     font-size: .8125rem;
   }
 }
@@ -49,14 +46,13 @@
     height: 2.5rem;
     min-width: 2.5rem;
     line-height: 2.25rem;
-    border-width: 2px;
     font-size: .875rem;
     justify-content: space-around;
   }
 }
 
 .checkout-step:last-child {
-  border-right: 1px solid #ddd;
+  border-right: 1px solid $thead_color;
   padding-right: .625rem;
   width: 2.875rem;
   flex-grow: 1;
@@ -64,7 +60,6 @@
 
 @media screen and (min-width: 64em) {
   .checkout-step:last-child {
-    border-width: 2px;
     padding-right: .75rem;
     width: 3.25rem;
     flex-basis: 5rem;
@@ -73,7 +68,6 @@
 
 @media screen and (min-width: 45em) {
   .checkout-step:last-child {
-    border-width: 2px;
     padding-right: 1.0625rem;
     width: 4.5625rem;
   }
@@ -81,7 +75,6 @@
 
 @media screen and (min-width: 23.125em) {
   .checkout-step:last-child {
-    border-width: 2px;
     padding-right: .8125rem;
     width: 3.625rem;
   }

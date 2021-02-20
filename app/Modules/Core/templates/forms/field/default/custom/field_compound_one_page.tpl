@@ -1,9 +1,9 @@
 {set $allErrors = array_merge($field->getErrors(), $fieldExt->getErrors())}
 {set $hasHint = $field->hasHint()}
-<div class="hide-for-large mobile-errors-content">
-    {raw $field->renderErrors($allErrors)}
-</div>
 <div class="checkout-field__row checkout-field-row">
+    <div class="common-field-error-wrapper">
+        {raw $field->renderErrors($allErrors)}
+    </div>
     <div class="checkout-field-title">
         {if $hasHint}
             <div class="medium-multiline">
@@ -30,9 +30,6 @@
         <div class="show-for-mediun input-info">
             <span class="show-success"></span>
             <span class="show-error"></span>
-        </div>
-        <div class="show-for-large large-errors-content">
-            {raw $field->renderErrors($allErrors)}
         </div>
     </div>
 </div>

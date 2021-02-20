@@ -1,15 +1,12 @@
 import formValidate from 'validate.js/validate';
-import fieldValidation from "./FieldValidation";
-import isMedia from "../utils/isMedia";
+import fieldValidation from "Classes/FieldValidation";
 
-class FormValidation {
-
+export default class FormValidation {
     /**
      * Construct form
      * @param name
      */
     constructor(name) {
-
         this.name = name;
         this.constraints = document.formConstraints[name];
 
@@ -31,7 +28,6 @@ class FormValidation {
         this.processJsChange = this.processJsChange.bind(this);
         this.validateOnSubmit = this.validateOnSubmit.bind(this);
 
-        //console.log('init',this.form);
         this.form.addEventListener('submit', this.validateOnSubmit);
 
         for (let i = 0; i < this.inputs.length; ++i) {
@@ -106,18 +102,19 @@ class FormValidation {
     scrollToFirstError() {
         if (this.errors.length) {
             let field = this.errors.shift();
-            if (!isMedia('large')) {
-                field.field.scrollIntoView();
-                field.element.focus();
-            }
+
+            window.scrollTo( {
+                top: field.field.offsetTop,
+                behavior: "smooth"
+            } );
+
+            field.element.focus( { preventScroll: true } );
         }
     }
 
     validateOnSubmit(event){
-        //event.preventDefault();
         this.hasErrors = false;
         this.checkAllForm();
-        //console.log(this.hasErrors);
 
         if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             event.preventDefault();
@@ -126,25 +123,36 @@ class FormValidation {
         }
     }
 
-    checkAllForm(){
+    /**
+     * get field that must be have validate
+     */
+    getValidatingFields() {
+        return this.fields;
+    }
 
+    onBeforeFieldShowError(field) {
+        // override this method
+    }
+
+    checkAllForm(){
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }
+
         let errors = formValidate(this.form, this.constraints) || {};
         this.hasErrors = false;
         this.errors = [];
 
-        for (let inputElementName in this.fields) {
+        const fields = this.getValidatingFields();
 
+        for (let inputElementName in fields) {
             let field = this.fields[inputElementName];
             let currentError = errors[inputElementName];
             let currentRules = this.constraints[inputElementName];
 
             if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
-
                 if(field.element.value === '') {
-                    if(!field.field.classList.contains('compound-field')) {
+                    if(!field.element.classList.contains('compound-field')) {
                         field.clearAllClasses();
                         continue;
                     }
@@ -172,12 +180,14 @@ class FormValidation {
                 field.success(false);
                 continue;
             }
-            field.showError(currentError[0]);
+
+            this.onBeforeFieldShowError( field );
+
+            field.showError( currentError[ 0 ] );
             this.errors.push(field);
             this.hasErrors = true;
         }
     }
-
 
     /**
      * Destruct form validator
@@ -192,8 +202,4 @@ class FormValidation {
         this.form.removeEventListener('submit', this.validateOnSubmit);
         this.fields = {};
     }
-}
-
-export default (name) => {
-    return new FormValidation(name);
 }

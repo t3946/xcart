@@ -8,3 +8,9 @@
     padding-left: .625rem;
   }
 }
+
+@include breakpoint(lg up) {
+  .checkout-left-column{
+    padding-right: 80px !important;
+  }
+}

@@ -57,6 +57,7 @@
     "fontfaceobserver": "^2.0.13",
     "form-serialize": "^0.7.2",
     "html-to-react": "^1.2.11",
+    "imask": "^6.0.7",
     "intersection-observer": "^0.4.0",
     "intl": "^1.2.5",
     "intl-polyfill": "0.0.3",

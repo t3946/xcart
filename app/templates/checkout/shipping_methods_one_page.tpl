@@ -5,14 +5,12 @@
 {set $shipping = $shipping_rates[$gi]}
 
 {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
-<div class="product-group-shipping">
+<div class="shipping-methods-group">
     {if $shipping}
-        <div class="row">
-            <div class="columns small-12">
-                {foreach $shipping as $quote first=$first}
+        {foreach $shipping as $quote first=$first}
                     {set $shipping_model = $quote->shipping}
                     {if $shipping_model}
-                        <label class="checkout-shipping-method-row checkout__shipping-method-item" for="shipping_{$quote->rateid}">
+                        <label class="shipping-method-row checkout__shipping-method-item" for="shipping_{$quote->rateid}">
                             <input
                                     {if $first}required{/if} {if ($first) || ($order_group && $order_group->shippingid == $shipping_model->shippingid)}checked{/if}
                                     id="shipping_{$quote->rateid}"
@@ -25,7 +23,7 @@
                             <label class="methods-label common-radio-label shipping-radio-label shipping-method-row__label" for="shipping_{$quote->rateid}">
                                 <span class="methods-text">
                                     <span class="shipping-method-name">{$shipping_model->getFrontendName()}</span>
-                                    <span class="shipping-method-comment">- {$shipping_model->shipping_time}</span>
+                                    <span class="shipping-method-comment show-for-medium">- {$shipping_model->shipping_time}</span>
                                 </span>
                                 <div class="methods-cell delivery-item-price">
                                     <span class="cost">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($quote->getShippingCharge())}</span>
@@ -34,8 +32,6 @@
                         </label>
                     {/if}
                 {/foreach}
-            </div>
-        </div>
     {elseif !isset($silent) || $silent===false}
         {add $phone_order_only = true}
         <div class="row">

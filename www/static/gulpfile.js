@@ -379,11 +379,11 @@ gulp.task('frontend:bem', function () {
 /**
  * build bem styles for frontend when updated
  */
-gulp.task( 'watch:frontend:bem', function () {
+gulp.task( 'watch:frontend:bem', [ 'frontend:bem' ], function () {
     gulp.watch( 'frontend/bem/blocks/**/*.scss', [ 'frontend:bem' ] );
 } );
 
-gulp.task( 'watch:frontend:css', function () {
+gulp.task( 'watch:frontend:css', [ 'frontend:css' ], function () {
     gulp.watch( ['frontend/bem/bem.scss' ], [ 'frontend:css' ] );
     // console.log(frontend.src.css);
     // gulp.watch( [

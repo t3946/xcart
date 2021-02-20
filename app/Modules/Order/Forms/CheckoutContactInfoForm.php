@@ -93,7 +93,6 @@ class CheckoutContactInfoForm extends FrontendForm
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),
                 'hint' => OrderModule::t( 'Order progress notifications will be sent here' ),
-                'required' => true,
                 'validators' => [
                     new EmailValidator()
                 ],
@@ -111,8 +110,14 @@ class CheckoutContactInfoForm extends FrontendForm
                 'class' => CheckboxField::class,
                 'hint' => OrderModule::t( 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with brining to Canada. All prices are in USD. ' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
+                'required' => true,
                 'fieldTemplate' => 'forms/field/checkbox/field_canada_cods_confirmation.tpl',
                 'hintClass' => 'common-hint',
+
+                'html' => [
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
+                ],
                 'fieldClass' => 'common-checkbox checkout-canada-cods-checkbox checkout__canada-cods-checkbox',
                 'containerClass' => 'checkout__canada-cods-field hide-for-large',
                 'inputClass' => 'common-checkbox checkout__canada-cods-checkbox',

@@ -16,22 +16,20 @@ class FieldValidation {
      * @param text
      */
     showError( text ) {
-
         if ( this.field === null ) {
             return;
         }
 
         let errors = this.field.querySelectorAll( '.errors' );
-        //console.log(errors);
         this.itemAddError( this.element );
         this.itemAddError( this.field );
 
         for ( let i = 0; i < errors.length; ++i ) {
             let oneErrorPlace = errors.item( i );
-            let oneErrorPlaceText = oneErrorPlace.querySelector( '.error-text' );
+            let oneErrorPlaceText = oneErrorPlace.querySelector( '.form-field-error-text' );
 
             oneErrorPlaceText.textContent = text;
-            oneErrorPlace.classList.add( 'show' );
+            oneErrorPlace.classList.add( 'common-field-error_visible' );
 
         }
     }
@@ -41,7 +39,6 @@ class FieldValidation {
      * @param element
      */
     removeError( element ) {
-
         if ( this.field === null ) {
             return;
         }
@@ -55,10 +52,10 @@ class FieldValidation {
 
         for ( let i = 0; i < errors.length; ++i ) {
             let oneErrorPlace = errors.item( i );
-            let oneErrorPlaceText = oneErrorPlace.querySelector( '.error-text' );
+            let oneErrorPlaceText = oneErrorPlace.querySelector( '.form-field-error-text' );
 
             oneErrorPlaceText.textContent = '';
-            oneErrorPlace.classList.remove( 'show' );
+            oneErrorPlace.classList.remove( 'common-field-error_visible' );
         }
     }
 
@@ -85,18 +82,16 @@ class FieldValidation {
      * @param element
      */
     success( dispatch = true ) {
-
         if ( this.field === null ) {
             return;
         }
 
         this.itemAddSuccess( this.element );
 
-        //console.log('compound', this.field.classList.contains('compound-field'));
         if ( !this.field.classList.contains( 'compound-field' ) ) {
-
             this.removeError();
             this.itemAddSuccess( this.field );
+
             if ( dispatch ) {
                 this.dispatchSuccess();
             }
@@ -111,7 +106,6 @@ class FieldValidation {
             if (
                 inputElement.classList.contains( 'required' ) && !inputElement.classList.contains( inputElement.dataset.correct || 'success' )
                 || !inputElement.classList.contains( 'required' ) && inputElement.classList.contains( inputElement.dataset.wrong || 'invalid' )
-
             ) {
                 return;
             }

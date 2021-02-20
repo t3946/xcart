@@ -1,5 +1,6 @@
 import { SwitcherButton } from "Classes/SwitcherButton";
 import { ShippingGoogleAutoComplete } from "Classes/ShippingGoogleAutoComplete";
+import "node_modules/imask";
 
 export const BillingForm = ( function () {
     // no checkout page
@@ -8,12 +9,20 @@ export const BillingForm = ( function () {
     }
 
     const $otherFields = $( '.checkout-billing-other-fields' );
+    let $switcher = null;
 
-    new SwitcherButton( '.address-switcher-button', function () {
+    const constructor = function () {
+        $switcher = new SwitcherButton( '.address-switcher-button', function () {
+            $otherFields.stop( true, false ).slideDown();
+        }, function () {
+            $otherFields.stop( true, false ).slideUp();
+        }, null );
+    }
+
+    constructor.prototype.showFields = function () {
+        $switcher.isOn = true;
         $otherFields.stop( true, false ).slideDown();
-    }, function () {
-        $otherFields.stop( true, false ).slideUp();
-    } );
+    };
 
     const componentForm = {
         street_number: 'short_name',
@@ -34,4 +43,11 @@ export const BillingForm = ( function () {
     if ( $( '#CheckoutForm_b_address' ).length ) {
         new ShippingGoogleAutoComplete( '#CheckoutForm_b_address', componentForm, billing_fields );
     }
+
+    IMask( document.getElementById('CheckoutForm_ap_phone'), { mask: '(000) 000-0000' } );
+    IMask( document.getElementById('CheckoutForm_pm_phone'), { mask: '(000) 000-0000' } );
+    IMask( document.getElementById('CheckoutForm_pm_fax'), { mask: '(000) 000-0000' } );
+    IMask( document.getElementById('CheckoutForm_ci_phone_ext'), { mask: '00000' } );
+
+    return new constructor();
 } )();

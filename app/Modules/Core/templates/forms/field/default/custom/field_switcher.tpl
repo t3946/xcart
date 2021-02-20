@@ -5,7 +5,7 @@
 
 <div class="form-field {$name}{$hasErrors}{$success}{$displayClass}">
     {set $hasHint = $field->hasHint()}
-    <div class="hide-for-large mobile-errors-content">
+    <div class="common-field-error-wrapper">
         {raw $errors}
     </div>
     <div class="checkout-field__row checkout-field-row">
@@ -30,9 +30,6 @@
             <div class="show-for-medium input-info">
                 <span class="show-success"></span>
                 <span class="show-error"></span>
-            </div>
-            <div class="show-for-large large-errors-content">
-                {raw $errors}
             </div>
         </div>
     </div>

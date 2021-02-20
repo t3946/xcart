@@ -4,3 +4,4 @@ import "./Components/checkout/DistributorCart";
 import "./Components/checkout/PaymentMethods";
 import "./Components/checkout/ShippingForm";
 import "./Components/checkout/ScrollUpButton";
+import "./Components/checkout/ShippingMethods";

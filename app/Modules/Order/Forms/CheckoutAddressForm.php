@@ -30,7 +30,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
@@ -43,7 +45,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'label' => OrderModule::t( 'Company' ),
                 'hint' => OrderModule::t( 'Fill in if shipping to a corporate or university address' ),
                 'html' => [
-                    'placeholder' => OrderModule::t( 'Eureka Inc.' )
+                    'placeholder' => OrderModule::t( 'Eureka Inc.' ),
                 ],
                 'labelClass' => 'common-label common-label',
                 'hintClass' => 'common-hint form-field__hint',
@@ -60,6 +62,8 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
                 'html' => [
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
@@ -73,9 +77,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'label' => OrderModule::t( 'Address (line 2)' ),
                 'hint' => OrderModule::t( 'Apartment, suite, floor, etc.' ),
                 'html' => [
-                    'placeholder' => OrderModule::t( 'Apt 1' )
+                    'placeholder' => OrderModule::t( 'Apt 1' ),
                 ],
-                'labelClass' => 'common-label common-label_required',
+                'labelClass' => 'common-label',
                 'hintClass' => 'common-hint form-field__hint',
                 'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
@@ -99,7 +103,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'placeholder' => $country->name ?? 'United States',
                     'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
@@ -117,7 +123,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
                     'class' => 'auto-complete zip',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
@@ -141,7 +149,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                         ? $state->state
                         : 'New Jersey',
                     'class' => 'auto-complete state',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',
@@ -156,7 +166,9 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
                     'class' => 'auto-complete city',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint form-field__hint',

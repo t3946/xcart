@@ -271,6 +271,7 @@
     {raw $checkout_form->renderEnd()}
 {/block}
 
+
 {block 'js'}
     <script>
         const $checkboxList = $( '[type="checkbox"][name="CheckoutForm[ci_canada_email_confirmation]"]' );

@@ -1,0 +1,5 @@
+@include breakpoint(lg up) {
+  .shipping-method-row_selected {
+    outline: 1px solid #c4c4c4;
+  }
+}

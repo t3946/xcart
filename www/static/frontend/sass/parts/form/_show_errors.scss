@@ -1,7 +1,5 @@
 @mixin getFormErrorsStyle() {
-
   .errors {
-    display: none;
     position: relative;
     list-style: none;
     background-color: #ffebeb;

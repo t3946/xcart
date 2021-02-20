@@ -1,4 +1,4 @@
-import { Switcher } from "./Switcher";
+import { Switcher }  from "./Switcher";
 
 export class SwitcherButton extends Switcher {
     /**
