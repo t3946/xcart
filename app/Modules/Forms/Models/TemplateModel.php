@@ -89,16 +89,24 @@ class TemplateModel extends Model
 
     public static function distributorsManager($instance = null)
     {
-        return static::objects($instance)
-            ->filter(['department' => 'distributor', 'active' => 'Y'])
-            ->order(['pos', 'template_name']);
+        if ($dx_category = TemplateCategoryModel::objects()->get(['id' => 28])) {
+            return static::objects($instance)->filter([
+                'category__lft__gte' => $dx_category->lft,
+                "category__rgt__lte" => $dx_category->rgt,
+                "category__root" => $dx_category->root])
+                ->order(['category__root', 'category__level', 'category__pos']);
+        }
     }
 
     public static function customer_serviceManager($instance = null)
     {
-        return static::objects($instance)
-            ->filter(['department' => 'our_customer_service', 'active' => 'Y'])
-            ->order(['pos', 'template_name']);
+        if ($dx_category = TemplateCategoryModel::objects()->get(['id' => 29])) {
+            return static::objects($instance)->filter([
+                'category__lft__gte' => $dx_category->lft,
+                "category__rgt__lte" => $dx_category->rgt,
+                "category__root" => $dx_category->root])
+                ->order(['category__root', 'category__level', 'category__pos']);
+        }
     }
 
     public function __toString()

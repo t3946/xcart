@@ -90,30 +90,6 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 ? $('.by_email').closest('tr').show().closest('form').find('.by_site').closest('tr').hide()
                 : $('.by_site').closest('tr').show().closest('form').find('.by_email').closest('tr').hide()"]
             ],
-            'd_order_entry_operator_email' => [
-                'class' => CharField::class,
-                'label' => 'Order entry operator email',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'html' => ['class' => 'by_site'],
-            ],
-            'd_order_entry_operator_subject_line_8' => [
-                'class' => CharField::class,
-                'label' => 'Order entry operator subject line',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'html' => ['class' => 'by_site'],
-            ],
-            'd_instructions_to_order_entry_operator' => [
-                'class' => EditorField::class,
-                'label' => 'Instructions to order entry operator',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'html' => ['class' => 'by_site'],
-            ],
             'order_entry_template' => [
                 'class' => DropDownField::class,
                 'fieldTemplate' => $this->fieldTemplate,
@@ -123,9 +99,10 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'html' => ['class' => 'by_site', 'style' => 'width:400px;'],
                 'choices' => static function () {
                     foreach (TemplateModel::customer_service() as $template) {
-                        $result[$template->id] = (string)$template;
+                        $category = $template->category;
+                        $list[$template->id] = $category['name'] .' -> '. $template;
                     }
-                    return $result ?? [];
+                    return $list ?? [];
                 },
             ],
             'template_1_subj' => [
@@ -192,9 +169,10 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'html' => ['class' => 'by_email', 'style' => 'width:400px;'],
                 'choices' => static function () {
                     foreach (TemplateModel::distributors() as $template) {
-                        $result[$template->id] = (string)$template;
+                        $category = $template->category;
+                        $list[$template->id] = $category['name'] .' -> '. $template;
                     }
-                    return $result ?? [];
+                    return $list ?? [];
                 },
             ],
             'template_2_subj' => [

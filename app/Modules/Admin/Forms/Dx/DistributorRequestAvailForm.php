@@ -71,9 +71,10 @@ class DistributorRequestAvailForm extends DistributorForm
                 'html' => ['class' => 'click_hide', 'style' => 'width:100%;'],
                 'choices' => static function () {
                     foreach (TemplateModel::distributors() as $template) {
-                        $result[$template->id] = (string)$template;
+                        $category = $template->category;
+                        $list[$template->id] = $category['name'] .' -> '. $template;
                     }
-                    return $result ?? [];
+                    return $list ?? [];
                 },
                 'hint' => LanguageModel::translate('help_dx_request_avail_template_text'),
             ],
@@ -92,14 +93,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
             ],
-            'd_message_body_14' => [
-                'class' => EditorField::class,
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide'],
-                'label' => 'Old template body'
-            ],
+
             'd_server_min_distributor_time' => [
                 'class' => CharField::class,
                 'label' => 'Server time - Distributor time',

@@ -1815,62 +1815,6 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
         $top_message = ["content" => func_get_langvar_by_name("txt_mnf_notification_sent")];
     }
-    elseif ($mode === 'cidev_send_email_to_operator') {
-
-        $d_order_entry_operator_email = func_query_first_cell('SELECT d_order_entry_operator_email FROM ' . $sql_tbl['manufacturers'] . ' WHERE manufacturerid = "' . $mnf_id . '"');
-
-        $d_url_to_login_to_distributor_website = func_query_first_cell('SELECT d_url_to_login_to_distributor_website FROM ' . $sql_tbl['manufacturers'] . ' WHERE manufacturerid = "' . $mnf_id . '"');
-        $d_login                               = func_query_first_cell('SELECT d_login FROM ' . $sql_tbl['manufacturers'] . ' WHERE manufacturerid = "' . $mnf_id . '"');
-        $d_password                            = func_query_first_cell('SELECT d_password FROM ' . $sql_tbl['manufacturers'] . ' WHERE manufacturerid = "' . $mnf_id . '"');
-
-        $message_body .= func_eol2br(stripslashes($mnf_body));
-
-        $mail_smarty->assign('email_is_sent_to_operator', 'Y');
-
-        $mail_smarty->assign('mnf_operator_notify', 'Y');
-        $mail_smarty->assign('message_body', $message_body);
-        $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
-
-        if (empty($order_after_refund['shipping_groups'][$mnf_id]['products'])) {
-            $mail_smarty->assign('order', $order);
-        }
-        else {
-            $mail_smarty->assign('order', $order_after_refund);
-        }
-        $mail_smarty->assign('sf_info', func_get_storefront_info($order['storefrontid'], 'ID', true));
-
-        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-        $oMail->init();
-        $oMail->to = $d_order_entry_operator_email;
-        $oMail->from = $config['Company']['orders_department'];
-        $oMail->reply_to = null;
-        $oMail->subject_template = 'mail/order_notification_subj.tpl';
-        $oMail->body_template = 'mail/order_notification_mnf.tpl';
-        $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-        $oMail->sendEmail();
-        //func_send_mail($d_order_entry_operator_email, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-
-        $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $d_email_subject_14;
-        func_log_order($orderid, 'X', $log, $login);
-
-        $top_message = ["content" => "Sent."];
-
-        $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-        $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-        $code                    = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
-
-        if ($current_dc_status !== "E") {
-            $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='E'");
-            $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-            func_log_order($orderid, 'X', $log, $login);
-        }
-
-//        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-        OrderGroupModel::objects()
-            ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
-            ->setAttribute('dc_status', 'E')
-            ->save();
-    }
 
     func_header_location("order.php?orderid=" . $orderid);
 }

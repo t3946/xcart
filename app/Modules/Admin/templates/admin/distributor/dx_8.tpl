@@ -42,8 +42,6 @@
             {raw $form->getField('order_entry_template')->render()}
             {raw $form->getField('template_1_subj')->render()}
             {raw $form->getField('template_1')->render()}
-            {raw $form->getField('d_order_entry_operator_subject_line_8')->render()}
-            {raw $form->getField('d_instructions_to_order_entry_operator')->render()}
             {raw $form->getField('order_entry_special_instructions')->render()}
 
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
@@ -61,8 +59,6 @@
             {raw $form->getField('order_submit_template')->render()}
             {raw $form->getField('template_2_subj')->render()}
             {raw $form->getField('template_2')->render()}
-            {raw $form->getField('d_subject_line_8')->render()}
-            {raw $form->getField('mess_body')->render()}
             {raw $form->getField('order_submit_special_instructions')->render()}
             {raw $form->getField('d_shipping_options')->render()}
         </table>

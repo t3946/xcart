@@ -37,12 +37,12 @@
 {add_asset_block type="js"}
 <script>
     window.app.afterReady.push(function(){
-        var price_min = {$values.prices.min|htmlentities};
-        var price_max = {$values.prices.max|htmlentities};
-        var start_min = {$values.selected.min|htmlentities};
-        var start_max = {$values.selected.max|htmlentities};
-        var keypressSlider = document.getElementById('filter_{$key}_range');
-        var inputs = [document.getElementById('filter_{$key}_min'), document.getElementById('filter_{$key}_max')];
+        const price_min = {$values.prices.min|floatval};
+        const price_max = {$values.prices.max|floatval};
+        const start_min = {$values.selected.min|floatval};
+        const start_max = {$values.selected.max|floatval};
+        const keypressSlider = document.getElementById('filter_{$key}_range');
+        const inputs = [document.getElementById('filter_{$key}_min'), document.getElementById('filter_{$key}_max')];
 
         {ignore}
         new window.FilterPriceSlider(keypressSlider, inputs, {
