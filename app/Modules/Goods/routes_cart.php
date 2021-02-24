@@ -86,9 +86,4 @@ return [
         'target' => [CartController::class, 'actionCalculateShipping'],
         'name' => 'calculate_shipping'
     ],
-    [
-        'route' => '/info',
-        'target' => [CartController::class, 'actionInfo'],
-        'name' => 'cart_info'
-    ],
 ];

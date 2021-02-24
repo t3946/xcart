@@ -9,6 +9,7 @@ use Modules\Goods\Models\ImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Forms\CountShippingForm;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Shipping\ShippingModule;
@@ -348,14 +349,4 @@ class CartController extends BaseCartController
         return $this->addInternal($uniqueId, $quantity);
     }
 
-    public function actionInfo()
-    {
-        $isAjax = $this->getRequest()->getIsAjax();
-        $cart = $this->getCart();
-        if (1==1 || $isAjax) {
-            $this->jsonResponse(
-                $cart->getItemsGroupedBy()
-            );
-        }
-    }
 }
