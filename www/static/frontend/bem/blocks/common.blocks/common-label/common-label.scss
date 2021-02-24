@@ -1,17 +1,19 @@
 .common-label {
-  font-size: 1.0625rem;
+  font-size: 1.25rem;
   font-weight: 700;
   position: relative;
 }
 
 @include breakpoint(md up) {
   .common-label {
+    font-size: 1.125rem;
     font-weight: 400;
   }
 }
 
 @include breakpoint(lg up) {
   .common-label {
+    font-size: 1.25rem;
     font-weight: 700;
   }
 }

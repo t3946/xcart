@@ -1,6 +1,7 @@
 import FormValidation from "Classes/FormValidation";
 import { ShippingForm } from "../Components/checkout/ShippingForm";
 import { BillingForm } from "../Components/checkout/BillingForm";
+import { CanadaCODs } from "../Components/checkout/CanadaCODs";
 
 export default class CheckoutFormValidation extends FormValidation {
     constructor( name ) {
@@ -8,29 +9,23 @@ export default class CheckoutFormValidation extends FormValidation {
     }
 
     // show wrong fields if it is hide
-    onBeforeFieldShowError( field ) {
-        const fieldName = field.element.name;
-
+    onAfterValidatingFields( validationFields ) {
         // shipping address
         if (
-            [
-                'CheckoutForm[s_country]',
-                'CheckoutForm[s_zipcode]',
-                'CheckoutForm[s_state]',
-                'CheckoutForm[s_city]',
-            ].indexOf( fieldName ) > -1
+            validationFields[ 'CheckoutForm[s_country]' ]
+            || validationFields[ 'CheckoutForm[s_zipcode]' ]
+            || validationFields[ 'CheckoutForm[s_state]' ]
+            || validationFields[ 'CheckoutForm[s_city]' ]
         ) {
             ShippingForm.showFields();
         }
 
         // billing address
         if (
-            [
-                'CheckoutForm[b_country]',
-                'CheckoutForm[b_zipcode]',
-                'CheckoutForm[b_state]',
-                'CheckoutForm[b_city]',
-            ].indexOf( fieldName ) > -1
+            validationFields[ 'CheckoutForm[b_country]' ]
+            || validationFields[ 'CheckoutForm[b_zipcode]' ]
+            || validationFields[ 'CheckoutForm[b_state]' ]
+            || validationFields[ 'CheckoutForm[b_city]' ]
         ) {
             BillingForm.showFields();
         }
@@ -72,11 +67,13 @@ export default class CheckoutFormValidation extends FormValidation {
                 || key.indexOf( '[s_' ) > -1
                 //fields from selected payment
                 || selectedPaymentFields.indexOf( key ) > -1
+                || key === 'CheckoutForm[ci_canada_email_confirmation]' && CanadaCODs.isActive()
             ) {
                 validationFields[ key ] = this.fields[ key ];
             }
         }
 
+        this.onAfterValidatingFields( validationFields );
 
         return validationFields;
     }

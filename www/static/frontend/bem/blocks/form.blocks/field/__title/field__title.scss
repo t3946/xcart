@@ -1,0 +1,15 @@
+.field__title {
+  margin: 0 0 5px 0;
+}
+
+@include breakpoint(md up) {
+  .field__title {
+    margin: 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .field__title {
+    margin: 0 0 5px 0;
+  }
+}

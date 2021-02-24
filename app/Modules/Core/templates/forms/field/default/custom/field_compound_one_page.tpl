@@ -5,7 +5,7 @@
         {raw $field->renderErrors($allErrors)}
     </div>
     <div class="checkout-field-row">
-        <div class="checkout-field-title">
+        <div class="checkout-field-title field__title">
             {if $hasHint}
                 <div class="medium-multiline">
                     {raw $label}

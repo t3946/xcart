@@ -3,9 +3,9 @@
   box-shadow: none;
   border: 1px solid #c4c4c4;
   padding: 0 .625rem;
-  font-size: 1.0625rem;
+  font-size: 1.25rem;
   line-height: 2.25rem;
-  height: 2.375rem;
+  height: 46px;
   vertical-align: middle;
   color: #272727;
   -webkit-appearance: none;
@@ -18,5 +18,5 @@
 
 .common-input::placeholder {
   font-style: italic;
-  color: #969696;
+  color: $grey_96;
 }

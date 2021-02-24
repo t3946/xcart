@@ -26,7 +26,23 @@ export const PaymentMethods = ( function () {
                 .addClass( selectedClass )
                 .find( '.payment-method-description-long' )
                 .stop( false, true )
-                .slideDown();
+                .slideDown( function () {
+                    const elementOffset = $paymentMethodItem.offset().top;
+                    const windowScroll = $( 'html' ).scrollTop();
+
+                    // element visible
+                    if (
+                        elementOffset >= windowScroll
+                        && elementOffset < windowScroll + window.innerHeight
+                    ) {
+                        return;
+                    }
+
+                    window.scrollTo( {
+                        top: $paymentMethodItem.offset().top,
+                        behavior: 'smooth',
+                    } );
+                } );
         }
 
         $input.prop( 'checked', true );

@@ -80,7 +80,7 @@
                     <section class="padding-0 overflow-hidden columns">
                         <ul class="checkout-steps-list no-bullet">
                             <li class="checkout-step checkout-step_one-page checkout-step_inactive show-for-medium">
-                                <a href="#" class="checkout-step-link checkout-step-link_inactive">
+                                <a href="/cart/" class="checkout-step-link checkout-step-link_inactive">
                                     <span class="step-label">Shopping cart</span>
                                 </a>
                                 <div class="checkout-arrow-right checkout-arrow-right_active"></div>

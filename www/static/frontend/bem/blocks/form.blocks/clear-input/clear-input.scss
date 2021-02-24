@@ -1,0 +1,28 @@
+.clear-input {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: .375rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: -.5625rem;
+  background: url('/static/frontend/dist/images/icons/forms/remove.svg') 0 0 no-repeat;
+  cursor: pointer;
+}
+
+.hasClose .clear-input{
+  display: block;
+}
+
+@include breakpoint(md up) {
+  .clear-input {
+    right: .5rem;
+    margin-top: -.625rem;
+  }
+}
+
+@include breakpoint(lg up) {
+  .clear-input {
+    display: none;
+  }
+}

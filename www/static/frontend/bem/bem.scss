@@ -944,7 +944,7 @@
   }
 }
 .checkout-field-title {
-  line-height: 110%;
+  line-height: 1.5;
 }
 
 @include breakpoint(md up) {
@@ -963,6 +963,7 @@
     line-height: 1.5rem;;
     text-align: left;
     justify-content: flex-start;
+    padding: 0;
   }
 }
 .checkout-left-column {

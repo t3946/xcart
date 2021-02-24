@@ -133,13 +133,7 @@ export default class FormValidation {
         return this.fields;
     }
 
-    onBeforeFieldShowError(field) {
-        // override this method
-    }
-
     checkAllForm(){
-        console.log( 'checkAllForm' );
-
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }
@@ -148,10 +142,7 @@ export default class FormValidation {
         this.hasErrors = false;
         this.errors = [];
 
-        const fields = {
-            'CheckoutForm[ci_canada_email_confirmation]': this.fields[ 'CheckoutForm[ ci_canada_email_confirmation ]' ],
-        }
-        //this.getValidatingFields();
+        const fields = this.getValidatingFields();
 
         for (let inputElementName in fields) {
             let field = this.fields[inputElementName];
@@ -188,8 +179,6 @@ export default class FormValidation {
                 field.success(false);
                 continue;
             }
-
-            this.onBeforeFieldShowError( field );
 
             field.showError( currentError[ 0 ] );
             this.errors.push(field);

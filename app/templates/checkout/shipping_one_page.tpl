@@ -220,15 +220,15 @@
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
-                    <div class="show-for-large">
-                        {foreach $fieldsets['contact'] as $field}
-                            {if $field->name === 'ci_canada_email_confirmation'}
-                                {set $field->containerClass = 'checkout__canada-cods-field'}
-                                {set $field->hintClass = 'common-hint text-left'}
-                                {raw $field->render()}
-                            {/if}
-                        {/foreach}
-                    </div>
+                    {*                    <div class="show-for-large">*}
+                    {*                        {foreach $fieldsets['contact'] as $field}*}
+                    {*                            {if $field->name === 'ci_canada_email_confirmation'}*}
+                    {*                                {set $field->containerClass = 'checkout__canada-cods-field'}*}
+                    {*                                {set $field->hintClass = 'common-hint text-left'}*}
+                    {*                                {raw $field->render()}*}
+                    {*                            {/if}*}
+                    {*                        {/foreach}*}
+                    {*                    </div>*}
 
                     {if $hst}
                         <div>
@@ -272,18 +272,8 @@
 {/block}
 
 
+
 {block 'js'}
-    <script>
-        const $checkboxList = $( '[type="checkbox"][name="CheckoutForm[ci_canada_email_confirmation]"]' );
-
-        $checkboxList.change( function () {
-            const self = this;
-
-            $checkboxList.each( function ( i, e ) {
-                e.checked = self.checked;
-            } );
-        } );
-    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQERMkixIWZNodbqoI5vFYt7IxuGQGdpk&libraries=places&language=en" defer></script>
 {/block}
