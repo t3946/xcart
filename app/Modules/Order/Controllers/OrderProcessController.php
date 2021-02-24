@@ -160,8 +160,28 @@ class OrderProcessController extends FrontendController
             return;
         }
 
+        $price = time() % 1000000 / 100;
+
         $response = [
-            'grandTotal' => time() % 1000000 / 100,
+            'grand_total' => $price,
+            'distributor_carts' => [
+                209 => [
+                    'id' => 209,
+                    'sales_tax' => $price,
+                    'vat_tax' => $price,
+                    'subtotal' => $price,
+                ],
+                175 => [
+                    'id' => 175,
+                    'sales_tax' => $price,
+                    'vat_tax' => $price,
+                    'subtotal' => $price,
+                ],
+            ],
+            'total' => $price,
+            'total_shipping_cost' => $price,
+            'total_sales_tax' => $price,
+            'total_vat_tax' => $price,
         ];
 
         echo json_encode( $response );
