@@ -33,8 +33,6 @@ export const ShippingForm = ( function () {
 
                             $cartShipping.html( $shippingGroup.html() );
                         } );
-
-                    document.dispatchEvent( new CustomEvent( 'delivery-address-update' ) );
                 },
             } );
         } );

@@ -6,8 +6,6 @@ export const ShippingMethods = ( function () {
             .find( 'input:checked' )
             .parents( '.shipping-method-row' )
             .addClass( 'shipping-method-row_selected' );
-
-        document.dispatchEvent( new CustomEvent( 'delivery-address-update' ) );
     }
 
     $( '.shipping-methods-group' ).on('change', 'input', function () {
