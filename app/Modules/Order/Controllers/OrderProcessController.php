@@ -153,9 +153,17 @@ class OrderProcessController extends FrontendController
         ] );
     }
 
-    public function checkoutUpdate():void {
-        echo [
-            'payment_methods_html' => $this->getPaymentMethods(),
+    public function checkoutUpdate(): void
+    {
+        if ( !$_POST[ 'key' ] || !$_POST[ 'value' ] ) {
+            http_response_code( 400 );
+            return;
+        }
+
+        $response = [
+            'grandTotal' => time() % 1000000 / 100,
         ];
+
+        echo json_encode( $response );
     }
 }
