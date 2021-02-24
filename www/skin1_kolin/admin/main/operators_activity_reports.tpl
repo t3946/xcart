@@ -33,7 +33,7 @@ function managedate(status) {
 
 {capture name=dialog}
 
-<form name="searchform" action="operators_activity_reports.php" method="post">
+<form name="searchform" action="operators_activity_reports.php" method="post" target="_blank">
 <input type="hidden" name="mode" value="" />
 
 <table cellpadding="1" cellspacing="5" width="100%">
@@ -141,7 +141,7 @@ function managedate(status) {
 	</td>
 </tr>
 <tr><td style="text-align:center;" colspan="3">
-	<input type="submit" value="Submit" onclick="javascript: document.searchform.mode.value=''; document.searchform.target='_blank'; document.searchform.submit();" />
+	<input type="submit" value="Submit" />
 	</td>
 </tr>
 </table>

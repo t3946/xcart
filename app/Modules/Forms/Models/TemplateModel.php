@@ -10,6 +10,7 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
@@ -18,10 +19,13 @@ use Xcart\App\Orm\Model;
  * @property string subject_line
  * @property AttentionTagModel status
  * @method static Manager distributors()
+ * @method static Manager customer_service()
  */
 class TemplateModel extends Model
 {
     public const REQUEST_AVAILABILITY_TEMPLATE_ID = 9614;
+    public const ORDER_ENTRY_TEMPLATE_ID = 8974;
+    public const DISPATCH_ORDER_TEMPLATE_ID = 9621;
 
     public static function tableName()
     {
@@ -38,7 +42,7 @@ class TemplateModel extends Model
             ],
             'category' => [
                 'field' => 'category_id',
-                'class' => ForeignField::class,
+                'class' => TreeForeignField::class,
                 'modelClass' => TemplateCategoryModel::class,
                 'link' => ['category_id' => 'id'],
                 'null' => false,
@@ -59,16 +63,6 @@ class TemplateModel extends Model
             'message_body' => [
                 'class' => CharField::class,
                 'verboseName' => "Message body"
-            ],
-            'department' => [
-                'class' => CharField::class,
-                'choices' => [
-                    'customer' => 'Customer',
-                    'distributor' => 'Distributor',
-                    'our_customer_service' => 'Our customer service',
-                    'third_party' => 'Third party',
-                ],
-                'verboseName' => 'Template to communicate to'
             ],
             'ca_status' => [
                 'class' => CharField::class,
@@ -95,9 +89,24 @@ class TemplateModel extends Model
 
     public static function distributorsManager($instance = null)
     {
-        return static::objects($instance)
-            ->filter(['department' => 'distributor', 'active' => 'Y'])
-            ->order(['pos', 'template_name']);
+        if ($dx_category = TemplateCategoryModel::objects()->get(['id' => 28])) {
+            return static::objects($instance)->filter([
+                'category__lft__gte' => $dx_category->lft,
+                "category__rgt__lte" => $dx_category->rgt,
+                "category__root" => $dx_category->root])
+                ->order(['category__root', 'category__level', 'category__pos']);
+        }
+    }
+
+    public static function customer_serviceManager($instance = null)
+    {
+        if ($dx_category = TemplateCategoryModel::objects()->get(['id' => 29])) {
+            return static::objects($instance)->filter([
+                'category__lft__gte' => $dx_category->lft,
+                "category__rgt__lte" => $dx_category->rgt,
+                "category__root" => $dx_category->root])
+                ->order(['category__root', 'category__level', 'category__pos']);
+        }
     }
 
     public function __toString()

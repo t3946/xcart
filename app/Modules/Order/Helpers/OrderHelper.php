@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Helpers;
 
 use DateTime;
@@ -39,11 +40,11 @@ class OrderHelper
         if (!empty($diff)) {
             $connection = Xcart::app()->db->getConnection();
             $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
-                                       ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
-                                       ->setAlias('t')
-                                       ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
-                                       ->where(['details.orderid__in' => $diff, 'eta_date_mm_dd_yyyy__gt' => 0])
-                                       ->group(['details.orderid'])->toSQL();
+                ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
+                ->setAlias('t')
+                ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
+                ->where(['details.orderid__in' => $diff, 'eta_date_mm_dd_yyyy__gt' => 0])
+                ->group(['details.orderid'])->toSQL();
 
             $orders_max_eta = $connection->fetchAll($max_eta_sql);
 
@@ -55,7 +56,6 @@ class OrderHelper
         $result = [];
         foreach (self::$__max_eta as $id => $eta) {
             if (in_array($id, $ids)) {
-
                 $result[$id] = $eta;
             }
         }
@@ -68,8 +68,7 @@ class OrderHelper
         $need_request = false;
         $userModel = null;
 
-        if (empty($user_id) && Xcart::app()->getIsWebMode())
-        {
+        if (empty($user_id) && Xcart::app()->getIsWebMode()) {
             $userModel = Xcart::app()->getUser();
             $user_id = $userModel->id;
         }
@@ -87,7 +86,6 @@ class OrderHelper
         }
 
         if ($need_request && $user_id && $userModel && $userModel->show_events) {
-
             $connection = Xcart::app()->db->getConnection();
 
             $min_date = ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null;
@@ -95,8 +93,8 @@ class OrderHelper
             $qs = static::getCountEventsQS($user_id, $min_date);
 
             $sql = $qs->filter(['order_id__in' => $ids,])
-                      ->group(["order_id"])
-                      ->allSql();
+                ->group(["order_id"])
+                ->allSql();
 
             $counts = $connection->fetchAll($sql);
             if ($counts) {
@@ -114,7 +112,6 @@ class OrderHelper
         $result = [];
         foreach (self::$__events_count as $id => $user_count) {
             if (in_array($id, $ids)) {
-
                 $result[$id] = $user_count[$user_id];
             }
         }
@@ -141,13 +138,13 @@ class OrderHelper
 
         $qs = $qs
             ->filter([
-                         new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
-                         new QOr([
-                                     new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
-                                     'a.user_id__isnull' => true
-                                 ]),
-                         new QAndNot(['user_id' => $user_id,]),
-                     ])
+                new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
+                new QOr([
+                    new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
+                    'a.user_id__isnull' => true
+                ]),
+                new QAndNot(['user_id' => $user_id,]),
+            ])
             ->getQuerySet()
             ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id', 'a.user_id' => new Expression($user_id)], 'a')
             ->select(['order_id', 'count' => new Expression('count(*)')]);
@@ -171,7 +168,7 @@ class OrderHelper
      *
      * @return array
      */
-    public static function changeOrderCBStatus(OrderModel $model, $status):array
+    public static function changeOrderCBStatus(OrderModel $model, $status): array
     {
         $log = null;
         $send = false;
@@ -186,7 +183,7 @@ class OrderHelper
                         OrderStatusModel::ORDER_STATUS_CANCELED,
                         OrderStatusModel::ORDER_STATUS_FAILED,
                         OrderStatusModel::ORDER_STATUS_DECLINED,
-                    ],true)) {
+                    ], true)) {
                     if ($group->cb_status !== $status) {
                         $log = "<br/><b>{$group->manufacturer->code}:</b> cb_status: {$group->cb_status_model->name} -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
                     }
@@ -208,7 +205,6 @@ class OrderHelper
         $log = null;
 
         if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])) {
-
             $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
                 return ($a->type == OrderTransactionModel::TYPE_AUTHORIZATION
                     && \in_array($a->transaction_status, [
@@ -248,7 +244,6 @@ class OrderHelper
         $user = null;
 
         if (($user_ids = Xcart::app()->request->session->get('identifiers')) && ($login = $user_ids['A'] ?: null) && !empty($login['login'])) {
-
             $user = UserModel::objects()->filter(['login' => $login['login']])->limit(1)->get();
         }
 
@@ -263,8 +258,7 @@ class OrderHelper
         if ($post_data) {
             foreach ($post_data as $f_c => $values) {
                 /** @var BaseForm $form */
-                if ($form = static::getForm($f_c))
-                {
+                if ($form = static::getForm($f_c)) {
                     if (!$form->populate($post_data)->isValid()) {
                         $errors[$f_c] = $form->getErrors();
                     }
@@ -286,14 +280,13 @@ class OrderHelper
         return null;
     }
 
-    public static function getOTRSMessages(OrderModel $model) : int
+    public static function getOTRSMessages(OrderModel $model): int
     {
         $ticket_resolver_messages = 0;
         $url = 'http://helpdesk.s3stores.com/otrs/index.pl';
         $TicketConnector_link = 'http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector';
 
         if ($model) {
-
             $curl_err = false;
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -333,7 +326,7 @@ class OrderHelper
         return $ticket_resolver_messages;
     }
 
-    public static function getCartOrder() :? OrderModel
+    public static function getCartOrder(): ?OrderModel
     {
         /** @var OrderModel $res */
         $cart = Xcart::app()->cart;
@@ -361,12 +354,12 @@ class OrderHelper
     public static function hasCustomerSiblingsOrders(OrderModel $order, $hours = 12): bool
     {
         return OrderModel::objects()->filter([
-            'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED, OrderStatusModel::ORDER_STATUS_QUEUED],
-            'date__gte' =>  new Expression("UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
-            'date__lte' =>  new Expression("UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
-            'email' => $order->email,
-            'orderid__isnt' => $order->orderid
-        ])->count() > 0 ;
+                'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED, OrderStatusModel::ORDER_STATUS_QUEUED],
+                'date__gte' => new Expression("UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
+                'date__lte' => new Expression("UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME({$order->date}), INTERVAL {$hours} HOUR))"),
+                'email' => $order->email,
+                'orderid__isnt' => $order->orderid
+            ])->count() > 0;
     }
 
     public static function genReceivedConfirmation(OrderGroupModel $orderGroup): string
@@ -383,8 +376,8 @@ class OrderHelper
         $query = http_build_query($params);
 
         $result = <<<HTML
-<a href='{$url}?{$query}'>
-<img src='https://{$orderGroup->order->site->domain}/skin1_kolin/images/received_img.png' alt='Please click to confirm that you received this order'/>
+<a href="{$url}?{$query}" style="cursor: pointer; text-decoration: none; background: #FFB500; border-radius: 5px; padding: 13px 26px; font-family: Lato; font-style: normal; font-weight: bold; font-size: 22px; color: #000000;">
+Please click this button to confirm that you received the order
 </a>
 HTML;
         return $result;
@@ -392,7 +385,7 @@ HTML;
 
     public static function checkOrderTrackedAll(OrderModel $order)
     {
-        $all =true;
+        $all = true;
         /** @var OrderGroupModel $group */
         foreach ($order->groups as $group) {
             if (!$group->trackings->count()) {
@@ -419,8 +412,7 @@ HTML;
         if (($res = $client->request('POST', $url, $data)) &&
             ($mapUrl = $res->filter('#imgMap')) &&
             $mapUrl->count() &&
-            $image = $mapUrl->image()->getUri())
-        {
+            $image = $mapUrl->image()->getUri()) {
             return $image;
         }
         return null;
@@ -432,7 +424,7 @@ HTML;
         $model = AttentionTagModel::objects()->get(['status_id' => $tagId]);
 
         if ($model) {
-            [,$created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
+            [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
             $message = "Attention tag added: " . $model->status;
             if ($isLog && $created) {
                 (new OrderLogModel([
@@ -492,9 +484,15 @@ HTML;
 
     public static function submitOrderEntry(OrderModel $order): void
     {
+        $site = $order->site;
+        $config = $site->getGlobalConfig();
+
         foreach ($order->groups as $group) {
             $dx = $group->manufacturer;
-            if (($dx->submit_to_operator === 'through_distributor_website') && in_array(
+
+            if ($dx->submit_to_operator === 'through_distributor_website' &&
+                ($template = $dx->order_entry_template) &&
+                in_array(
                     $group->cb_status,
                     [
                         OrderStatusModel::ORDER_STATUS_COMPLETED,
@@ -515,19 +513,17 @@ HTML;
                     true
                 )) {
                 $message = SnippetHelper::render(
-                    $dx->d_instructions_to_order_entry_operator,
-                    ['order' => $order, 'user' => Xcart::app()->user, 'group' => $group]
+                    html_entity_decode($template->message_body),
+                    ['order' => $order, 'group' => $group, 'distributor' => $dx]
                 );
                 $subject = SnippetHelper::render(
-                    $dx->d_order_entry_operator_subject_line_8,
-                    ['order' => $order, 'user' => Xcart::app()->user, 'group' => $group]
+                    $template->subject_line,
+                    ['order' => $order, 'group' => $group, 'distributor' => $dx]
                 );
 
-                /** @var SiteModel $site */
-                $site = Xcart::app()->getModule('Sites')->getSite();
-                $config = $site->getGlobalConfig();
-
-                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><b>From: </b>{$config['orders_department']}<br /><b>To: </b>{$dx->d_order_entry_operator_email}<br /><b>Subject: </b>{$subject}";
+                $log = <<<HTML
+The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><b>From: </b>{$config['orders_department']}<br /><b>To: </b>{$dx->d_order_entry_operator_email}<br /><b>Subject: </b>{$subject}
+HTML;
 
                 (new OrderLogModel(
                     [
@@ -540,11 +536,7 @@ HTML;
 
                 $params = ['from' => $config['orders_department']];
 
-                $emails = explode(',', $dx->d_order_entry_operator_email);
-                $email_to = array_shift($emails);
-                if ($emails) {
-                    $params['bcc'] = array_map(static fn($e) => trim($e), $emails);
-                }
+                $email_to = 'order.entry@s3stores.com';
 
                 Xcart::app()->mail->raw(
                     $email_to,
@@ -554,7 +546,7 @@ HTML;
                 );
 
                 /** @var OrderStatusModel $new_status */
-                $new_status = OrderStatusModel::objects()->get(['code' =>  OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY]);
+                $new_status = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY]);
                 $log = "<b>{$dx->code}:</b> dc_status: {$group->dc_status_model} -> {$new_status}";
                 (new OrderLogModel(
                     [

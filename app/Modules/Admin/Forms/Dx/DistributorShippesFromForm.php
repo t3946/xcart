@@ -20,9 +20,9 @@ class DistributorShippesFromForm extends DistributorForm
             'm_address',
             'm_address_2',
             'm_city',
-            'm_country',
             'm_state',
             'm_zipcode',
+            'm_country',
         ]];
     }
 
@@ -63,6 +63,7 @@ class DistributorShippesFromForm extends DistributorForm
                 },
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'depends' => ['m_state']
             ],
             'm_state' => [
                 'class' => DropDownField::class,

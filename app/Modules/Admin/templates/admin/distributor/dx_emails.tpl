@@ -6,7 +6,7 @@
         {var $form = $admin->getForm()}
 
         <div class="admin-page all-page">
-            {include 'admin/list/_list.tpl'}
+            {include 'admin/list/_email_list.tpl'}
         </div>
 
     {/smarty_admin_block}

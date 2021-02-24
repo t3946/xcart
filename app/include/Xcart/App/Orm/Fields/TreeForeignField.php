@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Xcart\App\Exceptions\Exception;
+use Xcart\App\Form\Fields\DropDownField;
 
 /**
  * Class TreeForeignField
@@ -10,11 +11,11 @@ use Xcart\App\Exceptions\Exception;
  */
 class TreeForeignField extends ForeignField
 {
-    public function getFormField($form, $fieldClass = '\Xcart\App\Form\Fields\DropDownField', array $extra = [])
+    public function getFormField($form, $fieldClass = DropDownField::class, array $extra = [])
     {
         $relatedModel = $this->getRelatedModel();
 
-        $choices = function () use ($relatedModel) {
+        $choices = static function () use ($relatedModel) {
             $list = ['' => ''];
 
             $qs = $relatedModel->objects()->order(['root', 'lft']);
@@ -33,16 +34,20 @@ class TreeForeignField extends ForeignField
         }
 
         if ($fieldClass === null) {
-            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : \Xcart\App\Form\Fields\CharField::className();
+            $fieldClass = $this->choices ? DropDownField::class : CharField::class;
         }
         elseif ($fieldClass === false) {
             return null;
         }
 
+        if ($fieldClass === DropDownField::class) {
+            $extra['inputTemplate'] = 'forms/field/dropdown/input_nested.tpl';
+        }
+
         $model = $this->getModel();
         $disabled = [];
 
-        if ($model->className() == $relatedModel->className() && $model->getIsNewRecord() === false) {
+        if ($model->className() === $relatedModel->className() && $model->getIsNewRecord() === false) {
             $disabled[] = $model->pk;
         }
 

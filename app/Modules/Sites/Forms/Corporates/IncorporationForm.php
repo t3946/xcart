@@ -95,8 +95,9 @@ class IncorporationForm extends CorporatesForm
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
+                    $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->inc_country ?? 'US']]) as $state) {
-                        $result[$state->code] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }
                     return $result ?? [];
                 },

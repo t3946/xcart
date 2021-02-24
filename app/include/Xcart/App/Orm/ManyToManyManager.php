@@ -101,7 +101,7 @@ abstract class ManyToManyManager extends ManagerBase
             $primaryModel->save();
         }
 
-        if ($primaryModel && empty($primaryModel->pk)) {
+        if ($primaryModel && $primaryModel->pk === null) {
             throw new Exception('Unable to ' . ($link ? 'link' : 'unlink') . ' models: the primary key of ' . get_class($primaryModel) . ' is ' . $primaryModel->pk . '.');
         }
 

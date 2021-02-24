@@ -4005,15 +4005,22 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                 $current_product_instock = true;
                 $count_instock_items++;
                 $is_instock_items = "Y";
-                $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
+                $cidev_instock_items_table .= '
+<tr>
+    <td width="150px" style="text-align: left;">' . $tmp_sku . '</td>
+    <td width="250px" style="text-align: left;">
+        <a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '
+    </td>
+    <td style="text-align: right;">' . $instock_items . '</td>
+</tr>';
             }
 
-            if ($v["back"] > 0 || $type_of_message == "compose_message_page") {
+            if ($v["back"] > 0 && $type_of_message === 'compose_message_page') {
                 $is_back = "Y";
 
                 $count_out_of_stock_items++;
 
-                if ($v["forsale"] == "N") {
+                if ($v['forsale'] === 'N') {
                     $tmp_eta_date_mm_dd_yyyy = "discontinued";
 
                     $count_eta_unknown++;
@@ -4029,11 +4036,11 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                     {
                         $tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
 
-                        if ($type_of_message == 'backorder_decision_request') {
+                        if ($type_of_message === 'backorder_decision_request') {
                             $tmp_time_diff = $tmp_mktime - time();
                             $tmp_time_diff = $tmp_time_diff / (60 * 60 * 24);
 
-                            if ($tmp_time_diff > 30 && $v["offer_backorder"] != "Y") {
+                            if ($tmp_time_diff > 30 && $v["offer_backorder"] !== "Y") {
                                 $tmp_eta_date_mm_dd_yyyy = "unknown";
                                 $count_eta_unknown++;
 
@@ -4046,7 +4053,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                     else {
                         $tmp_eta_date_mm_dd_yyyy = '';
 
-                        if ($type_of_message == 'backorder_decision_request') {
+                        if ($type_of_message === 'backorder_decision_request') {
                             $tmp_eta_date_mm_dd_yyyy = "unknown";
                             $count_eta_unknown++;
 
@@ -4056,13 +4063,13 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
                         }
                     }
 
-                    if ($tmp_eta_date_mm_dd_yyyy != "unknown") {
+                    if ($tmp_eta_date_mm_dd_yyyy !== "unknown") {
                         $count_eta_with_date++;
                         $count_out_of_stock_products_with_eta_with_date++;
                     }
                 }
 
-                if ($v["offer_backorder"] == "Y" || $type_of_message == "compose_message_page") {
+                if ($v['offer_backorder'] === 'Y' || $type_of_message === 'compose_message_page') {
                     $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a data-mce-href="' . $v["links"]["customer"] . '" href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td><td style="text-align: right;" nowrap="nowrap">' . $tmp_eta_date_mm_dd_yyyy . '</td></tr>';
 
                     $count_outofstock_products_with_offer_backorder_Y++;

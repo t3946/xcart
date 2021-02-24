@@ -16,6 +16,7 @@ namespace Xcart\App\Template;
 
 
 use Fenom;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
@@ -118,6 +119,20 @@ class TemplateManager
         });
         $this->_renderer->addModifier('not_in', function($variable, $array) {
             return !array_key_exists($variable, $array);
+        });
+
+        $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
+            /** @var SiteModel $site */
+            if (($site = Xcart::app()->getModule('Sites')->getSite()) && $site_currency = $site->getCurrency()) {
+                $arr = [
+                    $site_currency->symbol_prefix,
+                    !$site_currency->after ? $site_currency : '',
+                    " <span class=\"price\">{$site_currency->getCurrencyFormat($variable)}</span>",
+                    $site_currency->after ? $site_currency : '',
+                ];
+                return trim(implode('', $arr));
+            }
+            return '';
         });
 
         $this->_renderer->addAccessorSmart("app", "app", Fenom::ACCESSOR_PROPERTY);

@@ -888,4 +888,14 @@ class ProductModel extends Model implements ICartItem
         return (new DateTime())->add(new DateInterval('P7D'));
     }
 
+    public function getETADate():? DateTime
+    {
+        if ($this->eta_date_mm_dd_yyyy && $this->eta_date_mm_dd_yyyy > time()) {
+            $date =  new DateTime();
+            $date->setTimestamp($this->eta_date_mm_dd_yyyy);
+            return $date;
+        }
+        return null;
+    }
+
 }

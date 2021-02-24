@@ -13,26 +13,17 @@ class TemplateFilterForm extends Form
     public function getFields()
     {
         return [
-            'department' => [
-                'class' => DropDownField::class,
-                'label' => 'Templates to communicate to',
-                'choices' => [
-                    '' => 'All',
-                    'customer' => 'Customer',
-                    'distributor' => 'Distributor',
-                    'our_customer_service' => 'Our customer service',
-                    'third_party' => 'Third party',
-                ],
-            ],
             'category' => [
                 'class' => DropDownField::class,
                 'empty' => 'All',
+                'inputTemplate' => 'forms/field/dropdown/input_nested.tpl',
                 'choices' => function () {
-                    foreach (TemplateCategoryModel::objects() as $category) {
-                        $res[$category->id] = $category;
+                    foreach (TemplateCategoryModel::objects()->order(['root', 'level', 'pos']) as $category) {
+                        $level = $category['level'] ? $category['level'] - 1 : $category['level'];
+                        $list[$category['id']] = $level ? str_repeat("..", $level) . ' ' . $category['name'] : $category['name'];
                     }
-                    $res[''] = 'Not assigned';
-                    return $res ?? [];
+                    $list[''] = 'Not assigned';
+                    return $list ?? [];
                 },
                 'label' => 'Template category'
             ],

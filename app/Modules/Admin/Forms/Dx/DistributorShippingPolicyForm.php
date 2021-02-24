@@ -37,6 +37,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'd_minimum_order_amount',
                 'd_minimum_order_amount_in_us',
                 'd_for_orders_below_min_order_amount',
+                'd_dealer_discount_reduced_from',
             ],
             [
                 'update_approximation_shipping_rates',
@@ -230,6 +231,28 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => empty($dx->d_minimum_order_amount),
                 'hint' => LanguageModel::translate('help_dx_below_minimum_order_text') ?? 'help_dx_below_minimum_order_text',
+                'html' => ['onchange' => "this.value !== 'dealer_discount_is_reduced' ? $('#DistributorShippingPolicyForm_d_dealer_discount_reduced_from, #DistributorShippingPolicyForm_d_dealer_discount_reduced_to').closest('tr').hide() : $('#DistributorShippingPolicyForm_d_dealer_discount_reduced_from, #DistributorShippingPolicyForm_d_dealer_discount_reduced_to').closest('tr').show()"]
+            ],
+            'd_dealer_discount_reduced_from' => [
+                'label' => ' ',
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extends' => 'from',
+                'extend' => 'd_dealer_discount_reduced_to'
+            ],
+            'd_dealer_discount_reduced_to' => [
+                'label' => ' ',
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extends' => 'to',
             ],
             'update_approximation_shipping_rates' => [
                 'class' => CheckboxField::class,

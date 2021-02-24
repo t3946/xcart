@@ -39,21 +39,22 @@ class ProductFilterHelper
      * @return array
      * @throws \Exception
      */
-    public function getFilterStructure(array $types = ['price', 'brand', 'filter']): array
+    public function getFilterStructure(array $types = ['price', 'brand', 'filter'], $level): array
     {
         $cache_key = implode('-',$types) .';sql:' . (clone $this->qs)->allSql();
         $list = [];
 
-//        if ($list = Xcart::app()->cache->get($cache_key, []))
-//        {
-//            return $list;
-//        }
+        /*if ($list = Xcart::app()->cache->get($cache_key, []))
+        {
+            return $list;
+        }*/
 
-        if (\in_array('price', $types, true)) {
+        if (in_array('price', $types, true)) {
             $tqs = clone $this->qs;
             $tqs->filter(['quick_prices__price__isnull' => false])
                 ->select([new Min('quick_prices__price', 'min'),
                           new Max('quick_prices__price', 'max')])
+                ->cache(3600)
                 ->asArray();
             $prices = $tqs->get();
             $prices = [
@@ -77,11 +78,12 @@ class ProductFilterHelper
             ];
         }
 
-        if (\in_array('brand', $types, true)) {
+        if (in_array('brand', $types, true)) {
             $tqs = clone $this->qs;
             $brands = $tqs->select(['name' => 'brand__brand', 'value' => 'brandid', new Count('*', 'count')])
                           ->group(['brandid'])
                           ->limit(50)
+                          ->cache(3600)
                           ->order(['brand__brand'])
                           ->asArray()->all();
 
@@ -100,8 +102,7 @@ class ProductFilterHelper
             ];
         }
 
-
-        if (\in_array('filter', $types, true)) {
+        if ($level > 1 && in_array('filter', $types, true)) {
             $ftqs = clone $this->getFiltrateQS();
             $tqs = clone $this->qs;
             $tqs = $tqs->filter(['filter_values__fv_active' => 'Y'])->order([]);
@@ -111,7 +112,9 @@ class ProductFilterHelper
                 $filters = FilterModel::objects()
                                       ->filter(['f_active' => 'Y',
                                                 'f_id__in' => $f_ids])
-                                      ->order(['f_order_by'])
+                                      ->order(['f_name'])
+                                     ->limit(30)
+                                     ->cache(3600)
                                       ->valuesList([]);
 
                 if ($filters) {
@@ -119,6 +122,7 @@ class ProductFilterHelper
                     $fvalues = $ftqs->filter(['filter_values__fv_active' => 'Y'])
                                   ->select(['filter_values__fv_id', new Count('*', 'count')])
                                   ->group(['filter_values__fv_id'])
+                                  ->cache(3600)
                                   ->asArray()->all();
 
                     foreach ($fvalues as $value) {
@@ -129,6 +133,7 @@ class ProductFilterHelper
                                   ->select(['filter_values__fv_name', 'filter_values__fv_id', 'filter_values__f_id', new Count('*', 'count')])
                                   ->order(['filter_values__f_id','filter_values__fv_order_by','filter_values__fv_name'])
                                   ->group(['filter_values__fv_id'])
+                                  ->cache(3600)
                                   ->asArray()->all();
 
 
@@ -171,7 +176,7 @@ class ProductFilterHelper
 
         }
 
-//        Xcart::app()->cache->set($cache_key, $list, 8600);
+        //Xcart::app()->cache->set($cache_key, $list, 8600);
 
         return $list;
     }

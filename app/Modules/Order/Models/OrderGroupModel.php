@@ -3,8 +3,10 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Types;
+use Mindy\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Main\Xcart;
@@ -15,6 +17,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
@@ -36,6 +39,8 @@ use Xcart\OrderGroup;
  * @property OrderStatusModel|null dc_status_model
  * @property mixed refunds
  * @property bool notify_sent
+ * @property Manager|OrderDetailModel[] detail_models
+ * @property float total_tax
  */
 class OrderGroupModel extends Model
 {
@@ -136,6 +141,11 @@ class OrderGroupModel extends Model
                 'modelClass' => OrderGroupMemoModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
+            'tax_rates' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupTaxModel::class,
+                'link' => ['order_group_id' => 'order_group_id'],
+            ],
             'refunds' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupRefundModel::class,
@@ -167,6 +177,10 @@ class OrderGroupModel extends Model
                 'default' => '',
             ],
             'shipping_quote' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'total_tax' => [
                 'class' => DecimalField::class,
                 'null' => true,
             ],
@@ -363,5 +377,24 @@ URL;
     public function __toString(): string
     {
         return (string) $this->manufacturer;
+    }
+
+    public function getInStockDetails()
+    {
+        return $this->detail_models->filter([
+            'items_stock__gt' => 0
+        ]);
+    }
+
+    public function getOutOfStockDetails()
+    {
+        return $this->detail_models->filter([
+            'back__gt' => 0
+        ]);
+    }
+
+    public function genReceivedConfirmationButton(): string
+    {
+        return OrderHelper::genReceivedConfirmation($this);
     }
 }

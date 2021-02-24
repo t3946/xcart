@@ -48,6 +48,8 @@ use Xcart\Manufacturer;
  * @property TemplateModel request_avail_template
  * @property string d_send_to_email_14
  * @property DistributorTabModel[] tabs
+ * @property TemplateModel order_entry_template
+ * @property TemplateModel order_submit_template
  */
 class DistributorModel extends Model
 {
@@ -124,11 +126,38 @@ class DistributorModel extends Model
                 'null' => false,
                 'default' => TemplateModel::REQUEST_AVAILABILITY_TEMPLATE_ID,
             ],
+            'order_entry_template' => [
+                'field' => 'order_entry_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['order_entry_template_id' => 'id'],
+                'null' => true,
+                'default' => TemplateModel::ORDER_ENTRY_TEMPLATE_ID,
+            ],
+            'order_submit_template' => [
+                'field' => 'order_submit_template_id',
+                'class' => ForeignField::class,
+                'modelClass' => TemplateModel::class,
+                'link' => ['order_submit_template_id' => 'id'],
+                'null' => true,
+                'default' => TemplateModel::DISPATCH_ORDER_TEMPLATE_ID,
+            ],
+            'order_entry_special_instructions' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
+            'order_submit_special_instructions' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
             'd_email_subject_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
-            ],'d_message_body_14' => [
+            ],
+            'd_message_body_14' => [
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
@@ -148,6 +177,12 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'dx_paypal_account_email' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true,
+                'verboseName' => 'Distributor PayPal account email'
+            ],
             'dcad_swift' => [
                 'class' => CharField::class,
                 'default' => null,
@@ -156,7 +191,8 @@ class DistributorModel extends Model
             'avail' => [
                 'class' => BooleanCharField::class,
                 'null' => false,
-                'default' => true
+                'default' => true,
+                'verboseName' => 'Activate distributor products'
             ],
             'd_availability_must_be_checked' => [
                 'class' => BooleanCharField::class,
@@ -269,6 +305,14 @@ class DistributorModel extends Model
             'warehouse_pickups_are_allowed' => [
                 'class' => BooleanCharField::class,
                 'default' => false
+            ],
+            'days_before_verify' => [
+                'class' => IntField::class,
+                'default' => 60
+            ],
+            'd_order_entry_operator_email' => [
+                'class' => CharField::class,
+                'default' => 'order.entry@s3stores.com'
             ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
@@ -397,7 +441,8 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'sqlType' => Types::STRING,
                 'modelClass' => CountryModel::class,
-                'link' => ['m_country' => 'code']
+                'link' => ['m_country' => 'code'],
+                'default' => 'US'
             ],
             'state_model' => [
                 'field' => 'm_state',
@@ -408,6 +453,7 @@ class DistributorModel extends Model
                     'm_state' => 'code',
                     'm_country' => 'country_code'
                 ],
+                'default' => 'NY',
             ],
             'provider_model' => [
                 'field' => 'provider',
@@ -587,7 +633,8 @@ class DistributorModel extends Model
 
     public function getProductQuestionsContact()
     {
-        return $this->contacts_model->filter(['pq' => 'Y'])->limit(1)->get();
+        return $this->contacts_model
+            ->filter(['utility__utility_id' => DistributorUtilityModel::REQUEST_PRODUCT_QUESTIONS_UTILITY])->limit(1)->get();
     }
 
     public function getPhone(): string
@@ -656,5 +703,36 @@ class DistributorModel extends Model
     public function getContactNameForTemplates(): string
     {
         return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        if ($isNew) {
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 10,
+                'name' => 'Shipping',
+                'content' => '{{distributor_shipped_from}}'
+            ]);
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 20,
+                'name' => 'Our guarantee',
+                'content' => "This product is brand new and includes the manufacturer's warranty, so you can buy with confidence."
+            ]);
+            DistributorTabModel::objects()->getOrCreate([
+                'distributor_id' => $owner->pk,
+                'position' => 30,
+                'name' => 'Return policy',
+                'content' => "A 25% handling charge is levied against all authorized returns except those due to our error. Unauthorized returns are subject to a 40% handling charge. Damages & defects must be reported to us within 14 days."
+            ]);
+            ShippingRateModel::objects()->getOrCreate([
+                'shippingid' => 1,
+                'zoneid' => 11,
+                'manufacturerid' => $owner->pk,
+                'type' => 'R',
+                'cost_marcup' => 1
+            ]);
+        }
     }
 }

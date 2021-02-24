@@ -8,6 +8,7 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\UrlField;
 
 class DistributorPriceForm extends DistributorForm
@@ -17,6 +18,7 @@ class DistributorPriceForm extends DistributorForm
     public function getFieldsets()
     {
         return [[
+            'd_website_search_for_sku_url',
             'd_product_catalog',
             'd_price_list',
             'd_currency',
@@ -40,6 +42,13 @@ class DistributorPriceForm extends DistributorForm
         $dx = $this->getInstance();
 
         return [
+            'd_website_search_for_sku_url' => [
+                'class' => CharField::class,
+                'label' => 'Link to product on distributor website (use {{mpn}})',
+                'hint' => LanguageModel::translate('help_dx_search_for_sku_url_text') ?? 'help_dx_search_for_sku_url_text',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+            ],
             'd_product_catalog' => [
                 'class' => UrlField::class,
                 'label' => 'Product catalog URL',
@@ -70,10 +79,19 @@ class DistributorPriceForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_cost_to_us_text') ?? 'help_dx_cost_to_us_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => [
                     'size' => 9,
                     'style' => 'width: 75px;',
                 ],
+                'extend' => 'cost_to_us_coef_x_label',
+            ],
+            'cost_to_us_coef_x_label' => [
+                'class' => HiddenField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'extends' => ' * List price',
             ],
             'price_label' => [
                 'class' => CharField::class,
@@ -114,10 +132,19 @@ class DistributorPriceForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_map_price_text') ?? 'help_dx_map_price_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => [
                     'size' => 9,
                     'style' => 'width: 75px;',
                 ],
+                'extend' => 'new_map_price_coef_x_label'
+            ],
+            'new_map_price_coef_x_label' => [
+                'class' => HiddenField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'extends' => ' * List price',
             ],
             'supplier_products_price_multiplier' => [
                 'class' => CharField::class,

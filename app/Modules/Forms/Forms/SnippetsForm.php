@@ -4,6 +4,7 @@
 namespace Modules\Forms\Forms;
 
 
+use Modules\Core\Fields\AceField;
 use Modules\Editor\Fields\EditorField;
 use Modules\Forms\Models\SnippetModel;
 use Xcart\App\Form\Fields\CharField;
@@ -23,9 +24,9 @@ class SnippetsForm extends ModelForm
             'name' => ['class' => CharField::class, 'required' => true],
             'description' => CharField::class,
             'template' => [
-                'class' => EditorField::class,
+                'class' => AceField::class,
+                'language' => 'smarty',
                 'label' => 'Template',
-                'disable_forced_root_block' => true,
             ],
         ];
     }

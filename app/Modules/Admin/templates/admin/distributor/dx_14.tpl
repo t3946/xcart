@@ -14,9 +14,9 @@
 
             {raw $form->getField('request_avail_template')->render()}
 
-            {raw $form->getField('template_1')->render()}
+            {raw $form->getField('template_1_subj')->render()}
 
-            {raw $form->getField('d_message_body_14')->render()}
+            {raw $form->getField('template_1')->render()}
 
             <tr>
                 <td colspan="3">
@@ -24,9 +24,7 @@
                         <tr>
                             <td colspan="3">&nbsp;</td>
                         </tr>
-                        <tr>
-                            <td colspan="3" style="color: #000000;"><B>Availability request schedule</B></td>
-                        </tr>
+                        {raw $form->getField('d_availability_request_schedule')->render()}
                         <tr>
                             <td colspan="3" class="SubHeaderBlackLine">
                             </td>

@@ -12,6 +12,7 @@ use Xcart\App\Traits\RenderTrait;
 
 /**
  * @property string code
+ * @property string description
  */
 class SnippetModel extends Model
 {
@@ -54,6 +55,12 @@ class SnippetModel extends Model
 
     public function render($params)
     {
-        return $this->renderString(str_replace(['<!--', '-->'],'', html_entity_decode($this->template)), $params);
+        return $this->renderString(str_replace(['<!--', '-->'], '', html_entity_decode($this->template)), $params);
+    }
+
+    public static function renderSnippetsInfo(): string
+    {
+        $snippets = array_map(static fn(SnippetModel $model) => "{{{$model->code}}} = {$model->description}", self::objects()->all());
+        return nl2br("Replacements will occur according to the following rules:\n" . implode("\n", $snippets));
     }
 }

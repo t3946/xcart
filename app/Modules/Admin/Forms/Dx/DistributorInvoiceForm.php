@@ -16,6 +16,7 @@ class DistributorInvoiceForm extends DistributorForm
     public function getFieldsets()
     {
         return [[
+            'd_link_to_order_distributors_website',
             'd_invoices_sent_by_email_to',
             'd_invoices_sent_by_fax_to',
             'd_invoices_mailed_to_our_checkbox',
@@ -25,6 +26,13 @@ class DistributorInvoiceForm extends DistributorForm
     public function getFields()
     {
         return [
+            'd_link_to_order_distributors_website' => [
+                'class' => CharField::class,
+                'hint' => LanguageModel::translate('help_dx_link_to_order_text') ?? 'help_dx_link_to_order_text',
+                'label' => 'Link to order on distributor website (use {{orderid}})',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+            ],
             'd_invoices_sent_by_email_to' => [
                 'class' => CheckboxField::class,
                 'label' => ' ',
