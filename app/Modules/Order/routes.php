@@ -42,9 +42,4 @@ return [
         'target' => [OrderLexBotController::class, 'index'],
         'name' => 'order_bot'
     ],
-    [
-        'route' => '/api/shipping-methods',
-        'target' => [OrderProcessController::class, 'getShippingMethods'],
-        'name' => 'get_shipping_methods',
-    ],
 ];

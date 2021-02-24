@@ -152,4 +152,10 @@ class OrderProcessController extends FrontendController
             'payment_methods' => $payment_methods
         ] );
     }
+
+    public function checkoutUpdate():void {
+        echo [
+            'payment_methods_html' => $this->getPaymentMethods(),
+        ];
+    }
 }
