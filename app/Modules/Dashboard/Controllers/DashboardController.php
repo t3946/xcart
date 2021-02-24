@@ -255,13 +255,15 @@ class DashboardController extends PrototypeAdminController
         if (!$user->getIsGuest())
         {
             if ($this->getRequest()->getIsPost()) {
-                $params = ['user_id' => $user->id, 'filter_id' => $id];
-
-                if ($_POST[$class]) {
-                    UserFiltersLinkModel::objects()->getOrCreate($params);
-                }
-                else {
-                    UserFiltersLinkModel::objects()->filter($params)->delete();
+                $user_ids = $_POST[$class]['id'];
+                foreach ($user_ids as $user_id) {
+                    $params = ['user_id' => $user_id, 'filter_id' => $id];
+                    if ($_POST[$class] && $user_id) {
+                        UserFiltersLinkModel::objects()->getOrCreate($params);
+                    }
+                    else {
+                        //UserFiltersLinkModel::objects()->filter($params)->delete();
+                    }
                 }
             }
 
@@ -279,6 +281,8 @@ class DashboardController extends PrototypeAdminController
                 'ids' => $u_ids,
                 'users' => $users,
                 'model' => $user,
+                'all_users' => UserModel::objects()->exclude(['id__in' => array_merge($u_ids, [$user->id])])
+                    ->filter(['status' => 'Y', 'usertype' => 'A'])->order(['firstname'])->all()
             ]);
         }
     }

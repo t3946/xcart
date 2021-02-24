@@ -43,16 +43,27 @@
                 <div class="columns large-12">
                     <form action="{url 'dashboard:filter_subscription' id=$id}" method="post">
                         <div class="item">
-                            <input type="checkbox" name="{$class}[id]" value="{$model->id}" id="sf_id"
+                            <input type="checkbox" {if $model->id|in:$ids }disabled="disabled"{/if} name="{$class}[id]" value="{$model->id}" id="sf_id"
                                    {if $model->id|in:$ids }checked{/if}>
                             <label for="sf_id">
                                 {$model}
                             </label>
                         </div>
+                        {if $model->login === 'pavel'}
+                            {foreach $all_users as $user}
+                                <div class="item">
+                                    <input type="checkbox" name="{$class}[id][]" value="{$user->id}" id="sf_id"
+                                    <label for="sf_id">
+                                        {$user}
+                                    </label>
+                                </div>
+                            {/foreach}
+                        {/if}
                         <input type="submit" value="Apply">
                     </form>
                 </div>
             </div>
+
         </div>
     {/if}
 </div>
