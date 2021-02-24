@@ -167,12 +167,12 @@
                             <div class="table">
                                 <div class="table-body">
                                     <div class="cart-table-row cart-table-row_subtotal">
-                                        <div class="total-tax">
+                                        <div class="total-tax total-sales-tax">
                                             {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                                             <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                                         </div>
 
-                                        <div class="total-tax">
+                                        <div class="total-tax total-vat-tax">
                                             {t 'VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                                             <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                                         </div>
@@ -196,6 +196,7 @@
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
+
                     <div class="shipping-total">
                         <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
                         <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
@@ -203,12 +204,13 @@
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
+
                     <div class="total-tax checkout__total-tax">
-                        <div class="total-tax-sum">
-                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix} 1.80
+                        <div class="total-sales-tax">
+                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">0</span>
                         </div>
-                        <div class="total-tax-sum">
-                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix} 1.80
+                        <div class="total-vat-tax">
+                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">0</span>
                         </div>
                     </div>
 
@@ -220,15 +222,6 @@
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
                     </div>
-                    {*                    <div class="show-for-large">*}
-                    {*                        {foreach $fieldsets['contact'] as $field}*}
-                    {*                            {if $field->name === 'ci_canada_email_confirmation'}*}
-                    {*                                {set $field->containerClass = 'checkout__canada-cods-field'}*}
-                    {*                                {set $field->hintClass = 'common-hint text-left'}*}
-                    {*                                {raw $field->render()}*}
-                    {*                            {/if}*}
-                    {*                        {/foreach}*}
-                    {*                    </div>*}
 
                     {if $hst}
                         <div>

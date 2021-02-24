@@ -1,3 +1,4 @@
+import './Components/checkout/Checkout';
 import './Components/checkout/BillingForm';
 import './Components/checkout/BillingSameShipping';
 import './Components/checkout/DistributorCart';
@@ -6,6 +7,7 @@ import './Components/checkout/ShippingForm';
 import './Components/checkout/ScrollUpButton';
 import './Components/checkout/ShippingMethods';
 import './Components/checkout/CanadaCODs';
+import './Components/checkout/CheckoutTotal';
 
 export default ( function () {
     let timerThrottle = null;

@@ -26,10 +26,11 @@ export const ShippingForm = ( function () {
                     const $carts = $( '.distributor-cart' );
 
                     $shippingGroups
-                        .filter( '.product-group-shipping' )
+                        .filter( '.shipping-methods-group' )
                         .each( function ( i, e ) {
                             const $shippingGroup = $( e );
-                            const $cartShipping = $carts.eq( i ).find( '.product-group-shipping' );
+                            const $cartShipping = $carts.eq( i ).find( '.shipping-methods-group' );
+
                             $cartShipping.html( $shippingGroup.html() );
                         } );
                 },
@@ -55,8 +56,8 @@ export const ShippingForm = ( function () {
         $( '#CheckoutForm_s_state, #CheckoutForm_s_zipcode, #CheckoutForm_s_city, #CheckoutForm_s_country' ).on( 'change-event', updateShippingMethods );
 
         /* phone mask */
-        IMask( document.getElementById('CheckoutForm_ci_phone'), { mask: '(000) 000-0000' } );
-        IMask( document.getElementById('CheckoutForm_ci_phone_ext'), { mask: '00000' } );
+        IMask( document.getElementById( 'CheckoutForm_ci_phone' ), { mask: '(000) 000-0000' } );
+        IMask( document.getElementById( 'CheckoutForm_ci_phone_ext' ), { mask: '00000' } );
     }
 
     constructor.prototype.showFields = function () {

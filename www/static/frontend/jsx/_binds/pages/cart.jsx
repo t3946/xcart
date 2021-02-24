@@ -49,12 +49,14 @@ import _ from 'lodash';
             })
                 .done(data => {
                     let p_data = page_cart.dataset;
+                    console.log('data 1', data);
 
                     if (number_request === n_request && ( p_data.quantity != data.quantity || p_data.total != data.total))
                     {
                         $.get('/cart/?_=' + (new Date).getTime(), {})
                             .done(data => {
                                 if (number_request === n_request) {
+                                    console.log('data 2', data);
                                     //do not update checkout one page
                                     if ($('.checkout-page').length ) {
                                         return;
