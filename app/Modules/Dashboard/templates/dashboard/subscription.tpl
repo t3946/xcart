@@ -49,16 +49,14 @@
                                 {$model}
                             </label>
                         </div>
-                        {if $model->login === 'pavel'}
-                            {foreach $all_users as $user}
-                                <div class="item">
-                                    <input type="checkbox" name="{$class}[id][]" value="{$user->id}" id="sf_id"
-                                    <label for="sf_id">
-                                        {$user}
-                                    </label>
-                                </div>
-                            {/foreach}
-                        {/if}
+                        {foreach $all_users as $user}
+                            <div class="item">
+                                <input type="checkbox" name="{$class}[id][]" value="{$user->id}" id="sf_id"
+                                <label for="sf_id">
+                                    {$user}
+                                </label>
+                            </div>
+                        {/foreach}
                         <input type="submit" value="Apply">
                     </form>
                 </div>
