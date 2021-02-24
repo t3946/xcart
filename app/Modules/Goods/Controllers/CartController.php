@@ -347,4 +347,15 @@ class CartController extends BaseCartController
 
         return $this->addInternal($uniqueId, $quantity);
     }
+
+    public function actionInfo()
+    {
+        $isAjax = $this->getRequest()->getIsAjax();
+        $cart = $this->getCart();
+        if (1==1 || $isAjax) {
+            $this->jsonResponse(
+                $cart->getItemsGroupedBy()
+            );
+        }
+    }
 }
