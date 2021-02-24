@@ -21,6 +21,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
+use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
@@ -632,5 +633,35 @@ HTML;
                 self::submitOrderEntry($order);
             }
         }
+    }
+
+    public function getOrderInfo(OrderModel $order): array
+    {
+        $order_groups = [];
+        foreach ($order->groups as $group) {
+            $taxes = [];
+            foreach ($group->tax_rates as $group_tax) {
+                $tax_name = (string) $group_tax->tax_rate->tax;
+                $taxes[$group_tax->tax_rate->tax] = $tax_name . " Tax: " . CurrentSiteHelper::formatCurrency($group_tax->value);
+            }
+
+            $order_groups[$group->order_group_id] = [
+                'subtotal' => "Subtotal: " . CurrentSiteHelper::formatCurrency($group->total_gross),
+                'taxes' => $taxes,
+            ];
+        }
+
+        $total_taxes = [];
+        foreach ($order->getTaxes() as $tax_name => $tax)  {
+            $total_taxes[$tax_name] = $tax_name . " Tax: " . CurrentSiteHelper::formatCurrency($tax);
+        }
+        return [
+            'groups' => $order_groups,
+            'total' => "Total: " . CurrentSiteHelper::formatCurrency($order->subtotal),
+            'shipping' => "Total Shipping Cost: " . CurrentSiteHelper::formatCurrency($order->shipping_cost),
+            'taxes' => $total_taxes,
+            'grand_total' => "Grand Total: " . CurrentSiteHelper::formatCurrency($order->total),
+        ];
+
     }
 }
