@@ -56,8 +56,8 @@
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
                                 {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                                 <span class="cart__switcher-button switcher-button switcher-button_product-list">
-                                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
-                                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
+                                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
+                                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
                                 </span>
                             </div>
                             <div class="table cart-table_checkout">
@@ -153,7 +153,7 @@
                                             <div class="grid-remove table-column remove">
                                                 <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart-remove-item-button">
                                                     <svg class="cart-remove-icon">
-                                                        <use xlink:href="https://dev1.test.artistsupplysource.com/static/frontend/dist/images/icons/sprite.svg#cross"></use>
+                                                        <use xlink:href="/static/frontend/dist/images/icons/sprite.svg#cross"></use>
                                                     </svg>
                                                 </a>
                                             </div>
