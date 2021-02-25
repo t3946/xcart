@@ -878,6 +878,7 @@ $( document ).ready(function() {
 {foreach from=$oOrderGroups item=oOrderGroup}
     {assign var="key" value=$oOrderGroup->getManufacturerId()}
     {assign var="mnf_id" value=$oOrderGroup->getManufacturerId()}
+    {assign var="distributor_model" value=$oOrderGroup->manufacturer}
     {assign var="v" value=$order_manufacturers.$key}
 
     {assign var=show_to_order_entry_operator value=""}
@@ -885,36 +886,32 @@ $( document ).ready(function() {
     {assign var=show_dispatch_to_distributor value=""}
 
  {if $v.d_availability_must_be_checked eq "Y" && $v.submit_to_operator eq "through_distributor_website"}
-	{if $v.dc_status eq 'T'}
-                {assign var=show_request_availability value="Y"}
-	{/if}
+     {if $v.dc_status eq 'T'}
+         {assign var=show_request_availability value="Y"}
+     {/if}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
-        	{assign var=show_to_order_entry_operator value="Y"}
-	{/if}
+     {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+         {assign var=show_to_order_entry_operator value="Y"}
+     {/if}
 
  {elseif $v.d_availability_must_be_checked eq "Y" && $v.submit_to_operator ne "through_distributor_website"}
 
-        {if $v.dc_status eq 'T'}
-                {assign var=show_request_availability value="Y"}
-        {/if}
+     {if $v.dc_status eq 'T'}
+         {assign var=show_request_availability value="Y"}
+     {/if}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
-	        {assign var=show_dispatch_to_distributor value="Y"}
-	{/if}
+     {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+         {assign var=show_dispatch_to_distributor value="Y"}
+     {/if}
 
  {elseif $v.d_availability_must_be_checked ne "Y" && $v.submit_to_operator eq "through_distributor_website"}
-
-        {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
-                {assign var=show_to_order_entry_operator value="Y"}
-        {/if}
-
+     {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+         {assign var=show_to_order_entry_operator value="Y"}
+     {/if}
  {elseif $v.d_availability_must_be_checked ne "Y" && $v.submit_to_operator ne "through_distributor_website"}
-
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
-	        {assign var=show_dispatch_to_distributor value="Y"}
-	{/if}
-
+     {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+         {assign var=show_dispatch_to_distributor value="Y"}
+     {/if}
  {/if}
 
 {*
@@ -930,23 +927,8 @@ $( document ).ready(function() {
 	{/if}
  {/if}
 
-{*
- {assign var=show_stock_availability_form value=""}
- {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
-	{assign var=show_stock_availability_form value="Y"}
- {/if}
-*}
-
-{*
-<br />For testing:
-<br />show_to_order_entry_operator = '{$show_to_order_entry_operator}'
-<br />show_request_availability = '{$show_request_availability}'
-<br />show_dispatch_to_distributor = '{$show_dispatch_to_distributor}'
-<br /><br /><br />
-*}
-
-
  {if $show_request_availability eq "Y"}
+     {assign var="request_availability_template" value=$distributor_model->request_avail_template}
      <a name="request_availability_{$mnf_id}"></a>
      <form action="order.php" method="post" name="mnf_notifyform_{$mnf_id}">
          <input type="hidden" name="orderid" value="{$order.orderid}"/>
@@ -960,11 +942,17 @@ $( document ).ready(function() {
          <B>{$lng.lbl_to}:</B><br/>
          <input type="text" name="mnf_to" value="{$v.d_send_to_email_14}" style="width: 80%;"/><br/><br/>
          <B>Subject line:</B><br/>
-         <input type="text" name="d_email_subject_14" value="{$v.d_email_subject_14}" style="width: 80%;"/><br/><br/>
+         <input type="text" name="d_email_subject_14" value="{Modules\Forms\Helpers\SnippetHelper::render(
+         $request_availability_template->subject_line|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]
+         )}" style="width: 80%;"/><br/><br/>
          <B>{$lng.lbl_message_body}:</B><br/>
 
-         <textarea rows="30" cols="60" name="request_availability_mnf_body_{$mnf_id}" style="width: 80%;"
-                   class="new_editor">{$v.d_message_body_14|replace:"\n":"<br />"}</textarea>
+         <textarea rows="30" cols="60"
+                   name="request_availability_mnf_body_{$mnf_id}"
+                   style="width: 80%;"
+                   class="new_editor">{Modules\Forms\Helpers\SnippetHelper::render(
+             $request_availability_template->message_body|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]
+             )}</textarea>
 
 
          <input type="hidden" name="mnf_body" value=""/>
@@ -979,156 +967,182 @@ $( document ).ready(function() {
  {/if}
 
 
- {if $show_request_additional_shipping_charge eq "Y"}
+    {if $show_request_additional_shipping_charge eq "Y"}
+        {if $order.shipping_groups.$mnf_id.additional_shipping_status ne "W"}
+            <a name="request_additional_shipping_charge_{$mnf_id}"></a>
+            <form action="order.php" method="post" name="manuf_notify_form_{$mnf_id}">
+                <input type="hidden" name="orderid" value="{$order.orderid}"/>
+                <input type="hidden" name="mnf_id" value="{$mnf_id}"/>
+                <input type="hidden" name="mode" id="mode_request_additional_shipping_charge"
+                       value="request_additional_shipping_charge"/>
+                <div class="ProductTitle" align="center">{$v.manufacturer}: Request additional shipping charge</div>
+                <br/>
 
- {if $order.shipping_groups.$mnf_id.additional_shipping_status ne "W"}
-  <a name="request_additional_shipping_charge_{$mnf_id}"></a>
-  <form action="order.php" method="post" name="manuf_notify_form_{$mnf_id}">
-  <input type="hidden" name="orderid" value="{$order.orderid}" />
-  <input type="hidden" name="mnf_id" value="{$mnf_id}" />
-  <input type="hidden" name="mode" id="mode_request_additional_shipping_charge" value="request_additional_shipping_charge" />
-  <div class="ProductTitle" align="center">{$v.manufacturer}: Request additional shipping charge</div>
-  <br />
+                <table>
+                    <tr>
+                        <td align="right">
+                            Estimated profit =
+                        </td>
+                        <td>
+                            {if $v.estimated_profit_abs ne ""}<span style="color: #FF0000;">
+                                (${$v.estimated_profit_abs})</span>{else}${$v.estimated_profit}{/if}
+                        </td>
+                        <td>
+                            = {if $v.estimated_profit_margin_percent_abs ne ""}<span style="color: #FF0000;">
+                                ({$v.estimated_profit_margin_percent_abs}%)</span>{else}{$v.estimated_profit_margin_percent}%{/if}
+                        </td>
+                    </tr>
 
-  <table>
-  <tr>
-  <td align="right">
-  Estimated profit =
-  </td>
-  <td>
-  {if $v.estimated_profit_abs ne ""}<span style="color: #FF0000;">(${$v.estimated_profit_abs})</span>{else}${$v.estimated_profit}{/if}
-  </td>
-  <td>
-  =  {if $v.estimated_profit_margin_percent_abs ne ""}<span style="color: #FF0000;">({$v.estimated_profit_margin_percent_abs}%)</span>{else}{$v.estimated_profit_margin_percent}%{/if}
-  </td>
-  </tr>
-
-  <tr>
-  <td align="right">
-  Estimated profit after additional payment =
-  </td>
-  <td>
-  {if $v.estimated_profit_after_additional_payment_abs ne ""}<span style="color: #FF0000;">(${$v.estimated_profit_after_additional_payment_abs})</span>{else}${$v.estimated_profit_after_additional_payment}{/if}
-  </td>
-  <td>
-= {if $v.estimated_profit_margin_after_additional_payment_percent_abs ne ""}<span style="color: #FF0000;">({$v.estimated_profit_margin_after_additional_payment_percent_abs}%)</span>{else}{$v.estimated_profit_margin_after_additional_payment_percent}%{/if}
-  </td>
-  </tr>
-  </table>
-
-
-  <br /><br />
-  <B>{$lng.lbl_from}:</B><br />
-  <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_to}:</B><br />
-  <input type="text" name="mnf_to" value="{$customer.email}{if $order.po_details && $config.Additional_shipping_charge.po_copy_to_email ne ""}, {$config.Additional_shipping_charge.po_copy_to_email}{else}{if $config.Additional_shipping_charge.copy_to_email ne ""}, {$config.Additional_shipping_charge.copy_to_email}{/if}{/if}" style="width: 80%;" /><br /><br />
-  <B>Subject line:</B><br />
-  <input type="text" name="d_email_subject_14" value="{$v.additional_shipping_charge_subject_line}" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_message_body}:</B><br />
-
-{*  <textarea rows="20" cols="60" name="mnf_body" style="width: 80%;">{$v.additional_shipping_charge_message}</textarea><br /><br /> *}
-{*  <input type="submit" value="Send (Request additional shipping charge)" /> *}
+                    <tr>
+                        <td align="right">
+                            Estimated profit after additional payment =
+                        </td>
+                        <td>
+                            {if $v.estimated_profit_after_additional_payment_abs ne ""}<span style="color: #FF0000;">
+                                (${$v.estimated_profit_after_additional_payment_abs})</span>{else}${$v.estimated_profit_after_additional_payment}{/if}
+                        </td>
+                        <td>
+                            = {if $v.estimated_profit_margin_after_additional_payment_percent_abs ne ""}<span
+                                    style="color: #FF0000;">
+                                ({$v.estimated_profit_margin_after_additional_payment_percent_abs}%)</span>{else}{$v.estimated_profit_margin_after_additional_payment_percent}%{/if}
+                        </td>
+                    </tr>
+                </table>
 
 
-  {* --- *}
-{*
-  {include file="main/textarea_def.tpl" name="request_additional_shipping_charge_mnf_body_`$mnf_id`" cols="60" rows="30" class="InputWidth" data=$v.additional_shipping_charge_message|replace:"\n":"<br />" width="99%" btn_rows="30"}
-*}
+                <br/><br/>
+                <B>{$lng.lbl_from}:</B><br/>
+                <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly"
+                       style="width: 80%;"/><br/><br/>
+                <B>{$lng.lbl_to}:</B><br/>
+                <input type="text" name="mnf_to"
+                       value="{$customer.email}{if $order.po_details && $config.Additional_shipping_charge.po_copy_to_email ne ""}, {$config.Additional_shipping_charge.po_copy_to_email}{else}{if $config.Additional_shipping_charge.copy_to_email ne ""}, {$config.Additional_shipping_charge.copy_to_email}{/if}{/if}"
+                       style="width: 80%;"/><br/><br/>
+                <B>Subject line:</B><br/>
+                <input type="text" name="d_email_subject_14" value="{$v.additional_shipping_charge_subject_line}"
+                       style="width: 80%;"/><br/><br/>
+                <B>{$lng.lbl_message_body}:</B><br/>
 
-  <textarea rows="30" cols="60" name="request_additional_shipping_charge_mnf_body_{$mnf_id}" style="width: 80%;" class="new_editor">{$v.additional_shipping_charge_message|replace:"\n":"<br />"}</textarea>
+                <textarea rows="30" cols="60" name="request_additional_shipping_charge_mnf_body_{$mnf_id}"
+                          style="width: 80%;"
+                          class="new_editor">{$v.additional_shipping_charge_message|replace:"\n":"<br />"}</textarea>
 
-  <input type="hidden" name="mnf_body" value="" />
-  <br /><br />
-  <input name="send_email_button" type="button" value="Send (Request additional shipping charge)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notify_form_{$mnf_id}, 'request_additional_shipping_charge_', 'mnf_body', {$mnf_id});" {if $allowed_elements.send_request_additional_shipping_charge_btn eq "N"}disabled="disabled"{/if} /> {if $allowed_elements.send_request_additional_shipping_charge_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}<br /><br />
-  {* --- *}
-
-
-  <input type="button" value="Waive" onclick="javascript: $('#mode_request_additional_shipping_charge').val('waive'); tinyMCE.triggerSave(); this.form.submit();" {if $allowed_elements.waive_request_additional_shipping_charge_btn eq "N"}disabled="disabled"{/if} /> {if $allowed_elements.waive_request_additional_shipping_charge_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}
-  <br /><br />
-  <hr /><br />
-
-  </form>
- {/if}
- {/if}
+                <input type="hidden" name="mnf_body" value=""/>
+                <br/><br/>
+                <input name="send_email_button" type="button" value="Send (Request additional shipping charge)"
+                       onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notify_form_{$mnf_id}, 'request_additional_shipping_charge_', 'mnf_body', {$mnf_id});"
+                       {if $allowed_elements.send_request_additional_shipping_charge_btn eq "N"}disabled="disabled"{/if} /> {if $allowed_elements.send_request_additional_shipping_charge_btn eq "N"}&nbsp;&nbsp;<span
+                    style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}<br/><br/>
+                {* --- *}
 
 
+                <input type="button" value="Waive"
+                       onclick="javascript: $('#mode_request_additional_shipping_charge').val('waive'); tinyMCE.triggerSave(); this.form.submit();"
+                       {if $allowed_elements.waive_request_additional_shipping_charge_btn eq "N"}disabled="disabled"{/if} /> {if $allowed_elements.waive_request_additional_shipping_charge_btn eq "N"}&nbsp;&nbsp;
+                    <span style="color: #FF0000;">You are NOT authorized to click this button.</span>
+                {/if}
+                <br/><br/>
+                <hr/>
+                <br/>
+
+            </form>
+        {/if}
+    {/if}
     {if $v.dc_status eq "DP"}
         {assign var="show_dispatch_to_distributor" value="N"}
     {/if}
 
  {if $show_dispatch_to_distributor eq "Y" && $order.fraud_status eq "C" && $order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0}
-
+     {assign var="dispatch_template" value=$distributor_model->order_submit_template}
   <a name="dispatch_to_distributor_{$mnf_id}"></a>
-  <form action="order.php" method="post" name="manuf_notifyform_{$mnf_id}">
-  <input type="hidden" name="orderid" value="{$order.orderid}" />
-  <input type="hidden" name="mnf_id" value="{$mnf_id}" />
-  <input type="hidden" name="mode" value="mnf_notify" />
-  <input type="hidden" name="show_s3stores_site_in_invoice" value="Y" />
-  <input type="hidden" name="cidev_hide_invoice" value="Y" />
-  <div class="ProductTitle" align="center">{$v.manufacturer}: Dispatch to distributor</div>
-  <B>{$lng.lbl_from}:</B><br />
-  <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_to}:</B><br />
-  <input type="text" name="mnf_to" value="{$v.email}" style="width: 80%;" /><br /><br />
-  <B>Subject line:</B><br />
-  <input type="text" name="d_email_subject_14" value="{$v.d_subject_line_8}" style="width: 80%;" /><br /><br />
-  <B>{$lng.lbl_message_body}:</B><br />
+     <form action="order.php" method="post" name="manuf_notifyform_{$mnf_id}">
+         <input type="hidden" name="orderid" value="{$order.orderid}"/>
+         <input type="hidden" name="mnf_id" value="{$mnf_id}"/>
+         <input type="hidden" name="mode" value="mnf_notify"/>
+         <input type="hidden" name="show_s3stores_site_in_invoice" value="Y"/>
+         <input type="hidden" name="cidev_hide_invoice" value="Y"/>
+         <div class="ProductTitle" align="center">{$v.manufacturer}: Dispatch to distributor</div>
+         <B>{$lng.lbl_from}:</B><br/>
+         <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly"
+                style="width: 80%;"/><br/><br/>
+         <B>{$lng.lbl_to}:</B><br/>
+         <input type="text" name="mnf_to" value="{$v.email}" style="width: 80%;"/><br/><br/>
+         <B>Subject line:</B><br/>
+         <input type="text" name="d_email_subject_14" value="{Modules\Forms\Helpers\SnippetHelper::render(
+            $dispatch_template->subject_line|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]
+         )}" style="width: 80%;"/><br/><br/>
+         <B>{$lng.lbl_message_body}:</B><br/>
 
-  <textarea rows="30" cols="60" name="dispatch_to_distributor_mnf_body_{$mnf_id}" style="width: 80%;" class="new_editor">{$v.mess_body|replace:"\n":"<br />"}</textarea>
+         <textarea rows="30" cols="60"
+                   name="dispatch_to_distributor_mnf_body_{$mnf_id}"
+                   style="width: 80%;"
+                   class="new_editor">
+            {Modules\Forms\Helpers\SnippetHelper::render(
+                $dispatch_template->message_body|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]
+            )}
+         </textarea>
 
-  <input type="hidden" name="mnf_body" value="" />
-  <br />
+         <input type="hidden" name="mnf_body" value=""/>
+         <br/>
 
-  {if $v.submit_to_operator eq "by_email_or_and_fax" && $customer.s_country != "US"}
-  {$config.SF_localization_options.outside_sf_localization_warning}
-  <br />
-  <br />
-  {/if}
+         {if $v.submit_to_operator eq "by_email_or_and_fax" && $customer.s_country != "US"}
+             {$config.SF_localization_options.outside_sf_localization_warning}
+             <br/>
+             <br/>
+         {/if}
 
-{if $v.submit_to_operator eq "by_email_or_and_fax" && $v.d_dispatch_instructions ne ""}
-{$v.d_dispatch_instructions}<br /><br />
-{else}
-{$lng.lbl_send_dispatch_to_distributor}<br />
-{/if}
-  <table>
-  <tr>
-  {if $v.d_shipping_options_arr ne ""}
-  <td>
-        <select name="d_shipping_options_name">
-        {foreach from=$v.d_shipping_options_arr item=vv key=kk}
-                <option value="{$vv|trademark:$insert_trademark}">{$vv|trademark:$insert_trademark}</option>
-        {/foreach}
-        </select>
-  </td>
-  {/if}
+         {if $v.submit_to_operator eq "by_email_or_and_fax" && $v.d_dispatch_instructions ne ""}
+             {$v.d_dispatch_instructions}
+             <br/>
+             <br/>
+         {else}
+             {$lng.lbl_send_dispatch_to_distributor}
+             <br/>
+         {/if}
+         <table>
+             <tr>
+                 {if $v.d_shipping_options_arr ne ""}
+                     <td>
+                         <select name="d_shipping_options_name">
+                             {foreach from=$v.d_shipping_options_arr item=vv key=kk}
+                                 <option value="{$vv|trademark:$insert_trademark}">{$vv|trademark:$insert_trademark}</option>
+                             {/foreach}
+                         </select>
+                     </td>
+                 {/if}
 
-  <td>
-   {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" && $v.allow_dispatch_off_working_hours eq "Y"}
-	<input type="hidden" name="bad_time_do_not_send_email" value="Y" />
+                 <td>
+                     {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" && $v.allow_dispatch_off_working_hours eq "Y"}
+                         <input type="hidden" name="bad_time_do_not_send_email" value="Y"/>
+                         <input name="send_email_button" type="button" value="Send (Off-hours dispatch to distributor)"
+                                onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});"
+                                style="background-color: #fff2cc;"/>
+                     {else}
 
-	<input name="send_email_button" type="button" value="Send (Off-hours dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" style="background-color: #fff2cc;" />
+                         <input name="send_email_button" type="button" value="Send (Dispatch to distributor)"
+                                onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});"
+                                {if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}disabled="disabled"{/if} />{if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}&nbsp;&nbsp;
+                         <span style="color: #FF0000;">You are NOT authorized to click this button.</span>
+                     {/if}
 
-   {else}
-
-	<input name="send_email_button" type="button" value="Send (Dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" {if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}disabled="disabled"{/if} />{if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}
-
-   {/if}
-{assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
-&nbsp;Requested shipping method:
-<span style="color: red;">
+                     {/if}
+                     {assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
+                     &nbsp;Requested shipping method:
+                     <span style="color: red;">
 {if ($oOrderGroup->getRealShippingMethod() eq '')}
-  {$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}
+    {$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}
 {else}
-  {$oOrderGroup->getRealShippingMethod()}
+    {$oOrderGroup->getRealShippingMethod()}
 {/if}
 </span>
-  </td>
-  </tr>
-  </table>
-  <br />
+                 </td>
+             </tr>
+         </table>
+         <br/>
 
-  <hr /><br />
-  </form>
+         <hr/>
+         <br/>
+     </form>
   {/if}
 
 {/foreach}
