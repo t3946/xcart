@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 (()=>{
     let getValues = e => {
-
         let el = e.target;
         let $this = $(e.target);
         let $container = $this.closest('.quantity-group');
@@ -13,9 +12,6 @@ import _ from 'lodash';
         let max = parseInt($input.attr('max'));
         let min = parseInt($input.attr('min'));
         let data_min = parseInt($input.data('min'));
-
-        if (val > max) {val = max;}
-        if (val < min) {val = min;}
 
         return {
             '$this': $this,
@@ -95,5 +91,15 @@ import _ from 'lodash';
             // params.$input.val(params.val);
             recheckActives(e, params);
         })
-        .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => recheckActives(e));
+        .on( 'change blur propertychange mousewheel keyup', '.quantity-group input', function ( e ) {
+            const params = getValues( e );
+
+            //correct value after edition
+            if ( [ 'blur', 'change', 'focusout' ].indexOf( e.type ) > -1 ) {
+                if (params.val > params.max) {params.val = params.max;}
+                if (params.val < params.min) {params.val = params.min;}
+            }
+
+            recheckActives( e, params );
+        } );
 })();

@@ -131,13 +131,15 @@
                                                 <div class="table-column quantity">
                                                     <div class="inline-block">
                                                         <div class="quantity-group">
-                                                            <a href="{url 'cart:quantity:dec' key=$key}" class="btn active dec quantity-group-dec">-</a>
+                                                            <a href="{url 'cart:quantity:dec' key=$key}"
+                                                               class="btn dec quantity-group-dec {if $position->quantity > $position->object->min_amount}active{/if}"
+                                                            >-</a>
                                                             <input type="number" name="quantity"
                                                                    min="{$position->object->min_amount}"
                                                                    max="{$position->object->avail}"
                                                                    step="{if $position->object->mult_order_quantity == 'Y'}{$position->object->min_amount}{else}1{/if}"
                                                                    value="{$position->quantity}">
-                                                            <a href="{url 'cart:quantity:inc' key=$key}" class="btn active inc quantity-group-inc">+</a>
+                                                            <a href="{url 'cart:quantity:inc' key=$key}" class="btn inc quantity-group-inc {if $position->quantity < $position->object->avail}active{/if}">+</a>
                                                         </div>
                                                     </div>
                                                 </div>
