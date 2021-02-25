@@ -43,7 +43,7 @@
                 <div class="columns large-12">
                     <form action="{url 'dashboard:filter_subscription' id=$id}" method="post">
                         <div class="item">
-                            <input type="checkbox" {if $model->id|in:$ids }disabled="disabled"{/if} name="{$class}[id]" value="{$model->id}" id="sf_id"
+                            <input type="checkbox" {if $model->id|in:$ids }disabled="disabled"{/if} name="{$class}[id][]" value="{$model->id}" id="sf_id"
                                    {if $model->id|in:$ids }checked{/if}>
                             <label for="sf_id">
                                 {$model}
