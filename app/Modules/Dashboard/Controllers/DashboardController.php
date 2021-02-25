@@ -65,17 +65,15 @@ class DashboardController extends PrototypeAdminController
             $data['questions'] = $this->render('dashboard/_product_question.tpl', ['questions' => $questionModels,]);
 
             $this->jsonResponse($data);
-        }
-        else {
-
+        } else {
             $add_tabs = GlobalConfigModel::objects()->filter(['category' => 'Order_Dashboard_Tabs'])->all();
 
             echo $this->renderInternal('dashboard/index.tpl',
                 [
-                    'models'  => $models,
+                    'models' => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
                     'myModels' => $myModels,
-                    'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                    'groups' => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                     'questions' => $questionModels,
                     'inquiries' => $inquiries,
                     'inquiries_tags' => $inquiries_tags,
@@ -93,10 +91,10 @@ class DashboardController extends PrototypeAdminController
 
         echo $this->renderInternal('dashboard/index.tpl',
             [
-                'models'  => $models,
+                'models' => $models,
                 'row_col' => DashboardFilter::getMaxRowCol(),
                 'myModels' => $myModels,
-                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                'groups' => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 'questions' => $questionModels,
                 'inquiries' => $inquiries,
                 'inquiries_tags' => $inquiries_tags,
@@ -117,10 +115,10 @@ class DashboardController extends PrototypeAdminController
 
         echo $this->renderInternal('dashboard/index.tpl',
             [
-                'models'  => $models,
+                'models' => $models,
                 'row_col' => DashboardFilter::getMaxRowCol(),
                 'myModels' => $myModels,
-                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                'groups' => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 'questions' => $questionModels,
                 'inquiries' => $inquiries,
                 'inquiries_tags' => $inquiries_tags,
@@ -169,11 +167,11 @@ class DashboardController extends PrototypeAdminController
                     array_merge(
                         SearchHelper::getFormAndListData(),
                         [
-                            'modify'        => $modify,
-                            'model'         => $model,
-                            'pager'         => $pager,
-                            'models'        => $models,
-                            'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                            'modify' => $modify,
+                            'model' => $model,
+                            'pager' => $pager,
+                            'models' => $models,
+                            'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                             'form_collapse' => true,
                         ]
                     )
@@ -195,8 +193,7 @@ class DashboardController extends PrototypeAdminController
                     'columns' => $admin->buildListColumns(),
                 ]);
             }
-        }
-        else {
+        } else {
             $this->redirect('dashboard:index');
         }
     }
@@ -208,8 +205,8 @@ class DashboardController extends PrototypeAdminController
         echo $this->renderInternal('dashboard/admin/admin_list.tpl',
             [
                 'row_col' => DashboardFilter::getMaxRowCol(),
-                'models'  => $models,
-                'groups'  => GroupModel::objects()->all(),
+                'models' => $models,
+                'groups' => GroupModel::objects()->all(),
             ]
         );
     }
@@ -218,11 +215,9 @@ class DashboardController extends PrototypeAdminController
     {
         /** @var Model|ModelInterface $model */
         if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']])) {
-
             $model->setAttributes($_POST);
 
             if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
-
                 $this->jsonResponse(['message' => "Filter '{$model}' saved on position {$model->position_row}x{$model->position_column}"]);
             }
         }
@@ -231,9 +226,7 @@ class DashboardController extends PrototypeAdminController
     public function mySort(): void
     {
         /** @var Model|ModelInterface $model */
-        if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
-        {
-
+        if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']])) {
             $user = Xcart::app()->user;
             [$model] = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
@@ -241,7 +234,6 @@ class DashboardController extends PrototypeAdminController
             $model->setAttributes($_POST);
 
             if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
-
                 $this->jsonResponse(['message' => "Filter '{$filter_model}' saved on position {$model->position_row}x{$model->position_column}"]);
             }
         }
@@ -252,16 +244,16 @@ class DashboardController extends PrototypeAdminController
         $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
 
-        if (!$user->getIsGuest())
-        {
+        if (!$user->getIsGuest()) {
             if ($this->getRequest()->getIsPost()) {
-                $params = ['user_id' => $user->id, 'filter_id' => $id];
-
-                if ($_POST[$class]) {
-                    UserFiltersLinkModel::objects()->getOrCreate($params);
-                }
-                else {
-                    UserFiltersLinkModel::objects()->filter($params)->delete();
+                $user_ids = $_POST[$class]['id'];
+                foreach ($user_ids as $user_id) {
+                    $params = ['user_id' => $user_id, 'filter_id' => $id];
+                    if ($_POST[$class] && $user_id) {
+                        UserFiltersLinkModel::objects()->getOrCreate($params);
+                    } else {
+                        //UserFiltersLinkModel::objects()->filter($params)->delete();
+                    }
                 }
             }
 
@@ -279,6 +271,12 @@ class DashboardController extends PrototypeAdminController
                 'ids' => $u_ids,
                 'users' => $users,
                 'model' => $user,
+                'all_users' => $user->login === 'pavel'
+                    ? UserModel::objects()
+                        ->exclude(['id__in' => array_merge($u_ids, [$user->id])])
+                        ->filter(['status' => 'Y', 'usertype' => 'A'])
+                        ->order(['firstname'])
+                    : []
             ]);
         }
     }
@@ -293,8 +291,7 @@ class DashboardController extends PrototypeAdminController
     {
         if (!is_null($id) && $model = DashboardFilter::objects()->get(['id' => $id])) {
             $this->createOrUpdate($model);
-        }
-        else {
+        } else {
             $this->redirect('dashboard:admin_filters');
         }
     }
@@ -324,8 +321,8 @@ class DashboardController extends PrototypeAdminController
             array_merge(
                 SearchHelper::getFormAndListData(),
                 [
-                    'model'     => $model,
-                    'groups'    => GroupModel::objects()->all(),
+                    'model' => $model,
+                    'groups' => GroupModel::objects()->all(),
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
                 ]
             )
