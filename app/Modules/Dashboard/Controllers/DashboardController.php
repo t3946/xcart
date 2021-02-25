@@ -255,7 +255,7 @@ class DashboardController extends PrototypeAdminController
                         UserFiltersLinkModel::objects()->getOrCreate($params);
                     }
                 }
-                if ($user_ids && $user->login === $super_user) {
+                if ($user_ids && $is_super_user) {
                     UserFiltersLinkModel::objects()
                         ->exclude(['user_id__in' => $user_ids])
                         ->filter(['filter_id' => $id])

@@ -312,7 +312,8 @@ class DistributorModel extends Model
             ],
             'd_order_entry_operator_email' => [
                 'class' => CharField::class,
-                'default' => 'order.entry@s3stores.com'
+                'default' => 'order.entry@s3stores.com',
+                'verboseName' => 'Order entry operator email'
             ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
