@@ -243,6 +243,7 @@ class DashboardController extends PrototypeAdminController
     {
         $user = Xcart::app()->user;
         $super_user = 'pavel';
+        $is_super_user = $user->login === $super_user;
         $class = UserModel::classNameShort();
 
         if (!$user->getIsGuest()) {
@@ -276,7 +277,8 @@ class DashboardController extends PrototypeAdminController
                 'ids' => $u_ids,
                 'users' => $users,
                 'model' => $user,
-                'all_users' => $user->login === $super_user
+                'is_super_user' => $is_super_user,
+                'all_users' => $is_super_user
                     ? UserModel::objects()
                         ->exclude(['id__in' => array_merge($u_ids, [$user->id])])
                         ->filter(['status' => 'Y', 'usertype' => 'A'])

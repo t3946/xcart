@@ -22,7 +22,7 @@
                     <div class="item">
                         <div class="row">
                             <div class="columns large-12">
-                                <input type="checkbox" name="{$class}[id][]" value="{$user->id}" checked readonly>
+                                <input type="checkbox" name="{$class}[id][]" value="{$user->id}" checked readonly {if !$is_super_user}disabled{/if}>
                                 {$user}
                             </div>
                         </div>
