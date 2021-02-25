@@ -6,8 +6,10 @@ namespace Modules\Shipping\Models;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -39,23 +41,51 @@ class ShippingRateModel extends Model
     {
         return [
             'rateid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
+            ],
+            'maxamount' => [
+                'class' => IntField::class,
+                'default' => 0,
+            ],
+            'minweight' => [
+                'class' => DecimalField::class,
+                'default' => 0,
+            ],
+            'maxweight' => [
+                'class' => DecimalField::class,
+                'default' => 999999.99,
+            ],
+            'mintotal' => [
+                'class' => DecimalField::class,
+                'default' => 0,
+            ],
+            'maxtotal' => [
+                'class' => DecimalField::class,
+                'default' => 999999.99,
+            ],
+            'rate' => [
+                'class' => DecimalField::class,
+                'default' => 0,
+            ],
+            'item_rate' => [
+                'class' => DecimalField::class,
+                'default' => 0,
             ],
             'shipping' => [
                 'field' => 'shippingid',
-                'class' => ForeignField::className(),
-                'modelClass' => ShippingModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ShippingModel::class,
                 'link' => ['shippingid' => 'shippingid'],
             ],
             'distributor' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
             ],
             'zone_element_country' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ZoneElementModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ZoneElementModel::class,
                 'link' => ['zoneid' => 'zoneid'],
                 'extra' => ['field_type' => 'C']
             ],

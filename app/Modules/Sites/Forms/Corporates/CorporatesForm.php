@@ -74,7 +74,7 @@ class CorporatesForm extends ModelForm
 
     public function getModel()
     {
-        return new CorporateModel;
+        return new CorporateModel();
     }
 
     public function getFields()
@@ -91,12 +91,14 @@ class CorporatesForm extends ModelForm
                     }
                     return $result ?? [];
                 },
+                'depends' => ['state']
             ],
             'state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
                 'html' => ['style' => 'width:200px;'],
                 'choices' => static function () use ($entity) {
+                    $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->country ?? 'US']]) as $state) {
                         $result[$state->stateid] = "{$state->country_code}: {$state}";
                     }

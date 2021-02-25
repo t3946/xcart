@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Core\Components;
 
 use ArrayAccess;
@@ -41,25 +42,21 @@ class GlobalConfig implements ArrayAccess, Iterator
     private function prepareData($data)
     {
         $config = [];
-        if ($this->old_mode)
-        {
+        if ($this->old_mode) {
             foreach ($data as $row) {
                 if (!empty($row['category'])) {
-
                     if (!isset($this->data[$row['category']])) {
                         $config[$row['category']] = new self;
                     }
 
                     $config[$row['category']][$row['name']] = $row['value'];
                     $this->checked[$row['category']] = true;
-                }
-                else {
+                } else {
                     $config[$row['name']] = $row['value'];
                     $this->checked[$row['name']] = true;
                 }
             }
-        }
-        else {
+        } else {
             foreach ($data as $row) {
                 $config[$row['name']] = $row['value'];
 
@@ -74,13 +71,13 @@ class GlobalConfig implements ArrayAccess, Iterator
     {
         $data = null;
 
-        if (!is_null($key))
-        {
+        if (!is_null($key)) {
             $data = GlobalConfigModel::objects()
-                                     ->filter(['name' => $key])
-                                     ->orFilter(['category' => $key])
-                                     ->exclude(['type' => 'separator'])
-                                     ->valuesList(['name', 'value', 'category']);
+                ->filter(['name' => $key])
+                ->orFilter(['category' => $key])
+                ->exclude(['type' => 'separator'])
+                ->cache(60)
+                ->valuesList(['name', 'value', 'category']);
             if ($data) {
                 $this->prepareData($data);
             }
@@ -95,7 +92,7 @@ class GlobalConfig implements ArrayAccess, Iterator
 
     public function getAllData()
     {
-        $data = GlobalConfigModel::objects()->exclude(['type' => 'separator'])->valuesList(['name', 'value', 'category']);
+        $data = GlobalConfigModel::objects()->exclude(['type' => 'separator'])->cache(60)->valuesList(['name', 'value', 'category']);
 
         $this->prepareData($data);
 
@@ -176,7 +173,7 @@ class GlobalConfig implements ArrayAccess, Iterator
     public function saveCache()
     {
         if ($this->data) {
-            Xcart::app()->cache->set('config_global_cache', ['data' => $this->data , 'checked' => $this->checked], 35);
+            Xcart::app()->cache->set('config_global_cache', ['data' => $this->data, 'checked' => $this->checked], 35);
         }
     }
 }

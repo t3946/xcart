@@ -26,7 +26,6 @@ class XCart extends Cart
     {
         $groups = [];
 
-        /** @var \Modules\Cart\Components\CartItem $cartItem */
         foreach ($this->getItems() as $key => $cartItem)
         {
             $gi = $cartItem->getObject()->{$property};

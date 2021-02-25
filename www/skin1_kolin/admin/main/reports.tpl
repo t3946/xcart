@@ -23,6 +23,10 @@
 <a href="{$catalogs.admin}/operators_activity_reports.php" class="VertMenuItems">Operators activity report</a><br />
 
 <a href="{$catalogs.admin}/list_inventory_supply_reports.php" class="VertMenuItems">List Inventory Supply report</a><br />
+
+    <a href="{$xcartApp->router->url('admin:list', ['module' => 'Dashboard', 'admin' => 'DashboardFilterStatisticAdmin'])}" class="VertMenuItems">
+        Dashboard filters statistic
+    </a><br />
 {/if}
 
 {/capture}

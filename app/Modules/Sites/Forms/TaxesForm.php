@@ -5,6 +5,7 @@ namespace Modules\Sites\Forms;
 
 
 use Modules\Goods\Admin\OptionVariantsAdmin;
+use Modules\Sites\Admin\SitesAdmin;
 use Modules\Sites\Admin\TaxRatesAdmin;
 use Modules\Sites\Models\TaxModel;
 use Xcart\App\Form\Fields\ListViewField;
@@ -12,11 +13,11 @@ use Xcart\App\Form\ModelForm;
 
 class TaxesForm extends ModelForm
 {
-    public array $exclude = ['position'];
+    public array $exclude = ['position', 'sites'];
 
     public function getModel()
     {
-        return new TaxModel;
+        return new TaxModel();
     }
 
     public function getName()
@@ -31,6 +32,7 @@ class TaxesForm extends ModelForm
                 'class' => ListViewField::class,
                 'adminClass' => TaxRatesAdmin::class,
                 'listTemplate' => 'admin/list/_list.tpl'
-            ]];
+            ]
+        ];
     }
 }

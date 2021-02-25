@@ -32,6 +32,7 @@
             $input[ 0 ].type = 'hidden';
 
             const $link = $( '.{$id}_current-image' );
+            const $img = $link.find( 'img' );
             const blob = await fetch( 'https://cors-anywhere.herokuapp.com/' + url ).then( r => r.blob() );
 
             $link.css( 'display', 'inline-block' );

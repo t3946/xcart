@@ -2,7 +2,7 @@
     <div class="column price">
 
         <div class="value">
-            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($price)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}{if $discount}<span class="discount {if $discount}show{/if}">{$discount}%</span>{/if}
+            {$price|site_currency}{if $discount}<span class="discount {if $discount}show{/if}">{$discount}%</span>{/if}
         </div>
     </div>
 

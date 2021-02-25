@@ -91,7 +91,7 @@ class DefaultController extends AbstractCatalogController
             'categoryid__in' => $this->getQS($data)->select(['categories__categoryid']),
             'storefrontid' => $siteModule->getSite()->storefrontid,
             'active_product_count__gt' => 0,
-        ]);
+        ])->cache(3600);
 
         $categories = $qs->order(['category'])->all();
 

@@ -5,6 +5,7 @@ namespace Modules\Forms\Admin;
 
 
 use Modules\Admin\Contrib\Admin;
+use Modules\Admin\Contrib\NestedAdmin;
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Forms\Forms\TemplateCategoryForm;
 use Modules\Forms\Forms\TemplateFilterForm;
@@ -14,7 +15,7 @@ use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 
-class TemplateCategoryAdmin extends Admin
+class TemplateCategoryAdmin extends NestedAdmin
 {
 
     public static $public = false;
@@ -30,12 +31,12 @@ class TemplateCategoryAdmin extends Admin
 
     public function getForm()
     {
-        return new TemplateCategoryForm;
+        return new TemplateCategoryForm();
     }
 
     public function getModel()
     {
-        return new TemplateCategoryModel;
+        return new TemplateCategoryModel();
     }
 
     public static function getName()

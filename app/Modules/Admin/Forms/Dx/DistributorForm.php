@@ -47,7 +47,7 @@ class DistributorForm extends ModelForm
         ],
         'Product and inventory management' => [
             5 => [
-                'title' => 'Distributor pricing equations',
+                'title' => 'Distributor pricing',
                 'form' => DistributorPriceForm::class,
                 'required' => true,
             ],
@@ -66,7 +66,7 @@ class DistributorForm extends ModelForm
                 'hidden' => true
             ],
             40 => [
-                'title' => 'External marketplaces',
+                'title' => 'Forbidden API interactions',
                 'form' => DistributorExcludedMarketplacesForm::class,
                 'required' => true,
             ],
@@ -78,7 +78,7 @@ class DistributorForm extends ModelForm
         ],
         'Submitting order to distributor' => [
             14 => [
-                'title' => 'Requesting availability / shipping quote / cost to us',
+                'title' => 'Requesting availability / cost to us / shipping cost',
                 'form' => DistributorRequestAvailForm::class,
                 'required' => true,
             ],
@@ -163,15 +163,12 @@ class DistributorForm extends ModelForm
         return new DistributorModel();
     }
 
-    /*public static function getSections(): array
+    public static function getSections(): array
     {
         $vrs = Xcart::app()->user->hasRoles(['vrs', 'vrv']);
         foreach (parent::getSections() as $key => $section) {
-            $res[$key] = array_filter($section, static function ($s) use ($vrs) {
-                return !($s['hidden'] === true && $vrs === true);
-            });
-
+            $res[$key] = array_filter($section, static fn($s) => !(($vrs === true) && $s['hidden'] ?? false === true));
         }
         return $res ?? [];
-    }*/
+    }
 }

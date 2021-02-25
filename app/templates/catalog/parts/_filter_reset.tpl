@@ -26,7 +26,7 @@
                 {if $item.values.prices.min != $item.values.selected.min || $item.values.prices.max != $item.values.selected.max}
                     <div class="column column-block filter_item fv-remove-{$item.key}" data-group="fv-group-{$item.key}" data-type="price">
                         <div class="fi_container">
-                            {t 'Price from'} {$item.values.selected.min} {t 'to'} {$item.values.selected.max}
+                            {t 'Price from'} {$item.values.selected.min|htmlentities} {t 'to'} {$item.values.selected.max|htmlentities}
                         </div>
                     </div>
                 {/if}

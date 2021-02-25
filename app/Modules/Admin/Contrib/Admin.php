@@ -16,8 +16,11 @@ use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\TreeForeignField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
+use Xcart\App\Orm\TreeManager;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Template\Renderer;
@@ -406,7 +409,7 @@ abstract class Admin
      */
     public function getOrder()
     {
-        $order = isset($_GET['order']) ? $_GET['order'] : null;
+        $order = $_GET['order'] ?? null;
         if ($order) {
             $clean = $order;
             $asc = true;
@@ -451,11 +454,28 @@ abstract class Admin
             if ($value && $model_field = $this->getModel()->getFieldsInit()[$key]) {
                 if ($model_field instanceof ManyToManyField) {
                     $key = "{$model_field->getName()}__{$model_field->getRelatedModelPk()}";
+                    if (is_array($value)) {
+                        $qs->filter(["{$key}__in" => $value]);
+                    } else {
+                        $qs->filter([$key => $value]);
+                    }
                 }
-                if ($model_field instanceof ForeignField) {
+                elseif ($model_field instanceof TreeForeignField) {
+                    [$lft, $rgt, $root] = $model_field->getRelatedModel()::objects()->filter(['pk' => $value])->valuesList(['lft', 'rgt', 'root'], true);
+                    $qs->filter([
+                        "{$model_field->getName()}__lft__gte" => $lft,
+                        "{$model_field->getName()}__rgt__lte" => $rgt,
+                        "{$model_field->getName()}__root" => $root,
+                    ]);
+                }
+                elseif ($model_field instanceof ForeignField) {
                     $key = "{$model_field->getName()}__{$model_field->getTo()}";
-                }
-                if (is_array($value)) {
+                    if (is_array($value)) {
+                        $qs->filter(["{$key}__in" => $value]);
+                    } else {
+                        $qs->filter([$key => $value]);
+                    }
+                } elseif (is_array($value)) {
                     $qs->filter(["{$key}__in" => $value]);
                 } else {
                     $qs->filter([$key => $value]);
@@ -525,11 +545,11 @@ abstract class Admin
     }
 
     /**
-     * @param $qs QuerySet
-     * @return mixed
+     * @param $qs QuerySet|Manager
+     * @return QuerySet|Manager
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function fixSort(QuerySet $qs): QuerySet
+    public function fixSort($qs)
     {
         if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
             $newQs = clone($qs);
@@ -889,10 +909,10 @@ abstract class Admin
     }
 
     /**
-     * @param $qs QuerySet
+     * @param $qs QuerySet|Manager
      * @return bool
      */
-    public function getCanSort(QuerySet $qs): bool
+    public function getCanSort($qs): bool
     {
         if ($this->sort) {
             $order = $qs->getOrder();
@@ -902,8 +922,12 @@ abstract class Admin
         return false;
     }
 
-    public function sort($pkList, $to, $prev, $next): void
+    public function sort($pkList, $to, $prev, $next, $id = null): void
     {
+        if ($id) {
+            $this->parent_pk = $id;
+        }
+
         $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
         $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);

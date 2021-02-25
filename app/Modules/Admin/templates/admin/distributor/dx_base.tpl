@@ -40,7 +40,7 @@
                 </td>
                 <td width="*">
                     <h1 style="text-align: left">{$distributorModel} ({$distributorModel->code}) /
-                        <a style="color: #0101F7;" href="{$distributorModel->getAdminOrdersUrl(6)}" target="_blank">
+                        <a style="color: #0101F7; text-transform: none;" href="{$distributorModel->getAdminOrdersUrl(6)}" target="_blank">
                             Last 6 months of order history
                         </a>
                     </h1>

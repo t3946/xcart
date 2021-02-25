@@ -1129,47 +1129,8 @@ $( document ).ready(function() {
 
   <hr /><br />
   </form>
-  {/if} 
-
- {if $show_to_order_entry_operator eq "Y" && $order.fraud_status eq "C" && ($order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0)}
-  <a name="order_entry_{$mnf_id}"></a>
-  <form action="order.php" method="post" name="mnf_notify_form_{$mnf_id}">
-  <input type="hidden" name="orderid" value="{$order.orderid}" />
-  <input type="hidden" name="mnf_id" value="{$mnf_id}" />
-  <input type="hidden" name="mode" value="cidev_send_email_to_operator" />
-  <div class="ProductTitle" align="center">{$v.manufacturer}: Order entry</div>
-  <br />
-  <B>Order entry operator email:</B> {$v.d_order_entry_operator_email}<br />
-  <br />
-  <B>Subject line:</B><br />
-  <input type="text" name="d_email_subject_14" value="{$v.d_order_entry_operator_subject_line_8}" style="width: 80%;" /><br /><br />
-  <B>Instructions to order entry operator:</B>
-  <br />
-{*  <textarea rows="20" cols="60" name="mnf_body" style="width: 80%;">{$v.d_instructions_to_order_entry_operator}</textarea><br /><br /> *}
-{*  <input type="submit" value="Submit to order entry operator" /><br /><br /> *}
-
-  {* --- *}
-{*
-  {include file="main/textarea_def.tpl" name="order_entry_mnf_body_`$mnf_id`" cols="60" rows="30" class="InputWidth" data=$v.d_instructions_to_order_entry_operator|replace:"\n":"<br />" width="99%" btn_rows="30"}
-*}
-
-  <textarea rows="30" cols="60" name="order_entry_mnf_body_{$mnf_id}" style="width: 80%;" class="new_editor">{$v.d_instructions_to_order_entry_operator|replace:"\n":"<br />"}</textarea>
-
-  <input type="hidden" name="mnf_body" value="" />
-  <br />
-
-  {if $v.submit_to_operator eq "through_distributor_website" && $customer.s_country != "US"}
-  {$config.SF_localization_options.outside_sf_localization_warning}
-  <br />
-  <br />
   {/if}
 
-  <input {if $allowed_elements.submit_order_entry_btn eq "N"}disabled="disabled"{/if} name="send_email_button" type="button" value="Submit to order entry operator" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.mnf_notify_form_{$mnf_id}, 'order_entry_', 'mnf_body', {$mnf_id});" />{if $allowed_elements.submit_order_entry_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}<br /><br />
-  {* --- *}
-
-  <hr /><br />
-  </form>
- {/if}
 {/foreach}
 
 

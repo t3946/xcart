@@ -22,9 +22,7 @@
     <td class="actions">
         {include $admin->listItemActionsTemplate}
         {if !$child && $item->message_id !== $item->thread_id}
-            <a onclick="$('[data-thread-id={$item->thread_id}]').show(); $('i', this).addClass('fa-minus').removeClass('fa-plus'); event.stopPropagation(); return false;"
-               href="#"
-               class="">
+            <a href="#">
                 <i class="fa fa-plus"></i>
             </a>
         {/if}

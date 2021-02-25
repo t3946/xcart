@@ -14,7 +14,7 @@ class DistributorQuestionableProductsForm extends DistributorForm
     public function getFieldsets()
     {
         return [
-            'Dx offers the following products <b>prohibited by PayPal</b>' => [
+            'Distributor offers the following products <b>prohibited by PayPal</b>' => [
                 'd_questionable_1',
                 'd_questionable_2',
                 'd_questionable_3',
@@ -25,7 +25,7 @@ class DistributorQuestionableProductsForm extends DistributorForm
                 'd_questionable_8',
                 'd_questionable_9',
             ],
-            'Dx offers the following products requiring <b>approval by PayPal</b>' => [
+            'Distributor offers the following products requiring <b>approval by PayPal</b>' => [
                 'd_questionable_10',
                 'd_questionable_11',
                 'd_questionable_12',

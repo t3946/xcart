@@ -69,12 +69,15 @@ class CategoryController extends AbstractCatalogController
 
     public function actionList()
     {
-        $categories = CategoryModel::objects()->filter([
-            'level' => 1,
-            'active_product_count__gt' => 0,
-            'avail' => 'Y',
-            'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
-        ])->order('order_by')->all();
+        $categories = CategoryModel::objects()
+            ->filter([
+                'level' => 1,
+                'active_product_count__gt' => 0,
+                'avail' => 'Y',
+                'storefrontid' => Xcart::app()->getModule('Sites')->getSite()
+            ])
+            ->cache(3600)
+            ->order('order_by')->all();
 
         $this->setMetaBase(MetaType::CATLIST, [
             'model' => Xcart::app()->getModule('Sites')->getSite(),

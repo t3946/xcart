@@ -8,8 +8,9 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
+use Xcart\App\Orm\TreeModel;
 
-class TemplateCategoryModel extends Model
+class TemplateCategoryModel extends TreeModel
 {
     public static function tableName()
     {
@@ -18,7 +19,7 @@ class TemplateCategoryModel extends Model
 
     public static function getFields()
     {
-        return [
+        return array_merge([
             'id' => AutoField::class,
             'name' => [
                 'class' => CharField::class,
@@ -27,12 +28,12 @@ class TemplateCategoryModel extends Model
             'pos' => [
                 'class' => IntField::class,
                 'default' => 0,
-            ]
-        ];
+            ],
+        ], parent::getFields());
     }
 
     public function __toString()
     {
-        return (string) ($this->pk ? $this->name : 'Template category');
+        return (string)($this->pk ? $this->name : 'Template category');
     }
 }

@@ -174,7 +174,7 @@ class CategoryModel extends TreeModel
         return $this->getObjects()->descendants($includeSelf, $level)->filter([
             'avail' => 'Y',
             'active_product_count__gt' => 0,
-        ]);
+        ])->cache(3600);
     }
 
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
@@ -191,7 +191,7 @@ class CategoryModel extends TreeModel
             $qs->asTree();
         }
 
-        return $qs->all();
+        return $qs->cache(3600)->all();
     }
 
     public function afterDelete($owner)

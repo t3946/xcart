@@ -16,6 +16,8 @@ namespace Xcart\App\Template;
 
 
 use Fenom;
+use Modules\Sites\Helpers\CurrentSiteHelper;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
@@ -118,6 +120,10 @@ class TemplateManager
         });
         $this->_renderer->addModifier('not_in', function($variable, $array) {
             return !array_key_exists($variable, $array);
+        });
+
+        $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
+            return CurrentSiteHelper::formatCurrency($variable);
         });
 
         $this->_renderer->addAccessorSmart("app", "app", Fenom::ACCESSOR_PROPERTY);

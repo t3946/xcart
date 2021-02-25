@@ -28,6 +28,9 @@ class CorsMiddleware extends Middleware
             header('Access-Control-Allow-Methods: ' . (is_string($this->methods) ? $this->methods : implode(', ', $this->methods)));
             header('Access-Control-Allow-Headers: ' . (is_string($this->headers) ? $this->headers : implode(', ', $this->headers)));
 
+            header('X-XSS-Protection: 1; mode=block');
+            header('X-Frame-Options: SAMEORIGIN');
+
             // respond to preflights
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
                 exit;

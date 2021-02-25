@@ -6,6 +6,6 @@
 
 {block 'main_block'}
     <div class="email-all admin-page all-page">
-        {include 'admin/list/_list.tpl'}
+        {include 'admin/list/_email_list.tpl'}
     </div>
 {/block}

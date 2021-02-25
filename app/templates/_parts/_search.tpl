@@ -4,7 +4,7 @@
                name='q'
                class="search"
                placeholder="{$config.cidev_header_code}"
-               value="{$.app->request->get->get('q', '')}"
+               value="{$.app->request->get->get('q', '')|htmlentities}"
                itemprop="query-input"
                data-suggestion-url="{$.app->router->url('catalog:search:suggestion')}"
                autocomplete="off"

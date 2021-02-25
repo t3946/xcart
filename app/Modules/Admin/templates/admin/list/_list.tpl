@@ -61,6 +61,7 @@
                                 {/foreach}
                             </th>
                         {/if}
+
                     </tr>
                 </thead>
                 <tbody>

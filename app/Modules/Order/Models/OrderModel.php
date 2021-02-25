@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use DateInterval;
@@ -17,6 +18,8 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Models\TaxModel;
+use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -121,11 +124,11 @@ class OrderModel extends Model
         return 'xcart_orders';
     }
 
-    public static  function getFields()
+    public static function getFields()
     {
         return [
             'orderid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'date' => [
                 'class' => UnixTimestampField::class,
@@ -152,8 +155,8 @@ class OrderModel extends Model
                 'default' => null,
             ],
             'groups' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderGroupModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderGroupModel::class,
                 'link' => ['orderid' => 'orderid'],
             ],
             'tags' => [
@@ -162,13 +165,13 @@ class OrderModel extends Model
                 'through' => OrderAdditionalTagLinkModel::class,
             ],
             'transactions' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderTransactionModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderTransactionModel::class,
                 'link' => ['orderid' => 'orderid']
             ],
             'transactions_log' => [
-                'class' => HasManyField::className(),
-                'modelClass' => TransactionLogModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => TransactionLogModel::class,
                 'link' => ['orderid' => 'orderid']
             ],
             'shipping_state' => [
@@ -239,8 +242,8 @@ class OrderModel extends Model
             ],
             'fraud_status_model' => [
                 'field' => 'fraud_status',
-                'class' => ForeignField::className(),
-                'modelClass' => FraudStatusModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => FraudStatusModel::class,
                 'link' => ['fraud_status' => 'code'],
                 'sqlType' => Types::STRING,
                 'null' => false,
@@ -271,13 +274,13 @@ class OrderModel extends Model
                 'link' => ['orderid' => 'orderid'],
             ],
             'extra' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => ''
             ],
             'extra_info' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderExtrasModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderExtrasModel::class,
                 'link' => ['orderid' => 'orderid'],
             ],
             'payment_method_model' => [
@@ -375,8 +378,7 @@ class OrderModel extends Model
     public function afterFetchDataModel($model)
     {
         /** @var OrderGroupModel $group */
-        foreach ($this->groups as $group)
-        {
+        foreach ($this->groups as $group) {
             $model->orderGroup = $group->getDataModel();
         }
     }
@@ -448,7 +450,7 @@ class OrderModel extends Model
         }
     }
 
-    public function getAddressInfo() : array
+    public function getAddressInfo(): array
     {
         $info[] = [
             'address' => explode("\n", $this->s_address, 2),
@@ -493,11 +495,11 @@ class OrderModel extends Model
         return $shipping['country']->code === 'CA' && $this->groups->exclude(['manufacturer__m_country' => 'CA'])->count();
     }
 
-    public function getEstimatedDeliveryDate():? DateTime
+    public function getEstimatedDeliveryDate(): ?DateTime
     {
         $max_day = null;
 
-        foreach($this->groups as $group){
+        foreach ($this->groups as $group) {
             /** @var ShippingModel $shipping */
             if (!$shipping = $group->shippingModel) {
                 break;
@@ -519,7 +521,7 @@ class OrderModel extends Model
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
 
-    public function getCxDateTime():? DateTime
+    public function getCxDateTime(): ?DateTime
     {
         if ($time_zone = $this->billing_state->timezone) {
             return new DateTime('now', new DateTimeZone($time_zone));
@@ -529,7 +531,7 @@ class OrderModel extends Model
 
     public function getBillingAddressString(): string
     {
-        [,$b_address] = $this->getAddressInfo();
+        [, $b_address] = $this->getAddressInfo();
         return $b_address['address'][0] . ($b_address['address'][1] ? ", {$b_address['address'][1]}" : '') . ", {$b_address['city']}, {$b_address['state']->code}, {$b_address['zipcode']}";
     }
 
@@ -568,7 +570,6 @@ class OrderModel extends Model
 
     public function getOrderCancelLink()
     {
-
     }
 
     public function isPurchaseOrder()
@@ -597,7 +598,7 @@ class OrderModel extends Model
         return $tracks;
     }
 
-    public function getLastAuthorizationTransaction():? OrderTransactionModel
+    public function getLastAuthorizationTransaction(): ?OrderTransactionModel
     {
         return $this->transactions
             ->filter([
@@ -614,8 +615,6 @@ class OrderModel extends Model
         return "S3 Stores, Inc. Order # {$this->getOrderNumber()}";
     }
 
-
-
     public function updateVerificationStatus(): void
     {
         if ($this->vn_status !== ($new_status = OrderHelper::getOrderVerificationStatus($this))) {
@@ -623,5 +622,31 @@ class OrderModel extends Model
         }
     }
 
+    public function getAltItems(): array
+    {
+        if ($this->alt_items && $a = explode(',', $this->alt_items)) {
+            return ProductModel::forsale()->filter(['productcode__in' => $a])->all();
+        }
+        return [];
+    }
+    
+    public function getShippingCost(): float
+    {
+        return array_reduce($this->groups->all(), static fn($c, $i) => $c + $i->shipping_gross);
+    }
 
+    /**
+     * @return array
+     */
+    public function getTaxes(): array
+    {
+        $res = [];
+        $groups = array_map(static fn($group) => $group->tax_rates->all(), $this->groups->all());
+        foreach ($groups as $group) {
+            foreach ($group as $tax_rate) {
+                $res[(string)$tax_rate->tax_rate->tax] += $tax_rate->value;
+            }
+        }
+        return $res;
+    }
 }

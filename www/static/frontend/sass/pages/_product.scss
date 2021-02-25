@@ -47,6 +47,7 @@
   .block__title_price {
     @include breakpoint(large up) {
       max-width: 100%;
+      z-index: 1;
 
       .sku {
         line-height: 2;

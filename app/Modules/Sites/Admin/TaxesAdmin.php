@@ -51,7 +51,7 @@ class TaxesAdmin extends Admin
 
     public function getForm()
     {
-        return new TaxesForm;
+        return new TaxesForm();
     }
 
     public function getModel()
@@ -68,6 +68,11 @@ class TaxesAdmin extends Admin
     {
         return ['add'];
     }
+
+    /*public function isAjaxUpdate(): bool
+    {
+        return true;
+    }*/
 
     public function isAjaxCreate(): bool
     {

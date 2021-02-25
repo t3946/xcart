@@ -27,7 +27,7 @@ $(document).on('click', '.action_block.sort .options li', function(e){
                 success : (data)=>{
 
                     window.loader.load();
-                    window.location = window.location;
+                    window.location.reload();
                 }
             })
         });

@@ -58,12 +58,12 @@
                                     {include "checkout/_parts/_options.tpl" item=$item}
                                 </div>
                                 <div class="price-info hide-for-medium">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                    {$item->price|site_currency}
                                 </div>
                             </div>
 
                             <div class="order-table-cell price-info show-for-medium">
-                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($item->price)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                {$item->price|site_currency}
                             </div>
 
                             <div class="order-table-cell quantity show-for-large">
@@ -71,41 +71,43 @@
                             </div>
 
                             <div class="order-table-cell extended show-for-large">
-                                {set $extended = $item->amount * $item->price}
-                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp;<span class="price">{$site_currency->getCurrencyFormat($extended)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                {($item->amount * $item->price)|site_currency}
                             </div>
                         </div>
                     {/foreach}
                 </div>
                 <div class="group-info order-table-row">
                     {set $shippingModel = $order_group->shippingModel}
+                    {set $is_tax_applied = $order_group->total_tax > 0}
                     {if $shippingModel}
                         <div class="sum-info shipping">
-                                <span class="sum-info-label underline">
+                                <span class="sum-info-label{if !$is_tax_applied} underline{/if}">
                                     {if $shippingModel->is_free_shipping}
                                         {$shippingModel->getFrontendName()}:
                                     {else}
                                         {t 'Shipping by' } {$shippingModel->getFrontendName()}:
                                     {/if}
                                     {* не должно быть пробела! *}
-                                </span><span class="sum underline">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order_group->shipping_gross)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                </span><span class="sum{if !$is_tax_applied} underline{/if}">
+                                    {$order_group->shipping_gross|site_currency}
                                 </span>
                         </div>
                     {/if}
-                    {*<div class="sum-info shipping">*}
-                                {*<span class="sum-info-label underline">*}
-                                    {*{t 'Shipping by' } dsfsdfsdsddf:*}
-                                {*</span><span class="sum underline">*}
-                                    {*US$ <span class="price">123.45</span>*}
-                        {*</span>*}
-                    {*</div>*}
+                    {if $order_group->total_tax}
+                        {foreach $order_group->tax_rates as $group_tax}
+                            <div class="sum-info tax-info">
+                                <div class="sum underline">
+                                    {$group_tax->tax_rate->tax}: {$group_tax->value|site_currency}
+                                </div>
+                            </div>
+                        {/foreach}
+                    {/if}
                     <div class="sum-info sum-price-info">
                         <span class="sum-info-label">
                             {t 'Subtotal' }:
                         </span>
                         <span class="sum">
-                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order_group->total_gross)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                            {$order_group->total_gross|site_currency}
                         </span>
                     </div>
                 </div>
@@ -124,15 +126,23 @@
         <div class="order-total">
             <div class="info-row total">
                 <span class="label">{t 'Total' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}</span>
+                <span class="sum">{$order->subtotal|site_currency}</span>
             </div>
             <div class="info-row total-shipping">
                 <span class="label">{t 'Total Shipping Cost' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}</span>
+                <span class="sum">{$order->shipping_cost|site_currency}</span>
+            </div>
+            <div class="info-row tax-info">
+                {foreach $order->getTaxes() as $tax_name => $tax_rate}
+                    <div class="sum-info tax-info">
+                        <span class="label">{t 'Total'}  {$tax_name}:</span>
+                        <span class="sum">{$tax_rate|site_currency}</span>
+                    </div>
+                {/foreach}
             </div>
             <div class="info-row grand-total">
                 <span class="label">{t 'Grand Total' }:</span>
-                <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}</span>
+                <span class="sum">{$order->total|site_currency}</span>
             </div>
         </div>
     </div>

@@ -94,6 +94,10 @@ footer {
     .payment-methods {
       margin: -3px;
 
+      @include breakpoint(large) {
+        margin: -5px;
+      }
+
       img {
         width: 46px;
         height: 28px;
@@ -103,6 +107,7 @@ footer {
         @include breakpoint(large) {
           width: 54px;
           height: 36px;
+          padding: 5px;
         }
       }
     }

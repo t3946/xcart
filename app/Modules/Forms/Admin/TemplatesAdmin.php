@@ -67,9 +67,6 @@ class TemplatesAdmin extends Admin
         }
         $qs = parent::handleFilter($qs, $form);
 
-        if ($form->department->getValue() === null) {
-            $qs->filter(['department__isnull' => true]);
-        }
         if ($form->category->getValue() === '') {
             $qs->filter(['category_id__isnull' => true]);
         }
@@ -78,8 +75,8 @@ class TemplatesAdmin extends Admin
 
     public function getItemProperty(Model $item, $property)
     {
-        if ($property === 'department') {
-            return ($field = $item->getField($property)) ? $field->toText() : '';
+        if (($property === 'category') && $category = $item->category) {
+            return implode(" > ", $category->getObjects()->ancestors(true)->order(['lft'])->all());
         }
         return parent::getItemProperty($item, $property);
     }
@@ -99,5 +96,24 @@ class TemplatesAdmin extends Admin
     public function isAjaxCreate(): bool
     {
         return true;
+    }
+
+    public function applyOrder($qs)
+    {
+        $order = $this->getOrder();
+
+        if ($order && isset($order['raw'])) {
+            $qs->order([
+                $order['raw']
+            ]);
+        } else if ($this->sort) {
+            $qs->order([
+                'category__root',
+                'category__level',
+                'category__pos',
+                $this->sort
+            ]);
+        }
+        return $qs;
     }
 }

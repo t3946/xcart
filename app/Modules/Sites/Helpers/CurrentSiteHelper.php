@@ -52,4 +52,18 @@ class CurrentSiteHelper
         }
     }
 
+    public static function formatCurrency($value): string
+    {
+        if (($site = Xcart::app()->getModule('Sites')->getSite()) && $site_currency = $site->getCurrency()) {
+            $arr = [
+                $site_currency->symbol_prefix,
+                !$site_currency->after ? $site_currency : '',
+                " <span class=\"price\">{$site_currency->getCurrencyFormat($value)}</span>",
+                $site_currency->after ? $site_currency : '',
+            ];
+            return trim(implode('', $arr));
+        }
+        return '';
+    }
+
 }

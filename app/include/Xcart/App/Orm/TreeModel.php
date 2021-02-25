@@ -27,27 +27,27 @@ abstract class TreeModel extends Model
     {
         return [
             'parent' => [
-                'class' => TreeForeignField::className(),
+                'class' => TreeForeignField::class,
                 'modelClass' => get_called_class(),
                 'null' => true,
             ],
             'lft' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'editable' => false,
                 'null' => true,
             ],
             'rgt' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'editable' => false,
                 'null' => true,
             ],
             'level' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'editable' => false,
                 'null' => true,
             ],
             'root' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'editable' => false,
                 'null' => true,
             ],

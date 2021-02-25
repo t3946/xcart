@@ -83,34 +83,28 @@ class ViewedRelatedProducts
         if ($this->_search_with_categories) {
             if (!empty($categories) && is_array($categories)) {
                 $cats = implode(',', $categories);
-                $to_sql = "and c.categoryid in ({$cats})";
+                $to_sql = "join xcart_products_categories c ON c.productid = P.productid and c.categoryid in ({$cats}) ";
             }
         }
 
-        $sql =  /** @lang MySQL */ <<<SQL
-select SP.*
-from (
-    select SP.*
-    from xcart_cidev_surf_path SP
-    where SP.meta_id = (SELECT id FROM xcart_cidev_surf_meta WHERE sessid='{$this->ssid}' limit 1)
-      and SP.resource_type in ('S') 
-      and SP.meta_id > 0
-      and SP.position = (select max(sp1.position) from xcart_cidev_surf_path sp1 where sp1.meta_id = SP.meta_id and sp1.resource_type = 'S')
-    group by SP.resource_id, SP.additional_data
-    
-    union
-    
-    select SP.*
-    from xcart_cidev_surf_path SP
-    join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
-    join xcart_products_categories c ON c.productid = P.productid {$to_sql}
-    
-    where SP.meta_id = (SELECT id FROM xcart_cidev_surf_meta WHERE sessid='{$this->ssid}' limit 1)
-      and SP.resource_type in ('P') 
-      and SP.meta_id > 0
-    group by SP.resource_id
-) as SP
-order by FIELD(SP.resource_type, 'S', 'P') asc, SP.position desc
+        $sql =  /** @lang MySQL */
+            <<<SQL
+SELECT SP.*
+FROM xcart_cidev_surf_path SP
+INNER JOIN xcart_cidev_surf_meta M ON M.id = SP.meta_id
+INNER JOIN xcart_products P ON P.productid = SP.resource_id AND P.forsale = 'Y'
+{$to_sql}
+WHERE sessid='{$this->ssid}' AND SP.resource_type in ('P') 
+GROUP BY resource_id
+UNION 
+(
+SELECT SP.*
+FROM xcart_cidev_surf_path SP
+INNER JOIN xcart_cidev_surf_meta M ON M.id = SP.meta_id
+WHERE sessid='{$this->ssid}' AND SP.resource_type in ('S')
+ORDER BY POSITION DESC
+LIMIT 1)
+ORDER BY FIELD(resource_type, 'S', 'P'), POSITION DESC;
 SQL;
 
         $resources = Xcart::app()->db->getConnection()->fetchAll($sql);

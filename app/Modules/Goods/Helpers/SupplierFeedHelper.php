@@ -400,6 +400,7 @@ class SupplierFeedHelper
         if (!empty($data)) {
             foreach ($data as $f_name => $fv_name_arr) {
                 if (!empty($fv_name_arr)) {
+                    $f_name = trim($f_name);
                     [$filterModel] = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
                     if (!is_array($fv_name_arr)) {
                         $fv_name_arr = [$fv_name_arr];

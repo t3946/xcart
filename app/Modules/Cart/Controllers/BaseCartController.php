@@ -43,11 +43,7 @@ abstract class BaseCartController extends FrontendController
     {
         $isAjax = $this->getRequest()->getIsAjax();
         $cart = $this->getCart();
-        $order = OrderHelper::getCartOrder();
-        dd([
-            $order->shipping_cost,
-            $order->shipping_cost + $order->total,
-        ]);
+
         if ($isAjax) {
             $this->jsonResponse([
                 'status' => true,

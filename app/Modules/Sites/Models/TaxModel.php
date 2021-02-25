@@ -9,8 +9,12 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string apply_to
+ */
 class TaxModel extends Model
 {
     public static function tableName(): string
@@ -73,6 +77,11 @@ class TaxModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => TaxRatesModel::class,
                 'link' => ['taxid' => 'taxid'],
+            ],
+            'sites' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => SiteModel::class,
+                'through' => SiteTaxModel::class,
             ],
         ];
     }

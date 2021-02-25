@@ -21,7 +21,7 @@ class TemplateForm extends ModelForm
 
     public function getModel()
     {
-        return new TemplateModel;
+        return new TemplateModel();
     }
 
     public function getFields()
@@ -30,24 +30,17 @@ class TemplateForm extends ModelForm
             'message_body' => [
                 'class' => EditorField::class,
             ],
-            'department' => [
-                'class' => DropDownField::class,
-                'choices' => [
-                    'customer' => 'Customer',
-                    'distributor' => 'Distributor',
-                    'our_customer_service' => 'Our customer service',
-                    'third_party' => 'Third party',
-                ],
-            ],
             'category' => [
                 'class' => DropDownField::class,
+                'inputTemplate' => 'forms/field/dropdown/input_nested.tpl',
                 'required' => true,
                 'extend' => 'category_link',
                 'choices' => function () {
-                    foreach (TemplateCategoryModel::objects()->order(['pos']) as $category) {
-                        $result[$category->id] = (string)$category;
+                    foreach (TemplateCategoryModel::objects()->order(['root', 'level', 'pos']) as $category) {
+                        $level = $category['level'] ? $category['level'] - 1 : $category['level'];
+                        $list[$category['id']] = $level ? str_repeat("..", $level) . ' ' . $category['name'] : $category['name'];
                     }
-                    return $result ?? [];
+                    return $list ?? [];
                 },
             ],
             'category_link' => [

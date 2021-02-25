@@ -358,6 +358,10 @@
 
         }
 
+        &.tax-info {
+          color: #154159;
+        }
+
         &.sum-price-info {
           color: #9a1524;
         }
@@ -424,6 +428,11 @@
       &.total-shipping {
         color: $forest_green;
       }
+
+      &.tax-info {
+        color: #154159;
+      }
+
       &.grand-total {
         color: #9a1524;
         text-transform: uppercase;

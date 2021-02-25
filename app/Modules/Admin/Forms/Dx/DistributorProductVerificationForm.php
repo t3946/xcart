@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 
@@ -27,6 +28,7 @@ class DistributorProductVerificationForm extends DistributorForm
                 'label' => 'Tick the checkbox if product verification is NOT required',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_products_always_verify_text'),
                 'html' => ['style' => 'width:1em;'],
             ],
             'days_before_verify' => [
@@ -34,6 +36,7 @@ class DistributorProductVerificationForm extends DistributorForm
                 'label' => 'How long [in days] product verification remains valid?',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_days_before_verify_text'),
                 'html' => ['style' => 'width:100px;'],
             ],
         ];

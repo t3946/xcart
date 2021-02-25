@@ -805,7 +805,7 @@ class OrderSearchStore extends BaseStore
         return (int)Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
     }
 
-    public function getCachedPriorityShippingCount()
+    public function getCachedPriorityShippingCount():? int
     {
         $count = null;
 
@@ -881,7 +881,7 @@ class OrderSearchStore extends BaseStore
         return 0;
     }
 
-    public function getCachedEventsCount()
+    public function getCachedEventsCount():? int
     {
         $user = Xcart::app()->user;
 
