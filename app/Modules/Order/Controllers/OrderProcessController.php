@@ -160,6 +160,8 @@ class OrderProcessController extends FrontendController
             return;
         }
 
+
+
         $price = time() % 1000000 / 100;
 
         $response = [
