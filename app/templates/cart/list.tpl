@@ -125,15 +125,7 @@
 
                                     <div class="table-column quantity">
                                         <div class="inline-block">
-                                            <div class="quantity-group">
-                                                <a href="{url 'cart:quantity:dec' key=$key}" class="btn active dec">-</a>
-                                                <input type="number" name="quantity"
-                                                       min="{$position->object->min_amount}"
-                                                       max="{$position->object->avail}"
-                                                       step="{if $position->object->mult_order_quantity == 'Y'}{$position->object->min_amount}{else}1{/if}"
-                                                       value="{$position->quantity}">
-                                                <a href="{url 'cart:quantity:inc' key=$key}" class="btn active inc">+</a>
-                                            </div>
+                                            {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity}
                                         </div>
 
                                     </div>

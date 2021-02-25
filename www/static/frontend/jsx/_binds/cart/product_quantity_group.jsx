@@ -25,15 +25,15 @@ import _ from 'lodash';
     };
 
     let recheckActives = (e, params = getValues(e)) => {
-
-        params.$container.find('.btn').removeClass('active');
+        console.log('remove quantity-group-btn_active');
+        params.$container.find('.quantity-group-btn').removeClass('quantity-group-btn_active');
 
         if (params.val < params.max) {
-            params.$container.find('.btn.inc').addClass('active');
+            params.$container.find('.quantity-group-btn_inc').addClass('quantity-group-btn_active');
         }
 
         if (params.val > params.min) {
-            params.$container.find('.btn.dec').addClass('active');
+            params.$container.find('.quantity-group-btn_dec').addClass('quantity-group-btn_active');
         }
 
         let product = params.element.closest('[data-product]');
@@ -75,23 +75,23 @@ import _ from 'lodash';
     };
 
     $(document)
-        .on('click', '.quantity-group .btn', e => {
+        .on('click', '.quantity-group-btn', e => {
             e.preventDefault();
 
             let params = getValues(e);
 
-            if (params.$this.hasClass('inc') && params.val < params.max) {
+            if (params.$this.hasClass('quantity-group-btn_inc') && params.val < params.max) {
                 params.val += parseInt(params.$input.attr('step'));
             }
 
-            if (params.$this.hasClass('dec') && params.val > params.min) {
+            if (params.$this.hasClass('quantity-group-btn_dec') && params.val > params.min) {
                 params.val -= parseInt(params.$input.attr('step'));
             }
 
             // params.$input.val(params.val);
             recheckActives(e, params);
         })
-        .on( 'change blur propertychange mousewheel keyup', '.quantity-group input', function ( e ) {
+        .on( 'change blur propertychange mousewheel keyup', '.quantity-group-input', function ( e ) {
             const params = getValues( e );
 
             //correct value after edition

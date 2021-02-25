@@ -128,21 +128,7 @@
                                             </div>
 
                                             <div class="grid-counter table-wrapper cart-column-quantity quantity-extended">
-                                                <div class="table-column quantity">
-                                                    <div class="inline-block">
-                                                        <div class="quantity-group">
-                                                            <a href="{url 'cart:quantity:dec' key=$key}"
-                                                               class="btn dec quantity-group-dec {if $position->quantity > $position->object->min_amount}active{/if}"
-                                                            >-</a>
-                                                            <input type="number" name="quantity"
-                                                                   min="{$position->object->min_amount}"
-                                                                   max="{$position->object->avail}"
-                                                                   step="{if $position->object->mult_order_quantity == 'Y'}{$position->object->min_amount}{else}1{/if}"
-                                                                   value="{$position->quantity}">
-                                                            <a href="{url 'cart:quantity:inc' key=$key}" class="btn inc quantity-group-inc {if $position->quantity < $position->object->avail}active{/if}">+</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity}
                                             </div>
 
                                             <div class="grid-multiplier table-column cart-column-multiply-sign">x</div>
@@ -209,10 +195,12 @@
 
                     <div class="total-tax checkout__total-tax">
                         <div class="total-sales-tax">
-                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">0</span>
+                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                            <span class="price">0</span>
                         </div>
                         <div class="total-vat-tax">
-                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price">0</span>
+                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                            <span class="price">0</span>
                         </div>
                     </div>
 
