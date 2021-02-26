@@ -90,6 +90,13 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 ? $('.by_email').closest('tr').show().closest('form').find('.by_site').closest('tr').hide()
                 : $('.by_site').closest('tr').show().closest('form').find('.by_email').closest('tr').hide()"]
             ],
+            'd_order_entry_operator_email' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'html' => ['class' => 'by_site'],
+            ],
             'order_entry_template' => [
                 'class' => DropDownField::class,
                 'fieldTemplate' => $this->fieldTemplate,

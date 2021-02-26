@@ -17,6 +17,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Manager;
@@ -41,6 +42,7 @@ use Xcart\OrderGroup;
  * @property bool notify_sent
  * @property Manager|OrderDetailModel[] detail_models
  * @property float total_tax
+ * @property OrderOffHourMessageModel|null off_hours_message
  */
 class OrderGroupModel extends Model
 {
@@ -139,6 +141,11 @@ class OrderGroupModel extends Model
             'memos' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupMemoModel::class,
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
+            ],
+            'off_hours_message' => [
+                'class' => HasToOneField::class,
+                'modelClass' => OrderOffHourMessageModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'tax_rates' => [

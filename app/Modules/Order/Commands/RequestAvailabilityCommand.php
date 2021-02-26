@@ -72,5 +72,6 @@ class RequestAvailabilityCommand extends Command
                 ))->save();
             }
         }
+        print"Done!\n";
     }
 }

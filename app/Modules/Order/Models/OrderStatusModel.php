@@ -41,6 +41,7 @@ class OrderStatusModel extends Model
     public const ORDER_DC_STATUS_PENDING_ADDL_PAYMENT = 'M';
     public const ORDER_DC_STATUS_SHIPPED_BACKORDERED = 'G';
     public const ORDER_DC_STATUS_RECEIVED_BY_AMAZON = 'DA';
+    public const ORDER_DC_STATUS_PENDING_DISPATCH = 'DP';
     public const ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR = 'L';
     public const ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED  = 'C';
 
