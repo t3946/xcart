@@ -11,5 +11,5 @@
         <span class="text">{t 'Add to cart'}</span>
         <span class="wait-text">{t 'Added'}</span>
     </a>
-    <a href="/cart/" class="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout">Checkout</a>
+    <a href="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}" class="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout">Checkout</a>
 </div>

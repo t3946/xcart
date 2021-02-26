@@ -664,4 +664,8 @@ HTML;
         ];
 
     }
+
+    public static function getCheckoutUrl():string {
+        return '/checkout/shipping/';
+    }
 }
