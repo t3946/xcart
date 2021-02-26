@@ -166,6 +166,9 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $body = html_entity_decode($template_model->message_body);
 
     $group = reset($order['shipping_groups'])['oOrderGroup'];
+    if ($manufacturerid) {
+        $group = $order['shipping_groups'][$manufacturerid]['oOrderGroup'];
+    }
     $order_model = $group->order;
     $subject = SnippetHelper::render($subject, [
         'site' => $order_model->site,
