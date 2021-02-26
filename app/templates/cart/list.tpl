@@ -1,36 +1,38 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 {block 'content'}
-{set $cartEmpty = $.app->cart->getIsEmpty()}
+{set $isCartEmpty = $.app->cart->getIsEmpty()}
 {add $site = $.getSite}
 {add $site_currency = $site->getCurrency()}
 <section class="cart-page cart_shipping-page">
-    <div class="row">
-        <div class="columns large-12">
-            <div class="head_line">
+    <div class="row head_line">
+        <div class="columns small-6 medium-3">
+            <div class="b-back">
+                <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                    {t 'Shop more'}
+                </a>
+            </div>
+        </div>
 
+        <div class="columns small-12 medium-6 {if $isCartEmpty}align-self-middle{/if}">
+            {if $isCartEmpty}
+                <h2 class="text-center">{t 'Your shopping cart is empty'}</h2>
+            {else}
+                <h2 class="cart-number-header">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
+            {/if}
+        </div>
+
+        <div class="columns small-6 medium-3">
+            {if !$isCartEmpty}
                 <div class="b-next">
                     <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
                         {t 'Checkout'}
                     </a>
                 </div>
-
-                <div class="b-back">
-                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                       {t 'Shop more'}
-                    </a>
-                </div>
-
-
-                {if !$cartEmpty}
-                <div class="head">
-                    <div class="nop"></div>
-                    <h2 class="cart-number">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
-                </div>
-                {/if}
-            </div>
-
-
-
+            {/if}
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-12">
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}
             {set $warehouse  = $.get_warehouse($gi) }
@@ -195,7 +197,7 @@
 
             <div class="hr"></div>
 
-            {if !$cartEmpty}
+            {if !$isCartEmpty}
 
                 <div class="memo_subtotal">
                     <div class="grand-subtotal">

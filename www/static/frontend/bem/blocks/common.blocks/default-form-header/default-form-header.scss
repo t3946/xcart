@@ -1,0 +1,29 @@
+.default-form-header {
+  line-height: 110%;
+  text-align: center;
+  margin: 1rem 0 rem-calc(22);
+
+  &.top-title {
+    margin-bottom: rem-calc(5);
+  }
+
+  &.margin-bottom-default {
+    margin-bottom: 1rem;
+  }
+
+  @include breakpoint(sm) {
+    font-size: rem-calc(26);
+  }
+
+  @include breakpoint(medium) {
+    font-size: rem-calc(30);
+    margin: 1rem 0 rem-calc(32);
+  }
+
+  @include breakpoint(large) {
+    font-size: rem-calc(20);
+    line-height: rem-calc(36);
+    text-align: left;
+    margin: 0;
+  }
+}

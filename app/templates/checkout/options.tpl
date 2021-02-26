@@ -63,7 +63,7 @@
                 <div class="columns small-12 large-8">
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Delivery Methods' }</h2>
+                            <h2 class="default-form-header">{t 'Delivery Methods' }</h2>
                         </div>
                     </div>
                     {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
@@ -166,7 +166,7 @@
                 <div class="columns large-8">
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Payment Methods' }</h2>
+                            <h2 class="default-form-header">{t 'Payment Methods' }</h2>
                         </div>
                     </div>
                     {if $payment_methods}
@@ -202,7 +202,7 @@
                     {set $billing_diff = $.app->request->post->get('billing_same') === '0' || $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
                     <div class="row">
                         <div class="columns small-12">
-                            <h2>{t 'Is Billing Address the same as Shipping Address?' }</h2>
+                            <h2 class="default-form-header">{t 'Is Billing Address the same as Shipping Address?' }</h2>
                         </div>
                     </div>
                     <div class="row">

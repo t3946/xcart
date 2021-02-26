@@ -162,16 +162,6 @@ form {
       margin-bottom: 0;
     }
   }
-  h2 {
-    line-height: 110%;
-    text-align: center;
-    margin: 1rem 0;
-
-    @include breakpoint(large) {
-      line-height: inherit;
-      text-align: left;
-    }
-  }
 
   .mandatory {
     .required {

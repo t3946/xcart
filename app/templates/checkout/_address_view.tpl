@@ -1,5 +1,5 @@
 <div class="info_sended_data">
-    <h2 class="title">{$header}</h2>
+    <h2 class="title default-form-header">{$header}</h2>
 
     <ul class="address-view">
         <li>{$info['address'][0]}</li>

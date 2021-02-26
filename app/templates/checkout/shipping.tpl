@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="columns small-12 large-6 large-collapse-right show-for-large">
                     <div class="options">
-                        <h2 class="title" >{t 'Shipping Address' }</h2>
+                        <h2 class="title default-form-header" >{t 'Shipping Address' }</h2>
                     </div>
                 </div>
                 <div class="small-12  large-6 columns text-center large-text-left large-collapse-left">
@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="columns small-12">
                     <div class="contact-options">
-                        <h2 class="title">{t 'Contact Information' }</h2>
+                        <h2 class="title default-form-header">{t 'Contact Information' }</h2>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="columns small-12">
                     <div class="subscription-options">
-                        <h5 class="title">{t 'Privacy Policy' }</h5>
+                        <h5 class="title default-form-header">{t 'Privacy Policy' }</h5>
                         <div class="private-claim">
                             {t 'All your private data is confidential. We will never sell, exchange or market it in any way.' }
                         </div>
