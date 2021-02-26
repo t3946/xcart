@@ -31,6 +31,7 @@ export default class CategoryViewType
         if (value && CategoryViewType.inTypes(value) ) {
             Storage.set(this.storage_key, value);
             this.setContainerClassess(value);
+            document.dispatchEvent( new CustomEvent( 'change-category-view' ) );
         }
     }
 

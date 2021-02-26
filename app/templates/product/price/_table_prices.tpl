@@ -136,15 +136,7 @@
                             {t 'Congratulations! You got a great price!'}
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
-                            {*                            {include "product/parts/_number_button.tpl"}*}
-                            <a class="add button yellow wait-button">
-                                <span class="text">
-                                    {t 'Add to cart'}
-                                </span>
-                                <span class="wait-text">
-                                    {t 'Added'}
-                                </span>
-                            </a>
+                            {include "product/parts/_add_to_cart.tpl" type='product' }
                         </div>
                         <div class="no-account">
                             {t 'No account needed! Checkout only takes 2 minutes.'}
@@ -204,4 +196,3 @@
         <div class="notify_stock"></div>
     </div>
 </div>
-

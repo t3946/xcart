@@ -5,7 +5,7 @@ import CreateWaitButton from '../../components/AnimateWaitButton';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
-import sendAnalytics from "../../utils/sendAnalytics";
+import { AddToCartButton } from "../../../js/Classes/AddToCartButton";
 
 import {h, render} from 'preact';
 import SelectNumberItems from "../../components/SelectNumberItems";
@@ -73,61 +73,13 @@ import SelectNumberItems from "../../components/SelectNumberItems";
     //     return lastPartString.substring(0, lastPartString.length - 1);
     // }
 
+    $('.add-to-cart-button').each(function (i, e) {
+        new AddToCartButton(e);
+    });
+    new AddToCartButton();
     $(document)
         // добавить товар в корзину
         .on('click', '.cart_add .add', (e) => {
-            e.preventDefault();
-
-            let buttonAnimation = CreateWaitButton(e.target.closest('.wait-button'));
-            let product = e.target.closest('[data-product]');
-
-            if ( product )
-            {
-                let form = null;
-
-                let infoFormId = e.target.closest('.cart_add').getAttribute('data-form-id');
-                if (infoFormId) {
-                    form = document.getElementById(infoFormId);
-
-                    if (typeof document.formValidators !== 'undefined'
-                        && document.formValidators[infoFormId] !== 'undefined') {
-
-                        let formValidate = document.formValidators[infoFormId];
-                        formValidate.checkAllForm();
-
-                        if (formValidate.hasErrors) {
-                            return false;
-                        }
-                    }
-                }
-
-                let opt = [];
-
-                // $('select.product-options', product).each(function(){
-                //     opt.push({'o_id': this.dataset.id, 'ov_id': $(this).find('option:selected').val()});
-                // });
-                let values = $(form).serializeArray();
-                for (let oneValue of values) {
-                    //let name = getOptionNameFromString(oneValue.name);
-                    let valueParts = oneValue.value.split('_');
-                    let identifiersParts = valueParts[0].split('-');
-                    //console.log(identifiersParts);
-                    opt.push({'optionId': identifiersParts[0], 'variantId': identifiersParts[1]});
-                }
-
-                let data = [{
-                    id: product.dataset.product,
-                    quantity: product.dataset.quantity  || 1,
-                    options: opt
-                }];
-
-                buttonAnimation.start();
-                cartAdd(data, ()=>{
-                    productItemResetState(product);
-                    $('.jackpot').show();
-                });
-                window.sendAnalytics.addToCart(product);
-            }
 
         })
         .on('click', '.group_cart_add .button', (e) => {

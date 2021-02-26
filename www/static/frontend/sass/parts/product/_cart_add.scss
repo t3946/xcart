@@ -79,10 +79,6 @@
           text-decoration: none;
         }
 
-        &:before {
-          display: none;
-        }
-
         &.loading{
           &:after {
             left: 0;

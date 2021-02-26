@@ -8,6 +8,7 @@ import './Components/checkout/ScrollUpButton';
 import './Components/checkout/ShippingMethods';
 import './Components/checkout/CanadaCODs';
 import './Components/checkout/CheckoutTotal';
+import './Classes/AddToCartButton';
 
 export default ( function () {
     let timerThrottle = null;

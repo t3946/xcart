@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const DURATION_PRELOAD = 500;
 const DURATION_SHOW_INFO = 500;
 
@@ -17,6 +15,10 @@ class AnimateWaitButton {
     }
 
     start() {
+        if ( typeof this._element === 'string' ) {
+            return;
+        }
+
         this._element.classList.add('wait', 'loading');
         this._element.addEventListener('click', this.blockAllEvents);
 
