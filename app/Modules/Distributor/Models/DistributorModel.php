@@ -33,6 +33,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
@@ -50,6 +51,8 @@ use Xcart\Manufacturer;
  * @property DistributorTabModel[] tabs
  * @property TemplateModel order_entry_template
  * @property TemplateModel order_submit_template
+ * @property bool allow_dispatch_off_working_hours
+ * @property DistributorContactsModel[]|Manager contacts_model
  */
 class DistributorModel extends Model
 {
