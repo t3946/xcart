@@ -131,7 +131,7 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TemplateModel::class,
                 'link' => ['order_entry_template_id' => 'id'],
-                'null' => true,
+                'null' => false,
                 'default' => TemplateModel::ORDER_ENTRY_TEMPLATE_ID,
             ],
             'order_submit_template' => [
@@ -139,7 +139,7 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TemplateModel::class,
                 'link' => ['order_submit_template_id' => 'id'],
-                'null' => true,
+                'null' => false,
                 'default' => TemplateModel::DISPATCH_ORDER_TEMPLATE_ID,
             ],
             'order_entry_special_instructions' => [

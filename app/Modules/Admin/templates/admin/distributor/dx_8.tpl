@@ -10,7 +10,6 @@
         <table class="dx_form" cellpadding="3" cellspacing="1" width="100%">
             {raw $form->getField('d_our_dealer_account_n')->render()}
             {raw $form->getField('d_contact_name_for_templates')->render()}
-            {raw $form->getField('d_send_to_email_for_templates')->render()}
             <tr>
                 <td colspan="3" align="center"><b>Login to distributor website</b></td>
             </tr>
@@ -33,12 +32,6 @@
                 id="tr_email_to_order_entry_operator">
                 <td class="by_site" colspan="3" align="center"><b>Email to order entry operator</b></td>
             </tr>
-
-            <tr {if $distributorModel->submit_to_operator === 'by_email_or_and_fax'}style="display: none;"{/if}
-                id="order_submission_by_email_or_and_fax7">
-                <td class="by_site" colspan="3">{Modules\Core\Models\LanguageModel::translate('txt_distributor_section_82')}</td>
-            </tr>
-            {raw $form->getField('d_order_entry_operator_email')->render()}
             {raw $form->getField('order_entry_template')->render()}
             {raw $form->getField('template_1_subj')->render()}
             {raw $form->getField('template_1')->render()}
@@ -47,10 +40,6 @@
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
                 id="order_submission_by_email_or_and_fax1">
                 <td class="by_email" colspan="3" align="center"><B>Order submission by e-mail or/and fax</B></td>
-            </tr>
-            <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
-                id="order_submission_by_email_or_and_fax3">
-                <td class="by_email" colspan="3">{Modules\Core\Models\LanguageModel::translate('txt_distributor_section_8')}</td>
             </tr>
 
             {raw $form->getField('allow_dispatch_off_working_hours')->render()}

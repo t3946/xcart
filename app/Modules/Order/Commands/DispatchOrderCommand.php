@@ -33,17 +33,19 @@ class DispatchOrderCommand extends Command
         /** @var OrderGroupModel $group */
         foreach ($m as $group) {
             $dx = $group->manufacturer;
+            $order = $group->order;
             if (!$dx->isGoodTimeToSendEmail()) {
                 continue;
             }
             $template = $dx->order_submit_template;
             $template->message_body = $group->off_hours_message ?: $template->message_body;
 
-            /*$to = $dx->contacts_model->filter([
-                'utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
-            ])->valuesList('email', true);*/
+            $to = $dx->contacts_model->filter([
+                'utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY
+            ])->valuesList('email', true);
 
-            $to[] = $dx->email;
+            $to[] = 'orders@s3stores.com';
+            $to = array_unique(array_map('trim', $to));
 
             SendMailHelper::sendTemplate($to, $template, $group);
 
@@ -65,6 +67,9 @@ class DispatchOrderCommand extends Command
                     'log' => nl2br($log),
                 ]
             ))->save();
+
+            $log_text = "<a href='{$order->getAdminUrl()}' target='_blank' style='color: blue;'>{$order->getOrderNumber()}</a>, {$dx->code} - dispatched by cron";
+            func_backprocess_log("Auto_dispatch_cron", $log_text);
         }
         print "Done!\n";
     }

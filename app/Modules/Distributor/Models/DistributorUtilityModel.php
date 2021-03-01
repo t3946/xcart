@@ -11,6 +11,9 @@ use Xcart\App\Orm\Model;
 class DistributorUtilityModel extends Model
 {
     public const REQUEST_AVAIL_UTILITY = 1;
+    public const DISPATCH_UTILITY = 2;
+    public const ORDER_MESSAGE_UTILITY = 3;
+    public const ACCOUNT_RECEIVABLE_UTILITY = 4;
     public const REQUEST_PRODUCT_QUESTIONS_UTILITY = 5;
 
     public static function tableName()
