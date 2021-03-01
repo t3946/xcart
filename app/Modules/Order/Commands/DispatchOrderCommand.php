@@ -34,11 +34,14 @@ class DispatchOrderCommand extends Command
         foreach ($m as $group) {
             $dx = $group->manufacturer;
             $order = $group->order;
-            if (!$dx->isGoodTimeToSendEmail()) {
+            if (!$dx->allow_dispatch_off_working_hours || !$dx->isGoodTimeToSendEmail()) {
                 continue;
             }
-            $template = $dx->order_submit_template;
-            $template->message_body = $group->off_hours_message ?: $template->message_body;
+            if (!$template = $dx->order_submit_template) {
+                func_backprocess_log("Auto_dispatch_cron", "{$dx->code} dispatch template not set");
+                continue;
+            }
+            $template->message_body = (string)$group->off_hours_message ?: $template->message_body;
 
             $to = $dx->contacts_model->filter([
                 'utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY
@@ -50,8 +53,7 @@ class DispatchOrderCommand extends Command
             SendMailHelper::sendTemplate($to, $template, $group);
 
             $new_status = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED]);
-            $log = "{$dx->code}: Send (Dispatch to distributor) CRON \n";
-            $log .= "dc_status: {$group->dc_status_model} -> {$new_status} \n";
+            $log = "{$dx->code}: Send (Dispatch to distributor) CRON \n dc_status: {$group->dc_status_model} -> {$new_status} \n";
 
             $group->setAttributes([
                 'dc_status' => OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED,
