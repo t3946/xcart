@@ -8,8 +8,11 @@ const COMPLEX_MODE = 2;
 export class AddToCartButton {
     constructor( elem ) {
         this.$button = $( elem );
-        this.$mainButton = this.$button.find( '.add-to-cart-button-main' );
+        this.$addButton = this.$button.find( '.add-to-cart-button-add' );
         this.$checkoutButton = this.$button.find( '.add-to-cart-button-checkout' );
+        this.$noAccountMessage = this.$button.find('.no-account');
+        this.$buttonWrapper = this.$button.find( '.add-to-cart-button-wrapper' );
+
         this.mode = SIMPLE_MODE;
 
         const self = this;
@@ -92,8 +95,13 @@ export class AddToCartButton {
 
     update() {
         if ( this.mode === COMPLEX_MODE ) {
-            this.$mainButton.addClass( 'add-to-cart-button-main_complex' ).find( '.text, .wait-text' ).remove();
-            this.$checkoutButton.addClass( 'add-to-cart-button-checkout_complex' );
+            const mainButtonComplexClass = this.$button.data('addComplexClass');
+            const checkoutButtonComplexClass = this.$button.data('checkoutComplexClass');
+
+            this.$addButton.addClass( mainButtonComplexClass ).find( '.text, .wait-text' ).remove();
+            this.$checkoutButton.addClass( checkoutButtonComplexClass );
+            this.$noAccountMessage.show();
+            this.$buttonWrapper.show();
 
             if ( AddToCartButton.isCategoryPage() ) {
                 const categoryViewType = Storage.get( 'cviewt' );

@@ -4,7 +4,7 @@
 
     .price__quantity {
 
-      padding: rem-calc(18);
+      padding: rem-calc(18) 0;
 
       .column{
         padding: 0;
@@ -327,19 +327,6 @@
         }
       }
     }
-
-    .no-account {
-      margin-top: rem-calc(5);
-      color: #777777;
-      font-size: rem-calc(14);
-
-    }
-
-    .jackpot {
-      margin-bottom: rem-calc(17);
-      color: #2a8c3e;
-      display:none;
-    }
   }
 
   .subtotal_container {
@@ -347,6 +334,7 @@
     text-align: left;
 
     .safe-prices {
+      display: flex;
       font-size: rem-calc(16);
 
       .title, .value {
@@ -402,4 +390,15 @@
       }
     }
   }
+}
+
+@include breakpoint(md up) {
+  .safe-prices {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.table__prices--down {
+  padding: 0 1px 0 0;
 }

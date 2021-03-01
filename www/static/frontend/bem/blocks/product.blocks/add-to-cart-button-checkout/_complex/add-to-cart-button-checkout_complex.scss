@@ -1,4 +1,9 @@
 .add-to-cart-button-checkout_complex {
-  display: block;
+  display: flex;
   flex-grow: 1;
+}
+
+.cart_add .add-to-cart-button-main_complex:before {
+  width: 39px;
+  height: 30px;
 }

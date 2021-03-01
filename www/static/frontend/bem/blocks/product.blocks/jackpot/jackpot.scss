@@ -1,0 +1,18 @@
+.jackpot {
+  margin-bottom: rem-calc(17);
+  color: #2a8c3e;
+  display:none;
+  text-align: left;
+}
+
+@include breakpoint(md up) {
+  .jackpot {
+    text-align: right;
+  }
+}
+
+@include breakpoint(lg up) {
+  .jackpot {
+    text-align: left;
+  }
+}

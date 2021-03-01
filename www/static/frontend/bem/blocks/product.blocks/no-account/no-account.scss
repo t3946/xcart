@@ -1,0 +1,20 @@
+.no-account {
+  display: none;
+  margin-top: rem-calc(5);
+  color: #777777;
+  font-size: rem-calc(14);
+  white-space: pre-line;
+  text-align: left;
+}
+
+@include breakpoint(md up) {
+  .no-account {
+    text-align: right;
+  }
+}
+
+@include breakpoint(lg up) {
+  .no-account {
+    text-align: left;
+  }
+}

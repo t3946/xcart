@@ -5,22 +5,8 @@
         <div class="price-section columns small-12">
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
             {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
-            {*<div class="row price-info-block show-for-sm-only">
-                <div class="columns shrink price-value-text medium-12">
-                    {$site_currency->symbol_prefix}{$site_currency} <span class="price">{$site_currency->getCurrencyFormat($model->getFrontendPrice())}</span>
-                </div>
-                {if $subtotal_hide}
-                    <div class="columns shrink save-info-text">
-                        Save {$site_currency->symbol}<span class="price">{$site_currency->getCurrencyFormat($price_safe)}</span>
-                    </div>
-                    <div class="columns shrink orig-info-text">
-                        Orig. {$site_currency->symbol}<span class="price">{$site_currency->getCurrencyFormat($model->list_price)}</span>
-                    </div>
-                {/if}
-            </div>*}
             <div class="price__quantity">
-                <div class="row">
-                    <div class="column small-12">
+                <div class="column small-12">
                         <div class="table table__prices table__prices--top">
                             <div class="column price">
                                 <div class="title">{t 'Unit Price'}</div>
@@ -62,70 +48,67 @@
                             {/if}
                         </div>
                     </div>
-                </div>
                 {if !$model->isOutOfStockFrontend()}
-                    <div class="row">
-                        <div class="column small-8 large-8 price-row-width xl-8">
-                            <div class="table table__prices table__prices--down price-row-width">
-                                {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
-                                    {if $quantity == 1}
-                                        {set $discount_base = $price}
-                                        {continue}
-                                    {/if}
+                    <div class="column small-8 large-8 price-row-width xl-8">
+                        <div class="table table__prices table__prices--down price-row-width">
+                            {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
+                                {if $quantity == 1}
+                                    {set $discount_base = $price}
+                                    {continue}
+                                {/if}
 
-                                    {if $last_quantity!}
-                                        {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity - 1}
-                                        {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
-                                        {set $discount = round(($discount_base - $last_price) / $discount_base * 100)}
+                                {if $last_quantity!}
+                                    {set $max_q = ($quantity > $model->avail) ? $model->avail : $quantity - 1}
+                                    {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
+                                    {set $discount = round(($discount_base - $last_price) / $discount_base * 100)}
 
-                                        {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
-                                    {/if}
+                                    {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
+                                {/if}
 
-                                    {if $quantity > $model->avail}{break}{/if}
+                                {if $quantity > $model->avail}{break}{/if}
 
-                                    {if $last}
-                                        {set $discount = round(($discount_base - $price) / $discount_base * 100)}
-                                        {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$quantity price=$price quantity_line = "{$quantity}+"}
-                                    {/if}
+                                {if $last}
+                                    {set $discount = round(($discount_base - $price) / $discount_base * 100)}
+                                    {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$quantity price=$price quantity_line = "{$quantity}+"}
+                                {/if}
 
-                                    {set $last_quantity = $quantity}
-                                    {set $last_price = $price}
-                                {/foreach}
-                            </div>
-
+                                {set $last_quantity = $quantity}
+                                {set $last_price = $price}
+                            {/foreach}
                         </div>
-                        {if $index}
-                        <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
-                            <div class="row" style="margin:0">
-                                <div class="columns discount__title">{t 'Extra qty discount'}</div>
-                            </div>
-                            <div class="row discount__counter">
-                                <div class="columns">
-                                    <div class="digit hours"></div>
-                                    <div class="label hours">{t 'hrs'}</div>
-                                </div>
-                                <div class="columns">
-                                    <span class="delimiter">:</span>
-                                </div>
-                                <div class="columns">
-                                    <div class="digit minutes"></div>
-                                    <div class="label minutes">{t 'min'}</div>
-                                </div>
-                                <div class="columns">
-                                    <span class="delimiter">:</span>
-                                </div>
-                                <div class="columns">
-                                    <div class="digit seconds"></div>
-                                    <div class="label seconds">{t 'sec'}</div>
-                                </div>
-                            </div>
-                        </div>
-                        {/if}
+
                     </div>
+                    {if $index}
+                        <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
+                        <div class="row" style="margin:0">
+                            <div class="columns discount__title">{t 'Extra qty discount'}</div>
+                        </div>
+                        <div class="row discount__counter">
+                            <div class="columns">
+                                <div class="digit hours"></div>
+                                <div class="label hours">{t 'hrs'}</div>
+                            </div>
+                            <div class="columns">
+                                <span class="delimiter">:</span>
+                            </div>
+                            <div class="columns">
+                                <div class="digit minutes"></div>
+                                <div class="label minutes">{t 'min'}</div>
+                            </div>
+                            <div class="columns">
+                                <span class="delimiter">:</span>
+                            </div>
+                            <div class="columns">
+                                <div class="digit seconds"></div>
+                                <div class="label seconds">{t 'sec'}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
                 {/if}
             </div>
         </div>
-        <div class="button-section columns small-12 medium-6 ml-12">
+        <div class="button-section columns small-12">
             {if !$model->isOutOfStockFrontend()}
                 <div class="row">
                     <div class="columns small-12">
@@ -136,15 +119,12 @@
                             {t 'Congratulations! You got a great price!'}
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
-                            {include "product/parts/_add_to_cart.tpl" type='product' }
-                        </div>
-                        <div class="no-account">
-                            {t 'No account needed! Checkout only takes 2 minutes.'}
+                            {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
                         </div>
                     </div>
                     <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
                         <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
-                            <div class="safe-prices list-price">
+                            <div class="safe-prices list-price ">
                                 <div class="title">
                                     {t 'List Price'}:
                                 </div>
@@ -153,7 +133,7 @@
                                 </div>
                             </div>
 
-                            <div class="safe-prices safe safe-per-item">
+                            <div class="safe-prices safe safe-per-item ">
                                 <div class="title">
                                     {t 'Per item savings'}:
                                 </div>
@@ -162,7 +142,7 @@
                                 </div>
                             </div>
 
-                            <div class="safe-prices safe total-safe">
+                            <div class="safe-prices safe total-safe ">
                                 <div class="title">
                                     {t 'Total savings'}:
                                 </div>
@@ -170,7 +150,6 @@
                                     {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

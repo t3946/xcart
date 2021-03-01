@@ -1,9 +1,9 @@
-.add-to-cart-button-main_complex {
+.add-to-cart-button-add__complex {
   width: 51px;
   flex-grow: 0 !important;
 }
 
-.add-to-cart-button-main_complex.wait:before {
+.add-to-cart-button-add__complex.wait:before {
   display: inline-block;
   content: url('/static/frontend/dist/images/icons/green_check_mark.svg');
   height: 1.875rem;
