@@ -35,6 +35,7 @@ class ClearFormFields {
             this.processJsChange = this.processJsChange.bind(this);
             closeButton.addEventListener('click', this.clearFieldListener, {'passive': true});
             input.addEventListener('keyup', this.processChange, {'passive': true});
+            input.addEventListener('change', this.processChange, {'passive': true});
             input.addEventListener('js.change.event', this.processJsChange, {'passive': true});
 
             this.closeButtons.push({
