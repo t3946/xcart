@@ -25,7 +25,6 @@ import _ from 'lodash';
     };
 
     let recheckActives = (e, params = getValues(e)) => {
-        console.log('remove quantity-group-btn_active');
         params.$container.find('.quantity-group-btn').removeClass('quantity-group-btn_active');
 
         if (params.val < params.max) {

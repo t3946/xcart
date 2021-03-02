@@ -20,6 +20,11 @@ window.endless_paginate = ()=>{
             $.ajax($this.attr('href'), {
                 'dataType': 'json',
                 'success' : (data)=>{
+                    $container.removeClass( 'hide' );
+                    $this.css('margin', '20px 0');
+
+                    $('.products-state-line').show();
+                    // $('.product-items').show();
                     let old_uri = $this.attr('href');
 
                     $container.append(data.content);

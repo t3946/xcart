@@ -392,7 +392,6 @@
 
   &.list-view {
     flex-direction: column;
-    display: flex;
 
     .show-for-tile {
       display: none;
@@ -506,7 +505,6 @@
   }
 
   &.tile-view {
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 1.4% 0;

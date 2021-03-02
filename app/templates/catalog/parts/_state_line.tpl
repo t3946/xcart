@@ -1,4 +1,4 @@
-<div class="products_state_line pcont">
+<div class="products-state-line pcont">
     <div class="row">
         <div class="columns large-3 show-for-large">
             {if $state_title}<div class="line-title">{$state_title}</div>{/if}
@@ -53,5 +53,4 @@
             </div>
         </div>
     </div>
-
 </div>
