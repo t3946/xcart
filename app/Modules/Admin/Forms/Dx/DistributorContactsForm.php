@@ -4,6 +4,7 @@
 namespace Modules\Admin\Forms\Dx;
 
 
+use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
@@ -38,32 +39,37 @@ class DistributorContactsForm extends ModelForm
         return [
             'contact_name' => [
                 'class' => CharField::class,
-                'html' => ['style' => 'width: 300px']
+                'html' => ['style' => 'width: 300px'],
+                'hint' => LanguageModel::translate('help_distributor_contact_contact_name_text')
             ],
             'distributor_field_name' => [
                 'class' => CharField::class,
-                'html' => ['style' => 'width: 300px']
+                'html' => ['style' => 'width: 300px'],
+                'hint' => LanguageModel::translate('help_distributor_contact_field_name_text')
             ],
             'email' => [
                 'class' => EmailField::class,
                 'html' => ['style' => 'width: 200px'],
+                'hint' => LanguageModel::translate('help_distributor_contact_email_text')
             ],
             'phone' => [
                 'class' => CharField::class,
                 'html' => ['style' => 'width: 200px'],
                 'extend' => 'ext',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'hint' => LanguageModel::translate('help_distributor_contact_phone_text')
             ],
             'ext' => [
-                'label' => 'ext',
+                'label' => '<b>ext</b>',
                 'extends' => 'ext',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'class' => CharField::class,
-                'html' => ['style' => 'width: 70px']
+                'html' => ['style' => 'width: 70px'],
             ],
             'fax' => [
                 'class' => CharField::class,
-                'html' => ['style' => 'width: 200px']
+                'html' => ['style' => 'width: 200px'],
+                'hint' => LanguageModel::translate('help_distributor_contact_fax_text')
             ],
             'distributor' => [
                 'class' => HiddenField::class
@@ -72,7 +78,8 @@ class DistributorContactsForm extends ModelForm
                 'class' => Select2Field::class,
                 'multiple' => true,
                 'html' => ['style' => 'width:100%'],
-                'placeholder' => 'Click to select a function'
+                'placeholder' => 'Click to select a function',
+                'hint' => LanguageModel::translate('help_distributor_contact_utility_text')
             ]
         ];
     }
