@@ -7,6 +7,7 @@ namespace Modules\Order\Forms;
 use Modules\Order\Models\OrderStatusAvailabilityModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Form\Fields\Select2Field;
+use Xcart\App\Form\Fields\TextAreaField;
 use Xcart\App\Form\ModelForm;
 
 class OrderStatusForm extends ModelForm
@@ -23,6 +24,9 @@ class OrderStatusForm extends ModelForm
         /** @var OrderStatusModel $model */
         $model = $this->getInstance();
         return [
+            'description' => [
+                'class' => TextAreaField::class,
+            ],
             'availability_statuses' => [
                 'class' => Select2Field::class,
                 'multiple' => true,

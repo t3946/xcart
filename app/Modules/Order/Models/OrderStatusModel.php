@@ -82,6 +82,11 @@ class OrderStatusModel extends Model
             'name' => [
                 'class' => CharField::class,
             ],
+            'description' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ],
             'orderby' => [
                 'class' => IntField::class,
             ],
