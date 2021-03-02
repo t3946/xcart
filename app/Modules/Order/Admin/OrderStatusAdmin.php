@@ -17,6 +17,7 @@ class OrderStatusAdmin extends Admin
         return [
             'type',
             'name',
+            'description',
             'code',
         ];
     }
