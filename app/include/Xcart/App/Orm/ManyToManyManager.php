@@ -124,7 +124,7 @@ abstract class ManyToManyManager extends ManagerBase
                 $to => $model->pk,
             ], $extra);
 
-            [$through, $created] = $throughModel->objects()->getOrCreate($data);
+            [$through, $created] = $throughModel::objects()->getOrCreate($data);
             return $through;
         }
         else {

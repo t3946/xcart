@@ -79,6 +79,8 @@ class ManyToManyField extends RelatedField
      */
     protected $_columns = [];
 
+    public $link = [];
+
     /**
      * @return \Xcart\App\Orm\Model
      */
@@ -106,7 +108,7 @@ class ManyToManyField extends RelatedField
      */
     public function getRelatedModelColumn()
     {
-        if (empty($this->_modelColumn)) {
+        if (empty($this->_relatedModelColumn)) {
             if (!empty($this->through)) {
                 if (empty($this->link)) {
                     $throughClass = $this->through;
@@ -124,13 +126,9 @@ class ManyToManyField extends RelatedField
                         }
                     }
                 } else {
-                    if ($this->link) {
-                        throw new Exception('throughLink is missing in configutaion');
-                    }
-
                     [$fromId, $toId] = $this->link;
 
-                    $this->_relatedModelColumn = $this->reversed ? $toId : $fromId;
+                    $this->_relatedModelColumn = $this->reversed ? $fromId : $toId;
                 }
             } else {
                 $end = $this->getModelPk();
@@ -181,10 +179,6 @@ class ManyToManyField extends RelatedField
                         }
                     }
                 } else {
-                    if ($this->link) {
-                        throw new Exception('throughLink is missing in configutaion');
-                    }
-
                     [$fromId, $toId] = $this->link;
 
                     $this->_modelColumn = $this->reversed ? $toId : $fromId;

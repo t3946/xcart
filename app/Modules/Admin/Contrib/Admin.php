@@ -874,7 +874,7 @@ abstract class Admin
         }
 
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
-            if ($form->isValid() && $form->save()) {
+            if ($form->save()) {
                 if ($request->getIsAjax()) {
                     $this->jsonResponse(['status' => 'success', 'close' => true]);
                     return;
