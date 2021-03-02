@@ -50,11 +50,10 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     return $result ?? [];
                 },
                 'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])->valuesList('id', true),
-                'label' => 'Order messages contact',
+                'label' => 'Contacts for templates',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:100%;'],
-                'hint' => LanguageModel::translate('help_d_contact_name_for_templates_text'),
                 'required' => true
             ],
             'd_url_to_login_to_distributor_website' => [

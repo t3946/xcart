@@ -11,29 +11,18 @@
             {raw $form->getField('d_our_dealer_account_n')->render()}
             {raw $form->getField('d_contact_name_for_templates')->render()}
             <tr>
-                <td colspan="3" align="center"><h1>Login to distributor website</h1></td>
+                <td colspan="3" align="center"><b>Login to distributor website</b></td>
             </tr>
             {raw $form->getField('d_url_to_login_to_distributor_website')->render()}
             <tr class="link_unhide">
-                <td>
-                    <b>Login/username</b>
-                    <a title="{Modules\Core\Models\LanguageModel::translate($form->getField('d_login')->hint)}" class="tooltip">
-                        <i class="fa fa-question-circle pointer"></i>
-                    </a>
-                </td>
+                <td><b>Login/username</b></td>
                 <td><a style="color: blue; border-bottom: 1px dotted blue; text-decoration: none;"
                        href="javascript: void(0);"
                        onclick="$('.unhide').closest('tr').show();$('.link_unhide').hide();">Unhide</a>
                 </td>
-
             </tr>
             <tr class="link_unhide">
-                <td>
-                    <b>Password</b>
-                    <a title="{Modules\Core\Models\LanguageModel::translate($form->getField('d_password')->hint)}" class="tooltip">
-                        <i class="fa fa-question-circle pointer"></i>
-                    </a>
-                </td>
+                <td><b>Password</b></td>
                 <td></td>
             </tr>
             {raw $form->getField('d_login')->render()}
@@ -50,7 +39,7 @@
 
             <tr {if $distributorModel->submit_to_operator === 'through_distributor_website'}style="display: none;"{/if}
                 id="order_submission_by_email_or_and_fax1">
-                <td class="by_email" colspan="3" align="center"><h1>Order submission by e-mail or/and fax</h1></td>
+                <td class="by_email" colspan="3" align="center"><B>Order submission by e-mail or/and fax</B></td>
             </tr>
 
             {raw $form->getField('allow_dispatch_off_working_hours')->render()}
