@@ -55,18 +55,36 @@ export default class FormValidation {
      * @param event
      */
     processChange(event){
-
-        if(event.explicitOriginalTarget !== null
+        if (
+            event.explicitOriginalTarget !== null
             && typeof event.explicitOriginalTarget !== 'undefined'
             && typeof event.explicitOriginalTarget.classList !== 'undefined'
-            && event.explicitOriginalTarget.classList.contains('clear-input')){
-
+            && event.explicitOriginalTarget.classList.contains('clear-input')
+        ){
             let clearContainer = event.explicitOriginalTarget.closest('.input-container');
             let eventContainer = event.target.closest('.input-container');
 
             if(clearContainer === eventContainer){
                 return;
             }
+        }
+
+        if (
+            event.target.id === 'CheckoutForm_s_address'
+        ) {
+            this.checkForm( CheckoutForm_s_country );
+            this.checkForm( CheckoutForm_s_zipcode );
+            this.checkForm( CheckoutForm_s_state );
+            this.checkForm( CheckoutForm_s_city );
+        }
+
+        if (
+            event.target.id === 'CheckoutForm_b_address'
+        ) {
+            this.checkForm( CheckoutForm_b_country );
+            this.checkForm( CheckoutForm_b_zipcode );
+            this.checkForm( CheckoutForm_b_state );
+            this.checkForm( CheckoutForm_b_city );
         }
 
         this.checkForm(event.target);
@@ -80,6 +98,7 @@ export default class FormValidation {
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }
+
         let inputElementName = inputElement.getAttribute('name');
         let currentRules = this.constraints[inputElementName];
         let field = this.fields[inputElementName];

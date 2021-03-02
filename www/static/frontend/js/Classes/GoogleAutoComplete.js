@@ -88,6 +88,9 @@ export class GoogleAutoComplete {
 
             if ( field ) {
                 field.value = value;
+
+                const event = new CustomEvent( 'change' );
+                field.dispatchEvent( event );
             }
         }
 
