@@ -76,6 +76,7 @@ class DistributorContactsModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => DistributorUtilityModel::class,
                 'through' => DistributorContactUtilityModel::class,
+                'verboseName' => 'Function'
             ]
         ];
     }
