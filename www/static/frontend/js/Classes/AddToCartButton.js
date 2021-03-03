@@ -107,9 +107,9 @@ export class AddToCartButton {
                 const categoryViewType = Storage.get( 'cviewt' );
 
                 if ( categoryViewType === 'list-view' ) {
-                    this.$checkoutButton.show();
+                    this.$buttonWrapper.show();
                 } else if ( categoryViewType === 'tile-view' ) {
-                    this.$checkoutButton.hide();
+                    this.$buttonWrapper.hide();
                 }
             }
         }
