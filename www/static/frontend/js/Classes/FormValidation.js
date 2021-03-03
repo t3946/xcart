@@ -16,6 +16,14 @@ export default class FormValidation {
         this.errors = [];
         this._bind();
         this.hasErrors = false;
+
+        for ( let i = 0; i < this.form.length; i++ ) {
+            const input = this.form[i];
+
+            if ( input.type === 'text' && input.value.length ) {
+                this.checkForm(input);
+            }
+        }
     }
 
     /**
