@@ -87,9 +87,3 @@
         {/if}
     {/if}
 </div>
-
-<style>
-    .checkout-payment-methods__purchase-order-header {
-        margin: 0 0 16px;
-    }
-</style>

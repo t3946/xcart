@@ -1,3 +1,6 @@
+import { ShippingMethods } from "./ShippingMethods";
+import { PaymentMethods } from "./PaymentMethods";
+
 export default ( function () {
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
@@ -29,6 +32,14 @@ export default ( function () {
                         whTotal.find('.total-sales-tax .subtotal').text(whPrices.sales_tax);
                         whTotal.find('.total-vat-tax .subtotal').text(whPrices.vat_tax);
                         whTotal.find('.format_price .subtotal').text(whPrices.subtotal);
+                    }
+
+                    if ( res.templates.payment_methods ) {
+                        PaymentMethods.updateTemplate( res.templates.payment_methods );
+                    }
+
+                    if ( res.templates.shipping_methods ) {
+                        ShippingMethods.updateTemplate( res.templates.shipping_methods );
                     }
                 },
                 error: function ( err ) {

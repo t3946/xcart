@@ -1,9 +1,9 @@
 <?php
 
-
 namespace Modules\Order\Controllers;
 
-
+use Modules\Order\Forms\CheckoutForm;
+use Modules\Order\Forms\PayByCardForm;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\AttentionTagModel;
@@ -118,7 +118,7 @@ class OrderProcessController extends FrontendController
     /**
      * get html off all shipping methods for passed address
      */
-    public function getShippingMethods(): void
+    public function getShippingMethods(): string
     {
         //address params
         $get_params = Xcart::app()->request->get->all();
@@ -133,13 +133,13 @@ class OrderProcessController extends FrontendController
 
         $sh_rates = self::getShippingRates( $order );
 
-        $this->display( 'checkout/all_shipping_methods_one_page.tpl', [
+        return $this->render( 'checkout/all_shipping_methods_one_page.tpl', [
             'order' => $order,
             'shipping_rates' => $sh_rates ?? []
         ] );
     }
 
-    public function getPaymentMethods(): void
+    public function getPaymentMethods(): string
     {
         $site = Xcart::app()->getModule( 'Sites' )->getSite();
 
@@ -148,8 +148,20 @@ class OrderProcessController extends FrontendController
             ->order( [ 'is_cod', 'orderby' ] )
             ->all();
 
-        $this->display( 'checkout/payment_methods_one_page.tpl', [
-            'payment_methods' => $payment_methods
+        $field_sets = (new CheckoutForm())->getFieldsets();
+        $fields = (new CheckoutForm())->getFieldsInit();
+
+        foreach ($field_sets as $set_name => $set) {
+            foreach ($set as $key => $field_name) {
+                $set[$key] = $fields[$field_name];
+            }
+
+            $field_sets[$set_name] = $set;
+        }
+
+        return $this->render( 'checkout/payment_methods_one_page.tpl', [
+            'payment_methods' => $payment_methods,
+            'fieldsets' => $field_sets,
         ] );
     }
 
@@ -159,8 +171,6 @@ class OrderProcessController extends FrontendController
             http_response_code( 400 );
             return;
         }
-
-
 
         $price = time() % 1000000 / 100;
 
@@ -184,7 +194,16 @@ class OrderProcessController extends FrontendController
             'total_shipping_cost' => $price,
             'total_sales_tax' => $price,
             'total_vat_tax' => $price,
+            'templates' => [],
         ];
+
+        if ( 1 ) {
+            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
+        }
+
+        if ( 1 ) {
+            $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
+        }
 
         echo json_encode( $response );
     }

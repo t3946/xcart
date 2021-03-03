@@ -1,52 +1,87 @@
-export const PaymentMethods = ( function () {
-    const selectedClass = 'payment-method-item_selected';
+import { SwitcherSlider } from "Classes/SwitcherSlider";
 
-    // no checkout page
+export const PaymentMethods = ( function () {
+    // this component only for checkout page
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
     }
 
-    const $root = $( '.checkout-payment-methods' );
-    const $paymentMethods = $root.find( '.payment-method-item' );
-    const $radioInputMethods = $root.find( 'input[name=payment_method]' );
-    const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
+    /**
+     * created handlers and toggle visibilities
+     */
+    function init() {
+        const selectedClass = 'payment-method-item_selected';
+        const $root = $( '.checkout-payment-methods' );
+        const $paymentMethods = $root.find( '.payment-method-item' );
+        const $radioInputMethods = $root.find( 'input[name=payment_method]' );
+        const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
 
-    $paymentMethods.click( function ( e ) {
-        const $paymentMethodItem = $( this );
-        const $input = $paymentMethodItem.find( '[name=payment_method]' );
+        $paymentMethods.click( function ( e ) {
+            const $paymentMethodItem = $( this );
+            const $input = $paymentMethodItem.find( '[name=payment_method]' );
 
-        if ( $input.prop( 'checked' ) === false ) {
-            $paymentMethods.removeClass( selectedClass );
+            if ( $input.prop( 'checked' ) === false ) {
+                $paymentMethods.removeClass( selectedClass );
 
-            $allLongDescriptions
-                .stop( false, true )
-                .slideUp();
+                $allLongDescriptions
+                    .stop( false, true )
+                    .slideUp();
 
-            $paymentMethodItem
-                .addClass( selectedClass )
-                .find( '.payment-method-description-long' )
-                .stop( false, true )
-                .slideDown( function () {
-                    const elementOffset = $paymentMethodItem.offset().top;
-                    const windowScroll = $( 'html' ).scrollTop();
+                $paymentMethodItem
+                    .addClass( selectedClass )
+                    .find( '.payment-method-description-long' )
+                    .stop( false, true )
+                    .slideDown( function () {
+                        const elementOffset = $paymentMethodItem.offset().top;
+                        const windowScroll = $( 'html' ).scrollTop();
 
-                    // element visible
-                    if (
-                        elementOffset >= windowScroll
-                        && elementOffset < windowScroll + window.innerHeight
-                    ) {
-                        return;
-                    }
+                        // element visible
+                        if (
+                            elementOffset >= windowScroll
+                            && elementOffset < windowScroll + window.innerHeight
+                        ) {
+                            return;
+                        }
 
-                    window.scrollTo( {
-                        top: $paymentMethodItem.offset().top,
-                        behavior: 'smooth',
+                        window.scrollTo( {
+                            top: $paymentMethodItem.offset().top,
+                            behavior: 'smooth',
+                        } );
                     } );
-                } );
-        }
+            }
 
-        $input.prop( 'checked', true );
-    } );
+            $input.prop( 'checked', true );
+        } );
 
-    $radioInputMethods.filter( ':checked' ).parent().parent().parent().find( '.payment-method-description-long' ).show();
+        $radioInputMethods
+            .filter( ':checked' )
+            .parents( '.payment-method-item' )
+            .find( '.payment-method-description-long' )
+            .show();
+
+        // billing same shipping
+
+        const $addressFields = $( '.billing-form-address-fields' );
+
+        new SwitcherSlider(
+            $( '.switcher-slider-label' ),
+            function () {
+                $addressFields.stop( true, false ).slideDown();
+            },
+            function () {
+                $addressFields.stop( true, false ).slideUp();
+            },
+        );
+    }
+
+    const constructor = function () {
+        init();
+    }
+
+    constructor.prototype.updateTemplate = function ( template ) {
+        $( '.payment-methods-container' )[ 0 ].outerHTML = template;
+        init();
+    }
+
+    return new constructor();
 } )();
