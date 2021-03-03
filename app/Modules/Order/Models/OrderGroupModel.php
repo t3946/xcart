@@ -400,7 +400,7 @@ URL;
         return OrderHelper::genReceivedConfirmation($this);
     }
 
-    public function getTaxes()
+    public function getTaxes(): array
     {
         $taxes = [];
         foreach ($this->tax_rates as $group_tax) {

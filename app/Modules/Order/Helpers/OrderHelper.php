@@ -639,14 +639,14 @@ HTML;
 
     public static function getOrderInfo(OrderModel $order): array
     {
-        $order_groups = [];
+        $groups = [];
         foreach ($order->groups as $group) {
-
-            $order_groups[$group_id] = array_merge(['id' => $group_id, 'subtotal' => $group->total_gross], $taxes);
+            $group_id = $group->order_group_id;
+            $groups[$group_id] = array_merge(['id' => $group_id, 'subtotal' => $group->total_gross], $group->getTaxes());
         }
 
         return array_merge([
-            'distributor_carts' => $order_groups,
+            'distributor_carts' => $groups,
             'total' => $order->subtotal,
             'shipping' => $order->shipping_cost,
             'grand_total' => $order->total,

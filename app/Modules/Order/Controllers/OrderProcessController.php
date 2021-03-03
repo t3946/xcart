@@ -163,14 +163,14 @@ class OrderProcessController extends FrontendController
 
         if ($order = OrderHelper::getCartOrder()) {
             $data = OrderHelper::getOrderInfo($order);
-            dd($data);
+
             $response = [
                 'grand_total' => $data['grand_total'],
                 'distributor_carts' => $data['distributor_carts'],
                 'total' => $data['total'],
                 'total_shipping_cost' => $data['shipping'],
-                /*'total_sales_tax' => $data['total_sales_tax'],
-                'total_vat_tax' => $data['total_vat_tax'],*/
+                'total_sales_tax' => $data['sales_tax'],
+                'total_vat_tax' => $data['vat_tax'],
             ];
         }
 
