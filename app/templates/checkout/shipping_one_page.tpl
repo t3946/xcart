@@ -1,6 +1,5 @@
 {extends "checkout/base_one_page.tpl"}
 {block 'content'}
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     {raw $checkout_form->renderBegin([
     'action' => $.app->router->url('checkout:shipping'),
     'method' => 'POST',
