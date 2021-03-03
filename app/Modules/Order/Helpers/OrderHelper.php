@@ -648,7 +648,7 @@ HTML;
         return array_merge([
             'distributor_carts' => $groups,
             'total' => $order->subtotal,
-            'shipping' => $order->shipping_cost,
+            'total_shipping_cost' => $order->shipping_cost,
             'grand_total' => $order->total,
         ], $order->getTaxes());
 

@@ -643,7 +643,7 @@ class OrderModel extends Model
         $res = [];
         foreach ($this->groups as $group) {
             foreach ($group->getTaxes() as $type => $val) {
-                $res[$type] += $val;
+                $res["total_{$type}"] += $val;
             }
         }
         return $res;
