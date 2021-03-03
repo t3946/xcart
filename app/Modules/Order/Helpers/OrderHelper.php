@@ -14,6 +14,7 @@ use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderGroupTaxModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -23,6 +24,7 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
@@ -635,37 +637,25 @@ HTML;
         }
     }
 
-    public function getOrderInfo(OrderModel $order): array
+    public static function getOrderInfo(OrderModel $order): array
     {
-        $order_groups = [];
+        $groups = [];
         foreach ($order->groups as $group) {
-            $taxes = [];
-            foreach ($group->tax_rates as $group_tax) {
-                $tax_name = (string) $group_tax->tax_rate->tax;
-                $taxes[$group_tax->tax_rate->tax] = $tax_name . " Tax: " . CurrentSiteHelper::formatCurrency($group_tax->value);
-            }
-
-            $order_groups[$group->order_group_id] = [
-                'subtotal' => "Subtotal: " . CurrentSiteHelper::formatCurrency($group->total_gross),
-                'taxes' => $taxes,
-            ];
+            $group_id = $group->order_group_id;
+            $groups[$group_id] = array_merge(['id' => $group_id, 'subtotal' => $group->total_gross], $group->getTaxes());
         }
 
-        $total_taxes = [];
-        foreach ($order->getTaxes() as $tax_name => $tax)  {
-            $total_taxes[$tax_name] = $tax_name . " Tax: " . CurrentSiteHelper::formatCurrency($tax);
-        }
-        return [
-            'groups' => $order_groups,
-            'total' => "Total: " . CurrentSiteHelper::formatCurrency($order->subtotal),
-            'shipping' => "Total Shipping Cost: " . CurrentSiteHelper::formatCurrency($order->shipping_cost),
-            'taxes' => $total_taxes,
-            'grand_total' => "Grand Total: " . CurrentSiteHelper::formatCurrency($order->total),
-        ];
+        return array_merge([
+            'distributor_carts' => $groups,
+            'total' => $order->subtotal,
+            'total_shipping_cost' => $order->shipping_cost,
+            'grand_total' => $order->total,
+        ], $order->getTaxes());
 
     }
 
-    public static function getCheckoutUrl():string {
+    public static function getCheckoutUrl(): string
+    {
         return '/checkout/shipping/';
     }
 }

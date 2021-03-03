@@ -641,10 +641,9 @@ class OrderModel extends Model
     public function getTaxes(): array
     {
         $res = [];
-        $groups = array_map(static fn($group) => $group->tax_rates->all(), $this->groups->all());
-        foreach ($groups as $group) {
-            foreach ($group as $tax_rate) {
-                $res[(string)$tax_rate->tax_rate->tax] += $tax_rate->value;
+        foreach ($this->groups as $group) {
+            foreach ($group->getTaxes() as $type => $val) {
+                $res["total_{$type}"] += $val;
             }
         }
         return $res;

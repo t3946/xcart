@@ -3,7 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Modules\Order\Forms\CheckoutForm;
-use Modules\Order\Forms\PayByCardForm;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\AttentionTagModel;
@@ -172,30 +172,9 @@ class OrderProcessController extends FrontendController
             return;
         }
 
-        $price = time() % 1000000 / 100;
-
-        $response = [
-            'grand_total' => $price,
-            'distributor_carts' => [
-                209 => [
-                    'id' => 209,
-                    'sales_tax' => $price,
-                    'vat_tax' => $price,
-                    'subtotal' => $price,
-                ],
-                175 => [
-                    'id' => 175,
-                    'sales_tax' => $price,
-                    'vat_tax' => $price,
-                    'subtotal' => $price,
-                ],
-            ],
-            'total' => $price,
-            'total_shipping_cost' => $price,
-            'total_sales_tax' => $price,
-            'total_vat_tax' => $price,
-            'templates' => [],
-        ];
+        if ($order = OrderHelper::getCartOrder()) {
+            $response = OrderHelper::getOrderInfo($order);
+        }
 
         if ( 1 ) {
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
@@ -205,6 +184,6 @@ class OrderProcessController extends FrontendController
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
         }
 
-        echo json_encode( $response );
+        $this->jsonResponse($response ?? []);
     }
 }

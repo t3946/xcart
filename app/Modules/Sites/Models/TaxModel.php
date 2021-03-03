@@ -14,6 +14,7 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property string apply_to
+ * @property bool is_vat
  */
 class TaxModel extends Model
 {

@@ -9,6 +9,10 @@ use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property TaxRatesModel tax_rate
+ * @property float value
+ */
 class OrderGroupTaxModel extends Model
 {
     public static function tableName()
