@@ -10,34 +10,6 @@ export const ShippingForm = ( function () {
         return;
     }
 
-    function updateShippingMethods() {
-        Pace.ignore( function () {
-            $.ajax( {
-                method: 'GET',
-                url: '/api/shipping-methods',
-                data: {
-                    state: $( '#CheckoutForm_s_state' ).attr( 'data-code' ),
-                    zipcode: $( '#CheckoutForm_s_zipcode' ).val(),
-                    city: $( '#CheckoutForm_s_city' ).val(),
-                    country: $( '#CheckoutForm_s_country' ).attr( 'data-code' ),
-                },
-                success: function ( res ) {
-                    const $shippingGroups = $( res );
-                    const $carts = $( '.distributor-cart' );
-
-                    $shippingGroups
-                        .filter( '.shipping-methods-group' )
-                        .each( function ( i, e ) {
-                            const $shippingGroup = $( e );
-                            const $cartShipping = $carts.eq( i ).find( '.shipping-methods-group' );
-
-                            $cartShipping.html( $shippingGroup.html() );
-                        } );
-                },
-            } );
-        } );
-    }
-
     const constructor = function () {
         const self = this;
 
@@ -50,14 +22,9 @@ export const ShippingForm = ( function () {
             self.$otherFields.stop( true, false ).slideUp();
         } );
 
-        /* handle change delivery address */
-        this.addressField.addEventListener( 'autocomplete.change', updateShippingMethods );
-
-        $( '#CheckoutForm_s_state, #CheckoutForm_s_zipcode, #CheckoutForm_s_city, #CheckoutForm_s_country' ).on( 'change-event', updateShippingMethods );
-
         /* phone mask */
-        IMask( document.getElementById( 'CheckoutForm_phone' ), { mask: '(000) 000-0000' } );
-        IMask( document.getElementById( 'CheckoutForm_phone_ext' ), { mask: '00000' } );
+        IMask( document.getElementById( 'CheckoutForm_ci_phone' ), { mask: '(000) 000-0000' } );
+        IMask( document.getElementById( 'CheckoutForm_ci_phone_ext' ), { mask: '00000' } );
     }
 
     constructor.prototype.showFields = function () {

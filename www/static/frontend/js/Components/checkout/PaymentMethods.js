@@ -50,7 +50,12 @@ export const PaymentMethods = ( function () {
                     } );
             }
 
-            $input.prop( 'checked', true );
+            if ($input.prop( 'checked' ) === false) {
+                $input.prop( 'checked', true );
+                $input.trigger( 'change' );
+            } else {
+                $input.prop( 'checked', true );
+            }
         } );
 
         $radioInputMethods
