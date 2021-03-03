@@ -72235,7 +72235,6 @@ window.endless_paginate = function () {
                     $this.css('margin', '20px 0');
 
                     $('.products-state-line').show();
-
                     var old_uri = $this.attr('href');
 
                     $container.append(data.content);
