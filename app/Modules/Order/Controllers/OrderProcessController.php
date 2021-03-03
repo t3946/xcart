@@ -148,15 +148,15 @@ class OrderProcessController extends FrontendController
             ->order( [ 'is_cod', 'orderby' ] )
             ->all();
 
-        $field_sets = (new CheckoutForm())->getFieldsets();
-        $fields = (new CheckoutForm())->getFieldsInit();
+        $field_sets = ( new CheckoutForm() )->getFieldsets();
+        $fields = ( new CheckoutForm() )->getFieldsInit();
 
-        foreach ($field_sets as $set_name => $set) {
-            foreach ($set as $key => $field_name) {
-                $set[$key] = $fields[$field_name];
+        foreach ( $field_sets as $set_name => $set ) {
+            foreach ( $set as $key => $field_name ) {
+                $set[ $key ] = $fields[ $field_name ];
             }
 
-            $field_sets[$set_name] = $set;
+            $field_sets[ $set_name ] = $set;
         }
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
@@ -167,8 +167,8 @@ class OrderProcessController extends FrontendController
 
     public function checkoutUpdate(): void
     {
-        if ($order = OrderHelper::getCartOrder()) {
-            $response = OrderHelper::getOrderInfo($order);
+        if ( $order = OrderHelper::getCartOrder() ) {
+            $response = OrderHelper::getOrderInfo( $order );
         }
 
         if ( 1 ) {
@@ -179,6 +179,6 @@ class OrderProcessController extends FrontendController
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
         }
 
-        $this->jsonResponse($response ?? []);
+        $this->jsonResponse( $response ?? [] );
     }
 }
