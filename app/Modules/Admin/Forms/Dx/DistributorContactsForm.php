@@ -15,7 +15,7 @@ use Xcart\App\Form\ModelForm;
 class DistributorContactsForm extends ModelForm
 {
     public array $exclude = ['pq'];
-    public string $hintTemplate = 'admin/distributor/form/hint.tpl';
+    public $hintTemplate = 'admin/distributor/form/hint.tpl';
 
     public function getFieldsets()
     {
@@ -65,8 +65,7 @@ class DistributorContactsForm extends ModelForm
                 'hintTemplate' => $this->hintTemplate,
             ],
             'ext' => [
-                'label' => '<b>ext</b>',
-                'extends' => 'ext',
+                'extends' => '<b>ext</b>',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'class' => CharField::class,
                 'html' => ['style' => 'width: 70px'],
