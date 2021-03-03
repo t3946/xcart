@@ -24,7 +24,7 @@ class CheckoutContactInfoForm extends FrontendForm
     public function getFields()
     {
         return [
-            'ci_firstname' => [
+            'firstname' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Full name' ),
                 'required' => true,
@@ -40,7 +40,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
-            'ci_phone' => [
+            'phone' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Phone' ),
                 'required' => true,
@@ -54,7 +54,7 @@ class CheckoutContactInfoForm extends FrontendForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
-                'extend' => 'ci_phone_ext',
+                'extend' => 'phone_ext',
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint',
                 'fieldClass' => 'checkout-compound__phone-main-field checkout-field',
@@ -64,7 +64,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
-            'ci_phone_ext' => [
+            'phone_ext' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'ext' ),
                 'html' => [
@@ -82,7 +82,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
-            'ci_track_sms' => [
+            'track_sms' => [
                 'class' => CheckboxField::class,
                 'label' => OrderModule::t( 'SMS notifications' ),
                 'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
@@ -92,7 +92,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'inputClass' => 'common-checkbox',
             ],
 
-            'ci_email' => [
+            'email' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),
                 'hint' => OrderModule::t( 'Order progress notifications will be sent here' ),
