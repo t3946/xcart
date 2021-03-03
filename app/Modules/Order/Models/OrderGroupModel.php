@@ -9,6 +9,7 @@ use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
+use Modules\Sites\Models\TaxRatesModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -41,6 +42,7 @@ use Xcart\OrderGroup;
  * @property bool notify_sent
  * @property Manager|OrderDetailModel[] detail_models
  * @property float total_tax
+ * @property OrderGroupTaxModel[]|Manager tax_rates
  */
 class OrderGroupModel extends Model
 {
@@ -396,5 +398,15 @@ URL;
     public function genReceivedConfirmationButton(): string
     {
         return OrderHelper::genReceivedConfirmation($this);
+    }
+
+    public function getTaxes()
+    {
+        $taxes = [];
+        foreach ($this->tax_rates as $group_tax) {
+            $is_vat = $group_tax->tax_rate->tax->is_vat;
+            $taxes[$is_vat ? 'vat_tax' : 'sales_tax'] += $group_tax->value;
+        }
+        return $taxes ?? [];
     }
 }

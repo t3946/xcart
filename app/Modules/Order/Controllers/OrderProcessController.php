@@ -4,6 +4,7 @@
 namespace Modules\Order\Controllers;
 
 
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\AttentionTagModel;
@@ -160,32 +161,19 @@ class OrderProcessController extends FrontendController
             return;
         }
 
+        if ($order = OrderHelper::getCartOrder()) {
+            $data = OrderHelper::getOrderInfo($order);
+            dd($data);
+            $response = [
+                'grand_total' => $data['grand_total'],
+                'distributor_carts' => $data['distributor_carts'],
+                'total' => $data['total'],
+                'total_shipping_cost' => $data['shipping'],
+                /*'total_sales_tax' => $data['total_sales_tax'],
+                'total_vat_tax' => $data['total_vat_tax'],*/
+            ];
+        }
 
-
-        $price = time() % 1000000 / 100;
-
-        $response = [
-            'grand_total' => $price,
-            'distributor_carts' => [
-                209 => [
-                    'id' => 209,
-                    'sales_tax' => $price,
-                    'vat_tax' => $price,
-                    'subtotal' => $price,
-                ],
-                175 => [
-                    'id' => 175,
-                    'sales_tax' => $price,
-                    'vat_tax' => $price,
-                    'subtotal' => $price,
-                ],
-            ],
-            'total' => $price,
-            'total_shipping_cost' => $price,
-            'total_sales_tax' => $price,
-            'total_vat_tax' => $price,
-        ];
-
-        echo json_encode( $response );
+        $this->jsonResponse($response ?? []);
     }
 }
