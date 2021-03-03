@@ -24,7 +24,6 @@ window.endless_paginate = ()=>{
                     $this.css('margin', '20px 0');
 
                     $('.products-state-line').show();
-                    // $('.product-items').show();
                     let old_uri = $this.attr('href');
 
                     $container.append(data.content);

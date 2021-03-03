@@ -3,8 +3,14 @@
   display: none;
 }
 
-@media (min-width: 720px) {
+@include breakpoint(md up) {
   .add-to-cart-button-wrapper {
     flex-grow: 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .add-to-cart-button-wrapper {
+    flex-grow: 1;
   }
 }

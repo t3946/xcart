@@ -2,3 +2,11 @@
   flex-grow: 0;
   width: 85px;
 }
+
+.add-to-cart-button-add__complex-product.wait:before {
+  display: inline-block;
+  content: url('/static/frontend/dist/images/icons/green_check_mark.svg');
+  height: 1.875rem;
+  width: 1.8125rem;
+  margin-left: .4375rem;
+}
