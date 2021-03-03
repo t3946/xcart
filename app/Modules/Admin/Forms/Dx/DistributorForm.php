@@ -132,7 +132,8 @@ class DistributorForm extends ModelForm
                 'required' => true,
             ],
             9 => [
-                'title' => 'Tax policy',
+                'title' => 'Taxes charged by distributor',
+                'form' => DistributorTaxForm::class,
                 'required' => true,
             ],
         ],
