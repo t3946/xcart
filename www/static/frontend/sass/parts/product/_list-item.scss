@@ -1,8 +1,7 @@
 @import "globals";
 
 .product-items {
-  //display: flex;
-  display: none;
+  display: flex;
 
   //transition: 0.4s all;
   transition: height 1s;
