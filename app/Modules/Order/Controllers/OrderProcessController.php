@@ -169,6 +169,18 @@ class OrderProcessController extends FrontendController
     {
         if ( $order = OrderHelper::getCartOrder() ) {
             $response = OrderHelper::getOrderInfo( $order );
+        } else {
+            $order = new OrderModel([
+                'cart_number' => Xcart::app()->cart->getCartNumber()
+            ]);
+        }
+
+        $form = new CheckoutForm();
+        $form->setInstance( $order );
+        $form->populate( Xcart::app()->request->post );
+        $form->setModelAttributes( $form->getAttributes() );
+        if ( $model = $form->getInstance() ) {
+            $model->save();
         }
 
         if ( 1 ) {

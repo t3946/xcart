@@ -47,7 +47,7 @@ export const BillingForm = ( function () {
     IMask( document.getElementById('CheckoutForm_ap_phone'), { mask: '(000) 000-0000' } );
     IMask( document.getElementById('CheckoutForm_pm_phone'), { mask: '(000) 000-0000' } );
     IMask( document.getElementById('CheckoutForm_pm_fax'), { mask: '(000) 000-0000' } );
-    IMask( document.getElementById('CheckoutForm_ci_phone_ext'), { mask: '00000' } );
+    IMask( document.getElementById('CheckoutForm_phone_ext'), { mask: '00000' } );
 
     return new constructor();
 } )();

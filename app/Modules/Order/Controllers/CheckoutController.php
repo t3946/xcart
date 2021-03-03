@@ -132,7 +132,7 @@ class CheckoutController extends FrontendController
             }
         }
 
-        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
+        $order = OrderHelper::getCartOrder();
 
         if ($order && !$app->request->getIsPost()) {
             $checkout_form->setAttributes($order->getAttributes());

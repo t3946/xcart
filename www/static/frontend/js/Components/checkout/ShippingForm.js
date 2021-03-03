@@ -56,8 +56,8 @@ export const ShippingForm = ( function () {
         $( '#CheckoutForm_s_state, #CheckoutForm_s_zipcode, #CheckoutForm_s_city, #CheckoutForm_s_country' ).on( 'change-event', updateShippingMethods );
 
         /* phone mask */
-        IMask( document.getElementById( 'CheckoutForm_ci_phone' ), { mask: '(000) 000-0000' } );
-        IMask( document.getElementById( 'CheckoutForm_ci_phone_ext' ), { mask: '00000' } );
+        IMask( document.getElementById( 'CheckoutForm_phone' ), { mask: '(000) 000-0000' } );
+        IMask( document.getElementById( 'CheckoutForm_phone_ext' ), { mask: '00000' } );
     }
 
     constructor.prototype.showFields = function () {
