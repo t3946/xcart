@@ -55,11 +55,8 @@
                     {*{insert 'catalog/parts/_page_count.tpl'}*}
                 </div>
 
-                <div class="product-items tile-view" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">
-                    {*{foreach $pager->paginate() as $item }*}
-                        {*{include "catalog/parts/_catalog_list_item.tpl" item=$item}*}
-                    {*{/foreach}*}
-                </div>
+                <div class="product-items tile-view hide" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog"></div>
+
                 {insert "catalog/parts/_state_line.tpl"}
 
                 {raw $pager->render()}

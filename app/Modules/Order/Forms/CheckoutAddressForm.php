@@ -72,6 +72,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                 'fieldClass' => 'checkout-field',
                 'switcherClass' => 'address-switcher-button switcher-button_other-fields-switcher',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+                'inputClass' => 'common-input switcher-input',
             ],
 
             'address_2' => [
