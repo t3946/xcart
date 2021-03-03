@@ -10,13 +10,13 @@ export default ( function () {
 
     const constructor = function () {
         $form.on( 'change', 'input', function ( e ) {
+            const data = {};
+            data[ e.target.name ] = e.target.value;
+
             $.ajax( {
                 url: '/api/checkout/update',
                 method: 'POST',
-                data: {
-                    key: e.target.name,
-                    value: e.target.value,
-                },
+                data: data,
                 dataType: 'json',
                 success: function ( res ) {
                     $( '.order-total .total .price' ).text( res.total );

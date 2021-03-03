@@ -167,11 +167,6 @@ class OrderProcessController extends FrontendController
 
     public function checkoutUpdate(): void
     {
-        if ( !$_POST[ 'key' ] || !$_POST[ 'value' ] ) {
-            http_response_code( 400 );
-            return;
-        }
-
         if ($order = OrderHelper::getCartOrder()) {
             $response = OrderHelper::getOrderInfo($order);
         }
