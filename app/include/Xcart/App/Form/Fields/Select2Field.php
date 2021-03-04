@@ -45,6 +45,7 @@ class Select2Field extends DropDownField
                 '</script>',
                 '<style>
                     .select2-results__option[aria-selected=true] {display: none;}
+                    .select2-search--inline {width: 100% !important;}
                     .select2-search--inline input {width: 100% !important;}
                 </style>',
             ]

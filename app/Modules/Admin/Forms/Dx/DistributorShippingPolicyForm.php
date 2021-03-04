@@ -87,6 +87,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'selected' => $countriesSelected,
                 'multiple' => true,
                 'html' => ['style' => 'width:400px;'],
+                'placeholder' => 'Click to select shipping zone',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
@@ -241,8 +242,9 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => 'from',
-                'extend' => 'd_dealer_discount_reduced_to'
+                'extends' => '<b>from</b>',
+                'extend' => 'd_dealer_discount_reduced_to',
+                'hint' => LanguageModel::translate('help_dx_d_dealer_discount_reduced_from_text'),
             ],
             'd_dealer_discount_reduced_to' => [
                 'label' => ' ',
@@ -252,7 +254,8 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => 'to',
+                'extends' => '<b>to</b>',
+                'hint' => LanguageModel::translate('help_dx_d_dealer_discount_reduced_to_text'),
             ],
             'update_approximation_shipping_rates' => [
                 'class' => CheckboxField::class,
