@@ -85,6 +85,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'html' => ['class' => 'click_hide', 'readonly' => true, 'style' => 'border: none'],
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'hint' => LanguageModel::translate('help_dx_template_1_subj_text'),
+                'hintTemplate' => $this->hintTemplate,
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -94,6 +95,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'hint' => LanguageModel::translate('help_dx_template_1_text'),
+                'hintTemplate' => $this->hintTemplate,
             ],
 
             'd_server_min_distributor_time' => [
