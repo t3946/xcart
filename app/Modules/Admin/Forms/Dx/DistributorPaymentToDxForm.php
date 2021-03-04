@@ -10,6 +10,7 @@ use Modules\Core\Models\StateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
 
@@ -20,10 +21,13 @@ class DistributorPaymentToDxForm extends DistributorForm
     public function getFieldsets()
     {
         return [
-            'Payment to distributor arrangements' => [
+            'Payment to distributor arrangement' => [
                 'd_pay_to_distributor_by',
                 'd_net_payment_terms_in_days',
                 'd_we_pay_to_distributor_by',
+            ],
+            'Distributor PayPal account details' => [
+                'dx_paypal_account_email',
             ],
             'Distributor checking account details' => [
                 'dcad_company_name',
@@ -38,9 +42,6 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'dcad_swift',
                 'dcad_routing_number',
                 'dcad_account_number',
-            ],
-            'Distributor PayPal account details' => [
-                'dx_paypal_account_email',
             ],
             'Reconciliation settings' => [
                 'd_bulk_or_individual_order_payments',
@@ -111,7 +112,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'extend' => 'd_we_can_save_after',
             ],
             'dx_paypal_account_email' => [
-                'class' => CharField::class,
+                'class' => EmailField::class,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_paypal_account_email_text'),
@@ -156,6 +157,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'html' => ['style' => 'width:300px'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_dcad_address_text'),
             ],
             'dcad_address_2' => [
                 'class' => CharField::class,
@@ -163,6 +165,7 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'html' => ['style' => 'width:300px'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_dx_dcad_address_2_text'),
             ],
             'dcad_city' => [
                 'class' => CharField::class,
