@@ -118,6 +118,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $list ?? [];
                 },
+                'hint' => LanguageModel::translate('help_order_entry_template_text'),
             ],
             'template_1_subj' => [
                 'class' => CharField::class,
@@ -127,6 +128,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message subject line',
                 'html' => ['class' => 'by_site', 'readonly' => true, 'style' => 'border: none'],
+                'hint' => LanguageModel::translate('help_template_1_subj_text'),
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -136,14 +138,16 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message body',
                 'html' => ['class' => 'by_site'],
+                'hint' => LanguageModel::translate('help_template_1_text'),
             ],
             'order_entry_special_instructions' => [
                 'class' => EditorField::class,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'label' => '<span style="color:red">Order entry special instructions</span>',
+                'label' => '<span style="color:red">Special order entry instructions</span>',
                 'html' => ['class' => 'by_site'],
+                'hint' => LanguageModel::translate('help_order_entry_special_instructions_text'),
             ],
             'allow_dispatch_off_working_hours' => [
                 'class' => CheckboxField::class,
@@ -196,6 +200,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $list ?? [];
                 },
+                'hint' => LanguageModel::translate('help_order_submit_template_text'),
             ],
             'template_2_subj' => [
                 'class' => CharField::class,
@@ -205,6 +210,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => 'Dispatch subject line',
                 'html' => ['class' => 'by_email', 'readonly' => true, 'style' => 'border: none'],
+                'hint' => LanguageModel::translate('help_template_2_subj_text'),
             ],
             'template_2' => [
                 'class' => EditorField::class,
@@ -215,6 +221,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Dispatch message body',
                 'readonly' => true,
                 'html' => ['class' => 'by_email'],
+                'hint' => LanguageModel::translate('help_template_2_text'),
             ],
             'd_subject_line_8' => [
                 'class' => CharField::class,
@@ -237,8 +244,9 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => '<span style="color:red">Dispatch special instructions</span>',
+                'label' => '<span style="color:red">Special dispatch instructions</span>',
                 'html' => ['class' => 'by_email'],
+                'hint' => LanguageModel::translate('help_order_submit_special_instructions_text'),
             ],
             'd_dispatch_instructions' => [
                 'class' => EditorField::class,

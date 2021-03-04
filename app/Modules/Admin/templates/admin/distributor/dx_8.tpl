@@ -16,7 +16,7 @@
             {raw $form->getField('d_url_to_login_to_distributor_website')->render()}
             <tr class="link_unhide">
                 <td>
-                    <b>Login/username</b>
+                    <b>Login/Username</b>
                     <a title="{Modules\Core\Models\LanguageModel::translate('help_d_login_text')}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
