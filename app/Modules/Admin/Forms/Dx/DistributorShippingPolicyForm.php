@@ -242,9 +242,8 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => '<b>from</b>',
+                'extends' => '<b>from</b> <a title="'.LanguageModel::translate('help_dx_d_dealer_discount_reduced_from_text').'" class="tooltip"><i class="fa fa-question-circle pointer"></i></a>',
                 'extend' => 'd_dealer_discount_reduced_to',
-                'hint' => LanguageModel::translate('help_dx_d_dealer_discount_reduced_from_text'),
             ],
             'd_dealer_discount_reduced_to' => [
                 'label' => ' ',
@@ -254,8 +253,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => '<b>to</b>',
-                'hint' => LanguageModel::translate('help_dx_d_dealer_discount_reduced_to_text'),
+                'extends' => '<b>to</b> <a title="'.LanguageModel::translate('help_dx_d_dealer_discount_reduced_to_text').'" class="tooltip"><i class="fa fa-question-circle pointer"></i></a>',
             ],
             'update_approximation_shipping_rates' => [
                 'class' => CheckboxField::class,
