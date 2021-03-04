@@ -44,10 +44,25 @@ export const BillingForm = ( function () {
         new ShippingGoogleAutoComplete( '#CheckoutForm_b_address', componentForm, billing_fields );
     }
 
-    IMask( document.getElementById('CheckoutForm_ap_phone'), { mask: '(000) 000-0000' } );
-    IMask( document.getElementById('CheckoutForm_pm_phone'), { mask: '(000) 000-0000' } );
-    IMask( document.getElementById('CheckoutForm_pm_fax'), { mask: '(000) 000-0000' } );
-    IMask( document.getElementById('CheckoutForm_phone_ext'), { mask: '00000' } );
+    if ( typeof CheckoutForm_ap_phone !== 'undefined' ) {
+        IMask( CheckoutForm_ap_phone, { mask: '(000) 000-0000' } );
+    }
+
+    if ( typeof CheckoutForm_pm_phone !== 'undefined' ) {
+        IMask( CheckoutForm_pm_phone, { mask: '(000) 000-0000' } );
+    }
+
+    if ( typeof CheckoutForm_pm_fax !== 'undefined' ) {
+        IMask( CheckoutForm_pm_fax, { mask: '(000) 000-0000' } );
+    }
+
+    if ( typeof CheckoutForm_phone_ext !== 'undefined' ) {
+        IMask( CheckoutForm_phone_ext, { mask: '00000' } );
+    }
+
+    // if ( typeof CheckoutForm_ci_phone_ext !== 'undefined' ) {
+    //     IMask( CheckoutForm_ci_phone_ext, { mask: '00000' } );
+    // }
 
     return new constructor();
 } )();

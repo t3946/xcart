@@ -195,11 +195,11 @@
                     <div class="total-tax checkout__total-tax">
                         <div class="total-sales-tax">
                             {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                            <span class="price">0</span>
+                            <span class="price">0.00</span>
                         </div>
                         <div class="total-vat-tax">
                             {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                            <span class="price">0</span>
+                            <span class="price">0.00</span>
                         </div>
                     </div>
 

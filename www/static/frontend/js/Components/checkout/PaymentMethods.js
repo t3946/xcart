@@ -13,12 +13,12 @@ export const PaymentMethods = ( function () {
         const selectedClass = 'payment-method-item_selected';
         const $root = $( '.checkout-payment-methods' );
         const $paymentMethods = $root.find( '.payment-method-item' );
-        const $radioInputMethods = $root.find( 'input[name=payment_method]' );
+        const $radioInputMethods = $root.find( 'input[name="CheckoutForm[paymentid]"]' );
         const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
 
         $paymentMethods.click( function ( e ) {
             const $paymentMethodItem = $( this );
-            const $input = $paymentMethodItem.find( '[name=payment_method]' );
+            const $input = $paymentMethodItem.find( '[name="CheckoutForm[paymentid]"]' );
 
             if ( $input.prop( 'checked' ) === false ) {
                 $paymentMethods.removeClass( selectedClass );

@@ -162,6 +162,7 @@ class OrderProcessController extends FrontendController
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
             'payment_methods' => $payment_methods,
             'fieldsets' => $field_sets,
+            'order' => OrderHelper::getCartOrder(),
         ] );
     }
 
@@ -169,10 +170,11 @@ class OrderProcessController extends FrontendController
     {
         if ( $order = OrderHelper::getCartOrder() ) {
             $response = OrderHelper::getOrderInfo( $order );
-        } else {
-            $order = new OrderModel([
+        }
+        else {
+            $order = new OrderModel( [
                 'cart_number' => Xcart::app()->cart->getCartNumber()
-            ]);
+            ] );
         }
 
         $form = new CheckoutForm();
@@ -183,7 +185,19 @@ class OrderProcessController extends FrontendController
             $model->save();
         }
 
-        if ( 1 ) {
+        if (
+            isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
+        ) {
+            if ( count( OrderProcessController::getShippingRates( $order ) ) < count( Xcart::app()->cart->getItemsGroupedBy() ) ) {
+                $phone_payment_id = 4;
+                $order->paymentid = $phone_payment_id;
+                $order->save();
+            }
+
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
         }
 

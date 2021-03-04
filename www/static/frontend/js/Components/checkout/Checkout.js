@@ -40,19 +40,20 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                $( '.order-total .total .price' ).text( res.total );
-                $( '.shipping-total .price' ).text( res.total_shipping_cost );
-                $( '.total-sales-tax .price' ).text( res.total_sales_tax );
-                $( '.total-vat-tax .price' ).text( res.total_vat_tax );
-                $( '.grand-total .price' ).text( res.grand_total );
+                var n = '0';
+                $( '.order-total .total .price' ).text( parseFloat( n ).toFixed( 2 ) );
+                $( '.shipping-total .price' ).text( parseFloat( n ).toFixed( 2 ) );
+                $( '.total-sales-tax .price' ).text( parseFloat( n ).toFixed( 2 ) );
+                $( '.total-vat-tax .price' ).text( parseFloat( n ).toFixed( 2 ) );
+                $( '.grand-total .price' ).text( parseFloat( n ).toFixed( 2 ) );
 
                 for ( let id in res.distributor_carts ) {
                     const whPrices = res.distributor_carts[ id ];
                     const whTotal = $( `.warehouse_subtotal[data-wh=${ id }]` );
 
-                    whTotal.find( '.total-sales-tax .subtotal' ).text( whPrices.sales_tax );
-                    whTotal.find( '.total-vat-tax .subtotal' ).text( whPrices.vat_tax );
-                    whTotal.find( '.format_price .subtotal' ).text( whPrices.subtotal );
+                    whTotal.find( '.total-sales-tax .subtotal' ).text( parseFloat( n ).toFixed() );
+                    whTotal.find( '.total-vat-tax .subtotal' ).text( parseFloat( n ).toFixed() );
+                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( n ).toFixed() );
                 }
 
                 if ( res.templates.payment_methods ) {
