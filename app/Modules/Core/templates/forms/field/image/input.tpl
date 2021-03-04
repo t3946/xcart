@@ -1,7 +1,7 @@
 <div style="height:0px;overflow:hidden">
     <input type="{$type}" accept="{$field->getHtmlAccept()}" value="{$value}" id="{$id}" name="{$name}" {raw $html}>
 </div>
-<button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image</button>
+<button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image (.jpg, .png, .svg)</button>
 <button type="button" onclick="uploadUrl(this)">Upload from url</button>
 <br>
 <a target="_blank" class="{$id}_current-image" style="

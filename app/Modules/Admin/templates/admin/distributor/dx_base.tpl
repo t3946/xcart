@@ -107,7 +107,7 @@
 {block 'js'}
     <script>
         $(function () {
-            let t = $('.tooltip').tooltip({
+            const t = $('.tooltip').tooltip({
                 position: {
                     using: function (position, feedback) {
                         $(this).css(position);
@@ -121,7 +121,8 @@
                 },
                 open: function (event, ui) {
                     ui.tooltip.css("max-width", "650px");
-                }
+                },
+                hide: { delay: 1000 }
             });
         });
     </script>
