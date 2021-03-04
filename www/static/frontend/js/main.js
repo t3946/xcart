@@ -9,6 +9,8 @@ import './Components/checkout/CanadaCODs';
 import './Components/checkout/CheckoutTotal';
 import './Classes/AddToCartButton';
 
+import '_binds/forms';
+
 export default ( function () {
     let timerThrottle = null;
 

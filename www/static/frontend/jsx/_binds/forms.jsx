@@ -1,8 +1,7 @@
-import documentReady from "../utils/documentReady";
 import FormValidation from "Classes/FormValidation";
 import CheckoutFormValidation from "Classes/CheckoutFormValidation";
-import clearFormFields from "../components/ClearFormFields";
-import initSelectFields from "../components/CreateSelectFields";
+import clearFormFields from "components/ClearFormFields";
+import initSelectFields from "components/CreateSelectFields";
 
 function createDuplicatedFields( fields ) {
 
@@ -38,19 +37,31 @@ function rememberCreatedFormValidator( name, form ) {
     document.formValidators[ name ] = form;
 }
 
-documentReady( () => {
+export default ( function Forms() {
+    const forms = [];
+
+    const Constructor = function () {
+    }
+
+    /**
+     * get list of FormValidation objects, that mounted to forms on the page
+     * @returns {[]}
+     */
+    Constructor.prototype.getValidationForms = function () {
+        return forms;
+    }
 
     // init form client validation
     if ( typeof document.formConstraints !== 'undefined' ) {
         for ( let name in document.formConstraints ) {
-            if (!document.formConstraints.hasOwnProperty(name)) {
+            if ( !document.formConstraints.hasOwnProperty( name ) ) {
                 continue;
             }
 
             let form = null;
 
             // checkout form on checkout one page
-            if ( name === 'CheckoutForm9' && $('.checkout-page').length ) {
+            if ( name === 'CheckoutForm9' && $( '.checkout-page' ).length ) {
                 form = new CheckoutFormValidation( name );
             } else {
                 form = new FormValidation( name );
@@ -58,6 +69,7 @@ documentReady( () => {
 
             createDuplicatedFields( form.fields );
             rememberCreatedFormValidator( name, form );
+            forms.push( form );
         }
     }
 
@@ -91,4 +103,5 @@ documentReady( () => {
         initSelectFields( event.detail );
     }, false );
 
-} );
+    return new Constructor();
+} )();

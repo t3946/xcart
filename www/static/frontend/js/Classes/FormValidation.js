@@ -102,9 +102,13 @@ export default class FormValidation {
         this.checkForm(event.detail.element);
     }
 
+    /**
+     * validate input
+     * @return boolean return true if field is valid else false
+     */
     checkForm(inputElement){
         if(this.form.getAttribute('data-validate') !== 'true'){
-            return;
+            return true;
         }
 
         let inputElementName = inputElement.getAttribute('name');
@@ -114,7 +118,7 @@ export default class FormValidation {
         if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
             if(inputElement.value === '') {
                 field.clearAllClasses();
-                return;
+                return true;
             }
         }
 
@@ -123,10 +127,12 @@ export default class FormValidation {
 
         if(typeof currentError === 'undefined' || currentError.length <= 0) {
             field.success();
-            return;
+            return true;
         }
 
         field.showError(currentError[0]);
+
+        return false;
     }
 
     scrollToFirstError() {
