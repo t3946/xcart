@@ -10,6 +10,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
@@ -77,6 +78,11 @@ class DistributorContactsModel extends Model
                 'modelClass' => DistributorUtilityModel::class,
                 'through' => DistributorContactUtilityModel::class,
                 'verboseName' => 'Function'
+            ],
+            'position' => [
+                'class' => IntField::class,
+                'default' => 10000,
+                'null' => false
             ]
         ];
     }
