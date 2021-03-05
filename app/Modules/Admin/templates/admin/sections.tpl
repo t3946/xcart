@@ -7,7 +7,10 @@
     {/if}
     <div style="border: #000 2px solid; padding:10px 5px; font-weight: bold">
         {$form->getInstance()} sections
-        <a style="float:right; text-decoration: none; font-weight: bold" href="#" onclick="$('.section_table').toggle(); return false;">+</a>
+        <a style="font-size:22px; top:-6px; float:right; text-decoration: none; font-weight: bold; display: block; position: relative;" href="#"
+           onclick="$('.section_table').toggle(); $(this).toggle().siblings('a').toggle(); return false;">+</a>
+        <a style="font-size:22px; top:-6px; float:right; text-decoration: none; font-weight: bold; display: none; position: relative;" href="#"
+           onclick="$('.section_table').toggle(); $(this).toggle().siblings('a').toggle(); return false;">&mdash;</a>
     </div>
     <div class="section_table" style="display: none">
         <table cellspacing="0" cellpadding="0" width="100%" class="NavDialogBox" style="BORDER: #FFCC33 1px solid;">
