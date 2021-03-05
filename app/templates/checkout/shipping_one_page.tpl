@@ -73,24 +73,6 @@
 
                                     <div class="table-column grid-price cart-column-price">{t 'Unit price' }</div>
                                 </div>
-                                <style>
-                                    @media (min-width: 1024px) {
-                                        .grid-quantity {
-                                            grid-area: grid-quantity;
-                                        }
-
-                                        .cart-table-head {
-                                            display: grid;
-                                            grid-template-areas: "cell1 grid-title cell3 grid-quantity cell4 grid-price";
-                                            grid-template-columns: 110px 1fr 111px 95px 66px 100px;
-                                            grid-column-gap: 5px;
-                                        }
-
-                                        .grid-price {
-                                            text-align: right;
-                                        }
-                                    }
-                                </style>
 
                                 <div class="table-body">
                                     {foreach $items as $key=>$position}

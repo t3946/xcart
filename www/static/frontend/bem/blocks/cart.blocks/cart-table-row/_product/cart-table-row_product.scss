@@ -99,4 +99,12 @@
   .grid-title_header {
     grid-column: 2/4;
   }
+
+  .grid-quantity {
+    grid-area: grid-quantity;
+  }
+
+  .grid-price {
+    text-align: right;
+  }
 }

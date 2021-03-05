@@ -1,0 +1,8 @@
+@include breakpoint(lg up) {
+  .cart-table-head {
+    display: grid;
+    grid-template-areas: "cell1 grid-title cell3 grid-quantity cell4 grid-price";
+    grid-template-columns: 110px 1fr 111px 95px 66px 100px;
+    grid-column-gap: 5px;
+  }
+}
