@@ -120,22 +120,13 @@ class OrderProcessController extends FrontendController
      */
     public function getShippingMethods(): string
     {
-        //address params
-        $get_params = Xcart::app()->request->get->all();
-
-        //make order
-        $order = new OrderModel( [
-            's_country' => $get_params[ 'country' ] ?? '',
-            's_zipcode' => $get_params[ 'zipcode' ] ?? '',
-            's_state' => $get_params[ 'state' ] ?? '',
-            's_city' => $get_params[ 'city' ] ?? '',
-        ] );
-
+        $order = OrderHelper::getCartOrder();
         $sh_rates = self::getShippingRates( $order );
 
         return $this->render( 'checkout/all_shipping_methods_one_page.tpl', [
             'order' => $order,
-            'shipping_rates' => $sh_rates ?? []
+            'shipping_rates' => $sh_rates ?? [],
+            'silent' => true,
         ] );
     }
 
