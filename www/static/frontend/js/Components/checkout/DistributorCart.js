@@ -97,7 +97,11 @@ export const DistributorCart = ( function () {
             const $target = $( e.currentTarget );
 
             $.ajax( {
-                url: $target.attr( 'href' ),
+                url: '/api/checkout/update',
+                data: {
+                    uid: $target.attr( 'href' ).split('/').pop(),
+                    quantity: 0,
+                },
                 method: 'GET',
                 success: function ( res ) {
                     let $row = $target;

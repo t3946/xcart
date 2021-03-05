@@ -56,7 +56,7 @@ export default ( function () {
                         $vaxTax.hide();
                     }
 
-                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( manufacturer['subtotal'] ).toFixed() );
+                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( manufacturer['subtotal'] ).toFixed(2) );
                 }
 
                 if ( res.templates.payment_methods ) {
