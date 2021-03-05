@@ -190,9 +190,6 @@ class OrderProcessController extends FrontendController
             }
 
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
-        }
-
-        if ( 1 ) {
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
         }
 

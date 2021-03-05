@@ -43,27 +43,34 @@ import _ from 'lodash';
             let key = product.dataset.key, quantity = parseInt(product.dataset.quantity) || 1;
             let number_request = ++n_request;
 
-            $.post(product.dataset.cartAction, {
+            $.post('/api/checkout/update', {
                 uid: key,
                 quantity: quantity,
             })
-                .done(data => {
+                .done(res => {
                     let p_data = page_cart.dataset;
+                    let cartQuantity = 0;
 
-                    if (number_request === n_request && ( p_data.quantity != data.quantity || p_data.total != data.total))
+                    for ( const dxCartId in res[ 'distributor_carts' ] ) {
+                        cartQuantity += res[ 'distributor_carts' ][ dxCartId ].quantity;
+                    }
+
+                    if ( number_request === n_request && ( p_data.quantity != cartQuantity || p_data.total != res.total ) )
                     {
-                        $.get('/cart/?_=' + (new Date).getTime(), {})
-                            .done(data => {
-                                if (number_request === n_request) {
-                                    //do not update checkout one page
-                                    if ($('.checkout-page').length ) {
-                                        return;
-                                    }
+                        Pace.ignore(function () {
+                            $.get('/cart/?_=' + (new Date).getTime(), {})
+                                .done(data => {
+                                    if (number_request === n_request) {
+                                        //do not update checkout one page
+                                        if ($('.checkout-page').length ) {
+                                            return;
+                                        }
 
-                                    $(page_cart).html(data.content || data);
-                                    window.LazyLoad.update();
-                                }
-                            });
+                                        $(page_cart).html(data.content || data);
+                                        window.LazyLoad.update();
+                                    }
+                                });
+                        });
                     }
                 });
         }, 200);

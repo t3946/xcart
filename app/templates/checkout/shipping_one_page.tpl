@@ -48,6 +48,7 @@
                 {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                     {set $items = $group.items}
                     {set $warehouse = $.get_warehouse($gi) }
+                    {set $taxes = $order->groups->get(['manufacturerid' => $gi])->getTaxes()}
                     <div class="warehouse_products">
                         <div class="distributor-cart">
                             <div class="cart-table-caption checkout__cart-table-caption">
@@ -60,7 +61,7 @@
                                 </span>
                             </div>
                             <div class="table cart-table_checkout">
-                                <div class="cart-table-row cart-table-head cart-table-row__head table-head show-for-large">
+                                <div class="cart-table-head cart-table-row__head table-head show-for-large">
                                     <div class="table-column"></div>
 
                                     <div class="table-column grid-title_header">{t 'Item name / SKU' }</div>
@@ -136,19 +137,31 @@
                             <div class="table">
                                 <div class="table-body">
                                     <div class="cart-table-row cart-table-row_subtotal">
-                                        <div class="total-tax total-sales-tax">
-                                            {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
-                                        </div>
-
-                                        <div class="total-tax total-vat-tax">
-                                            {t 'VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat(11.90)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
-                                        </div>
+                                        {if isset($taxes['sales_tax'])}
+                                            <div class="total-tax total-sales-tax">
+                                                {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                                <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>
+                                                    {$site_currency->getCurrencyFormat($taxes['sales_tax'])}
+                                                </span>
+                                                {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                            </div>
+                                        {/if}
+                                        {if isset($taxes['vat_tax'])}
+                                            <div class="total-tax total-vat-tax">
+                                                {t 'VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                                <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>
+                                                {$site_currency->getCurrencyFormat($taxes['vat_tax'])}
+                                            </span>
+                                                {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                            </div>
+                                        {/if}
 
                                         <div class="table-column extended_remove format_price">
                                             {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                            <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>
+                                                {$site_currency->getCurrencyFormat($group.subtotal)}
+                                            </span>
+                                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
                                         </div>
                                     </div>
                                 </div>

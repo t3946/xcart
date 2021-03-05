@@ -14,7 +14,6 @@ use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderGroupModel;
-use Modules\Order\Models\OrderGroupTaxModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -22,9 +21,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
-use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Models\SiteModel;
-use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
@@ -640,9 +637,23 @@ HTML;
     public static function getOrderInfo(OrderModel $order): array
     {
         $groups = [];
+        $cart = Xcart::app()->cart->getItemsGroupedBy();
         foreach ($order->groups as $group) {
-            $group_id = $group->order_group_id;
-            $groups[$group_id] = array_merge(['id' => $group_id, 'subtotal' => $group->total_gross], $group->getTaxes());
+            $manufacturer_id = $group->manufacturerid;
+            $quantity = 0;
+
+            foreach ($cart[ $manufacturer_id ][ 'items' ] as $item) {
+                $quantity += $item->getQuantity();
+            }
+
+            $groups[ $manufacturer_id ] = array_merge(
+                [
+                    'manufacturerid' => $manufacturer_id,
+                    'subtotal' => $group->total_gross,
+                    'quantity' => $quantity,
+                ],
+                $group->getTaxes()
+            );
         }
 
         return array_merge([
