@@ -159,12 +159,21 @@ class OrderProcessController extends FrontendController
 
     public function checkoutUpdate(): void
     {
+        $post = $this->getRequest()->post;
+        $cart = Xcart::app()->cart;
+
+        if ($post->has('uid') && $post->has('quantity')) {
+            $cart_key = $post->get('uid');
+            $item = $cart->getStorage()->get($cart_key);
+            $cart->updateQuantityByKey($cart_key, $this->getRequest()->post->get('quantity', $item->getQuantity()));
+        }
+
         if ( $order = OrderHelper::getCartOrder() ) {
             $response = OrderHelper::getOrderInfo( $order );
         }
         else {
             $order = new OrderModel( [
-                'cart_number' => Xcart::app()->cart->getCartNumber()
+                'cart_number' =>$cart->getCartNumber()
             ] );
         }
 
