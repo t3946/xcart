@@ -102,7 +102,7 @@ export const DistributorCart = ( function () {
                     uid: $target.attr( 'href' ).split('/').pop(),
                     quantity: 0,
                 },
-                method: 'GET',
+                method: 'POST',
                 success: function ( res ) {
                     let $row = $target;
 
@@ -143,7 +143,6 @@ export const DistributorCart = ( function () {
                         paddingBottom: 0,
                     }, 250, function () {
                         $row.remove();
-                        recalc();
                     } );
                 },
             } );

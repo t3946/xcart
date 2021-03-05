@@ -48,7 +48,14 @@
                 {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                     {set $items = $group.items}
                     {set $warehouse = $.get_warehouse($gi) }
-                    {set $taxes = $order->groups->get(['manufacturerid' => $gi])->getTaxes()}
+
+                    {if $order->groups->get(['manufacturerid' => $gi]) }
+                        {set $taxes = $order->groups->get(['manufacturerid' => $gi])->getTaxes()}
+                    {else}
+                        {*TODO: временное решение*}
+                        {set $taxes = []}
+                    {/if}
+
                     <div class="warehouse_products">
                         <div class="distributor-cart">
                             <div class="cart-table-caption checkout__cart-table-caption">
