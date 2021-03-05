@@ -188,14 +188,19 @@
                     </div>
 
                     <div class="total-tax checkout__total-tax">
-                        <div class="total-sales-tax">
-                            {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                            <span class="price">0.00</span>
-                        </div>
-                        <div class="total-vat-tax">
-                            {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                            <span class="price">0.00</span>
-                        </div>
+                        {set $taxes = $order->getTaxes()}
+                        {if isset($taxes['total_sales_tax']) }
+                            <div class="total-sales-tax">
+                                {t 'Total Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                <span class="price">{$taxes['total_sales_tax']}</span>
+                            </div>
+                        {/if}
+                        {if isset($taxes['total_vat_tax']) }
+                            <div class="total-vat-tax">
+                                {t 'Total VAT Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                <span class="price">{$taxes['total_vat_tax']}</span>
+                            </div>
+                        {/if}
                     </div>
 
                     <div class="grand-total order-total__grand">

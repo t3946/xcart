@@ -19,6 +19,7 @@ config = {
             // Not necessary unless you consume a module using `createClass`
             'create-react-class': 'preact-compat/lib/create-react-class',
             'Classes': path.resolve('./frontend/js/Classes'),
+            'Components': path.resolve('./frontend/js/Components'),
         },
         modules: [
             'frontend/jsx',

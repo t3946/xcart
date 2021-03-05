@@ -26,7 +26,7 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
                 data[ CheckoutForm_s_state.name ] = CheckoutForm_s_state.value;
                 data[ CheckoutForm_s_city.name ] = CheckoutForm_s_city.value;
 
-                Checkout.update(data);
+                Checkout.fieldUpdate(data);
             }
 
             /**
@@ -41,7 +41,7 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
                 data[ CheckoutForm_b_state.name ] = CheckoutForm_b_state.value;
                 data[ CheckoutForm_b_city.name ] = CheckoutForm_b_city.value;
 
-                Checkout.update(data);
+                Checkout.fieldUpdate(data);
             }
         } );
     }

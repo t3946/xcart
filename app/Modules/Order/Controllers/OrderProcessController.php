@@ -176,6 +176,8 @@ class OrderProcessController extends FrontendController
             $model->save();
         }
 
+        $response[ 'templates' ] = [];
+
         if (
             isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )

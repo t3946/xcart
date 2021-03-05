@@ -17,7 +17,67 @@ export default ( function () {
         } );
     }
 
-    Constructor.prototype.update = function ( data ) {
+    Constructor.prototype.update = function ( data, callback = null ) {
+        $.ajax( {
+            url: '/api/checkout/update',
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function ( res ) {
+                $( '.order-total .total .price' ).text( parseFloat( res['total'] ).toFixed( 2 ) );
+                $( '.shipping-total .price' ).text( parseFloat( res['total_shipping_cost'] ).toFixed( 2 ) );
+                $( '.total-sales-tax .price' ).text( parseFloat( res['total_sales_tax'] ).toFixed( 2 ) );
+                $( '.total-vat-tax .price' ).text( parseFloat( res['total_vat_tax'] ).toFixed( 2 ) );
+                $( '.grand-total .price' ).text( parseFloat( res['grand_total'] ).toFixed( 2 ) );
+
+                for ( let manufacturer_id in res.distributor_carts ) {
+                    const manufacturer = res.distributor_carts[ manufacturer_id ];
+                    const whTotal = $( `.warehouse_subtotal[data-wh=${ manufacturer_id }]` );
+
+                    const $salesTax = whTotal.find( '.total-sales-tax' );
+
+                    if ( manufacturer[ 'sales_tax' ] ) {
+                        $salesTax
+                            .show()
+                            .find( '.subtotal' )
+                            .text( parseFloat( manufacturer[ 'sales_tax' ] ).toFixed( 2 ) );
+                    } else {
+                        $salesTax.hide();
+                    }
+
+                    const $vaxTax = whTotal.find( '.total-vat-tax' );
+
+                    if ( manufacturer[ 'vat_tax' ] ) {
+                        $vaxTax
+                            .show()
+                            .find( '.subtotal' )
+                            .text( parseFloat( manufacturer[ 'vat_tax' ] ).toFixed( 2 ) );
+                    } else {
+                        $vaxTax.hide();
+                    }
+
+                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( manufacturer['subtotal'] ).toFixed() );
+                }
+
+                if ( res.templates.payment_methods ) {
+                    PaymentMethods.updateTemplate( res.templates.payment_methods );
+                }
+
+                if ( res.templates.shipping_methods ) {
+                    ShippingMethods.updateTemplate( res.templates.shipping_methods );
+                }
+
+                if ( typeof callback === "function" ) {
+                    callback( res );
+                }
+            },
+            error: function ( err ) {
+                console.log( 'error', err );
+            },
+        } );
+    }
+
+    Constructor.prototype.fieldUpdate = function ( data, callback = null ) {
         const form = Forms.getValidationForms().find( ( item ) => item.form.id === 'CheckoutForm9' );
 
         //dont send if is invalid
@@ -34,40 +94,7 @@ export default ( function () {
             return;
         }
 
-        $.ajax( {
-            url: '/api/checkout/update',
-            method: 'POST',
-            data: data,
-            dataType: 'json',
-            success: function ( res ) {
-                var n = '0';
-                $( '.order-total .total .price' ).text( parseFloat( n ).toFixed( 2 ) );
-                $( '.shipping-total .price' ).text( parseFloat( n ).toFixed( 2 ) );
-                $( '.total-sales-tax .price' ).text( parseFloat( n ).toFixed( 2 ) );
-                $( '.total-vat-tax .price' ).text( parseFloat( n ).toFixed( 2 ) );
-                $( '.grand-total .price' ).text( parseFloat( n ).toFixed( 2 ) );
-
-                for ( let id in res.distributor_carts ) {
-                    const whPrices = res.distributor_carts[ id ];
-                    const whTotal = $( `.warehouse_subtotal[data-wh=${ id }]` );
-
-                    whTotal.find( '.total-sales-tax .subtotal' ).text( parseFloat( n ).toFixed() );
-                    whTotal.find( '.total-vat-tax .subtotal' ).text( parseFloat( n ).toFixed() );
-                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( n ).toFixed() );
-                }
-
-                if ( res.templates.payment_methods ) {
-                    PaymentMethods.updateTemplate( res.templates.payment_methods );
-                }
-
-                if ( res.templates.shipping_methods ) {
-                    ShippingMethods.updateTemplate( res.templates.shipping_methods );
-                }
-            },
-            error: function ( err ) {
-                console.log( 'error', err );
-            },
-        } );
+        update( data );
     }
 
     return new Constructor();
