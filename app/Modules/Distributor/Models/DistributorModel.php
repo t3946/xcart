@@ -18,6 +18,7 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Models\TaxModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -543,7 +544,12 @@ class DistributorModel extends Model
                 'adapterName' => 'www',
                 'uploadTo' => 'images/M/',
                 'null' => true,
-            ]
+            ],
+            'taxes' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => TaxModel::class,
+                'through' => DistributorTaxModel::class,
+            ],
         ];
     }
 

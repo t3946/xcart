@@ -37,7 +37,6 @@ class DistributorFrontEndMessagesForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_front_page_tabs_text') ?? 'help_dx_front_page_tabs_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-
             ],
             'lead_time_message' => [
                 'class' => CharField::class,
