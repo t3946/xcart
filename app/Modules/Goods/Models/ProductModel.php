@@ -588,7 +588,9 @@ class ProductModel extends Model implements ICartItem
 
     public function getDistributorUrl()
     {
-        return str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [$this->getMPN(), $this->supplier_internal_id], $this->distributor->d_website_search_for_sku_url);
+        return str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [$this->getMPN(), $this->supplier_internal_id],
+            $this->distributor->d_website_search_for_sku_url ?: '{{supplier_internal_id}}'
+        );
     }
 
     public function getAmpAbsoluteUrl($full = false)
