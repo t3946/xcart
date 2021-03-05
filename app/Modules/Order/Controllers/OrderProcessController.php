@@ -159,18 +159,27 @@ class OrderProcessController extends FrontendController
 
     public function checkoutUpdate(): void
     {
+        $post = $this->getRequest()->post;
+        $cart = Xcart::app()->cart;
+
+        if ($post->has('uid') && $post->has('quantity')) {
+            $cart_key = $post->get('uid');
+            $item = $cart->getStorage()->get($cart_key);
+            $cart->updateQuantityByKey($cart_key, $post->get('quantity', $item->getQuantity()));
+        }
+
         if ( $order = OrderHelper::getCartOrder() ) {
             $response = OrderHelper::getOrderInfo( $order );
         }
         else {
             $order = new OrderModel( [
-                'cart_number' => Xcart::app()->cart->getCartNumber()
+                'cart_number' => $cart->getCartNumber()
             ] );
         }
 
         $form = new CheckoutForm();
         $form->setInstance( $order );
-        $form->populate( Xcart::app()->request->post );
+        $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
         if ( $model = $form->getInstance() ) {
             $model->save();
@@ -185,7 +194,7 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            if ( count( OrderProcessController::getShippingRates( $order ) ) < count( Xcart::app()->cart->getItemsGroupedBy() ) ) {
+            if ( count( OrderProcessController::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
                 $order->save();
