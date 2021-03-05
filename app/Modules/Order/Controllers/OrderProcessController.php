@@ -164,8 +164,8 @@ class OrderProcessController extends FrontendController
 
         if ($post->has('uid') && $post->has('quantity')) {
             $cart_key = $post->get('uid');
-            $item = $cart->getStorage()->get($cart_key);
-            $cart->updateQuantityByKey($cart_key, $post->get('quantity', $item->getQuantity()));
+            $quantity = $post->get('quantity');
+            $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
         }
 
         if ( $order = OrderHelper::getCartOrder() ) {
