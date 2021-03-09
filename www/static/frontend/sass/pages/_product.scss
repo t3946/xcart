@@ -72,6 +72,7 @@
 
   .product__images-slider {
     margin: 0 auto;
+    height: 100%;
 
     @include breakpoint(large) {
       margin: 0;

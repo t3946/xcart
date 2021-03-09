@@ -73,6 +73,7 @@ input {
 #main_wrapper {
   min-width: 320px;
   min-height: 100%;
+  overflow: initial;
 
   .off-canvas-content {
     min-height: 100%;
