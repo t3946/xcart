@@ -5,51 +5,81 @@
         <div class="price-section columns small-12">
             {set $subtotal_hide = ($model->list_price > $model->getFrontendPrice())}
             {set $price_safe = ($model->list_price - $model->getFrontendPrice())}
-            <div class="price__quantity">
+            {set $has_discount = $model->list_price > $model->getFrontendPrice($model->min_amount)}
+
+            <div class="product-quantity">
                 <div class="column small-12">
-                        <div class="table table__prices table__prices--top">
-                            <div class="column price">
-                                <div class="title">{t 'Unit Price'}</div>
-                                <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount))}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
-                                </div>
+                    <div class="table table__prices table__prices--top product-quantity-row__title">
+                        <div class="title column small-4 product-quantity-title">{t 'Unit Price'}</div>
+                        <div class="title column small-4 product-quantity-title">{t 'Quantity'}</div>
+                        {if !$model->isOutOfStockFrontend()}
+                            <div class="title column small-4 product-quantity-title">{t 'Subtotal'}</div>
+                        {/if}
+                    </div>
+
+                    <div class="table table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
+                        <div class="column column-price small-4">
+                            <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
+                                {$site_currency->symbol_prefix}
+                                {if !$site_currency->after}
+                                    {$site_currency}
+                                {/if}
+                                <span class="price" var-price>
+                                    {$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount))}
+                                </span>
+                                {if $site_currency->after}
+                                    {$site_currency}
+                                {/if}
                             </div>
-
-                            <div class="column quantity">
-                                <div class="title">{t 'Quantity'}</div>
-                                <div class="value">
-
-                                    {if !$model->isOutOfStockFrontend()}
-                                        {include "product/parts/_quantity_group.tpl"}
-                                    {else}
-                                        {t 'Out of stock'}
+                            {if $has_discount}
+                                <div class="value product-quantity-old-price">
+                                    {$site_currency->symbol_prefix}
+                                    {if !$site_currency->after}
+                                        {$site_currency}
+                                    {/if}
+                                    <span class="price">
+                                        {$model->list_price}
+                                    </span>
+                                    {if $site_currency->after}
+                                        {$site_currency}
                                     {/if}
                                 </div>
-                            </div>
-
-                            {if !$model->isOutOfStockFrontend()}
-                                <div class="column extended">
-                                    <div class="title">{t 'Subtotal'}</div>
-                                    <div class="value">
-                                        {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
-                                    </div>
-                                </div>
-
-
-                            {else}
-
-                                <div class="column notify auto">
-                                    <div class="title"></div>
-                                    <div class="value">
-
-                                    </div>
-                                </div>
-
                             {/if}
                         </div>
+
+                        <div class="column quantity small-4">
+                            <div class="value">
+                                {if !$model->isOutOfStockFrontend()}
+                                    {include "product/parts/_quantity_group.tpl"}
+                                {else}
+                                    {t 'Out of stock'}
+                                {/if}
+                            </div>
+                        </div>
+
+                        {if !$model->isOutOfStockFrontend()}
+                            <div class="column column-extended small-4">
+                                <div class="product-quantity-extended-price">
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                    <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
+                                </div>
+                                {if $model->list_price > $model->getFrontendPrice($model->min_amount)}
+                                    <div class="value product-quantity-old-price">
+                                        {$site_currency->symbol_prefix}
+                                        {if !$site_currency->after}
+                                            {$site_currency}
+                                        {/if}
+                                        <span class="price product-quantity-old-price">{number_format($model->list_price * $model->min_amount, 2, '.', ' ')}</span>
+                                        {if $site_currency->after}
+                                            {$site_currency}
+                                        {/if}
+                                    </div>
+                                {/if}
+                            </div>
+                        {/if}
                     </div>
-                {if !$model->isOutOfStockFrontend()}
-                    <div class="column small-8 large-8 price-row-width xl-8">
+
+                    {if !$model->isOutOfStockFrontend()}
                         <div class="table table__prices table__prices--down price-row-width">
                             {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
                                 {if $quantity == 1}
@@ -76,36 +106,8 @@
                                 {set $last_price = $price}
                             {/foreach}
                         </div>
-
-                    </div>
-                    {if $index}
-                        <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
-                        <div class="row" style="margin:0">
-                            <div class="columns discount__title">{t 'Extra qty discount'}</div>
-                        </div>
-                        <div class="row discount__counter">
-                            <div class="columns">
-                                <div class="digit hours"></div>
-                                <div class="label hours">{t 'hrs'}</div>
-                            </div>
-                            <div class="columns">
-                                <span class="delimiter">:</span>
-                            </div>
-                            <div class="columns">
-                                <div class="digit minutes"></div>
-                                <div class="label minutes">{t 'min'}</div>
-                            </div>
-                            <div class="columns">
-                                <span class="delimiter">:</span>
-                            </div>
-                            <div class="columns">
-                                <div class="digit seconds"></div>
-                                <div class="label seconds">{t 'sec'}</div>
-                            </div>
-                        </div>
-                    </div>
                     {/if}
-                {/if}
+                </div>
             </div>
         </div>
         <div class="button-section columns small-12">
@@ -129,7 +131,8 @@
                                     {t 'List Price'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-list>{$site_currency->getCurrencyFormat($model->list_price)}</span>{if $site_currency->after}{$site_currency}{/if}
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                    <span class="price" var-price-list>{$site_currency->getCurrencyFormat($model->list_price)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -138,7 +141,8 @@
                                     {t 'Per item savings'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-perunit-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                    <span class="price" var-price-perunit-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -147,7 +151,8 @@
                                     {t 'Total savings'}:
                                 </div>
                                 <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="price" var-price-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                    <span class="price" var-price-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
                                 </div>
                             </div>
                         </div>

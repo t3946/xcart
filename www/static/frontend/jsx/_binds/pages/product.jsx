@@ -11,8 +11,13 @@ import documentReady from "../../utils/documentReady";
 
             if (prices_row) {
                 let timers = {};
+                const $prices_table = $(page);
+                const listPrice = parseFloat( $prices_table.find( '.column-price .product-quantity-old-price .price' ).text() );
+                const $oldTotalPrice = $prices_table.find( '.column-extended .product-quantity-old-price .price' );
 
                 $(document).on('component.quantity.change', (e, data) => {
+                    //update old total price
+                    $oldTotalPrice.text( ( listPrice * data.val ).toFixed( 2 ) );
 
                     if (data.product && data.product.dataset.product === page.dataset.product) {
                         let allHide = true;

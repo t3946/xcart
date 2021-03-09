@@ -1,12 +1,11 @@
-@mixin getPricesTable()
-{
+@mixin getPricesTable() {
   .prices__container {
 
-    .price__quantity {
+    .product-quantity {
 
       padding: rem-calc(18) 0;
 
-      .column{
+      .column {
         padding: 0;
       }
 
@@ -23,22 +22,22 @@
       }
 
       .discount_block {
-        text-align:center;
+        text-align: center;
         color: red;
         display: none;
         padding-top: rem-calc(4);
 
         .discount__title {
           height: rem-calc(16);
-          font-size:rem-calc(14);
+          font-size: rem-calc(14);
 
           @include breakpoint(sm down) {
-            font-size:rem-calc(11);
+            font-size: rem-calc(11);
           }
         }
 
-        .discount__counter{
-          font-size:rem-calc(20);
+        .discount__counter {
+          font-size: rem-calc(20);
           max-width: rem-calc(110);
           margin: 0 auto;
 
@@ -68,23 +67,10 @@
             flex: auto;
           }
 
-          .title {
-            display: flex;
-            text-align: center;
-            height: rem-calc(36);
-            line-height: rem-calc(36);
-            align-content: center;
-            justify-content: center;
-          }
-
           .value {
             display: flex;
             align-content: center;
             align-items: center;
-
-            font: {
-              size: rem-calc(13);
-            }
 
             &.price-value,
             &.extended-value {
@@ -92,80 +78,29 @@
                 size: rem-calc(15);
               }
             }
-
-            @include breakpoint(medium) {
-              font: {
-                size: rem-calc(16);
-              }
-              &.price-value,
-              &.extended-value {
-                font: {
-                  size: rem-calc(18);
-                }
-              }
-            }
-            @include breakpoint(large) {
-              font: {
-                size: rem-calc(15);
-              }
-              &.price-value,
-              &.extended-value {
-                font: {
-                  size: rem-calc(17);
-                }
-              }
-            }
           }
         }
       }
 
       .table__prices {
-        border: 2px solid #666;
 
         .column {
           flex: auto;
           padding: 0;
-          border-right: 2px solid #b4b4b4;
 
-          .title { text-align: center; border-bottom: 2px solid #666 }
+          .title {
+            text-align: center;
+            background: #E4E4E4;
+          }
+
           .value {
             text-align: center;
             justify-content: center;
           }
 
-          &.price {
-            flex: 0 0 33.33333%;
-
-            @include breakpoint(medium) {
-              /*flex: 0 0 rem-calc(174);
-              width: rem-calc(174);*/
-            }
-
-            @include breakpoint(large only) {
-              /*flex: 0 0 rem-calc(154);
-              width: rem-calc(154);*/
-            }
-          }
-
           &.quantity {
-            flex: 0 0 33.33333%;
-
-            @include breakpoint(medium) {
-              /*flex: 0 0 rem-calc(150);
-              width: rem-calc(150);*/
-            }
-
-
-            @include breakpoint(large only) {
-              /*flex: 0 0 rem-calc(128);
-              width: rem-calc(128);*/
-            }
-
             .quantity-group {
               .btn {
-                -moz-user-select: none;
-                -khtml-user-select: none;
-                -webkit-user-select: none;
                 user-select: none;
               }
 
@@ -186,17 +121,6 @@
           &.extended {
             flex: auto;
             border-right: none;
-
-            @include breakpoint(sm down) {
-            }
-
-            @include breakpoint(medium up) {
-            }
-
-            @include breakpoint(large only) {
-
-            }
-
           }
         }
 
@@ -213,76 +137,11 @@
           flex: auto;
         }
 
-
-        @include bem_modifier(top) {
-          box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-
-          .column {
-
-            &.auto {
-              border-right: none;
-            }
-
-            &.price {
-              .value {
-                font: {
-                  size: rem-calc(27);
-                  weight: 700;
-                }
-
-                @include breakpoint(sm down) {
-                  font: {
-                    size: rem-calc(18);
-                    weight: 700;
-                  }
-                }
-              }
-            }
-
-            &.extended {
-              .value {
-                font: {
-                  size: rem-calc(22);
-                }
-                @include breakpoint(sm down) {
-                  font: {
-                    size: rem-calc(16);
-                  }
-                }
-              }
-            }
-
-            .value {
-              height: rem-calc(63);
-              line-height: rem-calc(63);
-
-              .cart_add {
-                width: 100%;
-                margin:10px;
-              }
-            }
-          }
-        }
-
         .price-row {
           transition: all .6s ease;
           height: rem-calc(30);
           line-height: rem-calc(30);
           overflow: hidden;
-
-          border: 2px solid #bababa;
-          border-top: none;
-          border-right: none;
-          border-bottom: 1px solid #dbdbdb;
-          background-color: #f2f2f2;
-
-          /*@include breakpoint(medium) {
-            max-width: rem-calc(150) + rem-calc(174) + rem-calc(2);
-          }
-
-          @include breakpoint(large only) {
-            max-width: rem-calc(130) + rem-calc(154) + rem-calc(2);
-          }*/
 
           .column {
             &.price {
@@ -310,19 +169,9 @@
             }
           }
 
-
-          &:last-child {
-              border-bottom: 2px solid #bababa;
-          }
-
           &.hidden {
-            height: 1px;
-            margin-top: -1px;
-
-          }
-
-          .quantity {
-            border-right: 2px solid #bababa;
+            height: 0;
+            margin-top: 0;
           }
         }
       }
@@ -368,19 +217,13 @@
         .value {
           font-weight: 700;
         }
-
       }
 
       &.safe-per-item {
-
         color: #0d69a1;
 
         .title {
           font-size: rem-calc(14);
-        }
-
-        .value {
-
         }
       }
 
@@ -401,4 +244,92 @@
 
 .table__prices--down {
   padding: 0 1px 0 0;
+}
+
+.table__prices--top {
+  .column {
+    &.auto {
+      border-right: none;
+    }
+
+    .value {
+      .cart_add {
+        width: 100%;
+        margin: 10px;
+      }
+    }
+  }
+}
+
+.product-quantity-one-price {
+  white-space: nowrap;
+  font-size: rem-calc(20);
+  line-height: rem-calc(20);
+  font-weight: 900;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(20);
+    line-height: rem-calc(20);
+  }
+}
+
+.product-quantity-one-price__discount {
+  color: #fe1104;
+}
+
+.product-quantity-old-price {
+  font: {
+    size: rem-calc(15);
+    weight: normal;
+  }
+  color: #4a4949;
+  text-decoration: line-through;
+}
+
+.product-quantity-bulk-price {
+  font-size: rem-calc(25);
+}
+
+.product-quantity-title {
+  display: flex;
+  text-align: center;
+  height: rem-calc(40);
+  line-height: rem-calc(40);
+  align-content: center;
+  justify-content: center;
+}
+
+.product-quantity-row__title {
+  background: #e4e4e4;
+}
+
+.product-quantity-row__price {
+  padding: 20px 0;
+}
+
+.product-quantity-row__price_discount {
+  padding: 20px 0 25px;
+}
+
+.product-quantity-row__wholesale {
+  background-color: #f2f2f2;
+}
+
+.product-quantity_wholesale-row {
+  margin: 0 0 2px;
+}
+
+.product-quantity_wholesale-row:last-child {
+  margin: 0;
+}
+
+.product-quantity-extended-price {
+    font-size: rem-calc(22);
+    line-height: rem-calc(22);
+    text-align: center;
+
+    @include breakpoint(sm down) {
+      font-size: rem-calc(20);
+      line-height: rem-calc(20);
+    }
 }

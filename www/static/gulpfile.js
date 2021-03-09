@@ -382,7 +382,7 @@ gulp.task( 'watch:frontend:bem', [ 'frontend:bem' ], function () {
 } );
 
 gulp.task( 'watch:frontend:css', [ 'frontend:css' ], function () {
-    gulp.watch( ['frontend/bem/bem.scss' ], [ 'frontend:css' ] );
+    gulp.watch( ['frontend/bem/bem.scss', 'frontend/sass/**/*' ], [ 'frontend:css' ] );
     // console.log(frontend.src.css);
     // gulp.watch( [
     //     frontend.src.css,
