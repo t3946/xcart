@@ -717,9 +717,9 @@ class ProductModel extends Model implements ICartItem
             $this->priceArray = [];
             $curr = $this->distributor->currency;
             foreach ($this->pricing as $price) {
-                $price_value = max($price->price, $this->new_map_price);
+                $price_value = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
                 if (!in_array($price_value, $this->priceArray, true)) {
-                    $this->priceArray[$price->quantity] = CurrencyHelper::convert($curr, $price_value);
+                    $this->priceArray[$price->quantity] = $price_value;
                 }
             }
         }
