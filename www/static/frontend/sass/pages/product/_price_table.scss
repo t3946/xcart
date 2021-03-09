@@ -146,22 +146,6 @@
           .column {
             &.price {
               flex: 0 0 50%;
-
-              .value {
-                .discount {
-                  color: red;
-                  margin-left: rem-calc(5);
-                  font: {
-                    size: rem-calc(12);
-                  }
-
-                  &.show {
-                    &:before {
-                      content: "-";
-                    }
-                  }
-                }
-              }
             }
 
             &.quantity {
@@ -326,10 +310,25 @@
 .product-quantity-extended-price {
     font-size: rem-calc(22);
     line-height: rem-calc(22);
-    text-align: center;
+    display: flex;
+    justify-content: center;
 
     @include breakpoint(sm down) {
       font-size: rem-calc(20);
       line-height: rem-calc(20);
     }
+}
+
+.discount-percent {
+  color: red;
+  margin-left: rem-calc(5);
+  font: {
+    size: rem-calc(12);
+  }
+
+  &.show {
+    &:before {
+      content: "-";
+    }
+  }
 }

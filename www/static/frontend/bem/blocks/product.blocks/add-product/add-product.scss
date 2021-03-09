@@ -2,15 +2,3 @@
   display: flex;
   justify-content: flex-start;
 }
-
-@include breakpoint(md up) {
-  .add-product {
-    justify-content: flex-end;
-  }
-}
-
-@include breakpoint(lg up) {
-  .add-product {
-    justify-content: flex-start;
-  }
-}

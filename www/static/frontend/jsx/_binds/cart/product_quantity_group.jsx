@@ -79,12 +79,23 @@ import _ from 'lodash';
 
             let params = getValues(e);
 
-            if (params.$this.hasClass('quantity-group-btn_inc') && params.val < params.max) {
+            // do inc
+            if (
+                params.$this.hasClass('quantity-group-btn_inc')
+                && params.val < params.max
+            ) {
                 params.val += parseInt(params.$input.attr('step'));
             }
-
-            if (params.$this.hasClass('quantity-group-btn_dec') && params.val > params.min) {
+            // do dec
+            else if (
+                params.$this.hasClass('quantity-group-btn_dec')
+                && params.val > params.min
+            ) {
                 params.val -= parseInt(params.$input.attr('step'));
+            }
+            // do not anything
+            else {
+                return;
             }
 
             // params.$input.val(params.val);

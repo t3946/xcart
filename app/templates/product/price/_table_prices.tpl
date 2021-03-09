@@ -21,28 +21,36 @@
                         <div class="column column-price small-4">
                             <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
                                 {$site_currency->symbol_prefix}
-                                {if !$site_currency->after}
-                                    {$site_currency}
-                                {/if}
+                                <span>
+                                    {if !$site_currency->after}
+                                        {$site_currency}
+                                    {/if}
+                                </span>
                                 <span class="price" var-price>
                                     {$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount))}
                                 </span>
-                                {if $site_currency->after}
-                                    {$site_currency}
-                                {/if}
+                                <span>
+                                    {if $site_currency->after}
+                                        {$site_currency}
+                                    {/if}
+                                </span>
                             </div>
                             {if $has_discount}
                                 <div class="value product-quantity-old-price">
                                     {$site_currency->symbol_prefix}
-                                    {if !$site_currency->after}
-                                        {$site_currency}
-                                    {/if}
+                                    <span>
+                                        {if !$site_currency->after}
+                                            {$site_currency}
+                                        {/if}
+                                    </span>
                                     <span class="price">
                                         {$model->list_price}
                                     </span>
-                                    {if $site_currency->after}
-                                        {$site_currency}
-                                    {/if}
+                                    <span>
+                                        {if $site_currency->after}
+                                            {$site_currency}
+                                        {/if}
+                                    </span>
                                 </div>
                             {/if}
                         </div>
@@ -66,13 +74,17 @@
                                 {if $model->list_price > $model->getFrontendPrice($model->min_amount)}
                                     <div class="value product-quantity-old-price">
                                         {$site_currency->symbol_prefix}
-                                        {if !$site_currency->after}
-                                            {$site_currency}
-                                        {/if}
+                                        <span>
+                                            {if !$site_currency->after}
+                                                {$site_currency}
+                                            {/if}
+                                        </span>
                                         <span class="price product-quantity-old-price">{number_format($model->list_price * $model->min_amount, 2, '.', ' ')}</span>
-                                        {if $site_currency->after}
-                                            {$site_currency}
-                                        {/if}
+                                        <span>
+                                            {if $site_currency->after}
+                                                {$site_currency}
+                                            {/if}
+                                        </span>
                                     </div>
                                 {/if}
                             </div>
@@ -81,6 +93,8 @@
 
                     {if !$model->isOutOfStockFrontend()}
                         <div class="table table__prices table__prices--down price-row-width">
+                            {set $max_show_rows = 2}
+                            {set $showed_rows = 0}
                             {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
                                 {if $quantity == 1}
                                     {set $discount_base = $price}
@@ -92,7 +106,16 @@
                                     {set $ql = ($max_q == $last_quantity) ? $last_quantity : "{$last_quantity} - {$max_q}"}
                                     {set $discount = round(($discount_base - $last_price) / $discount_base * 100)}
 
-                                    {include "product/price/_price_table_row.tpl" discount = $discount hidden=$index > 2 quantity=$last_quantity price=$last_price quantity_line = $ql}
+                                    {if $showed_rows < $max_show_rows}
+                                        {set $hidden = $last_quantity <= $model->min_amount}
+                                        {if $hidden === false}
+                                            {set $showed_rows = $showed_rows + 1}
+                                        {/if}
+                                    {else}
+                                        {set $hidden = true}
+                                    {/if}
+
+                                    {include "product/price/_price_table_row.tpl" discount = $discount hidden=$hidden quantity=$last_quantity price=$last_price quantity_line = $ql}
                                 {/if}
 
                                 {if $quantity > $model->avail}{break}{/if}
@@ -122,39 +145,6 @@
                         </div>
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
-                        </div>
-                    </div>
-                    <div class="column large-4 xl-4 hide-for-small show-for-medium auto">
-                        <div class="subtotal_container {if !$subtotal_hide}hide{/if}" cont-subtotal>
-                            <div class="safe-prices list-price ">
-                                <div class="title">
-                                    {t 'List Price'}:
-                                </div>
-                                <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                    <span class="price" var-price-list>{$site_currency->getCurrencyFormat($model->list_price)}</span>{if $site_currency->after}{$site_currency}{/if}
-                                </div>
-                            </div>
-
-                            <div class="safe-prices safe safe-per-item ">
-                                <div class="title">
-                                    {t 'Per item savings'}:
-                                </div>
-                                <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                    <span class="price" var-price-perunit-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
-                                </div>
-                            </div>
-
-                            <div class="safe-prices safe total-safe ">
-                                <div class="title">
-                                    {t 'Total savings'}:
-                                </div>
-                                <div class="value">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                    <span class="price" var-price-safe>{$site_currency->getCurrencyFormat($price_safe)}</span>{if $site_currency->after}{$site_currency}{/if}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

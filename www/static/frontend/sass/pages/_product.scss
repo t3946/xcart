@@ -23,8 +23,10 @@
   }
 
   .price {
-    padding-left: 3px;
-
+    display: flex;
+    &:before {
+      content: ' ';
+    }
     .price-value {
       font-weight: bold;
     }

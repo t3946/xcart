@@ -11,9 +11,13 @@
     .button {
       line-height: rem-calc(46);
       height: rem-calc(46);
+      @include breakpoint(lg up) {
+        line-height: rem-calc(50);
+        height: rem-calc(50);
+      }
     }
 
-    .wait-button{
+    .wait-button {
       position: relative;
       overflow: hidden;
 
@@ -31,13 +35,7 @@
         top: 0;
         left: -50%;
         z-index: 2;
-        background: repeating-linear-gradient(
-                        135deg,
-                        $white,
-                        $white 12px,
-                        $grey_e2 12px,
-                        $grey_e2 24px
-        );
+        background: repeating-linear-gradient(135deg, $white, $white 12px, $grey_e2 12px, $grey_e2 24px);
         visibility: hidden;
         transition: left 1.2s linear;
       }
@@ -52,7 +50,7 @@
           text-decoration: none;
         }
 
-        &.loading{
+        &.loading {
           &:after {
             left: 0;
             visibility: visible;
