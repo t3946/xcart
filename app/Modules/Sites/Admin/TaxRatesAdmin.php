@@ -40,7 +40,7 @@ class TaxRatesAdmin extends ListViewAdmin
 
     public function getModel()
     {
-        return new TaxRatesModel;
+        return new TaxRatesModel();
     }
 
     public static function getName()
