@@ -32,7 +32,7 @@ class DistributorTabModel extends Model
             ],
             'content' => [
                 'class' => CharField::class,
-                'verboseName' => 'Tab content'
+                'verboseName' => 'Tab body'
             ],
         ];
     }
