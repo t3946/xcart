@@ -70,4 +70,10 @@ class DxTaxesAdmin extends ListViewAdmin
         ];
     }
 
+    public function getListItemActions()
+    {
+        return [
+            'remove',
+        ];
+    }
 }
