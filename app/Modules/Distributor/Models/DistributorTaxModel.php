@@ -5,6 +5,7 @@ namespace Modules\Distributor\Models;
 
 
 use Modules\Sites\Models\TaxModel;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
@@ -18,6 +19,7 @@ class DistributorTaxModel extends Model
     public static function getFields()
     {
         return [
+            'distributor_taxes_id' => AutoField::class,
             'distributor' => [
                 'field' => 'distributor_id',
                 'class' => ForeignField::class,
@@ -31,5 +33,10 @@ class DistributorTaxModel extends Model
                 'link' => ['tax_id' => 'taxid']
             ]
         ];
+    }
+
+    public function __toString(): string
+    {
+        return (string)($this->pk ? $this->tax : 'Tax');
     }
 }

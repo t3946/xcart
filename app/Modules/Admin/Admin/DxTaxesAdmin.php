@@ -36,11 +36,14 @@ class DxTaxesAdmin extends ListViewAdmin
 
     public function getItemProperty(Model $item, $property)
     {
-        $rates = $item->rates->all();
+        $tax = $item->tax;
+        $rates = $tax->rates->all();
         /** @var TaxModel $item */
         switch ($property) {
+            case 'tax_name':
+                return (string)$tax;
             case 'is_vat':
-                return $item->$property ? 'VAT' : 'Sales';
+                return $tax->$property ? 'VAT' : 'Sales';
             case 'tax_rate':
                 return implode('<br/>', array_map(static fn($r) => $r->rate_value . $r->rate_type, $rates));
             case 'zone':

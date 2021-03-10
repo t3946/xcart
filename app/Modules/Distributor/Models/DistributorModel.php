@@ -166,6 +166,11 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'd_frontend_return_policy' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
             'd_distributor_return_policy' => [
                 'class' => CharField::class,
                 'default' => '',
@@ -546,9 +551,9 @@ class DistributorModel extends Model
                 'null' => true,
             ],
             'taxes' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => TaxModel::class,
-                'through' => DistributorTaxModel::class,
+                'class' => HasManyField::class,
+                'modelClass' => DistributorTaxModel::class,
+                'link' => ['manufacturerid' => 'distributor_id']
             ],
         ];
     }
