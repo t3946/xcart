@@ -50,14 +50,13 @@ class ClearFormFields {
      * @param event
      */
     clearField(input, event){
-
         let closeElement = event.target;
-        let wrapper = closeElement.closest('.input-container');
+        let wrapper = closeElement.closest( '.input-container' );
 
-         input.value = '';
-         input.focus();
-         wrapper.classList.remove('hasClose');
-
+        input.value = '';
+        input.focus();
+        $(input).trigger('change');
+        wrapper.classList.remove('hasClose');
     }
 
 
