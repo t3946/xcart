@@ -23,8 +23,8 @@
             <div class="input-container switcher-input-container {$field->className} {$hasClose}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                 {raw $input}
                 <span class="switcher-button field__switcher-button {$field->switcherClass}">
-                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="/static/frontend/dist/images/icons/sprite.svg#switcher-plus"></use></svg>
-                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="/static/frontend/dist/images/icons/sprite.svg#switcher-minus"></use></svg>
+                    <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="/static/frontend/images/icons/sprite.svg#switcher-plus"></use></svg>
+                    <svg class="icon switcher-button-icon switcher-button-icon-minus"><use xlink:href="/static/frontend/images/icons/sprite.svg#switcher-minus"></use></svg>
                 </span>
             </div>
             <div class="show-for-medium input-info">

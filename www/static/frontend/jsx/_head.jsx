@@ -25,7 +25,7 @@ import  "./_binds/forms"
 import  "./_binds/cart"
 import  "./_binds/up_down_buttons"
 import  "./_binds/breadcrumbs"
-import  "./_binds/sticky_menu"
+// import  "./_binds/sticky_menu"
 import  "./_binds/sticky_header"
 import  "./_binds/response_status_278";
 import  "./_binds/endless_pagination";

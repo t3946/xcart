@@ -231,6 +231,8 @@
 </section>
 {/block}
 
+{block 'search-menu'}{/block}
+
 {block 'js'}
     {foreach $.app->cart->getItems() as $gi => $item}
         {set $pids[] = $item->getObject()->productid}

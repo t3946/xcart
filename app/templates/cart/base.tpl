@@ -122,3 +122,4 @@
 
 
 {block 'offcanvas-menu-left'}{/block}
+{block 'search-menu'}{/block}

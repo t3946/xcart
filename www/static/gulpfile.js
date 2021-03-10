@@ -153,7 +153,7 @@ gulp.task( 'frontend:js', function ( done ) {
     const args = [
         './node_modules/webpack/bin/webpack.js',
         '--config',
-        './config/webpack.frontend-js.js',
+        './config/webpack.frontend.js',
         '--progress',
         '-w',
     ];
@@ -369,6 +369,7 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/form.blocks/**/*.scss',
         'frontend/bem/blocks/product.blocks/**/*.scss',
         'frontend/bem/blocks/billing.blocks/**/*.scss',
+        'frontend/bem/blocks/header.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));

@@ -76,7 +76,7 @@
                 <div class="column small-12">
                     <button class="footer-scroll-up-button footer__scroll-up-button" type="button">
                         <svg class="footer-scroll-up-icon">
-                            <use xlink:href="/static/frontend/dist/images/icons/sprite.svg#corner-white"></use>
+                            <use xlink:href="/static/frontend/images/icons/sprite.svg#corner-white"></use>
                         </svg>
                         <span class="footer-scroll-up-title">{t 'up'}</span>
                     </button>

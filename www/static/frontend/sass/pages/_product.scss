@@ -131,9 +131,9 @@
   }
 
   .pinterest-bookmark {
-    position: relative;
-    top: rem-calc(-64);
-    float: right;
-    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 32px;
   }
 }

@@ -427,6 +427,8 @@ export default class ProductImageSlider extends Component {
             return <div className="slider loading"></div>;
         }
 
+        const detail = this.renderDetailClickBar();
+
         return (
             <div className="images-slider">
                 {this.renderSliderThumbs()}
@@ -434,9 +436,14 @@ export default class ProductImageSlider extends Component {
                     <div className="wrap">
                         {this.renderSlyDetails()}
                     </div>
-                    <ul className="detailClickBar">
-                        {this.renderDetailClickBar()}
-                    </ul>
+                    { detail &&
+                        <ul className="detailClickBar">
+                            { detail }
+                        </ul>
+                    }
+                    <div class="pinterest-bookmark" id="pinterest-bookmark">
+                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"></a>
+                    </div>
                 </div>
             </div>
         );
