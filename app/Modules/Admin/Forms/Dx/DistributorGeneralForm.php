@@ -76,7 +76,7 @@ class DistributorGeneralForm extends DistributorForm
             ],
             'logo' => [
                 'class' => ImageField::class,
-                'label' => 'Logo',
+                'label' => 'Logo (jpg, png, svg formats only)',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_logo_text'),
