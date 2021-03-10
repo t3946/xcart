@@ -41,7 +41,7 @@
             {raw $form->getField('submit_to_operator')->render()}
             <tr {if $distributorModel->submit_to_operator === 'by_email_or_and_fax'}style="display: none;"{/if}
                 id="tr_email_to_order_entry_operator">
-                <td class="by_site" colspan="3" align="center"><b>Email to order entry operator</b></td>
+                <td class="by_site" colspan="3" align="center"><h1>Email to order entry operator</h1></td>
             </tr>
             {raw $form->getField('order_entry_template')->render()}
             {raw $form->getField('template_1_subj')->render()}
