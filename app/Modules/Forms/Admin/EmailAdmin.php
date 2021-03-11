@@ -66,7 +66,7 @@ class EmailAdmin extends Admin
                 'template' => $this->columnDefaultTemplate,
             ],
             'subject' => [
-                'title' => 'Subject',
+                'title' => 'Subject Line / Message',
                 'template' => $this->columnDefaultTemplate,
             ],
             'body' => [
