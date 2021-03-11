@@ -13,6 +13,6 @@
                 & Free shipping
             {/if}
         {/if}
-        We pay to distributor by {$distributor->getField('d_we_pay_to_distributor_by')->toText()}
+        We pay by {$distributor->getField('d_we_pay_to_distributor_by')->toText()}
     </div>
 </div>
