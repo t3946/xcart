@@ -49,7 +49,6 @@ class DistributorContactsForm extends ModelForm
                 'html' => ['style' => 'width: 300px'],
                 'hint' => LanguageModel::translate('help_distributor_contact_field_name_text'),
                 'hintTemplate' => $this->hintTemplate,
-                'required' => true
             ],
             'email' => [
                 'class' => EmailField::class,
