@@ -1,6 +1,6 @@
 import {h, render} from "preact";
-import PhotoSwipe from 'photoswipe/dist/photoswipe'
-import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
+import PhotoSwipe from '../../libs/photoswipe/dist/photoswipe'
+import PhotoSwipeUI_Default from '../../libs/photoswipe/dist/photoswipe-ui-default'
 
 const cont = new class PhotoSwipeContainer
 {
@@ -13,7 +13,7 @@ const cont = new class PhotoSwipeContainer
             index: 0,
             history: false,
             bgOpacity: 0.91,
-            showHideOpacity: false
+            showHideOpacity: false,
         };
     }
 
@@ -24,6 +24,7 @@ const cont = new class PhotoSwipeContainer
 
 
         this.pswp.listen('close', () => {
+            document.body.style.overflow = 'initial';
             let item = this.pswp.currItem;
             if (item.onBlur) {
                 item.onBlur(item, this.pswp);
@@ -48,7 +49,9 @@ const cont = new class PhotoSwipeContainer
                 }
             }
         });
+
         this.pswp.listen('afterChange', () => {
+            document.body.style.overflow = 'hidden';
             let item = this.pswp.currItem;
             if (item.onShow) {
                 item.onShow(item, this.pswp);
@@ -128,10 +131,16 @@ const cont = new class PhotoSwipeContainer
                         <div className="pswp__ui pswp__ui--hidden">
                             <div className="pswp__top-bar">
                                 <div className="pswp__counter"></div>
-                                <button className="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                                <button className="pswp__button pswp__button--close" title="Close (Esc)">
+                                    <svg class="pswp__button--close-icon" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <rect width="1" height="16" transform="translate(20.3137 8) rotate(45)"/>
+                                            <rect width="1" height="16" transform="translate(21.7279 19.3137) rotate(135)"/>
+                                        </g>
+                                    </svg>
+                                </button>
                                 <button className="pswp__button pswp__button--share" title="Share"></button>
                                 <button className="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-                                <button className="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
                                 <div className="pswp__preloader">
                                     <div className="pswp__preloader__icn">
