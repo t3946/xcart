@@ -561,9 +561,6 @@ class SupplierFeedHelper
 
             $data['child_products'][$key]['feed_child'] = true;
             $data['child_products'][$key]['group_root'] = $group->productid;
-            $data['child_products'][$key]['brand_name'] = $data['brand_name'];
-
-            $data['child_products'][$key]['supplier_categories'] = $data['supplier_categories'];
 
             if (isset($data['pc_classify_status'])) {
                 $data['child_products'][$key]['pc_classify_status'] = $data['pc_classify_status'];
@@ -575,7 +572,6 @@ class SupplierFeedHelper
         if ($childs) {
             $params = [
                 'group_root' => null,
-                'product' => new Expression('TRIM(CONCAT(COALESCE(group_mask, ""), " ", product))'),
                 'group_mask' => null
             ];
 
