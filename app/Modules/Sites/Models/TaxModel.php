@@ -61,7 +61,7 @@ class TaxModel extends Model
             'price_includes_tax' => [
                 'class' => BooleanField::class,
                 'default' => false,
-                'verboseName' => 'Tax is included'
+                'verboseName' => 'Tax is included into the product price'
             ],
             'position' => [
                 'class' => IntField::class,
@@ -76,7 +76,7 @@ class TaxModel extends Model
             'active' => [
                 'class' => BooleanField::class,
                 'default' => false,
-                'vrboseName' => 'Activate tax'
+                'verboseName' => 'Activate tax'
             ],
             'sites' => [
                 'class' => ManyToManyField::class,
