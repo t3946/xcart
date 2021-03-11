@@ -22,7 +22,6 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             'tabs',
             'lead_time_message',
             'products_quantity_behavior',
-            'calculate_shipping',
             'allow_pre_orders',
         ]];
     }
@@ -48,6 +47,7 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             'products_quantity_behavior' => [
                 'class' => RadioField::class,
                 'choices' => [
+                    'N' => 'do NOT display quantity',
                     'R' => 'display real quantity',
                     'D' => 'display quantity of',
                 ],
@@ -74,10 +74,11 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             ],
             'allow_pre_orders' => [
                 'class' => CheckboxField::class,
-                'label' => 'Allow pre-orders',
+                'label' => 'Allow to order ETA products',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width: 1em']
+                'html' => ['style' => 'width: 1em'],
+                'hint' => LanguageModel::translate('help_dx_allow_pre_orders_text'),
             ],
             'calculate_shipping' => [
                 'class' => CheckboxField::class,

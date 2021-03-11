@@ -333,6 +333,15 @@ class DistributorModel extends Model
                     'check' => 'check',
                 ],
             ],
+            'products_quantity_behavior' => [
+                'class' => CharField::class,
+                'default' => 'N',
+                'choices' => [
+                    'N' => 'do NOT display quantity',
+                    'R' => 'display real quantity',
+                    'D' => 'display quantity of',
+                ],
+            ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
                 'choices' => [
