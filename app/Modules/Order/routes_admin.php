@@ -2,6 +2,7 @@
 
 use Modules\Order\Controllers\Admin\OrderRelatedMessagesController;
 use Modules\Order\Controllers\Api\ActivityController;
+use Modules\Order\Controllers\Api\ExportController;
 use Modules\Order\Controllers\Api\ReconciliationController;
 
 return [
@@ -64,5 +65,10 @@ return [
         'route' => '/api/activity/{i:order_id}/{slug:action}',
         'target' => [ActivityController::class, 'hook'],
         'name' => 'activity'
+    ],
+    [
+        'route' => '/api/export/{i:order_id}',
+        'target' => [ExportController::class, 'export'],
+        'name' => 'api:export'
     ],
 ];
