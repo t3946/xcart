@@ -3,6 +3,8 @@
         Enter this {$distributor->code} order on <a href="{$distributor->d_url_to_login_to_distributor_website}" target="_blank">{$distributor->manufacturer} website!</a>
         {if $distributor->order_entry_special_instructions}
             <br/>
+            We pay by {$distributor->getField('d_we_pay_to_distributor_by')->toText()}
+            <hr/>
             {$distributor->order_entry_special_instructions|html_entity_decode}
         {/if}
         {if $is_amazon}
@@ -13,6 +15,6 @@
                 & Free shipping
             {/if}
         {/if}
-        <div>We pay by {$distributor->getField('d_we_pay_to_distributor_by')->toText()}</div>
+
     </div>
 </div>
