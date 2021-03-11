@@ -99,7 +99,7 @@ class DistributorGeneralForm extends DistributorForm
             ],
             'dx_eta_date' => [
                 'class' => DateField::class,
-                'label' => 'Dx warehouse is closed until',
+                'label' => 'Distributor warehouse will be closed until',
                 'html' => ['style' =>'width:100px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
