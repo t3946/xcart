@@ -53,14 +53,14 @@
                 <td class="by_email" colspan="3" align="center"><h1>Order submission by e-mail or/and fax</h1></td>
             </tr>
 
-            {raw $form->getField('allow_dispatch_off_working_hours')->render()}
-            {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}
+
             {raw $form->getField('email')->render()}
             {raw $form->getField('order_submit_template')->render()}
             {raw $form->getField('template_2_subj')->render()}
-            {raw $form->getField('template_2')->render()}
+            {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}{raw $form->getField('template_2')->render()}
             {raw $form->getField('order_submit_special_instructions')->render()}
             {raw $form->getField('d_shipping_options')->render()}
+            {raw $form->getField('allow_dispatch_off_working_hours')->render()}
         </table>
         <div class="row" style="margin-top: 15px;">
             <div class="column text-center">
