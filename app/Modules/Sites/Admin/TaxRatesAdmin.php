@@ -27,7 +27,7 @@ class TaxRatesAdmin extends ListViewAdmin
                 'template' => $this->columnDefaultTemplate,
             ],
             'rate_value' => [
-                'title' => 'Rate value',
+                'title' => 'Tax rate',
                 'template' => $this->columnDefaultTemplate,
             ],
         ];
