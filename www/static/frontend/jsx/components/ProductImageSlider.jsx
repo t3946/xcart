@@ -336,12 +336,14 @@ export default class ProductImageSlider extends Component {
                     options={{
                         horizontal: 1,
                         itemNav: 'forceCentered',
-                        speed: 300,
+                        speed: 100,
                         activateMiddle: 1,
                         mouseDragging: 1,
                         touchDragging: 1,
                         smart: 1,
-                        onSlideActive: this.onSlideActive.bind(this)
+                        onSlideActive: this.onSlideActive.bind(this),
+                        minHandleSize: 10,
+                        scrollBy: 10,
                     }}>
                     <div className="frame" ref={el => this.refs.frameDetail = el} style={{'height': this.state.height}}>
                         {this.renderAllDetails()}
