@@ -13,11 +13,11 @@
             </div>
         </div>
 
-        <div class="columns small-12 medium-6 {if $isCartEmpty}align-self-middle{/if}">
+        <div class="columns small-12 medium-6 show-for-medium flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if}">
             {if $isCartEmpty}
-                <h2 class="text-center">{t 'Your shopping cart is empty'}</h2>
+                <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
             {else}
-                <h2 class="cart-number-header">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
+                <h2 class="cart-number-header margin-0">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
             {/if}
         </div>
 
