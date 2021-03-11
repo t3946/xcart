@@ -324,6 +324,15 @@ class DistributorModel extends Model
                 'default' => 'order.entry@s3stores.com',
                 'verboseName' => 'Order entry operator email'
             ],
+            'd_we_pay_to_distributor_by' => [
+                'class' => CharField::class,
+                'default' => 'credit_card',
+                'choices' => [
+                    'credit_card' => 'credit / debit card',
+                    'paypal_balance' => 'PayPal balance',
+                    'check' => 'check',
+                ],
+            ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
                 'choices' => [
