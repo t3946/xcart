@@ -51,106 +51,121 @@ export const ShippingForm = ( function () {
 
     new ShippingGoogleAutoComplete( '#CheckoutForm_s_address', componentForm, shipping_fields );
 
-    // autocomplete for address parts fields
-    const countryInput = document.querySelector( '.checkout-page #CheckoutForm_s_country' );
-    const stateInput = document.querySelector( '.checkout-page #CheckoutForm_s_state' );
-    const cityInput = document.querySelector( '.checkout-page #CheckoutForm_s_city' );
-    const zipcodeInput = document.querySelector( '.checkout-page #CheckoutForm_s_zipcode' );
+    /**
+     * init autocomplete for group address fields (country state city zipcode)
+     */
+    function initAddressAutocompleteFields( countryInput, stateInput, cityInput, zipcodeInput ) {
+        new ShippingPixabayAutocomplete( countryInput, {
+            renderItem: function ( item, search ) {
+                return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="' + item.code + '">' + item.name + '</div>';
+            },
+            source: function ( term, suggest ) {
+                $.getJSON( '/checkout/auto_complete_country/', { search: term }, function ( data ) {
+                    suggest( data );
+                } );
+            },
+        } );
 
-    new ShippingPixabayAutocomplete( countryInput, {
-        renderItem: function ( item, search ) {
-            return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="' + item.code + '">' + item.name + '</div>';
-        },
-        source: function ( term, suggest ) {
-            $.getJSON( '/checkout/auto_complete_country/', { search: term }, function ( data ) {
-                suggest( data );
-            } );
-        },
-    } );
+        new ShippingPixabayAutocomplete( stateInput, {
+            renderItem: function ( item, search ) {
+                return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">' + item.state + '</div>';
+            },
+            source: function ( term, suggest ) {
+                $.getJSON( '/checkout/auto_complete_state/', {
+                    search: term,
+                    country: countryInput.dataset.code,
+                }, function ( data ) {
+                    suggest( data );
+                } );
+            },
+            onSelect: function ( e, term, item, ctx ) {
+                let state, codeState;
 
-    new ShippingPixabayAutocomplete( stateInput, {
-        renderItem: function ( item, search ) {
-            return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">' + item.state + '</div>';
-        },
-        source: function ( term, suggest ) {
-            $.getJSON( '/checkout/auto_complete_state/', {
-                search: term,
-                country: countryInput.dataset.code,
-            }, function ( data ) {
-                suggest( data );
-            } );
-        },
-        onSelect: function ( e, term, item, ctx ) {
-            let state, codeState;
+                if ( e.constructor === Object ) {
+                    state = e.state;
+                    codeState = e.code;
+                } else {
+                    state = item.dataset.val;
+                    codeState = item.dataset.code;
+                }
 
-            if ( e.constructor === Object ) {
-                state = e.state;
-                codeState = e.code;
-            } else {
-                state = item.dataset.val;
-                codeState = item.dataset.code;
+                stateInput.value = state;
+                stateInput.dataset.code = codeState
             }
+        } );
 
-            stateInput.value = state;
-            stateInput.dataset.code = codeState
-        }
-    } );
+        new ShippingPixabayAutocomplete( cityInput, {
+            renderItem: function ( item, search ) {
+                return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item + '</div>';
+            },
+            source: function ( term, suggest ) {
+                $.getJSON( '/checkout/auto_complete_city/', {
+                    search: term,
+                    country: countryInput ? countryInput.getAttribute( 'data-code' ) : '',
+                    state: CheckoutForm_s_state ? CheckoutForm_s_state.getAttribute( 'data-code' ) : '',
+                }, function ( data ) {
+                    suggest( data );
+                } );
+            },
+        } );
 
-    new ShippingPixabayAutocomplete( cityInput, {
-        renderItem: function ( item, search ) {
-            return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item + '</div>';
-        },
-        source: function ( term, suggest ) {
-            $.getJSON( '/checkout/auto_complete_city/', {
-                search: term,
-                country: countryInput ? countryInput.getAttribute( 'data-code' ) : '',
-                state: CheckoutForm_s_state ? CheckoutForm_s_state.getAttribute( 'data-code' ) : '',
-            }, function ( data ) {
-                suggest( data );
-            } );
-        },
-    } );
+        new ShippingPixabayAutocomplete( zipcodeInput, {
+            renderItem: function ( item, search ) {
+                let html = '<span class="zip">' + item.zip + '</span>' + ' <span class="city">' + item.primary_city + ', ' + item.state + '</span>';
 
-    new ShippingPixabayAutocomplete( zipcodeInput, {
-        renderItem: function ( item, search ) {
-            let html = '<span class="zip">' + item.zip + '</span>' + ' <span class="city">' + item.primary_city + ', ' + item.state + '</span>';
+                return '<div class="autocomplete-suggestion" data-state-name="' + item.state_name + '" data-state="' + item.state + '" data-city="' + item.primary_city + '"  data-val="' + item.zip + '">' + html + '</div>';
+            },
+            source: function ( term, suggest ) {
+                $.getJSON( '/checkout/auto_complete_zip_code/', {
+                    search: term,
+                    country: countryInput ? countryInput.getAttribute( 'data-code' ) : '',
+                }, function ( data ) {
+                    suggest( data );
+                } );
+            },
+            onSelect: function ( e, term, item, ctx ) {
+                let city, stateName, stateCode, zipCode;
 
-            return '<div class="autocomplete-suggestion" data-state-name="' + item.state_name + '" data-state="' + item.state + '" data-city="' + item.primary_city + '"  data-val="' + item.zip + '">' + html + '</div>';
-        },
-        source: function ( term, suggest ) {
-            $.getJSON( '/checkout/auto_complete_zip_code/', {
-                search: term,
-                country: countryInput ? countryInput.getAttribute( 'data-code' ) : '',
-            }, function ( data ) {
-                suggest( data );
-            } );
-        },
-        onSelect: function ( e, term, item, ctx ) {
-            let city, stateName, stateCode, zipCode;
+                if ( e.constructor === Object ) {
+                    city = e.primary_city;
+                    stateName = e.state_name;
+                    stateCode = e.state;
+                    zipCode = e.zip;
+                } else {
+                    e.preventDefault();
+                    city = item.dataset.city;
+                    stateName = item.dataset.stateName;
+                    stateCode = item.dataset.state;
+                    zipCode = item.dataset.val;
+                }
 
-            if ( e.constructor === Object ) {
-                city = e.primary_city;
-                stateName = e.state_name;
-                stateCode = e.state;
-                zipCode = e.zip;
-            } else {
-                e.preventDefault();
-                city = item.dataset.city;
-                stateName = item.dataset.stateName;
-                stateCode = item.dataset.state;
-                zipCode = item.dataset.val;
+                zipcodeInput.value = zipCode;
+                cityInput.value = city;
+                stateInput.value = stateName;
+                stateInput.dataset.code = stateCode;
+
+                ctx.throwJsChangeEvent( zipcodeInput );
+                ctx.throwJsChangeEvent( cityInput );
+                ctx.throwJsChangeEvent( stateInput );
             }
+        } );
+    }
 
-            zipcodeInput.value = zipCode;
-            cityInput.value = city;
-            stateInput.value = stateName;
-            stateInput.dataset.code = stateCode;
+    /**
+     * shipping address feilds
+     */
+    initAddressAutocompleteFields( CheckoutForm_s_country, CheckoutForm_s_state, CheckoutForm_s_city, CheckoutForm_s_zipcode );
 
-            ctx.throwJsChangeEvent( zipcodeInput );
-            ctx.throwJsChangeEvent( cityInput );
-            ctx.throwJsChangeEvent( stateInput );
-        }
-    } );
+    /**
+     * billing address feilds
+     */
+    if ( typeof CheckoutForm_b_country !== 'undefined'
+        && typeof CheckoutForm_b_state !== 'undefined'
+        && typeof CheckoutForm_b_city !== 'undefined'
+        && typeof CheckoutForm_b_zipcode !== 'undefined'
+    ) {
+        initAddressAutocompleteFields( CheckoutForm_b_country, CheckoutForm_b_state, CheckoutForm_b_city, CheckoutForm_b_zipcode );
+    }
 
     return new constructor();
 } )();
