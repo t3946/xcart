@@ -344,7 +344,12 @@ export default class ProductImageSlider extends Component {
                         onSlideActive: this.onSlideActive.bind(this),
                         minHandleSize: 10,
                         scrollBy: 10,
-                    }}>
+                        change: function () {
+                            console.log('change slide');
+                        },
+                    }}
+                    change={{ function () { alert('change'); } }}
+                >
                     <div className="frame" ref={el => this.refs.frameDetail = el} style={{'height': this.state.height}}>
                         {this.renderAllDetails()}
                     </div>

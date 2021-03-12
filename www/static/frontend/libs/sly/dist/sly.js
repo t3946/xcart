@@ -901,24 +901,27 @@
 				for (var i = 0, il = items.length; i < il; i++) {
 					let border = items[i].half;
 
-					if ( slideePos > items[ i ].end + items[i].half ) {
-						border *= 1.8;
+					if ( slideePos > items[ i ].center + items[i].half ) {
+						border *= 1.85;
 					} else {
-						border *= 0.2;
+						border *= 0.15;
 					}
 
 					// First item
 					if (first === false && slideePos <= items[i].start + border) {
+						console.log(`F center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						first = i;
 					}
 
 					// Center item
 					if (center === false && slideePos <= items[i].center + border) {
+						console.log(`C center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						center = i;
 					}
 
 					// Last item
 					if (i === il - 1 || slideePos <= items[i].end + border) {
+						console.log(`L center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						last = i;
 						break;
 					}
