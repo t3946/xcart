@@ -8,8 +8,10 @@ import PreactSlySlide from "./PreactSlySlide";
 import { actionMedia } from '../redusers/appHeadReduser';
 import ScreenSize from "../utils/ScreenSize";
 //import ScreenSize from "../utils/ScreenSize";
+import { Component as ReactComponent } from 'react';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
 
-export default class ProductImageSlider extends Component {
+export default class ProductImageSlider extends ReactComponent {
     constructor(props) {
         super();
 
@@ -331,29 +333,43 @@ export default class ProductImageSlider extends Component {
     renderSlyDetails() {
         if (this.state.count) {
             return (
-                <PreactSlySlide
-                    pos={this.state.index}
-                    options={{
-                        horizontal: 1,
-                        itemNav: 'forceCentered',
-                        speed: 100,
-                        activateMiddle: 1,
-                        mouseDragging: 1,
-                        touchDragging: 1,
-                        smart: 1,
-                        onSlideActive: this.onSlideActive.bind(this),
-                        minHandleSize: 10,
-                        scrollBy: 10,
-                        change: function () {
-                            console.log('change slide');
-                        },
-                    }}
-                    change={{ function () { alert('change'); } }}
+                <Splide
+                    options={ {
+                        rewind : true,
+                        width  : 800,
+                        gap    : '1rem',
+                    } }
                 >
-                    <div className="frame" ref={el => this.refs.frameDetail = el} style={{'height': this.state.height}}>
-                        {this.renderAllDetails()}
-                    </div>
-                </PreactSlySlide>
+                    <SplideSlide>
+                        <img src="//cdn.7sportinggoods.com/api/i/28442291/520/262_images_products_1340_7136_19673.jpg" alt="Image 1"/>
+                    </SplideSlide>
+                    <SplideSlide>
+                        <img src="//cdn.7sportinggoods.com/api/i/28442291/520/262_images_products_1340_7136_19673.jpg" alt="Image 2"/>
+                    </SplideSlide>
+                </Splide>
+                // <PreactSlySlide
+                //     pos={this.state.index}
+                //     options={{
+                //         horizontal: 1,
+                //         itemNav: 'forceCentered',
+                //         speed: 100,
+                //         activateMiddle: 1,
+                //         mouseDragging: 1,
+                //         touchDragging: 1,
+                //         smart: 1,
+                //         onSlideActive: this.onSlideActive.bind(this),
+                //         minHandleSize: 10,
+                //         scrollBy: 10,
+                //         change: function () {
+                //             console.log('change slide');
+                //         },
+                //     }}
+                //     change={{ function () { alert('change'); } }}
+                // >
+                //     <div className="frame" ref={el => this.refs.frameDetail = el} style={{'height': this.state.height}}>
+                //         {this.renderAllDetails()}
+                //     </div>
+                // </PreactSlySlide>
             );
         }
 
