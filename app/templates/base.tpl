@@ -109,9 +109,13 @@
                                                     <span class="category-menu-title">{t 'Departments'}</span>
                                                 </div>
                                             </div>
-                                            {cache key = '_parts/_menu_desktop.tpl'}
-                                            {insert "_parts/_menu_desktop.tpl"}
-                                            {/cache}
+                                            {if constant('APP_LOCAL')}
+                                                {cache key = '_parts/_menu_desktop.tpl'}
+                                                {insert "_parts/_menu_desktop.tpl"}
+                                                {/cache}
+                                            {else}
+                                                {insert "_parts/_menu_desktop.tpl"}
+                                            {/if}
                                         </div>
                                         <div class="columns small-12 large-7">
                                             {insert "_parts/_search.tpl"}

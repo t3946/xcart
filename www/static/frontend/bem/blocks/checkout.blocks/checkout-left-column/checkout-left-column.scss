@@ -11,6 +11,12 @@
 
 @include breakpoint(lg up) {
   .checkout-left-column{
-    padding-right: 80px !important;
+    padding-right: 20px;
+  }
+}
+
+@include breakpoint(xl up) {
+  .checkout-left-column{
+    padding-right: 80px;
   }
 }

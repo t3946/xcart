@@ -5,6 +5,12 @@
 
 @include breakpoint(lg up) {
   .checkout-compound-main-container {
+    width: 58%;
+  }
+}
+
+@include breakpoint(xl up) {
+  .checkout-compound-main-container {
     width: 60%;
   }
 }

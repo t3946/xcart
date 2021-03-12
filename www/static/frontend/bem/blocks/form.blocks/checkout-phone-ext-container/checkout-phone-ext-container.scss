@@ -5,7 +5,12 @@
 
 @include breakpoint(lg up) {
   .checkout-phone-ext-container {
-    max-width: 40%;
+    max-width: 42%;
   }
 }
 
+@include breakpoint(xl up) {
+  .checkout-phone-ext-container {
+    max-width: 40%;
+  }
+}

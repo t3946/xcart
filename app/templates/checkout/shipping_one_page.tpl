@@ -240,10 +240,10 @@
         </div>
 
         <div class="row checkout-customer-notes__row checkout-customer-notes-row">
-            <div class="column small-12 medium-6 large-4">
+            <div class="column small-12 medium-4 checkout-customer-notes-header">
                 <h2 class="customer-notes-header">Customers notes</h2>
             </div>
-            <div class="column small-12 medium-6 large-8">
+            <div class="column small-12 medium-8 checkout-customer-notes-field">
                 <textarea name="customer_notes" class="checkout-customer-notes" placeholder="Put order related instructions here"></textarea>
             </div>
         </div>

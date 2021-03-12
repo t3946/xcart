@@ -34,19 +34,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .common-input-container {
-        width: 100%;
-    }
-    @media (min-width: 720px) and (max-width: 1024px) {
-        .checkout-field-title {
-            width: 50%;
-        }
-
-        .switcher-field {
-            width: 50%;
-            width: 320px;
-        }
-    }
-</style>

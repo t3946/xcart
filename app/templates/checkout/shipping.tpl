@@ -14,7 +14,7 @@
                     <h2 class="title default-form-header">{t 'Shipping Address' }</h2>
                 </div>
             </div>
-            <div class="small-12 large-6 columns text-center large-text-left large-collapse-left">
+            <div class="small-12 large-6 columns large-collapse-left">
                 <div class="mandatory">
                     {t 'The fields marked with' } <span class="required">*</span> {t 'are mandatory.' }
                 </div>

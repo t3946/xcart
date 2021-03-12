@@ -1,0 +1,13 @@
+.common-field-error_old {
+  height: 32px;
+  width: auto;
+}
+
+.common-field-error_old .form-field-error-text:before {
+  content: none;
+}
+
+.common-field-error_old .form-field-error-text {
+  line-height: 22px;
+  padding: 0;
+}
