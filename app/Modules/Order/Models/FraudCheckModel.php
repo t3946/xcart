@@ -97,7 +97,7 @@ class FraudCheckModel extends Model
                         $unique_names[] = $name;
                         $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
                         $$pn .= <<<HTML
-{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+{$name} <a target="_blank" href="https://www.google.com/search?q={$add_link}+{$name_c}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">{$address_key} + {$key}</a>
 HTML;
                     }
                 }
@@ -112,7 +112,7 @@ HTML;
                         $unique_names[] = $name;
                         $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
                         $$pn .= <<<HTML
-{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+{$name} <a target="_blank" href="https://www.google.com/search?q={$add_link}+{$name_c}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">{$address_key} + {$key}</a>
 HTML;
                     }
                 }
@@ -125,7 +125,7 @@ HTML;
                         $unique_names[] = $name;
                         $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
                         $google_phone_name .= <<<HTML
-{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+{$name} <a target="_blank" href="https://www.google.com/search?q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
 HTML;
                     }
                 }
@@ -138,7 +138,7 @@ HTML;
                         $unique_names[] = $name;
                         $name_c = str_replace([' ', '#', '&'], ['+', '', 'and'], $name);
                         $google_email_name .= <<<HTML
-{$name} <a target="_blank" href="https://www.google.com/#q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
+{$name} <a target="_blank" href="https://www.google.com/search?q={$add_link}+{$name_c}" style="color: #1F08F8;">{$address_key} + {$key}</a>
 HTML;
                     }
                 }
@@ -148,16 +148,16 @@ HTML;
 <a target="_blank" href="//www.{$order->getEmailDomain()}" style="color: #1F08F8;">www.{$order->getEmailDomain()}</a>
 HTML;
             $google_shipping_l = <<<HTML
-<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address</a>
+<a target="_blank" href="https://www.google.com/search?q={$google_shipping_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google shipping address</a>
 HTML;
             $google_bill_l = <<<HTML
-<a target="_blank" href="https://www.google.com/#q={$google_billing_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google billing address</a>
+<a target="_blank" href="https://www.google.com/search?q={$google_billing_address}{$fraud_Google_address_search_exclusions}" style="color: #1F08F8;">Google billing address</a>
 HTML;
             $google_email = <<<HTML
-<a target="_blank" href="https://www.google.com/#q={$order->email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google email</a>
+<a target="_blank" href="https://www.google.com/search?q={$order->email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google email</a>
 HTML;
             $google_phone_l = <<<HTML
-<a target="_blank" href="https://www.google.com/#q={$google_phone}{$fraud_Google_phone_search_exclusions}" style="color: #1F08F8;">Google phone</a>
+<a target="_blank" href="https://www.google.com/search?q={$google_phone}{$fraud_Google_phone_search_exclusions}" style="color: #1F08F8;">Google phone</a>
 HTML;
             $fs_phone = substr($order->phone, 0, 3) . '-' . substr($order->phone, 3, 3) . '-' . substr($order->phone, 6);
             $fs_phone = <<<HTML
