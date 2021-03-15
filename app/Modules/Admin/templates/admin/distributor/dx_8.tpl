@@ -57,7 +57,8 @@
             {raw $form->getField('email')->render()}
             {raw $form->getField('order_submit_template')->render()}
             {raw $form->getField('template_2_subj')->render()}
-            {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}{raw $form->getField('template_2')->render()}
+            {raw $form->getField('template_2')->render()}
+            {raw $form->getField('add_cost_to_us_column_to_dispatch_message')->render()}
             {raw $form->getField('order_submit_special_instructions')->render()}
             {raw $form->getField('d_shipping_options')->render()}
             {raw $form->getField('allow_dispatch_off_working_hours')->render()}
