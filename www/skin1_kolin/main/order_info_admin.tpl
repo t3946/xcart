@@ -551,7 +551,6 @@ function check_r_fields() {
                             {else}
                                 {$product.productcode}
                             {/if}
-                            {$product.oProduct|dd}
                             {if $product.oProduct->getDistributorUrl()}
                                 <br/>
                                 <a style="color: #3A3AFF;"
