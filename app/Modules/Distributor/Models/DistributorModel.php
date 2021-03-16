@@ -753,12 +753,6 @@ class DistributorModel extends Model
                 'name' => 'Our guarantee',
                 'content' => "This product is brand new and includes the manufacturer's warranty, so you can buy with confidence."
             ]);
-            DistributorTabModel::objects()->getOrCreate([
-                'distributor_id' => $owner->pk,
-                'position' => 30,
-                'name' => 'Return policy',
-                'content' => "A 25% handling charge is levied against all authorized returns except those due to our error. Unauthorized returns are subject to a 40% handling charge. Damages & defects must be reported to us within 14 days."
-            ]);
             ShippingRateModel::objects()->getOrCreate([
                 'shippingid' => 1,
                 'zoneid' => 11,
