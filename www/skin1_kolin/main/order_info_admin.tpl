@@ -551,10 +551,11 @@ function check_r_fields() {
                             {else}
                                 {$product.productcode}
                             {/if}
-                            {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}
+                            {$product.oProduct|dd}
+                            {if $product.oProduct->getDistributorUrl()}
                                 <br/>
                                 <a style="color: #3A3AFF;"
-                                   href='{$product.oProduct->getProductURLOnDistributorWebSite()}'
+                                   href='{$product.oProduct->getDistributorUrl()}'
                                    target="_blank">{$product.oProduct->getMPN()}</a>
                             {/if}
                             <br/>
