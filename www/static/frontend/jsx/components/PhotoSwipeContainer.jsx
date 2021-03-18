@@ -20,8 +20,35 @@ const cont = new class PhotoSwipeContainer
     init()
     {
         this.render();
-        this.pswp = new PhotoSwipe(this.container, PhotoSwipeUI_Default, this.images, this.options);
+        const pswp = new PhotoSwipe(this.container, PhotoSwipeUI_Default, this.images, this.options);
+        this.pswp = pswp;
 
+        let offset = 0;
+        const $left = $('.photoswipe-left-arrow');
+        const $right = $('.photoswipe-right-arrow');
+
+        function changePadding() {
+            const $img = $(this.pswp.items[this.pswp.getCurrentIndex()].container).find('img');
+            const $imgWidth = $img.width();
+            let $zoomScale = 1;
+
+            const $zoomContainer = $img.parents('.pswp__zoom-wrap');
+            const style = $zoomContainer.attr( 'style' );
+
+            if ( style ) {
+                $zoomScale = parseFloat( style.match( /scale\((\d+(.\d+)?)\)/ )[ 1 ] );
+            }
+
+            const $visibleWidth = $imgWidth * $zoomScale;
+
+            offset = Math.ceil($visibleWidth / 2) + 50;
+            $left.css('paddingRight', offset);
+            $right.css('paddingLeft', offset);
+        }
+
+        $('.photoswipe-close-button').click(function () {
+            pswp.close();
+        });
 
         this.pswp.listen('close', () => {
             document.body.style.overflow = 'initial';
@@ -47,6 +74,7 @@ const cont = new class PhotoSwipeContainer
                 if (prevItem.onBlur) {
                     prevItem.onBlur(prevItem, this.pswp);
                 }
+                changePadding.call(this);
             }
         });
 
@@ -56,6 +84,7 @@ const cont = new class PhotoSwipeContainer
             if (item.onShow) {
                 item.onShow(item, this.pswp);
             }
+            changePadding.call(this);
         });
 
         this.pswp.listen('gettingData', (index, item)  =>{
@@ -77,19 +106,9 @@ const cont = new class PhotoSwipeContainer
             }
         });
 
-        // this.pswp.listen('imageLoadComplete', (index, item) => {
-        //     let linkEl = item.el.children[0];
-        //     let img = item.container.children[0];
-        //
-        //     if (!linkEl.getAttribute('data-size')) {
-        //         linkEl.setAttribute('data-size', img.naturalWidth + 'x' + img.naturalHeight);
-        //         item.w = img.naturalWidth;
-        //         item.h = img.naturalHeight;
-        //
-        //         this.pswp.invalidateCurrItems();
-        //         this.pswp.updateSize(true);
-        //     }
-        // });
+        this.pswp.listen('resize', () => {
+            changePadding.call(this);
+        });
 
         this.pswp.init();
 
@@ -102,7 +121,6 @@ const cont = new class PhotoSwipeContainer
         });
     }
 
-
     getPhotoSwipe ()
     {
         return this.pswp;
@@ -113,11 +131,12 @@ const cont = new class PhotoSwipeContainer
         this.images = images;
     }
 
-
     render()
     {
         if (!this.container) {
-            this.container = render(
+            const $container = $('<div class="pswp-container">');
+            $container.appendTo(document.body);
+            render(
                 <div className="pswp" tabindex="-1" role="dialog" aria-hidden="true">
                     <div className="pswp__bg"></div>
                     <div className="pswp__scroll-wrap">
@@ -154,20 +173,38 @@ const cont = new class PhotoSwipeContainer
                             <div className="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
                                 <div className="pswp__share-tooltip"></div>
                             </div>
-                            <button className="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
-                            <button className="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+                            <div className="photoswipe-left-arrow">
+                                <button
+                                    className="pswp__button pswp__button--arrow--left photoswipe-navigate-button"
+                                    title="Previous (arrow left)">
+                                </button>
+                                <img className="photoswipe-navigate-button-icon" src="/static/frontend/dist/images/photoswipe/arrow.svg" alt=""/>
+                            </div>
+
+                            <div className="photoswipe-right-arrow">
+                                <button
+                                    className="pswp__button pswp__button--arrow--right photoswipe-navigate-button"
+                                    title="Next (arrow right)">
+                                </button>
+                                <img className="photoswipe-navigate-button-icon" src="/static/frontend/dist/images/photoswipe/arrow.svg" style="transform: rotateY(180deg)" alt=""/>
+                            </div>
+
                             <div className="pswp__caption">
                                 <div className="pswp__caption__center"></div>
                             </div>
+
+                            <img className="photoswipe-close-button" src="/static/frontend/dist/images/photoswipe/cross.svg" alt=""/>
                         </div>
                     </div>
                 </div>
                 ,
-                document.body
+                $container[0]
             );
+
+            this.container = $('.pswp')[0];
         }
     }
 };
-
 
 export default cont;

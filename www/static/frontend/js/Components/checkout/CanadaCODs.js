@@ -1,4 +1,4 @@
-export const CanadaCods = ( function () {
+export const CanadaCODs = ( function () {
     const $target = $( '.checkout__canada-cods-field' );
     const $destDesktop = $( '.order-total__grand' );
     const $destMobile = $( '#CheckoutForm_ci_email' ).parents( '.checkout-field-row' );

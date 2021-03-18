@@ -1,0 +1,9 @@
+.photoswipe-navigate-button-icon {
+  opacity: 0.5;
+  transition: opacity 0.1s linear;
+}
+
+.photoswipe-left-arrow:hover .photoswipe-navigate-button-icon,
+.photoswipe-right-arrow:hover .photoswipe-navigate-button-icon {
+  opacity: 1;
+}

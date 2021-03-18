@@ -141,6 +141,11 @@ gulp.task('frontend:jsx', function(done){
     args.push('-w');
     let cmd = spawn('node', args, {stdio: 'inherit'});
 
+    gulp.src(frontend.src.js_include)
+        .pipe(concat('vendors.js'))
+        .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
+        .pipe(gulp.dest(frontend.dst.js));
+
     cmd.on('close', function (code) {
         console.log('frontend:jsx exited with code ' + code);
         done(code);
@@ -370,6 +375,7 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/product.blocks/**/*.scss',
         'frontend/bem/blocks/billing.blocks/**/*.scss',
         'frontend/bem/blocks/header.blocks/**/*.scss',
+        'frontend/bem/blocks/photoswipe.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));

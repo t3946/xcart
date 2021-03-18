@@ -32,6 +32,7 @@
     &.active {
       .minicart-items {
         display: block;
+        top: 50px;
       }
     }
   }
@@ -98,7 +99,7 @@
           display: block;
           text-decoration: none;
 
-          &:hover{
+          &:hover {
             .name-text {
               text-decoration: underline;
             }

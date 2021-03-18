@@ -1,7 +1,7 @@
 import autoComplete from 'bower_components/javascript-auto-complete/auto-complete.js';
 
 
-    var createAutoComplete = function(){
+var createAutoComplete = function(){
 
         function throwJsChangeEvent(element){
             let detail = {
@@ -139,7 +139,6 @@ import autoComplete from 'bower_components/javascript-auto-complete/auto-complet
         }
         return createAutoComplete;
     }();
-(() => {
-    module.exports = createAutoComplete;
-    createAutoComplete();
-})();
+
+createAutoComplete();
+export default createAutoComplete;

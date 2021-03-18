@@ -909,19 +909,19 @@
 
 					// First item
 					if (first === false && slideePos <= items[i].start + border) {
-						console.log(`F center=${items[i].center} slideePos=${slideePos} border=${border}`);
+						// console.log(`F center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						first = i;
 					}
 
 					// Center item
 					if (center === false && slideePos <= items[i].center + border) {
-						console.log(`C center=${items[i].center} slideePos=${slideePos} border=${border}`);
+						// console.log(`C center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						center = i;
 					}
 
 					// Last item
 					if (i === il - 1 || slideePos <= items[i].end + border) {
-						console.log(`L center=${items[i].center} slideePos=${slideePos} border=${border}`);
+						// console.log(`L center=${items[i].center} slideePos=${slideePos} border=${border}`);
 						last = i;
 						break;
 					}

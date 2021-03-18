@@ -1,12 +1,12 @@
 'use strict';
 
 // import 'pace';
-import 'modernizr';
+// import 'modernizr';
 import $ from 'jquery';
 import 'jquery-form';
 //import 'mmodal';
 
-import 'swiper';
+// import 'swiper';
 //import WebFont from 'webfontloader';
 import FontFaceObserver from 'fontfaceobserver';
 import Waves from 'Waves';
@@ -15,7 +15,7 @@ import formValidate from 'validate.js';
 import noUiSlider from 'nouislider';
 import Loader from "./components/Loader";
 import FilterPriceSlider from "./components/FilterPriceSlider";
-import '../libs/sly/dist/sly.js';
+import 'sly/dist/sly';
 import './utils/mmodal/jquery.mindy.modal';
 
 import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';

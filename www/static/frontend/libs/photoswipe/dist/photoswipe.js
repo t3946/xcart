@@ -1055,10 +1055,6 @@ var publicMethods = {
 
 
 	goTo: function(index) {
-		//prevent action when animating
-		if (_mainScrollAnimating === true) {
-			return;
-		}
 
 		index = _getLoopedId(index);
 
@@ -1078,10 +1074,22 @@ var publicMethods = {
 		self.updateCurrItem();
 	},
 	next: function() {
-		self.goTo( _currentItemIndex + 1);
+		var a = _initDragReleaseAnimationData();
+		a.calculateSwipeSpeed('x');
+		a.lastFlickDist.x = 10;
+		a.lastFlickOffset.x = -10;
+		a.lastFlickSpeed.x = 0;
+		_startPoint.x = _currPoint.x + 50;
+		_finishSwipeMainScrollGesture('swipe', a);
 	},
 	prev: function() {
-		self.goTo( _currentItemIndex - 1);
+		var a = _initDragReleaseAnimationData();
+		a.calculateSwipeSpeed('x');
+		a.lastFlickDist.x = 10;
+		a.lastFlickOffset.x = 10;
+		a.lastFlickSpeed.x = 0;
+		_startPoint.x = _currPoint.x - 50;
+		_finishSwipeMainScrollGesture('swipe', a);
 	},
 
 	// update current zoom/pan objects
@@ -2024,7 +2032,7 @@ var _gestureStartTime,
 		// if second pointer released
 		if(numPoints === 1) {
 			_equalizePoints(_startPoint, touchList[0]);
-		}				
+		}
 
 
 		// pointer hasn't moved, send "tap release" point
@@ -2208,7 +2216,7 @@ var _gestureStartTime,
 
 							_animateProp('bounceZoomPan'+axis,_panOffset[axis], 
 								s.backAnimDestination[axis], 
-								speed || 300, 
+								speed || 300,
 								framework.easing.sine.out, 
 								function(pos) {
 									_panOffset[axis] = pos;

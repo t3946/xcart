@@ -4,6 +4,7 @@ const BowerResolvePlugin = require( "bower-resolve-webpack-plugin" );
 const paths = require( './gulp.frontend.patchs' );
 
 config = {
+    mode: 'development',
     entry: paths.src.jsx_bundles,
     output: {
         path: path.resolve( './' + paths.dst.jsx ),
@@ -14,13 +15,14 @@ config = {
         alias: {
             modernizr$: path.resolve( __dirname, "./support/modernizrrc.js" ),
             'jQuery': 'jquery',
-            'react': 'preact-compat',
-            'react-dom': 'preact-compat',
+            'react': 'preact/compat',
+            'react-dom': 'preact/compat',
             // Not necessary unless you consume a module using `createClass`
-            'create-react-class': 'preact-compat/lib/create-react-class',
-            'Classes': path.resolve('./frontend/js/Classes'),
-            'Components': path.resolve('./frontend/js/Components'),
+            'create-react-class': 'preact/compat/lib/create-react-class',
+            'Classes': path.resolve( './frontend/js/Classes' ),
+            'Components': path.resolve( './frontend/js/Components' ),
         },
+
         modules: [
             'frontend/jsx',
             paths.modules.jsx,
@@ -28,71 +30,79 @@ config = {
             'node_modules',
             'bower_components',
         ],
+
         plugins: [ new BowerResolvePlugin( {
             modulesDirectories: [ "bower_components" ],
             includes: /.*/,
             excludes: [],
             searchResolveModulesDirectories: true
         } ) ],
+
         descriptionFiles: [ 'bower.json', 'package.json' ],
-        mainFields: [ 'browser', 'main' ],
         extensions: [ '.js', '.jsx', '.json' ],
     },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)?$/,
-                exclude: /(node_modules)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        comments: false,
-                        presets: [
-                            [ "react" ],
-                            [ "env", {
-                                "targets": {
-                                    "browsers": [ "last 10 versions", "safari >= 8" ],
-                                    "uglify": true,
-                                },
-                                "production": {
-                                    "presets": [ "minify" ]
-                                },
-                                // "modules": false,
-                                "loose": true,
-                            } ],
-                        ],
-                        plugins: [
-                            [ "transform-object-rest-spread", { "useBuiltIns": true } ],
-                            [ "transform-react-jsx", {
-                                "pragma": "h" // default pragma is React.createElement
-                            } ],
-                            [ "module-resolver", {
-                                "root": [ "." ],
-                                "alias": {
-                                    "react": "preact-compat",
-                                    "react-dom": "preact-compat",
-                                    "create-react-class": "preact-compat/lib/create-react-class"
-                                }
-                            } ],
-                        ]
-                    }
-                }
+                test: /\.js$/,
+                enforce: "pre",
+                use: [ "source-map-loader" ],
             },
             {
-                test: /modernizrrc(\.js)?$/,
+                test: /\.(js|jsx)?$/,
+                exclude: /(node_modules)/,
                 use: [
                     {
-                        loader: 'modernizr-loader',
-                        options: require( __dirname + '/support/modernizrrc.js' ),
+                        loader: "source-map-loader",
                     },
-                ]
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            comments: false,
+                            presets: [
+                                [
+                                    "@babel/env",
+                                    {
+                                        "modules": false,
+                                        "loose": true
+                                    }
+                                ],
+                                "@babel/preset-react",
+                            ],
+                            plugins: [
+                                "@babel/plugin-proposal-object-rest-spread",
+                                [ "transform-react-jsx", {
+                                    "pragma": "h" // default pragma is React.createElement
+                                } ],
+                                [ "module-resolver", {
+                                    "root": [ "." ],
+                                    "alias": {
+                                        "react": "preact/compat",
+                                        "react-dom": "preact/compat",
+                                        "create-react-class": "preact-compat/lib/create-react-class"
+                                    }
+                                } ],
+                            ]
+                        }
+                    },
+                ],
             },
+            // {
+            //     test: /modernizrrc(\.js)?$/,
+            //     use: [
+            //         {
+            //             loader: 'modernizr-loader',
+            //             options: require( __dirname + '/support/modernizrrc.js' ),
+            //         },
+            //     ]
+            // },
         ]
     },
     plugins: [
         new webpack.ProvidePlugin( {
             $: 'jquery',
             jQuery: 'jquery',
+            React: 'react',
             'window.jQuery': 'jquery'
         } ),
         new webpack.LoaderOptionsPlugin( {

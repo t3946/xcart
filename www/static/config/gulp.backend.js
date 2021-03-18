@@ -100,10 +100,10 @@ module.exports = {
 
         mmodal: {
             js: [
-                'bower_components/mmodal/js/jquery.mindy.modal.js'
+                'node_modules/mmodal/js/jquery.mindy.modal.js'
             ]
             // scss: [
-            //     'bower_components/mmodal/scss/jquery.mmodal.scss'
+            //     'node_modules/mmodal/scss/jquery.mmodal.scss'
             // ]
         },
         modal: {
