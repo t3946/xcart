@@ -1,4 +1,3 @@
-{* $Id: order_status.tpl,v 1.7 2005/11/30 13:29:35 max Exp $ *}
 {if $usertype eq 'A' && $current_membership_flag eq 'FS'}{assign var="limited" value="Y"}{/if}
 {if $status_type eq ''}{assign var="status_type" value="CB"}{/if}
 {if $extended eq "" and $status eq ""}
@@ -14,7 +13,7 @@
 
       {if $code ne "B"} 
 
-        {if $limited eq ''}
+        {if !$limited}
             <option value="{$code}"{if $status eq $code} selected="selected"{/if} {if ($code eq "K" && $hide_pending_availability_check_status eq "Y") || ($code eq "C" && $hide_dispatched_status eq "Y")}disabled="disabled"{/if}>{$o_status}</option>
         {else}
             {if $code eq 'C' || $code eq 'S' || $code eq 'B' || $code eq 'G'}

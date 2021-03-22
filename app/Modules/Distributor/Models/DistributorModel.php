@@ -18,7 +18,6 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Sites\Models\TaxModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
@@ -40,6 +39,9 @@ use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
 
 /**
+ * @property int manufacturerid
+ * @property float price_coef_x
+ * @property float price_coef_y
  * @property float price_coef_z
  * @property float d_minimum_order_amount_in_us
  * @property string d_minimum_order_amount
@@ -50,6 +52,7 @@ use Xcart\Manufacturer;
  * @property TemplateModel request_avail_template
  * @property string d_send_to_email_14
  * @property DistributorTabModel[] tabs
+ * @property ShippingRateModel[]|Manager shipping_rates
  * @property TemplateModel order_entry_template
  * @property TemplateModel order_submit_template
  * @property bool allow_dispatch_off_working_hours
@@ -249,8 +252,8 @@ class DistributorModel extends Model
                 'default' => false
             ],
             'shipping_rates' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ShippingRateModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ShippingRateModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
             'contacts_model' => [

@@ -1088,7 +1088,7 @@ function check_r_fields() {
                                                      extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
                                         {else}
                                             {include file="main/order_status.tpl"
-                                                     status=$v.cb_status
+                                                     status=$oOrderGroup->cb_status_model
                                                      mode="select"
                                                      name="groups[`$m_id`][cb_status]"
                                                      status_type="CB"
@@ -1099,7 +1099,7 @@ function check_r_fields() {
                                             {assign var=bCanAcceptCoupon value='Y'}
                                         {/if}
 
-                                        {if $oOrderGroup->cb_status == 'AP'}
+                                        {if $oOrderGroup->cb_status === 'AP'}
                                             {assign var=latsAuth value=$oOrderGroup->order->getLastAuthorizationTransaction()}
                                             {if $latsAuth}
                                                 {assign var=authLeft value=$latsAuth->getAuthorizationLeft()}
@@ -1124,7 +1124,6 @@ function check_r_fields() {
                                                 {$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}
                                             {/if}
                                         </div>
-
                                     </td>
                                 {elseif $oOrderGroup->c2a_status !== null}
                                     <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
