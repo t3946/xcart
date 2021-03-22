@@ -23,7 +23,6 @@ use Mpdf\Writer\FormWriter;
 use Mpdf\Writer\ImageWriter;
 use Mpdf\Writer\JavaScriptWriter;
 use Mpdf\Writer\MetadataWriter;
-use Mpdf\Writer\ObjectWriter;
 use Mpdf\Writer\OptionalContentWriter;
 use Mpdf\Writer\PageWriter;
 
@@ -57,8 +56,10 @@ class ServiceFactory
 
 		$tableOfContents = new TableOfContents($mpdf, $sizeConverter);
 
-		$cache = new Cache($config['tempDir']);
-		$fontCache = new FontCache(new Cache($config['tempDir'] . '/ttfontdata'));
+		$cacheBasePath = $config['tempDir'] . '/mpdf';
+
+		$cache = new Cache($cacheBasePath, $config['cacheCleanupInterval']);
+		$fontCache = new FontCache(new Cache($cacheBasePath . '/ttfontdata', $config['cacheCleanupInterval']));
 
 		$fontFileFinder = new FontFileFinder($config['fontDir']);
 
@@ -115,7 +116,6 @@ class ServiceFactory
 		$optionalContentWriter = new OptionalContentWriter($mpdf, $writer);
 		$colorWriter = new ColorWriter($mpdf, $writer);
 		$backgroundWriter = new BackgroundWriter($mpdf, $writer);
-		$objectWriter = new ObjectWriter($mpdf, $writer);
 		$javaScriptWriter = new JavaScriptWriter($mpdf, $writer);
 
 		$resourceWriter = new ResourceWriter(
@@ -129,7 +129,6 @@ class ServiceFactory
 			$backgroundWriter,
 			$bookmarkWriter,
 			$metadataWriter,
-			$objectWriter,
 			$javaScriptWriter,
 			$logger
 		);
@@ -167,7 +166,6 @@ class ServiceFactory
 			'optionalContentWriter' => $optionalContentWriter,
 			'colorWriter' => $colorWriter,
 			'backgroundWriter' => $backgroundWriter,
-			'objectWriter' => $objectWriter,
 			'javaScriptWriter' => $javaScriptWriter,
 
 			'resourceWriter' => $resourceWriter

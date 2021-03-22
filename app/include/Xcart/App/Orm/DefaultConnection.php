@@ -2,12 +2,11 @@
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Connection as DBALConnection;
+use Doctrine\DBAL\Connection;
 use Xcart\App\Main\ErrorHandler;
 use Xcart\App\Main\Xcart;
 
-class DefaultConnection extends DBALConnection
+class DefaultConnection extends Connection
 {
     private $__errHandler = null;
     private $__enableErrHandler = true;

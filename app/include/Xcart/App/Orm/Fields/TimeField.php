@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -41,7 +42,7 @@ class TimeField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::TIME);
+        return Type::getType(Types::TIME_MUTABLE);
     }
 
     /**

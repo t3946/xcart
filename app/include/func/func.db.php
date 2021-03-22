@@ -38,39 +38,36 @@ function db_query_param($query, array $params, array $types = [])
     return \Xcart\Connection::getInstance()->executeQuery($query, $params, $types);
 }
 
-function db_result(\Doctrine\DBAL\Driver\ResultStatement $result, $offset)
+function db_result($result, $offset)
 {
     return db_fetch_field($result, $offset);
 }
 
-function db_fetch_row(\Doctrine\DBAL\Driver\ResultStatement $result)
+function db_fetch_row($result)
 {
     return $result->fetch(PDO::FETCH_NUM);
 }
 
-function db_fetch_array(\Doctrine\DBAL\Driver\ResultStatement $result, $flag = null)
+function db_fetch_array($result, $flag = null)
 {
     return $result->fetch(PDO::FETCH_ASSOC);
 }
 
-function db_fetch_field(\Doctrine\DBAL\Driver\ResultStatement $result, $num = 0)
+function db_fetch_field($result, $num = 0)
 {
     return $result->fetchColumn($num);
 }
 
-function db_free_result(\Doctrine\DBAL\Driver\ResultStatement $result)
+function db_free_result($result)
 {
-    if ($result && $result instanceof \Doctrine\DBAL\Driver\ResultStatement) {
-        $result->closeCursor();
-    }
 }
 
-function db_num_rows(\Doctrine\DBAL\Driver\ResultStatement $result)
+function db_num_rows($result)
 {
     return $result->rowCount();
 }
 
-function db_num_fields(\Doctrine\DBAL\Driver\ResultStatement $result)
+function db_num_fields($result)
 {
     return $result->columnCount();
 }
@@ -80,7 +77,7 @@ function db_insert_id()
     return \Xcart\Connection::getInstance()->lastInsertId();
 }
 
-function db_affected_rows(\Doctrine\DBAL\Driver\ResultStatement $result)
+function db_affected_rows($result)
 {
     return $result->rowCount();
 }

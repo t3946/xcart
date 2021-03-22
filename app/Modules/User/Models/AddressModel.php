@@ -3,7 +3,7 @@
 namespace Modules\User\Models;
 
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -52,7 +52,7 @@ class AddressModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'link' => ['country' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => false,
             ],
             'zip' => [

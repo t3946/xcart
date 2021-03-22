@@ -4,7 +4,6 @@
 namespace Modules\Sites\Models;
 
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
@@ -194,7 +193,7 @@ class CorporateModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'link' => ['mailing_country' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true,
                 'default' => null,
                 'verboseName' => 'Country',

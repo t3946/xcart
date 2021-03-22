@@ -4,6 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
@@ -25,7 +26,7 @@ abstract class RelatedField extends IntField
      * @var string sql type of field get type name from const Doctrine\DBAL\Types\Type class
      *             default = 'integer'
      */
-    public $sqlType = Type::INTEGER;
+    public $sqlType = Types::INTEGER;
 
     protected $_model;
 
@@ -37,7 +38,6 @@ abstract class RelatedField extends IntField
 
     /**
      * @return \Doctrine\DBAL\Types\Type
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function getSqlType()
     {

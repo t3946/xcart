@@ -3,7 +3,7 @@ namespace Modules\Goods\Models;
 
 use DateInterval;
 use DateTime;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -139,7 +139,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasToOneField::class,
                 'modelClass' => AmazonOfferModel::class,
                 'link' => ['ASIN' => 'ASIN'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
 
             'sites' => [

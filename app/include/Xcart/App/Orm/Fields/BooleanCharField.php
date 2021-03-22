@@ -4,12 +4,13 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 class BooleanCharField extends BooleanField
 {
     public function getSqlType()
     {
-        return Type::getType(Type::STRING);
+        return Type::getType(Types::STRING);
     }
 
     public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)

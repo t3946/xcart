@@ -182,7 +182,7 @@ JSON;
        Order By COUNT(SS.id) desc
         Limit {$count}";
 
-        $query_result = Xcart::app()->db->getConnection()->fetchAll($query,[
+        $query_result = Xcart::app()->db->getConnection()->fetchAllAssociative($query,[
             'spaces' => $spaces,
             'sfid' => $siteModule->getSite()->storefrontid,
             'name' => $search_phrase_updated.'%',

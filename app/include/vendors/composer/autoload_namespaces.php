@@ -20,7 +20,6 @@ return array(
     'MWSCartService_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
     'Google_Service_' => array($vendorDir . '/google/apiclient-services/src'),
-    'Google_' => array($vendorDir . '/google/apiclient/src'),
     'Fenom\\' => array($vendorDir . '/fenom/fenom/src'),
     'FBAOutboundServiceMWS_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),
     'FBAInventoryServiceMWS_' => array($vendorDir . '/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary'),

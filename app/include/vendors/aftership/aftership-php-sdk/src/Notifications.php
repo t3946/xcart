@@ -31,10 +31,11 @@ class Notifications
      * @param $slug
      * @param string $trackingNumber The tracking number which is provider by tracking provider
      * @param array $params The optional parameters
+     * @param array $additionalFields The tracking additional_fields required by some courier
      * @return array Response Body
      * @throws AfterShipException
      */
-    public function create($slug, $trackingNumber, array $params = array())
+    public function create($slug, $trackingNumber, array $params = array(), $additionalFields = [])
     {
         if (empty($slug)) {
             throw new AfterShipException('Slug cannot be empty');
@@ -44,7 +45,7 @@ class Notifications
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $slug . '/' . $trackingNumber . '/add', 'POST',
+        return $this->request->send('POST', 'notifications/' . $slug . '/' . $trackingNumber . '/add' . TrackingAdditionalFields::buildQuery($additionalFields, '?'),
             ['notification' => $params]);
     }
 
@@ -62,7 +63,7 @@ class Notifications
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $trackingId . '/add', 'POST', array('notification' => $params));
+        return $this->request->send('POST', 'notifications/' . $trackingId . '/add', ['notification' => $params]);
     }
 
     /**
@@ -71,10 +72,11 @@ class Notifications
      * @param string $slug The slug of the tracking provider
      * @param string $trackingNumber The tracking number which is provider by tracking provider
      * @param array $params
+     * @param array $additionalFields The tracking additional_fields required by some courier
      * @return array Response body
      * @throws AfterShipException
      */
-    public function delete($slug, $trackingNumber, array $params = array())
+    public function delete($slug, $trackingNumber, array $params = [], $additionalFields = [])
     {
         if (empty($slug)) {
             throw new AfterShipException('Slug cannot be empty');
@@ -84,8 +86,8 @@ class Notifications
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $slug . '/' . $trackingNumber . '/remove', 'POST',
-            array('notification' => $params));
+        return $this->request->send('POST', 'notifications/' . $slug . '/' . $trackingNumber . '/remove' . TrackingAdditionalFields::buildQuery($additionalFields, '?'),
+            ['notification' => $params]);
     }
 
     /**
@@ -102,7 +104,7 @@ class Notifications
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $trackingId . '/remove', 'POST', array('notification' => $params));
+        return $this->request->send('POST', 'notifications/' . $trackingId . '/remove', ['notification' => $params]);
     }
 
     /**
@@ -114,7 +116,7 @@ class Notifications
      * @return array Response body
      * @throws \Exception
      */
-    public function get($slug, $trackingNumber, array $params = array())
+    public function get($slug, $trackingNumber, array $params = [])
     {
         if (empty($slug)) {
             throw new AfterShipException('Slug cannot be empty');
@@ -124,7 +126,7 @@ class Notifications
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $slug . '/' . $trackingNumber, 'GET', $params);
+        return $this->request->send('GET', 'notifications/' . $slug . '/' . $trackingNumber, $params);
     }
 
     /**
@@ -141,6 +143,6 @@ class Notifications
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('notifications/' . $trackingId, 'GET', $params);
+        return $this->request->send('GET', 'notifications/' . $trackingId, $params);
     }
 }

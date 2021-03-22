@@ -2,7 +2,7 @@
 
 namespace Modules\Payment\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -25,24 +25,24 @@ class ProcessorModel extends Model
     {
         return [
             'processor_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'processor_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => '',
                 'null' => false
             ],
             'transaction_link' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => '',
                 'null' => false
             ],
             'cc_processor' => [
                 'field' => 'processor_name',
-                'class' => ForeignField::className(),
-                'modelClass' => PaymentProcessorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => PaymentProcessorModel::class,
                 'link' => ['processor_name' => 'module_name'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ]
 
         ];
