@@ -180,7 +180,7 @@ class AbstractModel extends Base
                 $this->getPrimaryKeyName(),
                 'seq'
             ]);
-        } catch (DBALException $e) {
+        } catch (\Doctrine\DBAL\Exception $e) {
             return null;
         }
     }

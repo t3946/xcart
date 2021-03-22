@@ -50,7 +50,7 @@
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="*" align="left" valign="top">
-                    {Modules\Core\Models\LanguageModel::translate('txt_manufacturers_top_text')}
+                    {$.call.Modules.Core.Models.LanguageModel::translate('txt_manufacturers_top_text')}
                 </td>
                 <td width="2%" align="center">&nbsp;</td>
                 <td width="48%" align="left" valign="top">

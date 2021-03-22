@@ -95,7 +95,7 @@
 
                         </div>
                         {if $index}
-                        <div class="column small-4 discount_block" data-timer="{Modules\User\Helpers\DiscountHelper::getDiscountTime()}" data-minutes="{Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}">
+                        <div class="column small-4 discount_block" data-timer="{$.call.Modules.User.Helpers.DiscountHelper::getDiscountTime()}" data-minutes="{$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()}">
                             <div class="row" style="margin:0">
                                 <div class="columns discount__title">{t 'Extra qty discount'}</div>
                             </div>

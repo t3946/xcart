@@ -98,7 +98,7 @@
                         del: '{url "cart:products:del"}',
                     }
                 },
-                'discount_minutes': {Modules\User\Helpers\DiscountHelper::getDiscountMinutes()}
+                'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()}
             }
         };
         window.parseUrl = function(href) { var a = document.createElement("a");a.href = href;return { 'href':href,'protocol': a.protocol,'host': a.host,'hostname': a.hostname,'port': a.port,'pathname': a.pathname,'hash': a.hash,'search': a.search,'origin': a.origin, 'document':a.pathname.split("/").pop(),};}

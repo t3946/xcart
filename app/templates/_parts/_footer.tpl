@@ -99,7 +99,7 @@
                                             <img src="" width="54" height="36" class="lazy-img" data-src="/{$method->logo}" alt="{$method->name}">
                                         {/foreach}
                                     {else}
-                                        {foreach Modules\Sites\Models\PaymentMethodModel::active() as $key => $method}
+                                        {foreach $.call.Modules.Sites.Models.PaymentMethodModel::active() as $key => $method}
                                             <img src="" width="54" height="36" class="lazy-img" data-src="/{$method->logo}" alt="{$method->name}">
                                         {/foreach}
                                     {/if}
@@ -149,7 +149,7 @@
                 </ul>
             </div>
             <div class="column small-12 medium-7 medium-order-1 copyright">
-                {t 'Copyright ©'} {$config.start_year}-{date_add()|date:"Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {t 'Copyright ©'} {$config.start_year}-{time()|date_format:"%Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
             </div>
         </div>
     </div>

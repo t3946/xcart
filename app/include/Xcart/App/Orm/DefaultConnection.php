@@ -3,6 +3,7 @@ namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Xcart\App\Main\ErrorHandler;
 use Xcart\App\Main\Xcart;
 
@@ -133,7 +134,7 @@ class DefaultConnection extends Connection
         try {
             return call_user_func_array('parent::' . $function, $args);
         }
-        catch (DBALException $e) {
+        catch (Exception $e) {
             $this->processException($e, $args[0]);
         }
 
