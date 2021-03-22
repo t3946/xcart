@@ -4,7 +4,7 @@
 namespace Modules\Amp\Helpers;
 
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\Sites\Models\SiteModel;

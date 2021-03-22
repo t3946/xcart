@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Dashboard\Models;
 
-use Mindy\QueryBuilder\Aggregation\Max;
+use Xcart\App\QueryBuilder\Aggregation\Max;
 use Modules\Dashboard\Stores\CallSearchStore;
 use Modules\Dashboard\Stores\EmailSearchStore;
 use Modules\Dashboard\Stores\OrderSearchStore;

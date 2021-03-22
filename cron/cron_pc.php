@@ -1,5 +1,5 @@
 <?php
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Goods\Models\ProductCategoryTermsModel;
 use Xcart\Connection;
 

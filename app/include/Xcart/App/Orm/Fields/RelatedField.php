@@ -4,7 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class RelatedField

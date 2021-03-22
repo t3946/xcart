@@ -3,7 +3,7 @@
 namespace Modules\Shipping\Helpers;
 
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Sqls\AmazonSql;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;

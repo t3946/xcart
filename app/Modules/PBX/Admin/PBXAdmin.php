@@ -6,8 +6,8 @@ namespace Modules\PBX\Admin;
 
 use DateTime;
 use Exception;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Models\OrderModel;

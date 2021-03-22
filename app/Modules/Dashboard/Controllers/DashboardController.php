@@ -3,7 +3,7 @@
 namespace Modules\Dashboard\Controllers;
 
 use Exception;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;

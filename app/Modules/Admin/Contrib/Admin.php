@@ -3,9 +3,9 @@
 namespace Modules\Admin\Contrib;
 
 
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Form\Form;

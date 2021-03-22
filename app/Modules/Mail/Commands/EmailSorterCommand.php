@@ -4,7 +4,7 @@
 namespace Modules\Mail\Commands;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Forms\Models\EmailEntityModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\EmailSorterModel;

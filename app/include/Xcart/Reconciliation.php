@@ -1,8 +1,8 @@
 <?php
 namespace Xcart;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 

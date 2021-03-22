@@ -9,7 +9,7 @@
 namespace Modules\Goods\Helpers;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 

@@ -6,7 +6,7 @@ namespace Modules\Goods\Helpers;
 use DateInterval;
 use DateTime;
 use Exception;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;

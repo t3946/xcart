@@ -1,6 +1,6 @@
 <?php
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Helpers\AmazonProductHelper;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Amazon\Stores\AmazonInventoryStore;

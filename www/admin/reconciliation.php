@@ -2,9 +2,9 @@
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderReconciliationHelper;
 use Modules\Order\Models\OrderGroupInvoiceModel;

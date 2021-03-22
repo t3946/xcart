@@ -3,7 +3,7 @@
 namespace Modules\Goods\Forms;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Editor\Fields\EditorField;
 use Modules\Goods\Admin\ProductAdmin;

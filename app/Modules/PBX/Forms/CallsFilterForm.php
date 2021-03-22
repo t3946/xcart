@@ -2,7 +2,7 @@
 
 namespace Modules\PBX\Forms;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateRangeField;

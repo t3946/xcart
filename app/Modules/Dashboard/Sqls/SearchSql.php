@@ -1,8 +1,8 @@
 <?php
 namespace Modules\Dashboard\Sqls;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\Connection;
 
 class SearchSql

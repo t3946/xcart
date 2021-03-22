@@ -5,7 +5,7 @@ namespace Modules\Order\Helpers;
 
 use DateTime;
 use DateTimeZone;
-use Mindy\QueryBuilder\Q\QOrNot;
+use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;

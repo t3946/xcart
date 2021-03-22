@@ -7,10 +7,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/tsukasa-mixer/fenom"
         }
     ],
@@ -38,7 +34,6 @@
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-ziparchive": "^1.0",
-        "mindy/query_builder": "dev-master_5.4",
         "mobiledetect/mobiledetectlib": "^2.8",
         "monolog/monolog": "^1.22",
         "mpdf/mpdf": "^7.1",

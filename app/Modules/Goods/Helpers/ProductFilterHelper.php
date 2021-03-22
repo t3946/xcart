@@ -1,11 +1,11 @@
 <?php
 namespace Modules\Goods\Helpers;
 
-use Mindy\QueryBuilder\Aggregation\Aggregation;
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Max;
-use Mindy\QueryBuilder\Aggregation\Min;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Aggregation\Aggregation;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Max;
+use Xcart\App\QueryBuilder\Aggregation\Min;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\FilterModel;
 use Xcart\App\Main\Xcart;

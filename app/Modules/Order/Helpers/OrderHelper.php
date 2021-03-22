@@ -3,11 +3,11 @@
 namespace Modules\Order\Helpers;
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\AttentionTagModel;

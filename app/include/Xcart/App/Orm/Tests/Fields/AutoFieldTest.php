@@ -9,7 +9,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 
 class AutoFieldTest extends \PHPUnit_Framework_TestCase
 {

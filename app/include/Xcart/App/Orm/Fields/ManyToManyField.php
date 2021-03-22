@@ -3,15 +3,14 @@
 namespace Xcart\App\Orm\Fields;
 
 use Exception;
-use Mindy\QueryBuilder\Expression;
 use RuntimeException;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\MetaData;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
 use Xcart\App\Orm\AbstractModel;
-use Mindy\QueryBuilder\QueryBuilder;
-use Xcart\App\Orm\ManagerInterface;
+use Xcart\App\QueryBuilder\QueryBuilder;
+
 
 /**
  * Class ManyToManyField

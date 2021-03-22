@@ -6,7 +6,7 @@ use Exception;
 use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 
 /**
  * Class TreeModel.

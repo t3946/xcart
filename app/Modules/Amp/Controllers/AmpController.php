@@ -3,7 +3,7 @@
 
 namespace Modules\Amp\Controllers;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Amp\Models\AmpProductModel;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Meta\Types\MetaType;

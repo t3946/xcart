@@ -4,7 +4,7 @@ namespace Modules\Core\Commands;
 
 
 use Jobby\Jobby;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Core\Components\JobRunner;
 use Modules\Core\Models\CronModel;
 use Xcart\App\Commands\Command;

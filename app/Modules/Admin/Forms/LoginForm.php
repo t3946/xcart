@@ -14,7 +14,7 @@
 
 namespace Modules\Admin\Forms;
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\User\Models\UserModel;
 use Modules\User\UserModule;
 use Xcart\App\Form\Fields\CharField;

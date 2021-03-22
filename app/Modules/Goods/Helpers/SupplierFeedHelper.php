@@ -5,8 +5,8 @@ namespace Modules\Goods\Helpers;
 
 use DateTime;
 use Exception;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Distributor\Models\SupplierFeedModel;

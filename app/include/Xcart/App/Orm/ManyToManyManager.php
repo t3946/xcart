@@ -9,7 +9,7 @@
 namespace Xcart\App\Orm;
 
 use Exception;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class ManyToManyManager

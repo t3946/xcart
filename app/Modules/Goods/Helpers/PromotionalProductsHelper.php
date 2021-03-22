@@ -3,7 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Helpers\Cache;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderStatusModel;

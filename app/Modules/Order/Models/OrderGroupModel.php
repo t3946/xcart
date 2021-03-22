@@ -3,7 +3,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Types;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;

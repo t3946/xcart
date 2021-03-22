@@ -5,7 +5,7 @@ namespace Xcart\App\Orm\Fields;
 use DateTime;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\ModelInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 

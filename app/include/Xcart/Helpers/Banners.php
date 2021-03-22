@@ -3,9 +3,9 @@ namespace Xcart\Helpers;
 
 
 use Doctrine\DBAL\Driver\PDOConnection;
-use Mindy\QueryBuilder\Database\Mysql\Adapter;
-use Mindy\QueryBuilder\LookupBuilder\LookupBuilder;
-use Mindy\QueryBuilder\QueryBuilderFactory;
+use Xcart\App\QueryBuilder\Database\Mysql\Adapter;
+use Xcart\App\QueryBuilder\LookupBuilder\LookupBuilder;
+use Xcart\App\QueryBuilder\QueryBuilderFactory;
 
 class Banners
 {

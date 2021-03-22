@@ -4,7 +4,7 @@
 namespace Modules\Order\Commands;
 
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderLogModel;

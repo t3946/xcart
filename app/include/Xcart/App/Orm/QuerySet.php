@@ -4,15 +4,15 @@ namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Xcart\App\Orm\Exception\MultipleObjectsReturned;
-use Mindy\QueryBuilder\Aggregation\Aggregation;
-use Mindy\QueryBuilder\Aggregation\Avg;
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Max;
-use Mindy\QueryBuilder\Aggregation\Min;
-use Mindy\QueryBuilder\Aggregation\Sum;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOrNot;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Aggregation\Aggregation;
+use Xcart\App\QueryBuilder\Aggregation\Avg;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Max;
+use Xcart\App\QueryBuilder\Aggregation\Min;
+use Xcart\App\QueryBuilder\Aggregation\Sum;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOrNot;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\Fields\RelatedField;
 
 /**

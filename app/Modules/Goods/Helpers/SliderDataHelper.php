@@ -1,8 +1,8 @@
 <?php
 namespace Modules\Goods\Helpers;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;

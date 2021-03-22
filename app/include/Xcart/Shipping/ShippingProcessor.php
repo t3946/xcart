@@ -3,9 +3,9 @@
 namespace Xcart\Shipping;
 
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Shipping\Models\ShippingCacheLocationModel;
 use Modules\Shipping\Models\ShippingCacheModel;
 use Modules\Shipping\Models\ShippingCacheProductModel;

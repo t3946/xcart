@@ -2,10 +2,10 @@
 
 namespace Modules\Reports\Stores;
 
-use Mindy\QueryBuilder\Aggregation\Avg;
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Sum;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Aggregation\Avg;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Sum;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;

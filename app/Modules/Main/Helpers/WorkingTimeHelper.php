@@ -11,7 +11,7 @@ namespace Modules\Main\Helpers;
 
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Distributor\Models\RequestAvailabilityOptionModel;
 
 class WorkingTimeHelper

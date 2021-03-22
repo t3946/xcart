@@ -5,7 +5,7 @@ namespace Xcart\App\Orm;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class Sync
