@@ -326,11 +326,11 @@ class CheckoutController extends FrontendController
                     if ($tax_rates = TaxHelper::getTaxRate($site, $order->s_country, $order->s_state)) {
                         foreach ($tax_rates as $tax_rate) {
                             $tax_value = TaxHelper::getTaxValue($tax_rate, $group->total_net, $group->shipping_net);
-                            OrderGroupTaxModel::objects()->getOrCreate([
+                            [$tax_group] = OrderGroupTaxModel::objects()->getOrCreate([
                                 'order_group_id' => $group->order_group_id,
                                 'tax_rate_id' => $tax_rate->rateid,
-                                'value' => $tax_value
                             ]);
+                            $tax_group->update(['value' => $tax_value]);
                             $tax_value_total += $tax_value;
                         }
                     }

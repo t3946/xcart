@@ -96,7 +96,7 @@ class AbstractModel extends Base
         {
             if ($this->getField($primaryKeyName) instanceof AutoField) {
                 if (in_array($primaryKeyName, $dirty) === false) {
-                    $values[ $primaryKeyName ] = $connection->lastInsertId($this->getSequenceName());
+                    $values[ $primaryKeyName ] = $connection->lastInsertId();
                 }
             }
         }
