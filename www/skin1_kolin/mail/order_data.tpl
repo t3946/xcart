@@ -35,8 +35,8 @@
 {/section}
 
 {if $products}
-{$lng.lbl_payment_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}
-{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
+{$lng.lbl_payment_status|cat:":"|string_format:$max_space}{$statuses.CB[$v.cb_status]}
+{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{$statuses.ВС[$v.dc_status]}
 {/if}
 
 {if $show_shipping_groups neq 'N' && $v.oOrderGroup->trackings}
@@ -80,8 +80,8 @@
 {$lng.lbl_recipient_email|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$giftcerts[giftcert].recipient_email}
 {/if}
 
-{$lng.lbl_payment_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$order.cb_status mode="static" status_type="CB"}
-{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$order.dc_status mode="static" status_type="DC"}
+{$lng.lbl_payment_status|cat:":"|string_format:$max_space}{$statuses.CB[$v.cb_status]}
+{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{$statuses.DC[$v.dc_status]}
 
 {/section}
 
