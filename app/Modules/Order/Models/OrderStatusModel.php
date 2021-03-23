@@ -101,6 +101,7 @@ class OrderStatusModel extends Model
                     'CB' => 'CB',
                     'DA' => 'DA',
                     'DC' => 'DC',
+                    'PO' => 'PO',
                     'PV' => 'PV',
                     'RU' => 'RU',
                 ]
@@ -115,8 +116,18 @@ class OrderStatusModel extends Model
         ];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->name;
+    }
+
+    public function getAvailableStatuses(): array
+    {
+        if ($destination_statuses = OrderStatusAvailabilityModel::objects()
+            ->filter(['source_status_id' => $this->status_id])
+            ->valuesList(['destination_status_id'], true)) {
+            return self::objects()->filter(['status_id__in' => $destination_statuses])->valuesList(['code'], true);
+        }
+        return [];
     }
 }

@@ -116,6 +116,22 @@ class OrderGroupModel extends Model
                 'link' => ['d2a_status' => 'code'],
                 'null' => true,
             ],
+            'c2a_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'c2a_status',
+                'sqlType' => Types::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['c2a_status' => 'code'],
+                'null' => true,
+            ],
+            'po_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'po_status',
+                'sqlType' => Types::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['po_status' => 'code'],
+                'null' => true,
+            ],
             'payment_method' => [
                 'field' => 'acc_paymentid',
                 'class' => ForeignField::class,

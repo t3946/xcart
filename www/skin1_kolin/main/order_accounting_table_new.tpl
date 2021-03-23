@@ -290,7 +290,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 {cycle values=", OrderSheetDark" assign="cycle_class"}
 <tr class="OrderSheetCell{$cycle_class}{if $v.profit_margin lt 0} OrderSheetRed{else} OrderSheetGreen{/if}{if $smarty.foreach.groups.first} OrderSheetFirst{/if}" style="font-weight: bold;">
   <td width="5">{if $static eq 'Y' || $static eq 'O'}{if $smarty.foreach.groups.first}<input type="checkbox" name="orderids[{$order.orderid}]" />{/if}{else}&nbsp;{/if}</td>
-  <td>{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}</td>
+  <td>{$statuses.CB[$v.cb_status]}</td>
   <td nowrap="nowrap" class="OrderSheetCommonCell">{$order.firstname}</td>
   <td>{if $v.total.net eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$v.total.net}{/if}</td>
   <td>
@@ -355,7 +355,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 </tr>
 <tr class="OrderSheetCell{$cycle_class}">
   <td width="5">{* {if $static eq 'Y' || $static eq 'O'} *}<a href="order.php?orderid={$order.orderid}" style="color: blue;" target="_blank">{* {/if} *}<b>{$order.order_prefix}{$order.orderid}</b>{* {if $static} *}</a>{* {/if} *}</td>
-  <td class="OrderSheetGreenCell"><b>{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}</b></td>
+  <td class="OrderSheetGreenCell"><b>{$statuses.DC[$v.dc_status]}</b></td>
   <td>{$order.lastname}</td>
   <td>{if $v.total.gst eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}{/if}</td>
   <td>{$order.payment_method}</td>
@@ -500,8 +500,8 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
  {if $v.ru_status ne ""}
   <table cellpadding="0" cellspacing="0" {* width="100%" *} style="background-color: #B4A7D6; margin-top: -3px; margin-left: -3px; padding-top: 3px;">  
   <tr>
-  <td align="left">  
-    {include file="main/order_status.tpl" status=$v.ru_status mode="static" status_type="RU" extended="Y"}
+  <td align="left">
+    {$statuses.RU[$v.ru_status]}
   </td>
   </tr>
   </table>

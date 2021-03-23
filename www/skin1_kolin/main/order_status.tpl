@@ -1,30 +1,34 @@
-{if $usertype eq 'A' && $current_membership_flag eq 'FS'}{assign var="limited" value="Y"}{/if}
-{if $status_type eq ''}{assign var="status_type" value="CB"}{/if}
-{if $extended eq "" and $status eq ""}
+{if !$status_type}
+    {assign var="status_type" value="CB"}
+{/if}
+{if !$extended and !$status}
     {$lng.lbl_wrong_status}
-{elseif $mode eq "select" && ($limited eq "" || $extended ne "")}
+{elseif !$limited || $extended}
+
+    {assign var=avail_statuses value=$status->getAvailableStatuses()}
 
     <select name="{$name}" {$extra}>
-    {if ($extended ne "" && $limited eq "") || $empty ne ""}
-        <option value=""></option>
-    {/if}
-
-    {foreach from=$statuses[$status_type] key="code" item="o_status"}
-
-      {if $code ne "B"} 
-
-        {if !$limited}
-            <option value="{$code}"{if $status eq $code} selected="selected"{/if} {if ($code eq "K" && $hide_pending_availability_check_status eq "Y") || ($code eq "C" && $hide_dispatched_status eq "Y")}disabled="disabled"{/if}>{$o_status}</option>
-        {else}
-            {if $code eq 'C' || $code eq 'S' || $code eq 'B' || $code eq 'G'}
-                <option value="{$code}"{if $status eq $code} selected="selected"{/if}>{$o_status}</option>
-            {/if}
+        {if ($extended && !$limited) || $empty}
+            <option value=""></option>
         {/if}
 
-      {/if} 
-
-    {/foreach}
+        {foreach from=$statuses[$status_type] key="code" item="o_status"}
+            {if $code !== 'B'}
+                <option
+                        value="{$code}"
+                        title="{Modules\Order\Models\OrderStatusModel::objects()->get(['code' => $code])->description}"
+                        {if $status->code === $code}
+                            selected
+                        {/if}
+                        {if ($status->code !== $code && (!$avail_statuses|count || !$code|in_array:$avail_statuses)) ||
+                        ($code === "K" && $hide_pending_availability_check_status === 'Y') ||
+                        ($code === 'C' && $hide_dispatched_status === 'Y')}
+                            disabled
+                        {/if}
+                >
+                    {$o_status}
+                </option>
+            {/if}
+        {/foreach}
     </select>
-{elseif $mode eq "static" || $limited ne ""}
-    {$statuses[$status_type][$status]}
 {/if}

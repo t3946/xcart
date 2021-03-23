@@ -1081,17 +1081,15 @@ function check_r_fields() {
                                                    value="{$v.cb_status}"/>
 
                                             {include file="main/order_status.tpl"
-                                                     status=$v.cb_status
-                                                     mode="select"
+                                                     status=$oOrderGroup->cb_status_model
                                                      name="groups[`$m_id`][cb_status]"
-                                                     status_type="CB"
+                                                     status_type='CB'
                                                      extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
                                         {else}
                                             {include file="main/order_status.tpl"
                                                      status=$oOrderGroup->cb_status_model
-                                                     mode="select"
                                                      name="groups[`$m_id`][cb_status]"
-                                                     status_type="CB"
+                                                     status_type='CB'
                                                      extra=" id='groups_cb_status_`$m_id`'"}
                                         {/if}
 
@@ -1129,8 +1127,7 @@ function check_r_fields() {
                                     <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
                                         <b>Customer to Amazon payment status:</b><br/>
                                         {include file="main/order_status.tpl"
-                                                 status=$v.cb_status
-                                                 mode="select"
+                                                 status=$oOrderGroup->c2a_status_model
                                                  name="groups[`$m_id`][c2a_status]"
                                                  status_type="C2"
                                                  extra=" id='groups_c2a_status_`$m_id`'"}
@@ -1168,7 +1165,14 @@ function check_r_fields() {
                                             {/literal}
                                         </script>
 
-                                        {include file="main/order_status.tpl" status=$v.dc_status mode="select" name="groups[`$m_id`][dc_status]" status_type="DC" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_dc_status_`$m_id`' "}
+                                        {include
+                                            file="main/order_status.tpl"
+                                            status=$oOrderGroup->dc_status_model
+                                            name="groups[`$m_id`][dc_status]"
+                                            status_type="DC"
+                                            hide_pending_availability_check_status=$hide_pending_availability_check_status
+                                            hide_dispatched_status=$hide_dispatched_status
+                                            extra=" id='groups_dc_status_`$m_id`' "}
 
                                         <br/>
                                         <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span
@@ -1191,7 +1195,14 @@ function check_r_fields() {
 
                                         {assign var="hide_pending_availability_check_status" value="Y"}
 
-                                        {include file="main/order_status.tpl" status=$oOrderGroup->d2a_status mode="select" name="groups[`$m_id`][d2a_status]" status_type="DA" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_d2a_status_`$m_id`' "}
+                                        {include
+                                            file="main/order_status.tpl"
+                                            status=$oOrderGroup->d2a_status_model
+                                            name="groups[`$m_id`][d2a_status]"
+                                            status_type="DA"
+                                            hide_pending_availability_check_status=$hide_pending_availability_check_status
+                                            hide_dispatched_status=$hide_dispatched_status
+                                            extra=" id='groups_d2a_status_`$m_id`' "}
 
                                         <br/>
                                         <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span
@@ -1201,8 +1212,6 @@ function check_r_fields() {
                                         <B>Received by distributor
                                             date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}
                                         <span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
-
-
                                     </td>
                                 {/if}
                                 {if $oOrderGroup->bd_status !== null}
@@ -1230,8 +1239,6 @@ function check_r_fields() {
                                         {else}
                                             {$invoice_memo_statuses.N}
                                         {/if}
-
-
                                     </td>
                                 {/if}
                             </tr>
@@ -1242,7 +1249,12 @@ function check_r_fields() {
                 <tr id="po_status_{$m_id}_tr" {if $v.cb_status ne "O"}style="display: none;"{else}style="background-color: #B6D7A8;"{/if}>
                     <td colspan="11">
                         <b>Check transit status:</b><br/>
-                        {include file="main/order_status.tpl" status=$v.po_status mode="select" name="groups[`$m_id`][po_status]" status_type="PO" extra=" id='groups_po_status_`$m_id`' "}
+                        {include file="main/order_status.tpl"
+                            status=$oOrderGroup->po_status_model
+                            mode="select"
+                            name="groups[`$m_id`][po_status]"
+                            status_type="PO"
+                            extra=" id='groups_po_status_`$m_id`' "}
                     </td>
                 </tr>
 
