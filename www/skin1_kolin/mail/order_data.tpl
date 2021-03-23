@@ -36,7 +36,7 @@
 
 {if $products}
 {$lng.lbl_payment_status|cat:":"|string_format:$max_space}{$statuses.CB[$v.cb_status]}
-{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{$statuses.ВС[$v.dc_status]}
+{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{$statuses.DС[$v.dc_status]}
 {/if}
 
 {if $show_shipping_groups neq 'N' && $v.oOrderGroup->trackings}
