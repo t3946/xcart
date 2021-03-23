@@ -43,7 +43,7 @@ vim: set ts=2 sw=2 sts=2 et:
               {$lng.lbl_order_status}:
             </span>
             <span class="mob-table-cell">
-              {include file="main/order_status.tpl" status=$order.status mode="static"}
+              {$statuses.CB[$order.status]}
             </span>
           </div>
           <div class="mob-table-row">
