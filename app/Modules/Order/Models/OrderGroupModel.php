@@ -199,6 +199,11 @@ class OrderGroupModel extends Model
                 'null' => false,
                 'default' => '',
             ],
+            'voided_reason' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ],
             'shipping_quote' => [
                 'class' => DecimalField::class,
                 'null' => true,

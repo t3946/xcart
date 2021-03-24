@@ -577,7 +577,7 @@ if ($REQUEST_METHOD === 'POST')
                     OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR,
                     OrderStatusModel::ORDER_DC_STATUS_RECEIVED_BY_AMAZON], true))
                 {
-                    $current_dc_status_model =  OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
+                    $current_dc_status_model = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
                     if ($current_dc_status_model && $current_dc_status_model->dc_status !== $v['dc_status']) {
                         if ($v['dc_status'] === 'C') {
                             if (!$current_dc_status_model->dc_dispatched_time) {
@@ -599,6 +599,10 @@ if ($REQUEST_METHOD === 'POST')
                 if (isset($v_cart_tmp['cb_status'], $groups[$k_cart_tmp]['cb_status']) && $v_cart_tmp['cb_status'] === 'AP' &&
                     in_array($groups[$k_cart_tmp]['cb_status'], ['D', 'A'], true)) {
                     $make_paypal_void = true;
+                    if (isset($orderGroupModel)) {
+                        $orderGroupModel->voided_reason = $groups[$k_cart_tmp]['voided_reason'];
+                        $orderGroupModel->save();
+                    }
                 } else {
                     $make_paypal_void = false;
                     break;

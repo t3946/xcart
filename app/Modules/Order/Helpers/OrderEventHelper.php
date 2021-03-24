@@ -145,8 +145,11 @@ class OrderEventHelper
 
                             $order = $order_id ? OrderModel::objects()->get(['orderid' => $order_id]) : null;
 
-                            if ($order && \in_array($newValue, [
-                                OrderStatusModel::ORDER_STATUS_UNPAID, OrderStatusModel::ORDER_STATUS_CANCELED, OrderStatusModel::ORDER_STATUS_DECLINED
+                            if ($order && in_array($newValue, [
+                                    OrderStatusModel::ORDER_STATUS_UNPAID,
+                                    OrderStatusModel::ORDER_STATUS_CANCELED,
+                                    OrderStatusModel::ORDER_STATUS_DECLINED,
+                                    OrderStatusModel::ORDER_STATUS_FAILED,
                                 ], true))
                             {
                                 $order->cart_number = null;

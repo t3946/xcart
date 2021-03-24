@@ -211,52 +211,13 @@ function func_check_cb_statuses(){
   cb_status = $('#groups_cb_status_{/literal}{$m_id}{literal}').val();
 
   if (document.getElementById('refund_group_{/literal}{$m_id}{literal}')){
-    if (cb_status == "3" || cb_status == "V"){
+    if (cb_status === '3' || cb_status === 'V'){
       $("#refund_group_{/literal}{$m_id}{literal}").show();
     } else {
       $("#refund_group_{/literal}{$m_id}{literal}").hide();
     }
   }
-
-/*
-  if (cb_status == "P"){
-    cb_status_eq_P_found = true;
-  } else {
-    all_cb_status_eq_P = false;
-  }
-
-  if (cb_status == "AP"){
-    cb_status_eq_AP_found = true;
-  } else {
-    all_cb_status_eq_AP = false;
-  }
-
-  if (cb_status == "3"){
-    cb_status_eq_3_found = true;
-  } else {
-    all_cb_status_eq_3 = false;
-  }
-
-  if (cb_status == "V"){
-    cb_status_eq_V_found = true;
-  } else {
-    all_cb_status_eq_V = false;
-  }
-
-  if (cb_status == "H"){
-    cb_status_eq_H_found = true;
-  } else {
-    all_cb_status_eq_H = false;
-  }
-
-  if (cb_status == "R"){
-    cb_status_eq_R_found = true;
-  } else {
-    all_cb_status_eq_R = false;
-  }
-*/
-
-  if (cb_status == "O"){
+  if (cb_status === 'O'){
     $("#po_status_{/literal}{$m_id}{literal}_tr").show();
   } else {
     $("#po_status_{/literal}{$m_id}{literal}_tr").hide();
@@ -264,7 +225,7 @@ function func_check_cb_statuses(){
 
 {/literal}
 {/foreach}
-    {literal}
+{literal}
 
 }
 
@@ -308,20 +269,20 @@ function check_r_field(form, prefix, key_of_arr) {
 
   for (var i = 0; i < form.elements.length; i++) {
 
-    if (form.elements[i].type == "text" && (!prefix || form.elements[i].id.search(reg) == 0)){
+    if (form.elements[i].type === "text" && (!prefix || form.elements[i].id.search(reg) == 0)){
 
       var field_id = form.elements[i].id;
       var field = $('#'+field_id).val();
       var first_letter = field[0];
 
-      if (first_letter == "R" || first_letter == "r"){
+      if (first_letter === "R" || first_letter === "r"){
 
        var field_id_arr = js_explode("_", field_id);
        var mid = field_id_arr[key_of_arr];
 
        var cb_status = $('#groups_cb_status_'+mid).val();
 
-       if (cb_status != "P" && cb_status != "V" && cb_status != "H" && cb_status != "3" && cb_status != "AP"){
+       if (cb_status !== "P" && cb_status !== "V" && cb_status !== "H" && cb_status !== "3" && cb_status !== "AP"){
           return "N";
        }
       }
@@ -336,7 +297,7 @@ function check_r_fields() {
   var check_amount = check_r_field(form, "items_amount_", 2);
   var check_shipping_cost_net = check_r_field(form, "groups_shipping_cost_net_", 4);
 
-  if (check_amount == "Y" && check_shipping_cost_net == "Y"){
+  if (check_amount === "Y" && check_shipping_cost_net === "Y"){
     form.submit();
     return true;
   } else {
@@ -1067,6 +1028,10 @@ function check_r_fields() {
                                             $(function () {
                                                 $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function () {
                                                     func_check_cb_statuses();
+                                                    const void_order_message = $('#void_order_message_{/literal}{$m_id}{literal}');
+                                                    $(this).val() === 'A'
+                                                        ? void_order_message.show().find('textarea').prop('required', true)
+                                                        : void_order_message.hide().find('textarea').prop('required', false);
                                                 });
                                             });
                                             {/literal}
@@ -1267,6 +1232,22 @@ function check_r_fields() {
                         </tr>
                     {/if}
                 {/if}
+
+                <tr id="void_order_message_{$m_id}"
+                    style='background-color: #F4CCCC; {if $v.cb_status !== 'A'} display: none; {/if}'>
+                    <td>
+                        <div>
+                            <b>Authorization voided reason:</b>
+                            {if $v.voided_reason}
+                                {$v.voided_reason}
+                            {/if}
+                        </div>
+                        {if !$v.voided_reason}
+                            <textarea name="groups[{$m_id}][voided_reason]" style="width: 100%;" placeholder="Why didn't we save the order?"></textarea>
+                            <button type="submit" onclick="$('#send_email1').val('Y');this.form.submit();">Void authorization</button>
+                        {/if}
+                    </td>
+                </tr>
 
                 <tr id="pending_order_message1_{$m_id}"
                     style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>
