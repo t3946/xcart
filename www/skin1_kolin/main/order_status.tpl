@@ -20,7 +20,7 @@
                         {if $status->code === $code}
                             selected
                         {/if}
-                        {if ($status->code !== $code && (!$avail_statuses|count || !$code|in_array:$avail_statuses)) ||
+                        {if ($status->code != $code && (!$avail_statuses|count || !$code|in_array:$avail_statuses)) ||
                         ($code === "K" && $hide_pending_availability_check_status === 'Y') ||
                         ($code === 'C' && $hide_dispatched_status === 'Y')}
                             disabled
