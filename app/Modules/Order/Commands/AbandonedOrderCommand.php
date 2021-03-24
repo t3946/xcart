@@ -29,7 +29,6 @@ class AbandonedOrderCommand extends Command
                 OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3,
                 OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
                 OrderStatusModel::ORDER_STATUS_NOT_FINISHED,
-                OrderStatusModel::ORDER_STATUS_FAILED,
             ]])->order(['-orderid']) as $order) {
 
             $isGoogle = trim($order->phone) === self::GOOGLE_BOT_PHONE;
