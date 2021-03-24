@@ -1,0 +1,9 @@
+.quantity-group-btn__checkout {
+  display: none;
+}
+
+@include breakpoint(md up) {
+  .quantity-group-btn__checkout {
+    display: flex;
+  }
+}

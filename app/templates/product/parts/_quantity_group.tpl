@@ -1,8 +1,10 @@
 {set $min = $model->min_amount}
 {set $quantity = $quantity ? $quantity : $min}
+{set $group_class = $group_class ? " $group_class" : ''}
+{set $btn_class = $btn_class ? " $btn_class" : ''}
 
-<div class="quantity-group">
-    <span class="quantity-group-btn quantity-group-btn_dec {if $quantity > $min}quantity-group-btn_active{/if}">–</span>
+<div class="quantity-group{$group_class}">
+    <span class="quantity-group-btn quantity-group-btn_dec {if $quantity > $min}quantity-group-btn_active{/if}{$btn_class}">–</span>
     <input
             class="quantity-group-input"
             type="number"
@@ -15,5 +17,5 @@
             id="quantity-{$model->productid}"
             autocomplete="off"
     />
-    <span class="quantity-group-btn quantity-group-btn_inc {if $quantity <= $model->avail}quantity-group-btn_active{/if}">+</span>
+    <span class="quantity-group-btn quantity-group-btn_inc {if $quantity <= $model->avail}quantity-group-btn_active{/if}{$btn_class}">+</span>
 </div>

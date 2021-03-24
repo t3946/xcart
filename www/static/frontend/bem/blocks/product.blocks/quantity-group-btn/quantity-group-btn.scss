@@ -7,16 +7,10 @@
   min-width: 1.4em;
   line-height: 34px;
   cursor: default;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
-}
-
-@include breakpoint(md up) {
-  .quantity-group-btn {
-    display: flex;
-  }
 }
 
 @include breakpoint(lg up) {

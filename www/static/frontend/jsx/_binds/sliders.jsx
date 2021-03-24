@@ -1,83 +1,31 @@
-import ajax from "../utils/ajax";
+import { render }         from 'preact';
+import SliderProducts     from '@/components/SliderProducts/SliderProducts';
+import SliderProductsMini from '@/components/SliderProductsMini/SliderProductsMini';
 
-(()=>{
-    let fncHideBlock = slide => {
-        slide.classList.remove('loading');
-        slide.closest('.slider-block').classList.add('hide');
-    };
+( () => {
+    // init product sliders
 
-    let fncSlyAttach = (slide) => {
-        window.addEventListener('resize', () => $(slide).sly('reload'));
+    $( '.slider-bestsellers .slider-data' ).each( function( i, elem ) {
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
+    } );
 
-        let slideContainer = $( '<div />' ).addClass('slide-container');
-        let buttonLeft = $( '<div />' ).addClass('nav-button b-left');
-        let buttonRight = $( '<div />' ).addClass('nav-button b-right');
+    $( '.slider-featured-product .slider-data' ).each( function( i, elem ) {
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
+    } );
 
-        $(slide).wrap( slideContainer );
-        $(slide).after(buttonLeft, buttonRight);
-        slide.closest('.slider-block').classList.remove('hide');
+    $( '.slider-new .slider-data' ).each( function( i, elem ) {
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
+    } );
 
-        $(slide).sly({
-            horizontal: 1,
-            itemNav: 'basic',
-            speed: 300,
-            mouseDragging: 1,
-            touchDragging: 1,
-            releaseSwing: 1,
-            dragHandle: 1,
-            dynamicHandle: 1,
-            clickBar: 1,
-            scrollBar: $(slide).closest('.slider-block').find('.scrollbar'),
-            scrollBy: 0,
-            scrollTrap: true,
-            // pagesBar: $wrap.find('.pages'),
-            activatePageOn: 'click',
-            nextPage: buttonRight,
-            prevPage: buttonLeft,
-        }).sly('on','load move', function(){window.LazyLoad.update();}).css('overflow', 'hidden');
+    $( '.slider-related .slider-data' ).each( function( i, elem ) {
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
+    } );
 
-        window.LazyLoad.update();
-    };
+    $( '.slider-also_bought .slider-data' ).each( function( i, elem ) {
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
+    } );
 
-    document.addEventListener('sliders_show', ()=>{
-        let sliders = document.querySelectorAll('.slider-block .slider-data:not(.loaded):not(.loading):not(.not-load)');
-
-        if (sliders.length) {
-            for (let i=0; i < sliders.length; i++) {
-                let slide = sliders[i];
-                slide.classList.add('loading');
-
-                if (slide.dataset.url)
-                {
-                    ajax( slide.dataset.url )
-                        .then(data => {
-                            if (data) {
-                                slide.innerHTML = data.html;
-                                slide.classList.add('loaded');
-
-                                fncSlyAttach(slide);
-                            }
-                            else {
-                                fncHideBlock(slide);
-                            }
-
-                            slide.classList.remove('loading');
-                        })
-                        .catch(error => {
-                            console.error(
-                                error.message,
-                                slide.dataset.url
-                            );
-
-                            fncHideBlock(slide);
-                        })
-                    ;
-
-                }
-            }
-        }
-    });
-
-    let evnt = new CustomEvent('sliders_show');
-    document.dispatchEvent(evnt);
-})();
+    $( '.slider-viewed .slider-data' ).each( function( i, elem ) {
+        render( <SliderProductsMini url={ elem.dataset.url }/>, elem );
+    } );
+} )();

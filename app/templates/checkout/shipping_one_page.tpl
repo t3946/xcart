@@ -117,7 +117,7 @@
                                             </div>
 
                                             <div class="grid-counter table-wrapper cart-column-quantity quantity-extended">
-                                                {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity}
+                                                {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity btn_class='quantity-group-btn__checkout' group_class='quantity-group__checkout'}
                                             </div>
 
                                             <div class="grid-multiplier table-column cart-column-multiply-sign">x</div>

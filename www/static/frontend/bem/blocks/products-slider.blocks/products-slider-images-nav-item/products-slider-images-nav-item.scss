@@ -1,0 +1,26 @@
+.products-slider-images-nav-item {
+  position: relative;
+  height: 100%;
+  padding: 0 3px 4px 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+
+  &:first-child {
+    padding: 0 3px 4px 10px;
+  }
+
+  &:last-child {
+    padding: 0 10px 4px 0;
+  }
+
+  &:before {
+    content: "";
+    background: #ececec;
+    height: 3px;
+    width: 100%;
+    display: block;
+    transform: skewX(-24deg);
+    transition: background 0.15s linear;
+  }
+}

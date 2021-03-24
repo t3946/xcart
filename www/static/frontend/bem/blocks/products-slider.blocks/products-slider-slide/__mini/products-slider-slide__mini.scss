@@ -1,0 +1,11 @@
+.products-slider-slide__mini {
+  height: rem-calc(120);
+  padding: rem-calc(5);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(10);
+  }
+  @include breakpoint(lg up) {
+    padding: rem-calc(15);
+  }
+}

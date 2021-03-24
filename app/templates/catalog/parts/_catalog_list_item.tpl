@@ -50,6 +50,7 @@
 
             </a>
         </div>
+
         <div class="info_container container">
             <h4 class="title " itemprop="name">
                 {if $item->isGroupRoot()}

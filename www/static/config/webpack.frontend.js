@@ -21,6 +21,7 @@ config = {
             'create-react-class': 'preact/compat/lib/create-react-class',
             'Classes': path.resolve( './frontend/js/Classes' ),
             'Components': path.resolve( './frontend/js/Components' ),
+            '@': path.resolve( './frontend/jsx' ),
         },
 
         modules: [
@@ -87,15 +88,6 @@ config = {
                     },
                 ],
             },
-            // {
-            //     test: /modernizrrc(\.js)?$/,
-            //     use: [
-            //         {
-            //             loader: 'modernizr-loader',
-            //             options: require( __dirname + '/support/modernizrrc.js' ),
-            //         },
-            //     ]
-            // },
         ]
     },
     plugins: [
@@ -103,7 +95,9 @@ config = {
             $: 'jquery',
             jQuery: 'jquery',
             React: 'react',
-            'window.jQuery': 'jquery'
+            'window.jQuery': 'jquery',
+            h: [ 'preact', 'h' ],
+            Component: [ 'preact', 'Component' ],
         } ),
         new webpack.LoaderOptionsPlugin( {
             minimize: true,

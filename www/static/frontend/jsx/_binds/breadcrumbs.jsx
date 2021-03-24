@@ -1,53 +1,69 @@
-import cssFileLoaded from "../utils/cssFileLoaded";
+import { render }              from 'preact';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-(() => {
-    let breadcrumbs = document.querySelector('.breadcrumbs-container');
-    if (breadcrumbs) {
+class Breadcrumbs extends Component {
+    constructor() {super();}
 
-        let sly;
-        let options = {
-            horizontal: 1,
-            itemNav: 'basic',
-            speed: 300,
-            mouseDragging: 1,
-            touchDragging: 1,
-            releaseSwing: 1,
-            dragHandle: 1,
-            dynamicHandle: 1,
-            scrollBy: 0,
-            scrollTrap: true,
-            activatePageOn: 'click'
-        };
+    render( props ) {
+        return (
+            <Swiper
+                spaceBetween={ 0 }
+                longSwipesRatio={ 0.05 }
+                slidesPerView="auto"
+                resistance={ true }
+                resistanceRatio={ 0 }
+                className="breadcrumb-list no-bullet"
+                itemType="http://schema.org/BreadcrumbList"
+                itemProp="breadcrumb"
+                itemScope
+                onSwiper={ swiper => swiper.slideToLoop( props.breadcrumbsData.length ) }
+            >
+                { props.breadcrumbsData.map( ( item, i ) => {
+                    const last = i + 1 === props.breadcrumbsData.length;
 
-        // После загрузки css
-        $(document).on('app.start', function () {
-
-            function fixWidth(){
-                $(breadcrumbs).find('li').each(function(){
-                    let width = Math.ceil($(this).outerWidth());
-                    $(this).css('width', width + 'px');
-                });
-            }
-
-            function initBreadcrumbs() {
-                fixWidth();
-                sly = new Sly(breadcrumbs, options).init();
-                sly.toEnd();
-            }
-
-            function reloadBreadcrumbs(){
-                fixWidth();
-                sly.reload();
-                sly.toEnd();
-            }
-
-            cssFileLoaded('styles.css', function(){
-                initBreadcrumbs();
-                $(window).resize(reloadBreadcrumbs);
-            });
-
-        });
-
+                    if ( !last ) {
+                        return (
+                            <SwiperSlide key={ i } className="breadcrumb-slide">
+                                <a
+                                    className="breadcrumb-link"
+                                    itemScope
+                                    itemType="http://schema.org/Thing"
+                                    itemProp="item"
+                                    id={ item.url }
+                                    href={ item.url }>
+                                    <span itemProp="name">
+                                        { item.name }
+                                    </span>
+                                </a>
+                                <meta itemProp="position" content={ i + 1 }/>
+                            </SwiperSlide>
+                        );
+                    }
+                    else {
+                        return (
+                            <SwiperSlide key={ i } className="breadcrumb-slide">
+                                <span itemScope itemType="http://schema.org/Thing" itemProp="item" id={ item.url }>
+                                    <span itemProp="name">
+                                        { item.name }
+                                    </span>
+                                </span>
+                                <meta itemProp="position" content={ i + 1 }/>
+                            </SwiperSlide>
+                        );
+                    }
+                } ) }
+            </Swiper>
+        );
     }
-})();
+}
+
+export default ( () => {
+    $( '.breadcrumbs-container' ).each( ( i, elem ) => {
+        const breadcrumbsData = JSON.parse( elem.dataset.breadcrumbs );
+
+        if ( breadcrumbsData ) {
+            return render( <Breadcrumbs breadcrumbsData={ breadcrumbsData }/>, elem );
+        }
+    } );
+} )();
 

@@ -4,6 +4,7 @@ use Modules\Goods\Controllers\Api\ApiAnalyticController;
 use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
 use Modules\Order\Controllers\Api\UpsMapController;
+use Modules\Goods\Controllers\Api\ApiCategoriesController;
 
 return [
     [
@@ -41,5 +42,37 @@ return [
         'route' => 'i/{i:image_id}/{**:filename}',
         'target' => [ApiImageController::class, 'view'],
         'name' => 'image'
+    ],
+
+    // product sliders
+    [
+        'route' => 'category/bestsellers',
+        'target' => [ApiCategoriesController::class, 'actionBestsellers'],
+        'name' => 'bestsellersApi'
+    ],
+    [
+        'route' => 'category/featured',
+        'target' => [ApiCategoriesController::class, 'actionFeatured'],
+        'name' => 'featuredApi'
+    ],
+    [
+        'route' => 'category/new',
+        'target' => [ApiCategoriesController::class, 'actionNew'],
+        'name' => 'newApi'
+    ],
+    [
+        'route' => 'category/api/viewed',
+        'target' => [ApiCategoriesController::class, 'actionViewed'],
+        'name' => 'viewedApi'
+    ],
+    [
+        'route' => 'category/api/also-bound-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionAlsoBought'],
+        'name' => 'also_boundApi'
+    ],
+    [
+        'route' => 'category/api/related-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionRelatedProducts'],
+        'name' => 'relatedApi'
     ],
 ];

@@ -376,6 +376,9 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/billing.blocks/**/*.scss',
         'frontend/bem/blocks/header.blocks/**/*.scss',
         'frontend/bem/blocks/photoswipe.blocks/**/*.scss',
+        'frontend/bem/blocks/products-slider.blocks/**/*.scss',
+        'frontend/bem/blocks/swiper.blocks/**/*.scss',
+        'frontend/bem/blocks/breadcrumb.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));

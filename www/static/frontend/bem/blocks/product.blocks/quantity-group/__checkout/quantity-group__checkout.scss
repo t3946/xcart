@@ -1,0 +1,9 @@
+.quantity-group__checkout {
+  border: 1px solid #aaaaaa;
+}
+
+@include breakpoint(md up) {
+  .quantity-group__checkout {
+    border: 1px solid #ffe296;
+  }
+}
