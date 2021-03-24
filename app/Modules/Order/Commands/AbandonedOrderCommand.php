@@ -36,7 +36,7 @@ class AbandonedOrderCommand extends Command
             if ($order->total < self::ORDER_TOTAL_THRESHOLD ||
                 $isGoogle ||
                 OrderHelper::hasCustomerSiblingsOrders($order)) {
-                $status = $isGoogle ? OrderStatusModel::ORDER_STATUS_DECLINED : OrderStatusModel::ORDER_STATUS_CANCELED;
+                $status = $isGoogle ? OrderStatusModel::ORDER_STATUS_DECLINED : OrderStatusModel::ORDER_STATUS_FAILED;
                 $order->groups->update(['cb_status' => $status]);
                 $order->cb_status = $status;
                 $order->save();
