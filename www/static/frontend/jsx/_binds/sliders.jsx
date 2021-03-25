@@ -36,7 +36,7 @@ import SliderBreadcrumbs  from '@/components/Sliders/SliderBreadcrumbs';
     } );
 
     $( '.slider-viewed .slider-data' ).each( function( i, elem ) {
-        render( <SliderProductsMini url={ elem.dataset.url }/>, elem );
+        render( <SliderProducts url={ elem.dataset.url }/>, elem );
     } );
 
     $( '.breadcrumbs-container' ).each( ( i, elem ) => {
