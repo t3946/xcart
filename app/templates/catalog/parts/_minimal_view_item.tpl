@@ -6,7 +6,7 @@
      itemprop="itemListElement">
 
     <div class="image_container container">
-        <a href="{$item->getAbsoluteUrl()}" class="link">
+        <a href="{$item->getAbsoluteUrl()}" class="link catalog-product-image-link">
             {if $item->isGroupRoot()}
                 {set $childrens = $item->getFrontendChilds()->limit(1)->all()}
                 <div class="images images-many images-{$childrens|count}">

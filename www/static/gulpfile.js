@@ -380,6 +380,7 @@ gulp.task('frontend:bem', function () {
         'frontend/bem/blocks/swiper.blocks/**/*.scss',
         'frontend/bem/blocks/breadcrumb.blocks/**/*.scss',
         'frontend/bem/blocks/promo-slider.blocks/**/*.scss',
+        'frontend/bem/blocks/catalog.blocks/**/*.scss',
     ])
         .pipe(concat('bem.scss'))
         .pipe(gulp.dest('frontend/bem/'));
