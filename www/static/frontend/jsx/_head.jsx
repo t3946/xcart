@@ -61,7 +61,10 @@ import LazyLoad from "vanilla-lazyload";
     window['sendAnalytics'] = new sendAnalytics;
     window['LazyLoad'] = new LazyLoad({
         elements_selector: ".lazy-img, .lazy-bg",
-        callback_set: function(el){el.classList.remove('lazy-img')}
+        callback_set: function(el){
+            el.classList.remove('lazy-img');
+            el.classList.add('lazy-bg-loaded');
+        }
     });
 
     window.d = (...arg) => {
