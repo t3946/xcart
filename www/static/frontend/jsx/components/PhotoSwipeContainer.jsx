@@ -175,18 +175,12 @@ const cont = new class PhotoSwipeContainer
                             </div>
 
                             <div className="photoswipe-left-arrow">
-                                <button
-                                    className="pswp__button pswp__button--arrow--left photoswipe-navigate-button"
-                                    title="Previous (arrow left)">
-                                </button>
+                                <button className="pswp__button pswp__button--arrow--left photoswipe-navigate-button" />
                                 <img className="photoswipe-navigate-button-icon" src="/static/frontend/dist/images/photoswipe/arrow.svg" alt=""/>
                             </div>
 
                             <div className="photoswipe-right-arrow">
-                                <button
-                                    className="pswp__button pswp__button--arrow--right photoswipe-navigate-button"
-                                    title="Next (arrow right)">
-                                </button>
+                                <button className="pswp__button pswp__button--arrow--right photoswipe-navigate-button" />
                                 <img className="photoswipe-navigate-button-icon" src="/static/frontend/dist/images/photoswipe/arrow.svg" style="transform: rotateY(180deg)" alt=""/>
                             </div>
 
@@ -194,7 +188,9 @@ const cont = new class PhotoSwipeContainer
                                 <div className="pswp__caption__center"></div>
                             </div>
 
-                            <img className="photoswipe-close-button" src="/static/frontend/dist/images/photoswipe/cross.svg" alt=""/>
+                            <div className="photoswipe-close-button">
+                                <img className="photoswipe-close-button-icon" src="/static/frontend/dist/images/photoswipe/cross.svg" alt=""/>
+                            </div>
                         </div>
                     </div>
                 </div>
