@@ -3,6 +3,7 @@
 namespace Modules\Admin\Controllers;
 
 use DateTime;
+use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -49,44 +50,62 @@ class CommonController extends BackendController
                 : array_filter($orders, static fn($order) => in_array($order['cb_status'], $statuses, true));
 
             foreach (self::ORDER_DATES_PERIODS as $period => $days) {
-
-                if ($days !== null) {
-                    $min_date = (new DateTime("-$days days"))->setTime(0, 0)->getTimestamp();
-                    $table_orders[$type][$period] = array_filter($filtered, static fn($order) => $order['date'] >= $min_date);
+                if ($days === null) {
+                    $table_orders[$type][$period]['total'] = OrderAnalyticsHelper::ordersTotalSum($filtered);
+                    $table_orders[$type][$period]['count'] = count($filtered);
                 } else {
-                    $table_orders[$type][$period] = $filtered;
+                    $min_date = (new DateTime("-$days days"))->setTime(0, 0)->getTimestamp();
+                    $orders_by_date = array_filter($filtered, static fn($order) => $order['date'] >= $min_date);
+                    $table_orders[$type][$period]['total'] = OrderAnalyticsHelper::ordersTotalSum($orders_by_date);
+                    $table_orders[$type][$period]['count'] = count($orders_by_date);
                 }
-
-                if ($type === 'AUTHORIZATION VOIDED') {
-                    $table_orders['AUTHORIZATION VOIDED RATE'][$period] = self::getRates(
-                        $table_orders['AUTHORIZATION VOIDED'][$period],
-                        array_merge($table_orders['PAID'][$period], $table_orders['AUTHORIZATION VOIDED'][$period], $table_orders['REFUNDED'][$period])
-                    );
-                    if ($period === self::TOTAL_COLUMN){
-                        $table_orders['AUTHORIZATION VOIDED RATE'][$period] = null;
-                    }
-                }
-                if ($type === 'REFUNDED') {
-                    $table_orders['REFUND RATE'][$period] = self::getRates($table_orders['REFUNDED'][$period], $table_orders['PAID'][$period]);
-                    if ($period === self::TOTAL_COLUMN){
-                        $table_orders['REFUND RATE'][$period] = null;
-                    }
-                }
-
                 if ($period === self::TOTAL_COLUMN && $type !== 'AUTHORIZED') {
                     $table_orders[$type][$period] = null;
                 }
             }
         }
 
+        $orders_rates['AUTHORIZATION VOIDED'] = self::geTypeRates(
+            $table_orders,
+            'AUTHORIZATION VOIDED',
+            ['PAID', 'AUTHORIZATION VOIDED', 'REFUNDED'],
+        );
+        $orders_rates['REFUNDED'] = self::geTypeRates(
+            $table_orders,
+            'REFUNDED',
+            ['PAID'],
+        );
+
+        $average_daily_sales = round($table_orders['AUTHORIZED AND PAID']['Last 30 days']['total'] / 30, 2);
+
         $last_orders = OrderModel::objects()->order(['-orderid'])->cache(10)->limit(10)->all();
         $last_orders = array_reverse($last_orders);
 
-        echo $this->renderInSmarty('admin/index.tpl', ['orders' => $table_orders, 'last_orders' => $last_orders]);
+        echo $this->renderInSmarty('admin/index.tpl', [
+            'orders' => $table_orders,
+            'last_orders' => $last_orders,
+            'average_daily_sales' => $average_daily_sales,
+            'orders_rates' => $orders_rates,
+        ]);
     }
 
-    private static function getRates($source, $dest): string
+    private static function geTypeRates($table_orders, string $source_type, array $dest_types): array
     {
-        return number_format($dest ? round((count($source) / count($dest)) * 100, 2) : 0, 2);
+        $result = [];
+        foreach (self::ORDER_DATES_PERIODS as $period => $days) {
+            $rate = $table_orders[$source_type][$period]
+                ? self::getRates(
+                    $table_orders[$source_type][$period]['total'],
+                    array_reduce($dest_types, static fn($c, $t) => $c + $table_orders[$t][$period]['total'])
+                )
+                : null;
+            $result[$period] = $rate;
+        }
+        return $result;
+    }
+
+    private static function getRates(float $source, float $dest): float
+    {
+        return $dest ? round(($source / $dest) * 100, 2) : 0;
     }
 }

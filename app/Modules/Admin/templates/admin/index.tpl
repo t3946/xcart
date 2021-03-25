@@ -13,6 +13,8 @@
         {include 'admin/home/_stats.tpl'}
         <br/>
         <br/>
+        Average daily S3 Stores sales {$average_daily_sales|site_currency}
+        <br/>
         <br/>
 
         {include 'admin/home/_last_orders.tpl'}
