@@ -47,4 +47,9 @@ class OrderAnalyticsHelper
             }
         }
     }
+
+    public static function ordersTotalSum(array $order_groups)
+    {
+        return array_reduce($order_groups, static fn($c, $o) => $c + $o['total_gross']);
+    }
 }
