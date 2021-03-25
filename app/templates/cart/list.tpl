@@ -127,7 +127,7 @@
 
                                     <div class="table-column quantity">
                                         <div class="inline-block">
-                                            {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity}
+                                            {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity btn_class='quantity-group-btn__checkout' group_class='quantity-group__checkout'}
                                         </div>
 
                                     </div>

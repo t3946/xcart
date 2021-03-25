@@ -1,6 +1,5 @@
 @mixin getQuantityGroupStyle() {
   .quantity-group {
-    border: $default_qg_border;
     word-spacing: 0;
     flex-direction: row;
     flex-wrap: nowrap;

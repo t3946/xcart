@@ -1,8 +1,9 @@
-import { render }              from 'preact';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-class Breadcrumbs extends Component {
-    constructor() {super();}
+export default class SliderBreadcrumbs extends Component {
+    constructor() {
+        super();
+    }
 
     render( props ) {
         return (
@@ -56,14 +57,3 @@ class Breadcrumbs extends Component {
         );
     }
 }
-
-export default ( () => {
-    $( '.breadcrumbs-container' ).each( ( i, elem ) => {
-        const breadcrumbsData = JSON.parse( elem.dataset.breadcrumbs );
-
-        if ( breadcrumbsData ) {
-            return render( <Breadcrumbs breadcrumbsData={ breadcrumbsData }/>, elem );
-        }
-    } );
-} )();
-

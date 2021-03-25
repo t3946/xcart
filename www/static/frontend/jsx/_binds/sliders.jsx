@@ -1,9 +1,19 @@
 import { render }         from 'preact';
-import SliderProducts     from '@/components/SliderProducts/SliderProducts';
-import SliderProductsMini from '@/components/SliderProductsMini/SliderProductsMini';
+import SliderProducts     from '@/components/Sliders/SliderProducts/SliderProducts';
+import SliderProductsMini from '@/components/Sliders/SliderProductsMini/SliderProductsMini';
+import SliderPromo        from '@/components/Sliders/SliderPromo';
+import SliderBreadcrumbs  from '@/components/Sliders/SliderBreadcrumbs';
 
 ( () => {
-    // init product sliders
+    // init sliders
+
+    $( '#promo-slider' ).each( function( i, elem ) {
+        const { uri, slides } = elem.dataset;
+
+        if ( slides ) {
+            render( <SliderPromo slides={ JSON.parse( slides ) } uri={ uri }/>, elem );
+        }
+    } );
 
     $( '.slider-bestsellers .slider-data' ).each( function( i, elem ) {
         render( <SliderProducts url={ elem.dataset.url }/>, elem );
@@ -27,5 +37,13 @@ import SliderProductsMini from '@/components/SliderProductsMini/SliderProductsMi
 
     $( '.slider-viewed .slider-data' ).each( function( i, elem ) {
         render( <SliderProductsMini url={ elem.dataset.url }/>, elem );
+    } );
+
+    $( '.breadcrumbs-container' ).each( ( i, elem ) => {
+        const breadcrumbsData = JSON.parse( elem.dataset.breadcrumbs );
+
+        if ( breadcrumbsData ) {
+            return render( <SliderBreadcrumbs breadcrumbsData={ breadcrumbsData }/>, elem );
+        }
     } );
 } )();
