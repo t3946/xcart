@@ -828,7 +828,8 @@ function check_r_fields() {
                                             {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
                                                 {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'}
                                             {else}
-                                                {$order_manufacturers[$m_id].d_drop_ship_fee_in_us|number_format:2}%
+                                                {assign var=dropship_calc value=$v.total.gross * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
+                                                {include file="currency.tpl" value=$dropship_calc hide_zero='Y'}
                                             {/if}
                                             applies to this order
                                         {elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
