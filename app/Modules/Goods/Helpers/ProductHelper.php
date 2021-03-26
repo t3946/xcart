@@ -3,8 +3,6 @@
 namespace Modules\Goods\Helpers;
 
 
-use DateInterval;
-use DateTime;
 use Exception;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -12,7 +10,6 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Helpers\Paths;
-use Xcart\App\Main\Xcart;
 
 class ProductHelper
 {
@@ -48,7 +45,7 @@ class ProductHelper
                 if (!empty($arrQueryParams)) {
                     $arrQueryParamsFiltered = array_filter($arrQueryParams, static function ($var) use($allowExtensions) {
                         foreach ($allowExtensions as $ext) {
-                            if (str_contains($var, ".{$ext}")) {
+                            if (strpos($var, ".{$ext}") !== false) {
                                 return true;
                             }
                         }
