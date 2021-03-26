@@ -18,11 +18,13 @@ class CommonController extends BackendController
         ],
         'AUTHORIZED' => [OrderStatusModel::ORDER_STATUS_AUTHORIZED],
         'AUTHORIZATION VOIDED' => [OrderStatusModel::ORDER_STATUS_CANCELED],
+        'AUTHORIZATION VOIDED RATE' => null,
         'PAID' => [OrderStatusModel::ORDER_STATUS_COMPLETED],
         'REFUNDED' => [
             OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
             OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
         ],
+        'REFUNDED RATE' => null,
     ];
     private const TOTAL_COLUMN = 'Total / Up to date';
 
@@ -61,12 +63,12 @@ class CommonController extends BackendController
             }
         }
 
-        $orders_rates['AUTHORIZATION VOIDED'] = self::geTypeRates(
+        $orders_rates['AUTHORIZATION VOIDED RATE'] = self::geTypeRates(
             $table_orders,
             'AUTHORIZATION VOIDED',
             ['PAID', 'AUTHORIZATION VOIDED', 'REFUNDED'],
         );
-        $orders_rates['REFUNDED'] = self::geTypeRates(
+        $orders_rates['REFUNDED RATE'] = self::geTypeRates(
             $table_orders,
             'REFUNDED',
             ['PAID'],
