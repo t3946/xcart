@@ -828,7 +828,7 @@ function check_r_fields() {
                                             {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
                                                 {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'}
                                             {else}
-                                                {assign var=dropship_calc value=$v.total.gross * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
+                                                {assign var=dropship_calc value=$v.oOrderGroup->getTotalCostToUs() * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
                                                 {include file="currency.tpl" value=$dropship_calc hide_zero='Y'}
                                             {/if}
                                             applies to this order
