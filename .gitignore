@@ -30,6 +30,7 @@ bower_components
 /app/runtime/
 /log/
 /html_cache/
+/app/Modules/Translate/lang/*.i18next.json
 
 !.gitkeep
 !/skin1_kolin/
