@@ -1,6 +1,6 @@
 <table class="SubHeader" cellspacing="0">
     <tr>
-        <td class="Green2">Last orders</td>
+        <td class="Green2">Latest orders</td>
     </tr>
     <tr>
         <td class="SubHeaderLine"><img src="/skin1_kolin/images/spacer.gif" class="Spc" alt=""><br></td>
@@ -9,11 +9,11 @@
 
 <table cellpadding="3" cellspacing="0" width="100%">
     <tr class="TableHead">
-        <td>Order #</td>
-        <td>Order date</td>
-        <td nowrap="nowrap">Customer name</td>
-        <td nowrap="nowrap">Shipping</td>
-        <td nowrap="nowrap">Payment status</td>
+        <td align="left">Order #</td>
+        <td align="left">Order date</td>
+        <td align="left" nowrap="nowrap">Customer name</td>
+        <td align="left" nowrap="nowrap">Shipping</td>
+        <td align="left" nowrap="nowrap">Payment status</td>
         <td nowrap="nowrap">Grand total</td>
     </tr>
     {foreach $last_orders as $order}

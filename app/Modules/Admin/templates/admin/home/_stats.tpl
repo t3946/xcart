@@ -1,11 +1,10 @@
 <table cellpadding="3" cellspacing="0" width="100%">
 
     <tr class="TableHead">
-        <td class="borderr-black">Status</td>
+        <td class="borderr-black" width="40%">Status</td>
         <td class="borderr-black" colspan="2" align="center">Last 24 hours</td>
         <td class="borderr-black" colspan="2" nowrap="nowrap" align="center">Last 7 days</td>
         <td class="borderr-black" colspan="2" nowrap="nowrap" align="center">Last 30 days</td>
-        <td class="borderr-black" colspan="2" nowrap="nowrap" align="center">Total / Up to date</td>
     </tr>
     {foreach $orders|array_keys as $row}
         <tr class="{cycle ['SectionBox','TableSubHead']}">

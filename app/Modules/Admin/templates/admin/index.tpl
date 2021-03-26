@@ -13,10 +13,10 @@
         {include 'admin/home/_stats.tpl'}
         <br/>
         <br/>
-        Average daily S3 Stores sales {$average_daily_sales|site_currency}
+        <b>Average daily S3 Stores sales:</b> {$average_daily_sales|site_currency}
+        <b>Authorized outstanding:</b> {$authorized_outstanding|site_currency} ({$authorized_outstanding_count})
         <br/>
         <br/>
-
         {include 'admin/home/_last_orders.tpl'}
 
     {/smarty_admin_block}
