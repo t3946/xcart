@@ -20,7 +20,7 @@ class TranslateHelper
      * @var Translations
      */
     private $_translations;
-//TODO: тут сохраняются переводы
+
     public function __construct()
     {
         $this->_translations = new Translations();
