@@ -133,6 +133,25 @@ if ($REQUEST_METHOD === 'POST')
 
         func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-customer_info");
     }
+    elseif ($mode === 'convert_to_purchase_order' && !empty($order['shipping_groups'])) {
+        $log = "'Convert to Purchase order' at 'Customer info'";
+        $new_cb_status_value = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_UNPAID_PO]);
+        $po_order = OrderModel::objects()->get(['orderid' => $order['orderid']]);
+        $po_order->cb_status = $new_cb_status_value->code;
+        foreach ($order['shipping_groups'] as $m_id => $v) {
+            $current_cb_status_value = OrderStatusModel::objects()->get(['code' => $v['cb_status']]);
+            if ($current_cb_status_value->code !== $new_cb_status_value->code &&
+                $og = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid])) {
+                $og->cb_status = $new_cb_status_value->code;
+                $og->save();
+                $log .= "<br /><b>{$v['all_distributor_info']['code']}:</b> cb_status: {$current_cb_status_value} -> {$new_cb_status_value}";
+            }
+        }
+        $po_order->save();
+        unset($po_order);
+        func_log_order($orderid, 'X', $log, $login);
+        func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-customer_info");
+    }
     elseif ($mode === 'order_edit_apply') {
 
         $tmp_mnfs = func_get_order_manufacturers($orderid);
