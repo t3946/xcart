@@ -135,7 +135,7 @@ if ($REQUEST_METHOD === 'POST')
     }
     elseif ($mode === 'convert_to_purchase_order' && !empty($order['shipping_groups'])) {
         $log = "'Convert to Purchase order' at 'Customer info'";
-        $new_cb_status_value = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_UNPAID_PO]);
+        $new_cb_status_value = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO]);
         $po_order = OrderModel::objects()->get(['orderid' => $order['orderid']]);
         $po_order->cb_status = $new_cb_status_value->code;
         foreach ($order['shipping_groups'] as $m_id => $v) {

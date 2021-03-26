@@ -822,22 +822,20 @@ function check_r_fields() {
 
                                     <div>
                                         &nbsp;
-                                        {*
-                                        {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
-                                        &nbsp;
-                                        <span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
-                                        {/if}
-                                        *}
 
                                         {if $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_all_orders"}
-                                            Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to all orders
+                                            Drop-ship fee:
+                                            {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
+                                                {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'}
+                                            {else}
+                                                {$order_manufacturers[$m_id].d_drop_ship_fee_in_us|number_format:2}%
+                                            {/if}
+                                            applies to this order
                                         {elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
                                             Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to orders below {include file="currency.tpl" value=$order_manufacturers[$m_id].d_minimum_order_amount_in_us hide_zero='Y'}
                                         {/if}
                                     </div>
-
                                 </div>
-
                     </td>
                     <td align="right">
                         <input id="actual_shipping_cost_net_{$m_id}" type="text" size="8"
