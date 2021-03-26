@@ -843,7 +843,7 @@ Shipping quoted by distributor
 Items are shipped to an address that is different from
  </td>
  <td>
-<a onclick="javascript: $('#customers_shipping_address_{$m_id}_{$invoice_number}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">the customer's shipping address</a>.
+<a onclick="$('#customers_shipping_address_{$m_id}_{$invoice_number}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">the customer's shipping address</a>.
 
 <div id="customers_shipping_address_{$m_id}_{$invoice_number}" class="cidev_NoteBox" style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
  <table border="0">
@@ -884,13 +884,12 @@ Drop-ship fee in X-cart
   <input id="manufacturer_invoices_data_drop_ship_fee_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][drop_ship_fee_charged]" size="8" value="{$invoice.drop_ship_fee_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
 <div class="bg__yellow color__black" align="right">
-
-{if $v.real_drop_ship_fee ne ""}
-  {include file="currency2.tpl" value=$v.real_drop_ship_fee}
-{else}
-  {include file="currency2.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us}
-{/if}
-
+  {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
+    {include file="currency2.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us}
+  {else}
+    {assign var=dropship_calc value=$cost_to_us_for_products_in_xcart * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
+    {include file="currency2.tpl" value=$dropship_calc}
+  {/if}
 </div>
 </td>
 </tr>

@@ -499,20 +499,19 @@ if ($REQUEST_METHOD === 'POST')
                 $actual_shipping_gross = $v['actual_shipping_cost_net'];
 
                 if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] === 'applies_to_all_orders') {
-                    if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
-                        $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
+                    if ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_type'] === 'value') {
+                        if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
+                            $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
+                        }
+                    } else {
+                        $sum_cost_to_us = array_reduce($order['shipping_groups'][$m_id]['products'] ?? [], static fn($c, $g) => $c + $g['cost_to_us']);
+                        $actual_shipping_gross += round($sum_cost_to_us * ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'] / 100), 2);
                     }
                 }
                 elseif ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] === 'applies_to_orders_below_minimum_order_amount_only') {
                     if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
 
-                        $sum_cost_to_us = 0;
-
-                        if (!empty($order['shipping_groups'][$m_id]['products']) && is_array($order['shipping_groups'][$m_id]['products'])) {
-                            foreach ($order['shipping_groups'][$m_id]['products'] as $v_pr) {
-                                $sum_cost_to_us += $v_pr["cost_to_us"];
-                            }
-                        }
+                        $sum_cost_to_us = array_reduce($order['shipping_groups'][$m_id]['products'] ?? [], static fn($c, $g) => $c + $g['cost_to_us']);
 
                         if ($sum_cost_to_us < $order['shipping_groups'][$m_id]['all_distributor_info']['d_minimum_order_amount_in_us'] && $order['shipping_groups'][$m_id]['all_distributor_info']['d_minimum_order_amount_in_us'] > 0) {
                             $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
