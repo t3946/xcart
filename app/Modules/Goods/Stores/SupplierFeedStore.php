@@ -37,7 +37,7 @@ class SupplierFeedStore extends BaseStore
 
     public function isValid()
     {
-        if (empty($this->products) || !\is_array($this->products)) {
+        if (empty($this->products) || !is_array($this->products)) {
             $this->errors[] = GoodsModule::t('manufacturerid: {mid}. No products found. ({feed_type})',
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
             return false;
