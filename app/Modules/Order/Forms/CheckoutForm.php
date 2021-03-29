@@ -36,7 +36,7 @@ class CheckoutForm extends ShippingForm
         $shipping_form = new CheckoutShippingAddressForm();
 
         $this->_shippingFields = $shipping_form->getFields();
-        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_ci_firstname';
+        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_firstname';
         $this->_contactFields = ( new CheckoutContactInfoForm() )->getFields();
         $this->_billingFields = ( new CheckoutBillingForm() )->getFields();
         $this->_purchase_order_details_form = ( new CheckoutPurchaseOrderDetailsForm() )->getFields();

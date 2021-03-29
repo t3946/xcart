@@ -53,80 +53,18 @@ class CheckoutController extends FrontendController
 
         if ($site && $app->request->getIsPost()) {
             $checkout_form->populate($app->request->post);
-
             if ($checkout_form->isValid()) {
 
-                [$order, $is_created] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
-
-                $order->subtotal = 0;
+                [$order] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
 
                 $order->setAttributes(array_merge($checkout_form->getAttributes(), [
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP2,
-                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
-                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
-                    'currency'  => $site->getCurrency()->currency_code ?? 'USD'
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                    'currency' => $site->getCurrency()->currency_code ?? 'USD',
+                    'date' => time()
                 ]));
 
                 if ($order->save()) {
-
-                    if ($cart_groups = $cart->getItemsGroupedBy()) {
-                        $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
-
-                        foreach ($cart_groups as $g => $cart_group)
-                        {
-                            /** @var OrderGroupModel $group */
-                            [$group] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
-
-                            $group->setAttributes([
-                                'shippingid' => null,
-                                'shipping' => '',
-                                'cb_status' => $order->cb_status,
-                                'dc_status' => $order->dc_status,
-                                'bd_status' => $order->bd_status,
-                                'total_gross' => $cart_group['subtotal'],
-                                'total_net' => $cart_group['subtotal'],
-                                'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
-                            ]);
-                            $order->subtotal += $group->total_gross;
-                            $order->total = $order->subtotal;
-                            $order->shipping_cost = 0;
-
-                            $group->save();
-
-                            OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
-
-                            /** @var CartItem $item */
-                            foreach ($cart_group['items'] as $item)
-                            {
-                                /** @var ProductModel $product */
-                                $product = $item->getObject();
-                                $detail = new OrderDetailModel([
-                                    'orderid' => $group->orderid,
-                                    'productid' => $product->productid,
-                                    'order_group_id' => $group->order_group_id,
-                                    'price' => $product->getFrontendPrice($item->getQuantity()),
-                                    'amount' => $item->getQuantity(),
-                                    'productcode' => $product->productcode,
-                                    'product' => $product->getFrontendName(),
-                                    'provider' => $product->provider,
-                                    'original_provider' => $product->original_provider,
-                                    'item_cost_to_us' => $product->cost_to_us,
-                                    'product_options' => $item->data ?? null,
-                                ]);
-                                $detail->save();
-                            }
-                        }
-
-                    } else {
-                        $order->groups->delete();
-                    }
-
-                    $order->save();
-
-                    if ($is_created) {
-                        $app->event->trigger('order:created', ['model' => $order]);
-                    }
-
+                    $this->redirect('checkout:payment');
                 }
             }
         }
@@ -193,8 +131,6 @@ class CheckoutController extends FrontendController
         }
 
         //get payment methods
-        $site = Xcart::app()->getModule( 'Sites' )->getSite();
-
         $payment_methods = PaymentMethodModel::objects()
             ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
             ->order( [ 'is_cod', 'orderby' ] )

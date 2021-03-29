@@ -23,8 +23,8 @@ export const ShippingForm = ( function () {
         } );
 
         /* phone mask */
-        IMask( document.getElementById( 'CheckoutForm_ci_phone' ), { mask: '(000) 000-0000' } );
-        IMask( document.getElementById( 'CheckoutForm_ci_phone_ext' ), { mask: '00000' } );
+        IMask( document.getElementById( 'CheckoutForm_phone' ), { mask: '(000) 000-0000' } );
+        IMask( document.getElementById( 'CheckoutForm_phone_ext' ), { mask: '00000' } );
     }
 
     constructor.prototype.showFields = function () {
