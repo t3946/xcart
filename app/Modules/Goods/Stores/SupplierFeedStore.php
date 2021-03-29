@@ -42,11 +42,6 @@ class SupplierFeedStore extends BaseStore
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
             return false;
         }
-        if ($this->count() != $this->products_in_feed) {
-            $this->errors[] = GoodsModule::t('manufacturerid: {mid}. Corrupted feed file (by products in feed count). ({feed_type}) {c1} vs {c2}',
-                ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText(), '{c1}' => $this->count(), '{c2}' => $this->products_in_feed]);
-            return false;
-        }
         if ($this->supplier_id != $this->feed_model->manufacturerid) {
             $this->errors[] = GoodsModule::t('manufacturerid: {mid}. Wrong supplier_id. ({feed_type}) . Feed skipped.',
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
