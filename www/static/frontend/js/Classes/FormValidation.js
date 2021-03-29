@@ -149,6 +149,8 @@ export default class FormValidation {
     }
 
     validateOnSubmit(event){
+        event.preventDefault();
+        event.stopPropagation();
         this.hasErrors = false;
         this.checkAllForm();
 

@@ -31,15 +31,18 @@ export default class CheckoutFormValidation extends FormValidation {
         }
     }
 
+    /**
+     * get fields that must be validated
+     * @return {{}}
+     */
     getValidatingFields() {
         const self = this;
-        const paymentMethodInputValue = $( this.fields.payment_method.element ).parents( 'form' )[ 0 ][ 'payment_method' ].value;
-        const paymentMethodInput = $( `input[name="payment_method"][value="${ paymentMethodInputValue }"` );
-        const paymentMethodItem = paymentMethodInput.parents( '.payment-method-item' );
+        const $paymentMethodInput = $(this.fields['CheckoutForm[paymentid]'].element);
+        const $paymentMethodItem = $paymentMethodInput.parents( '.payment-method-item' );
         const selectedPaymentFields = [];
 
-        paymentMethodItem.find( 'input' ).each( function ( i, e ) {
-            // shipping address without billing same shipping mode
+        $paymentMethodItem.find( 'input' ).each( function ( i, e ) {
+            // shipping address without "billing same shipping" mode
             if ( e.name.indexOf( '[b_' ) > -1 && self.fields[ 'billing_same_shipping' ].element.checked === false ) {
                 return;
             }

@@ -1,21 +1,19 @@
+{set $payment_method_field = $fieldsets['other'][0]}
 <div class="payment-methods-container">
     <h2 class="text-center large-text-left checkout__second-header checkout-payment-methods__header payment-methods-header">{t 'Payment Methods' }</h2>
-    <div class="checkout-payment-methods checkout__payment-methods-container">
-        {set $payment_method_field = $fieldsets['other'][0]}
+    <div class="checkout-payment-methods checkout__payment-methods-container" data-default-checked-field="{$payment_method_field->value}">
         {foreach $payment_method_field->choices as $choice first=$first}
             {set $method = Modules\Payment\Models\PaymentMethodModel::objects()->filter(['paymentid'=> $choice])->get()}
-            {set $checked = $choice === $payment_method_field->value || count($payment_method_field->choices) === 1}
-            <div class="payment-method-item {cycle ["payment-method-item_odd", ""]} {if $first }payment-method-item_selected{/if}" for="payment_{$method->paymentid}">
+            <div class="payment-method-item {cycle ["payment-method-item_odd", ""]} for="payment_{$method->paymentid}">
                 <div class="row">
                     <div class="columns small-12 large-4">
                         <div class="payment-method-name">
                             <input
-                                    {if $checked}checked{/if}
-                                    id="payment_{$method->paymentid}"
-                                    type="radio"
-                                    name="CheckoutForm[{$fieldsets['other'][0]->name}]"
-                                    value="{$method->paymentid}"
-                                    class="common-input-radio"
+                                id="payment_{$method->paymentid}"
+                                type="radio"
+                                name="CheckoutForm[{$fieldsets['other'][0]->name}]"
+                                value="{$method->paymentid}"
+                                class="common-input-radio"
                             />
                             <div class="common-radio-label payment-radio-label payment-method-title">{$method->payment_method}</div>
                         </div>

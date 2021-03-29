@@ -1,6 +1,6 @@
-import { SwitcherButton } from "Classes/SwitcherButton";
-import { ShippingGoogleAutoComplete } from "Classes/ShippingGoogleAutoComplete";
-import "node_modules/imask";
+import { SwitcherButton }             from 'Classes/SwitcherButton';
+import { ShippingGoogleAutoComplete } from 'Classes/ShippingGoogleAutoComplete';
+import 'node_modules/imask';
 
 export const BillingForm = ( function () {
     // no checkout page
@@ -24,6 +24,19 @@ export const BillingForm = ( function () {
         $otherFields.stop( true, false ).slideDown();
     };
 
+    /**
+     * check mask on field if it exists
+     * @param fieldId
+     * @param mask
+     */
+    function setMask( fieldId, mask ) {
+        const elem = document.getElementById( fieldId );
+
+        if (typeof elem !== undefined) {
+            IMask( elem, { mask } );
+        }
+    }
+
     const componentForm = {
         street_number: 'short_name',
         route: 'long_name',
@@ -44,25 +57,8 @@ export const BillingForm = ( function () {
         new ShippingGoogleAutoComplete( '#CheckoutForm_b_address', componentForm, billing_fields );
     }
 
-    if ( typeof CheckoutForm_ap_phone !== 'undefined' ) {
-        IMask( CheckoutForm_ap_phone, { mask: '(000) 000-0000' } );
-    }
-
-    if ( typeof CheckoutForm_pm_phone !== 'undefined' ) {
-        IMask( CheckoutForm_pm_phone, { mask: '(000) 000-0000' } );
-    }
-
-    if ( typeof CheckoutForm_pm_fax !== 'undefined' ) {
-        IMask( CheckoutForm_pm_fax, { mask: '(000) 000-0000' } );
-    }
-
-    if ( typeof CheckoutForm_phone_ext !== 'undefined' ) {
-        IMask( CheckoutForm_phone_ext, { mask: '00000' } );
-    }
-
-    // if ( typeof CheckoutForm_ci_phone_ext !== 'undefined' ) {
-    //     IMask( CheckoutForm_ci_phone_ext, { mask: '00000' } );
-    // }
+    setMask( 'CheckoutForm_phone', '(000) 000-0000' );
+    setMask( 'CheckoutForm_phone_ext', '00000' );
 
     return new constructor();
 } )();

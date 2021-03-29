@@ -10,8 +10,8 @@ export const PaymentMethods = ( function () {
      * created handlers and toggle visibilities
      */
     function init() {
-        const selectedClass = 'payment-method-item_selected';
         const $root = $( '.checkout-payment-methods' );
+        const selectedClass = 'payment-method-item_selected';
         const $paymentMethods = $root.find( '.payment-method-item' );
         const $radioInputMethods = $root.find( 'input[name="CheckoutForm[paymentid]"]' );
         const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
@@ -65,7 +65,6 @@ export const PaymentMethods = ( function () {
             .show();
 
         // billing same shipping
-
         const $addressFields = $( '.billing-form-address-fields' );
 
         new SwitcherSlider(
@@ -77,6 +76,24 @@ export const PaymentMethods = ( function () {
                 $addressFields.stop( true, false ).slideUp();
             },
         );
+
+        // set default select
+        const defaultValue = $root.data('default-checked-field');
+        let defaultInput = $radioInputMethods.filter(`[value="${defaultValue}"]`) || $radioInputMethods.eq(0);
+
+        // use first as default if no default
+        if (defaultInput.length === 0) {
+            defaultInput = $radioInputMethods.eq(0);
+        }
+
+        defaultInput
+            //set active attributes
+            .prop('checked', true)
+            .parents('.payment-method-item')
+            .addClass(selectedClass)
+            // show long description
+            .find( '.payment-method-description-long' )
+            .show();
     }
 
     const constructor = function () {
