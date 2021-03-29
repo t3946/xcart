@@ -78,8 +78,6 @@
     "preact-markup": "^1.6.0",
     "preact-redux": "^2.0.2",
     "preact-render-to-string": "^3.6.3",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "react-id-swiper": "^1.4.0",
     "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
     "redux": "^3.7.1",
