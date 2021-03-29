@@ -7,13 +7,20 @@ export default ( function () {
         return;
     }
 
+    /**
+     * prevent update fields with id from this list
+     */
+    const excludedFieldsFromUpdate = ['CheckoutForm_s_address', 'CheckoutForm_b_address'];
     const $form = $( '.checkout-shipping-form' );
 
     const Constructor = function () {
         $form.on( 'change', 'input', function ( e ) {
             const data = {};
             data[ e.target.name ] = e.target.value;
-            Constructor.prototype.update( data );
+
+            if (excludedFieldsFromUpdate.indexOf(e.target.id) === -1) {
+                Constructor.prototype.update( data );
+            }
         } );
     }
 
