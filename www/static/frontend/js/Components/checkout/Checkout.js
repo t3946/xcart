@@ -94,7 +94,7 @@ export default ( function () {
             return;
         }
 
-        update( data );
+        this.update( data );
     }
 
     return new Constructor();
