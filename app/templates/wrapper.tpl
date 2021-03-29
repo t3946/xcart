@@ -11,6 +11,7 @@
     {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
     {set $uri = $is_dev_mode ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $translates = $.call.Modules.Translate.Classes.I18nextManager::getTranslates($config[ 'Preferred_language' ])}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">

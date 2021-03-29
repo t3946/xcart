@@ -39,7 +39,6 @@ class DefaultController extends FrontendController
             'product' => PromotionalProductsHelper::getProductOfTheDay(),
             'best_seller' => PromotionalProductsHelper::getBestSellerProduct(),
             'new_product' => PromotionalProductsHelper::getNewProduct(),
-            'translates' => I18nextManager::getTranslates($site->getConfig()[ 'Preferred_language' ]),
         ]);
     }
 

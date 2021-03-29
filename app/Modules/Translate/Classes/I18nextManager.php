@@ -44,7 +44,7 @@ class I18nextManager
         $json = file_get_contents($path);
 
         if ($minify) {
-            $json = json_encode(json_decode($minify));
+            $json = json_encode(json_decode($json));
         }
 
         return $json;
