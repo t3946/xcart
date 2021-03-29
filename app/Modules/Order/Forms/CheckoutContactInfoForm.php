@@ -99,6 +99,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'validators' => [
                     new EmailValidator(),
                 ],
+                'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
                     'data-correct' => 'common-input__correct',
