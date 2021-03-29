@@ -1,9 +1,7 @@
 <footer itemscope itemtype="http://schema.org/WPFooter">
-
     {insert "_parts/_bottom_menu.tpl"}
 
     <div class="footer-content">
-
         <div class="row contacts-presentations">
             <div class="column small-12 medium-7 large-7 left-side">
 
