@@ -23,7 +23,7 @@
                     <div class="payment-method-description columns small-12 large-8">
                         <div class="payment-method-description-preview">{$method->payment_details}</div>
                         <div class="payment-method-description-long" {if $checked}style="display: block"{/if}>
-                            {if stripos($method->payment_method, 'Pay by Credit or Debit card') !== false}
+                            {if $method->paymentid == 106}
                                 <div class="billing-form-fields">
                                     {foreach $fieldsets['pay_by_card'] as $field}
                                         {raw $field->render()}

@@ -53,7 +53,9 @@ class CheckoutController extends FrontendController
 
         if ($site && $app->request->getIsPost()) {
             $checkout_form->populate($app->request->post);
-            if ($checkout_form->isValid()) {
+            if (true || $checkout_form->isValid()) {
+
+                $checkout_form->getInstance()->save();
 
                 [$order] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
 
@@ -66,6 +68,8 @@ class CheckoutController extends FrontendController
                 if ($order->save()) {
                     $this->redirect('checkout:payment');
                 }
+            } else {
+                $this->redirect('checkout:checkoutOnePage');
             }
         }
 

@@ -17,7 +17,7 @@ use Xcart\App\Main\Xcart;
 
 class Stripe extends Gateway
 {
-    private const CONNECTED_ACCOUNT_ID = 'acct_1HIbMdI2P4rQcZLT';
+    public const CONNECTED_ACCOUNT_ID = 'acct_1HIbMdI2P4rQcZLT';
 
     public static function getProcessorName()
     {

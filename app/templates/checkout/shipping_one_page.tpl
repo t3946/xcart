@@ -188,7 +188,7 @@
 
                     <div class="shipping-total">
                         <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
-                        <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
+                        <span class="sum">{$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                             <span class="price">{$site_currency->getCurrencyFormat($order->shipping_cost)}</span>
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
@@ -213,7 +213,7 @@
                     <div class="grand-total order-total__grand">
                         <span class="label">{t 'Grand Total' }</span>
                         <span class="sum">
-                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}&nbsp
+                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                             <span class="price">{$site_currency->getCurrencyFormat($order->total)}</span>
                             {if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </span>
