@@ -1,4 +1,5 @@
 import { SwitcherSlider } from "@/js/Classes/SwitcherSlider";
+import BillingForm from "@/js/Components/checkout/BillingForm";
 
 export const PaymentMethods = ( function () {
     // this component only for checkout page
@@ -103,6 +104,7 @@ export const PaymentMethods = ( function () {
     constructor.prototype.updateTemplate = function ( template ) {
         $( '.payment-methods-container' )[ 0 ].outerHTML = template;
         init();
+        BillingForm.updateSwitcher();
     }
 
     return new constructor();

@@ -2,26 +2,32 @@ import { SwitcherButton }             from '@/js/Classes/SwitcherButton';
 import { ShippingGoogleAutoComplete } from '@/js/Classes/ShippingGoogleAutoComplete';
 import 'node_modules/imask';
 
-export const BillingForm = ( function () {
+export default ( function BillingForm() {
     // no checkout page
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
     }
 
-    const $otherFields = $( '.checkout-billing-other-fields' );
+    let $otherFields = $( '.checkout-billing-other-fields' );
     let $switcher = null;
 
     const constructor = function () {
-        $switcher = new SwitcherButton( '.address-switcher-button', function () {
-            $otherFields.stop( true, false ).slideDown();
-        }, function () {
-            $otherFields.stop( true, false ).slideUp();
-        }, null );
+        this.updateSwitcher();
     }
 
     constructor.prototype.showFields = function () {
         $switcher.isOn = true;
         $otherFields.stop( true, false ).slideDown();
+    };
+
+    constructor.prototype.updateSwitcher = function() {
+        $otherFields = $( '.checkout-billing-other-fields' );
+
+        $switcher = new SwitcherButton( '.address-switcher-button', function () {
+            $otherFields.stop( true, false ).slideDown();
+        }, function () {
+            $otherFields.stop( true, false ).slideUp();
+        }, null );
     };
 
     /**
