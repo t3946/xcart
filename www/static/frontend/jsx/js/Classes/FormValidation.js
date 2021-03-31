@@ -1,5 +1,5 @@
 import formValidate from 'validate.js/validate';
-import fieldValidation from "Classes/FieldValidation";
+import fieldValidation from "@/js/Classes/FieldValidation";
 
 export default class FormValidation {
     /**

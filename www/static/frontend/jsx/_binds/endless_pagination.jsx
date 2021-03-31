@@ -1,4 +1,4 @@
-import { AddToCartButton } from '../../js/Classes/AddToCartButton';
+import { AddToCartButton } from '@/js/Classes/AddToCartButton';
 
 $(document).on('click', '.front-endless-pager a.show-more', function(e){
     e.preventDefault();

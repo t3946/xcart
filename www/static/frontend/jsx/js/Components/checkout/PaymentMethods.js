@@ -1,4 +1,4 @@
-import { SwitcherSlider } from "Classes/SwitcherSlider";
+import { SwitcherSlider } from "@/js/Classes/SwitcherSlider";
 
 export const PaymentMethods = ( function () {
     // this component only for checkout page

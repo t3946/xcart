@@ -1,5 +1,5 @@
-import { GoogleAutoComplete } from "./GoogleAutoComplete";
-import Checkout from "../Components/checkout/Checkout";
+import { GoogleAutoComplete } from "@/js/Classes/GoogleAutoComplete";
+import Checkout from "@/js/Components/checkout/Checkout";
 
 export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
     constructor(elem, componentForm, fields) {

@@ -152,29 +152,6 @@ gulp.task('frontend:jsx', function(done){
     });
 });
 
-// build native javascript from frontend/js
-gulp.task( 'frontend:js', function ( done ) {
-
-    const args = [
-        './node_modules/webpack/bin/webpack.js',
-        '--config',
-        './config/webpack.frontend.js',
-        '--progress',
-        '-w',
-    ];
-
-    if ( isProduction() ) {
-        args.push( '-p' );
-    }
-
-    const command = spawn( 'node', args, { stdio: 'inherit' } );
-
-    command.on( 'close', function ( code ) {
-        console.log( 'frontend:jsx exited with code ' + code );
-        done( code );
-    } );
-} );
-
 let fjsinc_builded = false;
 gulp.task('frontend:js:includes', function(done){
     if (!fjsinc_builded) {
@@ -337,9 +314,7 @@ gulp.task('clear', function() {
 });
 
 gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend'], function(){
-    gulp.start(
-        'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
-    );
+    gulp.start( 'frontend:raw', 'frontend:css', 'frontend:images', 'frontend:fonts' );
 });
 
 gulp.task('build:backend', ['clear:backend'], function(){

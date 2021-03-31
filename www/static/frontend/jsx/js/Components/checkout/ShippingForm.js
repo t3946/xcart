@@ -1,6 +1,6 @@
-import { ShippingPixabayAutocomplete } from "Classes/ShippingPixabayAutocomplete";
-import { ShippingGoogleAutoComplete } from "Classes/ShippingGoogleAutoComplete";
-import { SwitcherButton } from "Classes/SwitcherButton";
+import { ShippingPixabayAutocomplete } from "@/js/Classes/ShippingPixabayAutocomplete";
+import { ShippingGoogleAutoComplete } from "@/js/Classes/ShippingGoogleAutoComplete";
+import { SwitcherButton } from "@/js/Classes/SwitcherButton";
 import "node_modules/imask";
 
 export const ShippingForm = ( function () {

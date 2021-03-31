@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import Checkout from 'Components/checkout/Checkout';
+import Checkout from '@/js/Components/checkout/Checkout';
 
 (()=>{
     let page_cart = document.querySelector('.cart-page, .checkout-page');

@@ -1,5 +1,5 @@
-import { SwitcherButton }             from 'Classes/SwitcherButton';
-import { ShippingGoogleAutoComplete } from 'Classes/ShippingGoogleAutoComplete';
+import { SwitcherButton }             from '@/js/Classes/SwitcherButton';
+import { ShippingGoogleAutoComplete } from '@/js/Classes/ShippingGoogleAutoComplete';
 import 'node_modules/imask';
 
 export const BillingForm = ( function () {

@@ -1,7 +1,7 @@
-import FormValidation from "Classes/FormValidation";
-import { ShippingForm } from "../Components/checkout/ShippingForm";
-import { BillingForm } from "../Components/checkout/BillingForm";
-import { CanadaCODs } from "../Components/checkout/CanadaCODs";
+import FormValidation from "@/js/Classes/FormValidation";
+import { ShippingForm } from "@/js/Components/checkout/ShippingForm";
+import { BillingForm } from "@/js/Components/checkout/BillingForm";
+import { CanadaCODs } from "@/js/Components/checkout/CanadaCODs";
 
 export default class CheckoutFormValidation extends FormValidation {
     constructor( name ) {

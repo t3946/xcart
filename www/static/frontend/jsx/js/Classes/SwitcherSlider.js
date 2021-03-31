@@ -1,4 +1,4 @@
-import { Switcher } from "./Switcher";
+import { Switcher } from "@/js/Classes/Switcher";
 
 export class SwitcherSlider extends Switcher {
     /**

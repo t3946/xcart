@@ -1,6 +1,6 @@
-import CreateWaitButton from "../../jsx/components/AnimateWaitButton";
-import { cartAdd } from "../../jsx/redusers/appCartRediser";
-import Storage from "../../jsx/utils/localStorage/storage";
+import CreateWaitButton from "@/components/AnimateWaitButton";
+import { cartAdd } from "@/redusers/appCartRediser";
+import Storage from "@/utils/localStorage/storage";
 
 const SIMPLE_MODE = 1;
 const COMPLEX_MODE = 2;

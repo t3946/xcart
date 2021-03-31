@@ -1,5 +1,5 @@
-import FormValidation from "Classes/FormValidation";
-import CheckoutFormValidation from "Classes/CheckoutFormValidation";
+import FormValidation from "@/js/Classes/FormValidation";
+import CheckoutFormValidation from "@/js/Classes/CheckoutFormValidation";
 import clearFormFields from "components/ClearFormFields";
 import initSelectFields from "components/CreateSelectFields";
 

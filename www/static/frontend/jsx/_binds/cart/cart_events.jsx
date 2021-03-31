@@ -5,7 +5,7 @@ import CreateWaitButton from '../../components/AnimateWaitButton';
 
 import { hideAll, action } from "../../redusers/appHeadReduser";
 import { cartAdd } from "../../redusers/appCartRediser";
-import { AddToCartButton } from "../../../js/Classes/AddToCartButton";
+import { AddToCartButton } from "@/js/Classes/AddToCartButton";
 
 import {h, render} from 'preact';
 import SelectNumberItems from "../../components/SelectNumberItems";
