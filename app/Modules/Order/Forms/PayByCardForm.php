@@ -6,17 +6,14 @@ use Modules\Core\Forms\FrontendForm;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
-use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\EmailField;
-use Xcart\App\Validation\EmailValidator;
 
 class PayByCardForm extends FrontendForm
 {
-    public string $stripe_payment_intent;
-    public string $public_key;
+    public string $stripe_payment_intent = '';
+    public string $public_key = '';
 
     protected array $fieldsSettings = [
         'fieldTemplate' => 'forms/field/default/custom/one_field_checkout.tpl',
@@ -38,24 +35,31 @@ class PayByCardForm extends FrontendForm
             ];
 
             /** @var ProcessorModel $pm */
-            if (($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
-                && $gw = Gateway::getGateway($pm)) {
-                $customer = $gw->gateway->createCustomer([
-                    'email' => $order->email,
-                    'name' => $order->b_firstname ?: $order->firstname,
-                    'description' => $order->orderid,
-                ])->send();
+            if (
+                ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
+                && $gw = Gateway::getGateway($pm)
+            ) {
+                $customer = $gw->gateway->createCustomer(
+                    [
+                        'email' => $order->email,
+                        'name' => $order->b_firstname ?: $order->firstname,
+                        'description' => $order->orderid,
+                    ]
+                )->send();
 
                 $intent = $gw->gateway->createPaymentIntent(
-                    array_merge($params, [
-                        'metadata' => ['order' => $order->orderid, 'email' => $order->email],
-                        'connectedAccount' => $gw::CONNECTED_ACCOUNT_ID,
-                        'setupFutureUsage' => 'off_session',
-                        'captureMethod' => 'manual',
-                        'customerReference' => $customer->getCustomerReference()
-                    ])
+                    array_merge(
+                        $params,
+                        [
+                            'metadata' => ['order' => $order->orderid, 'email' => $order->email],
+                            'connectedAccount' => $gw::CONNECTED_ACCOUNT_ID,
+                            'setupFutureUsage' => 'off_session',
+                            'captureMethod' => 'manual',
+                            'customerReference' => $customer->getCustomerReference()
+                        ]
+                    )
                 )->send();
-                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()['client_secret'] : '';
+                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()[ 'client_secret' ] : '';
                 $this->public_key = $pm->param01 ?? '';
             }
         }
