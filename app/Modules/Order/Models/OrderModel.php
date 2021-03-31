@@ -353,6 +353,11 @@ class OrderModel extends Model
                 'null' => false,
                 'default' => false,
             ],
+            'billing_same_shipping' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => true,
+            ],
             'order_type' => [
                 'class' => CharField::class,
                 'default' => self::ORDER_TYPE_XCART,
