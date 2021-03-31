@@ -40,7 +40,9 @@
                                         {/foreach}
                                         <div class="checkout-billing-other-fields">
                                             {foreach array_slice( $fieldsets['billing'], 3 ) as $field}
-                                                {raw $field->render()}
+                                                {if $field->name !== 'billing_same_shipping'}
+                                                    {raw $field->render()}
+                                                {/if}
                                             {/foreach}
                                         </div>
                                     </div>
