@@ -1,18 +1,35 @@
 # xcart
+
 # Project hierarchy
 
-|--xcart
-|--app
-|  |--include
-|     |--Xcart
-|        |--App (Mindy framework engine)
-|           |--Behaviours (Field Behaviours)
+```
+xcart
+├──app
+│  └──include
+│     └──Xcart
+│        └──App ─ Mindy framework engine
+│            ├──Behaviours ─ Field Behaviours
+│            └──Template
+│               └──TemplateManager.php ─ Fenom initial file(use it for fenom extesion)
+```
 
-#Mindy framework engine
-##Field Behaviours
-Determine strategy of form fields behaviour as what can and can't field does, his template rendering and validation. This is similar to controllers but for fields.
+# Mindy framework engine
+
+## Fenom
+
+Fenom is site template engine.
+
+You can find it on [Github](https://github.com/fenom-template/fenom).
+
+Fenom has good [Documentation](https://github.com/fenom-template/fenom/tree/master/docs).
+
+## Field Behaviours
+
+Determine strategy of form fields behaviour as what can and can't field does, his template rendering and validation.
+This is similar to controllers but for fields.
 
 Before work on Branches setup these files:
+
 ```php
 <?php
 return [
@@ -40,16 +57,19 @@ return [
 
 ---
 
+# Development Agreements
 
-#Development Agreements
-##Layout
+## Layout
+
 - Use BEM methodology form yandex company
-- For BEM blocks and BEM elements to create new directory 
+- For BEM blocks and BEM elements to create new directory
 - Don't use scss many-level css rules (rule inside rule)
 - Don't use !important in styles
 
-##Naming
+## Naming
+
 > Module hierarchy example
+
 ```xslt
 ModuleName
 
@@ -60,11 +80,14 @@ ModuleName
 ```
 
 > Классы
-  
-Model - Должен описывать функции ```static tableName() ``` и ``` static getFields ``` 
-- в ```getFields``` описываются все поля таблицы с соотвествием типа и опций поля. Должны быть описаны все поля таблицы, в противном случае будет сгенерирована ошибка
+
+Model - Должен описывать функции ```static tableName() ``` и ``` static getFields ```
+
+- в ```getFields``` описываются все поля таблицы с соотвествием типа и опций поля. Должны быть описаны все поля таблицы,
+  в противном случае будет сгенерирована ошибка
 - в ```tableName``` описывается имя таблицы в которой хранятся данные
 
-AutoMetaTrait - позволяет оттказатся от полного описания всех полей таблицы, но необходимо описать ключевые поля, так-же следует помнить, что описание полей может быть приведено не корректно.
+AutoMetaTrait - позволяет оттказатся от полного описания всех полей таблицы, но необходимо описать ключевые поля, так-же
+следует помнить, что описание полей может быть приведено не корректно.
 
 
