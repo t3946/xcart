@@ -1,3 +1,5 @@
+{add $fieldsets = $checkout_form->createFieldsets()}
+{set $payment_method_field = $fieldsets['other'][0]}
 <div class="payment-methods-container">
     <h2 class="text-center large-text-left checkout__second-header checkout-payment-methods__header payment-methods-header">{t 'Payment Methods' }</h2>
     <div class="checkout-payment-methods checkout__payment-methods-container" data-default-checked-field="{$payment_method_field->value}">
