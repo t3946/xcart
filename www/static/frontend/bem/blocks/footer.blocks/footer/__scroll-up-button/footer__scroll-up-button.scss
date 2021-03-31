@@ -1,5 +1,5 @@
 .footer__scroll-up-button {
-  margin: 20px 0 10px;
+  margin: rem-calc(10) 0;
 }
 
 @include breakpoint(md up) {

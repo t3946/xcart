@@ -1,0 +1,35 @@
+.footer-socials {
+  display: flex;
+  justify-content: center;
+
+  a {
+    display: inline-block;
+    background: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+
+    @include breakpoint(large) {
+      margin-right: 15px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .facebook {
+    background-image: url(../images/icons/footer/facebook.svg);
+  }
+
+  .youtube {
+    background-image: url(../images/icons/footer/youtube.svg);
+  }
+
+  .pinterest {
+    background-image: url(../images/icons/footer/pinterest.svg);
+  }
+
+  @include breakpoint(md up) {
+    justify-content: flex-start;
+  }
+}

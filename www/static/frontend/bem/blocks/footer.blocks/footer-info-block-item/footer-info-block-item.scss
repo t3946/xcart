@@ -1,0 +1,10 @@
+.footer-info-block-item {
+  color: $aqua;
+  line-height: rem-calc(25);
+  font-size: rem-calc(15);
+
+  @include breakpoint(md up) {
+    line-height: rem-calc(20);
+    font-size: rem-calc(14);
+  }
+}

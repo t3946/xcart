@@ -1,0 +1,17 @@
+.footer-info-block-title {
+  color: $white;
+  font-size: rem-calc(20);
+  line-height: rem-calc(21);
+  font-weight: normal;
+  margin: 0 0 rem-calc(14);
+
+  @include breakpoint(medium) {
+    font-size: rem-calc(16);
+    margin: 0 0 rem-calc(17);
+  }
+
+  @include breakpoint(large) {
+    font-size: rem-calc(18);
+    margin: 0 0 rem-calc(16);
+  }
+}

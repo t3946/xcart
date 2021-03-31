@@ -1,0 +1,10 @@
+.footer-schedule-title {
+  font-weight: normal;
+  font-size: rem-calc(18);
+  line-height: rem-calc(18);
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(20);
+    line-height: rem-calc(20);
+  }
+}

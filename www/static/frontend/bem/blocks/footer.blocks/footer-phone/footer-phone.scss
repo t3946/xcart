@@ -1,0 +1,8 @@
+.footer-phone {
+  font-weight: bold;
+  font-size: rem-calc(18);
+
+  @include breakpoint(md up) {
+    font-size: inherit;
+  }
+}

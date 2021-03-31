@@ -1,0 +1,11 @@
+.footer-schedule-icon {
+  float: left;
+  width: rem-calc(40);
+  height: rem-calc(44);
+  margin: 0 rem-calc(10) 0 0;
+
+  @include breakpoint(lg up) {
+    width: rem-calc(45);
+    height: rem-calc(50);
+  }
+}

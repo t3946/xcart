@@ -17,13 +17,11 @@ namespace Xcart\App\Template;
 
 use Fenom;
 use Modules\Sites\Helpers\CurrentSiteHelper;
-use Modules\Sites\Models\SiteModel;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Xcart\App\Translate\Translate;
 
 class TemplateManager
 {
@@ -132,10 +130,6 @@ class TemplateManager
         $this->_renderer->addAccessorSmart("request", "request", Fenom::ACCESSOR_PROPERTY);
         $this->_renderer->request = Xcart::app()->request;
 
-        //Not module class
-//        $this->_renderer->addAccessorSmart("user", "user", Fenom::ACCESSOR_PROPERTY);
-//        $this->_renderer->user = Xcart::app()->getUser();
-
         $this->_renderer->addModifier('class', function($object) {
             if (is_object($object)) {
                 return get_class($object);
@@ -153,6 +147,21 @@ class TemplateManager
             list($route, $attributes) =$this->prepareUrlTag($params);
 
             return Xcart::app()->router->absoluteUrl($route, $attributes);
+        });
+
+        $this->_renderer->addFunction('assets', function($params) {
+            $url = $params[0];
+            // is dev mode
+            if (constant('APP_LOCAL') === false ) {
+                $site = Xcart::app()->getModule('Sites')->getSite();
+                $config = $site->getConfig();
+                $prefix = rtrim($site->getHttpOrHttps() . $config->CDN_domain, '/');
+            }
+
+            // dist directory
+            define('DIST', '/static/frontend/');
+
+            return ($prefix ?? '') . DIST . ltrim($url, '/');
         });
     }
 

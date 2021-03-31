@@ -2,28 +2,19 @@ footer {
   .footer-content {
     min-height: 60px;
     background-color: #15303f;
-    padding: rem-calc(10) 0;
+    padding: rem-calc(30) 0 0;
 
-
-    .contacts-presentations {
-      @include breakpoint(md up) {
-        margin-bottom: 40px;
-      }
-
-      @include breakpoint(large) {
-        margin-bottom: 10px;
-      }
-    }
-
-    .left-side {
-      @include breakpoint(large) {
-        border-right: 2px solid #2a4a5c;
-      }
+    @include breakpoint(md up) {
+      padding: rem-calc(30) 0 rem-calc(26);
     }
 
     .present-icons {
+      margin: 0 0 rem-calc(17);
 
-      margin-bottom: rem-calc(30);
+      @include breakpoint(md up) {
+        margin: 0 0 rem-calc(30);
+      }
+
       .column {
         display: flex;
         justify-content: space-between;
@@ -36,107 +27,6 @@ footer {
 
     .email-support {
       min-width: 165px;
-    }
-
-    .s3stores-logo {
-      text-align: left;
-      @include breakpoint(large) {
-        min-width: 235px;
-      }
-    }
-
-    .s3logo {
-      width: 100px;
-      height: 60px;
-    }
-
-
-    .socials {
-      display: flex;
-      margin-bottom: 35px;
-      //justify-content: space-between;
-
-      a {
-        display: inline-block;
-        background: no-repeat ;
-        background-size: contain;
-        width: 38px;
-        height: 39px;
-        margin-right: 20px;
-
-        @include breakpoint(large) {
-          margin-right: 7px;
-          width: 61px;
-          height: 30px;
-        }
-      }
-
-      .facebook { background-image: url(../images/icons/social/facebook.png); }
-      .twitter { background-image: url(../images/icons/social/twitter.png); }
-      .youtube { background-image: url(../images/icons/social/youtube.png); }
-      .pinterest { background-image: url(../images/icons/social/pinterest.png); }
-      .instagram { background-image: url(../images/icons/social/instagram.png); }
-      .googleplus { background-image: url(../images/icons/social/googleplus.png); }
-
-      @include breakpoint(large) {
-
-        margin-bottom: 30px;
-
-        .facebook { background-image: url(../images/icons/social/large/facebook.png); }
-        .twitter { background-image: url(../images/icons/social/large/twitter.png); }
-        .youtube { background-image: url(../images/icons/social/large/youtube.png); }
-        .pinterest { background-image: url(../images/icons/social/large/pinterest.png); }
-        .instagram { background-image: url(../images/icons/social/large/instagram.png); }
-        .googleplus { background-image: url(../images/icons/social/large/googleplus.png); }
-      }
-    }
-
-    .payment-methods {
-      margin: -3px;
-
-      @include breakpoint(large) {
-        margin: -5px;
-      }
-
-      img {
-        width: 46px;
-        height: 28px;
-        padding: 3px;
-        box-sizing: content-box;
-
-        @include breakpoint(large) {
-          width: 54px;
-          height: 36px;
-          padding: 5px;
-        }
-      }
-    }
-
-    .payment-methods img:last-child {
-      margin: 0;
-    }
-
-    .all-times {
-      width: 200px;
-      color: #ffae21;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
-      clear: both;
-      display: inline-block;
-
-      img {
-        float: left;
-        width: 41px;
-        height: 45px;
-        margin-right: 10px;
-      }
-
-      .title {
-        font-size: 20px;
-        font-weight: 900;
-        line-height: 20px;
-      }
     }
 
     .contacts {
@@ -155,7 +45,7 @@ footer {
       span {
         margin-right: rem-calc(7);
 
-        &#bbb{
+        &#bbb {
           margin-left: rem-calc(7);
         }
 
@@ -265,85 +155,55 @@ footer {
       }
     }
 
-    .confirmations {
-      border-top: 2px solid #2a4a5c;
-      padding-top: 20px;
-    }
-
     .menu-list {
-      margin: 0;
-      color: #6796b0;
+      color: $aqua;
       line-height: 31px;
       font-size: 16px;
 
-      .title-menu {
-        color: white;
-        font-size: 21px;
-        font-weight: 700;
-        line-height: 21px;
-        margin-bottom: rem-calc(5);
-      }
-
       .toll-free {
-        font-size: 20px;
-
         .number {
           font-weight: 700;
-          text-decoration: underline;
         }
-      }
-
-      a {
-        color: #d0eeff;
       }
 
       @include breakpoint(medium) {
         line-height: 30px;
         font-size: 14px;
-
-        .title-menu {
-          font-size: 16px;
-        }
-
-        .toll-free {
-          font-size: 18px;
-        }
       }
 
       @include breakpoint(large) {
         line-height: 20px;
         font-size: 14px;
-
-        .title-menu {
-          font-size: 16px;
-        }
-
-        .toll-free {
-          font-size: 20px;
-        }
       }
     }
   }
 
   .footer-menu {
     min-height: rem-calc(60);
-    line-height: rem-calc(30);
+    line-height: rem-calc(25);
     background-color: #0d2431;
     color: #6796b0;
     font-size: rem-calc(13);
+    padding: rem-calc(5) 0;
+    height: 65px;
+    align-items: center;
+    display: flex;
 
-    @include breakpoint (medium) {
+    @include breakpoint(medium) {
       font-size: rem-calc(14);
       line-height: rem-calc(60);
+      padding: 0;
+      height: 48px;
+      display: block;
+    }
+
+    @include breakpoint(lg up) {
+      height: 53px;
     }
 
     .copyright {
       font-weight: 300;
-      font-size: rem-calc(10);
-
-      @include breakpoint (medium ) {
-        font-size: rem-calc(12);
-      }
+      font-size: rem-calc(14);
     }
 
     ul {
@@ -362,6 +222,4 @@ footer {
       }
     }
   }
-
-
 }

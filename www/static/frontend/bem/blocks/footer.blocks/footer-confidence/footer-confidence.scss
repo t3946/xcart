@@ -1,0 +1,11 @@
+.footer-confidence {
+  padding: 0 rem-calc(10) 0;
+
+  @include breakpoint(md up) {
+    padding: 0 rem-calc(10) 0 0;
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10);
+  }
+}

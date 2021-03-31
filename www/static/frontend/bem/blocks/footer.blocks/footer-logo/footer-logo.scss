@@ -1,0 +1,14 @@
+.footer-logo {
+  width: rem-calc(180);
+  height: rem-calc(46);
+
+  @include breakpoint(md up) {
+    width: rem-calc(173);
+    height: rem-calc(44);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(228);
+    height: rem-calc(57);
+  }
+}

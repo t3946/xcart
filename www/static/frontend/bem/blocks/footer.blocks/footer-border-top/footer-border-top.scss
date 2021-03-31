@@ -1,0 +1,8 @@
+.footer-border-top {
+  border-top: 1px solid $aqua;
+  padding: rem-calc(21) 0 0 0;
+
+  @include breakpoint(lg up) {
+    border-top: none;
+  }
+}

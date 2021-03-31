@@ -1,0 +1,7 @@
+.footer_payment-methods {
+  margin: 0 -3px 7px 0;
+
+  @include breakpoint(md up) {
+    margin: 0 -5px 5px 0;
+  }
+}

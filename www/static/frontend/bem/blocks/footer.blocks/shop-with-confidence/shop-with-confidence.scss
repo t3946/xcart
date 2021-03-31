@@ -1,0 +1,11 @@
+.shop-with-confidence {
+  @include breakpoint(md up) {
+    border-top: 1px solid $aqua;
+    padding: rem-calc(21) rem-calc(10) 0 rem-calc(10);
+  }
+
+  @include breakpoint(lg up) {
+    border-top: none;
+    padding: 0 rem-calc(10) 0 rem-calc(60);
+  }
+}

@@ -1,0 +1,15 @@
+.footer-payment-method-image {
+  width: rem-calc(56);
+  height: rem-calc(37);
+  box-sizing: content-box;
+
+  @include breakpoint(md up) {
+    width: rem-calc(49);
+    height: rem-calc(32);
+  }
+
+  @include breakpoint(large) {
+    width: rem-calc(59);
+    height: rem-calc(40);
+  }
+}

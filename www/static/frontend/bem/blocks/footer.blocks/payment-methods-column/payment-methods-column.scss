@@ -1,0 +1,7 @@
+.payment-methods-column {
+  padding-top: rem-calc(20);
+
+  @include breakpoint(lg up) {
+    border-right: rem-calc(1) solid $aqua;
+  }
+}

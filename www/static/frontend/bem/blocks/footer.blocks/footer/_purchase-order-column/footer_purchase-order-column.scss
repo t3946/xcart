@@ -1,0 +1,7 @@
+.footer_purchase-order-column {
+  margin: rem-calc(21) 0 rem-calc(27);
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}
