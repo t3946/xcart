@@ -22,7 +22,7 @@ let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
 
 function isProduction() {
-    return (process.env.NODE_ENV == 'production');
+    return process.env.NODE_ENV === 'production';
 }
 
 function buildVendorsData(vendors) {
@@ -333,32 +333,63 @@ gulp.task('default', function(){
     gulp.start('watch');
 });
 
+
+/**
+ * Redefinition Level(RL) is directory that contain bem-blocks and named as
+ * Main.blocks or Common.blocks e.t.c farther will as RL for concise
+ *
+ * @param order array - RL names f.e. Basic.blocks or Common.blocks should to pass as ['basic', 'common']
+ * @param rlDir string - path to redefinition level dirs
+ * @param ext - string style files extension
+ * @return array paths to RL
+ */
+async function BemOrderBuilder(rlDir, order = [], ext = 'css') {
+    order = order.reverse();
+
+    //trim slash in the end
+    rlDir.replace(/[\\/]$/, '');
+
+    let orderedLevels = [];
+
+    return new Promise((resolve, reject) => {
+        fs.readdir( rlDir, ( err, files ) => {
+            const otherLevels = [];
+
+            files.forEach( file => {
+                if ( file.search( /^.*?\.blocks$/ ) !== 0 ) {
+                    return;
+                }
+
+                const levelName = file.split( '.' )[ 0 ];
+                let index = order.indexOf( levelName );
+
+                if ( index > -1 ) {
+                    orderedLevels[ index ] = `${rlDir}/${file}/**/*.${ext}`;
+                } else {
+                    otherLevels.push( `${rlDir}/${file}/**/*.${ext}` );
+                }
+            } );
+
+            //remove empty values
+            orderedLevels = orderedLevels.filter((elem) => elem);
+            orderedLevels.push( ...otherLevels );
+
+            resolve(orderedLevels);
+        } );
+    });
+}
+
 /**
  * build bem styles for frontend
  */
-gulp.task('frontend:bem', function () {
-    //TODO: тут должна быть система расстановки приоритетов загрузки, но её нет
-    return gulp.src([
-        'frontend/bem/blocks/common.blocks/**/*.scss',
-        'frontend/bem/blocks/cart.blocks/**/*.scss',
-        'frontend/bem/blocks/checkout.blocks/**/*.scss',
-        'frontend/bem/blocks/payment.blocks/**/*.scss',
-        'frontend/bem/blocks/shipping.blocks/**/*.scss',
-        'frontend/bem/blocks/footer.blocks/**/*.scss',
-        'frontend/bem/blocks/mandatory.blocks/**/*.scss',
-        'frontend/bem/blocks/form.blocks/**/*.scss',
-        'frontend/bem/blocks/product.blocks/**/*.scss',
-        'frontend/bem/blocks/billing.blocks/**/*.scss',
-        'frontend/bem/blocks/header.blocks/**/*.scss',
-        'frontend/bem/blocks/photoswipe.blocks/**/*.scss',
-        'frontend/bem/blocks/products-slider.blocks/**/*.scss',
-        'frontend/bem/blocks/swiper.blocks/**/*.scss',
-        'frontend/bem/blocks/breadcrumb.blocks/**/*.scss',
-        'frontend/bem/blocks/promo-slider.blocks/**/*.scss',
-        'frontend/bem/blocks/catalog.blocks/**/*.scss',
-    ])
-        .pipe(concat('bem.scss'))
-        .pipe(gulp.dest('frontend/bem/'));
+gulp.task('frontend:bem', async function () {
+    const bemLevelsOrder = [ 'common', 'main', ];
+    const bemOrderedPaths = await BemOrderBuilder('frontend/bem/blocks', bemLevelsOrder, 'scss');
+
+    return gulp
+        .src( bemOrderedPaths )
+        .pipe( concat( 'bem.scss' ) )
+        .pipe( gulp.dest( 'frontend/bem/' ) );
 });
 
 /**
