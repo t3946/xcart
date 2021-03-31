@@ -132,28 +132,13 @@ class OrderProcessController extends FrontendController
 
     public function getPaymentMethods(): string
     {
-        $site = Xcart::app()->getModule( 'Sites' )->getSite();
-
-        $payment_methods = PaymentMethodModel::objects()
-            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
-            ->order( [ 'is_cod', 'orderby' ] )
-            ->all();
-
-        $field_sets = ( new CheckoutForm() )->getFieldsets();
-        $fields = ( new CheckoutForm() )->getFieldsInit();
-
-        foreach ( $field_sets as $set_name => $set ) {
-            foreach ( $set as $key => $field_name ) {
-                $set[ $key ] = $fields[ $field_name ];
-            }
-
-            $field_sets[ $set_name ] = $set;
-        }
+        $order = OrderHelper::getCartOrder();
+        $checkout_form = new CheckoutForm();
+        $checkout_form->setAttributes( $order->getAttributes() );
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
-            'payment_methods' => $payment_methods,
-            'fieldsets' => $field_sets,
-            'order' => OrderHelper::getCartOrder(),
+            'checkout_form' => $checkout_form,
+            'order' => $order,
         ] );
     }
 
@@ -207,8 +192,9 @@ class OrderProcessController extends FrontendController
         $form->setInstance( $order );
         $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
-        if ( $form->getInstance() ) {
-            $form->getInstance()->save();
+        $form_instance = $form->getInstance();
+        if ( $form_instance ) {
+            $form_instance->save();
         }
 
         $response = OrderHelper::getOrderInfo( $order );
@@ -225,6 +211,17 @@ class OrderProcessController extends FrontendController
             if ( count( self::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
+                $order->save([]);
+            }
+
+            if (!$post->has('billing_same_shipping')) {
+                $order->setAttributes([
+                    'b_address' => $form_instance->s_address,
+                    'b_country' => $form_instance->s_country,
+                    'b_zipcode' => $form_instance->s_zipcode,
+                    'b_state' => $form_instance->s_state,
+                    'b_city' => $form_instance->s_city,
+                ]);
                 $order->save();
             }
 

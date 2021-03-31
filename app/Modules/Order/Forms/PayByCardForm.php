@@ -9,6 +9,7 @@ use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
+use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Validation\EmailValidator;
 
@@ -78,7 +79,7 @@ class PayByCardForm extends FrontendForm
             ],
 
             'pbc_card_details' => [
-                'class' => CharCleanField::class,
+                'class' => CharField::class,
                 'label' => OrderModule::t('Credit / Debit card details'),
                 'required' => true,
                 'html' => [

@@ -10,7 +10,7 @@
 <script>
     const stripe = Stripe('{$public_key}');
     const elements = stripe.elements();
-    const form = document.getElementById('payment-form');
+    const form = document.querySelector('form');
     const button = document.querySelector('button');
     const clientSecret = '{$pi}';
     const style = {
@@ -28,13 +28,14 @@
         country: '{$order->b_country ?: 'US'}',
         currency: '{$order->currency|strtolower}',
         total: {
+            'label': 'Total',
             amount: {$order->total * 100}
         },
         requestPayerName: true,
         requestPayerEmail: true,
     });
 
-    /*paymentRequest.on('paymentmethod', function(ev) {
+    paymentRequest.on('paymentmethod', function(ev) {
         stripe.confirmCardPayment(
                 clientSecret,
                 { payment_method: ev.paymentMethod.id },
@@ -53,9 +54,9 @@
                 });
             }
         });
-    });*/
+    });
 
-/*    const prButton = elements.create('paymentRequestButton', {
+    const prButton = elements.create('paymentRequestButton', {
         paymentRequest: paymentRequest
     });
 
@@ -65,7 +66,7 @@
         } else {
             document.getElementById('payment-request-button').style.display = 'none';
         }
-    });*/
+    });
 
     const card = elements.create("card", { style: style });
 
@@ -84,28 +85,28 @@
                 card: card,
                 billing_details: {
                     address: {
-                        city: {$order->b_city},
-                        country: {$order->b_country},
-                        line1: {$order->getAddressInfo()[1]['address'][0]},
-                        line2: {$order->getAddressInfo()[1]['address'][1]},
-                        postal_code: {$order->b_zipcode},
-                        state: {$order->b_state},
+                        city: '{$order->b_city ?: $order->s_city}',
+                        country: '{$order->b_country ?: $order->s_country}',
+                        line1: '{$order->getAddressInfo()[1]['address'][0] ?: $order->getAddressInfo()[0]['address'][0]}',
+                        line2: '{$order->getAddressInfo()[1]['address'][1] ?: $order->getAddressInfo()[0]['address'][1]}',
+                        postal_code: '{$order->b_zipcode ?: $order->s_zipcode}',
+                        state: '{$order->b_state ?: $order->s_state}',
                     },
-                    name: {$order->b_firstname},
-                    email: {$order->email},
-                    phone: {$order->phone},
+                    name: '{$order->b_firstname}',
+                    email: '{$order->email}',
+                    phone: '{$order->phone}',
                 },
             },
             shipping: {
                 address: {
-                    line1: {$order->getAddressInfo()[0]['address'][0]},
-                    line2: {$order->getAddressInfo()[0]['address'][1]},
-                    city: {$order->s_city},
-                    country: {$order->s_country},
-                    postal_code: {$order->s_zipcode},
-                    state: {$order->s_state},
+                    line1: '{$order->getAddressInfo()[0]['address'][0]}',
+                    line2: '{$order->getAddressInfo()[0]['address'][1]}',
+                    city: '{$order->s_city}',
+                    country: '{$order->s_country}',
+                    postal_code: '{$order->s_zipcode}',
+                    state: '{$order->s_state}',
                 },
-                name: {$order->s_firstname},
+                name: '{$order->s_firstname}',
             }
         }).then(function (result) {
             if (result.error) {
