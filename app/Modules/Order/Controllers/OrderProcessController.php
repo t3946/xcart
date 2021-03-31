@@ -132,28 +132,13 @@ class OrderProcessController extends FrontendController
 
     public function getPaymentMethods(): string
     {
-        $site = Xcart::app()->getModule( 'Sites' )->getSite();
-
-        $payment_methods = PaymentMethodModel::objects()
-            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
-            ->order( [ 'is_cod', 'orderby' ] )
-            ->all();
-
-        $field_sets = ( new CheckoutForm() )->getFieldsets();
-        $fields = ( new CheckoutForm() )->getFieldsInit();
-
-        foreach ( $field_sets as $set_name => $set ) {
-            foreach ( $set as $key => $field_name ) {
-                $set[ $key ] = $fields[ $field_name ];
-            }
-
-            $field_sets[ $set_name ] = $set;
-        }
+        $order = OrderHelper::getCartOrder();
+        $checkout_form = new CheckoutForm();
+        $checkout_form->setAttributes( $order->getAttributes() );
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
-            'payment_methods' => $payment_methods,
-            'fieldsets' => $field_sets,
-            'order' => OrderHelper::getCartOrder(),
+            'checkout_form' => $checkout_form,
+            'order' => $order,
         ] );
     }
 
@@ -161,6 +146,11 @@ class OrderProcessController extends FrontendController
     {
         $post = $this->getRequest()->post;
         $cart = Xcart::app()->cart;
+        if (!$order = OrderHelper::getCartOrder()) {
+            $order = new OrderModel([
+                'cart_number' => $cart->getCartNumber()
+            ]);
+        }
 
         if ($post->has('uid') && $post->has('quantity')) {
             $cart_key = $post->get('uid');
@@ -168,24 +158,57 @@ class OrderProcessController extends FrontendController
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
         }
 
-        if ( $order = OrderHelper::getCartOrder() ) {
-            $response = OrderHelper::getOrderInfo( $order );
-        }
-        else {
-            $order = new OrderModel( [
-                'cart_number' => $cart->getCartNumber()
-            ] );
+        if ($post->has('shipping_rates')) {
+
+            $shipping_rates = self::getShippingRates($order);
+
+            foreach ($post->get('shipping_rates') as $mid => $rate) {
+                if (isset($shipping_rates[$mid][$rate])) {
+                    $order->shipping_cost = 0;
+                    $sh_rate = $shipping_rates[$mid][$rate];
+                    $charge = $sh_rate->getShippingCharge();
+                    foreach ($order->groups as $group) {
+                        if ((int)$group->manufacturerid === (int)$mid) {
+                            $group->setAttributes([
+                                'shippingid' => $sh_rate->shippingid,
+                                'shipping' => $sh_rate->shipping->getFrontendName(),
+                                'shipping_quote' => $sh_rate->getShippingQuote(),
+                                'shipping_gross' => $charge,
+                                'shipping_net' => $charge,
+                            ]);
+                            $group->save();
+                        }
+                        $order->shipping_cost += $group->shipping_gross;
+                    }
+                    $order->setAttributes([
+                        'total' => $order->subtotal + $order->shipping_cost + $order->tax,
+                    ]);
+                    $order->save();
+                }
+            }
         }
 
         $form = new CheckoutForm();
         $form->setInstance( $order );
         $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
-        if ( $model = $form->getInstance() ) {
-            $model->save();
+        $form_instance = $form->getInstance();
+        if ( $form_instance ) {
+            $form_instance->save();
         }
 
+        $response = OrderHelper::getOrderInfo( $order );
+
         $response[ 'templates' ] = [];
+
+        if (isset($_POST[ 'CheckoutForm' ][ 's_firstname' ]) && !$post->has('billing_same_shipping')) {
+            $order->b_firstname = $form_instance->s_firstname;
+            $order->save();
+        }
+        if (isset($_POST[ 'CheckoutForm' ][ 's_company' ]) && !$post->has('billing_same_shipping')) {
+            $order->b_company = $form_instance->s_company;
+            $order->save();
+        }
 
         if (
             isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
@@ -194,9 +217,20 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            if ( count( OrderProcessController::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
+            if ( count( self::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
+                $order->save();
+            }
+
+            if (!$post->has('billing_same_shipping')) {
+                $order->setAttributes([
+                    'b_address' => $form_instance->s_address,
+                    'b_country' => $form_instance->s_country,
+                    'b_zipcode' => $form_instance->s_zipcode,
+                    'b_state' => $form_instance->s_state,
+                    'b_city' => $form_instance->s_city,
+                ]);
                 $order->save();
             }
 

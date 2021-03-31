@@ -7,12 +7,17 @@ use Modules\Core\Behaviours\ClientValidationBehavior;
 use Modules\Core\Behaviours\FormClearInputBehavior;
 use Modules\Order\Controllers\OrderProcessController;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Form\Fields\RadioField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutForm extends ShippingForm
 {
+    public string $stripe_payment_intent;
+    public string $public_key;
+    public ?OrderModel $order;
+
     protected function behaviours()
     {
         return [
@@ -36,13 +41,18 @@ class CheckoutForm extends ShippingForm
         $shipping_form = new CheckoutShippingAddressForm();
 
         $this->_shippingFields = $shipping_form->getFields();
-        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_ci_firstname';
+        $this->_shippingFields[ $shipping_form->replacement . 'firstname' ][ 'html' ][ 'data-duplicate' ] = $this->getName() . '_firstname';
         $this->_contactFields = ( new CheckoutContactInfoForm() )->getFields();
         $this->_billingFields = ( new CheckoutBillingForm() )->getFields();
         $this->_purchase_order_details_form = ( new CheckoutPurchaseOrderDetailsForm() )->getFields();
         $this->_purchasing_manager_form = ( new CheckoutPurchasingManagerForm() )->getFields();
         $this->_accounts_payable_form = ( new CheckoutAccountsPayableForm() )->getFields();
-        $this->_pay_by_card_form = ( new PayByCardForm() )->getFields();
+
+        $pay_form = new PayByCardForm();
+        $this->stripe_payment_intent = $pay_form->stripe_payment_intent;
+        $this->public_key = $pay_form->public_key;
+        $this->_pay_by_card_form = $pay_form->getFields();
+        $this->order = OrderHelper::getCartOrder();
 
     }
 
@@ -72,7 +82,7 @@ class CheckoutForm extends ShippingForm
             $this->_pay_by_card_form,
         );
 
-        if ( $order = OrderHelper::getCartOrder() ) {
+        if ( $this->order ) {
             //get payment methods
             $site = Xcart::app()->getModule( 'Sites' )->getSite();
 
@@ -81,7 +91,7 @@ class CheckoutForm extends ShippingForm
                 ->order( [ 'is_cod', 'orderby' ] );
 
             //only phone order for no address orders
-            if ( count( OrderProcessController::getShippingRates( $order ) ) < count( Xcart::app()->cart->getItemsGroupedBy() ) ) {
+            if ( count( OrderProcessController::getShippingRates( $this->order ) ) < count( Xcart::app()->cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $payment_methods_query->filter( [ 'paymentid' => $phone_payment_id ] );
             }
@@ -98,7 +108,7 @@ class CheckoutForm extends ShippingForm
             $fields[ 'paymentid' ] = [
                 'class' => RadioField::class,
                 'choices' => $choices,
-                'value' => $order->paymentid,
+                'value' => $this->order->paymentid,
                 'inputClass' => 'common-input-radio',
             ];
         }

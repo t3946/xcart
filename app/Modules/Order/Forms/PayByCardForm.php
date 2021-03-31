@@ -3,13 +3,21 @@
 namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\OrderModule;
+use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
+use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Validation\EmailValidator;
 
 class PayByCardForm extends FrontendForm
 {
+    public string $stripe_payment_intent;
+    public string $public_key;
+
     protected array $fieldsSettings = [
         'fieldTemplate' => 'forms/field/default/custom/one_field_checkout.tpl',
         'errorsTemplate' => 'forms/field/default/custom/errors.tpl',
@@ -17,12 +25,48 @@ class PayByCardForm extends FrontendForm
         'labelTemplate' => 'forms/field/default/custom/label.tpl',
     ];
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        if ($order = OrderHelper::getCartOrder()) {
+            $params = [
+                'amount' => $order->total,
+                'currency' => $order->currency,
+                'description' => $order->getTransactionDescription(),
+                'order' => $order
+            ];
+
+            /** @var ProcessorModel $pm */
+            if (($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
+                && $gw = Gateway::getGateway($pm)) {
+                $customer = $gw->gateway->createCustomer([
+                    'email' => $order->email,
+                    'name' => $order->b_firstname ?: $order->firstname,
+                    'description' => $order->orderid,
+                ])->send();
+
+                $intent = $gw->gateway->createPaymentIntent(
+                    array_merge($params, [
+                        'metadata' => ['order' => $order->orderid, 'email' => $order->email],
+                        'connectedAccount' => $gw::CONNECTED_ACCOUNT_ID,
+                        'setupFutureUsage' => 'off_session',
+                        'captureMethod' => 'manual',
+                        'customerReference' => $customer->getCustomerReference()
+                    ])
+                )->send();
+                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()['client_secret'] : '';
+                $this->public_key = $pm->param01 ?? '';
+            }
+        }
+    }
+
     public function getFields()
     {
         return [
             'pbc_card_holder_name' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Cardholder name' ),
+                'label' => OrderModule::t('Cardholder name'),
                 'required' => true,
                 'html' => [
                     'data-correct' => 'common-input__correct',
@@ -35,16 +79,14 @@ class PayByCardForm extends FrontendForm
             ],
 
             'pbc_card_details' => [
-                'class' => EmailField::class,
-                'label' => OrderModule::t( 'Credit / Debit card details' ),
+                'class' => CharField::class,
+                'label' => OrderModule::t('Credit / Debit card details'),
                 'required' => true,
-                'validators' => [
-                    new EmailValidator()
-                ],
                 'html' => [
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
+                'inputTemplate' => 'forms/field/stripe/input.tpl',
                 'labelClass' => 'common-label common-label_required checkout__single-common-label',
                 'hintClass' => 'common-hint',
                 'fieldClass' => 'checkout-field',

@@ -96,6 +96,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),
                 'hint' => OrderModule::t( 'Order progress notifications will be sent here' ),
+                'required' => true,
                 'validators' => [
                     new EmailValidator(),
                 ],
