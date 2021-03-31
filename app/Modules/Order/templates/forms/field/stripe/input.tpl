@@ -17,7 +17,6 @@
         base: {
             color: '#272727',
             fontSize: '20px',
-            fontFamily: 'Lato',
             '::placeholder': {
                 color: '#272727'
             }
