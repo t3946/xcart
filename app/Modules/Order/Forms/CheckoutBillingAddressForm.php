@@ -24,14 +24,6 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
             $new_fields[ $new_name ] = $one_field;
         }
 
-        $new_fields = array_merge($new_fields, [
-            'billing_same_shipping' => [
-                'class' => CheckboxField::class,
-                'html' => ['class' => 'hide'],
-                'fieldTemplate' => 'forms/field/checkbox/switcher.tpl',
-            ]
-        ]);
-
         return $new_fields;
     }
 }

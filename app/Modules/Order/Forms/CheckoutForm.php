@@ -9,6 +9,7 @@ use Modules\Order\Controllers\OrderProcessController;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\RadioField;
 use Xcart\App\Main\Xcart;
 
@@ -80,6 +81,13 @@ class CheckoutForm extends ShippingForm
             $this->_purchasing_manager_form,
             $this->_accounts_payable_form,
             $this->_pay_by_card_form,
+            [
+                'billing_same_shipping' => [
+                    'class' => CheckboxField::class,
+                    'html' => ['class' => 'hide'],
+                    'fieldTemplate' => 'forms/field/checkbox/switcher.tpl',
+                ]
+            ]
         );
 
         if ( $this->order ) {

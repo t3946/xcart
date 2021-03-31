@@ -59,7 +59,7 @@ class PayByCardForm extends FrontendForm
                         ]
                     )
                 )->send();
-                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()[ 'client_secret' ] : '';
+                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()[ 'client_secret' ] ?? '' : '';
                 $this->public_key = $pm->param01 ?? '';
             }
         }
