@@ -17,10 +17,14 @@ export class SwitcherSlider extends Switcher {
     }
 
     set isOn( value ) {
+        if (this.$input) {
+            this.$input.prop( 'checked', value );
+        }
+
         this._isOn = value;
+
         this.updateStyles();
     }
-
     get isOn() {
         return this._isOn;
     }
@@ -51,6 +55,7 @@ export class SwitcherSlider extends Switcher {
 
     toggle( event ) {
         super.toggle( event );
+
         this.animatedUpdateStyles();
     }
 }

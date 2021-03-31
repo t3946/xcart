@@ -1,8 +1,8 @@
 export class Switcher {
     constructor( elem, onAction, offAction, callback ) {
-        this._isOn = false;
         this.$button = typeof elem === 'string' ? $( elem ) : elem;
         this.$input = this.$button.find( 'input[type="checkbox"]' ).eq( 0 );
+        this._isOn = this.$input ? this.$input.prop('checked') : false;
         this.onAction = onAction;
         this.offAction = offAction;
         this.callback = callback;
@@ -41,6 +41,11 @@ export class Switcher {
             }
 
             this.offAction();
+        }
+
+        // update input
+        if (this.$input) {
+            this.$input.prop( 'checked', this.isOn );
         }
 
         if ( this.callback ) {

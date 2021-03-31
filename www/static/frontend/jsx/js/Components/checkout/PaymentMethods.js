@@ -1,5 +1,6 @@
-import { SwitcherSlider } from "@/js/Classes/SwitcherSlider";
-import BillingForm from "@/js/Components/checkout/BillingForm";
+import { SwitcherSlider } from '@/js/Classes/SwitcherSlider';
+import BillingForm from '@/js/Components/checkout/BillingForm';
+import Checkout    from '@/js/Components/checkout/Checkout';
 
 export const PaymentMethods = ( function () {
     // this component only for checkout page
@@ -68,15 +69,22 @@ export const PaymentMethods = ( function () {
         // billing same shipping
         const $addressFields = $( '.billing-form-address-fields' );
 
-        new SwitcherSlider(
+        const switcher = new SwitcherSlider(
             $( '.switcher-slider-label' ),
             function () {
                 $addressFields.stop( true, false ).slideDown();
+                Checkout.update({'CheckoutForm[billing_same_shipping]': '1'});
             },
             function () {
                 $addressFields.stop( true, false ).slideUp();
+                Checkout.update({'CheckoutForm[billing_same_shipping]': '0'});
             },
         );
+
+        // show fields if billing_same_shipping checked
+        if ( switcher.isOn === true ) {
+            $addressFields.show();
+        }
 
         // set default select
         const defaultValue = $root.data('default-checked-field');
