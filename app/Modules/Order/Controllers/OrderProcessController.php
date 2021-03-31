@@ -201,6 +201,15 @@ class OrderProcessController extends FrontendController
 
         $response[ 'templates' ] = [];
 
+        if (isset($_POST[ 'CheckoutForm' ][ 's_firstname' ]) && !$post->has('billing_same_shipping')) {
+            $order->b_firstname = $form_instance->s_firstname;
+            $order->save();
+        }
+        if (isset($_POST[ 'CheckoutForm' ][ 's_company' ]) && !$post->has('billing_same_shipping')) {
+            $order->b_company = $form_instance->s_company;
+            $order->save();
+        }
+
         if (
             isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
@@ -211,7 +220,7 @@ class OrderProcessController extends FrontendController
             if ( count( self::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
-                $order->save([]);
+                $order->save();
             }
 
             if (!$post->has('billing_same_shipping')) {
