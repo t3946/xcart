@@ -1,0 +1,7 @@
+.checkout-submit {
+  text-align: center;
+
+  @include breakpoint(lg up) {
+    text-align: left;
+  }
+}

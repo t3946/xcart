@@ -251,7 +251,7 @@
         <div class="row align-center">
             <div class="column show-for-large large-4"></div>
             <div class="column small-12 large-8">
-                <div class="buttons checkout-form__submit-button text-center">
+                <div class="checkout-submit checkout-form__submit-button">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect submit_big">Submit order</button>
                 </div>
             </div>
