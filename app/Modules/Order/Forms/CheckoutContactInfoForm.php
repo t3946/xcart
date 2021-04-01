@@ -87,6 +87,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'label' => OrderModule::t( 'SMS notifications' ),
                 'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
+                'fieldClass' => 'checkout-field__checkbox',
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint',
                 'inputClass' => 'common-checkbox',
