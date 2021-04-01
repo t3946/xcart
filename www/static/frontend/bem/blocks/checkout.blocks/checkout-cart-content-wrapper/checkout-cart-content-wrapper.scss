@@ -1,3 +1,7 @@
 .checkout-cart-content-wrapper {
   height: 100%;
+
+  @include breakpoint(lg up) {
+    padding: 0 0 0 rem-calc(40);
+  }
 }

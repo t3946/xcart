@@ -4,18 +4,34 @@
             <path fill="#000" d="M0 2.429V.572h13v1.857z"/>
         </g>
     </symbol>
+
     <symbol id="switcher-plus" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13">
         <g>
             <path fill="#000" d="M5.571 0h1.857v13H5.571z"/>
             <path fill="#000" d="M0 7.429V5.572h13v1.857z"/>
         </g>
     </symbol>
+
+    <symbol id="switcher-minus__ash" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 3">
+        <g>
+            <path fill="#49474a" d="M0 2.429V.572h13v1.857z"/>
+        </g>
+    </symbol>
+
+    <symbol id="switcher-plus__ash" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13">
+        <g>
+            <path fill="#49474a" d="M5.571 0h1.857v13H5.571z"/>
+            <path fill="#49474a" d="M0 7.429V5.572h13v1.857z"/>
+        </g>
+    </symbol>
+
     <symbol id="corner-white" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="-33 42.012 32 16.988">
         <g>
             <path fill="#ffffff" stroke="white"
                   d="M-1 43l-15.517 15.517L-17 59l-.489-.483L-33 43l.966-.972L-17 57.057l15.028-15.029z"/>
         </g>
     </symbol>
+
     <symbol id="cross" viewBox="0 0 30 29" xmlns="http://www.w3.org/2000/svg">
         <g>
             <rect width="1" height="16" transform="translate(20.3137 8) rotate(45)"/>
