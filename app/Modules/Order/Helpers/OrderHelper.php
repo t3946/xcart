@@ -666,30 +666,6 @@ HTML;
 
     }
 
-    public static function setOrderShippingRate(OrderModel $order, ShippingRateModel $shipping_rate): void
-    {
-        $order->shipping_cost = 0;
-        $charge = $shipping_rate->getShippingCharge();
-        $shipping = $shipping_rate->shipping;
-        foreach ($order->groups as $group) {
-            if ((int)$group->manufacturerid === (int)$shipping_rate->manufacturerid) {
-                $group->setAttributes([
-                    'shippingid' => $shipping_rate->shippingid,
-                    'shipping' => $shipping->getFrontendName(),
-                    'shipping_quote' => $shipping_rate->getShippingQuote(),
-                    'shipping_gross' => $charge,
-                    'shipping_net' => $charge,
-                ]);
-                $group->save();
-            }
-            $order->shipping_cost += $group->shipping_gross;
-        }
-        $order->setAttributes([
-            'total' => $order->subtotal + $order->shipping_cost + $order->tax,
-        ]);
-        $order->save();
-    }
-
     public static function getCheckoutUrl(): string
     {
         return '/checkout/shipping/';

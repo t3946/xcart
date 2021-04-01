@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Modules\Order\Forms\CheckoutForm;
+use Modules\Order\Helpers\CheckoutHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
@@ -156,6 +157,7 @@ class OrderProcessController extends FrontendController
             $cart_key = $post->get('uid');
             $quantity = $post->get('quantity');
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
+            CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
         }
 
         if ($post->has('shipping_rates')) {
@@ -163,9 +165,7 @@ class OrderProcessController extends FrontendController
             $shipping_rates = self::getShippingRates($order);
 
             foreach ($post->get('shipping_rates') as $mid => $rate) {
-                if (isset($shipping_rates[$mid][$rate])) {
-                    OrderHelper::setOrderShippingRate($order, $shipping_rates[$mid][$rate]);
-                }
+                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate);
             }
         }
 
@@ -200,9 +200,7 @@ class OrderProcessController extends FrontendController
         ) {
             $shipping_rates = self::getShippingRates( $order );
 
-            foreach ($shipping_rates as $rate) {
-                OrderHelper::setOrderShippingRate($order, reset($rate));
-            }
+            CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
             if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
