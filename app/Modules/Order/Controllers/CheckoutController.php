@@ -85,54 +85,66 @@ class CheckoutController extends FrontendController
 
         if (!$order) {
             [$order] = OrderModel::objects()->getOrCreate(['cart_number' => $cart->getCartNumber()]);
-            if ($cart_groups = $cart->getItemsGroupedBy()) {
+        }
 
-                $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
+        $shipping_rates = OrderProcessController::getShippingRates( $order );
 
-                foreach ($cart_groups as $g => $cart_group)
-                {
-                    [$group] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+        if ($cart_groups = $cart->getItemsGroupedBy()) {
+
+            $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
+            $order->shipping_cost = 0;
+            foreach ($cart_groups as $g => $cart_group)
+            {
+                [$group] = OrderGroupModel::objects()->getOrNew(['manufacturerid' => $g, 'orderid' => $order->orderid]);
+                $group->setAttributes([
+
+                    'cb_status' => $order->cb_status,
+                    'dc_status' => $order->dc_status,
+                    'bd_status' => $order->bd_status,
+                    'total_gross' => $cart_group['subtotal'],
+                    'total_net' => $cart_group['subtotal'],
+                    'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
+                ]);
+
+                if (isset($shipping_rates[$group->manufacturerid])) {
+                    OrderHelper::setOrderShippingRate($order, reset($shipping_rates[$group->manufacturerid]));
+                } else {
                     $group->setAttributes([
                         'shippingid' => null,
                         'shipping' => '',
-                        'cb_status' => $order->cb_status,
-                        'dc_status' => $order->dc_status,
-                        'bd_status' => $order->bd_status,
-                        'total_gross' => $cart_group['subtotal'],
-                        'total_net' => $cart_group['subtotal'],
-                        'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
                     ]);
-                    $order->subtotal += $group->total_gross;
-                    $order->total = $order->subtotal;
-                    $order->shipping_cost = 0;
-                    $group->save();
+                }
 
-                    OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+                $order->subtotal += $group->total_gross;
+                $order->total = $order->subtotal;
+                $group->save();
 
-                    /** @var CartItem $item */
-                    foreach ($cart_group['items'] as $item)
-                    {
-                        /** @var ProductModel $product */
-                        $product = $item->getObject();
-                        $detail = new OrderDetailModel([
-                            'orderid' => $group->orderid,
-                            'productid' => $product->productid,
-                            'order_group_id' => $group->order_group_id,
-                            'price' => $product->getFrontendPrice($item->getQuantity()),
-                            'amount' => $item->getQuantity(),
-                            'productcode' => $product->productcode,
-                            'product' => $product->getFrontendName(),
-                            'provider' => $product->provider,
-                            'original_provider' => $product->original_provider,
-                            'item_cost_to_us' => $product->cost_to_us,
-                            'product_options' => $item->data ?? null,
-                        ]);
-                        $detail->save();
-                    }
+                OrderDetailModel::objects()->delete(['order_group_id' => $group->order_group_id]);
+
+                /** @var CartItem $item */
+                foreach ($cart_group['items'] as $item)
+                {
+                    /** @var ProductModel $product */
+                    $product = $item->getObject();
+                    $detail = new OrderDetailModel([
+                        'orderid' => $group->orderid,
+                        'productid' => $product->productid,
+                        'order_group_id' => $group->order_group_id,
+                        'price' => $product->getFrontendPrice($item->getQuantity()),
+                        'amount' => $item->getQuantity(),
+                        'productcode' => $product->productcode,
+                        'product' => $product->getFrontendName(),
+                        'provider' => $product->provider,
+                        'original_provider' => $product->original_provider,
+                        'item_cost_to_us' => $product->cost_to_us,
+                        'product_options' => $item->data ?? null,
+                    ]);
+                    $detail->save();
                 }
             }
             $order->save();
         }
+
 
         //get payment methods
         $payment_methods = PaymentMethodModel::objects()
@@ -143,7 +155,7 @@ class CheckoutController extends FrontendController
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
             'checkout_form' => $checkout_form,
-            'shipping_rates' => OrderProcessController::getShippingRates( $order ),
+            'shipping_rates' => $shipping_rates,
             'payment_methods' => $payment_methods,
         ]);
     }

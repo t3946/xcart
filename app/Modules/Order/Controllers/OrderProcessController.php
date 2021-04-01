@@ -164,26 +164,7 @@ class OrderProcessController extends FrontendController
 
             foreach ($post->get('shipping_rates') as $mid => $rate) {
                 if (isset($shipping_rates[$mid][$rate])) {
-                    $order->shipping_cost = 0;
-                    $sh_rate = $shipping_rates[$mid][$rate];
-                    $charge = $sh_rate->getShippingCharge();
-                    foreach ($order->groups as $group) {
-                        if ((int)$group->manufacturerid === (int)$mid) {
-                            $group->setAttributes([
-                                'shippingid' => $sh_rate->shippingid,
-                                'shipping' => $sh_rate->shipping->getFrontendName(),
-                                'shipping_quote' => $sh_rate->getShippingQuote(),
-                                'shipping_gross' => $charge,
-                                'shipping_net' => $charge,
-                            ]);
-                            $group->save();
-                        }
-                        $order->shipping_cost += $group->shipping_gross;
-                    }
-                    $order->setAttributes([
-                        'total' => $order->subtotal + $order->shipping_cost + $order->tax,
-                    ]);
-                    $order->save();
+                    OrderHelper::setOrderShippingRate($order, $shipping_rates[$mid][$rate]);
                 }
             }
         }
@@ -197,7 +178,7 @@ class OrderProcessController extends FrontendController
             $form_instance->save();
         }
 
-        $response = OrderHelper::getOrderInfo( $order );
+        $response = [];
 
         $response[ 'templates' ] = [];
 
@@ -217,7 +198,13 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            if ( count( self::getShippingRates( $order ) ) < count( $cart->getItemsGroupedBy() ) ) {
+            $shipping_rates = self::getShippingRates( $order );
+
+            foreach ($shipping_rates as $rate) {
+                OrderHelper::setOrderShippingRate($order, reset($rate));
+            }
+
+            if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
                 $order->save();
@@ -237,6 +224,8 @@ class OrderProcessController extends FrontendController
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
         }
+
+        $response = array_merge($response, OrderHelper::getOrderInfo($order));
 
         $this->jsonResponse( $response ?? [] );
     }
