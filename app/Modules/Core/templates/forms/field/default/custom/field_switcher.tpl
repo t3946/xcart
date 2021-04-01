@@ -20,7 +20,7 @@
             {/if}
         </div>
         <div class="field switcher-field {$field->fieldClass}">
-            <div class="input-container switcher-input-container {$field->className} {$hasClose}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
+            <div class="input-container switcher-input-container {$field->className}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
                 {raw $input}
                 <span class="switcher-button field__switcher-button {$field->switcherClass}">
                     <svg class="icon switcher-button-icon switcher-button-icon-plus"><use xlink:href="/static/frontend/images/icons/sprite.svg#switcher-plus"></use></svg>
