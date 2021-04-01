@@ -197,7 +197,8 @@
                         </div>
 
                         <div class="cart_add cart_buttons">
-                            {include "product/parts/_add_to_cart.tpl"}
+                            {include "product/parts/_add_to_cart.tpl" type="catalog"}
+
                         </div>
 
                         <div class="subtotal_container hide" cont-subtotal>

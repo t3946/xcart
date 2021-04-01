@@ -3,13 +3,15 @@
 {set $add_to_cart_button_checkout_class = 'add-to-cart-button-checkout'}
 {set $add_button_complex_class = 'add-to-cart-button-add__complex'}
 {set $checkout_button_complex_class = 'add-to-cart-button-checkout__complex'}
+{set $add_to_cart_button_wrapper_class = 'add-to-cart-button-wrapper'}
 
 {if isset($type)}
-    {set $add_to_cart_button_class = "$add_to_cart_button_class {$add_to_cart_button_class}_{$type}"}
-    {set $add_to_cart_button_add_class = "$add_to_cart_button_add_class {$add_to_cart_button_add_class}__{$type}"}
-    {set $add_to_cart_button_checkout_class = "$add_to_cart_button_checkout_class {$add_to_cart_button_checkout_class}_{$type}"}
-    {set $add_button_complex_class = "{$add_button_complex_class}-{$type}"}
-    {set $checkout_button_complex_class = "$checkout_button_complex_class-{$type}"}
+    {set $add_to_cart_button_class = $add_to_cart_button_class ~~ "{$add_to_cart_button_class}_{$type}"}
+    {set $add_to_cart_button_add_class = $add_to_cart_button_add_class ~~ "{$add_to_cart_button_add_class}__$type"}
+    {set $add_to_cart_button_checkout_class = $add_to_cart_button_checkout_class ~~ "{$add_to_cart_button_checkout_class}_$type"}
+    {set $add_button_complex_class = $add_button_complex_class ~~ "{$add_button_complex_class}-$type"}
+    {set $checkout_button_complex_class = $checkout_button_complex_class ~~ "$checkout_button_complex_class-$type"}
+    {set $add_to_cart_button_wrapper_class = $add_to_cart_button_wrapper_class ~~ "{$add_to_cart_button_wrapper_class}__$type"}
 {/if}
 
 <div
@@ -21,7 +23,7 @@
         <span class="text">{t 'Add to cart'}</span>
         <span class="wait-text">{t 'Added'}</span>
     </a>
-    <div class="add-to-cart-button-wrapper margin-left-1">
+    <div class="{$add_to_cart_button_wrapper_class}">
         <a href="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}" class="button yellow-white waves waves-orange waves-effect {$add_to_cart_button_checkout_class}">Checkout</a>
         {if isset($noAccount) && $noAccount === true}<div class="no-account">{t "No account needed! \n Checkout only takes 3 minutes."}</div>{/if}
     </div>

@@ -1,11 +1,9 @@
 .add-to-cart-button {
   display: flex;
-  grid-gap: 10px;
   width: 100%;
-}
 
-@include breakpoint(md up) {
-  .add-to-cart-button {
+  @include breakpoint(md up) {
     justify-content: flex-end;
   }
 }
+

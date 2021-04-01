@@ -4,15 +4,3 @@
   display:none;
   text-align: left;
 }
-
-@include breakpoint(md up) {
-  .jackpot {
-    text-align: right;
-  }
-}
-
-@include breakpoint(lg up) {
-  .jackpot {
-    text-align: left;
-  }
-}

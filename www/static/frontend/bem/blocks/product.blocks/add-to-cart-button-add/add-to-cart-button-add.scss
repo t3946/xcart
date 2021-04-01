@@ -14,11 +14,12 @@
 }
 
 .add-to-cart-button-add:before {
-  content: url("../../dist/images/icons/add_to_cart.svg");
+  content: '';
+  background: url(../../dist/images/icons/add_to_cart.svg) no-repeat;
   display: inline-block;
-  width: rem-calc(35);
-  height: rem-calc(38);
-  background-size: 90%;
+  width: 1.875rem;
+  height: 1.5rem;
+  background-size: contain;
   vertical-align: text-bottom;
 }
 
