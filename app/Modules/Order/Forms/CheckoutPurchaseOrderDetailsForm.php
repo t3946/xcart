@@ -29,6 +29,7 @@ class CheckoutPurchaseOrderDetailsForm extends FrontendForm
                     'placeholder' => OrderModule::t('14031879'),
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'inputmode' => 'numeric',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',

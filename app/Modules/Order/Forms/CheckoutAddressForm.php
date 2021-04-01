@@ -130,6 +130,7 @@ abstract class CheckoutAddressForm extends FrontendForm
                     'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'inputmode' => 'numeric',
                 ],
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint',

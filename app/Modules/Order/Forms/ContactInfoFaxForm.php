@@ -29,7 +29,8 @@ class ContactInfoFaxForm extends ContactInfoForm
             ],
             'html' => [
                 'placeholder' => OrderModule::t('(609) 924-8399'),
-                'class' => 'phone'
+                'class' => 'phone',
+                'inputmode' => 'numeric',
             ],
         ];
 

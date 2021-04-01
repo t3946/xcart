@@ -136,6 +136,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                     'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+                    'inputmode' => 'numeric',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',

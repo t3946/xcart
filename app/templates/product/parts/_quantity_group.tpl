@@ -16,6 +16,7 @@
             value="{$quantity}"
             id="quantity-{$model->productid}"
             autocomplete="off"
+            inputmode="numeric"
     />
     <span class="quantity-group-btn quantity-group-btn_inc {if $quantity <= $model->avail}quantity-group-btn_active{/if}{$btn_class}">+</span>
 </div>

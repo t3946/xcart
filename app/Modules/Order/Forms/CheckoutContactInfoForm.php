@@ -53,6 +53,7 @@ class CheckoutContactInfoForm extends FrontendForm
                     'class' => 'phone',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'inputmode' => 'numeric',
                 ],
                 'extend' => 'phone_ext',
                 'labelClass' => 'common-label common-label_required',
@@ -69,6 +70,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'label' => OrderModule::t( 'ext' ),
                 'html' => [
                     'class' => 'phone_ext',
+                    'inputmode' => 'numeric',
                 ],
                 'extends' => true,
                 'validators' => [

@@ -55,6 +55,7 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                     'class' => 'phone',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'inputmode' => 'numeric',
                 ],
                 'extend' => 'ap_phone_ext',
                 'labelClass' => 'common-label common-label_required',

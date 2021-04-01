@@ -38,7 +38,8 @@ class ContactInfoForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t('(609) 924-8399'),
-                    'class' => 'phone'
+                    'class' => 'phone',
+                    'inputmode' => 'numeric',
                 ],
                 'extend' => 'phone_ext',
             ],
@@ -48,6 +49,7 @@ class ContactInfoForm extends FrontendForm
                 'label' => OrderModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
+                    'inputmode' => 'numeric',
                 ],
                 'extends' => true,
                 'validators' => [

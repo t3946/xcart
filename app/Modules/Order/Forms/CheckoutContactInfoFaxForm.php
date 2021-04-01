@@ -23,7 +23,8 @@ class CheckoutContactInfoFaxForm extends CheckoutContactInfoForm
             ],
             'html' => [
                 'placeholder' => OrderModule::t('(609) 924-8399'),
-                'class' => 'phone'
+                'class' => 'phone',
+                'inputmode' => 'numeric',
             ],
             'labelClass' => 'common-label',
             'hintClass' => 'common-hint',

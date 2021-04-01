@@ -20,7 +20,8 @@ class PurchaseOrderDetailsForm extends FrontendForm
                 'hint' => OrderModule::t('PO number or internal order code in your system'),
                 'html' => [
                     'class' => 'po_number',
-                    'placeholder' => OrderModule::t('14031879')
+                    'placeholder' => OrderModule::t('14031879'),
+                    'inputmode' => 'numeric',
                 ]
             ],
             'organization_name' => [
