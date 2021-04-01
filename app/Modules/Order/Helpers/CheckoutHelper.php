@@ -48,6 +48,7 @@ class CheckoutHelper
                 $order->shipping_cost += $group->shipping_gross;
             }
         }
+        self::updateOrderTotalValues($order);
     }
 
     public static function updateOrderGroupsFromCart(OrderModel $order, XCart $cart): void
