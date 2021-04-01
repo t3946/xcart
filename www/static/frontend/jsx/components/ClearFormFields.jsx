@@ -8,7 +8,6 @@ class ClearFormFields {
      * @param name
      */
     constructor(name) {
-        console.log('constructor');
         this.name = name;
         //this.constraints = document.formConstraints[name];
 
@@ -77,10 +76,8 @@ class ClearFormFields {
     }
 
     showHideClose(inputElement){
-        console.log('showHideClose');
         let wrapper = inputElement.closest('.input-container');
         if(inputElement.value !== '') {
-            console.log('add class', wrapper);
             if ( $(wrapper).find('input[type=text]').length ) {
                 wrapper.classList.add('hasClose');
             }
