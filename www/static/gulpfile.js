@@ -344,8 +344,6 @@ gulp.task('default', function(){
  * @return array paths to RL
  */
 async function BemOrderBuilder(rlDir, order = [], ext = 'css') {
-    order = order.reverse();
-
     //trim slash in the end
     rlDir.replace(/[\\/]$/, '');
 
@@ -383,7 +381,11 @@ async function BemOrderBuilder(rlDir, order = [], ext = 'css') {
  * build bem styles for frontend
  */
 gulp.task('frontend:bem', async function () {
-    const bemLevelsOrder = [ 'common', 'main', ];
+    const bemLevelsOrder = [
+        'common',
+        'form',
+        'checkout',
+    ];
     const bemOrderedPaths = await BemOrderBuilder('frontend/bem/blocks', bemLevelsOrder, 'scss');
 
     return gulp
