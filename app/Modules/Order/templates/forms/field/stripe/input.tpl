@@ -8,7 +8,9 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    const stripe = Stripe('{$public_key}');
+    const stripe = Stripe('{$public_key}', {
+        locale: 'en',
+    });
     const elements = stripe.elements();
     const form = document.querySelector('form');
     const button = document.querySelector('button');
@@ -56,7 +58,10 @@
     });
 
     const prButton = elements.create('paymentRequestButton', {
-        paymentRequest: paymentRequest
+        paymentRequest: paymentRequest,
+        classes: {
+            base: 'checkout_stripe-element-button',
+        },
     });
 
     paymentRequest.canMakePayment().then(function(result) {
@@ -67,7 +72,14 @@
         }
     });
 
-    const card = elements.create("card", { style: style });
+    const card = elements.create("card", {
+        style: style,
+        classes: {
+            base: 'stripe-element common-input',
+            complete: 'common-input__correct',
+            invalid: 'common-input__wrong',
+        },
+    });
 
     card.mount("#{$id}");
 
