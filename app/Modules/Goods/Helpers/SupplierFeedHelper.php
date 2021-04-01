@@ -178,17 +178,11 @@ class SupplierFeedHelper
             $upcModel->save();
         }
 
-        if (!$is_created) {
-            if (empty($data['feed_child']) && $model->isGroupChild()) {
-                $model->product = $model->getOldAttribute('product');
-            }
-
-            if ($dont_update_fields) {
-                foreach ($dont_update_fields as $fieldUnset) {
-                    $trimDesc = trim($model->fulldescr);
-                    if ($fieldUnset !== 'fulldescr' || ($fieldUnset === 'fulldescr' && !empty($trimDesc))) {
-                        $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
-                    }
+        if (!$is_created && $dont_update_fields) {
+            foreach ($dont_update_fields as $fieldUnset) {
+                $trimDesc = trim($model->fulldescr);
+                if ($fieldUnset !== 'fulldescr' || ($fieldUnset === 'fulldescr' && !empty($trimDesc))) {
+                    $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
                 }
             }
         }
