@@ -21,6 +21,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
