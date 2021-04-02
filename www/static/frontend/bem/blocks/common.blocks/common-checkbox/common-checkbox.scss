@@ -1,9 +1,9 @@
 .common-checkbox {
   position: relative;
   border: 1px solid #d4d4d4;
-  width: 22px;
+  width: rem-calc(30);
+  height: rem-calc(30);
   appearance: none;
-  height: 22px;
   display: block;
   cursor: pointer;
   background: white;
@@ -12,14 +12,14 @@
 
 .common-checkbox:after {
   content: '';
-  background: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg');
+  background: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg') no-repeat center;
   position: absolute;
   display: block;
-  width: 12px;
-  height: 14px;
+  width: rem-calc(20);
+  height: rem-calc(20);
   top: 50%;
   left: 50%;
-  transform: translate(-6px, -7px);
+  transform: translate(rem-calc(-10), rem-calc(-10));
   opacity: 0;
   transition: opacity 0.03s linear;
 }

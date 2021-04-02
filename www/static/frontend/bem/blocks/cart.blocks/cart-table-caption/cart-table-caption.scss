@@ -1,6 +1,6 @@
 .cart-table-caption {
   position: relative;
-  padding: 10px 32px;
+  padding: 0 rem-calc(32);
   font-size: 1.125rem;
   font-weight: 700;
   background: $grey_e4;
@@ -10,7 +10,7 @@
 @include breakpoint(md up) {
   .cart-table-caption {
     font-size: 1.25rem;
-    padding: 20px 38px 24px;
+    padding: 0 rem-calc(38);
     text-align: center;
     line-height: 32px;
   }
@@ -18,14 +18,14 @@
 
 @include breakpoint(ml up) {
   .cart-table-caption {
-    padding: 20px 62px 24px;
+    padding: 0 rem-calc(62);
   }
 }
 
 @include breakpoint(lg up) {
   .cart-table-caption {
     font-size: 1.125rem;
-    padding: 30px 77px 22px;
+    padding: 0 rem-calc(77);
     background: none;
   }
 }

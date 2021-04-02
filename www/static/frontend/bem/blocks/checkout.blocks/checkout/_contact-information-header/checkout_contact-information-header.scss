@@ -1,0 +1,11 @@
+.checkout_contact-information-header {
+  margin: rem-calc(25) 0 rem-calc(20);
+
+  @include breakpoint(md up) {
+    margin: rem-calc(35) 0 rem-calc(30);
+  }
+
+  @include breakpoint(lg up) {
+    margin: rem-calc(46) 0 rem-calc(10);
+  }
+}

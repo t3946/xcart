@@ -1,5 +1,11 @@
-@media (min-width: 1200px) {
-  .checkout__delivery-methods-header {
-    margin: 25px 0 8px;
+.checkout__delivery-methods-header {
+  margin: rem-calc(25) 0 rem-calc(21);
+
+  @include breakpoint(md up) {
+    margin: rem-calc(38) 0 rem-calc(30);
+  }
+
+  @include breakpoint(xl up) {
+    margin: rem-calc(25) 0 rem-calc(22);
   }
 }

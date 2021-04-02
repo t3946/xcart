@@ -1,0 +1,5 @@
+.checkout_shipping-header {
+  @include breakpoint(lg up) {
+    margin: 0;
+  }
+}

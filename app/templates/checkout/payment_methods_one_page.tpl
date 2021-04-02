@@ -58,7 +58,7 @@
                             {case 2}
                                 <div class="form-purchase-order-details">
                                     <h2 class="checkout-payment-methods__purchase-order-header text-center large-text-left">Purchase Order Details</h2>
-                                    <div class="checkout-mandatory checkout__mandatory text-center large-text-left">
+                                    <div class="checkout-mandatory checkout_mandatory text-center large-text-left">
                                         {t 'The fields marked with' }
                                         <span class="mandatory-star">*</span> {t 'are mandatory.' }
                                     </div>

@@ -15,10 +15,10 @@
                     {* shipping address form *}
                     {* shipping address form -- header *}
                     <div class="options">
-                        <h2 class="title checkout-second-header checkout__second-header text-center large-text-left checkout__shipping-header">{t 'Shipping Address' }</h2>
+                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header">{t 'Shipping Address' }</h2>
                     </div>
 
-                    <div class="checkout-mandatory checkout__mandatory text-center large-text-left">
+                    <div class="checkout-mandatory checkout_mandatory">
                         {t 'The fields marked with' }
                         <span class="mandatory-star">*</span> {t 'are mandatory.' }
                     </div>
@@ -38,7 +38,7 @@
                     {* contact information form *}
                     {* contact information form -- header *}
                     <div class="contact-options">
-                        <h2 class="title text-center checkout__second-header checkout-second-header large-text-left">{t 'Contact Information' }</h2>
+                        <h2 class="title checkout_contact-information-header checkout-second-header">{t 'Contact Information' }</h2>
                     </div>
                     {* contact information form -- fields *}
                     {foreach $fieldsets['contact'] as $field}
@@ -49,7 +49,7 @@
             <div class="columns small-12 large-8">
                 <div class="checkout-cart-content-wrapper">
                     <div class="checkout-cart-content">
-                        <h2 class="title checkout-second-header checkout__second-header text-center large-text-left checkout__delivery-methods-header">{t 'Delivery Methods' }</h2>
+                        <h2 class="title checkout-second-header text-center large-text-left checkout__delivery-methods-header">{t 'Delivery Methods' }</h2>
                         {* distributor carts *}
                         {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                             {set $items = $group.items}

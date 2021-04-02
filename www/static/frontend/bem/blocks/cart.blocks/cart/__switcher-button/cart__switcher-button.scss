@@ -4,25 +4,6 @@
   top: 0;
 }
 
-@include breakpoint(md up) {
-  .cart__switcher-button {
-    top: 20px;
-  }
-}
-
-@include breakpoint(ml up) {
-  .cart__switcher-button {
-    right: 32px;
-  }
-}
-
-@include breakpoint(lg up) {
-  .cart__switcher-button {
-    top: 30px;
-    right: 0;
-  }
-}
-
 @include breakpoint(xl up) {
   .cart__switcher-button {
     right: 45px;
