@@ -1,8 +1,7 @@
 import { Swiper, SwiperSlide }         from 'swiper/react';
 import SwiperCore, { Lazy, Scrollbar } from 'swiper';
-import Image                           from './components/Image';
-import Price                           from './components/Price';
 import classnames                      from 'classnames';
+import Product                         from '@/components/product/Product';
 
 SwiperCore.use( [ Lazy, Scrollbar ] );
 
@@ -158,31 +157,7 @@ export default class SliderProducts extends Component {
                 >
                     { items.map( ( item, i ) => (
                         <SwiperSlide className="products-slider-slide" key={ i }>
-                            {/*image*/ }
-                            <Image { ...item }/>
-
-                            {/*title*/ }
-                            <div className="info_container container">
-                                <a href={ item.url } title={ item.name }>
-                                    <h4
-                                        className="products-slider-slide-title"
-                                        itemProp="name"
-                                    >{ item.name }</h4>
-                                </a>
-                            </div>
-
-                            {/*price*/ }
-                            <div className="products-slider-price-container" itemProp="offers" itemScope>
-                                { item.listPrice.number >
-                                item.price.number &&
-                                <span className="products-slider-old-price">
-                                    <Price currency={ item.currency } price={ item.listPrice.formatted }/>
-                                </span>
-                                }
-                                <span className="products-slider-current-price">
-                                    <Price currency={ item.currency } price={ item.price.formatted }/>
-                                </span>
-                            </div>
+                            <Product productData={ item } context={'slider'}/>
                         </SwiperSlide>
                     ) ) }
 

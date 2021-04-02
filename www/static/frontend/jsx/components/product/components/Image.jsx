@@ -1,5 +1,5 @@
-import ImageComplex     from './ImageComplex';
-import ImgSlider from '@/components/Sliders/SliderProducts/components/ImgCatalogSlider';
+import ImageComplex from './ImageComplex';
+import ImgSlider from './ImgSlider';
 
 export default class Image extends Component {
     constructor( { images, mpn, upc, url, name } ) {
@@ -25,12 +25,7 @@ export default class Image extends Component {
         return (
             <div className="products-slider-images-group images-1">
                 {
-                    <img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=="
-                        data-src={ image.url }
-                        alt={ image.alt }
-                        className="swiper-lazy products-slider-image"
-                    />
+                    <ImgSlider image={image} />
                 }
                 <meta itemProp="mpn" content={ mpn }/>
                 { upc && <meta itemProp="gtin" content={ upc }/> }

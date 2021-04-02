@@ -8,6 +8,10 @@
 {block 'content'}
 <div class="default-content-page home-page">
     <section class="banners-section">
+        <h1>test product</h1>
+        <div id="test-product"></div>
+    </section>
+    <section class="banners-section">
 
         <div class="promotion disable-global-swipe-horizontal banner">
             {renderSlider 'promo-sly-slider'}
