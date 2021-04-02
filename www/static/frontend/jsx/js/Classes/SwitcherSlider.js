@@ -37,7 +37,7 @@ export class SwitcherSlider extends Switcher {
             this.$captionEnabled.css( { right: -87, opacity: 0 } );
             this.$background.css( { left: -5 } );
         } else {
-            this.$ball.css( { left: 4 } );
+            this.$ball.css( { left: 2 } );
             this.$captionDisabled.css( { left: -87, opacity: 0 } );
             this.$captionEnabled.css( { right: 13, opacity: 1 } );
             this.$background.css( { left: -137 } );
@@ -51,7 +51,7 @@ export class SwitcherSlider extends Switcher {
             this.$captionEnabled.stop( true, false ).animate( { right: -37, opacity: 0 }, this.animationSpeedMS, 'linear' );
             this.$background.stop( true, false ).animate( { left: -5 }, this.animationSpeedMS, 'linear' );
         } else {
-            this.$ball.stop( true, false ).animate( { left: 4 }, this.animationSpeedMS, 'linear' );
+            this.$ball.stop( true, false ).animate( { left: 2 }, this.animationSpeedMS, 'linear' );
             this.$captionDisabled.stop( true, false ).animate( { left: -37, opacity: 0 }, this.animationSpeedMS, 'linear' );
             this.$captionEnabled.stop( true, false ).animate( { right: 13, opacity: 1 }, this.animationSpeedMS, 'linear' );
             this.$background.stop( true, false ).animate( { left: -137 }, this.animationSpeedMS, 'linear' );
