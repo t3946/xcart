@@ -1,11 +1,12 @@
 .switcher-slider-ball {
-        position: absolute;
-        left: 5px;
-        top: 4px;
-        display: block;
-        width: 26px;
-        height: 26px;
-        background: #959595;
-        border-radius: 13px;
-        z-index: 1;
-    }
+  position: absolute;
+  left: rem-calc(5);
+  top: rem-calc(4);
+  display: block;
+  width: rem-calc(26);
+  height: rem-calc(26);
+  background: #ffffff;
+  border-radius: rem-calc(13);
+  z-index: 1;
+  box-shadow: 0 rem-calc(3) rem-calc(3) rem-calc(-1) rgba(0,0,0,0.38);
+}

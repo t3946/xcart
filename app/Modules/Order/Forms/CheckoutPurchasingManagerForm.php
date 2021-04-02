@@ -53,7 +53,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                     'class' => 'phone',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
-                    'inputmode' => 'numeric',
+                    'inputmode' => 'tel',
                 ],
                 'extend' => 'pm_phone_ext',
                 'labelClass' => 'common-label common-label_required',
@@ -70,6 +70,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'label' => OrderModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
+                    'inputmode' => 'numeric',
                 ],
                 'extends' => true,
                 'validators' => [
@@ -123,7 +124,7 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'html' => [
                     'placeholder' => OrderModule::t( '(609) 924-8399' ),
                     'class' => 'phone',
-                    'inputmode' => 'numeric',
+                    'inputmode' => 'tel',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label',
