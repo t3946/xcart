@@ -105,7 +105,7 @@ class OrderReconciliationHelper
                     $params['manufacturer__d_net_payment_terms_in_days'] = 0;
                 }
                 $o = OrderGroupModel::objects()->filter($params)->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
-                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL COALESCE(d_net_payment_terms_in_days, 0)-1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));
