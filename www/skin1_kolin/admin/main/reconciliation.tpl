@@ -761,6 +761,7 @@ function func_show_full_info(id){
                         <option value="60">31-60</option>
                         <option value="90">61-90</option>
                         <option value="91">Over 90</option>
+                        <option value="x">Dx without NET</option>
                     </select>
                     <div style="margin-top: 10px;">
                         <a style="position:relative; left:-170px; text-decoration: none; border-bottom: blue 1px dotted; color: blue" href="" class="net_choises__select_all">
