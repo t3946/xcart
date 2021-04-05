@@ -94,12 +94,17 @@ class OrderReconciliationHelper
             if (($period = $aParams['period']) && \is_array($period)) {
                 $t_a = OrderGroupInvoiceModel::objects()->getTableAlias();
                 $t_am = OrderGroupMemoModel::objects()->getTableAlias();
-                $o = OrderGroupModel::objects()->filter([
+                $params = [
                     'order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
                     new QOr(['invoices__status' => 'U', 'memos__status' => 'U']),
                     'manufacturer__d_net_payment_terms_in_days__gt' => 0,
                     'amz_fullfilment_order_placed' => 'N',
-                ])->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
+                ];
+                if (in_array('x', $period, true)) {
+                    unset($params['manufacturer__d_net_payment_terms_in_days__gt']);
+                    $params['manufacturer__d_net_payment_terms_in_days'] = 0;
+                }
+                $o = OrderGroupModel::objects()->filter($params)->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
                 $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
