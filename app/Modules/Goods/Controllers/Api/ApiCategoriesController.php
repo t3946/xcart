@@ -143,6 +143,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
+                'description' => $product->getFrontendDescription(),
 
                 'price' => [
                     'number' => $product->getFrontendPrice(),
