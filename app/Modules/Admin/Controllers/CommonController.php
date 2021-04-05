@@ -99,10 +99,16 @@ class CommonController extends BackendController
         $result = [];
         foreach (self::ORDER_DATES_PERIODS as $period => $days) {
             $rate = $table_orders[$source_type][$period]
-                ? self::getRates(
-                    $table_orders[$source_type][$period]['total'],
-                    array_reduce($dest_types, static fn($c, $t) => $c + $table_orders[$t][$period]['total'])
-                )
+                ? [
+                    'total' => self::getRates(
+                        $table_orders[$source_type][$period]['total'],
+                        array_reduce($dest_types, static fn($c, $t) => $c + $table_orders[$t][$period]['total'])
+                    ),
+                    'count' => self::getRates(
+                        $table_orders[$source_type][$period]['count'],
+                        array_reduce($dest_types, static fn($c, $t) => $c + $table_orders[$t][$period]['count'])
+                    ),
+                ]
                 : null;
             $result[$period] = $rate;
         }

@@ -12,11 +12,14 @@
             {if $row|in_array:['AUTHORIZATION VOIDED RATE','REFUNDED RATE']}
                 {foreach $orders_rates[$row]|array_keys as $col}
                     <td class="borderb-gray" align="center">
-                        {if $orders_rates[$row][$col] !== null}
-                            {$orders_rates[$row][$col]}%
+                        {if $orders_rates[$row][$col]['total'] !== null}
+                            {$orders_rates[$row][$col]['total']}%
                         {/if}
                     </td>
                     <td class="borderr-black" align="center">
+                        {if $orders_rates[$row][$col]['count'] !== null}
+                            {$orders_rates[$row][$col]['count']}%
+                        {/if}
                     </td>
                 {/foreach}
             {else}
