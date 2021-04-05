@@ -19,7 +19,7 @@ class ApiCategoriesController extends AbstractCatalogController
         $this->jsonResponse($data);
     }
 
-    public function actionNew(): void
+    public function actionSliderNew(): void
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -44,7 +44,7 @@ class ApiCategoriesController extends AbstractCatalogController
         $this->jsonResponse($data);
     }
 
-    public function actionFeatured(): void
+    public function actionSliderFeatured(): void
     {
         $qs = $this
             ->getQS()
@@ -59,7 +59,7 @@ class ApiCategoriesController extends AbstractCatalogController
         $this->jsonResponse($data);
     }
 
-    public function actionAlsoBought($id): void
+    public function actionSliderAlsoBought($id): void
     {
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
@@ -69,7 +69,7 @@ class ApiCategoriesController extends AbstractCatalogController
         }
     }
 
-    public function actionRelatedProducts($id): void
+    public function actionSliderRelatedProducts($id): void
     {
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('similar_products', $id);
@@ -79,7 +79,7 @@ class ApiCategoriesController extends AbstractCatalogController
         }
     }
 
-    public function actionViewed(): void
+    public function actionSliderViewed(): void
     {
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('recently_viewed_products');

@@ -47,27 +47,27 @@ return [
     // product sliders
     [
         'route' => 'category/bestsellers',
-        'target' => [ApiCategoriesController::class, 'actionBestsellers'],
+        'target' => [ApiCategoriesController::class, 'actionSliderBestsellers'],
         'name' => 'bestsellersApi'
     ],
     [
         'route' => 'category/featured',
-        'target' => [ApiCategoriesController::class, 'actionFeatured'],
+        'target' => [ApiCategoriesController::class, 'actionSliderFeatured'],
         'name' => 'featuredApi'
     ],
     [
         'route' => 'category/new',
-        'target' => [ApiCategoriesController::class, 'actionNew'],
+        'target' => [ApiCategoriesController::class, 'actionSliderNew'],
         'name' => 'newApi'
     ],
     [
         'route' => 'category/api/viewed',
-        'target' => [ApiCategoriesController::class, 'actionViewed'],
+        'target' => [ApiCategoriesController::class, 'actionSliderViewed'],
         'name' => 'viewedApi'
     ],
     [
         'route' => 'category/api/also-bound-{i:id}',
-        'target' => [ApiCategoriesController::class, 'actionAlsoBought'],
+        'target' => [ApiCategoriesController::class, 'actionSliderAlsoBought'],
         'name' => 'also_boundApi'
     ],
     [
