@@ -108,9 +108,16 @@ class ApiCategoriesController extends AbstractCatalogController
 
             if ($product->isGroupRoot()) {
                 $children = $product->getFrontendChilds()->limit(4)->all();
+                $unique_hash_list = [];
 
                 foreach ($children as $child) {
                     $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+
+                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                        continue;
+                    }
+
+                    $unique_hash_list[] = $image->md5;
 
                     if ($image && $url = $image->getCdnURL(174)) {
                         $images[] = [
