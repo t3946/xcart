@@ -15,7 +15,7 @@ class ApiCategoriesController extends AbstractCatalogController
     public function actionBestsellers(): void
     {
         $qs = PromotionalProductsHelper::getBestsellersSQ();
-        $data = $this->renderSliderDataAPI($qs);
+        $data = $this->getProductData($qs);
         $this->jsonResponse($data);
     }
 
@@ -31,7 +31,7 @@ class ApiCategoriesController extends AbstractCatalogController
             ]
         )->limit(1)->get();
 
-        $data = $this->renderSliderDataAPI(
+        $data = $this->getProductData(
             $this->getQS()->filter(
                 [
                     'images__image_path__isnull' => false,
@@ -55,7 +55,7 @@ class ApiCategoriesController extends AbstractCatalogController
             )
             ->order(['?']);
 
-        $data = $this->renderSliderDataAPI($qs);
+        $data = $this->getProductData($qs);
         $this->jsonResponse($data);
     }
 
@@ -64,7 +64,7 @@ class ApiCategoriesController extends AbstractCatalogController
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
         if ($products) {
-            $data = $this->renderSliderDataAPI($products);
+            $data = $this->getProductData($products);
             $this->jsonResponse($data);
         }
     }
@@ -74,7 +74,7 @@ class ApiCategoriesController extends AbstractCatalogController
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('similar_products', $id);
         if ($products) {
-            $data = $this->renderSliderDataAPI($products);
+            $data = $this->getProductData($products);
             $this->jsonResponse($data);
         }
     }
@@ -85,12 +85,17 @@ class ApiCategoriesController extends AbstractCatalogController
         $products = SliderDataHelper::getSliderData('recently_viewed_products');
 
         if ($products) {
-            $data = $this->renderSliderDataAPI($products);
+            $data = $this->getProductData($products);
             $this->jsonResponse($data);
         }
     }
 
-    private function renderSliderDataAPI($products, $view = 'catalog/parts/_catalog_list_item.tpl'): array
+    /**
+     * get array of main product fields (product has many excess data because this method takes only needed info) and return this
+     * @param $products
+     * @return array
+    */
+    private function getProductData($products): array
     {
         if (!\is_array($products)) {
             $products->limit(20)->cache(10);
