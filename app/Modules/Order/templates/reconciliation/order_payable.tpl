@@ -99,16 +99,15 @@
 <div style="text-align: center; margin-top:1em;">
     <b class="pay__balance"></b>
 </div>
-<div style="margin:10px 0; display: grid; grid-template-columns: 5fr 2fr 5fr;">
+<div style="margin:20px 0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 16px;">
     <div>
         <button data-url="{url 'order:api:payable_prereconcile'}" class="net__pay__button">Combine for reconciliation</button>
         <div style="margin-top: 10px">
             <i>{$.call.Modules.Core.Models.LanguageModel::translate('prereconcile_paid_text')}</i>
         </div>
     </div>
-    <div></div>
     <div>
-        <div style="text-align: center">
+        <div>
             <button data-url="{url 'order:api:payable_tentatively'}" class="tent__pay__button">Mark as Tentatively paid</button>
         </div>
         <div style="margin-top: 10px">
