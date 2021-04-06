@@ -103,8 +103,7 @@
     <div>
         <button data-url="{url 'order:api:payable_prereconcile'}" class="net__pay__button">Combine for reconciliation</button>
         <div style="margin-top: 10px">
-            <i>Selected invoices and credit memos will be pre-reconciled to a future payment to Dx.<br>
-                Use this option for an upcoming VISA card (or a scheduled check) payment to Dx.</i>
+            <i>{$.call.Modules.Core.Models.LanguageModel::translate('prereconcile_paid_text')}</i>
         </div>
     </div>
     <div></div>
