@@ -894,49 +894,54 @@ Drop-ship fee in X-cart
 </td>
 </tr>
 
-<tr>
-<td>
-<B>Shipping total</B>
-<br />
-</td>
-<td colspan="4"></td>
-<td align="right">
-<B><span id="Shipping_total_{$m_id}_{$invoice_number}">{include file="currency2.tpl" value=$invoice.shipping_total}</span></B>
-</td>
-</tr>
+    <tr>
+        <td>
+            <B>Shipping total</B>
+            <br/>
+        </td>
+        <td colspan="4"></td>
+        <td align="right">
+            <b><span id="Shipping_total_{$m_id}_{$invoice_number}">{include file="currency2.tpl" value=$invoice.shipping_total}</span></b>
+        </td>
+    </tr>
 
-<tr>
-<td>
-HST charged
-</td>
-<td colspan="4"></td>
-<td align="center">
-  <input id="manufacturer_invoices_data_HST_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][HST_charged]" size="8" value="{$invoice.HST_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
-</td>
-</tr>
+    <tr>
+        <td>
+            HST charged
+        </td>
+        <td colspan="4"></td>
+        <td align="center">
+            <input id="manufacturer_invoices_data_HST_charged_{$m_id}_{$invoice_number}"
+                   name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][HST_charged]" size="8"
+                   value="{$invoice.HST_charged}"
+                   onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
+                   onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
+                   {if $invoice.status eq "R"}readonly="readonly"{/if} />
+        </td>
+    </tr>
 
-<tr><td colspan="6"><hr /></td></tr>
+    <tr>
+        <td colspan="6">
+            <hr/>
+        </td>
+    </tr>
 
-<tr>
-<td>
-<span style="font-weight: bold; font-size: 14px;">Invoice total</span>
-</td>
-<td colspan="4"></td>
-<td align="right">
-<B><span id="Invoice_total_{$m_id}_{$invoice_number}" style="font-size: 14px;">{include file="currency2.tpl" value=$invoice.invoice_total}</span></B>
-</td>
-</tr>
-
+    <tr>
+        <td>
+            <span style="font-weight: bold; font-size: 14px;">Invoice total</span>
+        </td>
+        <td colspan="4"></td>
+        <td align="right">
+            <b>
+                <span id="Invoice_total_{$m_id}_{$invoice_number}" style="font-size: 14px;">
+                    {include file="currency2.tpl" value=$invoice.invoice_total}
+                </span>
+            </b>
+        </td>
+    </tr>
 </table>
 
 <br />
-
-
-
-
-
-
-
         <input type="hidden" id="row_max_index_{$m_id}_{$invoice_number}" name="row_max_index_{$m_id}_{$invoice_number}" value="{if $all_distributor_links.$m_id.distributor_links.count_links_to_distributor_invoices}{$all_distributor_links.$m_id.distributor_links.count_links_to_distributor_invoices}{else}1{/if}" />
         <table cellpadding="0" cellspacing="0">
         {if $all_distributor_links.$m_id.distributor_links.$invoice_number}
@@ -948,7 +953,7 @@ HST charged
                                    value="{$distributor_link.link_to_distributor_invoice|escape}"/>&nbsp;
                             <a href="javascript: void(0);"onclick="javascript: add_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/></a>
                             &nbsp;<a href="javascript: void(0);"
-                                     onclick="javascript: remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');">
+                                     onclick="remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');">
                                 <img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_remove_row|escape:'javascript'}"/></a>
                             &nbsp;&nbsp;<a style="color: #3A3AFF; font-weight: normal;"
                                            href='{$distributor_link.link_to_distributor_invoice}' target="_blank">
@@ -965,7 +970,7 @@ HST charged
                            name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][1][link_to_distributor_invoice]"
                            value=""/>
                     &nbsp;<a href="javascript: void(0);"
-                             onclick="javascript: add_distributor_link_row(1, '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/>
+                             onclick="add_distributor_link_row(1, '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/>
                     </a>
                 </td>
             </tr>
@@ -985,7 +990,6 @@ HST charged
   <tr>
   <td>This invoice is a part of the total transaction in the amount of&nbsp;</td>
   <td>
-{*  <input type="text" name="part_of_total_transaction_in_amount_of[{$m_id}]" value="{$v.part_of_total_transaction_in_amount_of}" size="6" /> *}
   <input type="text" name="part_of_total_transaction_in_amount_of[{$m_id}][{$invoice_number}]" value="{$invoice.part_of_total_transaction_in_amount_of}" size="6" />
   </td>
   </tr>
@@ -993,20 +997,13 @@ HST charged
 {/if}
 
 
-  {if $invoice.full_reconciliation_info ne "" && $invoice.status eq "R"}
+{if $invoice.full_reconciliation_info ne "" && $invoice.status eq "R"}
 Invoice payment in the amount of ({$invoice.full_reconciliation_info.amount_csv_abs|price_format}) taken on {$invoice.full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
 {$invoice.full_reconciliation_info.description_csv}
-  {/if}
-
-
-
+{/if}
 
 <br />
 <br />
-
-
-
-
 
 <script type="text/javascript">
 <!--
@@ -1016,6 +1013,7 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
 </script>
 
 <table cellpadding="1" cellspacing="1" border="0">
+
 <tr class="TableHead">
   <td>Ship date</td>
   <td>Carrier</td>
@@ -1062,7 +1060,6 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
   </td>
 </tr>
 
-
 <tr id="acc_track_{$m_id}_{$invoice_number}_tr">
     <td id="acc_track_{$m_id}_{$invoice_number}_box_3" style="padding-right: 5px;">
         <input type="text" id="tracking_ship_date_{$m_id}_{$invoice_number}_box_0"
@@ -1095,44 +1092,36 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
 
 </table>
 
-
-
-
-
-{*
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}');
--->
-</script>
-*}
-
 {/if}
 
 <br />
-<div style="BACKGROUND-COLOR: {if $invoice.status eq "A"}#F2A3A8;{elseif $invoice.status eq "U"}#ffd44c;{elseif $invoice.status eq "R"}#d9ead3;{/if} color: #000000;">
-<B>Invoice status: {$invoice_memo_statuses[$invoice.status]}</B>
-</div>
-
+    <div style="BACKGROUND-COLOR:
+    {if $invoice.status eq "A"}
+            #F2A3A8;
+    {elseif $invoice.status eq "U" || $invoice.status eq "T"}
+            #ffd44c;
+    {elseif $invoice.status eq "R"}
+            #d9ead3;
+    {/if} color: #000000;">
+        <b>Invoice status: {$invoice.invoice_model->getField('status')->toText()}</b>
+    </div>
 {if $invoice.invoice_total eq "0.00"}
 <br />
-<div align="left">
-<input type="button" value="Delete invoice" onclick="javascript: $('#mode_accounting_page').val('delete_invoice'); $('#certain_mid').val('{$m_id}'); $('#certain_invoice_number').val('{$invoice_number}'); this.form.submit();" />
-</div>
+    <div align="left">
+        <input type="button" value="Delete invoice"
+               onclick="$('#mode_accounting_page').val('delete_invoice'); $('#certain_mid').val('{$m_id}'); $('#certain_invoice_number').val('{$invoice_number}'); this.form.submit();"/>
+    </div>
 {/if}
 
-{/foreach} {* // foreach from=$v.invoices item=invoice key=invoice_number *}
+{/foreach}
 
 
 
 {if !$static}
 <br />
-{*
-<input type="button" value="Update" onclick="javascript: $('#mode_accounting_page').val('accounting_apply'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
-&nbsp;
-*}
+
 <div align="right">
-<input type="button" value="Additional invoice received" onclick="javascript: $('#mode_accounting_page').val('additional_invoice_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
+<input type="button" value="Additional invoice received" onclick="$('#mode_accounting_page').val('additional_invoice_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 </div>
 {/if}
 
@@ -1294,7 +1283,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 
 <br />
 <div style="BACKGROUND-COLOR: {if $memo.status eq "A"}#F2A3A8;{elseif $memo.status eq "U"}#ffd44c;{elseif $memo.status eq "R"}#d9ead3;{/if} color: #000000;">
-<B>Credit memo status: {$invoice_memo_statuses[$memo.status]}</B>
+<B>Credit memo status: {$memo.memo_model->getField('status')->toText()}</B>
 </div>
 
 {/foreach} {* // foreach from=$v.memos item=memo key=memo_number *}

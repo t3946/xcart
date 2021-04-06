@@ -6,7 +6,6 @@ use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
-use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -15,7 +14,12 @@ use Xcart\OrderGroupInvoice;
 
 class OrderGroupInvoiceModel extends Model
 {
-    use DataModelTrait, AutoMetaTrait;
+    use AutoMetaTrait;
+    use DataModelTrait;
+
+    public const INVOICE_STATUS_RECONCILED = 'R';
+    public const INVOICE_STATUS_PRE_RECONCILED = 'P';
+    public const INVOICE_STATUS_TENTATIVELY  = 'T';
 
     public static function getDataModelClass(): string
     {
@@ -60,6 +64,19 @@ class OrderGroupInvoiceModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null
+            ],
+            'status' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'N' => 'Not received',
+                    'A' => 'Added',
+                    'U' => 'Updated',
+                    'R' => 'Reconciled',
+                    'P' => 'Pre-reconciled',
+                    'T' => 'Tentatively paid',
+                ],
+                'default' => 'A',
+                'null' => false
             ]
         ];
     }
