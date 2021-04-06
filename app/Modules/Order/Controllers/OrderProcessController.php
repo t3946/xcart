@@ -182,13 +182,15 @@ class OrderProcessController extends FrontendController
 
         $response[ 'templates' ] = [];
 
-        if (isset($_POST[ 'CheckoutForm' ][ 's_firstname' ]) && !$post->has('billing_same_shipping')) {
-            $order->b_firstname = $form_instance->s_firstname;
-            $order->save();
-        }
-        if (isset($_POST[ 'CheckoutForm' ][ 's_company' ]) && !$post->has('billing_same_shipping')) {
-            $order->b_company = $form_instance->s_company;
-            $order->save();
+        if (isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
+        ) {
+            CheckoutHelper::updateBillingDetails($order, $form_instance);
         }
 
         if (
@@ -205,17 +207,6 @@ class OrderProcessController extends FrontendController
             if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
                 $phone_payment_id = 4;
                 $order->paymentid = $phone_payment_id;
-                $order->save();
-            }
-
-            if ($order->billing_same_shipping === false) {
-                $order->setAttributes([
-                    'b_address' => $form_instance->s_address,
-                    'b_country' => $form_instance->s_country,
-                    'b_zipcode' => $form_instance->s_zipcode,
-                    'b_state' => $form_instance->s_state,
-                    'b_city' => $form_instance->s_city,
-                ]);
                 $order->save();
             }
 
