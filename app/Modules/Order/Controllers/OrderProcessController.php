@@ -208,7 +208,7 @@ class OrderProcessController extends FrontendController
                 $order->save();
             }
 
-            if (!$post->has('billing_same_shipping')) {
+            if ($order->billing_same_shipping === false) {
                 $order->setAttributes([
                     'b_address' => $form_instance->s_address,
                     'b_country' => $form_instance->s_country,
