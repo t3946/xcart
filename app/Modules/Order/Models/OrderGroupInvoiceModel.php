@@ -20,6 +20,7 @@ class OrderGroupInvoiceModel extends Model
     public const INVOICE_STATUS_RECONCILED = 'R';
     public const INVOICE_STATUS_PRE_RECONCILED = 'P';
     public const INVOICE_STATUS_TENTATIVELY  = 'T';
+    public const INVOICE_STATUS_UPDATED  = 'U';
 
     public static function getDataModelClass(): string
     {

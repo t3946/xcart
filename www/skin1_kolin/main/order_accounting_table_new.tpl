@@ -1112,10 +1112,14 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
                onclick="$('#mode_accounting_page').val('delete_invoice'); $('#certain_mid').val('{$m_id}'); $('#certain_invoice_number').val('{$invoice_number}'); this.form.submit();"/>
     </div>
 {/if}
+{if $invoice.status === 'T'}
+    <br />
+    <div>
+        <input type="button" value="Change invoice status back to Updated" onclick="$('#mode_accounting_page').val('invoice_back_to_updated'); $('#certain_mid').val('{$m_id}'); $('#certain_invoice_number').val('{$invoice_number}'); this.form.submit();"/>
+    </div>
+{/if}
 
 {/foreach}
-
-
 
 {if !$static}
 <br />

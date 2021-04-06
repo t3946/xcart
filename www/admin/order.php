@@ -13,6 +13,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
@@ -1268,6 +1269,29 @@ if ($REQUEST_METHOD === "POST") {
         }
 
         func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+    }
+    elseif ($mode === 'invoice_back_to_updated') {
+        if (!empty($certain_mid) && !empty($certain_invoice_number)) {
+            if ($invoice_group = OrderGroupInvoiceModel::objects()->get([
+                'invoice_number' => $certain_invoice_number,
+                'manufacturerid' => $certain_mid,
+                'orderid' => $orderid
+            ])) {
+                $invoice_group->setAttributes([
+                    'status' => OrderGroupInvoiceModel::INVOICE_STATUS_UPDATED,
+                    'reconciliation_id' => 0,
+                ]);
+                $invoice_group->save();
+                (new OrderLogModel([
+                    'orderid' => $orderid,
+                    'type' => OrderLogModel::LOG_TYPE_XCART,
+                    'login' => Xcart::app()->user->login,
+                    'log' => "Invoice #{$invoice_group} status <b>Tentatively paid</b> -> <b>Updated</b>",
+                ])
+                )->save();
+            }
+            Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
+        }
     }
     elseif ($mode === "delete_invoice") {
 
