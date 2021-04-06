@@ -113,7 +113,7 @@
             <button data-url="{url 'order:api:payable_tentatively'}" class="tent__pay__button">Mark as Tentatively paid</button>
         </div>
         <div style="margin-top: 10px">
-            <i>{$tentatively_paid_text}</i>
+            <i>{$lng.tentatively_paid_text}</i>
         </div>
     </div>
 </div>
