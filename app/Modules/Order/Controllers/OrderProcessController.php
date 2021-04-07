@@ -8,6 +8,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -190,6 +191,33 @@ class OrderProcessController extends FrontendController
         $response = [];
 
         $response[ 'templates' ] = [];
+
+        if (isset($_POST[ 'CheckoutForm' ]['organization_name'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_firstname'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_phone'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_phone_ext'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_track_sms'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_email'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_fax'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_firstname'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_phone'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_phone_ext'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_track_sms'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_email'])
+        ) {
+            $po_data = [];
+            $po_field_sets = ['purchase_order_details', 'purchasing_manager', 'accounts_payable'];
+            foreach ($po_field_sets as $field_set) {
+                foreach ($form->getFieldsets()[$field_set] as $field) {
+                    if (isset($_POST[ 'CheckoutForm' ][$field])) {
+                        $po_data[$field] = $form->getField($field)->getValue();
+                    }
+                }
+            }
+            [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
+            $extra->purchase_order = array_merge($extra->purchase_order ?? [], $po_data);
+            $extra->save();
+        }
 
         if (isset( $_POST[ 'CheckoutForm' ][ 'billing_same_shipping' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )

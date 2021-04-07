@@ -46,7 +46,7 @@ class OrderExtraModel extends Model
             ],
 
             'purchase_order' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
             ],
 

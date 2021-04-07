@@ -45,7 +45,7 @@ use Xcart\App\Traits\DataModelTrait;
 use Xcart\Order;
 
 /**
- * @property string|null purchase_order
+ * @property array|null purchase_order
  * @property string s_address
  * @property string s_firstname
  * @property string s_company

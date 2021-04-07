@@ -88,7 +88,10 @@ class CheckoutController extends FrontendController
         }
 
         if ($order && !$app->request->getIsPost()) {
-            $checkout_form->setAttributes($order->getAttributes());
+            $checkout_form->setAttributes(array_merge(
+                $order->getAttributes(),
+                $order->extra_model->purchase_order ?? [])
+            );
         }
 
         $shipping_rates = OrderProcessController::getShippingRates( $order );
