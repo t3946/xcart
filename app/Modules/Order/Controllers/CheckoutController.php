@@ -48,6 +48,11 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $site = $app->getModule('Sites')->getSite();
         $cart = $app->cart;
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
         $shipping = null;
         $checkout_form = new CheckoutForm();
 
@@ -75,16 +80,15 @@ class CheckoutController extends FrontendController
 
         $order = OrderHelper::getCartOrder();
 
+        if (!$order) {
+            [$order] = OrderModel::objects()->getOrCreate([
+                'cart_number' => $cart->getCartNumber(),
+                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
+            ]);
+        }
+
         if ($order && !$app->request->getIsPost()) {
             $checkout_form->setAttributes($order->getAttributes());
-        }
-
-        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
-            $this->redirect('cart:list');
-        }
-
-        if (!$order) {
-            [$order] = OrderModel::objects()->getOrCreate(['cart_number' => $cart->getCartNumber()]);
         }
 
         $shipping_rates = OrderProcessController::getShippingRates( $order );
@@ -95,17 +99,10 @@ class CheckoutController extends FrontendController
 
         $order->save();
 
-        //get payment methods
-        $payment_methods = PaymentMethodModel::objects()
-            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
-            ->order( [ 'is_cod', 'orderby' ] )
-            ->all();
-
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
             'checkout_form' => $checkout_form,
             'shipping_rates' => $shipping_rates,
-            'payment_methods' => $payment_methods,
         ]);
     }
 

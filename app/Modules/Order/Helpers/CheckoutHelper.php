@@ -53,21 +53,22 @@ class CheckoutHelper
 
     public static function updateOrderGroupsFromCart(OrderModel $order, XCart $cart): void
     {
-        $cart_groups = $cart->getItemsGroupedBy();
-        $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
+        if ($cart_groups = $cart->getItemsGroupedBy()) {
+            $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
 
-        foreach ($cart_groups as $mid => $cart_group) {
-            [$group] = OrderGroupModel::objects()->getOrNew([
-                'manufacturerid' => $mid,
-                'orderid' => $order->orderid,
-            ]);
-            $group->setAttributes([
-                'total_gross' => $cart_group['subtotal'],
-                'total_net' => $cart_group['subtotal'],
-                'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
-            ]);
-            $group->save();
-            self::updateOrderDetailsFromCart($group, $cart_group['items']);
+            foreach ($cart_groups as $mid => $cart_group) {
+                [$group] = OrderGroupModel::objects()->getOrNew([
+                    'manufacturerid' => $mid,
+                    'orderid' => $order->orderid,
+                ]);
+                $group->setAttributes([
+                    'total_gross' => $cart_group['subtotal'],
+                    'total_net' => $cart_group['subtotal'],
+                    'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
+                ]);
+                $group->save();
+                self::updateOrderDetailsFromCart($group, $cart_group['items']);
+            }
         }
 
         self::updateOrderTotalValues($order);

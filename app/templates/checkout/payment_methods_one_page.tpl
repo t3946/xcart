@@ -3,9 +3,8 @@
 <div class="payment-methods-container">
     <h2 class="checkout__second-header checkout-payment-methods__header payment-methods-header">{t 'Payment Methods' }</h2>
     <div class="checkout-payment-methods checkout__payment-methods-container" data-default-checked-field="{$payment_method_field->value}">
-        {foreach $payment_method_field->choices as $choice first=$first}
-            {set $method = Modules\Payment\Models\PaymentMethodModel::objects()->filter(['paymentid'=> $choice])->get()}
-            {set $checked = $choice === $payment_method_field->value || count($payment_method_field->choices) === 1}
+        {foreach $payment_method_field->choices as $method}
+            {set $checked = $method->paymentid == $payment_method_field->value || count($payment_method_field->choices) === 1}
             <div class="payment-method-item {cycle ["payment-method-item_odd", ""]} for="payment_{$method->paymentid}">
                 <div class="row">
                     <div class="columns small-12 large-4">

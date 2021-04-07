@@ -131,14 +131,12 @@ class OrderProcessController extends FrontendController
         ] );
     }
 
-    public function getPaymentMethods(): string
+    public function getPaymentMethods($form): string
     {
-        $order = OrderHelper::getCartOrder();
-        $checkout_form = new CheckoutForm();
-        $checkout_form->setAttributes( $order->getAttributes() );
+        $order = $form->getInstance();
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
-            'checkout_form' => $checkout_form,
+            'checkout_form' => $form,
             'order' => $order,
         ] );
     }
@@ -182,7 +180,8 @@ class OrderProcessController extends FrontendController
 
         $response[ 'templates' ] = [];
 
-        if (isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
+        if (isset( $_POST[ 'CheckoutForm' ][ 'billing_same_shipping' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
@@ -205,8 +204,7 @@ class OrderProcessController extends FrontendController
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
             if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
-                $phone_payment_id = 4;
-                $order->paymentid = $phone_payment_id;
+                $order->paymentid = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
                 $order->save();
             }
 
