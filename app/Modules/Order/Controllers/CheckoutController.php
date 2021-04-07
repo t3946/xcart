@@ -99,10 +99,26 @@ class CheckoutController extends FrontendController
 
         $order->save();
 
+        $only_phone_order = count($shipping_rates) < $order->groups->count();
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+
+        if ($only_phone_order) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+        }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
+            ->all();
+
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
             'checkout_form' => $checkout_form,
             'shipping_rates' => $shipping_rates,
+            'payment_methods' => $payment_methods
         ]);
     }
 

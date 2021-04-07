@@ -97,7 +97,10 @@ class CheckoutForm extends ShippingForm
 
         $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
 
-        if (!count(OrderProcessController::getShippingRates($this->order))) {
+        /** @var OrderModel $order */
+        $order = $this->getInstance();
+
+        if (!$order || !count(OrderProcessController::getShippingRates($order))) {
             $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
         }
 

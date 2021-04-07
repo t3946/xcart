@@ -119,9 +119,9 @@ class OrderProcessController extends FrontendController
     /**
      * get html off all shipping methods for passed address
      */
-    public function getShippingMethods(): string
+    public function getShippingMethods($form): string
     {
-        $order = OrderHelper::getCartOrder();
+        $order = $form->getInstance();
         $sh_rates = self::getShippingRates( $order );
 
         return $this->render( 'checkout/all_shipping_methods_one_page.tpl', [
@@ -131,13 +131,26 @@ class OrderProcessController extends FrontendController
         ] );
     }
 
-    public function getPaymentMethods($form): string
+    public function getPaymentMethods($form, $only_phone_order = false): string
     {
         $order = $form->getInstance();
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+        if ($only_phone_order) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+        }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
+            ->all();
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
             'checkout_form' => $form,
             'order' => $order,
+            'payment_methods' => $payment_methods
         ] );
     }
 
@@ -171,10 +184,8 @@ class OrderProcessController extends FrontendController
         $form->setInstance( $order );
         $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
-        $form_instance = $form->getInstance();
-        if ( $form_instance ) {
-            $form_instance->save();
-        }
+        /** @var OrderModel $order */
+        $order = $form->getInstance();
 
         $response = [];
 
@@ -184,35 +195,39 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            CheckoutHelper::updateBillingDetails($order, $form_instance);
+            CheckoutHelper::updateBillingDetails($order);
         }
 
         if (
             isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            $shipping_rates = self::getShippingRates( $order );
+            $shipping_rates = self::getShippingRates($order);
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
             if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
                 $order->paymentid = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
-                $order->save();
+                $only_phone_order = true;
             }
 
-            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
-            $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
+            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order);
+            $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
         }
 
         $response = array_merge($response, OrderHelper::getOrderInfo($order));
+
+        $order->save();
 
         $this->jsonResponse( $response ?? [] );
     }

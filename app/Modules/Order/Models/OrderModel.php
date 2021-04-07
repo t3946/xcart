@@ -357,7 +357,7 @@ class OrderModel extends Model
             'billing_same_shipping' => [
                 'class' => BooleanField::class,
                 'null' => false,
-                'default' => true,
+                'default' => false,
             ],
             'order_type' => [
                 'class' => CharField::class,
