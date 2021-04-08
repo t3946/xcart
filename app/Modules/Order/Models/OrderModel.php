@@ -521,10 +521,16 @@ class OrderModel extends Model
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
 
-    public function getCxDateTime(): ?DateTime
+    public function getCxDateTime($is_now = true): ?DateTime
     {
-        if ($time_zone = $this->billing_state->timezone) {
-            return new DateTime('now', new DateTimeZone($time_zone));
+        $state = $this->billing_state ?: $this->shipping_state;
+        if ($time_zone = $state->timezone) {
+            $date = new DateTime('now', new DateTimeZone($time_zone));
+            if ($is_now) {
+                return $date;
+            }
+            $date->setTimestamp($this->date);
+            return $date;
         }
         return null;
     }

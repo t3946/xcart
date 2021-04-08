@@ -9,7 +9,7 @@
     {foreach $orders|array_keys as $row}
         <tr class="{cycle ['SectionBox','TableSubHead']}">
             <td class="borderr-black" align="right"><b>{$row}</b></td>
-            {if $row|in_array:['AUTHORIZATION VOIDED RATE','REFUNDED RATE']}
+            {if $row|in_array:['AUTHORIZATION VOIDED RATE','REFUNDED RATE', 'ABANDONED RATE']}
                 {foreach $orders_rates[$row]|array_keys as $col}
                     <td class="borderb-gray" align="center">
                         {if $orders_rates[$row][$col]['total'] !== null}
@@ -25,18 +25,10 @@
             {else}
                 {foreach $orders[$row]|array_keys as $col}
                     <td class="borderb-gray" align="center">
-                        {if $orders[$row][$col] !== null}
-                            {if $orders[$row][$col]['rate']}
-                                {$orders[$row][$col]['rate']}%
-                            {else}
-                                {$orders[$row][$col]['total']|site_currency}
-                            {/if}
-                        {/if}
+                        {$orders[$row][$col]->getTotal()|site_currency}
                     </td>
                     <td class="borderr-black" align="center">
-                        {if $orders[$row][$col] !== null}
-                            {$orders[$row][$col]['count']}
-                        {/if}
+                        {$orders[$row][$col]->getCount()}
                     </td>
                 {/foreach}
             {/if}

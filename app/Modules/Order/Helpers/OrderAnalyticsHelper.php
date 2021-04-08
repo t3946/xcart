@@ -45,8 +45,4 @@ class OrderAnalyticsHelper
         }
     }
 
-    public static function ordersTotalSum(array $order_groups): float
-    {
-        return (float)array_reduce($order_groups, static fn($c, $o) => $c + $o['total_gross']);
-    }
 }
