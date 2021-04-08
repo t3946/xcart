@@ -55,8 +55,8 @@ class CommonController extends BackendController
             ->valuesList(['cb_status', 'total_gross', 'order__date']);
 
         foreach (self::ORDER_STATS_TYPES as $type => $statuses) {
-            $stat = new OrderStatistic($orders, $statuses);
             foreach (self::ORDER_DATES_PERIODS as $period => $days) {
+                $stat = new OrderStatistic($orders, $statuses);
                 $table_orders[$type][$period] = $stat->setPeriod($days);
             }
         }
