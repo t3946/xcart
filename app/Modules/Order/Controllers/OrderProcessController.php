@@ -185,6 +185,9 @@ class OrderProcessController extends FrontendController
         $form->setInstance( $order );
         $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
+
+        $form->setAttributes($order->extra_model->purchase_order ?? []);
+
         /** @var OrderModel $order */
         $order = $form->getInstance();
 
@@ -249,7 +252,7 @@ class OrderProcessController extends FrontendController
                 $only_phone_order = true;
             }
 
-            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order);
+            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
         }
 
