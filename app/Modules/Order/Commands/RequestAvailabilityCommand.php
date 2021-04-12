@@ -44,9 +44,7 @@ class RequestAvailabilityCommand extends Command
             if (($template = $manufacturer->request_avail_template)
                 && $manufacturer->isGoodTimeToSendEmail()
             ) {
-                $to = $manufacturer->contacts_model->filter([
-                    'utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
-                ])->valuesList('email', true);
+                $to = DistrbutorHelper::getDistributorEmails($manufacturer, DistributorUtilityModel::REQUEST_AVAIL_UTILITY);
 
                 $to[] = 'orders@s3stores.com';
 
