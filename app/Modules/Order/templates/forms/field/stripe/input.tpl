@@ -88,6 +88,8 @@
         document.querySelector("#card-errors").textContent = event.error ? event.error.message : "";
     });
 
+
+    //TODO: этот код нужен, но он пока мешает валидации. его потом нужно будет совместить с основной валидацией
     /*form.addEventListener('submit', function (ev) {
         ev.preventDefault();
         document.querySelector("button").disabled = true;
@@ -129,5 +131,6 @@
                 }
             }
         });
-    });*/
+    });
+    */
 </script>

@@ -136,7 +136,6 @@ export default class FormValidation {
     }
 
     scrollToFirstError() {
-        console.log(this.errors);
         if (this.errors.length) {
             let field = this.errors.shift();
 
@@ -170,6 +169,7 @@ export default class FormValidation {
     }
 
     checkAllForm(){
+        //need validate
         if(this.form.getAttribute('data-validate') !== 'true'){
             return;
         }
@@ -180,6 +180,7 @@ export default class FormValidation {
 
         const fields = this.getValidatingFields();
 
+        //fields circle
         for (let inputElementName in fields) {
             let field = this.fields[inputElementName];
             let currentError = errors[inputElementName];
@@ -193,16 +194,21 @@ export default class FormValidation {
                     }
 
                     let hasNoValue = true;
-                    this.inputs = this.form.querySelectorAll('input, textarea, select');
-                    for (let i = 0; i < this.inputs.length; ++i) {
 
+                    this.inputs = this.form.querySelectorAll('input, textarea, select');
+
+                    for (let i = 0; i < this.inputs.length; ++i) {
                         let inputElement = this.inputs.item(i);
+
                         if(inputElement.value !== '') {
                             hasNoValue = false;
                         }
                     }
 
-                    if(hasNoValue && !(field.field.classList.contains('invalid') || field.field.classList.contains('success'))) {
+                    if(
+                        hasNoValue && !(field.field.classList.contains('invalid')
+                        || field.field.classList.contains('success'))
+                    ) {
                         field.clearAllClasses();
                         continue;
                     }
