@@ -141,7 +141,7 @@ export default class Card extends Component {
 
         const addToCartClasses = {
             mainWrapper: [ 'add-to-cart-button_catalog' ],
-            button: [ 'add-to-cart-button-add__catalog', 'catalog_add-to-cart-button' ],
+            button: [ 'add-to-cart-button-add__catalog' ],
             checkoutLink: [ 'add-to-cart-button-checkout_catalog' ],
             checkoutLinkWrapper: [ 'add-to-cart-button-wrapper__catalog' ],
             buttonComplex: [ 'add-to-cart-button-add__complex-product' ],
