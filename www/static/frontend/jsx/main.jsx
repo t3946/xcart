@@ -5,21 +5,19 @@ import 'preact/debug';
 import '../../temp/frontend/js/vendors';
 import './_head.jsx';
 
-import foundationRegisterCustomEvents from "./_binds/foundation_events";
+import foundationRegisterCustomEvents from './_binds/foundation_events';
 
-import createResizeMonitor from "./components/ResizeMonitor";
-import DepartmentMenu from "./components/DepartmentMenu";
-import CategoryViewType from "./components/CategoryViewType";
-import CatalogFilter from "./components/CatalogFilter";
-import Search from "./components/Search";
-import isMedia from "./utils/isMedia";
-import documentReady from "./utils/documentReady";
+import createResizeMonitor from './components/ResizeMonitor';
+import DepartmentMenu      from './components/DepartmentMenu';
+import CatalogFilter       from './components/CatalogFilter';
+import Search              from './components/Search';
+import isMedia             from './utils/isMedia';
+import documentReady       from './utils/documentReady';
 
-( function () {
+( function() {
     documentReady( () => {
         createResizeMonitor();
         new Search();
-        new CategoryViewType();
         new DepartmentMenu();
         new CatalogFilter();
 
@@ -29,7 +27,7 @@ import documentReady from "./utils/documentReady";
         Waves.attach( '.waves' );
         Waves.init();
 
-        $( document ).on( 'click', '.show_more', function ( e ) {
+        $( document ).on( 'click', '.show_more', function( e ) {
             let $this = $( this );
             let $target = $( $this.data( 'target' ) );
 
@@ -37,17 +35,17 @@ import documentReady from "./utils/documentReady";
                 $target.addClass( 'full' );
 
                 $this.html( $this.data( 'text-less' ) );
-            } else {
+            }
+            else {
                 $target.removeClass( 'full' );
 
                 $this.html( $this.data( 'text-more' ) );
             }
         } );
 
-        $( document ).on( 'click', 'form button', function ( event ) {
+        $( document ).on( 'click', 'form button', function( event ) {
             $( event.target ).parents( 'form' ).addClass( 'tried_to_submit' );
         } );
-
 
         loader.detach( () => {
             $( '.off-canvas' ).removeClass( 'hide' );
@@ -65,27 +63,23 @@ import documentReady from "./utils/documentReady";
         $( document ).trigger( 'app.start' );
 
         Promise.all( [
-            ( new FontFaceObserver( "Lato", {
-                style: "normal",
-                weight: 400
+            ( new FontFaceObserver( 'Lato', {
+                style: 'normal',
+                weight: 400,
             } ) ).load(),
-            ( new FontFaceObserver( "Lato", {
-                style: "normal",
-                weight: 700
+            ( new FontFaceObserver( 'Lato', {
+                style: 'normal',
+                weight: 700,
             } ) ).load(),
-        ] ).then( function () {
+        ] ).then( function() {
                 let event = new CustomEvent( 'font.loaded', { detail: true } );
                 document.font = true;
                 document.dispatchEvent( event );
             },
-            function () {
+            function() {
                 let event = new CustomEvent( 'font.loaded', { detail: false } );
                 document.dispatchEvent( event );
-            }
+            },
         );
-
-
-
-
-    })
-})();
+    } );
+} )();
