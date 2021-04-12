@@ -222,8 +222,11 @@ class OrderProcessController extends FrontendController
             $extra->save();
         }
 
-        if (isset( $_POST[ 'CheckoutForm' ][ 'billing_same_shipping' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
+        if ( isset($_POST['CheckoutForm']['billing_same_shipping']) ) {
+            CheckoutHelper::updateBillingDetails($order);
+        }
+
+        if ( isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
@@ -233,16 +236,7 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
             CheckoutHelper::updateBillingDetails($order);
-        }
-
-        if (
-            isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
-            || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
-        ) {
+            
             $shipping_rates = self::getShippingRates($order);
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
@@ -251,6 +245,8 @@ class OrderProcessController extends FrontendController
                 $order->paymentid = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
                 $only_phone_order = true;
             }
+
+           $form->setInstance($order);
 
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
