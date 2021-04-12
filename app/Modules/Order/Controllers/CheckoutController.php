@@ -48,6 +48,11 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $site = $app->getModule('Sites')->getSite();
         $cart = $app->cart;
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
         $shipping = null;
         $checkout_form = new CheckoutForm();
 
@@ -75,16 +80,18 @@ class CheckoutController extends FrontendController
 
         $order = OrderHelper::getCartOrder();
 
-        if ($order && !$app->request->getIsPost()) {
-            $checkout_form->setAttributes($order->getAttributes());
-        }
-
-        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
-            $this->redirect('cart:list');
-        }
-
         if (!$order) {
-            [$order] = OrderModel::objects()->getOrCreate(['cart_number' => $cart->getCartNumber()]);
+            [$order] = OrderModel::objects()->getOrCreate([
+                'cart_number' => $cart->getCartNumber(),
+                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
+            ]);
+        }
+
+        if ($order && !$app->request->getIsPost()) {
+            $checkout_form->setAttributes(array_merge(
+                $order->getAttributes(),
+                $order->extra_model->purchase_order ?? [])
+            );
         }
 
         $shipping_rates = OrderProcessController::getShippingRates( $order );
@@ -95,17 +102,26 @@ class CheckoutController extends FrontendController
 
         $order->save();
 
-        //get payment methods
+        $only_phone_order = count($shipping_rates) < $order->groups->count();
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+
+        if ($only_phone_order) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+        }
+
         $payment_methods = PaymentMethodModel::objects()
-            ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
-            ->order( [ 'is_cod', 'orderby' ] )
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
             ->all();
 
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
             'checkout_form' => $checkout_form,
             'shipping_rates' => $shipping_rates,
-            'payment_methods' => $payment_methods,
+            'payment_methods' => $payment_methods
         ]);
     }
 

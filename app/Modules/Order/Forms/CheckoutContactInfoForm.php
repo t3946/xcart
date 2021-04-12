@@ -115,7 +115,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
-            'ci_canada_email_confirmation' => [
+            'non_us_confirmation' => [
                 'class' => CheckboxField::class,
                 'hint' => OrderModule::t( 'By checking this box I agree to be responsible for custom duties, CODs, and other charges associated with brining to Canada. All prices are in USD. ' ),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',

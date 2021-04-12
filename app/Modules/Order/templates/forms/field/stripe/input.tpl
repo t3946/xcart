@@ -88,7 +88,7 @@
         document.querySelector("#card-errors").textContent = event.error ? event.error.message : "";
     });
 
-    form.addEventListener('submit', function (ev) {
+    /*form.addEventListener('submit', function (ev) {
         ev.preventDefault();
         document.querySelector("button").disabled = true;
         stripe.confirmCardPayment(clientSecret, {
@@ -125,9 +125,9 @@
                 document.querySelector("#card-errors").textContent = result.error ? result.error.message : "";
             } else {
                 if (result.paymentIntent.status === 'requires_capture') {
-                    window.location = button.dataset.return;
+                    console.log('payment complete');
                 }
             }
         });
-    });
+    });*/
 </script>

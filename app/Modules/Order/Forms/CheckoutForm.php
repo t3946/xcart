@@ -15,6 +15,8 @@ use Xcart\App\Main\Xcart;
 
 class CheckoutForm extends ShippingForm
 {
+    public $replacement = ['s_', 'b_'];
+
     public string $stripe_payment_intent;
     public string $public_key;
     public ?OrderModel $order;
@@ -90,36 +92,33 @@ class CheckoutForm extends ShippingForm
             ]
         );
 
-        if ( $this->order ) {
-            //get payment methods
-            $site = Xcart::app()->getModule( 'Sites' )->getSite();
+        //get payment methods
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-            $payment_methods_query = PaymentMethodModel::objects()
-                ->filter( [ 'active' => 'Y', 'site__through__storefrontid' => $site->storefrontid ] )
-                ->order( [ 'is_cod', 'orderby' ] );
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
 
-            //only phone order for no address orders
-            if ( count( OrderProcessController::getShippingRates( $this->order ) ) < count( Xcart::app()->cart->getItemsGroupedBy() ) ) {
-                $phone_payment_id = 4;
-                $payment_methods_query->filter( [ 'paymentid' => $phone_payment_id ] );
-            }
+        /** @var OrderModel $order */
+        $order = $this->getInstance();
 
-            $payment_methods = $payment_methods_query->all();
-
-            $choices = [];
-
-            foreach ( $payment_methods as $method ) {
-                $choices[ $method->paymentid ] = $method->paymentid;
-            }
-
-
-            $fields[ 'paymentid' ] = [
-                'class' => RadioField::class,
-                'choices' => $choices,
-                'value' => $this->order->paymentid,
-                'inputClass' => 'common-input-radio',
-            ];
+        if (!$order || !count(OrderProcessController::getShippingRates($order))) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
         }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby']);
+
+        $choices = [];
+
+        foreach ($payment_methods as $method) {
+            $choices[$method->paymentid] = $method;
+        }
+
+        $fields['paymentid'] = [
+            'class' => RadioField::class,
+            'choices' => $choices,
+            'inputClass' => 'common-input-radio',
+        ];
 
         return $fields;
     }

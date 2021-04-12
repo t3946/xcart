@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anna
- * Date: 20.07.2018
- * Time: 17:54
- */
 
 namespace Modules\Order\Traits;
 
@@ -25,31 +19,39 @@ trait AddressAttributesReplacement
             }
         }
 
-        if (strpos($data[$this->replacement . 'address'], "\n")) {
-            $t = explode("\n", $t_data[$this->replacement . 'address']);
-            $t_data[$this->replacement . 'address'] = $t[0];
-            $t_data[$this->replacement . 'address_2'] = $t[1];
+        $replacements = $this->replacement;
+        if (!is_array($replacements)) {
+            $replacements = [$replacements];
         }
 
-        if ($t_data[$this->replacement . 'state'] && $t_data[$this->replacement . 'country']) {
-            /** @var StateModel $sModel */
-            if ($sModel =  StateModel::objects()->get([
-                'code' => $t_data[$this->replacement . 'state'],
-                'country_code' =>  $t_data[$this->replacement . 'country'
-                ]])) {
-                $t_data[$this->replacement . 'state'] = $sModel->state;
-                $state_f = $this->getField($this->replacement . 'state');
-                $state_f->setAttributes(array_merge($state_f->getAttributes(), ['data-code' => $sModel->code ?? '']));
-            }
-        }
 
-        if ($t_data[$this->replacement . 'country']) {
-            if ($cModel =  CountryModel::objects()->get(['code' =>  $t_data[$this->replacement . 'country']])) {
-                $t_data[$this->replacement . 'country'] = $cModel->name;
-                $country_f = $this->getField($this->replacement . 'country');
-                $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
+        foreach ($replacements as $replacement) {
+            if (strpos($data[$replacement . 'address'], "\n")) {
+                $t = explode("\n", $t_data[$replacement . 'address']);
+                $t_data[$replacement . 'address'] = $t[0];
+                $t_data[$replacement . 'address_2'] = $t[1];
+            }
+
+            if ($t_data[$replacement . 'state'] && $t_data[$replacement . 'country']) {
+                /** @var StateModel $sModel */
+                if ($sModel = StateModel::objects()->get([
+                    'code' => $t_data[$replacement . 'state'],
+                    'country_code' => $t_data[$replacement . 'country']])) {
+                    $t_data[$replacement . 'state'] = $sModel->state;
+                    $state_f = $this->getField($replacement . 'state');
+                    $state_f->setAttributes(array_merge($state_f->getAttributes(), ['data-code' => $sModel->code ?? '']));
+                }
+            }
+
+            if ($t_data[$replacement . 'country']) {
+                if ($cModel = CountryModel::objects()->get(['code' => $t_data[$replacement . 'country']])) {
+                    $t_data[$replacement . 'country'] = $cModel->name;
+                    $country_f = $this->getField($replacement . 'country');
+                    $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
+                }
             }
         }
+        
         return parent::setAttributes($t_data);
     }
 
@@ -60,33 +62,39 @@ trait AddressAttributesReplacement
     {
         $data = parent::getAttributes();
 
-        if ($data[$this->replacement . 'country']) {
-
-            $filter = ['name' => $data[$this->replacement . 'country']];
-
-            if (array_key_exists(strtoupper($data[$this->replacement . 'country']), CountryModel::$codes)) {
-                $filter = ['code' => CountryModel::$codes[strtoupper($data[$this->replacement . 'country'])]];
-            }
-
-            /** @var CountryModel $cModel */
-            if ($cModel =  CountryModel::objects()->get($filter)) {
-                $data[$this->replacement . 'country'] = $cModel->code;
-            }
+        $replacements = $this->replacement;
+        if (!is_array($replacements)) {
+            $replacements = [$replacements];
         }
 
-        if ($data[$this->replacement . 'state'] && $data[$this->replacement . 'country']) {
-            /** @var StateModel $sModel */
-            if ($sModel =  StateModel::objects()->get([
-                'state' => $data[$this->replacement . 'state'],
-                'country_code' =>  $data[$this->replacement . 'country']
-            ])) {
-                $data[$this->replacement . 'state'] = $sModel->code;
-            }
-        }
+        foreach ($replacements as $replacement) {
+            if ($data[$replacement . 'country']) {
+                $filter = ['name' => $data[$replacement . 'country']];
 
-        if ($data[$this->replacement . 'address'] && $data[$this->replacement . 'address_2']) {
-            $data[$this->replacement . 'address'] .= "\n" . $data[$this->replacement . 'address_2'];
-            unset($data[$this->replacement . 'address_2']);
+                if (array_key_exists(strtoupper($data[$replacement . 'country']), CountryModel::$codes)) {
+                    $filter = ['code' => CountryModel::$codes[strtoupper($data[$replacement . 'country'])]];
+                }
+
+                /** @var CountryModel $cModel */
+                if ($cModel = CountryModel::objects()->get($filter)) {
+                    $data[$replacement . 'country'] = $cModel->code;
+                }
+            }
+
+            if ($data[$replacement . 'state'] && $data[$replacement . 'country']) {
+                /** @var StateModel $sModel */
+                if ($sModel = StateModel::objects()->get([
+                    'state' => $data[$replacement . 'state'],
+                    'country_code' => $data[$replacement . 'country']
+                ])) {
+                    $data[$replacement . 'state'] = $sModel->code;
+                }
+            }
+
+            if ($data[$replacement . 'address'] && $data[$replacement . 'address_2']) {
+                $data[$replacement . 'address'] .= "\n" . $data[$replacement . 'address_2'];
+                unset($data[$replacement . 'address_2']);
+            }
         }
 
         return $data;

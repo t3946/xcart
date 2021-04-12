@@ -24,6 +24,14 @@ class CheckoutHelper
         $order->shipping_cost = 0;
 
         foreach ($order->groups as $group) {
+            $params = [
+                    'shippingid' => null,
+                    'shipping' => '',
+                    'shipping_quote' => 0,
+                    'shipping_gross' => 0,
+                    'shipping_net' => 0,
+            ];
+
             if (isset($shipping_rates[$group->manufacturerid])) {
                 if ($selected_rate) {
                     $shipping_rate = $shipping_rates[$group->manufacturerid][$selected_rate] ?? null;
@@ -35,39 +43,42 @@ class CheckoutHelper
                 if ($shipping_rate) {
                     $charge = $shipping_rate->getShippingCharge();
 
-                    $group->setAttributes([
+                    $params = [
                         'shippingid' => $shipping_rate->shippingid,
                         'shipping' => $shipping_rate->shipping->getFrontendName(),
                         'shipping_quote' => $shipping_rate->getShippingQuote(),
                         'shipping_gross' => $charge,
                         'shipping_net' => $charge,
-                    ]);
-                    $group->save();
+                    ];
                 }
-
                 $order->shipping_cost += $group->shipping_gross;
             }
+
+            $group->setAttributes($params);
+
+            $group->save();
         }
         self::updateOrderTotalValues($order);
     }
 
     public static function updateOrderGroupsFromCart(OrderModel $order, XCart $cart): void
     {
-        $cart_groups = $cart->getItemsGroupedBy();
-        $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
+        if ($cart_groups = $cart->getItemsGroupedBy()) {
+            $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
 
-        foreach ($cart_groups as $mid => $cart_group) {
-            [$group] = OrderGroupModel::objects()->getOrNew([
-                'manufacturerid' => $mid,
-                'orderid' => $order->orderid,
-            ]);
-            $group->setAttributes([
-                'total_gross' => $cart_group['subtotal'],
-                'total_net' => $cart_group['subtotal'],
-                'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
-            ]);
-            $group->save();
-            self::updateOrderDetailsFromCart($group, $cart_group['items']);
+            foreach ($cart_groups as $mid => $cart_group) {
+                [$group] = OrderGroupModel::objects()->getOrNew([
+                    'manufacturerid' => $mid,
+                    'orderid' => $order->orderid,
+                ]);
+                $group->setAttributes([
+                    'total_gross' => $cart_group['subtotal'],
+                    'total_net' => $cart_group['subtotal'],
+                    'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
+                ]);
+                $group->save();
+                self::updateOrderDetailsFromCart($group, $cart_group['items']);
+            }
         }
 
         self::updateOrderTotalValues($order);
@@ -124,4 +135,19 @@ class CheckoutHelper
         $order->total = $order->subtotal + $order->shipping_cost;
     }
 
+    public static function updateBillingDetails(OrderModel $order): void
+    {
+        if ($order->billing_same_shipping === false) {
+            $order->setAttributes([
+                'b_firstname' => $order->s_firstname,
+                'b_company' => $order->s_company,
+                'b_address' => $order->s_address,
+                'b_country' => $order->s_country,
+                'b_zipcode' => $order->s_zipcode,
+                'b_state' => $order->s_state,
+                'b_city' => $order->s_city,
+            ]);
+            $order->save();
+        }
+    }
 }

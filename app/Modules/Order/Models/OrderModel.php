@@ -45,7 +45,7 @@ use Xcart\App\Traits\DataModelTrait;
 use Xcart\Order;
 
 /**
- * @property string|null purchase_order
+ * @property array|null purchase_order
  * @property string s_address
  * @property string s_firstname
  * @property string s_company
@@ -85,6 +85,7 @@ use Xcart\Order;
  * @property mixed tracking_all_filled
  * @property int tracking_fill_time
  * @property bool track_sms
+ * @property bool billing_same_shipping
  * @property mixed|Field|FileField|ModelFieldInterface|null date
  * @property mixed|Field|FileField|ModelFieldInterface|null b_country
  * @property OrderExtraModel extra_model
@@ -356,7 +357,7 @@ class OrderModel extends Model
             'billing_same_shipping' => [
                 'class' => BooleanField::class,
                 'null' => false,
-                'default' => true,
+                'default' => false,
             ],
             'order_type' => [
                 'class' => CharField::class,

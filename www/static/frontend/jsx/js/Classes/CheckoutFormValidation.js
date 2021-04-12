@@ -64,13 +64,14 @@ export default class CheckoutFormValidation extends FormValidation {
             this.fields[ key ].removeError();
 
             if (
-                //contact information fields
-                key.indexOf( '[ci_' ) > -1
                 //shipping fields
-                || key.indexOf( '[s_' ) > -1
+                key.indexOf( '[s_' ) > -1
+                || key === 'CheckoutForm[firstname]'
+                || key === 'CheckoutForm[phone]'
+                || key === 'CheckoutForm[email]'
                 //fields from selected payment
                 || selectedPaymentFields.indexOf( key ) > -1
-                || key === 'CheckoutForm[ci_canada_email_confirmation]' && CanadaCODs.isActive()
+                || key === 'CheckoutForm[non_us_confirmation]' && CanadaCODs.isActive()
             ) {
                 validationFields[ key ] = this.fields[ key ];
             }

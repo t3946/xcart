@@ -136,6 +136,7 @@ export default class FormValidation {
     }
 
     scrollToFirstError() {
+        console.log(this.errors);
         if (this.errors.length) {
             let field = this.errors.shift();
 

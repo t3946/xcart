@@ -1,7 +1,7 @@
 export const CanadaCODs = ( function () {
     const $target = $( '.checkout__canada-cods-field' );
     const $destDesktop = $( '.order-total__grand' );
-    const $destMobile = $( '#CheckoutForm_ci_email' ).parents( '.checkout-field-row' );
+    const $destMobile = $( '#CheckoutForm_email' ).parents( '.checkout-field-row' );
     const $countryField = $( '#CheckoutForm_s_country' );
     let active = false;
 

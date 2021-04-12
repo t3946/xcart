@@ -8,6 +8,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -119,9 +120,9 @@ class OrderProcessController extends FrontendController
     /**
      * get html off all shipping methods for passed address
      */
-    public function getShippingMethods(): string
+    public function getShippingMethods($form): string
     {
-        $order = OrderHelper::getCartOrder();
+        $order = $form->getInstance();
         $sh_rates = self::getShippingRates( $order );
 
         return $this->render( 'checkout/all_shipping_methods_one_page.tpl', [
@@ -131,15 +132,26 @@ class OrderProcessController extends FrontendController
         ] );
     }
 
-    public function getPaymentMethods(): string
+    public function getPaymentMethods($form, $only_phone_order = false): string
     {
-        $order = OrderHelper::getCartOrder();
-        $checkout_form = new CheckoutForm();
-        $checkout_form->setAttributes( $order->getAttributes() );
+        $order = $form->getInstance();
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+        if ($only_phone_order) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+        }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
+            ->all();
 
         return $this->render( 'checkout/payment_methods_one_page.tpl', [
-            'checkout_form' => $checkout_form,
+            'checkout_form' => $form,
             'order' => $order,
+            'payment_methods' => $payment_methods
         ] );
     }
 
@@ -173,57 +185,80 @@ class OrderProcessController extends FrontendController
         $form->setInstance( $order );
         $form->populate( $post );
         $form->setModelAttributes( $form->getAttributes() );
-        $form_instance = $form->getInstance();
-        if ( $form_instance ) {
-            $form_instance->save();
-        }
+
+        $form->setAttributes($order->extra_model->purchase_order ?? []);
+
+        /** @var OrderModel $order */
+        $order = $form->getInstance();
 
         $response = [];
 
         $response[ 'templates' ] = [];
 
-        if (isset($_POST[ 'CheckoutForm' ][ 's_firstname' ]) && !$post->has('billing_same_shipping')) {
-            $order->b_firstname = $form_instance->s_firstname;
-            $order->save();
-        }
-        if (isset($_POST[ 'CheckoutForm' ][ 's_company' ]) && !$post->has('billing_same_shipping')) {
-            $order->b_company = $form_instance->s_company;
-            $order->save();
+        if (isset($_POST[ 'CheckoutForm' ]['organization_name'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_firstname'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_phone'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_phone_ext'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_track_sms'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_email'])
+            || isset($_POST[ 'CheckoutForm' ]['pm_fax'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_firstname'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_phone'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_phone_ext'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_track_sms'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_email'])
+        ) {
+            $po_data = [];
+            $po_field_sets = ['purchase_order_details', 'purchasing_manager', 'accounts_payable'];
+            foreach ($po_field_sets as $field_set) {
+                foreach ($form->getFieldsets()[$field_set] as $field) {
+                    if (isset($_POST[ 'CheckoutForm' ][$field])) {
+                        $po_data[$field] = $form->getField($field)->getValue();
+                    }
+                }
+            }
+            [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order->orderid]);
+            $extra->purchase_order = array_merge($extra->purchase_order ?? [], $po_data);
+            $extra->save();
         }
 
-        if (
-            isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+        if (isset( $_POST[ 'CheckoutForm' ][ 'billing_same_shipping' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
         ) {
-            $shipping_rates = self::getShippingRates( $order );
+            CheckoutHelper::updateBillingDetails($order);
+        }
+
+        if (
+            isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
+        ) {
+            $shipping_rates = self::getShippingRates($order);
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
             if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
-                $phone_payment_id = 4;
-                $order->paymentid = $phone_payment_id;
-                $order->save();
+                $order->paymentid = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+                $only_phone_order = true;
             }
 
-            if (!$post->has('billing_same_shipping')) {
-                $order->setAttributes([
-                    'b_address' => $form_instance->s_address,
-                    'b_country' => $form_instance->s_country,
-                    'b_zipcode' => $form_instance->s_zipcode,
-                    'b_state' => $form_instance->s_state,
-                    'b_city' => $form_instance->s_city,
-                ]);
-                $order->save();
-            }
-
-            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods();
-            $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods();
+            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
+            $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
         }
 
         $response = array_merge($response, OrderHelper::getOrderInfo($order));
+
+        $order->save();
 
         $this->jsonResponse( $response ?? [] );
     }
