@@ -75,4 +75,9 @@ return [
         'target' => [ApiCategoriesController::class, 'actionRelatedProducts'],
         'name' => 'relatedApi'
     ],
+    [
+        'route' => 'category/{i:id}/{slug:slug}/',
+        'target' => [ApiCategoriesController::class, 'actionCatalogCategory'],
+        'name' => 'categoryPaginatedApi',
+    ],
 ];

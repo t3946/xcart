@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide }         from 'swiper/react';
 import SwiperCore, { Lazy, Scrollbar } from 'swiper';
 import classnames                      from 'classnames';
-import Product                         from '@/components/product/Product';
+import ProductCard                     from '@/components/product/card/slider/Card';
 
 SwiperCore.use( [ Lazy, Scrollbar ] );
 
@@ -155,9 +155,9 @@ export default class SliderProducts extends Component {
                     onSlideChange={ this.updateSlideBordersFlags }
                     onReachEnd={ this.onReachEndHandler }
                 >
-                    { items.map( ( item, i ) => (
+                    { items.map( ( product, i ) => (
                         <SwiperSlide className="products-slider-slide" key={ i }>
-                            <Product productData={ item } context={'slider'}/>
+                            <ProductCard product={ product } />
                         </SwiperSlide>
                     ) ) }
 

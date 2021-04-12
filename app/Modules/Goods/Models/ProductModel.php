@@ -16,9 +16,9 @@ use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
+use Modules\Menu\Models\CleanUrlModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -28,7 +28,6 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
-use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
@@ -709,6 +708,20 @@ class ProductModel extends Model implements ICartItem
     public function getFrontendDescription()
     {
         return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
+    }
+
+    public function getCatalogDescription()
+    {
+        define('MAX_CATALOG_DESCRIPTION_LENGTH', 140);
+        $frontend_description = $this->getFrontendDescription();
+        $no_tags = strip_tags($frontend_description);
+
+        if (strlen($no_tags) > MAX_CATALOG_DESCRIPTION_LENGTH) {
+            $shorted = substr_replace($no_tags, '...', MAX_CATALOG_DESCRIPTION_LENGTH);
+        }
+
+        //to one line
+        return preg_replace("/(\r\n|\n|\r)/", " ", $shorted);
     }
 
     public function getPrices(): array

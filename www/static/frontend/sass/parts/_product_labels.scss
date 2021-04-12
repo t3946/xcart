@@ -73,17 +73,6 @@
     }
   }
 
-  &.last-items {
-    i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/last_items.svg");
-      }
-    }
-  }
-
   &.out-of-stock {
     i {
       display: none;

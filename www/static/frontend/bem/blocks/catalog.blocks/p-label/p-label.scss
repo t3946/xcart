@@ -1,0 +1,8 @@
+.p-label i.least-items-icon {
+  display: none;
+
+  @include breakpoint(large) {
+    display: block;
+    background-image: url("/static/frontend/dist/images/icons/item_product/last_items.svg");
+  }
+}

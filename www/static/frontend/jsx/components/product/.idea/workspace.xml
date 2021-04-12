@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8c2acac4-d913-447e-a638-be9ffa12aa5a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../_binds/pages/category.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/Catalog.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/CatalogContext.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/CatalogViewMode.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/FilterReset.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/PageCount.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/ProductsList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../catalog/StateLine.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AddToCartButton.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/Product.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/QuantityGroup.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/catalog/Card.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/catalog/Img.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/components/ImageNo.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/components/ImageSingle.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/slider/Card.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/card/slider/Img.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/Controllers/Api/ApiCategoriesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/Controllers/Api/ApiCategoriesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/Models/ProductModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/Models/ProductModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/routes_api.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/Modules/Goods/routes_api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/templates/catalog/base.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/templates/catalog/base.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/templates/catalog/parts/_page_count.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/templates/catalog/parts/_page_count.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/templates/catalog/parts/_state_line.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/templates/catalog/parts/_state_line.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/templates/home.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/templates/home.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../app/templates/product/parts/_add_to_cart.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../app/templates/product/parts/_add_to_cart.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../bem/bem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../../bem/bem.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../_head.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../_head.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AnimateWaitButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../AnimateWaitButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CategoryViewType.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sliders/SliderProducts/SliderProducts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Sliders/SliderProducts/SliderProducts.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sliders/SliderProducts/components/Image.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sliders/SliderProducts/components/ImageComplex.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sliders/SliderProducts/components/Price.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/card/components/Price.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Product.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Image.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/card/components/Image.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ImageComplex.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/card/components/ImageComplex.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ImgCatalog.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/card/catalog/ImgCatalog.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ImgSlider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/card/slider/ImgSlider.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ImgSliderComplex.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Price.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../js/Classes/AddToCartButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../js/Classes/AddToCartButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../sass/parts/_products_state_line.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../../sass/parts/_products_state_line.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../sass/parts/product/_cart_add.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../../sass/parts/product/_cart_add.scss" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../.." />
+  </component>
+  <component name="ProjectId" id="1qvW5lEmJ3JKrpQoTbSvOgthPZN" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../../CRUD-main" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8c2acac4-d913-447e-a638-be9ffa12aa5a" name="Default Changelist" comment="" />
+      <created>1617960363033</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1617960363033</updated>
+      <workItem from="1617960364222" duration="13000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

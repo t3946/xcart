@@ -48,7 +48,7 @@
             </div>
 
             <div class="brand show-for-small">
-                Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
+                <span>Brand: </span><span class="value" itemprop="brand">{$item->brand->brand}</span>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
                 {if $item.descr}

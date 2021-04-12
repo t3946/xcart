@@ -1,9 +1,13 @@
 $(document).on('click', '.action_block.sort', function(e){
+    return;
+
     e.preventDefault();
     $(this).toggleClass('active');
 });
 
 $(document).on('click', '.action_block.sort .options li', function(e){
+    return;
+
     e.preventDefault();
     e.stopPropagation();
     let $this = $(this);

@@ -37,6 +37,7 @@ export class AddToCartButton {
             if ( self.mode === SIMPLE_MODE ) {
                 setTimeout( function () {
                     self.toggleMode.call( self );
+                    self.$buttonWrapper.removeClass('hide');
                 }, 1000 );
             }
 
@@ -77,9 +78,11 @@ export class AddToCartButton {
                     options: opt
                 } ];
 
+                console.log('start animation');
                 buttonAnimation.start();
 
                 cartAdd( data, () => {
+                    console.log('ДОБАВЛЯЮ В КАРЗИНУ', product);
                     productItemResetState( product );
                     $( '.jackpot' ).show();
                 } );

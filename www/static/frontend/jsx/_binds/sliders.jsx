@@ -6,7 +6,6 @@ import SliderBreadcrumbs  from '@/components/Sliders/SliderBreadcrumbs';
 
 ( () => {
     // init sliders
-
     $( '#promo-slider' ).each( function( i, elem ) {
         const { uri, slides } = elem.dataset;
 

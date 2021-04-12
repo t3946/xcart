@@ -4,6 +4,8 @@ namespace Modules\Goods\Controllers\Api;
 
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\GoodsModule;
+use Modules\Goods\Helpers\ProductFilterHelper;
+use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
@@ -12,7 +14,7 @@ use Xcart\App\Main\Xcart;
 
 class ApiCategoriesController extends AbstractCatalogController
 {
-    public function actionBestsellers(): void
+    public function actionSliderBestsellers(): void
     {
         $qs = PromotionalProductsHelper::getBestsellersSQ();
         $data = $this->getProductData($qs);
@@ -32,7 +34,7 @@ class ApiCategoriesController extends AbstractCatalogController
         )->limit(1)->get();
 
         $data = $this->getProductData(
-            $this->getQS()->filter(
+            parent::getQS()->filter(
                 [
                     'images__image_path__isnull' => false,
                     'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(
@@ -46,8 +48,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderFeatured(): void
     {
-        $qs = $this
-            ->getQS()
+        $qs = parent::getQS()
             ->filter(
                 [
                     'featured__product_order__isnull' => false,
@@ -90,11 +91,69 @@ class ApiCategoriesController extends AbstractCatalogController
         }
     }
 
+    public function getQS($data)
+    {
+        return parent::getQS($data)
+            ->filter(
+                [
+                    'categories__lft__gte' => $data->lft,
+                    'categories__rgt__lte' => $data->rgt,
+                    'categories__root' => $data->root,
+                ]
+            );
+    }
+
+    /**
+     * get paginated category by id
+     * @param int $id category id
+     * @param string $slug
+     * @throws \Exception
+     */
+    public function actionCatalogCategory(int $id, string $slug): void
+    {
+        //actionViewOld
+        $model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
+
+        //view_internal
+        $this->model = $model;
+        $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+
+        /** @var \Xcart\App\Orm\QuerySet $pqs */
+        $pqs = $this->getQS($model);
+        $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
+
+
+        if ($this->getRequest()->getIsAjax()) {
+            $pqs = $fh->getFiltrateQS();
+            $pqs = $this->getSortedQS($pqs);
+        }
+
+        $pager = $this->getPager($pqs);
+
+        $this->setCanonical($model);
+
+        if ($this->getRequest()->getIsAjax()) {
+            $pagerView = $pager->createView();
+            $this->jsonResponse(
+                [
+                    'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
+                    'items' => $this->getProductData($pager->paginate()),
+                    'pager' => [
+                        'pageSize' => $pager->getPageSize(),
+                        'currentPage' => $pager->getPage(),
+                        'paginateCount' => count($pager->paginate()),
+                        'total' => $pager->getTotal(),
+                    ],
+                ]
+            );
+        }
+    }
+
     /**
      * get array of main product fields (product has many excess data because this method takes only needed info) and return this
      * @param $products
      * @return array
-    */
+     */
     private function getProductData($products): array
     {
         if (!\is_array($products)) {
@@ -142,13 +201,34 @@ class ApiCategoriesController extends AbstractCatalogController
                 }
             }
 
+            $eta_date = '';
+
+            if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
+                $date = (new \DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
+                $eta_date = date_format($date, "d F Y");
+            }
+
             $data[] = [
                 'name' => htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES),
                 'url' => $product->getAbsoluteUrl(),
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
-                'description' => $product->getFrontendDescription(),
+                'description' => $product->getCatalogDescription(),
+                'inStock' => !$product->isOutOfStock(),
+                'productcode' => $product->productcode,
+                'brand' => $product->brand->brand ?? null,
+                'brandUrl' => $product->brand ? $product->brand->getAbsoluteUrl() : null,
+                'min_amount' => $product->min_amount,
+                'lead_time_message' => trim($product->lead_time_message),
+                'mult_order_quantity' => $product->mult_order_quantity,
+                'eta_date' => $eta_date,
+                'avail' => $product->r_avail,
+                'productid' => $product->productid,
+                'isNew' => $product->isNewProduct(),
+                'isSale' => $product->isSaleSticker(),
+                'isGroupRoot' => $product->isGroupRoot(),
+                'childrenNumber' => $product->getFrontendChilds()->count(),
 
                 'price' => [
                     'number' => $product->getFrontendPrice(),

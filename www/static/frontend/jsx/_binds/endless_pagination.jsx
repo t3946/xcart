@@ -1,6 +1,8 @@
 import { AddToCartButton } from '@/js/Classes/AddToCartButton';
 
 $(document).on('click', '.front-endless-pager a.show-more', function(e){
+    //TODO: старый код подгрузки каталога
+    return;
     e.preventDefault();
     endless_paginate()
 });
