@@ -586,7 +586,8 @@ abstract class Field implements IValidateField
             'errors' => $this->renderErrors(),
             'hint' => $this->renderHint(),
             'ext' => $fieldExtension,
-            'field' => $this
+            'field' => $this,
+            'value' => $this->getRenderValue(),
         ]);
     }
 
