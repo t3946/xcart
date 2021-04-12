@@ -27,7 +27,6 @@ class PurchaseOrderDetailsForm extends FrontendForm
             'organization_name' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('Organization Name'),
-                'required' => true,
                 'hint' => OrderModule::t('The name of your organization'),
                 'html' => [
                     'placeholder' => OrderModule::t('Eureka Inc.')
