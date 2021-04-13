@@ -35,6 +35,7 @@ import  "./_binds/catalog_actionblock_sort";
 import  "./_binds/productSlider";
 import  "./_binds/pages/category";
 import  "./_binds/sliders";
+import  "./_binds/checkout";
 
 import  "./_binds/pages/product";
 import  "./_binds/pages/categories";

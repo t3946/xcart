@@ -102,6 +102,8 @@
 {/block}
 
 {block "content-wrapper"}
+    <div data-component="checkout"></div>
+
     <div class="cart_shipping-page default-content-page">
         {block "content"}{/block}
     </div>
