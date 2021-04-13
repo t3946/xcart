@@ -15,13 +15,26 @@ export default ( function () {
 
     const Constructor = function () {
         $form.on( 'change', 'input', function ( e ) {
+            const input = e.target;
+
             //prevent quantity field update
-            if (e.target.name === 'quantity') {
+            if (input.name === 'quantity') {
                 return;
             }
 
+            let value;
+
+            switch ( input.type ) {
+                case 'checkbox':
+                    value = input.checked ? 1 : 0;
+                    break;
+                default:
+                    value = input.value;
+                    break;
+            }
+
             const data = {};
-            data[ e.target.name ] = e.target.value;
+            data[ input.name ] = value;
 
             if (excludedFieldsFromUpdate.indexOf(e.target.id) === -1) {
                 Constructor.prototype.update( data );
