@@ -157,8 +157,6 @@ export default class FormValidation {
         this.checkAllForm();
 
         if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
-            event.preventDefault();
-            event.stopPropagation();
             this.scrollToFirstError();
         }
     }

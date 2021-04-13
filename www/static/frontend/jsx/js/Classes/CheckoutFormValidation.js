@@ -31,8 +31,8 @@ export default class CheckoutFormValidation extends FormValidation {
         }
     }
 
-    getFieldValue(fieldName) {
-        return document.forms['CheckoutForm9'][fieldName].value;
+    getFieldValue( fieldName ) {
+        return document.forms[ 'CheckoutForm9' ][ fieldName ].value;
     }
 
     /**
@@ -41,27 +41,30 @@ export default class CheckoutFormValidation extends FormValidation {
      */
     getValidatingFields() {
         const self = this;
-        const $paymentMethodInput = $(this.fields['CheckoutForm[paymentid]'].element);
+        const $paymentMethodInput = $( '[name="CheckoutForm[paymentid]"]:checked' );
         const $paymentMethodItem = $paymentMethodInput.parents( '.payment-method-item' );
         const selectedPaymentFields = [];
 
-        $paymentMethodItem.find( 'input' ).each( function ( i, field ) {
-            const fieldName = field.name
+        $paymentMethodItem.find( 'input' ).each( function( i, field ) {
+            const fieldName = field.name;
 
             // billing address without "billing same shipping" mode
-            if ( fieldName.indexOf( '[b_' ) > -1
-                && self.fields[ 'billing_same_shipping' ].element.checked === false ) {
+            if (
+                fieldName.indexOf( '[b_' ) > -1
+                && self.fields[ 'CheckoutForm[billing_same_shipping]' ].element.checked === false
+            ) {
                 return;
             }
 
             //purchase order fields
-            const purchaseFieldNames = [ 'CheckoutForm[po_number]', 'CheckoutForm[po_organization_name]', 'CheckoutForm[pm_firstname]', 'CheckoutForm[pm_phone]', 'CheckoutForm[pm_email]', 'CheckoutForm[ap_firstname]', 'CheckoutForm[ap_phone]', 'CheckoutForm[ap_email]', ];
+            const purchaseFieldNames = [ 'CheckoutForm[po_number]', 'CheckoutForm[po_organization_name]', 'CheckoutForm[pm_firstname]', 'CheckoutForm[pm_phone]', 'CheckoutForm[pm_email]', 'CheckoutForm[ap_firstname]', 'CheckoutForm[ap_phone]', 'CheckoutForm[ap_email]' ];
             const selectedPaymentMethodId = parseInt( self.getFieldValue( 'CheckoutForm[paymentid]' ) );
             const purchaseOrderMethodId = 2;
 
-            // purchase order form and purchase order form disabled
             if (
-                purchaseFieldNames.indexOf(fieldName) !== -1
+                // field from purchase order form
+                purchaseFieldNames.indexOf( fieldName ) !== -1
+                // purchase order form is disable
                 && selectedPaymentMethodId !== purchaseOrderMethodId
             ) {
                 return;
