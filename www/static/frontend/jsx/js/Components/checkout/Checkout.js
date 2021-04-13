@@ -15,6 +15,11 @@ export default ( function () {
 
     const Constructor = function () {
         $form.on( 'change', 'input', function ( e ) {
+            //prevent quantity field update
+            if (e.target.name === 'quantity') {
+                return;
+            }
+
             const data = {};
             data[ e.target.name ] = e.target.value;
 

@@ -3,6 +3,9 @@
 import _ from 'lodash';
 
 ( () => {
+    //need for prevent excess change events
+    let oldValue = null;
+
     let getValues = e => {
         let el = e.target;
         let $this = $( e.target );
@@ -54,6 +57,12 @@ import _ from 'lodash';
 
         params.$input.val( params.val );
 
+        if ( parseInt( params.val ) === oldValue ) {
+            return;
+        }
+
+        oldValue = parseInt( params.val );
+
         $( document ).trigger( 'component.quantity.change', {
             target: e.target,
             val: params.val,
@@ -101,6 +110,9 @@ import _ from 'lodash';
             // params.$input.val(params.val);
             recheckActives( e, params );
         } )
+        .on('focus', '.quantity-group-input', ( e ) => {
+            oldValue = parseInt(e.target.value);
+        })
         .on( 'change blur propertychange mousewheel keyup', '.quantity-group-input', function( e ) {
             const params = getValues( e );
 
