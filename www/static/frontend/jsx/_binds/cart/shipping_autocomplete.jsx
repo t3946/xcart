@@ -39,7 +39,6 @@ var createAutoComplete = function(){
                             });
                         },
                         onSelect: function (e, term, item) {
-                            console.log('onSelect');
                             e.preventDefault();
                             let code = item.getAttribute('data-code');
                             inputCountry.setAttribute('data-code', code);
