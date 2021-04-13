@@ -8,7 +8,12 @@ export const CanadaCODs = ( function () {
     // show if country is Canada else hide
     function toggle() {
         active = $countryField.val().toLowerCase().trim() === 'canada';
-        $target.toggle( active, 0 );
+
+        if (active) {
+            $target.removeClass('hide');
+        } else {
+            $target.addClass('hide');
+        }
     }
 
     function insert() {
@@ -26,8 +31,8 @@ export const CanadaCODs = ( function () {
 
         $countryField.change( toggle );
 
-        toggle();
         insert();
+        toggle();
     }
 
     constructor.prototype.isActive = function () {

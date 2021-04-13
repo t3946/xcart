@@ -129,7 +129,7 @@ class CheckoutContactInfoForm extends FrontendForm
                     'data-wrong' => 'common-input__wrong',
                 ],
                 'fieldClass' => 'common-checkbox checkout-canada-cods-checkbox checkout__canada-cods-checkbox',
-                'containerClass' => 'checkout__canada-cods-field',
+                'containerClass' => 'checkout__canada-cods-field hide',
                 'inputClass' => 'common-checkbox checkout__canada-cods-checkbox',
             ],
         ];
