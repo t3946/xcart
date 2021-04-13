@@ -1,6 +1,6 @@
-import { ShippingMethods } from "./ShippingMethods";
-import { PaymentMethods } from "./PaymentMethods";
-import Forms from '_binds/forms';
+import { ShippingMethods } from './ShippingMethods';
+import { PaymentMethods }  from './PaymentMethods';
+import Forms               from '_binds/forms';
 
 export default ( function () {
     if ( document.querySelector( '.checkout-page' ) === null ) {
@@ -42,18 +42,27 @@ export default ( function () {
         } );
     }
 
+    Constructor.prototype.formatNumber = function( number ) {
+        return Intl
+            .NumberFormat( 'en-US', { style: 'currency', currency: 'USD' } )
+            .format( number )
+            .substr( 1 );
+    };
+
     Constructor.prototype.update = function ( data, callback = null ) {
+        const self = this;
+
         $.ajax( {
             url: '/api/checkout/update',
             method: 'POST',
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                $( '.order-total .total .price' ).text( parseFloat( res['total'] ).toFixed( 2 ) );
-                $( '.shipping-total .price' ).text( parseFloat( res['total_shipping_cost'] ).toFixed( 2 ) );
-                $( '.total-sales-tax .price' ).text( parseFloat( res['total_sales_tax'] ).toFixed( 2 ) );
-                $( '.total-vat-tax .price' ).text( parseFloat( res['total_vat_tax'] ).toFixed( 2 ) );
-                $( '.grand-total .price' ).text( parseFloat( res['grand_total'] ).toFixed( 2 ) );
+                $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
+                $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
+                $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
+                $( '.total-vat-tax .price' ).text( self.formatNumber( res[ 'total_vat_tax' ] ) );
+                $( '.grand-total .price' ).text( self.formatNumber( res[ 'grand_total' ] ) );
 
                 for ( let manufacturer_id in res.distributor_carts ) {
                     const manufacturer = res.distributor_carts[ manufacturer_id ];

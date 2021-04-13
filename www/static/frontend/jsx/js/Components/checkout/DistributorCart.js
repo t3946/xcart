@@ -55,6 +55,8 @@ export const DistributorCart = ( function () {
      * recalculate carts totals
      */
     function recalc() {
+        //-
+        console.log('RECALC');
         const page_cart = document.querySelector( '.cart-page, .checkout-page' );
 
         let products = page_cart.querySelectorAll( '[data-product]' );
