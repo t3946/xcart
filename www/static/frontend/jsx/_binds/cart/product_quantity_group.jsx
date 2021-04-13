@@ -55,8 +55,10 @@ import _ from 'lodash';
             product = null;
         }
 
+
         params.$input.val( params.val );
 
+        //do not emit event if value no changed
         if ( parseInt( params.val ) === oldValue ) {
             return;
         }

@@ -185,37 +185,41 @@
 
                         <div class="checkout-cart-footer">
                             <div class="order-total">
-                                <div class="total">
-                                    <span class="sum-info-label">{t 'Total' }:</span>
-                                    <span class="sum">
-                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                            <span class="price cart_subtotal">{$site_currency->getCurrencyFormat($order->subtotal)}</span>
-                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
-                        </span>
-                                </div>
+                                <div class="preloader order-total_preloader preloader__checkout-cart-footer"></div>
 
-                                <div class="shipping-total">
-                                    <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
-                                    <span class="sum">{$order->shipping_cost|site_currency}</span>
-                                </div>
+                                <div class="order-total-wrapper">
+                                    <div class="total">
+                                        <span class="sum-info-label">{t 'Total' }:</span>
+                                        <span class="sum">
+                                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                            <span class="price cart_subtotal">{$site_currency->getCurrencyFormat($order->subtotal)}</span>
+                                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                        </span>
+                                    </div>
 
-                                <div class="total-tax checkout__total-tax">
-                                    {set $taxes = $order->getTaxes()}
-                                    {if isset($taxes['total_sales_tax']) }
-                                        <div class="total-sales-tax">
-                                            {t 'Total Sales Tax' }: {$taxes['total_sales_tax']|site_currency}
-                                        </div>
-                                    {/if}
-                                    {if isset($taxes['total_vat_tax']) }
-                                        <div class="total-vat-tax">
-                                            {t 'Total VAT Tax' }: {$taxes['total_vat_tax']|site_currency}
-                                        </div>
-                                    {/if}
-                                </div>
+                                    <div class="shipping-total">
+                                        <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
+                                        <span class="sum">{$order->shipping_cost|site_currency}</span>
+                                    </div>
 
-                                <div class="grand-total order-total__grand">
+                                    <div class="total-tax checkout__total-tax">
+                                        {set $taxes = $order->getTaxes()}
+                                        {if isset($taxes['total_sales_tax']) }
+                                            <div class="total-sales-tax">
+                                                {t 'Total Sales Tax' }: {$taxes['total_sales_tax']|site_currency}
+                                            </div>
+                                        {/if}
+                                        {if isset($taxes['total_vat_tax']) }
+                                            <div class="total-vat-tax">
+                                                {t 'Total VAT Tax' }: {$taxes['total_vat_tax']|site_currency}
+                                            </div>
+                                        {/if}
+                                    </div>
+
+                                    <div class="grand-total order-total__grand">
                                     <span class="label">{t 'Grand Total' }</span>
                                     <span class="sum">{$order->total|site_currency}</span>
+                                </div>
                                 </div>
                             </div>
                         </div>

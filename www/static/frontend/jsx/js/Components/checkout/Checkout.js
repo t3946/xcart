@@ -3,6 +3,9 @@ import { PaymentMethods }  from './PaymentMethods';
 import Forms               from '_binds/forms';
 
 export default ( function () {
+    // number update queries on update product quantity
+    let quantityUpdateQueries = 0;
+
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
     }
@@ -52,12 +55,23 @@ export default ( function () {
     Constructor.prototype.update = function ( data, callback = null ) {
         const self = this;
 
+        // show checkout order total preloader
+        if ( data.quantity !== undefined ) {
+            quantityUpdateQueries += 1;
+
+            if (quantityUpdateQueries > 0) {
+                $('.order-total-wrapper').addClass('order-total-wrapper__loading');
+                $('.order-total_preloader').fadeIn();
+            }
+        }
+
         $.ajax( {
             url: '/api/checkout/update',
             method: 'POST',
             data: data,
             dataType: 'json',
             success: function ( res ) {
+
                 $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
                 $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
                 $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
@@ -107,6 +121,17 @@ export default ( function () {
             },
             error: function ( err ) {
                 console.log( 'error', err );
+            },
+            complete() {
+                // hide checkout order total preloader
+                if ( data.quantity !== undefined ) {
+                    quantityUpdateQueries -= 1;
+
+                    if (quantityUpdateQueries === 0) {
+                        $('.order-total-wrapper').removeClass('order-total-wrapper__loading');
+                        $('.order-total_preloader').fadeOut();
+                    }
+                }
             },
         } );
     }
