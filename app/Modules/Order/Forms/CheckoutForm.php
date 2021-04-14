@@ -10,6 +10,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Xcart\App\Form\Fields\CheckboxField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\RadioField;
 use Xcart\App\Main\Xcart;
 
@@ -69,7 +70,7 @@ class CheckoutForm extends ShippingForm
             'purchasing_manager' => array_keys( $this->_purchasing_manager_form ),
             'accounts_payable' => array_keys( $this->_accounts_payable_form ),
             'pay_by_card' => array_keys( $this->_pay_by_card_form ),
-            'other' => [ 'paymentid' ],
+            'other' => [ 'paymentid', 'customer_notes' ],
         ];
     }
 
@@ -118,6 +119,10 @@ class CheckoutForm extends ShippingForm
             'class' => RadioField::class,
             'choices' => $choices,
             'inputClass' => 'common-input-radio',
+        ];
+
+        $fields['customer_notes'] = [
+            'class' => HiddenField::class,
         ];
 
         return $fields;

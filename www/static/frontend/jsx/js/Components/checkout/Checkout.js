@@ -17,7 +17,7 @@ export default ( function () {
     const $form = $( '.checkout-shipping-form' );
 
     const Constructor = function () {
-        $form.on( 'change', 'input', function ( e ) {
+        $form.on( 'change', 'input, textarea', function ( e ) {
             const input = e.target;
 
             //prevent quantity field update

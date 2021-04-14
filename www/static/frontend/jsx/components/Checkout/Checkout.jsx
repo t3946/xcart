@@ -34,11 +34,17 @@ export default class Checkout extends Component {
     }
 
     render() {
-        const stripeField = app.options.payByCardForm.stripeField;
+        let stripeField;
+
+        if ( app.options.payByCardForm ) {
+            stripeField = app.options.payByCardForm.stripeField;
+        }
 
         return (
             <div className="checkout">
+                { stripeField &&
                 <PayByCardStripe { ...stripeField } ref={ this.PayByCardStripe }/>
+                }
             </div>
         );
     }
