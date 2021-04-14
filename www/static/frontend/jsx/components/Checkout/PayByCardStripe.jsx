@@ -1,11 +1,14 @@
 import { Fragment }   from 'preact';
-// import Stripe   from 'stripe';
 import { loadStripe } from '@stripe/stripe-js';
+import InputError     from '@/components/Checkout/InputError';
 import 'regenerator-runtime/runtime';
 
 export default class PayByCardStripe extends Component {
     constructor( props ) {
         super( props );
+        this.state = {
+            error: '',
+        };
     }
 
     async componentDidMount() {
@@ -39,20 +42,21 @@ export default class PayByCardStripe extends Component {
             requestPayerEmail: true,
         } );
 
-        paymentRequest.on( 'paymentmethod', function( ev ) {
+        paymentRequest.on( 'paymentmethod', ( ev ) => {
             stripe.confirmCardPayment(
                 clientSecret,
                 { payment_method: ev.paymentMethod.id },
                 { handleActions: false },
-            ).then( function( confirmResult ) {
+            ).then( ( confirmResult ) => {
                 if ( confirmResult.error ) {
                     ev.complete( 'fail' );
                 }
                 else {
                     ev.complete( 'success' );
-                    stripe.confirmCardPayment( clientSecret ).then( function( result ) {
+                    stripe.confirmCardPayment( clientSecret ).then( ( result ) => {
                         if ( result.error ) {
-                            document.querySelector( '#card-errors' ).textContent = result.error ? result.error.message : '';
+                            const error = result.error ? result.error.message : '';
+                            this.setState( { error } );
                         }
                         else {
                             window.location = button.dataset.return;
@@ -89,9 +93,10 @@ export default class PayByCardStripe extends Component {
 
         this.card.mount( '#' + this.props.id );
 
-        this.card.on( 'change', function( event ) {
+        this.card.on( 'change', ( event ) => {
             document.querySelector( 'button' ).disabled = event.empty || event.error;
-            document.querySelector( '#card-errors' ).textContent = event.error ? event.error.message : '';
+            const error = event.error ? event.error.message : '';
+            this.setState( { error } );
         } );
     }
 
@@ -140,15 +145,11 @@ export default class PayByCardStripe extends Component {
                 },
                 name: getValue( 's_firstname' ),
             },
-        } ).then( function( result ) {
+        } ).then( ( result ) => {
             if ( result.error ) {
                 document.querySelector( 'button' ).disabled = false;
-                document.querySelector( '#card-errors' ).textContent = result.error ? result.error.message : '';
-            }
-            else {
-                if ( result.paymentIntent.status === 'requires_capture' ) {
-                    console.log( 'payment complete' );
-                }
+                const error = result.error ? result.error.message : '';
+                this.setState( { error } );
             }
         } );
     }
@@ -157,9 +158,9 @@ export default class PayByCardStripe extends Component {
         return (
             <Fragment>
                 <div className="checkout-stripe">
+                    <InputError message={ this.state.error }/>
                     <div id="payment-request-button"></div>
                     <div id="CheckoutForm_pbc_card_details"></div>
-                    <div id="card-errors" role="alert"></div>
                 </div>
             </Fragment>
         );

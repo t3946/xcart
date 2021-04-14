@@ -163,8 +163,6 @@ export default class FormValidation {
             return;
         }
 
-        console.log('before checkout submit');
-
         //pay by card method payment
         if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
             $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit');
