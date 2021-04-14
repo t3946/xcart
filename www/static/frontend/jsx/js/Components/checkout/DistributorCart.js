@@ -1,7 +1,8 @@
-import { SwitcherButton } from "@/js/Classes/SwitcherButton";
-import { Switcher } from "@/js/Classes/Switcher";
+import { SwitcherButton } from '@/js/Classes/SwitcherButton';
+import { Switcher }       from '@/js/Classes/Switcher';
 
-export const DistributorCart = ( function () {
+export const DistributorCart = ( function() {
+    let quantityUpdateQueries = 0;
     // no checkout page
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
@@ -10,7 +11,7 @@ export const DistributorCart = ( function () {
     /**
      * add show/hide buttons for cart table
      */
-    $( '.distributor-cart' ).each( function ( i, e ) {
+    $( '.distributor-cart' ).each( function( i, e ) {
         const $cart = $( e );
         const $table = $cart.find( '.table' );
         const $textSwitcher = $cart.find( '.cart-show-switcher_text' );
@@ -22,28 +23,28 @@ export const DistributorCart = ( function () {
             return $table.find( '.cart-table-row' ).length <= 7 ? 500 : 750;
         }
 
-        const showTable = function () {
-            $images.each( function ( i, e ) {
+        const showTable = function() {
+            $images.each( function( i, e ) {
                 LazyLoad.load( e );
             } );
             $table.stop( true, false ).slideDown( getAnimationDuration() );
         };
 
-        const hideTable = function () {
+        const hideTable = function() {
             $table.stop( true, false ).slideUp( getAnimationDuration() );
         };
 
-        const switcherButton = new SwitcherButton( $buttonSwitcher, showTable, hideTable, function ( e ) {
+        const switcherButton = new SwitcherButton( $buttonSwitcher, showTable, hideTable, function( e ) {
             e.stopPropagation();
             switcherCaption.isOn = switcherText.isOn = switcherButton.isOn;
         } );
 
-        const switcherText = new Switcher( $textSwitcher, showTable, hideTable, function ( e ) {
+        const switcherText = new Switcher( $textSwitcher, showTable, hideTable, function( e ) {
             e.stopPropagation();
             switcherCaption.isOn = switcherButton.isOn = switcherText.isOn;
         } );
 
-        const switcherCaption = new Switcher( $cartCaption, showTable, hideTable, function ( e ) {
+        const switcherCaption = new Switcher( $cartCaption, showTable, hideTable, function( e ) {
             e.stopPropagation();
             switcherButton.isOn = switcherText.isOn = switcherCaption.isOn;
         } );
@@ -51,12 +52,17 @@ export const DistributorCart = ( function () {
         switcherCaption.isOn = switcherButton.isOn = switcherText.isOn = true;
     } );
 
+    function formatNumber( number ) {
+        return Intl
+            .NumberFormat( 'en-US', { style: 'currency', currency: 'USD' } )
+            .format( number )
+            .substr( 1 );
+    };
+
     /**
      * recalculate carts totals
      */
     function recalc() {
-        //-
-        console.log('RECALC');
         const page_cart = document.querySelector( '.cart-page, .checkout-page' );
 
         let products = page_cart.querySelectorAll( '[data-product]' );
@@ -92,20 +98,35 @@ export const DistributorCart = ( function () {
     /**
      * remove item from cart handler
      */
-    $( 'a.cart-remove-item-button' ).click( function ( e ) {
+    $( 'a.cart-remove-item-button' ).click( function( e ) {
         e.preventDefault();
 
-        Pace.ignore( function () {
+        quantityUpdateQueries += 1;
+
+        if ( quantityUpdateQueries > 0 ) {
+            $( '.order-total-wrapper' ).addClass( 'order-total-wrapper__loading' );
+            $( '.order-total_preloader' ).fadeIn();
+        }
+
+        Pace.ignore( function() {
             const $target = $( e.currentTarget );
 
             $.ajax( {
                 url: '/api/checkout/update',
                 data: {
-                    uid: $target.attr( 'href' ).split('/').pop(),
+                    uid: $target.attr( 'href' ).split( '/' ).pop(),
                     quantity: 0,
                 },
                 method: 'POST',
-                success: function ( res ) {
+                success: function( res ) {
+                    $( '.order-total .total .price' ).text( formatNumber( res[ 'total' ] ) );
+                    $( '.shipping-total .price' ).text( formatNumber( res[ 'total_shipping_cost' ] ) );
+                    $( '.total-sales-tax .price' ).text( formatNumber( res[ 'total_sales_tax' ] ) );
+                    $( '.total-vat-tax .price' ).text( formatNumber( res[ 'total_vat_tax' ] ) );
+                    $( '.grand-total .price' ).text( formatNumber( res[ 'grand_total' ] ) );
+
+                    console.log( res );
+
                     let $row = $target;
 
                     while ( $row.length && !$row.hasClass( 'cart-table-row' ) ) {
@@ -126,7 +147,7 @@ export const DistributorCart = ( function () {
                             opacity: 0,
                             paddingTop: 0,
                             paddingBottom: 0,
-                        }, 250, function () {
+                        }, 250, function() {
                             $warehouse.remove();
 
                             // removed last product in last cart
@@ -134,18 +155,26 @@ export const DistributorCart = ( function () {
                                 window.location.href = '/';
                             }
                         } );
-
-                        return;
                     }
+                    else {
+                        $row.animate( {
+                            height: 0,
+                            opacity: 0,
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                        }, 250, function() {
+                            $row.remove();
+                        } );
+                    }
+                },
+                complete() {
+                    // hide checkout order total preloader
+                    quantityUpdateQueries -= 1;
 
-                    $row.animate( {
-                        height: 0,
-                        opacity: 0,
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                    }, 250, function () {
-                        $row.remove();
-                    } );
+                    if ( quantityUpdateQueries === 0 ) {
+                        $( '.order-total-wrapper' ).removeClass( 'order-total-wrapper__loading' );
+                        $( '.order-total_preloader' ).fadeOut();
+                    }
                 },
             } );
         } );

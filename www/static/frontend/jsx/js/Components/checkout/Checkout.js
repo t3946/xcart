@@ -71,7 +71,6 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-
                 $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
                 $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
                 $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
