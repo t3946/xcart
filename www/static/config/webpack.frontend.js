@@ -37,6 +37,13 @@ config = {
             searchResolveModulesDirectories: true
         } ) ],
 
+        fallback: {
+            "http": require.resolve("stream-http"),
+            "https": require.resolve("https-browserify"),
+            "crypto": require.resolve("crypto-browserify"),
+            "stream": require.resolve("stream-browserify"),
+        },
+
         descriptionFiles: [ 'bower.json', 'package.json' ],
         extensions: [ '.js', '.jsx', '.json' ],
     },
@@ -113,7 +120,7 @@ config = {
     watchOptions: {
         aggregateTimeout: 300,
         poll: 1000
-    }
+    },
 };
 
 if ( process.env.NODE_ENV === 'production' ) {

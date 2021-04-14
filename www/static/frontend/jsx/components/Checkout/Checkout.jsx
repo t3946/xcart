@@ -1,4 +1,13 @@
+import { createRef }   from 'preact';
+import PayByCardStripe from '@/components/Checkout/PayByCardStripe';
+
 export default class Checkout extends Component {
+    constructor() {
+        super();
+        this.PayByCardStripe = createRef();
+        this.checkoutSubmit.bind( this );
+    }
+
     componentDidMount() {
         //this solution have to smooth No-React to React transition
         //use html permutations and inserts for creating full-react component someday
@@ -11,11 +20,26 @@ export default class Checkout extends Component {
 
         // insert no-react-code in react container
         $checkoutElement.appendTo( $root );
+
+        //insert stripe
+        const $stripeTarget = $( '.stripe-target' );
+        const $stripeField = $( '.checkout-stripe' );
+        $stripeTarget.append( $stripeField );
+
+        $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', () => this.checkoutSubmit() );
+    }
+
+    checkoutSubmit() {
+        this.PayByCardStripe.current.sendStripeRequest();
     }
 
     render() {
+        const stripeField = app.options.payByCardForm.stripeField;
+
         return (
-            <div className="checkout"></div>
+            <div className="checkout">
+                <PayByCardStripe { ...stripeField } ref={ this.PayByCardStripe }/>
+            </div>
         );
     }
 }

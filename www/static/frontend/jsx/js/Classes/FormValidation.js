@@ -148,6 +148,7 @@ export default class FormValidation {
 
             field.element.focus( { preventScroll: true } );
         }
+
     }
 
     validateOnSubmit(event){
@@ -156,8 +157,17 @@ export default class FormValidation {
         this.hasErrors = false;
         this.checkAllForm();
 
+        // form invalid
         if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             this.scrollToFirstError();
+            return;
+        }
+
+        console.log('before checkout submit');
+
+        //pay by card method payment
+        if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
+            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit');
         }
     }
 

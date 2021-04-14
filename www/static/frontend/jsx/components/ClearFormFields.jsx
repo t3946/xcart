@@ -27,6 +27,11 @@ class ClearFormFields {
             let inputContainer = this.inputs.item(i);
             let closeButton = document.createElement('a');
             let input = inputContainer.querySelector('input');
+
+            if (!input) {
+                return;
+            }
+
             closeButton.classList.add('clear-input');
             //closeButton.setAttribute("pseudo", "-webkit-search-cancel-button");
             inputContainer.append(closeButton);

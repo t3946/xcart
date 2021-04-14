@@ -1,9 +1,8 @@
 .image-splash {
   height: rem-calc(20);
-  line-height: rem-calc(22);
-  width: rem-calc(44);
+  line-height: rem-calc(20);
   text-align: center;
-  padding: 0 rem-calc(6);
+  padding: rem-calc(1) rem-calc(6);
   color: $white;
   font-size: rem-calc(14);
 }
