@@ -313,8 +313,8 @@ gulp.task('clear', function() {
     );
 });
 
-gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend'], function(){
-    gulp.start( 'frontend:raw', 'frontend:css', 'frontend:images', 'frontend:fonts' );
+gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend', 'frontend:bem'], function(){
+    gulp.start( 'frontend:raw', 'frontend:css', 'frontend:images', 'frontend:fonts' , 'frontend:jsx');
 });
 
 gulp.task('build:backend', ['clear:backend'], function(){

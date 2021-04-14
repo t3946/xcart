@@ -37,6 +37,7 @@
     "mmodal": "git://github.com/tsukasa-mixer/mmodal.git",
     "modernizr": "^3.5.0",
     "npm": "^6.11.3",
+    "photoswipe": "^4.1.3",
     "preact": "^10.5.13",
     "preact-compat": "^3.16.0",
     "preact-markup": "^1.6.0",
