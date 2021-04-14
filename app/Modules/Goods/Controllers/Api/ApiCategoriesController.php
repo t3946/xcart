@@ -74,6 +74,7 @@ class ApiCategoriesController extends AbstractCatalogController
     {
         /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('similar_products', $id);
+
         if ($products) {
             $data = $this->getProductData($products);
             $this->jsonResponse($data);

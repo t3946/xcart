@@ -66,17 +66,17 @@ return [
         'name' => 'new'
     ],
     [
-        'route' => '/category/api/viewed',
+        'route' => '/category/viewed',
         'target' => [PromoController::class, 'actionViewed'],
         'name' => 'viewed'
     ],
     [
-        'route' => '/category/api/also-bound-{i:id}',
+        'route' => '/category/also-bound-{i:id}',
         'target' => [PromoController::class, 'actionAlsoBought'],
         'name' => 'also_bound'
     ],
     [
-        'route' => '/category/api/related-{i:id}',
+        'route' => '/category/related-{i:id}',
         'target' => [PromoController::class, 'actionRelatedProducts'],
         'name' => 'related'
     ],

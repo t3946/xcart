@@ -61,18 +61,18 @@ return [
         'name' => 'newApi'
     ],
     [
-        'route' => 'category/api/viewed',
+        'route' => 'category/viewed',
         'target' => [ApiCategoriesController::class, 'actionSliderViewed'],
         'name' => 'viewedApi'
     ],
     [
-        'route' => 'category/api/also-bound-{i:id}',
+        'route' => 'category/also-bound-{i:id}',
         'target' => [ApiCategoriesController::class, 'actionSliderAlsoBought'],
         'name' => 'also_boundApi'
     ],
     [
-        'route' => 'category/api/related-{i:id}',
-        'target' => [ApiCategoriesController::class, 'actionRelatedProducts'],
+        'route' => 'category/related-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionSliderRelatedProducts'],
         'name' => 'relatedApi'
     ],
     [
