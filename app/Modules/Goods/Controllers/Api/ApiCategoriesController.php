@@ -215,7 +215,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
-                'description' => $product->getCatalogDescription(),
+                'description' => utf8_encode( $product->getCatalogDescription() ),
                 'inStock' => !$product->isOutOfStock(),
                 'productcode' => $product->productcode,
                 'brand' => $product->brand->brand ?? null,

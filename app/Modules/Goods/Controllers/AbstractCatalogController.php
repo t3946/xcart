@@ -127,7 +127,7 @@ abstract class AbstractCatalogController extends FrontendController
             $pqs = $this->getSortedQS($pqs);
         }
 
-        $pager = $this->getPager($pqs);
+        $pager =$this->getPager($pqs);
 
         $this->setCanonical($model);
 
@@ -135,10 +135,25 @@ abstract class AbstractCatalogController extends FrontendController
         {
             $pagerView = $pager->createView();
 
+            $products = $this->getProductData(($pager->paginate()));
+//            dd($products);
+
             $this->jsonResponse([
                 'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
-                'content' => $this->render($this->view, array_replace([ 'model' => $model, 'pager' => $pager,], $this->getAdvancedData($model))),
-                'page_count' => $this->render('catalog/parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                'content' => $this->render(
+                    $this->view,
+                    array_replace(
+                        [ 'model' => $model, 'pager' => $pager,],
+                        $this->getAdvancedData($model)
+                    )
+                ),
+                'items' => $products,
+                'pager' => [
+                    'pageSize' => $pager->getPageSize(),
+                    'currentPage' => $pager->getPage(),
+                    'paginateCount' => count($pager->paginate()),
+                    'total' => $pager->getTotal(),
+                ],
             ]);
         }
         else {
@@ -152,5 +167,106 @@ abstract class AbstractCatalogController extends FrontendController
                 'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
             ], $this->getAdvancedData($model)));
         }
+    }
+    /**
+     * get array of main product fields (product has many excess data because this method takes only needed info) and return this
+     * @param $products
+     * @return array
+     */
+    private function getProductData($products): array
+    {
+        if (!\is_array($products)) {
+            $products->limit(20)->cache(10);
+        }
+
+        $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
+        $data = [];
+
+        /**
+         * @var ProductModel $product
+         */
+        foreach ($products as $product) {
+            //get images
+            $images = [];
+
+            if ($product->isGroupRoot()) {
+                $children = $product->getFrontendChilds()->limit(4)->all();
+                $unique_hash_list = [];
+
+                foreach ($children as $child) {
+                    $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+
+                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                        continue;
+                    }
+
+                    $unique_hash_list[] = $image->md5;
+
+                    if ($image && $url = $image->getCdnURL(174)) {
+                        $images[] = [
+                            'url' => $url,
+                            'alt' => $child->getFrontendName(),
+                        ];
+                    }
+                }
+            } else {
+                $imageModel = $product->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+
+                if ($imageModel && $url = $imageModel->getCdnURL(174)) {
+                    $images[] = [
+                        'url' => $url,
+                        'alt' => $product->getFrontendName(),
+                    ];
+                }
+            }
+
+            $eta_date = '';
+
+            if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
+                $date = (new \DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
+                $eta_date = date_format($date, "d F Y");
+            }
+
+            $data[] = [
+                'name' => utf8_encode(htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES)),
+                'url' => $product->getAbsoluteUrl(),
+                'mpn' => $product->getMpn(),
+                'upc' => $product->upc,
+                'images' => $images,
+                'description' => utf8_encode($product->getCatalogDescription()),
+                'inStock' => !$product->isOutOfStock(),
+                'productcode' => $product->productcode,
+                'brand' => $product->brand->brand ?? null,
+                'brandUrl' => $product->brand ? $product->brand->getAbsoluteUrl() : null,
+                'min_amount' => $product->min_amount,
+                'lead_time_message' => trim($product->lead_time_message),
+                'mult_order_quantity' => $product->mult_order_quantity,
+                'eta_date' => $eta_date,
+                'avail' => $product->r_avail,
+                'productid' => $product->productid,
+                'isNew' => $product->isNewProduct(),
+                'isSale' => $product->isSaleSticker(),
+                'isGroupRoot' => $product->isGroupRoot(),
+                'childrenNumber' => $product->getFrontendChilds()->count(),
+
+                'price' => [
+                    'number' => $product->getFrontendPrice(),
+                    'formatted' => $currency->getCurrencyFormat($product->getFrontendPrice()),
+                ],
+
+                'listPrice' => [
+                    'number' => $product->list_price,
+                    'formatted' => $currency->getCurrencyFormat($product->list_price),
+                ],
+
+                'currency' => [
+                    'currency' => (string)$currency,
+                    'symbol_prefix' => $currency->symbol_prefix,
+                    'after' => $currency->after,
+                ]
+            ];
+        }
+
+        return $data;
     }
 }

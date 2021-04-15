@@ -80,4 +80,9 @@ return [
         'target' => [ApiCategoriesController::class, 'actionCatalogCategory'],
         'name' => 'categoryPaginatedApi',
     ],
+    [
+        'route' => 'brand/{i:id}/{slug:slug}/',
+        'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
+        'name' => 'viewApi'
+    ],
 ];
