@@ -42,6 +42,8 @@ module.exports = {
         ],
         scss_include: [
             'bower_components/compass-mixins/lib/',
+            'bower_components/foundation-sites/scss',
+            'components/cds',
         ],
         css: [
             'temp/frontend/css/**/*'

@@ -36,7 +36,12 @@ module.exports = {
         ].concat(modules.map(function(dir) {
             return dir + '/static/scss/**/*.*'
         })),
-        scss_include: [],
+        scss_include: [
+            'bower_components/compass-mixins/lib/',
+            'bower_components/foundation-sites/scss',
+            'bower_components/mindy-sass',
+            'components/cds',
+        ],
         css: [
             'backend/css/*',
             'temp/backend/css/**/*',

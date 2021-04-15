@@ -1,419 +1,373 @@
-const fs = require('fs');
-const gulp = require('gulp-v3');
-const concat = require('gulp-concat');
-const cssnano = require('gulp-cssnano');
-const imagemin = require('gulp-imagemin');
-const livereload = require('gulp-livereload');
-const rimraf = require('gulp-rimraf');
-const sass = require('gulp-sass');
-const hashsum = require('gulp-hashsum');
-const uglify = require('gulp-uglify');
-const autoprefixer = require('gulp-autoprefixer');
-const babel = require('gulp-babel');
-// const browserify = require('gulp-browserify');
-const spawn = require('child_process').spawn;
-const inlineimage = require('gulp-inline-image');
-const importCss = require('gulp-import-css');
-// const pump = require('pump');
-
-let watch = false;
-
-let frontend = require('./config/gulp.frontend');
-let backend = require('./config/gulp.backend');
-
-function isProduction() {
-    return process.env.NODE_ENV === 'production';
-}
-
-function buildVendorsData(vendors) {
-    let vendorsData = {};
-    for (let vendor in vendors) {
-        if (vendors.hasOwnProperty(vendor)) {
-            let vendorConfig = vendors[vendor];
-            for (let type in vendorConfig) {
-                if (vendorConfig.hasOwnProperty(type)) {
-                    let matches = vendorConfig[type];
-                    if (typeof vendorsData[type] == 'undefined') {
-                        vendorsData[type] = [];
-                    }
-                    if (typeof matches == 'string') {
-                        vendorsData[type].unshift(matches);
-                    } else {
-                        vendorsData[type] = [].concat(vendorsData[type], matches)
-                    }
-                }
-            }
-        }
-    }
-    return vendorsData;
-}
-
-let frontendVendorsData = buildVendorsData(frontend.vendors);
-for (let vendorType in frontendVendorsData) {
-    if (frontendVendorsData.hasOwnProperty(vendorType)) {
-        if (!frontend.src.hasOwnProperty(vendorType)) {
-            frontend.src[vendorType] = [];
-        }
-        frontend.src[vendorType] = [].concat(frontendVendorsData[vendorType], frontend.src[vendorType]);
-    }
-}
-
-let backendVendorsData = buildVendorsData(backend.vendors);
-for (let vendorType in backendVendorsData) {
-    if (backendVendorsData.hasOwnProperty(vendorType)) {
-        if (!backend.src.hasOwnProperty(vendorType)) {
-            backend.src[vendorType] = [];
-        }
-        backend.src[vendorType] = [].concat(backendVendorsData[vendorType], backend.src[vendorType]);
-    }
-}
-
-gulp.task('frontend:scss', function() {
-    return gulp.src(frontend.src.scss)
-        .pipe(sass({
-            includePaths: frontend.src.scss_include ? frontend.src.scss_include : []
-        }).on('error', sass.logError))
-        .pipe(inlineimage())
-        .pipe(gulp.dest(frontend.dst.scss));
-});
-
-gulp.task('frontend:css:raw', function() {
-    let pipe = gulp.src(frontend.src.css_raw);
-
-    return pipe.pipe(concat(frontend.config.name + '.css'))
-        .pipe(gulp.dest(frontend.dst.scss));
-});
-
-gulp.task('backend:scss', function() {
-    return gulp.src(backend.src.scss)
-        .pipe(sass({
-            includePaths: backend.src.scss_include ? backend.src.scss_include : []
-        }).on('error', sass.logError))
-        // .pipe(inlineimage())
-        .pipe(gulp.dest(backend.dst.scss));
-});
-
-gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
-    let pipe = gulp.src(frontend.src.css)
-        // .pipe(importCss())
-        .pipe(autoprefixer({
-            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
-            cascade: false
-        }));
-
-    if (isProduction && frontend.config.compress) {
-        pipe = pipe.pipe(cssnano(frontend.config.cssnano))
-    }
-
-    return pipe
-        .pipe(gulp.dest(frontend.dst.css))
-        .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
-        .pipe(livereload());
-});
-
-gulp.task('backend:css', ['backend:scss'], function () {
-    let pipe = gulp.src(backend.src.css);
-
-    // if (isProduction && backend.config.compress) {
-    //     pipe = pipe.pipe(cssnano(backend.config.cssnano))
-    // }
-
-    // pipe = pipe.pipe(cssnano(backend.config.cssnano))
-
-    return pipe.pipe(concat(backend.config.name + '.css'))
-        .pipe(gulp.dest(backend.dst.css))
-        .pipe(hashsum({filename: 'backend/versions/css.yml', hash: 'md5'}))
-        .pipe(livereload());
-});
-
-// build react from frontend/jsx
-gulp.task('frontend:jsx', function(done){
-    let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
-
-    if (isProduction()) {
-        args.push('-p');
-    }
-
-    if (watch) {
-        args.push('--progress');
-    }
-
-    args.push('-w');
-    let cmd = spawn('node', args, {stdio: 'inherit'});
-
-    gulp.src(frontend.src.js_include)
-        .pipe(concat('vendors.js'))
-        .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
-        .pipe(gulp.dest(frontend.dst.js));
-
-    cmd.on('close', function (code) {
-        console.log('frontend:jsx exited with code ' + code);
-        done(code);
-    });
-});
-
-let fjsinc_builded = false;
-gulp.task('frontend:js:includes', function(done){
-    if (!fjsinc_builded) {
-        let pipe = gulp.src(frontend.src.js_include);
-
-        // if (isProduction && frontend.config.compress) {
-        //     pipe = pipe.pipe(uglify(frontend.config.uglify));
-        // }
-
-        return pipe
-            .pipe(concat('vendors.js'))
-            .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
-            .pipe(gulp.dest(frontend.dst.js));
-    }
-
-    done();
-});
-
-
-
-gulp.task('backend:jsx', function() {
-    let pipe = gulp.src(backend.src.jsx);
-
-    if (backend.config && backend.config.babel) {
-        pipe = pipe.pipe(babel(backend.config.babel))
-            .on('error',  function(err) {
-                // For gulp-util users u can use a more colorfull variation
-                // util.log(util.colors.red('[Compilation Error]'));
-                // util.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-                // util.log(util.colors.red('error Babel: ' + err.message + '\n'));
-                // util.log(err.codeFrame);
-
-                console.log('[Compilation Error]');
-                console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-                console.log('error Babel: ' + err.message + '\n');
-                console.log(err.codeFrame);
-
-                this.emit('end');
-            });
-    }
-
-    return pipe.pipe(gulp.dest(backend.dst.jsx));
-});
-
-gulp.task('backend:js', ['backend:jsx'], function() {
-    let pipe = gulp.src(backend.src.js, {allowEmpty: true});
-
-    if (backend.config.compress) {
-        pipe = pipe.pipe(uglify(backend.config.uglify))
-    }
-
-    return pipe
-        .pipe(concat(backend.config.name + '.js'))
-        .pipe(gulp.dest(backend.dst.js))
-        .pipe(hashsum({filename: 'backend/versions/js.yml', hash: 'md5'}))
-        .pipe(livereload());
-});
-
-gulp.task('frontend:images', function() {
-    let pipe = gulp.src(frontend.src.images);
-
-    if (isProduction() && frontend.config.compress) {
-        pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
-    }
-    return pipe
-        .pipe(gulp.dest(frontend.dst.images))
-        .pipe(livereload());
-});
-
-gulp.task('backend:images', function() {
-    let pipe = gulp.src(backend.src.images);
-
-    if (isProduction() && backend.config.compress) {
-        pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
-    }
-    return pipe
-        .pipe(gulp.dest(backend.dst.images))
-        .pipe(livereload());
-});
-
-gulp.task('frontend:fonts', function() {
-    return gulp.src(frontend.src.fonts)
-        .pipe(gulp.dest(frontend.dst.fonts)).pipe(livereload());
-});
-
-gulp.task('backend:fonts', function() {
-    return gulp.src(backend.src.fonts)
-        .pipe(gulp.dest(backend.dst.fonts)).pipe(livereload());
-});
-
-gulp.task('frontend:raw', function() {
-    return gulp.src(frontend.src.raw)
-        .pipe(gulp.dest(frontend.dst.raw)).pipe(livereload());
-});
-
-gulp.task('backend:raw', function() {
-    return gulp.src(backend.src.raw)
-        .pipe(gulp.dest(backend.dst.raw)).pipe(livereload());
-});
-
-gulp.task('watch:frontend', ['frontend:jsx'], function() {
-    // watch = true;
-    // livereload({ start: true, quiet: true});
-    // // const js_watch = frontend.src.js.concat(frontend.src.jsx);
-    //
-    // gulp.watch(frontend.src.raw, ['frontend:raw']);
-    // gulp.watch(frontend.src.scss, ['frontend:css']);
-    // gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch([
-        frontend.src.jsx,
-        frontend.src.js
-    ], ['frontend:jsx']);
-    // gulp.watch(frontend.src.images, ['frontend:images']);
-    // gulp.watch(frontend.src.fonts, ['frontend:fonts']);
-});
-
-gulp.task('watch:backend', function() {
-    livereload({ start: true, quiet: true });
-
-    gulp.watch(backend.src.raw, ['backend:raw']);
-    gulp.watch(backend.src.jsx, ['backend:js']);
-    gulp.watch(backend.src.js, ['backend:js']);
-    gulp.watch(backend.src.scss, ['backend:css']);
-    gulp.watch(backend.src.css, ['backend:css']);
-    gulp.watch(backend.src.fonts, ['backend:fonts']);
-});
-
-// gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
-gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:js:includes'], function(done){
-
-    if (!fs.existsSync(frontend.dst.scss)){
-        fs.mkdirSync(frontend.dst.scss);
-    }
-
-    if (!fs.existsSync(frontend.dst.jsx)){
-        fs.mkdirSync(frontend.dst.jsx);
-    }
-
-    done();
-});
-
-gulp.task('watch', ['build'], function() {
-    gulp.start(
-        'watch:backend' , 'watch:frontend'
-    );
-});
-
-gulp.task('clear:frontend', function() {
-    return gulp.src(['frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss]).pipe(rimraf());
-});
-
-gulp.task('clear:backend', function() {
-    return gulp.src(['backend/dist/*', 'backend/temp/*', backend.dst.jsx, backend.dst.scss]).pipe(rimraf());
-});
-
-gulp.task('clear', function() {
-    gulp.start(
-        'clear:frontend', 'clear:backend'
-    );
-});
-
-gulp.task('build:frontend', function(){
-    gulp.start(
-        'frontend:bem',
-        'frontend:jsx',
-        'frontend:raw',
-        'frontend:css',
-        'frontend:images',
-        'frontend:fonts',
-        'prepare:frontend'
-    );
-});
-
-gulp.task('build:backend', ['clear:backend'], function(){
-    gulp.start(
-        'backend:raw', 'backend:css', 'backend:js', 'backend:images', 'backend:fonts'
-    );
-});
-
-gulp.task('build', function(){
-    gulp.start(
-        'build:backend' , 'build:frontend'
-    );
-});
-
-gulp.task('default', function(){
-    gulp.start('watch');
-});
-
+/**
+ * A LITTLE ABOUT
+ *
+ * Recommended to write in this files only imports and tasks definitions in global name space
+ * All task divided on thematic sections and chapters
+ *
+ * sections as: [FRONTEND ...] [BACKEND ...]
+ * chapters as: [STYLES] [SCRIPTS] ...
+ * [STYLES] / [SCRIPTS] / [FONTS] / [IMAGES] this chapters correspond one-name tasks
+ * [UTILS] this chapter for tasks that improves your work experience
+ * [BUILD] must have only one task that only bundle all assets
+ * [WATCH] all watch tasks must be in this chapter
+ */
 
 /**
- * Redefinition Level(RL) is directory that contain bem-blocks and named as
- * Main.blocks or Common.blocks e.t.c farther will as RL for concise
- *
- * @param order array - RL names f.e. Basic.blocks or Common.blocks should to pass as ['basic', 'common']
- * @param rlDir string - path to redefinition level dirs
- * @param ext - string style files extension
- * @return array paths to RL
+ * gulp modules
  */
-async function BemOrderBuilder(rlDir, order = [], ext = 'css') {
-    //trim slash in the end
-    rlDir.replace(/[\\/]$/, '');
+const gulp = require( 'gulp' );
+const autoprefixer = require( 'gulp-autoprefixer' );
+const concat = require( 'gulp-concat' );
+const cssnano = require( 'gulp-cssnano' );
+// TODO: need setting https://www.npmjs.com/package/gulp-livereload
+const livereload = require( 'gulp-livereload' );
+const inlineImage = require( 'gulp-inline-image' );
+const sass = require( 'gulp-sass' );
+const hashSum = require( 'gulp-hashsum' );
+const babel = require( 'gulp-babel' );
+const uglify = require( 'gulp-uglify' );
+const imagemin = require( 'gulp-imagemin' );
+const rimraf = require( 'gulp-rimraf' );
 
-    let orderedLevels = [];
+const spawn = require( 'child_process' ).spawn;
 
-    return new Promise((resolve, reject) => {
-        fs.readdir( rlDir, ( err, files ) => {
-            const otherLevels = [];
+// user code
+const GulpAssets = require( './GulpAssets' ).default;
 
-            files.forEach( file => {
-                if ( file.search( /^.*?\.blocks$/ ) !== 0 ) {
-                    return;
-                }
+// configurations
+const frontend = require( './config/gulp.frontend' );
+const backend = require( './config/gulp.backend' );
 
-                const levelName = file.split( '.' )[ 0 ];
-                let index = order.indexOf( levelName );
+/**
+ *
+ *          [FRONTEND START]
+ *
+ */
 
-                if ( index > -1 ) {
-                    orderedLevels[ index ] = `${rlDir}/${file}/**/*.${ext}`;
-                } else {
-                    otherLevels.push( `${rlDir}/${file}/**/*.${ext}` );
-                }
-            } );
-
-            //remove empty values
-            orderedLevels = orderedLevels.filter((elem) => elem);
-            orderedLevels.push( ...otherLevels );
-
-            resolve(orderedLevels);
-        } );
-    });
-}
+/**
+ *
+ *          [STYLES]
+ *
+ */
 
 /**
  * build bem styles for frontend
  */
-gulp.task('frontend:bem', async function () {
+gulp.task( 'frontend:bem', async function() {
     const bemLevelsOrder = [
         'common',
         'form',
         'checkout',
     ];
-    const bemOrderedPaths = await BemOrderBuilder('frontend/bem/blocks', bemLevelsOrder, 'scss');
+    const bemOrderedPaths = await GulpAssets.BemOrderBuilder( 'frontend/bem/blocks', bemLevelsOrder, 'scss' );
 
     return gulp
         .src( bemOrderedPaths )
         .pipe( concat( 'bem.scss' ) )
         .pipe( gulp.dest( 'frontend/bem/' ) );
-});
+} );
+
+gulp.task( 'frontend:scss', function() {
+    return gulp
+        .src( frontend.src.scss )
+        .pipe( sass( {
+            includePaths: frontend.src.scss_include ? frontend.src.scss_include : [],
+        } ).on( 'error', sass.logError ) )
+        .pipe( inlineImage() )
+        .pipe( gulp.dest( frontend.dst.scss ) );
+} );
+
+gulp.task( 'frontend:css:raw', function() {
+    let pipe = gulp.src( frontend.src.css_raw );
+
+    return pipe
+        .pipe( concat( frontend.config.name + '.css' ) )
+        .pipe( gulp.dest( frontend.dst.scss ) );
+} );
+
+gulp.task( 'frontend:css', gulp.series( 'frontend:scss', 'frontend:css:raw' ), function() {
+    let pipe = gulp
+        .src( frontend.src.css )
+        .pipe( autoprefixer( {
+            browsers: [ '> 5%', 'last 2 versions', 'last 4 iOS versions' ],
+            cascade: false,
+        } ) );
+
+    if ( GulpAssets.isProduction && frontend.config.compress ) {
+        pipe = pipe.pipe( cssnano( frontend.config.cssnano ) );
+    }
+
+    return pipe
+        .pipe( gulp.dest( frontend.dst.css ) )
+        .pipe( hashSum( { filename: 'frontend/versions/css.yml', hash: 'md5' } ) )
+        .pipe( livereload() );
+} );
 
 /**
- * build bem styles for frontend when updated
+ *
+ *          [SCRIPTS]
+ *
  */
-gulp.task( 'watch:frontend:bem', [ 'frontend:bem' ], function () {
-    gulp.watch( 'frontend/bem/blocks/**/*.scss', [ 'frontend:bem' ] );
+
+gulp.task( 'frontend:jsx', function( done ) {
+    let args = [ './node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js' ];
+
+    GulpAssets.isProduction() && args.push( '-p' );
+
+    const cmd = spawn( 'node', args, { stdio: 'inherit' } );
+    const src = frontend.src.js_include;
+    const dst = frontend.dst.js;
+
+    GulpAssets.buildJsx( src, dst, cmd, done );
 } );
 
-gulp.task( 'watch:frontend:css', [ 'frontend:css' ], function () {
-    gulp.watch( ['frontend/bem/bem.scss', 'frontend/sass/**/*' ], [ 'frontend:css' ] );
-    // console.log(frontend.src.css);
-    // gulp.watch( [
-    //     frontend.src.css,
-    //     'frontend/bem/bem.scss'
-    // ], [ 'frontend:css' ] );
+gulp.task( 'watch:frontend:jsx', function( done ) {
+    let args = [ './node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js' ];
+
+    GulpAssets.isProduction() && args.push( '-p' );
+
+    args.push( '--progress' );
+    args.push( '-w' );
+
+    const cmd = spawn( 'node', args, { stdio: 'inherit' } );
+    const src = frontend.src.js_include;
+    const dst = frontend.dst.js;
+
+    GulpAssets.buildJsx( src, dst, cmd, done );
 } );
+
+/**
+ *
+ *          [FONTS]
+ *
+ */
+
+gulp.task( 'frontend:fonts', function() {
+    return gulp
+        .src( frontend.src.fonts )
+        .pipe( gulp.dest( frontend.dst.fonts ) )
+        .pipe( livereload() );
+} );
+
+/**
+ *
+ *          [IMAGES]
+ *
+ */
+
+gulp.task( 'frontend:images', function() {
+    let pipe = gulp.src( frontend.src.images );
+
+    if ( GulpAssets.isProduction() && frontend.config.compress ) {
+        pipe = pipe.pipe( imagemin( frontend.config.imagemin || {} ) );
+    }
+    return pipe
+        .pipe( gulp.dest( frontend.dst.images ) )
+        .pipe( livereload() );
+} );
+
+/**
+ *
+ *          [UTILS]
+ *
+ */
+
+/**
+ * remove frontend bundles and assets in destinations
+ */
+gulp.task( 'clear:frontend', function() {
+    return gulp.src( [ 'frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss ] ).pipe( rimraf() );
+} );
+
+/**
+ *
+ *          [WATCH]
+ *
+ */
+
+/**
+ * build scripts for frontend when changed
+ */
+gulp.task( 'watch:frontend:scripts', gulp.series( 'watch:frontend:jsx' ) );
+
+/**
+ * build styles for frontend when changed
+ */
+gulp.task( 'watch:frontend:styles', gulp.series(
+    'frontend:bem',
+    function watchStyles() {
+        gulp.watch( 'frontend/bem/blocks/**/*.scss', gulp.parallel( 'frontend:bem' ) );
+        gulp.watch( [ 'frontend/bem/bem.scss', 'frontend/sass/**/*' ], gulp.parallel( 'frontend:css' ) );
+    },
+) );
+
+/**
+ *
+ *          [BUILD]
+ *
+ */
+
+/**
+ * build all frontend assets
+ */
+gulp.task( 'build:frontend', gulp.series( 'clear:frontend', 'frontend:bem', 'frontend:css', 'frontend:jsx', 'frontend:fonts', 'frontend:images' ) );
+
+/**
+ *
+ *          [FRONTEND END]
+ *
+ */
+
+//------------------------------------------------//
+
+/**
+ *
+ *          [BACKEND START]
+ *
+ */
+
+/**
+ *
+ *          [STYLES]
+ *
+ */
+
+gulp.task( 'backend:scss', function() {
+    return gulp
+        .src( backend.src.scss )
+        .pipe( sass( {
+            includePaths: backend.src.scss_include ? backend.src.scss_include : [],
+        } ).on( 'error', sass.logError ) )
+        .pipe( gulp.dest( backend.dst.scss ) );
+} );
+
+gulp.task( 'backend:css', gulp.series( 'backend:scss' ), function() {
+    let pipe = gulp.src( backend.src.css );
+
+    return pipe
+        .pipe( concat( backend.config.name + '.css' ) )
+        .pipe( gulp.dest( backend.dst.css ) )
+        .pipe( hashSum( { filename: 'backend/versions/css.yml', hash: 'md5' } ) )
+        .pipe( livereload() );
+} );
+
+/**
+ *
+ *          [SCRIPTS]
+ *
+ */
+
+gulp.task( 'backend:jsx', function() {
+    let pipe = gulp.src( backend.src.jsx );
+
+    if ( backend.config && backend.config.babel ) {
+        pipe = pipe
+            .pipe( babel( backend.config.babel ) )
+            .on( 'error', function( err ) {
+                console.log( '[Compilation Error]' );
+                console.log( err.fileName + ( err.loc ? `( ${ err.loc.line }, ${ err.loc.column } ): ` : ': ' ) );
+                console.log( 'error Babel: ' + err.message + '\n' );
+                console.log( err.codeFrame );
+                this.emit( 'end' );
+            } );
+    }
+
+    return pipe.pipe( gulp.dest( backend.dst.jsx ) );
+} );
+
+gulp.task( 'backend:js', gulp.series( 'backend:jsx' ), function() {
+    let pipe = gulp.src( backend.src.js, { allowEmpty: true } );
+
+    if ( backend.config.compress ) {
+        pipe = pipe.pipe( uglify( backend.config.uglify ) );
+    }
+
+    return pipe
+        .pipe( concat( backend.config.name + '.js' ) )
+        .pipe( gulp.dest( backend.dst.js ) )
+        .pipe( hashSum( { filename: 'backend/versions/js.yml', hash: 'md5' } ) )
+        .pipe( livereload() );
+} );
+
+/**
+ *
+ *          [IMAGES]
+ *
+ */
+
+gulp.task( 'backend:images', function() {
+    let pipe = gulp.src( backend.src.images );
+
+    if ( GulpAssets.isProduction() && backend.config.compress ) {
+        pipe = pipe.pipe( imagemin( backend.config.imagemin || {} ) );
+    }
+    return pipe
+        .pipe( gulp.dest( backend.dst.images ) )
+        .pipe( livereload() );
+} );
+
+/**
+ *
+ *          [FONTS]
+ *
+ */
+
+gulp.task( 'backend:fonts', function() {
+    return gulp
+        .src( backend.src.fonts )
+        .pipe( gulp.dest( backend.dst.fonts ) ).pipe( livereload() );
+} );
+
+gulp.task( 'backend:raw', function() {
+    return gulp
+        .src( backend.src.raw )
+        .pipe( gulp.dest( backend.dst.raw ) ).pipe( livereload() );
+} );
+
+/**
+ *
+ *          [UTILS]
+ *
+ */
+
+/**
+ * remove backend bundles and assets in destinations
+ */
+gulp.task( 'clear:backend', function() {
+    return gulp
+        .src( [ 'backend/dist/*', 'backend/temp/*', backend.dst.jsx, backend.dst.scss ], { allowEmpty: true } )
+        .pipe( rimraf() );
+} );
+
+/**
+ *
+ *          [WATCH]
+ *
+ */
+
+gulp.task( 'watch:backend', gulp.series(
+    function watchALL() {
+        livereload( { start: true, quiet: true } );
+
+        gulp.watch( backend.src.raw, [ 'backend:raw' ] );
+        gulp.watch( backend.src.jsx, [ 'backend:js' ] );
+        gulp.watch( backend.src.js, [ 'backend:js' ] );
+        gulp.watch( backend.src.scss, [ 'backend:css' ] );
+        gulp.watch( backend.src.css, [ 'backend:css' ] );
+        gulp.watch( backend.src.fonts, [ 'backend:fonts' ] );
+    },
+) );
+
+/**
+ *
+ *          [BUILD]
+ *
+ */
+
+gulp.task( 'build:backend', gulp.series( 'clear:backend', 'backend:raw', 'backend:css', 'backend:js', 'backend:images', 'backend:fonts' ) );
+
+/**
+ *
+ *          [BACKEND END]
+ *
+ */
