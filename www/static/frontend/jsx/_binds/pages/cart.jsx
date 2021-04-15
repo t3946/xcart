@@ -9,7 +9,11 @@ import Checkout from '@/js/Components/checkout/Checkout';
     if (page_cart) {
         let n_request = 0;
         let recalc = () => {
-            page_cart = document.querySelector('.cart-page, .checkout-page');
+            page_cart = document.querySelector('.cart-page');
+
+            if (!page_cart) {
+                return;
+            }
 
             let products = page_cart.querySelectorAll('[data-product]');
             if (products) {
@@ -51,6 +55,7 @@ import Checkout from '@/js/Components/checkout/Checkout';
             };
 
             Checkout.update( data, function ( res ) {
+                const page_cart = document.querySelector('.checkout-page');
                 let p_data = page_cart.dataset;
                 let cartQuantity = 0;
 
