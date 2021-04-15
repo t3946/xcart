@@ -32,6 +32,8 @@ bower_components
 /html_cache/
 /app/Modules/Translate/lang/*.i18next.json
 /www/static/frontend/dist
+/www/static/frontend/versions
+/www/static/frontend/bem/bem.scss
 
 !.gitkeep
 !/skin1_kolin/
