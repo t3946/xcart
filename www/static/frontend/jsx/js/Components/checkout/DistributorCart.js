@@ -104,7 +104,6 @@ export const DistributorCart = ( function() {
         quantityUpdateQueries += 1;
 
         if ( quantityUpdateQueries > 0 ) {
-            $( '.order-total-wrapper' ).addClass( 'order-total-wrapper__loading' );
             $( '.order-total_preloader' ).fadeIn();
         }
 
@@ -119,13 +118,13 @@ export const DistributorCart = ( function() {
                 },
                 method: 'POST',
                 success: function( res ) {
-                    $( '.order-total .total .price' ).text( formatNumber( res[ 'total' ] ) );
-                    $( '.shipping-total .price' ).text( formatNumber( res[ 'total_shipping_cost' ] ) );
-                    $( '.total-sales-tax .price' ).text( formatNumber( res[ 'total_sales_tax' ] ) );
-                    $( '.total-vat-tax .price' ).text( formatNumber( res[ 'total_vat_tax' ] ) );
-                    $( '.grand-total .price' ).text( formatNumber( res[ 'grand_total' ] ) );
-
-                    console.log( res );
+                    if ( quantityUpdateQueries === 1 ) {
+                        $( '.order-total .total .price' ).text( formatNumber( res[ 'total' ] ) );
+                        $( '.shipping-total .price' ).text( formatNumber( res[ 'total_shipping_cost' ] ) );
+                        $( '.total-sales-tax .price' ).text( formatNumber( res[ 'total_sales_tax' ] ) );
+                        $( '.total-vat-tax .price' ).text( formatNumber( res[ 'total_vat_tax' ] ) );
+                        $( '.grand-total .price' ).text( formatNumber( res[ 'grand_total' ] ) );
+                    }
 
                     let $row = $target;
 
@@ -172,7 +171,6 @@ export const DistributorCart = ( function() {
                     quantityUpdateQueries -= 1;
 
                     if ( quantityUpdateQueries === 0 ) {
-                        $( '.order-total-wrapper' ).removeClass( 'order-total-wrapper__loading' );
                         $( '.order-total_preloader' ).fadeOut();
                     }
                 },

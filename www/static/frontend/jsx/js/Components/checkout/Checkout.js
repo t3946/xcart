@@ -60,7 +60,6 @@ export default ( function () {
             quantityUpdateQueries += 1;
 
             if (quantityUpdateQueries > 0) {
-                $('.order-total-wrapper').addClass('order-total-wrapper__loading');
                 $('.order-total_preloader').fadeIn();
             }
         }
@@ -71,11 +70,13 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
-                $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
-                $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
-                $( '.total-vat-tax .price' ).text( self.formatNumber( res[ 'total_vat_tax' ] ) );
-                $( '.grand-total .price' ).text( self.formatNumber( res[ 'grand_total' ] ) );
+                if (quantityUpdateQueries === 1) {
+                    $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
+                    $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
+                    $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
+                    $( '.total-vat-tax .price' ).text( self.formatNumber( res[ 'total_vat_tax' ] ) );
+                    $( '.grand-total .price' ).text( self.formatNumber( res[ 'grand_total' ] ) );
+                }
 
                 for ( let manufacturer_id in res.distributor_carts ) {
                     const manufacturer = res.distributor_carts[ manufacturer_id ];
@@ -87,7 +88,7 @@ export default ( function () {
                         $salesTax
                             .show()
                             .find( '.subtotal' )
-                            .text( parseFloat( manufacturer[ 'sales_tax' ] ).toFixed( 2 ) );
+                            .text( self.formatNumber( manufacturer[ 'sales_tax' ] ) );
                     } else {
                         $salesTax.hide();
                     }
@@ -98,12 +99,14 @@ export default ( function () {
                         $vaxTax
                             .show()
                             .find( '.subtotal' )
-                            .text( parseFloat( manufacturer[ 'vat_tax' ] ).toFixed( 2 ) );
+                            .text( self.formatNumber( parseFloat( manufacturer[ 'vat_tax' ] ) ) );
                     } else {
                         $vaxTax.hide();
                     }
 
-                    whTotal.find( '.format_price .subtotal' ).text( parseFloat( manufacturer['subtotal'] ).toFixed(2) );
+                    whTotal
+                        .find( '.format_price .subtotal' )
+                        .text( self.formatNumber( parseFloat( manufacturer[ 'subtotal' ] ) ) );
                 }
 
                 if ( res.templates.payment_methods ) {
@@ -127,7 +130,6 @@ export default ( function () {
                     quantityUpdateQueries -= 1;
 
                     if (quantityUpdateQueries === 0) {
-                        $('.order-total-wrapper').removeClass('order-total-wrapper__loading');
                         $('.order-total_preloader').fadeOut();
                     }
                 }
