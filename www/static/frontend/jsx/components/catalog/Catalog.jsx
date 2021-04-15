@@ -82,9 +82,6 @@ export default class Catalog extends Component {
                     { this.printStateLine() }
 
                     <LoadMore onNext={ this.onNext } next={ this.state.next } classes={ [ 'catalog_load-more' ] } isLoading={ this.state.isLoading }/>
-
-                    {/*Возможно это кнопка Load more*/ }
-                    {/*raw $pager->render()*/ }
                 </CatalogContext.Provider>
             </div>
         );
