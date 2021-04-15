@@ -18,7 +18,7 @@ module.exports = {
         scss: 'temp/frontend/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
-        fonts: 'frontend/dist/fonts',
+        fonts: 'frontend/dist/css/fonts',
         raw: 'frontend/dist/raw'
     },
     modules: {

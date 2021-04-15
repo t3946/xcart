@@ -37,7 +37,8 @@
     "slick-carousel": "~1.6.0",
     "fancybox": "~2.1.5",
     "flow-js": "~2",
-    "javascript-auto-complete": "^1.0.4"
+    "javascript-auto-complete": "^1.0.4",
+    "jquery-form": "^4.3.0"
   },
   "devDependencies": {}
 }
