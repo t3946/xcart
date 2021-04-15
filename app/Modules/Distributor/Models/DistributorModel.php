@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
@@ -738,7 +739,16 @@ class DistributorModel extends Model
 
     public function getContactNameForTemplates(): string
     {
-        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
+        /** @var DistributorContactsModel $contact */
+        $contact = $this->contacts_model
+            ->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])
+            ->order(['position'])
+            ->limit(1)
+            ->get();
+        if ($contact && $names_arrays = explode(' ', $contact->contact_name)) {
+            $result = ucfirst(strtolower($names_arrays[0]));
+        }
+        return $result ?? 'Supplier';
     }
 
     public function afterSave($owner, $isNew)
