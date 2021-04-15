@@ -745,7 +745,7 @@ class DistributorModel extends Model
             ->order(['position'])
             ->limit(1)
             ->get();
-        if ($contact && $names_arrays = explode(' ', $contact->contact_name)) {
+        if ($contact && $contact->contact_name && $names_arrays = explode(' ', $contact->contact_name)) {
             $result = ucfirst(strtolower($names_arrays[0]));
         }
         return $result ?? 'Supplier';
