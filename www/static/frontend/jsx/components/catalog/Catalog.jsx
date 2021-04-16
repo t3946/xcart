@@ -50,6 +50,7 @@ export default class Catalog extends Component {
         }
     }
 
+
     onLoadProductList() {
         this.setState( { loaded: false } );
     }
