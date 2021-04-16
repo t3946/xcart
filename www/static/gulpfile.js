@@ -19,8 +19,6 @@ const gulp = require( 'gulp' );
 const autoprefixer = require( 'gulp-autoprefixer' );
 const concat = require( 'gulp-concat' );
 const cssnano = require( 'gulp-cssnano' );
-// TODO: need setting https://www.npmjs.com/package/gulp-livereload
-const livereload = require( 'gulp-livereload' );
 const inlineImage = require( 'gulp-inline-image' );
 const sass = require( 'gulp-sass' );
 const hashSum = require( 'gulp-hashsum' );
@@ -99,8 +97,7 @@ gulp.task( 'frontend:css', gulp.series( 'frontend:scss', 'frontend:css:raw', () 
 
     return pipe
         .pipe( hashSum( { filename: 'frontend/versions/css.yml', hash: 'md5' } ) )
-        .pipe( gulp.dest( frontend.dst.css ) )
-        .pipe( livereload() );
+        .pipe( gulp.dest( frontend.dst.css ) );
 } ) );
 
 /**
@@ -145,8 +142,7 @@ gulp.task( 'watch:frontend:jsx', function( done ) {
 gulp.task( 'frontend:fonts', function() {
     return gulp
         .src( frontend.src.fonts )
-        .pipe( gulp.dest( frontend.dst.fonts ) )
-        .pipe( livereload() );
+        .pipe( gulp.dest( frontend.dst.fonts ) );
 } );
 
 /**
@@ -162,8 +158,7 @@ gulp.task( 'frontend:images', function() {
         pipe = pipe.pipe( imagemin( frontend.config.imagemin || {} ) );
     }
     return pipe
-        .pipe( gulp.dest( frontend.dst.images ) )
-        .pipe( livereload() );
+        .pipe( gulp.dest( frontend.dst.images ) );
 } );
 
 /**
@@ -247,8 +242,7 @@ gulp.task( 'backend:css', gulp.series( 'backend:scss', () => {
     return pipe
         .pipe( concat( backend.config.name + '.css' ) )
         .pipe( gulp.dest( backend.dst.css ) )
-        .pipe( hashSum( { filename: 'backend/versions/css.yml', hash: 'md5' } ) )
-        .pipe( livereload() );
+        .pipe( hashSum( { filename: 'backend/versions/css.yml', hash: 'md5' } ) );
 } ) );
 
 /**
@@ -285,8 +279,7 @@ gulp.task( 'backend:js', gulp.series( 'backend:jsx', function() {
     return pipe
         .pipe( concat( backend.config.name + '.js' ) )
         .pipe( gulp.dest( backend.dst.js ) )
-        .pipe( hashSum( { filename: 'backend/versions/js.yml', hash: 'md5' } ) )
-        .pipe( livereload() );
+        .pipe( hashSum( { filename: 'backend/versions/js.yml', hash: 'md5' } ) );
 } ) );
 
 /**
@@ -301,9 +294,8 @@ gulp.task( 'backend:images', function() {
     if ( GulpAssets.isProduction() && backend.config.compress ) {
         pipe = pipe.pipe( imagemin( backend.config.imagemin || {} ) );
     }
-    return pipe
-        .pipe( gulp.dest( backend.dst.images ) )
-        .pipe( livereload() );
+
+    return pipe.pipe( gulp.dest( backend.dst.images ) );
 } );
 
 /**
@@ -315,13 +307,13 @@ gulp.task( 'backend:images', function() {
 gulp.task( 'backend:fonts', function() {
     return gulp
         .src( backend.src.fonts )
-        .pipe( gulp.dest( backend.dst.fonts ) ).pipe( livereload() );
+        .pipe( gulp.dest( backend.dst.fonts ) );
 } );
 
 gulp.task( 'backend:raw', function() {
     return gulp
         .src( backend.src.raw )
-        .pipe( gulp.dest( backend.dst.raw ) ).pipe( livereload() );
+        .pipe( gulp.dest( backend.dst.raw ) );
 } );
 
 /**
@@ -347,8 +339,6 @@ gulp.task( 'clear:backend', function() {
 
 gulp.task( 'watch:backend', gulp.series(
     function watchALL() {
-        livereload( { start: true, quiet: true } );
-
         gulp.watch( backend.src.raw, [ 'backend:raw' ] );
         gulp.watch( backend.src.jsx, [ 'backend:js' ] );
         gulp.watch( backend.src.js, [ 'backend:js' ] );
