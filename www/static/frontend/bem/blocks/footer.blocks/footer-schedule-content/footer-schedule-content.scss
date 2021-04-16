@@ -1,0 +1,7 @@
+.footer-schedule-content {
+  font-size: rem-calc(12);
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}
