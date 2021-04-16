@@ -37,9 +37,9 @@ module.exports = {
             return dir + '/static/scss/**/*.*'
         })),
         scss_include: [
-            'bower_components/compass-mixins/lib/',
-            'bower_components/foundation-sites/scss',
-            'bower_components/mindy-sass',
+            'node_modules/compass-mixins/lib/',
+            'node_modules/foundation-sites/scss',
+            'node_modules/mindy-sass',
             'components/cds',
         ],
         css: [
@@ -62,36 +62,36 @@ module.exports = {
     vendors: {
         jquery: {
             js: [
-                'bower_components/jquery/dist/jquery.js'
+                'node_modules/jquery/dist/jquery.js'
             ]
         },
 
         'jquery-ui': {
             js: [
-                'bower_components/jquery-ui/jquery-ui.js'
+                'node_modules/jquery-ui/jquery-ui.js'
             ],
             css: [
-                'bower_components/jquery-ui/themes/base/jquery-ui.css',
-                // 'bower_components/jquery-ui/themes/base/theme.css',
-                // 'bower_components/jquery-ui/themes/base/tabs.css',
-                // 'bower_components/jquery-ui/themes/base/datepicker.css',
+                'node_modules/jquery-ui/themes/base/jquery-ui.css',
+                // 'node_modules/jquery-ui/themes/base/theme.css',
+                // 'node_modules/jquery-ui/themes/base/tabs.css',
+                // 'node_modules/jquery-ui/themes/base/datepicker.css',
             ],
         },
 
         'jquery.shapeshift': {
             js: [
-                'bower_components/jquery.shapeshift/core/jquery.shapeshift.js'
+                'node_modules/jquery.shapeshift/core/jquery.shapeshift.js'
             ]
         },
 
         'jquery.cookie': {
             js: [
-                'bower_components/jquery.cookie/jquery.cookie.js'
+                'node_modules/jquery.cookie/jquery.cookie.js'
             ]
         },
         'jquery-form': {
             js: [
-                'bower_components/jquery-form/dist/jquery.form.min.js'
+                'node_modules/jquery-form/dist/jquery.form.min.js'
             ]
         },
         font_icons: {
@@ -118,15 +118,15 @@ module.exports = {
         },
         mouse_wheel: {
             js: [
-                'bower_components/jquery-mousewheel/jquery.mousewheel.js'
+                'node_modules/jquery-mousewheel/jquery.mousewheel.js'
             ]
             // scss: [
-            //     'bower_components/mmodal/scss/jquery.mmodal.scss'
+            //     'node_modules/mmodal/scss/jquery.mmodal.scss'
             // ]
         },
         underscore: {
             js: [
-                'bower_components/underscore/underscore.js'
+                'node_modules/underscore/underscore.js'
             ]
         },
         confirm: {
@@ -149,7 +149,7 @@ module.exports = {
         },
         flow: {
             js: [
-                'bower_components/flow-js/dist/flow.js'
+                'node_modules/flow-js/dist/flow.js'
             ]
         },
         files_field: {
@@ -159,11 +159,11 @@ module.exports = {
         },
         select2: {
             js: [
-                // 'bower_components/select2/dist/js/select2.full.js'
-                'bower_components/select2/dist/js/select2.js'
+                // 'node_modules/select2/dist/js/select2.full.js'
+                'node_modules/select2/dist/js/select2.js'
             ],
             css: [
-                'bower_components/select2/dist/css/select2.css'
+                'node_modules/select2/dist/css/select2.css'
             ]
         },
 
@@ -179,13 +179,13 @@ module.exports = {
 
         'font-awesome': {
             fonts: [
-                'bower_components/font-awesome/fonts/*'
+                'node_modules/font-awesome/fonts/*'
             ],
             // css: [
-            //     'bower_components/font-awesome/css/font-awesome.css'
+            //     'node_modules/font-awesome/css/font-awesome.css'
             // ]
             scss: [
-                'bower_components/font-awesome/scss/*'
+                'node_modules/font-awesome/scss/*'
             ]
         },
 
@@ -206,12 +206,12 @@ module.exports = {
 
         'compass-mixins': {
             scss_include: [
-                'bower_components/compass-mixins/lib/'
+                'node_modules/compass-mixins/lib/'
             ]
         },
         'mindy-sass': {
             scss_include: [
-                'bower_components/mindy-sass/'
+                'node_modules/mindy-sass/'
             ]
         }
     }
