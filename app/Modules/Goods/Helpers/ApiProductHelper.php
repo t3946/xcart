@@ -1,0 +1,116 @@
+<?php
+
+namespace Modules\Goods\Helpers;
+
+use DateTime;
+use Modules\Goods\Models\ProductModel;
+use Xcart\App\Exceptions\UnknownPropertyException;
+use Xcart\App\Main\Xcart;
+use function is_array;
+
+class ApiProductHelper
+{
+    /**
+     * get array of main product fields (product has many excess data because this method takes only needed info) and return this
+     * @param $products
+     * @return array
+     * @throws UnknownPropertyException
+     */
+    public static function getProductData($products): array
+    {
+        if (!is_array($products)) {
+            $products->limit(20)->cache(10);
+        }
+
+        $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
+        $data = [];
+
+        /**
+         * @var ProductModel $product
+         */
+        foreach ($products as $product) {
+            //get images
+            $images = [];
+
+            if ($product->isGroupRoot()) {
+                /** @var ProductModel[] $children */
+                $children = $product->getFrontendChilds()->limit(4)->all();
+                $unique_hash_list = [];
+
+                foreach ($children as $child) {
+                    $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+
+                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                        continue;
+                    }
+
+                    $unique_hash_list[] = $image->md5;
+
+                    if ($image && $url = $image->getCdnURL(174)) {
+                        $images[] = [
+                            'url' => $url,
+                            'alt' => $child->getFrontendName(),
+                        ];
+                    }
+                }
+            } else {
+                $imageModel = $product->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+
+                if ($imageModel && $url = $imageModel->getCdnURL(174)) {
+                    $images[] = [
+                        'url' => $url,
+                        'alt' => $product->getFrontendName(),
+                    ];
+                }
+            }
+
+            $eta_date = '';
+
+            if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
+                $date = (new DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
+                $eta_date = date_format($date, "d F Y");
+            }
+
+            $data[] = [
+                'name' => htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES),
+                'url' => $product->getAbsoluteUrl(),
+                'mpn' => $product->getMpn(),
+                'upc' => $product->upc,
+                'images' => $images,
+                'description' => $product->getCatalogDescription(),
+                'inStock' => !$product->isOutOfStock(),
+                'productcode' => $product->productcode,
+                'brand' => $product->brand->brand ?? null,
+                'brandUrl' => $product->brand ? $product->brand->getAbsoluteUrl() : null,
+                'min_amount' => $product->min_amount,
+                'lead_time_message' => trim($product->lead_time_message),
+                'mult_order_quantity' => $product->mult_order_quantity,
+                'eta_date' => $eta_date,
+                'avail' => $product->r_avail,
+                'productid' => $product->productid,
+                'isNew' => $product->isNewProduct(),
+                'isSale' => $product->isSaleSticker(),
+                'isGroupRoot' => $product->isGroupRoot(),
+                'childrenNumber' => $product->getFrontendChilds()->count(),
+
+                'price' => [
+                    'number' => $product->getFrontendPrice(),
+                    'formatted' => $currency->getCurrencyFormat($product->getFrontendPrice()),
+                ],
+
+                'listPrice' => [
+                    'number' => $product->list_price,
+                    'formatted' => $currency->getCurrencyFormat($product->list_price),
+                ],
+
+                'currency' => [
+                    'currency' => (string)$currency,
+                    'symbol_prefix' => $currency->symbol_prefix,
+                    'after' => $currency->after,
+                ]
+            ];
+        }
+
+        return $data;
+    }
+}
