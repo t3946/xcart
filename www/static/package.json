@@ -44,6 +44,7 @@
     "preact-markup": "^1.6.0",
     "preact-redux": "^2.0.2",
     "preact-render-to-string": "^3.6.3",
+    "react-accessible-accordion": "^3.3.4",
     "react-i18next": "^11.8.12",
     "react-id-swiper": "^1.4.0",
     "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
@@ -72,6 +73,7 @@
     "browser-sync": "^2.18.12",
     "browserify": "^14.3.0",
     "child_process": "^1.0.2",
+    "formik": "^2.2.6",
     "gulp": "^4.0.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-babel": "^7.0.0",
@@ -91,9 +93,12 @@
     "json-loader": "^0.5.4",
     "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
+    "preact-router": "^3.2.1",
     "pump": "^1.0.2",
+    "react-collapsible": "^2.8.3",
     "webpack": "^5.25.1",
     "webpack-cli": "^4.5.0",
-    "webpack-sweet-entry": "^1.1.5"
+    "webpack-sweet-entry": "^1.1.5",
+    "yup": "^0.32.9"
   }
 }

@@ -65,6 +65,11 @@ return array_merge($admin_routes, [
         'namespace' => 'demo'
     ],
     [
+        'route' => '/help',
+        'path' => 'Modules.Help.routes',
+        'namespace' => 'help'
+    ],
+    [
         'route' => '/coupon',
         'path' => 'Modules.Cart.routes_coupon',
         'namespace' => 'coupon',
