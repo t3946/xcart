@@ -85,7 +85,7 @@ gulp.task( 'frontend:css:raw', function() {
         .pipe( gulp.dest( frontend.dst.scss ) );
 } );
 
-gulp.task( 'frontend:css', gulp.series( 'frontend:scss', 'frontend:css:raw' ), function() {
+gulp.task( 'frontend:css', gulp.series( 'frontend:scss', 'frontend:css:raw', () => {
     let pipe = gulp
         .src( frontend.src.css )
         .pipe( autoprefixer( {
@@ -98,10 +98,10 @@ gulp.task( 'frontend:css', gulp.series( 'frontend:scss', 'frontend:css:raw' ), f
     }
 
     return pipe
-        .pipe( gulp.dest( frontend.dst.css ) )
         .pipe( hashSum( { filename: 'frontend/versions/css.yml', hash: 'md5' } ) )
+        .pipe( gulp.dest( frontend.dst.css ) )
         .pipe( livereload() );
-} );
+} ) );
 
 /**
  *
@@ -241,7 +241,7 @@ gulp.task( 'backend:scss', function() {
         .pipe( gulp.dest( backend.dst.scss ) );
 } );
 
-gulp.task( 'backend:css', gulp.series( 'backend:scss' ), function() {
+gulp.task( 'backend:css', gulp.series( 'backend:scss', () => {
     let pipe = gulp.src( backend.src.css );
 
     return pipe
@@ -249,7 +249,7 @@ gulp.task( 'backend:css', gulp.series( 'backend:scss' ), function() {
         .pipe( gulp.dest( backend.dst.css ) )
         .pipe( hashSum( { filename: 'backend/versions/css.yml', hash: 'md5' } ) )
         .pipe( livereload() );
-} );
+} ) );
 
 /**
  *
@@ -275,7 +275,7 @@ gulp.task( 'backend:jsx', function() {
     return pipe.pipe( gulp.dest( backend.dst.jsx ) );
 } );
 
-gulp.task( 'backend:js', gulp.series( 'backend:jsx' ), function() {
+gulp.task( 'backend:js', gulp.series( 'backend:jsx', function() {
     let pipe = gulp.src( backend.src.js, { allowEmpty: true } );
 
     if ( backend.config.compress ) {
@@ -287,7 +287,7 @@ gulp.task( 'backend:js', gulp.series( 'backend:jsx' ), function() {
         .pipe( gulp.dest( backend.dst.js ) )
         .pipe( hashSum( { filename: 'backend/versions/js.yml', hash: 'md5' } ) )
         .pipe( livereload() );
-} );
+} ) );
 
 /**
  *
