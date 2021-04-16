@@ -3,12 +3,6 @@ import documentReady from "../../utils/documentReady";
 import { render } from 'preact';
 import Catalog    from '@/components/catalog/Catalog';
 
-// export default ( () => {
-//     // init catalog
-//
-// } )();
-
-
 (() => {
 
     const elem = document.getElementsByClassName( 'groupped-products' )[0];
