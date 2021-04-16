@@ -1,7 +1,5 @@
 'use strict';
 
-console.log('head');
-
 // import 'pace';
 // import 'modernizr';
 import $ from 'jquery';
