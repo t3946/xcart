@@ -80,4 +80,9 @@ return [
         'target' => [ApiCategoriesController::class, 'actionCatalogCategory'],
         'name' => 'categoryPaginatedApi',
     ],
+    [
+        'route' => 'product/{i:id}/{slug:slug}/',
+        'target' => [ApiProductController::class, 'actionProductGroup'],
+        'name' => 'groupProductApi',
+    ],
 ];
