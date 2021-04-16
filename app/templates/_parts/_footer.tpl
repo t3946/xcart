@@ -15,8 +15,8 @@
                                 <img alt="{t 'Web order 24/7'}" class="footer-schedule-icon lazy-img" data-src="{assets 'images/icons/footer/web_order.svg'}">
                                 <div class="content">
                                     <div class="footer-schedule-title">{t 'Web Orders'}</div>
-                                    <div>{t '24 hours a day'}</div>
-                                    <div>{t '7 days a week'}</div>
+                                    <div class="footer-schedule-content">{t '24 hours a day'}</div>
+                                    <div class="footer-schedule-content">{t '7 days a week'}</div>
                                 </div>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import CountUp from 'countUp.js';
+import { CountUp } from 'countup.js';
 import storeCart from '../../stores/StoreCart';
 import storeApp from '../../stores/StoreApp';
 import CreateWaitButton from '../../components/AnimateWaitButton';

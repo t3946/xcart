@@ -1,4 +1,4 @@
-import autoComplete from 'bower_components/javascript-auto-complete/auto-complete.js';
+import autoComplete from 'javascript-auto-complete';
 
 
 var createAutoComplete = function(){

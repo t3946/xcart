@@ -13,6 +13,7 @@ import CatalogFilter       from './components/CatalogFilter';
 import Search              from './components/Search';
 import isMedia             from './utils/isMedia';
 import documentReady       from './utils/documentReady';
+import Waves               from 'node-waves';
 
 ( function() {
     documentReady( () => {

@@ -1,4 +1,4 @@
-import AutoComplete from 'bower_components/javascript-auto-complete/auto-complete';
+import AutoComplete from 'javascript-auto-complete';
 
 export class ShippingPixabayAutocomplete {
     constructor( elem, autocompleteOptions ) {

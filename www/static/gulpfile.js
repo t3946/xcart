@@ -171,7 +171,7 @@ gulp.task( 'frontend:images', function() {
  * remove frontend bundles and assets in destinations
  */
 gulp.task( 'clear:frontend', function() {
-    return gulp.src( [ 'frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss ] ).pipe( rimraf() );
+    return gulp.src( [ 'frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss ] , { allowEmpty: true }).pipe( rimraf() );
 } );
 
 /**

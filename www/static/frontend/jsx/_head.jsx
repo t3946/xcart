@@ -9,7 +9,7 @@ import 'jquery-form';
 // import 'swiper';
 //import WebFont from 'webfontloader';
 import FontFaceObserver from 'fontfaceobserver';
-import Waves from 'Waves';
+import Waves from 'node-waves';
 import whatInput from 'what-input';
 import formValidate from 'validate.js';
 import noUiSlider from 'nouislider';
@@ -18,7 +18,7 @@ import FilterPriceSlider from "./components/FilterPriceSlider";
 import 'sly/dist/sly';
 import './utils/mmodal/jquery.mindy.modal';
 
-import 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js';
+import 'jQuery.dotdotdot';
 
 
 import  "./_binds/forms"
