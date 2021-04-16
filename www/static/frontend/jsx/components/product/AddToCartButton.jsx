@@ -4,6 +4,7 @@ import { cartAdd }      from '@/redusers/appCartRediser';
 import * as preact      from 'preact';
 import { Fragment }     from 'preact';
 import CreateWaitButton from '@/components/AnimateWaitButton';
+import t                from '@/i18n';
 
 export default class AddToCartButton extends Component {
     constructor( props ) {
@@ -35,12 +36,19 @@ export default class AddToCartButton extends Component {
         let addToCartLongText = [ 'text' ];
         let addToCartShortText = [ 'text' ];
 
-        const classes = { mainWrapper, button, checkoutLinkWrapper, checkoutLink, addToCartLongText, addToCartShortText, };
+        const classes = {
+            mainWrapper,
+            button,
+            checkoutLinkWrapper,
+            checkoutLink,
+            addToCartLongText,
+            addToCartShortText,
+        };
 
         const propsClasses = this.props.classes;
 
         // extend computed classes by props classes
-        if (propsClasses) {
+        if ( propsClasses ) {
             if ( this.state.mode === this.COMPLEX_MODE ) {
                 button.push( 'add-to-cart-button-add__complex', propsClasses.buttonComplex );
                 checkoutLink.push( 'add-to-cart-button-checkout__complex', propsClasses.checkoutLinkComplex );
@@ -71,7 +79,7 @@ export default class AddToCartButton extends Component {
 
         if ( noAccount ) {
             return (
-                <div className="no-account">{ 'No account needed! \n Checkout only takes 3 minutes.' }</div>
+                <div className="no-account">{ t( 'No account needed! \n Checkout only takes 3 minutes.' ) }</div>
             );
         }
     }
@@ -154,22 +162,22 @@ export default class AddToCartButton extends Component {
 
     render() {
         this.computeClasses();
-        //TODO: Здесь не должно быть зависимости от контекста т.к. это общий компонент
+
         return (
             <div className={ this.classes.mainWrapper } ref={ this.mainWrapper }>
                 <a className={ this.classes.button } onClick={ this.onAddToCart } ref={ this.button }>
                     { this.state.mode === this.SIMPLE_MODE && this.context.viewMode === 'list' &&
                     <Fragment>
-                        <span className="text">Add to cart</span>
-                        <span className="text hide">Add</span>
-                        <span className="wait-text">Added</span>
+                        <span className="text">{ t( 'Add to cart' ) }</span>
+                        <span className="text hide">{ t( 'Add' ) }</span>
+                        <span className="wait-text">{ t( 'Added' ) }</span>
                     </Fragment>
                     }
                 </a>
 
                 { this.state.mode === this.COMPLEX_MODE &&
                 <div className={ this.classes.checkoutLinkWrapper } ref={ this.checkoutWrapper }>
-                    <a href={ this.context.checkoutUrl } className={ this.classes.checkoutLink } ref={ this.checkoutLink }>Checkout</a>
+                    <a href={ this.context.checkoutUrl } className={ this.classes.checkoutLink } ref={ this.checkoutLink }>{ t( 'Checkout' ) }</a>
                     { this.noAccount() }
                 </div>
                 }

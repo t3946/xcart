@@ -1,31 +1,12 @@
+import classnames      from 'classnames';
+import { Fragment }    from 'preact';
 import Product         from '@/components/product/card/Product';
-import ImgCatalog      from './ImgCatalog';
+import ImgCatalog      from '@/components/product/card/catalog/ImgCatalog';
 import Price           from '@/components/product/card/components/Price';
 import QuantityGroup   from '@/components/product/card/QuantityGroup';
 import AddToCartButton from '@/components/product/AddToCartButton';
-import classnames      from 'classnames';
 import CatalogContext  from '@/components/catalog/CatalogContext';
-
-import { Fragment } from 'preact';
-//
-// i18n.use( initReactI18next )
-//     .use( intervalPlural )
-//     .init( {
-//         resources: {
-//             en: {
-//                 translation: window.translation,
-//             },
-//         },
-//
-//         interpolation: {
-//             prefix: '%',
-//             suffix: '%',
-//             escapeValue: false,
-//         },
-//
-//         lng: 'en',
-//         fallbackLng: 'ru',
-//     } );
+import t               from '@/i18n';
 
 export default class Card extends Component {
     constructor( props ) {
@@ -116,7 +97,7 @@ export default class Card extends Component {
             if ( this.product.mult_order_quantity === 'Y' ) {
                 return (
                     <div className="multiply-quantity icon info padding">
-                        <i />
+                        <i/>
                         <span className="text">Order in multiples of { this.product.min_amount } items</span>
                     </div>
                 );
@@ -124,7 +105,7 @@ export default class Card extends Component {
             else {
                 return (
                     <div className="p-label last-items">
-                        <i className="least-items-icon" />
+                        <i className="least-items-icon"/>
                         <span className="text">Order at least { this.product.min_amount } items</span>
                     </div>
                 );
@@ -170,7 +151,7 @@ export default class Card extends Component {
                 <div className="price_container">
                     { product.listPrice.number > product.price.number && (
                         <div className="old">
-                            <span>List Price: </span>
+                            <span>{ t( 'List Price' ) }: </span>
                             <span className="products-slider-old-price">
                                 <Price currency={ product.currency } price={ product.listPrice.formatted }/>
                             </span>
@@ -178,7 +159,7 @@ export default class Card extends Component {
                     ) }
 
                     <div className="current">
-                        <span>Price: </span>
+                        <span>{ t( 'Price' ) }: </span>
                         <span className="products-slider-current-price">
                             <Price currency={ product.currency } price={ product.price.formatted }/>
                         </span>
@@ -237,12 +218,12 @@ export default class Card extends Component {
                                 <div className="out-of-stock">
                                     <div className="p-label out-of-stock">
                                         <i/>
-                                        <span className="text">Out of stock</span>
+                                        <span className="text">{ t( 'Out of stock' ) }</span>
                                     </div>
 
                                     { this.product.eta_date &&
                                     <div className="eta-date">
-                                        Eta date: { this.product.eta_date }
+                                        { t( 'Eta date' ) }: { this.product.eta_date }
                                     </div>
                                     }
 
