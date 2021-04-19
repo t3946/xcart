@@ -12,7 +12,6 @@ use Modules\Goods\Helpers\ProductVerificationHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\VerificationStatusModel;
 use Modules\Shipping\Helpers\ShippingHelper;
-use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
 class ApiProductController extends AbstractCatalogController

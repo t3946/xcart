@@ -8,10 +8,13 @@ import './Components/checkout/ShippingMethods';
 import './Components/checkout/CanadaCODs';
 import './Components/checkout/CheckoutTotal';
 import './Classes/AddToCartButton';
-
 import '_binds/forms';
+import './Components/checkout/File';
 
-export default ( function () {
+
+// import './Components/checkout/File';
+
+( function () {
     let timerThrottle = null;
 
     $( window ).resize( function ( e ) {
