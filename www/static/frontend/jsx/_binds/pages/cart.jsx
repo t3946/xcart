@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import Checkout from '@/js/Components/checkout/Checkout';
+import Pace from "pace-js";
 
 (()=>{
     let page_cart = document.querySelector('.cart-page, .checkout-page');
