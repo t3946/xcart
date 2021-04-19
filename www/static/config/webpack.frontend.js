@@ -1,6 +1,5 @@
 const webpack = require( 'webpack' );
 const path = require( 'path' );
-const BowerResolvePlugin = require( "bower-resolve-webpack-plugin" );
 const paths = require( './gulp.frontend.patchs' );
 
 config = {
@@ -27,15 +26,7 @@ config = {
             paths.modules.jsx,
             path.resolve( './' + paths.modules.jsx ),
             'node_modules',
-            'bower_components',
         ],
-
-        plugins: [ new BowerResolvePlugin( {
-            modulesDirectories: [ "bower_components" ],
-            includes: /.*/,
-            excludes: [],
-            searchResolveModulesDirectories: true
-        } ) ],
 
         fallback: {
             "http": require.resolve("stream-http"),
@@ -44,7 +35,7 @@ config = {
             "stream": require.resolve("stream-browserify"),
         },
 
-        descriptionFiles: [ 'bower.json', 'package.json' ],
+        descriptionFiles: [ 'package.json' ],
         extensions: [ '.js', '.jsx', '.json' ],
     },
     module: {
