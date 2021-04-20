@@ -11,6 +11,7 @@
             {set $lbl}{t '$8.99 flat rate shipping within contiguous U.S.'}{/set}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "flat-shipping" text=$lbl}
         {/if}
+
         {if $model->lead_time_message|trim}
             {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$model->lead_time_message}
         {elseif $brand->leadtime_from}
@@ -32,6 +33,7 @@
                 {include "product/messages/_p_label.tpl" cls=$class ~~ "lead-time" text=$lbl1 ~~ $dx->dx_leadtime~"-"~$dx->dx_leadtime_to ~~ $lbl2}
             {/if}
         {/if}
+
         {if $model->min_amount > 1}
             {if $model->mult_order_quantity == 'Y'}
                 {set $lbl}{t 'Order in multiples of %count% item' 'Order in multiples of %count% items' $model->min_amount}{/set}

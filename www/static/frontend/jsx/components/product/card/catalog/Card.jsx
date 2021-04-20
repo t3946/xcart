@@ -82,11 +82,36 @@ export default class Card extends Component {
 
     //print lead time
     leadTime() {
-        if ( this.product.lead_time_message ) {
+        const leadTime = this.product.lead_time;
+        let leadTimeMessage = null;
+
+        if (leadTime.lead_time_message) {
+            leadTimeMessage = leadTime.lead_time_message.trim();
+        } else if (leadTime.brand.leadtime_from) {
+            const brand = leadTime.brand;
+
+            if (brand.leadtime_from === brand.leadtime_to || !brand.leadtime_to) {
+                leadTimeMessage = t('Lead time for this product is %count% business days', {count: brand.leadtime_from});
+            } else {
+                const from_to = leadTime.brand.leadtime_from + '-' + leadTime.brand.leadtime_to;
+                leadTimeMessage = `Lead time for this product is ${from_to} business days`;
+            }
+        } else if (leadTime.dx.leadtime) {
+            const dx = leadTime.dx;
+
+            if (dx.leadtime === dx.leadtime_to || !dx.leadtime_to) {
+                leadTimeMessage = t('Lead time for this product is %count% business days', {count: dx.leadtime});
+            } else {
+                const from_to = dx.leadtime + '-' + dx.leadtime_to;
+                leadTimeMessage = `Lead time for this product is ${from_to} business days`;
+            }
+        }
+
+        if ( leadTimeMessage ) {
             return (
                 <div className="p-label lead-time">
                     <i/>
-                    <div className="text">{ this.product.lead_time_message }</div>
+                    <div className="text">{ leadTimeMessage }</div>
                 </div>
             );
         }
@@ -130,14 +155,14 @@ export default class Card extends Component {
 
         };
 
-        const overflowContainer = [ 'overflow_container' ];
+        const priceAttributes = [ 'price-attributes', 'show-for-medium' ];
 
         if ( this.context.viewMode === 'tile' ) {
             quantityGroupClasses.group.push( 'quantity-group__catalog-tile' );
 
             addToCartClasses.button.push( 'add-to-cart-button-add__catalog-tile' );
             addToCartClasses.checkoutLink.push( 'hide' );
-            overflowContainer.push( 'overflow_container__tile' );
+            priceAttributes.push( 'price-attributes__tile' );
         }
         else {
             addToCartClasses.mainWrapper.push( 'catalog_add-to-cart-list' );
@@ -151,7 +176,7 @@ export default class Card extends Component {
                 <div className="price_container">
                     { product.listPrice.number > product.price.number && (
                         <div className="old">
-                            <span>{ t( 'List Price' ) }: </span>
+                            <span className="show-for-medium">{ t( 'List Price' ) }: </span>
                             <span className="products-slider-old-price">
                                 <Price currency={ product.currency } price={ product.listPrice.formatted }/>
                             </span>
@@ -159,14 +184,14 @@ export default class Card extends Component {
                     ) }
 
                     <div className="current">
-                        <span>{ t( 'Price' ) }: </span>
+                        <span className="show-for-medium">{ t( 'Price' ) }: </span>
                         <span className="products-slider-current-price">
                             <Price currency={ product.currency } price={ product.price.formatted }/>
                         </span>
                     </div>
                 </div>
 
-                <div className={ classnames( overflowContainer ) }>
+                <div className={ classnames( priceAttributes ) }>
                     { ( () => {
                         if ( this.product.isGroupRoot ) {
                             return (
@@ -202,14 +227,6 @@ export default class Card extends Component {
                                     <div className={ classnames( 'cart-add', { 'cart-add__tile': this.context.viewMode === 'tile' } ) }>
                                         <AddToCartButton type={ 'catalog' } classes={ addToCartClasses }/>
                                     </div>
-
-                                    { this.context.viewMode === 'tile' &&
-                                    <div className="info_container">
-                                        { this.leadTime() }
-
-                                        { this.minAmount() }
-                                    </div>
-                                    }
                                 </Fragment>
                             );
                         }
@@ -218,7 +235,7 @@ export default class Card extends Component {
                                 <div className="out-of-stock">
                                     <div className="p-label out-of-stock">
                                         <i/>
-                                        <span className="text">{ t( 'Out of stock' ) }</span>
+                                        <span className="text p-label-text_out-of-stock">{ t( 'Out of stock' ) }</span>
                                     </div>
 
                                     { this.product.eta_date &&
@@ -233,18 +250,32 @@ export default class Card extends Component {
                         }
                     } )() }
                 </div>
+                { this.context.viewMode === 'tile' &&
+                <div className="info_container">
+                    { this.leadTime() }
+
+                    { this.minAmount() }
+                </div>
+                }
             </Fragment>
         );
     }
 
     render( props ) {
         const classes = props.classes ?? { product: [] };
+        const self = this;
 
         classes.product.push( 'catalog-product', 'item' );
         classes.image = {
             container: [ 'image_container' ],
-            link: 'products-slider-image-link__catalog-list',
+            link: `products-slider-image-link__catalog-${self.context.viewMode}`,
         };
+
+        classes.priceContainer = {
+            'show-for-medium': self.context.viewMode === 'list',
+        }
+
+        console.log( 'CARD', classes );
 
         return (
             <Product
