@@ -53,9 +53,6 @@
       }
 
       a {
-        //display: block;
-        display: inline-block;
-
         .images {
           height: 100%;
           display: flex;
@@ -327,28 +324,6 @@
         flex-wrap: nowrap;
         justify-content : space-between;
         align-items: center;
-
-
-        label {
-          flex: 0 0 20%;
-          //width: 20%;
-          //display: inline-block;
-        }
-
-        .quantity-group {
-
-          flex: 0 0 60%;
-          //width: 60%;
-
-          @include breakpoint(medium down) {
-            input {
-              //width: 6em;
-            }
-          }
-
-        }
-
-
       }
 
       .info {
@@ -546,13 +521,11 @@
 
       .image_container {
         display: block;
-        padding-bottom: 2%;
         height: rem-calc(190);
         line-height: rem-calc(190);
 
         @include breakpoint(sm down) {
           height: rem-calc(130);
-          line-height: rem-calc(130);
 
           img {
             max-height: rem-calc(125);

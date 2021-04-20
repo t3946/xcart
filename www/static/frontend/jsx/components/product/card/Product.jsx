@@ -28,6 +28,11 @@ export default class Product extends Component {
             classes: this.classes.image,
         };
 
+        const productsSliderPriceContainer = [ 'products-slider-price-container'];
+        productsSliderPriceContainer.push(this.props.classes ? this.props.classes.priceContainer : null);
+
+        console.log( 'PRODUCTS', productsSliderPriceContainer );
+
         return (
             <div className={ classnames( { 'out_of_stock': product.inStock, }, [ this.classes.product ] ) }
                  data-product={ product.productid }
@@ -44,7 +49,7 @@ export default class Product extends Component {
 
                 <div className="info_container container">{ this.mainInfo }</div>
 
-                <div className="products-slider-price-container show-for-medium" itemProp="offers" itemScope>{ this.price }</div>
+                <div className={classnames( productsSliderPriceContainer )} itemProp="offers" itemScope>{ this.price }</div>
             </div>
         );
     }

@@ -34,9 +34,9 @@
     display: inline;
     vertical-align: middle;
     font-size: rem-calc(14);
-    padding: 0 9px;
 
     @include breakpoint(medium up) {
+      padding: 0 9px;
       font-size: rem-calc(16);
     }
 
