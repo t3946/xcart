@@ -14,11 +14,11 @@ class RequiredValidator extends Validator
     /**
      * @var string
      */
-    public $message = 'Cannot be empty';
+    public $message = "Can't be empty";
 
     public function __construct($message = null)
     {
-        $this->message = TranslateModule::t('Cannot be empty');
+        $this->message = TranslateModule::t("Can't be empty");
         if (!empty($message)) {
             $this->message = $message;
         }
