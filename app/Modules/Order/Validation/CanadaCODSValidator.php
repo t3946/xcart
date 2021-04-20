@@ -8,7 +8,7 @@ use Xcart\App\Validation\Validator;
 
 class CanadaCODSValidator extends Validator
 {
-    private $message = 'Cannot be empty';
+    private $message = "Can't be empty";
 
     public function __construct( $message = null )
     {
