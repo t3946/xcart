@@ -99,7 +99,7 @@ export default class Catalog extends Component {
 
                     <LoadMore
                         onNext={ this.onNext } next={ this.state.next }
-                        classes={ [ 'catalog_load-more' ] }
+                        classes={ [ 'catalog_load-more', { 'margin-0': this.state.printStateLines === false } ] }
                         isLoading={ this.state.isLoading }
                     />
                 </CatalogContext.Provider>

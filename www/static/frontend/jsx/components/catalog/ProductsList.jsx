@@ -67,8 +67,16 @@ export default class ProductsList extends Component {
     render() {
         const viewMode = this.context.viewMode;
 
+        const classes = [
+            'product-items',
+            `${ viewMode }-view`,
+            {
+                'padding-0': this.state.items.length === 0,
+            }
+        ];
+
         return (
-            <div className={ classnames( [ 'product-items', `${ viewMode }-view` ] ) }>
+            <div className={ classnames( classes ) }>
                 { this.state.items.map( ( item ) => {
                     return this.productItem( item, viewMode );
                 } ) }
