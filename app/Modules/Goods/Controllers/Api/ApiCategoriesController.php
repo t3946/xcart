@@ -118,6 +118,7 @@ class ApiCategoriesController extends AbstractCatalogController
         //view_internal
         $this->model = $model;
         $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+        $this->sort = $orderBy;
 
         /** @var \Xcart\App\Orm\QuerySet $pqs */
         $pqs = $this->getQS($model);
@@ -126,6 +127,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
         if ($this->getRequest()->getIsAjax()) {
             $pqs = $fh->getFiltrateQS();
+            $this->sort = $this->getRequest()->get->get('sort', $this->sort);
             $pqs = $this->getSortedQS($pqs);
         }
 
