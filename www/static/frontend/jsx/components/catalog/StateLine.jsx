@@ -14,8 +14,17 @@ export default class StateLine extends Component {
         this.state = { isOpenSortMenu: false, };
 
         $( document ).click( () => {
-            this.setState( { isOpenSortMenu: false, } );
+            if (this._mounted) {
+                this.setState( { isOpenSortMenu: false, } );
+            }
         } );
+    }
+
+    componentDidMount () {
+        this._mounted = true
+    }
+    componentWillUnmount () {
+        this._mounted = false
     }
 
     toggleSortList( e ) {
