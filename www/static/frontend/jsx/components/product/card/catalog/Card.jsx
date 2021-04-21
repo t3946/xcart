@@ -281,8 +281,6 @@ export default class Card extends Component {
             'show-for-medium': self.context.viewMode === 'list',
         }
 
-        console.log('debug');
-
         return (
             <Product
                 product={this.product}
