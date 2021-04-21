@@ -53,16 +53,25 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        $shipping = null;
         $checkout_form = new CheckoutForm();
+
+        $order = OrderHelper::getCartOrder();
+
+        if (!$order) {
+            [$order] = OrderModel::objects()->getOrCreate([
+                'cart_number' => $cart->getCartNumber(),
+                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
+            ]);
+        }
+
+        $checkout_form->setInstance($order);
 
         if ($site && $app->request->getIsPost()) {
             $checkout_form->populate($app->request->post);
-            if (true || $checkout_form->isValid()) {
 
-                $checkout_form->getInstance()->save();
+            if ($checkout_form->isValid()) {
 
-                [$order] = OrderModel::objects()->getOrNew(['cart_number' => $cart->getCartNumber(),]);
+                $order = $checkout_form->getInstance();
 
                 $order->setAttributes(array_merge($checkout_form->getAttributes(), [
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
@@ -76,15 +85,6 @@ class CheckoutController extends FrontendController
             } else {
                 $this->redirect('checkout:checkoutOnePage');
             }
-        }
-
-        $order = OrderHelper::getCartOrder();
-
-        if (!$order) {
-            [$order] = OrderModel::objects()->getOrCreate([
-                'cart_number' => $cart->getCartNumber(),
-                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
-            ]);
         }
 
         if ($order && !$app->request->getIsPost()) {
