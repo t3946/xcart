@@ -4,9 +4,7 @@ import { render } from 'preact';
 import Catalog    from '@/components/catalog/Catalog';
 
 (() => {
-
     const elem = document.getElementsByClassName( 'groupped-products' )[0];
-
 
     if ( !elem ) {
         return;
@@ -19,7 +17,7 @@ import Catalog    from '@/components/catalog/Catalog';
     render(
         <Catalog
             sortingOptions={ sortingOptions }
-            currentSortingKey={ elem.dataset.currentSortingKey }
+            sortKey={ elem.dataset.currentSortingKey }
             hideSort={ hideSort }
             pager={ pager }
             catalogUrl={ '/api'+ elem.dataset.catalogUrl }

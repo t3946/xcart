@@ -30,7 +30,6 @@ export default class Catalog extends Component {
             isLoading: false,
             // next page url in catalog
             next: props.catalogUrl,
-            sortKey: null,
         };
     }
 
@@ -45,8 +44,14 @@ export default class Catalog extends Component {
 
     printStateLine() {
         if ( this.state.loaded ) {
+            const props = {
+                sortKey: this.state.sortKey,
+                hideSort: this.state.hideSort,
+                sortingOptions: this.state.sortingOptions,
+            };
+
             return (
-                <StateLine { ...this.state } onSort={ this.onSortCatalog.bind( this ) }/>
+                <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/>
             );
         }
     }
@@ -87,8 +92,11 @@ export default class Catalog extends Component {
 
                     { this.printStateLine() }
 
-                    <LoadMore onNext={ this.onNext } next={ this.state.next } classes={ [ 'catalog_load-more' ] }
-                              isLoading={ this.state.isLoading }/>
+                    <LoadMore
+                        onNext={ this.onNext } next={ this.state.next }
+                        classes={ [ 'catalog_load-more' ] }
+                        isLoading={ this.state.isLoading }
+                    />
                 </CatalogContext.Provider>
             </div>
         );
