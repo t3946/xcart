@@ -29,13 +29,14 @@ export default class Catalog extends Component {
             // loading product list
             isLoading: false,
             // next page url in catalog
+            baseUrl: props.catalogUrl.split('?')[0],
             next: props.catalogUrl,
             printStateLines: true,
         };
     }
 
     onUpdateProductList( pager, next ) {
-        this.setState( { pager, loaded: true, next: next } );
+        this.setState( { pager, loaded: true, next } );
     }
 
     onViewModeChange( viewMode ) {
@@ -89,7 +90,7 @@ export default class Catalog extends Component {
 
                     <ProductsList
                         ref={ this.productList }
-                        catalogUrl={ this.state.next }
+                        catalogUrl={ this.state.baseUrl }
                         onBeginLoading={ this.onBeginLoading }
                         onEndLoading={ this.onEndLoading }
                         sortKey={ this.state.sortKey }
