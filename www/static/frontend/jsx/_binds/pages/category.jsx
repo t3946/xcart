@@ -16,7 +16,7 @@ export default ( () => {
     render(
         <Catalog
             sortingOptions={ sortingOptions }
-            currentSortingKey={ elem.dataset.currentSortingKey }
+            sortKey={ elem.dataset.currentSortingKey }
             hideSort={ hideSort }
             pager={ pager }
             catalogUrl={ '/api' + elem.dataset.catalogUrl }
