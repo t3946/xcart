@@ -45,13 +45,6 @@
       position: relative;
       text-align: center;
 
-      img {
-        display: inline-block;
-        width: auto;
-        max-height: rem-calc(190);
-        min-height: rem-calc(100);
-      }
-
       a {
         .images {
           height: 100%;
@@ -376,19 +369,8 @@
       flex: 1 0;
       flex-wrap: nowrap;
 
-      padding-top: 15px;
-      padding-bottom: 14px;
-
       margin-bottom: 15px;
       border-bottom: 1px solid #cccccc;
-
-      @include breakpoint(large up) {
-        padding-right: 2%;
-      }
-
-      @include breakpoint (medium down) {
-        padding: 14px 1.4%;
-      }
 
       @include breakpoint (sm down) {
         margin-bottom: 0;
@@ -497,8 +479,6 @@
       flex: 0 0 50%;
       width: 50%;
       align-items: stretch;
-      //padding: 15px 1.75% ;
-      padding: 15px ;
       box-sizing: border-box;
       border: 1px solid transparent;
       border-bottom: 1px solid transparent;

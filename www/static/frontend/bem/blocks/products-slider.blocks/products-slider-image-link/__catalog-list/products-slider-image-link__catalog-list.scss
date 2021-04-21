@@ -1,3 +1,9 @@
 .products-slider-image-link__catalog-list {
-  height: auto;
+    width: auto;
+    height: rem-calc(130);
+
+    @include breakpoint(md up) {
+        width: rem-calc(174);
+        height: rem-calc(174);
+    }
 }
