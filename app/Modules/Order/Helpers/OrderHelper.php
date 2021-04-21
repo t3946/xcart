@@ -10,6 +10,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
@@ -668,6 +669,9 @@ HTML;
 
     public static function getCheckoutUrl(): string
     {
-        return '/checkout/shipping/';
+        $router = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+            ? 'checkout:checkoutOnePage'
+            : 'checkout:shipping';
+        return Xcart::app()->router->url($router);
     }
 }

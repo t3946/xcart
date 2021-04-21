@@ -2,7 +2,7 @@
 
 namespace Modules\User\Models;
 
-use Xcart\App\Cli\Cli;
+use Modules\User\UserModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -17,9 +17,9 @@ use Xcart\App\Orm\Model;
  * @package Modules\User\Models
  *
  * @property string(32) $sessid
- * @property integer $start
- * @property integer $expiry
- * @property integer $cart_number
+ * @property int $start
+ * @property int $expiry
+ * @property int $cart_number
  * @property array|string $data
  */
 class SessionDataModel extends Model
@@ -76,11 +76,9 @@ class SessionDataModel extends Model
 
     public function beforeSave($owner, $isNew)
     {
-        if ($isNew) {
-            /** @var \Modules\User\UserModule $module */
-            if ($module = Xcart::app()->getModule('User')) {
-                $owner->expiry = time() + $module->sessionTime;
-            }
+        /** @var UserModule $module */
+        if ($isNew && $module = Xcart::app()->getModule('User')) {
+            $owner->expiry = time() + $module->sessionTime;
         }
     }
 
