@@ -19,6 +19,11 @@ export default class ProductsList extends Component {
     loadData() {
         this.props.onBeginLoading( this.state.nextPage );
 
+        //end of pagination
+        if (!this.props.catalogUrl) {
+            return;
+        }
+
         let url = this.props.catalogUrl.split( '?' )[ 0 ];
         const { nextPage, sort } = this.state;
 
