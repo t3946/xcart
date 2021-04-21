@@ -3,11 +3,14 @@ import CatalogContext from '@/components/catalog/CatalogContext';
 import classnames     from 'classnames';
 
 export default class ProductsList extends Component {
-    constructor(props) {
-        super(props);
+    constructor( props ) {
+        super( props );
 
         this.state = {
             items: [],
+            nextPage: 1,
+            sort: null,
+            sortWasChanged: false,
         };
 
         this.loadData();
@@ -16,7 +19,12 @@ export default class ProductsList extends Component {
     loadData() {
         this.props.onBeginLoading();
 
-        fetch( this.props.catalogUrl, {
+        let url = this.props.catalogUrl.split('?')[0];
+        const { nextPage, sort } = this.state;
+
+        url = url + `?page=${nextPage}&sort=${sort}`;
+
+        fetch( url, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             },
@@ -25,9 +33,13 @@ export default class ProductsList extends Component {
                ( res ) => {
                    this.props.onEndLoading();
                    this.state.items.push( ...res.items );
-                   this.setState( { items: this.state.items, isLoaded: true } );
+                   this.setState( {
+                       items: this.state.items,
+                       isLoaded: true,
+                       nextPage: this.state.nextPage + 1,
+                   } );
                    this.paginationPage += 1;
-                   this.context.onUpdateProductList(res.pager, res.href);
+                   this.context.onUpdateProductList( res.pager, res.href );
                },
                ( error ) => {
                    this.setState( {
@@ -41,12 +53,25 @@ export default class ProductsList extends Component {
         return ( <Card product={ product } classes={ { product: [ `catalog-product__${ viewMode }` ] } }/> );
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.sortKey !== this.props.sortKey) {
+            nextState.sort = nextProps.sortKey;
+            nextState.nextPage = 1;
+            nextState.items = [];
+            this.loadData();
+        }
+
+        return true;
+    }
+
     render() {
         const viewMode = this.context.viewMode;
 
         return (
             <div className={ classnames( [ 'product-items', `${ viewMode }-view` ] ) }>
-                { this.state.items.map( ( item ) => { return this.productItem( item, viewMode ); } ) }
+                { this.state.items.map( ( item ) => {
+                    return this.productItem( item, viewMode );
+                } ) }
             </div>
         );
     }
