@@ -1,12 +1,16 @@
 import classnames from 'classnames';
-import Image      from './components/Image';
+import Image from './components/Image';
+import {createRef} from "preact";
 
 /**
  * abstract component for product cart in sliders and catalog
  */
 export default class Product extends Component {
-    constructor( props ) {
+    constructor(props) {
         super(props);
+
+        this.root = createRef();
+        this.price = createRef();
     }
 
     render({product, images, mainInfo, price, classes}) {
@@ -28,28 +32,27 @@ export default class Product extends Component {
             classes: this.classes.image,
         };
 
-        const productsSliderPriceContainer = [ 'products-slider-price-container'];
+        const productsSliderPriceContainer = ['products-slider-price-container'];
         productsSliderPriceContainer.push(this.props.classes ? this.props.classes.priceContainer : null);
 
-        console.log( 'PRODUCTS', productsSliderPriceContainer );
-
         return (
-            <div className={ classnames( { 'out_of_stock': product.inStock, }, [ this.classes.product ] ) }
-                 data-product={ product.productid }
-                 data-name={ product.name }
-                 data-source={ analytics_source }
-                 data-brand={ product.brand }
-                 data-prices={ product.prices }
-                 data-list-price={ product.listPrice.number }
+            <div ref={this.root} className={classnames({'out_of_stock': product.inStock,}, [this.classes.product])}
+                 data-product={product.productid}
+                 data-name={product.name}
+                 data-source={analytics_source}
+                 data-brand={product.brand}
+                 data-prices={product.prices}
+                 data-list-price={product.listPrice.number}
                  itemScope
                  itemType="http://schema.org/Product"
                  itemProp="itemListElement"
             >
-                <Image { ...imageProp } />
+                <Image {...imageProp} />
 
-                <div className="info_container container">{ this.mainInfo }</div>
+                <div className="info_container container">{this.mainInfo}</div>
 
-                <div className={classnames( productsSliderPriceContainer )} itemProp="offers" itemScope>{ this.price }</div>
+                <div ref={this.price} className={classnames(productsSliderPriceContainer)} itemProp="offers"
+                     itemScope>{this.price}</div>
             </div>
         );
     }
