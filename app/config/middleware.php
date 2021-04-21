@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Core\Middleware\CorsMiddleware;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Middleware\PurchaseOrderMiddleware;
 use Modules\User\Middleware\ExpireHeadersMiddleware;
 use Modules\User\Middleware\ReferrerSearchMiddleware;
@@ -13,10 +14,6 @@ use Modules\User\Middleware\UserDiscountMiddleware;
 return [
     'CORS' => [
         'class' => CorsMiddleware::class,
-    ],
-    'static_cache' => [
-        'class' => CacheMiddleware::class,
-        'cacheEnabled' => (defined('APP_DEBUG') && APP_DEBUG)? false : true,
     ],
     'CurrentSiteMiddleware' => [
         'class' => CurrentSiteMiddleware::class,
@@ -38,5 +35,8 @@ return [
     ],
     'PurchaseOrderMiddleware' => [
         'class' => PurchaseOrderMiddleware::class
+    ],
+    'OrderCheckoutMiddleware' => [
+        'class' => OrderCheckoutMiddleware::class
     ],
 ];

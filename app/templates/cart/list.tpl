@@ -24,7 +24,7 @@
         <div class="columns small-6 medium-3">
             {if !$isCartEmpty}
                 <div class="b-next">
-                    <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                    <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
                         {t 'Checkout'}
                     </a>
                 </div>
