@@ -30,6 +30,7 @@ export default class Catalog extends Component {
             isLoading: false,
             // next page url in catalog
             next: props.catalogUrl,
+            printStateLines: true,
         };
     }
 
@@ -68,19 +69,23 @@ export default class Catalog extends Component {
         this.productList.current.loadData();
     }
 
-    onBeginLoading() {
+    onBeginLoading( page ) {
+        if ( page === 1 ) {
+            this.setState( { printStateLines: false, } );
+        }
+
         this.setState( { isLoading: true } );
     }
 
     onEndLoading() {
-        this.setState( { isLoading: false } );
+        this.setState( { printStateLines: true, isLoading: false } );
     }
 
     render() {
         return (
             <div className="catalog">
                 <CatalogContext.Provider value={ this.state }>
-                    { this.printStateLine() }
+                    { this.state.printStateLines && this.printStateLine() }
 
                     <ProductsList
                         ref={ this.productList }
@@ -90,7 +95,7 @@ export default class Catalog extends Component {
                         sortKey={ this.state.sortKey }
                     />
 
-                    { this.printStateLine() }
+                    { this.state.printStateLines && this.printStateLine() }
 
                     <LoadMore
                         onNext={ this.onNext } next={ this.state.next }

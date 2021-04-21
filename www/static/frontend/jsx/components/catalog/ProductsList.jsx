@@ -17,12 +17,12 @@ export default class ProductsList extends Component {
     }
 
     loadData() {
-        this.props.onBeginLoading();
+        this.props.onBeginLoading( this.state.nextPage );
 
-        let url = this.props.catalogUrl.split('?')[0];
+        let url = this.props.catalogUrl.split( '?' )[ 0 ];
         const { nextPage, sort } = this.state;
 
-        url = url + `?page=${nextPage}&sort=${sort}`;
+        url = url + `?page=${ nextPage }&sort=${ sort }`;
 
         fetch( url, {
             headers: {
@@ -53,8 +53,8 @@ export default class ProductsList extends Component {
         return ( <Card product={ product } classes={ { product: [ `catalog-product__${ viewMode }` ] } }/> );
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.sortKey !== this.props.sortKey) {
+    shouldComponentUpdate( nextProps, nextState ) {
+        if ( nextProps.sortKey !== this.props.sortKey ) {
             nextState.sort = nextProps.sortKey;
             nextState.nextPage = 1;
             nextState.items = [];
