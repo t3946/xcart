@@ -4,28 +4,6 @@ import { render } from 'preact';
 import Catalog    from '@/components/catalog/Catalog';
 
 (() => {
-    const elem = document.getElementsByClassName( 'groupped-products' )[0];
-
-    if ( !elem ) {
-        return;
-    }
-
-    const sortingOptions = JSON.parse( elem.dataset.sortingOptions );
-    const hideSort = !!elem.dataset.hideSort;
-    const pager = JSON.parse( elem.dataset.pager );
-
-    render(
-        <Catalog
-            sortingOptions={ sortingOptions }
-            sortKey={ elem.dataset.currentSortingKey }
-            hideSort={ hideSort }
-            pager={ pager }
-            catalogUrl={ '/api'+ elem.dataset.catalogUrl }
-            checkoutUrl={ elem.dataset.checkoutUrl }
-        />,
-        elem,
-    );
-
     let page = document.querySelector('.product-page');
     if (page) {
 
@@ -164,6 +142,30 @@ import Catalog    from '@/components/catalog/Catalog';
                     }
                 });
             });
+
+            const elem = document.getElementsByClassName( 'groupped-products' )[0];
+
+
+            if ( !elem ) {
+                return;
+            }
+
+            const sortingOptions = JSON.parse( elem.dataset.sortingOptions );
+            const hideSort = !!elem.dataset.hideSort;
+            const pager = JSON.parse( elem.dataset.pager );
+
+            render(
+                <Catalog
+                    sortingOptions={ sortingOptions }
+                    currentSortingKey={ elem.dataset.currentSortingKey }
+                    hideSort={ hideSort }
+                    pager={ pager }
+                    catalogUrl={ '/api'+ elem.dataset.catalogUrl }
+                    checkoutUrl={ elem.dataset.checkoutUrl }
+                />,
+                elem,
+            );
+
 
         });
     }
