@@ -3,6 +3,7 @@
 namespace Modules\Goods\Admin;
 
 
+use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Brand\Models\BrandModel;
 use Modules\Cart\Models\CouponKitModel;
@@ -11,14 +12,10 @@ use Modules\Goods\Forms\ProductAdminForm;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\Model;
 
 class ProductAdmin extends Admin
 {
-
-    public function getSearchColumns()
-    {
-        return ['productcode'];
-    }
 
     /**
      * @return ModelForm
@@ -35,32 +32,12 @@ class ProductAdmin extends Admin
 
     public function getListColumns()
     {
-        return ['productid','productcode','(string)', 'forsale'];
-    }
-
-    public function getAvailableListColumns()
-    {
         return [
-            'productid' => [
-                'title' => 'ID',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'productid'
-            ],
-            'productcode' => [
-                'title' => 'SKU',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'productcode'
-            ],
-            '(string)' => [
-                'title' => 'PRODUCT',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'product'
-            ],
-            'forsale' => [
-                'title' => 'FORSALE',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'forsale'
-            ],
+            'forsale',
+            'image',
+            'productcode',
+            'product',
+            'add_date'
         ];
     }
 
@@ -108,5 +85,41 @@ class ProductAdmin extends Admin
             'update',
             'view',
         ];
+    }
+
+    public function getItemProperty(Model $item, $property)
+    {
+        /** @var ProductModel $image */
+        if ($property === 'image' && $image = $item->getMainImage()) {
+            return "<div style='text-align: center'><img src=\"/{$image->getCdnURL(60)}\" title=\"{$item}\" width='60' /></div>";
+        }
+        if ($property === 'forsale') {
+            return $item->forsale === 'Y' ? 'Active' : 'Inactive';
+        }
+        if ($property === 'add_date') {
+            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
+        }
+
+        return parent::getItemProperty($item, $property);
+    }
+
+    public function applyOrder($qs)
+    {
+        $order = $this->getOrder();
+
+        if ($order && isset($order['raw'])) {
+            $qs->order([
+                $order['raw']
+            ]);
+        } else if ($this->sort) {
+            $qs->order([
+                $this->sort
+            ]);
+        } else {
+            $qs->order([
+                '-add_date'
+            ]);
+        }
+        return $qs;
     }
 }
