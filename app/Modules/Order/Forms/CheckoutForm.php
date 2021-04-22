@@ -147,4 +147,34 @@ class CheckoutForm extends ShippingForm
             'prefix' => $prefix
         ], $params ) );
     }
+
+    public function isValid()
+    {
+        $is_valid = parent::isValid();
+
+        if (!$is_valid && $order = $this->getInstance()) {
+            $errors = array_keys($this->getErrors());
+
+            if ((int)$order->paymentid !== 2) {
+                $po_required_fields =
+                    array_filter(
+                        array_merge(
+                            $this->_purchase_order_details_form,
+                            $this->_purchasing_manager_form,
+                            $this->_accounts_payable_form
+                        ), static fn($f) => (bool)$f['required'] === true
+                    );
+                array_map(fn($e) => $this->clearErrors($e), array_intersect($errors, array_keys($po_required_fields)));
+            }
+            if ((int)$order->paymentid !== 106) {
+                $card_required_fields = array_filter(
+                    $this->_pay_by_card_form, static fn($f) => (bool)$f['required'] === true
+                );
+                array_map(fn($e) => $this->clearErrors($e), array_intersect($errors,  array_keys($card_required_fields)));
+            }
+
+            return $this->hasErrors() === false;
+        }
+        return $is_valid;
+    }
 }

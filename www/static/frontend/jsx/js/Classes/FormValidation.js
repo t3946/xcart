@@ -152,7 +152,6 @@ export default class FormValidation {
     }
 
     validateOnSubmit(event){
-        event.preventDefault();
         event.stopPropagation();
         this.hasErrors = false;
         this.checkAllForm();
@@ -160,6 +159,7 @@ export default class FormValidation {
         // form invalid
         if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
             this.scrollToFirstError();
+            event.preventDefault();
             return;
         }
 
