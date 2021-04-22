@@ -3,9 +3,6 @@ import { PaymentMethods }  from './PaymentMethods';
 import Forms               from '_binds/forms';
 
 export default ( function () {
-    // number update queries on update product quantity
-    let quantityUpdateQueries = 0;
-
     if ( document.querySelector( '.checkout-page' ) === null ) {
         return;
     }
@@ -57,11 +54,7 @@ export default ( function () {
 
         // show checkout order total preloader
         if ( data.quantity !== undefined ) {
-            quantityUpdateQueries += 1;
-
-            if (quantityUpdateQueries > 0) {
-                $('.order-total_preloader').fadeIn();
-            }
+            $( document ).trigger( 'updateRequestSend.checkout' );
         }
 
         $.ajax( {
@@ -70,13 +63,7 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                if (quantityUpdateQueries === 1) {
-                    $( '.order-total .total .price' ).text( self.formatNumber( res[ 'total' ] ) );
-                    $( '.shipping-total .price' ).text( self.formatNumber( res[ 'total_shipping_cost' ] ) );
-                    $( '.total-sales-tax .price' ).text( self.formatNumber( res[ 'total_sales_tax' ] ) );
-                    $( '.total-vat-tax .price' ).text( self.formatNumber( res[ 'total_vat_tax' ] ) );
-                    $( '.grand-total .price' ).text( self.formatNumber( res[ 'grand_total' ] ) );
-                }
+                $( document ).trigger( 'updateRequestSuccess.checkout', res );
 
                 for ( let manufacturer_id in res.distributor_carts ) {
                     const manufacturer = res.distributor_carts[ manufacturer_id ];
@@ -115,6 +102,7 @@ export default ( function () {
 
                 if ( res.templates.shipping_methods ) {
                     ShippingMethods.updateTemplate( res.templates.shipping_methods );
+                    $( document ).trigger( 'update.total.checkout', res );
                 }
 
                 if ( typeof callback === "function" ) {
@@ -126,13 +114,7 @@ export default ( function () {
             },
             complete() {
                 // hide checkout order total preloader
-                if ( data.quantity !== undefined ) {
-                    quantityUpdateQueries -= 1;
-
-                    if (quantityUpdateQueries === 0) {
-                        $('.order-total_preloader').fadeOut();
-                    }
-                }
+                $( document ).trigger( 'updateRequestComplete.checkout' );
             },
         } );
     }
