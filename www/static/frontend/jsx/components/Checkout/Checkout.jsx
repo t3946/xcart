@@ -68,7 +68,13 @@ export default class Checkout extends Component {
         //insert stripe
         const $stripeTarget = $( '.stripe-target' );
         const $stripeField = $( '.checkout-stripe' );
-        $stripeTarget.append( $stripeField );
+
+        if ($stripeTarget.length) {
+            $stripeTarget.append( $stripeField );
+        } else {
+            $stripeField.hide();
+        }
+
 
         $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', () => this.checkoutSubmit() );
     }
