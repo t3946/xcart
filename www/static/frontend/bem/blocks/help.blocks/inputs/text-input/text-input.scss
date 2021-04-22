@@ -1,0 +1,122 @@
+.formik-input {
+  margin-bottom: 15px;
+  transition: all .4s;
+  padding: 10px 35px 10px 10px;
+  width: 100%;
+
+  &-button {
+    width: 100%;
+    max-width: none;
+    position: relative;
+
+    @media (min-width: 1024px) {
+      max-width: 400px;
+    }
+  }
+
+  &-error-wrap {
+    display: flex;
+  }
+
+  &-suffix-btn {
+    width: 30px;
+    top: calc(50% - 5px);
+    cursor: pointer;
+    line-height: 44px;
+    position: absolute;
+    z-index: 1;
+    padding-right: 10px;
+    right: 0;
+  }
+
+  &-wrap {
+    margin: 0 auto;
+    max-width: 600px;
+  }
+
+  &:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &-text {
+    font-size: 14px;
+    color: #000000;
+    line-height: 25px;
+  }
+
+  &-text_required {
+    color: red;
+  }
+}
+
+.formik-input-error {
+  margin-bottom: 15px;
+  width: 100%;
+  transition: all .4s;
+  padding: 10px;
+  color: red;
+  border: 1px solid red;
+
+  &:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &::-webkit-input-placeholder {
+    color: red
+  }
+
+  &-text {
+    font-size: 14px;
+    color: red;
+    line-height: 25px;
+  }
+
+  &-text_required {
+    color: red;
+  }
+}
+
+.formik-input-valid {
+  margin-bottom: 15px;
+  width: 100%;
+  transition: all .4s;
+  padding: 10px;
+  color: green;
+  border: 1px solid green;
+
+  &:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &::-webkit-input-placeholder {
+    color: green
+  }
+
+  &:focus {
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  &-text {
+    font-size: 14px;
+    color: green;
+    line-height: 25px;
+  }
+
+  &-text_required {
+    color: red;
+  }
+}
+
+.error-message-right {
+  display: flex;
+}
+
+.input-validate-icons {
+  padding-top: 5px;
+  width: 20px;
+  height: 80px;
+  margin-left: 15px;
+}

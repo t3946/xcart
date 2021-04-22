@@ -1,13 +1,11 @@
-import { render } from 'preact';
-import YourOrder from "@/components/help-center/your-order/YourOrder";
-import NavigateMenuRoutes from "@/components/help-center/navigate-menu/NavigateMenuRoutes";
+import React from "react";
+import ReactDOM from "react-dom";
+import NavigateMenuRoutes from "@/modules/help-center/components/navigate-menu/NavigateMenuRoutes";
 
 (() => {
     const elem = document.getElementsByClassName( 'help' )[0];
 
-    console.log(elem)
-
-    render(
+    ReactDOM.render(
     <NavigateMenuRoutes/>,
         elem
     )

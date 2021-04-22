@@ -1,0 +1,11 @@
+.error-top-wrapper{
+  display: block;
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.error-top{
+  left: 0 !important;
+  width: 100% !important;
+}

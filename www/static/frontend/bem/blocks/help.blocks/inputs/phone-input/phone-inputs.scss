@@ -1,0 +1,25 @@
+.phone-input {
+  &-wrap {
+    height: 80px;
+    width: 100%;
+    max-width: none;
+    display: flex;
+    @media (min-width: 1024px) {
+      max-width: 400px;
+    }
+  }
+
+  &-right {
+    width: 40% !important;
+    display: flex;
+
+    &-text {
+      line-height: 85px;
+      margin-right: 10px;
+    }
+  }
+
+  &-left {
+    margin-right: 40px;
+  }
+}

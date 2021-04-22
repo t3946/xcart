@@ -1,10 +1,9 @@
 .Collapsible {
-  background-color: black;
+  background-color: white;
 }
 
 .Collapsible__contentInner {
   padding: 10px;
-  border: 1px solid #3d5c6c;
   border-top: 0;
 
   p {
@@ -20,29 +19,28 @@
 
 //The link which when clicked opens the collapsable area
 .Collapsible__trigger {
+  cursor: pointer;
   display: block;
   font-weight: 400;
   text-decoration: none;
-  color: $grey;
   position: relative;
-  border: 1px solid white;
   padding: 10px;
-  background: $cyan;
-  color: white;
+  color: black;
 
 
   &:after {
-    content: '\f107';
+    content: url("/static/frontend/images/icons/switcher/switcher-plus.svg");
     position: absolute;
     right: 10px;
     top: 10px;
     display: block;
+    width: 10px;
     transition: transform 300ms;
   }
 
   &.is-open {
     &:after {
-      transform: rotateZ(180deg);
+      content: url("/static/frontend/images/icons/switcher/switcher-minus.svg");
     }
   }
 
@@ -68,4 +66,9 @@
   font-size: 12px;
   background-color: #CBB700;
   color: black;
+}
+
+.Collapsible__hr{
+  color: #C4C4C4;
+  margin: 0;
 }

@@ -1,0 +1,20 @@
+.error-right {
+  &-margin {
+    margin-top: 20px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: calc(50% - 0.25rem);
+    border: 1px solid #ed1c24;
+    transform: rotate(155deg) skewX(36deg);
+    width: 10px;
+    height: 8px;
+    bottom: -.3125rem;
+    border-top: none;
+    border-left: none;
+    background: linear-gradient(321deg, #ffebeb 50%, transparent 0) #ffebeb;
+  }
+}

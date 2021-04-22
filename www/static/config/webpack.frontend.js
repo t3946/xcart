@@ -45,7 +45,7 @@ config = {
         },
 
         descriptionFiles: [ 'bower.json', 'package.json' ],
-        extensions: [ '.js', '.jsx', '.json' ],
+            extensions: ['*', '.json', '.js', '.jsx', '.tsx', '.ts'],
     },
     module: {
         rules: [
@@ -88,6 +88,27 @@ config = {
                                         "create-react-class": "preact-compat/lib/create-react-class"
                                     }
                                 } ],
+                            ]
+                        }
+                    },
+                ],
+            },
+            {
+                test: /\.(ts|tsx)?$/,
+                exclude: /(node_modules)/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            comments: false,
+                            presets: [
+                                "@babel/preset-env",
+                                "@babel/preset-typescript",
+                                "@babel/preset-react",
+                            ],
+                            plugins: [
+                                "@babel/proposal-class-properties",
+                                "@babel/proposal-object-rest-spread"
                             ]
                         }
                     },
