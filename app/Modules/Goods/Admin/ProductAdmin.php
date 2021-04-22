@@ -90,8 +90,10 @@ class ProductAdmin extends Admin
     public function getItemProperty(Model $item, $property)
     {
         /** @var ProductModel $image */
-        if ($property === 'image' && $image = $item->getMainImage()) {
-            return "<div style='text-align: center'><img src=\"/{$image->getCdnURL(60)}\" title=\"{$item}\" width='60' /></div>";
+        if ($property === 'image') {
+            return ($image = $item->getMainImage())
+                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(60)}\" title=\"{$item}\" width='60' /></div>"
+                : '';
         }
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
