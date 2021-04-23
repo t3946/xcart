@@ -52,6 +52,20 @@ export default class Checkout extends Component {
         $( '.grand-total .price' ).text( this.formatNumber( total[ 'grand_total' ] ) );
     }
 
+    insertStripeField() {
+        //insert stripe
+        const $stripeTarget = $( '.stripe-target' );
+        const $stripeField = $( '.checkout-stripe' );
+
+        if ($stripeTarget.length) {
+            $stripeTarget.append( $stripeField.show() );
+        } else {
+            $stripeField.hide();
+        }
+
+        $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', () => this.checkoutSubmit() );
+    }
+
     componentDidMount() {
         //this solution have to smooth No-React to React transition
         //use html permutations and inserts for creating full-react component someday
@@ -64,19 +78,11 @@ export default class Checkout extends Component {
 
         // insert no-react-code in react container
         $checkoutElement.appendTo( $root );
+        this.insertStripeField();
+    }
 
-        //insert stripe
-        const $stripeTarget = $( '.stripe-target' );
-        const $stripeField = $( '.checkout-stripe' );
-
-        if ($stripeTarget.length) {
-            $stripeTarget.append( $stripeField );
-        } else {
-            $stripeField.hide();
-        }
-
-
-        $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', () => this.checkoutSubmit() );
+    componentDidUpdate( previousProps, previousState, previousContext ) {
+        this.insertStripeField();
     }
 
     checkoutSubmit() {

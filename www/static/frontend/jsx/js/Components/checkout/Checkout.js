@@ -52,10 +52,7 @@ export default ( function () {
     Constructor.prototype.update = function ( data, callback = null ) {
         const self = this;
 
-        // show checkout order total preloader
-        if ( data.quantity !== undefined ) {
-            $( document ).trigger( 'updateRequestSend.checkout' );
-        }
+        $( document ).trigger( 'updateRequestSend.checkout' );
 
         $.ajax( {
             url: '/api/checkout/update',
