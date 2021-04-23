@@ -10,8 +10,7 @@
     "webpack:frontend:watch": "webpack --config ./config/webpack.frontend.js --watch --progress",
     "webpack:frontend:hot": "webpack --config ./config/webpack.frontend.hot.js",
     "dev": "npm run gulp watch:frontend",
-    "lint:fix": "eslint ./frontend/jsx/modules --fix",
-    "lint": "eslint ./frontend/jsx/modules"
+    "lint:fix": "eslint ./frontend/jsx/modules --fix"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -84,6 +83,7 @@
     "source-map-loader": "^2.0.1",
     "stripe": "^8.143.0",
     "swiper": "^6.5.0",
+    "typescript": "^4.2.4",
     "underscore": "^1.13.1",
     "validate.js": "^0.12.0",
     "vanilla-lazyload": "^8.7.1",
