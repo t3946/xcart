@@ -28,6 +28,7 @@ const babel = require("gulp-babel");
 const uglify = require("gulp-uglify");
 const imagemin = require("gulp-imagemin");
 const rimraf = require("gulp-rimraf");
+const argv = require("yargs").argv;
 
 const spawn = require("child_process").spawn;
 
@@ -293,12 +294,17 @@ gulp.task("backend:scss", function () {
 });
 
 gulp.task(
-  "backend:css",
+  "backend:styles",
   gulp.series("backend:scss", () => {
-    let pipe = gulp.src(backend.src.css);
+    let stream = gulp.src(backend.src.css);
 
-    return pipe
-      .pipe(concat(backend.config.name + ".css"))
+    stream = stream.pipe(concat(backend.config.name + ".css"));
+
+    if (argv.production) {
+      stream = stream.pipe(cssnano());
+    }
+
+    return stream
       .pipe(gulp.dest(backend.dst.css))
       .pipe(hashSum({ filename: "backend/versions/css.yml", hash: "md5" }));
   })
@@ -425,8 +431,8 @@ gulp.task(
     gulp.watch(backend.src.raw, ["backend:raw"]);
     gulp.watch(backend.src.jsx, ["backend:js"]);
     gulp.watch(backend.src.js, ["backend:js"]);
-    gulp.watch(backend.src.scss, ["backend:css"]);
-    gulp.watch(backend.src.css, ["backend:css"]);
+    gulp.watch(backend.src.scss, ["backend:styles"]);
+    gulp.watch(backend.src.css, ["backend:styles"]);
     gulp.watch(backend.src.fonts, ["backend:fonts"]);
   })
 );
@@ -442,7 +448,7 @@ gulp.task(
   gulp.series(
     "clear:backend",
     "backend:raw",
-    "backend:css",
+    "backend:styles",
     "backend:js",
     "backend:images",
     "backend:fonts"
