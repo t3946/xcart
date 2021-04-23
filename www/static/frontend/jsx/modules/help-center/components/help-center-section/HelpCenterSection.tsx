@@ -7,13 +7,13 @@ const HelpCenterSection: React.FC<HelpSectionItemDto> = ({ title, items }) => {
   return (
     <div className="navbar-wrap-items">
       <h3 className="navbar-wrap-title">{title}</h3>
-      {items.itemContent.map((section, id) => {
-        const lastChild = items.itemContent.length - 1 === id;
+      {items.map((section, id) => {
+        const lastChild = items.length - 1 === id;
         return (
           <div key={id}>
             <Accordion lastChild={lastChild} text={section.question}>
               <span>{section.answer}</span>
-              <SwitchFormForType type={section?.formType} />
+              <SwitchFormForType type={section?.form_type} />
             </Accordion>
           </div>
         );

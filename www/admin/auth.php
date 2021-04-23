@@ -254,7 +254,8 @@ $smarty->assign('publication_statuses', $publication_statuses);
 
 ###   
     $all_storefronts = $storefronts;
-    $storefronts_0[0] = func_get_storefront_info(0, 'ID');
+    $site_0 = \Modules\Sites\Models\SiteModel::objects()->get(['storefrontid' => 0]);
+    $storefronts_0[0] = $site_0->getAttributes();
     $all_storefronts = array_merge($storefronts_0, $all_storefronts);
     $smarty->assign('all_storefronts', $all_storefronts);
 

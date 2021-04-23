@@ -5,18 +5,15 @@ export interface HelpCenterItemDto {
 }
 
 export interface HelpSectionItemDto {
-  id: number;
+  menu_id: number;
   title: string;
   icon?: string;
-  activeIcon?: string;
-  items: {
-    route: string;
-    itemContent: itemContentDto[];
-  };
+  active_icon?: string;
+  items: itemContentDto[];
 }
 
 export interface itemContentDto {
   question: string;
   answer: string;
-  formType: FormType;
+  form_type: FormType;
 }
