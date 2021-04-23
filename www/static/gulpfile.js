@@ -118,6 +118,21 @@ gulp.task( 'frontend:jsx', function( done ) {
     GulpAssets.buildJsx( src, dst, cmd, done );
 } );
 
+gulp.task( 'watch:frontend:jsx', function( done ) {
+    let args = [ './node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js' ];
+
+    GulpAssets.isProduction() && args.push( '-p' );
+
+    args.push( '--progress' );
+    args.push( '-w' );
+
+    const cmd = spawn( 'node', args, { stdio: 'inherit' } );
+    const src = frontend.src.js_include;
+    const dst = frontend.dst.js;
+
+    GulpAssets.buildJsx( src, dst, cmd, done );
+} );
+
 /**
  *
  *          [FONTS]
