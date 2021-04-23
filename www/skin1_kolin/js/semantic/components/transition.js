@@ -1087,4 +1087,4 @@ $.fn.transition.settings = {
 };
 
 
-})( jQuery, window, document );
+})( $, window, document );

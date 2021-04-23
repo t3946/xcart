@@ -345,6 +345,26 @@ gulp.task(
   })
 );
 
+gulp.task("backend:scripts", function () {
+  const args = [
+    "./node_modules/webpack/bin/webpack.js",
+    "--config",
+    "./config/webpack.backend.js",
+  ];
+
+  GulpAssets.isProduction() && args.push("-p");
+
+  args.push("--progress");
+  args.push("-w");
+
+  const cmd = spawn("node", args, { stdio: "inherit" });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
+});
+
 /**
  *
  *          [IMAGES]
