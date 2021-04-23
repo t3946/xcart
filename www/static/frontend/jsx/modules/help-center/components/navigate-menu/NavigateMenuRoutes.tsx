@@ -5,14 +5,20 @@ import { BrowserRouter } from "react-router-dom";
 import { ApiService } from "../../../shared/services/api.service";
 import { useEffect, useState } from "preact/hooks";
 import HelpCenterSection from "../help-center-section/HelpCenterSection";
+import {
+  HelpCenterItemDto,
+  HelpSectionItemDto,
+} from "@/frontend/jsx/modules/help-center/ts/types";
 
 const NavigateMenuRoutes: React.FC = () => {
   const api = new ApiService();
-  const [menuItems, setMenuItems] = useState(undefined);
+  const [menuItems, setMenuItems] = useState<HelpSectionItemDto[] | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    api.get("http://localhost:3000/menu-items").then((data) => {
-      setMenuItems(data);
+    api.get<HelpCenterItemDto>("/help/api/item-list").then((data) => {
+      setMenuItems(data.menuItems);
     });
   }, []);
 
@@ -21,7 +27,7 @@ const NavigateMenuRoutes: React.FC = () => {
       {menuItems ? (
         <div className="row">
           <div className="help-wrap">
-            <NavigateMenu items={menuItems} />
+            <NavigateMenu menuItems={menuItems} />
             <Switch>
               {menuItems.map((item) => {
                 return (
@@ -30,7 +36,13 @@ const NavigateMenuRoutes: React.FC = () => {
                     key={item.id}
                     path={item.items.route}
                     component={() => {
-                      return <HelpCenterSection item={item} />;
+                      return (
+                        <HelpCenterSection
+                          items={item.items}
+                          id={item.id}
+                          title={item.title}
+                        />
+                      );
                     }}
                   />
                 );

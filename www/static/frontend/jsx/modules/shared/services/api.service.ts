@@ -1,5 +1,5 @@
 export class ApiService {
-  async get(url = "") {
+  async get<T>(url = ""): Promise<T> {
     const response = await fetch(url, {
       method: "GET",
       mode: "cors",
@@ -14,7 +14,7 @@ export class ApiService {
     return response.json();
   }
 
-  async post(url = "", data) {
+  async post<T>(url = "", data: BodyInit): Promise<T> {
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",

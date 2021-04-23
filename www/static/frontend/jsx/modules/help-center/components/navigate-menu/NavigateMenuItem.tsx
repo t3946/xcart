@@ -1,12 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { NavigateMenuItemDto } from "@/frontend/jsx/modules/help-center/ts/types";
+import { useLocation } from "react-router-dom";
 
 const NavigateMenuItem: React.FC<NavigateMenuItemDto> = ({
   link,
-  image,
   text,
+  icon,
+  activeIcon,
 }) => {
+  const location = useLocation();
   return (
     <NavLink
       exact={true}
@@ -17,7 +20,7 @@ const NavigateMenuItem: React.FC<NavigateMenuItemDto> = ({
       <div className="navigate-item-image-wrap">
         <img
           className="navigate-item-image"
-          src="/static/frontend/images/icons/forms/checkmark_accepted.svg"
+          src={location.pathname === link ? activeIcon : icon}
         />
       </div>
       <span className="navigate-item-text">{text}</span>

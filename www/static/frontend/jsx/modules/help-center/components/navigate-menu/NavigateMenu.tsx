@@ -1,16 +1,18 @@
 import React from "react";
 import NavigateMenuItem from "./NavigateMenuItem";
+import { HelpCenterItemDto } from "@/frontend/jsx/modules/help-center/ts/types";
 
-const NavigateMenu: React.FC<any> = ({ items }) => {
+const NavigateMenu: React.FC<HelpCenterItemDto> = ({ menuItems }) => {
   return (
     <nav className="navbar-wrap">
-      {items.map((item) => {
+      {menuItems.map((item) => {
         return (
           <NavigateMenuItem
-            key={item.items.id}
+            activeIcon={item.activeIcon}
+            key={item.id}
             link={item.items.route}
             text={item.title}
-            image={""}
+            icon={item.icon}
           />
         );
       })}

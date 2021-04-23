@@ -10,11 +10,6 @@ import HelpFormPhoneInput from "../help-form-phone-input/HelpFormPhoneInput";
 const YourOrderForm: React.FC = () => {
   return (
     <div>
-      <p>
-        You can use any of the payment methods listed below: Visa, MasterCard,
-        American Express, PayPal, Money order, Check (educational institutions
-        and governmental bodies only)
-      </p>
       <Formik
         initialValues={initialFormValue}
         onSubmit={null}
@@ -22,7 +17,7 @@ const YourOrderForm: React.FC = () => {
       >
         {({ errors, setFieldValue, values, touched }) => {
           return (
-            <Form encType="multipart/form-data">
+            <Form className="your-order-form" encType="multipart/form-data">
               <HelpFormInput
                 value={values.name}
                 clear={setFieldValue}

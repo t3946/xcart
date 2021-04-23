@@ -13,9 +13,6 @@
       "@/modules/shared/*": [
         "frontend/jsx/modules/shared/*"
       ],
-      "@/icons": [
-        "frontend/images/*"
-      ]
     },
     "jsx": "react"
   }

@@ -1,5 +1,6 @@
 export interface NavigateMenuItemDto {
   link: string;
-  image: string;
+  icon: string;
   text: string;
+  activeIcon: string;
 }
