@@ -78,7 +78,7 @@
     "redux": "^3.7.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "select2": "~4.0.3",
+    "select2": "^4.0.13",
     "simplebar": "^2.6.1",
     "slick-carousel": "^1.8.1",
     "source-map-loader": "^2.0.1",
@@ -90,7 +90,8 @@
     "vanilla-lazyload": "^8.7.1",
     "webfontloader": "^1.6.28",
     "what-input": "^5.2.10",
-    "whatwg-fetch": "^2.0.4"
+    "whatwg-fetch": "^2.0.4",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
