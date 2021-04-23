@@ -1,66 +1,70 @@
-const gulp = require( 'gulp' );
-const hashSum = require( 'gulp-hashsum' );
-const concat = require( 'gulp-concat' );
-const fs = require( 'fs' );
+/* eslint no-console: 0 */
 
-exports[ 'default' ] = {
-    /**
-     * Redefinition Level(RL) is directory that contain bem-blocks and named as
-     * Main.blocks or Common.blocks e.t.c farther will as RL for concise
-     *
-     * @param order array - RL names f.e. Basic.blocks or Common.blocks should to pass as ['basic', 'common']
-     * @param rlDir string - path to redefinition level dirs
-     * @param ext - string style files extension
-     * @return array paths to RL
-     */
-    BemOrderBuilder: async function( rlDir, order = [], ext = 'css' ) {
-        //trim slash in the end
-        rlDir.replace( /[\\/]$/, '' );
+const gulp = require("gulp");
+const hashSum = require("gulp-hashsum");
+const concat = require("gulp-concat");
+const fs = require("fs");
 
-        let orderedLevels = [];
+exports["default"] = {
+  /**
+   * Redefinition Level(RL) is directory that contain bem-blocks and named as
+   * Main.blocks or Common.blocks e.t.c farther will as RL for concise
+   *
+   * @param order array - RL names f.e. Basic.blocks or Common.blocks should to pass as ['basic', 'common']
+   * @param rlDir string - path to redefinition level dirs
+   * @param ext - string style files extension
+   * @return array paths to RL
+   */
+  BemOrderBuilder: async function (rlDir, order = [], ext = "css") {
+    //trim slash in the end
+    rlDir.replace(/[\\/]$/, "");
 
-        return new Promise( ( resolve, reject ) => {
-            fs.readdir( rlDir, ( err, files ) => {
-                const otherLevels = [];
+    let orderedLevels = [];
 
-                files.forEach( file => {
-                    if ( file.search( /^.*?\.blocks$/ ) !== 0 ) {
-                        return;
-                    }
+    return new Promise((resolve, reject) => {
+      fs.readdir(rlDir, (err, files) => {
+        const otherLevels = [];
 
-                    const levelName = file.split( '.' )[ 0 ];
-                    let index = order.indexOf( levelName );
+        files.forEach((file) => {
+          if (file.search(/^.*?\.blocks$/) !== 0) {
+            return;
+          }
 
-                    if ( index > -1 ) {
-                        orderedLevels[ index ] = `${ rlDir }/${ file }/**/*.${ ext }`;
-                    }
-                    else {
-                        otherLevels.push( `${ rlDir }/${ file }/**/*.${ ext }` );
-                    }
-                } );
+          const levelName = file.split(".")[0];
+          let index = order.indexOf(levelName);
 
-                //remove empty values
-                orderedLevels = orderedLevels.filter( ( elem ) => elem );
-                orderedLevels.push( ...otherLevels );
+          if (index > -1) {
+            orderedLevels[index] = `${rlDir}/${file}/**/*.${ext}`;
+          } else {
+            otherLevels.push(`${rlDir}/${file}/**/*.${ext}`);
+          }
+        });
 
-                resolve( orderedLevels );
-            } );
-        } );
-    },
+        //remove empty values
+        orderedLevels = orderedLevels.filter((elem) => elem);
+        orderedLevels.push(...otherLevels);
 
-    isProduction: function() {
-        return process.env.NODE_ENV === 'production';
-    },
+        resolve(orderedLevels);
+      });
+    });
+  },
 
-    buildJsx: function( src, dst, cmd, done ) {
-        gulp.src( src )
-            .pipe( concat( 'vendors.js' ) )
-            .pipe( hashSum( { filename: 'frontend/versions/vendor_js.yml', hash: 'md5' } ) )
-            .pipe( gulp.dest( dst ) );
+  isProduction: function () {
+    return process.env.NODE_ENV === "production";
+  },
 
-        cmd.on( 'close', function( code ) {
-            console.log( 'frontend:jsx exited with code ' + code );
-            done( code );
-        } );
-    },
+  buildJsx: function (src, dst, cmd, done) {
+    gulp
+      .src(src)
+      .pipe(concat("vendors.js"))
+      .pipe(
+        hashSum({ filename: "frontend/versions/vendor_js.yml", hash: "md5" })
+      )
+      .pipe(gulp.dest(dst));
+
+    cmd.on("close", function (code) {
+      console.log("frontend:jsx exited with code " + code);
+      done(code);
+    });
+  },
 };
