@@ -16,7 +16,7 @@
         }
         return pos;
     }
-})(jQuery);
+})($);
 
 $.fn.caret = function (begin, end)
     {

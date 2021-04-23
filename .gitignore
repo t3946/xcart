@@ -24,7 +24,6 @@ composer.lock
 /www/verificator/cookies/*
 /www/include/system/
 node_modules
-bower_components
 /www/static/**/temp/
 /www/skin1_kolin/pages/
 /app/runtime/

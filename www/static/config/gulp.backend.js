@@ -26,7 +26,7 @@ module.exports = {
             'backend/jsx/main.jsx'
         ],
         js: [
-            'backend/js/**/*',
+            // 'backend/js/**/*',
             'temp/backend/js/**/*',
         ].concat(modules.map(function(dir) {
             return dir + '/static/js/**/*.*'
