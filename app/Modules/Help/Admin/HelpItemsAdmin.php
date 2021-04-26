@@ -34,11 +34,11 @@ class HelpItemsAdmin extends ListViewAdmin
 
     public function isAjaxUpdate(): bool
     {
-        return false;
+        return true;
     }
 
     public function isAjaxCreate(): bool
     {
-        return false;
+        return true;
     }
 }
