@@ -32,7 +32,7 @@ export class AddToCartButton {
       });
     };
 
-    this.$button.click(function (e) {
+    this.$addButton.click(function (e) {
       if (self.mode === SIMPLE_MODE) {
         setTimeout(function () {
           self.toggleMode.call(self);
