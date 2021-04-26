@@ -1,5 +1,7 @@
 import $ from "jquery";
 import "jquery-ui-dist/jquery-ui";
+import "select2";
+import "jquery-form";
 
 import "@/js/ajaxTooltip";
 import "@/js/CCDashboard";
@@ -15,7 +17,6 @@ import "@/js/mTooltip";
 import "@/js/prevention";
 import "@/js/tablePosition";
 import "@/js/translates";
-import "select2";
 
 (function () {
   "use strict";
