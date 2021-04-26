@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="columns small-12 medium-6 show-for-medium flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if}">
+        <div class="columns small-12 medium-6 flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if}">
             {if $isCartEmpty}
                 <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
             {else}
