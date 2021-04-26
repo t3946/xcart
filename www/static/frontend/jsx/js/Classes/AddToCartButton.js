@@ -78,11 +78,9 @@ export class AddToCartButton {
                     options: opt
                 } ];
 
-                console.log('start animation');
                 buttonAnimation.start();
 
                 cartAdd( data, () => {
-                    console.log('ДОБАВЛЯЮ В КАРЗИНУ', product);
                     productItemResetState( product );
                     $( '.jackpot' ).show();
                 } );
