@@ -462,7 +462,7 @@ gulp.task(
     "clear:backend",
     "backend:raw",
     "backend:styles",
-    "backend:js",
+    "backend:scripts",
     "backend:images",
     "backend:fonts"
   )
