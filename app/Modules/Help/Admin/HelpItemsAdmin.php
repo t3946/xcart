@@ -11,7 +11,7 @@ use Modules\Help\Models\HelpMenuContentModel;
 class HelpItemsAdmin extends ListViewAdmin
 {
     public ?string $sort = 'order_by';
-    public $ownerField = 'menu_items';
+    public $ownerField = 'menu';
 
     public function getListColumns()
     {

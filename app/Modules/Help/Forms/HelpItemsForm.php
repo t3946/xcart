@@ -9,6 +9,8 @@ use Xcart\App\Form\ModelForm;
 
 class HelpItemsForm extends ModelForm
 {
+    public array $exclude = ['menu'];
+
     public function getModel()
     {
         return new HelpMenuContentModel();
