@@ -7,11 +7,12 @@ const COMPLEX_MODE = 2;
 
 export class AddToCartButton {
     constructor( elem ) {
-        this.$button = $( elem );
-        this.$addButton = this.$button.find( '.add-to-cart-button-add' );
-        this.$checkoutButton = this.$button.find( '.add-to-cart-button-checkout' );
-        this.$noAccountMessage = this.$button.find('.no-account');
-        this.$buttonWrapper = this.$button.find( '.add-to-cart-button-wrapper' );
+        this.$root = $( elem );
+        this.$button = this.$root.find( '.button' );
+        this.$addButton = this.$root.find( '.add-to-cart-button-add' );
+        this.$checkoutButton = this.$root.find( '.add-to-cart-button-checkout' );
+        this.$noAccountMessage = this.$root.find('.no-account');
+        this.$buttonWrapper = this.$root.find( '.add-to-cart-button-wrapper' );
 
         this.mode = SIMPLE_MODE;
 
@@ -32,6 +33,7 @@ export class AddToCartButton {
         };
 
         this.$button.click( function ( e ) {
+            console.log('CLICK');
             if ($(e.currentTarget)) {}
 
             if ( self.mode === SIMPLE_MODE ) {
@@ -96,8 +98,8 @@ export class AddToCartButton {
 
     update() {
         if ( this.mode === COMPLEX_MODE ) {
-            const mainButtonComplexClass = this.$button.data('addComplexClass');
-            const checkoutButtonComplexClass = this.$button.data('checkoutComplexClass');
+            const mainButtonComplexClass = this.$root.data('addComplexClass');
+            const checkoutButtonComplexClass = this.$root.data('checkoutComplexClass');
 
             this.$addButton.addClass( mainButtonComplexClass ).find( '.text, .wait-text' ).remove();
             this.$checkoutButton.addClass( checkoutButtonComplexClass );
