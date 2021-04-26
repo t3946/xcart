@@ -5,6 +5,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
+use Xcart\App\Orm\Fields\IntField;
 
 class HelpMenuContentModel extends Model
 {
@@ -22,7 +23,10 @@ class HelpMenuContentModel extends Model
                 'form_type' => [
                     'class' => CharField::class,
                     'null' => true,
-                     'default' => null
+                     'default' => null,
+                    'choices' => [
+                        'question' => 'Question'
+                    ]
                 ],
                 'answer' => [
                     'class' => CharField::class,
@@ -32,6 +36,10 @@ class HelpMenuContentModel extends Model
                     'class' => CharField::class,
                     'null' => false,
                 ],
+              'order_by' => [
+                        'class' => IntField::class,
+                        'default' => 0
+                    ],
                  'menu' => [
                    'field' => 'menu_id',
                    'class' => ForeignField::class,

@@ -3,31 +3,33 @@
 
 namespace Modules\Help\Admin;
 
-
 use Modules\Admin\Contrib\Admin;
-use Modules\Admin\Traits\AdminTrait;
-use Modules\Help\Forms\HelpForm;
-use Modules\Help\Models\HelpListModel;
+use Modules\Admin\Contrib\ListViewAdmin;
+use Modules\Help\Forms\HelpItemsForm;
+use Modules\Help\Models\HelpMenuContentModel;
 
-class HelpAdmin extends Admin
+class HelpItemsAdmin extends ListViewAdmin
 {
     public ?string $sort = 'order_by';
+    public $ownerField = 'menu_items';
 
     public function getListColumns()
     {
         return [
-            'title',
+            'form_type',
+            'answer',
+            'question',
         ];
     }
 
     public function getForm()
     {
-        return new HelpForm();
+        return new HelpItemsForm();
     }
 
     public function getModel()
     {
-        return new HelpListModel();
+        return new HelpMenuContentModel();
     }
 
     public function isAjaxUpdate(): bool
