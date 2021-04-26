@@ -282,6 +282,19 @@ gulp.task(
  *
  */
 
+gulp.task("backend:bem", async function () {
+  const bemOrderedPaths = await GulpAssets.BemOrderBuilder(
+    "backend/bem/blocks",
+    [],
+    "scss"
+  );
+
+  return gulp
+    .src(bemOrderedPaths)
+    .pipe(concat("bem.scss"))
+    .pipe(gulp.dest("backend/bem/"));
+});
+
 gulp.task("backend:scss", function () {
   return gulp
     .src(backend.src.scss)
@@ -295,7 +308,7 @@ gulp.task("backend:scss", function () {
 
 gulp.task(
   "backend:styles",
-  gulp.series("backend:scss", () => {
+  gulp.series("backend:bem", "backend:scss", () => {
     let stream = gulp.src(backend.src.css);
 
     stream = stream.pipe(concat(backend.config.name + ".css"));

@@ -110,20 +110,23 @@ import SelectNumberItems from "../../components/SelectNumberItems";
         })
         // Изменение колличества товара в корзине в верхней части окна
         .on('update.cart.store', (e, data) => {
-            let qNew = data.state.cart.quantity;
-            let qPrev = data.prevState.cart.quantity;
-            let mc_count = document.querySelector('.mc_count');
+            const qtyNewNum = data.state.cart.quantity;
+            const qtyOldNum = data.prevState.cart.quantity;
+            const miniCartCounter = document.querySelector('.mc_count');
 
-            if (mc_count) {
-                if (qNew > 99) {
-                    mc_count.classList.add('small');
+            if (miniCartCounter) {
+                if (qtyNewNum > 99) {
+                    miniCartCounter.classList.add('small');
                 } else {
-                    mc_count.classList.remove('small');
+                    miniCartCounter.classList.remove('small');
                 }
 
-                mc_count.innerHTML = qNew;
+                miniCartCounter.innerHTML = qtyNewNum;
 
-                (new CountUp('desktop-cart-quantity', qPrev, qNew, 0, 1, {useEasing: true})).start();
+                (new CountUp('desktop-cart-quantity', qtyNewNum, {
+                    useEasing: true,
+                    startVal: qtyOldNum,
+                })).start();
             }
         })
         // Раскрыть корзину в верхней части окна

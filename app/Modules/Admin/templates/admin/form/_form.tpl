@@ -6,9 +6,13 @@
         text-decoration: none !important;
         color: red;
     }
-    .x_form input, .x_form textarea {
+
+    .x_form input[type='text'],
+    .x_form input[type='select'],
+    .x_form textarea {
         width: 100%;
     }
+
     .admin .required {
         color: inherit;
     }
