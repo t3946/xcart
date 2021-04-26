@@ -19,7 +19,7 @@ class HelpForm extends ModelForm
     public function getFields()
     {
         return [
-          'items' => [
+          'menu_items' => [
                'class' => ListViewField::class,
                'adminClass' => HelpItemsAdmin::class,
                ]
