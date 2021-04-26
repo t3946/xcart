@@ -951,14 +951,9 @@ Drop-ship fee in X-cart
                             <input type="text" size="40"
                                    name="links_to_distributor_invoices[{$m_id}][{$invoice_number}][{$key}][link_to_distributor_invoice]"
                                    value="{$distributor_link.link_to_distributor_invoice|escape}"/>&nbsp;
-                            <a href="javascript: void(0);"onclick="javascript: add_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/></a>
-                            &nbsp;<a href="javascript: void(0);"
-                                     onclick="remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');">
-                                <img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_remove_row|escape:'javascript'}"/></a>
-                            &nbsp;&nbsp;<a style="color: #3A3AFF; font-weight: normal;"
-                                           href='{$distributor_link.link_to_distributor_invoice}' target="_blank">
-                                View invoice
-                            </a>
+                            <a href="javascript: void(0);"
+                               onclick="add_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}"/></a>&nbsp;&nbsp;<a href="javascript: void(0);" onclick="remove_distributor_link_row('{$key}', '{$m_id}', '{$invoice_number}');"><img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_remove_row|escape:'javascript'}"/></a>
+                            <a style="color: #3A3AFF; font-weight: normal;" href='{$distributor_link.link_to_distributor_invoice}' target="_blank">View invoice</a>
                         </td>
                     </tr>
                 {/foreach}
