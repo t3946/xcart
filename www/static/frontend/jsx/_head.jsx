@@ -15,7 +15,6 @@ import formValidate from 'validate.js';
 import noUiSlider from 'nouislider';
 import Loader from "./components/Loader";
 import FilterPriceSlider from "./components/FilterPriceSlider";
-import 'sly/dist/sly';
 import './utils/mmodal/jquery.mindy.modal';
 
 import 'jQuery.dotdotdot';
