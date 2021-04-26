@@ -27,6 +27,7 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "bootstrap-sass": "^3.4.1",
     "bourbon": "^4.3.4",
+    "bower-resolve-webpack-plugin": "^1.0.5",
     "classnames": "^2.2.6",
     "compass-mixins": "^0.12.10",
     "countup.js": "git+https://github.com/inorganik/countUp.js.git",
