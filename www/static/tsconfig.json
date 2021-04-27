@@ -7,12 +7,9 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": [
-        "*"
-      ],
-      "@/modules/shared/*": [
-        "frontend/jsx/modules/shared/*"
-      ],
+      "@modules/*": [
+        "frontend/jsx/modules/*"
+      ]
     },
     "jsx": "react"
   }
