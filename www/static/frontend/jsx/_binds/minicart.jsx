@@ -10,11 +10,16 @@ if (miniCart) {
   render(
     <Fragment>
       <Provider store={storeCart}>
-        <MiniCartItems store={storeCart} labels={miniCart.dataset} />
+        <MiniCartItems
+          store={storeCart}
+          labels={miniCart.dataset}
+          checkoutUrl={miniCart.dataset.checkoutUrl}
+        />
       </Provider>
+
       <MiniCartInfo
         quantity={miniCart.dataset.quantity}
-        url={miniCart.dataset.url}
+        url={miniCart.dataset.cartUrl}
       />
     </Fragment>,
     miniCart
