@@ -168,7 +168,7 @@ export default class AddToCartButton extends Component {
                 <a className={ this.classes.button } onClick={ this.onAddToCart } ref={ this.button }>
                     { this.state.mode === this.SIMPLE_MODE && this.context.viewMode === 'list' &&
                     <Fragment>
-                        <span className="text">{ t( 'Add to cart' ) }</span>
+                        <span className="text button-text">{ t( 'Add to cart' ) }</span>
                         <span className="text hide">{ t( 'Add' ) }</span>
                         <span className="wait-text">{ t( 'Added' ) }</span>
                     </Fragment>
