@@ -85,27 +85,43 @@ export default class Card extends Component {
     leadTime() {
         const leadTime = this.product.lead_time;
         let leadTimeMessage = null;
+        let fromDays = null;
+        let toDays = null;
 
         if (leadTime.lead_time_message) {
             leadTimeMessage = leadTime.lead_time_message.trim();
         } else if (leadTime.brand.leadtime_from) {
             const brand = leadTime.brand;
 
-            if (brand.leadtime_from === brand.leadtime_to || !brand.leadtime_to) {
-                leadTimeMessage = t('Lead time for this product is %count% business days', {count: brand.leadtime_from});
+            if ((brand.leadtime_from === brand.leadtime_to || !brand.leadtime_to) ) {
+              fromDays = parseInt( brand.leadtime_from );
             } else {
-                const from_to = leadTime.brand.leadtime_from + '-' + leadTime.brand.leadtime_to;
-                leadTimeMessage = `Lead time for this product is ${from_to} business days`;
+              fromDays = parseInt( leadTime.brand.leadtime_from );
+              toDays = parseInt( leadTime.brand.leadtime_to );
             }
         } else if (leadTime.dx.leadtime) {
             const dx = leadTime.dx;
 
-            if (dx.leadtime === dx.leadtime_to || !dx.leadtime_to) {
-                leadTimeMessage = t('Lead time for this product is %count% business days', {count: dx.leadtime});
+            if ((dx.leadtime === dx.leadtime_to || !dx.leadtime_to) ) {
+                toDays = parseInt(dx.leadtime);
             } else {
-                const from_to = dx.leadtime + '-' + dx.leadtime_to;
-                leadTimeMessage = `Lead time for this product is ${from_to} business days`;
+                fromDays = parseInt(dx.leadtime);
+                toDays = parseInt(dx.leadtime_to);
             }
+        }
+
+        let days = null;
+
+        if (fromDays && toDays) {
+          days = `${fromDays}-${toDays}`;
+        } else if (fromDays) {
+          days = fromDays;
+        } else if (toDays) {
+          days = toDays;
+        }
+
+        if (days) {
+          leadTimeMessage = t('Lead time for this product is %count% business days', {count: days});
         }
 
         if (leadTimeMessage) {
