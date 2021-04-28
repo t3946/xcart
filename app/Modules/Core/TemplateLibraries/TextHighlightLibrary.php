@@ -17,7 +17,7 @@ class TextHighlightLibrary extends TemplateLibrary
         if(!$m) {
             return $str;
         }
-        $re = '~\\b(' . implode('|', $m[0]) . ')\\b~';
+        $re = '~\\b(' . implode('|', $m[0]) . ')\\b~i';
         return preg_replace($re, "<$tag class='{$class}'>$0</{$tag}>", $str);
     }
 }
