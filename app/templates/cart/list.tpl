@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="columns small-12 medium-6 show-for-medium flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if}">
+        <div class="columns small-12 medium-6 flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if} small-order-2 medium-order-1">
             {if $isCartEmpty}
                 <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
             {else}
@@ -21,7 +21,7 @@
             {/if}
         </div>
 
-        <div class="columns small-6 medium-3">
+        <div class="columns small-6 medium-3 small-order-1 medium-order-2">
             {if !$isCartEmpty}
                 <div class="b-next">
                     <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
