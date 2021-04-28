@@ -25,6 +25,11 @@
 
   .action_group {
     display: inline-block;
+    margin: 0 2px 0 0;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 
   .actions {
@@ -36,6 +41,8 @@
         padding-right: 8%;
 
         .action_block {
+          position: relative;
+
           &.sort {
             .options {
               right: 0;
@@ -117,8 +124,6 @@
       }
 
       &.active {
-        position: relative;
-
         .options {
           text-align: left;
           display: block;
@@ -188,6 +193,7 @@
   @include breakpoint(ml down) {
     .actions {
       display: flex;
+      position: relative;
 
       .action_group {
         flex: 1 0;
@@ -209,9 +215,7 @@
         }
 
         .action_button {
-          position: relative;
           transition: all .4s;
-          width: 99%;
           cursor: pointer;
           display: block;
           color: inherit;
@@ -242,8 +246,6 @@
 
         &.sort {
           &.active {
-            position: relative;
-
             .options {
               border: 2px solid $dark_blue;
               border-top: none;
