@@ -372,6 +372,10 @@
       margin-bottom: 15px;
       border-bottom: 1px solid #cccccc;
 
+      &:last-child {
+        border-bottom: none;
+      }
+
       @include breakpoint (sm down) {
         margin-bottom: 0;
       }

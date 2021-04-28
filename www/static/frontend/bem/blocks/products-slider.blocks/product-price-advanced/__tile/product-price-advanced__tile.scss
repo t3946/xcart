@@ -13,8 +13,11 @@
     left: -1px;
 }
 
-.catalog-product:hover .product-price-advanced__tile {
-    display: block;
-    position: absolute;
-    padding: 0 rem-calc(15) rem-calc(15);
+@include breakpoint(md up) {
+    .catalog-product:hover .product-price-advanced__tile {
+        display: block;
+        position: absolute;
+        padding: 0 rem-calc(15) rem-calc(15);
+    }
 }
+
