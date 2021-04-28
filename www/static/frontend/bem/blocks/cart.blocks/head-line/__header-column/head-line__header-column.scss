@@ -1,0 +1,6 @@
+.head-line__header-column {
+    margin: rem-calc(29) 0 0 0;
+    @include breakpoint(md up) {
+        margin: 0;
+    }
+}
