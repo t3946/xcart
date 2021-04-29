@@ -148,12 +148,13 @@ class OrderGroupHelper
         }
 
         foreach ($params['tracking_carrier'] as $_k => $sh) {
-            if ($sh && !$params['tracking_id'][$_k] && trim($params['tracking_number'][$_k])) {
+            if ($sh && !$params['tracking_id'][$_k]) {
+                $tracking_number = trim($params['tracking_number'][$_k]);
                 $t_shipdate = trim($params['tracking_ship_date'][$_k]);
                 $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
                 $tri = [
                     'linkid' => $params['tracking_shipper'][$_k] ?? 0,
-                    'tracknum' => trim($params['tracking_number'][$_k]),
+                    'tracknum' => $tracking_number ?: null,
                     'shipping_date' => $t_shipdate ? DateTime::createFromFormat('m/d/Y H:i:s', "{$t_shipdate} 00:00:00", new DateTimeZone('EST')) : null,
                     'carrier_id' => $sh,
                     'order_group_id' => $group->order_group_id
