@@ -53,13 +53,23 @@ export default class Card extends Component {
         );
     }
 
-    render() {
+    render(props) {
+        const classes = {
+            product: [],
+            image: {
+                link: ['products-slider-image-link'],
+                container: ['products-slider__image-container', 'products-slider-image-container'],
+                noImage: ["products-slider-no-image"],
+            },
+        };
+
         return (
             <Product
                 product={ this.product }
                 images={ this.imgList }
                 mainInfo={ this.productMainInfoBlock() }
                 price={ this.productPriceBlock() }
+                classes={classes}
             />
         );
     }

@@ -1,28 +1,38 @@
-import classnames       from 'classnames';
+import classnames from 'classnames';
 
 /**
  * images viewer for product in products slider where many images
  */
 export default class ImageComplex extends Component {
-    constructor( { images, mpn, upc } ) {
-        super();
+    constructor( props ) {
+        super(props);
         //view image index
         this.state = { activeIndex: 0 };
-        this.images = images;
         this.hoverIntentTimeout = null;
     }
 
-    render() {
+    render(props) {
+
         const { activeIndex } = this.state;
+        const classes = {
+            container: [
+                'product-card-image-group',
+                'images-many',
+                `images-${ props.images.length }`,
+                props.classes.container,
+            ],
+        }
+
+        console.log(classes.container);
         return (
-            <div className={ `products-slider-images-group images-many images-${ this.images.length }` }>
-                { this.images.map( ( image, i ) => (
+            <div className={ classnames(classes.container) }>
+                { props.images.map( ( image, i ) => (
                     <div key={ `image-${ i }` } className={ 'products-slider-images-group ' + ( i === activeIndex ? 'show' : 'hide' ) }>
                         { image }
                     </div>
                 ) ) }
                 <ul className="products-slider-images-navigator" style="display: flex">
-                    { this.images.map( ( image, i ) => (
+                    { props.images.map( ( image, i ) => (
                         <li onMouseOver={ e => {
                             clearTimeout( this.hoverIntentTimeout );
                             this.hoverIntentTimeout = setTimeout( () => this.setState( { activeIndex: i } ), 35 );

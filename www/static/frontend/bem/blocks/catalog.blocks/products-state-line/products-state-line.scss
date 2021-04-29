@@ -2,8 +2,6 @@
   font-weight: 500;
   height: rem-calc(60);
   line-height: rem-calc(60);
-  padding-left: rem-calc(5);
-  padding-right: rem-calc(5);
 
   @include breakpoint(large up) {
     background-color: #ebebeb;

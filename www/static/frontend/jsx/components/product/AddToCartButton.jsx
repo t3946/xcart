@@ -33,8 +33,8 @@ export default class AddToCartButton extends Component {
         let button = [ 'add', 'button', 'yellow', 'wait-button', 'add-to-cart-button-add' ];
         let checkoutLinkWrapper = [ 'add-to-cart-button-wrapper' ];
         let checkoutLink = [ 'button', 'yellow-white', 'waves waves-orange', 'waves-effect', 'add-to-cart-button-checkout' ];
-        let addToCartLongText = [ 'text' ];
-        let addToCartShortText = [ 'text' ];
+        let addToCartLongText = [ 'button-text' ];
+        let addToCartShortText = [ 'button-text' ];
 
         const classes = {
             mainWrapper,
@@ -56,11 +56,6 @@ export default class AddToCartButton extends Component {
             for ( let key in classes ) {
                 classes[ key ].push( propsClasses[ key ] );
             }
-        }
-
-        // hide by default
-        if ( !propsClasses.addToCartShortText ) {
-            classes.addToCartShortText.push( 'hide' );
         }
 
         // join classes
@@ -168,8 +163,8 @@ export default class AddToCartButton extends Component {
                 <a className={ this.classes.button } onClick={ this.onAddToCart } ref={ this.button }>
                     { this.state.mode === this.SIMPLE_MODE && this.context.viewMode === 'list' &&
                     <Fragment>
-                        <span className="text button-text">{ t( 'Add to cart' ) }</span>
-                        <span className="text hide">{ t( 'Add' ) }</span>
+                        <span className={this.classes.addToCartLongText}>{ t( 'Add to cart' ) }</span>
+                        <span className={this.classes.addToCartShortText}>{ t( 'Add' ) }</span>
                         <span className="wait-text">{ t( 'Added' ) }</span>
                     </Fragment>
                     }

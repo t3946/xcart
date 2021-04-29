@@ -21,6 +21,14 @@ export default class Product extends Component {
     this.classes = classes ?? {};
 
     const analytics_source = "";
+
+    if (this.classes.image) {
+      this.classes.image.container = [
+        this.classes.image.container,
+        "grid-catalog-product-image",
+      ];
+    }
+
     const imageProp = {
       images: this.images,
       mpn: product.mpn,
@@ -32,10 +40,11 @@ export default class Product extends Component {
       classes: this.classes.image,
     };
 
-    const productsSliderPriceContainer = ["products-slider-price-container"];
-    productsSliderPriceContainer.push(
-      this.props.classes ? this.props.classes.priceContainer : null
-    );
+    const productsSliderPriceContainer = [
+      "product-card-price__catalog",
+      "grid-catalog-product-price",
+      this.props.classes ? this.props.classes.priceContainer : null,
+    ];
 
     return (
       <div
@@ -55,7 +64,9 @@ export default class Product extends Component {
       >
         <Image {...imageProp} />
 
-        <div className="info_container container">{this.mainInfo}</div>
+        <div className="container grid-catalog-product-info product-card-info">
+          {this.mainInfo}
+        </div>
 
         <div
           ref={this.price}

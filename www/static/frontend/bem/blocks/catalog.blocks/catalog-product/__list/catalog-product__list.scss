@@ -1,5 +1,17 @@
 .catalog-product__list {
-  padding: rem-calc(15) rem-calc(20) rem-calc(15) 0;
   flex: 0 0 100%;
   width: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 180px 1fr;
+  grid-template-areas: "image info" "cel21 price";
+  grid-column-gap: rem-calc(10);
+  padding: 0 0 rem-calc(10);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(15) rem-calc(20) rem-calc(15) 0;
+    grid-template-columns: 180px 1fr 180px;
+    grid-template-rows: 1fr;
+    grid-template-areas: "image info price";
+  }
 }

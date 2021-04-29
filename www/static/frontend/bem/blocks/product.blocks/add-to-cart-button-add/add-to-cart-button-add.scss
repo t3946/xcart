@@ -21,6 +21,7 @@
   height: 1.5rem;
   background-size: contain;
   vertical-align: text-bottom;
+  flex-shrink: 0;
 }
 
 @include breakpoint(md up) {

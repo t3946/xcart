@@ -50,6 +50,9 @@ export default class Catalog extends Component {
                 sortKey: this.state.sortKey,
                 hideSort: this.state.hideSort,
                 sortingOptions: this.state.sortingOptions,
+                classes: {
+                    container: 'products-state-line_catalog',
+                }
             };
 
             return (

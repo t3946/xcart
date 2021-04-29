@@ -55,7 +55,14 @@ export default class ProductsList extends Component {
     }
 
     productItem( product, viewMode ) {
-        return ( <Card product={ product } classes={ { product: [ `catalog-product__${ viewMode }` ] } }/> );
+        const classes = {
+            product: [
+                `catalog-product__${ viewMode }`,
+                `catalog-product_${ viewMode }`,
+            ],
+        };
+
+        return ( <Card product={ product } classes={ classes }/> );
     }
 
     shouldComponentUpdate( nextProps, nextState ) {
@@ -75,6 +82,7 @@ export default class ProductsList extends Component {
         const classes = [
             'product-items',
             `${ viewMode }-view`,
+            `product-items__${ viewMode }`,
             {
                 'padding-0': this.state.items.length === 0,
             }

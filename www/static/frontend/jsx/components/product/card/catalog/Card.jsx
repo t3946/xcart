@@ -43,7 +43,7 @@ export default class Card extends Component {
                 </h4>
 
                 {/*sku*/}
-                <div className="sku show-for-large">
+                <div className="product-card-sku product-card__label show-for-large">
                     <span className="value">
                         <span>{t('SKU')}: </span>
                         <span className="style" itemProp="sku">{product.productcode}</span>
@@ -52,7 +52,7 @@ export default class Card extends Component {
 
                 {/*brand*/}
                 {product.brand &&
-                <div className="brand show-for-small">
+                <div className="product-card-brand product-card__label">
                     <span>{t('Brand')}: </span>
                     <a className="value" itemProp="brand" href={product.brandUrl}>
                         {product.brand}
@@ -63,7 +63,7 @@ export default class Card extends Component {
                 {/*description*/}
                 {product.description &&
                 <Fragment>
-                    <div className="description show-for-medium">
+                    <div className="product-card-description show-for-medium">
                         <span itemProp="description">{product.description}</span>
 
                         <div className="see-details">
@@ -71,7 +71,7 @@ export default class Card extends Component {
                         </div>
                     </div>
                     <noindex>
-                        <div className="description show-for-small hide-for-medium">
+                        <div className="product-card-description show-for-small hide-for-medium">
                             {product.description}
                         </div>
                     </noindex>
@@ -126,7 +126,7 @@ export default class Card extends Component {
 
         if (leadTimeMessage) {
             return (
-                <div className="p-label lead-time">
+                <div className="p-label lead-time product-card__label">
                     <i/>
                     <div className="text">{leadTimeMessage}</div>
                 </div>
@@ -138,14 +138,14 @@ export default class Card extends Component {
         if (this.product.min_amount > 1) {
             if (this.product.mult_order_quantity === 'Y') {
                 return (
-                    <div className="multiply-quantity icon info padding">
+                    <div className="multiply-quantity icon info padding product-card__label">
                         <i/>
                         <span className="text">Order in multiples of {this.product.min_amount} items</span>
                     </div>
                 );
             } else {
                 return (
-                    <div className="p-label last-items">
+                    <div className="p-label last-items product-card__label">
                         <i className="least-items-icon"/>
                         <span className="text">Order at least {this.product.min_amount} items</span>
                     </div>
@@ -168,11 +168,13 @@ export default class Card extends Component {
             checkoutLinkWrapper: ['add-to-cart-button-wrapper__catalog'],
             buttonComplex: ['add-to-cart-button-add__complex-product'],
             checkoutLinkComplex: ['add-to-cart-button-checkout__complex-product'],
+            addToCartLongText: ['add-to-cart-text__long add-to-cart-text__long-catalog'],
+            addToCartShortText: ['add-to-cart-text__short add-to-cart-text__short-catalog'],
         };
 
-        const advancedClasses = ['product-price-advanced'];
+        const advancedClasses = ['product-card-price-info'];
 
-        const priceAttributes = ['price-attributes', 'show-for-medium'];
+        const priceAttributes = ['price-attributes'];
 
         if (this.context.viewMode === 'tile') {
             quantityGroupClasses.group.push('quantity-group__catalog-tile');
@@ -190,7 +192,7 @@ export default class Card extends Component {
 
         return (
             <Fragment>
-                <div className="price_container">
+                <div className="price_container product-card-price">
                     {product.listPrice.number > product.price.number && (
                         <div className="old">
                             <span className="show-for-medium">{t('List Price')}: </span>
@@ -245,21 +247,21 @@ export default class Card extends Component {
                                         }
 
                                         <div
-                                            className={classnames('cart-add', {'cart-add__tile': this.context.viewMode === 'tile'})}>
+                                            className={classnames('cart-add product-card-button', {'cart-add__tile': this.context.viewMode === 'tile'})}>
                                             <AddToCartButton type={'catalog'} classes={addToCartClasses}/>
                                         </div>
                                     </Fragment>
                                 );
                             } else {
                                 return (
-                                    <div className="out-of-stock">
-                                        <div className="p-label out-of-stock">
+                                    <div className="info_container">
+                                        <div className="p-label out-of-stock product-card__label">
                                             <i/>
                                             <span className="text p-label-text_out-of-stock">{t('Out of stock')}</span>
                                         </div>
 
                                         {this.product.eta_date &&
-                                        <div className="eta-date">
+                                        <div className="product-card-info product-card-info__eta-date product-card__label">
                                             {t('Eta date')}: {this.product.eta_date}
                                         </div>
                                         }
@@ -289,13 +291,14 @@ export default class Card extends Component {
 
         classes.product.push('catalog-product', 'item');
         classes.image = {
-            container: ['image_container'],
-            link: `products-slider-image-link__catalog-${self.context.viewMode}`,
+            link: `product-image__catalog-${self.context.viewMode}`,
+            container: ['product-image__container', 'product-image-container'],
+            complex: {
+                container: ['product-card-image-group__catalog'],
+            },
         };
 
-        classes.priceContainer = {
-            'show-for-medium': self.context.viewMode === 'list',
-        }
+        classes.image.noImage = ["product-no-image__catalog"];
 
         return (
             <Product

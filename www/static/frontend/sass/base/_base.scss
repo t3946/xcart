@@ -1,3 +1,203 @@
+.grid-catalog-product-image {
+  grid-area: image;
+  grid-row: 1/3;
+
+  @include breakpoint(md up) {
+    grid-row: 1/2;
+  }
+}
+
+.grid-catalog-product-price {
+  grid-area: price;
+}
+
+.grid-catalog-product-info {
+  grid-area: info;
+}
+
+.products-slider-price-container {
+  padding: 0 3%;
+
+  @include breakpoint(md up) {
+      padding: 0;
+  }
+}
+
+.product-items__tile {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+.product-card-info {
+  color: $dark_33;
+}
+
+.product-card-title {
+  @include breakpoint (medium down) {
+    font: {
+      size: rem-calc(16);
+    }
+  }
+  @include breakpoint (small down) {
+    font: {
+      size: rem-calc(14);
+    }
+  }
+
+  &, a {
+    color: black;
+    text-align: left;
+
+    //overflow: hidden;
+    //max-height: 3em;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.product-card-sku {
+  margin: 5px 0;
+  line-height: 1.1;
+  font: {
+    size: rem-calc(16);
+  };
+
+  .value {
+    color: $forest_green;
+    text-transform: uppercase;
+    font: {
+      weight: 400;
+    }
+  }
+
+  .has-tip {
+    width: 19px;
+    height: 19px;
+    line-height: 1.3;
+    color: $white;
+    background-color: #cfcfcf;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    text-align: center;
+    display: inline-block;
+    border: none;
+  }
+}
+
+.product-card-description {
+  @include breakpoint (medium down) {
+    font: {
+      size: rem-calc(14)
+    }
+  }
+
+  @include breakpoint (small down) {
+    font: {
+      size: rem-calc(12)
+    }
+  }
+}
+
+.product-card-brand {
+  @include breakpoint (medium down) {
+    font: {
+      size: rem-calc(14)
+    }
+  }
+
+  @include breakpoint (small down) {
+    font: {
+      size: rem-calc(12)
+    }
+  }
+}
+
+.product-card-price {
+  line-height: rem-calc(22);
+  flex-grow: 1;
+  display: flex;
+}
+
+
+
+
+
+/*grid for pricing block*/
+.product-card-price__catalog {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: "price-option__price" "price-option__info";
+  margin: rem-calc(10) 0 0 0;
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}
+
+.product-card-price {
+  grid-area: price-option__price;
+}
+
+.product-card-price-info {
+  grid-area: price-option__info;
+}
+
+.product-card-button {
+  grid-area: price-option__button;
+  grid-column: 2/4;
+}
+
+.price_container product-card-price{
+  grid-area: ценник;
+}
+
+.cart-quantity {
+  grid-area: price-option__quantity;
+}
+
+.info_container {
+  grid-area: info_container;
+  grid-column: 1/3;
+}
+
+.price-attributes {
+  display: grid;
+  grid-template-areas: "price-option__quantity price-option__button" "info_container cell22";
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: rem-calc(10);
+}
+
+.add-to-cart-text__long-catalog {
+  display: none;
+
+  @include breakpoint(400px up) {
+    display: none;
+  }
+
+  @include breakpoint(ms up) {
+      display: block;
+  }
+}
+
+.add-to-cart-text__short-catalog {
+  display: none;
+
+  @include breakpoint(400px up) {
+    display: block;
+  }
+
+  @include breakpoint(ms up) {
+    display: none;
+  }
+}
+
 
 
 html,
