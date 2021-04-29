@@ -10,8 +10,7 @@
     "webpack:frontend:watch": "webpack --config ./config/webpack.frontend.js --watch --progress",
     "webpack:frontend:hot": "webpack --config ./config/webpack.frontend.hot.js",
     "dev": "npm run gulp watch:frontend",
-    "lint:fix": "eslint ./frontend/jsx/modules --fix",
-    "lint": "eslint ./frontend/jsx/modules"
+    "lint:fix": "eslint ./frontend/jsx/modules --fix"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -29,6 +28,7 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "bootstrap-sass": "^3.4.1",
     "bourbon": "^4.3.4",
+    "bower-resolve-webpack-plugin": "^1.0.5",
     "classnames": "^2.2.6",
     "compass-mixins": "^0.12.10",
     "countup.js": "git+https://github.com/inorganik/countUp.js.git",
@@ -45,7 +45,6 @@
     "intersection-observer": "^0.4.0",
     "intl": "^1.2.5",
     "intl-polyfill": "0.0.3",
-    "jQuery.dotdotdot": "file:local_modules/jQuery.dotdotdot",
     "javascript-auto-complete": "file:local_modules/JavaScript-auto-complete",
     "jquery": "^3.6.0",
     "jquery-form": "^4.3.0",
@@ -54,6 +53,7 @@
     "jquery-ui": "^1.12.1",
     "jquery-ui-dist": "^1.12.1",
     "jquery.cookie": "^1.4.1",
+    "jQuery.dotdotdot": "file:local_modules/jQuery.dotdotdot",
     "js-cookie": "^2.1.4",
     "jscrollpane": "git+https://github.com/vitch/jScrollPane.git",
     "linkstate": "^1.1.0",
@@ -110,6 +110,7 @@
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "bluebird": "^3.5.0",
+    "bower-resolve-webpack-plugin": "^1.0.4",
     "browser-sync": "^2.18.12",
     "browserify": "^14.3.0",
     "child_process": "^1.0.2",

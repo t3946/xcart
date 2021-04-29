@@ -49,31 +49,31 @@ import sendAnalytics from './utils/sendAnalytics'
 import LazyLoad from "vanilla-lazyload";
 
 (function(){
-    window['$'] = $;
-    window['jQuery'] = $;
-    window['FilterPriceSlider'] = FilterPriceSlider;
-    window['loader'] = new Loader;
-    window['whatInput'] = whatInput;
-    window['formValidate'] = formValidate;
-    window['Waves'] = Waves;
-    window['FontFaceObserver'] = FontFaceObserver;
-    window['noUiSlider'] = noUiSlider;
-    window['sendAnalytics'] = new sendAnalytics;
-    window['LazyLoad'] = new LazyLoad({
-        elements_selector: ".lazy-img, .lazy-bg",
-        callback_set: function(el){
-            el.classList.remove('lazy-img');
-            el.classList.add('lazy-bg-loaded');
-        }
+  window['$'] = $;
+  window['jQuery'] = $;
+  window['FilterPriceSlider'] = FilterPriceSlider;
+  window['loader'] = new Loader;
+  window['whatInput'] = whatInput;
+  window['formValidate'] = formValidate;
+  window['Waves'] = Waves;
+  window['FontFaceObserver'] = FontFaceObserver;
+  window['noUiSlider'] = noUiSlider;
+  window['sendAnalytics'] = new sendAnalytics;
+  window['LazyLoad'] = new LazyLoad({
+    elements_selector: ".lazy-img, .lazy-bg",
+    callback_set: function(el){
+      el.classList.remove('lazy-img');
+      el.classList.add('lazy-bg-loaded');
+    }
+  });
+
+  window.d = (...arg) => {
+  };
+
+  window.surfMetaRegister = () => {
+    $.post('/api/analytics?_='+(new Date()).getTime(),{
+      'url':window.location.href,
+      'referrer': document.referrer || ''
     });
-
-    window.d = (...arg) => {
-    };
-
-    window.surfMetaRegister = () => {
-        $.post('/api/analytics?_='+(new Date()).getTime(),{
-            'url':window.location.href,
-            'referrer': document.referrer || ''
-        });
-    };
+  };
 })();

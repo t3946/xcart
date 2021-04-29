@@ -29,12 +29,16 @@ export default class AddToCartButton extends Component {
      * computed html classes for redraw component
      */
     computeClasses() {
-        let mainWrapper = [ 'add-to-cart-button' ];
-        let button = [ 'add', 'button', 'yellow', 'wait-button', 'add-to-cart-button-add' ];
-        let checkoutLinkWrapper = [ 'add-to-cart-button-wrapper' ];
-        let checkoutLink = [ 'button', 'yellow-white', 'waves waves-orange', 'waves-effect', 'add-to-cart-button-checkout' ];
-        let addToCartLongText = [ 'text' ];
-        let addToCartShortText = [ 'text' ];
+        const mainWrapper = [ 'add-to-cart-button' ];
+        const button = [ 'add', 'button', 'yellow', 'wait-button', 'add-to-cart-button-add' ];
+        const checkoutLinkWrapper = [ 'add-to-cart-button-wrapper' ];
+        const checkoutLink = [ 'button', 'yellow-white', 'waves waves-orange', 'waves-effect', 'add-to-cart-button-checkout' ];
+        const addToCartLongText = [
+            'button-text',
+            {
+                'complex': this.state.mode === this.COMPLEX_MODE,
+            },
+        ];
 
         const classes = {
             mainWrapper,
@@ -42,7 +46,13 @@ export default class AddToCartButton extends Component {
             checkoutLinkWrapper,
             checkoutLink,
             addToCartLongText,
-            addToCartShortText,
+            waitText: [
+                'wait-text',
+                'button-wait-text',
+                {
+                    'hide': this.state.mode === this.COMPLEX_MODE,
+                },
+            ]
         };
 
         const propsClasses = this.props.classes;
@@ -56,11 +66,6 @@ export default class AddToCartButton extends Component {
             for ( let key in classes ) {
                 classes[ key ].push( propsClasses[ key ] );
             }
-        }
-
-        // hide by default
-        if ( !propsClasses.addToCartShortText ) {
-            classes.addToCartShortText.push( 'hide' );
         }
 
         // join classes
@@ -105,6 +110,10 @@ export default class AddToCartButton extends Component {
             setTimeout( () => {
                 this.setState( { mode: this.COMPLEX_MODE } );
                 this.computeClasses();
+
+                if (typeof this.props.onChangeMode === "function") {
+                    this.props.onChangeMode();
+                }
             }, 1000 );
         }
 
@@ -166,13 +175,8 @@ export default class AddToCartButton extends Component {
         return (
             <div className={ this.classes.mainWrapper } ref={ this.mainWrapper }>
                 <a className={ this.classes.button } onClick={ this.onAddToCart } ref={ this.button }>
-                    { this.state.mode === this.SIMPLE_MODE && this.context.viewMode === 'list' &&
-                    <Fragment>
-                        <span className="text">{ t( 'Add to cart' ) }</span>
-                        <span className="text hide">{ t( 'Add' ) }</span>
-                        <span className="wait-text">{ t( 'Added' ) }</span>
-                    </Fragment>
-                    }
+                    <span className={this.classes.addToCartLongText}>{ t( 'Add to cart' ) }</span>
+                    <span className={this.classes.waitText}>{ t( 'Added' ) }</span>
                 </a>
 
                 { this.state.mode === this.COMPLEX_MODE &&

@@ -9,27 +9,28 @@ export default class Image extends Component {
     }
 
     render( { images, mpn, upc, url, name, classes, isNew, isSale } ) {
-        let containerClasses = [ 'products-slider__image-container', 'products-slider-image-container', 'container' ];
-        let linkClasses = ['products-slider-image-link'];
-
-        //extend default classes
-        if ( classes ) {
-            containerClasses.push( classes.container );
-            linkClasses.push( this.props.classes.link );
-        }
+        const containerClasses = [ classes.container ];
+        const linkClasses = [classes.link];
+        const noImageClasses = [ classes.noImage ];
 
         return (
             <div className={ classnames( containerClasses ) }>
                 <a href={ url } title={ name } className={classnames(linkClasses)}>
                     { ( () => {
                         if ( images.length === 0 ) {
-                            return ( <ImageNo { ...{ upc, mpn } } /> );
+                            return ( <ImageNo upc={upc} mpn={mpn} classes={noImageClasses} /> );
                         }
                         else if ( images.length === 1 ) {
                             return ( <ImageSingle { ...{ image: images[ 0 ], upc, mpn } } /> );
                         }
                         else {
-                            return ( <ImageComplex { ...{ images, upc, mpn } }/> );
+                            let complexClasses = {};
+
+                            if (complexClasses && classes.complex) {
+                                complexClasses = classes.complex;
+                            }
+
+                            return ( <ImageComplex upc={upc} mpn={mpn} images={images} classes={ complexClasses }/> );
                         }
                     } )() }
 

@@ -142,14 +142,13 @@ class MiniCart extends Component
     }
 
     render(props, state) {
-
         return (
         <div className="minicart-items">
             <div className="product-list" ref={(product_list) => { this.product_list = product_list; }}>
                 {this.renderProducts(props, state)}
             </div>
             <div className="buttons">
-                <a href="/cart/" className="button yellow waves waves-orange">
+                <a href={props.checkoutUrl} className="button yellow waves waves-orange">
                     {props.labels.lng_checkout}
                 </a>
             </div>

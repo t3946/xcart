@@ -1,0 +1,75 @@
+.Collapsible {
+  background-color: white;
+}
+
+.Collapsible__contentInner {
+  padding: 10px;
+  border-top: 0;
+
+  p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+//The link which when clicked opens the collapsable area
+.Collapsible__trigger {
+  cursor: pointer;
+  display: block;
+  font-size: 18px;
+  font-weight: 400;
+  text-decoration: none;
+  position: relative;
+  padding: 10px;
+  color: black;
+
+
+  &:after {
+    content: url("/static/frontend/images/icons/switcher/switcher-plus.svg");
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: block;
+    width: 10px;
+    transition: transform 300ms;
+  }
+
+  &.is-open {
+    &:after {
+      content: url("/static/frontend/images/icons/switcher/switcher-minus.svg");
+    }
+  }
+
+  &.is-disabled {
+    opacity: 0.5;
+    background-color: grey;
+  }
+}
+
+.CustomTriggerCSS {
+  background-color: lightcoral;
+  transition: background-color 200ms ease;
+
+
+}
+
+.CustomTriggerCSS--open {
+  background-color: darkslateblue;
+}
+
+.Collapsible__custom-sibling {
+  padding: 5px;
+  font-size: 12px;
+  background-color: #CBB700;
+  color: black;
+}
+
+.Collapsible__hr{
+  color: #C4C4C4;
+  margin: 0;
+}

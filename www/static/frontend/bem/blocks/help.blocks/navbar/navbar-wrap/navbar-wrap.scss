@@ -1,0 +1,22 @@
+.navbar-wrap{
+  width: 100%;
+  @media (min-width: 769px) {
+    padding-right: 40px;
+    width: 35%;
+  }
+  @media (min-width: 1366px) {
+    padding-right: 60px;
+    width: 30%;
+  }
+  &-items{
+    width: 100%;
+  }
+
+  &-title{
+    padding-left: 10px;
+    @media (max-width: 769px) {
+      text-align: center;
+    }
+  }
+}
+

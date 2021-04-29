@@ -30,7 +30,7 @@ export default class LoadMore extends Component {
     render() {
         return (
             <div className={ classnames( 'front-endless-pager', this.props.classes ) }>
-                { this.props.next &&
+                { (this.props.next || this.props.isLoading) &&
                 <a href={ this.next }
                    className="show-more button yellow-white waves waves-orange"
                    itemScope

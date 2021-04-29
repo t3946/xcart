@@ -149,8 +149,8 @@ $padding_container: rem-calc(18);
           &.active {
             .options {
               @include breakpoint(sm down) {
-                width: 137%;
-                left: -38%;
+                width: 100%;
+                left: 0;
               }
             }
           }

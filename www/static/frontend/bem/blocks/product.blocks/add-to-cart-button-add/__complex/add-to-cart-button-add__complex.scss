@@ -1,5 +1,7 @@
 .add-to-cart-button-add__complex {
-  max-width: 51px;
+  @include breakpoint(md up) {
+    max-width: 51px;
+  }
   flex-grow: 0 !important;
 }
 
