@@ -16,6 +16,7 @@ use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Components\Flash;
 use Xcart\App\Finder\FinderFactory;
 use Xcart\App\Middleware\MiddlewareManager;
+use Xcart\App\Queue\QueueManager;
 use Xcart\App\Request\RequestManager;
 use Xcart\App\Request\HttpRequest;
 use Modules\User\Components\XcartSession;
@@ -79,6 +80,14 @@ return array_replace_recursive([
                    ]
                ]
            ]
+       ],
+
+       'queue' => [
+           'class' => QueueManager::class,
+           'host' => '159.65.220.58',
+           'port' => 15672,
+           'user' => 'guest',
+           'password' => 'guest',
        ],
 
        'event' => [
