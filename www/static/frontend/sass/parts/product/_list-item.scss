@@ -115,12 +115,12 @@
         display: inline-block;
         text-transform: uppercase;
         text-align: center;
+        transition: all 0.5s linear;
 
         font: {
           size: rem-calc(16);
           weight: bold;
         }
-
       }
 
       .splash-new {
@@ -236,13 +236,17 @@
     }
 
     @include breakpoint(large up) {
+      .splash {
+        transition: all 0.2s linear;
+      }
+
       &:hover {
         .button-quick-view {
           display: block !important;
         }
 
         .splash {
-          display: none;
+          opacity: 0.2;
         }
       }
     }
