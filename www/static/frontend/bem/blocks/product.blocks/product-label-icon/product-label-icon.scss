@@ -1,0 +1,14 @@
+.product-label-icon {
+    display: none;
+    width: rem-calc(48);
+    height: rem-calc(48);
+    padding: rem-calc(10);
+    background: no-repeat center;
+    background-size: contain;
+    flex-shrink: 0;
+    background-origin: content-box;
+
+    @include breakpoint(lg up) {
+        display: block;
+    }
+}
