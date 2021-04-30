@@ -2,8 +2,8 @@
 
 namespace Xcart\App\Orm\Fields;
 
-use DateTime;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use Xcart\App\Orm\ModelInterface;
 
@@ -27,7 +27,7 @@ class UnixTimestampField extends IntField
      */
     public function getSqlType()
     {
-        return Type::getType(Type::INTEGER);
+        return Type::getType(Types::INTEGER);
     }
 
     /**

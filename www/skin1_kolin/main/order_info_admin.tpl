@@ -624,7 +624,7 @@ function check_r_fields() {
                             {* --- *}
                         </td>
                         <td align="right">
-                            {if $product.extra_data ne ""}
+                            {if $product.extra_data|is_array}
                                 {include file="currency2.tpl" value=$product.extra_data.taxes.GST.tax_value+$product.extra_data.taxes.HST.tax_value hide_zero='Y'}
                             {/if}
                         </td>

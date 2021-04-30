@@ -96,7 +96,7 @@ class AbstractModel extends Base
         {
             if ($this->getField($primaryKeyName) instanceof AutoField) {
                 if (in_array($primaryKeyName, $dirty) === false) {
-                    $values[ $primaryKeyName ] = $connection->lastInsertId($this->getSequenceName());
+                    $values[ $primaryKeyName ] = $connection->lastInsertId();
                 }
             }
         }
@@ -180,7 +180,7 @@ class AbstractModel extends Base
                 $this->getPrimaryKeyName(),
                 'seq'
             ]);
-        } catch (DBALException $e) {
+        } catch (\Doctrine\DBAL\Exception $e) {
             return null;
         }
     }

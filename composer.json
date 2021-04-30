@@ -4,13 +4,8 @@
         "optimize-autoloader": true,
         "vendor-dir": "app/include/vendors"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/tsukasa-mixer/fenom"
-        }
-    ],
     "require": {
+        "ext-json": "*",
         "aftership/aftership-php-sdk": "^5.1",
         "aveiv/open-exchange-rates-api": "^1.2",
         "aws/aws-sdk-php": "^3.0",
@@ -19,6 +14,7 @@
         "claviska/simpleimage": "^3.3",
         "cocur/slugify": "^3.0",
         "dariuszp/cli-progress-bar": "^1.0",
+        "doctrine/dbal": "^3.0",
         "fabpot/goutte": "^3.2",
         "facebook/php-business-sdk": "^3.2",
         "fenom/fenom": "^2.12",
@@ -36,10 +32,11 @@
         "league/flysystem-ziparchive": "^1.0",
         "mobiledetect/mobiledetectlib": "^2.8",
         "monolog/monolog": "^1.22",
-        "mpdf/mpdf": "^7.1",
+        "mpdf/mpdf": "^8.0",
         "omnipay/paypal": "^3.0",
         "omnipay/stripe": "^3.0",
         "paypal/rest-api-sdk-php": "*",
+        "php-http/guzzle6-adapter": "^1.1",
         "smarty/smarty": "^3.1",
         "swiftmailer/swiftmailer": "^6",
         "symfony/http-foundation": "^2.8",
@@ -47,8 +44,7 @@
         "symfony/validator": "^3.0",
         "theiconic/php-ga-measurement-protocol": "^2.7",
         "tinymce/tinymce": "^5.3",
-        "true/punycode": "^2.1",
-      "ext-json": "*"
+        "true/punycode": "^2.1"
     },
     "autoload": {
         "psr-4": {

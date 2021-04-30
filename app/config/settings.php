@@ -67,6 +67,7 @@ return array_replace_recursive([
                    'mapping' => [
                        'enum' => 'string'
                    ],
+                   'wrapperClass' => false,
                    'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
                        'class' => FilesystemCache::class,
                        'directory' => 'base.runtime.query_cache'

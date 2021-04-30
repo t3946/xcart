@@ -6,7 +6,7 @@
 
 {block 'main_block'}
     <div class="admin-page all-page">
-        <div>{Modules\Core\Models\LanguageModel::translate('lbl_product_verification_explanation')}</div>
+        <div>{$.call.Modules.Core.Models.LanguageModel::translate('lbl_product_verification_explanation')}</div>
         {include 'admin/list/_list.tpl'}
     </div>
 {/block}

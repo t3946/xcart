@@ -964,7 +964,7 @@ if ($tab == "inventory") {
         ->order([$o_direction . $order_by])
         ->toSQL();
 
-    $cidev_daily_fba_stats = Connection::getInstance()->fetchAll($sql);
+    $cidev_daily_fba_stats = Connection::getInstance()->fetchAllAssociative($sql);
 
     $smarty->assign("cidev_daily_fba_stats", $cidev_daily_fba_stats);
 }

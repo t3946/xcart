@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class DecimalField
@@ -24,7 +25,7 @@ class DecimalField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::DECIMAL);
+        return Type::getType(Types::DECIMAL);
     }
 
     /**

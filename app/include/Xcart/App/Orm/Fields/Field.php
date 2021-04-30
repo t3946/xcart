@@ -460,25 +460,7 @@ abstract class Field implements ModelFieldInterface
             return null;
         }
 
-//        $validators = [];
-//        if ($form->hasField($this->name)) {
-//            $field = $form->getField($this->name);
-//            $validators = $field->validators;
-//        }
-
-//        if (($this->null === false || $this->required) && $this->autoFetch === false && ($this instanceof BooleanField) === false) {
-//            $validator = new RequiredValidator;
-//            $validator->setName($this->name);
-//            $validator->setModel($this);
-//            $validators[] = $validator;
-//        }
-//
-//        if ($this->unique) {
-//            $validator = new UniqueValidator;
-//            $validator->setName($this->name);
-//            $validator->setModel($this);
-//            $validators[] = $validator;
-//        }
+        $validators = [];
 
         return Creator::createObject(array_merge([
              'class' => $fieldClass,
@@ -489,12 +471,7 @@ abstract class Field implements ModelFieldInterface
              'label' => $this->verboseName,
              'hint' => $this->helpText,
              'validators' => array_merge($validators, $this->getValidationConstraints()),
-//             'validators' => array_merge($validators, []),
              'value' => $this->default ? $this->default : null
-
-//            'html' => [
-//                'multiple' => $this->value instanceof RelatedManager
-//            ]
         ], $extra));
     }
 }

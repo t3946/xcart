@@ -4,6 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class IntField
@@ -22,11 +23,10 @@ class IntField extends Field
 
     /**
      * @return Type
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function getSqlType()
     {
-        return Type::getType(Type::INTEGER);
+        return Type::getType(Types::INTEGER);
     }
 
     public function getSqlOptions()

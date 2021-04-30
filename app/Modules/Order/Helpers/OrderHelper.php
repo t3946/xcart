@@ -46,7 +46,7 @@ class OrderHelper
                 ->where(['details.orderid__in' => $diff, 'eta_date_mm_dd_yyyy__gt' => 0])
                 ->group(['details.orderid'])->toSQL();
 
-            $orders_max_eta = $connection->fetchAll($max_eta_sql);
+            $orders_max_eta = $connection->fetchAllAssociative($max_eta_sql);
 
             foreach ($orders_max_eta as $item) {
                 self::$__max_eta[$item['orderid']] = $item['max_eta'];
@@ -96,7 +96,7 @@ class OrderHelper
                 ->group(["order_id"])
                 ->allSql();
 
-            $counts = $connection->fetchAll($sql);
+            $counts = $connection->fetchAllAssociative($sql);
             if ($counts) {
                 foreach ($counts as $item) {
                     self::$__events_count[$item['order_id']][$user_id] = $item['count'];

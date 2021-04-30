@@ -3,7 +3,7 @@
 namespace Modules\Amazon\Models;
 
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\ZipCodeModel;
@@ -34,7 +34,7 @@ class AmazonFulfillmentLocationsModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
                 'link' => ['country' => 'code'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'state_model' => [
                 'field' => 'state',

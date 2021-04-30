@@ -141,15 +141,15 @@ class QueryBuilder
     }
 
     /**
-     * @param Connection $connection
+     * @param \Doctrine\DBAL\Connection $connection
      * @return QueryBuilder
      * @throws Exception
      */
-    public static function getInstance(Connection $connection)
+    public static function getInstance($connection)
     {
         $driver = $connection->getDriver();
-        switch ($driver->getName()) {
-            case 'pdo_mysql':
+        switch (get_class($driver)) {
+            case 'Doctrine\DBAL\Driver\PDO\MySQL\Driver':
                 $adapter = new MysqlAdapter($connection);
                 break;
             case 'pdo_sqlite':
@@ -172,7 +172,7 @@ class QueryBuilder
      * @param BaseAdapter $adapter
      * @param ILookupBuilder $lookupBuilder
      */
-    public function __construct(Connection $connection, BaseAdapter $adapter, ILookupBuilder $lookupBuilder)
+    public function __construct($connection, BaseAdapter $adapter, ILookupBuilder $lookupBuilder)
     {
         $this->connection = $connection;
         $this->adapter = $adapter;

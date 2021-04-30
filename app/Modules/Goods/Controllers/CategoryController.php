@@ -57,7 +57,7 @@ class CategoryController extends AbstractCatalogController
         $this->view_internal($model);
     }
 
-    public function getQS($data)
+    public function getQS($data = null)
     {
         return parent::getQS($data)
             ->filter([

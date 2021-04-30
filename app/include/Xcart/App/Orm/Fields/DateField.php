@@ -5,6 +5,7 @@ namespace Xcart\App\Orm\Fields;
 use DateTime;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\ModelInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,7 +33,7 @@ class DateField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::DATE);
+        return Type::getType(Types::DATE_MUTABLE);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Modules\Order\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -27,10 +27,10 @@ class TransactionLogModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'transaction_status'  => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => 'failed',
                 'null' => false,
                 'choices' => [
@@ -47,38 +47,38 @@ class TransactionLogModel extends Model
                 ]
             ],
             'date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
                 'autoNow' => true,
                 'null' => false
             ],
             'transaction_total' => [
-                'class' => FloatField::className(),
+                'class' => FloatField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'transaction_log' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => ''
             ],
             'user' => [
                 'field' => 'login',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['login' => 'login'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'transaction' => [
                 'field' => 'order_transaction_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderTransactionModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderTransactionModel::class,
                 'link' => ['order_transaction_id' => 'id'],
             ],
             'payment_method_model' => [
                 'field' => 'paymentid',
-                'class' => ForeignField::className(),
-                'modelClass' => PaymentMethodModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
                 'null' => false,
             ],
         ];

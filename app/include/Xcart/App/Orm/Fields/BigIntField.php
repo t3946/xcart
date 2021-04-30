@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 16/09/16
- * Time: 20:01
- */
 
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 class BigIntField extends IntField
 {
     public function getSqlType()
     {
-        return Type::getType(Type::BIGINT);
+        return Type::getType(Types::BIGINT);
     }
 }

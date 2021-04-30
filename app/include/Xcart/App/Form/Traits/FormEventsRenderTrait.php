@@ -21,7 +21,8 @@ trait FormEventsRenderTrait
      */
     public function onBeforeCreateField(&$name, &$config):void
     {
-        $this->_applyEvent('onBeforeCreateField', $array = [&$name, &$config]);
+        $array = [&$name, &$config];
+        $this->_applyEvent('onBeforeCreateField', $array);
     }
 
     /**
@@ -30,7 +31,8 @@ trait FormEventsRenderTrait
      */
     public function onAfterCreateField(&$field):void
     {
-        $this->_applyEvent('onAfterCreateField', $array = [&$field]);
+        $array = [&$field];
+        $this->_applyEvent('onAfterCreateField', $array);
     }
 
     /**
@@ -40,7 +42,8 @@ trait FormEventsRenderTrait
      */
     public function onBeforeGetTemplate(&$templates, &$defaultTemplateType):void
     {
-        $this->_applyEvent('onBeforeGetTemplate', $array = [&$templates, &$defaultTemplateType]);
+        $array = [&$templates, &$defaultTemplateType];
+        $this->_applyEvent('onBeforeGetTemplate', $array);
     }
 
     /**
@@ -49,7 +52,8 @@ trait FormEventsRenderTrait
      */
     public function onBeforeRender(&$fields):void
     {
-        $this->_applyEvent('onBeforeRender', $array = [&$fields]);
+        $array = [&$fields];
+        $this->_applyEvent('onBeforeRender', $array);
     }
 
     /**
@@ -59,7 +63,8 @@ trait FormEventsRenderTrait
      */
     public function onBeforeRenderBegin(&$prefix, &$template):void
     {
-        $this->_applyEvent('onBeforeRenderBegin', $array = [&$prefix, &$template]);
+        $array = [&$prefix, &$template];
+        $this->_applyEvent('onBeforeRenderBegin', $array);
     }
 
     /**
@@ -69,7 +74,8 @@ trait FormEventsRenderTrait
      */
     public function onBeforeRenderEnd(&$prefix, &$template):void
     {
-        $this->_applyEvent('onBeforeRenderEnd', $array = [&$prefix, &$template]);
+        $array = [&$prefix, &$template];
+        $this->_applyEvent('onBeforeRenderEnd', $array);
     }
 
     /**

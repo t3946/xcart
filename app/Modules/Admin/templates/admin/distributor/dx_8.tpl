@@ -17,7 +17,7 @@
             <tr class="link_unhide">
                 <td>
                     <b>Login/Username</b>
-                    <a title="{Modules\Core\Models\LanguageModel::translate('help_d_login_text')}" class="tooltip">
+                    <a title="{$.call.Modules.Core.Models.LanguageModel::translate('help_d_login_text')}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>
@@ -30,7 +30,7 @@
             <tr class="link_unhide">
                 <td>
                     <b>Password</b>
-                    <a title="{Modules\Core\Models\LanguageModel::translate('help_d_password_text')}" class="tooltip">
+                    <a title="{$.call.Modules.Core.Models.LanguageModel::translate('help_d_password_text')}" class="tooltip">
                         <i class="fa fa-question-circle pointer"></i>
                     </a>
                 </td>

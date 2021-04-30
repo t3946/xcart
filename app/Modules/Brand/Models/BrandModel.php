@@ -2,7 +2,7 @@
 
 namespace Modules\Brand\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Brand\BrandModule;
 use Modules\Core\Helpers\Cache;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
@@ -175,7 +175,7 @@ class BrandModel extends Model
             'user' => [
                 'field' => 'provider',
                 'class' => ForeignField::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'modelClass' => UserModel::class,
                 'link' => ['provider' => 'login']
             ],

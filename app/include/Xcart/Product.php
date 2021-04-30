@@ -751,7 +751,7 @@ SQL;
                                      ->where(['productid__in' => $ids])
                                      ->toSQL();
 
-                foreach ($connection->fetchAll($sql) as $item) {
+                foreach ($connection->fetchAllAssociative($sql) as $item) {
                     $e_ids[] = $item['productid'];
                 }
 
@@ -791,7 +791,7 @@ SQL;
                            ->limit($limit)
                            ->toSQL();
 
-        return $connection->fetchAll($sql);
+        return $connection->fetchAllAssociative($sql);
     }
 
     public function getProductCategories()

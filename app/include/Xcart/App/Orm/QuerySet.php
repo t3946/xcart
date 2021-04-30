@@ -270,7 +270,6 @@ class QuerySet extends QuerySetBase
 
         if ( $stmt = $this->getConnection()->executeQuery($sql, $params, $types, $qcp) ) {
             $rows = $stmt->fetchAll()?:[];
-            $stmt->closeCursor();
         }
 
         return $rows;
