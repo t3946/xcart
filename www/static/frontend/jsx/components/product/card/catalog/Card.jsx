@@ -321,6 +321,9 @@ export default class Card extends Component {
             complex: {
                 container: ['product-card-image-group__catalog'],
             },
+            single: {
+                container: ['product-card-image-group__catalog'],
+            },
         };
 
         classes.image.noImage = ["product-no-image__catalog"];

@@ -21,7 +21,13 @@ export default class Image extends Component {
                             return ( <ImageNo upc={upc} mpn={mpn} classes={noImageClasses} /> );
                         }
                         else if ( images.length === 1 ) {
-                            return ( <ImageSingle { ...{ image: images[ 0 ], upc, mpn } } /> );
+                            let singleClasses = {};
+
+                            if (singleClasses && classes.single) {
+                                singleClasses = classes.single;
+                            }
+
+                            return ( <ImageSingle upc={upc} mpn={mpn} image={images[ 0 ]} classes={singleClasses} /> );
                         }
                         else {
                             let complexClasses = {};
