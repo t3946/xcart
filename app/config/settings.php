@@ -86,9 +86,9 @@ return array_replace_recursive([
        'queue' => [
            'class' => QueueManager::class,
            'host' => '159.65.220.58',
-           'port' => 15672,
-           'user' => 'guest',
-           'password' => 'guest',
+           'port' => 5672,
+           'user' => 'xcart',
+           'password' => 'Uv5WxjbRj7pjqzY',
        ],
 
        'event' => [
