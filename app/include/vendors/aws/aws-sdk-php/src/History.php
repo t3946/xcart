@@ -77,13 +77,11 @@ class History implements \Countable, \IteratorAggregate
 
         if (isset($last['result'])) {
             return $last['result'];
-        }
-
-        if (isset($last['exception'])) {
+        } elseif (isset($last['exception'])) {
             return $last['exception'];
+        } else {
+            throw new \LogicException('No return value for last entry.');
         }
-
-        throw new \LogicException('No return value for last entry.');
     }
 
     /**
@@ -117,9 +115,7 @@ class History implements \Countable, \IteratorAggregate
     {
         if (!isset($this->entries[$ticket])) {
             throw new \InvalidArgumentException('Invalid history ticket');
-        }
-
-        if (isset($this->entries[$ticket]['result'])
+        } elseif (isset($this->entries[$ticket]['result'])
             || isset($this->entries[$ticket]['exception'])
         ) {
             throw new \LogicException('History entry is already finished');

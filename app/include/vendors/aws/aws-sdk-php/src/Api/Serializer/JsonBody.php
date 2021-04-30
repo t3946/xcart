@@ -58,9 +58,6 @@ class JsonBody
                             = $this->format($valueShape, $v);
                     }
                 }
-                if (empty($data)) {
-                    return new \stdClass;
-                }
                 return $data;
 
             case 'list':
@@ -84,10 +81,7 @@ class JsonBody
                 return base64_encode($value);
 
             case 'timestamp':
-                $timestampFormat = !empty($shape['timestampFormat'])
-                    ? $shape['timestampFormat']
-                    : 'unixTimestamp';
-                return TimestampShape::format($value, $timestampFormat);
+                return TimestampShape::format($value, 'unixTimestamp');
 
             default:
                 return $value;
