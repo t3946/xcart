@@ -369,13 +369,13 @@ $remove: (
 
 
     .errors {
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
 
       .err {
         display: inline-block;
       }
     }
-
   }
 
   .hr {

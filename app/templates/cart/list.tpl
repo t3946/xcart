@@ -180,13 +180,13 @@
 
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
-                        {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
+                        {p_label cls="err fill " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '') type="minimal-amount"}
                             {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {/p_label}
                         {/if}
                         {set $only_one_country = $warehouse->getShippingOnlyOneCountry()}
                         {if $only_one_country}
-                            {p_label cls="err fill last-items"}
+                            {p_label cls="err fill" type="last-items"}
                                 {t 'This product line can only be shipped to a'} {$only_one_country} {t 'address.'}
                             {/p_label}
                         {/if}
