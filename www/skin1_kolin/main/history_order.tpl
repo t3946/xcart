@@ -929,6 +929,7 @@ $( document ).ready(function() {
 
  {if $show_request_availability eq "Y"}
      {assign var="request_availability_template" value=$distributor_model->request_avail_template}
+     {assign var=dx_request_emails value=Modules\Distributor\Helpers\DistributorHelper::getDistributorEmails($distributor_model, 1)}
      <a name="request_availability_{$mnf_id}"></a>
      <form action="order.php" method="post" name="mnf_notifyform_{$mnf_id}">
          <input type="hidden" name="orderid" value="{$order.orderid}"/>
@@ -940,7 +941,7 @@ $( document ).ready(function() {
          <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly"
                 style="width: 80%;"/><br/><br/>
          <B>{$lng.lbl_to}:</B><br/>
-         <input type="text" name="mnf_to" value="{$v.d_send_to_email_14}" style="width: 80%;"/><br/><br/>
+         <input type="text" name="mnf_to" value="{', '|implode:$dx_request_emails}" style="width: 80%;"/><br/><br/>
          <B>Subject line:</B><br/>
          <input type="text" name="d_email_subject_14" value="{Modules\Forms\Helpers\SnippetHelper::render(
          $request_availability_template->subject_line|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]
@@ -1054,6 +1055,7 @@ $( document ).ready(function() {
 
  {if $show_dispatch_to_distributor eq "Y" && $order.fraud_status eq "C" && $order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0}
      {assign var="dispatch_template" value=$distributor_model->order_submit_template}
+     {assign var=dx_dispatch_emails value=Modules\Distributor\Helpers\DistributorHelper::getDistributorEmails($distributor_model, 2)}
   <a name="dispatch_to_distributor_{$mnf_id}"></a>
      <form action="order.php" method="post" name="manuf_notifyform_{$mnf_id}">
          <input type="hidden" name="orderid" value="{$order.orderid}"/>
@@ -1066,7 +1068,7 @@ $( document ).ready(function() {
          <input type="text" name="mnf_from" value="{$config.Company.orders_department}" readonly="readonly"
                 style="width: 80%;"/><br/><br/>
          <B>{$lng.lbl_to}:</B><br/>
-         <input type="text" name="mnf_to" value="{$v.email}" style="width: 80%;"/><br/><br/>
+         <input type="text" name="mnf_to" value="{', '|implode:$dx_dispatch_emails}, {$config.Company.orders_department}" style="width: 80%;"/><br/><br/>
          <B>Subject line:</B><br/>
          <input type="text" name="d_email_subject_14" value="{Modules\Forms\Helpers\SnippetHelper::render(
             $dispatch_template->subject_line|html_entity_decode, ['group' => $oOrderGroup,'distributor' => $distributor_model,'order' => $oOrder]

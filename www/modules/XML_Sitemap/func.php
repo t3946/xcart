@@ -199,14 +199,14 @@ function xmlmap_generate($cron = "", $cron_storefrontid = "")
 		for ($i = 0; $i < $n; $i++) {
 			$smarty->assign('xmlmap_items', $chunks[$i]);
 			$src = func_display('modules/XML_Sitemap/sitemap.tpl', $smarty, false);
-			$smarty->clear_assign('xmlmap_items');
+			$smarty->clearAssign('xmlmap_items');
 			$xml_files[] = array('loc' => xmlmap_write_xmlitems($src, $i, $current_storefront_info['domain']));
 			unset($src);
 		}
 
 		$smarty->assign('xmlindex_items', $xml_files);
 		$src = func_display('modules/XML_Sitemap/index.tpl', $smarty, false);
-		$smarty->clear_assign('xmlindex_items');
+		$smarty->clearAssign('xmlindex_items');
 		xmlmap_write_xmlindex($src, $current_storefront_info['domain']);
 
 		func_flush(func_get_langvar_by_name('xmlmap_log_generationend', null, false, true));

@@ -43,6 +43,11 @@ class ProductAdminForm extends ModelForm
     public function getFieldsets()
     {
         return [
+            'Operator and product availability' => [
+                'forsale',
+                'lock_forsale',
+                'eta_date_mm_dd_yyyy',
+            ],
             'Product details' => [
                 'productcode',
                 'upc',
@@ -51,11 +56,6 @@ class ProductAdminForm extends ModelForm
                 'descr',
                 'lead_time_message',
                 'supplier_internal_id',
-            ],
-            'Operator and product availability' => [
-                'forsale',
-                'lock_forsale',
-                'eta_date_mm_dd_yyyy',
             ],
             'Categorization' => [
                 'distributor',

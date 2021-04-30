@@ -108,7 +108,7 @@ class SupplierFeedModel extends Model
             ],
             'threshold' => [
                 'class' => FloatField::class,
-                'default' => 0.8,
+                'default' => 0,
                 'null' => false
             ],
             'feed_source_date' => [

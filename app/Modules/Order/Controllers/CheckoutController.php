@@ -3,6 +3,8 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
@@ -661,6 +663,11 @@ class CheckoutController extends FrontendController
 
             [$shipping, $billing] = $order->getAddressInfo();
 
+            SurfingHelper::logSurfPath([
+                'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                'resource_id' => $order->pk,
+            ]);
+
             $this->display('checkout/complete.tpl', [
                 'order' => $order,
                 'shipping_info' => $shipping,
@@ -695,10 +702,6 @@ class CheckoutController extends FrontendController
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => [
             'url' => 'checkout:payment',
             'step' => 4,
-        ],
-        OrderStatusModel::ORDER_STATUS_FAILED => [
-            'url' => 'checkout:payment',
-            'step' => 3,
         ],
     ];
 

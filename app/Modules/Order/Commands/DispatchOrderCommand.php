@@ -4,6 +4,7 @@
 namespace Modules\Order\Commands;
 
 
+use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Mail\Helpers\SendMailHelper;
 use Modules\Order\Models\OrderGroupModel;
@@ -43,9 +44,7 @@ class DispatchOrderCommand extends Command
             }
             $template->message_body = (string)$group->off_hours_message ?: $template->message_body;
 
-            $to = $dx->contacts_model->filter([
-                'utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY
-            ])->valuesList('email', true);
+            $to = DistributorHelper::getDistributorEmails($dx, DistributorUtilityModel::DISPATCH_UTILITY);
 
             $to[] = 'orders@s3stores.com';
             $to = array_unique(array_map('trim', $to));

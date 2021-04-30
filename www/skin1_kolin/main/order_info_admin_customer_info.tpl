@@ -63,16 +63,17 @@
 <td align="right">
 
 {if $convert_to_regular_order_show_button}
-	<input type="button" value="Convert to regular order" onclick="javascript: $('#mode_ordereditform2').val('convert_to_regular_order'); this.form.submit();" />
+	<input type="button" value="Convert to regular order" onclick="$('#mode_ordereditform2').val('convert_to_regular_order'); this.form.submit();" />
 {/if}
 
 </td>
 </tr>
 </table>
-
+{elseif $oOrder->cb_status === 'Q'}
+    <input type="button" value="Convert to Purchase order"
+           onclick="$('#mode_ordereditform2').val('convert_to_purchase_order'); this.form.submit();"/>
 {/if}
-
-  </td>
+</td>
 </tr>
 <tr>
   <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>

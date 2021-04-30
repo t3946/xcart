@@ -211,52 +211,13 @@ function func_check_cb_statuses(){
   cb_status = $('#groups_cb_status_{/literal}{$m_id}{literal}').val();
 
   if (document.getElementById('refund_group_{/literal}{$m_id}{literal}')){
-    if (cb_status == "3" || cb_status == "V"){
+    if (cb_status === '3' || cb_status === 'V'){
       $("#refund_group_{/literal}{$m_id}{literal}").show();
     } else {
       $("#refund_group_{/literal}{$m_id}{literal}").hide();
     }
   }
-
-/*
-  if (cb_status == "P"){
-    cb_status_eq_P_found = true;
-  } else {
-    all_cb_status_eq_P = false;
-  }
-
-  if (cb_status == "AP"){
-    cb_status_eq_AP_found = true;
-  } else {
-    all_cb_status_eq_AP = false;
-  }
-
-  if (cb_status == "3"){
-    cb_status_eq_3_found = true;
-  } else {
-    all_cb_status_eq_3 = false;
-  }
-
-  if (cb_status == "V"){
-    cb_status_eq_V_found = true;
-  } else {
-    all_cb_status_eq_V = false;
-  }
-
-  if (cb_status == "H"){
-    cb_status_eq_H_found = true;
-  } else {
-    all_cb_status_eq_H = false;
-  }
-
-  if (cb_status == "R"){
-    cb_status_eq_R_found = true;
-  } else {
-    all_cb_status_eq_R = false;
-  }
-*/
-
-  if (cb_status == "O"){
+  if (cb_status === 'O'){
     $("#po_status_{/literal}{$m_id}{literal}_tr").show();
   } else {
     $("#po_status_{/literal}{$m_id}{literal}_tr").hide();
@@ -264,7 +225,7 @@ function func_check_cb_statuses(){
 
 {/literal}
 {/foreach}
-    {literal}
+{literal}
 
 }
 
@@ -308,20 +269,20 @@ function check_r_field(form, prefix, key_of_arr) {
 
   for (var i = 0; i < form.elements.length; i++) {
 
-    if (form.elements[i].type == "text" && (!prefix || form.elements[i].id.search(reg) == 0)){
+    if (form.elements[i].type === "text" && (!prefix || form.elements[i].id.search(reg) == 0)){
 
       var field_id = form.elements[i].id;
       var field = $('#'+field_id).val();
       var first_letter = field[0];
 
-      if (first_letter == "R" || first_letter == "r"){
+      if (first_letter === "R" || first_letter === "r"){
 
        var field_id_arr = js_explode("_", field_id);
        var mid = field_id_arr[key_of_arr];
 
        var cb_status = $('#groups_cb_status_'+mid).val();
 
-       if (cb_status != "P" && cb_status != "V" && cb_status != "H" && cb_status != "3" && cb_status != "AP"){
+       if (cb_status !== "P" && cb_status !== "V" && cb_status !== "H" && cb_status !== "3" && cb_status !== "AP"){
           return "N";
        }
       }
@@ -336,7 +297,7 @@ function check_r_fields() {
   var check_amount = check_r_field(form, "items_amount_", 2);
   var check_shipping_cost_net = check_r_field(form, "groups_shipping_cost_net_", 4);
 
-  if (check_amount == "Y" && check_shipping_cost_net == "Y"){
+  if (check_amount === "Y" && check_shipping_cost_net === "Y"){
     form.submit();
     return true;
   } else {
@@ -861,22 +822,21 @@ function check_r_fields() {
 
                                     <div>
                                         &nbsp;
-                                        {*
-                                        {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
-                                        &nbsp;
-                                        <span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
-                                        {/if}
-                                        *}
 
                                         {if $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_all_orders"}
-                                            Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to all orders
+                                            Drop-ship fee:
+                                            {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
+                                                {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'}
+                                            {else}
+                                                {assign var=dropship_calc value=$v.oOrderGroup->getTotalCostToUs() * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
+                                                {include file="currency.tpl" value=$dropship_calc hide_zero='Y'}
+                                            {/if}
+                                            applies to this order
                                         {elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
                                             Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to orders below {include file="currency.tpl" value=$order_manufacturers[$m_id].d_minimum_order_amount_in_us hide_zero='Y'}
                                         {/if}
                                     </div>
-
                                 </div>
-
                     </td>
                     <td align="right">
                         <input id="actual_shipping_cost_net_{$m_id}" type="text" size="8"
@@ -1067,6 +1027,10 @@ function check_r_fields() {
                                             $(function () {
                                                 $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function () {
                                                     func_check_cb_statuses();
+                                                    const void_order_message = $('#void_order_message_{/literal}{$m_id}{literal}');
+                                                    $(this).val() === 'A'
+                                                        ? void_order_message.show().find('textarea').prop('required', true)
+                                                        : void_order_message.hide().find('textarea').prop('required', false);
                                                 });
                                             });
                                             {/literal}
@@ -1081,17 +1045,15 @@ function check_r_fields() {
                                                    value="{$v.cb_status}"/>
 
                                             {include file="main/order_status.tpl"
-                                                     status=$v.cb_status
-                                                     mode="select"
+                                                     status=$oOrderGroup->cb_status_model
                                                      name="groups[`$m_id`][cb_status]"
-                                                     status_type="CB"
+                                                     status_type='CB'
                                                      extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
                                         {else}
                                             {include file="main/order_status.tpl"
                                                      status=$oOrderGroup->cb_status_model
-                                                     mode="select"
                                                      name="groups[`$m_id`][cb_status]"
-                                                     status_type="CB"
+                                                     status_type='CB'
                                                      extra=" id='groups_cb_status_`$m_id`'"}
                                         {/if}
 
@@ -1129,8 +1091,7 @@ function check_r_fields() {
                                     <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
                                         <b>Customer to Amazon payment status:</b><br/>
                                         {include file="main/order_status.tpl"
-                                                 status=$v.cb_status
-                                                 mode="select"
+                                                 status=$oOrderGroup->c2a_status_model
                                                  name="groups[`$m_id`][c2a_status]"
                                                  status_type="C2"
                                                  extra=" id='groups_c2a_status_`$m_id`'"}
@@ -1168,7 +1129,14 @@ function check_r_fields() {
                                             {/literal}
                                         </script>
 
-                                        {include file="main/order_status.tpl" status=$v.dc_status mode="select" name="groups[`$m_id`][dc_status]" status_type="DC" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_dc_status_`$m_id`' "}
+                                        {include
+                                            file="main/order_status.tpl"
+                                            status=$oOrderGroup->dc_status_model
+                                            name="groups[`$m_id`][dc_status]"
+                                            status_type="DC"
+                                            hide_pending_availability_check_status=$hide_pending_availability_check_status
+                                            hide_dispatched_status=$hide_dispatched_status
+                                            extra=" id='groups_dc_status_`$m_id`' "}
 
                                         <br/>
                                         <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span
@@ -1191,7 +1159,14 @@ function check_r_fields() {
 
                                         {assign var="hide_pending_availability_check_status" value="Y"}
 
-                                        {include file="main/order_status.tpl" status=$oOrderGroup->d2a_status mode="select" name="groups[`$m_id`][d2a_status]" status_type="DA" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_d2a_status_`$m_id`' "}
+                                        {include
+                                            file="main/order_status.tpl"
+                                            status=$oOrderGroup->d2a_status_model
+                                            name="groups[`$m_id`][d2a_status]"
+                                            status_type="DA"
+                                            hide_pending_availability_check_status=$hide_pending_availability_check_status
+                                            hide_dispatched_status=$hide_dispatched_status
+                                            extra=" id='groups_d2a_status_`$m_id`' "}
 
                                         <br/>
                                         <B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span
@@ -1201,8 +1176,6 @@ function check_r_fields() {
                                         <B>Received by distributor
                                             date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}
                                         <span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
-
-
                                     </td>
                                 {/if}
                                 {if $oOrderGroup->bd_status !== null}
@@ -1230,8 +1203,6 @@ function check_r_fields() {
                                         {else}
                                             {$invoice_memo_statuses.N}
                                         {/if}
-
-
                                     </td>
                                 {/if}
                             </tr>
@@ -1242,7 +1213,12 @@ function check_r_fields() {
                 <tr id="po_status_{$m_id}_tr" {if $v.cb_status ne "O"}style="display: none;"{else}style="background-color: #B6D7A8;"{/if}>
                     <td colspan="11">
                         <b>Check transit status:</b><br/>
-                        {include file="main/order_status.tpl" status=$v.po_status mode="select" name="groups[`$m_id`][po_status]" status_type="PO" extra=" id='groups_po_status_`$m_id`' "}
+                        {include file="main/order_status.tpl"
+                            status=$oOrderGroup->po_status_model
+                            mode="select"
+                            name="groups[`$m_id`][po_status]"
+                            status_type="PO"
+                            extra=" id='groups_po_status_`$m_id`' "}
                     </td>
                 </tr>
 
@@ -1255,6 +1231,22 @@ function check_r_fields() {
                         </tr>
                     {/if}
                 {/if}
+
+                <tr id="void_order_message_{$m_id}"
+                    style='background-color: #F4CCCC; {if $v.cb_status !== 'A'} display: none; {/if}'>
+                    <td>
+                        <div>
+                            <b>Authorization voided reason:</b>
+                            {if $v.voided_reason}
+                                {$v.voided_reason}
+                            {/if}
+                        </div>
+                        {if !$v.voided_reason}
+                            <textarea name="groups[{$m_id}][voided_reason]" style="width: 100%;" placeholder="Why didn't we save the order?"></textarea>
+                            <button type="submit" onclick="$('#send_email1').val('Y');this.form.submit();">Void authorization</button>
+                        {/if}
+                    </td>
+                </tr>
 
                 <tr id="pending_order_message1_{$m_id}"
                     style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>

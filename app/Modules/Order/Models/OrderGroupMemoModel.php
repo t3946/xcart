@@ -58,6 +58,19 @@ class OrderGroupMemoModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null
+            ],
+            'status' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'N' => 'Not received',
+                    'A' => 'Added',
+                    'U' => 'Updated',
+                    'R' => 'Reconciled',
+                    'P' => 'Pre-reconciled',
+                    'T' => 'Tentatively paid',
+                ],
+                'default' => 'A',
+                'null' => false
             ]
         ];
     }

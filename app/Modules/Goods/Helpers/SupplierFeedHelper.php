@@ -178,17 +178,11 @@ class SupplierFeedHelper
             $upcModel->save();
         }
 
-        if (!$is_created) {
-            if (empty($data['feed_child']) && $model->isGroupChild()) {
-                $model->product = $model->getOldAttribute('product');
-            }
-
-            if ($dont_update_fields) {
-                foreach ($dont_update_fields as $fieldUnset) {
-                    $trimDesc = trim($model->fulldescr);
-                    if ($fieldUnset !== 'fulldescr' || ($fieldUnset === 'fulldescr' && !empty($trimDesc))) {
-                        $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
-                    }
+        if (!$is_created && $dont_update_fields) {
+            foreach ($dont_update_fields as $fieldUnset) {
+                $trimDesc = trim($model->fulldescr);
+                if ($fieldUnset !== 'fulldescr' || ($fieldUnset === 'fulldescr' && !empty($trimDesc))) {
+                    $model->setAttribute($fieldUnset, $model->getOldAttribute($fieldUnset));
                 }
             }
         }
@@ -440,78 +434,9 @@ class SupplierFeedHelper
         if (!$is_created && !$model->isGroupRoot()) {
             return $model;
         }
-
-        if (!empty($categories) && is_array($categories)) {
-
-            $parent_id = $feed->base_category_id;
-
-            if ($model->isGroupRoot()) {
-                $parent_id = null;
-                /** @var ProductModel $child_model */
-                if ($is_created) {
-                    if ($child_model = $model->childs->limit(1)->get()) {
-                        $product_sfid = $child_model->getMainCategory()->storefrontid;
-                    }
-                } else {
-                    $product_sfid = $model->sites->limit(1)->get()->storefrontid;
-                }
-            }
-            if ($model->isGroupChild() && $parent = $model->parent) {
-                $product_sfid = $parent->sites->limit(1)->get()->storefrontid;
-            }
-
-            $lastCategory = null;
-
-            $cats_arr = $categories;
-
-            if (count($categories) === 1) {
-                $cats_arr = explode("/", reset($categories));
-            }
-
-            if ($cats_arr) {
-
-                foreach ($cats_arr as $v_cat) {
-
-                    /** @var CategoryModel $modelCat */
-                    [$modelCat, $is_cat_created] = CategoryModel::objects()->limit(1)->getOrCreate(
-                        [
-                            'parentid' => $parent_id ?: 0,
-                            'category' => $v_cat,
-                            'storefrontid' => $product_sfid ?? $feed->storefront_id
-                        ]);
-
-                    if ($is_cat_created) {
-                        $modelCat->setAttributes([
-                            'prevent_index_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                            'prevent_index_category_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                            'is_bold' => 'Y',
-                            'order_by' => 10
-                        ]);
-
-                        $modelCat->categoryid_path = $modelCat->parent->categoryid_path . "/" . $modelCat->categoryid;
-
-                        $modelCat->save();
-
-                        [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'C', 'resource_id' => $modelCat->categoryid]);
-                        $url->clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
-                        $url->save();
-                    }
-
-                    $lastCategory = $modelCat;
-                    $parent_id = $modelCat->categoryid;
-                }
-
-                if ($lastCategory) {
-                    if ($is_created || $model->isGroupRoot()) {
-                        $model->setMainCategory($lastCategory);
-                    }
-                }
-            }
-        } else {
-            /** @var CategoryModel $cat */
-            if ($feed->base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
-                $model->setMainCategory($cat);
-            }
+        /** @var CategoryModel $cat */
+        if ($feed->base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
+            $model->setMainCategory($cat);
         }
 
         return $model;

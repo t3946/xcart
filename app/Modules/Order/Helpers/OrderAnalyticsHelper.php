@@ -14,7 +14,6 @@ class OrderAnalyticsHelper
     public static function sendRefund(OrderModel $model)
     {
         if ($model) {
-
             try {
                 $analytics = new Analytics();
 
@@ -40,11 +39,10 @@ class OrderAnalyticsHelper
                     ->setTrackingId($UA)
                     ->setClientId($clientId)
                     ->sendEvent();
-            }
-
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 func_log_order($model->orderid, 'X', 'GA Error: ' . $e->getMessage(), Xcart::app()->user->login);
             }
         }
     }
+
 }

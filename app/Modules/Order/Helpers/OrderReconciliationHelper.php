@@ -22,9 +22,8 @@ class OrderReconciliationHelper
         $having = [];
         foreach ($period as $net) {
             switch ($net) {
-                case 0:
-                    $having[] = ['net__gte' => 0];
-                    break;
+                case 'x':
+                    continue 2;
                 case 30:
                     $having[] = new QAnd(['net__gte' => -30, 'net__lt' => 0]);
                     break;
@@ -37,6 +36,9 @@ class OrderReconciliationHelper
                 case 91:
                     $having[] = ['net__lt' => -90];
                     break;
+                case 0:
+                    $having[] = ['net__gte' => 0];
+                    break;
             }
         }
 
@@ -46,24 +48,30 @@ class OrderReconciliationHelper
     public static function getPayableManufacturers($aParams)
     {
         if (($period = $aParams['period']) && \is_array($period)) {
-            $d = DistributorModel::objects()->filter([
-                    'order_groups__order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
-                    'order_groups__invoices__status' => 'U',
-                    'd_net_payment_terms_in_days__gt' => 0,
-                    'order_groups__amz_fullfilment_order_placed' => 'N',
-                ]
-            )->order('manufacturer');
 
-            $d->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+            $params = [
+                'order_groups__order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
+                'order_groups__invoices__status' => 'U',
+                'd_net_payment_terms_in_days__gt' => 0,
+                'order_groups__amz_fullfilment_order_placed' => 'N',
+            ];
+
+            if (in_array('x', $period, true)) {
+                unset($params['d_net_payment_terms_in_days__gt']);
+                $params['d_net_payment_terms_in_days'] = 0;
+            }
+
+            $d = DistributorModel::objects()->filter($params)->order('manufacturer');
+
+            $d->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL COALESCE(d_net_payment_terms_in_days, 0) - 1 DAY), DATE(NOW()))')]);
 
             $d->having(self::getNetFilter($period));
-
 
             $r = $d->all();
             $ar = [];
 
             if ($r) {
-                $r = array_filter($r, function ($d) use (&$ar) {
+                $r = array_filter($r, static function ($d) use (&$ar) {
                     if (!in_array($d->manufacturerid, $ar)) {
                         $ar[] = $d->manufacturerid;
                         return true;
@@ -86,13 +94,18 @@ class OrderReconciliationHelper
             if (($period = $aParams['period']) && \is_array($period)) {
                 $t_a = OrderGroupInvoiceModel::objects()->getTableAlias();
                 $t_am = OrderGroupMemoModel::objects()->getTableAlias();
-                $o = OrderGroupModel::objects()->filter([
+                $params = [
                     'order__date__gte' => \DateTime::createFromFormat('Y-m-d', '2018-01-01', new \DateTimeZone('EST'))->getTimestamp(),
                     new QOr(['invoices__status' => 'U', 'memos__status' => 'U']),
                     'manufacturer__d_net_payment_terms_in_days__gt' => 0,
                     'amz_fullfilment_order_placed' => 'N',
-                ])->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
-                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL d_net_payment_terms_in_days-1 DAY), DATE(NOW()))')]);
+                ];
+                if (in_array('x', $period, true)) {
+                    unset($params['manufacturer__d_net_payment_terms_in_days__gt']);
+                    $params['manufacturer__d_net_payment_terms_in_days'] = 0;
+                }
+                $o = OrderGroupModel::objects()->filter($params)->order(["{$t_a}.invoice_date", "{$t_am}.memo_date"]);
+                $o->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(COALESCE(invoice_date, memo_date)), INTERVAL COALESCE(d_net_payment_terms_in_days, 0)-1 DAY), DATE(NOW()))')]);
 
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));

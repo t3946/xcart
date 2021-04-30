@@ -175,7 +175,7 @@ class OrderHelper
         if ($model->groups) {
             /** @var OrderGroupModel $group */
             foreach ($model->groups as $group) {
-                if (\in_array($group->cb_status,
+                if (in_array($group->cb_status,
                     [
                         OrderStatusModel::ORDER_STATUS_QUEUED,
                         OrderStatusModel::ORDER_STATUS_UNPAID,

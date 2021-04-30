@@ -6,6 +6,7 @@ namespace Modules\Order\Models;
 
 use DateInterval;
 use DateTime;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -21,6 +22,7 @@ class ReconciliationModel extends Model
 {
     public const RECONCILIATION_STATUS_RECONCILED = 'R';
     public const RECONCILIATION_STATUS_PRE_RECONCILED = 'P';
+    public const RECONCILIATION_STATUS_TENTATIVELY = 'T';
     public const RECONCILIATION_STATUS_DROPPED = 'D';
     public const RECONCILIATION_STATUS_NULL = '';
 
@@ -41,6 +43,18 @@ class ReconciliationModel extends Model
             'file_upload_date' => [
                 'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
+            ],
+            'action' => [
+                'class' => CharField::class,
+                'choices' => [
+                    self::RECONCILIATION_STATUS_NULL => 'Not reconciled',
+                    self::RECONCILIATION_STATUS_DROPPED => 'Dropped',
+                    self::RECONCILIATION_STATUS_RECONCILED => 'Reconciled',
+                    self::RECONCILIATION_STATUS_PRE_RECONCILED => 'Pre-reconciled',
+                    self::RECONCILIATION_STATUS_TENTATIVELY => 'Tentatively paid',
+                ],
+                'default' => '',
+                'null' => false
             ],
             'distributor' => [
                 'field' => 'manufacturerid',

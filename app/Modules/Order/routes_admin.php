@@ -57,6 +57,11 @@ return [
         'name' => 'api:payable_prereconcile'
     ],
     [
+        'route' => '/api/payable_orders/tentatively',
+        'target' => [ReconciliationController::class, 'actionPayableOrdersTentatively'],
+        'name' => 'api:payable_tentatively'
+    ],
+    [
         'route' => '/order_note_tag_settings',
         'target' => [OrderRelatedMessagesController::class, 'actionSetOrderNoteTag'],
         'name' => 'order_note_tag_settings'

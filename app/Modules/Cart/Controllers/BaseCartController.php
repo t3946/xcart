@@ -3,10 +3,13 @@
 namespace Modules\Cart\Controllers;
 
 use Modules\Cart\CartModule;
+use Modules\Cart\Components\Cart;
+use Modules\Cart\Components\CartItem;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\OptionVariantModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 abstract class BaseCartController extends FrontendController
@@ -30,8 +33,8 @@ abstract class BaseCartController extends FrontendController
     }
 
     /**
-     * @return \Modules\Cart\Components\Cart
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @return Cart
+     * @throws UnknownPropertyException
      */
     protected function getCart()
     {
@@ -119,13 +122,14 @@ abstract class BaseCartController extends FrontendController
         ]);
     }
 
-    public function actionSetQuantity($uniqueId)
+    public function actionSetQuantity($uniqueId): void
     {
         if ( $this->getRequest()->getIsPost() ) {
             $cart = $this->getCart();
-            /** @var \Modules\Cart\Components\CartItem $item */
-            $item = $cart->getStorage()->get($uniqueId);
-            $this->actionQuantity($uniqueId, $this->getRequest()->post->get('quantity', $item->getQuantity()));
+            /** @var CartItem $item */
+            if ($item = $cart->getStorage()->get($uniqueId)) {
+                $this->actionQuantity($uniqueId, $this->getRequest()->post->get('quantity', $item->getQuantity()));
+            }
         }
     }
 
