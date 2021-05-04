@@ -153,7 +153,7 @@
                                 <div class="small-12 column slider-viewed">
                                     {set $link}{url 'catalog:viewed'}{/set}
                                     {set $lbl}{t 'You recently viewed items'}{/set}
-                                    {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+                                    {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=false}
                                 </div>
                             </div>
                         {/block}
