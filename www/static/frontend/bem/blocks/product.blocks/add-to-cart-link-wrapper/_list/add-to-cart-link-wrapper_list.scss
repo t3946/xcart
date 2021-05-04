@@ -1,3 +1,8 @@
 .add-to-cart-link-wrapper_list {
   margin: 0 0 0 rem-calc(10);
+  display: none;
+
+  @include breakpoint(md up) {
+      display: block;
+  }
 }

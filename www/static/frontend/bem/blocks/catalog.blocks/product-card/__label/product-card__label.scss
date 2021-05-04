@@ -1,0 +1,7 @@
+.product-card__label {
+    margin: rem-calc(5) 0 0;
+
+    @include breakpoint(md up) {
+        margin: rem-calc(8) 0 0;
+    }
+}

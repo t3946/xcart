@@ -91,8 +91,9 @@ class ApiProductController extends AbstractCatalogController
 
                     $result['shipping']['free_shipping'] = $this->render('product/messages/_p_label.tpl',
                         [
-                            'cls' => 'fill free-shipping',
-                            'text' => $free_text
+                            'cls' => 'fill',
+                            'text' => $free_text,
+                            'type' => 'free-shipping',
                         ]
                     );
                 }

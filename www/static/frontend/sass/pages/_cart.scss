@@ -369,13 +369,13 @@ $remove: (
 
 
     .errors {
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
 
       .err {
         display: inline-block;
       }
     }
-
   }
 
   .hr {
@@ -412,6 +412,7 @@ $remove: (
 
     .subtotal {
       margin-left: rem-calc(15);
+      white-space: nowrap;
 
       //@include breakpoint(large up) {
       //  margin-left: rem-calc(5);

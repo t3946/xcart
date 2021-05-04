@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="columns small-12 medium-6 flex-container align-center align-middle {if $isCartEmpty}align-self-middle{/if}">
+        <div class="columns small-12 medium-6 flex-container align-center align-middle head-line__header-column {if $isCartEmpty}align-self-middle{/if} small-order-2 medium-order-1">
             {if $isCartEmpty}
                 <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
             {else}
@@ -21,7 +21,7 @@
             {/if}
         </div>
 
-        <div class="columns small-6 medium-3">
+        <div class="columns small-6 medium-3 small-order-1 medium-order-2">
             {if !$isCartEmpty}
                 <div class="b-next">
                     <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
@@ -180,13 +180,13 @@
 
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
-                        {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
+                        {p_label cls="err fill " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '') type="minimal-amount"}
                             {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {/p_label}
                         {/if}
                         {set $only_one_country = $warehouse->getShippingOnlyOneCountry()}
                         {if $only_one_country}
-                            {p_label cls="err fill last-items"}
+                            {p_label cls="err fill" type="last-items"}
                                 {t 'This product line can only be shipped to a'} {$only_one_country} {t 'address.'}
                             {/p_label}
                         {/if}

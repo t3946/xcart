@@ -1,19 +1,21 @@
+import classnames from "classnames";
+
 export default class ImageSingle extends Component {
-    constructor( { image, mpn, upc } ) {
-        super();
-        this.image = image;
-        this.mpn = mpn;
-        this.upc = upc;
+    constructor( props ) {
+        super(props);
     }
 
-    render() {
-        const { image, mpn, upc } = this;
+    render(props) {
+        const containerClasses = [
+            'images-1',
+            props.classes.container,
+        ];
 
         return (
-            <div className="products-slider-images-group images-1">
-                { image }
-                <meta itemProp="mpn" content={ mpn }/>
-                { upc && <meta itemProp="gtin" content={ upc }/> }
+            <div className={classnames(containerClasses)}>
+                { props.image }
+                <meta itemProp="mpn" content={ props.mpn }/>
+                { props.upc && <meta itemProp="gtin" content={ props.upc }/> }
             </div>
         );
     }

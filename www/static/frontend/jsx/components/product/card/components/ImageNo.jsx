@@ -1,15 +1,17 @@
+import classnames from "classnames";
+
 export default class ImageNo extends Component {
-    constructor( { mpn, upc } ) {
-        super();
-        this.mpn = mpn;
-        this.upc = upc;
+    constructor( props ) {
+        super(props);
     }
 
-    render() {
-        const { mpn, upc } = this;
+    render(props) {
+        const { mpn, upc, classes } = props;
+
+        classes.push('product-card-no-image');
 
         return (
-            <div className="products-slider-no-image">
+            <div className={classnames(classes)}>
                 <span>Image not available</span>
                 <meta itemProp="mpn" content={ mpn }/>
                 { upc && <meta itemProp="gtin" content={ upc }/> }

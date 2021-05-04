@@ -57,6 +57,11 @@ import Pace from "pace-js";
 
             Checkout.update( data, function ( res ) {
                 const page_cart = document.querySelector('.checkout-page');
+
+                if (!page_cart) {
+                   return;
+                }
+
                 let p_data = page_cart.dataset;
                 let cartQuantity = 0;
 

@@ -3,10 +3,6 @@ import { PaymentMethods }  from './PaymentMethods';
 import Forms               from '_binds/forms';
 
 export default ( function () {
-    if ( document.querySelector( '.checkout-page' ) === null ) {
-        return;
-    }
-
     /**
      * prevent update fields with id from this list
      */

@@ -364,7 +364,7 @@ gulp.task(
   })
 );
 
-gulp.task("backend:scripts", function () {
+gulp.task("backend:scripts", function (done) {
   const args = [
     "./node_modules/webpack/bin/webpack.js",
     "--config",
@@ -372,9 +372,6 @@ gulp.task("backend:scripts", function () {
   ];
 
   GulpAssets.isProduction() && args.push("-p");
-
-  args.push("--progress");
-  args.push("-w");
 
   const cmd = spawn("node", args, { stdio: "inherit" });
 
@@ -449,6 +446,26 @@ gulp.task(
     gulp.watch(backend.src.fonts, ["backend:fonts"]);
   })
 );
+
+gulp.task("watch:backend:scripts", function (done) {
+  const args = [
+    "./node_modules/webpack/bin/webpack.js",
+    "--config",
+    "./config/webpack.backend.js",
+  ];
+
+  GulpAssets.isProduction() && args.push("-p");
+
+  args.push("--progress");
+  args.push("-w");
+
+  const cmd = spawn("node", args, { stdio: "inherit" });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
+});
 
 /**
  *

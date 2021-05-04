@@ -88,9 +88,9 @@ export default class StateLine extends Component {
         );
     }
 
-    render() {
+    render(props) {
         return (
-            <div className="products-state-line pcont">
+            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) }>
                 <div className="row">
                     <div className="columns large-3 show-for-large">
                         <div className="page_count_wrap">

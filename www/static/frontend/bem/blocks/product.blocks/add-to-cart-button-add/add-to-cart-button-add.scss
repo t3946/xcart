@@ -13,14 +13,31 @@
   }
 }
 
+.add-to-cart-button-add.wait {
+  .add-to-cart-text__long-catalog {
+    display: none;
+  }
+
+  .add-to-cart-text__short-catalog {
+    display: none;
+  }
+}
+
 .add-to-cart-button-add:before {
   content: '';
   background: url(../../dist/images/icons/add_to_cart.svg) no-repeat;
   display: inline-block;
   width: 1.875rem;
-  height: 1.5rem;
-  background-size: contain;
+  height: 1.406rem;
   vertical-align: text-bottom;
+  flex-shrink: 0;
+}
+
+.add-to-cart-button-add.wait:before {
+  content: '';
+  background: url(/static/frontend/dist/images/icons/green_check_mark.svg) no-repeat;
+  height: 1.875rem;
+  width: 1.8125rem;
 }
 
 @include breakpoint(md up) {

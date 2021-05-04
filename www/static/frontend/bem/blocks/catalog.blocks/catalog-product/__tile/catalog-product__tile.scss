@@ -1,6 +1,7 @@
 .catalog-product__tile {
   flex: 0 0 33.33333%;
   width: 33.33333%;
+  padding: 15px;
 
   @include breakpoint(md up) {
     flex: 0 0 25%;
