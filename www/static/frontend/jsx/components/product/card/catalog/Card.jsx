@@ -35,6 +35,18 @@ export default class Card extends Component {
             return str;
         }
 
+        const brandClasses = [
+            'product-card-brand',
+            'product-card__label',
+            `product-card-brand__${this.context.viewMode}`,
+        ];
+
+        const descriptionClasses = [
+            'product-card-description',
+            `product-card-description__${this.context.viewMode}`,
+            'show-for-medium',
+        ];
+
         return (
             <Fragment>
                 {/*title*/}
@@ -55,7 +67,7 @@ export default class Card extends Component {
 
                 {/*brand*/}
                 {product.brand &&
-                <div className="product-card-brand product-card__label">
+                <div className={classnames(brandClasses)}>
                     <span>{t('Brand')}: </span>
                     <a className="value" itemProp="brand" href={product.brandUrl}>
                         {product.brand}
@@ -66,7 +78,7 @@ export default class Card extends Component {
                 {/*description*/}
                 {product.description &&
                 <Fragment>
-                    <div className="product-card-description show-for-medium">
+                    <div className={classnames(descriptionClasses)}>
                         <span itemProp="description">{product.description}</span>
 
                         <div className="see-details">
@@ -75,7 +87,7 @@ export default class Card extends Component {
                     </div>
                     <noindex>
                         <div className="product-card-description show-for-small hide-for-medium">
-                            {product.description}
+                            {product.short_description}
                         </div>
                     </noindex>
                 </Fragment>
@@ -177,9 +189,11 @@ export default class Card extends Component {
             checkoutLinkWrapper: ['add-to-cart-button-wrapper__catalog'],
             buttonComplex: ['add-to-cart-button-add__complex-product'],
             checkoutLinkComplex: ['add-to-cart-button-checkout__complex-product'],
-            addToCartLongText: ['add-to-cart-text__long add-to-cart-text__long-catalog'],
+            addToCartLongText: [`add-to-cart-text__catalog add-to-cart-text__catalog-${this.context.viewMode}`],
             addToCartShortText: ['add-to-cart-text__short add-to-cart-text__short-catalog'],
         };
+
+        const containerClasses = ['price_container', 'product-card-price'];
 
         const advancedClasses = ['product-card-price-info'];
 
@@ -187,11 +201,11 @@ export default class Card extends Component {
 
         if (this.context.viewMode === 'tile') {
             quantityGroupClasses.group.push('quantity-group__catalog-tile');
-
             addToCartClasses.button.push('add-to-cart-button-add__catalog-tile');
             addToCartClasses.checkoutLink.push('hide');
             priceAttributes.push('price-attributes__tile');
             advancedClasses.push('product-price-advanced__tile');
+            containerClasses.push('catalog-tile_price');
         } else {
             addToCartClasses.mainWrapper.push('catalog_add-to-cart-list');
             quantityGroupClasses.group.push('quantity-group__catalog-list');
@@ -201,7 +215,7 @@ export default class Card extends Component {
 
         return (
             <Fragment>
-                <div className="price_container product-card-price">
+                <div className={classnames(containerClasses)}>
                     {product.listPrice.number > product.price.number && (
                         <div className="old">
                             <span className="show-for-medium">{t('List Price')}: </span>
@@ -237,7 +251,8 @@ export default class Card extends Component {
                                     'cart-add',
                                     'product-card-button',
                                     'catalog_product-card-button',
-                                    {'cart-add__tile': this.context.viewMode === 'tile'},
+                                    `cart-add__${this.context.viewMode}`,
+                                    `product-card-button__${this.context.viewMode}`,
                                 ];
 
                                 return (
@@ -317,16 +332,12 @@ export default class Card extends Component {
         classes.product.push('catalog-product', 'item');
         classes.image = {
             link: `product-image__catalog-${self.context.viewMode}`,
-            container: ['product-card-image__container', 'product-card-image-container', 'product-card-image-container__catalog'],
-            complex: {
-                container: ['product-card-image-group__catalog'],
-            },
-            single: {
-                container: ['product-card-image-group__catalog'],
-            },
+            container: [
+                'product-card-image',
+                `product-card-image__catalog-${self.context.viewMode}`,
+            ],
+            noImage: ["product-no-image__catalog"],
         };
-
-        classes.image.noImage = ["product-no-image__catalog"];
 
         return (
             <Product

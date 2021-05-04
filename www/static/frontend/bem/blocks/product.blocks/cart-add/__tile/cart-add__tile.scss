@@ -1,3 +1,5 @@
 .cart-add__tile {
-  width: 30%;
+  @include breakpoint(md up) {
+    width: 30%;
+  }
 }

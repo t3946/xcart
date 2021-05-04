@@ -49,9 +49,6 @@ export default class AddToCartButton extends Component {
             waitText: [
                 'wait-text',
                 'button-wait-text',
-                {
-                    'hide': this.state.mode === this.COMPLEX_MODE,
-                },
             ]
         };
 

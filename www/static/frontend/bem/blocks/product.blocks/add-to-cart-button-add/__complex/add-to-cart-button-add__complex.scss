@@ -6,7 +6,6 @@
 }
 
 .add-to-cart-button-add__complex.wait:before {
-  display: inline-block;
   content: '';
   background-image: url('/static/frontend/dist/images/icons/green_check_mark.svg');
   height: 1.875rem;

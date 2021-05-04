@@ -3,7 +3,6 @@
   overflow: hidden;
 
   .wait-text {
-    display: none;
     text-transform: uppercase;
   }
 
@@ -40,10 +39,6 @@
 
     .text {
       display: none;
-    }
-
-    .wait-text {
-      display: inline;
     }
   }
 }

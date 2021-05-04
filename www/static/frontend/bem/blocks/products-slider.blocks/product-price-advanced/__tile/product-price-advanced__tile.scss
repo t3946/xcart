@@ -1,16 +1,18 @@
 .product-price-advanced__tile {
-    display: none;
-    position: absolute;
-    padding: 0 .9375rem .9375rem;
-    transform: translateY(100%);
-    z-index: 1;
-    background: white;
-    border: 1px solid #b7b7b7;
-    box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.15);
-    border-top: none;
-    width: calc(100% + 2px);
-    bottom: 0;
-    left: -1px;
+    @include breakpoint(md up) {
+        position: absolute;
+        display: none;
+        box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.15);
+        left: -1px;
+        z-index: 1;
+        background: white;
+        border: 1px solid #b7b7b7;
+        border-top: none;
+        bottom: 0;
+        width: calc(100% + 2px);
+        transform: translateY(100%);
+        padding: 0 rem-calc(15) rem-calc(15);
+    }
 }
 
 @include breakpoint(md up) {
