@@ -1,0 +1,24 @@
+.product-card-title {
+    @include breakpoint(medium down) {
+        font: {
+            size: rem-calc(16);
+        }
+    }
+    @include breakpoint(small down) {
+        font: {
+            size: rem-calc(14);
+        }
+    }
+
+    &, a {
+        color: black;
+        text-align: left;
+
+        //overflow: hidden;
+        //max-height: 3em;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

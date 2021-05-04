@@ -44,8 +44,14 @@ export default class Card extends Component {
         const descriptionClasses = [
             'product-card-description',
             `product-card-description__${this.context.viewMode}`,
-            'show-for-medium',
         ];
+        const shortDescriptionClasses = [
+            'product-card-description',
+            `product-card-description__short-${this.context.viewMode}`,
+            'product-card-description__short',
+        ];
+
+        const skuClasses = ['product-card-sku', 'product-card__label', 'show-for-large', `product-card-sku__${this.context.viewMode}`];
 
         return (
             <Fragment>
@@ -58,7 +64,7 @@ export default class Card extends Component {
                 </h4>
 
                 {/*sku*/}
-                <div className="product-card-sku product-card__label show-for-large">
+                <div className={classnames(skuClasses)}>
                     <span className="value">
                         <span>{t('SKU')}: </span>
                         <span className="style" itemProp="sku">{product.productcode}</span>
@@ -86,7 +92,7 @@ export default class Card extends Component {
                         </div>
                     </div>
                     <noindex>
-                        <div className="product-card-description show-for-small hide-for-medium">
+                        <div className={classnames(shortDescriptionClasses)}>
                             {product.short_description}
                         </div>
                     </noindex>
@@ -181,31 +187,26 @@ export default class Card extends Component {
     productPriceBlock() {
         const product = this.product;
         const quantityGroupClasses = {group: []};
-
         const addToCartClasses = {
             mainWrapper: ['add-to-cart-button_catalog'],
             button: ['add-to-cart-button-add__catalog'],
             checkoutLink: ['add-to-cart-button-checkout_catalog'],
             checkoutLinkWrapper: ['add-to-cart-button-wrapper__catalog'],
-            buttonComplex: ['add-to-cart-button-add__complex-product'],
+            buttonComplex: [`add-to-cart-button__complex-${this.context.viewMode}`],
             checkoutLinkComplex: ['add-to-cart-button-checkout__complex-product'],
             addToCartLongText: [`add-to-cart-text__catalog add-to-cart-text__catalog-${this.context.viewMode}`],
             addToCartShortText: ['add-to-cart-text__short add-to-cart-text__short-catalog'],
         };
-
         const containerClasses = ['price_container', 'product-card-price'];
-
         const advancedClasses = ['product-card-price-info'];
-
         const priceAttributes = ['price-attributes'];
+        const priceCaptionClasses = ['show-for-medium', `product-card-price-caption__${this.context.viewMode}`];
 
         if (this.context.viewMode === 'tile') {
             quantityGroupClasses.group.push('quantity-group__catalog-tile');
             addToCartClasses.button.push('add-to-cart-button-add__catalog-tile');
             addToCartClasses.checkoutLink.push('hide');
-            priceAttributes.push('price-attributes__tile');
             advancedClasses.push('product-price-advanced__tile');
-            containerClasses.push('catalog-tile_price');
         } else {
             addToCartClasses.mainWrapper.push('catalog_add-to-cart-list');
             quantityGroupClasses.group.push('quantity-group__catalog-list');
@@ -213,12 +214,15 @@ export default class Card extends Component {
             addToCartClasses.checkoutLinkWrapper.push('add-to-cart-link-wrapper_list');
         }
 
+        priceAttributes.push('price-attributes__' + this.context.viewMode);
+        containerClasses.push(`product-card-price__catalog-${this.context.viewMode}`);
+
         return (
             <Fragment>
                 <div className={classnames(containerClasses)}>
                     {product.listPrice.number > product.price.number && (
                         <div className="old">
-                            <span className="show-for-medium">{t('List Price')}: </span>
+                            <span className={classnames(priceCaptionClasses)}>{t('List Price')}: </span>
                             <span className="products-slider-old-price">
                                 <Price currency={product.currency} price={product.listPrice.formatted}/>
                             </span>
@@ -226,7 +230,7 @@ export default class Card extends Component {
                     )}
 
                     <div className="current">
-                        <span className="show-for-medium">{t('Price')}: </span>
+                        <span className={classnames(priceCaptionClasses)}>{t('Price')}: </span>
                         <span className="products-slider-current-price">
                             <Price currency={product.currency} price={product.price.formatted}/>
                         </span>
@@ -250,7 +254,7 @@ export default class Card extends Component {
                                 const buttonContainerClasses = [
                                     'cart-add',
                                     'product-card-button',
-                                    'catalog_product-card-button',
+                                    `catalog-${this.context.viewMode}_product-card-button`,
                                     `cart-add__${this.context.viewMode}`,
                                     `product-card-button__${this.context.viewMode}`,
                                 ];
@@ -338,6 +342,7 @@ export default class Card extends Component {
             ],
             noImage: ["product-no-image__catalog"],
         };
+        classes.priceContainer = ["product-card-price__catalog"];
 
         return (
             <Product

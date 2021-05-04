@@ -1,0 +1,10 @@
+.price-attributes {
+    display: grid;
+    grid-template-areas:
+            "price-option__quantity price-option__button"
+            "price-option__link     cell22"
+            "price-option__info     cell22";
+    grid-template-rows: repeat(3, auto);
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: rem-calc(10);
+}

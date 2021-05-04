@@ -1,0 +1,4 @@
+.price-attributes__tile {
+    grid-template-areas:"price-option__quantity price-option__button" "price-option__info" "cell31 cell32";
+    grid-template-columns: 1fr 1fr;
+}

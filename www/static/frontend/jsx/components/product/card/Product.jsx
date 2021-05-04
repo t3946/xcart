@@ -41,7 +41,6 @@ export default class Product extends Component {
     };
 
     const productsSliderPriceContainer = [
-      "product-card-price__catalog",
       "grid-catalog-product-price",
       this.props.classes ? this.props.classes.priceContainer : null,
     ];

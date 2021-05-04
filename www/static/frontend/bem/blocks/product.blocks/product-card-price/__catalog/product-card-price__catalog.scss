@@ -1,0 +1,14 @@
+.product-card-price__catalog {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+            "price-option__price"
+            "price-option__info";
+    margin: rem-calc(10) 0 0 0;
+
+    @include breakpoint(md up) {
+        margin: 0;
+        grid-template-rows: auto 1fr;
+    }
+}

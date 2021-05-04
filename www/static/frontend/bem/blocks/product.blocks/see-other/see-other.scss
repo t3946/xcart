@@ -1,0 +1,9 @@
+.see-other {
+    @include breakpoint(md down) {
+        height: rem-calc(42);
+        display: flex;
+        margin: rem-calc(10) 0;
+        font-size: rem-calc(14);
+        text-transform: uppercase;
+    }
+}
