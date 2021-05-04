@@ -26,7 +26,7 @@
                                     <span class="shipping-method-comment show-for-medium">- {$shipping_model->shipping_time}</span>
                                 </span>
                         <div class="methods-cell delivery-item-price">
-                            <span class="cost">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($quote->getShippingCharge())}</span>
+                            <span class="cost">{$quote->getShippingCharge()|site_currency}</span>
                         </div>
                     </label>
                 </label>

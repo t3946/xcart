@@ -96,9 +96,11 @@ class CheckoutController extends FrontendController
 
         $shipping_rates = OrderProcessController::getShippingRates( $order );
 
+        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+
         CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
-        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+        CheckoutHelper::updateOrderTotalValues($order);
 
         $order->save();
 
