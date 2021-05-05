@@ -1,0 +1,7 @@
+.product-table-prices_price-column {
+    margin: rem-calc(7) 0 0;
+
+    @include breakpoint(lg up) {
+        margin: rem-calc(3) 0 0;
+    }
+}
