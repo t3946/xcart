@@ -395,16 +395,18 @@ class SupplierFeedHelper
             foreach ($data as $f_name => $fv_name_arr) {
                 if (!empty($fv_name_arr)) {
                     $f_name = trim($f_name);
-                    [$filterModel] = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
-                    if (!is_array($fv_name_arr)) {
-                        $fv_name_arr = [$fv_name_arr];
-                    }
-                    foreach ($fv_name_arr as $fv_name) {
-                        $fv_name = trim($fv_name);
-                        if (!empty($fv_name)) {
-                            [$filterValueModel] = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
-                            FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $model->productid, 'is_feed' => 1]);
-                            $fv_ids[] = $filterValueModel->fv_id;
+                    if (strlen($f_name) <= 128) {
+                        [$filterModel] = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $feed->storefront_id]);
+                        if (!is_array($fv_name_arr)) {
+                            $fv_name_arr = [$fv_name_arr];
+                        }
+                        foreach ($fv_name_arr as $fv_name) {
+                            $fv_name = trim($fv_name);
+                            if (!empty($fv_name)) {
+                                [$filterValueModel] = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                                FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $model->productid, 'is_feed' => 1]);
+                                $fv_ids[] = $filterValueModel->fv_id;
+                            }
                         }
                     }
                 }
