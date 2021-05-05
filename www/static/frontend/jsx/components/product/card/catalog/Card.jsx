@@ -340,7 +340,7 @@ export default class Card extends Component {
                 'product-card-image',
                 `product-card-image__catalog-${self.context.viewMode}`,
             ],
-            noImage: ["product-no-image__catalog"],
+            noImage: [`product-no-image__catalog-${self.context.viewMode}`],
         };
         classes.priceContainer = ["product-card-price__catalog"];
 
