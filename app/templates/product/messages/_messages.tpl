@@ -1,4 +1,5 @@
-{set $class = ($fill! && $fill) ? 'fill' : '' }
+{set $fill_class = ($fill! && $fill) ? 'fill' : '' }
+{set $class = ($class ? $class : '') ~~ $fill_class}
 {set $dx = $model->distributor}
 {set $brand = $model->brand}
 {if !$model->isGroupRoot()}
@@ -30,7 +31,7 @@
             {else}
                 {set $lbl1}{t 'Lead time for this product is'}{/set}
                 {set $lbl2}{t 'business days'}{/set}
-                {include "product/messages/_p_label.tpl" cls=$class type="lead-time" text=$lbl1 ~~ $dx->dx_leadtime~"-"~$dx->dx_leadtime_to ~~ $lbl2}
+                {include "product/messages/_p_label.tpl" containerClass=$class type="lead-time" text=$lbl1 ~~ $dx->dx_leadtime~"-"~$dx->dx_leadtime_to ~~ $lbl2}
             {/if}
         {/if}
 

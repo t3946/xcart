@@ -64,11 +64,8 @@
                     <div class="column shrink notifications hide-for-ml">
                         <div class="notifications-info small-collapse">
                             <div class="column shrink">
-                                {include "product/messages/_messages.tpl" model=$model fill=true}
+                                {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
                             </div>
-                            {*<div class="column shrink godaddy show-for-medium">*}
-                                {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                            {*</div>*}
                         </div>
                     </div>
                 </div>
@@ -149,7 +146,7 @@
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink ">
-                            {include "product/messages/_messages.tpl" model=$model fill=true}
+                            {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
                         </div>
                     </div>
                 </div>
