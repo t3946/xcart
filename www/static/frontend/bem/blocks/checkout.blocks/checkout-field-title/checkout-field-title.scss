@@ -1,23 +1,40 @@
 .checkout-field-title {
-  line-height: 110%;
-}
+    line-height: 110%;
+    padding: 0 rem-calc(22) 0 0;
+    position: relative;
 
-@include breakpoint(md up) {
-  .checkout-field-title {
-    text-align: right;
-    justify-content: flex-end;
-    padding: 0 rem-calc(21) 0 0;
-    align-items: center;
-    display: flex;
-    width: 50%;
-  }
-}
+    &:after {
+        position: absolute;
+        width: rem-calc(16);
+        height: rem-calc(16);
+        right: rem-calc(0);
+        bottom: rem-calc(6);
 
-@include breakpoint(lg up) {
-  .checkout-field-title {
-    text-align: left;
-    justify-content: flex-start;
-    padding: rem-calc(5) 0 0 0;
-    width: 100%;
-  }
+        @include breakpoint(md up) {
+            display: none;
+            width: rem-calc(24);
+            height: rem-calc(24);
+        }
+
+        @include breakpoint(lg up) {
+            display: block;
+            width: rem-calc(16);
+            height: rem-calc(16);
+        }
+    }
+
+    @include breakpoint(md up) {
+        text-align: right;
+        justify-content: flex-end;
+        align-items: center;
+        display: flex;
+        width: 50%;
+    }
+
+    @include breakpoint(lg up) {
+        text-align: left;
+        justify-content: flex-start;
+        padding: rem-calc(5) rem-calc(22) 0 0;
+        width: 100%;
+    }
 }

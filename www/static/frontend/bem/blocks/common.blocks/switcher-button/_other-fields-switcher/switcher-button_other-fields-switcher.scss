@@ -10,12 +10,3 @@
     background: #ffffff;
   }
 }
-
-
-.common-input__wrong ~ .switcher-button_other-fields-switcher {
-  border-left-color: #ee2a31;
-}
-
-.common-input__correct ~ .switcher-button_other-fields-switcher {
-  border-left-color: #a7d198;
-}

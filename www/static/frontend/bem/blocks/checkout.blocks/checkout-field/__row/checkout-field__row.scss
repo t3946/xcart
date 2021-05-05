@@ -1,15 +1,16 @@
 .checkout-field__row {
-  margin: 0 0 9px 0;
+  margin: 0 0 rem-calc(9) 0;
+  position: relative;
 }
 
 @include breakpoint(md up) {
   .checkout-field__row {
-    margin: 0 0 18px 0;
+    margin: 0 0 rem-calc(18) 0;
   }
 }
 
 @include breakpoint(lg up) {
   .checkout-field__row {
-    margin: 0 0 15px 0;
+    margin: 0 0 rem-calc(15) 0;
   }
 }
