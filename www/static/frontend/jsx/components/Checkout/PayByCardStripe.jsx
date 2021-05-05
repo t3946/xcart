@@ -2,6 +2,7 @@ import { Fragment }   from 'preact';
 import { loadStripe } from '@stripe/stripe-js';
 import InputError     from '@/components/Checkout/InputError';
 import 'regenerator-runtime/runtime';
+import PayByCardStripe from '@/components/Checkout/PayByCardStripe';
 
 export default class PayByCardStripe extends Component {
     constructor( props ) {

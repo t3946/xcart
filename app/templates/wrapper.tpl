@@ -79,9 +79,6 @@
 </style>
     <script>
         window.app = {
-            assets: {
-                cssLoaded: false
-            },
             afterReady:[],
             assets: {
                 'css': {
