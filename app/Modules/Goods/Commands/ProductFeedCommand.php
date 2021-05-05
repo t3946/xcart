@@ -113,6 +113,7 @@ class ProductFeedCommand extends Command
                             $skippedProductsCount++;
                             continue;
                         }
+                        print_r($aProduct);
                         [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
                         if (in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
                             $duplicate_sku[] = $modelProduct->productcode;
