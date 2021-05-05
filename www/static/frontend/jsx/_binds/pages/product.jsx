@@ -101,6 +101,7 @@ import Catalog from "@/components/catalog/Catalog";
       });
     });
 
+    // group product
     const elem = document.getElementsByClassName("groupped-products")[0];
 
     if (!elem) {

@@ -90,3 +90,11 @@
 .add-to-cart-button-add__catalog-tile.wait .wait-text {
   display: none;
 }
+
+.add-to-cart-button-add__product.wait:before{
+  display: none;
+}
+
+.add-to-cart-button-add__complex-product.wait:before {
+  display: block;
+}

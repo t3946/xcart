@@ -1,17 +1,7 @@
-.add-to-cart-button__complex {
-  flex-grow: 0 !important;
-}
+.add-to-cart-button-add__complex {
+  width: rem-calc(51);
 
-.add-to-cart-button__complex.wait:before {
-  content: '';
-  background-image: url('/static/frontend/dist/images/icons/green_check_mark.svg');
-  height: 1.875rem;
-  width: 1.8125rem;
-  margin-left: .4375rem;
-}
-
-.add-to-cart-button__complex-list {
   @include breakpoint(md up) {
-    max-width: 51px;
+    width: rem-calc(81);
   }
 }
