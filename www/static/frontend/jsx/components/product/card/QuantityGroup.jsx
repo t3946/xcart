@@ -19,7 +19,9 @@ export default class QuantityGroup extends Component {
 
         return (
             <div className={ groupClass }>
-                <span className={ decClass }>–</span>
+                <span className={ decClass }>
+                    <svg className="icon quantity-group-icon"><use xlinkHref="/static/frontend/images/icons/sprite.svg#switcher-minus" /></svg>
+                </span>
                 <input
                     className="quantity-group-input"
                     type="number"
@@ -33,7 +35,9 @@ export default class QuantityGroup extends Component {
                     autoComplete="off"
                     inputMode="numeric"
                 />
-                <span className={ incClass }>+</span>
+                <span className={ incClass }>
+                    <svg className="icon quantity-group-icon"><use xlinkHref="/static/frontend/images/icons/sprite.svg#switcher-plus" /></svg>
+                </span>
             </div>
         );
     }
