@@ -232,14 +232,14 @@ class ShippingHelper
     {
         return (float)Connection::getInstance()
             ->executeQuery('SELECT f_price_getShippingUPS(:value, :m_id) as ups', ['value' => $value, 'm_id' => $manufacturer_id])
-            ->fetchFirstColumn();
+            ->fetchAssociative()['ups'];
     }
 
     public static function getAverageShippingCharge($value, $qty, $shipping_id)
     {
         return (float)Connection::getInstance()
             ->executeQuery('SELECT f_price_getAverageShipping(:value, :qty, :sid) as ups', ['value' => $value, 'qty' => $qty, 'sid' => $shipping_id])
-            ->fetchFirstColumn();
+            ->fetchAssociative()['ups'];
     }
 
     public static function combination($list)
