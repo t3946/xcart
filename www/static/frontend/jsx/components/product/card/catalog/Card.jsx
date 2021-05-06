@@ -58,7 +58,10 @@ export default class Card extends Component {
                 {/*title*/}
                 <h4 className={classnames('product-card-title__catalog', `product-card-title__catalog-${this.context.viewMode}`)}
                     itemProp="name">
-                    <a href={product.url} title={product.name} className="product-card-title-link">
+                    <a href={product.url}
+                       title={product.name}
+                       className="product-card-title-link"
+                    >
                         {product.name}
                     </a>
                 </h4>
@@ -75,7 +78,11 @@ export default class Card extends Component {
                 {product.brand &&
                 <div className={classnames(brandClasses)}>
                     <span>{t('Brand')}: </span>
-                    <a className="value" itemProp="brand" href={product.brandUrl}>
+                    <a className="value"
+                       itemProp="brand"
+                       href={product.brandUrl}
+                       title={product.brand}
+                    >
                         {product.brand}
                     </a>
                 </div>
@@ -88,7 +95,10 @@ export default class Card extends Component {
                         <span itemProp="description">{product.description}</span>
 
                         <div className="see-details">
-                            <a href={product.url} className="show-for-medium">{t('See details')}</a>
+                            <a href={product.url}
+                               className="show-for-medium"
+                               title={this.product.name}
+                            >{t('See details')}</a>
                         </div>
                     </div>
                     <noindex>
@@ -244,7 +254,9 @@ export default class Card extends Component {
                                 return (
                                     <div className="info-container">
                                         <a className="button waves waves-orange yellow-white see-other"
-                                           href={this.product.url}>
+                                           href={this.product.url}
+                                           title={this.product.name}
+                                        >
                                             <span
                                                 className="text">See {this.product.childrenNumber} products variation</span>
                                         </a>
@@ -292,6 +304,7 @@ export default class Card extends Component {
                                         <div className={classnames('product-card-checkout-link', {hide: this.state.buttonSimple})}>
                                             <a href={ this.context.checkoutUrl }
                                                className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout"
+                                               title={this.product.name}
                                             >Checkout</a>
                                         </div>
                                     </Fragment>
