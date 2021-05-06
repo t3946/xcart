@@ -34,6 +34,7 @@ export default class QuantityGroup extends Component {
                     id={ "quantity-" + product.productid }
                     autoComplete="off"
                     inputMode="numeric"
+                    defaultValue={ quantity }
                 />
                 <span className={ incClass }>
                     <svg className="icon quantity-group-icon"><use xlinkHref="/static/frontend/images/icons/sprite.svg#switcher-plus" /></svg>
