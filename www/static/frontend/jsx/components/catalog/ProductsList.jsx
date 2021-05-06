@@ -62,7 +62,7 @@ export default class ProductsList extends Component {
             ],
         };
 
-        return ( <Card product={ product } classes={ classes }/> );
+        return ( <Card product={ product } classes={ classes } key={ `product-card-${product.productid}` }/> );
     }
 
     shouldComponentUpdate( nextProps, nextState ) {
