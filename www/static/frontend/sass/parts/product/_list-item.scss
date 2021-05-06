@@ -296,16 +296,6 @@
           flex:0 0 20%;
         }
 
-        .quantity-group {
-          input {
-            max-width: 8em;
-          }
-
-          .btn {
-            max-width: 1.8em;
-          }
-        }
-
         .price_container {
           .old, .current {
             display: block;
@@ -484,10 +474,6 @@
           &:after {
             display: none;
           }
-
-          .quantity-group {
-            flex: 0 0 90%;
-          }
         }
 
         .info_container {
@@ -598,16 +584,6 @@
       }
     }
   }
-}
-
-.quantity-group input[name="quantity"] {
-  border: none;
-  height: 1.75rem;
-  line-height: 1.6875rem;
-}
-
-.quantity-group input[name="quantity"]:focus {
-  border: none;
 }
 
 //.mobile, .tablet {

@@ -1,32 +1,22 @@
 .product-page {
 
   input, textarea, select {
-
     width: 100%;
     box-shadow: none;
     border: 1px solid #aaaaaa;
-    padding: 0 .625rem;
     font-size: 1em;
-    line-height: 1.875rem;
-    height: 1.875rem;
     vertical-align: middle;
 
     @include breakpoint(sm up) {
       font-size: rem-calc(20);
-      line-height: rem-calc(46);
-      height: rem-calc(46);
     }
     @include breakpoint(medium up) {
       max-width: 20rem;
       font-size: rem-calc(18);
-      line-height: rem-calc(40);
-      height: rem-calc(40);
     }
     @include breakpoint(large up) {
       max-width: 17.9375rem;
       font-size: rem-calc(14);
-      line-height: rem-calc(22);
-      height: rem-calc(22);
     }
 
     &::placeholder {
