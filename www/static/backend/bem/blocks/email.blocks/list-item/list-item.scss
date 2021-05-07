@@ -1,0 +1,71 @@
+.list-item-wrap{
+    position: relative;
+    padding: 3px 40px;
+    cursor: pointer;
+
+    &:hover{
+        z-index: 1000000;
+        box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.faxage-text{
+    margin-top: 15px;
+}
+
+.checkbox{
+    width: 45px;
+}
+
+.text-name{
+    width: 45%;
+    margin: 15px 50px 0;
+}
+
+.favorites{
+    color: #FFB400;
+}
+
+.readed-item{
+    bottom: 6px;
+    background-color: #ED7070;
+    position: absolute;
+    left: 0;
+    width: 6px;
+    height: 26px;
+    margin: 0 5px;
+    transition: .3s linear;
+}
+
+.readed{
+    margin-left: 159px;
+    background-color: #999999;
+}
+
+.readed-wrap{
+    margin-top: 12px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    width: 170px;
+    height: 29px;
+}
+
+.readed-slide{
+    background-color: white;
+    height: 20px;
+    border: 1px solid #8A8A8A;
+    transition: .3s linear;
+}
+
+.slide-readed{
+  background-color: inherit;
+}
+
+.date{
+  margin: 17px 22px 0 30px;
+}
+
+.message-type-wrap{
+  margin-top: 13px;
+}

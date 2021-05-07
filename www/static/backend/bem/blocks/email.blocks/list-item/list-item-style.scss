@@ -1,0 +1,41 @@
+.incoming-blue{
+  background-color: #DDEBFD !important;
+}
+
+.incoming-green{
+  background-color: #D8FFD8 !important;
+}
+
+.outgoing-blue{
+  background-color: #ECF4FF !important;
+}
+
+.outgoing-green{
+  background-color: #EDFFD8 !important;
+}
+
+.note{
+  background-color: #FFF5D9 !important;
+}
+
+.icon{
+  &-incoming-blue{
+    color: #5C9DF0;
+  }
+
+  &-incoming-green{
+    color: #399C4D;
+  }
+
+  &-outgoing-blue{
+    color: #5C9DF0;
+  }
+
+  &-outgoing-green{
+    color: #399C4D;
+  }
+
+  &-note{
+    color: #FEB300;
+  }
+}

@@ -1,0 +1,36 @@
+.search-input{
+  background-color: inherit;
+  border: 0;
+  border-bottom: 1px solid;
+  width: 100%;
+  transition: all .2s linear;
+  &:focus{
+    border: 0;
+  }
+}
+
+.search-wrap{
+  padding: 7px 20px 7px 15px;
+  transition: all .2s linear;
+}
+
+.focus{
+  background-color: #FFFFFF !important;
+}
+
+.search-back{
+  background-color: #FFEBB2;
+  padding: 5px 40px;
+}
+
+.search-text{
+  font-size: 14px;
+  font-style: italic;
+  margin-left: 10px;
+}
+
+.icon{
+  cursor: pointer;
+  margin-top: 3px;
+  margin-left: 10px;
+}
