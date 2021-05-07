@@ -89,7 +89,7 @@ export default ( function () {
                         .text( self.formatNumber( parseFloat( manufacturer[ 'subtotal' ] ) ) );
                 }
 
-                if ( res.templates.payment_methods ) {
+                if ( res.templates.payment_methods && PaymentMethods ) {
                     PaymentMethods.updateTemplate( res.templates.payment_methods );
                 }
 
