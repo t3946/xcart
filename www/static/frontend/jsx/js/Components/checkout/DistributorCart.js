@@ -129,6 +129,16 @@ export const DistributorCart = ( function() {
                             $row.remove();
                         } );
                     }
+
+                    //update subtotal in distribution cart
+                    for ( let manufacturer_id in res.distributor_carts ) {
+                        const manufacturer = res.distributor_carts[ manufacturer_id ];
+                        const whTotal = $( `.warehouse_subtotal[data-wh=${ manufacturer_id }]` );
+
+                        whTotal
+                          .find( '.format_price .subtotal' )
+                          .text( formatNumber( parseFloat( manufacturer[ 'subtotal' ] ) ) );
+                    }
                 },
                 complete() {
                     // hide checkout order total preloader
