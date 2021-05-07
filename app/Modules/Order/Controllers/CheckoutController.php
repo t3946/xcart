@@ -19,6 +19,7 @@ use Modules\Order\Forms\ShippingForm;
 use Modules\Order\Helpers\CheckoutHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -753,6 +754,7 @@ class CheckoutController extends FrontendController
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
                 'hash' => $hash,
+                'checkoutType' => Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
             ]);
         } else {
             $this->error(404);
