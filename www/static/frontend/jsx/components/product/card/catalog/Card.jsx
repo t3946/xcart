@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import {Fragment} from 'preact';
+import {Fragment, createRef} from 'preact';
 import Product from '@/components/product/card/Product';
 import ImgCatalog from '@/components/product/card/catalog/ImgCatalog';
 import Price from '@/components/product/card/components/Price';
@@ -18,6 +18,8 @@ export default class Card extends Component {
         this.imgList = [];
         this.state = {
             buttonSimple: true,
+            // how many add product in cart when add to cart pressed
+            quantityAdd: 0,
         }
 
         for (let i = 0; product.images && i < product.images.length; i++) {
@@ -282,7 +284,11 @@ export default class Card extends Component {
                                             </label>
                                             }
 
-                                            <QuantityGroup product={product} classes={quantityGroupClasses}/>
+                                            <QuantityGroup
+                                              product={product}
+                                              classes={quantityGroupClasses}
+                                              onChange={(q) => { this.setState({quantityAdd: q}) }}
+                                            />
                                         </div>
 
                                         {this.context.viewMode === 'list' &&
@@ -297,6 +303,7 @@ export default class Card extends Component {
                                             <AddToCartButton
                                               type={'catalog'}
                                               classes={addToCartClasses}
+                                              quantity={this.state.quantityAdd}
                                               onChangeMode={this.addToCartChangeMode.bind(this)}
                                             />
                                         </div>

@@ -150,7 +150,7 @@ export default class AddToCartButton extends Component {
             let data = [
                 {
                     id: product.dataset.product,
-                    quantity: product.dataset.quantity || 1,
+                    quantity: this.props.quantity || 1,
                     options: opt,
                 },
             ];
@@ -159,6 +159,8 @@ export default class AddToCartButton extends Component {
 
             cartAdd( data, () => {
                 this.productItemResetState( product );
+
+                // show caption on product page
                 $( '.jackpot' ).show();
             } );
 
