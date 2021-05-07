@@ -20,8 +20,8 @@ class ReconciliationController extends Controller
             'description' => 'PRE RECONCILIATION TRANSACTION',
         ],
         OrderGroupInvoiceModel::INVOICE_STATUS_TENTATIVELY => [
-            'reconciliation_status' => ReconciliationModel::RECONCILIATION_STATUS_PRE_RECONCILED,
-            'description' => 'PRE RECONCILIATION TRANSACTION',
+            'reconciliation_status' => ReconciliationModel::RECONCILIATION_STATUS_TENTATIVELY,
+            'description' => 'TENTATIVELY TRANSACTION',
         ]
     ];
 
