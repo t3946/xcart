@@ -310,14 +310,14 @@ if ($REQUEST_METHOD == "POST") {
             $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date"] = $posted_data["date_csv"]["end_date"];
             $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date_str"] = $posted_data["date_csv"]["end_date_str"];
         }
-    } else {
+    }/* else {
         foreach ($all_tabs as $t) {
             unset(
                 $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date"],
                 $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date_str"]
             );
         }
-    }
+    }*/
 
     if (!empty($date_Start)) {
         $posted_data["date"]["start_date_str"] = $date_Start;
