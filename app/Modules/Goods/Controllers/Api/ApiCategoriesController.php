@@ -6,6 +6,7 @@ use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
+use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
