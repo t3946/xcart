@@ -401,8 +401,7 @@ class SupplierFeedHelper
                             $fv_name_arr = [$fv_name_arr];
                         }
                         foreach ($fv_name_arr as $fv_name) {
-                            $fv_name = trim($fv_name);
-                            if (!empty($fv_name)) {
+                            if (($fv_name = trim($fv_name)) && strlen($f_name) <= 768) {
                                 [$filterValueModel] = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
                                 FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $model->productid, 'is_feed' => 1]);
                                 $fv_ids[] = $filterValueModel->fv_id;
