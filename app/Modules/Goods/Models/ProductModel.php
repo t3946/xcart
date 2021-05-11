@@ -710,14 +710,13 @@ class ProductModel extends Model implements ICartItem
         return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
     }
 
-    public function getCatalogDescription()
+    public function getCatalogDescription($length = 0)
     {
-        define('MAX_CATALOG_DESCRIPTION_LENGTH', 140);
         $frontend_description = $this->getFrontendDescription();
         $no_tags = strip_tags($frontend_description);
 
-        if (strlen($no_tags) > MAX_CATALOG_DESCRIPTION_LENGTH) {
-            $shorted = substr_replace($no_tags, '...', MAX_CATALOG_DESCRIPTION_LENGTH);
+        if ( $length !== 0 && strlen($no_tags) > $length) {
+            $shorted = substr_replace($no_tags, '...', $length);
         }
 
         //to one line

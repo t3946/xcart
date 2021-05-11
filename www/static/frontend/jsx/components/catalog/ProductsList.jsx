@@ -27,7 +27,7 @@ export default class ProductsList extends Component {
         let url = this.props.catalogUrl.split( '?' )[ 0 ];
         const { nextPage, sort } = this.state;
 
-        url = url + `?page=${ nextPage }&sort=${ sort }`;
+        url = url + `?page=${ nextPage }&sort=${ sort }&isCatalogPage=1`;
 
         fetch( url, {
             headers: {
@@ -36,6 +36,8 @@ export default class ProductsList extends Component {
         } ).then( res => res.json() )
            .then(
                ( res ) => {
+                   console.log('PRODUCTS LIST', res);
+
                    this.props.onEndLoading();
                    this.state.items.push( ...res.items );
                    this.setState( {
@@ -62,7 +64,7 @@ export default class ProductsList extends Component {
             ],
         };
 
-        return ( <Card product={ product } classes={ classes }/> );
+        return ( <Card product={ product } classes={ classes } key={ `product-card-${product.productid}` }/> );
     }
 
     shouldComponentUpdate( nextProps, nextState ) {

@@ -1,4 +1,4 @@
-import { createRef }   from 'preact';
+import { render, createRef }   from 'preact';
 import PayByCardStripe from '@/components/Checkout/PayByCardStripe';
 
 export default class Checkout extends Component {
@@ -35,6 +35,19 @@ export default class Checkout extends Component {
                 $( '.order-total_preloader' ).fadeOut();
             }
         } );
+
+        $( document ).on('update.total.checkout', () => {
+            const $stripeTarget = $('.stripe-target');
+            const options = {
+                id: $stripeTarget.data('id'),
+                pi: $stripeTarget.data('pi'),
+                public_key: $stripeTarget.data('public_key'),
+            };
+
+            if ($stripeTarget.length){
+                render(<PayByCardStripe { ...options } ref={ this.PayByCardStripe }/>, $stripeTarget[0]);
+            }
+        });
     }
 
     formatNumber( number ) {
@@ -90,11 +103,12 @@ export default class Checkout extends Component {
     }
 
     render() {
-        let stripeField;
-
-        if ( app.options.payByCardForm ) {
-            stripeField = app.options.payByCardForm.stripeField;
-        }
+        const $stripeTarget = $('.stripe-target');
+        const stripeField = {
+            id: $stripeTarget.data('id'),
+            pi: $stripeTarget.data('pi'),
+            public_key: $stripeTarget.data('public_key'),
+        };
 
         return (
             <div className="checkout">

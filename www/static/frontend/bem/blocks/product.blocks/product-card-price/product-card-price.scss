@@ -1,0 +1,10 @@
+.product-card-price {
+    line-height: rem-calc(22);
+    flex-grow: 1;
+    display: flex;
+    grid-area: price-option__price;
+
+    @include breakpoint(md up) {
+        flex-direction: column;
+    }
+}

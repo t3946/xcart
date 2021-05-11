@@ -34,8 +34,8 @@ export default class SliderProducts extends Component {
             },
         } ).then( res => res.json() )
            .then(
-               ( newItems ) => {
-                   this.state.items.push( ...newItems );
+               ( res ) => {
+                   this.state.items.push( ...res.items );
                    this.setState( { items: this.state.items, isLoaded: true } );
                    this.paginationPage += 1;
                },

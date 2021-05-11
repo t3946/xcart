@@ -92,19 +92,19 @@ import _ from 'lodash';
 
             // do inc
             if (
-                params.$this.hasClass( 'quantity-group-btn_inc' )
+                params.$this.closest('.quantity-group-btn_inc').length
                 && params.val < params.max
             ) {
                 params.val += parseInt( params.$input.attr( 'step' ) );
             }
             // do dec
             else if (
-                params.$this.hasClass( 'quantity-group-btn_dec' )
+                params.$this.closest('.quantity-group-btn_dec').length
                 && params.val > params.min
             ) {
                 params.val -= parseInt( params.$input.attr( 'step' ) );
             }
-            // do not anything
+            // do nothing
             else {
                 return;
             }

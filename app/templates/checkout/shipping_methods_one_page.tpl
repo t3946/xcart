@@ -18,15 +18,17 @@
                             name="shipping_rates[{$gi}]"
                             class="common-input-radio"
                             value="{$quote->rateid}"
+                            data-shipping-cost="{$quote->getShippingCharge()}"
                     />
 
                     <label class="methods-label common-radio-label shipping-radio-label shipping-method-row__label" for="shipping_{$quote->rateid}">
-                                <span class="methods-text">
-                                    <span class="shipping-method-name">{$shipping_model->getFrontendName()}</span>
-                                    <span class="shipping-method-comment show-for-medium">- {$shipping_model->shipping_time}</span>
-                                </span>
+                        <span class="methods-text">
+                            <span class="shipping-method-name">{$shipping_model->getFrontendName()}</span>
+                            <span class="shipping-method-comment show-for-medium">- {$shipping_model->shipping_time}</span>
+                        </span>
+
                         <div class="methods-cell delivery-item-price">
-                            <span class="cost">{$site_currency->symbol_prefix}{$site_currency} {$site_currency->getCurrencyFormat($quote->getShippingCharge())}</span>
+                            <span class="cost">{$quote->getShippingCharge()|site_currency}</span>
                         </div>
                     </label>
                 </label>

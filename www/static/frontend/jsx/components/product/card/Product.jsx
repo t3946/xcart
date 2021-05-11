@@ -34,14 +34,13 @@ export default class Product extends Component {
       mpn: product.mpn,
       upc: product.upc,
       url: product.url,
-      name: product.url,
+      name: product.name,
       isNew: product.isNew,
       isSale: product.isSale,
       classes: this.classes.image,
     };
 
     const productsSliderPriceContainer = [
-      "product-card-price__catalog",
       "grid-catalog-product-price",
       this.props.classes ? this.props.classes.priceContainer : null,
     ];

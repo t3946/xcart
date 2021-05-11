@@ -17,8 +17,10 @@ class ApiCategoriesController extends AbstractCatalogController
     public function actionSliderBestsellers(): void
     {
         $qs = PromotionalProductsHelper::getBestsellersSQ();
-        $data = $this->getProductData($qs);
-        $this->jsonResponse($data);
+
+        if ($this->getRequest()->getIsAjax()) {
+            $this->jsonResponse($this->getPaginatedProducts($qs));
+        }
     }
 
     public function actionSliderNew(): void
@@ -33,20 +35,21 @@ class ApiCategoriesController extends AbstractCatalogController
             ]
         )->limit(1)->get();
 
-        $data = $this->getProductData(
-            parent::getQS()->filter(
-                [
-                    'images__image_path__isnull' => false,
-                    'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(
-                        ['pk']
-                    ),
-                ]
-            )
+        $qs = parent::getQS()->filter(
+            [
+                'images__image_path__isnull' => false,
+                'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(
+                    ['pk']
+                ),
+            ]
         );
-        $this->jsonResponse($data);
+
+        if ($this->getRequest()->getIsAjax()) {
+            $this->jsonResponse($this->getPaginatedProducts($qs));
+        }
     }
 
-    public function actionSliderFeatured(): void
+    public function actionSliderFeatured()
     {
         $qs = parent::getQS()
             ->filter(
@@ -56,8 +59,9 @@ class ApiCategoriesController extends AbstractCatalogController
             )
             ->order(['?']);
 
-        $data = $this->getProductData($qs);
-        $this->jsonResponse($data);
+        if ($this->getRequest()->getIsAjax()) {
+            $this->jsonResponse($this->getPaginatedProducts($qs));
+        }
     }
 
     public function actionSliderAlsoBought($id): void
@@ -77,7 +81,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
         if ($products) {
             $data = $this->getProductData($products);
-            $this->jsonResponse($data);
+            $this->jsonResponse(['items' => $data]);
         }
     }
 
@@ -88,7 +92,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
         if ($products) {
             $data = $this->getProductData($products);
-            $this->jsonResponse($data);
+            $this->jsonResponse(['items' => $data]);
         }
     }
 
@@ -104,51 +108,52 @@ class ApiCategoriesController extends AbstractCatalogController
             );
     }
 
+    private function getPaginatedProducts($qs) {
+        //sorting products
+        $isCatalogPage = (int)$this->getRequest()->get->get('isCatalogPage', 0);
+
+        if ($isCatalogPage === 1) {
+            $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+            $fh = new ProductFilterHelper($qs, $this->getRequest()->get->get('filter', []), $this->filters);
+            if ($this->getRequest()->getIsAjax()) {
+                $qs = $fh->getFiltrateQS();
+                $this->sort = $this->getRequest()->get->get('sort', $this->sort);
+                $qs = $this->getSortedQS($qs);
+            }
+        }
+
+        $pager = $this->getPager($qs);
+        $this->setCanonical($this->model);
+        $pagerView = $pager->createView();
+        $products = $pager->paginate();
+
+        return [
+            'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
+            'items' => $this->getProductData($products),
+            'pager' => [
+                'pageSize' => $pager->getPageSize(),
+                'currentPage' => $pager->getPage(),
+                'paginateCount' => count($products),
+                'total' => $pager->getTotal(),
+            ],
+        ];
+    }
+
     /**
      * get paginated category by id
      * @param int $id category id
      * @param string $slug
      * @throws \Exception
      */
-    public function actionCatalogCategory(int $id, string $slug): void
+    public function actionCatalogCategory(int $id): void
     {
-        //actionViewOld
-        $model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
+        $this->model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
 
-        //view_internal
-        $this->model = $model;
-        $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
-        $this->sort = $orderBy;
-
-        /** @var \Xcart\App\Orm\QuerySet $pqs */
-        $pqs = $this->getQS($model);
-        $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
-
+        /** @var \Xcart\App\Orm\QuerySet $qs */
+        $qs = $this->getQS($this->model);
 
         if ($this->getRequest()->getIsAjax()) {
-            $pqs = $fh->getFiltrateQS();
-            $this->sort = $this->getRequest()->get->get('sort', $this->sort);
-            $pqs = $this->getSortedQS($pqs);
-        }
-
-        $pager = $this->getPager($pqs);
-
-        $this->setCanonical($model);
-
-        if ($this->getRequest()->getIsAjax()) {
-            $pagerView = $pager->createView();
-            $this->jsonResponse(
-                [
-                    'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
-                    'items' => $this->getProductData($pager->paginate()),
-                    'pager' => [
-                        'pageSize' => $pager->getPageSize(),
-                        'currentPage' => $pager->getPage(),
-                        'paginateCount' => count($pager->paginate()),
-                        'total' => $pager->getTotal(),
-                    ],
-                ]
-            );
+            $this->jsonResponse($this->getPaginatedProducts($qs));
         }
     }
 
@@ -220,7 +225,8 @@ class ApiCategoriesController extends AbstractCatalogController
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
-                'description' => utf8_encode( $product->getCatalogDescription() ),
+                'description' => utf8_encode( $product->getCatalogDescription(140) ),
+                'short_description' => utf8_encode( $product->getCatalogDescription(70) ),
                 'inStock' => !$product->isOutOfStock(),
                 'productcode' => $product->productcode,
                 'brand' => $product->brand->brand ?? null,

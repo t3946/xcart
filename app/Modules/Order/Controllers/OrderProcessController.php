@@ -124,7 +124,6 @@ class OrderProcessController extends FrontendController
     {
         $order = $form->getInstance();
         $sh_rates = self::getShippingRates( $order );
-
         return $this->render( 'checkout/all_shipping_methods_one_page.tpl', [
             'order' => $order,
             'shipping_rates' => $sh_rates ?? [],
@@ -170,13 +169,14 @@ class OrderProcessController extends FrontendController
             $quantity = $post->get('quantity');
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
             CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+            CheckoutHelper::updateOrderTotalValues($order);
         }
 
         if ($post->has('shipping_rates')) {
 
             $shipping_rates = self::getShippingRates($order);
 
-            foreach ($post->get('shipping_rates') as $mid => $rate) {
+            foreach ($post->get('shipping_rates') as $rate) {
                 CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate);
             }
         }
@@ -234,6 +234,7 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_state' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
+            || ($post->has('uid') && $post->has('quantity'))
         ) {
             CheckoutHelper::updateBillingDetails($order);
             

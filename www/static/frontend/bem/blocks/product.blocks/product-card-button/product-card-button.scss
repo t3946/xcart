@@ -1,0 +1,8 @@
+.product-card-button {
+    grid-area: price-option__button;
+    grid-column: 2/4;
+
+    @include breakpoint(md up) {
+        grid-column: 1/2;
+    }
+}

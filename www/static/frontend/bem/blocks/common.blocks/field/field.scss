@@ -1,0 +1,22 @@
+.field {
+    position: relative;
+
+    &:after {
+        display: none;
+        position: absolute;
+        width: rem-calc(16);
+        height: rem-calc(16);
+        right: rem-calc(-30);
+        top: rem-calc(6);
+
+        @include breakpoint(md up) {
+            display: block;
+            width: rem-calc(24);
+            height: rem-calc(24);
+        }
+
+        @include breakpoint(lg up) {
+            display: none;
+        }
+    }
+}

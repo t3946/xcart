@@ -21,22 +21,10 @@ export default class Image extends Component {
                             return ( <ImageNo upc={upc} mpn={mpn} classes={noImageClasses} /> );
                         }
                         else if ( images.length === 1 ) {
-                            let singleClasses = {};
-
-                            if (singleClasses && classes.single) {
-                                singleClasses = classes.single;
-                            }
-
-                            return ( <ImageSingle upc={upc} mpn={mpn} image={images[ 0 ]} classes={singleClasses} /> );
+                            return ( <ImageSingle upc={upc} mpn={mpn} image={images[ 0 ]} classes={classes} /> );
                         }
                         else {
-                            let complexClasses = {};
-
-                            if (complexClasses && classes.complex) {
-                                complexClasses = classes.complex;
-                            }
-
-                            return ( <ImageComplex upc={upc} mpn={mpn} images={images} classes={ complexClasses }/> );
+                            return ( <ImageComplex upc={upc} mpn={mpn} images={images} classes={ classes }/> );
                         }
                     } )() }
 

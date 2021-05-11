@@ -98,26 +98,6 @@
             justify-content: center;
           }
 
-          &.quantity {
-            .quantity-group {
-              .btn {
-                user-select: none;
-              }
-
-              input {
-                border: none;
-
-                @include breakpoint(sm down) {
-                  height: rem-calc(34);
-                  line-height: rem-calc(34);
-                }
-                @include breakpoint(medium down) {
-                  height: rem-calc(34);
-                }
-              }
-            }
-          }
-
           &.extended {
             flex: auto;
             border-right: none;

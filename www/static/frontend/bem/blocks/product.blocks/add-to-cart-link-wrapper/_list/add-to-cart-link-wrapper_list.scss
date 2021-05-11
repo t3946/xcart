@@ -4,5 +4,7 @@
 
   @include breakpoint(md up) {
       display: block;
+      width: 100%;
+      flex: 1 0;
   }
 }

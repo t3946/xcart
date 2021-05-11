@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="table table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
-                        <div class="column column-price small-4">
+                        <div class="column product-table-prices_price-column column-price small-4">
                             <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
                                 {$site_currency->symbol_prefix}
                                 <span>
@@ -66,7 +66,7 @@
                         </div>
 
                         {if !$model->isOutOfStockFrontend()}
-                            <div class="column column-extended small-4">
+                            <div class="column product-table-prices_price-column column-extended small-4">
                                 <div class="product-quantity-extended-price">
                                     {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                                     <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
