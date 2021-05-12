@@ -68,6 +68,7 @@ export default class Checkout extends Component {
     insertStripeField() {
         //insert stripe
         const $stripeTarget = $( '.stripe-target' );
+
         const $stripeField = $( '.checkout-stripe' );
 
         if ($stripeTarget.length) {
@@ -96,6 +97,13 @@ export default class Checkout extends Component {
 
     componentDidUpdate( previousProps, previousState, previousContext ) {
         this.insertStripeField();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        //dont update if only checkoutUpdateQueries changed
+        if (this.state.checkoutUpdateQueries !== nextState.checkoutUpdateQueries ) {
+            return false;
+        }
     }
 
     checkoutSubmit() {
