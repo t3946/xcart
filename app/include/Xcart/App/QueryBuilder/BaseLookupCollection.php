@@ -42,10 +42,10 @@ class BaseLookupCollection implements ILookupCollection
                 if ($value instanceof Expression) {
                     $sqlValue = $value->toSQL();
                 }
-                else if ($value instanceof QueryBuilder) {
+                elseif ($value instanceof QueryBuilder) {
                     $sqlValue = '(' . $value->toSQL() . ')';
                 }
-                else if (strpos($value, 'SELECT') !== false) {
+                elseif (strpos($value, 'SELECT') === 0) {
                     $sqlValue = '(' . $value . ')';
                 }
                 else {
