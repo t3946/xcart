@@ -1,7 +1,7 @@
 .switcher-button_other-fields-switcher {
   background-color: #ffffff;
   height: calc(100% - 2px);
-  width: rem-calc(38);
+  width: rem-calc(34);
   margin: -1px;
   z-index: 1;
   border: 1px solid #ffb500;
@@ -9,13 +9,4 @@
   @include breakpoint(md up) {
     background: #ffffff;
   }
-}
-
-
-.common-input__wrong ~ .switcher-button_other-fields-switcher {
-  border-left-color: #ee2a31;
-}
-
-.common-input__correct ~ .switcher-button_other-fields-switcher {
-  border-left-color: #a7d198;
 }

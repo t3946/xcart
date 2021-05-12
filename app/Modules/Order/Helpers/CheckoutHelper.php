@@ -80,8 +80,6 @@ class CheckoutHelper
                 self::updateOrderDetailsFromCart($group, $cart_group['items']);
             }
         }
-
-        self::updateOrderTotalValues($order);
     }
 
     /**

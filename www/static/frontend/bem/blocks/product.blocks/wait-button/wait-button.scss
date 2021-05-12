@@ -3,7 +3,6 @@
   overflow: hidden;
 
   .wait-text {
-    display: none;
     text-transform: uppercase;
   }
 
@@ -41,9 +40,61 @@
     .text {
       display: none;
     }
-
-    .wait-text {
-      display: inline;
-    }
   }
+}
+
+.add-to-cart-text__catalog.complex {
+  @include breakpoint(md up) {
+    display: none;
+  }
+}
+
+.wait .add-to-cart-text__catalog {
+  display: none;
+}
+
+.wait-button .wait-text {
+  display: none;
+}
+
+@include breakpoint(550px up) {
+  .wait-button.wait .wait-text {
+    display: block;
+  }
+}
+
+@include breakpoint(md up) {
+  .add-to-cart-button-add__complex.wait .wait-text {
+    display: none;
+  }
+}
+
+.button-wait-text {
+  text-transform: uppercase;
+}
+
+.add-to-cart-button-add.wait:before {
+  display: block;
+
+  @include breakpoint(550px up) {
+    display: none;
+  }
+}
+
+.add-to-cart-button-add__complex.wait:before {
+  @include breakpoint(md up) {
+    display: block;
+  }
+}
+
+.add-to-cart-button-add__catalog-tile.wait .wait-text {
+  display: none;
+}
+
+.add-to-cart-button-add__product.wait:before{
+  display: none;
+}
+
+.add-to-cart-button-add__complex-product.wait:before {
+  display: block;
 }

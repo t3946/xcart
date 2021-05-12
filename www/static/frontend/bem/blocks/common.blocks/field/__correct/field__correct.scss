@@ -1,0 +1,5 @@
+.field__correct {
+    &:after {
+        content: url('../images/icons/forms/checkmark_accepted.svg');
+    }
+}

@@ -1,4 +1,9 @@
 .quantity-group-input {
-  height: 1.75rem;
-  line-height: 1.6875rem;
+  height: 100%;
+  border: none;
+  padding: 0 rem-calc(5);
+
+  @include breakpoint(md up) {
+      padding: 0 rem-calc(10);
+  }
 }

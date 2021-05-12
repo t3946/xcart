@@ -85,4 +85,9 @@ return [
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'viewApi'
     ],
+        [
+            'route' => 'product/{i:id}/{slug:slug}/',
+            'target' => [ApiProductController::class, 'actionProductGroup'],
+            'name' => 'groupProductApi',
+        ],
 ];

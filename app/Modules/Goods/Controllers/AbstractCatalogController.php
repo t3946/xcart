@@ -136,7 +136,6 @@ abstract class AbstractCatalogController extends FrontendController
             $pagerView = $pager->createView();
 
             $products = $this->getProductData(($pager->paginate()));
-//            dd($products);
 
             $this->jsonResponse([
                 'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,

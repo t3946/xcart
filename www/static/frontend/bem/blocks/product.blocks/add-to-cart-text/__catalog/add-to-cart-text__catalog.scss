@@ -1,0 +1,7 @@
+.add-to-cart-text__catalog {
+    display: none;
+
+    @include breakpoint(550px up) {
+        display: block;
+    }
+}

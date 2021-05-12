@@ -136,8 +136,17 @@ class FieldValidation {
      * @param item
      */
     itemAddError( item ) {
+        //toggle input classes
         item.classList.remove( item.dataset.correct || 'success' );
         item.classList.add( item.dataset.wrong || 'invalid' );
+
+        //toggle field classes if need custom styling
+        if (item.dataset.correct) {
+            $(item).parents('.checkout-field-row').find('.checkout-field-title').removeClass( 'field__correct' );
+            $(item).parents('.checkout-field-row').find('.checkout-field-title').addClass( 'field__has-error' );
+            $(item).parents('.field').removeClass( 'field__correct' );
+            $(item).parents('.field').addClass( 'field__has-error' );
+        }
     }
 
     /**
@@ -145,8 +154,17 @@ class FieldValidation {
      * @param item
      */
     itemAddSuccess( item ) {
+        //toggle input classes
         item.classList.remove( item.dataset.wrong || 'invalid' );
         item.classList.add( item.dataset.correct || 'success' );
+
+        //toggle field classes if need custom styling
+        if (item.dataset.correct) {
+            $(item).parents('.checkout-field-row').find('.checkout-field-title').removeClass( 'field__has-error' );
+            $(item).parents('.checkout-field-row').find('.checkout-field-title').addClass( 'field__correct' );
+            $(item).parents('.field').removeClass( 'field__has-error' );
+            $(item).parents('.field').addClass( 'field__correct' );
+        }
     }
 
     /**
@@ -155,6 +173,8 @@ class FieldValidation {
      */
     itemRemoveError( item ) {
         item.classList.remove( item.dataset.wrong || 'invalid' );
+        $(item).parents('.checkout-field-row').find('.checkout-field-title').removeClass('field__has-error');
+        $(item).parents('.field').removeClass('field__has-error');
     }
 }
 

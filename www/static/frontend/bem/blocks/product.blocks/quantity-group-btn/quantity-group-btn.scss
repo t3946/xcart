@@ -1,21 +1,16 @@
 .quantity-group-btn {
-  flex: 0 0 1.375rem;
-  color: #000;
-  text-align: center;
+  flex: 0 0 rem-calc(35);
+  width: rem-calc(35);
   background-color: #fff0ca;
-  height: 35px;
-  min-width: 1.4em;
-  line-height: 34px;
+  height: 100%;
   cursor: default;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
-}
 
-@include breakpoint(lg up) {
-  .quantity-group-btn {
-    height: 1.75rem;
-    line-height: 1.6875rem;
+  @include breakpoint(md up) {
+    flex: 0 0 rem-calc(22);
+    width: rem-calc(22);
   }
 }

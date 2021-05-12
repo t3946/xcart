@@ -1,7 +1,7 @@
 .stripe-element {
   background: white;
-  height: 46px;
+  height: rem-calc(36);
   position: relative;
   align-items: center;
-  padding: 10px;
+  padding: rem-calc(6);
 }

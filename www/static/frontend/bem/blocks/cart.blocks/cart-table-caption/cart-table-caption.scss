@@ -1,18 +1,21 @@
 .cart-table-caption {
   position: relative;
   padding: 0 rem-calc(32);
-  font-size: 1.125rem;
+  font-size: rem-calc(18);
   font-weight: 700;
   background: $grey_e4;
   cursor: pointer;
+  min-height: rem-calc(38);
+  display: flex;
+  align-items: center;
 }
 
 @include breakpoint(md up) {
   .cart-table-caption {
-    font-size: 1.25rem;
+    font-size: rem-calc(20);
     padding: 0 rem-calc(38);
     text-align: center;
-    line-height: 32px;
+    line-height: rem-calc(32);
   }
 }
 
@@ -24,7 +27,7 @@
 
 @include breakpoint(lg up) {
   .cart-table-caption {
-    font-size: 1.125rem;
+    font-size: rem-calc(18);
     padding: 0 rem-calc(77);
     background: none;
   }

@@ -29,7 +29,6 @@ form {
   input, select, textarea {
     border: 1px solid #aaa;
     border-radius: 0;
-    line-height: rem-calc(34);
     padding: 0 rem-calc(10);
     margin: rem-calc(6) 0;
     background: $white;
@@ -48,7 +47,6 @@ form {
     }
 
     @include breakpoint(large) {
-      line-height: rem-calc(24);
       max-width: rem-calc(295);
       width: rem-calc(295);
     }

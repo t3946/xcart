@@ -35,7 +35,7 @@ class CurrencyModel extends Model
 
     public function getCurrencyFormat($number): string
     {
-        return number_format($number, $this->decimals ?? 2, $this->decimals_separator?? '', $this->thousands_separator ?? '');
+        return number_format(round($number, 2), $this->decimals ?? 2, $this->decimals_separator?? '', $this->thousands_separator ?? '');
     }
 
     public function __toString(): string
