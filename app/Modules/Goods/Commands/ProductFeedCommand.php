@@ -114,19 +114,11 @@ class ProductFeedCommand extends Command
                             $skippedProductsCount++;
                             continue;
                         }
-                        print_r($aProduct);
-                        //TODO remove catch exception, need to fix ORM (MRH-SELECTEDDOLL)
-                        try {
-                            [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
-                            if (in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
-                                $duplicate_sku[] = $modelProduct->productcode;
-                            } else {
-                                $all_feed_productcodes[] = $modelProduct->productcode;
-                            }
-                        }
-                        catch (Throwable $e) {
-                            echo "{$e->getMessage()}\n";
-                            continue;
+                        [$modelProduct, $is_created] = ProductModel::objects()->getOrNew(['productcode' => $aProduct['productcode']]);
+                        if (in_array($modelProduct->productcode, $all_feed_productcodes, true)) {
+                            $duplicate_sku[] = $modelProduct->productcode;
+                        } else {
+                            $all_feed_productcodes[] = $modelProduct->productcode;
                         }
                     }
 
