@@ -152,6 +152,11 @@ export default class PayByCardStripe extends Component {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
           this.setState({ error });
+
+          window.scrollTo({
+            top: $(".billing-form-fields").offset().top,
+            behavior: "smooth",
+          });
         }
       });
   }
