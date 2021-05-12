@@ -72,6 +72,7 @@
     "react-accessible-accordion": "^3.3.4",
     "react-i18next": "^11.8.12",
     "react-id-swiper": "^4.0.0",
+    "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
     "redux": "^3.7.1",
