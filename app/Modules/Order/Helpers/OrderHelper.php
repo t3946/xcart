@@ -651,7 +651,7 @@ HTML;
             $groups[ $manufacturer_id ] = array_merge(
                 [
                     'manufacturerid' => $manufacturer_id,
-                    'subtotal' => $group->total_gross,
+                    'subtotal' => $group->product_gross,
                     'quantity' => $quantity,
                 ],
                 $group->getTaxes()
