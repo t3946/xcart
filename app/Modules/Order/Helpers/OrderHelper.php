@@ -660,9 +660,9 @@ HTML;
 
         return array_merge([
             'distributor_carts' => $groups,
-            'total' => $order->subtotal,
-            'total_shipping_cost' => $order->shipping_cost,
-            'grand_total' => $order->total,
+            'total' => round($order->subtotal, 2),
+            'total_shipping_cost' => round($order->shipping_cost, 2),
+            'grand_total' => round($order->total, 2),
         ], $order->getTaxes());
 
     }

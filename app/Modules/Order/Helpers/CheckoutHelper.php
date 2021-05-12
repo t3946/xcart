@@ -19,10 +19,8 @@ class CheckoutHelper
      * @param int|null $selected_rate
      * @throws Exception
      */
-    public static function updateOrderShippingRates(OrderModel $order, array $shipping_rates, int $selected_rate = null): void
+    public static function updateOrderShippingRates(OrderModel $order, array $shipping_rates, int $selected_rate = null, bool $is_replace = true): void
     {
-        $order->shipping_cost = 0;
-
         foreach ($order->groups as $group) {
             $params = [
                     'shippingid' => null,
@@ -50,8 +48,9 @@ class CheckoutHelper
                         'shipping_gross' => $charge,
                         'shipping_net' => $charge,
                     ];
+                } elseif ($is_replace === false) {
+                    continue;
                 }
-                $order->shipping_cost += $group->shipping_gross;
             }
 
             $group->setAttributes($params);

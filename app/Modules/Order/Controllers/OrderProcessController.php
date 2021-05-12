@@ -177,7 +177,7 @@ class OrderProcessController extends FrontendController
             $shipping_rates = self::getShippingRates($order);
 
             foreach ($post->get('shipping_rates') as $rate) {
-                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate);
+                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate, false);
             }
         }
 
