@@ -30,11 +30,11 @@ node_modules
 /log/
 /html_cache/
 /app/Modules/Translate/lang/*.i18next.json
-/www/static/backend/dist
 /www/static/frontend/dist
 /www/static/frontend/versions
 /www/static/frontend/bem/bem.scss
+/www/static/backend/dist
+/www/static/backend/versions
 /www/static/backend/bem/bem.scss
-
 !.gitkeep
 !/skin1_kolin/
