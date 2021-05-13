@@ -1,8 +1,6 @@
 export const ShippingMethods = (function () {
-  let $shippingMethodsGroups = $(".shipping-methods-group");
-
   function updateClasses() {
-    $shippingMethodsGroups.each(function (i, elem) {
+    $(".shipping-methods-group").each(function (i, elem) {
       $(elem)
         .find(".shipping-method-row")
         .removeClass("shipping-method-row_selected")
@@ -13,23 +11,22 @@ export const ShippingMethods = (function () {
   }
 
   const constructor = function () {
-    initHandlers();
+    $(".shipping-methods-group").on("change", "input", function () {
+      updateClasses($(this).parents(".shipping-methods-group"));
+    });
+
     updateClasses();
   };
 
-  function initHandlers() {
-    $shippingMethodsGroups.on("change", "input", function () {
-      updateClasses($(this).parents(".shipping-methods-group"));
-    });
-  }
-
+  /**
+   * update html in old template from new template
+   */
   constructor.prototype.updateTemplate = function (template) {
-    const $newShippingMethodsGroups = $(template).filter(
-      ".shipping-methods-group"
-    );
+    const $newTemplate = $(template).filter(".shipping-methods-group");
+    const $oldTemplate = $(".shipping-methods-group");
 
-    $newShippingMethodsGroups.each(function (i, e) {
-      $shippingMethodsGroups
+    $newTemplate.each(function (i, e) {
+      $oldTemplate
         .eq(i)
         .html(e.outerHTML)
         .on("change", "input", function () {
@@ -37,9 +34,6 @@ export const ShippingMethods = (function () {
         });
     });
 
-    $shippingMethodsGroups = $(".shipping-methods-group");
-
-    initHandlers();
     updateClasses();
   };
 
