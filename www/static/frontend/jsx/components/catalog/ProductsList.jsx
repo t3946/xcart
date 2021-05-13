@@ -21,7 +21,7 @@ export default class ProductsList extends Component {
         let url = this.props.catalogUrl.split( '?' )[ 0 ];
 
         // if search page
-        if (document.location.href.search('.com/search') !== -1) {
+        if (document.location.href.search(document.location.host + '/search') !== -1) {
             const searchParams = document.location.href.split('?')[1];
             url = `/search?${searchParams}&`;
         } else {
