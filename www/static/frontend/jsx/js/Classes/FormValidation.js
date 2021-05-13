@@ -173,9 +173,6 @@ export default class FormValidation {
         if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
             $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit');
         }
-
-        event.preventDefault();
-        return;
     }
 
     /**

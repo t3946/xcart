@@ -67,10 +67,10 @@ export default class Card extends Component {
                     >
                         <Highlighter
                           highlightClassName="highlight"
-                          searchWords={[this.props.searchText]}
+                          searchWords={this.props.searchText.split(' ')}
                           autoEscape={true}
                           textToHighlight={product.name}
-                        />,
+                        />
                     </a>
                 </h4>
 
