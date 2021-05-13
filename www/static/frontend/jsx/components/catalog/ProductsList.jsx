@@ -16,6 +16,28 @@ export default class ProductsList extends Component {
         this.loadData();
     }
 
+    getUrl() {
+        const { nextPage, sort } = this.state;
+        let url = this.props.catalogUrl.split( '?' )[ 0 ];
+
+        // if search page
+        if (document.location.href.search('.com/search') !== -1) {
+            const searchParams = document.location.href.split('?')[1];
+            url = `/search?${searchParams}&`;
+        } else {
+            url += '?';
+        }
+
+        //page
+        url += `page=${ nextPage }&`;
+        //sort
+        url += `sort=${ sort }&`;
+        //catalog modifier (need for match response format)
+        url += 'isCatalogPage=1';
+
+        return url;
+    }
+
     loadData() {
         this.props.onBeginLoading( this.state.nextPage );
 
@@ -24,10 +46,7 @@ export default class ProductsList extends Component {
             return;
         }
 
-        let url = this.props.catalogUrl.split( '?' )[ 0 ];
-        const { nextPage, sort } = this.state;
-
-        url = url + `?page=${ nextPage }&sort=${ sort }&isCatalogPage=1`;
+        const url = this.getUrl();
 
         fetch( url, {
             headers: {

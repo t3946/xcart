@@ -129,6 +129,8 @@ class SearchController extends AbstractCatalogController
         ))->save();
 
         $q = $this->q ?? $q;
+
+        $this->sort = $_GET['sort'];
         $this->view_internal($q);
     }
 

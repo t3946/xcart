@@ -5,6 +5,7 @@ use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
 use Modules\Order\Controllers\Api\UpsMapController;
 use Modules\Goods\Controllers\Api\ApiCategoriesController;
+use Modules\Goods\Controllers\SearchController;
 
 return [
     [
@@ -88,5 +89,25 @@ return [
         'route' => 'product/{i:id}/{slug:slug}/',
         'target' => [ApiProductController::class, 'actionProductGroup'],
         'name' => 'groupProductApi',
+    ],
+
+    /** SEARCH ROUTES */
+    [
+        'route' => 'search',
+        'target' => [SearchController::class, 'actionSearch'],
+        'name' => 'search',
+    ],
+    [
+        'route' => 'search/suggestion',
+        'target' => [SearchController::class, 'actionApiSuggestion'],
+        'name' => 'search:suggestion',
+    ],
+    [
+        'route' => 'keyword/{slug:q}',
+        'target' => [SearchController::class, 'actionKeywords'],
+    ],
+    [
+        'route' => 'keyword/{slug:q}/',
+        'target' => [SearchController::class, 'actionKeywords'],
     ],
 ];
