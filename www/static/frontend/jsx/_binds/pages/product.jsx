@@ -120,6 +120,7 @@ import Catalog from "@/components/catalog/Catalog";
         pager={pager}
         catalogUrl={"/api" + elem.dataset.catalogUrl}
         checkoutUrl={elem.dataset.checkoutUrl}
+        searchText=''
       />,
       elem
     );
