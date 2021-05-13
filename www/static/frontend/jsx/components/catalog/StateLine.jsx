@@ -54,8 +54,8 @@ export default class StateLine extends Component {
 
         return (
             <div className={ classes }>
-                <div className="action_button sort" onClick={ this.toggleSortList.bind( this ) }>
-                    <span className="action">Sort by </span>
+                <div className="action_button sort state-line-sort" onClick={ this.toggleSortList.bind( this ) }>
+                    <span className="action state-line-sort__caption">Sort by</span>
                     <span
                         className="active_value show-for-large"
                         onClick={ this.toggleSortList.bind( this ) }
