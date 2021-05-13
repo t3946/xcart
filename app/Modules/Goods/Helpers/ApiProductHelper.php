@@ -71,6 +71,9 @@ class ApiProductHelper
                 $eta_date = date_format($date, "d F Y");
             }
 
+            $dx = $product->distributor;
+            $brand = $product->brand;
+
             $data[] = [
                 'name' => htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES),
                 'url' => $product->getAbsoluteUrl(),
@@ -84,7 +87,17 @@ class ApiProductHelper
                 'brand' => $product->brand->brand ?? null,
                 'brandUrl' => $product->brand ? $product->brand->getAbsoluteUrl() : null,
                 'min_amount' => $product->min_amount,
-                'lead_time_message' => trim($product->lead_time_message),
+                'lead_time' => [
+                    'lead_time_message' => trim($product->lead_time_message),
+                    'dx' => [
+                        'leadtime' => $dx->dx_leadtime,
+                        'leadtime_to' => $dx->dx_leadtime_to,
+                    ],
+                    'brand' => [
+                        'leadtime_from' => $brand->leadtime_from,
+                        'leadtime_to' => $brand->leadtime_to,
+                    ],
+                ],
                 'mult_order_quantity' => $product->mult_order_quantity,
                 'eta_date' => $eta_date,
                 'avail' => $product->r_avail,
