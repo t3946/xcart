@@ -27,7 +27,6 @@ return [
         'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'
     ],
-
     [
         'route' => 'upsmap/{slug:zipcode}',
         'target' => [UpsMapController::class, 'index'],
@@ -44,7 +43,7 @@ return [
         'name' => 'image'
     ],
 
-    // product sliders
+    /** PRODUCT SLIDERS */
     [
         'route' => 'category/bestsellers',
         'target' => [ApiCategoriesController::class, 'actionSliderBestsellers'],
@@ -85,9 +84,9 @@ return [
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'viewApi'
     ],
-        [
-            'route' => 'product/{i:id}/{slug:slug}/',
-            'target' => [ApiProductController::class, 'actionProductGroup'],
-            'name' => 'groupProductApi',
-        ],
+    [
+        'route' => 'product/{i:id}/{slug:slug}/',
+        'target' => [ApiProductController::class, 'actionProductGroup'],
+        'name' => 'groupProductApi',
+    ],
 ];

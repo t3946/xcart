@@ -2,10 +2,10 @@
 
 use Modules\Goods\Controllers\Api\ApiProductController;
 use Modules\Goods\Controllers\NotifyStockController;
-use Modules\Goods\Controllers\SearchController;
 use Modules\Goods\Controllers\CategoryController;
 use Modules\Goods\Controllers\DefaultController;
 use Modules\Goods\Controllers\PromoController;
+use Modules\Goods\Controllers\SearchController;
 
 return [
     /** PRODUCTS ROUTES */
@@ -45,11 +45,7 @@ return [
         'name' => 'tpl'
     ],
 
-
-
     /** CATEGORY ROUTES */
-
-
     [
         'route' => '/category/bestsellers',
         'target' => [PromoController::class, 'actionBestsellers'],
@@ -85,20 +81,16 @@ return [
         'target' => [PromoController::class, 'actionBrands'],
         'name' => 'brands'
     ],
-
-
     [
         'route' => '/category/{i:id}/{slug:slug}/',
         'target' => [CategoryController::class, 'actionViewOld'],
         'name' => 'view'
     ],
-
     [
         'route' => '/category/{i:id}/.*',
         'target' => [CategoryController::class, 'actionViewIndex'],
         'name' => 'view_index'
     ],
-
     [
         'route' => '/categories/',
         'target' => [CategoryController::class, 'actionList'],
@@ -109,8 +101,6 @@ return [
         'target' => [CategoryController::class, 'actionListIndex'],
         'name' => 'list0'
     ],
-
-
 
     /** SEARCH ROUTES */
     [
@@ -123,7 +113,6 @@ return [
         'target' => [SearchController::class, 'actionApiSuggestion'],
         'name' => 'search:suggestion',
     ],
-
     [
         'route' => '/keyword/{slug:q}',
         'target' => [SearchController::class, 'actionKeywords'],
