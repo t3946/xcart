@@ -100,7 +100,7 @@ export default class PayByCardStripe extends Component {
     });
   }
 
-  sendStripeRequest() {
+  async sendStripeRequest(successCallback, errorCallback) {
     const stripe = this.stripe;
     const form = document.forms.CheckoutForm9;
     const clientSecret = this.props.pi;
@@ -117,7 +117,7 @@ export default class PayByCardStripe extends Component {
       return field.value;
     }
 
-    stripe
+    await stripe
       .confirmCardPayment(clientSecret, {
         payment_method: {
           card: this.card,
@@ -157,6 +157,12 @@ export default class PayByCardStripe extends Component {
             top: $(".billing-form-fields").offset().top,
             behavior: "smooth",
           });
+
+          if (typeof errorCallback === "function") {
+            errorCallback();
+          }
+        } else if (typeof successCallback === "function") {
+          successCallback();
         }
       });
   }

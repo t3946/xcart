@@ -48,6 +48,11 @@ export default class Checkout extends Component {
                 render(<PayByCardStripe { ...options } ref={ this.PayByCardStripe }/>, $stripeTarget[0]);
             }
         });
+
+        $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', (e, data) => {
+            console.log('CHECKOUT BEFORE SUBMIT EVENT');
+            this.checkoutSubmit(e, data);
+        } );
     }
 
     formatNumber( number ) {
@@ -76,8 +81,6 @@ export default class Checkout extends Component {
         } else {
             $stripeField.hide();
         }
-
-        $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', () => this.checkoutSubmit() );
     }
 
     componentDidMount() {
@@ -106,8 +109,53 @@ export default class Checkout extends Component {
         }
     }
 
-    checkoutSubmit() {
-        this.PayByCardStripe.current.sendStripeRequest();
+    checkoutSubmit(e, data) {
+        console.log('CHECKOUT SUBMIT', e, data);
+        /**
+         * отправкой формы управляет валидатор, он решеает позволять форме отправить данные или нет -- это не правильно,
+         * надо забрать у него право это решать.
+         */
+        e = data.event;
+        e.preventDefault();
+
+        /**
+         * валидатор проверил форму как смог, и если есть ошибки, не переходить к проверки поля карты
+         */
+        if (data.hasErrors === true) {
+            console.log('VALIDATION ERRORS');
+            return;
+        }
+
+        //если нужно проверять поле карты
+        if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
+            /**
+             * ещё до отправки формы у поля карты уже могут быть ошибки, и если они там есть -- не отпрвлять
+             */
+            const $stripeFieldError = $('#CheckoutForm_pbc_card_holder_name_errors.common-field-error_visible');
+            if ($stripeFieldError.length) {
+                console.log('STRIPE ERRORS BEFORE SEND REQUEST FOR CHECK');
+                //scroll to this errors
+                window.scrollTo({
+                    top: $(".billing-form-fields").offset().top,
+                    behavior: "smooth",
+                });
+                return;
+            }
+
+            /**
+             * после отправки формы, поле карты делает запрос на свой сервер чтобы ещё раз капитально себя проверить.
+             * Это последняя проверка, и если она пройдена -- можно отправлять заказ
+             */
+            this.PayByCardStripe.current.sendStripeRequest(() => {
+                console.log('FORM IS VALID');
+                document.forms.CheckoutForm9.submit();
+            }, () => {
+                console.log('AFTER STRIPE REQUEST WAS FOUNDED NEW ERRORS');
+            });
+        } else {
+            console.log('FORM IS VALID (NO CARD)');
+            document.forms.CheckoutForm9.submit();
+        }
     }
 
     render() {

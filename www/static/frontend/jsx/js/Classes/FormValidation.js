@@ -162,16 +162,9 @@ export default class FormValidation {
             return;
         }
 
-        //stripe field validation (only on new checkout form)
-        const $stripeFieldError = $('#CheckoutForm_pbc_card_holder_name_errors.common-field-error_visible');
-        if ($stripeFieldError.length) {
-            event.preventDefault();
-            return;
-        }
-
-        //pay by card method payment
-        if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
-            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit');
+        // checkout page has custom submit
+        if (document.forms.CheckoutForm9) {
+            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit', { event, hasErrors: this.hasErrors });
         }
     }
 
