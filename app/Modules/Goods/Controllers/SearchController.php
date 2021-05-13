@@ -5,6 +5,7 @@ namespace Modules\Goods\Controllers;
 use Mindy\QueryBuilder\Expression;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\GoodsModule;
+use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\SearchStatsModel;
@@ -130,7 +131,12 @@ class SearchController extends AbstractCatalogController
 
         $q = $this->q ?? $q;
 
-        $this->sort = $_GET['sort'];
+        if ($_GET['sort']) {
+            Xcart::app()->request->session->add('category_sort', $_GET['sort']);
+        }
+
+        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+
         $this->view_internal($q);
     }
 

@@ -31,7 +31,9 @@ export default class ProductsList extends Component {
         //page
         url += `page=${ nextPage }&`;
         //sort
-        url += `sort=${ sort }&`;
+        if ( sort ) {
+            url += `sort=${ sort }&`;
+        }
         //catalog modifier (need for match response format)
         url += 'isCatalogPage=1';
 
