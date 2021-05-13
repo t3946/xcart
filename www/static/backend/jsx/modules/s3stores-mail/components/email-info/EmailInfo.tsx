@@ -17,7 +17,6 @@ export const EmailInfo = () => {
     <div>
       <EmailInfoHeader info={emailInfo} />
       <EmailInfoData data={emailInfo} />
-      {emailInfo.title}
     </div>
   );
 };

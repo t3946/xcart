@@ -9,59 +9,78 @@ import {
   Paper,
   Select,
 } from "@material-ui/core";
+import ReplyIcon from "@material-ui/icons/Reply";
+import ForwardIcon from "@material-ui/icons/Forward";
+import { EmailSend } from "../email-send/EmailSend";
+import { EmailSelectInfo } from "../email-select-info/EmailSelectInfo";
 
 export const EmailInfoData = ({ data }) => {
-  const [age, setAge] = React.useState<number | string>("");
+  const [open, setOpen] = React.useState(false);
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(Number(event.target.value) || "");
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
-    <Paper elevation={0} square={true} className="email-info-data-wrapper">
-      <span>{data.title}</span>
-      <Grid container>
-        <span>From:</span>
-        <span>FAXAGE support@faxage.com</span>
-      </Grid>
-      <Grid container>
-        <span>To:</span>
-        <span>faxage800@s3stores.com reply-to: support@faxage.com</span>
-      </Grid>
-      <span>
-        You have received a new 2 page fax on FAXAGE from (707)792-1362. A copy
-        is attached for your reference. You may also visit http://www.faxage.
-        com to log in and work with your faxes.
-      </span>
-      <Grid container>
-        <Grid xs={2}>
-          <Button variant="outlined">1</Button>
+    <div>
+      <Paper elevation={0} square={true} className="email-info-data-wrapper">
+        <Grid container justify="space-between">
+          <Grid className="email-title-wrap">
+            <Grid container>
+              <span className="email-info-from">from:</span>
+              <span className="email-info-title-text">
+                FAXAGE support@faxage.com
+              </span>
+            </Grid>
+            <Grid container>
+              <span className="email-info-to">To:</span>
+              <span className="email-info-title-text">
+                faxage800@s3stores.com reply-to: support@faxage.com
+              </span>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid container>
+              <span className="email-info-from">from:</span>
+              <span className="email-info-title-text">
+                FAXAGE support@faxage.com
+              </span>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid xs={2}>
-          <FormControl>
-            <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-            <select
-              value={age}
-              onChange={handleChange}
-              defaultValue=""
-              id="grouped-native-select"
+
+        <span className="email-info-text">
+          You have received a new 2 page fax on FAXAGE from (707)792-1362. A
+          copy is attached for your reference. You may also visit
+          http://www.faxage. com to log in and work with your faxes.
+        </span>
+        <Grid container alignItems="center" className="email-info-footer">
+          <Grid xs={2}>
+            <Button className="email-info-btn" variant="outlined">
+              <ReplyIcon className="email-info-btn-icon-reply" />
+              <span>REPLY</span>
+            </Button>
+          </Grid>
+          <Grid container alignItems="center" xs={3}>
+            <EmailSelectInfo />
+          </Grid>
+          <Grid container alignItems="center" xs={7} justify="flex-end">
+            <Button
+              onClick={handleClickOpen}
+              className="email-info-btn"
+              variant="outlined"
             >
-              <option aria-label="None" value="" />
-              <optgroup label="Category 1">
-                <option value={1}>Option 1</option>
-                <option value={2}>Option 2</option>
-              </optgroup>
-              <optgroup label="Category 2">
-                <option value={3}>Option 3</option>
-                <option value={4}>Option 4</option>
-              </optgroup>
-            </select>
-          </FormControl>
+              <ForwardIcon className="email-info-btn-icon" />
+              <span>FORWARD</span>
+            </Button>
+          </Grid>
         </Grid>
-        <Grid container xs={8} justify="flex-end">
-          <Button variant="outlined">1</Button>
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+      <EmailSend open={open} handleClose={handleClose} />
+    </div>
   );
 };
