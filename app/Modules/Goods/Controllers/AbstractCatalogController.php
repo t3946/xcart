@@ -123,9 +123,8 @@ abstract class AbstractCatalogController extends FrontendController
 
         if ($this->getRequest()->getIsAjax()) {
             $pqs = $fh->getFiltrateQS();
+            $pqs = $this->getSortedQS($pqs);
         }
-        $pqs = $this->getSortedQS($pqs);
-//        dd($this->sort);
 
         $pager = $this->getPager($pqs);
 

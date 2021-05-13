@@ -7,6 +7,7 @@ import QuantityGroup from '@/components/product/card/QuantityGroup';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import CatalogContext from '@/components/catalog/CatalogContext';
 import t from '@/i18n';
+import Highlighter from "react-highlight-words";
 
 export default class Card extends Component {
     constructor(props) {
@@ -64,7 +65,12 @@ export default class Card extends Component {
                        title={product.name}
                        className="product-card-title-link"
                     >
-                        {product.name}
+                        <Highlighter
+                          highlightClassName="highlight"
+                          searchWords={[this.props.searchText]}
+                          autoEscape={true}
+                          textToHighlight={product.name}
+                        />,
                     </a>
                 </h4>
 
