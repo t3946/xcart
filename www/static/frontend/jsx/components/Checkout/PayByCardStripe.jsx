@@ -10,11 +10,16 @@ export default class PayByCardStripe extends Component {
       error: "",
     };
 
-    this.data = dataProvider.get('stripe');
+    this.state = dataProvider.get("stripe");
+
+    //update payment intent when checkout(and cart) changed
+    $(document).on("updateRequestSuccess.checkout", (e, res) => {
+      this.setState({ paymentIntent: res.payment_intent });
+    });
   }
 
   async componentDidMount() {
-    this.stripe = await loadStripe(this.data.publicKey);
+    this.stripe = await loadStripe(this.state.publicKey);
 
     const stripe = this.stripe;
     // init stripe field
@@ -22,7 +27,7 @@ export default class PayByCardStripe extends Component {
       locale: "en",
     });
     const button = document.querySelector("button");
-    const clientSecret = this.data.paymentIntent;
+    const clientSecret = this.state.paymentIntent;
     const style = {
       base: {
         color: "#272727",
@@ -93,7 +98,7 @@ export default class PayByCardStripe extends Component {
       },
     });
 
-    this.card.mount("#" + this.data.fieldId);
+    this.card.mount("#" + this.state.fieldId);
 
     this.card.on("change", (event) => {
       document.querySelector("button").disabled = event.empty || event.error;
@@ -105,7 +110,7 @@ export default class PayByCardStripe extends Component {
   async sendStripeRequest(successCallback, errorCallback) {
     const stripe = this.stripe;
     const form = document.forms.CheckoutForm9;
-    const clientSecret = this.data.paymentIntent;
+    const clientSecret = this.state.paymentIntent;
 
     document.querySelector("button").disabled = true;
 
