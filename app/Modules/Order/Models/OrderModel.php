@@ -18,11 +18,8 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Sites\Models\TaxModel;
-use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -653,5 +650,10 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getHash(): string
+    {
+        return md5($this->orderid . $this->total . $this->email);
     }
 }
