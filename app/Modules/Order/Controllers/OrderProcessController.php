@@ -167,6 +167,8 @@ class OrderProcessController extends FrontendController
             $quantity = $post->get('quantity');
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
             CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+            $shipping_rates = self::getShippingRates($order);
+            CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
             CheckoutHelper::updateOrderTotalValues($order);
         }
 
@@ -236,7 +238,9 @@ class OrderProcessController extends FrontendController
         ) {
             CheckoutHelper::updateBillingDetails($order);
             
-            $shipping_rates = self::getShippingRates($order);
+            if (!isset($shipping_rates)) {
+                $shipping_rates = self::getShippingRates($order);
+            }
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
