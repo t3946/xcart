@@ -159,9 +159,7 @@ class OrderProcessController extends FrontendController
         $post = $this->getRequest()->post;
         $cart = Xcart::app()->cart;
         if (!$order = OrderHelper::getCartOrder()) {
-            $order = new OrderModel([
-                'cart_number' => $cart->getCartNumber()
-            ]);
+            return;
         }
 
         if ($post->has('uid') && $post->has('quantity')) {
@@ -173,13 +171,13 @@ class OrderProcessController extends FrontendController
         }
 
         if ($post->has('shipping_rates')) {
-
             $shipping_rates = self::getShippingRates($order);
-
             foreach ($post->get('shipping_rates') as $rate) {
                 CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate, false);
             }
         }
+
+        $order->save();
 
         $form = new CheckoutForm();
         $form->setInstance( $order );
