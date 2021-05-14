@@ -73,6 +73,14 @@ export default ( function () {
 
         $( document ).trigger( 'updateRequestSend.checkout' );
 
+        //duplication firstname from shipping form to contact form
+        if (
+            CheckoutForm_s_firstname.value === CheckoutForm_firstname.value
+            && data['CheckoutForm[s_firstname]']
+        ) {
+            data['CheckoutForm[firstname]'] = data['CheckoutForm[s_firstname]'];
+        }
+
         $.ajax( {
             url: '/api/checkout/update',
             method: 'POST',
