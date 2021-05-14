@@ -108,9 +108,9 @@ class OrderProcessController extends FrontendController
         $ship_module = $app->getModule( 'Shipping' );
 
         $sh_rates = [];
-        foreach ( $cart_groups as $g => $cart_group ) {
-            if ( $shipping_rates = $ship_module::getShipping( $g, $order, $cart_group ) ) {
-                $sh_rates[ $g ] = $shipping_rates;
+        foreach ( $cart_groups as $dx_id => $group ) {
+            if ( $shipping_rates = $ship_module::getShipping( $dx_id, $order, $group ) ) {
+                $sh_rates[ $dx_id ] = $shipping_rates;
             }
         }
 
@@ -177,7 +177,7 @@ class OrderProcessController extends FrontendController
             $shipping_rates = self::getShippingRates($order);
 
             foreach ($post->get('shipping_rates') as $rate) {
-                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate);
+                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate, false);
             }
         }
 

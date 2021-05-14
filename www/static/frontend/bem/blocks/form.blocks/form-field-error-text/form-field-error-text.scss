@@ -1,7 +1,7 @@
 .form-field-error-text:before {
   content: "";
   position: absolute;
-  left: calc(50% - 10px);
+  left: calc(50% - 5px);
   border: 1px solid #ed1c24;
   transform: rotate(38deg) skewX(348deg);
   width: rem-calc(10);

@@ -148,7 +148,6 @@ export default class FormValidation {
 
             field.element.focus( { preventScroll: true } );
         }
-
     }
 
     validateOnSubmit(event){
@@ -163,9 +162,9 @@ export default class FormValidation {
             return;
         }
 
-        //pay by card method payment
-        if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
-            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit');
+        // checkout page has custom submit
+        if (document.forms.CheckoutForm9) {
+            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit', { event, hasErrors: this.hasErrors });
         }
     }
 

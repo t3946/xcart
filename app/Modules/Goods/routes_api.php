@@ -5,6 +5,7 @@ use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
 use Modules\Order\Controllers\Api\UpsMapController;
 use Modules\Goods\Controllers\Api\ApiCategoriesController;
+use Modules\Goods\Controllers\SearchController;
 
 return [
     [
@@ -27,7 +28,6 @@ return [
         'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'
     ],
-
     [
         'route' => 'upsmap/{slug:zipcode}',
         'target' => [UpsMapController::class, 'index'],
@@ -44,7 +44,7 @@ return [
         'name' => 'image'
     ],
 
-    // product sliders
+    /** PRODUCT SLIDERS */
     [
         'route' => 'category/bestsellers',
         'target' => [ApiCategoriesController::class, 'actionSliderBestsellers'],
@@ -85,9 +85,29 @@ return [
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'viewApi'
     ],
-        [
-            'route' => 'product/{i:id}/{slug:slug}/',
-            'target' => [ApiProductController::class, 'actionProductGroup'],
-            'name' => 'groupProductApi',
-        ],
+    [
+        'route' => 'product/{i:id}/{slug:slug}/',
+        'target' => [ApiProductController::class, 'actionProductGroup'],
+        'name' => 'groupProductApi',
+    ],
+
+    /** SEARCH ROUTES */
+    [
+        'route' => 'search',
+        'target' => [SearchController::class, 'actionSearch'],
+        'name' => 'search',
+    ],
+    [
+        'route' => 'search/suggestion',
+        'target' => [SearchController::class, 'actionApiSuggestion'],
+        'name' => 'search:suggestion',
+    ],
+    [
+        'route' => 'keyword/{slug:q}',
+        'target' => [SearchController::class, 'actionKeywords'],
+    ],
+    [
+        'route' => 'keyword/{slug:q}/',
+        'target' => [SearchController::class, 'actionKeywords'],
+    ],
 ];

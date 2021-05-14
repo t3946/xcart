@@ -58,11 +58,12 @@ class CheckoutController extends FrontendController
 
         $order = OrderHelper::getCartOrder();
 
-        if (!$order) {
+        if (!$order && $site) {
             [$order] = OrderModel::objects()->getOrCreate([
                 'cart_number' => $cart->getCartNumber(),
                 'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
             ]);
+            $order->order_prefix = $site->getOrderPrefix();
         }
 
         $checkout_form->setInstance($order);

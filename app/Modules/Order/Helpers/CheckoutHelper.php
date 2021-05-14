@@ -19,10 +19,8 @@ class CheckoutHelper
      * @param int|null $selected_rate
      * @throws Exception
      */
-    public static function updateOrderShippingRates(OrderModel $order, array $shipping_rates, int $selected_rate = null): void
+    public static function updateOrderShippingRates(OrderModel $order, array $shipping_rates, int $selected_rate = null, bool $is_replace = true): void
     {
-        $order->shipping_cost = 0;
-
         foreach ($order->groups as $group) {
             $params = [
                     'shippingid' => null,
@@ -41,7 +39,7 @@ class CheckoutHelper
                 }
 
                 if ($shipping_rate) {
-                    $charge = $shipping_rate->getShippingCharge();
+                    $charge = round($shipping_rate->getShippingCharge(),2);
 
                     $params = [
                         'shippingid' => $shipping_rate->shippingid,
@@ -49,9 +47,12 @@ class CheckoutHelper
                         'shipping_quote' => $shipping_rate->getShippingQuote(),
                         'shipping_gross' => $charge,
                         'shipping_net' => $charge,
+                        'total_gross' => $charge + $group->product_gross,
+                        'total_net' => $charge + $group->product_net,
                     ];
+                } elseif ($is_replace === false) {
+                    continue;
                 }
-                $order->shipping_cost += $group->shipping_gross;
             }
 
             $group->setAttributes($params);
@@ -72,8 +73,12 @@ class CheckoutHelper
                     'orderid' => $order->orderid,
                 ]);
                 $group->setAttributes([
-                    'total_gross' => $cart_group['subtotal'],
-                    'total_net' => $cart_group['subtotal'],
+                    'total_gross' => $cart_group['subtotal'] + $group->shipping_gross,
+                    'product_gross' => $cart_group['subtotal'],
+                    'product_gst' => 0,
+                    'product_pst' => 0,
+                    'product_net' => $cart_group['subtotal'],
+                    'total_net' => $cart_group['subtotal'] + $group->shipping_net,
                     'distributor_price_multiplier' => $group->manufacturer->supplier_products_price_multiplier,
                 ]);
                 $group->save();
@@ -126,7 +131,7 @@ class CheckoutHelper
         foreach ($order->groups as $group)
         {
             $order->shipping_cost += $group->shipping_gross;
-            $order->subtotal += $group->total_gross;
+            $order->subtotal += $group->product_gross;
             $order->tax += $group->total_tax;
         }
 

@@ -46,7 +46,6 @@
             </div>
 
             <div class="columns large-10">
-                {* TODO: currentPage is 0 *}
                 {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
 
                 <div class="catalog-component"
@@ -56,6 +55,7 @@
                      data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
                      data-catalog-url="{$pager->createView()->getUrl(1)}"
                      data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-search-text="{$q|escape}"
                 ></div>
             </div>
         </div>

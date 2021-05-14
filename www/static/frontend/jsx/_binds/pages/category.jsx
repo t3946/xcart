@@ -21,6 +21,7 @@ export default ( () => {
             pager={ pager }
             catalogUrl={ '/api' + elem.dataset.catalogUrl }
             checkoutUrl={ elem.dataset.checkoutUrl }
+            searchText={elem.dataset.searchText}
         />,
         elem,
     );

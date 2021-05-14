@@ -61,8 +61,6 @@ export default ( function () {
         });
     }
 
-
-
     Constructor.prototype.formatNumber = function( number ) {
         return Intl
             .NumberFormat( 'en-US', { style: 'currency', currency: 'USD' } )
@@ -87,6 +85,7 @@ export default ( function () {
                     PaymentMethods.updateTemplate( res.templates.payment_methods );
                 }
 
+                // update shipping methods if templates passed
                 if ( res.templates.shipping_methods ) {
                     ShippingMethods.updateTemplate( res.templates.shipping_methods );
                     $( document ).trigger( 'update.total.checkout', res );

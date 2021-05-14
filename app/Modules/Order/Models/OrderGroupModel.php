@@ -186,6 +186,22 @@ class OrderGroupModel extends Model
                 'class' => DecimalField::class,
                 'null' => true,
             ],
+            'product_net' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'product_gst' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'product_pst' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
+            'product_gross' => [
+                'class' => DecimalField::class,
+                'null' => true,
+            ],
             'distributor_price_multiplier' => [
                 'class' => DecimalField::class,
                 'default' => 1,

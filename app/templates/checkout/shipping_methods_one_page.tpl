@@ -5,7 +5,7 @@
 {set $shipping = $shipping_rates[$gi]}
 
 {set $order_group = $order->groups->get(['manufacturerid' => $gi])}
-<div class="shipping-methods-group">
+<div class="shipping-methods-group" data-dx-id="{$gi}">
     {if $shipping}
         {foreach $shipping as $quote first=$first}
             {set $shipping_model = $quote->shipping}

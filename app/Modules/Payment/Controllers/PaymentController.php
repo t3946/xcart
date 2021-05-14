@@ -8,6 +8,7 @@ use Modules\Core\Components\GlobalConfig;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
@@ -126,7 +127,11 @@ class PaymentController extends Controller
             $order->groups->update(['cb_status' => $order->cb_status]);
         }
 
-        $this->redirect('checkout:review');
+        $route = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+            ? 'checkout:checkoutOnePage'
+            : 'checkout:review';
+
+        $this->redirect($route);
     }
 
     public function return($gateway, $order_id, $slug): void

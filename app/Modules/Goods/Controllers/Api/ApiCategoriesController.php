@@ -148,6 +148,10 @@ class ApiCategoriesController extends AbstractCatalogController
      */
     public function actionCatalogCategory(int $id): void
     {
+        if ($_GET['sort']) {
+            Xcart::app()->request->session->add('category_sort', $_GET['sort']);
+        }
+
         $this->model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
 
         /** @var \Xcart\App\Orm\QuerySet $qs */

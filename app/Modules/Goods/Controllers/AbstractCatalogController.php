@@ -34,7 +34,7 @@ abstract class AbstractCatalogController extends FrontendController
             Xcart::app()->end();
         }
 
-        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+//        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
     }
 
 
@@ -121,13 +121,12 @@ abstract class AbstractCatalogController extends FrontendController
 
         $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
 
-
         if ($this->getRequest()->getIsAjax()) {
             $pqs = $fh->getFiltrateQS();
             $pqs = $this->getSortedQS($pqs);
         }
 
-        $pager =$this->getPager($pqs);
+        $pager = $this->getPager($pqs);
 
         $this->setCanonical($model);
 

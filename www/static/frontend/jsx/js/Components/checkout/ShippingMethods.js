@@ -1,45 +1,38 @@
-export const ShippingMethods = ( function () {
-    let $shippingMethodsGroups = $( '.shipping-methods-group' );
+export const ShippingMethods = (function () {
+  function updateClasses() {
+    $(".shipping-methods-group").each(function (i, elem) {
+      $(elem)
+        .find(".shipping-method-row")
+        .removeClass("shipping-method-row_selected")
+        .find("input:checked")
+        .parents(".shipping-method-row")
+        .addClass("shipping-method-row_selected");
+    });
+  }
 
-    function updateClasses() {
-        $shippingMethodsGroups.each( function ( i, elem ) {
-            $( elem )
-                .find( '.shipping-method-row' )
-                .removeClass( 'shipping-method-row_selected' )
-                .find( 'input:checked' )
-                .parents( '.shipping-method-row' )
-                .addClass( 'shipping-method-row_selected' );
-        } );
-    }
+  const constructor = function () {
+    $(".checkout-cart-content").on("change", "input", function () {
+      updateClasses($(this).parents(".shipping-methods-group"));
+    });
 
-    const constructor = function () {
-        initHandlers();
-        updateClasses();
-    }
+    updateClasses();
+  };
 
-    function initHandlers() {
-        $shippingMethodsGroups.on( 'change', 'input', function () {
-            updateClasses( $( this ).parents( '.shipping-methods-group' ) );
-        } );
-    }
+  /**
+   * update html in old template from new template
+   */
+  constructor.prototype.updateTemplate = function (template) {
+    const $template = $(template).filter(".shipping-methods-group");
 
-    constructor.prototype.updateTemplate = function ( template ) {
-        const $newShippingMethodsGroups = $( template ).filter( '.shipping-methods-group' );
+    $template.each(function (i, e) {
+      const $shippingGroup = $(e);
+      const dxId = $shippingGroup.data('dx-id');
+      //replace old markup on new
+      $(`.shipping-methods-group[data-dx-id=${dxId}]`).html($shippingGroup.html());
+    });
 
-        $newShippingMethodsGroups.each( function ( i, e ) {
-            $shippingMethodsGroups
-                .eq( i )
-                .html( e.outerHTML )
-                .on( 'change', 'input', function () {
-                    updateClasses( $( this ).parents( '.shipping-methods-group' ) );
-                } );
-        } );
+    updateClasses();
+  };
 
-        $shippingMethodsGroups = $( '.shipping-methods-group' ); // = $newShippingMethodsGroups;
-
-        initHandlers();
-        updateClasses();
-    }
-
-    return new constructor();
-} )();
+  return new constructor();
+})();

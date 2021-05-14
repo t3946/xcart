@@ -33,7 +33,8 @@ node_modules
 /www/static/frontend/dist
 /www/static/frontend/versions
 /www/static/frontend/bem/bem.scss
+/www/static/backend/dist
+/www/static/backend/versions
 /www/static/backend/bem/bem.scss
-
 !.gitkeep
 !/skin1_kolin/

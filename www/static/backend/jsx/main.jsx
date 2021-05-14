@@ -2,7 +2,8 @@ import $ from "jquery";
 import "jquery-ui-dist/jquery-ui";
 import "select2";
 import "jquery-form";
-import "./pages/s3stores-mail";
+import "air-datepicker"
+import "air-datepicker/dist/js/i18n/datepicker.en"
 
 import "@/js/ajaxTooltip";
 import "@/js/CCDashboard";
@@ -21,8 +22,9 @@ import "@/js/translates";
 
 (function () {
   "use strict";
+
   window.$ = $;
-  console.log("init");
+
   $(document).ready(function () {
     let f = $("fieldset.collapsible");
     if (f.length) {

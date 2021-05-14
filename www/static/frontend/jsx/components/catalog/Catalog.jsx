@@ -97,6 +97,7 @@ export default class Catalog extends Component {
                         onBeginLoading={ this.onBeginLoading }
                         onEndLoading={ this.onEndLoading }
                         sortKey={ this.state.sortKey }
+                        searchText={ this.props.searchText }
                     />
 
                     { this.state.printStateLines && this.printStateLine() }
