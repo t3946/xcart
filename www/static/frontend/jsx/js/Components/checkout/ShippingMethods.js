@@ -11,7 +11,7 @@ export const ShippingMethods = (function () {
   }
 
   const constructor = function () {
-    $(".shipping-methods-group").on("change", "input", function () {
+    $(".checkout-cart-content").on("change", "input", function () {
       updateClasses($(this).parents(".shipping-methods-group"));
     });
 
@@ -22,16 +22,13 @@ export const ShippingMethods = (function () {
    * update html in old template from new template
    */
   constructor.prototype.updateTemplate = function (template) {
-    const $newTemplate = $(template).filter(".shipping-methods-group");
-    const $oldTemplate = $(".shipping-methods-group");
+    const $template = $(template).filter(".shipping-methods-group");
 
-    $newTemplate.each(function (i, e) {
-      $oldTemplate
-        .eq(i)
-        .html(e.outerHTML)
-        .on("change", "input", function () {
-          updateClasses($(this).parents(".shipping-methods-group"));
-        });
+    $template.each(function (i, e) {
+      const $shippingGroup = $(e);
+      const dxId = $shippingGroup.data('dx-id');
+      //replace old markup on new
+      $(`.shipping-methods-group[data-dx-id=${dxId}]`).html($shippingGroup.html());
     });
 
     updateClasses();
