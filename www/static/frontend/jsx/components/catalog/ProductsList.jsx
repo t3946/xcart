@@ -57,8 +57,6 @@ export default class ProductsList extends Component {
         } ).then( res => res.json() )
            .then(
                ( res ) => {
-                   console.log('PRODUCTS LIST', res);
-
                    this.props.onEndLoading();
                    this.state.items.push( ...res.items );
                    this.setState( {
