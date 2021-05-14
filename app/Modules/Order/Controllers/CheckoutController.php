@@ -54,8 +54,6 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        $checkout_form = new CheckoutForm();
-
         $order = OrderHelper::getCartOrder();
 
         if (!$order && $site) {
@@ -65,6 +63,15 @@ class CheckoutController extends FrontendController
             ]);
             $order->order_prefix = $site->getOrderPrefix();
         }
+
+        //пересчёт стоимости заказа из корзины
+        $shipping_rates = OrderProcessController::getShippingRates( $order );
+        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+        CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
+        CheckoutHelper::updateOrderTotalValues($order);
+        $order->save();
+
+        $checkout_form = new CheckoutForm();
 
         $checkout_form->setInstance($order);
 
@@ -95,16 +102,6 @@ class CheckoutController extends FrontendController
                 $order->extra_model->purchase_order ?? [])
             );
         }
-
-        $shipping_rates = OrderProcessController::getShippingRates( $order );
-
-        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
-
-        CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
-
-        CheckoutHelper::updateOrderTotalValues($order);
-
-        $order->save();
 
         $only_phone_order = count($shipping_rates) < $order->groups->count();
 

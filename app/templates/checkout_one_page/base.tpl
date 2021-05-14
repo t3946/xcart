@@ -99,6 +99,13 @@
 
 
     </header>
+    <script>
+        dataProvider.set('stripe', {
+          publicKey: "{$checkout_form->public_key}",
+          paymentIntent: "{$checkout_form->stripe_payment_intent}",
+          fieldId: "CheckoutForm_pbc_card_details",
+        });
+    </script>
 {/block}
 
 {block "content-wrapper"}

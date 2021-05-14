@@ -78,6 +78,21 @@
     }
 </style>
     <script>
+      /**
+       * dataProvider нужен для централизованного хранения данных, необходимых странице в момент рендеринга
+       */
+      const dataProvider = {
+        data: {  },
+
+        get: function (key) {
+            return this.data[key];
+        },
+
+        set: function(key, value) {
+            return this.data[key] = value;
+        },
+      };
+
         window.app = {
             afterReady:[],
             assets: {

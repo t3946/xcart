@@ -255,6 +255,8 @@ class OrderProcessController extends FrontendController
 
         $response = array_merge($response, OrderHelper::getOrderInfo($order));
 
+        $response['payment_intent'] = $form->stripe_payment_intent;
+
         $order->save();
 
         $this->jsonResponse( $response ?? [] );

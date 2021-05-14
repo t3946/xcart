@@ -160,16 +160,11 @@ export default class Checkout extends Component {
 
     render() {
         const $stripeTarget = $('.stripe-target');
-        const stripeField = {
-            id: $stripeTarget.data('id'),
-            pi: $stripeTarget.data('pi'),
-            public_key: $stripeTarget.data('public_key'),
-        };
 
         return (
             <div className="checkout">
-                { stripeField &&
-                <PayByCardStripe { ...stripeField } ref={ this.PayByCardStripe }/>
+                { $stripeTarget.length &&
+                <PayByCardStripe ref={ this.PayByCardStripe }/>
                 }
             </div>
         );
