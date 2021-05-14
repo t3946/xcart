@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Modules\Order\Forms\CheckoutForm;
+use Modules\Order\Forms\PayByCardForm;
 use Modules\Order\Helpers\CheckoutHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
@@ -249,7 +250,13 @@ class OrderProcessController extends FrontendController
                 $only_phone_order = true;
             }
 
-           $form->setInstance($order);
+            $order->save();
+
+            //TODO need to refactoring
+            $pay_form = new PayByCardForm();
+            $form->stripe_payment_intent = $pay_form->stripe_payment_intent;
+
+            $form->setInstance($order);
 
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
