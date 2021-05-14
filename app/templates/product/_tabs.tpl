@@ -57,7 +57,7 @@
 
         <div class="tabs-panel" id="return-policy">
             <div class="tab-return-policy tab-content">
-                {$warehouse->d_frontend_return_policy?$warehouse->d_frontend_return_policy|html_entity_decode:$config.frontend_return_policy|html_entity_decode}
+                {$warehouse->d_frontend_return_policy?:$config.frontend_return_policy|html_entity_decode}
             </div>
         </div>
 
