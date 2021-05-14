@@ -42,13 +42,15 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
             $order->save();
 
-            $hash = md5($order->orderid . $order->total . $order->email);
-
             try {
 
                 $params = [
                     'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
-                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid, 'slug' => $hash]),
+                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', [
+                        'gateway' => strtolower($pm->processor_name),
+                        'order_id' => $order->orderid,
+                        'slug' => $order->getHash()
+                    ]),
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,

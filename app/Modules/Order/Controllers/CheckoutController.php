@@ -59,11 +59,18 @@ class CheckoutController extends FrontendController
         $order = OrderHelper::getCartOrder();
 
         if (!$order && $site) {
-            [$order] = OrderModel::objects()->getOrCreate([
+            [$order, $is_new] = OrderModel::objects()->getOrCreate([
                 'cart_number' => $cart->getCartNumber(),
                 'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
             ]);
-            $order->order_prefix = $site->getOrderPrefix();
+            if ($is_new) {
+                $order->setAttributes([
+                    'order_prefix' => $site->getOrderPrefix(),
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                ]);
+            }
         }
 
         $checkout_form->setInstance($order);
@@ -82,6 +89,9 @@ class CheckoutController extends FrontendController
                 ]));
 
                 if ($order->save()) {
+                    if ((int)$order->paymentid === 106) {
+                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getHash()]);
+                    }
                     $this->redirect('checkout:payment');
                 }
             } else {
