@@ -26,7 +26,7 @@ class ReportsHelper
         foreach($data as $row) {
             $col = $row[$column];
             unset($row[$column]);
-            $result[$col] = [$row];
+            $result[$col][] = $row;
         }
         return $result ?? [];
     }
