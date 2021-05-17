@@ -110,6 +110,12 @@ export default class FormValidation {
      * @return boolean return true if field is valid else false
      */
     checkForm(inputElement){
+
+        if (inputElement.name === 'CheckoutForm[phone]') {
+            console.log('phone validation');
+        }
+
+
         if(this.form.getAttribute('data-validate') !== 'true'){
             return true;
         }
