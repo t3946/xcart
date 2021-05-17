@@ -349,7 +349,7 @@ class ReportsStore extends OrderSearchStore
 
     public function getReport()
     {
-        $totals = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+        $totals = ReportsHelper::groupByColumn(Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(), 'storefront');
         if ($totals) {
             uasort($totals, function ($a, $b) {
                 $sa = $sb = [];
