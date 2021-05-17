@@ -9,6 +9,7 @@ use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Main\Xcart;
 
 class PayByCardForm extends FrontendForm
 {
@@ -39,13 +40,20 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                $customer = $gw->gateway->createCustomer(
-                    [
-                        'email' => $order->email,
-                        'name' => $order->b_firstname ?: $order->firstname,
-                        'description' => $order->orderid,
-                    ]
-                )->send();
+                if ($stripe_customer = Xcart::app()->request->session->get('stripe_customer_reference')) {
+                    $customer = $gw->gateway->fetchCustomer([
+                        'customerReference' => $stripe_customer
+                    ])->send();
+                } else {
+                    $customer = $gw->gateway->createCustomer(
+                        [
+                            'email' => $order->email,
+                            'name' => $order->b_firstname ?: $order->firstname,
+                            'description' => $order->orderid,
+                        ]
+                    )->send();
+                    Xcart::app()->request->session->add('stripe_customer_reference', $customer->getCustomerReference());
+                }
 
                 $intent = $gw->gateway->createPaymentIntent(
                     array_merge(
