@@ -50,7 +50,6 @@ export default class Checkout extends Component {
         });
 
         $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', (e, data) => {
-            console.log('CHECKOUT BEFORE SUBMIT EVENT');
             this.checkoutSubmit(e, data);
         } );
     }
@@ -163,9 +162,7 @@ export default class Checkout extends Component {
 
         return (
             <div className="checkout">
-                { $stripeTarget.length &&
-                <PayByCardStripe ref={ this.PayByCardStripe }/>
-                }
+                { !!$stripeTarget.length && <PayByCardStripe ref={ this.PayByCardStripe }/> }
             </div>
         );
     }

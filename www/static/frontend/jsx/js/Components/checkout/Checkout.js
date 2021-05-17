@@ -87,8 +87,6 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                $( document ).trigger( 'updateRequestSuccess.checkout', res );
-
                 if ( res.templates.payment_methods && PaymentMethods ) {
                     PaymentMethods.updateTemplate( res.templates.payment_methods );
                 }
@@ -135,6 +133,8 @@ export default ( function () {
                 if ( typeof callback === "function" ) {
                     callback( res );
                 }
+
+                $( document ).trigger( 'updateRequestSuccess.checkout', res );
             },
             error: function ( err ) {
                 console.log( 'error', err );
