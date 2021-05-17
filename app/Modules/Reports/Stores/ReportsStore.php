@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Stores;
 
+use Modules\Reports\Helpers\ReportsHelper;
 use Xcart\App\QueryBuilder\Aggregation\Avg;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Aggregation\Sum;
@@ -150,8 +151,9 @@ class ReportsStore extends OrderSearchStore
             $cnt = count($this->form_data['report']['group_settings']);
             for ($i=0; $i <= $cnt; $i++) {
                 $gn = $this->form_data['report']['group_settings'][$i+1];
-                $totals[empty($gn) ? 'report_total' : $gn] =
-                    Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+                $column = empty($gn) ? 'report_total' : $gn;
+                $total_result = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll();
+                $totals[$column] = ReportsHelper::groupByColumn($total_result, $column);
                 array_pop($this->form_data['report']['group_settings']);
             }
         }
