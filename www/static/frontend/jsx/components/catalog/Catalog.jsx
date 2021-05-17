@@ -1,4 +1,5 @@
 import StateLine      from '@/components/catalog/StateLine';
+import StateLineGroupProduct from '@/components/catalog/StateLineGroupProduct';
 import ProductsList   from '@/components/catalog/ProductsList';
 import CatalogContext from '@/components/catalog/CatalogContext';
 import LoadMore       from '@/components/catalog/LoadMore';
@@ -47,17 +48,20 @@ export default class Catalog extends Component {
     printStateLine() {
         if ( this.state.loaded ) {
             const props = {
-                sortKey: this.state.sortKey,
                 hideSort: this.state.hideSort,
                 sortingOptions: this.state.sortingOptions,
                 classes: {
                     container: 'products-state-line_catalog',
-                }
+                },
             };
 
-            return (
-                <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/>
-            );
+            switch ( this.props.mode ) {
+                case 'group-product':
+                    props.sortKey = this.state.sortKey;
+                    return ( <StateLineGroupProduct { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
+                default:
+                    return ( <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
+            }
         }
     }
 

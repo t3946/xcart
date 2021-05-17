@@ -2,6 +2,7 @@ import PageCount       from '@/components/catalog/PageCount';
 import classnames      from 'classnames';
 import CatalogViewMode from '@/components/catalog/CatalogViewMode';
 import { createRef }   from "preact";
+import t from '@/i18n';
 
 export default class StateLine extends Component {
     constructor( props ) {
@@ -91,22 +92,13 @@ export default class StateLine extends Component {
 
     render(props) {
         return (
-            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) } style="display:block">
-                <div className="row">
-                    <div className="columns large-3 show-for-large">
-                        <div className="page_count_wrap">
-                            <PageCount/>
-                        </div>
-                    </div>
-                    <div className="columns small-12 large-9">
-                        <div className="actions">
-                            <div className="action_group">
-                                { this.sortingOptionsList() }
-                            </div>
-
-                            <CatalogViewMode/>
-                        </div>
-                    </div>
+            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) }>
+                <div className="state-line-counter padding-left-1">
+                    <span className="state-line-title">{t('Product line')}</span>
+                    <PageCount/>
+                </div>
+                <div className="state-line-actions">
+                    <CatalogViewMode/>
                 </div>
             </div>
         );

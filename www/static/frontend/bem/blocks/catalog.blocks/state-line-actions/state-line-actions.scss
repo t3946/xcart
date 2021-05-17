@@ -1,0 +1,5 @@
+.state-line-actions {
+    @include breakpoint(lg up) {
+        padding: 0 rem-calc(16) 0 0;
+    }
+}
