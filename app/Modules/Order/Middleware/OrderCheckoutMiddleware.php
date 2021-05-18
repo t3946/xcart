@@ -15,8 +15,6 @@ class OrderCheckoutMiddleware extends Middleware
     {
         if (!$request->session->has('order_checkout_type')) {
             $type = $request->session->getStorage()->id % 2 ? self::ONE_PAGE_CHECKOUT_TYPE : self::MULTIPLE_PAGE_CHECKOUT_TYPE;
-            //TODO remove after new checkout tests complete
-            $type = self::ONE_PAGE_CHECKOUT_TYPE;
             $request->session->add('order_checkout_type', $type);
         }
     }
