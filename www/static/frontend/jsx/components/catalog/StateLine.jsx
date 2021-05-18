@@ -11,7 +11,10 @@ export default class StateLine extends Component {
         this.hideSort = props.hideSort;
         this.sortButton = createRef();
 
-        this.state = { isOpenSortMenu: false, };
+        this.state = {
+            isOpenSortMenu: false,
+            sortKey: props.sortKey,
+        };
 
         $( document ).click( () => {
             if (this._mounted) {

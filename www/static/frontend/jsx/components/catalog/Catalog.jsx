@@ -53,11 +53,11 @@ export default class Catalog extends Component {
                 classes: {
                     container: 'products-state-line_catalog',
                 },
+                sortKey: this.state.sortKey,
             };
 
             switch ( this.props.mode ) {
                 case 'group-product':
-                    props.sortKey = this.state.sortKey;
                     return ( <StateLineGroupProduct { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
                 default:
                     return ( <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
