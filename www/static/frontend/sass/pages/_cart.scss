@@ -678,6 +678,11 @@ $remove: (
   .button {
     text-transform: uppercase;
     font-weight: 700;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   }
 }
 

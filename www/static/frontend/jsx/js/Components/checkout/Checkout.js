@@ -8,6 +8,9 @@ export default ( function () {
      */
     const excludedFieldsFromUpdate = ['CheckoutForm_s_address', 'CheckoutForm_b_address'];
     const $form = $( '.checkout-shipping-form' );
+    const $submitButton = $form.find('button[type="submit"]');
+
+    console.log($submitButton);
 
     const Constructor = function () {
         $form.on( 'change', 'input, textarea', function ( e ) {
@@ -68,7 +71,19 @@ export default ( function () {
             .substr( 1 );
     };
 
+    /**
+     * Отключить кнопку отправки формы (следует делать во время валидации и запросов к api)
+     *
+     * @param isDisabled значение для атрибута disabled
+    */
+    Constructor.prototype.disableSubmitButton = function (isDisabled) {
+        console.log('disableSubmitButton', isDisabled);
+        $submitButton.prop('disabled', isDisabled);
+    }
+
     Constructor.prototype.update = function ( data, callback = null ) {
+        Constructor.prototype.disableSubmitButton(true);
+
         const self = this;
 
         $( document ).trigger( 'updateRequestSend.checkout' );
@@ -142,6 +157,8 @@ export default ( function () {
             complete() {
                 // hide checkout order total preloader
                 $( document ).trigger( 'updateRequestComplete.checkout' );
+
+                Constructor.prototype.disableSubmitButton(false);
             },
         } );
     }

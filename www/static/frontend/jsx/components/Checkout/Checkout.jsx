@@ -1,5 +1,6 @@
 import { render, createRef }   from 'preact';
 import PayByCardStripe from '@/components/Checkout/PayByCardStripe';
+import CheckoutJs from '@/js/Components/checkout/Checkout';
 
 export default class Checkout extends Component {
     constructor() {
@@ -109,6 +110,8 @@ export default class Checkout extends Component {
     }
 
     checkoutSubmit(e, data) {
+        CheckoutJs.disableSubmitButton(true);
+
         console.log('CHECKOUT SUBMIT', e, data);
         /**
          * отправкой формы управляет валидатор, он решеает позволять форме отправить данные или нет -- это не правильно,
@@ -150,6 +153,7 @@ export default class Checkout extends Component {
                 document.forms.CheckoutForm9.submit();
             }, () => {
                 console.log('AFTER STRIPE REQUEST WAS FOUNDED NEW ERRORS');
+                CheckoutJs.disableSubmitButton(false);
             });
         } else {
             console.log('FORM IS VALID (NO CARD)');
