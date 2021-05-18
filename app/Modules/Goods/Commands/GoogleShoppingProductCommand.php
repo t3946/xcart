@@ -64,7 +64,7 @@ class GoogleShoppingProductCommand extends Command
                 $entries = [];
 
                 foreach ($up as $model) {
-                    if ($product = $model->product) {
+                    if (($product = $model->product) && !$product->isGroupRoot()) {
                         /** @var DistributorModel $dX */
                         $dX = $product->distributor;
 
