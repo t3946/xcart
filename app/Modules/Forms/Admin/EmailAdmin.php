@@ -2,7 +2,7 @@
 
 namespace Modules\Forms\Admin;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Admin\Contrib\Admin;
 use Modules\Forms\Forms\EmailForm;
 use Modules\Forms\Models\EmailModel;
@@ -66,7 +66,7 @@ class EmailAdmin extends Admin
                 'template' => $this->columnDefaultTemplate,
             ],
             'subject' => [
-                'title' => 'Subject',
+                'title' => 'Subject Line / Message',
                 'template' => $this->columnDefaultTemplate,
             ],
             'body' => [

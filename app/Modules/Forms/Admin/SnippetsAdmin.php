@@ -76,5 +76,11 @@ class SnippetsAdmin extends Admin
         return true;
     }
 
+    public function getListItemActions()
+    {
+        return [
+            'update',
+        ];
+    }
 }
 

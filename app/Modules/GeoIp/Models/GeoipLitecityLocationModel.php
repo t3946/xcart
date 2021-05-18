@@ -2,7 +2,7 @@
 
 namespace Modules\GeoIp\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -31,30 +31,30 @@ class GeoipLitecityLocationModel extends Model
     {
         return [
             'locId' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'region' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => '',
                 'null' => false
             ],
             'country' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => '',
                 'null' => false
             ],
             'country_model' => [
                 'field' => 'country',
-                'class' => ForeignField::className(),
-                'sqlType' => Type::STRING,
-                'modelClass' => CountryModel::className(),
+                'class' => ForeignField::class,
+                'sqlType' => Types::STRING,
+                'modelClass' => CountryModel::class,
                 'link' => ['country' => 'code'],
             ],
             'state_model' => [
                 'field' => 'region',
-                'class' => ForeignField::className(),
-                'sqlType' => Type::STRING,
-                'modelClass' => StateModel::className(),
+                'class' => ForeignField::class,
+                'sqlType' => Types::STRING,
+                'modelClass' => StateModel::class,
                 'link' => [
                     'region' => 'code',
                     'country' => 'country_code'
@@ -62,8 +62,8 @@ class GeoipLitecityLocationModel extends Model
             ],
             'blocks' => [
                 'field' => 'locId',
-                'class' => HasManyField::className(),
-                'modelClass' => GeoLitecityBlocks::className(),
+                'class' => HasManyField::class,
+                'modelClass' => GeoLitecityBlocks::class,
                 'link' => ['locId' => 'locId'],
             ],
         ];

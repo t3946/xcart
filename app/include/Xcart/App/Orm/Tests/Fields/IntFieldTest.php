@@ -10,7 +10,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 
 class IntFieldTest extends \PHPUnit_Framework_TestCase
 {

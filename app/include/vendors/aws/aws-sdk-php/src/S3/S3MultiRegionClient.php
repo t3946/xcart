@@ -1,6 +1,7 @@
 <?php
 namespace Aws\S3;
 
+use Aws\Api\Parser\PayloadParserTrait;
 use Aws\CacheInterface;
 use Aws\CommandInterface;
 use Aws\LruArrayCache;
@@ -28,8 +29,6 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise deleteBucketAnalyticsConfigurationAsync(array $args = [])
  * @method \Aws\Result deleteBucketCors(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteBucketCorsAsync(array $args = [])
- * @method \Aws\Result deleteBucketEncryption(array $args = [])
- * @method \GuzzleHttp\Promise\Promise deleteBucketEncryptionAsync(array $args = [])
  * @method \Aws\Result deleteBucketInventoryConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteBucketInventoryConfigurationAsync(array $args = [])
  * @method \Aws\Result deleteBucketLifecycle(array $args = [])
@@ -50,8 +49,6 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise deleteObjectTaggingAsync(array $args = [])
  * @method \Aws\Result deleteObjects(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteObjectsAsync(array $args = [])
- * @method \Aws\Result deletePublicAccessBlock(array $args = [])
- * @method \GuzzleHttp\Promise\Promise deletePublicAccessBlockAsync(array $args = [])
  * @method \Aws\Result getBucketAccelerateConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBucketAccelerateConfigurationAsync(array $args = [])
  * @method \Aws\Result getBucketAcl(array $args = [])
@@ -60,8 +57,6 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise getBucketAnalyticsConfigurationAsync(array $args = [])
  * @method \Aws\Result getBucketCors(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBucketCorsAsync(array $args = [])
- * @method \Aws\Result getBucketEncryption(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getBucketEncryptionAsync(array $args = [])
  * @method \Aws\Result getBucketInventoryConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBucketInventoryConfigurationAsync(array $args = [])
  * @method \Aws\Result getBucketLifecycle(array $args = [])
@@ -80,8 +75,6 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise getBucketNotificationConfigurationAsync(array $args = [])
  * @method \Aws\Result getBucketPolicy(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBucketPolicyAsync(array $args = [])
- * @method \Aws\Result getBucketPolicyStatus(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getBucketPolicyStatusAsync(array $args = [])
  * @method \Aws\Result getBucketReplication(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBucketReplicationAsync(array $args = [])
  * @method \Aws\Result getBucketRequestPayment(array $args = [])
@@ -96,18 +89,10 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise getObjectAsync(array $args = [])
  * @method \Aws\Result getObjectAcl(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getObjectAclAsync(array $args = [])
- * @method \Aws\Result getObjectLegalHold(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getObjectLegalHoldAsync(array $args = [])
- * @method \Aws\Result getObjectLockConfiguration(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getObjectLockConfigurationAsync(array $args = [])
- * @method \Aws\Result getObjectRetention(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getObjectRetentionAsync(array $args = [])
  * @method \Aws\Result getObjectTagging(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getObjectTaggingAsync(array $args = [])
  * @method \Aws\Result getObjectTorrent(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getObjectTorrentAsync(array $args = [])
- * @method \Aws\Result getPublicAccessBlock(array $args = [])
- * @method \GuzzleHttp\Promise\Promise getPublicAccessBlockAsync(array $args = [])
  * @method \Aws\Result headBucket(array $args = [])
  * @method \GuzzleHttp\Promise\Promise headBucketAsync(array $args = [])
  * @method \Aws\Result headObject(array $args = [])
@@ -138,8 +123,6 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise putBucketAnalyticsConfigurationAsync(array $args = [])
  * @method \Aws\Result putBucketCors(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putBucketCorsAsync(array $args = [])
- * @method \Aws\Result putBucketEncryption(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putBucketEncryptionAsync(array $args = [])
  * @method \Aws\Result putBucketInventoryConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putBucketInventoryConfigurationAsync(array $args = [])
  * @method \Aws\Result putBucketLifecycle(array $args = [])
@@ -170,20 +153,10 @@ use GuzzleHttp\Promise;
  * @method \GuzzleHttp\Promise\Promise putObjectAsync(array $args = [])
  * @method \Aws\Result putObjectAcl(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putObjectAclAsync(array $args = [])
- * @method \Aws\Result putObjectLegalHold(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putObjectLegalHoldAsync(array $args = [])
- * @method \Aws\Result putObjectLockConfiguration(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putObjectLockConfigurationAsync(array $args = [])
- * @method \Aws\Result putObjectRetention(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putObjectRetentionAsync(array $args = [])
  * @method \Aws\Result putObjectTagging(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putObjectTaggingAsync(array $args = [])
- * @method \Aws\Result putPublicAccessBlock(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putPublicAccessBlockAsync(array $args = [])
  * @method \Aws\Result restoreObject(array $args = [])
  * @method \GuzzleHttp\Promise\Promise restoreObjectAsync(array $args = [])
- * @method \Aws\Result selectObjectContent(array $args = [])
- * @method \GuzzleHttp\Promise\Promise selectObjectContentAsync(array $args = [])
  * @method \Aws\Result uploadPart(array $args = [])
  * @method \GuzzleHttp\Promise\Promise uploadPartAsync(array $args = [])
  * @method \Aws\Result uploadPartCopy(array $args = [])
@@ -266,7 +239,7 @@ class S3MultiRegionClient extends BaseClient implements S3ClientInterface
                     } catch (AwsException $e) {
                         if ($e->getAwsErrorCode() === 'AuthorizationHeaderMalformed') {
                             $region = $this->determineBucketRegionFromExceptionBody(
-                                $e->getResponse()
+                                $e->getResponse()->getBody()
                             );
                             if (!empty($region)) {
                                 $this->cache->set($cacheKey, $region);
@@ -285,7 +258,7 @@ class S3MultiRegionClient extends BaseClient implements S3ClientInterface
         };
     }
 
-    public function createPresignedRequest(CommandInterface $command, $expires, array $options = [])
+    public function createPresignedRequest(CommandInterface $command, $expires)
     {
         if (empty($command['Bucket'])) {
             throw new \InvalidArgumentException('The S3\\MultiRegionClient'

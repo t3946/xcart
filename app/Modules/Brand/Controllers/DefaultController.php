@@ -1,8 +1,8 @@
 <?php
 namespace Modules\Brand\Controllers;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\BrandModule;
 use Modules\Brand\Models\BrandModel;
 use Modules\Core\Helpers\Cache;
@@ -113,7 +113,7 @@ class DefaultController extends AbstractCatalogController
         ];
     }
 
-    public function getQS($data)
+    public function getQS($data = null)
     {
         return parent::getQS()->filter(['brand__brandid' => $data->brandid]);
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Modules\User\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -82,7 +82,7 @@ class UserModel extends Model
             'distributors' => [
                 'modelClass' => DistributorModel::class,
                 'class' => HasManyField::class,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'link' => ['login' => 'provider']
             ],
             'childs' => [

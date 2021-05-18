@@ -1,7 +1,7 @@
 <?php
 
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOrNot;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Forms\Models\SnippetModel;
 use Modules\Sites\Models\SiteConfigModel;

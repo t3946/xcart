@@ -28,7 +28,7 @@ class TaxRatesForm extends ModelForm
 
     public function getName()
     {
-        return 'Tax rates';
+        return 'Tax rate';
     }
 
     public function getFields()

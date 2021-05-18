@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Modules\Core\Helpers\GuzzleDownloader;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Commands\Command;
+use Xcart\App\Main\Xcart;
 
 class ProductUpcByAsinCommand extends Command
 {
@@ -15,6 +16,9 @@ class ProductUpcByAsinCommand extends Command
     public function handle($arguments = [])
     {
 
+        Xcart::app()->queue->send('feeds', 'Hello world!');
+
+        die();
         $downloader = new GuzzleDownloader(['timeout' => 30, 'use_proxy' => true]);
         $i = 0;
         while ($qs = ProductModel::objects()->filter(['manufacturerid' => 605, 'ASIN__isnull' => false, 'upc' => ''])->paginate(++$i, 1000)) {

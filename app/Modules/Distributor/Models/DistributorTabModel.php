@@ -26,13 +26,19 @@ class DistributorTabModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['distributor_id' => 'manufacturerid']
             ],
-            'name' => CharField::class,
-            'content' => CharField::class,
+            'name' => [
+                'class' => CharField::class,
+                'verboseName' => 'Tab title'
+            ],
+            'content' => [
+                'class' => CharField::class,
+                'verboseName' => 'Tab body'
+            ],
         ];
     }
 
     public function __toString()
     {
-        return (string) ($this->name ?? 'Tab');
+        return (string)($this->name ?? 'Tab');
     }
 }

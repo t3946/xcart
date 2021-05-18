@@ -9,13 +9,18 @@ use Xcart\App\Main\Xcart;
 
 class SnippetHelper
 {
+    public static function parseSnippetCodes(string $value): array
+    {
+        preg_match_all('/{{(.*)}}/U', $value, $matches);
+        return $matches[1] ?? [];
+    }
+
     public static function getSnippets(string $value, array $params): array
     {
         $result = [];
 
-        if (preg_match_all('/{{(.*)}}/U', $value, $matches) && $matches[1]) {
-            /** @var SnippetModel $snippet */
-            foreach (SnippetModel::objects()->filter(['code__in' => $matches[1]]) as $snippet) {
+        if ($codes = self::parseSnippetCodes($value)) {
+            foreach (SnippetModel::objects()->filter(['code__in' => $codes]) as $snippet) {
                 $result["{{{$snippet->code}}}"] = $snippet->render($params);
             }
         }

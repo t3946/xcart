@@ -5,9 +5,9 @@ define("CIDEV_CRON_START", "CRON");
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/init.php";
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Goods\Helpers\ProductsToMoveHelper;
 use Modules\Goods\Models\ProductCategoriesModel;
 use Modules\Goods\Models\ProductModel;

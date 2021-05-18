@@ -3,8 +3,8 @@
 namespace Modules\Goods\Stores;
 
 
-use Mindy\QueryBuilder\Aggregation\Max;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Aggregation\Max;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Models\PricingModel;

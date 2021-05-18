@@ -63,16 +63,17 @@
 <td align="right">
 
 {if $convert_to_regular_order_show_button}
-	<input type="button" value="Convert to regular order" onclick="javascript: $('#mode_ordereditform2').val('convert_to_regular_order'); this.form.submit();" />
+	<input type="button" value="Convert to regular order" onclick="$('#mode_ordereditform2').val('convert_to_regular_order'); this.form.submit();" />
 {/if}
 
 </td>
 </tr>
 </table>
-
+{elseif $oOrder->cb_status === 'Q'}
+    <input type="button" value="Convert to Purchase order"
+           onclick="$('#mode_ordereditform2').val('convert_to_purchase_order'); this.form.submit();"/>
 {/if}
-
-  </td>
+</td>
 </tr>
 <tr>
   <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
@@ -107,7 +108,7 @@
 <tr>
   <td nowrap="nowrap"><b>{$lng.lbl_first_name}:</b></td>
   <td width="100%" nowrap="nowrap">{if !$static}<input type="text" name="customer_info[firstname]" value="{$customer.firstname}" style="width: 55%; {if $oOrder->isPurchaseOrder() && $customer.firstname|lower eq 'unknown'}background-color: #F4CCCC;{/if}" />{else}{$customer.firstname}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a>
+&nbsp;<a target="_blank" href="https://www.google.com/search?q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a>
 &nbsp;{if in_array($order.fraud_status, array('E','R'))}
     <a target="_blank" href="http://www.spokeo.com/search?q={$customer.firstname|replace:' ':'+'}" style="color: #1F08F8;">Spokeo FN</a>
  {/if}
@@ -153,7 +154,7 @@
               </span>
           {/if}
           <br>
-          <a target="_blank" href="https://www.google.com/#q={$google_phone}" style="color: #1F08F8;">Google #</a>
+          <a target="_blank" href="https://www.google.com/search?q={$google_phone}" style="color: #1F08F8;">Google #</a>
           {if in_array($order.fraud_status, array('E', 'R'))}
           &shy;
           <a target="_blank" href="http://www.spokeo.com/search?q={$google_phone}" style="color: #1F08F8;">Spokeo #</a>
@@ -180,7 +181,7 @@
   <td><b>{$lng.lbl_email}:</b></td>
   <td width="100%" nowrap="nowrap">
   {if !$static}<input type="text" name="customer_info[email]" value="{$customer.email}" style="width: 55%; {if $oOrder->isPurchaseOrder() && $customer.email|lower eq 'unknown@unknown.com'}background-color: #F4CCCC;{/if}" />{else}{$customer.email}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google @</a>
+&nbsp;<a target="_blank" href="https://www.google.com/search?q={$customer.email}{$fraud_Google_email_search_exclusions}" style="color: #1F08F8;">Google @</a>
  {if in_array($order.fraud_status, array('E', 'R'))}
 &nbsp;  <a target="_blank" href="http://www.spokeo.com/email-search/search?e={$customer.email}" style="color: #1F08F8;">Spokeo @</a>
  {/if}
@@ -323,7 +324,7 @@
 
   <tr>
     <td width="24%"><b>Full Name:</b> </td>
-    <td width="76%"><input style="width: 55%; {if $order.po_details.name_of_purchaser|lower eq 'unknown'}background-color: #F4CCCC;{/if}" type="text" name="name_of_purchaser" id="name_of_purchaser" value="{$order.po_details.name_of_purchaser|escape}" />&nbsp;<a target="_blank" href="https://www.google.com/#q={$order.po_details.name_of_purchaser|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a></td>
+    <td width="76%"><input style="width: 55%; {if $order.po_details.name_of_purchaser|lower eq 'unknown'}background-color: #F4CCCC;{/if}" type="text" name="name_of_purchaser" id="name_of_purchaser" value="{$order.po_details.name_of_purchaser|escape}" />&nbsp;<a target="_blank" href="https://www.google.com/search?q={$order.po_details.name_of_purchaser|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a></td>
   </tr>
 
   <tr>
@@ -331,7 +332,7 @@
     <td width="76%">
 <input type="text" name="purchase_manager_phone" id="purchase_manager_phone" value="{$order.po_details.purchase_manager_phone|escape}" style="width: 29%; {if $order.po_details.purchase_manager_phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}" />
 
-  <b>{$lng.lbl_phone_ext}</b> <input type="text" name="purchase_manager_phone_ext" id="purchase_manager_phone_ext" value="{$order.po_details.purchase_manager_phone_ext|escape}" style="width: 10%;" maxlength="6" />&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_purchase_manager_phone}" style="color: #1F08F8;">Google phone</a>
+  <b>{$lng.lbl_phone_ext}</b> <input type="text" name="purchase_manager_phone_ext" id="purchase_manager_phone_ext" value="{$order.po_details.purchase_manager_phone_ext|escape}" style="width: 10%;" maxlength="6" />&nbsp;<a target="_blank" href="https://www.google.com/search?q={$google_purchase_manager_phone}" style="color: #1F08F8;">Google phone</a>
 
     </td>
   </tr>
@@ -368,14 +369,14 @@
 
   <tr>
     <td width="24%"><b>Full Name:</b> </td>
-    <td width="76%"><input style="width: 55%; {if $order.po_details.accounts_payable_full_name|lower eq 'unknown'}background-color: #F4CCCC;{/if}" type="text" name="accounts_payable_full_name" id="accounts_payable_full_name" value="{$order.po_details.accounts_payable_full_name|escape}" />&nbsp;&nbsp;<a target="_blank" href="https://www.google.com/#q={$order.po_details.accounts_payable_full_name|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a></td>
+    <td width="76%"><input style="width: 55%; {if $order.po_details.accounts_payable_full_name|lower eq 'unknown'}background-color: #F4CCCC;{/if}" type="text" name="accounts_payable_full_name" id="accounts_payable_full_name" value="{$order.po_details.accounts_payable_full_name|escape}" />&nbsp;&nbsp;<a target="_blank" href="https://www.google.com/search?q={$order.po_details.accounts_payable_full_name|replace:' ':'+'}" style="color: #1F08F8;">Google FN</a></td>
   </tr>
 
   <tr>
     <td width="24%"><b>Phone:</b> </td>
     <td width="76%">
       <input type="text" name="accounts_payable_phone" id="accounts_payable_phone" value="{$order.po_details.accounts_payable_phone|escape}" style="width: 29%; {if $order.po_details.accounts_payable_phone eq '(000) 000-0000'}background-color: #F4CCCC;{/if}" />
-  <b>{$lng.lbl_phone_ext}</b> <input type="text" name="accounts_payable_phone_ext" id="accounts_payable_phone_ext" value="{$order.po_details.accounts_payable_phone_ext|escape}" style="width: 10%;" maxlength="6" />&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_accounts_payable_phone}" style="color: #1F08F8;">Google phone</a>
+  <b>{$lng.lbl_phone_ext}</b> <input type="text" name="accounts_payable_phone_ext" id="accounts_payable_phone_ext" value="{$order.po_details.accounts_payable_phone_ext|escape}" style="width: 10%;" maxlength="6" />&nbsp;<a target="_blank" href="https://www.google.com/search?q={$google_accounts_payable_phone}" style="color: #1F08F8;">Google phone</a>
     </td>
   </tr>
 
@@ -412,14 +413,14 @@
 <br />
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 <tr>
-  <td width="47%" height="25"><b>{$lng.lbl_shipping_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_shipping_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
+  <td width="47%" height="25"><b>{$lng.lbl_shipping_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/search?q={$google_shipping_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
       {if in_array($order.fraud_status, array('E', 'R'))}
       <a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_shipping_address}" style="color: #1F08F8;">Spokeo this address</a>
       {/if}
   </td>
 
   <td width="5%">&nbsp;</td>
-  <td width="47%" height="25"><b>{$lng.lbl_billing_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_billing_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
+  <td width="47%" height="25"><b>{$lng.lbl_billing_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/search?q={$google_billing_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;
       {if in_array($order.fraud_status, array('E', 'R'))}
         <a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_billing_address}" style="color: #1F08F8;">Spokeo this address</a>
       {/if}
@@ -440,7 +441,7 @@
   <tr>
     <td><b>{$lng.lbl_first_name}:</b> </td>
     <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[s_firstname]" value="{$oOrder->getShippingFirstName()}" />{else}{$oOrder->getShippingFirstName()}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingFirstName()|replace:' ':'+'}+{$oOrder->getShippingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
+&nbsp;<a target="_blank" href="https://www.google.com/search?q={$oOrder->getShippingFirstName()|replace:' ':'+'}+{$oOrder->getShippingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
     </td>
   </tr>
 {/if}
@@ -453,7 +454,7 @@
   <tr>
     <td>Company:</td>
         <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[2]" value="{$oOrder->getShippingCompany()}" />{else}{$oOrder->getShippingCompany()}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>{*{$oOrder->getShippingCompany()|escape|var_dump}*}
+&nbsp;<a target="_blank" href="https://www.google.com/search?q={$oOrder->getShippingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>{*{$oOrder->getShippingCompany()|escape|var_dump}*}
         </td>
   </tr>
 {if $customer.default_fields.s_address}
@@ -522,7 +523,7 @@
   <tr>
     <td><b>{$lng.lbl_first_name}:</b> </td>
     <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[b_firstname]" value="{$oOrder->getBillingFirstName()}" />{else}{$oOrder->getBillingFirstName()}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingFirstName()|replace:' ':'+'}+{$oOrder->getBillingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
+&nbsp;<a target="_blank" href="https://www.google.com/search?q={$oOrder->getBillingFirstName()|replace:' ':'+'}+{$oOrder->getBillingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
     </td>
   </tr>
 {/if}
@@ -535,7 +536,7 @@
   <tr>
     <td>Company:</td>
     <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[1]" value="{$oOrder->getBillingCompany()}" />{else}{$oOrder->getBillingCompany()}{/if}
-    &nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>
+    &nbsp;<a target="_blank" href="https://www.google.com/search?q={$oOrder->getBillingCompany()|escape:"url"}" style="color: #1F08F8;">Google company</a>
     </td>
   </tr>
 {if $customer.default_fields.b_address}

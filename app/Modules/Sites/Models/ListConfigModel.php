@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Sites\SitesModule;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;

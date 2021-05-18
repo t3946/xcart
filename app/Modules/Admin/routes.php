@@ -8,7 +8,7 @@ use Modules\Admin\Controllers\FieldController;
 
 return [
     [
-        'route' => '',
+        'route' => '/',
         'target' => [CommonController::class, 'index'],
         'name' => 'index'
     ],

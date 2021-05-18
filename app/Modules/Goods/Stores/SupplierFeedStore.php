@@ -37,14 +37,9 @@ class SupplierFeedStore extends BaseStore
 
     public function isValid()
     {
-        if (empty($this->products) || !\is_array($this->products)) {
+        if (empty($this->products) || !is_array($this->products)) {
             $this->errors[] = GoodsModule::t('manufacturerid: {mid}. No products found. ({feed_type})',
                 ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText()]);
-            return false;
-        }
-        if ($this->count() != $this->products_in_feed) {
-            $this->errors[] = GoodsModule::t('manufacturerid: {mid}. Corrupted feed file (by products in feed count). ({feed_type}) {c1} vs {c2}',
-                ['{mid}' => $this->feed_model->manufacturerid, '{feed_type}' => $this->feed_model->getField('feed_type')->toText(), '{c1}' => $this->count(), '{c2}' => $this->products_in_feed]);
             return false;
         }
         if ($this->supplier_id != $this->feed_model->manufacturerid) {
@@ -133,9 +128,7 @@ class SupplierFeedStore extends BaseStore
         $data['product'] = $data['title'] ?? $data['product'];
         $data['list_price'] = $data['listprice'] ?? $data['list_price'];
 
-        $data = array_filter($data, function ($v) {
-            return $v !== null;
-        });
+        $data = array_filter($data, static fn($v) => $v !== null);
 
         if (isset($data['eta_date_mm_dd_yyyy'])) {
             $data['eta_date_mm_dd_yyyy'] = strtotime($data['eta_date_mm_dd_yyyy']);

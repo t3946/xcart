@@ -1,5 +1,7 @@
 <?php
-use Mindy\QueryBuilder\QueryBuilder;
+
+use Modules\Goods\Models\ProductModel;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Goods\Models\ProductCategoryTermsModel;
 use Xcart\Connection;
 
@@ -44,15 +46,7 @@ SQL;
 
     print_r($pc_options[$storefrontid]);
 
-    $mcAccCountSQL = QueryBuilder::getInstance(Connection::getInstance())
-        ->setTypeSelect()
-        ->select('count(*)')
-        ->from('xcart_products')
-        ->setAlias('p')
-        ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
-        ->where(['ps.sfid' => $storefrontid, 'forsale' => 'Y'])
-        ->toSQL();
-    $mcAccCount = Connection::getInstance()->executeQuery($mcAccCountSQL)->fetchColumn();
+    $mcAccCount = ProductModel::forsale()->filter(['sites__storefrontid' => $storefrontid])->count();
 
     if ($pc_options[$storefrontid]["classification_approval_rate"] >= 0
         && $count_AC_products < $pc_options[$storefrontid]["amount_of_products_for_autoclassify_queue"]

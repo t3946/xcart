@@ -13,6 +13,7 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Helpers\DiscountHelper;
+use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
@@ -77,7 +78,7 @@ class OrderEventHelper
                     'orderid' => $model->orderid,
                     'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
                     'login' => Xcart::app()->user->login,
-                    'log' => \nl2br(implode(PHP_EOL, $log_message))
+                    'log' => nl2br(implode(PHP_EOL, $log_message))
                 ])
             )->save();
 
@@ -145,8 +146,11 @@ class OrderEventHelper
 
                             $order = $order_id ? OrderModel::objects()->get(['orderid' => $order_id]) : null;
 
-                            if ($order && \in_array($newValue, [
-                                OrderStatusModel::ORDER_STATUS_UNPAID, OrderStatusModel::ORDER_STATUS_CANCELED, OrderStatusModel::ORDER_STATUS_DECLINED
+                            if ($order && in_array($newValue, [
+                                    OrderStatusModel::ORDER_STATUS_UNPAID,
+                                    OrderStatusModel::ORDER_STATUS_CANCELED,
+                                    OrderStatusModel::ORDER_STATUS_DECLINED,
+                                    OrderStatusModel::ORDER_STATUS_FAILED,
                                 ], true))
                             {
                                 $order->cart_number = null;

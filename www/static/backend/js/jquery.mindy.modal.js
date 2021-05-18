@@ -116,11 +116,6 @@
                     return true;
                 });
 
-                $forms.find("[type='submit']").off("click").on("click", function (e) {
-                    e.preventDefault();
-                    self._submitHandler.call(self, this);
-                    return false;
-                });
                 $forms.off("submit").on("submit", function (e) {
                     e.preventDefault();
                     self._submitHandler.call(self, this);

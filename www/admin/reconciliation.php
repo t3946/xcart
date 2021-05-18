@@ -2,9 +2,9 @@
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderReconciliationHelper;
 use Modules\Order\Models\OrderGroupInvoiceModel;
@@ -310,7 +310,14 @@ if ($REQUEST_METHOD == "POST") {
             $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date"] = $posted_data["date_csv"]["end_date"];
             $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date_str"] = $posted_data["date_csv"]["end_date_str"];
         }
-    }
+    }/* else {
+        foreach ($all_tabs as $t) {
+            unset(
+                $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date"],
+                $search_data["reconciliation_tab_" . $t]["date_csv"]["end_date_str"]
+            );
+        }
+    }*/
 
     if (!empty($date_Start)) {
         $posted_data["date"]["start_date_str"] = $date_Start;
@@ -804,7 +811,6 @@ SQL
         }
 
     } else {
-
         $_filter = [
             'date_csv__gte' => $search_data["reconciliation_tab_" . $tab]["date_csv"]["start_date"],
             'date_csv__lte' => ($search_data["reconciliation_tab_" . $tab]["date_csv"]["end_date"]) ?: time(),
@@ -958,7 +964,7 @@ if ($tab == "inventory") {
         ->order([$o_direction . $order_by])
         ->toSQL();
 
-    $cidev_daily_fba_stats = Connection::getInstance()->fetchAll($sql);
+    $cidev_daily_fba_stats = Connection::getInstance()->fetchAllAssociative($sql);
 
     $smarty->assign("cidev_daily_fba_stats", $cidev_daily_fba_stats);
 }

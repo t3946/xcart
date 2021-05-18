@@ -2,13 +2,13 @@
 namespace Modules\Dashboard\Stores;
 
 use DateTime;
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Max;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Max;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Order\Helpers\OrderHelper;
@@ -802,7 +802,7 @@ class OrderSearchStore extends BaseStore
         $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
         $qs->addSelect(['shipping.important']);
 
-        return (int)Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
+        return (int)Connection::getInstance()->fetchAssociative("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`")['order'];
     }
 
     public function getCachedPriorityShippingCount():? int
@@ -920,10 +920,10 @@ class OrderSearchStore extends BaseStore
         }
 
         $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S', 'EL']])->toSQL();
-        $lo_messages = $connection->fetchAll($lom_sql);
+        $lo_messages = $connection->fetchAllAssociative($lom_sql);
 
         $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Max('date')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
-        $lo_activity = $connection->fetchAll($loa_sql);
+        $lo_activity = $connection->fetchAllAssociative($loa_sql);
 
         OrderHelper::getMaxEtaTimeByOrder($order_ids);
         OrderHelper::getCountEvents($order_ids);

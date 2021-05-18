@@ -156,12 +156,12 @@
             font-weight: 700;
             width: 44%;
             color: black;
-            //float: left;
+            word-wrap: break-word;
           }
 
           .value {
             max-width: 55%;
-
+            word-wrap: break-word;
             display: inline-block;
             color: #3a3a3a;
           }

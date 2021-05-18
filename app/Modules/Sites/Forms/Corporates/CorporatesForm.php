@@ -4,7 +4,7 @@
 namespace Modules\Sites\Forms\Corporates;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\CorporateModel;

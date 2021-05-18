@@ -18,6 +18,11 @@ class ImageField extends FileField
     public $inputTemplate = 'forms/field/image/input.tpl';
     public $fieldType = 'image';
 
+    public function getHtmlAccept()
+    {
+        return 'image/*';
+    }
+
     public function getSizeImage()
     {
         if(!$this->sizeShowValue){

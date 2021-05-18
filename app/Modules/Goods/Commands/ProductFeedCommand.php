@@ -14,6 +14,7 @@ use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Helpers\SupplierFeedHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Stores\SupplierFeedStore;
+use Throwable;
 use Xcart\App\Commands\Command;
 use Xcart\App\Main\Xcart;
 

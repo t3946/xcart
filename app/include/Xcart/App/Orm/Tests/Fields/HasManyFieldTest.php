@@ -14,7 +14,7 @@
 
 namespace Xcart\App\Orm\Tests\Fields;
 
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\Tests\OrmDatabaseTestCase;
 use Xcart\App\Orm\Tests\Models\Category;
 use Xcart\App\Orm\Tests\Models\Color;

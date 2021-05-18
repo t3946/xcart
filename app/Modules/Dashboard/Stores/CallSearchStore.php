@@ -2,8 +2,8 @@
 
 namespace Modules\Dashboard\Stores;
 
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Xcart\App\Orm\Manager;

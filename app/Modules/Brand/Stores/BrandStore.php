@@ -3,9 +3,9 @@
 namespace Modules\Brand\Stores;
 
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;

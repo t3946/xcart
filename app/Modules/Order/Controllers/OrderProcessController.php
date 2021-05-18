@@ -28,9 +28,9 @@ class OrderProcessController extends FrontendController
                     'model' => $order,
                     'h1' => "Order # {$order->getOrderNumber()} has been deleted from our system.",
                     'content' => "You won't receive any further communication from us.<br/>Have a lovely day!"
-                ] );
-                $order->groups->update( [ 'cb_status' => OrderStatusModel::ORDER_STATUS_CANCELED ] );
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_CANCELED;
+                ]);
+                $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_FAILED]);
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_FAILED;
                 $order->save();
                 ( new OrderLogModel( [
                     'orderid' => $order->orderid,

@@ -30,7 +30,7 @@ class TaxModel extends Model
             'tax_name' => [
                 'class' => CharField::class,
                 'requires' => true,
-                'verboseName' => 'Tax service name'
+                'verboseName' => 'Tax name'
             ],
             'regnumber' => [
                 'class' => CharField::class,
@@ -44,7 +44,7 @@ class TaxModel extends Model
                     'PS' => 'Product subtotal',
                     'SH' => 'Product subtotal + Shipping',
                 ],
-                'verboseName' => 'Apply tax to'
+                'verboseName' => 'Tax is applied to'
             ],
             'address_type' => [
                 'class' => CharField::class,
@@ -52,32 +52,32 @@ class TaxModel extends Model
                     'S' => 'Shipping address',
                     'B' => 'Billing address',
                 ],
-                'verboseName' => 'Rates depend on'
+                'verboseName' => 'Tax is activated based on'
             ],
             'is_vat' => [
                 'class' => BooleanField::class,
                 'default' => false,
-                'verboseName' => 'VAT'
+                'verboseName' => 'Tax type'
             ],
             'price_includes_tax' => [
                 'class' => BooleanField::class,
                 'default' => false,
-                'verboseName' => 'Included into the product price'
+                'verboseName' => 'Tax is included into the product price'
             ],
-
             'position' => [
                 'class' => IntField::class,
                 'default' => 0
-            ],
-            'active' => [
-                'class' => BooleanField::class,
-                'default' => false,
-                'vrboseName' => 'Status'
             ],
             'rates' => [
                 'class' => HasManyField::class,
                 'modelClass' => TaxRatesModel::class,
                 'link' => ['taxid' => 'taxid'],
+                'verboseName' => 'Tax rates'
+            ],
+            'active' => [
+                'class' => BooleanField::class,
+                'default' => false,
+                'verboseName' => 'Activate tax'
             ],
             'sites' => [
                 'class' => ManyToManyField::class,

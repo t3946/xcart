@@ -12,7 +12,7 @@ use Xcart\App\Form\Fields\HiddenField;
 
 class DistributorReturnPolicyForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
@@ -21,6 +21,7 @@ class DistributorReturnPolicyForm extends DistributorForm
             'd_re_stocking_fee_for_authorized_returns',
             'd_re_stocking_fee_for_unauthorized_returns',
             'd_distributor_return_policy',
+            'd_frontend_return_policy',
         ]];
     }
 
@@ -97,6 +98,13 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_d_distributor_return_policy_text'),
+            ],
+            'd_frontend_return_policy' => [
+                'class' => EditorField::class,
+                'label' => 'Front-end return policy',
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hint' => LanguageModel::translate('help_d_frontend_return_policy_text'),
             ]
         ];
     }

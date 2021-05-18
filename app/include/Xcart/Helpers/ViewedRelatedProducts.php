@@ -107,7 +107,7 @@ LIMIT 1)
 ORDER BY FIELD(resource_type, 'S', 'P'), POSITION DESC;
 SQL;
 
-        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
+        $resources = Xcart::app()->db->getConnection()->fetchAllAssociative($sql);
 
         if (empty($resources)) {
             return [];
@@ -248,7 +248,7 @@ FROM xcart_products_categories
 WHERE productid in ({$p_ids}) 
 ORDER BY FIELD(main, 'Y', 'N')
 SQL;
-        $categories = Xcart::app()->db->getConnection()->fetchAll($sql);
+        $categories = Xcart::app()->db->getConnection()->fetchAllAssociative($sql);
 
         if (!empty($categories))
         {

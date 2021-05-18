@@ -2,7 +2,7 @@
 
 namespace Modules\Cart\Discounts\Restrictions;
 
-use Mindy\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\CouponRestrictions\CountUsesRestrictionForm;
 use Modules\Cart\Models\CouponOrderModel;

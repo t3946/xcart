@@ -38,7 +38,7 @@ class Trackings extends BackwardCompatible
         }
 
         $params['tracking_number'] = $trackingNumber;
-        return $this->request->send('trackings', 'POST', ['tracking' => $params]);
+        return $this->request->send('POST', 'trackings', ['tracking' => $params]);
     }
 
     /**
@@ -58,10 +58,11 @@ class Trackings extends BackwardCompatible
      * https://www.aftership.com/docs/api/4/trackings/delete-trackings
      * @param string $slug The slug of the tracking provider
      * @param string $trackingNumber The tracking number which is provider by tracking provider
+     * @param array $additionalFields The tracking additional_fields required by some courier
      * @return array Response body
      * @throws AfterShipException
      */
-    public function delete($slug, $trackingNumber)
+    public function delete($slug, $trackingNumber, $additionalFields = [])
     {
         if (empty($slug)) {
             throw new AfterShipException('Slug cannot be empty');
@@ -71,7 +72,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $slug . '/' . $trackingNumber, 'DELETE');
+        return $this->request->send('DELETE', 'trackings/' . $slug . '/' . $trackingNumber . TrackingAdditionalFields::buildQuery($additionalFields, '?'));
     }
 
     /**
@@ -87,7 +88,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $trackingId, 'DELETE');
+        return $this->request->send('DELETE', 'trackings/' . $trackingId);
     }
 
     /**
@@ -98,7 +99,7 @@ class Trackings extends BackwardCompatible
      */
     public function all(array $params = [])
     {
-        return $this->request->send('trackings', 'GET', $params);
+        return $this->request->send('GET', 'trackings', $params);
     }
 
     /**
@@ -120,7 +121,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $slug . '/' . $trackingNumber, 'GET', $params);
+        return $this->request->send('GET', 'trackings/' . $slug . '/' . $trackingNumber, $params);
     }
 
     /**
@@ -137,7 +138,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $trackingId, 'GET', $params);
+        return $this->request->send('GET', 'trackings/' . $trackingId, $params);
     }
 
     /**
@@ -159,7 +160,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $slug . '/' . $trackingNumber, 'PUT', ['tracking' => $params]);
+        return $this->request->send('PUT', 'trackings/' . $slug . '/' . $trackingNumber, ['tracking' => $params]);
     }
 
     /**
@@ -176,7 +177,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $trackingId, 'PUT', ['tracking' => $params]);
+        return $this->request->send('PUT', 'trackings/' . $trackingId, ['tracking' => $params]);
     }
 
     /**
@@ -184,10 +185,11 @@ class Trackings extends BackwardCompatible
      * https://www.aftership.com/docs/api/4/trackings/post-trackings-slug-tracking_number-retrack
      * @param string $slug The slug of tracking provider
      * @param string $trackingNumber The tracking number which is provider by tracking provider
+     * @param array $additionalFields The tracking additional_fields required by some courier
      * @return array Response body
      * @throws AfterShipException
      */
-    public function retrack($slug, $trackingNumber)
+    public function retrack($slug, $trackingNumber, $additionalFields = [])
     {
         if (empty($slug)) {
             throw new AfterShipException("Slug cannot be empty");
@@ -197,7 +199,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking number cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $slug . '/' . $trackingNumber . '/retrack', 'POST');
+        return $this->request->send('POST', 'trackings/' . $slug . '/' . $trackingNumber . '/retrack' . TrackingAdditionalFields::buildQuery($additionalFields, '?'));
     }
 
     /**
@@ -213,7 +215,7 @@ class Trackings extends BackwardCompatible
             throw new AfterShipException('Tracking ID cannot be empty');
         }
 
-        return $this->request->send('trackings/' . $trackingId . '/retrack', 'POST');
+        return $this->request->send('POST', 'trackings/' . $trackingId . '/retrack');
     }
 
 }

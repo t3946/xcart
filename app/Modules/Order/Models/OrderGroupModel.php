@@ -3,7 +3,7 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Types;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
@@ -18,6 +18,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Manager;
@@ -42,6 +43,7 @@ use Xcart\OrderGroup;
  * @property bool notify_sent
  * @property Manager|OrderDetailModel[] detail_models
  * @property float total_tax
+ * @property OrderOffHourMessageModel|null off_hours_message
  * @property OrderGroupTaxModel[]|Manager tax_rates
  */
 class OrderGroupModel extends Model
@@ -116,6 +118,22 @@ class OrderGroupModel extends Model
                 'link' => ['d2a_status' => 'code'],
                 'null' => true,
             ],
+            'c2a_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'c2a_status',
+                'sqlType' => Types::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['c2a_status' => 'code'],
+                'null' => true,
+            ],
+            'po_status_model' => [
+                'class' => ForeignField::class,
+                'field' => 'po_status',
+                'sqlType' => Types::STRING,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['po_status' => 'code'],
+                'null' => true,
+            ],
             'payment_method' => [
                 'field' => 'acc_paymentid',
                 'class' => ForeignField::class,
@@ -141,6 +159,11 @@ class OrderGroupModel extends Model
             'memos' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupMemoModel::class,
+                'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
+            ],
+            'off_hours_message' => [
+                'class' => HasToOneField::class,
+                'modelClass' => OrderOffHourMessageModel::class,
                 'link' => ['orderid' => 'orderid', 'manufacturerid' => 'manufacturerid'],
             ],
             'tax_rates' => [
@@ -177,6 +200,11 @@ class OrderGroupModel extends Model
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+            ],
+            'voided_reason' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
             ],
             'shipping_quote' => [
                 'class' => DecimalField::class,

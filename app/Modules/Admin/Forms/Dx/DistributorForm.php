@@ -10,7 +10,7 @@ use Xcart\App\Main\Xcart;
 
 class DistributorForm extends ModelForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public $templates = [
         'default' => 'admin/distributor/form/_dx_form.tpl'
@@ -132,7 +132,8 @@ class DistributorForm extends ModelForm
                 'required' => true,
             ],
             9 => [
-                'title' => 'Tax policy',
+                'title' => 'Taxes charged by distributor',
+                'form' => DistributorTaxForm::class,
                 'required' => true,
             ],
         ],

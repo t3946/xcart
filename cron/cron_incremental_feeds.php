@@ -1,8 +1,8 @@
 <?php
 
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Min;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Min;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Sites\Models\SiteModel;

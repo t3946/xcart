@@ -22,7 +22,7 @@
 <tr>
 <td><b>{$lng.lbl_order_status}:</b></td>
 <td>&nbsp;</td>
-<td>{include file="main/order_status.tpl" mode="static" status=$order.status}</td>
+<td>{$statuses.CB[$order.status]}</td>
 </tr>
 </table>
 

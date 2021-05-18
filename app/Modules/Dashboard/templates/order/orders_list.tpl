@@ -179,7 +179,7 @@
         <tr>
             <td colspan="12" style="padding: 0;"></td>
         </tr>
-        {foreach $order->groups as $group last=$last_group}
+        {foreach $order->groups->all() as $group last=$last_group}
             <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if} order_list_row_{$order->orderid} bottom" data-orderid="{$order->orderid}">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
 

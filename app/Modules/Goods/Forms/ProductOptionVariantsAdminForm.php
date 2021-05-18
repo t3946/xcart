@@ -3,8 +3,8 @@
 namespace Modules\Goods\Forms;
 
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Goods\Admin\ProductOptionVariantsAdmin;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\OptionVariantModel;

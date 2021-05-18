@@ -9,7 +9,7 @@
 namespace Modules\PBX\Helpers;
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\PBX\Models\PbxAnveoCallModel;
 use Modules\User\Models\PbxOptionsModel;
 use Modules\User\Models\UserModel;

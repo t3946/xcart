@@ -43,7 +43,7 @@
 
     <div class="hidden">
         <div id="help_search">
-            {Modules\Core\Models\LanguageModel::translate('lbl_order_search_hint')}
+            {$.call.Modules.Core.Models.LanguageModel::translate('lbl_order_search_hint')}
         </div>
     </div>
 {/block}

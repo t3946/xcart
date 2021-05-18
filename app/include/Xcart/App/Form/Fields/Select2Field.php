@@ -43,7 +43,11 @@ class Select2Field extends DropDownField
                 '$("#' . $this->getHtmlId() . '").select2(' . JavaScript::encode($this->getJSOptions()) . ')',
                 '.on("select2:unselecting", function(e){if (!e.params.args.originalEvent) {return false;}e.params.args.originalEvent.stopPropagation();})',
                 '</script>',
-                '<style>.select2-results__option[aria-selected=true] {display: none;}</style>',
+                '<style>
+                    .select2-results__option[aria-selected=true] {display: none;}
+                    .select2-search--inline {width: 100% !important;}
+                    .select2-search--inline input {width: 100% !important;}
+                </style>',
             ]
         );
         return parent::render($extension);

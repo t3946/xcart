@@ -76,7 +76,7 @@ class DistributorGeneralForm extends DistributorForm
             ],
             'logo' => [
                 'class' => ImageField::class,
-                'label' => 'Logo',
+                'label' => 'Logo (jpg, png, svg formats only)',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_logo_text'),
@@ -99,7 +99,7 @@ class DistributorGeneralForm extends DistributorForm
             ],
             'dx_eta_date' => [
                 'class' => DateField::class,
-                'label' => 'Dx warehouse is closed until',
+                'label' => 'Distributor warehouse will be closed until',
                 'html' => ['style' =>'width:100px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,

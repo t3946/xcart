@@ -10,7 +10,7 @@ use IteratorAggregate;
 use Xcart\App\Orm\Callback\FetchColumnCallback;
 use Xcart\App\Orm\Callback\JoinCallback;
 use Xcart\App\Orm\Callback\LookupCallback;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Serializable;
 
 /**
@@ -37,7 +37,7 @@ abstract class QuerySetBase implements Countable, IteratorAggregate, ArrayAccess
      */
     private $_iterator;
     /**
-     * @var \Mindy\QueryBuilder\QueryBuilder
+     * @var \Xcart\App\QueryBuilder\QueryBuilder
      */
     protected $queryBuilder;
     /**
@@ -72,7 +72,7 @@ abstract class QuerySetBase implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @return \Mindy\QueryBuilder\BaseAdapter|\Mindy\QueryBuilder\Interfaces\ISQLGenerator
+     * @return \Xcart\App\QueryBuilder\BaseAdapter|\Xcart\App\QueryBuilder\Interfaces\ISQLGenerator
      * @throws Exception
      */
     protected function getAdapter()
@@ -131,7 +131,7 @@ abstract class QuerySetBase implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @return \Mindy\QueryBuilder\QueryBuilder
+     * @return \Xcart\App\QueryBuilder\QueryBuilder
      */
     public function getQueryBuilder()
     {

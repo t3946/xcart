@@ -28,7 +28,7 @@ class ConnectionManager
      */
     protected $eventManager = null;
 
-    protected $defaultWrapperClass = 'Xcart\App\Orm\DefaultConnection';
+    protected $defaultWrapperClass = DefaultConnection::class;
 
     /**
      * ConnectionManager constructor.

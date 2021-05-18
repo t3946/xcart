@@ -3,8 +3,10 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\CountryModel;
@@ -422,11 +424,11 @@ class CheckoutController extends FrontendController
                     if ($tax_rates = TaxHelper::getTaxRate($site, $order->s_country, $order->s_state)) {
                         foreach ($tax_rates as $tax_rate) {
                             $tax_value = TaxHelper::getTaxValue($tax_rate, $group->total_net, $group->shipping_net);
-                            OrderGroupTaxModel::objects()->getOrCreate([
+                            [$tax_group] = OrderGroupTaxModel::objects()->getOrCreate([
                                 'order_group_id' => $group->order_group_id,
                                 'tax_rate_id' => $tax_rate->rateid,
-                                'value' => $tax_value
                             ]);
+                            $tax_group->update(['value' => $tax_value]);
                             $tax_value_total += $tax_value;
                         }
                     }
@@ -757,6 +759,11 @@ class CheckoutController extends FrontendController
 
             [$shipping, $billing] = $order->getAddressInfo();
 
+            SurfingHelper::logSurfPath([
+                'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                'resource_id' => $order->pk,
+            ]);
+
             $this->display('checkout/complete.tpl', [
                 'order' => $order,
                 'shipping_info' => $shipping,
@@ -792,10 +799,6 @@ class CheckoutController extends FrontendController
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => [
             'url' => 'checkout:payment',
             'step' => 4,
-        ],
-        OrderStatusModel::ORDER_STATUS_FAILED => [
-            'url' => 'checkout:payment',
-            'step' => 3,
         ],
     ];
 

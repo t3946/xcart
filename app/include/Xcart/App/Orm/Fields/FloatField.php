@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class FloatField
@@ -15,7 +16,7 @@ class FloatField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::FLOAT);
+        return Type::getType(Types::FLOAT);
     }
 
     public function getValue()

@@ -3,15 +3,13 @@
 namespace Modules\Amazon\Models;
 
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\DecimalField;
-use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
@@ -33,7 +31,7 @@ class AmazonOfferModel extends Model
                 'class' => HasToOneField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['ASIN' => 'ASIN'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'ASIN' => [
                 'class' => CharField::class,

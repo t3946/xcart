@@ -2,8 +2,8 @@
 
 namespace Modules\PBX\Controllers\Admin;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Controllers\BackendController;
 use Modules\Order\Models\OrderModel;
 use Modules\PBX\Forms\TranslatesFilterForm;

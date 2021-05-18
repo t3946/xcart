@@ -5,7 +5,7 @@ if (!defined('XCART_START')) {
     die('Access denied');
 }
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorCarrierModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorSiteModel;

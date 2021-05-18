@@ -1,8 +1,8 @@
 <div style="height:0px;overflow:hidden">
     <input type="{$type}" accept="{$field->getHtmlAccept()}" value="{$value}" id="{$id}" name="{$name}" {raw $html}>
 </div>
-<button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image</button>
-<button type="button" onclick="uploadUrl()">Upload from url</button>
+<button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image file</button>
+<button type="button" onclick="uploadUrl(this)">Upload from URL</button>
 <br>
 <a target="_blank" class="{$id}_current-image" style="
         margin: 10px;
@@ -22,21 +22,17 @@
     <label for="{$id}_clear">{t 'Delete image'}</label>
 {/if}
 <script>
-    async function uploadUrl() {
+    function uploadUrl(o) {
         const url = prompt( 'Enter file url' );
 
         if ( url ) {
-            const $input = $( '#{$id}' );
+            const input = document.querySelector('#{$id}');
+            input.setAttribute('value', url);
+            input.type = 'hidden';
 
-            $input.val( url );
-            $input[ 0 ].type = 'hidden';
-
-            const $link = $( '.{$id}_current-image' );
-            const $img = $link.find( 'img' );
-            const blob = await fetch( 'https://cors-anywhere.herokuapp.com/' + url ).then( r => r.blob() );
-
-            $link.css( 'display', 'inline-block' );
-            $img.attr( 'src', URL.createObjectURL( blob ) );
+            const link = document.querySelector('.{$id}_current-image');
+            link.innerHTML = url.split('/').pop();
+            link.style.display = 'inline-block';
         }
     }
 

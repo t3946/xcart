@@ -20,8 +20,8 @@ use Exception;
 use Mindy\MockApp;
 use Xcart\App\Orm\Orm;
 use Xcart\App\Orm\Sync;
-use Mindy\QueryBuilder\ConnectionManager;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\ConnectionManager;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 class OrmDatabaseTestCase extends \PHPUnit_Framework_TestCase
 {

@@ -13,6 +13,7 @@ use Xcart\App\Helpers\Paths;
 use Xcart\App\Interfaces\AuthInterface;
 use Xcart\App\Main\ComponentsLibrary;
 use Xcart\App\Module\Module;
+use Xcart\App\Queue\QueueManager;
 use Xcart\App\Request\CliRequest;
 use Xcart\App\Request\HttpRequest;
 
@@ -32,6 +33,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Components\Breadcrumbs $breadcrumbs
  * @property \Xcart\App\Components\Flash $flash
  * @property \Modules\Mail\Components\Mailer $mail Mailer
+ * @property QueueManager $queue QueueManager
  * @property \Modules\Mail\Components\MailComponent $oldMail Mailer
  * @property \Modules\Cart\Components\XCart $cart Cart
  *

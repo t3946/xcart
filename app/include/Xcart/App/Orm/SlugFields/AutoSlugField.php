@@ -2,7 +2,7 @@
 
 namespace Xcart\App\Orm\SlugFields;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\Orm\ModelInterface;
 
 /**

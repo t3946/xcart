@@ -8,7 +8,7 @@
 
 namespace Xcart\App\Orm\Tests\Basic;
 
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\Tests\OrmDatabaseTestCase;
 use Xcart\App\Orm\Tests\Models\Customer;
 use Xcart\App\Orm\Tests\Models\Solution;

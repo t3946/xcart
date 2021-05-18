@@ -17,9 +17,9 @@ use Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry;
 use Google_Service_ShoppingContent_ProductShipping;
 use Google_Service_ShoppingContent_ProductShippingDimension;
 use Google_Service_ShoppingContent_ProductShippingWeight;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\Q\QOrNot;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Helpers\ProductHelper;
@@ -64,7 +64,7 @@ class GoogleShoppingProductCommand extends Command
                 $entries = [];
 
                 foreach ($up as $model) {
-                    if ($product = $model->product) {
+                    if (($product = $model->product) && !$product->isGroupRoot()) {
                         /** @var DistributorModel $dX */
                         $dX = $product->distributor;
 
@@ -147,10 +147,19 @@ class GoogleShoppingProductCommand extends Command
                                 ->exclude(['base_state_zipcode' => ''])
                                 ->order(['state'])
                                 ->all()) {
+                                $average_shipping = null;
                                 /** @var StateModel $state */
                                 foreach ($states as $state) {
                                     $states[$state->stateid] = $state;
-                                    $rates[$state->stateid] = ShippingHelper::getStateShipping($product->productid, $product->min_amount ?? 1, $state);
+                                    if ($average_shipping === null && !in_array($state->code, ['AK', 'HI'], true)) {
+                                        $average_shipping = ShippingHelper::getStateShipping($product->productid, $product->min_amount ?? 1, $state);
+                                    }
+                                    if (in_array($state->code, ['AK', 'HI'], true)) {
+                                        $state_shipping = ShippingHelper::getStateShipping($product->productid, $product->min_amount ?? 1, $state);
+                                    } else {
+                                        $state_shipping = $average_shipping;
+                                    }
+                                    $rates[$state->stateid] = $state_shipping;
                                     $rate = reset($rates[$state->stateid]);
                                     if ($rate && $sModel = $rate->shipping) {
                                         $shipping = new Google_Service_ShoppingContent_ProductShipping();

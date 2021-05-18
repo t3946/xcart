@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Order\Helpers\OrderHelper;
@@ -166,6 +168,9 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     $body = html_entity_decode($template_model->message_body);
 
     $group = reset($order['shipping_groups'])['oOrderGroup'];
+    if ($manufacturerid) {
+        $group = $order['shipping_groups'][$manufacturerid]['oOrderGroup'];
+    }
     $order_model = $group->order;
     $subject = SnippetHelper::render($subject, [
         'site' => $order_model->site,
@@ -210,7 +215,13 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
                 $to .= ', ';
             }
 
-            $to .= $vv['compose_email_to_distributor'];
+            $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+            $ato = $dx->contacts_model->filter([
+                'utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY
+            ])->valuesList('email', true);
+
+            $ato = array_unique(array_map('trim', $ato));
+            $to .= implode(',', $ato);
 
             $body = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
                 $vv['__shipto_table__'],
@@ -236,11 +247,6 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
         }
     }
 
-    if (!empty($to)) {
-        $to .= ', ';
-    }
-
-    $to .= $v['send_to_email'];
 
     $body = str_replace(['{{orderid}}', '{{c-fullname}}'], ["{$order['order_prefix']}{$orderid}", $userinfo['firstname']], $body);
 

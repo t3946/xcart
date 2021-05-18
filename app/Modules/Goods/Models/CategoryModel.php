@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Goods\Models;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
@@ -15,7 +15,6 @@ use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
-use Xcart\App\Orm\QuerySet;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;

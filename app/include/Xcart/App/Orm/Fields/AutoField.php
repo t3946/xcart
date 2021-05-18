@@ -4,7 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 
 /**
  * Class AutoField

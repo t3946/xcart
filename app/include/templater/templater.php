@@ -37,12 +37,12 @@ class Templater extends Smarty
 
 		$this->compile_check_md5 = false;
 
-		return parent::__construct();
+		parent::__construct();
 	}
 
-	function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false) {
-		$this->current_resource_name = $resource_name;
-		return parent::fetch($resource_name, $cache_id, $compile_id, $display);
+	function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null) {
+		$this->current_resource_name = $template;
+		return parent::fetch($template, $cache_id, $compile_id, $parent);
 	}
 
 	function _is_compiled($resource_name, $compile_path) {

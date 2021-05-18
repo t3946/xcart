@@ -2,7 +2,7 @@
 
 namespace Modules\Pages\Controllers;
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Meta\Types\MetaType;
 use Modules\Pages\Helpers\PageHelper;
 use Modules\Pages\Models\Page;

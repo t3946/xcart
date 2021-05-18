@@ -9,7 +9,7 @@ use Xcart\App\Orm\Base;
 use Xcart\App\Orm\Exception\OrmExceptions;
 use Xcart\App\Orm\ModelInterface;
 use Xcart\App\Orm\ManagerInterface;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class ForeignField

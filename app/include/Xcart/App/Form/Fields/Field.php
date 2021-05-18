@@ -381,7 +381,7 @@ abstract class Field implements IValidateField
      * @param array $classes
      * @return array
      */
-    public function getAttributesCommon($classes = [])
+    public function getAttributesCommon(array $classes = [])
     {
         return [
             'class' => $this->getCommonClasses($classes)
@@ -400,7 +400,7 @@ abstract class Field implements IValidateField
         if($this->hasErrors() || $hasErrors){
             $classes = ['show'];
         }
-        $attributes = $this->getAttributesCommon($classes);
+        $attributes = $this->getAttributesCommon($classes ?? []);
         $attributes = $this->extendAttribute($attributes, 'class', $this->errorsClass);
         return $attributes;
     }
