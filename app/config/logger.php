@@ -64,11 +64,11 @@ return [
     'loggers' => [
         'sql' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['sql', 'error_mail_admins']
+            'handlers' => ['error_mail_admins', 'sql']
         ],
         'debug' => [
             'class' => '\\Xcart\\App\\Logger\\DebugLogger',
-            'handlers' => ['debug', 'error_mail_admins']
+            'handlers' => ['error_mail_admins', 'debug']
         ],
         'error' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
