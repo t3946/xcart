@@ -47,8 +47,8 @@ class PayByCardForm extends FrontendForm
                     ->transactions
                     ->filter([
                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                        'transaction_amount' => $params['amount'],
-                        'transaction_currency' => $params['currency'],
+                        'transaction_amount' => $params['amount'] ?? 0,
+                        'transaction_currency' => $params['currency'] ?? 'USD',
                         'paymentid' => $order->payment_method_model->paymentid])
                     ->limit(1)
                     ->get()) {
