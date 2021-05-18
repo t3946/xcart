@@ -2,6 +2,7 @@
     line-height: rem-calc(22);
     flex-grow: 1;
     display: flex;
+    flex-wrap: wrap;
     grid-area: price-option__price;
 
     @include breakpoint(md up) {
