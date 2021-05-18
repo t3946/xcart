@@ -1,0 +1,11 @@
+.checkout_shipping-header-first {
+    margin: rem-calc(21) 0 rem-calc(22);
+
+    @include breakpoint(medium up) {
+        margin: rem-calc(23) 0 rem-calc(35);
+    }
+
+    @include breakpoint(large up) {
+        margin: 0 0 rem-calc(8);
+    }
+}

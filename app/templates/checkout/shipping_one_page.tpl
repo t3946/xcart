@@ -15,7 +15,7 @@
                     {* shipping address form *}
                     {* shipping address form -- header *}
                     <div class="options">
-                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header">{t 'Shipping Address' }</h2>
+                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first">{t 'Shipping Address' }</h2>
                     </div>
 
                     <div class="checkout-mandatory checkout_mandatory">
