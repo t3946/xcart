@@ -43,7 +43,7 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                if ($transaction = $order
+                if ($order->payment_method_model->paymentid && $transaction = $order
                     ->transactions
                     ->filter([
                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
