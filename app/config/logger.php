@@ -72,7 +72,7 @@ return [
         ],
         'error' => [
             'class' => '\\Xcart\\App\\Logger\\Logger',
-            'handlers' => ['error', 'error_mail_admins']
+            'handlers' => ['error_mail_admins', 'error']
         ],
     ]
 ];
