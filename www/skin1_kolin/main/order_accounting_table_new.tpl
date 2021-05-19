@@ -575,6 +575,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                                     date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
                                     $('#payment_due_date_{/literal}{$invoice_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
                                 },
+                                language: 'en',
                                 maxDate: 0
                             }); $(this).datepicker('show');{/literal}" />
         </td>
