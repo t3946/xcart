@@ -21,7 +21,6 @@ class SiteConfigModel extends Model
 //        'search_products_unique_id_checkbox' => 46,
 //        'cidev_tracking_code' => 100,
 //        'cidev_main_page_code' => 34,
-        'cidev_footer_code' => 35,
 //        'pop_up_code' => 36,
 //        'pop_up_in' => 37,
         'cidev_yandex_code_number' => 39,

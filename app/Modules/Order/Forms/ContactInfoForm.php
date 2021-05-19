@@ -6,7 +6,6 @@ use Modules\Core\Forms\FrontendForm;
 use Modules\Order\OrderModule;
 use Modules\Order\Validation\PhoneValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Validation\EmailValidator;
@@ -39,7 +38,8 @@ class ContactInfoForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t('(609) 924-8399'),
-                    'class' => 'phone'
+                    'class' => 'phone',
+                    'inputmode' => 'numeric',
                 ],
                 'extend' => 'phone_ext',
             ],
@@ -49,6 +49,7 @@ class ContactInfoForm extends FrontendForm
                 'label' => OrderModule::t('ext'),
                 'html' => [
                     'class' => 'phone_ext',
+                    'inputmode' => 'numeric',
                 ],
                 'extends' => true,
                 'validators' => [
@@ -122,7 +123,10 @@ class ContactInfoForm extends FrontendForm
                 if(isset($fieldInfo['extend'], $this->replacement[$fieldInfo['extend']])){
                     $fieldInfo['extend'] = $this->replacement[$fieldInfo['extend']];
                 }
-                $newFields[$replace[$fieldName]] = $fieldInfo;
+
+                if ( isset( $replace[ $fieldName ] ) ) {
+                    $newFields[ $replace[ $fieldName ] ] = $fieldInfo;
+                }
             }
 
             $fields = $newFields;

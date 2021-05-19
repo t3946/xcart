@@ -37,6 +37,7 @@
         .banner {
           flex-grow: 1;
           height: 100%;
+          background-color: transparent;
         }
 
         &.right-banners {
@@ -238,42 +239,6 @@
               }
             }
           }
-        }
-
-        .pages {
-          display: none;
-          position: absolute;
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          bottom: 0;
-          justify-content: center;
-          width: 100%;
-          line-height: rem-calc(25);
-          height: rem-calc(25);
-
-          li {
-            padding: 0;
-            margin: 0 rem-calc(10);
-            border-radius: 10px;
-            background-color: $white;
-            text-indent:  -9999px;
-            cursor: pointer;
-
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-
-            &.active {
-              background-color: #939393;
-            }
-          }
-
-
-          @include breakpoint(medium) {
-            display: flex;
-          }
-
         }
       }
     }

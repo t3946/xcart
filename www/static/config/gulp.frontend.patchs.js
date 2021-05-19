@@ -18,7 +18,7 @@ module.exports = {
         scss: 'temp/frontend/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
-        fonts: 'frontend/dist/fonts',
+        fonts: 'frontend/dist/css/fonts',
         raw: 'frontend/dist/raw'
     },
     modules: {
@@ -36,13 +36,14 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
-            // 'temp/frontend/js/**/*.js'
         ],
         scss: [
             'frontend/sass/**/*.scss'
         ],
         scss_include: [
-            'bower_components/compass-mixins/lib/',
+            'node_modules/compass-mixins/lib/',
+            'node_modules/foundation-sites/scss',
+            'components/cds',
         ],
         css: [
             'temp/frontend/css/**/*'
@@ -59,95 +60,90 @@ module.exports = {
         raw: ['frontend/row/*']
     },
     vendors: {
-        bower: {
-            scss_include: [
-                'bower_components/'
-            ]
-        },
 
         jquery: {
             js: [
-                // 'bower_components/jquery/dist/jquery.min.js'
+                // 'node_modules/jquery/dist/jquery.min.js'
             ]
         },
         // jquery_cookie: {
         //     js_include: [
-        //         'bower_components/jquery.cookie/jquery.cookie.js'
+        //         'node_modules/jquery.cookie/jquery.cookie.js'
         //     ]
         // },
         // bootstrap: {
         //     js: [
-        //         'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js'
+        //         'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js'
         //     ],
         //     fonts: [
-        //         'bower_components/bootstrap-sass/assets/fonts/bootstrap/*'
+        //         'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
         //     ],
         //     scss_include: [
-        //         'bower_components/bootstrap-sass/assets/stylesheets/'
+        //         'node_modules/bootstrap-sass/assets/stylesheets/'
         //     ]
         // },
         jquery_jscrollpane: {
             js_include: [
-                'bower_components/jScrollPane/script/jquery.jscrollpane.min.js'
+                'node_modules/jScrollPane/script/jquery.jscrollpane.min.js'
             ]
         },
         jquery_mousewheel: {
             js_include: [
-                'bower_components/jquery-mousewheel/jquery.mousewheel.min.js'
+                'node_modules/jquery-mousewheel/jquery.mousewheel.min.js'
             ]
         },
         nouislider: {
             js_include: [
-                'bower_components/nouislider/distribute/nouislider.js',
-                // 'bower_components/nouislider/distribute/nouislider.js',
+                'node_modules/nouislider/distribute/nouislider.js',
+                // 'node_modules/nouislider/distribute/nouislider.js',
             ],
             // css: [
-            //     'bower_components/nouislider/distribute/nouislider.css'
+            //     'node_modules/nouislider/distribute/nouislider.css'
             // ]
         },
         sly: {
             js_include: [
-                'bower_components/sly/dist/sly.min.js'
+                'node_modules/sly/dist/sly.min.js'
             ]
         },
         // swiper: {
         //     // css: [
-        //     //     'bower_components/swiper/dist/css/swiper.min.css'
+        //     //     'node_modules/swiper/dist/css/swiper.min.css'
         //     // ],
         //     scss_include: [
-        //         'bower_components/swiper/src/less/'
+        //         'node_modules/swiper/src/less/'
         //     ],
         // },
         // lato: {
         //     fonts: [
-        //         'bower_components/lato-webfont/fonts/*'
+        //         'node_modules/lato-webfont/fonts/*'
         //     ],
         //     scss_include: [
-        //         'bower_components/lato-webfont/scss/'
+        //         'node_modules/lato-webfont/scss/'
         //     ]
         // },
         dotdotdot: {
             js_include: [
-                'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js'
+                'node_modules/jQuery.dotdotdot/src/jquery.dotdotdot.js'
             ]
         },
         waves: {
             js_include: [
-                'bower_components/Waves/src/js/waves.js'
+                'node_modules/node-waves/src/js/waves.js'
             ],
             scss: [
-                // 'bower_components/Waves/src/scss/waves.scss'
+                // 'node_modules/Waves/src/scss/waves.scss'
             ]
         },
         // jqlazy: {
         //     js_include: [
-        //         'bower_components/jquery_lazyload/jquery.lazyload.js'
+        //         'node_modules/jquery_lazyload/jquery.lazyload.js'
         //     ]
         // },
 
         "what-input": {
             js_include: [
-                'bower_components/what-input/dist/what-input.js'
+                'node_modules/what-input/dist/what-input.js'
             ]
         },
         cds: {
@@ -158,25 +154,25 @@ module.exports = {
 
         jquery_form: {
             js_include: [
-                'bower_components/jquery-form/dist/jquery.form.min.js'
+                'node_modules/jquery-form/dist/jquery.form.min.js'
             ]
         },
         webfontloader: {
             js_include: [
-                'bower_components/webfontloader/webfontloader.js'
+                'node_modules/webfontloader/webfontloader.js'
             ]
         },
         // modal: {
         //     js_include: [
-        //         'bower_components/mmodal/js/jquery.mindy.modal.js'
+        //         'node_modules/mmodal/js/jquery.mindy.modal.js'
         //     ],
         //     scss_include: [
-        //         'bower_components/mmodal/scss/'
+        //         'node_modules/mmodal/scss/'
         //     ]
         // },
         bourbon: {
             scss_include: [
-                'bower_components/bourbon/app/assets/stylesheets/'
+                'node_modules/bourbon/app/assets/stylesheets/'
             ]
         },
         wNumb: {
@@ -191,11 +187,11 @@ module.exports = {
         },
         pace: {
             js_include: [
-                'bower_components/PACE/pace.js'
+                'node_modules/PACE/pace.js'
             ],
             css: [
-                // 'bower_components/PACE/themes/black/pace-theme-minimal.css'
-                // 'bower_components/PACE/themes/red/pace-theme-minimal.css'
+                // 'node_modules/PACE/themes/black/pace-theme-minimal.css'
+                // 'node_modules/PACE/themes/red/pace-theme-minimal.css'
             ]
         },
         simplebar: {
@@ -205,27 +201,27 @@ module.exports = {
         },
         foundation: {
             js_include: [
-                // 'bower_components/foundation-sites/dist/js/foundation.js', //all
-                'bower_components/foundation-sites/dist/js/plugins/foundation.core.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
-                // 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.smoothScroll.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.abide.js',
-                // 'bower_components/foundation-sites/dist/js/plugins/foundation.dropdown.js',
-                // 'bower_components/foundation-sites/dist/js/plugins/foundation.dropdownMenu.js',
-                // 'bower_components/foundation-sites/dist/js/plugins/foundation.tooltip.js',
+                // 'node_modules/foundation-sites/dist/js/foundation.js', //all
+                'node_modules/foundation-sites/dist/js/plugins/foundation.core.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.accordion.js',
+                // 'node_modules/foundation-sites/dist/js/plugins/foundation.sticky.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.toggler.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.smoothScroll.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.abide.js',
+                // 'node_modules/foundation-sites/dist/js/plugins/foundation.dropdown.js',
+                // 'node_modules/foundation-sites/dist/js/plugins/foundation.dropdownMenu.js',
+                // 'node_modules/foundation-sites/dist/js/plugins/foundation.tooltip.js',
 
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js',
-                'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.box.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.nest.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.motion.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.triggers.js',
+                'node_modules/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js',
             ],
             scss_include: [
-                'bower_components/foundation-sites/scss/'
+                'node_modules/foundation-sites/scss/'
             ]
         },
     }

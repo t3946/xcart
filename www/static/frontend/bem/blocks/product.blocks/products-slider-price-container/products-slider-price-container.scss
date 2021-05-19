@@ -1,0 +1,7 @@
+.products-slider-price-container {
+    padding: 0 3%;
+
+    @include breakpoint(md up) {
+        padding: 0;
+    }
+}

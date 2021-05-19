@@ -1,0 +1,21 @@
+.order-total {
+  position: relative;
+  text-align: right;
+  font-size: 1em;
+  line-height: 1.25rem;
+
+  @media print, screen and (min-width: 23.125em) {
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+  }
+
+  @include breakpoint(md up) {
+    font-size: 1.375rem;
+    line-height: 1.625rem;
+  }
+
+  @include breakpoint(md up) {
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+  }
+}

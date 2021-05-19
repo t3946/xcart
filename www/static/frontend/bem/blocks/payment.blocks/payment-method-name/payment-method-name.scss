@@ -1,0 +1,11 @@
+.payment-method-name {
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+}
+
+@include breakpoint(lg up) {
+  .payment-method-name {
+    height: 40px;
+  }
+}

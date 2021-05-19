@@ -1,13 +1,20 @@
 'use strict';
 
 import _ from 'lodash';
+import Checkout from '@/js/Components/checkout/Checkout';
+import Pace from "pace-js";
 
 (()=>{
-    let page_cart = document.querySelector('.cart-page');
+    let page_cart = document.querySelector('.cart-page, .checkout-page');
+
     if (page_cart) {
         let n_request = 0;
         let recalc = () => {
             page_cart = document.querySelector('.cart-page');
+
+            if (!page_cart) {
+                return;
+            }
 
             let products = page_cart.querySelectorAll('[data-product]');
             if (products) {
@@ -40,27 +47,45 @@ import _ from 'lodash';
         };
 
         let sync = _.throttle(product => {
-            let key = product.dataset.key, quantity = parseInt(product.dataset.quantity) || 1;
+            let key = product.dataset.key;
+            let quantity = parseInt(product.dataset.quantity) || 1;
             let number_request = ++n_request;
-
-            $.post(product.dataset.cartAction, {
+            const data = {
                 uid: key,
                 quantity: quantity,
-            })
-                .done(data => {
-                    let p_data = page_cart.dataset;
+            };
 
-                    if (number_request === n_request && ( p_data.quantity != data.quantity || p_data.total != data.total))
-                    {
-                        $.get('/cart/?_=' + (new Date).getTime(), {})
-                            .done(data => {
-                                if (number_request === n_request) {
-                                    $(page_cart).html(data.content || data);
-                                    window.LazyLoad.update();
+            Checkout.update( data, function ( res ) {
+                const page_cart = document.querySelector('.checkout-page');
+
+                if (!page_cart) {
+                   return;
+                }
+
+                let p_data = page_cart.dataset;
+                let cartQuantity = 0;
+
+                for ( const dxCartId in res[ 'distributor_carts' ] ) {
+                    cartQuantity += res[ 'distributor_carts' ][ dxCartId ].quantity;
+                }
+
+                if ( number_request === n_request && ( p_data.quantity != cartQuantity || p_data.total != res.total ) )
+                {
+                    Pace.ignore(function () {
+                        $.get('/cart/?_=' + (new Date).getTime(), {}).done(data => {
+                            if (number_request === n_request) {
+                                //do not update checkout one page
+                                if ($('.checkout-page').length ) {
+                                    return;
                                 }
-                            });
-                    }
-                });
+
+                                $(page_cart).html(data.content || data);
+                                window.LazyLoad.update();
+                            }
+                        });
+                    });
+                }
+            });
         }, 200);
 
         let updateCart = _.throttle(product => {

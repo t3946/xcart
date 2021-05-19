@@ -62,13 +62,10 @@
                         </span>
                     </div>
                     <div class="column shrink notifications hide-for-ml">
-                        <div class="row notifications-info small-collapse">
+                        <div class="notifications-info small-collapse">
                             <div class="column shrink">
-                                {include "product/messages/_messages.tpl" model=$model fill=true}
+                                {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
                             </div>
-                            {*<div class="column shrink godaddy show-for-medium">*}
-                                {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                            {*</div>*}
                         </div>
                     </div>
                 </div>
@@ -143,16 +140,13 @@
                     {/if}
 
                     </div>
-                    <div class="pinterest-bookmark" id="pinterest-bookmark">
-                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_round_red_32.png" /></a>
-                    </div>
                 </div>
                 <div class="column small-12 ml-6 large-6 block__title_price">
 
                 <div class="notifications show-for-ml">
                     <div class="row align-middle ml-collapse notifications-info">
-                        <div class="column shrink">
-                            {include "product/messages/_messages.tpl" model=$model fill=true}
+                        <div class="column shrink ">
+                            {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
                         </div>
                     </div>
                 </div>
@@ -191,12 +185,24 @@
 
 
     {include 'product/_tabs.tpl' model=$model}
-
     {if $model->isGroupRoot()}
-        <section class="groupped-products" id="products">
-            {include "product/_groupped_products.tpl"}
+        {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
+        <section>
+            <div class="row">
+                <div data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
+                     data-current-sorting-key="{$sort}"
+                     data-hide-sort="true"
+                     data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
+                     data-catalog-url="{$pager->createView()->getUrl(1)}"
+                     data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-mode="group-product"
+                     class="column groupped-products"
+                     id="products">
+                </div>
+            </div>
         </section>
     {/if}
+
 </div>
 {/block}
 
@@ -205,7 +211,7 @@
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=false}
         </div>
     </div>
     <div class="row">

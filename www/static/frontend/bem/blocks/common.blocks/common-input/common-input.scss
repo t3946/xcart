@@ -1,0 +1,22 @@
+.common-input {
+  width: 100%;
+  box-shadow: none;
+  border: 1px solid #c4c4c4;
+  padding: 0 .625rem;
+  font-size: 1.25rem;
+  line-height: 2.25rem;
+  height: rem-calc(36);
+  vertical-align: middle;
+  color: #272727;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  background: #fefefe;
+  border-radius: 0;
+}
+
+.common-input::placeholder {
+  font-style: italic;
+  color: $grey_96;
+}

@@ -1,0 +1,40 @@
+.pswp__button--arrow--left,
+.pswp__button--arrow--right {
+  top: 0;
+  margin: 0;
+  width: 50%;
+  height: 100%;
+}
+.pswp__button--arrow--left:before,
+.pswp__button--arrow--right:before {
+  content: none;
+}
+
+.pswp__top-bar {
+  display: none;
+  z-index: 2;
+}
+
+.pswp__button--close{
+  background: none !important;
+  width: 60px;
+  height: 60px;
+
+  @include breakpoint(lg up) {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.pswp__button--close-icon {
+  fill:#ffffff;
+  stroke: #ffffff;
+  stroke-width: 0.5;
+  width: 60px;
+  height: 60px;
+
+  @include breakpoint(lg up) {
+    width: 38px;
+    height: 38px;
+  }
+}

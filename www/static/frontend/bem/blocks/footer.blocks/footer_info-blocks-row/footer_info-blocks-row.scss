@@ -1,0 +1,7 @@
+.footer_info-blocks-row {
+  margin: rem-calc(20) 0 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(24) 0 0;
+  }
+}

@@ -1,0 +1,11 @@
+.checkout__cart-table-caption {
+  margin: 0 rem-calc(-10) 0;
+
+  @include breakpoint(md up) {
+    margin: 0 rem-calc(-10) rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 rem-calc(-10) rem-calc(20);
+  }
+}

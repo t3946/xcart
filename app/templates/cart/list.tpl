@@ -1,36 +1,38 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "cart/base.tpl"}
 {block 'content'}
-{set $cartEmpty = $.app->cart->getIsEmpty()}
+{set $isCartEmpty = $.app->cart->getIsEmpty()}
 {add $site = $.getSite}
 {add $site_currency = $site->getCurrency()}
 <section class="cart-page cart_shipping-page">
-    <div class="row">
-        <div class="columns large-12">
-            <div class="head_line">
+    <div class="row head_line">
+        <div class="columns small-6 medium-3">
+            <div class="b-back">
+                <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                    {t 'Shop more'}
+                </a>
+            </div>
+        </div>
 
+        <div class="columns small-12 medium-6 flex-container align-center align-middle head-line__header-column {if $isCartEmpty}align-self-middle{/if} small-order-2 medium-order-1">
+            {if $isCartEmpty}
+                <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
+            {else}
+                <h2 class="cart-number-header margin-0">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
+            {/if}
+        </div>
+
+        <div class="columns small-6 medium-3 small-order-1 medium-order-2">
+            {if !$isCartEmpty}
                 <div class="b-next">
-                    <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                    <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
                         {t 'Checkout'}
                     </a>
                 </div>
-
-                <div class="b-back">
-                    <a href="/" class="button yellow-white waves waves-orange waves-effect">
-                       {t 'Shop more'}
-                    </a>
-                </div>
-
-
-                {if !$cartEmpty}
-                <div class="head">
-                    <div class="nop"></div>
-                    <h2 class="cart-number">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
-                </div>
-                {/if}
-            </div>
-
-
-
+            {/if}
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-12">
             {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
             {set $items = $group.items}
             {set $warehouse  = $.get_warehouse($gi) }
@@ -125,15 +127,7 @@
 
                                     <div class="table-column quantity">
                                         <div class="inline-block">
-                                            <div class="quantity-group">
-                                                <a href="{url 'cart:quantity:dec' key=$key}" class="btn active dec">-</a>
-                                                <input type="number" name="quantity"
-                                                       min="{$position->object->min_amount}"
-                                                       max="{$position->object->avail}"
-                                                       step="{if $position->object->mult_order_quantity == 'Y'}{$position->object->min_amount}{else}1{/if}"
-                                                       value="{$position->quantity}">
-                                                <a href="{url 'cart:quantity:inc' key=$key}" class="btn active inc">+</a>
-                                            </div>
+                                            {include "product/parts/_quantity_group.tpl" model=$position->object quantity=$position->quantity btn_class='quantity-group-btn__checkout' group_class='quantity-group__checkout'}
                                         </div>
 
                                     </div>
@@ -186,13 +180,13 @@
 
                     <div class="errors">
                         {if $warehouse->getMinimalAmount()}
-                        {p_label cls="err fill minimal-amount " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '')}
+                        {p_label cls="err fill " ~ ($warehouse->checkMinimalAmount($group.subtotal) ? 'hide': '') type="minimal-amount"}
                             {t 'The minimum order amount for this product line is'} {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} {$site_currency->getCurrencyFormat($warehouse->getMinimalAmount())}{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         {/p_label}
                         {/if}
                         {set $only_one_country = $warehouse->getShippingOnlyOneCountry()}
                         {if $only_one_country}
-                            {p_label cls="err fill last-items"}
+                            {p_label cls="err fill" type="last-items"}
                                 {t 'This product line can only be shipped to a'} {$only_one_country} {t 'address.'}
                             {/p_label}
                         {/if}
@@ -203,7 +197,7 @@
 
             <div class="hr"></div>
 
-            {if !$cartEmpty}
+            {if !$isCartEmpty}
 
                 <div class="memo_subtotal">
                     <div class="grand-subtotal">
@@ -220,7 +214,7 @@
 
                 <div class="bottom_line">
                     <div class="b-next">
-                        <a href="{url 'checkout:shipping'}" class="button yellow waves waves-orange waves-effect">
+                        <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
                             {t 'Checkout'}
                         </a>
                     </div>
@@ -236,6 +230,8 @@
     </div>
 </section>
 {/block}
+
+{block 'search-menu'}{/block}
 
 {block 'js'}
     {foreach $.app->cart->getItems() as $gi => $item}

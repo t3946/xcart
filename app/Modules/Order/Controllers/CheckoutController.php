@@ -14,11 +14,14 @@ use Modules\Core\Models\StateModel;
 use Modules\Core\Models\ZipCodeModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\BillingForm;
+use Modules\Order\Forms\CheckoutForm;
 use Modules\Order\Forms\CheckoutReviewForm;
 use Modules\Order\Forms\CustomerNotesForm;
 use Modules\Order\Forms\ShippingForm;
+use Modules\Order\Helpers\CheckoutHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\PurchaseOrderHelper;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderExtraModel;
@@ -37,10 +40,103 @@ use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Storage\Files\LocalFile;
 
 class CheckoutController extends FrontendController
 {
+    public function actionCheckoutOnePage (): void {
+        StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_SHIPPING_ADDRESS);
+        /** @var OrderModel $order */
+        /** @var SiteModel $site */
+        /** @var Application $app */
+        $app = Xcart::app();
+        $site = $app->getModule('Sites')->getSite();
+        $cart = $app->cart;
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
+        }
+
+        $order = OrderHelper::getCartOrder();
+
+        if (!$order && $site) {
+            [$order, $is_new] = OrderModel::objects()->getOrCreate([
+                'cart_number' => $cart->getCartNumber(),
+                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
+            ]);
+            if ($is_new) {
+                $order->setAttributes([
+                    'order_prefix' => $site->getOrderPrefix(),
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                ]);
+            }
+        }
+
+        //пересчёт стоимости заказа из корзины
+        $shipping_rates = OrderProcessController::getShippingRates( $order );
+        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+        CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
+        CheckoutHelper::updateOrderTotalValues($order);
+        $order->save();
+
+        $checkout_form = new CheckoutForm();
+
+        $checkout_form->setInstance($order);
+
+        if ($site && $app->request->getIsPost()) {
+            $checkout_form->populate($app->request->post);
+
+            if ($checkout_form->isValid()) {
+
+                $order = $checkout_form->getInstance();
+
+                $order->setAttributes(array_merge($checkout_form->getAttributes(), [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
+                    'currency' => $site->getCurrency()->currency_code ?? 'USD',
+                    'date' => time()
+                ]));
+
+                if ($order->save()) {
+                    if ((int)$order->paymentid === 106) {
+                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getHash()]);
+                    }
+                    $this->redirect('checkout:payment');
+                }
+            } else {
+                $this->redirect('checkout:checkoutOnePage');
+            }
+        }
+
+        if ($order && !$app->request->getIsPost()) {
+            $checkout_form->setAttributes(array_merge(
+                $order->getAttributes(),
+                $order->extra_model->purchase_order ?? [])
+            );
+        }
+
+        $only_phone_order = count($shipping_rates) < $order->groups->count();
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+
+        if ($only_phone_order) {
+            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
+        }
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
+            ->all();
+
+        $this->display('checkout/shipping_one_page.tpl', [
+            'order' => $order,
+            'checkout_form' => $checkout_form,
+            'shipping_rates' => $shipping_rates,
+            'payment_methods' => $payment_methods
+        ]);
+    }
 
     public function beforeAction($action, $params): void
     {
@@ -93,7 +189,7 @@ class CheckoutController extends FrontendController
                 if ($order->save()) {
 
                     if ($cart_groups = $cart->getItemsGroupedBy()) {
-                        $order->groups->delete([new QAndNot(['manufacturerid__in' => array_keys($cart_groups)])]);
+                        $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
 
                         foreach ($cart_groups as $g => $cart_group)
                         {
@@ -673,6 +769,7 @@ class CheckoutController extends FrontendController
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
                 'hash' => $hash,
+                'checkoutType' => Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
             ]);
         } else {
             $this->error(404);

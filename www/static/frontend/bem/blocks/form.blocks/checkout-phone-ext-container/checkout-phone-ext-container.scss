@@ -1,0 +1,16 @@
+.checkout-phone-ext-container {
+  display: flex;
+  max-width: 30%;
+}
+
+@include breakpoint(lg up) {
+  .checkout-phone-ext-container {
+    max-width: 42%;
+  }
+}
+
+@include breakpoint(xl up) {
+  .checkout-phone-ext-container {
+    max-width: 40%;
+  }
+}

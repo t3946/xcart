@@ -1,0 +1,19 @@
+.payment-method-description-preview {
+  display: flex;
+  align-items: center;
+  color: #4a4949;
+  padding: 0 0 0 34px;
+}
+
+@include breakpoint(md up) {
+  .payment-method-description-preview {
+    min-height: 40px;
+    padding: 0 0 0 54px;
+  }
+}
+
+@include breakpoint(lg up) {
+  .payment-method-description-preview {
+    padding: 0;
+  }
+}

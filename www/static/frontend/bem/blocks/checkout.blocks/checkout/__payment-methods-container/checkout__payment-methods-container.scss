@@ -1,0 +1,9 @@
+.checkout__payment-methods-container {
+  margin: 0 -10px;
+}
+
+@include breakpoint(lg up) {
+  .checkout__payment-methods-container {
+    margin: 0;
+  }
+}

@@ -1,0 +1,13 @@
+.photoswipe-left-arrow {
+  width: 50%;
+  height: 100%;
+  justify-content: flex-end;
+  position: absolute;
+  align-items: center;
+  top: 0;
+  display: none;
+
+  @include breakpoint(ml up) {
+    display: flex;
+  }
+}

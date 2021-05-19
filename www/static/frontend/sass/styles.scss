@@ -1,5 +1,6 @@
 @import 'compass';
-@import url(https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap);
+//@import url(https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap);
+@import "fonts/fonts";
 @import url(https://fonts.googleapis.com/css?family=Roboto&display=swap);
 @import 'settings/colors';
 @import 'settings/icons';
@@ -28,7 +29,8 @@
 @import 'vendor/pace/pace';
 //@import 'vendor/mmodal/mmodal';
 @import 'vendor/swiper/swiper';
-@import 'vendor/photoswipe/photoswipe';
+@import 'vendor/photoswipe/_photoswipe';
+@import '../libs/photoswipe/dist/photoswipe';
 @import 'parts/mmodal/mmodal';
 
 
@@ -83,3 +85,5 @@
 @import 'pages/checkout_options_form';
 @import "pages/checkout_shipping";
 @import "pages/product_view_list";
+
+@import '../bem/bem';

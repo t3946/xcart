@@ -1,0 +1,17 @@
+.products-state-line {
+  display: flex;
+  font-weight: 500;
+  height: rem-calc(60);
+  line-height: rem-calc(60);
+
+  @include breakpoint(large up) {
+    background-color: #ebebeb;
+    height: rem-calc(40);
+    line-height: rem-calc(40);
+  }
+
+  @include breakpoint(sm down) {
+    height: rem-calc(45);
+    line-height: rem-calc(45);
+  }
+}

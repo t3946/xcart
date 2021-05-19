@@ -1,0 +1,42 @@
+.submit_big {
+  padding: 0 2.375rem;
+  height: 3.625rem;
+  line-height: 3.5rem;
+  font-size: 1.5625rem;
+  min-width: 100%;
+}
+
+@include breakpoint(md up) {
+  .submit_big {
+    min-width: 15rem;
+  }
+}
+
+.submit_big:after {
+  width: 1.1875rem;
+  height: 1rem;
+  background-origin: content-box;
+  background-size: contain;
+  display: inline-block;
+  margin-left: .6875rem;
+  content: "";
+  background: url('/static/frontend/dist/images/icons/cart/arrow_right_checkout.svg') no-repeat;
+}
+
+@media print, screen and (min-width: 370px) {
+  .submit_big {
+    width: auto;
+    height: 4.0625rem;
+    line-height: 3.9375rem;
+    font-size: 1.875rem;
+    min-width: 21.25rem;
+    max-width: 100%;
+  }
+}
+
+@media print, screen and (min-width: 45em) {
+  .submit_big:after {
+    width: 1.1875rem;
+    height: 1.1875rem;
+  }
+}

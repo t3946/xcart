@@ -1,0 +1,8 @@
+.quantity-group {
+  border: 1px solid #ffe296;
+  height: rem-calc(36);
+
+  @include breakpoint(lg up) {
+    height: rem-calc(30);
+  }
+}

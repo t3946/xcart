@@ -58,4 +58,9 @@ return [
         'target' => [CheckoutController::class, 'actionAutoCompleteCity'],
         'name' => 'auto_complete_city'
     ],
+    [
+        'route' => '/',
+        'target' => [CheckoutController::class, 'actionCheckoutOnePage'],
+        'name' => 'checkoutOnePage'
+    ],
 ];

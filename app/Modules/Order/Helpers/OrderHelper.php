@@ -10,6 +10,7 @@ use Xcart\App\QueryBuilder\Q\QOr;
 use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderEventsModel;
@@ -21,6 +22,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
@@ -632,5 +634,46 @@ HTML;
                 self::submitOrderEntry($order);
             }
         }
+    }
+
+    public static function getOrderInfo(OrderModel $order): array
+    {
+        $groups = [];
+        $cart = Xcart::app()->cart->getItemsGroupedBy();
+        foreach ($order->groups as $group) {
+            $manufacturer_id = $group->manufacturerid;
+            $quantity = 0;
+
+            foreach ($cart[ $manufacturer_id ][ 'items' ] as $item) {
+                $quantity += $item->getQuantity();
+            }
+
+            $groups[ $manufacturer_id ] = array_merge(
+                [
+                    'manufacturerid' => $manufacturer_id,
+                    'subtotal' => $group->product_gross,
+                    'quantity' => $quantity,
+                ],
+                $group->getTaxes()
+            );
+        }
+
+        return array_merge([
+            'distributor_carts' => $groups,
+            'total' => round($order->subtotal, 2),
+            'total_shipping_cost' => round($order->shipping_cost, 2),
+            'grand_total' => round($order->total, 2),
+        ], $order->getTaxes());
+
+    }
+
+    public static function getCheckoutUrl(): string
+    {
+        $router = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+            ? 'checkout:checkoutOnePage'
+            : 'checkout:shipping';
+        //TODO remove after all test has been completed to enable one page checkout
+        $router = 'checkout:shipping';
+        return Xcart::app()->router->url($router);
     }
 }

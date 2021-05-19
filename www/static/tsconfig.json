@@ -1,0 +1,16 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "removeComments": true,
+    "baseUrl": "./",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@modules/*": [
+        "frontend/jsx/modules/*"
+      ]
+    },
+    "jsx": "react"
+  }
+}

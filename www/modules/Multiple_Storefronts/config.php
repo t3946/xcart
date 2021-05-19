@@ -66,7 +66,6 @@ $domain_specific_config = array(
         'search_products_unique_id_checkbox' => '46',
         'cidev_tracking_code' => '100',
         'cidev_main_page_code' => '36',
-        'cidev_footer_code' => '37',
         'pop_up_in' => '38',
         'pop_up_code' => '38',
         'cidev_yandex_code_number' => '38',

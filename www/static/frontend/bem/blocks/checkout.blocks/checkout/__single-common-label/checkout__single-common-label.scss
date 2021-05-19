@@ -1,0 +1,9 @@
+.checkout__single-common-label {
+  margin: 0 0 7px 0;
+}
+
+@include breakpoint(lg up) {
+  .checkout__single-common-label {
+    margin: 0 0 12px 0;
+  }
+}

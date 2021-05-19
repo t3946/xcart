@@ -1,0 +1,13 @@
+.form-field-error-text:before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 5px);
+  border: 1px solid #ed1c24;
+  transform: rotate(38deg) skewX(348deg);
+  width: rem-calc(10);
+  height: rem-calc(10);
+  bottom: rem-calc(-6);
+  border-top: none;
+  border-left: none;
+  background: linear-gradient(321deg, #ffebeb 50%, transparent 50%) #ffebeb;
+}

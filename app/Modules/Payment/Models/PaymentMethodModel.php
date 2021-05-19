@@ -16,6 +16,8 @@ use Xcart\App\Orm\Model;
  */
 class PaymentMethodModel extends Model
 {
+    public const PHONE_ORDER_PAYMENT_METHOD_ID = 4;
+
     use AutoMetaTrait;
 
     public static function tableName()

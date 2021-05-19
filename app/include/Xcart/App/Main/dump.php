@@ -9,7 +9,7 @@ function pd($data, $depth = 10, $highlight = false)
         print_r($data);
     }
     else {
-        echo "<pre>";
+        echo "<pre style='white-space: pre-wrap'>";
         echo VarDumper::dump($data, $depth, $highlight);
         echo "</pre>";
     }

@@ -1,0 +1,15 @@
+.footer-schedule {
+  width: rem-calc(200);
+  color: #ffae21;
+  font-size: rem-calc(12);
+  line-height: rem-calc(14);
+  font-weight: 500;
+  clear: both;
+  display: flex;
+  align-items: center;
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(20);
+    line-height: rem-calc(20);
+  }
+}

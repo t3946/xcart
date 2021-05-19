@@ -1,0 +1,10 @@
+.add-to-cart-button_product {
+  grid-gap: 0;
+}
+
+@include breakpoint(md up) {
+  .add-to-cart-button_product {
+    width: 380px;
+  }
+}
+

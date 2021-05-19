@@ -1,0 +1,35 @@
+.photoswipe-close-button {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  padding: rem-calc(14) rem-calc(14) 0 0;
+  height: rem-calc(51);
+  width: 100%;
+  opacity: 0.5;
+  transition: opacity 0.1s linear;
+  text-align: right;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @media (min-width: rem-calc(840)) {
+    padding: rem-calc(15) rem-calc(30);
+    height: rem-calc(60);
+  }
+
+  @include breakpoint(xl up) {
+    text-align: center;
+    padding: rem-calc(60) 0 0;
+    width: rem-calc(90);
+    height: 100%;
+  }
+
+  @include breakpoint(xxl up) {
+    padding: rem-calc(60) rem-calc(60) 0;
+    width: rem-calc(180);
+    height: 100%;
+  }
+}

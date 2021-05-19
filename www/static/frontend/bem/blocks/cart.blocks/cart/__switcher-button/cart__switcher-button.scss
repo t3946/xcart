@@ -1,0 +1,11 @@
+.cart__switcher-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+@include breakpoint(xl up) {
+  .cart__switcher-button {
+    right: 45px;
+  }
+}

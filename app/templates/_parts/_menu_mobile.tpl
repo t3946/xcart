@@ -9,7 +9,7 @@
 
             <li class="accordion-item" {if $has_childs }data-accordion-item{/if}>
                 <a class="accordion-title" {if !$has_childs}href="{$category->getAbsoluteUrl()}" {/if}>
-                    <div class="row">
+                    <div>
                         <div class="columns small-2 medium-1">
                             {*<img src="{$category->image}" alt="{$category->category}">*}
                         </div>

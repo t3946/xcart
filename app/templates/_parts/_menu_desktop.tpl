@@ -19,7 +19,7 @@
                             <li class="category-menu-item {if $submenu|count > 0}has-child{/if}" data-hover-toggle="top-csm-{$index}">
                                 <div class="item-container">
                                     <a href="{$category->getAbsoluteUrl()}">
-                                        <div class="row">
+                                        <div>
                                             <div class="column large-2">
                                                 <div class="item-image">
                                                     {*<img src="{$item.image}" alt="{$item.name}">*}

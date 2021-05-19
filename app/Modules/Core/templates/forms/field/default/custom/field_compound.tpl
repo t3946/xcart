@@ -15,24 +15,24 @@
         {/if}
     </div>
     <div class="field compound-input">
-            <div class="input-block">
-                <div class="input-container {$field->className} {$hasClose}" {if $field->userClear}data-clear="true"{/if}>
-                    {raw $input}
+        <div class="input-block {$field->containerClass}">
+            <div class="input-container {$hasClose}" {if $field->userClear}data-clear="true"{/if}>
+                {raw $input}
+            </div>
+            <div class="compound-field-container {$fieldExt->containerClass}">
+                <label class="display-inline hide-for-medium">X</label>
+                <label class="display-inline show-for-medium">{t 'ext' }</label>
+                <div class="input-container {$field->className} {$hasCloseExt}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
+                    {raw $fieldExt->renderInput()}
                 </div>
-                <div class="compound-field-container">
-                    <label class="display-inline hide-for-medium">X</label>
-                    <label class="display-inline show-for-medium">{t 'ext' }</label>
-                    <div class="input-container {$field->className} {$hasCloseExt}" {if $field->userClear == 'input_text'}data-clear="true"{/if}>
-                        {raw $fieldExt->renderInput()}
-                    </div>
-                </div>
             </div>
-            <div class="show-for-mediun input-info">
-                <span class="show-success"></span>
-                <span class="show-error"></span>
-            </div>
-            <div class="show-for-large large-errors-content">
-                {raw $field->renderErrors($allErrors)}
-            </div>
+        </div>
+        <div class="input-info">
+            <span class="show-success"></span>
+            <span class="show-error"></span>
+        </div>
+        <div class="show-for-large large-errors-content">
+            {raw $field->renderErrors($allErrors)}
+        </div>
     </div>
 </div>

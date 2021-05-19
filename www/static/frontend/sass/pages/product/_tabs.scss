@@ -140,6 +140,11 @@
           min-height: rem-calc(38);
           border-bottom: 1px solid #e1e1e1;
           padding: rem-calc(12) 0;
+          display: flex;
+
+          &:first-child {
+            padding: 0 0 rem-calc(12);
+          }
 
           &:after{
             content: '';

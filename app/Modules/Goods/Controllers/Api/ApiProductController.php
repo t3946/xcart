@@ -5,14 +5,16 @@ namespace Modules\Goods\Controllers\Api;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\Controllers\AbstractCatalogController;
+use Modules\Goods\Helpers\ApiProductHelper;
+use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductVerificationHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\VerificationStatusModel;
 use Modules\Shipping\Helpers\ShippingHelper;
-use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
-class ApiProductController extends Controller
+class ApiProductController extends AbstractCatalogController
 {
     private const PRIVATE_KEY = 'y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=';
     private const PUBLIC_KEY = '2r7bQsPMLds=';
@@ -89,8 +91,9 @@ class ApiProductController extends Controller
 
                     $result['shipping']['free_shipping'] = $this->render('product/messages/_p_label.tpl',
                         [
-                            'cls' => 'fill free-shipping',
-                            'text' => $free_text
+                            'cls' => 'fill',
+                            'text' => $free_text,
+                            'type' => 'free-shipping',
                         ]
                     );
                 }
@@ -121,6 +124,56 @@ class ApiProductController extends Controller
             $result = ['result' => true];
         }
         $this->jsonResponse($result);
+    }
+
+    public function getQS($data = null)
+    {
+        return $data->childs->getQuerySet();
+    }
+
+    /**
+     * get paginated child products by group product id
+     * @param int $id product id
+     * @param string $slug
+     * @throws \Exception
+     */
+    public function actionProductGroup(int $id, string $slug): void
+    {
+        //actionViewOld
+        $model = ProductModel::objects()->get(['productid' => $id]);
+
+        //view_internal
+        $this->model = $model;
+
+        /** @var \Xcart\App\Orm\QuerySet $pqs */
+        $pqs = $this->getQS($model);
+        $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
+
+
+        if ($this->getRequest()->getIsAjax()) {
+            $pqs = $fh->getFiltrateQS();
+            $pqs = $this->getSortedQS($pqs);
+        }
+
+        $pager = $this->getPager($pqs);
+
+        $this->setCanonical($model);
+
+        if ($this->getRequest()->getIsAjax()) {
+            $pagerView = $pager->createView();
+            $this->jsonResponse(
+                [
+                    'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
+                    'items' => ApiProductHelper::getProductData($pager->paginate()),
+                    'pager' => [
+                        'pageSize' => $pager->getPageSize(),
+                        'currentPage' => $pager->getPage(),
+                        'paginateCount' => count($pager->paginate()),
+                        'total' => $pager->getTotal(),
+                    ],
+                ]
+            );
+        }
     }
 
 }

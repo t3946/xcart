@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {h, render, Component} from "preact";
 import CustomSelectOptions from './CustomSelectOptions';
 import CustomColorOptions from "./CustomColorOptions";
-import selectOption from './selectOption';
+import selectOption from './SelectOption';
 
 class CustomSelectField {
 

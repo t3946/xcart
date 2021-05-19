@@ -95,7 +95,8 @@ abstract class AddressForm extends FrontendForm
                 'html' => [
                     'placeholder' => $geoIp['postalCode'] ?? '08540',
                     'class' => 'auto-complete zip',
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'inputmode' => 'numeric',
                 ],
             ],
 

@@ -1,0 +1,15 @@
+.checkout-customer-notes__row {
+  margin: 22px auto 0;
+}
+
+@include breakpoint(md up) {
+  .checkout-customer-notes__row {
+    margin: 40px auto 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout-customer-notes__row {
+    margin: 50px auto 0;
+  }
+}

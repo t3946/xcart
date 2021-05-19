@@ -1,3 +1,6 @@
+@import "node_modules/jquery-ui-dist/jquery-ui";
+@import "node_modules/select2/dist/css/select2";
+@import "node_modules/air-datepicker/dist/css/datepicker";
 @import "settings";
 @import "__cds_index";
 @import "vendors/mmodal";
@@ -43,3 +46,7 @@
 @import "pages/amazon_restocking";
 
 @import "blocks/blocks";
+
+@import "../fonts/GothamPro/css/GothamPro";
+@import "../fonts/icons/css/style";
+@import "../bem/bem";

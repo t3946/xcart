@@ -1,0 +1,13 @@
+.promo-slider-pagination-bullet {
+  padding: rem-calc(10);
+  cursor: pointer;
+
+  &:after {
+    display: block;
+    content: '';
+    border-radius: rem-calc(10);
+    background-color: #fefefe;
+    width: rem-calc(10);
+    height: rem-calc(10);
+  }
+}

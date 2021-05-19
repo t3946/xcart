@@ -1,0 +1,16 @@
+.cart-column-quantity {
+  text-align: center;
+}
+
+@include breakpoint(md up) {
+  .cart-item-name-quantity {
+    justify-content: space-between;
+  }
+}
+
+@include breakpoint(lg up) {
+  .cart-item-name-quantity {
+    width: 135px;
+    padding-right: 40px;
+  }
+}

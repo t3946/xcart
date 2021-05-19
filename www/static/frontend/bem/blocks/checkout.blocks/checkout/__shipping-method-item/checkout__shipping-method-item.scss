@@ -1,0 +1,15 @@
+.checkout__shipping-method-item {
+  margin: 0 0 2px;
+}
+
+.checkout__shipping-method-item:first-child {
+  margin: 20px 0 0;
+}
+
+.checkout__shipping-method-item:last-child {
+  margin: 2px 0 0;
+}
+
+.checkout__shipping-method-item:first-child:last-child {
+  margin: 20px 0 0;
+}

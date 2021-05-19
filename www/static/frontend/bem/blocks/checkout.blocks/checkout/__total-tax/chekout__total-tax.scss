@@ -1,0 +1,15 @@
+.checkout__total-tax{
+  margin: 10px 0;
+}
+
+@include breakpoint(md up) {
+  .checkout__total-tax{
+    margin: 25px 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .checkout__total-tax{
+    margin: 7px 0;
+  }
+}

@@ -3,21 +3,51 @@
 {block "breadcrumbs"}
     {set $breadcrumbs = $.getCartBreadcrumbs}
     {if $breadcrumbs}
-        <div class="row cart-steps-container show-for-large order-confirmation-breadcrumbs">
-            <section class="cart-steps-section columns">
-                <ul class="cart-steps-items no-bullet">
-                    {foreach $breadcrumbs as $key => $item}
-                        <li class="cart-step inactive">
-                            <span class="step-link">
-                                <span class="step-number">{$key+1}</span>
-                                <span class="step-label">{$item['label']}</span>
+        {if $checkoutType === 'new'}
+            <div class="row cart-steps-container show-for-large">
+                {if !$breadcrumbs->isFirstStage()}
+                    <a class="columns shrink cart-steps-back hide-for-large"
+                       href="{$breadcrumbs->getPrevStage().url}">
+                            <span class="img">
+                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
                             </span>
-                            <div class="arrow-right"></div>
+                        <span class="text">{t 'BACK'}</span>
+                    </a>
+                {/if}
+                <section class="padding-0 overflow-hidden columns">
+                    <ul class="checkout-steps-list no-bullet">
+                        <li class="checkout-step checkout-step_one-page checkout-step_inactive show-for-medium">
+                            <span class="checkout-step-link checkout-step-link_active">
+                                <span class="step-label">Shopping cart</span>
+                            </span>
+                            <div class="checkout-arrow-right checkout-arrow-right_active"></div>
                         </li>
-                    {/foreach}
-                </ul>
-            </section>
-        </div>
+                        <li class="checkout-step checkout-step_one-page checkout-step_inactive">
+                            <span class="checkout-step-link checkout-step-link_active">
+                                <span class="step-label">Checkout</span>
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+        {else}
+            <div class="row cart-steps-container show-for-large order-confirmation-breadcrumbs">
+                <section class="cart-steps-section columns">
+                    <ul class="cart-steps-items no-bullet">
+                        {foreach $breadcrumbs as $key => $item}
+                            <li class="cart-step inactive">
+                                <span class="step-link">
+                                    <span class="step-number">{$key+1}</span>
+                                    <span class="step-label">{$item['label']}</span>
+                                </span>
+                                <div class="arrow-right"></div>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </section>
+            </div>
+        {/if}
     {/if}
     <div class="row cart-steps-container hide-for-large">
         <section class="cart-steps-section columns">

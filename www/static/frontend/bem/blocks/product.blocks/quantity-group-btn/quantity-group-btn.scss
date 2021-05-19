@@ -1,0 +1,16 @@
+.quantity-group-btn {
+  flex: 0 0 rem-calc(35);
+  width: rem-calc(35);
+  background-color: #fff0ca;
+  height: 100%;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+
+  @include breakpoint(md up) {
+    flex: 0 0 rem-calc(22);
+    width: rem-calc(22);
+  }
+}

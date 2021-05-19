@@ -1,0 +1,13 @@
+.checkout-step-link_inactive {
+  cursor: pointer;
+  color: #0a0a0a;
+  text-decoration: underline;
+  text-underline-offset: 1px;
+  text-decoration-thickness: 2px;
+}
+
+.checkout-step-link_inactive:hover {
+  text-decoration: underline;
+  text-underline-offset: 1px;
+  text-decoration-thickness: 2px;
+}

@@ -1,0 +1,6 @@
+.catalog_add-to-cart-list {
+  @include breakpoint(md up) {
+    //TODO: не знаю зачем он тут
+    //margin: rem-calc(10) 0 0 0;
+  }
+}

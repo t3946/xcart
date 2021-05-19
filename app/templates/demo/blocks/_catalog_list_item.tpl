@@ -48,7 +48,7 @@
             </div>
 
             <div class="brand show-for-small">
-                Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
+                <span>Brand: </span><span class="value" itemprop="brand">{$item->brand->brand}</span>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
                 {if $item.descr}
@@ -118,18 +118,7 @@
                             <span class="show-for-large-only">Qty:</span>
                         </label>
 
-                        <div class="quantity-group">
-                            <span class="btn dec">-</span>
-                            <input type="number"
-                                   name="quantity"
-                                   min="{$item->min_amount}"
-                                   max="{$item->avail}"
-                                   step="{if $item->mult_order_quantity == 'Y'}{$item->min_amount}{else}1{/if}"
-                                   value="{$item->min_amount}"
-                                   id="quantity-{$item.productid}"
-                            />
-                            <span class="btn inc active">+</span>
-                        </div>
+                        {include "product/parts/_quantity_group.tpl" model=$item}
                     </div>
 
                         <div class="info_container">

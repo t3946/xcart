@@ -16,13 +16,12 @@ namespace Xcart\App\Template;
 
 
 use Fenom;
-use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Helpers\CurrentSiteHelper;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Xcart\App\Translate\Translate;
 
 class TemplateManager
 {
@@ -122,17 +121,7 @@ class TemplateManager
         });
 
         $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
-            /** @var SiteModel $site */
-            if (($site = Xcart::app()->getModule('Sites')->getSite()) && $site_currency = $site->getCurrency()) {
-                $arr = [
-                    $site_currency->symbol_prefix,
-                    !$site_currency->after ? $site_currency : '',
-                    " <span class=\"price\">{$site_currency->getCurrencyFormat($variable)}</span>",
-                    $site_currency->after ? $site_currency : '',
-                ];
-                return trim(implode('', $arr));
-            }
-            return '';
+            return CurrentSiteHelper::formatCurrency($variable);
         });
 
         $this->_renderer->addAccessorSmart("app", "app", Fenom::ACCESSOR_PROPERTY);
@@ -140,10 +129,6 @@ class TemplateManager
 
         $this->_renderer->addAccessorSmart("request", "request", Fenom::ACCESSOR_PROPERTY);
         $this->_renderer->request = Xcart::app()->request;
-
-        //Not module class
-//        $this->_renderer->addAccessorSmart("user", "user", Fenom::ACCESSOR_PROPERTY);
-//        $this->_renderer->user = Xcart::app()->getUser();
 
         $this->_renderer->addModifier('class', function($object) {
             if (is_object($object)) {
@@ -162,6 +147,21 @@ class TemplateManager
             list($route, $attributes) =$this->prepareUrlTag($params);
 
             return Xcart::app()->router->absoluteUrl($route, $attributes);
+        });
+
+        $this->_renderer->addFunction('assets', function($params) {
+            $url = $params[0];
+            // is dev mode
+            if (constant('APP_LOCAL') === false ) {
+                $site = Xcart::app()->getModule('Sites')->getSite();
+                $config = $site->getConfig();
+                $prefix = rtrim($site->getHttpOrHttps() . $config->CDN_domain, '/');
+            }
+
+            // dist directory
+            define('DIST', '/static/frontend/');
+
+            return ($prefix ?? '') . DIST . ltrim($url, '/');
         });
     }
 

@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title top-title">{t 'Purchase Order Details'}</h2>
+                            <h2 class="title top-title default-form-header">{t 'Purchase Order Details'}</h2>
                         </div>
                     </div>
                     <div class="columns">
@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title">{t 'Purchasing Manager'}</h2>
+                            <h2 class="title default-form-header">{t 'Purchasing Manager'}</h2>
                         </div>
                     </div>
                     <div class="columns">
@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="columns small-12">
                         <div class="options">
-                            <h2 class="title">{t 'Accounts Payable'}</h2>
+                            <h2 class="title default-form-header">{t 'Accounts Payable'}</h2>
                         </div>
                     </div>
                     <div class="columns">

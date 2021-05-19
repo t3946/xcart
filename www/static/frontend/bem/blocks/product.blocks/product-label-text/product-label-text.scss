@@ -1,0 +1,14 @@
+.product-label-text {
+    font-size: rem-calc(12);
+    padding: 0 rem-calc(9);
+
+    @include breakpoint(md up) {
+        font-size: rem-calc(14);
+        padding: 0 rem-calc(9);
+    }
+
+    @include breakpoint(lg up) {
+        font-size: rem-calc(16);
+        padding: 0 rem-calc(20);
+    }
+}

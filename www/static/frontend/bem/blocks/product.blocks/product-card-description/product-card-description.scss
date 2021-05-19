@@ -1,0 +1,13 @@
+.product-card-description {
+    @include breakpoint(medium down) {
+        font: {
+            size: rem-calc(14)
+        }
+    }
+
+    @include breakpoint(small down) {
+        font: {
+            size: rem-calc(12)
+        }
+    }
+}

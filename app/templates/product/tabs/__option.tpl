@@ -1,6 +1,6 @@
 <div class="option">
-    <div class="title" style="vertical-align: middle; word-wrap: break-word;">{$title}</div>
-    <div class="value" style="word-wrap: break-word;">
+    <div class="title option-title">{$title}</div>
+    <div class="value">
             <span>{$value}</span>
     </div>
 </div>

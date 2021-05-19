@@ -13,11 +13,13 @@
 
     {block 'seo'}{meta controller=$this!:null}{/block}
 
+    {set $is_dev_mode = constant('APP_LOCAL') != false}
     {set $site = $.getSite}
     {set $config  = $site->getConfig()}
     {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
-    {set $uri = constant('APP_LOCAL') ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $uri = $is_dev_mode ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
+    {set $translates = $.call.Modules.Translate.Classes.I18nextManager::getTranslates($config[ 'Preferred_language' ])}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -84,10 +86,22 @@
     }
 </style>
     <script>
+      /**
+       * dataProvider нужен для централизованного хранения данных, необходимых странице в момент рендеринга
+       */
+      const dataProvider = {
+        data: {  },
+
+        get: function (key) {
+            return this.data[key];
+        },
+
+        set: function(key, value) {
+            return this.data[key] = value;
+        },
+      };
+
         window.app = {
-            assets: {
-                cssLoaded: false
-            },
             afterReady:[],
             assets: {
                 'css': {
@@ -106,8 +120,10 @@
                         del: '{url "cart:products:del"}',
                     }
                 },
-                'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()}
-            }
+                'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()},
+                'order': {json_encode($order->attributes)},
+                translates: {$translates},
+            },
         };
         window.parseUrl = function(href) { var a = document.createElement("a");a.href = href;return { 'href':href,'protocol': a.protocol,'host': a.host,'hostname': a.hostname,'port': a.port,'pathname': a.pathname,'hash': a.hash,'search': a.search,'origin': a.origin, 'document':a.pathname.split("/").pop(),};}
     </script>
@@ -166,23 +182,27 @@
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TCNTJMM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
+{if $is_dev_mode}
+    {*save spacing on development*}
+    {autoescape true}
+        {block 'preloader'}{/block}
 
-{filter|strip:true}
-{autoescape true}
-{block 'preloader'}
-    {*<div class="loader-bg waves waves-dark">
-        <div class="loader-wrapper">
-            <div class="loader-spinner"></div>
-            <div class="loader-container"></div>
-        </div>
-    </div>*}
-{/block}
+        {block "wrapper"}
+            {block "content"}{/block}
+        {/block}
+    {/autoescape}
+{else}
+    {*remove spacing on production*}
+    {filter|strip:true}
+        {autoescape true}
+            {block 'preloader'}{/block}
 
-{block "wrapper"}
-    {block "content"}{/block}
-{/block}
-{/autoescape}
-{/filter}
+            {block "wrapper"}
+                {block "content"}{/block}
+            {/block}
+        {/autoescape}
+    {/filter}
+{/if}
 
 
 {block 'js'}{/block}
@@ -301,10 +321,6 @@
                 po.src = '//assets.pinterest.com/js/pinit.js';
                 s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
-                var pints = document.getElementById('pinterest-bookmark');
-                if (pints) {
-                    pints.style.display='block';
-                }
 
                 <!-- Facebook Pixel Code -->
                 {ignore}

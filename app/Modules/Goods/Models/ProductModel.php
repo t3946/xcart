@@ -16,9 +16,9 @@ use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
+use Modules\Menu\Models\CleanUrlModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -28,7 +28,6 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
-use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
@@ -713,13 +712,29 @@ class ProductModel extends Model implements ICartItem
         return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
     }
 
+    public function getCatalogDescription($length = 0)
+    {
+        $frontend_description = $this->getFrontendDescription();
+        $no_tags = strip_tags($frontend_description);
+
+        if ( $length !== 0 && strlen($no_tags) > $length) {
+            $shorted = substr_replace($no_tags, '...', $length);
+        }
+
+        //to one line
+        return preg_replace("/(\r\n|\n|\r)/", " ", $shorted);
+    }
+
     public function getPrices(): array
     {
         if ($this->priceArray === null) {
             $this->priceArray = [];
             $curr = $this->distributor->currency;
             foreach ($this->pricing as $price) {
-                $this->priceArray[$price->quantity] = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
+                $price_value = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
+                if (!in_array($price_value, $this->priceArray, true)) {
+                    $this->priceArray[$price->quantity] = $price_value;
+                }
             }
         }
         return $this->priceArray ?? [];

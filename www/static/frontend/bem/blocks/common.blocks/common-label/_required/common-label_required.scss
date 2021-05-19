@@ -1,0 +1,15 @@
+.common-label_required:after {
+  content: "*";
+  display: inline;
+  vertical-align: top;
+  color: red;
+  position: static;
+  font-weight: 400;
+}
+
+@include breakpoint(md up) {
+  .common-label_required:after {
+    right: -11px;
+    position: absolute;
+  }
+}

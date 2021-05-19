@@ -1,0 +1,11 @@
+.footer-purchase-order-column {
+  padding: 0 rem-calc(10);
+
+  @include breakpoint(md up) {
+    padding: 0 rem-calc(10) 0 rem-calc(30);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(20);
+  }
+}

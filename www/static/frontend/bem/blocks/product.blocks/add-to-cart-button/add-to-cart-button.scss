@@ -1,0 +1,9 @@
+.add-to-cart-button {
+  display: flex;
+  width: 100%;
+
+  @include breakpoint(md up) {
+    justify-content: flex-end;
+  }
+}
+

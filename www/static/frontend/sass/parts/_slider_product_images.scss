@@ -12,11 +12,15 @@
 
 
   .images-slider {
-    height: 100%;
     display: flex;
     flex: 1 1 100%;
     flex-direction: row;
     flex-wrap: nowrap;
+
+    @include breakpoint(lg up) {
+      position: sticky;
+      top: 50px;
+    }
 
     &:after {
       content:'';
@@ -33,29 +37,6 @@
       flex-direction: column;
 
       min-width: rem-calc(54);
-
-
-      .wrap {
-        height: 277px;
-        overflow: hidden;
-        flex-grow: 1;
-
-        @include breakpoint(medium up) {
-          height: 600px;
-        }
-
-        @include breakpoint(ml up) {
-
-        }
-
-        @include breakpoint(large up) {
-          height: 400px;
-        }
-
-        @include breakpoint(xl up) {
-
-        }
-      }
 
       .slide {
         width: rem-calc(53);
@@ -106,9 +87,8 @@
     }
 
     .slider-detail {
-      //width: rem-calc(350);
+      position: relative;
       height: 100%;
-      //overflow: hidden;
       margin: 0 auto;
       text-align: center;
 
@@ -330,5 +310,17 @@
       margin-left: -8px;
       margin-top: -16px;
     }
+  }
+}
+
+.images-slider {
+  height: rem-calc(277);
+
+  @include breakpoint(medium up) {
+    height: rem-calc(600);
+  }
+
+  @include breakpoint(ml up) {
+    height: rem-calc(400);
   }
 }

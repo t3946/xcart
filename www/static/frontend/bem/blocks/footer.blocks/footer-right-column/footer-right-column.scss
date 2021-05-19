@@ -1,0 +1,5 @@
+.footer-right-column {
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10) 0 rem-calc(60);
+  }
+}

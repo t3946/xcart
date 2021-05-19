@@ -1,15 +1,9 @@
 <div class="row">
-    <div class="column small-12 large-4 block">
+    <div class="column small-12 large-5 block">
 
         <div class="options">
             <div class="h2 title">{t 'Options'}</div>
             <div class="content">
-{*
-                {include 'product/tabs/__option.tpl'
-                    title='Production'
-                    value=$model->distributor->manufacturer
-                }
-*}
 
                 {set $brand = $model->brand}
                 {if $brand}
@@ -41,7 +35,7 @@
                         {if $file->isFileExists()}
                             {include 'product/tabs/__option.tpl'
                                 title=$file->description
-                                value="<div class='row align-middle'><div class='columns shrink'><img class='icon' src='{$file->getFormatIconUrl()}'></img></div><div class='columns '><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
+                                value="<div class='row margin-0'><div class='columns option-file-icon shrink'><img class='icon' src='{$file->getFormatIconUrl()}'></img></div><div class='columns padding-0 option-file_description'><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
                             }
                         {/if}
                     {/foreach}
@@ -51,7 +45,7 @@
         </div>
 
     </div>
-    <div class="column small-12 large-8 block">
+    <div class="column small-12 large-7 block">
 
         <div class="description">
             <div class="h2 title">{t 'Description'}</div>

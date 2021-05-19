@@ -1,7 +1,5 @@
 import { h, Component, render } from 'preact';
 import _ from 'lodash';
-import SimpleBar from 'simplebar';
- import { connect } from 'preact-redux';
 
 class MiniCart extends Component
 {
@@ -21,15 +19,6 @@ class MiniCart extends Component
     componentWillUnmount() {
         this.unsubscribe();
     }
-
-    // componentDidMount() {
-    //     this.product_list.appendChild(render(this.renderProducts()));
-    //
-    //     this.simplebar = new SimpleBar(this.product_list, { autoHide: false });
-    // }
-    //
-    // componentDidUpdate(props, state) {
-    // }
 
     handleRemove(e, key, item)
     {
@@ -142,14 +131,13 @@ class MiniCart extends Component
     }
 
     render(props, state) {
-
         return (
         <div className="minicart-items">
             <div className="product-list" ref={(product_list) => { this.product_list = product_list; }}>
                 {this.renderProducts(props, state)}
             </div>
             <div className="buttons">
-                <a href="/cart/" className="button yellow waves waves-orange">
+                <a href={props.checkoutUrl} className="button yellow waves waves-orange">
                     {props.labels.lng_checkout}
                 </a>
             </div>

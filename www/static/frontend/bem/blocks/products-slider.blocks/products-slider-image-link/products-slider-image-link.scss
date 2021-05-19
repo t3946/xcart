@@ -1,0 +1,14 @@
+.products-slider-image-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: rem-calc(174);
+  max-width: 100%;
+  width: auto;
+  line-height: normal;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

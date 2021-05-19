@@ -1,0 +1,9 @@
+.add-to-cart-button__complex-list {
+    width: 100%;
+    flex: 1 0;
+
+    @include breakpoint(md up) {
+        width: rem-calc(51);
+        flex: 0 0 rem-calc(51);
+    }
+}

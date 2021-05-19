@@ -3,6 +3,10 @@ $admin_routes = include 'routes_admin.php';
 return array_merge($admin_routes, [
     [
         'route' => '',
+        'path' => 'Modules.Order.routes_api'
+    ],
+    [
+        'route' => '',
         'path' => 'Modules.Main.routes',
         'namespace' => 'main'
     ],
@@ -59,6 +63,11 @@ return array_merge($admin_routes, [
         'route' => '/demo',
         'path' => 'Modules.Demo.routes',
         'namespace' => 'demo'
+    ],
+    [
+        'route' => '/help',
+        'path' => 'Modules.Help.routes',
+        'namespace' => 'help'
     ],
     [
         'route' => '/coupon',

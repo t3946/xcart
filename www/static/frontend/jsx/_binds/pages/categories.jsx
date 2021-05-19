@@ -3,7 +3,6 @@ import documentReady from "../../utils/documentReady";
 
 (function () {
     documentReady(() => {
-
         // высота меню
         const MENU_HEIGHT = 50;
 

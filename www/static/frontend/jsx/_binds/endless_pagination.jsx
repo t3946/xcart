@@ -1,4 +1,8 @@
+import { AddToCartButton } from '@/js/Classes/AddToCartButton';
+
 $(document).on('click', '.front-endless-pager a.show-more', function(e){
+    //TODO: старый код подгрузки каталога
+    return;
     e.preventDefault();
     endless_paginate()
 });
@@ -14,11 +18,16 @@ window.endless_paginate = ()=>{
 
         window.sendAnalytics.sendLoadMore($this.attr('href'));
 
-        // window.loader.load(
+        Pace.ignore(function (){
             $.ajax($this.attr('href'), {
                 'dataType': 'json',
                 'success' : (data)=>{
+                    $container.removeClass( 'hide' );
+                    $this.css('margin', '20px 0');
+
+                    $('.products-state-line').show();
                     let old_uri = $this.attr('href');
+
                     $container.append(data.content);
 
                     if (data.href) {
@@ -34,7 +43,9 @@ window.endless_paginate = ()=>{
 
                     window.LazyLoad.update();
 
-                    // history.replaceState({pageUrl: old_uri}, document.title, old_uri);
+                    $container.find('.add-to-cart-button').each(function (i, e) {
+                        new AddToCartButton(e);
+                    });
                 },
                 'error': ()=>{
                     window.loader.detach();
@@ -44,8 +55,7 @@ window.endless_paginate = ()=>{
                     //window.addFlashMessage('An error has occurred. Please try again later.', 'error');
                 }
             });
-        // );
-
+        });
 
         $this.attr('disabled', 'disabled');
         $this.find('.text').html(text_loading);

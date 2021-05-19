@@ -1,37 +1,37 @@
-import { Foundation } from 'bower_components/foundation-sites/js/foundation.core';
-import { rtl, GetYoDigits, transitionend } from 'bower_components/foundation-sites/js/foundation.util.core';
+import { Foundation } from 'foundation-sites/js/foundation.core';
+import { rtl, GetYoDigits, transitionend } from 'foundation-sites/js/foundation.core.utils';
 
-import { Box } from 'bower_components/foundation-sites/js/foundation.util.box'
-import { onImagesLoaded } from 'bower_components/foundation-sites/js/foundation.util.imageLoader';
-import { Keyboard } from 'bower_components/foundation-sites/js/foundation.util.keyboard';
-import { MediaQuery } from 'bower_components/foundation-sites/js/foundation.util.mediaQuery';
-// import { Motion, Move } from 'bower_components/foundation-sites/js/foundation.util.motion';
-// import { Nest } from 'bower_components/foundation-sites/js/foundation.util.nest';
-// import { Timer } from 'bower_components/foundation-sites/js/foundation.util.timer';
-// import { Touch } from 'bower_components/foundation-sites/js/foundation.util.touch';
-import { Triggers } from 'bower_components/foundation-sites/js/foundation.util.triggers';
+import { Box } from 'foundation-sites/js/foundation.util.box'
+import { onImagesLoaded } from 'foundation-sites/js/foundation.util.imageLoader';
+import { Keyboard } from 'foundation-sites/js/foundation.util.keyboard';
+import { MediaQuery } from 'foundation-sites/js/foundation.util.mediaQuery';
+// import { Motion, Move } from 'foundation-sites/js/foundation.util.motion';
+// import { Nest } from 'foundation-sites/js/foundation.util.nest';
+// import { Timer } from 'foundation-sites/js/foundation.util.timer';
+// import { Touch } from 'foundation-sites/js/foundation.util.touch';
+import { Triggers } from 'foundation-sites/js/foundation.util.triggers';
 
-// import { Abide } from 'bower_components/foundation-sites/js/foundation.abide';
-import { Accordion } from 'bower_components/foundation-sites/js/foundation.accordion';
-// import { AccordionMenu } from 'bower_components/foundation-sites/js/foundation.accordionMenu';
-// import { Drilldown } from 'bower_components/foundation-sites/js/foundation.drilldown';
-// import { Dropdown } from 'bower_components/foundation-sites/js/foundation.dropdown';
-// import { DropdownMenu } from 'bower_components/foundation-sites/js/foundation.dropdownMenu';
-// import { Equalizer } from 'bower_components/foundation-sites/js/foundation.equalizer';
-// import { Interchange } from 'bower_components/foundation-sites/js/foundation.interchange';
-// import { Magellan } from 'bower_components/foundation-sites/js/foundation.magellan';
-import { OffCanvas } from 'bower_components/foundation-sites/js/foundation.offcanvas';
-// import { Orbit } from 'bower_components/foundation-sites/js/foundation.orbit';
-// import { ResponsiveMenu } from 'bower_components/foundation-sites/js/foundation.responsiveMenu';
-// import { ResponsiveToggle } from 'bower_components/foundation-sites/js/foundation.responsiveToggle';
-// import { Reveal } from 'bower_components/foundation-sites/js/foundation.reveal';
-// import { Slider } from 'bower_components/foundation-sites/js/foundation.slider';
-// import { SmoothScroll } from 'bower_components/foundation-sites/js/foundation.smoothScroll';
-import { Sticky } from 'bower_components/foundation-sites/js/foundation.sticky';
-import { Tabs } from 'bower_components/foundation-sites/js/foundation.tabs';
-import { Toggler } from 'bower_components/foundation-sites/js/foundation.toggler';
-import { ResponsiveAccordionTabs } from 'bower_components/foundation-sites/js/foundation.responsiveAccordionTabs';
-// import { Tooltip } from 'bower_components/foundation-sites/js/foundation.tooltip';
+// import { Abide } from 'foundation-sites/js/foundation.abide';
+import { Accordion } from 'foundation-sites/js/foundation.accordion';
+// import { AccordionMenu } from 'foundation-sites/js/foundation.accordionMenu';
+// import { Drilldown } from 'foundation-sites/js/foundation.drilldown';
+// import { Dropdown } from 'foundation-sites/js/foundation.dropdown';
+// import { DropdownMenu } from 'foundation-sites/js/foundation.dropdownMenu';
+// import { Equalizer } from 'foundation-sites/js/foundation.equalizer';
+// import { Interchange } from 'foundation-sites/js/foundation.interchange';
+// import { Magellan } from 'foundation-sites/js/foundation.magellan';
+import { OffCanvas } from 'foundation-sites/js/foundation.offcanvas';
+// import { Orbit } from 'foundation-sites/js/foundation.orbit';
+// import { ResponsiveMenu } from 'foundation-sites/js/foundation.responsiveMenu';
+// import { ResponsiveToggle } from 'foundation-sites/js/foundation.responsiveToggle';
+// import { Reveal } from 'foundation-sites/js/foundation.reveal';
+// import { Slider } from 'foundation-sites/js/foundation.slider';
+// import { SmoothScroll } from 'foundation-sites/js/foundation.smoothScroll';
+import { Sticky } from 'foundation-sites/js/foundation.sticky';
+import { Tabs } from 'foundation-sites/js/foundation.tabs';
+import { Toggler } from 'foundation-sites/js/foundation.toggler';
+import { ResponsiveAccordionTabs } from 'foundation-sites/js/foundation.responsiveAccordionTabs';
+// import { Tooltip } from 'foundation-sites/js/foundation.tooltip';
 
 (()=>{
     Foundation.addToJquery($);

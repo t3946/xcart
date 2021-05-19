@@ -1,0 +1,14 @@
+.photoswipe-right-arrow {
+  justify-content: flex-start;
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  align-items: center;
+  right: 0;
+  top: 0;
+  display: none;
+
+  @include breakpoint(ml up) {
+    display: flex;
+  }
+}

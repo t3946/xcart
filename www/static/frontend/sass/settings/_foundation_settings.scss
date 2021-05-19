@@ -84,9 +84,11 @@ $print-transparent-backgrounds: true;
 $breakpoints: (
   small: 0,
   sm: 370px,
-  //ms: 640px,
+  ms: 640px,
+  md: 720px,
   medium: 720px,
   ml: 960px,
+  lg: 1024px,
   large: 1024px,
   xl: 1280px,
   xxl: 1400px,
@@ -441,7 +443,7 @@ $meter-fill-bad: $alert-color;
 // --------------
 
 $offcanvas-sizes: (
-    small: 85%,
+    small: 300px,
     medium: 400px,
 );
 

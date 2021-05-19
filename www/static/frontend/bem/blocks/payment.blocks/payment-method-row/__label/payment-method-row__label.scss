@@ -1,0 +1,17 @@
+.payment-method-row__label:after {
+  position: absolute;
+  left: 25px;
+  top: calc(50% - 0px);
+}
+
+.payment-method-row__label:before {
+  position: absolute;
+  left: 15px;
+  top: calc(50% - 10px);
+}
+
+.common-input-radio:checked + .payment-method-row__label:after {
+  position: absolute;
+  left: 20px;
+  top: calc(50% - 5px);
+}

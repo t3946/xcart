@@ -1,0 +1,14 @@
+.billing-same-shipping-radio-group {
+  cursor: pointer;
+  padding: 10px;
+}
+
+@include breakpoint(lg up) {
+  .billing-same-shipping-radio-group:first-child {
+    padding: 0 34px 0 0;
+  }
+
+  .billing-same-shipping-radio-group:last-child {
+    padding: 0 34px;
+  }
+}

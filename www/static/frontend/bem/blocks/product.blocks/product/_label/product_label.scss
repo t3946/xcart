@@ -1,0 +1,7 @@
+.product_label{
+    margin: rem-calc(8) 0 0 0;
+
+    &:first-child {
+        margin: 0;
+    }
+}

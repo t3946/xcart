@@ -2,7 +2,7 @@ import isMedia from "../utils/isMedia";
 import cssFileLoaded from "../utils/cssFileLoaded";
 
 (() => {
-
+    console.log('st menu')
 
     // После загрузки css
     $(document).on('app.start', function () {
@@ -62,11 +62,11 @@ import cssFileLoaded from "../utils/cssFileLoaded";
         let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
 
         function checkMenuPosition(lastKnownScrollPosition) {
-
+            console.log('checkMenuPosition');
             if (lastKnownScrollPosition >= stickyContainer.offset().top) {
-                sticky.addClass('menu-fixed');
+                sticky[0].classList.add('menu-fixed');
             } else {
-                sticky.removeClass('menu-fixed');
+                sticky[0].classList.remove('menu-fixed');
             }
         }
 

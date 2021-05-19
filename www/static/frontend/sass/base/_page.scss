@@ -1,6 +1,4 @@
 .default-content-page {
-  padding-top: rem-calc(5);
-
   @include breakpoint(medium) {
     padding-top: rem-calc(10);
   }

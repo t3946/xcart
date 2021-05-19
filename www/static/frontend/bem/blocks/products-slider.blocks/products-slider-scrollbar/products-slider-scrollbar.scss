@@ -1,0 +1,14 @@
+.products-slider-scrollbar {
+  position: relative;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: rem-calc(2);
+    top: rem-calc(9);
+    display: block;
+    left: 0;
+    right: 0;
+    background-color: #eeeeee;
+  }
+}

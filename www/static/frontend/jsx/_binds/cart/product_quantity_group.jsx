@@ -2,20 +2,19 @@
 
 import _ from 'lodash';
 
-(()=>{
+( () => {
+    //need for prevent excess change events
+    let oldValue = null;
+
     let getValues = e => {
-
         let el = e.target;
-        let $this = $(e.target);
-        let $container = $this.closest('.quantity-group');
-        let $input = $container.find('input');
-        let val = parseInt($input.val());
-        let max = parseInt($input.attr('max'));
-        let min = parseInt($input.attr('min'));
-        let data_min = parseInt($input.data('min'));
-
-        if (val > max) {val = max;}
-        if (val < min) {val = min;}
+        let $this = $( e.target );
+        let $container = $this.closest( '.quantity-group' );
+        let $input = $container.find( 'input' );
+        let val = parseInt( $input.val() );
+        let max = parseInt( $input.attr( 'max' ) );
+        let min = parseInt( $input.attr( 'min' ) );
+        let data_min = parseInt( $input.data( 'min' ) );
 
         return {
             '$this': $this,
@@ -25,75 +24,106 @@ import _ from 'lodash';
             'val': val,
             'max': max,
             'min': min | data_min,
-        }
+        };
     };
 
-    let recheckActives = (e, params = getValues(e)) => {
+    let recheckActives = ( e, params = getValues( e ) ) => {
+        params.$container.find( '.quantity-group-btn' ).removeClass( 'quantity-group-btn_active' );
 
-        params.$container.find('.btn').removeClass('active');
-
-        if (params.val < params.max) {
-            params.$container.find('.btn.inc').addClass('active');
+        if ( params.val < params.max ) {
+            params.$container.find( '.quantity-group-btn_inc' ).addClass( 'quantity-group-btn_active' );
         }
 
-        if (params.val > params.min) {
-            params.$container.find('.btn.dec').addClass('active');
+        if ( params.val > params.min ) {
+            params.$container.find( '.quantity-group-btn_dec' ).addClass( 'quantity-group-btn_active' );
         }
 
-        let product = params.element.closest('[data-product]');
+        let product = params.element.closest( '[data-product]' );
 
-        if (!params.val || isNaN(params.val)) {
-            if (e.type === 'blur' || e.type === 'focusout') {
+        if ( !params.val || isNaN( params.val ) ) {
+            if ( e.type === 'blur' || e.type === 'focusout' ) {
                 params.val = product.dataset.quantity;
-                params.$input.val(params.val);
+                params.$input.val( params.val );
             }
             return;
         }
 
-        if (product) {
+        if ( product ) {
             product.dataset.quantity = params.val;
         }
         else {
             product = null;
         }
 
-        params.$input.val(params.val);
 
-        $(document).trigger('component.quantity.change', {
+        params.$input.val( params.val );
+
+        //do not emit event if value no changed
+        if ( parseInt( params.val ) === oldValue ) {
+            return;
+        }
+
+        oldValue = parseInt( params.val );
+
+        $( document ).trigger( 'component.quantity.change', {
             target: e.target,
             val: params.val,
             params: params,
-            product: product
-        });
+            product: product,
+        } );
     };
 
-    let recheckActives_throttled = _.throttle(recheckActives, 20);
-    recheckActives = (e, params) => {
-        let group = e.target.closest('.quantity-group');
+    let recheckActives_throttled = _.throttle( recheckActives, 20 );
+    recheckActives = ( e, params ) => {
+        let group = e.target.closest( '.quantity-group' );
 
-        clearTimeout($.data(group, 'timer'));
+        clearTimeout( $.data( group, 'timer' ) );
 
-        $.data(group, 'timer', setTimeout(() => {
-            recheckActives_throttled(e, params);
-        }, 100));
+        $.data( group, 'timer', setTimeout( () => {
+            recheckActives_throttled( e, params );
+        }, 100 ) );
     };
 
-    $(document)
-        .on('click', '.quantity-group .btn', e => {
+    $( document )
+        .on( 'click', '.quantity-group-btn', e => {
             e.preventDefault();
 
-            let params = getValues(e);
+            let params = getValues( e );
 
-            if (params.$this.hasClass('inc') && params.val < params.max) {
-                params.val += parseInt(params.$input.attr('step'));
+            // do inc
+            if (
+                params.$this.closest('.quantity-group-btn_inc').length
+                && params.val < params.max
+            ) {
+                params.val += parseInt( params.$input.attr( 'step' ) );
             }
-
-            if (params.$this.hasClass('dec') && params.val > params.min) {
-                params.val -= parseInt(params.$input.attr('step'));
+            // do dec
+            else if (
+                params.$this.closest('.quantity-group-btn_dec').length
+                && params.val > params.min
+            ) {
+                params.val -= parseInt( params.$input.attr( 'step' ) );
+            }
+            // do nothing
+            else {
+                return;
             }
 
             // params.$input.val(params.val);
-            recheckActives(e, params);
+            recheckActives( e, params );
+        } )
+        .on('focus', '.quantity-group-input', ( e ) => {
+            oldValue = parseInt(e.target.value);
         })
-        .on('change blur propertychange mousewheel keyup', '.quantity-group input', e => recheckActives(e));
-})();
+        .on( 'change blur propertychange mousewheel keyup', '.quantity-group-input', function( e ) {
+            const params = getValues( e );
+
+            //correct value after edition
+            if ( [ 'blur', 'change', 'focusout' ].indexOf( e.type ) > -1 ) {
+                if ( params.val > params.max ) {params.val = params.max;}
+                if ( params.val < params.min ) {params.val = params.min;}
+            }
+
+            recheckActives( e, params );
+        } );
+} )();

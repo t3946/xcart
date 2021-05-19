@@ -5,6 +5,7 @@ namespace Modules\Goods\Controllers;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\GoodsModule;
+use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\SearchStatsModel;
@@ -20,7 +21,6 @@ class SearchController extends AbstractCatalogController
     public $excluded_indexes = [
         'www.s3stores.com'
     ];
-
     public $ids;
     public $count;
     private $suggestion;
@@ -28,8 +28,6 @@ class SearchController extends AbstractCatalogController
     private $q_original;
     private $q;
     private $isSKU = false;
-
-
 
     public function actionKeywords($q): void
     {
@@ -80,6 +78,7 @@ class SearchController extends AbstractCatalogController
         } else {
             $this->q = $this->q_original = trim($this->getRequest()->get->get('q', '')[0]);
         }
+
         if (!$this->q) {
             $this->redirect('/');
         }
@@ -97,10 +96,6 @@ class SearchController extends AbstractCatalogController
                 $this->redirect($product->getAbsoluteUrl());
             }
         }
-
-        /*if ($product = ProductModel::objects()->filter(['productcode' => $this->q])->get()) {
-            $this->redirect($product->getAbsoluteUrl());
-        }*/
 
         $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
 
@@ -121,6 +116,7 @@ class SearchController extends AbstractCatalogController
                 'model' => $this->q ?? $q,
                 'breadcrumbs' => $this->getBreadcrumbsFromData($this->q ?? $q),
             ]);
+
             die();
         }
 
@@ -132,10 +128,17 @@ class SearchController extends AbstractCatalogController
                 'hits' => (int) $this->searched,
             ]
         ))->save();
+
         $q = $this->q ?? $q;
+
+        if ($_GET['sort']) {
+            Xcart::app()->request->session->add('category_sort', $_GET['sort']);
+        }
+
+        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+
         $this->view_internal($q);
     }
-
 
     public function getAdvancedData($data = null): array
     {

@@ -1,0 +1,14 @@
+.photoswipe-close-button-icon {
+  width: 17px;
+  height: 17px;
+
+  @include breakpoint(md up) {
+    width: 30px;
+    height: 30px;
+  }
+
+  @include breakpoint(xl up) {
+    width: 60px;
+    height: 60px;
+  }
+}

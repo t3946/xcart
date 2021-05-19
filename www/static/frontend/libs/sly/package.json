@@ -1,0 +1,40 @@
+{
+  "_args": [
+    [
+      "git+https://github.com/tsukasa-mixer/sly.git",
+      "D:\\programs\\OpenServer\\domains\\xcart\\www\\static"
+    ]
+  ],
+  "_from": "git+https://github.com/tsukasa-mixer/sly.git",
+  "_id": "sly@git+https://github.com/tsukasa-mixer/sly.git#19c40feb057b110c098e06df9f9bde9f31de96e2",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/sly",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/tsukasa-mixer/sly.git",
+    "rawSpec": "git+https://github.com/tsukasa-mixer/sly.git",
+    "saveSpec": "git+https://github.com/tsukasa-mixer/sly.git",
+    "fetchSpec": "https://github.com/tsukasa-mixer/sly.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/tsukasa-mixer/sly.git#19c40feb057b110c098e06df9f9bde9f31de96e2",
+  "_spec": "git+https://github.com/tsukasa-mixer/sly.git",
+  "_where": "D:\\programs\\OpenServer\\domains\\xcart\\www\\static",
+  "description": "JavaScript library for one-directional scrolling with item based navigation support.",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-bumpup": "~0.4.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-tagrelease": "~0.2.1"
+  },
+  "name": "sly",
+  "version": "0.0.0"
+}

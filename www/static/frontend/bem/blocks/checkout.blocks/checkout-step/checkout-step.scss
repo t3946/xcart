@@ -1,0 +1,71 @@
+.checkout-step {
+  display: block;
+  position: relative;
+  height: 35px;
+  min-width: 35px;
+  line-height: 33px;
+  font-size: 11px;
+  text-align: center;
+  vertical-align: middle;
+  flex-grow: 2;
+  background-color: $white;
+  border: 1px solid $thead_color;
+  border-right: none;
+}
+
+@media screen and (min-width: 23.125em) {
+  .checkout-step {
+    height: 2.8125rem;
+    min-width: 2.8125rem;
+    line-height: 2.8125rem;
+    font-size: .8125rem;
+  }
+}
+
+@media screen and (min-width: 45em) {
+  .checkout-step {
+    height: 3.5rem;
+    min-width: 3.5rem;
+    line-height: 3.5rem;
+    font-size: 1.125rem;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .checkout-step {
+    height: 2.5rem;
+    min-width: 2.5rem;
+    line-height: 2.25rem;
+    font-size: .875rem;
+    justify-content: space-around;
+  }
+}
+
+.checkout-step:last-child {
+  border-right: 1px solid $thead_color;
+  padding-right: .625rem;
+  width: 2.875rem;
+  flex-grow: 1;
+}
+
+@media screen and (min-width: 64em) {
+  .checkout-step:last-child {
+    padding-right: .75rem;
+    width: 3.25rem;
+    flex-basis: 5rem;
+  }
+}
+
+@media screen and (min-width: 45em) {
+  .checkout-step:last-child {
+    padding-right: 1.0625rem;
+    width: 4.5625rem;
+  }
+}
+
+@media screen and (min-width: 23.125em) {
+  .checkout-step:last-child {
+    padding-right: .8125rem;
+    width: 3.625rem;
+  }
+}

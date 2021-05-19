@@ -1,0 +1,5 @@
+.border-right-desktop {
+  @include breakpoint(lg up) {
+    border-right: 1px solid $aqua;
+  }
+}

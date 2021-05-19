@@ -1,5 +1,29 @@
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 html,
 body {
   height: 100%;
@@ -76,6 +100,9 @@ input {
 
   .off-canvas-content {
     min-height: 100%;
+  }
+  @include breakpoint(large){
+    overflow: initial;
   }
 }
 

@@ -1,0 +1,29 @@
+.clear-input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 rem-calc(6) 0 0;
+  display: none;
+  width: rem-calc(20);
+  height: 100%;
+  background: url('/static/frontend/dist/images/icons/forms/remove.svg') left center no-repeat;
+  background-size: 20px;
+  cursor: pointer;
+  box-sizing: content-box;
+}
+
+.hasClose .clear-input{
+  display: block;
+}
+
+@include breakpoint(md up) {
+  .clear-input {
+    padding: 0 rem-calc(8) 0 0;
+  }
+}
+
+@include breakpoint(lg up) {
+  .clear-input {
+    display: none;
+  }
+}

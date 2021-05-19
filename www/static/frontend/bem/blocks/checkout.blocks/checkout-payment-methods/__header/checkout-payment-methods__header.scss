@@ -1,0 +1,9 @@
+.checkout-payment-methods__header {
+  margin: 25px 0;
+}
+
+@include breakpoint(lg up) {
+  .checkout-payment-methods__header {
+    margin: 53px 0 27px;
+  }
+}

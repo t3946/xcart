@@ -1,0 +1,7 @@
+@include breakpoint(lg up) {
+  .form-purchase-order-details {
+    max-width: 360px;
+    margin-top: rem-calc(32);
+  }
+}
+

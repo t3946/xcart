@@ -1,0 +1,12 @@
+.product-label {
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    height: rem-calc(24);
+
+    @include breakpoint(lg up) {
+        height: rem-calc(48);
+        border: 1px dashed;
+    }
+}

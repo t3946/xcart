@@ -1,0 +1,7 @@
+.catalog-product_list {
+    margin: rem-calc(10) 0 0 0;
+
+    &:last-child {
+        margin: rem-calc(10) 0 rem-calc(10) 0;
+    }
+}

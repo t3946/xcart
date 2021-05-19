@@ -8,6 +8,7 @@ use Modules\Core\Components\GlobalConfig;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
@@ -41,13 +42,15 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
             $order->save();
 
-            $hash = md5($order->orderid . $order->total . $order->email);
-
             try {
 
                 $params = [
                     'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
-                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid, 'slug' => $hash]),
+                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', [
+                        'gateway' => strtolower($pm->processor_name),
+                        'order_id' => $order->orderid,
+                        'slug' => $order->getHash()
+                    ]),
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
@@ -126,7 +129,11 @@ class PaymentController extends Controller
             $order->groups->update(['cb_status' => $order->cb_status]);
         }
 
-        $this->redirect('checkout:review');
+        $route = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+            ? 'checkout:checkoutOnePage'
+            : 'checkout:review';
+
+        $this->redirect($route);
     }
 
     public function return($gateway, $order_id, $slug): void

@@ -1,0 +1,69 @@
+.checkout-arrow-right {
+  height: 2.1875rem;
+  overflow: hidden;
+  width: .625rem;
+  right: -.625rem;
+  position: absolute;
+  top: -1px;
+}
+
+@include breakpoint(lg up) {
+  .checkout-arrow-right {
+    height: 2.5rem;
+    width: .75rem;
+    right: -.75rem;
+    top: -2px;
+  }
+}
+
+@include breakpoint(md up) {
+  .checkout-arrow-right {
+    height: 3.5rem;
+    width: rem-calc(12);
+    right: rem-calc(-12);
+    top: -2px;
+  }
+}
+
+@media screen and (min-width: 23.125em) {
+  .checkout-arrow-right {
+    height: rem-calc(56);
+    width: rem-calc(17);
+    right: rem-calc(-16);
+    top: rem-calc(-2);
+  }
+}
+
+.checkout-arrow-right:after {
+  content: "";
+  display: block;
+  border-top: 1px solid $thead_color;
+  border-right: 1px solid $thead_color;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 2.1875rem;
+  height: 2.1875rem;
+  transform: matrix(.37, .7, -.6, 1.21, 0, 0);
+  background: #fff;
+  z-index: 1;
+}
+
+@include breakpoint(md up) {
+  .checkout-arrow-right:after {
+    width: 56px;
+    height: 60px;
+    top: 15px;
+    right: 2px;
+  }
+}
+
+@include breakpoint(large up) {
+  .checkout-arrow-right:after {
+    width: 2.5rem;
+    height: 2.5rem;
+    top: 10px;
+    right: rem-calc(5px);
+  }
+}
+

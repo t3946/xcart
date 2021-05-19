@@ -1,151 +1,87 @@
 .p-label {
   position: relative;
-  margin: 5px 0;
-  line-height: rem-calc(23);
-  display: inline-block;
-
-  @include breakpoint(large up) {
-    display: block;
-  }
-
+  display: flex;
+  align-items: center;
 
   i {
     background: no-repeat center center;
-    background-origin: content-box;
-    background-size: auto;
-    position: absolute;
-    left:0;
-    top: 0;
-    bottom: 0;
-    width: 26px;
+    background-size: contain;
+    height: rem-calc(26);
+    width: rem-calc(26);
     display: block;
-    overflow: hidden;
-    padding: 1px;
-
-    //&:after {
-    //  content: '';
-    //  position: absolute;
-    //  left:0;right:0;
-    //  top: 0; bottom: 0;
-    //}
+    flex-shrink: 0;
   }
 
   .text {
     display: inline;
     vertical-align: middle;
     font-size: rem-calc(14);
-    padding: 0 9px;
+    margin: 0 0 0 rem-calc(8);
+    line-height: 1;
 
     @include breakpoint(medium up) {
       font-size: rem-calc(16);
     }
 
     @include breakpoint(large up) {
-      display: inline-block;
       font-size: rem-calc(14);
-      line-height: 1;
-      padding: 3px 5px;
-      margin-left: rem-calc(26);
     }
   }
 
 
   &.lead-time {
     i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/lead_time.svg");
-      }
-
+      display: block;
+      background-image: url("../images/icons/item_product/lead_time.svg");
     }
   }
 
   &.multiply-quantity {
     i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/multiples_items.svg") ;
-      }
-    }
-  }
-
-  &.last-items {
-    i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/last_items.svg");
-      }
+      display: block;
+      background-image: url("../images/icons/item_product/multiples_items.svg") ;
     }
   }
 
   &.out-of-stock {
     i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/out_of_stock.svg");
-      }
+      display: block;
+      background-image: url("../images/icons/item_product/out_of_stock.svg");
     }
   }
   &.minimal-amount {
     i {
-      display: none;
-
-      @include breakpoint(large) {
-        display: block;
-        background-image: url("../images/icons/item_product/minimal_amount.svg");
-      }
+      display: block;
+      background-image: url("../images/icons/item_product/minimal_amount.svg");
     }
   }
   &.free-shipping {
     i {
-      display: none;
-
-      @include breakpoint(large) {
         display: block;
         background-image: url("../images/icons/item_product/free_shipping.svg");
-      }
     }
   }
   &.flat-shipping {
     i {
-      display: none;
-
-      @include breakpoint(large) {
         display: block;
         background-image: url("../images/icons/item_product/flat_shipping.png");
         background-size: 100%;
         padding: 0;
-      }
     }
   }
 
 
   &.fill {
     margin: 5px 0;
-    //line-height: rem-calc(38);
     line-height: rem-calc(23);
     border: 1px solid;
-
     border-radius: 3px;
-
-    @include breakpoint(medium up) {
-      //line-height: rem-calc(55);
-    }
 
     @include breakpoint(large up) {
       line-height: rem-calc(46);
       border: 1px dashed;
       border-left: none;
       border-radius: 0;
-      //min-width: rem-calc(320);
     }
 
     i {
@@ -158,13 +94,9 @@
         width: rem-calc(57);
         padding: 10px;
       }
-      @include breakpoint(ml up) {
-        //padding: 10px;
-      }
 
       @include breakpoint(large up) {
         width: rem-calc(48);
-        //padding: 5px;
       }
 
       @include breakpoint(xxl up) {
@@ -192,14 +124,10 @@
       border-color: #4EAAFC;
       border-left: 1px dashed #4EAAFC;
       i {
-        display: none;
-
-        @include breakpoint(large) {
           display: block;
           width: rem-calc(64);
           padding: 5px;
           background-image: url("../images/icons/item_product/free_shipping.svg");
-        }
       }
     }
 
@@ -207,14 +135,10 @@
       border-color: #4EAAFC;
       border-left: 1px dashed #4EAAFC;
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          width: rem-calc(64);
-          padding: 5px;
-          background-image: url("../images/icons/item_product/flat_shipping.png");
-        }
+        display: block;
+        width: rem-calc(64);
+        padding: 5px;
+        background-image: url("../images/icons/item_product/flat_shipping.png");
       }
     }
 
@@ -222,13 +146,9 @@
       border-color: #FF7200;
 
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          background-color: #FF7200;
-          background-image: url("../images/icons/item_product/white_lead_time.svg");
-        }
+        display: block;
+        background-color: #FF7200;
+        background-image: url("../images/icons/item_product/white_lead_time.svg");
       }
     }
 
@@ -236,14 +156,9 @@
       border-color: #134662;
 
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          background-color: #134662;
-          background-image: url("../images/icons/item_product/white_multiples_items.svg") ;
-        }
-
+        display: block;
+        background-color: #134662;
+        background-image: url("../images/icons/item_product/white_multiples_items.svg") ;
       }
     }
 
@@ -251,13 +166,9 @@
       border-color: #9A1524;
 
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          background-color: #9A1524;
-          background-image: url("../images/icons/item_product/white_last_items.svg");
-        }
+        display: block;
+        background-color: #9A1524;
+        background-image: url("../images/icons/item_product/white_last_items.svg");
       }
     }
 
@@ -265,13 +176,9 @@
       border-color: #FF7200;
 
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          background-color: #FF7200;
-          background-image: url("../images/icons/item_product/white_out_of_stock.svg");
-        }
+        display: block;
+        background-color: #FF7200;
+        background-image: url("../images/icons/item_product/white_out_of_stock.svg");
       }
     }
 
@@ -279,14 +186,9 @@
       border-color: #9A1524;
 
       i {
-        display: none;
-
-        @include breakpoint(large) {
-          display: block;
-          background-color: #9A1524;
-          background-image: url("../images/icons/item_product/white_minimal_amount.svg");
-        }
-
+        display: block;
+        background-color: #9A1524;
+        background-image: url("../images/icons/item_product/white_minimal_amount.svg");
       }
     }
   }

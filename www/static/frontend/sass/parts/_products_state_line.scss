@@ -1,6 +1,6 @@
 
 .groupped-products {
-  .products_state_line {
+  .products-state-line {
     .page_count {
       font-size: rem-calc(14);
       color: #5c5c5c;
@@ -15,26 +15,8 @@
   }
 }
 
-.products_state_line {
-  font-weight: 500;
-  height: rem-calc(60);
-  line-height: rem-calc(60);
-  padding-left: rem-calc(5);
-  padding-right: rem-calc(5);
-
-  @include breakpoint(large up) {
-    background-color: #ebebeb;
-    height: rem-calc(40);
-    line-height: rem-calc(40);
-  }
-
-  @include breakpoint(sm down) {
-    //background-color: #ebebeb;
-    height: rem-calc(45);
-    line-height: rem-calc(45);
-  }
-
-  .line-title {
+.products-state-line {
+  .state-line-title {
     float:left;
     margin-right: rem-calc(7);
     font-weight: 700;
@@ -43,6 +25,11 @@
 
   .action_group {
     display: inline-block;
+    margin: 0 2px 0 0;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 
   .actions {
@@ -54,6 +41,9 @@
         padding-right: 8%;
 
         .action_block {
+          position: relative;
+          height: 100%;
+
           &.sort {
             .options {
               right: 0;
@@ -135,14 +125,12 @@
       }
 
       &.active {
-        position: relative;
-
         .options {
           text-align: left;
           display: block;
           position: absolute;
           top: 100%;
-          z-index: 3;
+          z-index: 1;
           background: $white;
         }
       }
@@ -151,6 +139,7 @@
 
     &.view {
       background-color: #ebebeb;
+      height: 100%;
 
       a {
         display: inline-block;
@@ -206,6 +195,7 @@
   @include breakpoint(ml down) {
     .actions {
       display: flex;
+      position: relative;
 
       .action_group {
         flex: 1 0;
@@ -227,9 +217,7 @@
         }
 
         .action_button {
-          position: relative;
           transition: all .4s;
-          width: 99%;
           cursor: pointer;
           display: block;
           color: inherit;
@@ -260,8 +248,6 @@
 
         &.sort {
           &.active {
-            position: relative;
-
             .options {
               border: 2px solid $dark_blue;
               border-top: none;

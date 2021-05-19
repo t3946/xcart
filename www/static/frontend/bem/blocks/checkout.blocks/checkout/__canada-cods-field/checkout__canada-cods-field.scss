@@ -1,0 +1,9 @@
+.checkout__canada-cods-field {
+  margin: 6px 0 0 0;
+}
+
+@include breakpoint(lg up) {
+  .checkout__canada-cods-field {
+    margin: 25px 0 0 0;
+  }
+}

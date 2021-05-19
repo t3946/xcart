@@ -1,0 +1,12 @@
+.footer-link {
+  font-size: rem-calc(15);
+  color: $light_blue;
+
+  &:hover, &:focus {
+    color: $light_blue;
+  }
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(14);
+  }
+}

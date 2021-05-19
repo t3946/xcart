@@ -1,0 +1,13 @@
+.add-to-cart-button-add__catalog-tile {
+  height: 36px;
+  width: 100%;
+}
+
+.add-to-cart-button-add__catalog-tile.wait:before {
+  display: inline-block;
+  content: url(/static/frontend/dist/images/icons/green_check_mark.svg);
+  background: none;
+  height: 1.875rem;
+  width: 1.8125rem;
+  margin-left: .4375rem;
+}

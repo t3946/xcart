@@ -25,12 +25,6 @@ $remove: (
         large: rem-calc(107),
 );
 
-.default-form .cart-page input {
-  line-height: 1.15;
-  line-height: 1.15;
-  height:auto;
-}
-
 .cart-page {
 
   h2{
@@ -191,18 +185,6 @@ $remove: (
 
       @include breakpoint(sm down) {
         width: auto;
-        //width: rem-calc(135);
-
-        .quantity-group {
-          border: 1px solid #aaa;
-
-          .btn { display: none; }
-          input {
-            width: 61px;
-            height: 38px;
-
-          }
-        }
       }
     }
 
@@ -387,13 +369,13 @@ $remove: (
 
 
     .errors {
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
 
       .err {
         display: inline-block;
       }
     }
-
   }
 
   .hr {
@@ -430,6 +412,7 @@ $remove: (
 
     .subtotal {
       margin-left: rem-calc(15);
+      white-space: nowrap;
 
       //@include breakpoint(large up) {
       //  margin-left: rem-calc(5);
@@ -603,7 +586,7 @@ $remove: (
           height: 50px;
           line-height: 46px;
           font-size: 20px;
-          padding: 0 40px;
+          padding: 0 20px;
         }
 
         @include breakpoint(large) {
@@ -644,7 +627,7 @@ $remove: (
         &:before {
           margin-right: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
+          background: url("/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
 
           @include breakpoint(sm) {
             margin-right: rem-calc(16);
@@ -667,7 +650,7 @@ $remove: (
         &:after {
           margin-left: rem-calc(12);
           content:'';
-          background: url("../images/icons/cart/arrow_right_checkout.svg") 0 0 no-repeat;
+          background: url("/static/frontend/dist/images/icons/cart/arrow_right_checkout.svg") 0 0 no-repeat;
 
           @include breakpoint(sm) {
             margin-left: rem-calc(16);
@@ -695,6 +678,11 @@ $remove: (
   .button {
     text-transform: uppercase;
     font-weight: 700;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   }
 }
 

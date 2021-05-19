@@ -1,0 +1,29 @@
+.common-checkbox {
+  position: relative;
+  border: 1px solid #d4d4d4;
+  width: rem-calc(30);
+  height: rem-calc(30);
+  appearance: none;
+  display: block;
+  cursor: pointer;
+  background: white;
+  flex-shrink: 0;
+}
+
+.common-checkbox:after {
+  content: '';
+  background: url('/static/frontend/dist/images/icons/order/check_mark_grey.svg') no-repeat center;
+  position: absolute;
+  display: block;
+  width: rem-calc(20);
+  height: rem-calc(20);
+  top: 50%;
+  left: 50%;
+  transform: translate(rem-calc(-10), rem-calc(-10));
+  opacity: 0;
+  transition: opacity 0.03s linear;
+}
+
+.common-checkbox:checked:after {
+  opacity: 1;
+}

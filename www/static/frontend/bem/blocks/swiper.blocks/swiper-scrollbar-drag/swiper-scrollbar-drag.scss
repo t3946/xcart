@@ -1,0 +1,25 @@
+.swiper-scrollbar-drag {
+  height: rem-calc(20);
+  cursor: pointer;
+  margin-top: rem-calc(28);
+
+  &:before {
+    transition: background-color .3s;
+    overflow: hidden;
+    border-radius: rem-calc(10);
+    position: absolute;
+    display: block;
+    background-color: #dadada;
+    content: "";
+    top: rem-calc(8);
+    height: rem-calc(4);
+    left: 0;
+    right: 0;
+  }
+
+  &:hover {
+    &:before {
+      background-color: #aaaaaa;
+    }
+  }
+}

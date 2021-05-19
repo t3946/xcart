@@ -13,7 +13,4 @@
         </div>
     </div>
     <div class="slider-data" data-url="{$data_link ?: $link}"></div>
-    <div class="scrollbar">
-        <div class="handle"></div>
-    </div>
 </div>

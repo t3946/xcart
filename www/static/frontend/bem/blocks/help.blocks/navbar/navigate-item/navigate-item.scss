@@ -1,0 +1,51 @@
+.navigate-item{
+  display: flex;
+  text-decoration: none;
+
+  &:hover{
+    background-color: #F4F4F4;
+  }
+
+  &-text{
+    font-size: 18px;
+    color: #000000;
+    padding: 23px 0px 23px 15px;
+
+    @media (max-width: 768px) {
+      padding-left: 45px;
+    }
+  }
+
+  &-image{
+    width: 25px;
+  }
+
+  &-image-wrap{
+    padding: 22px 0 0 5px;
+    display: block;
+
+    @media (min-width: 768px) {
+      padding-left: 21px;
+      display: none;
+    }
+
+    @media (min-width: 1000px) {
+      display: block;
+      padding-left: 21px;
+    }
+    @media (min-width: 1366px) {
+      padding-top: 21px;
+    }
+
+  }
+}
+
+.active{
+  .navigate-item-text{
+    color: #83132B;
+  }
+}
+
+.navigate-item-image-wrap{
+
+}

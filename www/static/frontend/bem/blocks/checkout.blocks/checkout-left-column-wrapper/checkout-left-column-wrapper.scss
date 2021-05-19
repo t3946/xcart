@@ -1,0 +1,6 @@
+.checkout-left-column-wrapper {
+  @include breakpoint(lg up) {
+    background: #f4f4f4;
+    padding: 21px;
+  }
+}

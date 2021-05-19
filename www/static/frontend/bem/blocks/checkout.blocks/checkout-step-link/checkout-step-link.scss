@@ -1,0 +1,27 @@
+.checkout-step-link {
+  text-decoration: none;
+  color: #acacac;
+  margin-left: .625rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: default;
+  display: block;
+}
+
+@media print, screen and (min-width: 64em) {
+  .checkout-step-link {
+    margin-left: .75rem;
+  }
+}
+
+@media print, screen and (min-width: 45em) {
+  .checkout-step-link {
+    margin-left: 1.0625rem;
+  }
+}
+
+@media print, screen and (min-width: 23.125em) {
+  .checkout-step-link {
+    margin-left: .8125rem;
+  }
+}

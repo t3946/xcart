@@ -1,0 +1,7 @@
+.footer_socials {
+  margin: rem-calc(18) 0 rem-calc(26);
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(30);
+  }
+}

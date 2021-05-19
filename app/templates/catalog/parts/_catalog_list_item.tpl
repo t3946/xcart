@@ -50,6 +50,7 @@
 
             </a>
         </div>
+
         <div class="info_container container">
             <h4 class="title " itemprop="name">
                 {if $item->isGroupRoot()}
@@ -196,14 +197,8 @@
                         </div>
 
                         <div class="cart_add cart_buttons">
-                            <a class="add button yellow wait-button">
-                                <span class="text">
-                                    {t 'Add to cart'}
-                                </span>
-                                <span class="wait-text">
-                                    {t 'Added'}
-                                </span>
-                            </a>
+                            {include "product/parts/_add_to_cart.tpl" type="catalog"}
+
                         </div>
 
                         <div class="subtotal_container hide" cont-subtotal>

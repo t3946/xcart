@@ -122,6 +122,19 @@ abstract class Field implements IValidateField
      */
     public $labelClass = 'label';
 
+    public $labelCommentClass = 'comment';
+
+    /**
+     * @var string
+     */
+    public string $fieldClass = 'common-field';
+    public string $inputClass = 'common-input';
+    public string $containerClass = '';
+    public string $shortHintClass = '';
+    public string $longHintClass = '';
+    public string $errorClass = 'form-field-error form-field__error';
+    public string $errorTextClass = 'form-field-error-text';
+
     /**
      * @var string
      */
@@ -321,7 +334,7 @@ abstract class Field implements IValidateField
         return array_replace($this->_attributes, $t);
     }
 
-    public function getCommonClasses(array $defClasses = [])
+    public function getCommonClasses(?array $defClasses = [])
     {
 
         $errors = [];
@@ -360,7 +373,7 @@ abstract class Field implements IValidateField
     public function getAttributesInput()
     {
         $attributes = $this->getAttributes();
-        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses());
+        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses( [ $this->inputClass ] ));
         return $attributes;
     }
 
@@ -573,7 +586,8 @@ abstract class Field implements IValidateField
             'errors' => $this->renderErrors(),
             'hint' => $this->renderHint(),
             'ext' => $fieldExtension,
-            'field' => $this
+            'field' => $this,
+            'value' => $this->getRenderValue(),
         ]);
     }
 

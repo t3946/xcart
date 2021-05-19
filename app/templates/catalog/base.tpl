@@ -46,31 +46,17 @@
             </div>
 
             <div class="columns large-10">
-                {insert "catalog/parts/_state_line.tpl"}
-                <div class="mobile-reset-filter hide-for-large">
-                    {insert "catalog/parts/_filter_reset.tpl"}
-                </div>
+                {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
 
-                <div class="mobile_page_count hide-for-large page_count_wrap">
-                    {*{insert 'catalog/parts/_page_count.tpl'}*}
-                </div>
-
-                <div class="product-items tile-view" itemscope itemprop="mainEntity" itemtype="http://schema.org/OfferCatalog">
-                    {*{foreach $pager->paginate() as $item }*}
-                        {*{include "catalog/parts/_catalog_list_item.tpl" item=$item}*}
-                    {*{/foreach}*}
-                </div>
-                {insert "catalog/parts/_state_line.tpl"}
-
-                {raw $pager->render()}
-
-                {add_asset_block type="js"}
-                    <script>
-                        window.app.afterReady.push(function(){
-                            endless_paginate();
-                        });
-                    </script>
-                {/add_asset_block}
+                <div class="catalog-component"
+                     data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
+                     data-current-sorting-key="{$sort}"
+                     data-hide-sort="{$hide_sort}"
+                     data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
+                     data-catalog-url="{$pager->createView()->getUrl(1)}"
+                     data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-search-text="{$q|escape}"
+                ></div>
             </div>
         </div>
     </section>

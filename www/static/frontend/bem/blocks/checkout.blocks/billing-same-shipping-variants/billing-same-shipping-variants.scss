@@ -1,0 +1,10 @@
+.billing-same-shipping-variants {
+  display: flex;
+  padding: 0 0 0 27px;
+}
+
+@include breakpoint(lg up) {
+  .billing-same-shipping-variants {
+    padding: 0;
+  }
+}

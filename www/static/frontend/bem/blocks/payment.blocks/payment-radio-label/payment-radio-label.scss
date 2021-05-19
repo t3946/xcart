@@ -1,0 +1,20 @@
+.payment-radio-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0 34px;
+  height: 100%;
+  font-weight: 700;
+}
+
+@include breakpoint(md up) {
+  .payment-radio-label {
+    padding: 0 0 0 54px;
+  }
+}
+
+@media print, screen and (min-width: 1024px) {
+  .payment-radio-label {
+    padding: 0 0 0 70px;
+  }
+}

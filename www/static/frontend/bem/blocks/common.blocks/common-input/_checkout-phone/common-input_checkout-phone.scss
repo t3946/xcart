@@ -1,0 +1,5 @@
+.common-input_checkout-phone {
+  @include breakpoint(lg up) {
+    width: 170px;
+  }
+}

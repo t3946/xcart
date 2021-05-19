@@ -1,0 +1,11 @@
+.add-to-cart-button-add__complex-product{
+    width: rem-calc(51);
+
+    @include breakpoint(md up) {
+        width: rem-calc(81);
+    }
+
+    @include breakpoint(lg up) {
+        width: rem-calc(51);
+    }
+}

@@ -1,0 +1,18 @@
+.breadcrumb-slide {
+  width: auto;
+  font-size: rem-calc(12);
+  color: #888888;
+
+  &:after {
+    content: '>';
+    padding: 0 rem-calc(5);
+  }
+
+  &:last-child {
+    color: #000000;
+
+    &:after {
+      content: none;
+    }
+  }
+}

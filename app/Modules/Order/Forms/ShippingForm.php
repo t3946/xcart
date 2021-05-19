@@ -18,13 +18,17 @@ class ShippingForm extends FrontendModelForm
 {
     use AddressAttributesReplacement;
 
-    private $_shippingFields;
-    private $_contactFields;
+    protected array $_shippingFields;
+    protected array $_contactFields;
+    protected array $_billingFields;
+    protected array $_purchase_order_details_form;
+    protected array $_purchasing_manager_form;
+    protected array $_accounts_payable_form;
+    protected array $_pay_by_card_form;
 
     public $replacement = 's_';
 
     public $include = ['cb_status'];
-
 
     protected function beforeConstruct()
     {
@@ -35,7 +39,6 @@ class ShippingForm extends FrontendModelForm
         $this->_shippingFields[$shippingForm->replacement.'firstname']['html']['data-duplicate'] = $this->getName().'_firstname';
         $this->_contactFields = $contactForm->getFields();
     }
-
 
     public function getModel()
     {
@@ -54,5 +57,4 @@ class ShippingForm extends FrontendModelForm
     {
         return array_merge($this->_shippingFields, $this->_contactFields);
     }
-
 }

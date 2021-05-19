@@ -1,0 +1,7 @@
+.product-card-description__list {
+    display: none;
+
+    @include breakpoint(md up) {
+        display: block;
+    }
+}

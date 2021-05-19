@@ -1,0 +1,20 @@
+.form-field-error {
+  display: none;
+  font-size: rem-calc(14);
+  position: relative;
+  list-style: none;
+  background-color: #ffebeb;
+  border: 1px solid #ee2a31;
+  line-height: rem-calc(22);
+  width: 100%;
+  text-align: center;
+  min-height: rem-calc(34);
+  justify-content: center;
+  align-items: center;
+}
+
+@include breakpoint(lg up) {
+  .form-field-error {
+    max-width: rem-calc(400);
+  }
+}

@@ -1,0 +1,100 @@
+.wait-button {
+  position: relative;
+  overflow: hidden;
+
+  .wait-text {
+    text-transform: uppercase;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 300%;
+    height: 100%;
+    top: 0;
+    left: -50%;
+    z-index: 2;
+    background: repeating-linear-gradient(135deg, $white, $white 12px, $grey_e2 12px, $grey_e2 24px);
+    visibility: hidden;
+    transition: left 1.2s linear;
+  }
+
+  &.wait {
+    border: 2px solid $dark_orange;
+    background: $white;
+    cursor: default;
+    pointer-events: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.loading {
+      &:after {
+        left: 0;
+        visibility: visible;
+      }
+    }
+
+    .text {
+      display: none;
+    }
+  }
+}
+
+.add-to-cart-text__catalog.complex {
+  @include breakpoint(md up) {
+    display: none;
+  }
+}
+
+.wait .add-to-cart-text__catalog {
+  display: none;
+}
+
+.wait-button .wait-text {
+  display: none;
+}
+
+@include breakpoint(550px up) {
+  .wait-button.wait .wait-text {
+    display: block;
+  }
+}
+
+@include breakpoint(md up) {
+  .add-to-cart-button-add__complex.wait .wait-text {
+    display: none;
+  }
+}
+
+.button-wait-text {
+  text-transform: uppercase;
+}
+
+.add-to-cart-button-add.wait:before {
+  display: block;
+
+  @include breakpoint(550px up) {
+    display: none;
+  }
+}
+
+.add-to-cart-button-add__complex.wait:before {
+  @include breakpoint(md up) {
+    display: block;
+  }
+}
+
+.add-to-cart-button-add__catalog-tile.wait .wait-text {
+  display: none;
+}
+
+.add-to-cart-button-add__product.wait:before{
+  display: none;
+}
+
+.add-to-cart-button-add__complex-product.wait:before {
+  display: block;
+}

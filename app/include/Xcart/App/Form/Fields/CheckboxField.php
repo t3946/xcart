@@ -28,7 +28,7 @@ class CheckboxField extends CharField
             return $this->renderTemplate($this->fieldListTemplate, [
                 'inputs' => $this->renderInput(),
                 'errors' => $this->renderErrors(),
-                'hint' => $this->renderHint()
+                'hint' => $this->renderHint(),
             ]);
         }
 
@@ -89,7 +89,7 @@ class CheckboxField extends CharField
                 'field' => $this,
                 'html' => $this->buildAttributesLabel(),
                 'id' => $for,
-                'label' => $label
+                'label' => $label,
             ]);
         }
 

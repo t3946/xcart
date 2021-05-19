@@ -1,13 +1,17 @@
-import {h, render, Component} from "preact";
+import { h, Component } from "preact";
 import storeApp from "../stores/StoreApp";
 import renderToStringr from 'preact-render-to-string';
-import {videoLinkToObject} from "../utils/video";
+import { videoLinkToObject } from "../utils/video";
+import SwiperCore, { Navigation } from 'swiper';
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from 'lodash';
-import PreactSlySlide from "./PreactSlySlide";
 import { actionMedia } from '../redusers/appHeadReduser';
 import ScreenSize from "../utils/ScreenSize";
-//import ScreenSize from "../utils/ScreenSize";
+import React from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+React.useLayoutEffect = React.useEffect;
+SwiperCore.use([Navigation]);
 
 export default class ProductImageSlider extends Component {
     constructor(props) {
@@ -112,6 +116,7 @@ export default class ProductImageSlider extends Component {
         e.preventDefault();
 
         if (this.state.index !== n) {
+            this.productImagesSlider.slideTo( n + 1 );
             this.setState({
                 index: n,
                 isVideo: false,
@@ -169,6 +174,9 @@ export default class ProductImageSlider extends Component {
 
         let pswp = PhotoSwipe;
         pswp.options.index = this.state.index;
+        pswp.options.speed = 300;
+        pswp.options.zoomEl = false;
+        pswp.options.maxSpreadZoom = 1;
         pswp.setImages(this.preparedItems);
         pswp.init();
     }
@@ -177,6 +185,7 @@ export default class ProductImageSlider extends Component {
         e.preventDefault();
 
         if (this.state.index) {
+            this.productImagesSlider.slideTo(this.state.index - 1);
             this.setState({
                 index: this.state.index - 1,
                 isVideo: false,
@@ -188,6 +197,7 @@ export default class ProductImageSlider extends Component {
         e.preventDefault();
 
         if (this.state.index < this.state.count - 1) {
+            this.productImagesSlider.slideTo(this.state.index + 2);
             this.setState({
                 index: this.state.index + 1,
                 isVideo: false,
@@ -204,12 +214,6 @@ export default class ProductImageSlider extends Component {
         }
     }
 
-    // videoShowHndl(e) {
-    //     e.preventDefault();
-    //
-    //     this.setState({isVideo: true})
-    // }
-
     renderThumbs() {
         return _.map(this.state.items, (item, n) => {
 
@@ -218,12 +222,14 @@ export default class ProductImageSlider extends Component {
 
             if (item.type === 'image') {
                 return (
-                    <div className={"slide type-image" + is_active} key={"image.thumb." + n} onClick={e => {
-                        this.clickHndl(e, n, item)
-                    }}
-                         style={"background-image: url(" + item.thumb + ")"}
-                    >
-                    </div>
+                    <SwiperSlide
+                        className={"slide type-image" + is_active}
+                        key={"image.thumb." + n}
+                        onClick={e => {
+                            this.clickHndl(e, n, item)
+                        }}
+                        style={"background-image: url(" + item.thumb + ")"}
+                    />
                 );
             }
             if (item.type === 'video') {
@@ -232,34 +238,34 @@ export default class ProductImageSlider extends Component {
 
                 if (src) {
                     return (
-                        <div className={"slide type-video play-icon" + is_active}
-                             key={"video.thumb." + n}
-                             onClick={e => {
+                        <SwiperSlide
+                            className={"slide type-video play-icon" + is_active}
+                            key={"video.thumb." + n}
+                            onClick={e => {
                                  this.clickHndl(e, n, item)
                              }}
-                             style={"background-image: url(" + src + ")"}
-                        >
-                        </div>
+                            style={"background-image: url(" + src + ")"}
+                        />
                     );
                 }
                 else {
                     return (
-                        <div className={"slide type-video" + is_active} key={"video.thumb." + n} onClick={e => {
+                        <SwiperSlide className={"slide type-video" + is_active} key={"video.thumb." + n} onClick={e => {
                             this.clickHndl(e, n, item)
                         }}>
                             <span>No image</span>
-                        </div>
+                        </SwiperSlide>
                     );
                 }
             }
 
             if (item.type === 'html') {
                 return (
-                    <div className={"slide type-html" + is_active} key={"html.thumb." + n} onClick={e => {
+                    <SwiperSlide className={"slide type-html" + is_active} key={"html.thumb." + n} onClick={e => {
                         this.clickHndl(e, n, item)
                     }}>
                         HTML
-                    </div>
+                    </SwiperSlide>
                 );
             }
         });
@@ -291,21 +297,19 @@ export default class ProductImageSlider extends Component {
     }
 
     renderAllDetails() {
-
         return _.map(this.state.items, (item, n) => {
-
             let is_active = '';
             let position = n + 1;
             let key = 'detail.' + position;
 
             if (item.type === 'image') {
                 return (
-                    <div className={"slide image type-image" + is_active} key={key} onClick={e => {
-                        this.zoomHndl(e, item)
-                    }}
-                         style={"background-image: url(" + item.preview + ")"}
+                    <SwiperSlide
+                        key={key}
+                        onClick={e => {this.zoomHndl(e, item)}}
+                        style={"background-image: url(" + item.preview + ")"}
                     >
-                    </div>
+                    </SwiperSlide>
                 );
             }
 
@@ -319,34 +323,17 @@ export default class ProductImageSlider extends Component {
                     this.zoomHndl(e, item)
                 }} key={key}>{content}</div>;
             }
-
-            // if (item.type === 'html') {
-            //     return <div className="slide type-html" dangerouslySetInnerHTML={{__html:item.html}} key={key} ></div>;
-            // }
-
-
         });
     }
 
     renderSlyDetails() {
         if (this.state.count) {
             return (
-                <PreactSlySlide
-                    pos={this.state.index}
-                    options={{
-                        horizontal: 1,
-                        itemNav: 'forceCentered',
-                        speed: 300,
-                        activateMiddle: 1,
-                        mouseDragging: 1,
-                        touchDragging: 1,
-                        smart: 1,
-                        onSlideActive: this.onSlideActive.bind(this)
-                    }}>
+                <SwiperSlide change={{ function () { alert('change'); } }}>
                     <div className="frame" ref={el => this.refs.frameDetail = el} style={{'height': this.state.height}}>
                         {this.renderAllDetails()}
                     </div>
-                </PreactSlySlide>
+                </SwiperSlide>
             );
         }
 
@@ -375,7 +362,7 @@ export default class ProductImageSlider extends Component {
 
     renderSliderThumbs() {
 
-        let sliderButtonsClasses = (this.state.items.length <= 3) ? 'hide' : '';
+        let sliderButtonsClasses = (this.state.items.length <= 3) ? ' hide' : '';
         let buttonStyles = {
             'width': '100%',
         };
@@ -383,36 +370,36 @@ export default class ProductImageSlider extends Component {
 
         return (
             <div className="slider-thumbs" style={hideEl}>
-                <button className={"prev " + sliderButtonsClasses} onClick={e => {
+                <button className={"prev product-thumbs-slider-prev" + sliderButtonsClasses} onClick={e => {
                     this.prevHndl(e)
                 }} ref={el => this.refs.prev = el} style={buttonStyles}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
-                         viewBox="0 0 31.75 17.688">
-                        <path className="prev_path"
-                              d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z"
-                              transform="translate(-89.625 -204.656)"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688" viewBox="0 0 31.75 17.688">
+                        <path className="prev_path" d="M90.364,222.341l-0.728-.685,16-17,0.728,0.686Zm30.272,0,0.728-.685-16-17-0.728.686Z" transform="translate(-89.625 -204.656)"/>
                     </svg>
                 </button>
-                <PreactSlySlide
-                    pos={this.state.index}
-                    options={{
-                        horizontal: 0,
-                        speed: 300,
-                        mouseDragging: 1,
-                        touchDragging: 1,
-                        smart: 1,
-                        prev: this.refs.prev,
-                        next: this.refs.next,
-                    }}>
-                    <div className="frame" ref={el => this.refs.frame = el} style={{'height': this.state.height}}>
-                        {this.renderThumbs()}
-                    </div>
-                </PreactSlySlide>
-                <button className={"next " + sliderButtonsClasses} onClick={e => {
+
+                <Swiper
+                    spaceBetween={5}
+                    longSwipesRatio={0.05}
+                    slidesPerView={ 'auto' }
+                    effect={'coverflow'}
+                    direction={'vertical'}
+                    className={'product-thumbs-slider swiper-container'}
+                    navigation={
+                        {
+                            nextEl: '.product-thumbs-slider-next',
+                            prevEl: '.product-thumbs-slider-prev',
+                        }
+                    }
+                    onSwiper={(swiper) => this.productImagesThumbsSlider = swiper}
+                >
+                    { this.renderThumbs() }
+                </Swiper>
+
+                <button className={"next product-thumbs-slider-next" + sliderButtonsClasses} onClick={e => {
                     this.nextHndl(e)
                 }} ref={el => this.refs.next = el} style={buttonStyles}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688"
-                         viewBox="0 0 31.75 17.688">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="31.75" height="17.688" viewBox="0 0 31.75 17.688">
                         <path className="next_path"
                               d="M120.636,279.657l0.728,0.685-16,17-0.728-.685Zm-30.272,0-0.728.685,16,17,0.728-.685Z"
                               transform="translate(-89.625 -279.656)"/>
@@ -422,22 +409,41 @@ export default class ProductImageSlider extends Component {
         );
     }
 
+    onChange() {
+        if ( !this.productImagesSlider ) {
+            return;
+        }
+
+        const index = this.productImagesSlider.realIndex;
+        this.setState( {
+            index: index,
+            isVideo: false,
+        } );
+    }
+
     render() {
         if (this.state.loading) {
             return <div className="slider loading"></div>;
         }
 
+        const detail = this.renderDetailClickBar();
+
         return (
             <div className="images-slider">
-                {this.renderSliderThumbs()}
-                <div className="slider-detail">
-                    <div className="wrap">
-                        {this.renderSlyDetails()}
-                    </div>
-                    <ul className="detailClickBar">
-                        {this.renderDetailClickBar()}
-                    </ul>
-                </div>
+                { this.renderSliderThumbs() }
+
+                <Swiper
+                    spaceBetween={50}
+                    longSwipesRatio={0.05}
+                    slidesPerView={1}
+                    loop={true}
+                    effect={'coverflow'}
+                    className={'product-images-slider swiper-container'}
+                    onSwiper={(swiper) => this.productImagesSlider = swiper}
+                    onSlideChange={() => this.onChange()}
+                >
+                    {this.renderAllDetails()}
+                </Swiper>
             </div>
         );
     }

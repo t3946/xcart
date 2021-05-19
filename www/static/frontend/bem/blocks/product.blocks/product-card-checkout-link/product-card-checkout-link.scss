@@ -1,0 +1,15 @@
+.product-card-checkout-link {
+    grid-area: price-option__link;
+    grid-column: 1/4;
+
+    a {
+        width: 100%;
+        height: rem-calc(42);
+        display: flex;
+        margin: rem-calc(10) 0;
+    }
+
+    @include breakpoint(md up) {
+        display: none;
+    }
+}

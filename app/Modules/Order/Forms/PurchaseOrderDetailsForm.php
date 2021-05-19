@@ -20,13 +20,13 @@ class PurchaseOrderDetailsForm extends FrontendForm
                 'hint' => OrderModule::t('PO number or internal order code in your system'),
                 'html' => [
                     'class' => 'po_number',
-                    'placeholder' => OrderModule::t('14031879')
+                    'placeholder' => OrderModule::t('14031879'),
+                    'inputmode' => 'numeric',
                 ]
             ],
             'organization_name' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('Organization Name'),
-                'required' => true,
                 'hint' => OrderModule::t('The name of your organization'),
                 'html' => [
                     'placeholder' => OrderModule::t('Eureka Inc.')

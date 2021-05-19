@@ -1,0 +1,15 @@
+.checkout-left-column {
+  padding: 0 rem-calc(20);
+}
+
+@include breakpoint(md up) {
+  .checkout-left-column {
+    padding: 0 rem-calc(20);
+  }
+}
+
+@include breakpoint(xl up) {
+  .checkout-left-column{
+    padding: 0 rem-calc(40) 0 rem-calc(20);
+  }
+}

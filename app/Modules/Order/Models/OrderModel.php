@@ -18,11 +18,8 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Sites\Models\TaxModel;
-use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -45,7 +42,7 @@ use Xcart\App\Traits\DataModelTrait;
 use Xcart\Order;
 
 /**
- * @property string|null purchase_order
+ * @property array|null purchase_order
  * @property string s_address
  * @property string s_firstname
  * @property string s_company
@@ -85,6 +82,7 @@ use Xcart\Order;
  * @property mixed tracking_all_filled
  * @property int tracking_fill_time
  * @property bool track_sms
+ * @property bool billing_same_shipping
  * @property mixed|Field|FileField|ModelFieldInterface|null date
  * @property mixed|Field|FileField|ModelFieldInterface|null b_country
  * @property OrderExtraModel extra_model
@@ -349,6 +347,11 @@ class OrderModel extends Model
                 'null' => false,
             ],
             'track_sms' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'billing_same_shipping' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false,
@@ -647,12 +650,16 @@ class OrderModel extends Model
     public function getTaxes(): array
     {
         $res = [];
-        $groups = array_map(static fn($group) => $group->tax_rates->all(), $this->groups->all());
-        foreach ($groups as $group) {
-            foreach ($group as $tax_rate) {
-                $res[(string)$tax_rate->tax_rate->tax] += $tax_rate->value;
+        foreach ($this->groups as $group) {
+            foreach ($group->getTaxes() as $type => $val) {
+                $res["total_{$type}"] += $val;
             }
         }
         return $res;
+    }
+
+    public function getHash(): string
+    {
+        return md5($this->orderid . $this->total . $this->email);
     }
 }

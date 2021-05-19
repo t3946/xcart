@@ -1,11 +1,13 @@
+/**
+ * For all fields in form add button clear field.
+ * If a field have the hasClose class then clear field will show else hide.
+ */
 class ClearFormFields {
-
     /**
      * Construct form
      * @param name
      */
     constructor(name) {
-
         this.name = name;
         //this.constraints = document.formConstraints[name];
 
@@ -25,6 +27,11 @@ class ClearFormFields {
             let inputContainer = this.inputs.item(i);
             let closeButton = document.createElement('a');
             let input = inputContainer.querySelector('input');
+
+            if (!input) {
+                return;
+            }
+
             closeButton.classList.add('clear-input');
             //closeButton.setAttribute("pseudo", "-webkit-search-cancel-button");
             inputContainer.append(closeButton);
@@ -35,6 +42,7 @@ class ClearFormFields {
             this.processJsChange = this.processJsChange.bind(this);
             closeButton.addEventListener('click', this.clearFieldListener, {'passive': true});
             input.addEventListener('keyup', this.processChange, {'passive': true});
+            input.addEventListener('change', this.processChange, {'passive': true});
             input.addEventListener('js.change.event', this.processJsChange, {'passive': true});
 
             this.closeButtons.push({
@@ -49,14 +57,13 @@ class ClearFormFields {
      * @param event
      */
     clearField(input, event){
-
         let closeElement = event.target;
-        let wrapper = closeElement.closest('.input-container');
+        let wrapper = closeElement.closest( '.input-container' );
 
-         input.value = '';
-         input.focus();
-         wrapper.classList.remove('hasClose');
-
+        input.value = '';
+        input.focus();
+        $(input).trigger('change');
+        wrapper.classList.remove('hasClose');
     }
 
 
@@ -76,7 +83,9 @@ class ClearFormFields {
     showHideClose(inputElement){
         let wrapper = inputElement.closest('.input-container');
         if(inputElement.value !== '') {
-            wrapper.classList.add('hasClose');
+            if ( $(wrapper).find('input[type=text]').length ) {
+                wrapper.classList.add('hasClose');
+            }
         } else {
             wrapper.classList.remove('hasClose');
         }

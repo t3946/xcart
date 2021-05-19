@@ -219,6 +219,9 @@ header {
   @include breakpoint(sm){
     overflow: visible;
   }
+  @include breakpoint(lg up) {
+    border: none;
+  }
 }
 .header-fixed {
   position:fixed;

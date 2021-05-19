@@ -1,0 +1,10 @@
+.price-attributes__list {
+    @include breakpoint(md up) {
+        grid-template-areas:
+                "price-option__quantity"
+                "price-option__info"
+                "price-option__button";
+        grid-template-columns: 1fr;
+        grid-column-gap: 0;
+    }
+}

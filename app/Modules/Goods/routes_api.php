@@ -4,6 +4,8 @@ use Modules\Goods\Controllers\Api\ApiAnalyticController;
 use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
 use Modules\Order\Controllers\Api\UpsMapController;
+use Modules\Goods\Controllers\Api\ApiCategoriesController;
+use Modules\Goods\Controllers\SearchController;
 
 return [
     [
@@ -26,7 +28,6 @@ return [
         'target' => [ApiAnalyticController::class, 'index'],
         'name' => 'analytic'
     ],
-
     [
         'route' => 'upsmap/{slug:zipcode}',
         'target' => [UpsMapController::class, 'index'],
@@ -41,5 +42,72 @@ return [
         'route' => 'i/{i:image_id}/{**:filename}',
         'target' => [ApiImageController::class, 'view'],
         'name' => 'image'
+    ],
+
+    /** PRODUCT SLIDERS */
+    [
+        'route' => 'category/bestsellers',
+        'target' => [ApiCategoriesController::class, 'actionSliderBestsellers'],
+        'name' => 'bestsellersApi'
+    ],
+    [
+        'route' => 'category/featured',
+        'target' => [ApiCategoriesController::class, 'actionSliderFeatured'],
+        'name' => 'featuredApi'
+    ],
+    [
+        'route' => 'category/new',
+        'target' => [ApiCategoriesController::class, 'actionSliderNew'],
+        'name' => 'newApi'
+    ],
+    [
+        'route' => 'category/viewed',
+        'target' => [ApiCategoriesController::class, 'actionSliderViewed'],
+        'name' => 'viewedApi'
+    ],
+    [
+        'route' => 'category/also-bound-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionSliderAlsoBought'],
+        'name' => 'also_boundApi'
+    ],
+    [
+        'route' => 'category/related-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionSliderRelatedProducts'],
+        'name' => 'relatedApi'
+    ],
+    [
+        'route' => 'category/{i:id}/{slug:slug}/',
+        'target' => [ApiCategoriesController::class, 'actionCatalogCategory'],
+        'name' => 'categoryPaginatedApi',
+    ],
+    [
+        'route' => 'brand/{i:id}/{slug:slug}/',
+        'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
+        'name' => 'viewApi'
+    ],
+    [
+        'route' => 'product/{i:id}/{slug:slug}/',
+        'target' => [ApiProductController::class, 'actionProductGroup'],
+        'name' => 'groupProductApi',
+    ],
+
+    /** SEARCH ROUTES */
+    [
+        'route' => 'search',
+        'target' => [SearchController::class, 'actionSearch'],
+        'name' => 'search',
+    ],
+    [
+        'route' => 'search/suggestion',
+        'target' => [SearchController::class, 'actionApiSuggestion'],
+        'name' => 'search:suggestion',
+    ],
+    [
+        'route' => 'keyword/{slug:q}',
+        'target' => [SearchController::class, 'actionKeywords'],
+    ],
+    [
+        'route' => 'keyword/{slug:q}/',
+        'target' => [SearchController::class, 'actionKeywords'],
     ],
 ];

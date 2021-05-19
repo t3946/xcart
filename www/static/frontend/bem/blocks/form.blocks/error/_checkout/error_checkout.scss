@@ -1,0 +1,11 @@
+@include breakpoint(md up) {
+  .error_checkout {
+    width: 320px;
+  }
+}
+
+@include breakpoint(lg up) {
+  .error_checkout {
+    width: 100%;
+  }
+}
