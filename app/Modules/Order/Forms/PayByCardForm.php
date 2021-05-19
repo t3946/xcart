@@ -31,6 +31,10 @@ class PayByCardForm extends FrontendForm
         parent::__construct($config);
 
         if ($order = OrderHelper::getCartOrder()) {
+            $payment_id = $order->payment_method_model->paymentid;
+            if ((int)$payment_id !== 106) {
+                return;
+            }
             $params = [
                 'amount' => $order->total,
                 'currency' => $order->currency,
@@ -43,13 +47,14 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                if ($order->payment_method_model->paymentid && $transaction = $order
+
+                if ($transaction = $order
                     ->transactions
                     ->filter([
                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
                         'transaction_amount' => $params['amount'] ?? 0,
                         'transaction_currency' => $params['currency'] ?? 'USD',
-                        'paymentid' => $order->payment_method_model->paymentid])
+                        'paymentid' => $payment_id])
                     ->limit(1)
                     ->get()) {
                     $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
