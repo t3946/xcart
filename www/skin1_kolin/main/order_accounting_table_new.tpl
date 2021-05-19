@@ -1060,7 +1060,7 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
     <td id="acc_track_{$m_id}_{$invoice_number}_box_3" style="padding-right: 5px;">
         <input type="text" id="tracking_ship_date_{$m_id}_{$invoice_number}_box_0"
                name="groups[{$m_id}][tracking_ship_date][]" value="" size="15"
-               onclick="$(this).datepicker();  $(this).datepicker('show');"/>
+               onclick="$(this).datepicker({ language: 'en' });  $(this).datepicker('show');"/>
     </td>
     <td id="acc_track_{$m_id}_{$invoice_number}_box_4" style="padding-right: 10px;">
         <select id="tracking_carrier_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_carrier][]"
