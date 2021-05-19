@@ -78,7 +78,7 @@ export default ( function () {
     */
     Constructor.prototype.disableSubmitButton = function (isDisabled) {
         console.log('disableSubmitButton', isDisabled);
-        //$submitButton.prop('disabled', isDisabled);
+        $submitButton.prop('disabled', isDisabled);
     }
 
     Constructor.prototype.update = function ( data, callback = null ) {
