@@ -31,10 +31,7 @@ class PayByCardForm extends FrontendForm
         parent::__construct($config);
 
         if ($order = OrderHelper::getCartOrder()) {
-            $payment_id = (int) $order->payment_method_model->paymentid;
-            if ($payment_id === 0) {
-                return;
-            }
+            $payment_id = 106;
             $params = [
                 'amount' => $order->total,
                 'currency' => $order->currency,
@@ -95,12 +92,10 @@ class PayByCardForm extends FrontendForm
                                 'transaction_status' => OrderTransactionModel::STATUS_PENDING,
                                 'orderid' => $order->orderid,
                                 'type' => 'authorization',
-                                'paymentid' => $order->paymentid,
+                                'paymentid' => $payment_id,
                             ])
                     );
-                    if ($payment_id === 106) {
-                        $transaction->save();
-                    }
+                    $transaction->save();
                 }
 
                 $this->stripe_payment_intent = $transaction_id;
