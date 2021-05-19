@@ -588,7 +588,7 @@ function check_r_fields() {
                                 <!--
                                 {literal}
                                 $(function () {
-                                    $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker();
+                                    $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker({ language: 'en' });
                                 });
                                 {/literal}
                                 -->

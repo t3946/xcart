@@ -106,7 +106,7 @@
     <script>
         {literal}
         $(function () {
-            $("#eta_date_mm_dd_yyyy").datepicker();
+            $("#eta_date_mm_dd_yyyy").datepicker({ language: 'en' });
         });
         {/literal}
     </script>

@@ -329,7 +329,7 @@ function managedate(type, status) {
 <!--
 {literal}
   $(function() {
-    $("#id_start_date").datepicker();
+    $("#id_start_date").datepicker({ language: 'en' });
   });
 {/literal}
 -->
@@ -353,7 +353,7 @@ function managedate(type, status) {
 <!--
 {literal}
   $(function() {
-    $("#id_end_date").datepicker();
+    $("#id_end_date").datepicker({ language: 'en' });
   });
 {/literal}
 -->
