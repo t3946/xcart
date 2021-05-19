@@ -31,8 +31,8 @@ class PayByCardForm extends FrontendForm
         parent::__construct($config);
 
         if ($order = OrderHelper::getCartOrder()) {
-            $payment_id = $order->payment_method_model->paymentid;
-            if ((int)$payment_id !== 106) {
+            $payment_id = (int) $order->payment_method_model->paymentid;
+            if ($payment_id === 0) {
                 return;
             }
             $params = [
@@ -47,7 +47,6 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-
                 if ($transaction = $order
                     ->transactions
                     ->filter([
@@ -99,7 +98,9 @@ class PayByCardForm extends FrontendForm
                                 'paymentid' => $order->paymentid,
                             ])
                     );
-                    $transaction->save();
+                    if ($payment_id === 106) {
+                        $transaction->save();
+                    }
                 }
 
                 $this->stripe_payment_intent = $transaction_id;
