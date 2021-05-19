@@ -22,7 +22,7 @@ export default class Catalog extends Component {
 
         this.state = {
             ...props,
-            viewMode: Storage.get( this.VIEW_MODE_STORAGE_KEY, 'list' ),
+            viewMode: Storage.get( this.VIEW_MODE_STORAGE_KEY, 'tile' ),
             onViewModeChange,
             onUpdateProductList,
             // true after first product list loaded
