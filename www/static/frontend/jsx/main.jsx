@@ -62,7 +62,7 @@ import Waves               from 'node-waves';
 
         window.surfMetaRegister();
         $( document ).trigger( 'app.start' );
-        window.sendAnalytics.pageview();
+        
 
         Promise.all( [
             ( new FontFaceObserver( 'Lato', {
