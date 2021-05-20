@@ -92,16 +92,6 @@ function func_calc_total_deposit_amount(){
 <input type="hidden" name="mode" value="" />
 <input type="hidden" name="checks_deposited_id" value="{$checks_deposited_id}" />
 
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#date").datepicker();
-  });
-{/literal}
--->
-</script>
-
 <script type="text/javascript">
         <!--
                 var lbl_add = '{$lng.lbl_add|escape}';
@@ -126,7 +116,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
 {if $checks_deposited.status eq "D"}
 <input type="hidden" name="date" value="{$checks_deposited.date|date_format:'%m/%d/%Y'}" />
 {/if}
-<input autocomplete="off" id="date" {if $checks_deposited.status eq "D"}disabled="disabled"{/if} type="text" size="9" name="date" value="{$checks_deposited.date|default:now|date_format:'%m/%d/%Y'}" />
+<input class="datepicker-here" data-language="en" autocomplete="off" id="date" {if $checks_deposited.status eq "D"}disabled="disabled"{/if} type="text" size="9" name="date" value="{$checks_deposited.date|default:now|date_format:'%m/%d/%Y'}" />
 
 </td>
 <td>&nbsp;&nbsp;</td>
