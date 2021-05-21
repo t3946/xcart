@@ -5,6 +5,7 @@ import "jquery-form";
 import "air-datepicker"
 import "air-datepicker/dist/js/i18n/datepicker.en"
 
+import "@/../components/jquery.shapeshift/core/jquery.shapeshift"
 import "@/js/ajaxTooltip";
 import "@/js/CCDashboard";
 import "@/js/flash";

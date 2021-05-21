@@ -323,7 +323,7 @@ class ReportsStore extends OrderSearchStore
             'codes' => new Expression("GROUP_CONCAT(DISTINCT m.code ORDER BY m.code SEPARATOR ', ')")
         ]);
 
-        $totals = Connection::getInstance()->fetchAssoc($qsum->getSQL());
+        $totals = Connection::getInstance()->fetchAssociative($qsum->getSQL());
         if ($totals) {
             if (floatval($totals['accounting_net_0']) != 0) {
                 $totals['total_margin'] = round($totals['accounting_net_5_profit'] / $totals['accounting_net_0'] * 100, 2);
