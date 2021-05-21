@@ -16,8 +16,6 @@ window.endless_paginate = ()=>{
 
     if ($this.length) {
 
-        window.sendAnalytics.sendLoadMore($this.attr('href'));
-
         Pace.ignore(function (){
             $.ajax($this.attr('href'), {
                 'dataType': 'json',

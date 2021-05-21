@@ -364,26 +364,6 @@
 {/block}
 
 {block 'js'}
-    <!-- Google Code for Conversion Tracking: Order Conversion Page -->
-    <script>
-        var google_conversion_id = 1072406910;
-        var google_conversion_language = "en";
-        var google_conversion_format = "3";
-        var google_conversion_color = "ffffff";
-        var google_conversion_label = "9T_YCJXjmXMQ_sKu_wM";
-        var google_conversion_value = {$order->total};
-        var google_conversion_order_id = {$order->orderid};
-        var google_conversion_currency = "USD";
-        var google_remarketing_only = false;
-    </script>
-    <script src="//www.googleadservices.com/pagead/conversion.js"></script>
-    <noscript>
-        <div style="display:inline;">
-            <img height="1" width="1" style="border-style:none;" alt=""
-                 src="//www.googleadservices.com/pagead/conversion/1072406910/?value={$order->total}&amp;currency_code=USD&amp;label=9T_YCJXjmXMQ_sKu_wM&amp;guid=ON&amp;script=0"/>
-        </div>
-    </noscript>
-    <!-- Google Code for Conversion Tracking: Order Conversion Page -->
 
     <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
     <noscript><img src="//bat.bing.com/action/0?ti=5024901&Ver=2" height="0" width="0"
@@ -408,74 +388,42 @@
         {/ignore}
     </script>
     <!-- Bing Code for Conversion Tracking: Order Conversion Page -->
+{/block}
+
+{block 'head'}
     <script>
-        {ignore}
-        ga('require', 'ec');
-
-        ga('ec:setAction', 'purchase', {
-        {/ignore}
-            'id': '{$order->getOrderNumber()}',
-            'affiliation': '{$.getSite->domain}',
-            'revenue': '{$order->total|number_format:2:'.':''}',
-            'shipping': '{$order->shipping_cost|number_format:2:'.':''}'
-        {ignore}
-        });
-        {/ignore}
-
-        {foreach $order->detail_models as $detail}
-            {set $product = $detail->product_model}
-            {set $category = $product->getMainCategory()}
-            {if $product}
-                {ignore}
-                ga('ec:addProduct', {
-                {/ignore}
-                    'id':'{$order->getOrderNumber()}',
-                    'name':'{$product->getFrontendName()}',
-                    'sku':'{$product->productcode}',
-                    'category':'{$category->category}',
-                    'price':'{$detail->price|number_format:2:'.':''}',
-                    'quantity':'{$detail->amount}'
-                {ignore}
-                });
-                {/ignore}
-                {set $pids[] = $product->productid}
-            {/if}
-        {/foreach}
-        
-    </script>
-
-    <script>
-        gtag('event', 'page_view', {
-            send_to: 'AW-1072406910',
-            ecomm_pagetype: 'purchase',
-            ecomm_prodid: [{','|implode:$pids}],
-            ecomm_totalvalue: {$order->total|number_format:2:'.':''}
-        });
-        gtag('event', 'purchase', {
-            send_to: 'AW-1072406910',
-            transaction_id: '{$order->getOrderNumber()}'
-        });
-    </script>
-
-    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-
-    {if $google_review}
-        <script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
-        <script>
-            window.renderOptIn = function () {
-                window.gapi.load('surveyoptin', function () {
-                    window.gapi.surveyoptin.render(
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            'ecommerce': {
+                'purchase': {
+                    'actionField': {
+                        'id': '{$order->getOrderNumber()}', // Transaction ID. Required for purchases and refunds.
+                        'affiliation': '{$.getSite->domain}',
+                        'revenue': '{$order->total|number_format:2:'.':''}', // Total transaction value (incl. tax and shipping)
+                        'tax':0,
+                        'shipping': '{$order->shipping_cost|number_format:2:'.':''}',
+                    },
+                    'products': [
+                        {foreach $order->detail_models as $detail}
+                        {set $product = $detail->product_model}
+                        {set $category = $product->getMainCategory()}
+                        {if $product}
                         {
-                            // REQUIRED FIELDS
-                            "merchant_id": {$google_review},
-                            "order_id": "{$order->getOrderNumber()}",
-                            "email": "{$order->email}",
-                            "delivery_country": "{$order->s_country}",
-                            "estimated_delivery_date": "{$order->getEstimatedDeliveryDate()->format('Y-m-d')}",
-
-                        });
-                });
+                            'id': '{$order->getOrderNumber()}',
+                            'name': '{$product->getFrontendName()}',
+                            'sku': '{$product->productcode}',
+                            'brand': '{$product->brand->brand}',
+                            'category': '{$category->category}',
+                            'price': '{$detail->price|number_format:2:'.':''}',
+                            'quantity': '{$detail->amount}'
+                        },
+                        {/if}
+                        {/foreach}
+                    ]
+                }
             }
-        </script>
-    {/if}
+        });
+    </script>
+    {parent}
 {/block}

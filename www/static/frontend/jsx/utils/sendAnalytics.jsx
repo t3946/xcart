@@ -1,51 +1,21 @@
 export default class sendAnalytics {
-
-    constructor(options = {}) {
-
-    }
-
     addToCart(product) {
-        if (window['ga']) {
-            window.ga('require', 'ec');
-            window.ga('ec:addProduct', {
-                'id': product.dataset.product,
-                'name': product.dataset.name || '',
-                'category': product.dataset.category || '',
-                'brand': product.dataset.brand || '',
-                'price': product.dataset.price,
-                'quantity': product.dataset.quantity  || 1
-            });
-            window.ga('set', 'dimension1', window.app.options.discount_minutes);
-            window.ga('ec:setAction', 'add', {list: product.dataset.source});
-            window.ga('send', 'event', 'UX', 'click', 'Add to cart');
-        }
+        window.dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
+        window.dataLayer.push({
+            'event': 'addToCart',
+            'ecommerce': {
+                'currencyCode': product.dataset.currncy || 'USD',
+                'add': {                                // 'add' actionFieldObject measures.
+                    'products': [{                        //  adding a product to a shopping cart.
+                        'name': product.dataset.name || '',
+                        'id':  product.dataset.product,
+                        'price': product.dataset.price,
+                        'brand': product.dataset.brand || '',
+                        'category': product.dataset.category || '',
+                        'quantity': product.dataset.quantity  || 1
+                    }]
+                }
+            }
+        });
     }
-
-    sendLoadMore(lc) {
-        if (window['ga']) {
-            window.ga('send', {hitType: 'pageview', location: lc});
-        }
-    }
-
-    productDetail(product) {
-        if (window['ga']) {
-            window.ga('require', 'ec');
-            window.ga('ec:addProduct', {
-                'id': product.dataset.product,
-                'name': product.dataset.name || '',
-                'category': product.dataset.category || '',
-                'brand': product.dataset.brand || '',
-                'price': product.dataset.price,
-                'position': 1
-            });
-            window.ga('ec:setAction', 'detail');
-        }
-    }
-
-    pageview (data) {
-        if (window['ga']) {
-            window.ga('send', 'pageview', data);
-        }
-    }
-
 }

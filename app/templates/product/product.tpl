@@ -4,6 +4,29 @@
     {insert '_parts/_css_preload.tpl'}
 {/block}
 
+{block 'head'}
+    {add $brand = $model->brand}
+    <script>
+        // Measure a view of product details.
+        dataLayer = window.dataLayer || [];
+        dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
+        dataLayer.push({
+            'ecommerce': {
+                'detail': {
+                    'products': [{
+                        'name': '{$model->getFrontendName()|escape}',         // Name or ID is required.
+                        'id': '{$model->productid}',
+                        'price': '{$model->getFrontendPrice()}',
+                        'brand': '{$brand->brand|escape}',
+                        'category': '{$category->category|escape}',
+                    }]
+                }
+            }
+        });
+    </script>
+
+{/block}
+
 {block 'product_og'}
     <meta property="og:site_name" content="{$site->getName()}">
     <meta property="og:title" content="{$model->getFrontendName()}">
@@ -29,12 +52,16 @@
 {/block}
 
 {block "content"}
+    {add $brand = $model->brand}
 <div class="product-page default-content-page"
          data-product="{$model->productid}"
          data-name="{$model->getFrontendName()|escape}"
          data-category="{$category->category|escape}"
          data-source="detail-page"
+         data-brand="{$brand->brand|escape}"
          data-prices='{$model->getPrices()|json_encode}'
+         data-price="{$model->getFrontendPrice()}"
+         data-currency="{$site_currency->currency_code}"
          data-rows="2"
          {if $model->getFrontendPrice() < $model->list_price}
          data-list-price="{$model->list_price}"
@@ -232,21 +259,10 @@
 
 {block 'js'}
     {set $main_image = $model->images->limit(1)->get()}
-    {set $brand = $model->brand}
+    {add $brand = $model->brand}
 
     <script type="application/ld+json">
     {$helper->getJsonSchema($model)}
-    </script>
-    <script>
-        gtag('event', 'page_view', {
-        send_to: 'AW-1072406910',
-        ecomm_pagetype: 'product',
-        ecomm_prodid: {$model->productid},
-        ecomm_totalvalue: {$model->getFrontendPrice()|number_format:2:'.':''},
-        ecomm_category: '{$category->category|escape}',
-        isSaleItem: {if $model->isSaleSticker()} true {else} false {/if}
-        });
-
     </script>
 
 {/block}

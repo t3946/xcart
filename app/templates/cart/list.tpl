@@ -237,14 +237,4 @@
     {foreach $.app->cart->getItems() as $gi => $item}
         {set $pids[] = $item->getObject()->productid}
     {/foreach}
-    {if $pids}
-    <script>
-        gtag('event', 'page_view', {
-            send_to: 'AW-1072406910',
-            ecomm_pagetype: 'cart',
-            ecomm_prodid: [{','|implode:$pids}],
-            ecomm_totalvalue: {$total|number_format:2:'.':''}
-        });
-    </script>
-    {/if}
 {/block}
