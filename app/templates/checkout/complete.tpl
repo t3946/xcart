@@ -410,11 +410,11 @@
                         {set $category = $product->getMainCategory()}
                         {if $product}
                         {
-                            'id': '{$order->getOrderNumber()}',
-                            'name': '{$product->getFrontendName()}',
+                            'id': '{$product->productid}',
+                            'name': '{$product->getFrontendName()|escape}',
                             'sku': '{$product->productcode}',
-                            'brand': '{$product->brand->brand}',
-                            'category': '{$category->category}',
+                            'brand': '{$product->brand->brand|escape}',
+                            'category': '{$category->category|escape}',
                             'price': '{$detail->price|number_format:2:'.':''}',
                             'quantity': '{$detail->amount}'
                         },
