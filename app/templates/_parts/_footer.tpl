@@ -83,9 +83,9 @@
 
             <div class="column small-12 medium-4 footer-right-column">
                 <div class="footer-socials show-for-medium footer_socials">
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
                     <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
                 </div>
             </div>
         </div>
