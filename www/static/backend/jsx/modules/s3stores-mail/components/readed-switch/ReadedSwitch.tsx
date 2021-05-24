@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 
-export const ReadedSwitch = ({ readed }) => {
-  const [read, setRead] = useState(readed);
+interface ReadSwitchDto {
+  readed: boolean;
+  editAction: (e) => void;
+}
 
-  const handleClick = () => {
-    setRead(!read);
-  };
-
+export const ReadedSwitch: React.FC<ReadSwitchDto> = ({
+  readed,
+  editAction,
+}) => {
   return (
-    <div onClick={handleClick} className="readed-wrap">
+    <div onClick={editAction} className="readed-wrap">
       <div>
-        <div className={`readed-slide ${read ? "slide-readed" : ""}`}>
-          {read ? "Action taken by Zouhair" : "Action required"}
+        <div className={`readed-slide ${readed ? "slide-readed" : ""}`}>
+          {readed ? "Action taken by Zouhair" : "Action required"}
         </div>
-        <div className={`readed-item ${read ? "readed" : ""}`} />
+        <div className={`readed-item ${readed ? "readed" : ""}`} />
       </div>
     </div>
   );

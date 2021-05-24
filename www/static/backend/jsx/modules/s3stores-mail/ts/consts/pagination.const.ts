@@ -1,3 +1,3 @@
 export const firstPage = 1;
 
-export const pageSize = 3;
+export const pageSize = 20;

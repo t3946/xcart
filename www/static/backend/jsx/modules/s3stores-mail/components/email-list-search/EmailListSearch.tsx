@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import { Button, Grid, IconButton } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import { Grid } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useDispatch } from "react-redux";
-import { setSearchOptions } from "../../../../redux/actions/emailActions";
+import { setSearchOptions } from "@redux/actions";
 import { EmailSearchDialog } from "../email-search-dialog.tsx/EmailSearchDialog";
 
-export const EmailListSearch = () => {
+export const EmailListSearch: React.FC = () => {
   const [focus, setFocus] = useState(false);
 
-  const [value, setValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const [open, setOpen] = React.useState(false);
 
@@ -22,8 +21,12 @@ export const EmailListSearch = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
   const dispatch = useDispatch();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+    dispatch(setSearchOptions(event.target.value));
+  };
 
   return (
     <div className="search-back">
@@ -40,11 +43,8 @@ export const EmailListSearch = () => {
 
         <Grid spacing={3} xs={10}>
           <input
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-              dispatch(setSearchOptions(e.target.value));
-            }}
+            value={searchValue}
+            onChange={handleChange}
             onBlur={() => setFocus(false)}
             onFocus={() => setFocus(true)}
             className="search-input"

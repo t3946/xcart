@@ -4,23 +4,31 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { useSelector } from "react-redux";
 import { IconsList } from "../icons-list/IconsList";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const EmailListHeader: React.FC<any> = ({
+interface EmailListHeaderPropsDto {
+  getNewPage: (count: number) => void;
+  page: number;
+  maxPage: number;
+  paginate: () => string;
+}
+
+export const EmailListHeader: React.FC<EmailListHeaderPropsDto> = ({
   getNewPage,
   page,
   maxPage,
   paginate,
 }) => {
-  const itemsCount = useSelector((state: any) => state.itemsCount);
+  const itemsCount = useSelector((state: StoreDto) => state.itemsCount);
   return (
     <div>
       <Paper className="header-wrap" square={true}>
-        <Grid container justify={"space-between"}>
+        <Grid alignItems="center" container justify={"space-between"}>
           <IconsList />
           <div className="pagination-wrap">
             <div className="faxage-text paginate">
               <span>
-                {paginate()} of {itemsCount}
+                {paginate()} of {itemsCount ? itemsCount : "many"}
               </span>
             </div>
             <IconButton disabled={page === 1} onClick={() => getNewPage(-1)}>
@@ -28,7 +36,9 @@ export const EmailListHeader: React.FC<any> = ({
             </IconButton>
             <IconButton
               disabled={maxPage === page}
-              onClick={() => getNewPage(1)}
+              onClick={() => {
+                getNewPage(1);
+              }}
             >
               <ChevronRightIcon />
             </IconButton>

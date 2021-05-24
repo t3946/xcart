@@ -1,30 +1,8 @@
 import React from "react";
-import {
-  Button,
-  FormControl,
-  Grid,
-  Input,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-} from "@material-ui/core";
-import ReplyIcon from "@material-ui/icons/Reply";
-import ForwardIcon from "@material-ui/icons/Forward";
-import { EmailSend } from "../email-send/EmailSend";
-import { EmailSelectInfo } from "../email-select-info/EmailSelectInfo";
+import { Grid, Paper } from "@material-ui/core";
+import { EmailInfoDataFooter } from "../email-info-data-footer/EmailInfoDataFooter";
 
-export const EmailInfoData = ({ data }) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+export const EmailInfoData: React.FC = () => {
   return (
     <div>
       <Paper elevation={0} square={true} className="email-info-data-wrapper">
@@ -58,29 +36,8 @@ export const EmailInfoData = ({ data }) => {
           copy is attached for your reference. You may also visit
           http://www.faxage. com to log in and work with your faxes.
         </span>
-        <Grid container alignItems="center" className="email-info-footer">
-          <Grid xs={2}>
-            <Button className="email-info-btn" variant="outlined">
-              <ReplyIcon className="email-info-btn-icon-reply" />
-              <span>REPLY</span>
-            </Button>
-          </Grid>
-          <Grid container alignItems="center" xs={3}>
-            <EmailSelectInfo />
-          </Grid>
-          <Grid container alignItems="center" xs={7} justify="flex-end">
-            <Button
-              onClick={handleClickOpen}
-              className="email-info-btn"
-              variant="outlined"
-            >
-              <ForwardIcon className="email-info-btn-icon" />
-              <span>FORWARD</span>
-            </Button>
-          </Grid>
-        </Grid>
+        <EmailInfoDataFooter />
       </Paper>
-      <EmailSend open={open} handleClose={handleClose} />
     </div>
   );
 };

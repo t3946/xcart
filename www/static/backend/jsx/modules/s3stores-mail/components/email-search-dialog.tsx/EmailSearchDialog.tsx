@@ -1,8 +1,16 @@
 import React from "react";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogContent } from "@material-ui/core";
 import { EmailSearchForm } from "../email-search-form/EmailSearchForm";
 
-export const EmailSearchDialog = ({ open, handleClose }) => {
+interface SearchDialogPropsDto {
+  open: boolean;
+  handleClose: () => void;
+}
+
+export const EmailSearchDialog: React.FC<SearchDialogPropsDto> = ({
+  open,
+  handleClose,
+}) => {
   return (
     <Dialog
       fullWidth={true}

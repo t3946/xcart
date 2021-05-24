@@ -1,27 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import { EmailListItem } from "../email-list-item/EmailListItem";
-import { emailStyle } from "../../utils/setEmailItemStyle";
+import { emailStyle } from "@s3stores-mail/utils";
 import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import { SceletonEmailList } from "@s3stores-mail/components/sceleton-email-list/SceletonEmailList";
 
-export const EmailList = () => {
-  const emails = useSelector((state: any) => {
+export const EmailList: React.FC = () => {
+  const emails = useSelector((state: StoreDto) => {
     return state.items;
   });
 
+  const loading = useSelector((state: StoreDto) => state.loading);
+
   return (
     <div>
-      {emails.map((e) => {
-        return (
-          <EmailListItem
-            theme={emailStyle(e.emailType, e.emailCustomer)}
-            name={e.title}
-            favorite={e.favorite}
-            read={e.read}
-            key={e.id}
-            id={e.id}
-          />
-        );
-      })}
+      {loading ? (
+        <SceletonEmailList itemsCount={20} />
+      ) : (
+        emails.map((email, index) => {
+          return (
+            <EmailListItem
+              theme={emailStyle(
+                email.item?.emailType,
+                email.item?.emailCustomer
+              )}
+              name={email.item.subject}
+              favorite={email.item.favorite}
+              read={email.item.action.action}
+              key={email.item.id}
+              id={email.item.id}
+              checked={email.checked}
+              index={index}
+            />
+          );
+        })
+      )}
     </div>
   );
 };

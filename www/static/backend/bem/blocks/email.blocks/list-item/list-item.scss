@@ -10,7 +10,7 @@
 }
 
 .faxage-text{
-    margin-top: 15px;
+    margin-top: 3px;
 }
 
 .checkbox{
@@ -19,7 +19,7 @@
 
 .text-name{
     width: 45%;
-    margin: 15px 50px 0;
+    margin: 0 50px 0;
 }
 
 .favorites{
@@ -27,7 +27,7 @@
 }
 
 .readed-item{
-    bottom: 6px;
+    bottom: -3px;
     background-color: #ED7070;
     position: absolute;
     left: 0;
@@ -43,12 +43,11 @@
 }
 
 .readed-wrap{
-    margin-top: 12px;
     text-align: center;
     cursor: pointer;
     position: relative;
     width: 170px;
-    height: 29px;
+    height: 20px;
 }
 
 .readed-slide{
@@ -63,9 +62,9 @@
 }
 
 .date{
-  margin: 17px 22px 0 30px;
+  margin: 0 22px 0 30px;
 }
 
 .message-type-wrap{
-  margin-top: 13px;
+  margin-top: 0
 }

@@ -11,6 +11,8 @@ const config = _.merge(baseConfig, {
   resolve: {
     alias: {
       "@": path.resolve("./backend"),
+      "@redux": path.resolve("./backend/jsx/redux"),
+      "@s3stores-mail": path.resolve("./backend/jsx/modules/s3stores-mail"),
     },
   },
   module: {

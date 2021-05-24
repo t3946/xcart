@@ -1,34 +1,36 @@
 import React from "react";
 import { EmailListHeader } from "../../components/email-list-header/EmailListHeader";
-import { viewPaginateInfo } from "../../utils/viewPaginateInfo";
-import { useDispatch, useSelector } from "react-redux";
-import { getPage } from "../../../../redux/actions/emailActions";
-import { pageSize } from "../../ts/consts/pagination.const";
+import { viewPaginateInfo } from "@s3stores-mail/utils";
+import { useSelector } from "react-redux";
+import { pageSize } from "@s3stores-mail/ts/consts";
+import { useHistory, useParams } from "react-router-dom";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const EmailListHeaderContainer = () => {
-  const dispatch = useDispatch();
+export const EmailListHeaderContainer: React.FC = () => {
+  const history = useHistory();
 
-  const pageValue = useSelector((state: any) => state.page);
+  const { page }: { page?: string } = useParams();
 
-  const itemsCount = useSelector((state: any) => state.itemsCount);
+  const thisPage = Number(page);
+
+  const itemsCount: number = useSelector((state: StoreDto) => state.itemsCount);
 
   const maxPage = Math.ceil(itemsCount / pageSize);
 
   const getNewPage = (count: number) => {
-    dispatch(getPage(pageValue + count));
+    history.push(`/admin/forms/email-dashboard/page/${thisPage + count}`);
   };
 
   const paginate = () => {
-    return viewPaginateInfo(pageValue, itemsCount, maxPage, pageSize);
+    return viewPaginateInfo(thisPage, itemsCount, maxPage, pageSize);
   };
 
   return (
     <div>
       <EmailListHeader
-        itemsCount={itemsCount}
         paginate={paginate}
         maxPage={maxPage}
-        page={pageValue}
+        page={thisPage}
         getNewPage={getNewPage}
       />
     </div>

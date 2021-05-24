@@ -1,16 +1,16 @@
 import React from "react";
 import { Form, Formik } from "formik";
 import FormInput from "../../../shared/components/form-input/FormInput";
-import { initialFormValues } from "../../ts/consts/email-search-form.const";
+import { initialFormValues } from "@s3stores-mail/ts/consts";
 
-export const EmailSearchForm = () => {
+export const EmailSearchForm: React.FC = () => {
   return (
     <Formik
       initialValues={initialFormValues}
       onSubmit={null}
       validationSchema={null}
     >
-      {({ errors, setFieldValue, values, touched }) => {
+      {() => {
         return (
           <Form className="your-order-form" encType="multipart/form-data">
             <FormInput

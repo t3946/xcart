@@ -15,9 +15,19 @@ return [
         'name' => 'edit'
     ],
     [
+        'route' => '/email-dashboard/page/{i:page}',
+        'target' => [EmailDashboardAdmin::class, 'index'],
+        'name' => 'page'
+    ],
+    [
         'route' => '/email-dashboard',
         'target' => [EmailDashboardAdmin::class, 'index'],
         'name' => 'index'
+    ],
+    [
+        'route' => '/api',
+        'path' => 'Modules.Forms.routes_admin_api',
+        'namespace' => 'api'
     ],
 
 ];

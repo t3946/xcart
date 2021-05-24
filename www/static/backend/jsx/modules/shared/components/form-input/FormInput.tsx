@@ -1,7 +1,16 @@
 import { Field } from "formik";
 import React from "react";
 
-const FormInput: React.FC<any> = ({
+interface FormInputDto {
+  name: string;
+  label: string;
+  type?: string;
+  error?: boolean;
+  required?: boolean;
+  valid?: boolean;
+}
+
+const FormInput: React.FC<FormInputDto> = ({
   name,
   label,
   type = "text",

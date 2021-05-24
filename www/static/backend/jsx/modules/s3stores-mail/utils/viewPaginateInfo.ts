@@ -1,4 +1,9 @@
-export function viewPaginateInfo(page, itemsCount, pages, itemsOnPage): string {
+export function viewPaginateInfo(
+  page: number,
+  itemsCount: number,
+  pages: number,
+  itemsOnPage: number
+): string {
   if (page === pages) {
     const lastPage =
       pages % itemsOnPage === 0

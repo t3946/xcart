@@ -3,7 +3,7 @@ import { Grid, Paper } from "@material-ui/core";
 import { IconsList } from "../icons-list/IconsList";
 import { ReadedSwitch } from "../readed-switch/ReadedSwitch";
 
-export const EmailInfoHeader = ({ info }) => {
+export const EmailInfoHeader: React.FC<any> = ({ info }) => {
   return (
     <Paper className="header-wrap info" square={true}>
       <Grid container justify="space-around" alignItems="center">

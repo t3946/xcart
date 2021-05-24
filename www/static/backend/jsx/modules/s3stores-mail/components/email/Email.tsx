@@ -1,18 +1,32 @@
-import React from "react";
-import { EmailListHeaderContainer } from "../../containers/email-list-header/EmailListHeader.container";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getItemsCount, getPage } from "../../../../redux/actions/emailActions";
-import { EmailListTitle } from "../email-list-title/EmailListTitle";
-import { EmailList } from "../email-list/EmailList";
-import { firstPage } from "../../ts/consts/pagination.const";
-
-export const Email = () => {
+import { useParams } from "react-router-dom";
+import {
+  getItemsCount,
+  getPage,
+  setLoading,
+} from "@redux/actions/emailActions";
+import { EmailListHeaderContainer } from "@s3stores-mail/containers";
+import { EmailListTitle } from "@s3stores-mail/components/email-list-title/EmailListTitle";
+import { EmailList } from "@s3stores-mail/components/email-list/EmailList";
+import { StoreDto } from "@s3stores-mail/ts/types";
+export const Email: React.FC = () => {
   const dispatch = useDispatch();
 
-  useSelector((state: any) => state.searchOptions);
+  useSelector((state: StoreDto) => state.searchOptions);
 
-  dispatch(getPage(firstPage));
-  dispatch(getItemsCount());
+  const { page }: { page?: string } = useParams();
+
+  useEffect(() => {
+    dispatch(setLoading());
+    const timeOut = setTimeout(() => {
+      dispatch(getPage(Number(page)));
+    }, 300);
+
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [page]);
 
   return (
     <div>

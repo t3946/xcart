@@ -1,22 +1,21 @@
 import React from "react";
-import { Redirect, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EmailInfoHeader } from "../email-info-header/EmailInfoHeader";
 import { EmailInfoData } from "../email-info-data/EmailInfoData";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const EmailInfo = () => {
-  const { id }: any = useParams();
+export const EmailInfo: React.FC = () => {
+  const { id }: { id: string } = useParams();
 
-  const emailInfo = useSelector((state: any) => {
-    return state.items.filter((e) => e.id === Number(id))[0];
+  const emailInfo = useSelector((state: StoreDto) => {
+    return state.items.filter((e) => e.item.id === Number(id))[0];
   });
-
-  if (!emailInfo) return <Redirect to="/admin/forms/email-dashboard" />;
 
   return (
     <div>
-      <EmailInfoHeader info={emailInfo} />
-      <EmailInfoData data={emailInfo} />
+      <EmailInfoHeader info={emailInfo.item} />
+      <EmailInfoData />
     </div>
   );
 };

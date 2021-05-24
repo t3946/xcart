@@ -25,7 +25,6 @@ use Xcart\App\Orm\Model;
  */
 class EmailModel extends Model
 {
-    private $is_viewed;
 
     public static function getFields()
     {
@@ -127,7 +126,17 @@ class EmailModel extends Model
             'viewed' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => UserModel::class,
-                'through' => EmailUserModel::class
+                'through' => EmailViewedModel::class
+            ],
+            'favorite' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => UserModel::class,
+                'through' => EmailFavoriteModel::class
+            ],
+            'action' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => UserModel::class,
+                'through' => EmailActionModel::class
             ],
             'children' => [
                 'class' => HasManyField::class,
@@ -142,12 +151,22 @@ class EmailModel extends Model
         ];
     }
 
-    public function isViewed()
+    public function isViewed(): bool
     {
-        if ($this->is_viewed === null) {
-            $this->is_viewed = $this->viewed->filter(['id' => Xcart::app()->user->id])->count() > 0;
+       return $this->viewed->filter(['id' => Xcart::app()->user->id])->count() > 0;
+    }
+
+    public function isFavorite(): bool
+    {
+        return $this->favorite->filter(['id' => Xcart::app()->user->id])->count() > 0;
+    }
+
+    public function getAction()
+    {
+        if( $this->action->filter(['id' => Xcart::app()->user->id])->count() > 0){
+            return ['name' => Xcart::app()->user->login, 'action' => true];
         }
-        return $this->is_viewed;
+       return ['action' => false];
     }
 
     public function getFrom()

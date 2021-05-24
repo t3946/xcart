@@ -1,6 +1,6 @@
 .email-send-header-wrapper{
   background-color: #FFEBB2;
-  padding: 0px 10px 0px 21px;
+  padding: 0px 10px 0px 0;
 }
 
 .email-send-body-wrapper{
@@ -13,4 +13,20 @@
 
 .email-send-input{
   padding: 10px 0 !important;
+}
+
+.email-send-header-children{
+  padding-left: 40px;
+}
+
+.email-send-header-text{
+  margin-right: 20px;
+}
+
+.email-send-template-type{
+  margin-right: 15px;
+}
+
+.email-send-body-footer-text{
+  margin-right: 42px;
 }

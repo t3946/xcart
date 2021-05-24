@@ -6,7 +6,7 @@ import { ReplyIc } from "../icons/Reply";
 import { StarIc } from "../icons/Star";
 import { EmailIc } from "../icons/Email";
 
-export const IconsList = () => {
+export const IconsList: React.FC = () => {
   return (
     <Grid>
       <EmailIc />

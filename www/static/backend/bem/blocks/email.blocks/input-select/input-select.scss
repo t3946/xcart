@@ -23,7 +23,7 @@
   .select__head{
     border: 1px solid #C4C4C4;
     font-size: 13px;
-    padding: 5px 10px;
+    padding: 5px 35px 5px 10px;
   }
 
   .select__list{
@@ -52,10 +52,6 @@
   transition: .2s ease-in;
 }
 
-.select__head.open::after {
-  transform: translateY(50%) rotate(180deg);
-}
-
 .select__list {
   display: none;
   position: absolute;
@@ -78,7 +74,13 @@
 }
 
 .open{
-  display: block;
+  .select__head::after {
+    transform: translateY(50%) rotate(180deg);
+  }
+
+  .select__list{
+    display: block;
+  }
 }
 
 .select__list::-webkit-scrollbar {
