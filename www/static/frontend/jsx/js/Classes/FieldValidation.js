@@ -54,6 +54,10 @@ class FieldValidation {
             let oneErrorPlace = errors.item( i );
             let oneErrorPlaceText = oneErrorPlace.querySelector( '.form-field-error-text' );
 
+            if (!oneErrorPlaceText) {
+                continue;
+            }
+
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove( 'common-field-error_visible' );
         }
