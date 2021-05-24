@@ -2,6 +2,10 @@
     width: 100%;
     flex: 1 0;
 
+    .add-to-cart-button-add:before {
+        background-image: url(../../dist/images/icons/add_to_cart/cart.svg);
+    }
+
     @include breakpoint(md up) {
         width: rem-calc(51);
         flex: 0 0 rem-calc(51);
