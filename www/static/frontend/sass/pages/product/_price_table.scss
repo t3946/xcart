@@ -2,23 +2,8 @@
   .prices__container {
 
     .product-quantity {
-
-      padding: rem-calc(18) 0;
-
       .column {
         padding: 0;
-      }
-
-      .price-row-width {
-
-        /*@include breakpoint(medium) {
-          max-width: rem-calc(150) + rem-calc(174) + rem-calc(2) + rem-calc(40);
-        }
-
-        @include breakpoint(large only) {
-          max-width: rem-calc(130) + rem-calc(154) + rem-calc(2) + rem-calc(40);
-        }*/
-
       }
 
       .discount_block {

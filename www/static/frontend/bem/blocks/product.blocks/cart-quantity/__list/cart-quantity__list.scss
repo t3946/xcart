@@ -1,0 +1,5 @@
+.cart-quantity__list {
+    @include breakpoint(md up) {
+        padding: 0 0 0 rem-calc(15);
+    }
+}
