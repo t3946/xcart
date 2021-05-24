@@ -61,15 +61,15 @@
       text-decoration: none;
     }
 
-    &.loading {
-      &:after {
-        left: 0;
-        visibility: visible;
-      }
-    }
-
     .text {
       display: none;
+    }
+  }
+
+  &.loading {
+    &:after {
+      left: 0;
+      visibility: visible;
     }
   }
 }

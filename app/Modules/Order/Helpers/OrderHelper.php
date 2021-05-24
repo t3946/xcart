@@ -3,11 +3,11 @@
 namespace Modules\Order\Helpers;
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOr;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Middleware\OrderCheckoutMiddleware;
@@ -48,7 +48,7 @@ class OrderHelper
                 ->where(['details.orderid__in' => $diff, 'eta_date_mm_dd_yyyy__gt' => 0])
                 ->group(['details.orderid'])->toSQL();
 
-            $orders_max_eta = $connection->fetchAll($max_eta_sql);
+            $orders_max_eta = $connection->fetchAllAssociative($max_eta_sql);
 
             foreach ($orders_max_eta as $item) {
                 self::$__max_eta[$item['orderid']] = $item['max_eta'];
@@ -98,7 +98,7 @@ class OrderHelper
                 ->group(["order_id"])
                 ->allSql();
 
-            $counts = $connection->fetchAll($sql);
+            $counts = $connection->fetchAllAssociative($sql);
             if ($counts) {
                 foreach ($counts as $item) {
                     self::$__events_count[$item['order_id']][$user_id] = $item['count'];
@@ -177,7 +177,7 @@ class OrderHelper
         if ($model->groups) {
             /** @var OrderGroupModel $group */
             foreach ($model->groups as $group) {
-                if (\in_array($group->cb_status,
+                if (in_array($group->cb_status,
                     [
                         OrderStatusModel::ORDER_STATUS_QUEUED,
                         OrderStatusModel::ORDER_STATUS_UNPAID,
@@ -672,6 +672,8 @@ HTML;
         $router = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
             ? 'checkout:checkoutOnePage'
             : 'checkout:shipping';
+        //TODO remove after all test has been completed to enable one page checkout
+        $router = 'checkout:shipping';
         return Xcart::app()->router->url($router);
     }
 }

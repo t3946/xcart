@@ -5,24 +5,26 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Distributor\Models\DistributorContactUtilityModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Editor\Fields\EditorField;
 use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\Fields\UrlField;
 
 class DistributorOrderSubmissionForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
         return [[
             'd_our_dealer_account_n',
             'd_contact_name_for_templates',
-            'd_send_to_email_for_templates',
         ]];
     }
 
@@ -39,16 +41,21 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_d_our_dealer_account_n_text'),
             ],
             'd_contact_name_for_templates' => [
-                'class' => CharField::class,
-                'label' => 'Contact name for templates',
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'choices' => function () use ($dx): array {
+                    foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
+                        $result[$contact->id] = $contact->getEmail();
+                    }
+                    return $result ?? [];
+                },
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])->valuesList('id', true),
+                'label' => 'Order messages contact',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-            ],
-            'd_send_to_email_for_templates' => [
-                'class' => CharField::class,
-                'label' => '\'Send to\' email for templates',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
+                'html' => ['style' => 'width:100%;'],
+                'hint' => LanguageModel::translate('help_d_contact_name_for_templates_text'),
+                'required' => true
             ],
             'd_url_to_login_to_distributor_website' => [
                 'class' => UrlField::class,
@@ -90,6 +97,13 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 ? $('.by_email').closest('tr').show().closest('form').find('.by_site').closest('tr').hide()
                 : $('.by_site').closest('tr').show().closest('form').find('.by_email').closest('tr').hide()"]
             ],
+            'd_order_entry_operator_email' => [
+                'class' => CharField::class,
+                'fieldTemplate' => $this->fieldTemplate,
+                'hintTemplate' => $this->hintTemplate,
+                'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
+                'html' => ['class' => 'by_site'],
+            ],
             'order_entry_template' => [
                 'class' => DropDownField::class,
                 'fieldTemplate' => $this->fieldTemplate,
@@ -104,6 +118,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $list ?? [];
                 },
+                'hint' => LanguageModel::translate('help_order_entry_template_text'),
             ],
             'template_1_subj' => [
                 'class' => CharField::class,
@@ -113,6 +128,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message subject line',
                 'html' => ['class' => 'by_site', 'readonly' => true, 'style' => 'border: none'],
+                'hint' => LanguageModel::translate('help_template_1_subj_text'),
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -122,14 +138,16 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message body',
                 'html' => ['class' => 'by_site'],
+                'hint' => LanguageModel::translate('help_template_1_text'),
             ],
             'order_entry_special_instructions' => [
                 'class' => EditorField::class,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
-                'label' => 'Order entry special instructions',
+                'label' => '<span style="color:red">Special order entry instructions</span>',
                 'html' => ['class' => 'by_site'],
+                'hint' => LanguageModel::translate('help_order_entry_special_instructions_text'),
             ],
             'allow_dispatch_off_working_hours' => [
                 'class' => CheckboxField::class,
@@ -151,13 +169,21 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
             ],
             'email' => [
-                'class' => CharField::class,
+                'class' => Select2Field::class,
+                'multiple' => true,
+                'choices' => function () use ($dx): array {
+                    foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
+                        $result[$contact->id] = $contact->getEmail();
+                    }
+                    return $result ?? [];
+                },
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY])->valuesList('id', true),
                 'label' => "'Dispatch to' email contact",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'hint' => LanguageModel::translate('help_dx_email_text'),
-                'html' => ['class' => 'by_email'],
+                'html' => ['class' => 'by_email', 'style' => 'width:100%;'],
             ],
 
             'order_submit_template' => [
@@ -174,6 +200,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $list ?? [];
                 },
+                'hint' => LanguageModel::translate('help_order_submit_template_text'),
             ],
             'template_2_subj' => [
                 'class' => CharField::class,
@@ -183,6 +210,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => 'Dispatch subject line',
                 'html' => ['class' => 'by_email', 'readonly' => true, 'style' => 'border: none'],
+                'hint' => LanguageModel::translate('help_template_2_subj_text'),
             ],
             'template_2' => [
                 'class' => EditorField::class,
@@ -193,6 +221,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Dispatch message body',
                 'readonly' => true,
                 'html' => ['class' => 'by_email'],
+                'hint' => LanguageModel::translate('help_template_2_text'),
             ],
             'd_subject_line_8' => [
                 'class' => CharField::class,
@@ -215,8 +244,9 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'label' => 'Dispatch special instructions',
+                'label' => '<span style="color:red">Special dispatch instructions</span>',
                 'html' => ['class' => 'by_email'],
+                'hint' => LanguageModel::translate('help_order_submit_special_instructions_text'),
             ],
             'd_dispatch_instructions' => [
                 'class' => EditorField::class,
@@ -236,5 +266,48 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_d_shipping_options_text'),
             ]
         ];
+    }
+
+    public function afterInstanceSave($instance)
+    {
+        if ($contacts = $this->email->getValue()) {
+            foreach ($contacts as $contact_id) {
+                if ($contact_id) {
+                    DistributorContactUtilityModel::objects()->getOrCreate([
+                        'contact_id' => $contact_id,
+                        'utility_id' => DistributorUtilityModel::DISPATCH_UTILITY
+                    ]);
+                }
+            }
+            if ($contacts_to_delete = DistributorContactUtilityModel::objects()
+                ->filter(['contact__manufacturerid' => $this->getDx()])
+                ->exclude(['contact_id__in' => $contacts])
+                ->valuesList(['contact_id'], true)) {
+                DistributorContactUtilityModel::objects()->delete([
+                    'contact_id__in' => $contacts_to_delete,
+                    'utility_id' => DistributorUtilityModel::DISPATCH_UTILITY
+                ]);
+            }
+        }
+
+        if ($contacts = $this->d_contact_name_for_templates->getValue()) {
+            foreach ($contacts as $contact_id) {
+                if ($contact_id) {
+                    DistributorContactUtilityModel::objects()->getOrCreate([
+                        'contact_id' => $contact_id,
+                        'utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY
+                    ]);
+                }
+            }
+            if ($contacts_to_delete = DistributorContactUtilityModel::objects()
+                ->filter(['contact__manufacturerid' => $this->getDx()])
+                ->exclude(['contact_id__in' => $contacts])
+                ->valuesList(['contact_id'], true)) {
+                DistributorContactUtilityModel::objects()->delete([
+                    'contact_id__in' => $contacts_to_delete,
+                    'utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY
+                ]);
+            }
+        }
     }
 }

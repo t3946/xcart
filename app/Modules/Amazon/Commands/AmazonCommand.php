@@ -3,7 +3,7 @@
 namespace Modules\Amazon\Commands;
 
 
-use Mindy\QueryBuilder\Q\QOrNot;
+use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Amazon\Helpers\AmazonAWSHelper;
 use Modules\Amazon\Helpers\AmazonOfferHelper;
 use Modules\Amazon\Models\AmazonOfferCompetitorsModel;

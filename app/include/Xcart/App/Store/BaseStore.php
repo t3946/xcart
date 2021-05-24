@@ -3,7 +3,7 @@
 namespace Xcart\App\Store;
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Pagination\Pagination;
 use Modules\Order\Helpers\OrderHelper;

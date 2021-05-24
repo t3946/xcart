@@ -221,10 +221,23 @@ gulp.task("watch:frontend:scripts", function (done) {
   args.push("-w");
 
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
-  const dst = frontend.dst.js;
 
-  GulpAssets.buildJsx(src, dst, cmd, done);
+  //count hash for bundle
+  const webpackBundle = frontend.dst.jsx + "/main.js";
+  gulp.watch(webpackBundle, function (done) {
+    gulp.src(webpackBundle).pipe(
+      hashSum({
+        filename: "frontend/versions/vendor_js.yml",
+        hash: "md5",
+      })
+    );
+    done();
+  });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
 });
 
 /**

@@ -1,0 +1,26 @@
+.button__loading {
+    position: relative;
+    padding: 0 !important;
+    cursor: default;
+
+    &:before {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+        background: repeating-linear-gradient(135deg, #fefefe, #fefefe 12px, #e2e2e2 0, #e2e2e2 24px) 0 0;
+        background-size: 68px 100%;
+        animation: button__loading 1s infinite linear;
+    }
+}
+
+@keyframes button__loading {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 68px;
+    }
+}

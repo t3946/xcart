@@ -6,7 +6,7 @@ namespace Modules\Shipping\Commands;
 
 use DateTime;
 use DateTimeZone;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Models\StateModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;

@@ -1,3 +1,5 @@
 .grid-catalog-product-price {
     grid-area: price;
+    display: flex;
+    flex-wrap: wrap;
 }

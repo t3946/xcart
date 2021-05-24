@@ -46,7 +46,7 @@ class TaxRatesModel extends Model
             'rate_value' => [
                 'class' => DecimalField::class,
                 'requires' => true,
-                'verboseName' => 'Rate value'
+                'verboseName' => 'Tax rate'
             ],
             'rate_type' => [
                 'class' => CharField::class,
@@ -60,6 +60,6 @@ class TaxRatesModel extends Model
 
     public function __toString()
     {
-        return (string)$this->tax . " ". $this->zone;
+        return $this->pk ? $this->tax . " ". $this->zone : 'Tax rate';
     }
 }

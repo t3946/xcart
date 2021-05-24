@@ -11,6 +11,7 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Commands\Command;
+use Modules\Distributor\Helpers\DistributorHelper;
 
 class RequestAvailabilityCommand extends Command
 {
@@ -44,9 +45,7 @@ class RequestAvailabilityCommand extends Command
             if (($template = $manufacturer->request_avail_template)
                 && $manufacturer->isGoodTimeToSendEmail()
             ) {
-                $to = $manufacturer->contacts_model->filter([
-                    'utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY
-                ])->valuesList('email', true);
+                $to = DistributorHelper::getDistributorEmails($manufacturer, DistributorUtilityModel::REQUEST_AVAIL_UTILITY);
 
                 $to[] = 'orders@s3stores.com';
 
@@ -72,5 +71,6 @@ class RequestAvailabilityCommand extends Command
                 ))->save();
             }
         }
+        print"Done!\n";
     }
 }

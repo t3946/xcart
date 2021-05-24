@@ -30,9 +30,10 @@ class RoleModel extends Model
     public function canRequest($request): bool
     {
         if ($this->slug === 'vrs' || $this->slug === 'vrv') {
-            $permission = strpos(Xcart::app()->request->getPath(), 'manufacturers.php') !== false;
-            $permission = $permission || strpos(Xcart::app()->request->getPath(), 'admin/distributor/') !== false;
-            return $permission;
+            $path = $request->getPath();
+            $permission = strpos($path, 'manufacturers.php') !== false;
+            $permission = $permission || strpos($path, '/admin/create/Admin/') !== false;
+            return $permission || strpos($path, 'admin/distributor/') !== false;
         }
         return true;
     }

@@ -12,7 +12,7 @@ use Xcart\App\Form\Fields\DropDownField;
 
 class DistributorShippesFromForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
@@ -36,6 +36,7 @@ class DistributorShippesFromForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:200px;'],
+                'hint' => LanguageModel::translate('help_dx_m_address_text'),
             ],
             'm_address_2' => [
                 'class' => CharField::class,
@@ -43,6 +44,7 @@ class DistributorShippesFromForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'html' => ['style' => 'width:200px;'],
+                'hint' => LanguageModel::translate('help_dx_m_address_2_text'),
             ],
             'm_city' => [
                 'class' => CharField::class,

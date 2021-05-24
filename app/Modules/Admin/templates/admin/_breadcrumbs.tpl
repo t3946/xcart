@@ -1,4 +1,3 @@
-{if $breadcrumbs|length > 0}
     <div class="breadcrumbs-block">
         <ul class="breadcrumbs-list">
             <li>
@@ -20,4 +19,3 @@
             {/foreach}
         </ul>
     </div>
-{/if}

@@ -19,20 +19,6 @@ class TaxRatesAdmin extends ListViewAdmin
         return ['zone', 'rate_value'];
     }
 
-    public function getAvailableListColumns()
-    {
-        return [
-            'zone' => [
-                'title' => 'Zone',
-                'template' => $this->columnDefaultTemplate,
-            ],
-            'rate_value' => [
-                'title' => 'Rate value',
-                'template' => $this->columnDefaultTemplate,
-            ],
-        ];
-    }
-
     public function getForm()
     {
         return new TaxRatesForm();
@@ -40,7 +26,7 @@ class TaxRatesAdmin extends ListViewAdmin
 
     public function getModel()
     {
-        return new TaxRatesModel;
+        return new TaxRatesModel();
     }
 
     public static function getName()

@@ -14,6 +14,7 @@
                 {assign var=est_time value=date_create('now', timezone_open('EST'))}
                 {assign var=ny_time value=date_create('now', timezone_open('America/New_York'))}
                 {assign var=ca_time value=date_create('now', timezone_open('America/Los_Angeles'))}
+                {if !$xcartApp->user->hasRoles(['vrs','vrv'])}
                 <div style="width:44%; float:right">
                     <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">Product questions</a></div>
@@ -35,6 +36,7 @@
                         {/if}
                     </div>
                 </div>
+                {/if}
                 <div style="float:right;">
                     <div style="float:left; margin-right:7px;">
                         <div style="margin-bottom: 3px;">{$est_time->format('F j, Y')}</div>

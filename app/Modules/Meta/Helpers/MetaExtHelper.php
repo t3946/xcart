@@ -2,8 +2,8 @@
 namespace Modules\Meta\Helpers;
 
 
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;

@@ -3,9 +3,9 @@
 namespace Modules\Admin\Contrib;
 
 
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Form\Form;
@@ -874,7 +874,7 @@ abstract class Admin
         }
 
         if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
-            if ($form->isValid() && $form->save()) {
+            if ($form->save()) {
                 if ($request->getIsAjax()) {
                     $this->jsonResponse(['status' => 'success', 'close' => true]);
                     return;

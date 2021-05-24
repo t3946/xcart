@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Table;
 use Exception;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Fields\TimestampField;
 
@@ -26,7 +26,7 @@ class AbstractModel extends Base
     }
 
     /**
-     * @return \Mindy\QueryBuilder\BaseAdapter|\Mindy\QueryBuilder\Interfaces\ISQLGenerator
+     * @return \Xcart\App\QueryBuilder\BaseAdapter|\Xcart\App\QueryBuilder\Interfaces\ISQLGenerator
      * @throws \Exception
      */
     protected function getAdapter()
@@ -96,7 +96,7 @@ class AbstractModel extends Base
         {
             if ($this->getField($primaryKeyName) instanceof AutoField) {
                 if (in_array($primaryKeyName, $dirty) === false) {
-                    $values[ $primaryKeyName ] = $connection->lastInsertId($this->getSequenceName());
+                    $values[ $primaryKeyName ] = $connection->lastInsertId();
                 }
             }
         }
@@ -180,7 +180,7 @@ class AbstractModel extends Base
                 $this->getPrimaryKeyName(),
                 'seq'
             ]);
-        } catch (DBALException $e) {
+        } catch (\Doctrine\DBAL\Exception $e) {
             return null;
         }
     }

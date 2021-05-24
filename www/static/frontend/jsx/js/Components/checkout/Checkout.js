@@ -3,11 +3,19 @@ import { PaymentMethods }  from './PaymentMethods';
 import Forms               from '_binds/forms';
 
 export default ( function () {
+    // no checkout page
+    if ( document.querySelector( '.checkout-page' ) === null ) {
+        return;
+    }
+
     /**
      * prevent update fields with id from this list
      */
     const excludedFieldsFromUpdate = ['CheckoutForm_s_address', 'CheckoutForm_b_address'];
     const $form = $( '.checkout-shipping-form' );
+    const $submitButton = $form.find('button[type="submit"]');
+
+    console.log($submitButton);
 
     const Constructor = function () {
         $form.on( 'change', 'input, textarea', function ( e ) {
@@ -68,10 +76,31 @@ export default ( function () {
             .substr( 1 );
     };
 
+    /**
+     * Отключить кнопку отправки формы (следует делать во время валидации и запросов к api)
+     *
+     * @param isDisabled значение для атрибута disabled
+    */
+    Constructor.prototype.disableSubmitButton = function (isDisabled) {
+        $submitButton
+            .prop('disabled', isDisabled)
+            .toggleClass('button__loading', isDisabled);
+    }
+
     Constructor.prototype.update = function ( data, callback = null ) {
+        Constructor.prototype.disableSubmitButton(true);
+
         const self = this;
 
         $( document ).trigger( 'updateRequestSend.checkout' );
+
+        //duplication firstname from shipping form to contact form
+        if (
+            CheckoutForm_s_firstname.value === CheckoutForm_firstname.value
+            && data['CheckoutForm[s_firstname]']
+        ) {
+            data['CheckoutForm[firstname]'] = data['CheckoutForm[s_firstname]'];
+        }
 
         $.ajax( {
             url: '/api/checkout/update',
@@ -79,8 +108,6 @@ export default ( function () {
             data: data,
             dataType: 'json',
             success: function ( res ) {
-                $( document ).trigger( 'updateRequestSuccess.checkout', res );
-
                 if ( res.templates.payment_methods && PaymentMethods ) {
                     PaymentMethods.updateTemplate( res.templates.payment_methods );
                 }
@@ -127,6 +154,8 @@ export default ( function () {
                 if ( typeof callback === "function" ) {
                     callback( res );
                 }
+
+                $( document ).trigger( 'updateRequestSuccess.checkout', res );
             },
             error: function ( err ) {
                 console.log( 'error', err );
@@ -134,6 +163,8 @@ export default ( function () {
             complete() {
                 // hide checkout order total preloader
                 $( document ).trigger( 'updateRequestComplete.checkout' );
+
+                Constructor.prototype.disableSubmitButton(false);
             },
         } );
     }

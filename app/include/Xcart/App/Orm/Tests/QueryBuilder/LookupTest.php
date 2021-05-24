@@ -14,9 +14,9 @@
 
 namespace Xcart\App\Orm\Tests\QueryBuilder;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Xcart\App\Orm\Tests\OrmDatabaseTestCase;
 use Xcart\App\Orm\Tests\Models\Category;
 use Xcart\App\Orm\Tests\Models\Customer;

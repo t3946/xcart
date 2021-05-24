@@ -3,7 +3,7 @@
 namespace Modules\PBX\Helpers;
 
 use DateTime;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrdersCallsModel;
 use Modules\Order\Models\OrderUserActivityModel;

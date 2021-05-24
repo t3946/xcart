@@ -50,7 +50,7 @@
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="*" align="left" valign="top">
-                    {Modules\Core\Models\LanguageModel::translate('txt_manufacturers_top_text')}
+                    {$.call.Modules.Core.Models.LanguageModel::translate('txt_manufacturers_top_text')}
                 </td>
                 <td width="2%" align="center">&nbsp;</td>
                 <td width="48%" align="left" valign="top">
@@ -102,27 +102,4 @@
         }
     </style>
     <h1 style="text-align: center">{$selected_section['title']}</h1>
-{/block}
-
-{block 'js'}
-    <script>
-        $(function () {
-            let t = $('.tooltip').tooltip({
-                position: {
-                    using: function (position, feedback) {
-                        $(this).css(position);
-                        $("<div>")
-                            .addClass("tooltip__s3")
-                            .appendTo(this);
-                    }
-                },
-                content: function () {
-                    return $(this).attr('title');
-                },
-                open: function (event, ui) {
-                    ui.tooltip.css("max-width", "650px");
-                }
-            });
-        });
-    </script>
 {/block}

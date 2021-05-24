@@ -3,6 +3,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -10,7 +11,7 @@ class JsonField extends TextField
 {
     public function getSqlType()
     {
-        return Type::getType(Type::JSON_ARRAY);
+        return Type::getType(Types::JSON);
     }
 
     public function getValidationConstraints()

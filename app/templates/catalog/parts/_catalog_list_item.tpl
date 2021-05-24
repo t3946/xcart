@@ -61,7 +61,7 @@
 
                 <a href="{$item->getAbsoluteUrl()}" title="{$title}">
                     {if $q!}
-                        {raw $title|words_highlight:$q:"span.highlight"}
+                        {raw $title|words_highlight:$q:'span':'highlight'}
                     {else}
                         {raw $title}
                     {/if}
@@ -93,7 +93,7 @@
                         {set $description = $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
 
                         {if $q!}
-                            {raw $description|words_highlight:$q:"span.highlight"}
+                            {raw $description|words_highlight:$q:"span":"highlight"}
                         {else}
                             {raw $description}
                         {/if}
@@ -107,7 +107,7 @@
                         {set $description = $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
 
                         {if $q!}
-                            {raw $description|words_highlight:$q:"span.highlight"}
+                            {raw $description|words_highlight:$q:"span":"highlight"}
                         {else}
                             {raw $description}
                         {/if}

@@ -2,6 +2,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\Orm\ModelInterface;
 
 class ForeignCharField extends ForeignField
@@ -13,7 +14,7 @@ class ForeignCharField extends ForeignField
      */
     public $length = 255;
 
-    public $sqlType = Type::STRING;
+    public $sqlType = Types::STRING;
 
 
     public function getSqlOptions()

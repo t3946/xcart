@@ -9,7 +9,7 @@
 namespace Xcart\App\Orm;
 
 use Exception;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class ManyToManyManager
@@ -124,7 +124,7 @@ abstract class ManyToManyManager extends ManagerBase
                 $to => $model->pk,
             ], $extra);
 
-            [$through, $created] = $throughModel->objects()->getOrCreate($data);
+            [$through, $created] = $throughModel::objects()->getOrCreate($data);
             return $through;
         }
         else {

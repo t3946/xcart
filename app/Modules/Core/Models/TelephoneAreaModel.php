@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -29,14 +29,14 @@ class TelephoneAreaModel extends Model
                 'modelClass' => CountryModel::class,
                 'link' => ['country_code' => 'code'],
                 'field' => 'country',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'state_model' => [
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
                 'link' => ['country_code' => 'country_code', 'state_code' => 'code'],
                 'field' => 'state',
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'state_code' => [
                 'class' => CharField::class,

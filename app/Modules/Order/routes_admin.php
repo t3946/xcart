@@ -2,6 +2,7 @@
 
 use Modules\Order\Controllers\Admin\OrderRelatedMessagesController;
 use Modules\Order\Controllers\Api\ActivityController;
+use Modules\Order\Controllers\Api\ExportController;
 use Modules\Order\Controllers\Api\ReconciliationController;
 
 return [
@@ -56,6 +57,11 @@ return [
         'name' => 'api:payable_prereconcile'
     ],
     [
+        'route' => '/api/payable_orders/tentatively',
+        'target' => [ReconciliationController::class, 'actionPayableOrdersTentatively'],
+        'name' => 'api:payable_tentatively'
+    ],
+    [
         'route' => '/order_note_tag_settings',
         'target' => [OrderRelatedMessagesController::class, 'actionSetOrderNoteTag'],
         'name' => 'order_note_tag_settings'
@@ -64,5 +70,10 @@ return [
         'route' => '/api/activity/{i:order_id}/{slug:action}',
         'target' => [ActivityController::class, 'hook'],
         'name' => 'activity'
+    ],
+    [
+        'route' => '/api/export/{i:order_id}',
+        'target' => [ExportController::class, 'export'],
+        'name' => 'api:export'
     ],
 ];

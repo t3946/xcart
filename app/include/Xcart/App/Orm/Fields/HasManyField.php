@@ -5,7 +5,7 @@ namespace Xcart\App\Orm\Fields;
 use Exception;
 use Xcart\App\Orm\Exception\OrmExceptions;
 use Xcart\App\Orm\Manager;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
  * Class HasManyField

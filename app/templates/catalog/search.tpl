@@ -24,7 +24,7 @@
                         {foreach $suggestion['phrase_suggestions'] as $suggest}
                             {* не надо делать перенос строки перед закрытием тега - появляется лишний пробел *}
                             <a href="{$.app->router->url('catalog:search', [], ['q' => $suggest])}" class="related">
-                                {raw $suggest|text_highlight:$q:'span.bold.founded'}</a>
+                                {raw $suggest|words_highlight:$q:'span':'bold founded'}</a>
                         {/foreach}
                     {/if}
 

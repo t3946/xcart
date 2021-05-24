@@ -3,9 +3,9 @@ namespace Modules\Goods\Models;
 
 use DateInterval;
 use DateTime;
-use Doctrine\DBAL\Types\Type;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Doctrine\DBAL\Types\Types;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Amazon\Models\AmazonOfferCompetitorsModel;
 use Modules\Amazon\Models\AmazonOfferModel;
@@ -138,7 +138,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasToOneField::class,
                 'modelClass' => AmazonOfferModel::class,
                 'link' => ['ASIN' => 'ASIN'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
 
             'sites' => [
@@ -587,7 +587,9 @@ class ProductModel extends Model implements ICartItem
 
     public function getDistributorUrl()
     {
-        return str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [$this->getMPN(), $this->supplier_internal_id], $this->distributor->d_website_search_for_sku_url);
+        return str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [$this->getMPN(), $this->supplier_internal_id],
+            $this->distributor->d_website_search_for_sku_url ?: '{{supplier_internal_id}}'
+        );
     }
 
     public function getAmpAbsoluteUrl($full = false)

@@ -4,8 +4,8 @@
 namespace Modules\Order\Helpers;
 
 
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;

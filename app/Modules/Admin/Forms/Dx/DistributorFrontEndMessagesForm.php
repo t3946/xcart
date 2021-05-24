@@ -14,7 +14,7 @@ use Xcart\App\Form\Fields\RadioField;
 
 class DistributorFrontEndMessagesForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
@@ -22,7 +22,6 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             'tabs',
             'lead_time_message',
             'products_quantity_behavior',
-            'calculate_shipping',
             'allow_pre_orders',
         ]];
     }
@@ -37,7 +36,6 @@ class DistributorFrontEndMessagesForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_front_page_tabs_text') ?? 'help_dx_front_page_tabs_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-
             ],
             'lead_time_message' => [
                 'class' => CharField::class,
@@ -49,6 +47,7 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             'products_quantity_behavior' => [
                 'class' => RadioField::class,
                 'choices' => [
+                    'N' => 'do NOT display quantity',
                     'R' => 'display real quantity',
                     'D' => 'display quantity of',
                 ],
@@ -75,10 +74,11 @@ class DistributorFrontEndMessagesForm extends DistributorForm
             ],
             'allow_pre_orders' => [
                 'class' => CheckboxField::class,
-                'label' => 'Allow pre-orders',
+                'label' => 'Allow to order ETA products',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width: 1em']
+                'html' => ['style' => 'width: 1em'],
+                'hint' => LanguageModel::translate('help_dx_allow_pre_orders_text'),
             ],
             'calculate_shipping' => [
                 'class' => CheckboxField::class,

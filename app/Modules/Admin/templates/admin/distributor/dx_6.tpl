@@ -4,7 +4,7 @@
     {parent}
     {smarty_admin_block name=$section_title}
         <div>
-            Here indicate the address of the main distributor warehouse.
+            Enter the address of the main distributor warehouse.
             <br/>
             <br/>
         </div>

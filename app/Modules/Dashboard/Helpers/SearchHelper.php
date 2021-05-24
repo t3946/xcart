@@ -1,8 +1,8 @@
 <?php
 namespace Modules\Dashboard\Helpers;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Sqls\SearchSql;
@@ -27,12 +27,12 @@ class SearchHelper
 
         if (!$properties)
         {
-            $attention_tags   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
-            $fraud_statuses   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
-            $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
-            $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
-            $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
-            $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
+            $attention_tags   = Connection::getInstance()->fetchAllAssociative("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
+            $fraud_statuses   = Connection::getInstance()->fetchAllAssociative("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
+            $raw_statuses     = Connection::getInstance()->fetchAllAssociative("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
+            $shipping_methods = Connection::getInstance()->fetchAllAssociative("SELECT * FROM xcart_shipping");
+            $payment_methods  = Connection::getInstance()->fetchAllAssociative("SELECT * FROM xcart_payment_methods");
+            $countries        = Connection::getInstance()->fetchAllAssociative(SearchSql::getAllCountryOrderSql());
             $domains          = SiteModel::objects()->order(['domain'])->all();
 
             $order_statuses = [];
@@ -108,14 +108,14 @@ class SearchHelper
 
         switch ($type) {
             case 'customer.country': {
-                return Connection::getInstance()->fetchAll(SearchSql::getInCountryOrderSql($data));
+                return Connection::getInstance()->fetchAllAssociative(SearchSql::getInCountryOrderSql($data));
             }
             case 'customer.state': {
                 list($in, $like) = OrderSearchStore::explodeInOrLike($data, false);
                 $data = $like;
 
                 if (!empty($in)) {
-                    $founded = Connection::getInstance()->fetchAll(SearchSql::getInStateOrderSql($in));
+                    $founded = Connection::getInstance()->fetchAllAssociative(SearchSql::getInStateOrderSql($in));
                     $not_founded = [];
 
                     $in_founded = array_map(function($el){ return $el['id'];}, $founded);
@@ -131,10 +131,10 @@ class SearchHelper
             }
 
             case 'order.operator': {
-                return Connection::getInstance()->fetchAll(SearchSql::getInOperatorSql($data));
+                return Connection::getInstance()->fetchAllAssociative(SearchSql::getInOperatorSql($data));
             }
             case 'order.distributor': {
-                return Connection::getInstance()->fetchAll(SearchSql::getInDistributorSql($data));
+                return Connection::getInstance()->fetchAllAssociative(SearchSql::getInDistributorSql($data));
             }
         }
 

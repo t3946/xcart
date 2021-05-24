@@ -1,9 +1,9 @@
 <?php
 namespace Xcart;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 class Product extends Data
 {
@@ -751,7 +751,7 @@ SQL;
                                      ->where(['productid__in' => $ids])
                                      ->toSQL();
 
-                foreach ($connection->fetchAll($sql) as $item) {
+                foreach ($connection->fetchAllAssociative($sql) as $item) {
                     $e_ids[] = $item['productid'];
                 }
 
@@ -791,7 +791,7 @@ SQL;
                            ->limit($limit)
                            ->toSQL();
 
-        return $connection->fetchAll($sql);
+        return $connection->fetchAllAssociative($sql);
     }
 
     public function getProductCategories()

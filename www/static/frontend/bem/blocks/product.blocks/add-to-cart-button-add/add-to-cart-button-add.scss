@@ -11,6 +11,7 @@
     size: rem-calc(18);
     weight: 900;
   }
+
 }
 
 .add-to-cart-button-add.wait {
@@ -21,7 +22,7 @@
 
 .add-to-cart-button-add:before {
   content: '';
-  background: url(../../dist/images/icons/add_to_cart.svg) no-repeat;
+  background: url(../../dist/images/icons/add_to_cart/cart.svg) no-repeat;
   display: inline-block;
   width: 1.875rem;
   height: 1.406rem;

@@ -2,10 +2,11 @@
 
 namespace Modules\Reports\Stores;
 
-use Mindy\QueryBuilder\Aggregation\Avg;
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Sum;
-use Mindy\QueryBuilder\Expression;
+use Modules\Reports\Helpers\ReportsHelper;
+use Xcart\App\QueryBuilder\Aggregation\Avg;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Sum;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -150,8 +151,9 @@ class ReportsStore extends OrderSearchStore
             $cnt = count($this->form_data['report']['group_settings']);
             for ($i=0; $i <= $cnt; $i++) {
                 $gn = $this->form_data['report']['group_settings'][$i+1];
-                $totals[empty($gn) ? 'report_total' : $gn] =
-                    Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+                $column = empty($gn) ? 'report_total' : $gn;
+                $total_result = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll();
+                $totals[$column] = ReportsHelper::groupByColumn($total_result, $column);
                 array_pop($this->form_data['report']['group_settings']);
             }
         }
@@ -347,7 +349,7 @@ class ReportsStore extends OrderSearchStore
 
     public function getReport()
     {
-        $totals = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+        $totals = ReportsHelper::groupByColumn(Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(), 'storefront');
         if ($totals) {
             uasort($totals, function ($a, $b) {
                 $sa = $sb = [];

@@ -4,7 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class BooleanField
@@ -30,7 +30,7 @@ class BooleanField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::BOOLEAN);
+        return Type::getType(Types::BOOLEAN);
     }
 
     /**

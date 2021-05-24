@@ -2,7 +2,7 @@
 namespace Modules\Core\TemplateLibraries;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Core\Models\StaticNotificationModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;

@@ -576,12 +576,12 @@ function func_order_data($orderid)
         $v['product_options_txt'] = $v['product_options'];
         if ($v['extra_data']) {
             $v['extra_data'] = unserialize($v['extra_data']);
-            if (is_array(@$v["extra_data"]["display"])) {
+            if (is_array($v["extra_data"]) && is_array($v["extra_data"]["display"])) {
                 foreach ($v["extra_data"]["display"] as $i => $j) {
                     $v["display_{$i}"] = $j;
                 }
             }
-            if (is_array($v['extra_data']['taxes'])) {
+            if (is_array($v['extra_data']) && is_array($v['extra_data']['taxes'])) {
                 foreach ($v['extra_data']['taxes'] as $i => $j) {
                     if ($j['tax_value'] > 0) {
                         $_product_taxes[$i] = $j['tax_display_name'];

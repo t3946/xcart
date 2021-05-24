@@ -122,7 +122,6 @@ class DefaultController extends FrontendController
             'model' => $model,
             'form' => $productPageForm->getForm(),
             'breadcrumbs' => Xcart::app()->breadcrumbs->set($model->getBreadcrumbs()),
-            'tabs' => $model->distributor->tabs,
             'category' => $category,
             'helper' => new ProductHelper(),
         ];

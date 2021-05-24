@@ -123,13 +123,16 @@ class OrderDetail extends Data
     public function getProductHST()
     {
         $aExtraData = unserialize($this->getField('extra_data'));
-        return floatval($aExtraData['taxes']['HST']['tax_value']);
+        return (float) is_array($aExtraData) ? $aExtraData['taxes']['HST']['tax_value'] : null;
     }
 
     public function getProductPST()
     {
         $aExtraData = unserialize($this->getField('extra_data'));
-        return floatval(floatval($aExtraData['taxes']['GST']['tax_value']) + floatval($aExtraData['taxes']['PST']['tax_value']));
+        if (is_array($aExtraData)) {
+            return $aExtraData['taxes']['GST']['tax_value'] + $aExtraData['taxes']['PST']['tax_value'];
+        }
+        return null;
     }
 
     public function removeRetailTrust()

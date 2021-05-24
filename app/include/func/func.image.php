@@ -1112,9 +1112,20 @@ function func_set_correct_det_img($image_info, $update = false){
 
                         $im->setSize($new_width, $new_height);
                         $im->readImage($file_name_path);
+
+                        $mime = $im->getImageMimeType();
+                        switch ($mime) {
+                            case 'image/x-jpeg':
+                                $compression = Imagick::COMPRESSION_JPEG;
+                                break;
+                            case 'image/x-png':
+                                $compression = Imagick::INTERLACE_PNG;
+                                break;
+                        }
+
                         $im->thumbnailImage($new_width, 0, false);
 
-                        $im->setImageCompression(Imagick::COMPRESSION_JPEG);
+                        $im->setImageCompression($compression ?? Imagick::COMPRESSION_JPEG);
                         $im->setSamplingFactors(['2x2', '1x1', '1x1']);
                         $im->setImageCompressionQuality(94);
 

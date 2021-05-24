@@ -2,9 +2,9 @@
 
 namespace Modules\Reports\Controllers;
 
-use Mindy\QueryBuilder\Aggregation\Count;
-use Mindy\QueryBuilder\Aggregation\Sum;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Aggregation\Sum;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Reports\Helpers\ReportsHelper;

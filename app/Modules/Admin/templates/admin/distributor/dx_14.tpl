@@ -33,7 +33,7 @@
                             <td colspan="3">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="3">{Modules\Core\Models\LanguageModel::translate('lbl_server_min_distributor_time')}</td>
+                            <td colspan="3">{$.call.Modules.Core.Models.LanguageModel::translate('lbl_server_min_distributor_time')}</td>
                         </tr>
                         {raw $form->getField('d_server_min_distributor_time')->render()}
                     </table>

@@ -1,7 +1,7 @@
 <?php
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductVideosModel;
 

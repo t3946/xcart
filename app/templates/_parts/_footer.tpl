@@ -119,11 +119,13 @@
                         <div class="columns large-4 medium-6 small-12 flex-container align-bottom footer-purchase-order-column footer_purchase-order-column">
                             {if $po }
                                 <div>
-                                    <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
-                                        <li class="footer-payment-method-item footer-payment-method_item">
-                                            <img width="54" height="36" class="lazy-img footer-payment-method-image" data-src="/{$po->logo}" alt="{$po->name}">
-                                        </li>
-                                    </ul>
+                                    <a href="/purchase-orders">
+                                        <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
+                                            <li class="footer-payment-method-item footer-payment-method_item">
+                                                <img width="54" height="36" class="lazy-img footer-payment-method-image" data-src="/{$po->logo}" alt="{$po->name}">
+                                            </li>
+                                        </ul>
+                                    </a>
                                     <a class="purchase-order footer-link" href="/purchase-orders">{t 'Purchase Orders'}</a>
                                 </div>
                             {/if}
@@ -140,7 +142,7 @@
                     <div class="confidence">
                         <span id="bbb">
                             <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
-                                <img class="lazy-img bbb-logo show-for-large" data-src="https://seal-london.bbb.org/logo/erhzbum/s3-stores-1054268.png" alt="S3 Stores, Inc., Online Retailer, Chatham, ON">
+                                <img class="lazy-img bbb-logo show-for-large" data-src="https://seal-london.bbb.org/logo/erhzbum/s3-stores-1054268.png" alt="S3 Stores, Inc., Online Retailer, Chatham, ON" style="opacity: 0">
                             </a>
                         </span>
 

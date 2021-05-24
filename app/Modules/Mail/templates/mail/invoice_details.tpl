@@ -65,21 +65,6 @@
                 {/if}
             </td>
         </tr>
-        {foreach $group->trackings as $tr}
-            <tr>
-                <td colspan="{$colspan}" style="padding: 10px;">
-                    {$distributor} products have been shipped {if $tr->shipping_date}on {$tr->shipping_date|date_format:'%B %d, %Y'}{/if} by {$tr->carrier}.
-                    <br/>
-                    {set $link = $tr->getLink()}
-                    {if $tr->tracknum}
-                        The tracking number is {if $link}<a href="{$link}">{/if}{$tr->tracknum}{if $link}</a>{/if}
-                    {else}
-                        {$link}
-                    {/if}
-                    <br/>
-                </td>
-            </tr>
-        {/foreach}
     {/foreach}
 </table>
 

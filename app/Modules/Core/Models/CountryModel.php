@@ -3,7 +3,7 @@
 namespace Modules\Core\Models;
 
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\CoreModule;
 use Modules\Shipping\Models\ZoneElementModel;
 use Xcart\App\Orm\AutoMetaTrait;

@@ -13,7 +13,7 @@ use Xcart\App\Form\Fields\UrlField;
 
 class DistributorPriceForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {

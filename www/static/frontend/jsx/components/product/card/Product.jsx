@@ -1,6 +1,7 @@
 import classnames from "classnames";
 import Image from "./components/Image";
 import { createRef } from "preact";
+import CatalogContext from "@/components/catalog/CatalogContext";
 
 /**
  * abstract component for product cart in sliders and catalog
@@ -45,6 +46,16 @@ export default class Product extends Component {
       this.props.classes ? this.props.classes.priceContainer : null,
     ];
 
+    const cardInfoClasses = [
+      "container",
+      "grid-catalog-product-info",
+      "product-card-info",
+    ];
+
+    if (this.context) {
+      cardInfoClasses.push(`product-card-info__${this.context.viewMode}`);
+    }
+
     return (
       <div
         ref={this.root}
@@ -63,9 +74,7 @@ export default class Product extends Component {
       >
         <Image {...imageProp} />
 
-        <div className="container grid-catalog-product-info product-card-info">
-          {this.mainInfo}
-        </div>
+        <div className={classnames(cardInfoClasses)}>{this.mainInfo}</div>
 
         <div
           ref={this.price}
@@ -79,3 +88,5 @@ export default class Product extends Component {
     );
   }
 }
+
+Product.contextType = CatalogContext;

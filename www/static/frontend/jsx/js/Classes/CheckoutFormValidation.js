@@ -4,8 +4,13 @@ import BillingForm      from '@/js/Components/checkout/BillingForm';
 import { CanadaCODs }   from '@/js/Components/checkout/CanadaCODs';
 
 export default class CheckoutFormValidation extends FormValidation {
-    constructor( name ) {
-        super( name );
+    constructor( formName ) {
+        super( formName );
+
+        // после обновления формы, может обновиться разметка методов оплаты, тогда они перестанут проверяться валидатором
+        $( document ).on( 'updateRequestSuccess.checkout', ( e, res ) => {
+            this._bind();
+        });
     }
 
     // show wrong fields if it is hide

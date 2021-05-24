@@ -11,7 +11,10 @@ export default class StateLine extends Component {
         this.hideSort = props.hideSort;
         this.sortButton = createRef();
 
-        this.state = { isOpenSortMenu: false, };
+        this.state = {
+            isOpenSortMenu: false,
+            sortKey: props.sortKey,
+        };
 
         $( document ).click( () => {
             if (this._mounted) {
@@ -91,7 +94,7 @@ export default class StateLine extends Component {
 
     render(props) {
         return (
-            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) }>
+            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) } style="display:block">
                 <div className="row">
                     <div className="columns large-3 show-for-large">
                         <div className="page_count_wrap">

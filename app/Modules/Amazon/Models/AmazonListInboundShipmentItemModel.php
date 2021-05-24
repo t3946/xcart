@@ -2,7 +2,7 @@
 
 namespace Modules\Amazon\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -33,7 +33,7 @@ class AmazonListInboundShipmentItemModel extends Model
                 'classModel' => AmazonListInboundShipment::class,
                 'primary' => true,
                 'null' => false,
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ]
         ];
     }

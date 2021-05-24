@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Modules\Order\Forms\CheckoutForm;
+use Modules\Order\Forms\PayByCardForm;
 use Modules\Order\Helpers\CheckoutHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
@@ -27,9 +28,9 @@ class OrderProcessController extends FrontendController
                     'model' => $order,
                     'h1' => "Order # {$order->getOrderNumber()} has been deleted from our system.",
                     'content' => "You won't receive any further communication from us.<br/>Have a lovely day!"
-                ] );
-                $order->groups->update( [ 'cb_status' => OrderStatusModel::ORDER_STATUS_CANCELED ] );
-                $order->cb_status = OrderStatusModel::ORDER_STATUS_CANCELED;
+                ]);
+                $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_FAILED]);
+                $order->cb_status = OrderStatusModel::ORDER_STATUS_FAILED;
                 $order->save();
                 ( new OrderLogModel( [
                     'orderid' => $order->orderid,
@@ -159,9 +160,7 @@ class OrderProcessController extends FrontendController
         $post = $this->getRequest()->post;
         $cart = Xcart::app()->cart;
         if (!$order = OrderHelper::getCartOrder()) {
-            $order = new OrderModel([
-                'cart_number' => $cart->getCartNumber()
-            ]);
+            return;
         }
 
         if ($post->has('uid') && $post->has('quantity')) {
@@ -169,17 +168,19 @@ class OrderProcessController extends FrontendController
             $quantity = $post->get('quantity');
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
             CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+            $shipping_rates = self::getShippingRates($order);
+            CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
             CheckoutHelper::updateOrderTotalValues($order);
         }
 
         if ($post->has('shipping_rates')) {
-
             $shipping_rates = self::getShippingRates($order);
-
             foreach ($post->get('shipping_rates') as $rate) {
                 CheckoutHelper::updateOrderShippingRates($order, $shipping_rates, $rate, false);
             }
         }
+
+        $order->save();
 
         $form = new CheckoutForm();
         $form->setInstance( $order );
@@ -238,7 +239,9 @@ class OrderProcessController extends FrontendController
         ) {
             CheckoutHelper::updateBillingDetails($order);
             
-            $shipping_rates = self::getShippingRates($order);
+            if (!isset($shipping_rates)) {
+                $shipping_rates = self::getShippingRates($order);
+            }
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
@@ -247,13 +250,21 @@ class OrderProcessController extends FrontendController
                 $only_phone_order = true;
             }
 
-           $form->setInstance($order);
+            $order->save();
+
+            //TODO need to refactoring
+            $pay_form = new PayByCardForm();
+            $form->stripe_payment_intent = $pay_form->stripe_payment_intent;
+
+            $form->setInstance($order);
 
             $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
         }
 
         $response = array_merge($response, OrderHelper::getOrderInfo($order));
+
+        $response['payment_intent'] = $form->stripe_payment_intent;
 
         $order->save();
 

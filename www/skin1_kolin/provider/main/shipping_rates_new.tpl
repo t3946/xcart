@@ -1,9 +1,7 @@
 {assign var=dCurrency value=$distributorModel->currency}
 {if $type eq "D"}
-	{include file="page_title.tpl" title=$lng.lbl_shipping_charges}
 	{$lng.txt_shipping_charges_note|substitute:"weight_symbol":$config.General.weight_symbol}
 {else}
-	{include file="page_title.tpl" title=$lng.lbl_shipping_markups}
 	{$lng.txt_shipping_markups_note|substitute:"weight_symbol":$config.General.weight_symbol}
 {/if}
 

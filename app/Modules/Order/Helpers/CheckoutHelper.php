@@ -10,6 +10,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 
 class CheckoutHelper
 {
@@ -68,10 +69,18 @@ class CheckoutHelper
             $order->groups->exclude(['manufacturerid__in' => array_keys($cart_groups)])->delete();
 
             foreach ($cart_groups as $mid => $cart_group) {
-                [$group] = OrderGroupModel::objects()->getOrNew([
+                /** @var OrderGroupModel $group */
+                [$group, $is_new] = OrderGroupModel::objects()->getOrNew([
                     'manufacturerid' => $mid,
                     'orderid' => $order->orderid,
                 ]);
+                if ($is_new) {
+                    $group->setAttributes([
+                        'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                        'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                        'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                    ]);
+                }
                 $group->setAttributes([
                     'total_gross' => $cart_group['subtotal'] + $group->shipping_gross,
                     'product_gross' => $cart_group['subtotal'],

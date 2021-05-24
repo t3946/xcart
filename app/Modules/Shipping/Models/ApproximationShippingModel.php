@@ -7,6 +7,7 @@ namespace Modules\Shipping\Models;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
@@ -37,6 +38,11 @@ class ApproximationShippingModel extends Model
             ],
             'last_updated_date' => [
                 'class' => UnixTimestampField::class,
+                'autoNowAdd' => true,
+                'autoNow' => true,
+            ],
+            'updated_at' => [
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],

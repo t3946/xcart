@@ -15,7 +15,7 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorShippingPolicyForm extends DistributorForm
 {
-    public array $exclude = ['provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
@@ -87,6 +87,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'selected' => $countriesSelected,
                 'multiple' => true,
                 'html' => ['style' => 'width:400px;'],
+                'placeholder' => 'Click to select shipping zone',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
@@ -187,16 +188,25 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'html' => ['onchange' => "this.value ? $('#DistributorShippingPolicyForm_d_drop_ship_fee_in_us').closest('tr').show() : $('#DistributorShippingPolicyForm_d_drop_ship_fee_in_us').closest('tr').hide()"],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hint' => LanguageModel::translate('help_dx_dropship_fee_text') ?? 'help_dx_dropship_fee_text',
+                'hint' => LanguageModel::translate('help_dx_dropship_fee_text'),
             ],
             'd_drop_ship_fee_in_us' => [
                 'class' => CharField::class,
-                'label' => "Drop-ship fee in {$currency->symbol_prefix}{$currency}",
+                'label' => "Drop-ship fee amount",
                 'html' => ['style' => 'width:50px;'],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
+                'extend' => 'd_drop_ship_fee_type',
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'hidden' => empty($dx->d_drop_ship_fee_select),
-                'hint' => LanguageModel::translate('help_dx_dropship_fee_price_text') ?? 'help_dx_dropship_fee_price_text',
+                'hint' => LanguageModel::translate('help_dx_dropship_fee_price_text'),
+            ],
+            'd_drop_ship_fee_type' => [
+                'class' => DropDownField::class,
+                'choices' => [
+                    'value' => 'US$',
+                    'percent' => '% of subtotal in Cost to us pricing',
+                ]
             ],
             'd_minimum_order_amount' => [
                 'class' => DropDownField::class,
@@ -207,7 +217,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 ],
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_text') ?? 'help_dx_minimum_order_amount_text',
+                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_text'),
                 'html' => ['onchange' => "this.value ? $('#DistributorShippingPolicyForm_d_minimum_order_amount_in_us, #DistributorShippingPolicyForm_d_for_orders_below_min_order_amount').closest('tr').show() : $('#DistributorShippingPolicyForm_d_minimum_order_amount_in_us, #DistributorShippingPolicyForm_d_for_orders_below_min_order_amount').closest('tr').hide()"],
             ],
             'd_minimum_order_amount_in_us' => [
@@ -217,7 +227,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => empty($dx->d_minimum_order_amount),
-                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_price_text') ?? 'help_dx_minimum_order_amount_price_text',
+                'hint' => LanguageModel::translate('help_dx_minimum_order_amount_price_text'),
             ],
             'd_for_orders_below_min_order_amount' => [
                 'class' => DropDownField::class,
@@ -241,8 +251,8 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => 'from',
-                'extend' => 'd_dealer_discount_reduced_to'
+                'extends' => '<b>from</b> <a title="'.LanguageModel::translate('help_dx_d_dealer_discount_reduced_from_text').'" class="tooltip"><i class="fa fa-question-circle pointer"></i></a>',
+                'extend' => 'd_dealer_discount_reduced_to',
             ],
             'd_dealer_discount_reduced_to' => [
                 'label' => ' ',
@@ -252,7 +262,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'hidden' => $dx->d_for_orders_below_min_order_amount !== 'dealer_discount_is_reduced',
                 'inputTemplate' => 'admin/distributor/form/input.tpl',
                 'html' => ['style' => 'width:50px;'],
-                'extends' => 'to',
+                'extends' => '<b>to</b> <a title="'.LanguageModel::translate('help_dx_d_dealer_discount_reduced_to_text').'" class="tooltip"><i class="fa fa-question-circle pointer"></i></a>',
             ],
             'update_approximation_shipping_rates' => [
                 'class' => CheckboxField::class,

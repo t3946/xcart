@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class CharField
@@ -20,6 +21,6 @@ class CharField extends Field
      */
     public function getSqlType()
     {
-        return Type::getType(Type::STRING);
+        return Type::getType(Types::STRING);
     }
 }

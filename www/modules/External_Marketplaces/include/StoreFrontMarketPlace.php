@@ -2,6 +2,7 @@
 namespace Xcart\External_Marketplaces;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Sites\Models\SiteMarketplaceModel;
 use Xcart\Connection;
 use Xcart\Data;
 
@@ -130,11 +131,9 @@ abstract class StoreFrontMarketPlace extends Data
     public static function getMarketPlacesByStoreFront($iStoreFrontId)
     {
         $aMP = [];
-        $aMarketPlaces = Connection::getInstance()->fetchAll("SELECT marketplace_id FROM xcart_storefronts_external_marketplaces WHERE storefront_id = {$iStoreFrontId}");
-        if (!empty($aMarketPlaces)) {
-            foreach ($aMarketPlaces as $aMarketPlaceId) {
-                $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlaceId['marketplace_id'], $iStoreFrontId);
-            }
+        $aMarketPlaces = SiteMarketplaceModel::objects()->filter(['storefront_id' => $iStoreFrontId])->valuesList(['marketplace_id'], true);
+        foreach ($aMarketPlaces as $aMarketPlaceId) {
+            $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlaceId['marketplace_id'], $iStoreFrontId);
         }
         return $aMP;
     }

@@ -16,7 +16,7 @@
 }
 
 .products-state-line {
-  .line-title {
+  .state-line-title {
     float:left;
     margin-right: rem-calc(7);
     font-weight: 700;
@@ -42,6 +42,7 @@
 
         .action_block {
           position: relative;
+          height: 100%;
 
           &.sort {
             .options {
@@ -138,6 +139,7 @@
 
     &.view {
       background-color: #ebebeb;
+      height: 100%;
 
       a {
         display: inline-block;

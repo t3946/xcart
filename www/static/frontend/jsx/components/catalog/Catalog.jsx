@@ -1,4 +1,5 @@
 import StateLine      from '@/components/catalog/StateLine';
+import StateLineGroupProduct from '@/components/catalog/StateLineGroupProduct';
 import ProductsList   from '@/components/catalog/ProductsList';
 import CatalogContext from '@/components/catalog/CatalogContext';
 import LoadMore       from '@/components/catalog/LoadMore';
@@ -21,7 +22,7 @@ export default class Catalog extends Component {
 
         this.state = {
             ...props,
-            viewMode: Storage.get( this.VIEW_MODE_STORAGE_KEY, null ),
+            viewMode: Storage.get( this.VIEW_MODE_STORAGE_KEY, 'tile' ),
             onViewModeChange,
             onUpdateProductList,
             // true after first product list loaded
@@ -47,17 +48,20 @@ export default class Catalog extends Component {
     printStateLine() {
         if ( this.state.loaded ) {
             const props = {
-                sortKey: this.state.sortKey,
                 hideSort: this.state.hideSort,
                 sortingOptions: this.state.sortingOptions,
                 classes: {
                     container: 'products-state-line_catalog',
-                }
+                },
+                sortKey: this.state.sortKey,
             };
 
-            return (
-                <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/>
-            );
+            switch ( this.props.mode ) {
+                case 'group-product':
+                    return ( <StateLineGroupProduct { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
+                default:
+                    return ( <StateLine { ...props } onSort={ this.onSortCatalog.bind( this ) }/> );
+            }
         }
     }
 

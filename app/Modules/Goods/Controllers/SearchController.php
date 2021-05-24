@@ -2,7 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductSortHelper;

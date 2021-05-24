@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Goods\Models;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -51,7 +51,7 @@ class ProductQuestionModel extends Model
                 'field' => 'login',
                 'modelClass' => UserModel::class,
                 'link' => ['login' => 'login'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
                 'null' => true
             ],
             'product' => [

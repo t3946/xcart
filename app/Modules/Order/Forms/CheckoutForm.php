@@ -172,6 +172,9 @@ class CheckoutForm extends ShippingForm
                 );
                 array_map(fn($e) => $this->clearErrors($e), array_intersect($errors,  array_keys($card_required_fields)));
             }
+            if ((int)$order->paymentid === 106) {
+                $this->clearErrors('pbc_card_details');
+            }
 
             return $this->hasErrors() === false;
         }

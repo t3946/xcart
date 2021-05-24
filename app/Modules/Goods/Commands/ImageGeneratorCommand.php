@@ -4,7 +4,7 @@
 namespace Modules\Goods\Commands;
 
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Goods\Models\ImageDModel;
 use Xcart\App\Commands\Command;
 use Xcart\App\Helpers\Paths;

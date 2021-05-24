@@ -61,7 +61,7 @@
                             {t 'SKU'}: <span class="style">{$model->productcode}</span>
                         </span>
                     </div>
-                    <div class="column shrink notifications hide-for-ml">
+                    <div class="column shrink notifications hide-for-ml product_notifications">
                         <div class="notifications-info small-collapse">
                             <div class="column shrink">
                                 {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
@@ -143,7 +143,7 @@
                 </div>
                 <div class="column small-12 ml-6 large-6 block__title_price">
 
-                <div class="notifications show-for-ml">
+                <div class="notifications show-for-ml product_notifications">
                     <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink ">
                             {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
@@ -187,13 +187,19 @@
     {include 'product/_tabs.tpl' model=$model}
     {if $model->isGroupRoot()}
         {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
-        <section data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
-                 data-current-sorting-key="{$sort}"
-                 data-hide-sort="true"
-                 data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
-                 data-catalog-url="{$pager->createView()->getUrl(1)}"
-                 data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}" class="groupped-products"
-                 id="products">
+        <section>
+            <div class="row">
+                <div data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
+                     data-current-sorting-key="{$sort}"
+                     data-hide-sort="true"
+                     data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
+                     data-catalog-url="{$pager->createView()->getUrl(1)}"
+                     data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-mode="group-product"
+                     class="column groupped-products"
+                     id="products">
+                </div>
+            </div>
         </section>
     {/if}
 

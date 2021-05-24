@@ -92,7 +92,70 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelCommentClass' => 'common-comment',
                 'fieldClass' => 'checkout-field',
             ],
-
+            'city' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t( 'City' ),
+                'required' => true,
+                'html' => [
+                    'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
+                    'class' => 'auto-complete city',
+                    'autocomplete' => 'address-level2',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
+                ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+            ],
+            'state' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t( 'State/Province' ),
+                'required' => true,
+                'validators' => [
+                    new StateValidator( [ 'country' => 'country' ] )
+                ],
+                'html' => [
+                    'placeholder' => ( $geoIp && $state = StateModel::objects()->get(
+                            [
+                                'code' => $geoIp[ 'region' ] ?? '',
+                                'country_code' => $geoIp[ 'country' ] ?? ''
+                            ] ) )
+                        ? $state->state
+                        : 'New Jersey',
+                    'class' => 'auto-complete state',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
+                ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+            ],
+            'zipcode' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t( 'Zip/Postal Code' ),
+                'required' => true,
+                'validators' => [
+                    new ZipCodeValidator()
+                ],
+                'html' => [
+                    'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
+                    'class' => 'auto-complete zip',
+                    'autocomplete' => 'postal-code',
+                    'data-correct' => 'common-input__correct',
+                    'data-wrong' => 'common-input__wrong',
+                    'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+                    'inputmode' => 'numeric',
+                ],
+                'requiredClass' => 'common-required',
+                'labelClass' => 'common-label common-label_required',
+                'hintClass' => 'common-hint',
+                'fieldClass' => 'checkout-field',
+                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+            ],
             'country' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Country' ),
@@ -122,72 +185,11 @@ class CheckoutShippingAddressForm extends AddressForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
-            'zipcode' => [
-                'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Zip/Postal Code' ),
-                'required' => true,
-                'validators' => [
-                    new ZipCodeValidator()
-                ],
-                'html' => [
-                    'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
-                    'class' => 'auto-complete zip',
-                    'autocomplete' => 'postal-code',
-                    'data-correct' => 'common-input__correct',
-                    'data-wrong' => 'common-input__wrong',
-                    'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-                    'inputmode' => 'numeric',
-                ],
-                'requiredClass' => 'common-required',
-                'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'checkout-field',
-                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
 
-            'state' => [
-                'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'State/Province' ),
-                'required' => true,
-                'validators' => [
-                    new StateValidator( [ 'country' => 'country' ] )
-                ],
-                'html' => [
-                    'placeholder' => ( $geoIp && $state = StateModel::objects()->get(
-                            [
-                                'code' => $geoIp[ 'region' ] ?? '',
-                                'country_code' => $geoIp[ 'country' ] ?? ''
-                            ] ) )
-                        ? $state->state
-                        : 'New Jersey',
-                    'class' => 'auto-complete state',
-                    'data-correct' => 'common-input__correct',
-                    'data-wrong' => 'common-input__wrong',
-                ],
-                'requiredClass' => 'common-required',
-                'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'checkout-field',
-                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
 
-            'city' => [
-                'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'City' ),
-                'required' => true,
-                'html' => [
-                    'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
-                    'class' => 'auto-complete city',
-                    'autocomplete' => 'address-level2',
-                    'data-correct' => 'common-input__correct',
-                    'data-wrong' => 'common-input__wrong',
-                ],
-                'requiredClass' => 'common-required',
-                'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'fieldClass' => 'checkout-field',
-                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
+
+
+
         ];
 
         $newFields = [];

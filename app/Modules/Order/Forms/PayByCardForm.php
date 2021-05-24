@@ -4,11 +4,15 @@ namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\OrderModule;
 use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Base;
 
 class PayByCardForm extends FrontendForm
 {
@@ -39,27 +43,61 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                $customer = $gw->gateway->createCustomer(
-                    [
-                        'email' => $order->email,
-                        'name' => $order->b_firstname ?: $order->firstname,
-                        'description' => $order->orderid,
-                    ]
-                )->send();
+                if ($order->payment_method_model->paymentid && $transaction = $order
+                    ->transactions
+                    ->filter([
+                        'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                        'transaction_amount' => $params['amount'] ?? 0,
+                        'transaction_currency' => $params['currency'] ?? 'USD',
+                        'paymentid' => $order->payment_method_model->paymentid])
+                    ->limit(1)
+                    ->get()) {
+                    $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
+                } else {
+                    if ($stripe_customer = Xcart::app()->request->session->get('stripe_customer_reference')) {
+                        $customer = $gw->gateway->fetchCustomer([
+                            'customerReference' => $stripe_customer
+                        ])->send();
+                    } else {
+                        $customer = $gw->gateway->createCustomer(
+                            [
+                                'email' => $order->email,
+                                'name' => $order->b_firstname ?: $order->firstname,
+                                'description' => $order->orderid,
+                            ]
+                        )->send();
+                        Xcart::app()->request->session->add('stripe_customer_reference', $customer->getCustomerReference());
+                    }
 
-                $intent = $gw->gateway->createPaymentIntent(
-                    array_merge(
-                        $params,
-                        [
-                            'metadata' => ['order' => $order->orderid, 'email' => $order->email],
-                            'connectedAccount' => $gw::CONNECTED_ACCOUNT_ID,
-                            'setupFutureUsage' => 'off_session',
-                            'captureMethod' => 'manual',
-                            'customerReference' => $customer->getCustomerReference()
-                        ]
-                    )
-                )->send();
-                $this->stripe_payment_intent = $intent->getData() ? $intent->getData()[ 'client_secret' ] ?? '' : '';
+                    $intent = $gw->gateway->createPaymentIntent(
+                        array_merge(
+                            $params,
+                            [
+                                'metadata' => ['order' => $order->orderid, 'email' => $order->email],
+                                'connectedAccount' => $gw::CONNECTED_ACCOUNT_ID,
+                                'setupFutureUsage' => 'off_session',
+                                'captureMethod' => 'manual',
+                                'customerReference' => $customer->getCustomerReference()
+                            ]
+                        )
+                    )->send();
+                    $gw->result = $intent;
+
+                    $transaction_id = $intent->getData() ? $intent->getData()['client_secret'] ?? '' : '';
+
+                    $transaction = new OrderTransactionModel(array_merge(
+                            OrderTransactionHelper::prepareOrderTransaction($gw, $params),
+                            [
+                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                'orderid' => $order->orderid,
+                                'type' => 'authorization',
+                                'paymentid' => $order->paymentid,
+                            ])
+                    );
+                    $transaction->save();
+                }
+
+                $this->stripe_payment_intent = $transaction_id;
                 $this->public_key = $pm->param01 ?? '';
             }
         }

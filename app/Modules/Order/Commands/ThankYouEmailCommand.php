@@ -5,7 +5,7 @@ namespace Modules\Order\Commands;
 
 
 use DateTime;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Order\Models\OrderModel;

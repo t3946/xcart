@@ -1,12 +1,13 @@
 <?php
 namespace Modules\Brand\Controllers;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\BrandModule;
 use Modules\Brand\Models\BrandModel;
 use Modules\Core\Helpers\Cache;
 use Modules\Goods\Controllers\AbstractCatalogController;
+use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Meta\Helpers\MetaExtHelper;
@@ -23,6 +24,12 @@ class DefaultController extends AbstractCatalogController
 
     public function actionViewOld($id, $slug)
     {
+        if ($_GET['sort']) {
+            Xcart::app()->request->session->add('category_sort', $_GET['sort']);
+        }
+
+        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
@@ -106,7 +113,7 @@ class DefaultController extends AbstractCatalogController
         ];
     }
 
-    public function getQS($data)
+    public function getQS($data = null)
     {
         return parent::getQS()->filter(['brand__brandid' => $data->brandid]);
     }

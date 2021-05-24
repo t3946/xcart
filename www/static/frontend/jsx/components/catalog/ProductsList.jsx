@@ -20,7 +20,7 @@ export default class ProductsList extends Component {
         const { nextPage, sort } = this.state;
         let url = this.props.catalogUrl.split( '?' )[ 0 ];
 
-        // if search page
+        // if search page -- make url without api/
         if (document.location.href.search(document.location.host + '/search') !== -1) {
             const searchParams = document.location.href.split('?')[1];
             url = `/search?${searchParams}&`;
@@ -57,8 +57,6 @@ export default class ProductsList extends Component {
         } ).then( res => res.json() )
            .then(
                ( res ) => {
-                   console.log('PRODUCTS LIST', res);
-
                    this.props.onEndLoading();
                    this.state.items.push( ...res.items );
                    this.setState( {

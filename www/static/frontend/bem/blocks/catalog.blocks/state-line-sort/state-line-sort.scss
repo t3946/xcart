@@ -1,4 +1,9 @@
 .state-line-sort {
+    height: rem-calc(60);
     display: flex;
     align-items: center;
+
+    @include breakpoint(lg up) {
+        height: initial;
+    }
 }

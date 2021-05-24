@@ -4,7 +4,7 @@ namespace Modules\Order\Models;
 
 use DateInterval;
 use DateTime;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
@@ -55,10 +55,10 @@ class OrderTransactionModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'transaction_status' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => 'failed',
                 'null' => false,
                 'choices' => [
@@ -76,7 +76,7 @@ class OrderTransactionModel extends Model
                 ]
             ],
             'type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null,
                 'choices' => [
@@ -86,13 +86,13 @@ class OrderTransactionModel extends Model
                 ]
             ],
             'transaction_response' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => true,
             ],
             'payment_method_model' => [
                 'field' => 'paymentid',
-                'class' => ForeignField::className(),
-                'modelClass' => PaymentMethodModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => PaymentMethodModel::class,
                 'null' => false,
             ],
             'date' => [
@@ -102,31 +102,31 @@ class OrderTransactionModel extends Model
             ],
             'user' => [
                 'field' => 'login',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['login' => 'login'],
-                'sqlType' => Type::STRING,
+                'sqlType' => Types::STRING,
             ],
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
             ],
             'transaction_logs' => [
-                'class' => HasManyField::className(),
-                'modelClass' => TransactionLogModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => TransactionLogModel::class,
                 'link' => ['order_transaction_id' => 'id'],
             ],
             'parent' => [
                 'field' => 'parent_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderTransactionModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderTransactionModel::class,
                 'link' => ['parent_id' => 'id'],
             ],
             'child' => [
-                'class' => HasManyField::className(),
-                'modelClass' => OrderTransactionModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => OrderTransactionModel::class,
                 'link' => ['id' => 'parent_id'],
             ],
         ];

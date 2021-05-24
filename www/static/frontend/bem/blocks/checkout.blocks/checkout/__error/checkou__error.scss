@@ -7,5 +7,6 @@
 @include breakpoint(lg up) {
   .checkout__error {
     left: auto;
+    margin-bottom: 0;
   }
 }

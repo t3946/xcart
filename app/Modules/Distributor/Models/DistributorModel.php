@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Goods\Models\ImageMModel;
 use Modules\Goods\Models\ProductModel;
@@ -33,11 +34,15 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Manufacturer;
 
 /**
+ * @property int manufacturerid
+ * @property float price_coef_x
+ * @property float price_coef_y
  * @property float price_coef_z
  * @property float d_minimum_order_amount_in_us
  * @property string d_minimum_order_amount
@@ -48,8 +53,11 @@ use Xcart\Manufacturer;
  * @property TemplateModel request_avail_template
  * @property string d_send_to_email_14
  * @property DistributorTabModel[] tabs
+ * @property ShippingRateModel[]|Manager shipping_rates
  * @property TemplateModel order_entry_template
  * @property TemplateModel order_submit_template
+ * @property bool allow_dispatch_off_working_hours
+ * @property DistributorContactsModel[]|Manager contacts_model
  */
 class DistributorModel extends Model
 {
@@ -131,7 +139,7 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TemplateModel::class,
                 'link' => ['order_entry_template_id' => 'id'],
-                'null' => true,
+                'null' => false,
                 'default' => TemplateModel::ORDER_ENTRY_TEMPLATE_ID,
             ],
             'order_submit_template' => [
@@ -139,7 +147,7 @@ class DistributorModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => TemplateModel::class,
                 'link' => ['order_submit_template_id' => 'id'],
-                'null' => true,
+                'null' => false,
                 'default' => TemplateModel::DISPATCH_ORDER_TEMPLATE_ID,
             ],
             'order_entry_special_instructions' => [
@@ -161,6 +169,11 @@ class DistributorModel extends Model
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
+            ],
+            'd_frontend_return_policy' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
             ],
             'd_distributor_return_policy' => [
                 'class' => CharField::class,
@@ -240,8 +253,8 @@ class DistributorModel extends Model
                 'default' => false
             ],
             'shipping_rates' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ShippingRateModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ShippingRateModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid']
             ],
             'contacts_model' => [
@@ -312,7 +325,26 @@ class DistributorModel extends Model
             ],
             'd_order_entry_operator_email' => [
                 'class' => CharField::class,
-                'default' => 'order.entry@s3stores.com'
+                'default' => 'order.entry@s3stores.com',
+                'verboseName' => 'Order entry operator email'
+            ],
+            'd_we_pay_to_distributor_by' => [
+                'class' => CharField::class,
+                'default' => 'credit_card',
+                'choices' => [
+                    'credit_card' => 'credit / debit card',
+                    'paypal_balance' => 'PayPal balance',
+                    'check' => 'check',
+                ],
+            ],
+            'products_quantity_behavior' => [
+                'class' => CharField::class,
+                'default' => 'N',
+                'choices' => [
+                    'N' => 'do NOT display quantity',
+                    'R' => 'display real quantity',
+                    'D' => 'display quantity of',
+                ],
             ],
             'd_bulk_or_individual_order_payments' => [
                 'class' => CharField::class,
@@ -539,7 +571,12 @@ class DistributorModel extends Model
                 'adapterName' => 'www',
                 'uploadTo' => 'images/M/',
                 'null' => true,
-            ]
+            ],
+            'taxes' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorTaxModel::class,
+                'link' => ['manufacturerid' => 'distributor_id']
+            ],
         ];
     }
 
@@ -702,7 +739,16 @@ class DistributorModel extends Model
 
     public function getContactNameForTemplates(): string
     {
-        return ucfirst(strtolower(explode(' ', $this->d_contact_name_for_templates)[0] ?? 'Supplier'));
+        /** @var DistributorContactsModel $contact */
+        $contact = $this->contacts_model
+            ->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])
+            ->order(['position'])
+            ->limit(1)
+            ->get();
+        if ($contact && $contact->contact_name && $names_arrays = explode(' ', $contact->contact_name)) {
+            $result = ucfirst(strtolower($names_arrays[0]));
+        }
+        return $result ?? 'Supplier';
     }
 
     public function afterSave($owner, $isNew)
@@ -719,12 +765,6 @@ class DistributorModel extends Model
                 'position' => 20,
                 'name' => 'Our guarantee',
                 'content' => "This product is brand new and includes the manufacturer's warranty, so you can buy with confidence."
-            ]);
-            DistributorTabModel::objects()->getOrCreate([
-                'distributor_id' => $owner->pk,
-                'position' => 30,
-                'name' => 'Return policy',
-                'content' => "A 25% handling charge is levied against all authorized returns except those due to our error. Unauthorized returns are subject to a 40% handling charge. Damages & defects must be reported to us within 14 days."
             ]);
             ShippingRateModel::objects()->getOrCreate([
                 'shippingid' => 1,

@@ -6,8 +6,8 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
-use Mindy\QueryBuilder\LookupBuilder\LookupBuilder;
-use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\QueryBuilder\LookupBuilder\LookupBuilder;
+use Xcart\App\QueryBuilder\QueryBuilder;
 
 class LookupCallback
 {

@@ -6,7 +6,7 @@ namespace Modules\Order\Commands;
 
 use DateTime;
 use DateTimeZone;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTrackingModel;

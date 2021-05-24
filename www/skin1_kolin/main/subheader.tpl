@@ -49,7 +49,7 @@
                             </td>
                             <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 <a target="_blank" style="color: blue; font-weight: bold;"
-                                   href="order.php?orderid={$order.orderid}&mode=printable">{$lng.lbl_print_order}</a>
+                                   href="{$xcartApp->router->url('order:api:export',['order_id' => $order.orderid])}">Export</a>
                             </td>
                             {if $active_modules.RMA ne '' && $current_membership_flag ne 'FS'}
                                 {if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $return_products ne ''}
@@ -100,7 +100,7 @@
                                         <input type="hidden" name="mode" value="clone_order"/>
                                         <input type="hidden" name="orderid" value="{$order.orderid}"/>
                                         <a style="color: blue; font-weight: bold;" href="javascript: void(0);"
-                                           onclick="javascript: if (confirm('Would you really like to clone this order?')) window.open('order.php?orderid={$orderid}&mode=clone_order');">Clone
+                                           onclick="if (confirm('Would you really like to clone this order?')) window.open('order.php?orderid={$orderid}&mode=clone_order');">Clone
                                             this order</a>
                                     </form>
                                 </td>

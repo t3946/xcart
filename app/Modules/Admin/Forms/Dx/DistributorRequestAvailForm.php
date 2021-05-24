@@ -19,7 +19,7 @@ use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorRequestAvailForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
     public function getFieldsets()
     {
@@ -84,6 +84,8 @@ class DistributorRequestAvailForm extends DistributorForm
                 'label' => 'Availability request subject line',
                 'html' => ['class' => 'click_hide', 'readonly' => true, 'style' => 'border: none'],
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
+                'hint' => LanguageModel::translate('help_dx_template_1_subj_text'),
+                'hintTemplate' => $this->hintTemplate,
             ],
             'template_1' => [
                 'class' => EditorField::class,
@@ -92,6 +94,8 @@ class DistributorRequestAvailForm extends DistributorForm
                 'html' => ['class' => 'click_hide'],
                 'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
+                'hint' => LanguageModel::translate('help_dx_template_1_text'),
+                'hintTemplate' => $this->hintTemplate,
             ],
 
             'd_server_min_distributor_time' => [

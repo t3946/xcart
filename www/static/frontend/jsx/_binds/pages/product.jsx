@@ -113,15 +113,16 @@ import Catalog from "@/components/catalog/Catalog";
     const pager = JSON.parse(elem.dataset.pager);
 
     render(
-      <Catalog
-        sortingOptions={sortingOptions}
-        sortKey={elem.dataset.currentSortingKey}
-        hideSort={hideSort}
-        pager={pager}
-        catalogUrl={"/api" + elem.dataset.catalogUrl}
-        checkoutUrl={elem.dataset.checkoutUrl}
-        searchText=''
-      />,
+        <Catalog
+          sortingOptions={sortingOptions}
+          sortKey={elem.dataset.currentSortingKey}
+          hideSort={hideSort}
+          pager={pager}
+          catalogUrl={"/api" + elem.dataset.catalogUrl}
+          checkoutUrl={elem.dataset.checkoutUrl}
+          mode={elem.dataset.mode}
+          searchText=''
+        />,
       elem
     );
   }

@@ -2,9 +2,9 @@
 
 namespace Xcart\App\Orm;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -161,7 +161,6 @@ class TreeQuerySet extends QuerySet
 
     /**
      * @return int
-     * @throws \Doctrine\DBAL\DBALException
      */
     protected function getLastRoot()
     {
@@ -213,7 +212,6 @@ class TreeQuerySet extends QuerySet
      *
      * @param $table
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     protected function deleteBranchWithoutRoot($table)
@@ -230,12 +228,12 @@ class TreeQuerySet extends QuerySet
             new QAndNot(['root__in' => $subQuery]),
         ]);
 
-        $stmt = $this->getConnection()->query($query->toSQL());
-        $ids = $stmt->fetchColumn();
+        $stmt = $this->getConnection()->executeQuery($query->toSQL());
+        $ids = $stmt->fetchFirstColumn();
         if ($ids && count($ids) > 0) {
             $deleteQuery = clone $this->getQueryBuilder();
             $deleteQuery->clear()->setTypeDelete()->from($table)->where([$id_attr.'__in' => $ids]);
-            $this->getConnection()->query($deleteQuery->toSQL())->execute();
+            $this->getConnection()->executeQuery($deleteQuery->toSQL());
         }
     }
 
@@ -253,7 +251,6 @@ class TreeQuerySet extends QuerySet
      *
      * @param $table
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     protected function deleteBranchWithoutParent($table)
@@ -322,7 +319,7 @@ SQL;
 
         $adapter = $this->getAdapter();
 
-        $rows = $this->getConnection()->query($adapter->quoteSql($sql))->fetchAll();
+        $rows = $this->getConnection()->executeQuery($adapter->quoteSql($sql))->fetchAll();
         foreach ($rows as $row) {
             if ($row['move'] < 0) {
                 Xcart::app()->logger->warning("Tree in table '{$table}', maybe broken and can't fix automaticly.", ['fixdata' => $row]);
@@ -330,9 +327,9 @@ SQL;
             }
 
             $sql = 'UPDATE '.$table.' SET `lft`=`lft`-'.$row['move'].', `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft` > '.$row['rgt'];
-            $this->getConnection()->query($sql)->execute();
+            $this->getConnection()->executeQuery($sql);
             $sql = 'UPDATE '.$table.' SET `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft`<`rgt` AND `rgt` >= '.$row['rgt'];
-            $this->getConnection()->query($sql)->execute();
+            $this->getConnection()->executeQuery($sql);
         }
     }
 
@@ -373,7 +370,6 @@ SQL;
      * @param array $data
      *
      * @return array
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     private function shiftLeftRight($key, $delta, $root, $data)

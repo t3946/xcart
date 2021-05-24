@@ -194,7 +194,7 @@ $(function() {ldelim}
             <tr>
                 <td><B>Product distributor:</B></td>
                 <td>
-                    <a href="{$oDistributor->getAdminUrl(16)}" style="color: #3A3AFF;" target="_blank">{$oDistributor}</a>
+                    <a href="{$oDistributor->getAdminUrl(3)}" style="color: #3A3AFF;" target="_blank">{$oDistributor}</a>
                 </td>
             </tr>
             <tr>
@@ -375,7 +375,7 @@ $(function() {ldelim}
              {/if}&nbsp;
          </td>
          <td>
-             <a href="{$oDistributor->getAdminUrl(16)}" style="color: #3A3AFF;" target="_blank">Product distributor contact</a>
+             <a href="{$oDistributor->getAdminUrl(3)}" style="color: #3A3AFF;" target="_blank">Product distributor contact</a>
          </td>
      </tr>
 

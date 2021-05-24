@@ -4,13 +4,13 @@ import fieldValidation from "@/js/Classes/FieldValidation";
 export default class FormValidation {
     /**
      * Construct form
-     * @param name
+     * @param formName form id
      */
-    constructor(name) {
-        this.name = name;
-        this.constraints = document.formConstraints[name];
+    constructor(formName) {
+        this.name = formName;
+        this.constraints = document.formConstraints[formName];
 
-        let formSelector = '#' + name;
+        let formSelector = '#' + formName;
         this.form = document.querySelector(formSelector);
         this.fields = {};
         this.errors = [];
@@ -27,7 +27,7 @@ export default class FormValidation {
     }
 
     /**
-     * Bind events to fields
+     * Связывание скриптов валидации и полей формы
      * @private
      */
     _bind() {
@@ -50,10 +50,13 @@ export default class FormValidation {
             let inputElementName = inputElement.getAttribute('name');
             this.fields[inputElementName] = field;
 
+            //remove and create new listeners
+            inputElement.removeEventListener('blur', this.processChange);
+            inputElement.removeEventListener( 'change', this.processChange );
+            inputElement.removeEventListener('js.change.event', this.processJsChange);
+
             inputElement.addEventListener('blur', this.processChange);
-
             inputElement.addEventListener( 'change', this.processChange );
-
             inputElement.addEventListener('js.change.event', this.processJsChange);
         }
     }
@@ -107,6 +110,12 @@ export default class FormValidation {
      * @return boolean return true if field is valid else false
      */
     checkForm(inputElement){
+
+        if (inputElement.name === 'CheckoutForm[phone]') {
+            console.log('phone validation');
+        }
+
+
         if(this.form.getAttribute('data-validate') !== 'true'){
             return true;
         }
@@ -151,20 +160,45 @@ export default class FormValidation {
     }
 
     validateOnSubmit(event){
-        event.stopPropagation();
-        this.hasErrors = false;
-        this.checkAllForm();
+        try {
+            event.stopPropagation();
+            this.hasErrors = false;
+            this.checkAllForm();
 
-        // form invalid
-        if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
-            this.scrollToFirstError();
+            // form invalid
+            if(typeof this.hasErrors !== 'undefined' && this.hasErrors) {
+                this.scrollToFirstError();
+                event.preventDefault();
+                return;
+            }
+
+            // checkout page has custom submit
+            if (document.forms.CheckoutForm9) {
+                $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit', { event, hasErrors: this.hasErrors });
+            }
+        } catch ( e ) {
             event.preventDefault();
-            return;
-        }
 
-        // checkout page has custom submit
-        if (document.forms.CheckoutForm9) {
-            $(document.forms.CheckoutForm9).trigger('beforeCheckoutSubmit', { event, hasErrors: this.hasErrors });
+            console.log(e);
+
+            // checkout page has custom submit
+            if (document.forms.CheckoutForm9) {
+                let $errorMessage = $('.form-unexpected-exception');
+
+                if (!$errorMessage.length) {
+                    const $row = $('<div class="row">');
+                    const $col = $('<div class="columns">');
+                    $errorMessage = $('<div class="form-unexpected-exception errors form-field-error form-field__error checkout__error error_checkout common-field-error_visible" style="max-width: 100%">');
+
+                    $row.append($col);
+                    $col.append($errorMessage);
+                    $row.insertBefore(document.forms.CheckoutForm9);
+                }
+
+                $errorMessage.text('Sorry! We have some problems with sending form. Please tell to administration about this incident.');
+
+                window.scrollTo($errorMessage[0]);
+            }
         }
     }
 

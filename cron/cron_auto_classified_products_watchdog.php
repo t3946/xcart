@@ -1,6 +1,6 @@
 <?php
 
-use \Mindy\QueryBuilder\QueryBuilder;
+use \Xcart\App\QueryBuilder\QueryBuilder;
 use \Xcart\Config;
 use \Xcart\StoreFront;
 

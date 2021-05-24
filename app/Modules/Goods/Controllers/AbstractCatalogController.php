@@ -2,7 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
-use Mindy\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;

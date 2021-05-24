@@ -18,11 +18,8 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\Sites\Models\TaxModel;
-use Modules\Sites\Models\TaxRatesModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -527,10 +524,16 @@ class OrderModel extends Model
         return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
     }
 
-    public function getCxDateTime(): ?DateTime
+    public function getCxDateTime($is_now = true): ?DateTime
     {
-        if ($time_zone = $this->billing_state->timezone) {
-            return new DateTime('now', new DateTimeZone($time_zone));
+        $state = $this->billing_state ?: $this->shipping_state;
+        if ($time_zone = $state->timezone) {
+            $date = new DateTime('now', new DateTimeZone($time_zone));
+            if ($is_now) {
+                return $date;
+            }
+            $date->setTimestamp($this->date);
+            return $date;
         }
         return null;
     }
@@ -653,5 +656,10 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getHash(): string
+    {
+        return md5($this->orderid . $this->total . $this->email);
     }
 }

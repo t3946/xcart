@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en" class="no-js {if $.detector->isMobile()} mobile {/if}{if $.detector->isTablet()} tablet {/if}">
 <head>
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({ 'gtm.start': new Date().getTime(),event:'gtm.js' });
+        var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-TCNTJMM');
+    </script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="utf-8">
 
     {block 'seo'}{meta controller=$this!:null}{/block}
@@ -78,6 +86,21 @@
     }
 </style>
     <script>
+      /**
+       * dataProvider нужен для централизованного хранения данных, необходимых странице в момент рендеринга
+       */
+      const dataProvider = {
+        data: {  },
+
+        get: function (key) {
+            return this.data[key];
+        },
+
+        set: function(key, value) {
+            return this.data[key] = value;
+        },
+      };
+
         window.app = {
             afterReady:[],
             assets: {
@@ -97,7 +120,7 @@
                         del: '{url "cart:products:del"}',
                     }
                 },
-                'discount_minutes': {Modules\User\Helpers\DiscountHelper::getDiscountMinutes()},
+                'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()},
                 'order': {json_encode($order->attributes)},
                 translates: {$translates},
             },
@@ -154,6 +177,11 @@
 <body itemscope itemprop="mainEntity" {block 'schema_page_type'}itemtype="http://schema.org/WebPage"{/block}
       class="loading loading-active"
 >
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TCNTJMM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 {if $is_dev_mode}
     {*save spacing on development*}
     {autoescape true}

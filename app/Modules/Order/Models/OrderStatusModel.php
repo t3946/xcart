@@ -2,16 +2,22 @@
 
 namespace Modules\Order\Models;
 
-use Xcart\App\Orm\AutoMetaTrait;
+use Doctrine\DBAL\Types\Types;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 /**
  * @property mixed name
+ * @property OrderStatusAvailabilityModel[]|Manager availability_statuses
+ * @property int status_id
+ * @property string type
  */
 class OrderStatusModel extends Model
 {
-    use AutoMetaTrait;
 
     public const ORDER_STATUS_NULL = null;
     public const ORDER_STATUS_CHECKOUT_STEP1 = 'S1';
@@ -41,8 +47,9 @@ class OrderStatusModel extends Model
     public const ORDER_DC_STATUS_PENDING_ADDL_PAYMENT = 'M';
     public const ORDER_DC_STATUS_SHIPPED_BACKORDERED = 'G';
     public const ORDER_DC_STATUS_RECEIVED_BY_AMAZON = 'DA';
+    public const ORDER_DC_STATUS_PENDING_DISPATCH = 'DP';
     public const ORDER_DC_STATUS_RECEIVED_BY_DISTRIBUTOR = 'L';
-    public const ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED  = 'C';
+    public const ORDER_DC_STATUS_RECEIVED_BY_DISPATCHED = 'C';
 
     public const ORDER_DA_STATUS_NOT_SHIPPED = 'DT';
     public const ORDER_DA_STATUS_SHIPPED = 'DS';
@@ -64,17 +71,63 @@ class OrderStatusModel extends Model
     {
         return 'xcart_order_statuses';
     }
+
     public static function getFields()
     {
         return [
+            'status_id' => AutoField::class,
             'code' => [
                 'class' => CharField::class,
-                'primary' => true
             ],
+            'name' => [
+                'class' => CharField::class,
+            ],
+            'description' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ],
+            'orderby' => [
+                'class' => IntField::class,
+            ],
+            'type' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'AB' => 'AB',
+                    'AC' => 'AC',
+                    'BD' => 'BD',
+                    'C2' => 'C2',
+                    'CA' => 'CA',
+                    'CB' => 'CB',
+                    'DA' => 'DA',
+                    'DC' => 'DC',
+                    'PO' => 'PO',
+                    'PV' => 'PV',
+                    'RU' => 'RU',
+                ]
+            ],
+            'availability_statuses' => [
+                'class' => ManyToManyField::class,
+                'through' => OrderStatusAvailabilityModel::class,
+                'link' => ['source_status_id', 'destination_status_id'],
+                'modelClass' => self::class,
+                'verboseName' => 'Available statuses'
+            ]
         ];
     }
-    public function __toString()
+
+    public function __toString(): string
     {
-        return (string) $this->name;
+        return (string)$this->name;
+    }
+
+    public function getAvailableStatuses(): array
+    {
+        if ($destination_statuses = OrderStatusAvailabilityModel::objects()
+            ->filter(['source_status_id' => $this->status_id])
+            ->valuesList(['destination_status_id'], true)) {
+            return self::objects()->filter(['status_id__in' => $destination_statuses])->valuesList(['code'], true);
+        }
+        return [];
     }
 }

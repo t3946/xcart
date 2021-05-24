@@ -1,9 +1,10 @@
 <?php
 namespace Modules\Amazon\Stores;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAnd;
-use Mindy\QueryBuilder\Q\QOr;
+use PDO;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonReorderBatchDataModel;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Store\BaseStore;
@@ -11,7 +12,7 @@ use Xcart\Connection;
 
 class AmazonStore extends BaseStore
 {
-    private $qs = null;
+    protected $qs;
     private $batch_id;
 
     public function __construct($data)
@@ -116,7 +117,7 @@ class AmazonStore extends BaseStore
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
-            )->fetchAll(\PDO::FETCH_GROUP);
+            )->fetchAll(PDO::FETCH_GROUP);
     }
 
     public function getDistributors():array

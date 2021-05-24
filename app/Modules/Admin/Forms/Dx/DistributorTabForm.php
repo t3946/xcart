@@ -29,4 +29,9 @@ class DistributorTabForm extends ModelForm
             ]
         ];
     }
+
+    public function getName()
+    {
+        return 'Edit tab';
+    }
 }

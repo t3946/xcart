@@ -3,16 +3,13 @@
 namespace Modules\Goods\Helpers;
 
 
-use DateInterval;
-use DateTime;
 use Exception;
-use Mindy\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductFileModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Helpers\Paths;
-use Xcart\App\Main\Xcart;
 
 class ProductHelper
 {
@@ -46,7 +43,7 @@ class ProductHelper
             if (!empty($allowExtensions) && !in_array($filename['extension'], $allowExtensions, true)) {
                 parse_str($path['query'], $arrQueryParams);
                 if (!empty($arrQueryParams)) {
-                    $arrQueryParamsFiltered = array_filter($arrQueryParams, function ($var) use($allowExtensions) {
+                    $arrQueryParamsFiltered = array_filter($arrQueryParams, static function ($var) use($allowExtensions) {
                         foreach ($allowExtensions as $ext) {
                             if (strpos($var, ".{$ext}") !== false) {
                                 return true;
@@ -62,12 +59,12 @@ class ProductHelper
                 }
             } else {
                 $filePathPre = '';
-                $dir = ltrim(\dirname(ltrim($path['path'], '/')), '.');
+                $dir = ltrim(dirname(ltrim($path['path'], '/')), '.');
                 if (!empty($dir)) {
                     $aPath = explode('/', $dir);
                     if (!empty($aPath)) {
                         $filePathPre = implode('_', $aPath) . '_';
-                    };
+                    }
                 }
                 $result = $filePathPre . $fileName;
             }

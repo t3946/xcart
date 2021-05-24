@@ -1,5 +1,6 @@
 import { render, createRef }   from 'preact';
 import PayByCardStripe from '@/components/Checkout/PayByCardStripe';
+import CheckoutJs from '@/js/Components/checkout/Checkout';
 
 export default class Checkout extends Component {
     constructor() {
@@ -50,7 +51,6 @@ export default class Checkout extends Component {
         });
 
         $( document.forms.CheckoutForm9 ).on( 'beforeCheckoutSubmit', (e, data) => {
-            console.log('CHECKOUT BEFORE SUBMIT EVENT');
             this.checkoutSubmit(e, data);
         } );
     }
@@ -110,6 +110,8 @@ export default class Checkout extends Component {
     }
 
     checkoutSubmit(e, data) {
+        CheckoutJs.disableSubmitButton(true);
+
         console.log('CHECKOUT SUBMIT', e, data);
         /**
          * отправкой формы управляет валидатор, он решеает позволять форме отправить данные или нет -- это не правильно,
@@ -151,6 +153,7 @@ export default class Checkout extends Component {
                 document.forms.CheckoutForm9.submit();
             }, () => {
                 console.log('AFTER STRIPE REQUEST WAS FOUNDED NEW ERRORS');
+                CheckoutJs.disableSubmitButton(false);
             });
         } else {
             console.log('FORM IS VALID (NO CARD)');
@@ -160,17 +163,10 @@ export default class Checkout extends Component {
 
     render() {
         const $stripeTarget = $('.stripe-target');
-        const stripeField = {
-            id: $stripeTarget.data('id'),
-            pi: $stripeTarget.data('pi'),
-            public_key: $stripeTarget.data('public_key'),
-        };
 
         return (
             <div className="checkout">
-                { stripeField &&
-                <PayByCardStripe { ...stripeField } ref={ this.PayByCardStripe }/>
-                }
+                { !!$stripeTarget.length && <PayByCardStripe ref={ this.PayByCardStripe }/> }
             </div>
         );
     }

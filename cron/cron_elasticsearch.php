@@ -40,7 +40,7 @@ $update_fail_flag = false;
 $deleted_ok_flag  = false;
 
 
-foreach ($cidev_updated_products as $record) {
+foreach ($cidev_updated_products->limit(10000) as $record) {
     $counter++;
     if ($counter % 100 == 0) {
         func_flush('.');
@@ -204,7 +204,7 @@ $processed    = 0;
 $requests     = 0;
 $body         = '';
 
-foreach ($cidev_updated_products as $record) {
+foreach ($cidev_updated_products->limit(10000) as $record) {
     $counter++;
     if ($counter % 100 == 0) {
         func_flush('.');
@@ -315,7 +315,7 @@ $deleted_fail = 0;
 $processed    = 0;
 $data_arr     = [];
 
-foreach ($cidev_updated_products as $record) {
+foreach ($cidev_updated_products->limit(10000) as $record) {
 
     $counter++;
     if ($counter % 100 == 0) {

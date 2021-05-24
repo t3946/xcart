@@ -3,8 +3,10 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Core\Models\CountryModel;
@@ -54,17 +56,31 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        $checkout_form = new CheckoutForm();
-
         $order = OrderHelper::getCartOrder();
 
         if (!$order && $site) {
-            [$order] = OrderModel::objects()->getOrCreate([
+            [$order, $is_new] = OrderModel::objects()->getOrCreate([
                 'cart_number' => $cart->getCartNumber(),
                 'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
             ]);
-            $order->order_prefix = $site->getOrderPrefix();
+            if ($is_new) {
+                $order->setAttributes([
+                    'order_prefix' => $site->getOrderPrefix(),
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
+                    'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
+                ]);
+            }
         }
+
+        //пересчёт стоимости заказа из корзины
+        $shipping_rates = OrderProcessController::getShippingRates( $order );
+        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+        CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
+        CheckoutHelper::updateOrderTotalValues($order);
+        $order->save();
+
+        $checkout_form = new CheckoutForm();
 
         $checkout_form->setInstance($order);
 
@@ -82,6 +98,9 @@ class CheckoutController extends FrontendController
                 ]));
 
                 if ($order->save()) {
+                    if ((int)$order->paymentid === 106) {
+                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getHash()]);
+                    }
                     $this->redirect('checkout:payment');
                 }
             } else {
@@ -95,16 +114,6 @@ class CheckoutController extends FrontendController
                 $order->extra_model->purchase_order ?? [])
             );
         }
-
-        $shipping_rates = OrderProcessController::getShippingRates( $order );
-
-        CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
-
-        CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
-
-        CheckoutHelper::updateOrderTotalValues($order);
-
-        $order->save();
 
         $only_phone_order = count($shipping_rates) < $order->groups->count();
 
@@ -415,11 +424,11 @@ class CheckoutController extends FrontendController
                     if ($tax_rates = TaxHelper::getTaxRate($site, $order->s_country, $order->s_state)) {
                         foreach ($tax_rates as $tax_rate) {
                             $tax_value = TaxHelper::getTaxValue($tax_rate, $group->total_net, $group->shipping_net);
-                            OrderGroupTaxModel::objects()->getOrCreate([
+                            [$tax_group] = OrderGroupTaxModel::objects()->getOrCreate([
                                 'order_group_id' => $group->order_group_id,
                                 'tax_rate_id' => $tax_rate->rateid,
-                                'value' => $tax_value
                             ]);
+                            $tax_group->update(['value' => $tax_value]);
                             $tax_value_total += $tax_value;
                         }
                     }
@@ -750,6 +759,11 @@ class CheckoutController extends FrontendController
 
             [$shipping, $billing] = $order->getAddressInfo();
 
+            SurfingHelper::logSurfPath([
+                'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                'resource_id' => $order->pk,
+            ]);
+
             $this->display('checkout/complete.tpl', [
                 'order' => $order,
                 'shipping_info' => $shipping,
@@ -785,10 +799,6 @@ class CheckoutController extends FrontendController
         OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4 => [
             'url' => 'checkout:payment',
             'step' => 4,
-        ],
-        OrderStatusModel::ORDER_STATUS_FAILED => [
-            'url' => 'checkout:payment',
-            'step' => 3,
         ],
     ];
 

@@ -38,7 +38,7 @@ class PhoneValidator extends Validator
     {
         return [
             'format' => [
-                'pattern' => "^\+?[-()\d\s]*$",
+                'pattern' => "\(\d{3}\)\s\d{3}-\d{4}$",
                 'flags' => "im",
                 'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ]

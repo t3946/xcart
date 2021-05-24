@@ -42,13 +42,15 @@ class PaymentController extends Controller
             $order->cb_status = OrderStatusModel::ORDER_STATUS_QUEUED;
             $order->save();
 
-            $hash = md5($order->orderid . $order->total . $order->email);
-
             try {
 
                 $params = [
                     'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
-                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', ['gateway' => strtolower($pm->processor_name), 'order_id' => $order->orderid, 'slug' => $hash]),
+                    'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', [
+                        'gateway' => strtolower($pm->processor_name),
+                        'order_id' => $order->orderid,
+                        'slug' => $order->getHash()
+                    ]),
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),
                     'order' => $order,
@@ -121,7 +123,7 @@ class PaymentController extends Controller
         $order = OrderHelper::getCartOrder();
 
         if ($order) {
-            $order->cb_status = OrderStatusModel::ORDER_STATUS_FAILED;
+            $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP3;
             $order->save();
 
             $order->groups->update(['cb_status' => $order->cb_status]);
@@ -303,11 +305,18 @@ class PaymentController extends Controller
                     }
                 }
             } elseif ($gateway === 'stripe') {
-                if (($bodyReceived = file_get_contents('php://input')) &&
-                    $params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR)) {
-                    if (isset($params['data']['object']['payment_intent']) &&
-                        $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['data']['object']['payment_intent']])) {
-                        OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
+                if (($bodyReceived = file_get_contents('php://input'))
+                    && ($params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR))
+                    && isset($params['data']['object']['payment_intent'])
+                    && $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['data']['object']['payment_intent']])) {
+                    switch ($params['type']) {
+                        case 'charge.dispute.created' :
+                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
+                            break;
+                        case 'charge.expired':
+                            $txn->transaction_status = OrderTransactionModel::STATUS_EXPIRED;
+                            $txn->save();
+                            break;
                     }
                 }
             }

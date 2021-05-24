@@ -34,7 +34,7 @@
     @include breakpoint(lg up) {
         text-align: left;
         justify-content: flex-start;
-        padding: rem-calc(5) rem-calc(22) 0 0;
+        padding: rem-calc(10) rem-calc(22) 0 0;
         width: 100%;
     }
 }

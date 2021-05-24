@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Class BlobField
@@ -12,7 +13,7 @@ class BlobField extends Field
 {
     public function getSqlType()
     {
-        return Type::getType(Type::BLOB);
+        return Type::getType(Types::BLOB);
     }
 }
 
