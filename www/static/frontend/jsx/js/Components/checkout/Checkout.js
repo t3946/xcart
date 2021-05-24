@@ -82,8 +82,9 @@ export default ( function () {
      * @param isDisabled значение для атрибута disabled
     */
     Constructor.prototype.disableSubmitButton = function (isDisabled) {
-        console.log('disableSubmitButton', isDisabled);
-        $submitButton.prop('disabled', isDisabled);
+        $submitButton
+            .prop('disabled', isDisabled)
+            .toggleClass('button__loading', isDisabled);
     }
 
     Constructor.prototype.update = function ( data, callback = null ) {
