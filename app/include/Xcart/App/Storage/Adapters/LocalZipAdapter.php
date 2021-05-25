@@ -119,4 +119,9 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
         $this->archive->close();
         return $res;
     }
+
+    public function has($path)
+    {
+        return false;
+    }
 }

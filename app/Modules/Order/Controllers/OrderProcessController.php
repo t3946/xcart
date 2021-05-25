@@ -245,11 +245,6 @@ class OrderProcessController extends FrontendController
 
             CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
 
-            if ( count( $shipping_rates ) < count( $cart->getItemsGroupedBy() ) ) {
-                $order->paymentid = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
-                $only_phone_order = true;
-            }
-
             $order->save();
 
             //TODO need to refactoring
@@ -258,7 +253,7 @@ class OrderProcessController extends FrontendController
 
             $form->setInstance($order);
 
-            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, $only_phone_order ?? false);
+            $response[ 'templates' ][ 'payment_methods' ] = $this->getPaymentMethods($form, false);
             $response[ 'templates' ][ 'shipping_methods' ] = $this->getShippingMethods($form);
         }
 

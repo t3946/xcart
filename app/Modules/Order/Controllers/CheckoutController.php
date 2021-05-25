@@ -61,7 +61,7 @@ class CheckoutController extends FrontendController
         if (!$order && $site) {
             [$order, $is_new] = OrderModel::objects()->getOrCreate([
                 'cart_number' => $cart->getCartNumber(),
-                'paymentid' => PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID,
+                'paymentid' => PaymentMethodModel::STRIPE_PAYMENT_METHOD_ID,
             ]);
             if ($is_new) {
                 $order->setAttributes([
@@ -115,15 +115,15 @@ class CheckoutController extends FrontendController
             );
         }
 
-        $only_phone_order = count($shipping_rates) < $order->groups->count();
+        //$only_phone_order = count($shipping_rates) < $order->groups->count();
 
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
 
-        if ($only_phone_order) {
+        /*if ($only_phone_order) {
             $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
-        }
+        }*/
 
         $payment_methods = PaymentMethodModel::objects()
             ->filter($filter)
