@@ -157,6 +157,7 @@ export default class PayByCardStripe extends Component {
         },
       })
       .then((result) => {
+        console.log('REQ END', result);
         if (result.error) {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
