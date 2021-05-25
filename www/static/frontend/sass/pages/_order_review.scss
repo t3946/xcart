@@ -5,9 +5,6 @@
     &:last-child:not(.is-active) > .accordion-title {
       border-bottom: 1px solid #cbcbcb;
     }
-    &:first-child:not(.is-active) > .accordion-title {
-      //border-bottom: 0;
-    }
 
     &.shipping-review {
       @include breakpoint(large) {

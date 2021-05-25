@@ -1,0 +1,22 @@
+.accordion-title {
+    font-weight: 400;
+    border: 0;
+    background-color: $grey_ef;
+    font-size: rem-calc(20);
+
+    &:before {
+        position: absolute;
+        right: rem-calc(16);
+        content: '';
+        background: url("/static/frontend/dist/images/icons/accordion/plus.svg") no-repeat center;
+        width: rem-calc(15);
+        height: rem-calc(15);
+    }
+}
+
+.is-active > .accordion-title {
+    &:before {
+        content: '';
+        background: url("/static/frontend/dist/images/icons/accordion/minus.svg") no-repeat center;
+    }
+}
