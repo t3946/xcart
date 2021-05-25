@@ -45,7 +45,6 @@ export default ( function BillingForm() {
     }
 
     constructor.prototype.init = function() {
-        console.log('init billing form');
         const componentForm = {
             street_number: 'short_name',
             route: 'long_name',
