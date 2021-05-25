@@ -60,7 +60,7 @@
                 {if $warehouse->d_frontend_return_policy}
                     {$warehouse->d_frontend_return_policy|html_entity_decode}
                 {else}
-                    {$config.frontend_return_policy|html_entity_decode}
+                    {$gConfig.frontend_return_policy|html_entity_decode}
                 {/if}
             </div>
         </div>
