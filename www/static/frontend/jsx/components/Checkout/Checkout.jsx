@@ -113,7 +113,7 @@ export default class Checkout extends Component {
         CheckoutJs.disableSubmitButton(true);
 
         /**
-         * отправкой формы управляет валидатор, он решеает позволять форме отправить данные или нет -- это не правильно,
+         * отправкой формы управляет валидатор, он решает позволять форме отправить данные или нет -- это не правильно,
          * надо забрать у него право это решать.
          */
         e = data.event;
@@ -129,7 +129,7 @@ export default class Checkout extends Component {
         //если нужно проверять поле карты
         if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
             /**
-             * ещё до отправки формы у поля карты уже могут быть ошибки, и если они там есть -- не отпрвлять
+             * ещё до отправки формы у поля карты уже могут быть ошибки, и если они там есть -- не отправлять
              */
             const $stripeFieldError = $('#CheckoutForm_pbc_card_holder_name_errors.common-field-error_visible');
             if ($stripeFieldError.length) {
@@ -138,6 +138,8 @@ export default class Checkout extends Component {
                     top: $(".billing-form-fields").offset().top,
                     behavior: "smooth",
                 });
+
+                CheckoutJs.disableSubmitButton(false);
                 return;
             }
 
