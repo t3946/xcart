@@ -154,6 +154,7 @@ class CheckoutHelper
                 'b_firstname' => $order->s_firstname,
                 'b_company' => $order->s_company,
                 'b_address' => $order->s_address,
+                'b_full_address' => $order->s_full_address,
                 'b_country' => $order->s_country,
                 'b_zipcode' => $order->s_zipcode,
                 'b_state' => $order->s_state,
