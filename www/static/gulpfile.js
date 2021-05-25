@@ -125,8 +125,14 @@ gulp.task("frontend:jsx", function (done) {
 
   GulpAssets.isProduction() && args.push("-p");
 
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
+
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
+  const src = frontend.src.jsx;
   const dst = frontend.dst.js;
 
   GulpAssets.buildJsx(src, dst, cmd, done);
@@ -140,12 +146,17 @@ gulp.task("watch:frontend:jsx", function (done) {
   ];
 
   GulpAssets.isProduction() && args.push("-p");
-
   args.push("--progress");
   args.push("-w");
 
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
+
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
+  const src = frontend.src.jsx;
   const dst = frontend.dst.js;
 
   GulpAssets.buildJsx(src, dst, cmd, done);

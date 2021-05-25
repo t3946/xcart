@@ -56,9 +56,9 @@ exports["default"] = {
   buildJsx: function (src, dst, cmd, done) {
     gulp
       .src(src)
-      .pipe(concat("vendors.js"))
+      .pipe(concat("main.js"))
       .pipe(
-        hashSum({ filename: "frontend/versions/vendor_js.yml", hash: "md5" })
+        hashSum({ filename: "frontend/versions/js.yml", hash: "md5" })
       )
       .pipe(gulp.dest(dst));
 
