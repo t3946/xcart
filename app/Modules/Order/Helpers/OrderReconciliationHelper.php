@@ -126,7 +126,7 @@ class OrderReconciliationHelper
                 $v_arr = explode('<OR>', $search_keyphrase);
                 foreach ($v_arr as $k) {
                     if (trim($k)) {
-                        $a[] = new QOr(['description_csv__contains' => strtoupper(trim($k))]);
+                        $a[] = new QOr(['description_csv__contains' => str_replace('_', '\_', strtoupper(trim($k)))]);
                     }
                 }
                 foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
