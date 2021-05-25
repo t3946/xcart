@@ -211,7 +211,7 @@
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=false}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
         </div>
     </div>
     <div class="row">
