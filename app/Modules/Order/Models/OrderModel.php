@@ -44,6 +44,7 @@ use Xcart\Order;
 /**
  * @property array|null purchase_order
  * @property string s_address
+ * @property string s_full_address
  * @property string s_firstname
  * @property string s_company
  * @property string s_city
@@ -75,6 +76,7 @@ use Xcart\Order;
  * @property mixed b_state
  * @property mixed b_city
  * @property mixed b_address
+ * @property mixed b_full_address
  * @property mixed email
  * @property mixed phone_ext
  * @property mixed b_zipcode
@@ -370,8 +372,17 @@ class OrderModel extends Model
             'bare_fraud_score' => [
                 'class' => FloatField::class,
                 'default' => 0
-            ]
-
+            ],
+            's_full_address' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
+            'b_full_address' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ],
         ];
     }
 

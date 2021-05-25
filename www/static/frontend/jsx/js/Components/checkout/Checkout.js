@@ -1,6 +1,7 @@
 import { ShippingMethods } from './ShippingMethods';
 import { PaymentMethods }  from './PaymentMethods';
-import Forms               from '_binds/forms';
+import Forms       from '_binds/forms';
+import BillingForm from "@/js/Components/checkout/BillingForm";
 
 export default ( function () {
     // no checkout page
@@ -14,8 +15,6 @@ export default ( function () {
     const excludedFieldsFromUpdate = ['CheckoutForm_s_address', 'CheckoutForm_b_address'];
     const $form = $( '.checkout-shipping-form' );
     const $submitButton = $form.find('button[type="submit"]');
-
-    console.log($submitButton);
 
     const Constructor = function () {
         $form.on( 'change', 'input, textarea', function ( e ) {
@@ -88,6 +87,19 @@ export default ( function () {
     }
 
     Constructor.prototype.update = function ( data, callback = null ) {
+        /**
+         * предотвратить лишние запросы по обновлению авто-заполняемых полей адреса, т.к.
+         * после этого будет новый запрос с уже подставленными данными из авто-заполнителя
+        */
+        const keys = Object.keys(data);
+
+        if (
+          keys.length === 1
+          && (keys[0] === 'CheckoutForm[s_full_address]' || keys[0] === 'CheckoutForm[b_full_address]')
+        ) {
+            return;
+        }
+
         Constructor.prototype.disableSubmitButton(true);
 
         const self = this;
@@ -116,6 +128,7 @@ export default ( function () {
                 if ( res.templates.shipping_methods ) {
                     ShippingMethods.updateTemplate( res.templates.shipping_methods );
                     $( document ).trigger( 'update.total.checkout', res );
+                    BillingForm.init();
                 }
 
                 for ( let manufacturer_id in res.distributor_carts ) {

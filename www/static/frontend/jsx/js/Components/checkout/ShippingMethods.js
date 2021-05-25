@@ -1,3 +1,5 @@
+import { ShippingGoogleAutoComplete } from "@/js/Classes/ShippingGoogleAutoComplete";
+
 export const ShippingMethods = (function () {
   function updateClasses() {
     $(".shipping-methods-group").each(function (i, elem) {

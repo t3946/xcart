@@ -13,6 +13,7 @@ use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharSwitcherField;
 use Xcart\App\Form\Fields\CheckboxField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutBillingAddressForm extends CheckoutAddressForm
@@ -60,7 +61,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'fieldClass' => 'checkout-field',
             ],
 
-            'address' => [
+            'full_address' => [
                 'class' => CharSwitcherField::class,
                 'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
                 'label' => OrderModule::t( 'Address' ),
@@ -78,6 +79,10 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'switcherClass' => 'address-switcher-button switcher-button_other-fields-switcher',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
                 'inputClass' => 'common-input switcher-input',
+            ],
+
+            'address' => [
+                'class' => HiddenField::class,
             ],
 
             'address_2' => [

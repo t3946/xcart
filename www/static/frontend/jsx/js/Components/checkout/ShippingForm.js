@@ -52,7 +52,7 @@ export const ShippingForm = ( function () {
         postal_code: '#CheckoutForm_s_zipcode',
     };
 
-    new ShippingGoogleAutoComplete( '#CheckoutForm_s_address', componentForm, shipping_fields );
+    new ShippingGoogleAutoComplete( '#CheckoutForm_s_full_address', componentForm, shipping_fields );
 
     /**
      * init autocomplete for group address fields (country state city zipcode)

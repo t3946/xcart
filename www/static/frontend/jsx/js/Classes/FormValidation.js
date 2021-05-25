@@ -110,12 +110,6 @@ export default class FormValidation {
      * @return boolean return true if field is valid else false
      */
     checkForm(inputElement){
-
-        if (inputElement.name === 'CheckoutForm[phone]') {
-            console.log('phone validation');
-        }
-
-
         if(this.form.getAttribute('data-validate') !== 'true'){
             return true;
         }
@@ -123,6 +117,10 @@ export default class FormValidation {
         let inputElementName = inputElement.getAttribute('name');
         let currentRules = this.constraints[inputElementName];
         let field = this.fields[inputElementName];
+
+        if (!field){
+            return true;
+        }
 
         if(typeof currentRules === 'undefined' || typeof currentRules.presence === 'undefined'){
             if(inputElement.value === '') {
