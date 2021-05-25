@@ -42,7 +42,7 @@ export const setSendTemplate = (
 });
 
 export const editSendData = (
-  data: Date,
+  data: Date | string,
   field: string
 ): ActionEditSendDataDto => ({
   type: "EDIT_SEND_DATA",

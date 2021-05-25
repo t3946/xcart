@@ -21,7 +21,7 @@ interface EmailListItemDto {
   index: number;
 }
 
-export const EmailListItem: React.FC<EmailListItemDto> = ({
+const List: React.FC<EmailListItemDto> = ({
   name,
   theme,
   favorite,
@@ -85,3 +85,5 @@ export const EmailListItem: React.FC<EmailListItemDto> = ({
     </Paper>
   );
 };
+
+export const EmailListItem = React.memo(List);

@@ -100,7 +100,6 @@ const emailReducer = (
       };
     case "EDIT_ACTIONS":
       const actionItems = editActionItems(state.items, action.actionItems);
-      console.log(actionItems);
       return {
         ...state,
         items: actionItems,

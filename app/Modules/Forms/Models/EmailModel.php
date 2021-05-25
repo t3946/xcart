@@ -161,6 +161,11 @@ class EmailModel extends Model
         return $this->favorite->filter(['id' => Xcart::app()->user->id])->count() > 0;
     }
 
+    public function getBody()
+    {
+        return $this->body;
+    }
+
     public function getAction()
     {
         if( $this->action->filter(['id' => Xcart::app()->user->id])->count() > 0){
