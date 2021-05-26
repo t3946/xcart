@@ -224,7 +224,7 @@ export default class PayByCardStripe extends Component {
       <Fragment>
         <div className="checkout-stripe">
           <InputError message={this.state.error} ref={this.errorRef} />
-          <div id="payment-request-button"></div>
+          {/*<div id="payment-request-button"></div>*/}
           <div id="CheckoutForm_pbc_card_details"></div>
         </div>
       </Fragment>
