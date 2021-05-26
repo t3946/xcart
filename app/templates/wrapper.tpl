@@ -229,7 +229,7 @@
 
         window.addEventListener("load", function(event) {
 
-            createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js_include/vendors.js"}");
+            createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="jsx/main.js"}");
 
             /*setTimeout(function() {
                 {ignore}
