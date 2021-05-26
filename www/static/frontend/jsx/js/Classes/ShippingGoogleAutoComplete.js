@@ -39,7 +39,6 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
              */
             if (self.addressField.id === 'CheckoutForm_b_full_address') {
                 const data = {};
-                console.log('set address:', shortAddress);
 
                 CheckoutForm_b_address.value = shortAddress;
 

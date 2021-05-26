@@ -87,19 +87,6 @@ export default ( function () {
     }
 
     Constructor.prototype.update = function ( data, callback = null ) {
-        /**
-         * предотвратить лишние запросы по обновлению авто-заполняемых полей адреса, т.к.
-         * после этого будет новый запрос с уже подставленными данными из авто-заполнителя
-        */
-        const keys = Object.keys(data);
-
-        if (
-          keys.length === 1
-          && (keys[0] === 'CheckoutForm[s_full_address]' || keys[0] === 'CheckoutForm[b_full_address]')
-        ) {
-            return;
-        }
-
         Constructor.prototype.disableSubmitButton(true);
 
         const self = this;
