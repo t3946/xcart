@@ -152,59 +152,18 @@ function remove_order_manually_row(index, r_id) {
 
 from
 
-
 {if $tab eq "accounts_payable" || $tab eq "receivables"}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_Start").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_Start" type="text" size="11" name="date_Start" value="{$search_prefilled.date.start_date_str}" />
+    <input class="datepicker-here" data-language="en" id="id_date_Start" type="text" size="11" name="date_Start" value="{$search_prefilled.date.start_date_str}" />
 {else}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_csv_Start").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_csv_Start" type="text" size="11" name="date_csv_Start" value="{$search_prefilled.date_csv.start_date_str}" />
+    <input class="datepicker-here" data-language="en" id="id_date_csv_Start" type="text" size="11" name="date_csv_Start" value="{$search_prefilled.date_csv.start_date_str}" />
 {/if}
 
 to
 
 {if $tab eq "accounts_payable" || $tab eq "receivables"}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_End").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_End" type="text" size="11" name="date_End" value="{$search_prefilled.date.end_date_str}" />
+    <input class="datepicker-here" data-language="en" id="id_date_End" type="text" size="11" name="date_End" value="{$search_prefilled.date.end_date_str}" />
 {else}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_csv_End").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_csv_End" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
+    <input class="datepicker-here" data-language="en" id="id_date_csv_End" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
 {/if}
 
 {if $tab ne "unreconciled" && $tab ne "reconciled" && $tab ne "calculation"}
@@ -923,73 +882,6 @@ function func_show_full_orders_info(id){
   {/if}
 
 {/if}
-
-{*
-{if $tab eq "calculation"}
-<br />
-{capture name=dialog}
-This calculation will match orders to transactions.
-<br />
-<br />
-
-<form name="searchform1" method="post" action="reconciliation.php">
-<input type="hidden" name="mode" value="find_orders" >
-<input type="hidden" name="tab" value="{$tab}" >
-
-<table width="100%">
-<tr>
-<td><B>Transaction dates</B>
-from
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_csv_Start1").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_csv_Start1" type="text" size="11" name="date_csv_Start" value="{$search_prefilled.date_csv.start_date_str}" />
-
-to
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_csv_End1").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_csv_End1" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
-
-        </td>
-	<td>
-
-	<B>Orders</B>
-    <select name="data_orders_selectbox">
-        <option value="1" {if $search_prefilled.data_orders_selectbox eq "1"}selected="selected"{/if}>1</option>
-        <option value="2" {if $search_prefilled.data_orders_selectbox eq "2"}selected="selected"{/if}>2</option>
-        <option value="3" {if $search_prefilled.data_orders_selectbox eq "" || $search_prefilled.data_orders_selectbox eq "3"}selected="selected"{/if}>3</option>
-        <option value="6" {if $search_prefilled.data_orders_selectbox eq "6"}selected="selected"{/if}>6</option>
-        <option value="12" {if $search_prefilled.data_orders_selectbox eq "12"}selected="selected"{/if}>12</option>
-        <option value="24" {if $search_prefilled.data_orders_selectbox eq "24"}selected="selected"{/if}>24</option>
-    </select>
-	months back
-
-	</td>
-
-</tr>
-</table>
-<br />
-<INPUT type="submit" value="Find orders">
-</form>
-{/capture}
-{include file="dialog.tpl" title="Find orders for transactions" content=$smarty.capture.dialog extra="width=100%"}
-{/if}
-*}
 
 
 {if $tab eq "rules"}

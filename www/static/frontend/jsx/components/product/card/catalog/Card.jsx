@@ -268,6 +268,11 @@ export default class Card extends Component {
     priceAttributes.push("price-attributes__" + this.context.viewMode);
     containerClasses.push(`product-card-price__${this.context.viewMode}`);
 
+    const infoContainerClasses = [
+      "info-container",
+      `info-container__${this.context.viewMode}`,
+    ];
+
     return (
       <Fragment>
         <div className={classnames(containerClasses)}>
@@ -303,7 +308,7 @@ export default class Card extends Component {
             {(() => {
               if (this.product.isGroupRoot) {
                 return (
-                  <div className="info-container">
+                  <div className={classnames(infoContainerClasses)}>
                     <a
                       className="button waves waves-orange yellow-white see-other"
                       href={this.product.url}
@@ -352,7 +357,7 @@ export default class Card extends Component {
                     </div>
 
                     {this.context.viewMode === "list" && (
-                      <div className="info-container info-container__list">
+                      <div className={classnames(infoContainerClasses)}>
                         {this.leadTime()}
 
                         {this.minAmount()}
@@ -387,7 +392,7 @@ export default class Card extends Component {
                 );
               } else {
                 return (
-                  <div className="info-container">
+                  <div className={classnames(infoContainerClasses)}>
                     <div className="p-label out-of-stock product-card__label">
                       <i />
                       <span className="text p-label-text_out-of-stock">
@@ -409,7 +414,7 @@ export default class Card extends Component {
           </div>
 
           {this.context.viewMode === "tile" && (
-            <div className="info-container">
+            <div className={classnames(infoContainerClasses)}>
               {this.leadTime()}
 
               {this.minAmount()}

@@ -112,9 +112,8 @@ export default class Checkout extends Component {
     checkoutSubmit(e, data) {
         CheckoutJs.disableSubmitButton(true);
 
-        console.log('CHECKOUT SUBMIT', e, data);
         /**
-         * отправкой формы управляет валидатор, он решеает позволять форме отправить данные или нет -- это не правильно,
+         * отправкой формы управляет валидатор, он решает позволять форме отправить данные или нет -- это не правильно,
          * надо забрать у него право это решать.
          */
         e = data.event;
@@ -124,23 +123,23 @@ export default class Checkout extends Component {
          * валидатор проверил форму как смог, и если есть ошибки, не переходить к проверки поля карты
          */
         if (data.hasErrors === true) {
-            console.log('VALIDATION ERRORS');
             return;
         }
 
         //если нужно проверять поле карты
         if (document.forms.CheckoutForm9['CheckoutForm[paymentid]'].value === '106') {
             /**
-             * ещё до отправки формы у поля карты уже могут быть ошибки, и если они там есть -- не отпрвлять
+             * ещё до отправки формы у поля карты уже могут быть ошибки, и если они там есть -- не отправлять
              */
             const $stripeFieldError = $('#CheckoutForm_pbc_card_holder_name_errors.common-field-error_visible');
             if ($stripeFieldError.length) {
-                console.log('STRIPE ERRORS BEFORE SEND REQUEST FOR CHECK');
                 //scroll to this errors
                 window.scrollTo({
                     top: $(".billing-form-fields").offset().top,
                     behavior: "smooth",
                 });
+
+                CheckoutJs.disableSubmitButton(false);
                 return;
             }
 
@@ -149,14 +148,11 @@ export default class Checkout extends Component {
              * Это последняя проверка, и если она пройдена -- можно отправлять заказ
              */
             this.PayByCardStripe.current.sendStripeRequest(() => {
-                console.log('FORM IS VALID');
                 document.forms.CheckoutForm9.submit();
             }, () => {
-                console.log('AFTER STRIPE REQUEST WAS FOUNDED NEW ERRORS');
                 CheckoutJs.disableSubmitButton(false);
             });
         } else {
-            console.log('FORM IS VALID (NO CARD)');
             document.forms.CheckoutForm9.submit();
         }
     }

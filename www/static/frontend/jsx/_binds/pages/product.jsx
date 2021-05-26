@@ -55,10 +55,6 @@ import Catalog from "@/components/catalog/Catalog";
 
     let questionsContainer = $("#questions");
 
-    $(document).on("app.start", function () {
-      window.sendAnalytics.productDetail(page);
-    });
-
     documentReady(() => {
       $("#product_tabs").on("click", "#questions-label", () => {
         $.ajax("/product-question/", {

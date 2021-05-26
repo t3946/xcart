@@ -10,17 +10,22 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
         this.autocomplete.addListener( "place_changed", function () {
             const streetNumber = self.autocomplete.getPlace().address_components[0].long_name;
             const streetName = self.autocomplete.getPlace().address_components[1].long_name;
+            const shortAddress = `${streetNumber} ${streetName}`;
+            const longAddress = self.autocomplete.getPlace().formatted_address;
 
-            self.addressField.value = `${streetNumber} ${streetName}`;
+            self.addressField.value = longAddress;
             self.fillInAddress.call( self );
 
             /**
              * update  shipping  address components
              */
-            if (self.addressField.id === 'CheckoutForm_s_address') {
+            if (self.addressField.id === 'CheckoutForm_s_full_address') {
                 const data = {};
 
-                data[ CheckoutForm_s_address.name ] = CheckoutForm_s_address.value;
+                CheckoutForm_s_address.value = shortAddress;
+
+                data[ CheckoutForm_s_address.name ] = shortAddress;
+                data[ CheckoutForm_s_full_address.name ] = longAddress;
                 data[ CheckoutForm_s_country.name ] = CheckoutForm_s_country.value;
                 data[ CheckoutForm_s_zipcode.name ] = CheckoutForm_s_zipcode.value;
                 data[ CheckoutForm_s_state.name ] = CheckoutForm_s_state.value;
@@ -32,10 +37,14 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
             /**
              * update  billing  address components
              */
-            if (self.addressField.id === 'CheckoutForm_b_address') {
+            if (self.addressField.id === 'CheckoutForm_b_full_address') {
                 const data = {};
+                console.log('set address:', shortAddress);
 
-                data[ CheckoutForm_b_address.name ] = CheckoutForm_b_address.value;
+                CheckoutForm_b_address.value = shortAddress;
+
+                data[ CheckoutForm_b_address.name ] = shortAddress;
+                data[ CheckoutForm_b_full_address.name ] = longAddress;
                 data[ CheckoutForm_b_country.name ] = CheckoutForm_b_country.value;
                 data[ CheckoutForm_b_zipcode.name ] = CheckoutForm_b_zipcode.value;
                 data[ CheckoutForm_b_state.name ] = CheckoutForm_b_state.value;

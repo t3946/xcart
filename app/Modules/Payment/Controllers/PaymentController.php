@@ -129,7 +129,7 @@ class PaymentController extends Controller
             $order->groups->update(['cb_status' => $order->cb_status]);
         }
 
-        $route = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+        $route = Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
             ? 'checkout:checkoutOnePage'
             : 'checkout:review';
 

@@ -567,16 +567,12 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
             <b>Invoice date:&nbsp;</b>
         </td>
         <td>
-            <input autocomplete="off" type="text" name="groups[{$m_id}][invoice_date][{$invoice_number}]"
-                   value="{$invoice.invoice_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
-                                onSelect: function (fd) {
-                                    var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
-                                    date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
-                                    date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
-                                    $('#payment_due_date_{/literal}{$invoice_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
-                                },
-                                maxDate: 0
-                            }); $(this).datepicker('show');{/literal}" />
+            <input autocomplete="off"
+                   data-language="en"
+                   class="datepicker-here"
+                   type="text"
+                   name="groups[{$m_id}][invoice_date][{$invoice_number}]"
+                   value="{$invoice.invoice_date|date_format:'%m/%d/%Y'}" size="15"/>
         </td>
     </tr>
     {if $distributor->d_net_payment_terms_in_days > 0}
@@ -1058,8 +1054,9 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
 <tr id="acc_track_{$m_id}_{$invoice_number}_tr">
     <td id="acc_track_{$m_id}_{$invoice_number}_box_3" style="padding-right: 5px;">
         <input type="text" id="tracking_ship_date_{$m_id}_{$invoice_number}_box_0"
+               data-language="en" class="datepicker-here"
                name="groups[{$m_id}][tracking_ship_date][]" value="" size="15"
-               onclick="$(this).datepicker();  $(this).datepicker('show');"/>
+               />
     </td>
     <td id="acc_track_{$m_id}_{$invoice_number}_box_4" style="padding-right: 10px;">
         <select id="tracking_carrier_{$m_id}_{$invoice_number}_box_0" name="groups[{$m_id}][tracking_carrier][]"
@@ -1156,16 +1153,9 @@ multirowInputSets['acc_track_{$m_id}_{$invoice_number}'].noCloneContent = 1;
                 <b>Credit memo date:&nbsp;</b>
             </td>
             <td>
-                <input autocomplete="off" type="text" name="groups[{$m_id}][memo_date][{$memo_number}]"
-                       value="{$memo.memo_date|date_format:'%m/%d/%Y'}" size="15" onclick="{literal}$(this).datepicker({
-                        onSelect: function (fd) {
-                        var date2 = $.datepicker.parseDate('mm/dd/yy', fd);
-                        date2.setMinutes(date2.getMinutes() - date2.getTimezoneOffset()); //Correct timezone
-                        date2.setDate(date2.getDate()+{/literal}{$distributor->d_net_payment_terms_in_days}{literal});
-                        $('#payment_due_date_memo_{/literal}{$memo_number}{literal}').val($.datepicker.formatDate('mm/dd/yy', date2));
-                        },
-                        maxDate: 0
-                        }); $(this).datepicker('show');{/literal}" />
+                <input data-language="en" class="datepicker-here"
+                       autocomplete="off" type="text" name="groups[{$m_id}][memo_date][{$memo_number}]"
+                       value="{$memo.memo_date|date_format:'%m/%d/%Y'}" size="15" />
             </td>
         </tr>
         {if $distributor->d_net_payment_terms_in_days > 0}

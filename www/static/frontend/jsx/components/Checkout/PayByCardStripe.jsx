@@ -157,6 +157,7 @@ export default class PayByCardStripe extends Component {
         },
       })
       .then((result) => {
+        console.log('REQ END', result);
         if (result.error) {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
@@ -180,7 +181,6 @@ export default class PayByCardStripe extends Component {
   // решение проблемы с иконкой для поля, она не устанавливается
   // сама т.к. стандартная валидация не может обработать это поле
   toggleHeaderClasses() {
-    console.log('ПЕРЕКЛЮЧИТЬ КЛАССЫ ДЛЯ ЗАГОЛОВКА');
     const $stripeError = $(this.errorRef.current.base);
     const $fieldRow = $stripeError.parents(".checkout-field-row");
     const $fieldTitle = $fieldRow.find(".checkout-field-title");

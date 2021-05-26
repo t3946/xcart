@@ -43,24 +43,6 @@
     .accordion-item {
       border-bottom: 2px solid $white;
 
-      .accordion-title {
-        border: 0;
-        background-color: $grey_ef;
-        font-size: 1rem;
-        font-weight: bold;
-
-        @include breakpoint(sm) {
-          font-size: rem-calc(20);
-        }
-
-        &:before {
-          position: absolute;
-          right: 1rem;
-          margin-top: -.9rem;
-          font-size: 1.8rem;
-        }
-      }
-
       .accordion-content {
         background-color: #474747;
         border: 0;

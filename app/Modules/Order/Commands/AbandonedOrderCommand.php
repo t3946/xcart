@@ -35,18 +35,19 @@ class AbandonedOrderCommand extends Command
 
             if ($order->total < self::ORDER_TOTAL_THRESHOLD ||
                 $isGoogle ||
+                !$order->email ||
                 OrderHelper::hasCustomerSiblingsOrders($order)) {
-                $status = $isGoogle ? OrderStatusModel::ORDER_STATUS_DECLINED : OrderStatusModel::ORDER_STATUS_FAILED;
-                $order->groups->update(['cb_status' => $status]);
-                $order->cb_status = $status;
-                $order->save();
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => 'Abandoned: The order has been declined',
-                ]))->save();
-                echo "Abandoned: The order {$order->getOrderNumber()} has been declined\n";
-                continue;
+                    $status = $isGoogle ? OrderStatusModel::ORDER_STATUS_DECLINED : OrderStatusModel::ORDER_STATUS_FAILED;
+                    $order->groups->update(['cb_status' => $status]);
+                    $order->cb_status = $status;
+                    $order->save();
+                    (new OrderLogModel([
+                        'orderid' => $order->orderid,
+                        'type' => OrderLogModel::LOG_TYPE_XCART,
+                        'log' => 'Abandoned: The order has been declined',
+                    ]))->save();
+                    echo "Abandoned: The order {$order->getOrderNumber()} has been declined\n";
+                    continue;
             }
 
             $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_UNPAID]);

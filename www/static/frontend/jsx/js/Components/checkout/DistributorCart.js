@@ -138,7 +138,7 @@ export const DistributorCart = (function () {
 
                 // removed last product in last cart
                 if ($warehouseList.find(".warehouse_products").length === 0) {
-                  window.location.href = "/";
+                  window.location.href = "/cart/";
                 }
               }
             );

@@ -2,7 +2,6 @@ import classnames from "classnames";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import { cartAdd } from "@/redusers/appCartRediser";
 import * as preact from "preact";
-import { Fragment } from "preact";
 import CreateWaitButton from "@/components/AnimateWaitButton";
 import t from "@/i18n";
 
@@ -10,8 +9,8 @@ export default class AddToCartButton extends Component {
   constructor(props) {
     super(props);
 
-    this.SIMPLE_MODE = 1;
-    this.COMPLEX_MODE = 2;
+    this.SIMPLE_MODE = "simple";
+    this.COMPLEX_MODE = "complex";
     this.state = {
       classes: {},
       mode: this.SIMPLE_MODE,
@@ -65,16 +64,14 @@ export default class AddToCartButton extends Component {
 
     // extend computed classes by props classes
     if (propsClasses) {
+      button.push(`add-to-cart-button-add__${this.state.mode}`);
+      checkoutLink.push(`add-to-cart-button-checkout__${this.state.mode}`);
+
       if (this.state.mode === this.COMPLEX_MODE) {
-        button.push(
-          "add-to-cart-button-add__complex",
-          propsClasses.buttonComplex
-        );
-        checkoutLink.push(
-          "add-to-cart-button-checkout__complex",
-          propsClasses.checkoutLinkComplex
-        );
+        button.push(propsClasses.buttonComplex);
+        checkoutLink.push(propsClasses.checkoutLinkComplex);
       }
+
       for (let key in classes) {
         classes[key].push(propsClasses[key]);
       }

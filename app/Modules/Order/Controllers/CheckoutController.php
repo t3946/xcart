@@ -58,10 +58,17 @@ class CheckoutController extends FrontendController
 
         $order = OrderHelper::getCartOrder();
 
+        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
+
+        $payment_methods = PaymentMethodModel::objects()
+            ->filter($filter)
+            ->order(['is_cod', 'orderby'])
+            ->all();
+
         if (!$order && $site) {
             [$order, $is_new] = OrderModel::objects()->getOrCreate([
                 'cart_number' => $cart->getCartNumber(),
-                'paymentid' => PaymentMethodModel::STRIPE_PAYMENT_METHOD_ID,
+                'paymentid' => $payment_methods[0]->paymentid,
             ]);
             if ($is_new) {
                 $order->setAttributes([
@@ -72,6 +79,8 @@ class CheckoutController extends FrontendController
                 ]);
             }
         }
+
+        $order->is_new_checkout = Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE;
 
         //пересчёт стоимости заказа из корзины
         $shipping_rates = OrderProcessController::getShippingRates( $order );
@@ -115,20 +124,7 @@ class CheckoutController extends FrontendController
             );
         }
 
-        //$only_phone_order = count($shipping_rates) < $order->groups->count();
 
-        $site = Xcart::app()->getModule('Sites')->getSite();
-
-        $filter = ['active' => 'Y', 'site__through__storefrontid' => $site->storefrontid];
-
-        /*if ($only_phone_order) {
-            $filter['paymentid'] = PaymentMethodModel::PHONE_ORDER_PAYMENT_METHOD_ID;
-        }*/
-
-        $payment_methods = PaymentMethodModel::objects()
-            ->filter($filter)
-            ->order(['is_cod', 'orderby'])
-            ->all();
 
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,
@@ -769,7 +765,7 @@ class CheckoutController extends FrontendController
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
                 'hash' => $hash,
-                'checkoutType' => Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
+                'checkoutType' => Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
             ]);
         } else {
             $this->error(404);

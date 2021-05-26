@@ -1,5 +1,15 @@
-@include breakpoint(md up) {
-  .add-to-cart-button-add__product {
-    flex-grow: 0;
-  }
+.add-to-cart-button-add__product {
+    &:before {
+        margin: 0 10px 0 0;
+    }
+
+    @include breakpoint(md up) {
+        flex-grow: 0;
+    }
+}
+
+.add-to-cart-button-add__complex-product {
+    &:before {
+        margin: 0;
+    }
 }

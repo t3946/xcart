@@ -26,11 +26,11 @@
                          class="secured-logo-big">
                 </div>*}
                 <div class="columns s3-logo-block">
-                    <a href="" class="s3-logo-big-link logo-link">
+                    <div href="" class="s3-logo-big-link logo-link">
                         <img src="{$uri}/static/frontend/dist/images/logos/s3stores.svg"
                              alt="s3stores"
                              class="show-for-large s3-logo-big">
-                    </a>
+                    </div>
 
                     {*<a href="" class="secured-logo-big-link logo-link">
                         <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/verified_secured_logo.svg"
@@ -38,11 +38,11 @@
                              class="show-for-large secured-logo-big">
                     </a>*}
 
-                    <a href="" class="s3-logo-small-link logo-link">
+                    <div href="" class="s3-logo-small-link logo-link">
                         <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
                              alt="s3stores"
                              class="show-for-small hide-for-large s3-logo-small">
-                    </a>
+                    </div>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">

@@ -23,17 +23,17 @@
                     </a>
                 </div>
                 <div class="columns s3-logo-block">
-                    <a href="" class="s3-logo-big-link logo-link">
+                    <div class="s3-logo-big-link logo-link">
                         <img src="{$uri}/static/frontend/dist/images/logos/s3stores.svg"
                              alt="s3stores"
                              class="show-for-large s3-logo-big">
-                    </a>
+                    </div>
 
-                    <a href="" class="s3-logo-small-link logo-link">
+                    <div class="s3-logo-small-link logo-link">
                         <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
                              alt="s3stores"
                              class="show-for-small hide-for-large s3-logo-small">
-                    </a>
+                    </div>
                 </div>
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
