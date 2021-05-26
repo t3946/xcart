@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en" class="no-js {if $.detector->isMobile()} mobile {/if}{if $.detector->isTablet()} tablet {/if}">
 <head>
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({ 'gtm.start': new Date().getTime(),event:'gtm.js' });
-        var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-TCNTJMM');
-    </script>
-    <!-- End Google Tag Manager -->
-
     <meta charset="utf-8">
 
     {block 'seo'}{meta controller=$this!:null}{/block}
@@ -28,15 +20,13 @@
     <meta name="format-detection" content="email=no">
 
     <link rel="dns-prefetch" href="{$uri}">
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <link rel="preconnect" href="{$uri}">
-    <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
 
 
-    <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}" as="script">
+    <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js_include/vendors.js"}" as="script">
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -144,27 +134,13 @@
 
     {block 'head'}{/block}
 
-
-
+    <!-- Google Tag Manager -->
     <script>
-        {ignore}
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', '{/ignore}{$config.cidev_ga_code_number}{ignore}', 'auto',  {'useAmpClientId': true});
-        ga('set', '&cu', '{/ignore}{$site_currency->currency_code}{ignore}');
-        {/ignore}
+        (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({ 'gtm.start': new Date().getTime(),event:'gtm.js' });
+            var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-TCNTJMM');
     </script>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1072406910"></script>
-    <script>
-        {ignore}
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        {/ignore}
-    </script>
+    <!-- End Google Tag Manager -->
 
     {get_assets:raw type='css' position='head'}
     {get_assets:raw type='js' position='head'}
@@ -253,7 +229,7 @@
 
         window.addEventListener("load", function(event) {
 
-            createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js/main.js"}");
+            createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="js_include/vendors.js"}");
 
             /*setTimeout(function() {
                 {ignore}

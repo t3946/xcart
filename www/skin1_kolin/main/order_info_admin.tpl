@@ -588,7 +588,7 @@ function check_r_fields() {
                                 <!--
                                 {literal}
                                 $(function () {
-                                    $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker();
+                                    $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker({ language: 'en' });
                                 });
                                 {/literal}
                                 -->
@@ -963,7 +963,7 @@ function check_r_fields() {
                                     <input type="text" id="tracking_ship_date_{$m_id}_box_0"
                                            name="groups[{$m_id}][tracking_ship_date][]"
                                            value=""
-                                           size="15" onclick="$(this).datepicker();$(this).datepicker('show');"
+                                           size="15" onclick="$(this).datepicker({ language: 'en' });$(this).datepicker('show');"
                                            onchange="$(this).datepicker('hide');"/>
                                 </td>
                                 <td id="track_{$m_id}_box_4" style="padding-right: 10px;">

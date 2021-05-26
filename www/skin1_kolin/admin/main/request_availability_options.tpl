@@ -39,7 +39,7 @@
 <!--
 {literal}
   $(function() {
-    $("#date_mm_dd_yyyy_{/literal}{$key}{literal}").datepicker();
+    $("#date_mm_dd_yyyy_{/literal}{$key}{literal}").datepicker({ language: 'en' });
   });
 {/literal}
 -->

@@ -93,7 +93,7 @@
 <script>
 {literal}
   $(function() {
-    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker();
+    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker({ language: 'en' });
   });
 {/literal}
 </script>

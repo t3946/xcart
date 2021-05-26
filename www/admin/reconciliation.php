@@ -496,6 +496,23 @@ if ($REQUEST_METHOD == "POST") {
                         }
 
                         db_query("INSERT INTO $sql_tbl[reconciliations] (description_csv, date_csv, amount_csv, file_upload_date, action, manufacturerid, transaction_type) VALUES ('$description_csv', '$date_csv', '$amount_csv', '$cur_time', '$action', '$manufacturerid', '$transaction_type')");
+
+                        if ($pre_rec = ReconciliationModel::objects()->limit(1)->get([
+                            'amount_csv' => $amount_csv,
+                            'action' => ReconciliationModel::RECONCILIATION_STATUS_PRE_RECONCILED
+                        ]))
+                        {
+                            $pre_rec->setAttributes([
+                                'action' => ReconciliationModel::RECONCILIATION_STATUS_RECONCILED,
+                                'description_csv' => $description_csv,
+                                'date_csv' => $date_csv,
+                            ]);
+                            if ($pre_rec->save()) {
+                                $pre_rec->invoices->update(['status' => 'R']);
+                                $pre_rec->memos->update(['status' => 'R']);
+                            }
+                        }
+                        
                         $count_added_rows++;
                     }
                 }

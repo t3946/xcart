@@ -323,24 +323,7 @@ function managedate(type, status) {
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_order_date_from}:</td>
 	<td width="10">&nbsp;</td>
 	<td> 
-
-
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_start_date").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_start_date" type="text" size="11" name="posted_data[start_date]" value="" />
-
-{*
-	{html_select_date prefix="Start" time=$search_prefilled.start_date start_year=$config.Company.start_year end_year=$config.Company.end_year}
-*}
-
+		<input class="datepicker-here" data-language="en" id="id_start_date" type="text" size="11" name="posted_data[start_date]" value="" />
 	</td>
 </tr>
 
@@ -348,22 +331,7 @@ function managedate(type, status) {
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_order_date_through}:</td>
 	<td width="10">&nbsp;</td>
 	<td> 
-
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_end_date").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_end_date" type="text" size="11" name="posted_data[end_date]" value="" />
-
-{*
-	{html_select_date prefix="End" time=$search_prefilled.end_date start_year=$config.Company.start_year end_year=$config.Company.end_year display_days=yes}
-*}
+		<input class="datepicker-here" data-language="en" id="id_end_date" type="text" size="11" name="posted_data[end_date]" value="" />
 	</td>
 </tr>
 

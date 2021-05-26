@@ -3,7 +3,9 @@
 
 namespace Modules\Order\Validation;
 
+use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Translate\TranslateModule;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Translate\Translate;
 use Xcart\App\Validation\Validator;
 
@@ -36,9 +38,12 @@ class PhoneValidator extends Validator
 
     public function jsValidateParams()
     {
+        $pattern = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+            ? "\(\d{3}\)\s\d{3}-\d{4}$"
+            : "^\+?[-()\d\s]*$";
         return [
             'format' => [
-                'pattern' => "\(\d{3}\)\s\d{3}-\d{4}$",
+                'pattern' => $pattern,
                 'flags' => "im",
                 'message' => Translate::getInstance()->t('validation', '^' . $this->message, [])
             ]
