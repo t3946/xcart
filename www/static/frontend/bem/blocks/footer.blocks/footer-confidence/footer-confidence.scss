@@ -6,6 +6,6 @@
   }
 
   @include breakpoint(lg up) {
-    padding: 0 rem-calc(10);
+    padding: 0;
   }
 }
