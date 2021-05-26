@@ -159,18 +159,23 @@ class OrderProcessController extends FrontendController
     {
         $post = $this->getRequest()->post;
         $cart = Xcart::app()->cart;
-        if (!$order = OrderHelper::getCartOrder()) {
-            return;
-        }
+
+        $order = OrderHelper::getCartOrder();
 
         if ($post->has('uid') && $post->has('quantity')) {
             $cart_key = $post->get('uid');
             $quantity = $post->get('quantity');
             $quantity ? $cart->updateQuantityByKey($cart_key, $quantity) :  $cart->removeByKey($cart_key);
-            CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
-            $shipping_rates = self::getShippingRates($order);
-            CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
-            CheckoutHelper::updateOrderTotalValues($order);
+            if ($order) {
+                CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
+                $shipping_rates = self::getShippingRates($order);
+                CheckoutHelper::updateOrderShippingRates($order, $shipping_rates);
+                CheckoutHelper::updateOrderTotalValues($order);
+            }
+        }
+        
+        if (!$order) {
+            return;
         }
 
         if ($post->has('shipping_rates')) {
