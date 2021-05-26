@@ -4,11 +4,6 @@ import Forms       from '_binds/forms';
 import BillingForm from "@/js/Components/checkout/BillingForm";
 
 export default ( function () {
-    // no checkout page
-    if ( document.querySelector( '.checkout-page' ) === null ) {
-        return;
-    }
-
     /**
      * prevent update fields with id from this list
      */
@@ -68,6 +63,10 @@ export default ( function () {
         });
     }
 
+    function isCheckoutPage() {
+        return document.querySelector( '.checkout-page' ) !== null;
+    }
+
     Constructor.prototype.formatNumber = function( number ) {
         return Intl
             .NumberFormat( 'en-US', { style: 'currency', currency: 'USD' } )
@@ -92,13 +91,25 @@ export default ( function () {
          * полный адрес в поле сокращённого адреса
         */
         const keys = Object.keys(data);
+        let async = true;
 
         if ( keys.length === 1 ) {
             if ( keys[0] === 'CheckoutForm[s_full_address]' ) {
                 data['CheckoutForm[s_address]'] = data['CheckoutForm[s_full_address]'];
+                async = false;
             } else if ( keys[0] === 'CheckoutForm[b_full_address]' ) {
                 data['CheckoutForm[b_address]'] = data['CheckoutForm[b_full_address]'];
+                async = false;
             }
+        }
+
+        //duplication firstname from shipping form to contact form
+        if (
+          typeof CheckoutForm_s_firstname !== "undefined"
+          && CheckoutForm_s_firstname.value === CheckoutForm_firstname.value
+          && data['CheckoutForm[s_firstname]']
+        ) {
+            data['CheckoutForm[firstname]'] = data['CheckoutForm[s_firstname]'];
         }
 
         Constructor.prototype.disableSubmitButton(true);
@@ -107,62 +118,57 @@ export default ( function () {
 
         $( document ).trigger( 'updateRequestSend.checkout' );
 
-        //duplication firstname from shipping form to contact form
-        if (
-            CheckoutForm_s_firstname.value === CheckoutForm_firstname.value
-            && data['CheckoutForm[s_firstname]']
-        ) {
-            data['CheckoutForm[firstname]'] = data['CheckoutForm[s_firstname]'];
-        }
-
         $.ajax( {
             url: '/api/checkout/update',
             method: 'POST',
             data: data,
             dataType: 'json',
+            async,
             success: function ( res ) {
                 if ( res.templates.payment_methods && PaymentMethods ) {
                     PaymentMethods.updateTemplate( res.templates.payment_methods );
                 }
 
-                // update shipping methods if templates passed
-                if ( res.templates.shipping_methods ) {
-                    ShippingMethods.updateTemplate( res.templates.shipping_methods );
-                    $( document ).trigger( 'update.total.checkout', res );
-                    BillingForm.init();
-                }
-
-                for ( let manufacturer_id in res.distributor_carts ) {
-                    const manufacturer = res.distributor_carts[ manufacturer_id ];
-                    const whTotal = $( `.warehouse_subtotal[data-wh=${ manufacturer_id }]` );
-
-                    const $salesTax = whTotal.find( '.total-sales-tax' );
-
-                    if ( manufacturer[ 'sales_tax' ] ) {
-                        $salesTax
-                          .show()
-                          .find( '.subtotal' )
-                          .text( self.formatNumber( manufacturer[ 'sales_tax' ] ) );
-                    } else {
-                        $salesTax.hide();
+                if ( isCheckoutPage() ) {
+                    // update shipping methods if templates passed
+                    if ( res.templates.shipping_methods ) {
+                        ShippingMethods.updateTemplate( res.templates.shipping_methods );
+                        $( document ).trigger( 'update.total.checkout', res );
+                        BillingForm.init();
                     }
 
-                    const $vaxTax = whTotal.find( '.total-vat-tax' );
+                    for ( let manufacturer_id in res.distributor_carts ) {
+                        const manufacturer = res.distributor_carts[ manufacturer_id ];
+                        const whTotal = $( `.warehouse_subtotal[data-wh=${ manufacturer_id }]` );
 
-                    if ( manufacturer[ 'vat_tax' ] ) {
-                        $vaxTax
-                          .show()
-                          .find( '.subtotal' )
-                          .text( self.formatNumber( parseFloat( manufacturer[ 'vat_tax' ] ) ) );
-                    } else {
-                        $vaxTax.hide();
+                        const $salesTax = whTotal.find( '.total-sales-tax' );
+
+                        if ( manufacturer[ 'sales_tax' ] ) {
+                            $salesTax
+                              .show()
+                              .find( '.subtotal' )
+                              .text( self.formatNumber( manufacturer[ 'sales_tax' ] ) );
+                        } else {
+                            $salesTax.hide();
+                        }
+
+                        const $vaxTax = whTotal.find( '.total-vat-tax' );
+
+                        if ( manufacturer[ 'vat_tax' ] ) {
+                            $vaxTax
+                              .show()
+                              .find( '.subtotal' )
+                              .text( self.formatNumber( parseFloat( manufacturer[ 'vat_tax' ] ) ) );
+                        } else {
+                            $vaxTax.hide();
+                        }
+
+                        const deliveryCost = whTotal.closest('.warehouse_products').find('.shipping-methods-group input:checked').data('shipping-cost') || 0;
+
+                        whTotal
+                          .find( '.format_price .subtotal' )
+                          .text( self.formatNumber( parseFloat( manufacturer[ 'subtotal' ] ) + deliveryCost ) );
                     }
-
-                    const deliveryCost = whTotal.closest('.warehouse_products').find('.shipping-methods-group input:checked').data('shipping-cost') || 0;
-
-                    whTotal
-                      .find( '.format_price .subtotal' )
-                      .text( self.formatNumber( parseFloat( manufacturer[ 'subtotal' ] ) + deliveryCost ) );
                 }
 
                 if ( typeof callback === "function" ) {
