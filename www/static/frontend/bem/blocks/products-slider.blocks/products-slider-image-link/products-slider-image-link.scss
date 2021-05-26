@@ -5,10 +5,13 @@
   position: relative;
   height: rem-calc(174);
   max-width: 100%;
-  width: auto;
+  width: 100%;
   line-height: normal;
 
   &:hover {
     text-decoration: none;
   }
+}
+.products-slider-images-group {
+  height: 100%;
 }

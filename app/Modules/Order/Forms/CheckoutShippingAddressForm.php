@@ -11,6 +11,7 @@ use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharSwitcherField;
+use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutShippingAddressForm extends AddressForm
@@ -60,7 +61,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
             ],
 
-            'address' => [
+            'full_address' => [
                 'class' => CharSwitcherField::class,
                 'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
                 'label' => OrderModule::t( 'Address' ),
@@ -80,6 +81,10 @@ class CheckoutShippingAddressForm extends AddressForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
+            'address' => [
+                'class' => HiddenField::class,
+            ],
+
             'address_2' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address (line 2)' ),
@@ -92,6 +97,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelCommentClass' => 'common-comment',
                 'fieldClass' => 'checkout-field',
             ],
+
             'city' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'City' ),
@@ -109,6 +115,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
+
             'state' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'State/Province' ),
@@ -134,6 +141,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
+
             'zipcode' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Zip/Postal Code' ),
@@ -156,6 +164,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
+
             'country' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Country' ),
@@ -184,12 +193,6 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
-
-
-
-
-
-
         ];
 
         $newFields = [];

@@ -1,4 +1,4 @@
-import { Fragment } from "preact";
+import { Fragment, createRef } from "preact";
 import { loadStripe } from "@stripe/stripe-js";
 import InputError from "@/components/Checkout/InputError";
 import "regenerator-runtime/runtime";
@@ -9,6 +9,8 @@ export default class PayByCardStripe extends Component {
     this.state = {
       error: "",
     };
+
+    this.errorRef = createRef();
 
     this.state = dataProvider.get("stripe");
 
@@ -155,6 +157,7 @@ export default class PayByCardStripe extends Component {
         },
       })
       .then((result) => {
+        console.log('REQ END', result);
         if (result.error) {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
@@ -171,14 +174,56 @@ export default class PayByCardStripe extends Component {
         } else if (typeof successCallback === "function") {
           successCallback();
         }
+        this.toggleHeaderClasses();
       });
+  }
+
+  // решение проблемы с иконкой для поля, она не устанавливается
+  // сама т.к. стандартная валидация не может обработать это поле
+  toggleHeaderClasses() {
+    const $stripeError = $(this.errorRef.current.base);
+    const $fieldRow = $stripeError.parents(".checkout-field-row");
+    const $fieldTitle = $fieldRow.find(".checkout-field-title");
+    const $stripeField = $fieldRow.find("#CheckoutForm_pbc_card_details");
+
+    if ($stripeField.hasClass("common-input__wrong")) {
+      $fieldTitle.addClass("field__has-error");
+    } else {
+      $fieldTitle.removeClass("field__has-error");
+    }
+
+    if ($stripeField.hasClass("common-input__correct")) {
+      $fieldTitle.addClass("field__correct");
+    } else {
+      $fieldTitle.removeClass("field__correct");
+    }
+  }
+
+  // переместить сообщение об ошибке в поле карты, в нужное место формы
+  moveErrorMessage() {
+    const $stripeError = $(this.errorRef.current.base);
+    const $fieldRow = $stripeError.parents(".checkout-field-row");
+    $fieldRow.prepend($stripeError);
+    this.toggleHeaderClasses();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.error !== this.state.error) {
+      this.moveErrorMessage();
+    }
+
+    return true;
+  }
+
+  componentDidUpdate() {
+    this.moveErrorMessage();
   }
 
   render() {
     return (
       <Fragment>
         <div className="checkout-stripe">
-          <InputError message={this.state.error} />
+          <InputError message={this.state.error} ref={this.errorRef} />
           <div id="payment-request-button"></div>
           <div id="CheckoutForm_pbc_card_details"></div>
         </div>

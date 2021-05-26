@@ -1,0 +1,5 @@
+.product_notifications {
+    @include breakpoint(lg up) {
+        margin: 0 0 rem-calc(18) 0;
+    }
+}

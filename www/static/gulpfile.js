@@ -125,8 +125,14 @@ gulp.task("frontend:jsx", function (done) {
 
   GulpAssets.isProduction() && args.push("-p");
 
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
+
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
+  const src = frontend.src.jsx;
   const dst = frontend.dst.js;
 
   GulpAssets.buildJsx(src, dst, cmd, done);
@@ -140,12 +146,17 @@ gulp.task("watch:frontend:jsx", function (done) {
   ];
 
   GulpAssets.isProduction() && args.push("-p");
-
   args.push("--progress");
   args.push("-w");
 
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
+
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
+  const src = frontend.src.jsx;
   const dst = frontend.dst.js;
 
   GulpAssets.buildJsx(src, dst, cmd, done);
@@ -221,10 +232,23 @@ gulp.task("watch:frontend:scripts", function (done) {
   args.push("-w");
 
   const cmd = spawn("node", args, { stdio: "inherit" });
-  const src = frontend.src.js_include;
-  const dst = frontend.dst.js;
 
-  GulpAssets.buildJsx(src, dst, cmd, done);
+  //count hash for bundle
+  const webpackBundle = frontend.dst.jsx + "/main.js";
+  gulp.watch(webpackBundle, function (done) {
+    gulp.src(webpackBundle).pipe(
+      hashSum({
+        filename: "frontend/versions/vendor_js.yml",
+        hash: "md5",
+      })
+    );
+    done();
+  });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
 });
 
 /**

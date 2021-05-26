@@ -88,7 +88,7 @@
                             {t 'SKU'}: <span class="style">{$model->productcode}</span>
                         </span>
                     </div>
-                    <div class="column shrink notifications hide-for-ml">
+                    <div class="column shrink notifications hide-for-ml product_notifications">
                         <div class="notifications-info small-collapse">
                             <div class="column shrink">
                                 {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
@@ -170,7 +170,7 @@
                 </div>
                 <div class="column small-12 ml-6 large-6 block__title_price">
 
-                <div class="notifications show-for-ml">
+                <div class="notifications show-for-ml product_notifications">
                     <div class="row align-middle ml-collapse notifications-info">
                         <div class="column shrink ">
                             {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
@@ -238,7 +238,7 @@
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=false}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
         </div>
     </div>
     <div class="row">

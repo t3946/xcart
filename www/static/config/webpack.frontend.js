@@ -1,10 +1,10 @@
-
 const webpack = require("webpack");
 const path = require("path");
 const paths = require("./gulp.frontend.patchs");
+const argv = require("yargs").argv;
 
 config = {
-  mode: "development",
+  mode: argv.mode,
   entry: paths.src.jsx_bundles,
   output: {
     path: path.resolve("./" + paths.dst.jsx),
@@ -142,45 +142,5 @@ config = {
     poll: 1000,
   },
 };
-
-if (process.env.NODE_ENV === "production") {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      ie8: false,
-      ecma: 6,
-      sourceMap: false,
-      output: {
-        comments: false,
-        beautify: false,
-      },
-      compress: {
-        passes: 2,
-        unsafe_math: true,
-        unsafe_proto: true,
-
-        reduce_vars: true,
-        cascade: true,
-
-        loops: true,
-        comparisons: true,
-        sequences: true,
-        properties: true,
-        drop_debugger: true,
-        dead_code: true,
-        conditionals: true,
-        booleans: true,
-        unused: true,
-        if_return: true,
-        join_vars: true,
-        warnings: true,
-      },
-      parallel: {
-        cache: true,
-      },
-
-      warningsFilter: (src) => true,
-    })
-  );
-}
 
 module.exports = config;

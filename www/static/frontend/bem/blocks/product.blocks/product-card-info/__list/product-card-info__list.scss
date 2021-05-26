@@ -1,0 +1,7 @@
+.product-card-info__list {
+    padding: 0 rem-calc(15) 0 0;
+
+    @include breakpoint(lg up) {
+        padding: 0 rem-calc(25) 0 0;
+    }
+}

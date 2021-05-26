@@ -28,6 +28,10 @@ class FieldValidation {
             let oneErrorPlace = errors.item( i );
             let oneErrorPlaceText = oneErrorPlace.querySelector( '.form-field-error-text' );
 
+            if ( $(text.parentNode).hasClass('react-component') ) {
+                continue;
+            }
+
             oneErrorPlaceText.textContent = text;
             oneErrorPlace.classList.add( 'common-field-error_visible' );
 
@@ -53,6 +57,14 @@ class FieldValidation {
         for ( let i = 0; i < errors.length; ++i ) {
             let oneErrorPlace = errors.item( i );
             let oneErrorPlaceText = oneErrorPlace.querySelector( '.form-field-error-text' );
+
+            if (!oneErrorPlaceText) {
+                continue;
+            }
+
+            if ( $(oneErrorPlaceText.parentNode).hasClass('react-component') ) {
+                continue;
+            }
 
             oneErrorPlaceText.textContent = '';
             oneErrorPlace.classList.remove( 'common-field-error_visible' );
