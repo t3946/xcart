@@ -80,6 +80,8 @@ class CheckoutController extends FrontendController
             }
         }
 
+        $order->is_new_checkout = Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE;
+
         //пересчёт стоимости заказа из корзины
         $shipping_rates = OrderProcessController::getShippingRates( $order );
         CheckoutHelper::updateOrderGroupsFromCart($order, $cart);
@@ -763,7 +765,7 @@ class CheckoutController extends FrontendController
                 'shipping_info' => $shipping,
                 'billing_info' => $billing,
                 'hash' => $hash,
-                'checkoutType' => Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
+                'checkoutType' => Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE ? 'new' : 'old',
             ]);
         } else {
             $this->error(404);

@@ -358,6 +358,11 @@ class OrderModel extends Model
                 'null' => false,
                 'default' => false,
             ],
+            'is_new_checkout' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
             'order_type' => [
                 'class' => CharField::class,
                 'default' => self::ORDER_TYPE_XCART,

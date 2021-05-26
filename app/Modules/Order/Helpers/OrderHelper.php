@@ -669,11 +669,9 @@ HTML;
 
     public static function getCheckoutUrl(): string
     {
-        $router = Xcart::app()->request->session->get('order_checkout_type') === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
+        $router = Xcart::app()->request->session->get(OrderCheckoutMiddleware::ORDER_TYPE) === OrderCheckoutMiddleware::ONE_PAGE_CHECKOUT_TYPE
             ? 'checkout:checkoutOnePage'
             : 'checkout:shipping';
-        //TODO remove after all test has been completed to enable one page checkout
-        $router = 'checkout:shipping';
         return Xcart::app()->router->url($router);
     }
 }
