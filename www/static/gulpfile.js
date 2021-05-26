@@ -231,6 +231,12 @@ gulp.task("watch:frontend:scripts", function (done) {
   args.push("--progress");
   args.push("-w");
 
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
+
   const cmd = spawn("node", args, { stdio: "inherit" });
 
   //count hash for bundle
