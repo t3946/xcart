@@ -83,12 +83,13 @@ export default class PayByCardStripe extends Component {
     });
 
     paymentRequest.canMakePayment().then(function (result) {
-      if (result) {
+      //temporary disable apple pay button
+      /*if (result) {
         prButton.mount("#payment-request-button");
       } else {
         document.getElementById("payment-request-button").style.display =
           "none";
-      }
+      }*/
     });
 
     this.card = elements.create("card", {
@@ -224,7 +225,7 @@ export default class PayByCardStripe extends Component {
       <Fragment>
         <div className="checkout-stripe">
           <InputError message={this.state.error} ref={this.errorRef} />
-          {/*<div id="payment-request-button"></div>*/}
+          <div id="payment-request-button"></div>
           <div id="CheckoutForm_pbc_card_details"></div>
         </div>
       </Fragment>
