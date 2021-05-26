@@ -1,5 +1,5 @@
 import React from "react";
-import { EmailSend } from "../components/email-send/EmailSend";
+import { EmailSend } from "../containers/email-send/EmailSend";
 import { useDispatch } from "react-redux";
 import { EmailSendDialogContext } from "@s3stores-mail/contexts";
 import { resetSendData } from "@redux/actions";

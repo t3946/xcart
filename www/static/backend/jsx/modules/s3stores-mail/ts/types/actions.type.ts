@@ -23,7 +23,7 @@ export interface ActionSetSendTemplateDto extends ActionDto {
 }
 
 export interface ActionEditSendDataDto extends ActionDto {
-  data: Date;
+  data: Date | string;
   field: string;
 }
 

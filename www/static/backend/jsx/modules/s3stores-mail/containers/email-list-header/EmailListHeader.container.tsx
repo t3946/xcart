@@ -1,10 +1,10 @@
 import React from "react";
-import { EmailListHeader } from "../../components/email-list-header/EmailListHeader";
 import { viewPaginateInfo } from "@s3stores-mail/utils";
 import { useSelector } from "react-redux";
 import { pageSize } from "@s3stores-mail/ts/consts";
 import { useHistory, useParams } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { EmailListHeader } from "@s3stores-mail/components/smart/email-list-header/EmailListHeader";
 
 export const EmailListHeaderContainer: React.FC = () => {
   const history = useHistory();

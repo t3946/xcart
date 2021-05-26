@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Email } from "../components/email/Email";
-import { EmailListSearch } from "../components/email-list-search/EmailListSearch";
-import { EmailInfo } from "../components/email-info/EmailInfo";
+import { Email } from "../pages/email/Email";
+import { EmailInfo } from "../pages/email-info/EmailInfo";
 import { EmailSendDialogHOC } from "@s3stores-mail/hoc";
+import { EmailListSearch } from "@s3stores-mail/components/smart/email-list-search/EmailListSearch";
 
 export const MailRouters: React.FC = () => {
   return (

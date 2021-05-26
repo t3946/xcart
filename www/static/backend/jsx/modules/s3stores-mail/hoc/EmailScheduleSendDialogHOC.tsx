@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScheduleDialogContext } from "@s3stores-mail/contexts";
-import { EmailDialogScheduleSend } from "@s3stores-mail/components/email-dialog-schedule-send/EmailDialogScheduleSend";
+import { EmailDialogScheduleSend } from "@s3stores-mail/containers/email-dialog-schedule-send/EmailDialogScheduleSend";
 
 export const EmailScheduleSendDialogHOC: (
   component: React.ReactNode
