@@ -88,16 +88,17 @@ export default ( function () {
 
     Constructor.prototype.update = function ( data, callback = null ) {
         /**
-         * предотвратить лишние запросы по обновлению авто-заполняемых полей адреса, т.к.
-         * после этого будет новый запрос с уже подставленными данными из авто-заполнителя
+         * если отправляется новый полный адрес, но без нового сокращённого -- дублировать
+         * полный адрес в поле сокращённого адреса
         */
         const keys = Object.keys(data);
 
-        if (
-          keys.length === 1
-          && (keys[0] === 'CheckoutForm[s_full_address]' || keys[0] === 'CheckoutForm[b_full_address]')
-        ) {
-            return;
+        if ( keys.length === 1 ) {
+            if ( keys[0] === 'CheckoutForm[s_full_address]' ) {
+                data['CheckoutForm[s_address]'] = data['CheckoutForm[s_full_address]'];
+            } else if ( keys[0] === 'CheckoutForm[b_full_address]' ) {
+                data['CheckoutForm[b_address]'] = data['CheckoutForm[b_full_address]'];
+            }
         }
 
         Constructor.prototype.disableSubmitButton(true);
