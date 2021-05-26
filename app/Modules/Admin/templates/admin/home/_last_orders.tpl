@@ -16,6 +16,7 @@
         <td align="left" nowrap="nowrap">Shipping</td>
         <td align="left" nowrap="nowrap">Payment status</td>
         <td nowrap="nowrap">Grand total</td>
+        <td>One page</td>
     </tr>
     {foreach $last_orders as $order}
         {set $cs_time = $order->getCxDateTime(false)}
@@ -27,6 +28,7 @@
             <td class="borderb-gray">{$order->s_city}, {$order->s_state}, {$order->s_zipcode}</td>
             <td class="borderb-gray">{$order->cb_status_model}</td>
             <td class="borderb-gray" align="right">{$order->total|site_currency}</td>
+            <td class="borderb-gray" align="center">{$order->is_new_checkout ? 'Y' : 'N'}</td>
         </tr>
     {/foreach}
 </table>
