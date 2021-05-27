@@ -63,6 +63,7 @@ export default class Checkout extends Component {
     }
 
     updateTotal( total ) {
+        console.log('updateTotal');
         $( '.order-total .total .price' ).text( this.formatNumber( total[ 'total' ] ) );
         $( '.shipping-total .price' ).text( this.formatNumber( total[ 'total_shipping_cost' ] ) );
         $( '.total-sales-tax .price' ).text( this.formatNumber( total[ 'total_sales_tax' ] ) );
