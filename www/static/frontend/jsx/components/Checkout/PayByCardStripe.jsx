@@ -188,12 +188,6 @@ export default class PayByCardStripe extends Component {
     const $fieldTitle = $fieldRow.find(".checkout-field-title");
     const $stripeField = $fieldRow.find("#CheckoutForm_pbc_card_details");
 
-    if ($stripeField.hasClass("common-input__wrong")) {
-      $fieldTitle.addClass("field__has-error");
-    } else {
-      $fieldTitle.removeClass("field__has-error");
-    }
-
     if ($stripeField.hasClass("common-input__correct")) {
       $fieldTitle.addClass("field__correct");
     } else {
