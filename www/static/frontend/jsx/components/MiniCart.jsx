@@ -1,5 +1,6 @@
 import { h, Component, render } from 'preact';
-import _ from 'lodash';
+import _                        from 'lodash';
+import Price                    from "@/components/product/card/components/Price";
 
 class MiniCart extends Component
 {
@@ -118,7 +119,10 @@ class MiniCart extends Component
                                 x
                             </div>
                             <div className="price">
-                                {this.state.cart.currency} {item.price}
+                                <Price
+                                  currency={app.options.currency}
+                                  price={item.price}
+                                />
                             </div>
                         </div>
                     </div>
