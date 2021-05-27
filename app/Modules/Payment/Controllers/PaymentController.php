@@ -49,7 +49,7 @@ class PaymentController extends Controller
                     'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', [
                         'gateway' => strtolower($pm->processor_name),
                         'order_id' => $order->orderid,
-                        'slug' => $order->getHash()
+                        'slug' => $order->getOrderHash()
                     ]),
                     'notifyUrl' => Xcart::app()->router->absoluteUrl('payment:success', ['gateway' => strtolower($pm->processor_name)]),
                     'amount' => number_format($order->total, 2, '.', ''),

@@ -537,7 +537,7 @@ class OrderModel extends Model
 
     public function getOrderHash()
     {
-        return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
+        return OrderHelper::getOrderHash([$this->orderid, $this->s_zipcode, $this->email]);
     }
 
     public function getCxDateTime($is_now = true): ?DateTime
@@ -672,10 +672,5 @@ class OrderModel extends Model
             }
         }
         return $res;
-    }
-
-    public function getHash(): string
-    {
-        return md5($this->orderid . $this->s_zipcode . $this->email);
     }
 }
