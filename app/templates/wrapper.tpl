@@ -112,6 +112,11 @@
                 },
                 'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()},
                 'order': {json_encode($order->attributes)},
+                currency: {
+                    currency: "{$site_currency->symbol}",
+                    symbol_prefix: "{$site_currency->symbol_prefix}",
+                    after: "{$site_currency->after}",
+                },
                 translates: {$translates},
             },
         };

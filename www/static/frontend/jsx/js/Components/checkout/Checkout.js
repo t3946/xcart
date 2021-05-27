@@ -182,6 +182,8 @@ export default ( function () {
 
         const self = this;
 
+        $( document ).trigger( 'updateRequestSend.checkout' );
+
         $.ajax( {
             url: '/api/checkout/update',
             method: 'POST',

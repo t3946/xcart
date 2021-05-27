@@ -1,15 +1,15 @@
 .billing-same-shipping__header {
-  margin: 26px 0 15px 0;
+  margin: 0 0 rem-calc(15) 0;
 }
 
 @include breakpoint(md up) {
   .billing-same-shipping__header {
-    margin: 26px 0 19px 0;
+    margin: 0 0 rem-calc(19) 0;
   }
 }
 
 @include breakpoint(lg up) {
   .billing-same-shipping__header {
-    margin: 26px 0 11px 0;
+    margin: 0 0 rem-calc(11) 0;
   }
 }

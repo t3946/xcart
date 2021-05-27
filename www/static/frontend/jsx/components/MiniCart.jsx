@@ -26,6 +26,9 @@ class MiniCart extends Component
         this.store.dispatch({type:'PUSH', action: 'DEL', data: {items:[key]}});
     }
 
+    /**
+     * save new product quantity
+     */
     handleInput(e, key, item)
     {
         let val = e.target.value;
