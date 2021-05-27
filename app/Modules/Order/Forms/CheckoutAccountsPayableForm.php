@@ -85,16 +85,6 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
-            'ap_track_sms' => [
-                'class' => CheckboxField::class,
-                'label' => OrderModule::t( 'SMS notifications' ),
-                'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
-                'labelTemplate' => 'forms/field/checkbox/label.tpl',
-                'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'inputClass' => 'common-checkbox',
-            ],
-
             'ap_email' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),

@@ -84,16 +84,6 @@ class CheckoutPurchasingManagerForm extends CheckoutContactInfoFaxForm
                 'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
-            'pm_track_sms' => [
-                'class' => CheckboxField::class,
-                'label' => OrderModule::t( 'SMS notifications' ),
-                'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
-                'labelTemplate' => 'forms/field/checkbox/label.tpl',
-                'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'inputClass' => 'common-checkbox',
-            ],
-
             'pm_email' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),
