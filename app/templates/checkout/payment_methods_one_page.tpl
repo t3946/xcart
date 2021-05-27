@@ -49,8 +49,7 @@
                                     </div>
                                 </div>
                             {case 17}
-                                <h3 class="payment-method-title payment-method-">You will be transferred to PayPal
-                                    website to complete your payment.</h3>
+                                <h3 class="payment-method-title payment-method-">{t("You will be transferred to PayPal website to complete your payment.")}</h3>
                             {case 4}
                                 <h3 class="payment-method-title">Please call us 1-800-929-2431 to finalize your order
                                     over the phone.</h3>
