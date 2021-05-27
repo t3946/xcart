@@ -676,6 +676,6 @@ class OrderModel extends Model
 
     public function getHash(): string
     {
-        return md5($this->orderid . $this->total . $this->email);
+        return md5($this->orderid . $this->s_zipcode . $this->email);
     }
 }
