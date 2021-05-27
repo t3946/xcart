@@ -29,38 +29,6 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
         $geoIp = GeoipHelper::getGeoipLocation( Xcart::app()->request->getUserIP() );
 
         $fields = [
-            'firstname' => [
-                'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Full Name' ),
-                'hint' => OrderModule::t( 'The order will be shipped under this name' ),
-                'required' => true,
-                'html' => [
-                    'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
-                    'autocomplete' => 'new-password',
-                    'data-correct' => 'common-input__correct',
-                    'data-wrong' => 'common-input__wrong',
-                ],
-                'labelClass' => 'common-label common-label_required',
-                'hintClass' => 'common-hint',
-                'inputClass' => 'common-input',
-                'fieldClass' => 'checkout-field',
-                'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
-
-            'company' => [
-                'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Company' ),
-                'hint' => OrderModule::t( 'Fill in if shipping to a corporate or university address' ),
-                'html' => [
-                    'placeholder' => OrderModule::t( 'Eureka Inc.' ),
-                ],
-                'labelClass' => 'common-label common-label',
-                'hintClass' => 'common-hint',
-                'inputClass' => 'common-input',
-                'labelCommentClass' => 'common-comment',
-                'fieldClass' => 'checkout-field',
-            ],
-
             'full_address' => [
                 'class' => CharSwitcherField::class,
                 'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
@@ -143,6 +111,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
+
             'zipcode' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Zip/Postal Code' ),
@@ -164,6 +133,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
+
             'country' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Country' ),
