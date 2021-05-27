@@ -6,6 +6,7 @@
     }
 
     @include breakpoint(lg up) {
-        margin: rem-calc(13) 0 rem-calc(26);
+        /* -10 rem чтобы удлинить элемент и уместить текст в одну строку*/
+        margin: rem-calc(13) -10rem rem-calc(26) 0;
     }
 }

@@ -1,15 +1,12 @@
 .billing-same-shipping__header {
   margin: 0 0 rem-calc(15) 0;
-}
 
-@include breakpoint(md up) {
-  .billing-same-shipping__header {
+  @include breakpoint(md up) {
     margin: 0 0 rem-calc(19) 0;
   }
-}
 
-@include breakpoint(lg up) {
-  .billing-same-shipping__header {
-    margin: 0 0 rem-calc(11) 0;
+  @include breakpoint(lg up) {
+    /* -10 rem чтобы удлинить элемент и уместить текст в одну строку*/
+    margin: 0 -10rem rem-calc(11) 0;
   }
 }

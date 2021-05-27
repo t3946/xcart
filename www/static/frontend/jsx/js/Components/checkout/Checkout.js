@@ -194,8 +194,6 @@ export default ( function () {
             data['CheckoutForm[firstname]'] = data['CheckoutForm[s_firstname]'];
         }
 
-        Constructor.prototype.disableSubmitButton(true);
-
         const self = this;
 
         $( document ).trigger( 'updateRequestSend.checkout' );
