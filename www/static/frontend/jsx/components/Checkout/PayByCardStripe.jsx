@@ -161,7 +161,6 @@ export default class PayByCardStripe extends Component {
         },
       })
       .then((result) => {
-        console.log("REQ END", result);
         if (result.error) {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
@@ -221,12 +220,6 @@ export default class PayByCardStripe extends Component {
 
   componentDidUpdate() {
     this.moveErrorMessage();
-  }
-
-  formatNumber(number) {
-    return Intl.NumberFormat("en-US", { style: "currency", currency: "USD" })
-      .format(number)
-      .substr(1);
   }
 
   render(props, state) {

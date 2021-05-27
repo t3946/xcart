@@ -107,16 +107,20 @@ class PayByCardForm extends FrontendForm
     public function getFields()
     {
         return [
-            'pbc_card_holder_name' => [
+            'b_firstname' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t('Cardholder name'),
+                'label' => OrderModule::t( 'Full Name' ),
+                'hint' => OrderModule::t( 'The order will be shipped under this name' ),
                 'required' => true,
                 'html' => [
+                    'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
+                    'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
-                'labelClass' => 'common-label common-label_required checkout__single-common-label',
+                'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint',
+                'inputClass' => 'common-input',
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],

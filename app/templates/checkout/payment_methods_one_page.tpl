@@ -36,11 +36,11 @@
                                     </div>
 
                                     <div class="billing-form-address-fields">
-                                        {foreach array_slice($fieldsets['billing'], 0, 3) as $field}
+                                        {foreach array_slice($fieldsets['billing'], 0, 1) as $field}
                                             {raw $field->render()}
                                         {/foreach}
                                         <div class="checkout-billing-other-fields">
-                                            {foreach array_slice( $fieldsets['billing'], 3 ) as $field}
+                                            {foreach array_slice( $fieldsets['billing'], 1 ) as $field}
                                                 {if $field->name !== 'billing_same_shipping'}
                                                     {raw $field->render()}
                                                 {/if}
