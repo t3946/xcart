@@ -14,7 +14,16 @@ const cont = new class PhotoSwipeContainer
             history: false,
             bgOpacity: 0.91,
             showHideOpacity: false,
+            loop: true,
         };
+    }
+
+    // если слайдов меньше чем 3 -- loop не работает и надо отключать стрелки на границах
+    toggleArrows() {
+        if (this.pswp.items.length < 3) {
+            $('.photoswipe-left-arrow').toggleClass('photoswipe-arrow__disabled', !this.pswp.itemHolders[0].item);
+            $('.photoswipe-right-arrow').toggleClass('photoswipe-arrow__disabled', !this.pswp.itemHolders[2].item);
+        }
     }
 
     init()
@@ -80,10 +89,15 @@ const cont = new class PhotoSwipeContainer
 
         this.pswp.listen('afterChange', () => {
             document.body.style.overflow = 'hidden';
+
             let item = this.pswp.currItem;
+
             if (item.onShow) {
                 item.onShow(item, this.pswp);
             }
+
+            this.toggleArrows();
+
             changePadding.call(this);
         });
 
@@ -112,6 +126,8 @@ const cont = new class PhotoSwipeContainer
 
         this.pswp.init();
 
+        this.toggleArrows();
+
         this.pswp.framework.bind( this.pswp.scrollWrap, 'pswpTap',
         (e) => {
             let item = this.pswp.currItem;
@@ -136,6 +152,7 @@ const cont = new class PhotoSwipeContainer
         if (!this.container) {
             const $container = $('<div class="pswp-container">');
             $container.appendTo(document.body);
+
             render(
                 <div className="pswp" tabindex="-1" role="dialog" aria-hidden="true">
                     <div className="pswp__bg"></div>

@@ -8,3 +8,12 @@
 .photoswipe-right-arrow:hover .photoswipe-navigate-button-icon {
   opacity: 1;
 }
+
+.photoswipe-arrow__disabled:hover .photoswipe-navigate-button-icon,
+.photoswipe-arrow__disabled:hover .photoswipe-navigate-button-icon {
+  opacity: 0.5;
+}
+
+.photoswipe-arrow__disabled .photoswipe-navigate-button {
+  cursor: default;
+}

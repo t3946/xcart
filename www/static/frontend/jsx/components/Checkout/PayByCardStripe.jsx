@@ -202,7 +202,7 @@ export default class PayByCardStripe extends Component {
   // переместить сообщение об ошибке в поле карты, в нужное место формы
   moveErrorMessage() {
     const $stripeError = $(this.errorRef.current.base);
-    const $fieldRow = $stripeError.parents(".checkout-field-row");
+    const $fieldRow = $stripeError.parents(".checkout-field__row");
     $fieldRow.prepend($stripeError);
     this.toggleHeaderClasses();
   }
