@@ -94,6 +94,10 @@ export default ( function () {
          * с последней проверки -- отправить новый адрес
          */
         (() => {
+            if (!document.forms.CheckoutForm9) {
+                return;
+            }
+
             const delayUpdateMS = 1000;
             let oldAddress = {};
             let changedFields = {};
