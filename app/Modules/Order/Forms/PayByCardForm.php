@@ -44,7 +44,7 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                if ($transaction = $order
+                if (($transaction = $order
                     ->transactions
                     ->filter([
                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
@@ -52,8 +52,8 @@ class PayByCardForm extends FrontendForm
                         'transaction_currency' => $params['currency'] ?? 'USD',
                         'paymentid' => $payment_id])
                     ->limit(1)
-                    ->get()) {
-                    $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
+                    ->get()) && $transaction_id = $transaction->transaction_response['client_secret'] ?? '') {
+                    
                 } else {
                     if ($stripe_customer = Xcart::app()->request->session->get('stripe_customer_reference')) {
                         $customer = $gw->gateway->fetchCustomer([
