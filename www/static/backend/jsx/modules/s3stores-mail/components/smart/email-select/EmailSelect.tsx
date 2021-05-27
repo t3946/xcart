@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SelectItemDto } from "@s3stores-mail/ts/types";
+import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
 
 interface EmailSelectSendDto {
   items: SelectItemDto[];
@@ -9,16 +10,7 @@ interface EmailSelectSendDto {
 
 export const EmailSelect: React.FC<any> = ({ items, onClick, value }) => {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener("click", () => {
-      setOpen(false);
-    });
-    return window.removeEventListener("click", () => {
-      setOpen(false);
-    });
-  }, []);
-
+  useCLickListener(setOpen);
   return (
     <div
       className={`select select-send ${open && "open"}`}

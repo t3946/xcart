@@ -10,6 +10,7 @@ import {
   ActionSetSearchOptions,
   ActionSetSendTemplateDto,
   ActionSetSendTemplateTypeDto,
+  ActionSetViewed,
 } from "@s3stores-mail/ts/types";
 import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
 
@@ -85,4 +86,9 @@ export const resetSendData = (): ActionDto => ({
 
 export const setLoading = (): ActionDto => ({
   type: "SET_LOADING",
+});
+
+export const setViewed = (id: number): ActionSetViewed => ({
+  type: "SET_VIEWED",
+  emailId: id,
 });

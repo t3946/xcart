@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmailGroupSelectOption } from "@s3stores-mail/components/ordinary/email-group-select-option/EmailGroupSelectOption";
+import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
 
 export const EmailGroupSelect: React.FC<any> = ({
   items,
@@ -9,14 +10,7 @@ export const EmailGroupSelect: React.FC<any> = ({
 }) => {
   const [selectOpen, setSelectOpen] = useState(false);
 
-  useEffect(() => {
-    window.addEventListener("click", () => {
-      setSelectOpen(false);
-    });
-    return window.removeEventListener("click", () => {
-      setSelectOpen(false);
-    });
-  }, []);
+  useCLickListener(setSelectOpen);
 
   return (
     <React.Fragment>

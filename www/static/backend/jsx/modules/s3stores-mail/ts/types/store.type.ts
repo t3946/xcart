@@ -14,6 +14,9 @@ export interface StoreDto {
   checkedItemsOptions: {
     prevValue: number;
   };
+  page: number;
+  moreFavorites: boolean;
+  moreViewed: boolean;
 }
 
 export interface checkedValueDto {

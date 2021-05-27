@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Grid } from "@material-ui/core";
+import { Iframe } from "@s3stores-mail/components/smart/iframe/Iframe";
 
-export const EmailInfoBodyData = () => {
+export const EmailInfoBodyData = ({ data }) => {
   return (
     <React.Fragment>
       <Grid container justify="space-between">
@@ -28,12 +29,7 @@ export const EmailInfoBodyData = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      <span className="email-info-text">
-        You have received a new 2 page fax on FAXAGE from (707)792-1362. A copy
-        is attached for your reference. You may also visit http://www.faxage.
-        com to log in and work with your faxes.
-      </span>
+      <Iframe src={data.body} />
     </React.Fragment>
   );
 };

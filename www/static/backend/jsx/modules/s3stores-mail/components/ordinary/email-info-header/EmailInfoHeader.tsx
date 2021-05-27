@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid, Paper } from "@material-ui/core";
 import { ReadedSwitch } from "@s3stores-mail/components/simple/readed-switch/ReadedSwitch";
-import { IconsList } from "@s3stores-mail/components/simple/icons-list/IconsList";
+import { EmailInfoHeaderIcons } from "@s3stores-mail/components/ordinary/email-info-header-icons/EmailInfoHeaderIcons";
+import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 
 export const EmailInfoHeader: React.FC<any> = ({ info }) => {
+  const context = useContext(EmailInfoContext);
   return (
     <Paper className="header-wrap info" square={true}>
       <Grid container justify="space-around" alignItems="center">
         <Grid xs={6}>
-          <span>{info.title}</span>
+          <span>{info.subject}</span>
         </Grid>
         <Grid>
-          <ReadedSwitch editAction={null} readed={info.read} />
+          <ReadedSwitch
+            editAction={() => context.editAction(context.emailInfo.id)}
+            readed={info.action.action}
+          />
         </Grid>
         <Grid>
-          <IconsList />
+          <EmailInfoHeaderIcons />
         </Grid>
       </Grid>
     </Paper>

@@ -1,6 +1,10 @@
 import { EmailPersonType, EmailType } from "../ts/consts/email-type.const";
 
-export function emailStyle(email?: string, customer?: string): string {
+export function emailStyle(
+  viewed: boolean,
+  email?: string,
+  customer?: string
+): string {
   if (!email && !customer) {
     return "";
   }
@@ -25,4 +29,12 @@ export function emailStyle(email?: string, customer?: string): string {
       return "outgoing-green";
     }
   }
+}
+
+export function addStyleToViewed(viewed: boolean): string {
+  if (viewed) {
+    return "viewed";
+  }
+
+  return "";
 }

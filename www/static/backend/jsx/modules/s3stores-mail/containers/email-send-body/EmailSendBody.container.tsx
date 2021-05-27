@@ -5,17 +5,18 @@ import { addFile } from "@redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const EmailSendBodyContainer = () => {
+export const EmailSendBodyContainer: React.FC = () => {
   const dispatch = useDispatch();
   const onDrop = useCallback(([acceptedFile]) => {
     dispatch(addFile(acceptedFile));
   }, []);
 
-  const files = useSelector((state: StoreDto) => state.sendData.files);
+  const sendData = useSelector((state: StoreDto) => state.sendData);
 
   const context = {
     onDrop,
-    files,
+    files: sendData.files,
+    sendData: sendData,
   };
 
   return (

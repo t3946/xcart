@@ -47,3 +47,7 @@ export interface ActionEditFavorites extends ActionDto {
 export interface ActionEditActions extends ActionDto {
   actionItems: number[];
 }
+
+export interface ActionSetViewed extends ActionDto {
+  emailId: number;
+}

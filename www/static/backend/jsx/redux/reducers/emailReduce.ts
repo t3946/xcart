@@ -1,10 +1,14 @@
-import { editFavoriteItems } from "@s3stores-mail/utils";
 import { AnyAction } from "redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { initialValues } from "@s3stores-mail/ts/consts";
 import { editCheckedInEmailItems } from "@s3stores-mail/utils/edit-checked-in-email-items";
 import { editCheckedItems } from "@s3stores-mail/utils/edit-checked-items";
 import { editActionItems } from "@s3stores-mail/utils/edit-action-items";
+import {
+  editFieldsOnEmail,
+  isCheckedItemsFavorite,
+  isCheckedItemsTrue,
+} from "@s3stores-mail/utils/edit-fields-on-email";
 
 const emailReducer = (
   state: StoreDto = initialValues,
@@ -12,7 +16,7 @@ const emailReducer = (
 ): StoreDto => {
   switch (action.type) {
     case "GET_PAGE":
-      return { ...state };
+      return { ...state, page: action.page };
     case "SET_PAGE":
       return {
         ...state,
@@ -91,18 +95,42 @@ const emailReducer = (
         checkedItemsOptions: {
           prevValue: action.id,
         },
+        moreViewed: isCheckedItemsTrue(state.items, checkedItems, "viewed"),
+        moreFavorites: isCheckedItemsTrue(
+          state.items,
+          checkedItems,
+          "favorite"
+        ),
       };
     case "EDIT_FAVORITES":
-      const items = editFavoriteItems(state.items, action.favoriteItems);
+      const items = editFieldsOnEmail(
+        state.items,
+        action.favoriteItems,
+        "favorite"
+      );
       return {
         ...state,
         items: items,
       };
     case "EDIT_ACTIONS":
-      const actionItems = editActionItems(state.items, action.actionItems);
+      const actionItems = editFieldsOnEmail(
+        state.items,
+        action.actionItems,
+        "action"
+      );
       return {
         ...state,
         items: actionItems,
+      };
+    case "SET_VIEWED":
+      return {
+        ...state,
+        items: state.items.map((e) => {
+          if (e.item.id === action.emailId) {
+            e.item.viewed = !e.item.viewed;
+          }
+          return e;
+        }),
       };
     case "SET_LOADING":
       return {

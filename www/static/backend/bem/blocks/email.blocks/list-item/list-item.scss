@@ -2,8 +2,11 @@
     position: relative;
     padding: 3px 40px;
     cursor: pointer;
+    color: #494949 !important;
+    font-weight: 600;
 
     &:hover{
+        color: #000000;
         z-index: 1000000;
         box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
     }

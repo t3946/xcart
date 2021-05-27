@@ -1,1 +1,1 @@
-export * from "./EmailSendDialogHOC";
+export * from "./email-dialog/EmailDialogHOC";

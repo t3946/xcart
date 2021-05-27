@@ -2,16 +2,16 @@ import React, { useContext } from "react";
 import { Grid } from "@material-ui/core";
 import { selectSendFirstItems } from "@s3stores-mail/ts/consts";
 import { useSelector } from "react-redux";
-import { EmailSendDialogContext } from "@s3stores-mail/contexts";
 import { switchSendTemplateType } from "@s3stores-mail/utils";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-select/EmailGroupSelect";
 import { EmailDialogHeader } from "@s3stores-mail/components/simple/email-dialog-header/EmailDialogHeader";
 import { EmailSelect } from "@s3stores-mail/components/smart/email-select/EmailSelect";
 import { EmailSendHeaderDialogContext } from "@s3stores-mail/contexts/email-send-header-context/EmailSendHeaderDialog.context";
+import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 
 export const EmailSendHeader: React.FC = () => {
-  const dialog = useContext(EmailSendDialogContext);
+  const dialog = useContext(EmailDialogContext);
   const { setTemplateType, setTemplate } = useContext(
     EmailSendHeaderDialogContext
   );

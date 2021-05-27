@@ -1,10 +1,7 @@
 import { put, takeLatest, all } from "redux-saga/effects";
 import { ApiService } from "../../modules/shared/services/api.service";
 import { emailStore } from "@redux/stores";
-import {
-  convertActionDataToPost,
-  editCheckedInEmailItems,
-} from "@s3stores-mail/utils";
+import { editCheckedInEmailItems } from "@s3stores-mail/utils";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 const api = new ApiService();
@@ -49,7 +46,7 @@ function* editAction(action: AnyAction): Generator {
   try {
     yield api.post(
       `/admin/forms/api/edit-action`,
-      JSON.stringify(convertActionDataToPost(action.actionItems))
+      JSON.stringify(action.actionItems)
     );
   } catch (error) {
     yield put({
@@ -60,10 +57,29 @@ function* editAction(action: AnyAction): Generator {
   }
 }
 
+function* setViewed(action: AnyAction): Generator {
+  if (action.error) {
+    return;
+  }
+  try {
+    yield api.post(
+      `/admin/forms/api/set-viewed`,
+      JSON.stringify(action.emailId)
+    );
+  } catch (error) {
+    yield put({
+      type: "SET_VIEWED",
+      error: true,
+      emailId: action.emailId,
+    });
+  }
+}
+
 function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_PAGE", getPage);
   yield takeLatest("EDIT_FAVORITES", editFavorite);
   yield takeLatest("EDIT_ACTIONS", editAction);
+  yield takeLatest("SET_VIEWED", setViewed);
 }
 
 export default function* rootSaga(): Generator {

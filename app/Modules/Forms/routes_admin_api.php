@@ -18,4 +18,9 @@ return [
         'target' => [ApiEmailDashboardAdmin::class, 'editAction'],
         'name' => 'editAction'
     ],
+    [
+        'route' => '/set-viewed',
+        'target' => [ApiEmailDashboardAdmin::class, 'setViewed'],
+        'name' => 'setViewed'
+    ],
 ];

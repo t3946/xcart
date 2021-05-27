@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { EmailListItem } from "@s3stores-mail/components/ordinary/email-list-item/EmailListItem";
-import { emailStyle } from "@s3stores-mail/utils";
+import { addStyleToViewed, emailStyle } from "@s3stores-mail/utils";
 import { EmailLIstContext } from "@s3stores-mail/contexts/email-list-context/EmailLIst.context";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
@@ -19,7 +19,11 @@ export const EmailList: React.FC = () => {
       {emails.map((email, index) => {
         return (
           <EmailListItem
-            theme={emailStyle(email.item?.emailType, email.item?.emailCustomer)}
+            theme={
+              addStyleToViewed(email.item.viewed) +
+              " " +
+              emailStyle(email.item?.emailType, email.item?.emailCustomer)
+            }
             checked={email.checked}
             itemData={email.item}
             handleClick={() => handleItemClick(email.item.id)}

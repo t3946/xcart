@@ -19,5 +19,8 @@ export const initialValues: StoreDto = {
   checkedItemsOptions: {
     prevValue: 0,
   },
+  page: 0,
   loading: false,
+  moreViewed: false,
+  moreFavorites: false,
 };

@@ -3,8 +3,9 @@ import { Button } from "@material-ui/core";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { ScheduleDialogContext } from "@s3stores-mail/contexts";
-import { EmailScheduleSendDialogHOC } from "@s3stores-mail/hoc/EmailScheduleSendDialogHOC";
+import { EmailDialogHOC } from "@s3stores-mail/hoc/email-dialog/EmailDialogHOC";
+import { EmailDialogScheduleSend } from "@s3stores-mail/containers/email-dialog-schedule-send/EmailDialogScheduleSend";
+import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 
 const SendButton: React.FC = () => {
   useEffect(() => {
@@ -18,7 +19,7 @@ const SendButton: React.FC = () => {
 
   const [openScheduleButton, setOpenScheduleButton] = useState(false);
 
-  const dialog = useContext(ScheduleDialogContext);
+  const dialog = useContext(EmailDialogContext);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -54,4 +55,7 @@ const SendButton: React.FC = () => {
   );
 };
 
-export const EmailSendButton = EmailScheduleSendDialogHOC(<SendButton />);
+export const EmailSendButton = EmailDialogHOC(
+  <SendButton />,
+  <EmailDialogScheduleSend />
+);

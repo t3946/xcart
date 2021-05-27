@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Formik } from "formik";
 import {
   emailSendEditorSettings,
@@ -6,8 +6,10 @@ import {
 } from "@s3stores-mail/ts/consts";
 import { InputAdornment, TextField } from "@material-ui/core";
 import { Editor } from "@tinymce/tinymce-react";
+import { EmailSendBodyContext } from "@s3stores-mail/contexts";
 
 export const EmailSendBodyForm = () => {
+  const context = useContext(EmailSendBodyContext);
   return (
     <React.Fragment>
       <Formik
@@ -49,7 +51,7 @@ export const EmailSendBodyForm = () => {
         }}
       </Formik>
       <Editor
-        initialValue={"<p>123123</p>"}
+        initialValue={context.sendData.replyText}
         init={{
           height: 280,
           menubar: true,

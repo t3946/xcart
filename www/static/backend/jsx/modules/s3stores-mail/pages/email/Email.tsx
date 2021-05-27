@@ -1,16 +1,22 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getPage, setLoading } from "../../../../redux/actions/emailActions";
 import { EmailListHeaderContainer } from "../../containers";
 import { EmailListTitle } from "@s3stores-mail/components/ordinary/email-list-title/EmailListTitle";
 import { EmailListContainer } from "@s3stores-mail/containers/email-list/EmailList.container";
+import { StoreDto } from "@s3stores-mail/ts/types";
 export const Email: React.FC = () => {
   const dispatch = useDispatch();
 
   const { page }: { page?: string } = useParams();
 
+  const thisPage = useSelector((e: StoreDto) => e.page);
+
   useEffect(() => {
+    if (thisPage === Number(page)) {
+      return;
+    }
     dispatch(setLoading());
     const timeOut = setTimeout(() => {
       dispatch(getPage(Number(page)));

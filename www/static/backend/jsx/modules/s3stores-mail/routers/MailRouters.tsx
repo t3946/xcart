@@ -1,11 +1,18 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Switch, Route, useLocation } from "react-router-dom";
 import { Email } from "../pages/email/Email";
-import { EmailInfo } from "../pages/email-info/EmailInfo";
-import { EmailSendDialogHOC } from "@s3stores-mail/hoc";
 import { EmailListSearch } from "@s3stores-mail/components/smart/email-list-search/EmailListSearch";
+import { resetSendData } from "@redux/actions";
+import { useDispatch } from "react-redux";
+import { EmailDialogHOC } from "@s3stores-mail/hoc/email-dialog/EmailDialogHOC";
+import { EmailSend } from "@s3stores-mail/containers/email-send/EmailSend";
+import { EmailInfoPage } from "@s3stores-mail/pages/email-info/EmailInfoPage";
 
 export const MailRouters: React.FC = () => {
+  const dispatch = useDispatch();
+  const onClose = () => {
+    return dispatch(resetSendData());
+  };
   return (
     <div>
       <EmailListSearch />
@@ -14,11 +21,15 @@ export const MailRouters: React.FC = () => {
           <Route
             exact
             path="/admin/forms/email-dashboard/page/:page"
-            component={EmailSendDialogHOC(<Email />)}
+            component={EmailDialogHOC(<Email />, <EmailSend />, onClose)}
           />
           <Route
             path="/admin/forms/email-dashboard/email-info/:id"
-            component={EmailSendDialogHOC(<EmailInfo />)}
+            component={EmailDialogHOC(
+              <EmailInfoPage />,
+              <EmailSend />,
+              onClose
+            )}
           />
         </Switch>
       </BrowserRouter>

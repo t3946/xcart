@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Dialog } from "@material-ui/core";
-import { EmailSendDialogContext } from "@s3stores-mail/contexts";
 import { EmailSendBodyContainer } from "@s3stores-mail/containers/email-send-body/EmailSendBody.container";
 import { EmailSendHeaderContainer } from "@s3stores-mail/containers/email-send-header/EmailSendHeader.container";
+import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 export const EmailSend: React.FC = () => {
-  const dialog = useContext(EmailSendDialogContext);
+  const dialog = useContext(EmailDialogContext);
   return (
     <Dialog
       maxWidth={"md"}
