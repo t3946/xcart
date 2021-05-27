@@ -111,8 +111,7 @@ class PayByCardForm extends FrontendForm
         return [
             'b_firstname' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Full Name' ),
-                'hint' => OrderModule::t( 'The order will be shipped under this name' ),
+                'label' => OrderModule::t( 'Cardholder name' ),
                 'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
