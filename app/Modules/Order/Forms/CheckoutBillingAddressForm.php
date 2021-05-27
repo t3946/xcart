@@ -34,7 +34,6 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
-                'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
                 'html' => [
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
                     'data-correct' => 'common-input__correct',
