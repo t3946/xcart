@@ -21,6 +21,7 @@ export default class Checkout extends Component {
         } );
 
         $( document ).on( 'updateRequestSuccess.checkout', ( e, total ) => {
+            console.log('success checkout');
             if ( this.state.checkoutUpdateQueries === 1 ) {
                 this.updateTotal( total );
             }
