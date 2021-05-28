@@ -542,7 +542,12 @@ class OrderModel extends Model
 
     public function getCxDateTime($is_now = true): ?DateTime
     {
-        $state = $this->billing_state ?: $this->shipping_state;
+        if ($this->b_country && $this->b_state) {
+            $state = $this->billing_state;
+        } elseif ($this->s_country && $this->s_state) {
+            $state = $this->shipping_state;
+        }
+
         if ($time_zone = $state->timezone) {
             $date = new DateTime('now', new DateTimeZone($time_zone));
             if ($is_now) {
@@ -654,7 +659,7 @@ class OrderModel extends Model
         }
         return [];
     }
-    
+
     public function getShippingCost(): float
     {
         return array_reduce($this->groups->all(), static fn($c, $i) => $c + $i->shipping_gross);
