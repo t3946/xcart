@@ -54,6 +54,7 @@ class CheckoutContactInfoForm extends FrontendForm
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                     'inputmode' => 'numeric',
+                    'autocomplete' => 'tel-national'
                 ],
                 'extend' => 'phone_ext',
                 'labelClass' => 'common-label common-label_required',
@@ -71,6 +72,7 @@ class CheckoutContactInfoForm extends FrontendForm
                 'html' => [
                     'class' => 'phone_ext',
                     'inputmode' => 'numeric',
+                    'autocomplete' => 'tel-extension'
                 ],
                 'extends' => true,
                 'validators' => [
@@ -107,6 +109,7 @@ class CheckoutContactInfoForm extends FrontendForm
                     'placeholder' => OrderModule::t( 'albert.einstein@gmail.com' ),
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'autocomplete' => 'email'
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint',
