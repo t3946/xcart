@@ -1,0 +1,7 @@
+.button-with-icon-container__shop-more-checkout {
+    justify-content: center;
+
+    @include breakpoint(md up) {
+        justify-content: space-between;
+    }
+}

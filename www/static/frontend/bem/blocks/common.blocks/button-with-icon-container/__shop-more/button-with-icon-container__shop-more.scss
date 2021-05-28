@@ -1,0 +1,18 @@
+.button-with-icon-container__shop-more {
+    padding: 0 rem-calc(10);
+    font-size: rem-calc(14);
+
+    @include breakpoint(sm up) {
+        font-size: rem-calc(18);
+    }
+
+    @include breakpoint(md up) {
+        padding: 0 rem-calc(20);
+        font-size: rem-calc(20);
+    }
+
+    @include breakpoint(lg up) {
+        padding: 0 rem-calc(34);
+        font-size: rem-calc(18);
+    }
+}

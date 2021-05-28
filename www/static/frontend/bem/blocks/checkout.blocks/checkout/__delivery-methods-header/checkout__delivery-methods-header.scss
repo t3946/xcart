@@ -1,4 +1,8 @@
 .checkout__delivery-methods-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: rem-calc(25) 0 rem-calc(21);
 
   @include breakpoint(md up) {

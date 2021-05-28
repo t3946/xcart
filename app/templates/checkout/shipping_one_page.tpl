@@ -15,7 +15,14 @@
                     {* shipping address form *}
                     {* shipping address form -- header *}
                     <div class="options">
-                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first">{t 'Shipping Address' }</h2>
+                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first checkout-shipping-header">
+                            <a href="/" class="yellow-white waves waves-orange waves-effect button__common button__yellow-white button__shop-more button__shop-more-checkout checkout_shop-more hide-for-large">
+                                <div class="button-with-icon-container button-with-icon-container__shop-more button-with-icon-container__shop-more-checkout">
+                                    {t 'Shop more'}
+                                </div>
+                            </a>
+                            {t 'Shipping Address' }
+                        </h2>
                     </div>
 
                     <div class="checkout-mandatory checkout_mandatory">
@@ -49,7 +56,14 @@
             <div class="columns small-12 large-8">
                 <div class="checkout-cart-content-wrapper">
                     <div class="checkout-cart-content">
-                        <h2 class="title checkout-second-header text-center large-text-left checkout__delivery-methods-header">{t 'Delivery Methods' }</h2>
+                        <h2 class="title checkout-secondtitle checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first-header text-center large-text-left checkout__delivery-methods-header checkout-delivery-methods-header">
+                            <a href="/" class="yellow-white waves waves-orange waves-effect button__common button__yellow-white button__shop-more checkout_shop-more show-for-large">
+                                <div class="button-with-icon-container button-with-icon-container__shop-more">
+                                    {t 'Shop more'}
+                                </div>
+                            </a>
+                            {t 'Delivery Methods' }
+                        </h2>
                         {* distributor carts *}
                         {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                             {set $items = $group.items}

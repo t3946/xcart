@@ -1,0 +1,7 @@
+.button__shop-more-checkout {
+    height: rem-calc(40);
+
+    @include breakpoint(md down) {
+        width: 100%;
+    }
+}

@@ -1,0 +1,10 @@
+.checkout_shop-more {
+    margin: 0 0 rem-calc(20) 0;
+
+    @include breakpoint(md up) {
+        left: 0;
+        top: 0;
+        position: absolute;
+        margin: 0;
+    }
+}

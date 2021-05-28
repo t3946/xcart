@@ -1,0 +1,11 @@
+.button__shop-more {
+    height: rem-calc(38);
+
+    @include breakpoint(sm up) {
+        height: rem-calc(45);
+    }
+
+    @include breakpoint(md up) {
+        height: rem-calc(50);
+    }
+}
