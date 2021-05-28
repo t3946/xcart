@@ -222,31 +222,11 @@
 
         };
 
-        var cb = function() {
-
-
-            {*createStyleElement( "/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}");*}
-        };
-        var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-            webkitRequestAnimationFrame || msRequestAnimationFrame;
-        if (raf) raf(cb);
-        else window.addEventListener('load', setTimeout(cb, 0));
-
         window.addEventListener("load", function(event) {
 
             createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="jsx/main.js"}");
 
-            /*setTimeout(function() {
-                {ignore}
-                (function(){ var widget_id = 'jamrvwO7Hx';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-                {/ignore}
-            }, 10000);*/
-
             setTimeout(function() {
-                /*var po = document.createElement('script');
-                po.type = 'text/javascript';
-                po.src = 'https://seal.godaddy.com/getSeal?sealID=RVzmFJZUlQZwVnp0XQOKJPtEwfIgrDGcXXE9L625dBokxJCuRu6qptcFSHmt';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);*/
 
                 {if $config.cidev_yandex_code_number}
                     (function (d, w, c) {
@@ -276,53 +256,15 @@
                     })(document, window, "yandex_metrika_callbacks2");
                     {/if}
 
-                    {set $google_review = $.getSite->getConfig().Google_Trusted_Store_ID}
-                    {if $google_review && 1!=1}
-                    window.___gcfg = {
-                        lang: 'en_US'
-                    };
-                    var g_id = '{$google_review}';
-                    {ignore}
-                    window.renderBadge = function() {
-                        var ratingBadgeContainer = document.getElementById("g_review");
-                        window.gapi.load('ratingbadge', function() {
-                            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": g_id, "position": "INLINE"});
-                        });
-                    };
-                    {/ignore}
-
-                    var gr = document.createElement('script');
-                    gr.type = 'text/javascript';
-                    gr.src = 'https://apis.google.com/js/platform.js?onload=renderBadge';
-                    var sgr = document.getElementsByTagName('script')[0]; sgr.parentNode.insertBefore(gr, sgr);
-                {/if}
-
                 po = document.createElement('script');
                 po.type = 'text/javascript';
                 po.src = '//assets.pinterest.com/js/pinit.js';
                 s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(po, s);
-
-                <!-- Facebook Pixel Code -->
-                {ignore}
-                !function(f,b,e,v,n,t,s){
-                    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                        n.queue=[];t=b.createElement(e);t.async=!0;
-                        t.src=v;s=b.getElementsByTagName(e)[0];
-                        s.parentNode.insertBefore(t,s)}(window,document,'script',
-                    'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '855005561264819');
-                fbq('track', 'PageView');
-                {/ignore}
-                <!-- End Facebook Pixel Code -->
-
             },5100);
         });
 
     })();
-
 
 </script>
 
