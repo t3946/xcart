@@ -72,7 +72,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'required' => true,
                 'html' => [
                     'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
-                    'class' => 'city',
+                    'class' => 'auto-complete city',
                     'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
@@ -99,7 +99,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                             ] ) )
                         ? $state->state
                         : 'New Jersey',
-                    'class' => 'state',
+                    'class' => 'auto-complete state',
                     'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
@@ -120,7 +120,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 ],
                 'html' => [
                     'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
-                    'class' => 'zip',
+                    'class' => 'auto-complete zip',
                     'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
@@ -148,7 +148,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                     : null,
                 'html' => [
                     'placeholder' => $country->name ?? 'United States',
-                    'class' => 'country',
+                    'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
                     'autocomplete' => 'new-password',
                     'data-correct' => 'common-input__correct',

@@ -104,7 +104,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'required' => true,
                 'html' => [
                     'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
-                    'class' => 'city',
+                    'class' => 'auto-complete city',
                     'autocomplete' => 'address-level2',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
@@ -131,7 +131,7 @@ class CheckoutShippingAddressForm extends AddressForm
                             ] ) )
                         ? $state->state
                         : 'New Jersey',
-                    'class' => 'state',
+                    'class' => 'auto-complete state',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
@@ -151,7 +151,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'html' => [
                     'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
-                    'class' => 'zip',
+                    'class' => 'auto-complete zip',
                     'autocomplete' => 'postal-code',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
@@ -180,7 +180,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     : null,
                 'html' => [
                     'placeholder' => $country->name ?? 'United States',
-                    'class' => 'country',
+                    'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
                     'autocomplete' => 'address-level1',
                     'data-correct' => 'common-input__correct',
