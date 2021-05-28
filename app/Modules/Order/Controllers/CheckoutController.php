@@ -108,7 +108,7 @@ class CheckoutController extends FrontendController
 
                 if ($order->save()) {
                     if ((int)$order->paymentid === 106) {
-                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getHash()]);
+                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getOrderHash()]);
                     }
                     $this->redirect('checkout:payment');
                 }

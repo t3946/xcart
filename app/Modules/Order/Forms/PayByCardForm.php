@@ -44,7 +44,7 @@ class PayByCardForm extends FrontendForm
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
                 && $gw = Gateway::getGateway($pm)
             ) {
-                if ($transaction = $order
+                if (($transaction = $order
                     ->transactions
                     ->filter([
                         'transaction_status' => OrderTransactionModel::STATUS_PENDING,
@@ -52,8 +52,8 @@ class PayByCardForm extends FrontendForm
                         'transaction_currency' => $params['currency'] ?? 'USD',
                         'paymentid' => $payment_id])
                     ->limit(1)
-                    ->get()) {
-                    $transaction_id = $transaction->transaction_response['client_secret'] ?? '';
+                    ->get()) && $transaction_id = $transaction->transaction_response['client_secret'] ?? '') {
+
                 } else {
                     if ($stripe_customer = Xcart::app()->request->session->get('stripe_customer_reference')) {
                         $customer = $gw->gateway->fetchCustomer([
@@ -86,16 +86,18 @@ class PayByCardForm extends FrontendForm
 
                     $transaction_id = $intent->getData() ? $intent->getData()['client_secret'] ?? '' : '';
 
-                    $transaction = new OrderTransactionModel(array_merge(
-                            OrderTransactionHelper::prepareOrderTransaction($gw, $params),
-                            [
-                                'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                                'orderid' => $order->orderid,
-                                'type' => 'authorization',
-                                'paymentid' => $payment_id,
-                            ])
-                    );
-                    $transaction->save();
+                    if ($transaction_id) {
+                        $transaction = new OrderTransactionModel(array_merge(
+                                OrderTransactionHelper::prepareOrderTransaction($gw, $params),
+                                [
+                                    'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                    'orderid' => $order->orderid,
+                                    'type' => 'authorization',
+                                    'paymentid' => $payment_id,
+                                ])
+                        );
+                        $transaction->save();
+                    }
                 }
 
                 $this->stripe_payment_intent = $transaction_id;
@@ -109,8 +111,7 @@ class PayByCardForm extends FrontendForm
         return [
             'b_firstname' => [
                 'class' => CharCleanField::class,
-                'label' => OrderModule::t( 'Full Name' ),
-                'hint' => OrderModule::t( 'The order will be shipped under this name' ),
+                'label' => OrderModule::t( 'Cardholder name' ),
                 'required' => true,
                 'html' => [
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
