@@ -189,10 +189,8 @@ class OrderProcessController extends FrontendController
 
         $form = new CheckoutForm();
         $form->setInstance( $order );
-        $form->setAttributes($order->extra_model->purchase_order ?? []);
         $form->populate( $post );
-        $form->setModelAttributes( $form->getAttributes() );
-
+        $form->setModelAttributes( array_merge($form->getAttributes(), $order->extra_model->purchase_order ?? []));
 
         /** @var OrderModel $order */
         $order = $form->getInstance();
