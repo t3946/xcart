@@ -68,9 +68,11 @@ class TranslateAdmin extends Admin
     private function writePO( Translations $translations, string $lang_code ): void
     {
         $path = Xcart::app()->getModule( 'Translate' )->getPath();
+
         if ( !Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
             Xcart::app()->flash->error( "Can\'t write file $path/lang/$lang_code.po please check chmod" );
         }
+
         Mo::toFile($translations, "$path/lang/$lang_code.mo");
     }
 
@@ -97,6 +99,7 @@ class TranslateAdmin extends Admin
 
         //update translations
         $translations->mergeWith( $new_translations, Merge::DEFAULTS | Merge::TRANSLATION_OVERRIDE );
+
         $this->writePO( $translations, $lang_code );
     }
 
@@ -204,11 +207,11 @@ class TranslateAdmin extends Admin
         elseif (
             $req_method === 'POST'
             && $form->populate( $_POST, $_FILES )
-            && isset( $_POST[ 'save' ] )
         ) {
             if ( $form->isValid() ) {
                 $translate_model = $form->getInstance();
-                $translate_model->setAttribute( 'msgid', $translate_model->getAttribute( 'msgctxt' ) );
+                $message_context = $translate_model->getAttribute( 'msgctxt' );
+                $translate_model->setAttribute( 'msgid', $message_context );
                 $this->updateTranslation( $translate_model );
                 Xcart::app()->flash->success( 'Changes have been successfully applied.' );
                 $pk = $translate_model->getAttribute( 'lang_code' ) . '-' . $translate_model->getAttribute( 'msgid' );
