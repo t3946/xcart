@@ -132,6 +132,22 @@ export default ( function () {
                     }
                 }
 
+                // mandatory update s_address if s_full_address updated
+                if (
+                  changedFields["CheckoutForm[s_full_address]"]
+                  && !changedFields["CheckoutForm[s_address]"]
+                ) {
+                    changedFields["CheckoutForm[s_address]"] = changedFields["CheckoutForm[s_full_address]"];
+                }
+
+                // mandatory update b_address if b_full_address updated
+                if (
+                  changedFields["CheckoutForm[b_full_address]"]
+                  && !changedFields["CheckoutForm[b_address]"]
+                ) {
+                    changedFields["CheckoutForm[b_address]"] = changedFields["CheckoutForm[b_full_address]"];
+                }
+
                 return Object.keys(changedFields).length > 0;
             }
 
