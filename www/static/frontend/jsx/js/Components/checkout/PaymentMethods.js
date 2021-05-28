@@ -8,6 +8,11 @@ export const PaymentMethods = ( function () {
         return;
     }
 
+    function updateSubmitHint() {
+        const text = $( '[name="CheckoutForm[paymentid]"]:checked' ).data('submit-hint');
+        $('.checkout-submit-hint').text(text);
+    }
+
     /**
      * created handlers and toggle visibilities
      */
@@ -17,6 +22,8 @@ export const PaymentMethods = ( function () {
         const $paymentMethods = $root.find( '.payment-method-item' );
         const $radioInputMethods = $root.find( 'input[name="CheckoutForm[paymentid]"]' );
         const $allLongDescriptions = $paymentMethods.find( '.payment-method-description-long' );
+
+        updateSubmitHint();
 
         $paymentMethods.click( function ( e ) {
             const $paymentMethodItem = $( this );
@@ -58,6 +65,8 @@ export const PaymentMethods = ( function () {
             } else {
                 $input.prop( 'checked', true );
             }
+
+            updateSubmitHint();
         } );
 
         $radioInputMethods
@@ -113,6 +122,7 @@ export const PaymentMethods = ( function () {
         $( '.payment-methods-container' )[ 0 ].outerHTML = template;
         init();
         BillingForm.updateSwitcher();
+        updateSubmitHint();
     }
 
     return new constructor();

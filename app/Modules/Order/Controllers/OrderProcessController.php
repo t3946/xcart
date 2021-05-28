@@ -190,9 +190,7 @@ class OrderProcessController extends FrontendController
         $form = new CheckoutForm();
         $form->setInstance( $order );
         $form->populate( $post );
-        $form->setModelAttributes( $form->getAttributes() );
-
-        $form->setAttributes($order->extra_model->purchase_order ?? []);
+        $form->setModelAttributes( array_merge($form->getAttributes(), $order->extra_model->purchase_order ?? []));
 
         /** @var OrderModel $order */
         $order = $form->getInstance();
@@ -213,6 +211,7 @@ class OrderProcessController extends FrontendController
             || isset($_POST[ 'CheckoutForm' ]['ap_phone_ext'])
             || isset($_POST[ 'CheckoutForm' ]['ap_track_sms'])
             || isset($_POST[ 'CheckoutForm' ]['ap_email'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_fax'])
         ) {
             $po_data = [];
             $po_field_sets = ['purchase_order_details', 'purchasing_manager', 'accounts_payable'];

@@ -39,6 +39,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     'placeholder' => OrderModule::t( 'Albert H. Einstein' ),
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'autocomplete' => 'shipping name'
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
@@ -52,7 +53,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 'label' => OrderModule::t( 'Company' ),
                 'hint' => OrderModule::t( 'Fill in if shipping to a corporate or university address' ),
                 'html' => [
-                    'placeholder' => OrderModule::t( 'Eureka Inc.' )
+                    'placeholder' => OrderModule::t( 'Eureka Inc.' ),
+                    'autocomplete' => 'shipping organization'
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint',
@@ -71,6 +73,7 @@ class CheckoutShippingAddressForm extends AddressForm
                     'placeholder' => OrderModule::t( '112 Mercer Street' ),
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'autocomplete' => 'shipping address-line1'
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
@@ -90,7 +93,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 'label' => OrderModule::t( 'Address (line 2)' ),
                 'hint' => OrderModule::t( 'Apartment, suite, floor, etc.' ),
                 'html' => [
-                    'placeholder' => OrderModule::t( 'Apt 1' )
+                    'placeholder' => OrderModule::t( 'Apt 1' ),
+                    'autocomplete' => 'shipping address-line2'
                 ],
                 'labelClass' => 'common-label',
                 'hintClass' => 'common-hint',
@@ -104,8 +108,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 'required' => true,
                 'html' => [
                     'placeholder' => $geoIp[ 'city' ] ?? 'Princeton',
-                    'class' => 'city',
-                    'autocomplete' => 'address-level2',
+                    'class' => 'auto-complete city',
+                    'autocomplete' => 'shipping address-level2',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                 ],
@@ -131,9 +135,10 @@ class CheckoutShippingAddressForm extends AddressForm
                             ] ) )
                         ? $state->state
                         : 'New Jersey',
-                    'class' => 'state',
+                    'class' => 'auto-complete state',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
+                    'autocomplete' => 'shipping address-level1',
                 ],
                 'requiredClass' => 'common-required',
                 'labelClass' => 'common-label common-label_required',
@@ -151,8 +156,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 ],
                 'html' => [
                     'placeholder' => $geoIp[ 'postalCode' ] ?? '08540',
-                    'class' => 'zip',
-                    'autocomplete' => 'postal-code',
+                    'class' => 'auto-complete zip',
+                    'autocomplete' => 'shipping postal-code',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                     'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
@@ -172,17 +177,14 @@ class CheckoutShippingAddressForm extends AddressForm
                 'validators' => [
                     new CountryValidator()
                 ],
-                'value' => ( $geoIp && $country = CountryModel::objects()->get(
-                        [
-                            'code' => $geoIp[ 'country' ] ?? '',
-                        ] ) )
+                'value' => ($geoIp && $country = CountryModel::objects()->get(['code' => $geoIp['country'] ?? '',]))
                     ? $country->name
                     : null,
                 'html' => [
                     'placeholder' => $country->name ?? 'United States',
-                    'class' => 'country',
+                    'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
-                    'autocomplete' => 'address-level1',
+                    'autocomplete' => 'shipping country-name',
                     'data-correct' => 'common-input__correct',
                     'data-wrong' => 'common-input__wrong',
                     'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',

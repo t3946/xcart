@@ -70,6 +70,7 @@ export default ( function BillingForm() {
         setMask( 'CheckoutForm_pm_phone', '(000) 000-0000' );
         setMask( 'CheckoutForm_pm_fax', '(000) 000-0000' );
         setMask( 'CheckoutForm_ap_phone', '(000) 000-0000' );
+        setMask( 'CheckoutForm_ap_fax', '(000) 000-0000' );
     }
 
 

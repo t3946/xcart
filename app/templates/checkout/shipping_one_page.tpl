@@ -250,6 +250,7 @@
             <div class="column small-12 large-8">
                 <div class="checkout-submit checkout-form__submit-button">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect submit_big">Submit order</button>
+                    <p class="checkout-submit-hint checkout_submit-hint"></p>
                 </div>
             </div>
         </div>

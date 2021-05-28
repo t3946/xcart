@@ -3,10 +3,14 @@
   align-items: center;
   padding: 0 5px;
   color: black;
-}
 
-@include breakpoint(lg up) {
-  .checkout-phone-ext-long-hint {
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+    font-weight: 400;
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
     font-weight: 700;
   }
 }

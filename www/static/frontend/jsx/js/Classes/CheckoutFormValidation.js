@@ -62,7 +62,7 @@ export default class CheckoutFormValidation extends FormValidation {
             }
 
             //purchase order fields
-            const purchaseFieldNames = [ 'CheckoutForm[po_number]', 'CheckoutForm[po_organization_name]', 'CheckoutForm[pm_firstname]', 'CheckoutForm[pm_phone]', 'CheckoutForm[pm_email]', 'CheckoutForm[ap_firstname]', 'CheckoutForm[ap_phone]', 'CheckoutForm[ap_email]' ];
+            const purchaseFieldNames = [ 'CheckoutForm[po_number]', 'CheckoutForm[po_organization_name]', 'CheckoutForm[pm_firstname]', 'CheckoutForm[pm_phone]', 'CheckoutForm[pm_email]', 'CheckoutForm[ap_firstname]', 'CheckoutForm[ap_phone]', 'CheckoutForm[ap_email]', 'CheckoutForm[ap_fax]' ];
             const selectedPaymentMethodId = parseInt( self.getFieldValue( 'CheckoutForm[paymentid]' ) );
             const purchaseOrderMethodId = 2;
 
