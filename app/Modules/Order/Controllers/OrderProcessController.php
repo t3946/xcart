@@ -213,6 +213,7 @@ class OrderProcessController extends FrontendController
             || isset($_POST[ 'CheckoutForm' ]['ap_phone_ext'])
             || isset($_POST[ 'CheckoutForm' ]['ap_track_sms'])
             || isset($_POST[ 'CheckoutForm' ]['ap_email'])
+            || isset($_POST[ 'CheckoutForm' ]['ap_fax'])
         ) {
             $po_data = [];
             $po_field_sets = ['purchase_order_details', 'purchasing_manager', 'accounts_payable'];

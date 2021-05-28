@@ -105,6 +105,25 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
             ],
 
+            'ap_fax' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t('Fax'),
+                'hint' => OrderModule::t('Fax number of the person placing the order'),
+                'validators' => [
+                    new PhoneValidator(),
+                ],
+                'html' => [
+                    'placeholder' => OrderModule::t('(609) 924-8399'),
+                    'class' => 'phone',
+                    'inputmode' => 'numeric',
+                ],
+                'labelCommentClass' => 'common-comment',
+                'hintClass' => 'common-hint',
+                'labelClass' => 'common-label',
+                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
+            ],
+
             'purchase_order_file' => [
                 'class' => FileField::class,
                 'label' => OrderModule::t( 'Attach original PO' ),
