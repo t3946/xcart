@@ -16,6 +16,7 @@
                                 name="CheckoutForm[{$fieldsets['other'][0]->name}]"
                                 value="{$method->paymentid}"
                                 class="common-input-radio"
+                                data-submit-hint="{$method->submit_hint}"
                             />
                             <div class="common-radio-label payment-radio-label payment-method-title">{$method->payment_method}</div>
                         </div>
