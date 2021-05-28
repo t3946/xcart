@@ -232,11 +232,6 @@ class OrderProcessController extends FrontendController
             CheckoutHelper::updateBillingDetails($order);
         }
 
-        if (isset( $_POST[ 'CheckoutForm' ][ 's_full_address' ])
-         && !isset($_POST[ 'CheckoutForm' ][ 's_address' ])) {
-            $order->s_address = $order->s_full_address;
-        }
-
         if ( isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
