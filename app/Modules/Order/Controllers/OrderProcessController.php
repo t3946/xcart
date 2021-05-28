@@ -235,6 +235,7 @@ class OrderProcessController extends FrontendController
         if ( isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
+            || isset( $_POST[ 'CheckoutForm' ][ 's_full_address' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address_2' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_country' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_zipcode' ] )

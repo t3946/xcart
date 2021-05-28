@@ -86,12 +86,13 @@ export default class PayByCardStripe extends Component {
     });
 
     paymentRequest.canMakePayment().then(function (result) {
-      if (result) {
+      //temporary disable apple pay button
+      /*if (result) {
         prButton.mount("#payment-request-button");
       } else {
         document.getElementById("payment-request-button").style.display =
           "none";
-      }
+      }*/
     });
 
     this.card = elements.create("card", {
