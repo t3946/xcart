@@ -146,21 +146,4 @@ class CheckoutHelper
 
         $order->total = $order->subtotal + $order->shipping_cost;
     }
-
-    public static function updateBillingDetails(OrderModel $order): void
-    {
-        if ($order->billing_same_shipping === false) {
-            $order->setAttributes([
-                'b_firstname' => $order->s_firstname,
-                'b_company' => $order->s_company,
-                'b_address' => $order->s_address,
-                'b_full_address' => $order->s_full_address,
-                'b_country' => $order->s_country,
-                'b_zipcode' => $order->s_zipcode,
-                'b_state' => $order->s_state,
-                'b_city' => $order->s_city,
-            ]);
-            $order->save();
-        }
-    }
 }
