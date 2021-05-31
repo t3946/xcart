@@ -1,0 +1,8 @@
+.checkout-cart-footer__bordered {
+    border-top: 2px solid #959595;
+    padding: rem-calc(8) rem-calc(16) 0 0;
+
+    @include breakpoint(md up) {
+        padding: rem-calc(28) rem-calc(45) 0 0;
+    }
+}

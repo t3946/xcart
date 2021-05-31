@@ -193,7 +193,7 @@
                             </div>
                         {/foreach}
 
-                        <div class="checkout-cart-footer">
+                        <div class="checkout-cart-footer{if count($.app->cart->getItemsGroupedBy()) > 1} checkout-cart-footer__bordered{/if}">
                             <div class="order-total">
                                 <div class="preloader order-total_preloader preloader__checkout-cart-footer"></div>
 
