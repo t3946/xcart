@@ -227,6 +227,10 @@ class OrderProcessController extends FrontendController
             $extra->save();
         }
 
+        if ( isset($_POST['CheckoutForm']['billing_same_shipping']) ) {
+            CheckoutHelper::updateBillingDetails($order);
+        }
+
         if ( isset( $_POST[ 'CheckoutForm' ][ 's_company' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_firstname' ] )
             || isset( $_POST[ 'CheckoutForm' ][ 's_address' ] )
@@ -238,6 +242,8 @@ class OrderProcessController extends FrontendController
             || isset( $_POST[ 'CheckoutForm' ][ 's_city' ] )
             || ($post->has('uid') && $post->has('quantity'))
         ) {
+            CheckoutHelper::updateBillingDetails($order);
+            
             if (!isset($shipping_rates)) {
                 $shipping_rates = self::getShippingRates($order);
             }
