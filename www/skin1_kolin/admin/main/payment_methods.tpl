@@ -72,6 +72,8 @@
 	</td>
 	<td valign="top" nowrap="nowrap">
 	<textarea name="posted_data[{$payment_methods[method].paymentid}][payment_details]" cols="45" rows="3">{$payment_methods[method].payment_details|escape:"html"}</textarea>
+		<br/>
+	<textarea name="posted_data[{$payment_methods[method].paymentid}][submit_hint]" cols="45" rows="2">{$payment_methods[method].submit_hint|escape:"html"}</textarea>
 
 {if $payment_methods[method].processor_file eq ""}
 <br />

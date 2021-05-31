@@ -103,6 +103,7 @@ class CheckoutController extends FrontendController
                 $order->setAttributes(array_merge($checkout_form->getAttributes(), [
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
                     'currency' => $site->getCurrency()->currency_code ?? 'USD',
+                    'payment_method' => (string)$order->payment_method_model,
                     'date' => time()
                 ]));
 
