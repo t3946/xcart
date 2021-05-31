@@ -204,20 +204,6 @@
                                 <div class="preloader order-total_preloader preloader__checkout-cart-footer"></div>
 
                                 <div class="order-total-wrapper">
-                                    <div class="total">
-                                        <span class="sum-info-label">{t 'Total' }:</span>
-                                        <span class="sum">
-                                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                            <span class="price cart_subtotal">{$site_currency->getCurrencyFormat($order->subtotal)}</span>
-                                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
-                                        </span>
-                                    </div>
-
-                                    <div class="shipping-total">
-                                        <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
-                                        <span class="sum">{$order->shipping_cost|site_currency}</span>
-                                    </div>
-
                                     <div class="total-tax checkout__total-tax">
                                         {set $taxes = $order->getTaxes()}
                                         {if isset($taxes['total_sales_tax']) }
