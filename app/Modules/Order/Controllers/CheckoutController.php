@@ -73,6 +73,7 @@ class CheckoutController extends FrontendController
             if ($is_new) {
                 $order->setAttributes([
                     'order_prefix' => $site->getOrderPrefix(),
+                    'storefrontid' => $site->storefrontid,
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
                     'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
                     'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
@@ -124,8 +125,6 @@ class CheckoutController extends FrontendController
                 $order->extra_model->purchase_order ?? [])
             );
         }
-
-
 
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,

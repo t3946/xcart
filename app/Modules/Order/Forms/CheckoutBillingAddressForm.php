@@ -140,10 +140,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'validators' => [
                     new CountryValidator()
                 ],
-                'value' => ( $geoIp && $country = CountryModel::objects()->get(
-                        [
-                            'code' => $geoIp[ 'country' ] ?? '',
-                        ] ) )
+                'value' => ($geoIp && $country = CountryModel::objects()->get(['code' => $geoIp['country'] ?? '',]))
                     ? $country->name
                     : null,
                 'html' => [
