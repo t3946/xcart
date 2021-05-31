@@ -42,7 +42,7 @@ export const ShippingForm = (function () {
   };
 
   new ShippingGoogleAutoComplete(
-    "#CheckoutForm_s_full_address",
+    "#CheckoutForm_s_address",
     componentForm,
     shipping_fields
   );

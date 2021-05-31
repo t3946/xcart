@@ -10,7 +10,6 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutShippingAddressForm extends AddressForm
@@ -62,7 +61,7 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
             ],
 
-            'full_address' => [
+            'address' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
@@ -79,10 +78,6 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
                 'inputClass' => 'common-input',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
-
-            'address' => [
-                'class' => HiddenField::class,
             ],
 
             'address_2' => [

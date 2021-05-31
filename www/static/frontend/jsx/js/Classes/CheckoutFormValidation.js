@@ -13,29 +13,6 @@ export default class CheckoutFormValidation extends FormValidation {
         });
     }
 
-    // show wrong fields if it is hide
-    onAfterValidatingFields( validationFields ) {
-        // shipping address
-        if (
-            validationFields[ 'CheckoutForm[s_country]' ]
-            || validationFields[ 'CheckoutForm[s_zipcode]' ]
-            || validationFields[ 'CheckoutForm[s_state]' ]
-            || validationFields[ 'CheckoutForm[s_city]' ]
-        ) {
-            ShippingForm.showFields();
-        }
-
-        // billing address
-        if (
-            validationFields[ 'CheckoutForm[b_country]' ]
-            || validationFields[ 'CheckoutForm[b_zipcode]' ]
-            || validationFields[ 'CheckoutForm[b_state]' ]
-            || validationFields[ 'CheckoutForm[b_city]' ]
-        ) {
-            BillingForm.showFields();
-        }
-    }
-
     getFieldValue( fieldName ) {
         return document.forms[ 'CheckoutForm9' ][ fieldName ].value;
     }
@@ -106,8 +83,6 @@ export default class CheckoutFormValidation extends FormValidation {
         }
 
         //purchase order details form without purchase order selected
-
-        this.onAfterValidatingFields( validationFields );
 
         return validationFields;
     }

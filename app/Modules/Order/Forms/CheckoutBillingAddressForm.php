@@ -11,7 +11,6 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutBillingAddressForm extends CheckoutAddressForm
@@ -27,7 +26,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
         $geoIp = GeoipHelper::getGeoipLocation( Xcart::app()->request->getUserIP() );
 
         $fields = [
-            'full_address' => [
+            'address' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
@@ -42,10 +41,6 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
                 'inputClass' => 'common-input',
-            ],
-
-            'address' => [
-                'class' => HiddenField::class,
             ],
 
             'address_2' => [

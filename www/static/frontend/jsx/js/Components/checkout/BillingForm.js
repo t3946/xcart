@@ -43,7 +43,7 @@ export default (function BillingForm() {
 
     if ($("#CheckoutForm_b_address").length) {
       new ShippingGoogleAutoComplete(
-        "#CheckoutForm_b_full_address",
+        "#CheckoutForm_b_address",
         componentForm,
         billing_fields
       );
