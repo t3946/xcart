@@ -14,24 +14,6 @@ export default (function () {
   const $form = $(".checkout-shipping-form");
   const $submitButton = $form.find('button[type="submit"]');
 
-  // determine address or part of address field
-  function isAddressField(fieldName) {
-    // only google autocomplete affected fields
-    const addressFieldsNames = [
-      "CheckoutForm[s_address]",
-      "CheckoutForm[s_city]",
-      "CheckoutForm[s_state]",
-      "CheckoutForm[s_zipcode]",
-      "CheckoutForm[s_country]",
-      "CheckoutForm[b_address]",
-      "CheckoutForm[b_city]",
-      "CheckoutForm[b_state]",
-      "CheckoutForm[b_zipcode]",
-      "CheckoutForm[b_country]",
-    ];
-    return addressFieldsNames.indexOf(fieldName) !== -1;
-  }
-
   const Constructor = function () {
     $form.on("change", "input, textarea", function (e) {
       const input = e.target;
@@ -44,9 +26,6 @@ export default (function () {
 
       //prevent address fields update -- for address fields have dedicated
       //update system because google autocomplete has not friendly event system
-      if (isAddressField(name)) {
-        return;
-      }
 
       let value;
 
@@ -91,60 +70,6 @@ export default (function () {
 
       $subtotal.text(this.formatNumber(subtotal));
     });
-
-    /**
-     * по таймеру, каждую секунду проверяется адрес, и если он изменился
-     * с последней проверки -- отправить новый адрес
-     */
-    (() => {
-      if (!document.forms.CheckoutForm9) {
-        return;
-      }
-
-      const delayUpdateMS = 1000;
-      let oldAddress = {};
-      let changedFields = {};
-
-      function rememberNewAddress() {
-        oldAddress = {
-          CheckoutForm_s_address: CheckoutForm_s_address.value,
-          CheckoutForm_s_city: CheckoutForm_s_city.value,
-          CheckoutForm_s_state: CheckoutForm_s_state.value,
-          CheckoutForm_s_zipcode: CheckoutForm_s_zipcode.value,
-          CheckoutForm_s_country: CheckoutForm_s_country.value,
-          CheckoutForm_b_address: CheckoutForm_b_address.value,
-          CheckoutForm_b_city: CheckoutForm_b_city.value,
-          CheckoutForm_b_state: CheckoutForm_b_state.value,
-          CheckoutForm_b_zipcode: CheckoutForm_b_zipcode.value,
-          CheckoutForm_b_country: CheckoutForm_b_country.value,
-        };
-      }
-
-      function isAddressChanged() {
-        changedFields = {};
-
-        for (const fieldId in oldAddress) {
-          const field = document.getElementById(fieldId);
-          const oldValue = oldAddress[fieldId];
-          const newValue = field.value;
-
-          if (oldValue !== newValue) {
-            changedFields[field.name] = newValue;
-          }
-        }
-
-        return Object.keys(changedFields).length > 0;
-      }
-
-      rememberNewAddress();
-
-      setInterval(() => {
-        if (isAddressChanged() === true) {
-          rememberNewAddress();
-          this.fieldUpdate(changedFields);
-        }
-      }, delayUpdateMS);
-    })();
   };
 
   function isCheckoutPage() {
