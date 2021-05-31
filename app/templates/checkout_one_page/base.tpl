@@ -24,13 +24,9 @@
                 </div>
 
             <div class="columns large-4 medium-6 checkout-hat-logo checkout-hat-logo-company">
-                    <img src="{$uri}/static/frontend/dist/images/logos/s3stores.svg"
+                    <img src="/static/frontend/images/logos/s3stores_footer.svg"
                          alt="s3stores"
-                         class="show-for-large s3-logo-big checkout-hat-logo-image">
-
-                    <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
-                         alt="s3stores"
-                         class="show-for-small hide-for-large s3-logo-small checkout-hat-logo-image">
+                         class="s3-logo-big checkout-hat-logo-image">
                 </div>
 
             <div class="columns contacts-logo-block hide-for-small show-for-large text-align--right">
