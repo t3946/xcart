@@ -23,6 +23,7 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
         const data = {};
 
         data[CheckoutForm_s_address.name] = CheckoutForm_s_address.value;
+        data[CheckoutForm_s_address_2.name] = CheckoutForm_s_address_2.value;
         data[CheckoutForm_s_country.name] = CheckoutForm_s_country.value;
         data[CheckoutForm_s_zipcode.name] = CheckoutForm_s_zipcode.value;
         data[CheckoutForm_s_state.name] = CheckoutForm_s_state.value;
@@ -38,6 +39,7 @@ export class ShippingGoogleAutoComplete extends GoogleAutoComplete {
         const data = {};
 
         data[CheckoutForm_b_address.name] = CheckoutForm_b_address.value;
+        data[CheckoutForm_b_address_2.name] = CheckoutForm_b_address_2.value;
         data[CheckoutForm_b_country.name] = CheckoutForm_b_country.value;
         data[CheckoutForm_b_zipcode.name] = CheckoutForm_b_zipcode.value;
         data[CheckoutForm_b_state.name] = CheckoutForm_b_state.value;
