@@ -30,17 +30,11 @@
                         <span class="mandatory-star">*</span> {t 'are mandatory.' }
                     </div>
 
-                    {* shipping address form -- fields *}
                     {set $fieldsets = $checkout_form->createFieldsets()}
-                    {foreach array_slice($fieldsets['shipping'], 0, 3) as $field}
+                    {foreach $fieldsets['shipping'] as $field}
+                        {if $field->getName() === 's_address_2' }{/if}
                         {raw $field->render()}
                     {/foreach}
-                    <div class="checkout-shipping-other-fields">
-                        {foreach array_slice($fieldsets['shipping'], 3) as $field}
-                            {if $field->getName() === 's_address_2' }{/if}
-                            {raw $field->render()}
-                        {/foreach}
-                    </div>
 
                     {* contact information form *}
                     {* contact information form -- header *}

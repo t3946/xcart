@@ -11,8 +11,6 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharSwitcherField;
-use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
@@ -30,8 +28,7 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
 
         $fields = [
             'full_address' => [
-                'class' => CharSwitcherField::class,
-                'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
                 'html' => [
@@ -43,9 +40,8 @@ class CheckoutBillingAddressForm extends CheckoutAddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint',
                 'fieldClass' => 'checkout-field',
-                'switcherClass' => 'address-switcher-button switcher-button_other-fields-switcher',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-                'inputClass' => 'common-input switcher-input',
+                'inputClass' => 'common-input',
             ],
 
             'address' => [
