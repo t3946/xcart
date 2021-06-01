@@ -4,13 +4,6 @@ import Forms from "_binds/forms";
 import BillingForm from "@/js/Components/checkout/BillingForm";
 
 export default (function () {
-  /**
-   * prevent update fields with id from this list
-   */
-  const excludedFieldsFromUpdate = [
-    "CheckoutForm_s_address",
-    "CheckoutForm_b_address",
-  ];
   const $form = $(".checkout-shipping-form");
   const $submitButton = $form.find('button[type="submit"]');
 
@@ -41,9 +34,7 @@ export default (function () {
       const data = {};
       data[input.name] = value;
 
-      if (excludedFieldsFromUpdate.indexOf(e.target.id) === -1) {
-        Constructor.prototype.update(data);
-      }
+      Constructor.prototype.update(data);
     });
 
     /**
