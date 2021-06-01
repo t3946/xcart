@@ -44,7 +44,7 @@ export default class PayByCardStripe extends Component {
     };
     const { b_country, currency, total } = app.options.order;
     const paymentRequest = stripe.paymentRequest({
-      country: b_country || "US",
+      country: "US",
       currency: currency.toLowerCase(),
       total: {
         label: "Total",

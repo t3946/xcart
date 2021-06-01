@@ -1,5 +1,4 @@
 import storeCart from 'stores/StoreCart';
-import createAutoComplete from '_binds/cart/shipping_autocomplete';
 
 (() => {
     let cartContainer = document.querySelector('.cart-page');
@@ -84,7 +83,6 @@ import createAutoComplete from '_binds/cart/shipping_autocomplete';
                             });
                         }
                     });
-                    createAutoComplete('.mmodal-content');
                 });
             }
         });

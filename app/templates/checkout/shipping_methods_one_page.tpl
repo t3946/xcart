@@ -51,5 +51,7 @@
                 </div>
             </div>
         </div>
+    {else}
+        <p class="to-see-shipping-options checkout_to-see-shipping-options">{t 'To see shipping options enter your shipping address'}</p>
     {/if}
 </div>

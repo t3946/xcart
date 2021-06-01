@@ -1,0 +1,23 @@
+.button-with-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+
+    &:before {
+        content: "";
+        display: block;
+        width: rem-calc(14);
+        height: rem-calc(14);
+        margin: 0 rem-calc(12) 0 0;
+        background: url("/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg") 0 0 no-repeat;
+
+        @include breakpoint(md up) {
+            margin: 0 rem-calc(17) 0 0;
+        }
+
+        @include breakpoint(lg up) {
+            margin: 0 rem-calc(18) 0 0;
+        }
+    }
+}

@@ -42,12 +42,12 @@ export default class Card extends Component {
             <Fragment>
                 { listPrice.number > price.number && (
                     <span className="products-slider-old-price">
-                        <Price currency={ currency } price={ listPrice.formatted }/>
+                        <Price currency={ currency } price={ listPrice.number }/>
                     </span>
                 ) }
 
                 <span className="products-slider-current-price">
-                    <Price currency={ currency } price={ price.formatted }/>
+                    <Price currency={ currency } price={ price.number }/>
                 </span>
             </Fragment>
         );

@@ -98,9 +98,6 @@ export const DistributorCart = (function () {
         success: function (res) {
           if (quantityUpdateQueries === 1) {
             $(".order-total .total .price").text(formatNumber(res["total"]));
-            $(".shipping-total .price").text(
-              formatNumber(res["total_shipping_cost"])
-            );
             $(".total-sales-tax .price").text(
               formatNumber(res["total_sales_tax"])
             );

@@ -229,7 +229,7 @@ abstract class AbstractCatalogController extends FrontendController
             $brand = $product->brand;
 
             $data[] = [
-                'name' => utf8_encode(htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES)),
+                'name' => htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES),
                 'url' => $product->getAbsoluteUrl(),
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,

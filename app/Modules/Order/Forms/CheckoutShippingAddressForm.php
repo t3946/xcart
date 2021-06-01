@@ -10,8 +10,6 @@ use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharSwitcherField;
-use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Main\Xcart;
 
 class CheckoutShippingAddressForm extends AddressForm
@@ -63,9 +61,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 'fieldClass' => 'checkout-field',
             ],
 
-            'full_address' => [
-                'class' => CharSwitcherField::class,
-                'fieldTemplate' => 'forms/field/default/custom/field_switcher.tpl',
+            'address' => [
+                'class' => CharCleanField::class,
                 'label' => OrderModule::t( 'Address' ),
                 'required' => true,
                 'hint' => OrderModule::t( "Street address please, we don't ship to P.O. boxes" ),
@@ -79,13 +76,8 @@ class CheckoutShippingAddressForm extends AddressForm
                 'labelClass' => 'common-label common-label_required',
                 'hintClass' => 'common-hint',
                 'fieldClass' => 'checkout-field',
-                'switcherClass' => 'shipping-switcher-button switcher-button_other-fields-switcher',
-                'inputClass' => 'common-input switcher-input',
+                'inputClass' => 'common-input',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
-            ],
-
-            'address' => [
-                'class' => HiddenField::class,
             ],
 
             'address_2' => [

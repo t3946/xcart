@@ -1,7 +1,8 @@
 .cart-table-row_subtotal {
   color: #83132B;
   border: none;
-  padding: 15px 10px;
+  margin: rem-calc(15) rem-calc(10);
+  padding: 0;
   height: initial;
   min-height: initial;
   flex-direction: column;
@@ -11,12 +12,12 @@
 
 @include breakpoint(md up) {
   .cart-table-row_subtotal {
-    padding: 30px 45px 30px 0;
+    margin: rem-calc(30) rem-calc(45) rem-calc(30) 0;
   }
 }
 
 @include breakpoint(lg up) {
   .cart-table-row_subtotal {
-    padding: 28px 45px 38px 0;
+    margin: rem-calc(28) rem-calc(45) rem-calc(38) 0;
   }
 }

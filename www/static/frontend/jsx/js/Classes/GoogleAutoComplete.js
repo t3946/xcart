@@ -18,8 +18,6 @@ export class GoogleAutoComplete {
             }
         }
 
-        const self = this;
-
         this.autocomplete = new google.maps.places.Autocomplete( this.addressField, options );
         this.addressField.onfocus = () => this.geoLocate();
         this.addressField.onkeydown = function ( e ) {

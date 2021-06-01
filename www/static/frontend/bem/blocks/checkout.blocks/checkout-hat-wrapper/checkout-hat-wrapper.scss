@@ -1,0 +1,19 @@
+.checkout-hat-wrapper {
+    align-items: center;
+    padding: rem-calc(15) 0;
+    height: rem-calc(57);
+
+    @include breakpoint(sm up) {
+        height: rem-calc(70);
+    }
+
+    @include breakpoint(md up) {
+        padding: rem-calc(20) 0;
+        height: rem-calc(84);
+    }
+
+    @include breakpoint(lg up) {
+        padding: rem-calc(24) 0;
+        height: rem-calc(117);
+    }
+}

@@ -15,7 +15,14 @@
                     {* shipping address form *}
                     {* shipping address form -- header *}
                     <div class="options">
-                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first">{t 'Shipping Address' }</h2>
+                        <h2 class="title checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first checkout-shipping-header">
+                            <a href="/" class="yellow-white waves waves-orange waves-effect button__common button__yellow-white button__shop-more button__shop-more-checkout checkout_shop-more hide-for-large">
+                                <div class="button-with-icon-container button-with-icon-container__shop-more button-with-icon-container__shop-more-checkout">
+                                    {t 'Shop more'}
+                                </div>
+                            </a>
+                            {t 'Shipping Address' }
+                        </h2>
                     </div>
 
                     <div class="checkout-mandatory checkout_mandatory">
@@ -23,9 +30,9 @@
                         <span class="mandatory-star">*</span> {t 'are mandatory.' }
                     </div>
 
-                    {* shipping address form -- fields *}
                     {set $fieldsets = $checkout_form->createFieldsets()}
-                    {foreach array_slice($fieldsets['shipping'], 0, 3) as $field}
+                    {foreach $fieldsets['shipping'] as $field}
+                        {if $field->getName() === 's_address_2' }{/if}
                         {raw $field->render()}
                     {/foreach}
                     <div class="checkout-shipping-other-fields">
@@ -48,7 +55,14 @@
             <div class="columns small-12 large-8">
                 <div class="checkout-cart-content-wrapper">
                     <div class="checkout-cart-content">
-                        <h2 class="title checkout-second-header text-center large-text-left checkout__delivery-methods-header">{t 'Delivery Methods' }</h2>
+                        <h2 class="title checkout-secondtitle checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first-header text-center large-text-left checkout__delivery-methods-header checkout-delivery-methods-header">
+                            <a href="/" class="yellow-white waves waves-orange waves-effect button__common button__yellow-white button__shop-more checkout_shop-more show-for-large">
+                                <div class="button-with-icon-container button-with-icon-container__shop-more">
+                                    {t 'Shop more'}
+                                </div>
+                            </a>
+                            {t 'Delivery Methods' }
+                        </h2>
                         {* distributor carts *}
                         {foreach $.app->cart->getItemsGroupedBy() as $gi => $group}
                             {set $items = $group.items}
@@ -184,25 +198,11 @@
                             </div>
                         {/foreach}
 
-                        <div class="checkout-cart-footer">
+                        <div class="checkout-cart-footer{if count($.app->cart->getItemsGroupedBy()) > 1} checkout-cart-footer__bordered{/if}">
                             <div class="order-total">
                                 <div class="preloader order-total_preloader preloader__checkout-cart-footer"></div>
 
                                 <div class="order-total-wrapper">
-                                    <div class="total">
-                                        <span class="sum-info-label">{t 'Total' }:</span>
-                                        <span class="sum">
-                                            {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                            <span class="price cart_subtotal">{$site_currency->getCurrencyFormat($order->subtotal)}</span>
-                                            {if $site_currency->after}&nbsp;{$site_currency}{/if}
-                                        </span>
-                                    </div>
-
-                                    <div class="shipping-total">
-                                        <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
-                                        <span class="sum">{$order->shipping_cost|site_currency}</span>
-                                    </div>
-
                                     <div class="total-tax checkout__total-tax">
                                         {set $taxes = $order->getTaxes()}
                                         {if isset($taxes['total_sales_tax']) }

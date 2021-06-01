@@ -1,0 +1,5 @@
+.checkout-delivery-methods-header {
+    @include breakpoint(md up) {
+        height: rem-calc(50);
+    }
+}
