@@ -35,6 +35,11 @@
                         {if $field->getName() === 's_address_2' }{/if}
                         {raw $field->render()}
                     {/foreach}
+                    <div class="checkout-shipping-other-fields">
+                        {foreach array_slice($fieldsets['shipping'], 3) as $field}
+                            {raw $field->render()}
+                        {/foreach}
+                    </div>
 
                     {* contact information form *}
                     {* contact information form -- header *}
