@@ -85,9 +85,7 @@ class QueueDxFeedCommand extends Command
                     return self::getCode($feed);
                 }, $runForces));
 
-                $array = array_map(static fn($code) => self::getDxInfo($code), $nextRunning);
-
-                array_map(static fn($info) => Xcart::app()->queue->send('feeds', json_encode($info, JSON_THROW_ON_ERROR)), $array);
+                array_map(static fn($info) => Xcart::app()->queue->send('feeds', json_encode($info, JSON_THROW_ON_ERROR)), $nextRunning);
 
             }
         }
