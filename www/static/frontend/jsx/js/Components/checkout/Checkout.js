@@ -103,6 +103,15 @@ export default (function () {
       data["CheckoutForm[firstname]"] = data["CheckoutForm[s_firstname]"];
     }
 
+    //из-за проблем на сервере нужно отправлять поля address_2 вместе с address
+    if (data["CheckoutForm[s_address_2]"]) {
+      data["CheckoutForm[s_address]"] = CheckoutForm_s_address.value;
+    }
+
+    if (data["CheckoutForm[b_address_2]"]) {
+      data["CheckoutForm[b_address]"] = CheckoutForm_b_address.value;
+    }
+
     const self = this;
 
     $(document).trigger("updateRequestSend.checkout");
