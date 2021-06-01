@@ -200,8 +200,8 @@ const createAutoComplete = (function () {
       }
     }
   }
-  return createAutoComplete;
+
+  return createAutoComplete();
 })();
 
-createAutoComplete();
 export default createAutoComplete;
