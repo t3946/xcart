@@ -17,9 +17,6 @@ export default (function () {
         return;
       }
 
-      //prevent address fields update -- for address fields have dedicated
-      //update system because google autocomplete has not friendly event system
-
       let value;
 
       switch (input.type) {
