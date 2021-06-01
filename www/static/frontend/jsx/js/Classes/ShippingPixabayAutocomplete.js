@@ -1,114 +1,56 @@
-import AutoComplete from 'javascript-auto-complete';
+import AutoComplete from "javascript-auto-complete";
+
+/**
+ * Обёртка для модуля javascript-auto-complete. Позволяет добавлять/изменять функционал в поведение модуля,
+ * не внося изменение в код использующий модуль -- модуль промежуточной обработки
+ */
 
 export class ShippingPixabayAutocomplete {
-    constructor( elem, autocompleteOptions ) {
-        this.variants = null;
-        this.forceCompleted = false;
-        this.input = null;
-        this.input = typeof elem === 'string' ? document.querySelector( elem ) : elem;
-        const self = this;
+  /**
+   * @param elem -- input selector
+   * @param autocompleteOptions -- options for AutoComplete module
+   */
+  constructor(elem, autocompleteOptions) {
+    this.variants = null;
+    this.forceCompleted = false;
+    this.input = null;
+    this.input = typeof elem === "string" ? document.querySelector(elem) : elem;
 
-        new AutoComplete( {
-            selector: self.input,
-            cache: false,
-            offsetTop: 0,
-            minChars: 1,
-            renderItem: autocompleteOptions.renderItem,
-            source: function ( term, suggest ) {
-                if ( self.forceCompleted === true ) {
-                    return;
-                }
+    new AutoComplete({
+      selector: this.input,
+      cache: false,
+      offsetTop: 0,
+      minChars: 1,
+      renderItem: autocompleteOptions.renderItem,
 
-                autocompleteOptions.source( term, function ( data ) {
-                    self.variants = data;
-                    suggest( data );
-                } );
-            },
-            onSelect: function ( e, term, item ) {
-                e.preventDefault();
+      /**
+       * конфигурирует список релевантных данных
+       *
+       * служит обёрткой для переданной функции того же назначения
+       *
+       * @param term -- строка, введённая в поле ввода
+       * @param suggest -- функция принимающая релевантные term данные для дальнейшей обработки плагином
+       * @return void
+       */
+      source: function (term, suggest) {
+        autocompleteOptions.source(term, (data) => {
+          suggest(data);
+        });
+      },
 
-                self.variants = null;
-                if ( autocompleteOptions.onSelect ) {
-                    autocompleteOptions.onSelect( e, term, item, self );
-                } else if ( item.dataset.code !== undefined ) {
-                    self.input.dataset.code = item.dataset.code;
-                    self.input.value = item.dataset.val;
-                } else {
-                    self.input.value = term;
-                }
-
-                self.throwJsChangeEvent( self.input );
-            }
-        } );
-
-        const $input = $( this.input );
-
-        // force select when nothing selected
-        function forceUpdate() {
-            self.forceCompleted = true;
-
-            // use first autocomplete variant as selected
-            let variant = self.variants[ 0 ];
-
-            if ( autocompleteOptions.onSelect ) {
-                autocompleteOptions.onSelect( variant, null, null, self );
-                return;
-            }
-
-            let i = 0;
-
-            if ( typeof variant === 'string' ) {
-                //search compatible variant if it exists
-                while ( i < self.variants.length ) {
-                    if (self.input.value === self.variants[i]) {
-                        variant = self.variants[i];
-                    }
-
-                    i++;
-                }
-
-                self.input.value = variant;
-            } else {
-                //search compatible variant if it exists
-                while ( i < self.variants.length ) {
-                    if (self.input.value === self.variants[i]['name']) {
-                        variant = self.variants[i];
-                    }
-
-                    i++;
-                }
-
-                self.input.value = variant.name;
-                self.input.dataset.code = variant.code;
-            }
-
-            self.throwJsChangeEvent( self.input );
-            self.variants = null;
+      /**
+       * A callback function that fires when a suggestion is selected by mouse click, enter, or tab.
+       *
+       * @param e -- the event that triggered the callback
+       * @param term -- the selected value
+       * @param item -- the item(html node) rendered by the renderItem function.
+       * @return void
+       */
+      onSelect: function (e, term, item) {
+        if (typeof autocompleteOptions.onSelect === "function") {
+          autocompleteOptions.onSelect(e, term, item);
         }
-
-        /**
-         * press tab when without selected item in autocomplete list
-         */
-        $input.keydown( function ( e ) {
-            e.stopPropagation();
-            e.keyCode === 9 && self.variants && self.variants[ 0 ]
-                ? forceUpdate()
-                : self.forceCompleted = false;
-        } );
-
-        /**
-         * focus blur when without selected item in autocomplete list
-         */
-        $input.blur( function () {
-            self.variants && self.variants[ 0 ]
-                ? forceUpdate()
-                : self.forceCompleted = false;
-        } );
-    }
-
-    throwJsChangeEvent( element ) {
-        let detail = { element };
-        let event = new CustomEvent( 'change-event', { detail } );
-        element.dispatchEvent( event );
-    }
+      },
+    });
+  }
 }

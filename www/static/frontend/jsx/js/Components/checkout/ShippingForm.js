@@ -1,6 +1,6 @@
 import { ShippingPixabayAutocomplete } from "@/js/Classes/ShippingPixabayAutocomplete";
-import { ShippingGoogleAutoComplete } from "@/js/Classes/ShippingGoogleAutoComplete";
 import "node_modules/imask";
+import Checkout from "@/js/Components/checkout/Checkout";
 
 export const ShippingForm = (function () {
   // no checkout page
@@ -24,31 +24,8 @@ export const ShippingForm = (function () {
       IMask(CheckoutForm_ci_phone_ext, { mask: "00000" });
   };
 
-  // autocomplete for main address field
-  const componentForm = {
-    street_number: "short_name",
-    route: "long_name",
-    locality: "short_name",
-    administrative_area_level_1: "long_name",
-    country: "long_name",
-    postal_code: "short_name",
-  };
-
-  const shipping_fields = {
-    locality: "#CheckoutForm_s_city",
-    administrative_area_level_1: "#CheckoutForm_s_state",
-    country: "#CheckoutForm_s_country",
-    postal_code: "#CheckoutForm_s_zipcode",
-  };
-
-  new ShippingGoogleAutoComplete(
-    "#CheckoutForm_s_address",
-    componentForm,
-    shipping_fields
-  );
-
   /**
-   * init autocomplete for group address fields (country state city zipcode)
+   * установить автозаполнение для группы полей: country, state, city, zipcode
    */
   function initAddressAutocompleteFields(
     countryInput,
@@ -57,7 +34,7 @@ export const ShippingForm = (function () {
     zipcodeInput
   ) {
     new ShippingPixabayAutocomplete(countryInput, {
-      renderItem: function (item, search) {
+      renderItem: function (item) {
         return (
           '<div class="autocomplete-suggestion" data-val="' +
           item.name +
@@ -68,6 +45,7 @@ export const ShippingForm = (function () {
           "</div>"
         );
       },
+
       source: function (term, suggest) {
         $.getJSON(
           "/checkout/auto_complete_country/",
@@ -80,7 +58,7 @@ export const ShippingForm = (function () {
     });
 
     new ShippingPixabayAutocomplete(stateInput, {
-      renderItem: function (item, search) {
+      renderItem: function (item) {
         return (
           '<div class="autocomplete-suggestion" data-val="' +
           item.state +
@@ -91,6 +69,7 @@ export const ShippingForm = (function () {
           "</div>"
         );
       },
+
       source: function (term, suggest) {
         $.getJSON(
           "/checkout/auto_complete_state/",
@@ -103,7 +82,8 @@ export const ShippingForm = (function () {
           }
         );
       },
-      onSelect: function (e, term, item, ctx) {
+
+      onSelect: function (e, term, item) {
         let state, codeState;
 
         if (e.constructor === Object) {
@@ -120,15 +100,18 @@ export const ShippingForm = (function () {
     });
 
     new ShippingPixabayAutocomplete(cityInput, {
-      renderItem: function (item, search) {
-        return (
-          '<div class="autocomplete-suggestion" data-val="' +
-          item +
-          '">' +
-          item +
-          "</div>"
-        );
+      renderItem: function (item) {
+        const $suggestion = $("<div>", {
+          class: "autocomplete-suggestion",
+          attr: {
+            "data-val": item,
+          },
+          text: item,
+        });
+
+        return $suggestion[0].outerHTML;
       },
+
       source: function (term, suggest) {
         $.getJSON(
           "/checkout/auto_complete_city/",
@@ -147,73 +130,70 @@ export const ShippingForm = (function () {
     });
 
     new ShippingPixabayAutocomplete(zipcodeInput, {
-      renderItem: function (item, search) {
-        let html =
-          '<span class="zip">' +
-          item.zip +
-          "</span>" +
-          ' <span class="city">' +
-          item.primary_city +
-          ", " +
-          item.state +
-          "</span>";
+      renderItem: function (item) {
+        const $zip = $("<span>", {
+          class: "zip",
+          text: item.zip,
+        });
 
-        return (
-          '<div class="autocomplete-suggestion" data-state-name="' +
-          item.state_name +
-          '" data-state="' +
-          item.state +
-          '" data-city="' +
-          item.primary_city +
-          '"  data-val="' +
-          item.zip +
-          '">' +
-          html +
-          "</div>"
-        );
-      },
-      source: function (term, suggest) {
-        $.getJSON(
-          "/checkout/auto_complete_zip_code/",
-          {
-            search: term,
-            country: countryInput ? countryInput.getAttribute("data-code") : "",
+        const $city = $("<span>", {
+          class: "city",
+          text: `${item.primary_city}, ${item.state}`,
+        });
+
+        const $suggestion = $("<div>", {
+          class: "autocomplete-suggestion",
+          attr: {
+            "data-state-code": item.state,
+            "data-city": item.primary_city,
+            "data-val": item.zip,
+            "data-state-name": item.state_name,
           },
-          function (data) {
-            suggest(data);
-          }
-        );
+        });
+
+        $suggestion.append($zip).append($city);
+
+        return $suggestion[0].outerHTML;
       },
-      onSelect: function (e, term, item, ctx) {
-        let city, stateName, stateCode, zipCode;
 
-        if (e.constructor === Object) {
-          city = e.primary_city;
-          stateName = e.state_name;
-          stateCode = e.state;
-          zipCode = e.zip;
-        } else {
-          e.preventDefault();
-          city = item.dataset.city;
-          stateName = item.dataset.stateName;
-          stateCode = item.dataset.state;
-          zipCode = item.dataset.val;
-        }
+      source: function (term, suggest) {
+        const path = "/checkout/auto_complete_zip_code/";
+        const options = {
+          search: term,
+          country: countryInput ? countryInput.getAttribute("data-code") : "",
+        };
+        const callback = (data) => {
+          suggest(data);
+        };
 
-        zipcodeInput.value = zipCode;
+        $.getJSON(path, options, callback);
+      },
+
+      onSelect: function (e, term, item) {
+        e.preventDefault();
+
+        // zip code передаёт сразу 3 типа данных - город,
+        // штат и почтовый код -- здесь они записываются в поля формы
+        const { city, stateName, stateCode, val } = item.dataset;
+
+        zipcodeInput.value = val;
         cityInput.value = city;
         stateInput.value = stateName;
         stateInput.dataset.code = stateCode;
 
-        ctx.throwJsChangeEvent(zipcodeInput);
-        ctx.throwJsChangeEvent(cityInput);
-        ctx.throwJsChangeEvent(stateInput);
+        // save other update fields
+        const data = {};
+
+        data[cityInput.name] = cityInput.value;
+        data[stateInput.name] = stateInput.value;
+
+        Checkout.fieldUpdate(data);
       },
     });
   }
 
   /**
-   * shipping address feilds
+   * автозаполнение адреса shipping формы
    */
   initAddressAutocompleteFields(
     CheckoutForm_s_country,
@@ -223,7 +203,7 @@ export const ShippingForm = (function () {
   );
 
   /**
-   * billing address feilds
+   * автозаполнение адреса billing формы
    */
   if (
     typeof CheckoutForm_b_country !== "undefined" &&
