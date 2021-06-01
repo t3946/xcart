@@ -1,5 +1,6 @@
 import { ShippingPixabayAutocomplete } from "@/js/Classes/ShippingPixabayAutocomplete";
 import "node_modules/imask";
+import { ShippingGoogleAutoComplete } from "@/js/Classes/ShippingGoogleAutoComplete";
 import Checkout from "@/js/Components/checkout/Checkout";
 
 export const ShippingForm = (function () {
@@ -7,6 +8,29 @@ export const ShippingForm = (function () {
   if (document.querySelector(".checkout-page") === null) {
     return;
   }
+
+  // autocomplete for main address field
+  const componentForm = {
+    street_number: "short_name",
+    route: "long_name",
+    locality: "short_name",
+    administrative_area_level_1: "long_name",
+    country: "long_name",
+    postal_code: "short_name",
+  };
+
+  const shipping_fields = {
+    locality: "#CheckoutForm_s_city",
+    administrative_area_level_1: "#CheckoutForm_s_state",
+    country: "#CheckoutForm_s_country",
+    postal_code: "#CheckoutForm_s_zipcode",
+  };
+
+  new ShippingGoogleAutoComplete(
+    "#CheckoutForm_s_address",
+    componentForm,
+    shipping_fields
+  );
 
   const constructor = function () {
     this.$otherFields = $(".checkout-shipping-other-fields");
