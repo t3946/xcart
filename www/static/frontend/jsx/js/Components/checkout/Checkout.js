@@ -93,11 +93,11 @@ export default (function () {
 
     //из-за проблем на сервере нужно отправлять поля address_2 вместе с address
     if (data["CheckoutForm[s_address]"]) {
-      data["CheckoutForm[s_address_2]"] = CheckoutForm_s_address.value;
+      data["CheckoutForm[s_address_2]"] = CheckoutForm_s_address_2.value;
     }
 
     if (data["CheckoutForm[b_address]"]) {
-      data["CheckoutForm[b_address_2]"] = CheckoutForm_b_address.value;
+      data["CheckoutForm[b_address_2]"] = CheckoutForm_b_address_2.value;
     }
 
     if (data["CheckoutForm[s_address_2]"]) {
