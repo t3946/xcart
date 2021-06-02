@@ -161,7 +161,7 @@ class OrderGroupHelper
                     'order_group_id' => $group->order_group_id
                 ];
                 $tri = [
-                    'linkid' => $params['tracking_shipper'][$_k] ?? 0,
+                    'tracknum' => $tracking_number ?: null,
                     'order_group_id' => $group->order_group_id
                 ];
                 [$trackingModel, $is_new] = OrderTrackingModel::objects()->getOrNew($tri);
