@@ -165,12 +165,11 @@ class OrderGroupHelper
                     'order_group_id' => $group->order_group_id
                 ];
                 [$trackingModel, $is_new] = OrderTrackingModel::objects()->getOrNew($tri);
-                if (!$is_new) {
-                    throw new Exception("The tracking number {$tracking_number} is already entered");
+                if ($is_new){
+                    $trackingModel->setAttributes($tr_params);
+                    $trackingModel->save();
+                    $tracking[] = $trackingModel;
                 }
-                $trackingModel->setAttributes($tr_params);
-                $trackingModel->save();
-                $tracking[] = $trackingModel;
             }
         }
         return $tracking ?? [];
