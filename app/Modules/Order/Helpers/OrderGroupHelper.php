@@ -168,6 +168,7 @@ class OrderGroupHelper
                 if (!$is_new) {
                     throw new Exception("The tracking number {$tracking_number} is already entered");
                 }
+                $trackingModel->setAttributes($tr_params);
                 $trackingModel->save();
                 $tracking[] = $trackingModel;
             }
