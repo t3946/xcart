@@ -395,6 +395,7 @@
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ ecommerce: null });
         window.dataLayer.push({
+            'event': 'purchase',
             'ecommerce': {
                 'purchase': {
                     'actionField': {
