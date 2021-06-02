@@ -150,9 +150,10 @@ class Controller
         throw new HttpException($code, $message);
     }
 
-    public function jsonResponse($data = [])
+    public function jsonResponse($data = [], $code = 200)
     {
         header('Content-Type: application/json');
+        http_response_code($code);
         echo json_encode($data);
     }
 
