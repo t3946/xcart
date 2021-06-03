@@ -246,7 +246,6 @@ class CartController extends BaseCartController
 
     public function actionCalculateShipping()
     {
-
         $shippingForm = new CountShippingForm();
 
         if (Xcart::app()->request->getIsPost() && $shippingForm->populate(Xcart::app()->request->post)->isValid()) {
@@ -273,9 +272,9 @@ class CartController extends BaseCartController
             }
         }
 
-        $this->display('cart/calculate_shipping.tpl', [
-            'form' => $shippingForm
-        ]);
+        $this->jsonResponse([
+            'errors' => $shippingForm->getErrors(),
+        ], 402);
     }
 
     protected function addInternal($uniqueId, $quantity = 1, $data = [])
