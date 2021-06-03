@@ -12,6 +12,7 @@ const config = _.merge(baseConfig, {
   resolve: {
     alias: {
       "@": path.resolve("./backend"),
+      "@modules": path.resolve("./backend/jsx/modules"),
     },
   },
 });

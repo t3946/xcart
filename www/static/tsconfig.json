@@ -9,6 +9,9 @@
     "paths": {
       "@modules/*": [
         "frontend/jsx/modules/*"
+      ],
+      "@modules/admin/*": [
+        "backend/jsx/modules/*"
       ]
     },
     "jsx": "react"
