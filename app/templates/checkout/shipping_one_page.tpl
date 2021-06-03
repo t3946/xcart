@@ -159,7 +159,8 @@
                                 <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}" data-minamount="{$warehouse->getMinimalAmount()}">
                                     <div class="table">
                                         <div class="table-body">
-                                            <div class="cart-table-row cart-table-row_subtotal">
+                                            {if count($.app->cart->getItemsGroupedBy()) > 1}
+                                                <div class="cart-table-row cart-table-row_subtotal">
                                                 {if isset($taxes['sales_tax'])}
                                                     <div class="total-tax total-sales-tax">
                                                         {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
@@ -187,6 +188,7 @@
                                                     {if $site_currency->after}&nbsp;{$site_currency}{/if}
                                                 </div>
                                             </div>
+                                            {/if}
                                         </div>
                                     </div>
                                 </div>
