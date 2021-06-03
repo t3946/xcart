@@ -98,7 +98,13 @@ export default class Checkout extends Component {
       .toggleClass("skeleton-box", isActive)
       .css("color", isActive ? "transparent" : "");
 
-    $(".delivery-item-price")
+    $(".shipping-method-item-wrapper").toggleClass("skeleton-box", isActive);
+    $(".shipping-method-row").css({
+      outline: isActive ? "none" : "",
+      background: isActive ? "none" : "",
+    });
+
+    $(".to-see-shipping-options-wrapper")
       .toggleClass("skeleton-box", isActive)
       .css("color", isActive ? "transparent" : "");
   }
