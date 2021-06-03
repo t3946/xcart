@@ -254,14 +254,22 @@ class CartController extends BaseCartController
 
                 /** @var ShippingModule $shm */
                 $shm = Xcart::app()->getModule('Shipping');
+                $result = [];
+
                 foreach ($cart_groups as $g => $cart_group)
                 {
                     if ($rates = $shm::getShipping($g, new OrderModel($shippingForm->getAttributes()), $cart_group)) {
                         foreach ($rates as $rate) {
                             $ship_m = $rate->shipping;
-                            $result[$ship_m->getFrontendName() . ' - '. $ship_m->shipping_time] = "US$ {$rate->getShippingCharge()}";
+                            $name = $ship_m->getFrontendName() . ' - '. $ship_m->shipping_time;
+                            $price = "US$ {$rate->getShippingCharge()}";
+                            $result[] = "$name: $price";
                         }
                     }
+                }
+
+                if (count($result) === 0) {
+                    $result[] = "Shipping cost could not be calculated";
                 }
 
                 $this->jsonResponse([

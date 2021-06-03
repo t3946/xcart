@@ -40,7 +40,7 @@ function ModalCalculateShipping() {
   const actionUrl = "/cart/calculate_shipping";
   const [open, setOpen] = React.useState(false);
   const [qPressed, setQPressed] = React.useState(false);
-  const [shippingPrice, setShippingPrice] = React.useState({});
+  const [shippingPrice, setShippingPrice] = React.useState([]);
 
   const [countryCode, setCountryCode] = React.useState("US");
   const [stateCode, setStateCode] = React.useState("");
@@ -293,12 +293,8 @@ function ModalCalculateShipping() {
   const printShippingPrice = () => {
     const result = [];
 
-    for (const key in shippingPrice) {
-      result.push(`${key}: ${shippingPrice[key]}`);
-    }
-
-    if (result.length === 0) {
-      return;
+    for (const price of shippingPrice) {
+      result.push(<div>{price}</div>);
     }
 
     return <div className="column margin-top-1">{result}</div>;
