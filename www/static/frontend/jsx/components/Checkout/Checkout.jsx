@@ -17,7 +17,7 @@ export default class Checkout extends Component {
         checkoutUpdateQueries: this.state.checkoutUpdateQueries + 1,
       });
 
-      $(".order-total_preloader").fadeIn();
+      this.toggleSkeletons(true);
     });
 
     $(document).on("updateRequestSuccess.checkout", (e, total) => {
@@ -33,7 +33,7 @@ export default class Checkout extends Component {
 
       //hide preloader if this is the last query
       if (checkoutUpdateQueries === 0) {
-        $(".order-total_preloader").fadeOut();
+        this.toggleSkeletons(false);
       }
     });
 
@@ -89,6 +89,20 @@ export default class Checkout extends Component {
     }
   }
 
+  toggleSkeletons(isActive) {
+    $(".grand-total-wrapper")
+      .toggleClass("skeleton-box", isActive)
+      .css("color", isActive ? "transparent" : "");
+
+    $(".warehouse_products .cart-subtotal-wrapper")
+      .toggleClass("skeleton-box", isActive)
+      .css("color", isActive ? "transparent" : "");
+
+    $(".delivery-item-price")
+      .toggleClass("skeleton-box", isActive)
+      .css("color", isActive ? "transparent" : "");
+  }
+
   componentDidMount() {
     //this solution have to smooth No-React to React transition
     //use html permutations and inserts for creating full-react component someday
@@ -102,6 +116,8 @@ export default class Checkout extends Component {
     // insert no-react-code in react container
     $checkoutElement.appendTo($root);
     this.insertStripeField();
+
+    this.toggleSkeletons(false);
   }
 
   componentDidUpdate(previousProps, previousState, previousContext) {
