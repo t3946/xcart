@@ -30,7 +30,7 @@ class ApiCategoriesController extends AbstractCatalogController
             [
                 'images__image_path__isnull' => false,
             ]
-        )->order(['-add_date'])->group(['productid'])->cache(3600)->limit(500);
+        )->order(['-add_date'])->group(['productid']);
 
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getPaginatedProducts($qs));
@@ -156,7 +156,7 @@ class ApiCategoriesController extends AbstractCatalogController
     private function getProductData($products): array
     {
         if (!\is_array($products)) {
-            $products->limit(20)->cache(10);
+            $products->limit(20)->cache(3600);
         }
 
         $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
