@@ -26,24 +26,11 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderNew(): void
     {
-        $site = Xcart::app()->getModule('Sites')->getSite();
-
-        $category_new = CategoryModel::objects()->filter(
-            [
-                'category' => GoodsModule::t('New Products'),
-                'storefrontid' => $site->pk,
-                'level' => 1
-            ]
-        )->limit(1)->get();
-
         $qs = parent::getQS()->filter(
             [
                 'images__image_path__isnull' => false,
-                'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(
-                    ['pk']
-                ),
             ]
-        );
+        )->order(['-add_date'])->group(['productid'])->cache(3600);
 
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getPaginatedProducts($qs));
@@ -67,7 +54,6 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderAlsoBought($id): void
     {
-        /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
         if ($products) {
             $data = $this->getProductData($products);
