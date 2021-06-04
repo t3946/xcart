@@ -30,7 +30,7 @@ class ApiCategoriesController extends AbstractCatalogController
             [
                 'images__image_path__isnull' => false,
             ]
-        )->order(['-add_date'])->group(['productid'])->cache(3600);
+        )->order(['-add_date'])->group(['productid'])->cache(3600)->limit(500);
 
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getPaginatedProducts($qs));
