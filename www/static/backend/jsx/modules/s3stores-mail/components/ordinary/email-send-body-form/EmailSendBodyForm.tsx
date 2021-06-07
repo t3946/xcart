@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form, Formik } from "formik";
 import {
   emailSendEditorSettings,
@@ -7,11 +7,37 @@ import {
 import { InputAdornment, TextField } from "@material-ui/core";
 import { Editor } from "@tinymce/tinymce-react";
 import { EmailSendBodyContext } from "@s3stores-mail/contexts";
+import { EmailSendFilesList } from "@s3stores-mail/components/ordinary/email-send-files-list/EmailSendFilesList";
+import { EmailSendInput } from "@s3stores-mail/components/smart/email-send-input/EmailSendInput";
+import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const EmailSendBodyForm = () => {
-  const context = useContext(EmailSendBodyContext);
+const SendForm: React.FC = () => {
+  const { changeField, sendTemplate, filesRef } = useContext(
+    EmailSendBodyContext
+  );
+  const files = useSelector((state: StoreDto) => state.sendData.files);
+
+  useEffect(() => {
+    if (files !== []) {
+      filesRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [files]);
+
+  const subject = useSelector((state: StoreDto) => state.sendData.subject);
+
+  const replyText = useSelector((state: StoreDto) => state.sendData.replyText);
+
+  const initialValue =
+    sendTemplate.message_body +
+    `<blockquote style="margin: 0px 0px 0px 0.8ex; border-left: 1px solid #cccccc; padding-left: 1ex;">${replyText}</blockquote>`;
+
   return (
     <React.Fragment>
+      <EmailSendInput />
       <Formik
         initialValues={initialFormValues}
         onSubmit={null}
@@ -25,19 +51,8 @@ export const EmailSendBodyForm = () => {
                 autoComplete="off"
                 name={"from"}
                 fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <b className="email-send-field-to">To:</b>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                className={"email-send-input"}
-                autoComplete="off"
-                name={"from"}
-                fullWidth
+                value={subject}
+                onChange={(e) => changeField("subject", e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -51,13 +66,22 @@ export const EmailSendBodyForm = () => {
         }}
       </Formik>
       <Editor
-        initialValue={context.sendData.replyText}
+        onEditorChange={(e) => {
+          changeField("body", e);
+        }}
+        initialValue={initialValue}
         init={{
-          height: 280,
           menubar: true,
           ...emailSendEditorSettings,
+          plugins: "autoresize",
         }}
       />
+
+      <div ref={filesRef}>
+        <EmailSendFilesList files={files} />
+      </div>
     </React.Fragment>
   );
 };
+
+export const EmailSendBodyForm = React.memo(SendForm);

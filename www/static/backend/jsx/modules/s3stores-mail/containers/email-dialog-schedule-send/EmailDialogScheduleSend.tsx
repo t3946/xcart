@@ -19,10 +19,8 @@ export const EmailDialogScheduleSend: React.FC = () => {
         },
       }}
     >
-      <div>
-        <EmailDialogScheduleSendHeader />
-        <EmailDialogScheduleSendBodyContainer />
-      </div>
+      <EmailDialogScheduleSendHeader />
+      <EmailDialogScheduleSendBodyContainer />
     </Dialog>
   );
 };

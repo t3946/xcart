@@ -5,7 +5,7 @@ import { setScheduleTime } from "@s3stores-mail/utils";
 import { RadioText } from "@s3stores-mail/components/simple/email-dialog-schedule-send-radio-text/RadioText";
 
 export const SendRadioGroup: React.FC<any> = ({ handleDateChange, date }) => {
-  const [radioValue, setRadioValue] = useState("1");
+  const [radioValue, setRadioValue] = useState(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);

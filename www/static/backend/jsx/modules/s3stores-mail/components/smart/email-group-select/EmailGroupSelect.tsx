@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { EmailGroupSelectOption } from "@s3stores-mail/components/ordinary/email-group-select-option/EmailGroupSelectOption";
 import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
 
@@ -28,7 +28,7 @@ export const EmailGroupSelect: React.FC<any> = ({
             type="hidden"
             name=""
           />
-          <div className="select__head">{value.viewValue}</div>
+          <div className="select__head">{value.template_name}</div>
           <ul className={`select__list ${selectOpen && "open"}`}>
             {items.map((group) => {
               return (

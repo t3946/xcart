@@ -1,15 +1,11 @@
 import React from "react";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 
-export const EmailDialogHOC: (
+export const EmailDialogHOC = (
   component: React.ReactNode,
   dialog: React.ReactNode,
   func?: () => void
-) => React.FC = (
-  component: React.ReactNode,
-  dialog: React.ReactNode,
-  func?: () => void
-) => {
+): React.FC => {
   return () => {
     const [open, setOpen] = React.useState(false);
 

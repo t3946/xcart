@@ -11,12 +11,18 @@ import {
   ActionSetSendTemplateDto,
   ActionSetSendTemplateTypeDto,
   ActionSetViewed,
+  SearchDataDto,
+  SendDataDto,
 } from "@s3stores-mail/ts/types";
 import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
 
-export const getPage = (page: number): ActionGetPageDto => ({
+export const getPage = (
+  page: number,
+  searchParams: SearchDataDto
+): ActionGetPageDto => ({
   type: "GET_PAGE",
   page: page,
+  searchParams,
 });
 
 export const setSearchOptions = (
@@ -60,12 +66,16 @@ export const editCheckedItems = (
   multiply: multiply,
 });
 
-export const editFavorites = (id: number[]): ActionEditFavorites => ({
+export const editFavorites = (
+  id: string[],
+  value: boolean
+): ActionEditFavorites => ({
   type: "EDIT_FAVORITES",
   favoriteItems: id,
+  value,
 });
 
-export const editActions = (id: number[]): ActionEditActions => ({
+export const editActions = (id: string[]): ActionEditActions => ({
   type: "EDIT_ACTIONS",
   actionItems: id,
 });
@@ -88,7 +98,38 @@ export const setLoading = (): ActionDto => ({
   type: "SET_LOADING",
 });
 
-export const setViewed = (id: number): ActionSetViewed => ({
+export const setViewed = (id: string[], value: boolean): ActionSetViewed => ({
   type: "SET_VIEWED",
   emailId: id,
+  value,
+});
+
+export const getTemplates = (): ActionDto => ({
+  type: "GET_TEMPLATES",
+});
+
+export const addRecipient = (value: string): any => ({
+  type: "ADD_RECIPIENT",
+  value,
+});
+
+export const deleteRecipient = (value: string): any => ({
+  type: "DELETE_RECIPIENT",
+  value,
+});
+
+export const editRecipient = (value: string, newValue: string): any => ({
+  type: "EDIT_RECIPIENT",
+  value,
+  newValue,
+});
+
+export const editSearchOptions = (searchOptions: SearchDataDto): any => ({
+  type: "EDIT_SEARCH_OPTIONS",
+  searchOptions,
+});
+
+export const sendEmail = (email: SendDataDto): any => ({
+  type: "SEND_EMAIL",
+  email,
 });

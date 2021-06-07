@@ -13,9 +13,12 @@ export const Iframe: React.FC<any> = ({ src }) => {
 
   return (
     <iframe
+      className="iframe"
       style={{
         width: "100%",
         height: height,
+        border: 0,
+        padding: 0,
       }}
       ref={ref}
       onLoad={onLoad}

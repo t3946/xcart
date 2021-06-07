@@ -6,8 +6,9 @@ import { useHistory } from "react-router-dom";
 import { editActions, editCheckedItems, editFavorites } from "@redux/actions";
 import { EmailLIstContext } from "@s3stores-mail/contexts/email-list-context/EmailLIst.context";
 import { EmailList } from "@s3stores-mail/components/ordinary/email-list/EmailList";
+import { isFavoriteItemsTrue } from "@s3stores-mail/utils/edit-fields-on-email";
 
-export const EmailListContainer = () => {
+export const EmailListContainer: React.FC = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -20,8 +21,12 @@ export const EmailListContainer = () => {
 
   const editFavorite = (e, id) => {
     e.stopPropagation();
-    dispatch(editFavorites([id]));
+    dispatch(editFavorites([id], isFavoriteItemsTrue(emails, [id])));
   };
+
+  const emails = useSelector((state: StoreDto) => {
+    return state.items;
+  });
 
   const editAction = (e, id) => {
     e.stopPropagation();
@@ -45,7 +50,11 @@ export const EmailListContainer = () => {
   };
   return (
     <EmailLIstContext.Provider value={emailContext}>
-      {loading ? <SceletonEmailList itemsCount={20} /> : <EmailList />}
+      {loading ? (
+        <SceletonEmailList itemsCount={20} />
+      ) : (
+        <EmailList emails={emails} />
+      )}
     </EmailLIstContext.Provider>
   );
 };

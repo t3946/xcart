@@ -2,17 +2,10 @@ import React, { useContext } from "react";
 import { EmailListItem } from "@s3stores-mail/components/ordinary/email-list-item/EmailListItem";
 import { addStyleToViewed, emailStyle } from "@s3stores-mail/utils";
 import { EmailLIstContext } from "@s3stores-mail/contexts/email-list-context/EmailLIst.context";
-import { useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
-
-export const EmailList: React.FC = () => {
+export const EmailList: React.FC<any> = ({ emails }) => {
   const { handleItemClick, editFavorite, editAction, editChecked } = useContext(
     EmailLIstContext
   );
-
-  const emails = useSelector((state: StoreDto) => {
-    return state.items;
-  });
 
   return (
     <React.Fragment>

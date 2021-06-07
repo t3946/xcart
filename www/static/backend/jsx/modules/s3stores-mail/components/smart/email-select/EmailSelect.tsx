@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SelectItemDto } from "@s3stores-mail/ts/types";
 import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
 
@@ -20,12 +20,12 @@ export const EmailSelect: React.FC<any> = ({ items, onClick, value }) => {
       }}
     >
       <input value={value} className="select__input" type="hidden" name="" />
-      <div className="select__head">{value.viewValue}</div>
+      <div className="select__head">{value.name}</div>
       <ul className={`select__list`}>
-        {items.map((item) => {
+        {items.map(([item]) => {
           return (
             <li onClick={() => onClick(item)} className="select__item">
-              {item.viewValue}
+              {item.name}
             </li>
           );
         })}

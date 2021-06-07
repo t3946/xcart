@@ -1,9 +1,9 @@
 import React from "react";
-import { EmailSendFilesListItem } from "../../simple/email-send-files-list-item/EmailSendFilesListItem";
+import { EmailSendFilesListItem } from "@s3stores-mail/components/simple";
 
 export const EmailSendFilesList: React.FC<any> = ({ files }) => {
   return (
-    <div>
+    <div className="email-send-files">
       {files.map((file) => {
         return <EmailSendFilesListItem file={file} />;
       })}

@@ -1,31 +1,48 @@
-import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
+import { EmailDto } from "./email.type";
 
 export interface StoreDto {
-  items: any[];
+  items: EmailStoreItems[];
   itemsCount: number;
-  searchOptions: {
-    title: string;
-  };
-  templateType: SelectItemDto;
-  sendTemplate: SelectItemDto;
+  searchOptions: SearchDataDto;
+  templateType: any;
+  sendTemplate: any;
   sendData: SendDataDto | { [p: string]: any };
-  checkedItems: number[];
+  checkedItems: string[];
   loading: boolean;
   checkedItemsOptions: {
-    prevValue: number;
+    prevValue: string;
   };
   page: number;
   moreFavorites: boolean;
   moreViewed: boolean;
+  templates?: any;
+  user: any;
 }
 
-export interface checkedValueDto {
+export interface EmailStoreItems {
+  item: EmailDto;
+  checked: boolean;
+}
+
+export interface CheckedValueDto {
   id: number;
   index: number;
 }
 
 export interface SendDataDto {
-  date: Date;
+  to: any[];
+  date: Date | null;
+  subject: string;
+  body: string;
   replyText: string;
   files: File[];
+}
+
+export interface SearchDataDto {
+  from: string;
+  to: string;
+  subject: string;
+  dateAfter: Date | string;
+  dateBefore: Date | string;
+  hasAttachment: boolean;
 }

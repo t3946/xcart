@@ -16,7 +16,7 @@ export const EmailSend: React.FC = () => {
       PaperProps={{
         style: {
           borderRadius: 0,
-          height: 615,
+          minHeight: 650,
         },
       }}
     >

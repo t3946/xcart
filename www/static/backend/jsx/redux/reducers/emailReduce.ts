@@ -3,11 +3,11 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import { initialValues } from "@s3stores-mail/ts/consts";
 import { editCheckedInEmailItems } from "@s3stores-mail/utils/edit-checked-in-email-items";
 import { editCheckedItems } from "@s3stores-mail/utils/edit-checked-items";
-import { editActionItems } from "@s3stores-mail/utils/edit-action-items";
 import {
   editFieldsOnEmail,
-  isCheckedItemsFavorite,
-  isCheckedItemsTrue,
+  isActionItemTrue,
+  isFavoriteItemsTrue,
+  isViewedItemsTrue,
 } from "@s3stores-mail/utils/edit-fields-on-email";
 
 const emailReducer = (
@@ -23,9 +23,11 @@ const emailReducer = (
         items: action.json,
         loading: false,
         itemsCount: action.itemsCount,
+        checkedItems: [],
         checkedItemsOptions: {
-          prevValue: 0,
+          prevValue: "0",
         },
+        user: action.user,
       };
     case "SET_SEARCH_OPTIONS":
       return {
@@ -73,6 +75,35 @@ const emailReducer = (
           ),
         },
       };
+    case "ADD_RECIPIENT":
+      return {
+        ...state,
+        sendData: {
+          ...state.sendData,
+          to: state.sendData.to.concat(action.value),
+        },
+      };
+    case "DELETE_RECIPIENT":
+      return {
+        ...state,
+        sendData: {
+          ...state.sendData,
+          to: state.sendData.to.filter((item) => item !== action.value),
+        },
+      };
+    case "EDIT_RECIPIENT":
+      return {
+        ...state,
+        sendData: {
+          ...state.sendData,
+          to: state.sendData.to.map((item) => {
+            if (item === action.value) {
+              return action.newValue;
+            }
+            return item;
+          }),
+        },
+      };
     case "RESET_SEND_DATA":
       return {
         ...state,
@@ -95,47 +126,63 @@ const emailReducer = (
         checkedItemsOptions: {
           prevValue: action.id,
         },
-        moreViewed: isCheckedItemsTrue(state.items, checkedItems, "viewed"),
-        moreFavorites: isCheckedItemsTrue(
-          state.items,
-          checkedItems,
-          "favorite"
-        ),
+        moreViewed: isViewedItemsTrue(state.items, checkedItems),
+        moreFavorites: isFavoriteItemsTrue(state.items, checkedItems),
       };
     case "EDIT_FAVORITES":
       const items = editFieldsOnEmail(
         state.items,
         action.favoriteItems,
-        "favorite"
+        "favorite",
+        action.value
       );
       return {
         ...state,
         items: items,
+        moreFavorites: isFavoriteItemsTrue(items, action.favoriteItems),
       };
     case "EDIT_ACTIONS":
       const actionItems = editFieldsOnEmail(
         state.items,
         action.actionItems,
-        "action"
+        "action",
+        isActionItemTrue(state.items, action.actionItems, state.user)
       );
       return {
         ...state,
         items: actionItems,
       };
     case "SET_VIEWED":
+      const viewedItems = editFieldsOnEmail(
+        state.items,
+        action.emailId,
+        "viewed",
+        action.value
+      );
       return {
         ...state,
-        items: state.items.map((e) => {
-          if (e.item.id === action.emailId) {
-            e.item.viewed = !e.item.viewed;
-          }
-          return e;
-        }),
+        items: viewedItems,
+        moreViewed: isViewedItemsTrue(viewedItems, action.emailId),
       };
     case "SET_LOADING":
       return {
         ...state,
         loading: true,
+      };
+    case "GET_TEMPLATES":
+      return {
+        ...state,
+      };
+    case "SET_TEMPLATES":
+      return {
+        ...state,
+        templates: action.templates,
+      };
+    case "EDIT_SEARCH_OPTIONS":
+      return {
+        ...state,
+        searchOptions: action.searchOptions,
+        page: 1,
       };
     default:
       return state;

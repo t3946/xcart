@@ -8,6 +8,8 @@ use Modules\Forms\Models\EmailActionModel;
 use Modules\Forms\Models\EmailFavoriteModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\EmailViewedModel;
+use Modules\Forms\Models\TemplateCategoryModel;
+use Modules\Forms\Models\TemplateModel;
 use Modules\Help\Models\HelpListModel;
 use Throwable;
 use Xcart\App\Controller\Controller;
@@ -21,7 +23,45 @@ class ApiEmailDashboardAdmin extends Controller
     {
         $emails = [];
 
-        $qs = EmailModel::objects()->getQuerySet()->order(['-id']);
+        $actionItem = [];
+
+        $searchParams = json_decode(file_get_contents('php://input'));
+
+        $searchParams = $searchParams->searchParams;
+
+
+        if($searchParams->hasAttachment)
+        {
+            $actionItem =   array_merge($actionItem, ['attachments__attachment__isnull' => false]);
+            $actionItem =   array_merge($actionItem, ['attachments__cid__isnull' => true]);
+        }
+
+        if($searchParams->from)
+        {
+            $actionItem =  array_merge($actionItem, ['from_address__contains' => $searchParams->from]);
+        }
+
+        if($searchParams->to)
+        {
+            $actionItem =  array_merge($actionItem, ['to_address__contains' => $searchParams->to]);
+        }
+
+        if($searchParams->subject)
+        {
+            $actionItem =   array_merge($actionItem, ['subject__contains' => $searchParams->subject]);
+        }
+        if($searchParams->dateAfter)
+        {
+            $actionItem =   array_merge($actionItem, ['date__gte' => $searchParams->dateAfter]);
+        }
+        if($searchParams->dateBefore)
+        {
+            $actionItem =   array_merge($actionItem, ['date__lte' => $searchParams->dateBefore]);
+        }
+
+        $qs = EmailModel::objects()->getQuerySet()->filter($actionItem)->order(['-id']);
+
+//        $qs = EmailModel::objects()->getQuerySet()->order(['-id']);
 
         $pagination = new Pagination($qs, [
             'page' => $page,
@@ -34,35 +74,39 @@ class ApiEmailDashboardAdmin extends Controller
                 /** @var EmailModel $model */
                 $email = $model->getAttributes();
                 $email['viewed'] = $model->isViewed();
-                $email['action'] = $model->getAction();
+                $email['action'] = $model->getAction($model->id);
                 $email['favorite'] = $model->isFavorite();
+                $email['attachment'] = $model->getAttachment();
                 $email['body'] = (string)$model->body;
                 $emails[] = $email;
             }
 
             $meta = $pagination->toJson()['meta'];
+            $userInfo = Xcart::app()->user::objects()->asArray()->all();
         } catch (Throwable $exception) {
             $this->jsonResponse(['error' => $exception->getMessage()]);
             return;
         }
 
-        $this->jsonResponse(['objects' => $emails, 'meta' => $meta]);
+        $this->jsonResponse(['objects' => $emails, 'meta' => $meta, 'userInfo'=>$userInfo]);
     }
 
     public function editFavorite()
     {
         $favorite = json_decode(file_get_contents('php://input'));
 
-        foreach ($favorite as $item) {
+        $isFavorite =  $favorite->value;
+
+        foreach ($favorite->itemsId as $item) {
             $favoriteItem = ['email_id' => $item, 'user_id' => Xcart::app()->user->id];
-            $isFavorite = EmailFavoriteModel::objects()->filter($favoriteItem)->count() > 0;
 
             if($isFavorite)
             {
-                EmailFavoriteModel::objects()->delete( $favoriteItem);
+                EmailFavoriteModel::objects()->getOrCreate( $favoriteItem);
                 continue;
             }
-            EmailFavoriteModel::objects()->getOrCreate( $favoriteItem);
+            EmailFavoriteModel::objects()->delete( $favoriteItem);
+
         }
         $this->jsonResponse('success');
     }
@@ -73,7 +117,7 @@ class ApiEmailDashboardAdmin extends Controller
 
         foreach ($action as $item) {
 
-            $actionItem = ['email_id' => $item, 'user_id' => Xcart::app()->user->id];
+            $actionItem = ['email_id' => $item];
             $isActionTaken = EmailActionModel::objects()->filter($actionItem)->count() > 0;
 
             if($isActionTaken)
@@ -81,6 +125,7 @@ class ApiEmailDashboardAdmin extends Controller
                 EmailActionModel::objects()->delete( $actionItem);
                 continue;
             }
+            $actionItem[ 'user_id' ] = Xcart::app()->user->id;
             EmailActionModel::objects()->getOrCreate( $actionItem);
         }
         $this->jsonResponse('success');
@@ -89,10 +134,70 @@ class ApiEmailDashboardAdmin extends Controller
     public function setViewed()
     {
         $viewed = json_decode(file_get_contents('php://input'));
-        
 
-        $actionItem = ['email_id' => $viewed, 'user_id' => Xcart::app()->user->id];
-        EmailViewedModel::objects()->getOrCreate( $actionItem);
+        $isEmailViewed = $viewed->value;
+
+        foreach ($viewed->emailId as $view) {
+
+            $actionItem = ['email_id' => $view, 'user_id' => Xcart::app()->user->id];
+
+            if($isEmailViewed)
+            {
+                EmailViewedModel::objects()->getOrCreate( $actionItem);
+
+                continue;
+            }
+            EmailViewedModel::objects()->delete( $actionItem);
+
+        }
         $this->jsonResponse('success');
     }
+
+    public function actionGetTemplates()
+    {
+        $result =[];
+        $allRoot = TemplateCategoryModel::objects()->filter(['level' => 1])->all();
+        foreach ($allRoot as $root) {
+            $categories = $root->getObjects()->descendants(true)->asTree()->all();
+            $categories =   $this->addTemplate($categories);
+            $result[] = $categories;
+        }
+        $this->jsonResponse($result);
+    }
+
+    public function addTemplate($categories)
+    {
+        $result = [];
+        if($categories === []){
+            return $categories;
+        }
+        foreach ($categories as $key => $category) {
+            $categories[$key]['templates'] = TemplateModel::objects()->filter([
+                'category_id' => $category['id'],
+                'active' => 'Y'
+            ])->order(['pos'])->asArray()->all();
+
+            foreach (   $categories[$key]['templates'] as $i => $template){
+                $categories[$key]['templates'][$i]['message_body'] = html_entity_decode($template['message_body']);
+            }
+            $categories[$key]['items'] = $this->addTemplate($category['items']);
+        }
+        return $result = $categories;
+    }
+
+    public function actionSendEmail()
+    {
+        $email = file_get_contents('php://input');
+
+        Xcart::app()->queue->send('emails', $email);
+
+        $this->jsonResponse('success');
+    }
+
+    public function getTemplate()
+    {
+        $template = TemplateModel::objects()->get([]);
+    }
+
+
 }

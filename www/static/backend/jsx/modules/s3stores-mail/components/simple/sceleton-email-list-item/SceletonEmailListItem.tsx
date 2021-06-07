@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Paper } from "@material-ui/core";
 
-export const SceletonEmailListItem = () => {
+export const SceletonEmailListItem: React.FC = () => {
   return (
     <Paper square={true} className={`list-item-wrap `}>
       <Grid container alignItems="center" justify="space-between">

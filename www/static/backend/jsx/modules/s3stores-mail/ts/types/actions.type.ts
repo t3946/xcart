@@ -6,6 +6,7 @@ export interface ActionDto {
 
 export interface ActionGetPageDto extends ActionDto {
   page: number;
+  searchParams: any;
 }
 
 export interface ActionSetSearchOptions extends ActionDto {
@@ -41,13 +42,15 @@ export interface ActionDeleteFileDto extends ActionDto {
 }
 
 export interface ActionEditFavorites extends ActionDto {
-  favoriteItems: number[];
+  favoriteItems: string[];
+  value: boolean;
 }
 
 export interface ActionEditActions extends ActionDto {
-  actionItems: number[];
+  actionItems: string[];
 }
 
 export interface ActionSetViewed extends ActionDto {
-  emailId: number;
+  emailId: string[];
+  value: boolean;
 }

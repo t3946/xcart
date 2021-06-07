@@ -1,4 +1,10 @@
-export function editObjectField(object, field, newValue) {
+import { EmailStoreItems } from "../ts/types";
+
+export function editObjectField<T, D>(
+  object: T,
+  field: string,
+  newValue: D
+): any {
   if (typeof object !== "object" || object === null) {
     return false;
   }
@@ -7,6 +13,7 @@ export function editObjectField(object, field, newValue) {
       if (key === field) {
         return [key, newValue];
       } else {
+        if (Array.isArray(value)) return [key, value];
         const editValue = editObjectField(value, field, newValue);
         if (editValue) {
           return [key, editValue];
@@ -17,19 +24,18 @@ export function editObjectField(object, field, newValue) {
   );
 }
 
-export function getFieldValue(object, field) {
-  if (typeof object === "object" && object !== null) {
-    const a = Object.entries(object).filter(([key, value]) => {
-      if (key === field && typeof value !== "object") {
-        return [key, value];
-      } else {
-        const editValue = getFieldValue(value, field);
-        if (editValue) {
-          console.log(editValue);
-          return editValue;
-        }
-      }
-    });
-    return a;
-  }
-}
+// export function getFieldValue(object, field: string) {
+//   return Object.fromEntries(
+//     Object.entries(object).reduce((accumulator, [key, value]) => {
+//       if (key === field && typeof value !== "object") {
+//         return accumulator.concat([[key, value]]);
+//       } else if (typeof value === "object" && value !== null) {
+//         const editValue = getFieldValue(value, field);
+//         if (editValue && editValue !== [] && editValue !== {}) {
+//           return accumulator.concat([[key, editValue]]);
+//         }
+//       }
+//       return accumulator;
+//     }, [])
+//   );
+// }

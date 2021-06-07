@@ -10,7 +10,7 @@ import { setScheduleTime, switchValue } from "@s3stores-mail/utils";
 export const EmailDialogScheduleSendBodyContainer: React.FC = () => {
   const dispatch = useDispatch();
 
-  const selectedDate = useSelector((state: StoreDto) => state.sendData.date);
+  const sendData = useSelector((state: StoreDto) => state.sendData);
 
   const handleDateChange = (value: Date) => {
     dispatch(editSendData(value, "date"));
@@ -28,13 +28,13 @@ export const EmailDialogScheduleSendBodyContainer: React.FC = () => {
   return (
     <div className="schedule-body-wrap">
       <SendRadioGroup
-        date={selectedDate}
+        date={sendData.date}
         handleDateChange={handleDateChangeRadioGroup}
       />
       <div className="schedule-time-wrap">
-        <TimePicker date={selectedDate} handleDateChange={handleDateChange} />
+        <TimePicker date={sendData.date} handleDateChange={handleDateChange} />
       </div>
-      <ScheduleSendButtons />
+      <ScheduleSendButtons sendData={sendData} />
     </div>
   );
 };

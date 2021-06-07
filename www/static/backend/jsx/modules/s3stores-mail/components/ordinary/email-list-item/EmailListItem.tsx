@@ -5,6 +5,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { EmailType } from "../../../ts/consts";
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { ReadedSwitch } from "@s3stores-mail/components/simple";
+import moment from "moment";
 
 interface EmailListItemDto {
   name: string;
@@ -48,9 +49,13 @@ const List: React.FC<any> = ({
         <div className="text-name">
           <span>{itemData.subject}</span>
         </div>
-        <ReadedSwitch editAction={editAction} readed={itemData.action.action} />
+        <ReadedSwitch
+          actionName={itemData.action?.name}
+          editAction={editAction}
+          readed={itemData.action.action}
+        />
         <div className="date">
-          <span>Apr 14</span>
+          <span>{moment(itemData.date).format("D MMM")}</span>
         </div>
         <div className={`message-type-wrap icon-${theme}`}>
           {theme === EmailType.NOTE ? <EditIcon /> : <CallMadeIcon />}

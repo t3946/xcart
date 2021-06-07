@@ -1,9 +1,18 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { EmailSendBodyContext } from "@s3stores-mail/contexts/email-send-body-context/EmailSendBody.context";
 import { EmailSendBody } from "@s3stores-mail/components/simple/email-send-body/EmailSendBody";
-import { addFile } from "@redux/actions";
+import {
+  addFile,
+  addRecipient,
+  deleteRecipient,
+  editRecipient,
+  editSendData,
+  sendEmail,
+} from "@redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
+import { EmailSnackbarContext } from "@s3stores-mail/contexts/email-snackbar/EmailSnackbar.context";
 
 export const EmailSendBodyContainer: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,12 +20,45 @@ export const EmailSendBodyContainer: React.FC = () => {
     dispatch(addFile(acceptedFile));
   }, []);
 
-  const sendData = useSelector((state: StoreDto) => state.sendData);
+  const filesRef = useRef<HTMLDivElement>();
+
+  const dialog = useContext(EmailDialogContext);
+
+  const { showSnackbar } = useContext(EmailSnackbarContext);
+
+  const changeField = (field, value) => {
+    dispatch(editSendData(value, field));
+  };
+
+  const addNewRecipient = (value) => {
+    dispatch(addRecipient(value));
+  };
+
+  const editThisRecipient = (value, newValue) => {
+    dispatch(editRecipient(value, newValue));
+  };
+
+  const deleteThisRecipient = (value) => {
+    dispatch(deleteRecipient(value));
+  };
+
+  const sendMessage = (value, message: string) => {
+    dispatch(sendEmail(value));
+    dialog.handleClose();
+    showSnackbar(message, "success");
+  };
+
+  const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
 
   const context = {
     onDrop,
-    files: sendData.files,
-    sendData: sendData,
+    sendTemplate,
+    changeField,
+    addNewRecipient,
+    editThisRecipient,
+    deleteThisRecipient,
+    sendMessage,
+    filesRef,
   };
 
   return (

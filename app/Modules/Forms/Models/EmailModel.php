@@ -166,10 +166,20 @@ class EmailModel extends Model
         return $this->body;
     }
 
-    public function getAction()
+    public function getAttachment()
     {
-        if( $this->action->filter(['id' => Xcart::app()->user->id])->count() > 0){
-            return ['name' => Xcart::app()->user->login, 'action' => true];
+        return $this->attachments->asArray()->all();
+    }
+
+    public function getAction(int $id)
+    {
+        $filter = EmailActionModel::objects()->filter(['email_id' => $id]);
+        if($filter->count() > 0){
+            $name = $this->action->filter([
+                'id' => $filter->asArray()->all()[0]['user_id']
+            ])->asArray()->all()[0]['login'];
+
+            return ['name' => $name, 'action' => true, 'date' =>  $filter->asArray()->all()[0]['date']];
         }
        return ['action' => false];
     }

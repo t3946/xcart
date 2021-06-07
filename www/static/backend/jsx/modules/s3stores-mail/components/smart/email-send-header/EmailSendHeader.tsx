@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
 import { Grid } from "@material-ui/core";
-import { selectSendFirstItems } from "@s3stores-mail/ts/consts";
 import { useSelector } from "react-redux";
-import { switchSendTemplateType } from "@s3stores-mail/utils";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-select/EmailGroupSelect";
 import { EmailDialogHeader } from "@s3stores-mail/components/simple/email-dialog-header/EmailDialogHeader";
@@ -20,6 +18,10 @@ export const EmailSendHeader: React.FC = () => {
 
   const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
 
+  const templates = useSelector((state: StoreDto) => {
+    return state.templates;
+  });
+
   return (
     <EmailDialogHeader handleClose={dialog.handleClose}>
       <Grid
@@ -31,7 +33,7 @@ export const EmailSendHeader: React.FC = () => {
         <Grid className="email-send-header-text">Select template:</Grid>
         <Grid className={"email-send-template-type"}>
           <EmailSelect
-            items={selectSendFirstItems}
+            items={templates}
             value={templateType}
             onClick={(item) => setTemplateType(item)}
           />
@@ -41,7 +43,7 @@ export const EmailSendHeader: React.FC = () => {
             onClick={(item) => setTemplate(item)}
             value={sendTemplate}
             type="send"
-            items={switchSendTemplateType(templateType.value)}
+            items={templateType?.items}
           />
         </Grid>
       </Grid>

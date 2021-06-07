@@ -4,10 +4,10 @@
     cursor: pointer;
     color: #494949 !important;
     font-weight: 600;
-
+    z-index: 1;
     &:hover{
         color: #000000;
-        z-index: 1000000;
+        z-index: 3;
         box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
     }
 }
@@ -51,12 +51,31 @@
     position: relative;
     width: 170px;
     height: 20px;
+    &:hover{
+        .readed-taked-time{
+            opacity: 1;
+        }
+    }
+}
+
+.readed-taked-time{
+    font-size: 10px;
+    padding: 5px 5px;
+    font-weight: 700;
+    color: white;
+    background-color: #494949;
+    opacity: 0;
+    transition: .4s linear;
+    margin-top: 5px;
+    border-radius: 5px;
 }
 
 .readed-slide{
     background-color: white;
     height: 20px;
     border: 1px solid #8A8A8A;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: .3s linear;
 }
 

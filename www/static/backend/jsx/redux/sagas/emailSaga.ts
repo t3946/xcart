@@ -8,7 +8,12 @@ const api = new ApiService();
 
 function* getPage(action: AnyAction): Generator {
   const json: any = yield api
-    .get<any>(`/admin/forms/api/email-list/${action.page}`)
+    .post<any>(
+      `/admin/forms/api/email-list/${action.page}`,
+      JSON.stringify({
+        searchParams: action.searchParams,
+      })
+    )
     .then((response) => response);
 
   yield put({
@@ -18,6 +23,18 @@ function* getPage(action: AnyAction): Generator {
       emailStore.getState().checkedItems
     ),
     itemsCount: json.meta.total,
+    user: json.userInfo[0],
+  });
+}
+
+function* getTemplates(): Generator {
+  const templates: any = yield api
+    .get<any>(`/admin/forms/api/get-templates`)
+    .then((response) => response);
+
+  yield put({
+    type: "SET_TEMPLATES",
+    templates: templates,
   });
 }
 
@@ -28,7 +45,10 @@ function* editFavorite(action: AnyAction): Generator {
   try {
     yield api.post(
       `/admin/forms/api/edit-favorite`,
-      JSON.stringify(action.favoriteItems)
+      JSON.stringify({
+        itemsId: action.favoriteItems,
+        value: action.value,
+      })
     );
   } catch (error) {
     yield put({
@@ -64,7 +84,10 @@ function* setViewed(action: AnyAction): Generator {
   try {
     yield api.post(
       `/admin/forms/api/set-viewed`,
-      JSON.stringify(action.emailId)
+      JSON.stringify({
+        emailId: action.emailId,
+        value: action.value,
+      })
     );
   } catch (error) {
     yield put({
@@ -74,12 +97,24 @@ function* setViewed(action: AnyAction): Generator {
     });
   }
 }
+function* sendEmail(action: AnyAction): Generator {
+  try {
+    yield api.post(
+      `/admin/forms/api/send-email`,
+      JSON.stringify({
+        email: action.email,
+      })
+    );
+  } catch (e) {}
+}
 
 function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_PAGE", getPage);
   yield takeLatest("EDIT_FAVORITES", editFavorite);
   yield takeLatest("EDIT_ACTIONS", editAction);
   yield takeLatest("SET_VIEWED", setViewed);
+  yield takeLatest("GET_TEMPLATES", getTemplates);
+  yield takeLatest("SEND_EMAIL", sendEmail);
 }
 
 export default function* rootSaga(): Generator {

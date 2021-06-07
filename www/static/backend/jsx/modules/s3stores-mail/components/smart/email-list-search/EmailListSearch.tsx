@@ -1,31 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { useDispatch } from "react-redux";
-import { setSearchOptions } from "@redux/actions";
-import { EmailSearchDialog } from "../../../contexts/email-search-dialog.tsx/EmailSearchDialog";
+import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 
-export const EmailListSearch: React.FC = () => {
+const EmailListSearch: React.FC<any> = ({ subject, editSearchSubject }) => {
+  useEffect(() => {
+    setSearchValue(subject);
+  }, [subject]);
   const [focus, setFocus] = useState(false);
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(subject);
 
-  const [open, setOpen] = React.useState(false);
+  const { handleClickOpen } = useContext(EmailDialogContext);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const onChangeValue = (e) => {
+    setSearchValue(e.target.value);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const dispatch = useDispatch();
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-    dispatch(setSearchOptions(event.target.value));
+  const onSubmit = (e) => {
+    e.preventDefault();
+    editSearchSubject(searchValue);
   };
 
   return (
@@ -42,13 +38,15 @@ export const EmailListSearch: React.FC = () => {
         </Grid>
 
         <Grid spacing={3} xs={10}>
-          <input
-            value={searchValue}
-            onChange={handleChange}
-            onBlur={() => setFocus(false)}
-            onFocus={() => setFocus(true)}
-            className="search-input"
-          />
+          <form onSubmit={onSubmit}>
+            <input
+              value={searchValue}
+              onChange={onChangeValue}
+              onBlur={() => setFocus(false)}
+              onFocus={() => setFocus(true)}
+              className="search-input"
+            />
+          </form>
         </Grid>
         <div onClick={handleClickOpen}>
           {focus ? (
@@ -58,7 +56,8 @@ export const EmailListSearch: React.FC = () => {
           )}
         </div>
       </Grid>
-      <EmailSearchDialog open={open} handleClose={handleClose} />
     </div>
   );
 };
+
+export default EmailListSearch;

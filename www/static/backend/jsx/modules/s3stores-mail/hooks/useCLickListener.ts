@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function useCLickListener(func: (arg: boolean) => void) {
+export function useCLickListener(func: (arg: boolean) => void): void {
   useEffect(() => {
     window.addEventListener("click", () => {
       func(false);

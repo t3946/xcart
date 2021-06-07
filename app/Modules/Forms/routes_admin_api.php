@@ -9,6 +9,11 @@ return [
         'name' => 'actionGetEmails'
     ],
     [
+        'route' => '/email-list-search/{i:page}',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionSearchEmails'],
+        'name' => 'actionSearchEmails'
+    ],
+    [
         'route' => '/edit-favorite',
         'target' => [ApiEmailDashboardAdmin::class, 'editFavorite'],
         'name' => 'editFavorite'
@@ -22,5 +27,15 @@ return [
         'route' => '/set-viewed',
         'target' => [ApiEmailDashboardAdmin::class, 'setViewed'],
         'name' => 'setViewed'
+    ],
+    [
+        'route' => '/get-templates',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionGetTemplates'],
+        'name' => 'actionGetTemplates'
+    ],
+    [
+        'route' => '/send-email',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionSendEmail'],
+        'name' => 'actionSendEmail'
     ],
 ];

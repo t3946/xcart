@@ -14,7 +14,9 @@ export const EmailInfoHeader: React.FC<any> = ({ info }) => {
         </Grid>
         <Grid>
           <ReadedSwitch
-            editAction={() => context.editAction(context.emailInfo.id)}
+            inHeader={true}
+            actionName={info.action.name}
+            editAction={context.editAction}
             readed={info.action.action}
           />
         </Grid>

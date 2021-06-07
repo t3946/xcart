@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Grid } from "@material-ui/core";
 import ReplyIcon from "@material-ui/icons/Reply";
-import { selectInfoItems } from "@s3stores-mail/ts/consts";
 import ForwardIcon from "@material-ui/icons/Forward";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
@@ -11,6 +10,7 @@ export const EmailInfoDataFooter: React.FC<any> = ({
   handleReply,
   handleClick,
   handleForward,
+  templates,
 }) => {
   const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
   return (
@@ -30,7 +30,7 @@ export const EmailInfoDataFooter: React.FC<any> = ({
           value={sendTemplate}
           onClick={handleClick}
           type="info"
-          items={selectInfoItems}
+          items={templates.items}
         />
       </Grid>
       <Grid container alignItems="center" xs={7} justify="flex-end">

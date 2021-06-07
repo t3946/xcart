@@ -5,7 +5,9 @@ import { EmailSendFooter } from "@s3stores-mail/components/ordinary/email-send-f
 export const EmailSendBody: React.FC = () => {
   return (
     <div className="email-send-body-wrapper">
-      <EmailSendBodyForm />
+      <div className="email-send-body-form">
+        <EmailSendBodyForm />
+      </div>
       <EmailSendFooter />
     </div>
   );
