@@ -3,8 +3,11 @@
 namespace Xcart\App\Queue;
 
 
+use ErrorException;
 use Exception;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exception\AMQPConnectionClosedException;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class QueueManager
@@ -13,6 +16,33 @@ class QueueManager
     public string $port;
     public string $user;
     public string $password;
+    private ?AMQPStreamConnection $connection = null;
+    private ?AMQPChannel $channel = null;
+
+    private function connect(): void
+    {
+        if ($this->connection === null) {
+            $this->connection = new AMQPStreamConnection(
+                $this->host,    #host - имя хоста, на котором запущен сервер RabbitMQ
+                $this->port,    #port - номер порта сервиса, по умолчанию - 5672
+                $this->user,    #user - имя пользователя для соединения с сервером
+                $this->password #password
+            );
+            $this->channel = $this->connection->channel();
+        }
+    }
+
+    private function reconnect(): void
+    {
+        try {
+            if ($this->connection !== null) {
+                $this->connection->close();
+            }
+        } catch (ErrorException $e) {
+        }
+        $this->connection = null;
+        $this->connect();
+    }
 
     /**
      * Отправляет сообщение в очередь
@@ -23,19 +53,9 @@ class QueueManager
      */
     public function send(string $queue, string $message): void
     {
-        /**
-         * Создаёт совединение с RabbitAMQP
-         */
-        $connection = new AMQPStreamConnection(
-            $this->host,    #host - имя хоста, на котором запущен сервер RabbitMQ
-            $this->port,    #port - номер порта сервиса, по умолчанию - 5672
-            $this->user,    #user - имя пользователя для соединения с сервером
-            $this->password #password
-        );
+        $this->connect();
 
-        $channel = $connection->channel();
-
-        $channel->queue_declare(
+        $this->channel->queue_declare(
             $queue,    #queue name - Имя очереди может содержать до 255 байт UTF-8 символов
             false,        #passive - может использоваться для проверки того, инициирован ли обмен, без того, чтобы изменять состояние сервера
             true,        #durable - убедимся, что RabbitMQ никогда не потеряет очередь при падении - очередь переживёт перезагрузку брокера
@@ -45,15 +65,34 @@ class QueueManager
 
         $msg = new AMQPMessage($message);
 
-        $channel->basic_publish(
+        $this->channel->basic_publish(
             $msg,
             '',
             $queue
         );
 
-        $channel->close();
-        $connection->close();
-
     }
 
+    public function get(string $queue): ?AMQPMessage
+    {
+        $this->connect();
+        return $this->channel->basic_get($queue);
+    }
+
+    public function consume($queue, $callback, $tag = ''): void
+    {
+        $this->connect();
+
+        $this->channel->basic_consume($queue, $tag, false, false, false, false, $callback);
+
+        while ($this->channel->is_consuming()) {
+            try {
+                $this->channel->wait();
+            } catch (AMQPConnectionClosedException $e) {
+                echo "{$e->getMessage()}\n";
+                $this->reconnect();
+                $this->channel->basic_consume($queue, $tag, false, false, false, false, $callback);
+            }
+        }
+    }
 }
