@@ -2,8 +2,9 @@ import $ from "jquery";
 import "jquery-ui-dist/jquery-ui";
 import "select2";
 import "jquery-form";
-import "air-datepicker"
-import "air-datepicker/dist/js/i18n/datepicker.en"
+import "air-datepicker";
+import "air-datepicker/dist/js/i18n/datepicker.en";
+import "./pages/s3stores-mail";
 
 import "@/../components/jquery.shapeshift/core/jquery.shapeshift"
 import "@/js/ajaxTooltip";

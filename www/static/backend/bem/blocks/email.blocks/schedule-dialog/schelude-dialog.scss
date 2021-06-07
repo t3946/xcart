@@ -1,0 +1,47 @@
+.schedule-body-wrap{
+ padding: 13px 0 25px;
+}
+
+.schedule-header-text{
+  padding-left: 25px;
+}
+
+.radio-item{
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-right: 25px !important;
+  padding-left: 15px !important;
+
+  .MuiTypography-body1{
+    width: 100%;
+  }
+}
+
+.radio-text-label{
+  margin-right: 80px;
+}
+
+.schedule-time-wrap{
+  padding: 20px 50px 0 50px;
+}
+
+.schedule-send-buttons{
+  padding: 21px 25px 0 25px;
+
+  &-send{
+    font-size: 14px !important;
+    background-color: #FFB400 !important;
+    padding: 5px 20px !important;
+    font-weight: 700 !important;
+  }
+
+  &-cancel{
+    background-color: #FFFFFF!important;
+    border: 1px solid #FFB400 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 5px 20px !important;
+  }
+}
+
+

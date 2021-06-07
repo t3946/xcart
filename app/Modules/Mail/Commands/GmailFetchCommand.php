@@ -82,8 +82,13 @@ class GmailFetchCommand extends Command
                             'filename' => $attachment['filename'],
                         ]);
                         if ($isNew) {
-                            $emailAttach->attachment_content = new ResourceFile($attachment['data'], $attachment['filename']);
-                            $emailAttach->save();
+                            $emailAttach->cid = $attachment['cid'];
+                            try {
+                                $emailAttach->attachment_content = new ResourceFile($attachment['data'], $attachment['filename']);
+                                $emailAttach->save();
+                            } catch (\Throwable $e) {
+                                echo $e->getMessage()."\n";
+                            }
                         }
                     }
                 }

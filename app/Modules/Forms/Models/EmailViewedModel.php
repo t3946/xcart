@@ -8,8 +8,13 @@ use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
-class EmailUserModel extends Model
+class EmailViewedModel extends Model
 {
+    public static function tableName()
+    {
+        return 'forms_email_viewed';
+    }
+
     public static function getFields()
     {
         return [

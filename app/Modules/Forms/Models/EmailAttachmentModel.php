@@ -34,6 +34,10 @@ class EmailAttachmentModel extends Model
                 'link' => ['email_id' => 'id'],
                 'primary' => true,
             ],
+            'cid' => [
+                'class' => CharField::class,
+                'null' => true,
+            ],
         ];
     }
 

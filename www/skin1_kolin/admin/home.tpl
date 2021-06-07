@@ -4,8 +4,8 @@
 <head>
     <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
     {include file="meta.tpl"}
-    {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
 
+    {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
@@ -694,6 +694,6 @@
 {include file="rectangle_bottom.tpl"}
     </div>
 </div>
-
+{$xcartApp->template->render('inSmarty/footer_admin.tpl')}
 </body>
 </html>
