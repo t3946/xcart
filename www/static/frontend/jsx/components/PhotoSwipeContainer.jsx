@@ -20,7 +20,10 @@ const cont = new class PhotoSwipeContainer
 
     // если слайдов меньше чем 3 -- loop не работает и надо отключать стрелки на границах
     toggleArrows() {
-        if (this.pswp.items.length < 3) {
+        if (this.pswp.items.length < 2) {
+            $('.photoswipe-left-arrow').addClass('hide');
+            $('.photoswipe-right-arrow').addClass('hide');
+        } else if (this.pswp.items.length < 3) {
             $('.photoswipe-left-arrow').toggleClass('photoswipe-arrow__disabled', !this.pswp.itemHolders[0].item);
             $('.photoswipe-right-arrow').toggleClass('photoswipe-arrow__disabled', !this.pswp.itemHolders[2].item);
         }

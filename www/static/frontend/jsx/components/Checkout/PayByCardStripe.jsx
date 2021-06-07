@@ -2,21 +2,24 @@ import { Fragment, createRef } from "preact";
 import { loadStripe } from "@stripe/stripe-js";
 import InputError from "@/components/Checkout/InputError";
 import "regenerator-runtime/runtime";
+import _ from "lodash";
+import Price from "@/components/product/card/components/Price";
 
 export default class PayByCardStripe extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      error: "",
-    };
 
     this.errorRef = createRef();
 
-    this.state = dataProvider.get("stripe");
+    this.state = _.merge(dataProvider.get("stripe"), {
+      error: "",
+      grand_total: app.options.order.total,
+    });
 
     //update payment intent when checkout(and cart) changed
     $(document).on("updateRequestSuccess.checkout", (e, res) => {
       this.setState({ paymentIntent: res.payment_intent });
+      this.setState({ grand_total: res.grand_total });
     });
   }
 
@@ -41,7 +44,7 @@ export default class PayByCardStripe extends Component {
     };
     const { b_country, currency, total } = app.options.order;
     const paymentRequest = stripe.paymentRequest({
-      country: b_country || "US",
+      country: "US",
       currency: currency.toLowerCase(),
       total: {
         label: "Total",
@@ -83,12 +86,13 @@ export default class PayByCardStripe extends Component {
     });
 
     paymentRequest.canMakePayment().then(function (result) {
-      if (result) {
+      //temporary disable apple pay button
+      /*if (result) {
         prButton.mount("#payment-request-button");
       } else {
         document.getElementById("payment-request-button").style.display =
           "none";
-      }
+      }*/
     });
 
     this.card = elements.create("card", {
@@ -157,7 +161,6 @@ export default class PayByCardStripe extends Component {
         },
       })
       .then((result) => {
-        console.log('REQ END', result);
         if (result.error) {
           document.querySelector("button").disabled = false;
           const error = result.error ? result.error.message : "";
@@ -186,12 +189,6 @@ export default class PayByCardStripe extends Component {
     const $fieldTitle = $fieldRow.find(".checkout-field-title");
     const $stripeField = $fieldRow.find("#CheckoutForm_pbc_card_details");
 
-    if ($stripeField.hasClass("common-input__wrong")) {
-      $fieldTitle.addClass("field__has-error");
-    } else {
-      $fieldTitle.removeClass("field__has-error");
-    }
-
     if ($stripeField.hasClass("common-input__correct")) {
       $fieldTitle.addClass("field__correct");
     } else {
@@ -219,13 +216,23 @@ export default class PayByCardStripe extends Component {
     this.moveErrorMessage();
   }
 
-  render() {
+  render(props, state) {
     return (
       <Fragment>
         <div className="checkout-stripe">
           <InputError message={this.state.error} ref={this.errorRef} />
-          <div id="payment-request-button"></div>
-          <div id="CheckoutForm_pbc_card_details"></div>
+          <div id="payment-request-button" />
+          <div id="CheckoutForm_pbc_card_details" />
+          <p className="checkout_stripe-description stripe-description">
+            Your cart will be charged in the amount of USA of{" "}
+            <span className="stripe-description-price">
+              <Price
+                currency={app.options.currency}
+                price={this.state.grand_total}
+              />
+            </span>{" "}
+            by S3 Stores, Inc.
+          </p>
         </div>
       </Fragment>
     );

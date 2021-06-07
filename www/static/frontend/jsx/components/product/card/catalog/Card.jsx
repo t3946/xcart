@@ -284,7 +284,7 @@ export default class Card extends Component {
               <span className="products-slider-old-price">
                 <Price
                   currency={product.currency}
-                  price={product.listPrice.formatted}
+                  price={product.listPrice.number}
                 />
               </span>
             </div>
@@ -297,7 +297,7 @@ export default class Card extends Component {
             <span className="products-slider-current-price">
               <Price
                 currency={product.currency}
-                price={product.price.formatted}
+                price={product.price.number}
               />
             </span>
           </div>

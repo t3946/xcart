@@ -805,8 +805,8 @@ class FraudCheckHelper
         $orders = OrderModel::objects()->filter([
             'date__gte' => $time_condition,
             'date__lte' => $order->date,
-            's_address' => $order->s_address,
-            's_city' => $order->s_city,
+            's_address' => $order->s_address ?? '',
+            's_city' => $order->s_city ?? '',
             's_state' => $order->s_state,
             's_country' => $order->s_country,
             's_zipcode' => $order->s_zipcode,

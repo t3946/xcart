@@ -16,6 +16,7 @@
                                 name="CheckoutForm[{$fieldsets['other'][0]->name}]"
                                 value="{$method->paymentid}"
                                 class="common-input-radio"
+                                data-submit-hint="{$method->submit_hint}"
                             />
                             <div class="common-radio-label payment-radio-label payment-method-title">{$method->payment_method}</div>
                         </div>
@@ -36,24 +37,17 @@
                                     </div>
 
                                     <div class="billing-form-address-fields">
-                                        {foreach array_slice($fieldsets['billing'], 0, 3) as $field}
-                                            {raw $field->render()}
+                                        {foreach $fieldsets['billing'] as $field}
+                                            {if $field->name !== 'billing_same_shipping'}
+                                                {raw $field->render()}
+                                            {/if}
                                         {/foreach}
-                                        <div class="checkout-billing-other-fields">
-                                            {foreach array_slice( $fieldsets['billing'], 3 ) as $field}
-                                                {if $field->name !== 'billing_same_shipping'}
-                                                    {raw $field->render()}
-                                                {/if}
-                                            {/foreach}
-                                        </div>
                                     </div>
                                 </div>
                             {case 17}
-                                <h3 class="payment-method-title payment-method-">You will be transferred to PayPal
-                                    website to complete your payment.</h3>
+                                <h3 class="payment-method-title">{t 'You will be transferred to PayPal website to complete your payment.'}</h3>
                             {case 4}
-                                <h3 class="payment-method-title">Please call us 1-800-929-2431 to finalize your order
-                                    over the phone.</h3>
+                                <h3 class="payment-method-title">{t 'Please call us 1-800-929-2431 to finalize your order over the phone.'}</h3>
                             {case 2}
                                 <div class="form-purchase-order-details">
                                     <h2 class="checkout-payment-methods__purchase-order-header text-center large-text-left">Purchase Order Details</h2>

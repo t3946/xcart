@@ -1,0 +1,12 @@
+.checkout_stripe-description {
+    margin: rem-calc(7) 0 rem-calc(12);
+
+    @include breakpoint(md up) {
+        margin: rem-calc(5) 0 rem-calc(16);
+    }
+
+    @include breakpoint(lg up) {
+        /* -10 rem чтобы удлинить элемент и уместить текст в одну строку*/
+        margin: rem-calc(13) -10rem rem-calc(26) 0;
+    }
+}

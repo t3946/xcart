@@ -1,0 +1,8 @@
+.checkout-hat-logo {
+    flex: 0 0 50%;
+    height: 100%;
+
+    @include breakpoint(lg up) {
+        flex: 0 0 33.33%;
+    }
+}

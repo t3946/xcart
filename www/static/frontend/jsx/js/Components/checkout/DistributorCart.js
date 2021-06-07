@@ -98,9 +98,6 @@ export const DistributorCart = (function () {
         success: function (res) {
           if (quantityUpdateQueries === 1) {
             $(".order-total .total .price").text(formatNumber(res["total"]));
-            $(".shipping-total .price").text(
-              formatNumber(res["total_shipping_cost"])
-            );
             $(".total-sales-tax .price").text(
               formatNumber(res["total_sales_tax"])
             );
@@ -135,6 +132,14 @@ export const DistributorCart = (function () {
               250,
               function () {
                 $warehouse.remove();
+
+                //hide cart subtotals and grand total line if left only one cart
+                if ($(".distributor-cart").length < 2) {
+                  $(".cart-table-row_subtotal").hide();
+                  $(".checkout-cart-footer").removeClass(
+                    "checkout-cart-footer__bordered"
+                  );
+                }
 
                 // removed last product in last cart
                 if ($warehouseList.find(".warehouse_products").length === 0) {

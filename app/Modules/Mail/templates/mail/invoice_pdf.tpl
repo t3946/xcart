@@ -119,6 +119,7 @@
     </tr>
 </table>
 
+{set $is_purchase_order = in_array($order->cb_status,['O', 'IO'])}
 {set $purchase_order = $order->extra_model->purchase_order}
 <br>
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
@@ -165,7 +166,7 @@
     </tr>
 </table>
 <br>
-{if $purchase_order}
+{if $is_purchase_order && $purchase_order}
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr>
             <td width="45%" height="25"><b>{t 'Purchase manager'}</b>

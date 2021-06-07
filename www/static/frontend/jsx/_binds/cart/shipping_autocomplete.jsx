@@ -1,143 +1,207 @@
-import autoComplete from 'javascript-auto-complete';
+/**
+ * Автозаполнение полей адреса на старой форме оплаты
+ */
 
+import AutoComplete from "javascript-auto-complete";
 
-var createAutoComplete = function(){
+function isOldCheckout() {
+  return !!$(".cart-steps-container").length;
+}
 
-        function throwJsChangeEvent(element){
-            let detail = {
-                'element' : element
-            };
-            let event = new CustomEvent('js.change.event', { detail: detail });
-            element.dispatchEvent(event);
-        }
+const createAutoComplete = (function () {
+  if (!isOldCheckout()) {
+    return;
+  }
 
-        function createAutoComplete(containerSelector){
+  function throwJsChangeEvent(element) {
+    let detail = {
+      element: element,
+    };
+    let event = new CustomEvent("js.change.event", { detail: detail });
+    element.dispatchEvent(event);
+  }
 
-            let selectorPrefix = containerSelector ? containerSelector + ' .auto-complete' : '.auto-complete';
-            let elExists = document.querySelector(selectorPrefix);
+  function createAutoComplete(containerSelector) {
+    let selectorPrefix = containerSelector
+      ? containerSelector + " .auto-complete"
+      : ".auto-complete";
+    let elExists = document.querySelector(selectorPrefix);
 
-            if (elExists) {
+    if (elExists) {
+      let inputCountry = document.querySelector(selectorPrefix + ".country");
+      let inputZipCode = document.querySelector(selectorPrefix + ".zip");
+      let inputState = document.querySelector(selectorPrefix + ".state");
+      let inputCity = document.querySelector(selectorPrefix + ".city");
 
-                let inputCountry = document.querySelector(selectorPrefix + '.country');
-                let inputZipCode = document.querySelector(selectorPrefix + '.zip');
-                let inputState = document.querySelector(selectorPrefix + '.state');
-                let inputCity = document.querySelector(selectorPrefix + '.city');
+      if (inputCountry) {
+        new AutoComplete({
+          selector: inputCountry,
+          cache: false,
+          offsetTop: 0,
+          minChars: 1,
+          renderItem: function (item, search) {
+            return (
+              '<div class="autocomplete-suggestion" data-val="' +
+              item.name +
+              '" data-code="' +
+              item.code +
+              '">' +
+              item.name +
+              "</div>"
+            );
+          },
+          source: function (term, suggest) {
+            $.getJSON(
+              "/checkout/auto_complete_country/",
+              { search: term },
+              function (data) {
+                suggest(data);
+              }
+            );
+          },
+          onSelect: function (e, term, item) {
+            e.preventDefault();
+            let code = item.getAttribute("data-code");
+            inputCountry.setAttribute("data-code", code);
+            throwJsChangeEvent(inputCountry);
+          },
+        });
+      }
 
-                if (inputCountry) {
-                    new autoComplete({
-                        selector: inputCountry,
-                        cache: false,
-                        offsetTop: 0,
-                        minChars: 1,
-                        renderItem: function (item, search) {
-                            return '<div class="autocomplete-suggestion" data-val="' + item.name + '" data-code="'
-                                + item.code + '">' + item.name + '</div>';
-                        },
-                        source: function (term, suggest) {
-                            $.getJSON('/checkout/auto_complete_country/', {search: term}, function (data) {
-                                suggest(data);
-                            });
-                        },
-                        onSelect: function (e, term, item) {
-                            e.preventDefault();
-                            let code = item.getAttribute('data-code');
-                            inputCountry.setAttribute('data-code', code);
-                            throwJsChangeEvent(inputCountry);
-                        }
-                    });
-                }
+      if (inputZipCode) {
+        new AutoComplete({
+          selector: inputZipCode,
+          cache: false,
+          minChars: 1,
+          renderItem: function (item, search) {
+            let html = '<span class="zip">' + item.zip + "</span>";
+            html += ' <span class="city">' + item.primary_city + ", ";
+            html += item.state + "</span>";
 
-                if (inputZipCode) {
-                    new autoComplete({
-                        selector: inputZipCode,
-                        cache: false,
-                        minChars: 1,
-                        renderItem: function (item, search) {
-                            let html = '<span class="zip">' + item.zip + '</span>';
-                            html += ' <span class="city">' + item.primary_city + ', ';
-                            html += item.state + '</span>';
+            return (
+              '<div class="autocomplete-suggestion" data-state-name="' +
+              item.state_name +
+              '" data-state="' +
+              item.state +
+              '" data-city="' +
+              item.primary_city +
+              '"  data-val="' +
+              item.zip +
+              '">' +
+              html +
+              "</div>"
+            );
+          },
+          source: function (term, suggest) {
+            $.getJSON(
+              "/checkout/auto_complete_zip_code/",
+              {
+                search: term,
+                country: inputCountry
+                  ? inputCountry.getAttribute("data-code")
+                  : "",
+              },
+              function (data) {
+                suggest(data);
+              }
+            );
+          },
+          onSelect: function (e, term, item) {
+            e.preventDefault();
 
-                            return '<div class="autocomplete-suggestion" data-state-name="'+item.state_name+'" data-state="'+item.state+'" data-city="'+item.primary_city+'"  data-val="' + item.zip + '">' + html + '</div>';
-                        },
-                        source: function (term, suggest) {
+            inputCity.value = item.getAttribute("data-city");
+            inputState.value = item.getAttribute("data-state-name");
 
-                            $.getJSON('/checkout/auto_complete_zip_code/', {
-                                search: term,
-                                country: inputCountry ? inputCountry.getAttribute('data-code') : ''
-                            }, function (data) {
-                                suggest(data);
-                            });
-                        },
-                        onSelect: function (e, term, item) {
-                            e.preventDefault();
+            throwJsChangeEvent(inputZipCode);
+            throwJsChangeEvent(inputCity);
+            throwJsChangeEvent(inputState);
 
-                            inputCity.value = item.getAttribute('data-city');
-                            inputState.value = item.getAttribute('data-state-name');
+            inputState.setAttribute(
+              "data-code",
+              item.getAttribute("data-state")
+            );
+          },
+        });
+      }
 
-                            throwJsChangeEvent(inputZipCode);
-                            throwJsChangeEvent(inputCity);
-                            throwJsChangeEvent(inputState);
+      if (inputState) {
+        new AutoComplete({
+          selector: inputState,
+          cache: false,
+          minChars: 1,
+          renderItem: function (item, search) {
+            return (
+              '<div class="autocomplete-suggestion" data-val="' +
+              item.state +
+              '" data-code="' +
+              item.code +
+              '">' +
+              item.state +
+              "</div>"
+            );
+          },
+          source: function (term, response) {
+            $.getJSON(
+              "/checkout/auto_complete_state/",
+              {
+                search: term,
+                country: inputCountry
+                  ? inputCountry.getAttribute("data-code")
+                  : "",
+              },
+              function (data) {
+                response(data);
+              }
+            );
+          },
+          onSelect: function (e, term, item) {
+            e.preventDefault();
+            let code = item.getAttribute("data-code");
+            inputState.setAttribute("data-code", code);
+            throwJsChangeEvent(inputState);
+          },
+        });
+      }
 
-                            inputState.setAttribute('data-code', item.getAttribute('data-state'));
-                        }
-                    });
-                }
+      if (inputCity) {
+        new AutoComplete({
+          selector: inputCity,
+          cache: false,
+          minChars: 1,
+          source: function (term, response) {
+            $.getJSON(
+              "/checkout/auto_complete_city/",
+              {
+                search: term,
+                country: inputCountry
+                  ? inputCountry.getAttribute("data-code")
+                  : "",
+                state: inputState ? inputState.getAttribute("data-code") : "",
+              },
+              function (data) {
+                response(data);
+              }
+            );
+          },
+          renderItem: function (item, search) {
+            return (
+              '<div class="autocomplete-suggestion" data-val="' +
+              item +
+              '">' +
+              item +
+              "</div>"
+            );
+          },
+          onSelect: function (e, term, item) {
+            e.preventDefault();
+            throwJsChangeEvent(inputCity);
+          },
+        });
+      }
+    }
+  }
 
-                if (inputState) {
-                    new autoComplete({
-                        selector: inputState,
-                        cache: false,
-                        minChars: 1,
-                        renderItem: function (item, search) {
-                            return '<div class="autocomplete-suggestion" data-val="' + item.state + '" data-code="' + item.code + '">'
-                                + item.state + '</div>';
-                        },
-                        source: function (term, response) {
-                            $.getJSON('/checkout/auto_complete_state/', {
-                                search: term,
-                                country: inputCountry ? inputCountry.getAttribute('data-code') : ''
-                            }, function (data) {
-                                response(data);
-                            });
-                        },
-                        onSelect: function (e, term, item) {
-                            e.preventDefault();
-                            let code = item.getAttribute('data-code');
-                            inputState.setAttribute('data-code', code);
-                            throwJsChangeEvent(inputState);
+  return createAutoComplete();
+})();
 
-                        }
-                    });
-                }
-
-                if (inputCity) {
-                    new autoComplete({
-                        selector: inputCity,
-                        cache: false,
-                        minChars: 1,
-                        source: function (term, response) {
-                            $.getJSON('/checkout/auto_complete_city/', {
-                                search: term,
-                                country: inputCountry ? inputCountry.getAttribute('data-code') : '',
-                                state: inputState ? inputState.getAttribute('data-code') : '',
-                            }, function (data) {
-                                response(data);
-                            });
-                        },
-                        renderItem: function (item, search){
-                            return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item + '</div>';
-                        },
-                        onSelect: function (e, term, item) {
-                            e.preventDefault();
-                            throwJsChangeEvent(inputCity);
-                        }
-                    });
-                }
-
-            }
-        }
-        return createAutoComplete;
-    }();
-
-createAutoComplete();
 export default createAutoComplete;

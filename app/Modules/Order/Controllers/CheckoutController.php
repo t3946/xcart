@@ -73,6 +73,7 @@ class CheckoutController extends FrontendController
             if ($is_new) {
                 $order->setAttributes([
                     'order_prefix' => $site->getOrderPrefix(),
+                    'storefrontid' => $site->storefrontid,
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP1,
                     'dc_status' => OrderStatusModel::ORDER_DC_STATUS_NOT_SHIPPED,
                     'bd_status' => OrderStatusModel::ORDER_BD_STATUS_UNPAID,
@@ -103,12 +104,13 @@ class CheckoutController extends FrontendController
                 $order->setAttributes(array_merge($checkout_form->getAttributes(), [
                     'cb_status' => OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4,
                     'currency' => $site->getCurrency()->currency_code ?? 'USD',
+                    'payment_method' => (string)$order->payment_method_model,
                     'date' => time()
                 ]));
 
                 if ($order->save()) {
                     if ((int)$order->paymentid === 106) {
-                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getHash()]);
+                        $this->redirect('checkout:complete', ['order_id' => $order->orderid, 'slug' => $order->getOrderHash()]);
                     }
                     $this->redirect('checkout:payment');
                 }
@@ -123,8 +125,6 @@ class CheckoutController extends FrontendController
                 $order->extra_model->purchase_order ?? [])
             );
         }
-
-
 
         $this->display('checkout/shipping_one_page.tpl', [
             'order' => $order,

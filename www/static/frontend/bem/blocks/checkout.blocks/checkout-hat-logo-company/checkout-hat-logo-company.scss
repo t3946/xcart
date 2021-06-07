@@ -1,0 +1,8 @@
+.checkout-hat-logo-company {
+    text-align: right;
+
+    @include breakpoint(lg up) {
+        height: rem-calc(45);
+        text-align: center;
+    }
+}

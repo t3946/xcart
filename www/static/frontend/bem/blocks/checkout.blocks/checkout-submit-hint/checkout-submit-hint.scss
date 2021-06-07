@@ -1,0 +1,8 @@
+.checkout-submit-hint {
+    font-size: rem-calc(13);
+    color: #777777;
+
+    @include breakpoint(sm up) {
+        font-size: rem-calc(14);
+    }
+}

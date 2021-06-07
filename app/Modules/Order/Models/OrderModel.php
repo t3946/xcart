@@ -44,7 +44,6 @@ use Xcart\Order;
 /**
  * @property array|null purchase_order
  * @property string s_address
- * @property string s_full_address
  * @property string s_firstname
  * @property string s_company
  * @property string s_city
@@ -76,7 +75,6 @@ use Xcart\Order;
  * @property mixed b_state
  * @property mixed b_city
  * @property mixed b_address
- * @property mixed b_full_address
  * @property mixed email
  * @property mixed phone_ext
  * @property mixed b_zipcode
@@ -378,16 +376,6 @@ class OrderModel extends Model
                 'class' => FloatField::class,
                 'default' => 0
             ],
-            's_full_address' => [
-                'class' => CharField::class,
-                'null' => false,
-                'default' => ''
-            ],
-            'b_full_address' => [
-                'class' => CharField::class,
-                'null' => false,
-                'default' => ''
-            ],
         ];
     }
 
@@ -537,12 +525,17 @@ class OrderModel extends Model
 
     public function getOrderHash()
     {
-        return OrderHelper::getOrderHash([$this->orderid, $this->total, $this->email]);
+        return OrderHelper::getOrderHash([$this->orderid, $this->s_zipcode, $this->email]);
     }
 
     public function getCxDateTime($is_now = true): ?DateTime
     {
-        $state = $this->billing_state ?: $this->shipping_state;
+        if ($this->b_country && $this->b_state) {
+            $state = $this->billing_state;
+        } elseif ($this->s_country && $this->s_state) {
+            $state = $this->shipping_state;
+        }
+
         if ($time_zone = $state->timezone) {
             $date = new DateTime('now', new DateTimeZone($time_zone));
             if ($is_now) {
@@ -654,7 +647,7 @@ class OrderModel extends Model
         }
         return [];
     }
-    
+
     public function getShippingCost(): float
     {
         return array_reduce($this->groups->all(), static fn($c, $i) => $c + $i->shipping_gross);
@@ -672,10 +665,5 @@ class OrderModel extends Model
             }
         }
         return $res;
-    }
-
-    public function getHash(): string
-    {
-        return md5($this->orderid . $this->total . $this->email);
     }
 }

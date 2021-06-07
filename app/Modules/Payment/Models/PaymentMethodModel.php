@@ -5,6 +5,7 @@ namespace Modules\Payment\Models;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -53,7 +54,12 @@ class PaymentMethodModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => SiteModel::class,
                 'through' => PaymentStorefrontModel::class,
-            ]
+            ],
+            'submit_hint' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false,
+            ],
         ];
     }
 

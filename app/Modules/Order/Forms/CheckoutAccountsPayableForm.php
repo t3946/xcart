@@ -85,16 +85,6 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'longHintClass' => 'checkout-phone-ext-long-hint',
             ],
 
-            'ap_track_sms' => [
-                'class' => CheckboxField::class,
-                'label' => OrderModule::t( 'SMS notifications' ),
-                'hint' => OrderModule::t( 'Get shipment status notifications by SMS (free service)' ),
-                'labelTemplate' => 'forms/field/checkbox/label.tpl',
-                'labelClass' => 'common-label',
-                'hintClass' => 'common-hint',
-                'inputClass' => 'common-checkbox',
-            ],
-
             'ap_email' => [
                 'class' => EmailField::class,
                 'label' => OrderModule::t( 'Email' ),
@@ -113,6 +103,25 @@ class CheckoutAccountsPayableForm extends ContactInfoFaxForm
                 'hintClass' => 'common-hint',
                 'fieldClass' => 'checkout-field',
                 'errorClass' => 'form-field-error form-field__error checkout__error error_checkout',
+            ],
+
+            'ap_fax' => [
+                'class' => CharCleanField::class,
+                'label' => OrderModule::t('Fax'),
+                'hint' => OrderModule::t('Fax number of the person placing the order'),
+                'validators' => [
+                    new PhoneValidator(),
+                ],
+                'html' => [
+                    'placeholder' => OrderModule::t('(609) 924-8399'),
+                    'class' => 'phone',
+                    'inputmode' => 'numeric',
+                ],
+                'labelCommentClass' => 'common-comment',
+                'hintClass' => 'common-hint',
+                'labelClass' => 'common-label',
+                'inputClass' => 'common-input',
+                'fieldClass' => 'checkout-field',
             ],
 
             'purchase_order_file' => [

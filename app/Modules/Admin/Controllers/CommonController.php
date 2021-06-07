@@ -82,12 +82,15 @@ class CommonController extends BackendController
 
         $last_orders = OrderModel::objects()->order(['-orderid'])->cache(10)->limit(20)->all();
 
+        $stat = new OrderStatistic($orders, [OrderStatusModel::ORDER_STATUS_AUTHORIZED]);
+        $stat->setPeriod();
+
         echo $this->renderInSmarty('admin/index.tpl', [
             'orders' => $table_orders,
             'last_orders' => $last_orders,
             'average_daily_sales' => $average_daily_sales,
-            'authorized_outstanding' => $table_orders['AUTHORIZED']['Last 30 days']->setPeriod()->getTotal(),
-            'authorized_outstanding_count' => $table_orders['AUTHORIZED']['Last 30 days']->setPeriod()->getCount(),
+            'authorized_outstanding' => $stat->getTotal(),
+            'authorized_outstanding_count' => $stat->getCount(),
             'orders_rates' => $orders_rates,
         ]);
     }
