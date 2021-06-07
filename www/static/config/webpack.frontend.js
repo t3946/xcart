@@ -1,10 +1,9 @@
 const webpack = require("webpack");
 const path = require("path");
 const paths = require("./gulp.frontend.patchs");
-const argv = require("yargs").argv;
 
 config = {
-  mode: argv.mode,
+  mode: process.env.NODE_ENV || "development",
   entry: paths.src.jsx_bundles,
   output: {
     path: path.resolve("./" + paths.dst.jsx),
