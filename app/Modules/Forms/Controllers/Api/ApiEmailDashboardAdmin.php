@@ -82,7 +82,7 @@ class ApiEmailDashboardAdmin extends Controller
             }
 
             $meta = $pagination->toJson()['meta'];
-            $userInfo = Xcart::app()->user::objects()->asArray()->all();
+            $userInfo = Xcart::app()->user->getAttributes();
         } catch (Throwable $exception) {
             $this->jsonResponse(['error' => $exception->getMessage()]);
             return;
