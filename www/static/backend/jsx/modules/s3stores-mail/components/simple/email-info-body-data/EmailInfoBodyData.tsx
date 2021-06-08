@@ -23,7 +23,7 @@ export const EmailInfoBodyData: React.FC<{ data: EmailDto }> = ({ data }) => {
         <Grid>
           <Grid container>
             <span className="email-info-title-text">
-              {moment(data.date).format("DD, MMM, hh:mm")}
+              {moment(data.date).format("ddd, MMM, h:mm")}
               &nbsp;
               {`(${moment(data.date).fromNow()})`}
             </span>

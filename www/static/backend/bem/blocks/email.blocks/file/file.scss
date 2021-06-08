@@ -8,6 +8,7 @@ background-color: #F2F2F2;
   margin: 0 5px 0 15px;
 }
 .file-item-name{
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -21,11 +22,11 @@ background-color: #F2F2F2;
   margin-right: 10px;
   cursor: pointer;
   border: .5px solid #C4C4C4;
-  width: 190px;
-  height: 125px;
+  width: 180px;
+  height: 120px;
   position: relative;
    &-img{
-     height: 91px;
+     height: 86px;
    }
 
   &:hover{

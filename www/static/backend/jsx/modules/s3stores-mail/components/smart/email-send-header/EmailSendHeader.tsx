@@ -38,8 +38,13 @@ export const EmailSendHeader: React.FC = () => {
             onClick={(item) => setTemplateType(item)}
           />
         </Grid>
-        <Grid>
+        <Grid
+          style={{
+            minWidth: 300,
+          }}
+        >
           <EmailGroupSelect
+            label={"Select templates"}
             onClick={(item) => setTemplate(item)}
             value={sendTemplate}
             type="send"

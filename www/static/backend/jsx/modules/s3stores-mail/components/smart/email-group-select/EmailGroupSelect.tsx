@@ -7,6 +7,7 @@ export const EmailGroupSelect: React.FC<any> = ({
   value,
   type,
   onClick,
+  label,
 }) => {
   const [selectOpen, setSelectOpen] = useState(false);
 
@@ -28,7 +29,7 @@ export const EmailGroupSelect: React.FC<any> = ({
             type="hidden"
             name=""
           />
-          <div className="select__head">{value.template_name}</div>
+          <div className="select__head">{value?.template_name || label}</div>
           <ul className={`select__list ${selectOpen && "open"}`}>
             {items.map((group) => {
               return (

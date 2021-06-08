@@ -138,6 +138,11 @@ class EmailModel extends Model
                 'modelClass' => UserModel::class,
                 'through' => EmailActionModel::class
             ],
+            'actionLogs' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => UserModel::class,
+                'through' => EmailActionLogModel::class
+            ],
             'children' => [
                 'class' => HasManyField::class,
                 'modelClass' => __CLASS__,

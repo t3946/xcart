@@ -34,6 +34,17 @@ const emailReducer = (
         ...state,
         searchOptions: action.searchOptions,
       };
+    case "GET_EMAIL_INFO":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "SET_EMAIL_INFO":
+      return {
+        ...state,
+        loading: false,
+        emailInfo: action.emailInfo,
+      };
     case "SET_SEND_TEMPLATE_TYPE":
       return {
         ...state,
@@ -139,6 +150,7 @@ const emailReducer = (
       return {
         ...state,
         items: items,
+        emailInfo: editEmailInfo(state.emailInfo, items),
         moreFavorites: isFavoriteItemsTrue(items, action.favoriteItems),
       };
     case "EDIT_ACTIONS":
@@ -150,6 +162,7 @@ const emailReducer = (
       );
       return {
         ...state,
+        emailInfo: editEmailInfo(state.emailInfo, actionItems),
         items: actionItems,
       };
     case "SET_VIEWED":
@@ -163,6 +176,7 @@ const emailReducer = (
         ...state,
         items: viewedItems,
         moreViewed: isViewedItemsTrue(viewedItems, action.emailId),
+        emailInfo: editEmailInfo(state.emailInfo, viewedItems),
       };
     case "SET_LOADING":
       return {
@@ -189,3 +203,17 @@ const emailReducer = (
   }
 };
 export default emailReducer;
+
+function editEmailInfo(emailInfo, items) {
+  let newInfo = emailInfo;
+  items.forEach((e) => {
+    console.log(e);
+    if (e.item.id === emailInfo.id) {
+      newInfo = e.item;
+    }
+  });
+
+  console.log(newInfo);
+
+  return newInfo;
+}

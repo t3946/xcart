@@ -2,7 +2,7 @@ import React from "react";
 import EmailListSearch from "@s3stores-mail/components/smart/email-list-search/EmailListSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { editSearchOptions } from "@redux/actions";
+import { editSearchOptions, getPage, setLoading } from "@redux/actions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 
 const EmailSearchContainer: React.FC = () => {
@@ -20,6 +20,13 @@ const EmailSearchContainer: React.FC = () => {
       })
     );
     history.push(`/admin/forms/email-dashboard/page/${1}`);
+    dispatch(setLoading());
+    dispatch(
+      getPage(Number(1), {
+        ...searchOptions,
+        subject: value,
+      })
+    );
   };
   return (
     <EmailListSearch

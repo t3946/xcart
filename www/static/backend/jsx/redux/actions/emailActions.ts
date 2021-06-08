@@ -41,9 +41,7 @@ export const setSendTemplateType = (
   templateType: item,
 });
 
-export const setSendTemplate = (
-  item: SelectItemDto
-): ActionSetSendTemplateDto => ({
+export const setSendTemplate = (item: any): ActionSetSendTemplateDto => ({
   type: "SET_SEND_TEMPLATE",
   sendTemplate: item,
 });
@@ -132,4 +130,9 @@ export const editSearchOptions = (searchOptions: SearchDataDto): any => ({
 export const sendEmail = (email: SendDataDto): any => ({
   type: "SEND_EMAIL",
   email,
+});
+
+export const getEmailInfo = (id: string): any => ({
+  type: "GET_EMAIL_INFO",
+  id,
 });

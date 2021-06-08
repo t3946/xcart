@@ -23,7 +23,18 @@ function* getPage(action: AnyAction): Generator {
       emailStore.getState().checkedItems
     ),
     itemsCount: json.meta.total,
-    user: json.userInfo[0],
+    user: json.userInfo,
+  });
+}
+
+function* getEmailInfo(action: AnyAction): Generator {
+  const info: any = yield api
+    .get<any>(`/admin/forms/api/email-info/${action.id}`)
+    .then((response) => response);
+
+  yield put({
+    type: "SET_EMAIL_INFO",
+    emailInfo: info,
   });
 }
 
@@ -115,6 +126,7 @@ function* actionWatcher(): SagaIterator {
   yield takeLatest("SET_VIEWED", setViewed);
   yield takeLatest("GET_TEMPLATES", getTemplates);
   yield takeLatest("SEND_EMAIL", sendEmail);
+  yield takeLatest("GET_EMAIL_INFO", getEmailInfo);
 }
 
 export default function* rootSaga(): Generator {

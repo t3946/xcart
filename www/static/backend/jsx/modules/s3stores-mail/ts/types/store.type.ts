@@ -12,6 +12,7 @@ export interface StoreDto {
   checkedItemsOptions: {
     prevValue: string;
   };
+  emailInfo: EmailDto | null;
   page: number;
   moreFavorites: boolean;
   moreViewed: boolean;
