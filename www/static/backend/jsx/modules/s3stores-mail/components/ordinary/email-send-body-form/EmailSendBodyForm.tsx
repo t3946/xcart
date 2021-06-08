@@ -19,7 +19,8 @@ const SendForm: React.FC = () => {
   const files = useSelector((state: StoreDto) => state.sendData.files);
 
   useEffect(() => {
-    if (files !== []) {
+    if (files.length !== 0) {
+      console.log(files);
       filesRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
@@ -74,6 +75,7 @@ const SendForm: React.FC = () => {
           menubar: true,
           ...emailSendEditorSettings,
           plugins: "autoresize",
+          min_height: 425,
         }}
       />
 

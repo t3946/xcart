@@ -108,6 +108,7 @@ background-color: #F2F2F2;
   margin: 0 5px 0 15px;
 }
 .file-item-name{
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -251,179 +252,6 @@ background-color: #F2F2F2;
 .mini-icon{
   margin-right: 5px;
 }
-.email-info-data-wrapper{
-  padding: 12px 40px 25px;
-}
-
-.email-info-from{
-  font-size: 11px;
-  color: #494949;
-  margin-right: 5px;
-}
-
-.email-info-to{
-  font-size: 11px;
-  color: #494949;
-  margin-left: 13px;
-  margin-right: 5px;
-}
-
-.email-info-title-text{
-  font-size: 11px;
-}
-
-.email-title-wrap{
-  margin-bottom: 10px;
-}
-
-.email-info-btn{
-  display: flex !important;
-  align-items: center !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  padding: 8px 27px !important;
-  border-color: #C4C4C4 !important;
-
-  &-icon{
-    margin-right: 10px;
-    color: #8A8A8A;
-    margin-bottom: 1px;
-
-    &-reply{
-      margin-bottom: 3px;
-      margin-right: 10px;
-      color: #8A8A8A;
-    }
-  }
-}
-
-.icon-button{
-  color: #8A8A8A !important;
-&:hover{
-  color: black !important;
-}
-}
-
-.select {
-  position: relative;
-  display: block;
-  min-width: 220px;
-  width: 100%;
-  max-width: 400px;
-}
-
-.select-info{
-  .select__head{
-    border: 1px solid #FFB400;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 12px 10px;
-  }
-
-  .select__list{
-    border: 1px solid #C4C4C4;
-  }
-}
-
-.select-send{
-  .select__head{
-    border: 1px solid #C4C4C4;
-    font-size: 13px;
-    padding: 5px 35px 5px 10px;
-  }
-
-  .select__list{
-    border: 1px solid #FFB400;
-  }
-}
-
-.select__head {
-  width: 100%;
-  max-width: 100%;
-  color: #000000;
-  cursor: pointer;
-  background-color: white;
-}
-
-.select__head::after {
-  width: 10px;
-  height: 6px;
-  background: url("/static/backend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
-  position: absolute;
-  right: 20px;
-  bottom: 50%;
-  transform: translateY(50%);
-  content: '';
-  display: block;
-  transition: .2s ease-in;
-}
-
-.select__list {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  max-height: 205px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  z-index: 100;
-  margin: 0;
-  padding: 0;
-  font-size: 14px;
-  color: #424348;
-  scrollbar-color: dark;
-  scrollbar-width: thin;
-  overscroll-behavior: contain;
-  border-top:0;
-}
-
-.open{
-  .select__head::after {
-    transform: translateY(50%) rotate(180deg);
-  }
-
-  .select__list{
-    display: block;
-  }
-}
-
-.select__list::-webkit-scrollbar {
-  width: 7px;
-  background-color: #F8F9FA;
-  padding: 5px;
-}
-
-.select__list::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #D9D9D9;
-}
-
-.select__list .select__item {
-  position: relative;
-  padding: 10px 15px;
-  cursor: pointer;
-  list-style-type: none;
-  font-size: 13px;
-}
-
-.select__list .select__item:hover {
-  background-color: #F1F1F1;
-}
-
-.select__group-title{
-  margin-left: 15px;
-  margin-bottom: 8px;
-  margin-top: 10px;
-  list-style-type: none;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.select__group .select__item{
-  padding: 10px 35px;
-}
 .incoming-blue{
   background-color: #DDEBFD !important;
 }
@@ -566,6 +394,59 @@ background-color: #F2F2F2;
 .message-type-wrap{
   margin-top: 0
 }
+.email-info-data-wrapper{
+  padding: 12px 40px 25px;
+}
+
+.email-info-from{
+  font-size: 11px;
+  color: #494949;
+  margin-right: 5px;
+}
+
+.email-info-to{
+  font-size: 11px;
+  color: #494949;
+  margin-left: 13px;
+  margin-right: 5px;
+}
+
+.email-info-title-text{
+  font-size: 11px;
+}
+
+.email-title-wrap{
+  margin-bottom: 10px;
+}
+
+.email-info-btn{
+  display: flex !important;
+  align-items: center !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 8px 27px !important;
+  border-color: #C4C4C4 !important;
+
+  &-icon{
+    margin-right: 10px;
+    color: #8A8A8A;
+    margin-bottom: 1px;
+
+    &-reply{
+      margin-bottom: 3px;
+      margin-right: 10px;
+      color: #8A8A8A;
+    }
+  }
+}
+
+.icon-button{
+  color: #8A8A8A !important;
+&:hover{
+  color: black !important;
+}
+}
+
 .header-wrap{
   padding: 5px 30px 5px 40px;
   border-bottom: 1px solid #C4C4C4;
@@ -583,6 +464,126 @@ background-color: #F2F2F2;
 .pagination-wrap{
   display: flex;
   align-items: center;
+}
+.select {
+  position: relative;
+  display: block;
+  min-width: 220px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.select-info{
+  .select__head{
+    border: 1px solid #FFB400;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 10px;
+  }
+
+  .select__list{
+    border: 1px solid #C4C4C4;
+  }
+}
+
+.select-send{
+  .select__head{
+    border: 1px solid #C4C4C4;
+    font-size: 13px;
+    padding: 5px 35px 5px 10px;
+  }
+
+  .select__list{
+    border: 1px solid #FFB400;
+  }
+}
+
+.select__head {
+  width: 100%;
+  max-width: 100%;
+  color: #000000;
+  cursor: pointer;
+  background-color: white;
+}
+
+.select__head::after {
+  width: 10px;
+  height: 6px;
+  background: url("/static/backend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
+  position: absolute;
+  right: 20px;
+  bottom: 50%;
+  transform: translateY(50%);
+  content: '';
+  display: block;
+  transition: .2s ease-in;
+}
+
+.select__list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  max-height: 205px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: #424348;
+  scrollbar-color: dark;
+  scrollbar-width: thin;
+  overscroll-behavior: contain;
+  border-top:0;
+}
+
+.open{
+  .select__head::after {
+    transform: translateY(50%) rotate(180deg);
+  }
+
+  .select__list{
+    display: block;
+  }
+}
+
+.select__list::-webkit-scrollbar {
+  width: 7px;
+  background-color: #F8F9FA;
+  padding: 5px;
+}
+
+.select__list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #D9D9D9;
+}
+
+.select__list .select__item {
+  position: relative;
+  padding: 10px 15px;
+  cursor: pointer;
+  list-style-type: none;
+  font-size: 13px;
+}
+
+.select__list .select__item:hover {
+  background-color: #F1F1F1;
+}
+
+.select__group-title{
+  margin-left: 15px;
+  margin-bottom: 8px;
+  margin-top: 10px;
+  list-style-type: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.select__group .select__item{
+  padding: 10px 35px;
 }
 .search-input{
   background-color: inherit;

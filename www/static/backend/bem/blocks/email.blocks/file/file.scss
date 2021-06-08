@@ -8,6 +8,7 @@ background-color: #F2F2F2;
   margin: 0 5px 0 15px;
 }
 .file-item-name{
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
