@@ -1,4 +1,5 @@
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { AttachmentDto, EmailActionDto } from "../types/email.type";
 
 export const initialValues: StoreDto = {
   items: [],
@@ -11,11 +12,31 @@ export const initialValues: StoreDto = {
     dateBefore: null,
     hasAttachment: false,
   },
+  emailInfo: {
+    account_id: "",
+    action: null,
+    attachment: [],
+    body: "",
+    date: new Date(),
+    delivered_to_address: "",
+    favorite: false,
+    from_address: "",
+    id: "",
+    message_id: "",
+    parent_id: null,
+    reply_to: null,
+    snippet: null,
+    subject: "",
+    thread_id: "",
+    to_address: null,
+    type: "",
+    viewed: false,
+  },
   templateType: {
     name: "Select receiving party",
   },
   sendTemplate: {
-    template_name: "Select template",
+    template_name: undefined,
     message_body: "",
   },
   sendData: {
@@ -28,7 +49,7 @@ export const initialValues: StoreDto = {
   },
   checkedItems: [],
   checkedItemsOptions: {
-    prevValue: 0,
+    prevValue: "0",
   },
   user: {},
   page: 0,

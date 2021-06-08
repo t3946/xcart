@@ -10,7 +10,13 @@ export const EmailInfoHeader: React.FC<any> = ({ info }) => {
     <Paper className="header-wrap info" square={true}>
       <Grid container justify="space-around" alignItems="center">
         <Grid xs={6}>
-          <span>{info.subject}</span>
+          <span
+            style={{
+              fontSize: 15,
+            }}
+          >
+            {info.subject}
+          </span>
         </Grid>
         <Grid>
           <ReadedSwitch

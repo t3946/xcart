@@ -14,11 +14,11 @@ export const EmailInfoBody: React.FC<any> = ({ thisRef, emailInfo }) => {
     <React.Fragment>
       <Paper elevation={0} square={true}>
         <div ref={thisRef} className="email-info-data-wrapper">
-          <EmailInfoBodyData data={emailInfo.item} />
+          <EmailInfoBodyData data={emailInfo} />
         </div>
-        {emailInfo.item.attachment !== [] && (
+        {emailInfo.attachment !== [] && (
           <div className="email-info-data-wrapper">
-            <IncomingFilesList files={emailInfo.item.attachment} />
+            <IncomingFilesList files={emailInfo.attachment} />
           </div>
         )}
         <div className="email-info-data-wrapper">

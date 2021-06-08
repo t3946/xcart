@@ -6,6 +6,7 @@ import { EmailType } from "../../../ts/consts";
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { ReadedSwitch } from "@s3stores-mail/components/simple";
 import moment from "moment";
+import CallReceivedIcon from "@material-ui/icons/CallReceived";
 
 interface EmailListItemDto {
   name: string;
@@ -15,6 +16,18 @@ interface EmailListItemDto {
   id: number;
   checked: boolean;
   index: number;
+}
+
+function editEmailListItemIcon(type: string) {
+  switch (type) {
+    case "inbox": {
+      return <CallReceivedIcon />;
+    }
+
+    default: {
+      return <CallMadeIcon />;
+    }
+  }
 }
 
 const List: React.FC<any> = ({
@@ -43,12 +56,17 @@ const List: React.FC<any> = ({
           editFavorite={editFavorite}
           favorite={itemData.favorite}
         />
-        <div className="faxage-text">
-          <span>FAXAGE</span>
-        </div>
-        <div className="text-name">
-          <span>{itemData.subject}</span>
-        </div>
+        <Grid xs={3}>
+          <div className="faxage-text">
+            <span>{itemData.from_address}</span>
+          </div>
+        </Grid>
+        <Grid xs={4}>
+          <div className="text-name">
+            <span>{itemData.subject}</span>
+          </div>
+        </Grid>
+
         <ReadedSwitch
           actionName={itemData.action?.name}
           editAction={editAction}
@@ -58,7 +76,7 @@ const List: React.FC<any> = ({
           <span>{moment(itemData.date).format("D MMM")}</span>
         </div>
         <div className={`message-type-wrap icon-${theme}`}>
-          {theme === EmailType.NOTE ? <EditIcon /> : <CallMadeIcon />}
+          {editEmailListItemIcon(itemData.type)}
         </div>
       </Grid>
     </Paper>

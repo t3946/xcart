@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
-import { getPage, setLoading } from "../../../../redux/actions/emailActions";
+import { useParams } from "react-router-dom";
+import { getPage, setLoading } from "../../../../redux/actions";
 import { EmailListHeaderContainer } from "../../containers";
 import { EmailListTitle } from "@s3stores-mail/components/ordinary/email-list-title/EmailListTitle";
 import { EmailListContainer } from "@s3stores-mail/containers/email-list/EmailList.container";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import { StoreDto } from "../../ts/types";
 export const Email: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -13,10 +13,14 @@ export const Email: React.FC = () => {
 
   const searchParams = useSelector((e: StoreDto) => e.searchOptions);
 
+  const emailPage = useSelector((e: StoreDto) => e.page);
+
   useEffect(() => {
-    // if (thisPage === Number(page)) {
-    //   return;
-    // }
+    if (Number(page) === emailPage) {
+      console.log("yes");
+      return;
+    }
+    console.log("continue");
     dispatch(setLoading());
     const timeOut = setTimeout(() => {
       dispatch(getPage(Number(page), searchParams));
@@ -25,8 +29,7 @@ export const Email: React.FC = () => {
     return () => {
       clearTimeout(timeOut);
     };
-  }, [page, searchParams]);
-
+  }, [page]);
   return (
     <div>
       <EmailListTitle />

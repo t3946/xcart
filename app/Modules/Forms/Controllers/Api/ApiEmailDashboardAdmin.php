@@ -4,6 +4,7 @@
 namespace Modules\Forms\Controllers\Api;
 
 
+use Modules\Forms\Models\EmailActionLogModel;
 use Modules\Forms\Models\EmailActionModel;
 use Modules\Forms\Models\EmailFavoriteModel;
 use Modules\Forms\Models\EmailModel;
@@ -61,8 +62,6 @@ class ApiEmailDashboardAdmin extends Controller
 
         $qs = EmailModel::objects()->getQuerySet()->filter($actionItem)->order(['-id']);
 
-//        $qs = EmailModel::objects()->getQuerySet()->order(['-id']);
-
         $pagination = new Pagination($qs, [
             'page' => $page,
             'pageSize' => 20,
@@ -90,6 +89,21 @@ class ApiEmailDashboardAdmin extends Controller
 
         $this->jsonResponse(['objects' => $emails, 'meta' => $meta, 'userInfo'=>$userInfo]);
     }
+
+    public function actionGetEmailInfo(string $id)
+    {
+        $email =  EmailModel::objects()->filter(['id' => $id])[0];
+        $emailInfo = $email->getAttributes();
+        $emailInfo['viewed'] = $email->isViewed();
+        $emailInfo['action'] = $email->getAction($email->id);
+        $emailInfo['favorite'] = $email->isFavorite();
+        $emailInfo['attachment'] = $email->getAttachment();
+        $emailInfo['body'] = (string)$email->body;
+
+        $this->jsonResponse($emailInfo);
+    }
+
+
 
     public function editFavorite()
     {
@@ -123,10 +137,15 @@ class ApiEmailDashboardAdmin extends Controller
             if($isActionTaken)
             {
                 EmailActionModel::objects()->delete( $actionItem);
+                $actionItem[ 'user_id' ] = Xcart::app()->user->id;
+                $actionItem['action_value'] = true;
+                EmailActionLogModel::objects()->getOrCreate( $actionItem);
                 continue;
             }
             $actionItem[ 'user_id' ] = Xcart::app()->user->id;
             EmailActionModel::objects()->getOrCreate( $actionItem);
+            $actionItem['action_value'] = false;
+            EmailActionLogModel::objects()->getOrCreate( $actionItem);
         }
         $this->jsonResponse('success');
     }
@@ -144,10 +163,13 @@ class ApiEmailDashboardAdmin extends Controller
             if($isEmailViewed)
             {
                 EmailViewedModel::objects()->getOrCreate( $actionItem);
-
                 continue;
             }
+
             EmailViewedModel::objects()->delete( $actionItem);
+
+
+
 
         }
         $this->jsonResponse('success');

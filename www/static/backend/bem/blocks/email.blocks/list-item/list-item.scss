@@ -14,6 +14,9 @@
 
 .faxage-text{
     margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .checkbox{
@@ -21,8 +24,10 @@
 }
 
 .text-name{
-    width: 45%;
     margin: 0 50px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .favorites{

@@ -27,6 +27,7 @@ export const EmailInfoDataFooter: React.FC<any> = ({
       </Grid>
       <Grid container alignItems="center" xs={3}>
         <EmailGroupSelect
+          label={"REPLY BY TEMPLATE"}
           value={sendTemplate}
           onClick={handleClick}
           type="info"

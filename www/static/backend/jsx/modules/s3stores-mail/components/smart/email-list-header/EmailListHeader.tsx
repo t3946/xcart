@@ -30,7 +30,7 @@ export const EmailListHeader: React.FC<EmailListHeaderPropsDto> = ({
           </Grid>
 
           <div className="pagination-wrap">
-            <div className="faxage-text paginate">
+            <div className="paginate">
               <span>
                 {paginate()} of {!loading ? itemsCount : "many"}
               </span>

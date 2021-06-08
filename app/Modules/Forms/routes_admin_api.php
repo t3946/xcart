@@ -9,6 +9,11 @@ return [
         'name' => 'actionGetEmails'
     ],
     [
+        'route' => '/email-info/{i:id}',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionGetEmailInfo'],
+        'name' => 'actionGetEmailInfo'
+    ],
+    [
         'route' => '/email-list-search/{i:page}',
         'target' => [ApiEmailDashboardAdmin::class, 'actionSearchEmails'],
         'name' => 'actionSearchEmails'

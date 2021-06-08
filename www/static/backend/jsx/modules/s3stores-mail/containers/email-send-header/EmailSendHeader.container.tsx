@@ -9,6 +9,12 @@ export const EmailSendHeaderContainer: React.FC = () => {
 
   const setTemplateType = (item) => {
     dispatch(setSendTemplateType(item));
+    dispatch(
+      setSendTemplate({
+        template_name: undefined,
+        message_body: "",
+      })
+    );
   };
 
   const setTemplate = (item) => {
