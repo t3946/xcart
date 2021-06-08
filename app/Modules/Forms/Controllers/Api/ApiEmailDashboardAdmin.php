@@ -139,13 +139,13 @@ class ApiEmailDashboardAdmin extends Controller
                 EmailActionModel::objects()->delete( $actionItem);
                 $actionItem[ 'user_id' ] = Xcart::app()->user->id;
                 $actionItem['action_value'] = true;
-                EmailActionLogModel::objects()->getOrCreate( $actionItem);
+                EmailActionLogModel::objects()->create( $actionItem);
                 continue;
             }
             $actionItem[ 'user_id' ] = Xcart::app()->user->id;
             EmailActionModel::objects()->getOrCreate( $actionItem);
             $actionItem['action_value'] = false;
-            EmailActionLogModel::objects()->getOrCreate( $actionItem);
+            EmailActionLogModel::objects()->create( $actionItem);
         }
         $this->jsonResponse('success');
     }

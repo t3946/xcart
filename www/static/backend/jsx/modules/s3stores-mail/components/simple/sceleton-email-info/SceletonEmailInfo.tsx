@@ -31,10 +31,10 @@ export const SceletonEmailInfo = () => {
         <div className="email-info-data-wrapper">
           <Grid container justify="space-between" alignItems="center">
             <Grid justify="space-between" container xs={5}>
-              <Grid container xs={7}>
+              <Grid container xs={3}>
                 <div className="sceleton  sceleton-info-btn" />
               </Grid>
-              <Grid container xs={3}>
+              <Grid container xs={7}>
                 <div className="sceleton  sceleton-info-btn" />
               </Grid>
             </Grid>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectItemDto, StoreDto } from "@s3stores-mail/ts/types";
 import { EmailInfoHeader } from "@s3stores-mail/components/ordinary/email-info-header/EmailInfoHeader";
@@ -40,8 +40,12 @@ export const EmailInfoContainer: React.FC = () => {
     }
   }, [email]);
 
+  const page = useSelector((e: StoreDto) => e.page);
+
   const dialog = useContext(EmailDialogContext);
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const componentRef = useRef();
 
@@ -51,6 +55,7 @@ export const EmailInfoContainer: React.FC = () => {
 
   const editViewed = () => {
     dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
+    history.push(`/admin/forms/email-dashboard/page/${page}`);
   };
 
   const editFavorite = () => {
