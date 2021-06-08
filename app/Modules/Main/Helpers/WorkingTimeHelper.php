@@ -63,8 +63,8 @@ class WorkingTimeHelper
      */
     public static function workingTime(DateTime $dateTime): bool
     {
-        $startTime = new DateTime('08:30');
-        $endTime = new DateTime('16:30');
+        $startTime = new DateTime('08:00');
+        $endTime = new DateTime('16:00');
 
         return $dateTime >= $startTime && $dateTime <= $endTime;
     }

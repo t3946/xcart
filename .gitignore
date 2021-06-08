@@ -39,3 +39,4 @@ node_modules
 /app/include/vendors
 !.gitkeep
 !/skin1_kolin/
+/docker/mysql/data/

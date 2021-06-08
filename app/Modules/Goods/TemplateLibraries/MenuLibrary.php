@@ -26,7 +26,6 @@ class MenuLibrary extends TemplateLibrary
      */
     public static function getCategoryMenu()
     {
-
         if (!self::$root_categories) {
             /** @var \Modules\Sites\SitesModule $module */
             $module = Xcart::app()->getModule('Sites');
@@ -41,10 +40,7 @@ class MenuLibrary extends TemplateLibrary
                 ->cache(3600)
                 ->order(['order_by']);
 
-
-            $qs->group(['categoryid']);
-
-            self::$root_categories = $qs->cache()->all();
+            self::$root_categories = $qs->all();
         }
 
         return self::$root_categories;

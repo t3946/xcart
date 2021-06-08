@@ -566,9 +566,13 @@ if ($REQUEST_METHOD === 'POST')
 
                 $order['shipping_groups'][$m_id]['po_status'] = $v['po_status'];
 
-                if ($orderGroupModel->dc_status !== OrderStatusModel::ORDER_DC_STATUS_DELIVERED && OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
-                    $order['shipping_groups'][$m_id]['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
-                    define('TRACKING_ADDED', 1);
+                try {
+                    if ($orderGroupModel->dc_status !== OrderStatusModel::ORDER_DC_STATUS_DELIVERED && OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
+                        $order['shipping_groups'][$m_id]['dc_status'] = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
+                        define('TRACKING_ADDED', 1);
+                    }
+                } catch (Exception $e) {
+                    \Xcart\App\Main\Xcart::app()->flash->error($e->getMessage());
                 }
 
                 $log                          = '';
@@ -1304,9 +1308,14 @@ if ($REQUEST_METHOD === 'POST')
                 $orderGroupModel = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
 
                 if ($mode === 'accounting_apply' && $user_account['flag'] !== 'FS') {
-                    if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
-                        define('TRACKING_ADDED', 1);
-                        func_send_order_status_notification($orderGroupModel->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
+                    try {
+                        if (OrderGroupHelper::addTrackingNumbers($orderGroupModel, $v)) {
+                            define('TRACKING_ADDED', 1);
+                            func_send_order_status_notification($orderGroupModel->orderid, OrderStatusModel::ORDER_DC_STATUS_SHIPPED, true);
+                        }
+                    }
+                    catch (Exception $e) {
+                        \Xcart\App\Main\Xcart::app()->flash->error( $e->getMessage());
                     }
                 }
 
