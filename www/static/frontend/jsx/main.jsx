@@ -2,7 +2,6 @@
 
 import '@/js/main';
 import 'preact/debug';
-import '../../temp/frontend/js/vendors';
 import './_head.jsx';
 
 import foundationRegisterCustomEvents from './_binds/foundation_events';
