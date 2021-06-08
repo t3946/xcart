@@ -479,7 +479,7 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['product']['sku'])) {
                 $qs->join('inner join', 'xcart_order_details', ['orderid' => 'details.orderid'], 'details');
-                $tmp = ['details.productcode__contains' => $data['product']['sku']];
+                $tmp = ['details.productcode__startswith' => $data['product']['sku']];
 
                 $this->getQ($tmp, 'product.sku');
             }
