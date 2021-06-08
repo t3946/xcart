@@ -477,6 +477,13 @@ gulp.task(
   })
 );
 
+gulp.task("watch:backend:styles", function () {
+  gulp.watch(
+    ["backend/bem/blocks/**/*.scss", ...backend.src.scss],
+    gulp.parallel("backend:styles")
+  );
+});
+
 gulp.task("watch:backend:scripts", function (done) {
   const args = [
     "./node_modules/webpack/bin/webpack.js",
