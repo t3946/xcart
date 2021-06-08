@@ -12,11 +12,13 @@ services:
       MYSQL_DATABASE: xcart_k
       MYSQL_USER: xcart_k
       MYSQL_PASSWORD: i250923lst
+      TZ: EST
     ports:
       - '3308:3306'
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
+      #- ./docker/mysql/my_local.cnf:/etc/my.cnf.d/my.cnf
 
   pmm-server:
     container_name: pmm
@@ -54,9 +56,9 @@ services:
       DB_USER: root
       DB_PASS: 8Ap6dvSWVJ7r8U8x
       DB_DUMP_FREQ: 1440
-      DB_DUMP_BEGIN: 0100
+      DB_DUMP_BEGIN: 0200
       DB_SERVER: mysql
       DB_PORT: 3306
-      AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
-      AWS_SECRET_ACCESS_KEY: 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
+      AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
+      AWS_SECRET_ACCESS_KEY: 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
       AWS_DEFAULT_REGION: us-east-1
