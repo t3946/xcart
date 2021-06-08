@@ -8,7 +8,7 @@
 // $_ENV;
 
 //display_errors(1);
-//error_reporting(E_ALL ^ E_DEPRECATED);
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 defined('XCART_APP') ?: define('XCART_APP', 1);
 defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);

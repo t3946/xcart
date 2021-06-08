@@ -31,6 +31,9 @@
             </div>
         </div>
         {/if}
+        <hr>
+        <div id="distributor-reference-target"></div>
+        <hr>
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="33%">
