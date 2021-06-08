@@ -20,6 +20,7 @@ export const EmailSearchDialogContainer: React.FC = () => {
     dispatch(setLoading());
     dispatch(getPage(Number(1), values));
   };
+
   return (
     <EmailSearchDialogContext.Provider
       value={{

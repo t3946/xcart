@@ -10,6 +10,8 @@ export const EmailDatePicker: React.FC<any> = ({
   name,
   min = undefined,
   max = undefined,
+  InputProps,
+  InputLabelProps,
 }) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -24,6 +26,8 @@ export const EmailDatePicker: React.FC<any> = ({
         autoOk
         animateYearScrolling
         inputVariant="outlined"
+        InputProps={InputProps}
+        InputLabelProps={InputLabelProps}
       />
     </MuiPickersUtilsProvider>
   );
