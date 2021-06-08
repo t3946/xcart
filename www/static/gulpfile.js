@@ -343,7 +343,7 @@ gulp.task(
 
     stream = stream.pipe(concat(backend.config.name + ".css"));
 
-    if (argv.production) {
+    if (process.env.NODE_ENV === "production") {
       stream = stream.pipe(cssnano());
     }
 
