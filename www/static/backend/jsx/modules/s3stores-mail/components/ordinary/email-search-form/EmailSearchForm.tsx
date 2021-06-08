@@ -12,11 +12,21 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import { initialValues } from "@s3stores-mail/ts/consts";
 import { EmailDatePicker } from "@s3stores-mail/components/smart/email-date-picker/EmailDatePicker";
 import { EmailSearchDialogContext } from "@s3stores-mail/contexts/email-search-dialog-context/EmailSearchDialog.context";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const EmailSearchForm: React.FC<any> = () => {
   const formValues = useSelector((state: StoreDto) => state.searchOptions);
 
   const { editSearchValues } = useContext(EmailSearchDialogContext);
+
+  const useStyles = makeStyles({
+    input: {
+      padding: "13.5px 14px !important",
+    },
+    label: {
+      transform: "translate(14px, 16px) scale(1)",
+    },
+  });
   return (
     <div>
       <Formik onSubmit={null} initialValues={formValues} enableReinitialize>
@@ -30,6 +40,16 @@ export const EmailSearchForm: React.FC<any> = () => {
               onChange={handleChange}
               value={values.to}
               variant="outlined"
+              InputProps={{
+                classes: {
+                  input: useStyles().input,
+                },
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: useStyles().label,
+                },
+              }}
             />
             <TextField
               name="from"
@@ -39,6 +59,16 @@ export const EmailSearchForm: React.FC<any> = () => {
               onChange={handleChange}
               value={values.from}
               variant="outlined"
+              InputProps={{
+                classes: {
+                  input: useStyles().input,
+                },
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: useStyles().label,
+                },
+              }}
             />
             <TextField
               name="subject"
@@ -48,6 +78,16 @@ export const EmailSearchForm: React.FC<any> = () => {
               onChange={handleChange}
               value={values.subject}
               variant="outlined"
+              InputProps={{
+                classes: {
+                  input: useStyles().input,
+                },
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: useStyles().label,
+                },
+              }}
             />
             <Grid alignItems="center" container justify="space-between">
               <Grid xs={5}>
@@ -57,6 +97,16 @@ export const EmailSearchForm: React.FC<any> = () => {
                   label="Date After"
                   value={values.dateAfter}
                   handleDateChange={(e) => setFieldValue("dateAfter", e)}
+                  InputProps={{
+                    classes: {
+                      input: useStyles().input,
+                    },
+                  }}
+                  InputLabelProps={{
+                    classes: {
+                      root: useStyles().label,
+                    },
+                  }}
                 />
               </Grid>
               <Grid container alignItems="center" justify="center" xs={1}>
@@ -70,6 +120,16 @@ export const EmailSearchForm: React.FC<any> = () => {
                   label="Date Before"
                   value={values.dateBefore}
                   handleDateChange={(e) => setFieldValue("dateBefore", e)}
+                  InputProps={{
+                    classes: {
+                      input: useStyles().input,
+                    },
+                  }}
+                  InputLabelProps={{
+                    classes: {
+                      root: useStyles().label,
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
