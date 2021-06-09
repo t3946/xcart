@@ -20,6 +20,11 @@ return [
         'name' => 'page'
     ],
     [
+        'route' => '/email-dashboard/email-info/{i:info}',
+        'target' => [EmailDashboardAdmin::class, 'index'],
+        'name' => 'info'
+    ],
+    [
         'route' => '/email-dashboard',
         'target' => [EmailDashboardAdmin::class, 'index'],
         'name' => 'index'

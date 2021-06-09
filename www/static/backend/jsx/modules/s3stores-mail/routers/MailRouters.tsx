@@ -1,25 +1,13 @@
-import React, { useEffect } from "react";
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  useParams,
-  withRouter,
-} from "react-router-dom";
+import React from "react";
+import { Switch, Route } from "react-router-dom";
 import { Email } from "../pages/email/Email";
-import {
-  getPage,
-  getTemplates,
-  resetSendData,
-  setLoading,
-} from "@redux/actions";
-import { useDispatch, useSelector } from "react-redux";
+import { getTemplates, resetSendData } from "@redux/actions";
+import { useDispatch } from "react-redux";
 import { EmailDialogHOC } from "@s3stores-mail/hoc/email-dialog/EmailDialogHOC";
 import { EmailSend } from "@s3stores-mail/containers/email-send/EmailSend";
 import { EmailInfoPage } from "@s3stores-mail/pages/email-info/EmailInfoPage";
 import { EmailSearchDialog } from "@s3stores-mail/containers/email-search-dialog.tsx/EmailSearchDialog";
 import EmailSearchContainer from "@s3stores-mail/containers/email-search/EmailSearch.container";
-import { StoreDto } from "../ts/types";
 
 export const MailRouters: React.FC = () => {
   const dispatch = useDispatch();

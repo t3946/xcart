@@ -1,5 +1,4 @@
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { AttachmentDto, EmailActionDto } from "../types/email.type";
 
 export const initialValues: StoreDto = {
   items: [],
@@ -14,7 +13,9 @@ export const initialValues: StoreDto = {
   },
   emailInfo: {
     account_id: "",
-    action: null,
+    action: {
+      action: false,
+    },
     attachment: [],
     body: "",
     date: new Date(),

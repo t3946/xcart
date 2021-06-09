@@ -5,24 +5,16 @@ export const addPrefixToSubject = (
 ): string => {
   const prefix = subject.split(" ")[0];
 
-  const subjectWordsMass = subject.split(" ");
-
   if (prefix === firstValue) {
     return subject;
   }
   if (prefix === secondValue) {
-    return subjectWordsMass
-      .map((e, index) => {
-        if (index === 0) {
-          return firstValue;
-        }
-        return e;
-      })
-      .join(" ");
+    return subject.replace(secondValue, firstValue);
   }
 
-  subjectWordsMass.splice(0, 0, firstValue);
+  const wordMass = subject.split(" ");
 
-  return subjectWordsMass.join(" ");
+  wordMass.splice(0, 0, firstValue);
+
+  return wordMass.join(" ");
 };
-//переписать это говно

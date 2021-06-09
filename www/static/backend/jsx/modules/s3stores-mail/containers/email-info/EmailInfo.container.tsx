@@ -10,6 +10,7 @@ import {
   editActions,
   editFavorites,
   editSendData,
+  getEmailInfo,
   setSendTemplate,
   setSendTemplateType,
   setViewed,
@@ -24,24 +25,30 @@ import { addPrefixToSubject } from "@s3stores-mail/utils/add-prefix-to-subject";
 import { SceletonEmailInfo } from "../../components/simple/sceleton-email-info/SceletonEmailInfo";
 
 export const EmailInfoContainer: React.FC = () => {
-  const email = useSelector((state: StoreDto) => {
-    return state.emailInfo;
-  });
+  const { id }: { id: string } = useParams();
 
   const emails = useSelector((state: StoreDto) => {
     return state.items;
   });
 
-  const loading = useSelector((state: StoreDto) => state.loading);
+  const email = emails.filter((e) => e.item.id === id)[0];
 
+  console.log(email);
   const page = useSelector((e: StoreDto) => e.page);
 
   const history = useHistory();
 
   useEffect(() => {
-    console.log(email);
-    if (Boolean(email?.id) && !email.viewed) {
-      dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
+    email
+      ? (email.item.body = replaceCidToImage(
+          email.item.body,
+          email.item.attachment
+        ))
+      : dispatch(getEmailInfo(id));
+    if (Boolean(email?.item.id) && !email.item.viewed) {
+      dispatch(
+        setViewed([email.item.id], isViewedItemsTrue(emails, [email.item.id]))
+      );
     }
   }, [email]);
 
@@ -52,16 +59,19 @@ export const EmailInfoContainer: React.FC = () => {
 
   const templates = useSelector((state: StoreDto) => state.templates);
 
-  email.body = replaceCidToImage(email.body, email.attachment);
-
   const editViewed = () => {
     history.push(`/admin/forms/email-dashboard/page/${page}`);
-    dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
+    dispatch(
+      setViewed([email.item.id], isViewedItemsTrue(emails, [email.item.id]))
+    );
   };
 
   const editFavorite = () => {
     dispatch(
-      editFavorites([email.id], isFavoriteItemsTrue(emails, [email.id]))
+      editFavorites(
+        [email.item.id],
+        isFavoriteItemsTrue(emails, [email.item.id])
+      )
     );
   };
 
@@ -76,21 +86,27 @@ export const EmailInfoContainer: React.FC = () => {
   }
 
   const sendMessage = () => {
-    dispatch(editSendData(email.body, "replyText"));
+    dispatch(editSendData(email.item.body, "replyText"));
     dialog.handleClickOpen();
   };
 
   const handleForward = () => {
     dispatch(
-      editSendData(addPrefixToSubject("Fwd:", "Re:", email.subject), "subject")
+      editSendData(
+        addPrefixToSubject("Fwd:", "Re:", email.item.subject),
+        "subject"
+      )
     );
     sendMessage();
   };
 
   const handleReply = () => {
-    dispatch(addRecipient(editEmailAddress(email.from_address)));
+    dispatch(addRecipient(editEmailAddress(email.item.from_address)));
     dispatch(
-      editSendData(addPrefixToSubject("Re:", "Fwd:", email.subject), "subject")
+      editSendData(
+        addPrefixToSubject("Re:", "Fwd:", email.item.subject),
+        "subject"
+      )
     );
     sendMessage();
   };
@@ -102,7 +118,7 @@ export const EmailInfoContainer: React.FC = () => {
   };
 
   const editAction = () => {
-    dispatch(editActions([email.id]));
+    dispatch(editActions([email.item.id]));
   };
 
   const infoValue = {
@@ -118,12 +134,12 @@ export const EmailInfoContainer: React.FC = () => {
   };
   return (
     <EmailInfoContext.Provider value={infoValue}>
-      {loading ? (
+      {!email?.item.id ? (
         <SceletonEmailInfo />
       ) : (
         <React.Fragment>
-          <EmailInfoHeader info={email} />
-          <EmailInfoBody thisRef={componentRef} emailInfo={email} />
+          <EmailInfoHeader info={email.item} />
+          <EmailInfoBody thisRef={componentRef} emailInfo={email.item} />
         </React.Fragment>
       )}
     </EmailInfoContext.Provider>

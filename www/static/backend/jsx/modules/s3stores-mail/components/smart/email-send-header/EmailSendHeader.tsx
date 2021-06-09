@@ -7,6 +7,7 @@ import { EmailDialogHeader } from "@s3stores-mail/components/simple/email-dialog
 import { EmailSelect } from "@s3stores-mail/components/smart/email-select/EmailSelect";
 import { EmailSendHeaderDialogContext } from "@s3stores-mail/contexts/email-send-header-context/EmailSendHeaderDialog.context";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
+import { editSelectViewValue } from "../../../utils/edit-select-view-value";
 
 export const EmailSendHeader: React.FC = () => {
   const dialog = useContext(EmailDialogContext);
@@ -33,7 +34,7 @@ export const EmailSendHeader: React.FC = () => {
         <Grid className="email-send-header-text">Select template:</Grid>
         <Grid className={"email-send-template-type"}>
           <EmailSelect
-            items={templates}
+            items={editSelectViewValue(templates, "Select template by")}
             value={templateType}
             onClick={(item) => setTemplateType(item)}
           />

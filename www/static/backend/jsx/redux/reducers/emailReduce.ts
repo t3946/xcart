@@ -43,7 +43,7 @@ const emailReducer = (
       return {
         ...state,
         loading: false,
-        emailInfo: action.emailInfo,
+        items: [{ item: action.emailInfo, checked: false }],
       };
     case "SET_SEND_TEMPLATE_TYPE":
       return {

@@ -17,7 +17,6 @@ export const Email: React.FC = () => {
   const emailPage = useSelector((e: StoreDto) => e.page);
 
   useEffect(() => {
-    dispatch(setEmailInfo(initialValues.emailInfo));
     if (Number(page) === emailPage) {
       return;
     }
