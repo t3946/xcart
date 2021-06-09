@@ -1,9 +1,9 @@
-@import 'node_modules/bootstrap/dist/css/bootstrap.min';
+@import "settings";
+@import "__cds_index";
+@import "node_modules/bootstrap/dist/css/bootstrap.min";
 @import "node_modules/jquery-ui-dist/jquery-ui";
 @import "node_modules/select2/dist/css/select2";
 @import "node_modules/air-datepicker/dist/css/datepicker";
-@import "settings";
-@import "__cds_index";
 @import "vendors/mmodal";
 @import "vendors/modal";
 @import "vendors/mnotify";

@@ -174,7 +174,7 @@ class DistributorForm extends ModelForm
     }
 
     /**
-     * переделать ассоциативный массив секций в обынчий, чтобы при переводе в json порядок не нарушался
+     * переделать ассоциативный массив секций в обычный, чтобы при переводе в json порядок не нарушался
      * @param callable|null $map позволяет модифицировать элементы массива
     */
     public static function getSectionsArray(?callable $map): array

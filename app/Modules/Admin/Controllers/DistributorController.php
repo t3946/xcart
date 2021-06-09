@@ -104,13 +104,11 @@ class DistributorController extends BackendController
                 'normalizedPhone' => $dx->getPhoneNormalized(),
                 'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
                 'distributorsLink' => '/admin/manufacturers.php?word=num',
+                'currentSectionKey' => (int)$section,
             ],
-            'sections' => [
-                'list' => $form->getSectionsArray(function (&$sub_section) use($form) {
-                    $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
-                }),
-                'menuTitle' => "{$form->getInstance()} sections",
-            ],
+            'sections' => $form->getSectionsArray(function (&$sub_section) use($form) {
+                $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
+            }),
         ];
         StorageHelper::push($distributor_base_data, null, 'distributor');
 

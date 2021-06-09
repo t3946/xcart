@@ -1,5 +1,5 @@
 import React from "react";
-import DistributorReference from "@modules/distributor/components/distributor-reference";
+import DistributorReference from "@admin/modules/distributor/components/distributor-reference";
 import $ from "jquery";
 
 $(function () {

@@ -61,6 +61,6 @@ class StorageHelper
     {
         $json = json_encode(self::$store);
 
-        return "<script type=\"text/javascript\">const appData = $json;</script>";
+        return "<script type=\"text/javascript\">window.appData = $json;</script>";
     }
 }
