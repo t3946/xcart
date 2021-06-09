@@ -12,29 +12,31 @@ services:
       MYSQL_DATABASE: xcart_k
       MYSQL_USER: xcart_k
       MYSQL_PASSWORD: i250923lst
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
       TZ: EST
     ports:
-      - '3308:3306'
+      - '3306:3306'
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
       #- ./docker/mysql/my_local.cnf:/etc/my.cnf.d/my.cnf
 
-  pmm-server:
-    container_name: pmm
-    image: percona/pmm-server:latest
-    restart: always
-    ports:
-      - "4443:443"
-    environment:
-      SERVER_USER: pmm
-      SERVER_PASSWORD: pmm
+  #pmm-server:
+  #  container_name: pmm
+  #  image: percona/pmm-server:latest
+  #  restart: always
+  #  ports:
+  #    - "4443:443"
+  #  environment:
+  #    SERVER_USER: pmm
+  #    SERVER_PASSWORD: pmm
   pmm-client-ps:
     container_name: pmm-client
     image: perconalab/pmm-client:latest
     restart: always
     environment:
-      PMM_SERVER: pmm-server:443
+      PMM_SERVER: 159.65.220.58:443
       PMM_USER: pmm
       PMM_PASSWORD: pmm
       DB_TYPE: mysql
@@ -73,8 +75,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./www:/var/www
-      #- ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
 
   php:
     build:
@@ -91,7 +93,7 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./www:/var/www
+      - ./:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
   redis:
