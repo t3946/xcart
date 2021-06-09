@@ -49,8 +49,6 @@ services:
     restart: always
     volumes:
       - ./docker/mysql/backup/data:/db
-      - ./docker/mysql/backup/pre:/scripts.d/pre-backup
-      - ./docker/mysql/backup/post:/scripts.d/post-backup
     environment:
       DB_DUMP_TARGET: s3://backup-xcart/dumps
       DB_USER: root
@@ -62,3 +60,45 @@ services:
       AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
       AWS_SECRET_ACCESS_KEY: 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
       AWS_DEFAULT_REGION: us-east-1
+
+  # Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - php
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./www:/var/www
+      #- ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./www:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+    restart: always

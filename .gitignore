@@ -40,3 +40,4 @@ node_modules
 !.gitkeep
 !/skin1_kolin/
 /docker/mysql/data/
+/docker/redis/data/
