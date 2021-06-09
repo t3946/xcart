@@ -34,18 +34,19 @@ export const EmailInfoContainer: React.FC = () => {
 
   const loading = useSelector((state: StoreDto) => state.loading);
 
+  const page = useSelector((e: StoreDto) => e.page);
+
+  const history = useHistory();
+
   useEffect(() => {
+    console.log(email);
     if (Boolean(email?.id) && !email.viewed) {
-      editViewed();
+      dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
     }
   }, [email]);
 
-  const page = useSelector((e: StoreDto) => e.page);
-
   const dialog = useContext(EmailDialogContext);
   const dispatch = useDispatch();
-
-  const history = useHistory();
 
   const componentRef = useRef();
 
@@ -54,8 +55,8 @@ export const EmailInfoContainer: React.FC = () => {
   email.body = replaceCidToImage(email.body, email.attachment);
 
   const editViewed = () => {
-    dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
     history.push(`/admin/forms/email-dashboard/page/${page}`);
+    dispatch(setViewed([email.id], isViewedItemsTrue(emails, [email.id])));
   };
 
   const editFavorite = () => {

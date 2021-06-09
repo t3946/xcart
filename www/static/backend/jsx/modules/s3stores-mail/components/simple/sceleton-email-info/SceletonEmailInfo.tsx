@@ -26,6 +26,14 @@ export const SceletonEmailInfo = () => {
       </Paper>
       <Paper elevation={0} square={true}>
         <div className="email-info-data-wrapper">
+          <Grid container justify="space-between" alignItems="center">
+            <Grid xs={4}>
+              <div className="sceleton  sceleton-email-list-wrap" />
+            </Grid>
+            <Grid xs={3}>
+              <div className="sceleton  sceleton-email-list-wrap" />
+            </Grid>
+          </Grid>
           <div className="sceleton  sceleton-info-body" />
         </div>
         <div className="email-info-data-wrapper">

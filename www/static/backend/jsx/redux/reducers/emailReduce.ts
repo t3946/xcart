@@ -207,13 +207,9 @@ export default emailReducer;
 function editEmailInfo(emailInfo, items) {
   let newInfo = emailInfo;
   items.forEach((e) => {
-    console.log(e);
     if (e.item.id === emailInfo.id) {
       newInfo = e.item;
     }
   });
-
-  console.log(newInfo);
-
   return newInfo;
 }

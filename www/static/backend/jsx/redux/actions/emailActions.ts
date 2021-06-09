@@ -15,6 +15,7 @@ import {
   SendDataDto,
 } from "@s3stores-mail/ts/types";
 import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
+import { EmailDto } from "../../modules/s3stores-mail/ts/types/email.type";
 
 export const getPage = (
   page: number,
@@ -135,4 +136,9 @@ export const sendEmail = (email: SendDataDto): any => ({
 export const getEmailInfo = (id: string): any => ({
   type: "GET_EMAIL_INFO",
   id,
+});
+
+export const setEmailInfo = (emailInfo: EmailDto): any => ({
+  type: "SET_EMAIL_INFO",
+  emailInfo,
 });

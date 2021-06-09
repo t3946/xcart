@@ -7,6 +7,9 @@ import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/Ema
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { EditViewStateIcon } from "@s3stores-mail/components/simple/edit-view-state-icon/EditViewStateIcon";
 import ReactToPrint from "react-to-print";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { StoreDto } from "../../../ts/types";
 
 export const EmailInfoHeaderIcons: React.FC<any> = () => {
   const {
@@ -17,6 +20,7 @@ export const EmailInfoHeaderIcons: React.FC<any> = () => {
     editFavorite,
     componentRef,
   } = useContext(EmailInfoContext);
+
   return (
     <React.Fragment>
       <IconConstruct onClick={handleReply} title="reply">
@@ -33,7 +37,12 @@ export const EmailInfoHeaderIcons: React.FC<any> = () => {
         )}
         content={() => componentRef.current}
       />
-      <EditViewStateIcon viewed={emailInfo.viewed} editView={editViewed} />
+      <EditViewStateIcon
+        viewed={emailInfo.viewed}
+        editView={() => {
+          editViewed();
+        }}
+      />
       <FavoriteButton
         favorite={emailInfo.favorite}
         editFavorite={editFavorite}

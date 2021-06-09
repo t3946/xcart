@@ -34,7 +34,7 @@ const SendForm: React.FC = () => {
 
   const initialValue =
     sendTemplate.message_body +
-    `<blockquote style="margin: 0px 0px 0px 0.8ex; border-left: 1px solid #cccccc; padding-left: 1ex;">${replyText}</blockquote>`;
+    `<br/><blockquote style="margin: 0px 0px 0px 0.8ex; border-left: 1px solid #cccccc; padding-left: 1ex;">${replyText}</blockquote>`;
 
   return (
     <React.Fragment>
