@@ -161,9 +161,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
               <div className="summary">
                 <div className="row distributor_row-layout">
                   <div className="col-6 distributor-layout-column">
-                    <p className={"m-0"}>
-                      {appData().distributor.reference.description}
-                    </p>
+                    <p className={"m-0"} dangerouslySetInnerHTML={{__html: appData().distributor.reference.description}} />
                   </div>
 
                   <div className="col-6 distributor-layout-column">
