@@ -7,7 +7,7 @@
             {$right}
         </span>
     </div>
-    <div class="white-back orange-border content-block">
+    <div class="white-back content-block">
         {raw $html}
     </div>
 </div>
