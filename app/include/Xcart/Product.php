@@ -772,7 +772,7 @@ SQL;
 
     public static function getRandFbaProducts($limit = 2, array $no_ids = null, $sfid = null)
     {
-        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
+        $where = ['amazon_fba' => 'Y', 'amazon_enabled' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
 
         if (!empty($no_ids)) {
             $where[] = new QAndNot(['productid__in' => $no_ids]);
