@@ -559,22 +559,14 @@ class QuerySet extends QuerySetBase
     {
         $qb = clone $this->getQueryBuilder();
         
-//        list($order, $orderOptions) = $qb->getOrder();
         $select = $qb->getSelect();
 
-
-//        $select = $qb->getQueryBuilder()->getSelect();
-
-        $sql = $qb->order(null)->select(array_merge([$q], $select))->toSQL();
-//        $qb->select($select)->order($order, $orderOptions);
-        return $sql;
+        return $qb->order(null)->select(array_merge([$q], $select))->toSQL();
     }
 
     private function aggregate(Aggregation $q)
     {
-        $sql = $this->buildAggregateSql($q);
-        $statement = $this->getConnection()->query($sql);
-        $value = $statement->fetch();
+        $value = $this->execute($this->buildAggregateSql($q))[0];
         if (is_array($value)) {
             $value = end($value);
         }
@@ -671,11 +663,14 @@ class QuerySet extends QuerySetBase
 
         if (!empty($this->_group))
         {
-            return $clone->getConnection()->executeQuery($clone->buildAggregateSql(new Count($q)))->rowCount();
+            if ($this->cache && $this->getConnection()->getConfiguration()->getResultCacheImpl()) {
+                $qcp = new QueryCacheProfile($this->cache);
+            }
+            $sql = $clone->buildAggregateSql(new Count($q));
+            return $clone->getConnection()->executeQuery($sql, [], [], $qcp ?? null)->rowCount();
         }
-        else {
-            return $clone->aggregate(new Count($q));
-        }
+
+        return $clone->aggregate(new Count($q));
     }
 
     /**
