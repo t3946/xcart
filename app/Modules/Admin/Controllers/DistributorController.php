@@ -10,6 +10,7 @@ use Modules\Admin\Admin\DxContactsAdmin;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Admin\Forms\Dx\DistributorForm;
+use Modules\Admin\Forms\Dx\DistributorGeneralForm;
 use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -24,10 +25,45 @@ class DistributorController extends BackendController
     public function index($mid = null, $section = 1)
     {
         $user = Xcart::app()->user;
+        $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+        $distributor_section = DistributorForm::getSection($section);
+        //инициализация формы
+        $form = new $distributor_section['form'];
+
+        if ($dx) {
+            $form->setInstance($dx);
+        }
+        $general_form = new DistributorGeneralForm($dx);
+
+        //данные для клиентской части
+
+        $distributor_base_data = [
+            'reference' => [
+                'mainInfoTitle' => "$dx ({$dx->code})",
+                'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
+                'time' => $dx->getDistributorTime()->format('H:i'),
+                'phone' => $dx->getPhoneNormalized(),
+                'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
+                'normalizedPhone' => $dx->getPhoneNormalized(),
+                'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
+                'distributorsLink' => '/admin/manufacturers.php?word=num',
+                'currentSectionKey' => (int)$section,
+            ],
+
+            'sections' => $general_form->getSectionsArray(function (&$sub_section) use($form) {
+                $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
+            }),
+        ];
+
+        StorageHelper::push($distributor_base_data, null, 'distributor');
+
         /** @var DistributorModel $dx */
-        if ($mid && ($dx = DistributorModel::objects()->get(['manufacturerid' => $mid])) && $dx->provider !== $user->login) {
-            if (($user->hasRole('vrs')) ||
-                (Xcart::app()->user->hasRole('vrv') && $user->childs->filter(['login' => $dx->provider])->count() === 0)) {
+        if ($mid && $dx && $dx->provider !== $user->login) {
+            if (
+                $user->hasRole('vrs')
+                || Xcart::app()->user->hasRole('vrv')
+                && $user->childs->filter(['login' => $dx->provider])->count() === 0
+            ) {
                 Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
             }
         }
@@ -39,8 +75,7 @@ class DistributorController extends BackendController
             $admin->section = $section;
             $admin->all();
             exit;
-        }
-        if ($section == 50) {
+        } elseif ($section == 50) {
             $admin = new DxCommunicationAdmin();
             //$admin->dxModel = $dx;
             $admin->section = $section;
@@ -48,16 +83,11 @@ class DistributorController extends BackendController
             exit;
         }
 
-        $distributor_section = DistributorForm::getSection($section);
-
         if (!$distributor_section['form']) {
             $this->redirect("/admin/manufacturers.php?manufacturerid={$dx->manufacturerid}&distributor_section={$section}");
         }
 
-        $form = new $distributor_section['form'];
-        if ($dx) {
-            $form->setInstance($dx);
-        }
+        //сохранение формы
         if (Xcart::app()->request->getIsPost()) {
             $form->populate(Xcart::app()->request->post, $_FILES);
             if (!$dx) {
@@ -85,32 +115,13 @@ class DistributorController extends BackendController
             }
         }
 
+        //хлебные крошки
         Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'),  '/admin/manufacturers.php?&word=num');
         if (!$dx) {
             Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Add Distributor'));
         } else {
             Xcart::app()->breadcrumbs->add($distributor_section['title']);
         }
-
-        //данные для клиентской части
-        $dx = $form->getDx();
-        $distributor_base_data = [
-            'reference' => [
-                'mainInfoTitle' => "$dx ({$dx->code})",
-                'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
-                'time' => $dx->getDistributorTime()->format('H:i'),
-                'phone' => $dx->getPhoneNormalized(),
-                'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
-                'normalizedPhone' => $dx->getPhoneNormalized(),
-                'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
-                'distributorsLink' => '/admin/manufacturers.php?word=num',
-                'currentSectionKey' => (int)$section,
-            ],
-            'sections' => $form->getSectionsArray(function (&$sub_section) use($form) {
-                $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
-            }),
-        ];
-        StorageHelper::push($distributor_base_data, null, 'distributor');
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,
