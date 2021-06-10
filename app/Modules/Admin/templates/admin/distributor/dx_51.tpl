@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name=$section_title}
+    {smarty_admin_block is_show_title=false}
         <p>
             Simplified, easy to understand PayPal Acceptable Use Policy: <br/>
             <a style="color: #0101F7;" target="_blank" href="https://docs.google.com/document/d/1Imu2t_YU3vqWQwBH_UOSUHIptFm95r8evezsc9HFZXw/edit?usp=sharing">
