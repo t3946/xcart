@@ -27,35 +27,37 @@ class DistributorController extends BackendController
         $user = Xcart::app()->user;
         $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
         $distributor_section = DistributorForm::getSection($section);
-        //инициализация формы
-        $form = new $distributor_section['form'];
+        if ($distributor_section['form']){
+            //инициализация формы
+            $form = new $distributor_section['form'];
 
-        if ($dx) {
-            $form->setInstance($dx);
+            if ($dx) {
+                $form->setInstance($dx);
+            }
+            $general_form = new DistributorGeneralForm($dx);
+
+            //данные для клиентской части
+
+            $distributor_base_data = [
+                'reference' => [
+                    'mainInfoTitle' => "$dx ({$dx->code})",
+                    'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
+                    'time' => $dx->getDistributorTime()->format('H:i'),
+                    'phone' => $dx->getPhoneNormalized(),
+                    'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
+                    'normalizedPhone' => $dx->getPhoneNormalized(),
+                    'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
+                    'distributorsLink' => '/admin/manufacturers.php?word=num',
+                    'currentSectionKey' => (int)$section,
+                ],
+
+                'sections' => $general_form->getSectionsArray(function (&$sub_section) use($form) {
+                    $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
+                }),
+            ];
+
+            StorageHelper::push($distributor_base_data, null, 'distributor');
         }
-        $general_form = new DistributorGeneralForm($dx);
-
-        //данные для клиентской части
-
-        $distributor_base_data = [
-            'reference' => [
-                'mainInfoTitle' => "$dx ({$dx->code})",
-                'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
-                'time' => $dx->getDistributorTime()->format('H:i'),
-                'phone' => $dx->getPhoneNormalized(),
-                'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
-                'normalizedPhone' => $dx->getPhoneNormalized(),
-                'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
-                'distributorsLink' => '/admin/manufacturers.php?word=num',
-                'currentSectionKey' => (int)$section,
-            ],
-
-            'sections' => $general_form->getSectionsArray(function (&$sub_section) use($form) {
-                $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
-            }),
-        ];
-
-        StorageHelper::push($distributor_base_data, null, 'distributor');
 
         /** @var DistributorModel $dx */
         if ($mid && $dx && $dx->provider !== $user->login) {
