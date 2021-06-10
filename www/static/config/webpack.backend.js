@@ -13,6 +13,8 @@ const config = _.merge(baseConfig, {
       "@": path.resolve("./backend"),
       "@redux": path.resolve("./backend/jsx/redux"),
       "@s3stores-mail": path.resolve("./backend/jsx/modules/s3stores-mail"),
+      "@admin/modules": path.resolve("./backend/jsx/modules"),
+      "@admin": path.resolve("./backend/jsx"),
     },
   },
   module: {

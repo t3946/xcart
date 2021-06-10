@@ -1,14 +1,18 @@
 <tr {if $field->isHidden()}style="display: none;"{/if}>
-    <td width="30%" class="FormButton">
-        <b>{raw $label}</b>
-        {if $field->required}<span class="Star">*</span>{/if}
-        {if $field->hasHint()}{raw $hint}{/if}
+    <td colspan="3">
+        <div class="row">
+            <div class="col-3">
+                <b>{raw $label}</b>
+                {if $field->required}<span class="Star">*</span>{/if}
+                {if $field->hasHint()}{raw $hint}{/if}
+            </div>
+            <div class="col-8">
+                {raw $input}
+                {raw $errors}
+            </div>
+            <div class="col-1">
+                {raw $ext}
+            </div>
+        </div>
     </td>
-    <td width="60%">
-        {raw $input}
-        {raw $errors}
-    </td>
-    <td></td>
-    {raw $ext}
 </tr>
-

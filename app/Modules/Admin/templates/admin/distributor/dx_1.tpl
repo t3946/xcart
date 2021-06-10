@@ -14,11 +14,12 @@
     'enctype' => 'multipart/form-data'
     ])}
     {raw $form->render()}
-        <div class="row" style="margin-top: 15px;">
-            <div class="column text-center">
-                <button type="submit">Save</button>
-            </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-3"></div>
+        <div class="col-9">
+            <button type="submit" class="button_outline">Save</button>
         </div>
+    </div>
 
     {raw $form->renderEnd()}
     {/smarty_admin_block}

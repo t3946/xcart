@@ -10,8 +10,10 @@ use Modules\Admin\Admin\DxContactsAdmin;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Admin\Forms\Dx\DistributorForm;
+use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Sites\Helpers\StorageHelper;
 use Throwable;
 use Xcart\App\Exceptions\Exception;
 use Xcart\App\Main\Xcart;
@@ -90,6 +92,25 @@ class DistributorController extends BackendController
             Xcart::app()->breadcrumbs->add($distributor_section['title']);
         }
 
+        //данные для клиентской части
+        $dx = $form->getDx();
+        $distributor_base_data = [
+            'reference' => [
+                'mainInfoTitle' => "$dx ({$dx->code})",
+                'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
+                'time' => $dx->getDistributorTime()->format('H:i'),
+                'phone' => $dx->getPhoneNormalized(),
+                'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
+                'normalizedPhone' => $dx->getPhoneNormalized(),
+                'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
+                'distributorsLink' => '/admin/manufacturers.php?word=num',
+                'currentSectionKey' => (int)$section,
+            ],
+            'sections' => $form->getSectionsArray(function (&$sub_section) use($form) {
+                $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
+            }),
+        ];
+        StorageHelper::push($distributor_base_data, null, 'distributor');
 
         echo $this->renderInSmarty("admin/distributor/dx_{$section}.tpl", [
             'page_title' => $pageTitle,

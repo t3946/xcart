@@ -31,53 +31,9 @@
             </div>
         </div>
         {/if}
-        <table width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="33%">
-                    <h1 style="text-align: left">
-                        <a href="/admin/manufacturers.php?word=num" style="color: #0101F7;">Distributors</a>
-                    </h1>
-                </td>
-                <td width="*">
-                    <h1 style="text-align: left">{$distributorModel} ({$distributorModel->code}) /
-                        <a style="color: #0101F7; text-transform: none;" href="{$distributorModel->getAdminOrdersUrl(6)}" target="_blank">
-                            Last 6 months of order history
-                        </a>
-                    </h1>
-                </td>
-            </tr>
-        </table>
-        <table width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="*" align="left" valign="top">
-                    {$.call.Modules.Core.Models.LanguageModel::translate('txt_manufacturers_top_text')}
-                </td>
-                <td width="2%" align="center">&nbsp;</td>
-                <td width="48%" align="left" valign="top">
-                    <table>
-                        <tr>
-                            <td>
-                                <B>Distributor time:</B> {$distributorModel->getDistributorTime()->format('H:i')}
-                                <br/>
-                                <B>Distributor phone:</B> {$distributorModel->getPhoneNormalized()}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="call_btn_distr_{if $distributorModel->isGoodTimeToSendEmail()}a{else}d{/if}">
-                                    <a target="_blank" href="tel:{$distributorModel->getPhoneNormalized()}">
-                                        <div style="width: 219px; height: 44px;"></div>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <br/>
-        <br/>
-        {include 'admin/sections.tpl' current_section=$section sections=$sections}
+        <div id="distributor-reference-target"></div>
+        <br />
+        <br />
     {/if}
 {/block}
 

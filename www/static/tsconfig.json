@@ -10,6 +10,15 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
+      //административная часть
+      "@admin/modules/*": [
+        "backend/jsx/modules/*",
+      ],
+      "@admin/*": [
+        "backend/jsx/*",
+      ],
+
+      //клиентская часть
       "@modules/*": [
         "frontend/jsx/modules/*"
       ],

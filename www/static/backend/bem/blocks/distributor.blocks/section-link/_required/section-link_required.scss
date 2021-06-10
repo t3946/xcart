@@ -1,0 +1,6 @@
+.section-link_required {
+    &:after{
+        content: '*';
+        color: #ad1e00;
+    }
+}

@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
+    {Modules\Sites\Helpers\StorageHelper::print()}
 </head>
 <body{$reading_direction_tag}>
 
