@@ -1,0 +1,22 @@
+{
+  "name": "mindy-sass",
+  "main": [
+    "mindy/_mindy.scss"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {},
+  "homepage": "https://github.com/studio107/mindy-sass",
+  "_release": "4d0bedbe67",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4d0bedbe67f54ab971adc4559d5b25f2e32b5acb"
+  },
+  "_source": "https://github.com/studio107/mindy-sass.git",
+  "_target": "*",
+  "_originalSource": "mindy-sass"
+}
