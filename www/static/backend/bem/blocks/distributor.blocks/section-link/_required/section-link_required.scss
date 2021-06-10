@@ -1,6 +1,7 @@
 .section-link_required {
     &:after{
-        content: '*';
+        content: ' *';
         color: #ad1e00;
+        font-weight: 700;
     }
 }

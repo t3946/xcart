@@ -14,7 +14,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
       <div className="accordion-trigger row">
         <div className="col-2">
           <a
-            href={props.distributorsLink}
+            href={appData().distributor.reference.distributorsLink}
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -26,10 +26,10 @@ const DistributorReference: React.FC<any> = (props: any) => {
 
         <div className="col-8">
           <h2 className="distributor-reference-header text-center">
-            {props.mainInfoTitle}
+            {appData().distributor.reference.mainInfoTitle}
             {" / "}
             <a
-              href={props.lastOrderHistoryLink}
+              href={appData().distributor.reference.lastOrderHistoryLink}
               onClick={(e) => {
                 e.stopPropagation();
               }}
