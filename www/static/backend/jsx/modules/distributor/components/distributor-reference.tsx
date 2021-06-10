@@ -65,7 +65,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
   }
 
   function callButtonTemplate() {
-    const { isGoodTime, normalizedPhone } = appData().distributor.reference;
+    const { isGoodTimeToSendEmail, normalizedPhone } = appData().distributor.reference;
 
     if (!normalizedPhone) {
       return;
@@ -74,8 +74,8 @@ const DistributorReference: React.FC<any> = (props: any) => {
     return (
       <div
         className={classNames({
-          call_btn_distr_a: isGoodTime,
-          call_btn_distr_d: !isGoodTime,
+          call_btn_distr_a: isGoodTimeToSendEmail,
+          call_btn_distr_d: !isGoodTimeToSendEmail,
         })}
       >
         <a target="_blank" href={`tel:${normalizedPhone}`}>
