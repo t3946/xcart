@@ -3,10 +3,11 @@ import DistributorReference from "@admin/modules/distributor/components/distribu
 import $ from "jquery";
 
 $(function () {
+  if (!appData.distributor) {
+    return;
+  }
+
   const target = $("#distributor-reference-target")[0];
 
-  React.render(
-    <DistributorReference {...appData.distributor.reference} />,
-    target
-  );
+  React.render(<DistributorReference />, target);
 });
