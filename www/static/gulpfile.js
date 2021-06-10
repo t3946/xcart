@@ -343,7 +343,7 @@ gulp.task(
 
     stream = stream.pipe(concat(backend.config.name + ".css"));
 
-    if (argv.production) {
+    if (process.env.NODE_ENV === "production") {
       stream = stream.pipe(cssnano());
     }
 
@@ -478,6 +478,18 @@ gulp.task(
     gulp.watch(backend.src.scss, ["backend:styles"]);
     gulp.watch(backend.src.css, ["backend:styles"]);
     gulp.watch(backend.src.fonts, ["backend:fonts"]);
+  })
+);
+
+gulp.task(
+  "watch:backend:styles",
+  gulp.series("backend:styles", function (done) {
+    gulp.watch(
+      ["backend/bem/blocks/**/*.scss", ...backend.src.scss],
+      gulp.parallel("backend:styles")
+    );
+
+    done();
   })
 );
 

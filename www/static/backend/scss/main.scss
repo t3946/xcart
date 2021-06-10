@@ -1,8 +1,9 @@
+@import "settings";
+@import "__cds_index";
+@import "node_modules/bootstrap/dist/css/bootstrap.min";
 @import "node_modules/jquery-ui-dist/jquery-ui";
 @import "node_modules/select2/dist/css/select2";
 @import "node_modules/air-datepicker/dist/css/datepicker";
-@import "settings";
-@import "__cds_index";
 @import "vendors/mmodal";
 @import "vendors/modal";
 @import "vendors/mnotify";
@@ -46,7 +47,25 @@
 @import "pages/amazon_restocking";
 
 @import "blocks/blocks";
-
+@import "../static/local_modules/mindy-sass/mindy/_functions";
 @import "../fonts/GothamPro/css/GothamPro";
+@import "../fonts/lato";
 @import "../fonts/icons/css/style";
 @import "../bem/bem";
+
+html, body {
+    font-size: initial;
+}
+
+.admin-main-content,
+.VertMenuBorder,
+.headSearchLine,
+.select2-container {
+    font-size: 13px;
+}
+
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1310px;
+    }
+}

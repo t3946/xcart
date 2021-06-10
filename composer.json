@@ -6,6 +6,7 @@
     },
     "require": {
         "ext-json": "*",
+        "ext-mbstring": "^7.4",
         "aftership/aftership-php-sdk": "^5.1",
         "aveiv/open-exchange-rates-api": "^1.2",
         "aws/aws-sdk-php": "^3.0",

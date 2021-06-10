@@ -1,5 +1,20 @@
 # xcart
 
+# Сборка проекта
+Пусть корень проекта `/`.
+## Установка зависимостей
+`cd / && composer install`
+`cd /www/static && npm i`
+## Сборка frontend
+`cd /www/static && gulp build:frontend && gulp build:backend`
+### Production 
+Для сборки в production режиме<br/>
+`cd /www/static`<br/>
+`NODE_ENV=production gulp build:frontend`<br/>
+`NODE_ENV=production gulp build:backend`<br/>
+
+Для сборки на windows `NODE_ENV=production` нужно заменить на соответствующий терминалу аналог 
+
 # Project hierarchy
 
 ```

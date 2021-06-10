@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" width="100%">
+<table class="admin-hat" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td class="HeadLogo_admin" width="*">
             <a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">

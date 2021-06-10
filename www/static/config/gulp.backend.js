@@ -51,6 +51,7 @@ module.exports = {
     images: ["backend/images/**/*.*"],
     fonts: [
       "backend/fonts/GothamPro/fonts/**/*",
+      "fonts/lato/*",
       "backend/fonts/icons/fonts/*",
     ],
     raw: [].concat(
@@ -150,6 +151,11 @@ module.exports = {
     "font-gotham_pro": {
       fonts: ["backend/fonts/GothamPro/fonts/**/*"],
       css: ["backend/fonts/GothamPro/css/*"],
+    },
+
+    "font-lato": {
+      fonts: ["backend/fonts/lato/fonts/**/*"],
+      css: ["backend/fonts/lato/css/lato.css"],
     },
 
     cds: {
