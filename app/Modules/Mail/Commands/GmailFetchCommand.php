@@ -24,6 +24,7 @@ class GmailFetchCommand extends Command
 
         $service = new Google_Service_Gmail($client);
 
+
         foreach ($labels = GmailHelper::listLabels($service, $userId) as $label) {
             [$labelModel] = LabelModel::objects()->getOrNew(['label_id' => $label->getId()]);
             $labelModel->setAttributes([
