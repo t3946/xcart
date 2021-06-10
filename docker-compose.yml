@@ -36,7 +36,7 @@ services:
     image: perconalab/pmm-client:latest
     restart: always
     environment:
-      PMM_SERVER: 159.65.220.58:443
+      PMM_SERVER: pmm-server:443
       PMM_USER: pmm
       PMM_PASSWORD: pmm
       DB_TYPE: mysql
