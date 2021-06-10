@@ -58,44 +58,18 @@ class QueueProcessCommand extends Command
             $mime->addTo($recipients);
             $mime->setHTMLBody($data['body']);
             $mime->setSubject($data['subject']);
-
+            foreach ($data['files'] as $file) {
+                $mime_type = 'application/pdf'; // тут нужно определить mime type файла
+                $mime->addAttachment($file['content'], $mime_type, $file['name'], false);
+            }
 
             $mailMessage = base64_encode($mime->getMessage());
             $googleMessage->setRaw($mailMessage);
 
-            $request = $mailService->users_messages->send(
+            $mailService->users_messages->send(
                 $userId,
                 $googleMessage,
-                array( 'uploadType' => 'resumable' )
             );
-
-            $client->setDefer(true);
-
-            foreach ($data['files'] as $file){
-                $media = new Google_Http_MediaFileUpload(
-                    $client,
-                    $request,
-                    'message/rfc822',
-                    $mailMessage,
-                    true,
-                    $chunkSizeBytes = 1 * 1024 * 1024
-                );
-
-
-
-                $media->setFileSize(filesize($file));
-
-                $status = false;
-                $handle = fopen($file, 'rb');
-                while (! $status && ! feof($handle)) {
-                    $chunk = fread($handle, $chunkSizeBytes);
-                    $status = $media->nextChunk($chunk);
-                }
-                fclose($handle);
-            }
-
-            $client->setDefer(false);
-
         }
         $message->ack();
     }
