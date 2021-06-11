@@ -7,6 +7,9 @@ services:
     image: percona/percona-server:8.0
     restart: always
     command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - frontend
+      - backend
     environment:
       MYSQL_ROOT_PASSWORD: 8Ap6dvSWVJ7r8U8x
       MYSQL_DATABASE: xcart_k
@@ -22,19 +25,23 @@ services:
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
       #- ./docker/mysql/my_local.cnf:/etc/my.cnf.d/my.cnf
 
-  #pmm-server:
-  #  container_name: pmm
-  #  image: percona/pmm-server:latest
-  #  restart: always
-  #  ports:
-  #    - "4443:443"
-  #  environment:
-  #    SERVER_USER: pmm
-  #    SERVER_PASSWORD: pmm
+  pmm-server:
+    container_name: pmm
+    image: percona/pmm-server:latest
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "4443:443"
+    environment:
+      SERVER_USER: pmm
+      SERVER_PASSWORD: pmm
   pmm-client-ps:
     container_name: pmm-client
     image: perconalab/pmm-client:latest
     restart: always
+    networks:
+      - backend
     environment:
       PMM_SERVER: pmm-server:443
       PMM_USER: pmm
@@ -49,6 +56,8 @@ services:
     container_name: backup
     image: databack/mysql-backup
     restart: always
+    networks:
+      - backend
     volumes:
       - ./docker/mysql/backup/data:/db
     environment:
@@ -68,6 +77,8 @@ services:
     image: nginx:alpine
     container_name: nginx
     restart: unless-stopped
+    networks:
+      - frontend
     depends_on:
       - php
     tty: true
@@ -84,6 +95,9 @@ services:
       dockerfile: Dockerfile
     container_name: php
     restart: unless-stopped
+    networks:
+      - frontend
+      - backend
     depends_on:
       - mysql
       - redis
@@ -99,8 +113,20 @@ services:
   redis:
     container_name: redis
     image: redis
+    networks:
+      - frontend
+      - backend
     ports:
       - "6379:6379"
     volumes:
       - ./docker/redis/data:/data
     restart: always
+
+networks:
+  frontend:
+  backend:
+
+storage:
+  s3:
+    region: us-east-1
+    bucket: backup-xcart
