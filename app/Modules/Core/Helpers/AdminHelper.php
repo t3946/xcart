@@ -22,7 +22,7 @@ class AdminHelper
         return $str . ' ' . LanguageModel::translate('lbl_sf');
     }
 
-    public static function getMenu()
+    public static function buildMenu()
     {
         $menu = [];
         $modules = Xcart::app()->getModulesConfig();
