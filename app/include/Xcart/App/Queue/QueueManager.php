@@ -8,6 +8,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class QueueManager
 {
@@ -61,7 +62,7 @@ class QueueManager
             false,        #exclusive - используется только одним соединением, и очередь будет удалена при закрытии соединения
             false,        #autodelete - очередь удаляется, когда отписывается последний подписчик
             false,
-            $requeue ? ['x-dead-letter-exchange' => "{$queue}_requeue"] : []
+            $requeue ? new AMQPTable(["x-dead-letter-exchange" =>"{$queue}_requeue"]) : []
         );
 
         if ($requeue) {
@@ -72,10 +73,7 @@ class QueueManager
                 false,
                 false,
                 false,
-                [
-                    'x-dead-letter-exchange' => $queue,
-                    'x-message-ttl' => 300000
-                ]
+                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl=300000'])
             );
         }
 
