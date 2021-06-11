@@ -11,6 +11,7 @@ const config = _.merge(baseConfig, {
   resolve: {
     alias: {
       "@": path.resolve("./backend"),
+      "@admin/icons": path.resolve("./backend/jsx/modules/common/components/icons"),
       "@admin/modules": path.resolve("./backend/jsx/modules"),
       "@admin": path.resolve("./backend/jsx"),
     },

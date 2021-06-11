@@ -8,6 +8,9 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       //административная часть
+      "@admin/icons/*": [
+        "backend/jsx/modules/common/components/icons/*",
+      ],
       "@admin/modules/*": [
         "backend/jsx/modules/*",
       ],
