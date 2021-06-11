@@ -58,7 +58,11 @@ const List: React.FC<any> = ({
         />
         <Grid xs={3}>
           <div className="faxage-text">
-            <span>{itemData.from_address}</span>
+            <span>
+              {itemData.type === "inbox"
+                ? itemData.from_address
+                : itemData.to_address}
+            </span>
           </div>
         </Grid>
         <Grid xs={4}>
