@@ -28,12 +28,14 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
@@ -318,6 +320,10 @@ class DistributorModel extends Model
             'warehouse_pickups_are_allowed' => [
                 'class' => BooleanCharField::class,
                 'default' => false
+            ],
+            'created_at' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true
             ],
             'days_before_verify' => [
                 'class' => IntField::class,

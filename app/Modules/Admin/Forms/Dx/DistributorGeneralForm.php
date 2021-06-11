@@ -37,6 +37,7 @@ class DistributorGeneralForm extends DistributorForm
     {
         $dx = $this->getInstance();
         $user = Xcart::app()->user;
+        $provider = $dx->pk ? "{$dx->provider_model} ({$dx->provider})" : "{$user} ({$user->login})";
         return [
             'provider_name' => [
                 'class' => CharField::class,
@@ -45,7 +46,7 @@ class DistributorGeneralForm extends DistributorForm
                 'html' => [
                     'style' => 'border: none; width: 100%'
                 ],
-                'value' => $dx->pk ? "{$dx->provider_model} ({$dx->provider})" : "{$user} ({$user->login})",
+                'value' => $provider . " on {$dx->getField('created_at')->getValue()->format('d F Y')}",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],
