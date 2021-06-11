@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 
-export const Arrow: React.FC<any> = function (props: any) {
+export const RoundedCorner: React.FC<any> = function (props: any) {
   return (
     <i className={classNames(props.className)}>
       <svg
@@ -13,7 +13,7 @@ export const Arrow: React.FC<any> = function (props: any) {
       >
         <path
           d="M9 5L5 1L1 5"
-          stroke="#8A8A8A"
+          stroke={props.color || "#8A8A8A"}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -1,1 +1,1 @@
-export * from "./sidebar-menu-arrow";
+export * from "./rounded-corner";

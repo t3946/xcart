@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Accordion, Card } from "react-bootstrap";
 import ContextAwareToggle from "@admin/modules/common/components/accordion/context-aware-toggle";
 import appData from "@admin/utils/app-data";
-import { Arrow } from "@admin/icons/icons";
+import { RoundedCorner } from "@admin/icons/icons";
 
 const OldMenu: React.FC<any> = function (props: any) {
   function sectionLinksTemplate(links): any {
@@ -46,7 +46,7 @@ const OldMenu: React.FC<any> = function (props: any) {
           >
             <div className={classNames(hatClasses)}>
               <h3 className="sidebar-menu-header m-0">{name}</h3>
-              <Arrow className="sidebar-menu-header-icon" />
+              <RoundedCorner className="sidebar-menu-header-icon" />
             </div>
           </ContextAwareToggle>
         </Card.Header>
