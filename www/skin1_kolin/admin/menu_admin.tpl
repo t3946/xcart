@@ -1,11 +1,14 @@
+{*СТАРОЕ МЕНЮ: ЧАСТЬ 2 И 3*}
+
+
+
 {capture name=menu}
 
     {include file="modules/CIDEV_Best_Search_Filter/single/menu_box.tpl"}
 
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
-        <a href="{$catalogs.admin}/configuration.php"
-           class="VertMenuItems">{$lng.lbl_general_settings}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+        <a href="{$catalogs.admin}/configuration.php" class="VertMenuItems">{$lng.lbl_general_settings}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
         {/if}
     {/if}
 
@@ -30,8 +33,7 @@
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         {if $active_modules.Multiple_Storefronts}
             {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
-            <a href="{$catalogs.admin}/multiple_storefronts.php"
-               class="VertMenuItems">{$lng.lbl_multiple_storefronts}</a>
+            <a href="{$catalogs.admin}/multiple_storefronts.php"class="VertMenuItems">{$lng.lbl_multiple_storefronts}</a>
             {/if}
         {/if}
     {/if}
@@ -41,10 +43,6 @@
         <a href="{$catalogs.admin}/payment_methods.php" class="VertMenuItems">{$lng.lbl_payment_methods}</a>
         {/if}
     {/if}
-
-
-
-
 {/capture}
 {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
     {include file="menu_admin.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
@@ -84,15 +82,13 @@
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         {if $active_modules.News_Management}
-            <a href="{$catalogs.admin}/news.php"
-               class="VertMenuItems">{$lng.lbl_news_management}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+            <a href="{$catalogs.admin}/news.php"class="VertMenuItems">{$lng.lbl_news_management}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
         {/if}
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         {if $active_modules.Mailchimp_Subscription}
-            <a href="{$catalogs.admin}/mailchimp_news.php"
-               class="VertMenuItems">{$lng.lbl_mailchimp_news_management}</a>
+            <a href="{$catalogs.admin}/mailchimp_news.php"class="VertMenuItems">{$lng.lbl_mailchimp_news_management}</a>
         {/if}
     {/if}
 
@@ -105,8 +101,7 @@
     {/if}
 
     {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
-        <a href="{$catalogs.admin}/inv_update_ex.php"
-           class="VertMenuItems">{$lng.lbl_update_inventory}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+        <a href="{$catalogs.admin}/inv_update_ex.php"class="VertMenuItems">{$lng.lbl_update_inventory}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
     {/if}
 
     <a href="{$catalogs.admin}/categories.php?mode=info" class="VertMenuItems">Articles{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
@@ -126,8 +121,7 @@
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         <a href="{$catalogs.admin}/file_edit.php" class="VertMenuItems">{$lng.lbl_edit_templates}</a>
     {/if}
-    <a href="{$catalogs.admin}/file_manage.php"
-       class="VertMenuItems">{$lng.lbl_files}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+    <a href="{$catalogs.admin}/file_manage.php"class="VertMenuItems">{$lng.lbl_files}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         <a href="{$catalogs.admin}/geo_import.php" class="VertMenuItems">GEO import</a>
     {/if}
@@ -139,16 +133,14 @@
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         <a href="{$catalogs.admin}/images_location.php" class="VertMenuItems">{$lng.lbl_images_location}</a>
     {/if}
-    <a href="{$catalogs.admin}/import.php"
-       class="VertMenuItems">{$lng.lbl_import_export}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+    <a href="{$catalogs.admin}/import.php" class="VertMenuItems">{$lng.lbl_import_export}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
         <a href="{$catalogs.admin}/patch.php" class="VertMenuItems">{$lng.lbl_patch_upgrade}</a>
     {/if}
     <a class="VertMenuItems"
        href="{$catalogs.admin}/cidev_admin_add_filter_to_products.php">{$lng.lbl_cidev_search_by_filter} (SF)</a>
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-        <a href="{$catalogs.admin}/speed_bar.php"
-           class="VertMenuItems">{$lng.lbl_speed_bar}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
+        <a href="{$catalogs.admin}/speed_bar.php"class="VertMenuItems">{$lng.lbl_speed_bar}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a>
     {/if}
 
     {if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}

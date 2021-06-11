@@ -9,5 +9,9 @@ $(function () {
 
   const target = $("#distributor-reference-target")[0];
 
+  if (!target) {
+    return;
+  }
+
   React.render(<DistributorReference />, target);
 });

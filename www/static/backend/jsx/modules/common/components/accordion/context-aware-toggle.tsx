@@ -1,4 +1,11 @@
-//кнопка знает состояние аккордеона (свёрнут/развёрнут), и передаёт изменённое состояние в основной компонент
+/**
+ * Компонент для модификации переключателя bootstrap/accordion
+ * https://react-bootstrap.github.io/components/accordion/#custom-toggle-with-expansion-awareness
+ *
+ * Принимает дочерним элементом переключатель, вызывает хук onChange и отправляет туда новое состояние
+ * аккордеона (свёрнут/развёрнут)
+ */
+
 import React from "react";
 import { AccordionContext, useAccordionToggle } from "react-bootstrap";
 
