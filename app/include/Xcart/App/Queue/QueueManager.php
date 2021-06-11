@@ -92,7 +92,7 @@ class QueueManager
                 false,
                 false,
                 false,
-                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl' => 300000])
+                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl' => 60000])
             );
             $this->channel->queue_bind("{$queue}_requeue", "{$queue}_requeue");
         }
