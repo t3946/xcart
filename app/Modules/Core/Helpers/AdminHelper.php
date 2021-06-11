@@ -258,7 +258,5 @@ class AdminHelper
             "new" => $menu,
             "old" => $old_menu ?? null,
         ], null, 'sidebarMenu');
-
-        return $menu;
     }
 }
