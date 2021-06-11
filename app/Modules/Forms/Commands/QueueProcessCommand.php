@@ -43,24 +43,21 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $product  */
         /** @var ProductModel $group_product  */
 
-        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) {
             $userId = 'vr@s3stores.com';
             $client = GmailHelper::getClient($userId);
 
             $mailService = new Google_Service_Gmail($client);
             $googleMessage = new Google_Service_Gmail_Message;
 
-            $data = $data['email'];
-
             $recipients = implode(',', $data['to']);
 
-            $mime = new Mail_mime;
+            $mime = new Mail_mime(['head_charset'=>'UTF-8', 'html_charset'=>'UTF-8','text_charset'=>'UTF-8']);
             $mime->addTo($recipients);
             $mime->setHTMLBody($data['body']);
             $mime->setSubject($data['subject']);
             foreach ($data['files'] as $file) {
-                $mime_type = 'application/pdf'; // тут нужно определить mime type файла
-                $mime->addAttachment($file['content'], $mime_type, $file['name'], false);
+                $mime->addAttachment(base64_decode($file['content']), $file['type'], $file['name'], false);
             }
 
             $mailMessage = base64_encode($mime->getMessage());

@@ -23,15 +23,15 @@ export const EmailInfoHeaderIcons: React.FC<any> = () => {
 
   return (
     <React.Fragment>
-      <IconConstruct onClick={handleReply} title="reply">
+      <IconConstruct onClick={handleReply} title="Reply">
         <ReplyIcon />
       </IconConstruct>
-      <IconConstruct onClick={handleForward} title="forward">
+      <IconConstruct onClick={handleForward} title="Forward">
         <ForwardIcon />
       </IconConstruct>
       <ReactToPrint
         trigger={() => (
-          <IconConstruct title="print">
+          <IconConstruct title="Print">
             <PrintIcon />
           </IconConstruct>
         )}

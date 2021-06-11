@@ -6,7 +6,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailListHeader } from "@s3stores-mail/components/smart/email-list-header/EmailListHeader";
 import { EmailListHeaderContext } from "@s3stores-mail/contexts/email-list-header-context/EmailListHeader.context";
-import { editFavorites, setViewed } from "@redux/actions";
+import { editFavorites, getPage, setViewed } from "@redux/actions";
 import {
   isFavoriteItemsTrue,
   isViewedItemsTrue,
@@ -46,13 +46,25 @@ export const EmailListHeaderContainer: React.FC = () => {
     dispatch(setViewed(checkedItems, isViewedItemsTrue(items, checkedItems)));
   };
 
+  const searchParams = useSelector((e: StoreDto) => e.searchOptions);
+
+  const refreshEmails = () => {
+    dispatch(getPage(Number(page), searchParams));
+  };
+
   const moreFavorites = useSelector((state: StoreDto) => state.moreFavorites);
 
   const moreViewed = useSelector((state: StoreDto) => state.moreViewed);
 
   return (
     <EmailListHeaderContext.Provider
-      value={{ editFavorite, editViewed, moreFavorites, moreViewed }}
+      value={{
+        editFavorite,
+        editViewed,
+        moreFavorites,
+        moreViewed,
+        refreshEmails,
+      }}
     >
       <EmailListHeader
         paginate={paginate}

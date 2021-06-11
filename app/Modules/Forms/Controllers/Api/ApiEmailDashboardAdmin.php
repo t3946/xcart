@@ -209,9 +209,20 @@ class ApiEmailDashboardAdmin extends Controller
 
     public function actionSendEmail()
     {
-        $email = file_get_contents('php://input');
+        $files = self::diverse_array($_FILES['files']);
+        $convert_files = [];
+        foreach ($files as $file)
+        {
+            $convert_files[]= [
+                'name'=>$file['name'],
+                'type'=>$file['type'],
+                'content'=>base64_encode(file_get_contents($file['tmp_name'])),
+            ];
+        }
+        $email = $_POST;
+        $email['files'] =$convert_files;
 
-        Xcart::app()->queue->send('emails', $email);
+        Xcart::app()->queue->send('emails', json_encode($email, JSON_UNESCAPED_UNICODE));
 
         $this->jsonResponse('success');
     }
@@ -219,6 +230,14 @@ class ApiEmailDashboardAdmin extends Controller
     public function getTemplate()
     {
         $template = TemplateModel::objects()->get([]);
+    }
+
+    public static function diverse_array($vector) {
+        $result = array();
+        foreach($vector as $key1 => $value1)
+            foreach($value1 as $key2 => $value2)
+                $result[$key2][$key1] = $value2;
+        return $result;
     }
 
 

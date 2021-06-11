@@ -8,6 +8,7 @@ import { EmailSelect } from "@s3stores-mail/components/smart/email-select/EmailS
 import { EmailSendHeaderDialogContext } from "@s3stores-mail/contexts/email-send-header-context/EmailSendHeaderDialog.context";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 import { editSelectViewValue } from "../../../utils/edit-select-view-value";
+import { emailStore } from "../../../../../redux/stores";
 
 export const EmailSendHeader: React.FC = () => {
   const dialog = useContext(EmailDialogContext);
@@ -19,9 +20,9 @@ export const EmailSendHeader: React.FC = () => {
 
   const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
 
-  const templates = useSelector((state: StoreDto) => {
-    return state.templates;
-  });
+  const templates = useSelector((state: StoreDto) => state.templates);
+
+  const a = templates.slice(0);
 
   return (
     <EmailDialogHeader handleClose={dialog.handleClose}>
@@ -34,7 +35,7 @@ export const EmailSendHeader: React.FC = () => {
         <Grid className="email-send-header-text">Select template:</Grid>
         <Grid className={"email-send-template-type"}>
           <EmailSelect
-            items={editSelectViewValue(templates, "Select template by")}
+            items={templates}
             value={templateType}
             onClick={(item) => setTemplateType(item)}
           />

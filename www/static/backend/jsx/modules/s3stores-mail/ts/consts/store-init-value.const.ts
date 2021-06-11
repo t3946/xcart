@@ -46,7 +46,7 @@ export const initialValues: StoreDto = {
     body: "",
     files: [],
     to: [],
-    subject: undefined,
+    subject: "",
   },
   checkedItems: [],
   checkedItemsOptions: {

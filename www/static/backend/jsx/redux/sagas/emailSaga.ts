@@ -109,13 +109,21 @@ function* setViewed(action: AnyAction): Generator {
   }
 }
 function* sendEmail(action: AnyAction): Generator {
+  console.log(action.email);
   try {
-    yield api.post(
-      `/admin/forms/api/send-email`,
-      JSON.stringify({
-        email: action.email,
-      })
-    );
+    const formData = new FormData();
+
+    Object.entries(action.email).forEach(([key, value]: any) => {
+      if (Array.isArray(value)) {
+        value.forEach((e) => {
+          formData.append(`${key}[]`, e);
+        });
+        return;
+      }
+      formData.append(key, value);
+    });
+
+    yield api.post(`/admin/forms/api/send-email`, formData);
   } catch (e) {}
 }
 
