@@ -162,14 +162,11 @@ class ApiEmailDashboardAdmin extends Controller
 
             if($isEmailViewed)
             {
-                EmailViewedModel::objects()->getOrCreate( $actionItem);
+                EmailViewedModel::objects()->getOrCreate($actionItem);
                 continue;
             }
 
-            EmailViewedModel::objects()->delete( $actionItem);
-
-
-
+            EmailViewedModel::objects()->delete($actionItem);
 
         }
         $this->jsonResponse('success');
@@ -213,16 +210,16 @@ class ApiEmailDashboardAdmin extends Controller
         $convert_files = [];
         foreach ($files as $file)
         {
-            $convert_files[]= [
-                'name'=>$file['name'],
-                'type'=>$file['type'],
-                'content'=>base64_encode(file_get_contents($file['tmp_name'])),
+            $convert_files[] = [
+                'name' => $file['name'],
+                'type' => $file['type'],
+                'content' => base64_encode(file_get_contents($file['tmp_name'])),
             ];
         }
-        $email = $_POST;
+        $email = $this->getRequest()->post->all();
         $email['files'] =$convert_files;
 
-        Xcart::app()->queue->send('emails', json_encode($email, JSON_UNESCAPED_UNICODE));
+        Xcart::app()->queue->send('emails', json_encode($email, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), true);
 
         $this->jsonResponse('success');
     }

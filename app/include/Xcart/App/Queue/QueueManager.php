@@ -4,7 +4,6 @@ namespace Xcart\App\Queue;
 
 
 use ErrorException;
-use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
@@ -49,9 +48,9 @@ class QueueManager
      *
      * @param string $queue
      * @param string $message
-     * @throws Exception
+     * @param bool $requeue
      */
-    public function send(string $queue, string $message): void
+    public function send(string $queue, string $message, bool $requeue = false): void
     {
         $this->connect();
 
@@ -60,8 +59,25 @@ class QueueManager
             false,        #passive - может использоваться для проверки того, инициирован ли обмен, без того, чтобы изменять состояние сервера
             true,        #durable - убедимся, что RabbitMQ никогда не потеряет очередь при падении - очередь переживёт перезагрузку брокера
             false,        #exclusive - используется только одним соединением, и очередь будет удалена при закрытии соединения
-            false        #autodelete - очередь удаляется, когда отписывается последний подписчик
+            false,        #autodelete - очередь удаляется, когда отписывается последний подписчик
+            false,
+            $requeue ? ['x-dead-letter-exchange' => "{$queue}_requeue"] : []
         );
+
+        if ($requeue) {
+            $this->channel->queue_declare(
+                "{$queue}_requeue",
+                false,
+                true,
+                false,
+                false,
+                false,
+                [
+                    'x-dead-letter-exchange' => $queue,
+                    'x-message-ttl' => 300000
+                ]
+            );
+        }
 
         $msg = new AMQPMessage($message);
 
