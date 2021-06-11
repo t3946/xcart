@@ -11,6 +11,7 @@ use Google_Service_Gmail_Draft;
 use Google_Service_Gmail_Message;
 use Mail_mime;
 use Modules\Goods\Models\ProductModel;
+use Modules\Mail\Helpers\GetNewMessagesHelper;
 use Modules\Mail\Helpers\GmailHelper;
 use PhpAmqpLib\Message\AMQPMessage;
 use Xcart\App\Commands\Command;
@@ -24,19 +25,6 @@ class QueueProcessCommand extends Command
         Xcart::app()->queue->consume('emails', [$this, 'consume']);
     }
 
-//   public function createMessage($sender, $to, $subject, $messageText) {
-//        $message = new Google_Service_Gmail_Message();
-//        $rawMessageString = "From: <{$sender}>\r\n";
-//        $rawMessageString .= "To: <{$to}>\r\n";
-//        $rawMessageString .= 'Subject: =?utf-8?B?' . base64_encode($subject) . "?=\r\n";
-//        $rawMessageString .= "MIME-Version: 1.0\r\n";
-//        $rawMessageString .= "Content-Type: text/html; charset=utf-8\r\n";
-//        $rawMessageString .= 'Content-Transfer-Encoding: quoted-printable' . "\r\n\r\n";
-//        $rawMessageString .= "{$messageText}\r\n";
-//        $rawMessage = strtr(base64_encode($rawMessageString), array('+' => '-', '/' => '_'));
-//        $message->setRaw($rawMessage);
-//        return $message;
-//    }
 
     public function consume(AMQPMessage $message): void
     {
@@ -54,6 +42,7 @@ class QueueProcessCommand extends Command
 
             $mime = new Mail_mime(['head_charset'=>'UTF-8', 'html_charset'=>'UTF-8','text_charset'=>'UTF-8']);
             $mime->addTo($recipients);
+            $mime->setFrom($userId);
             $mime->setHTMLBody($data['body']);
             $mime->setSubject($data['subject']);
             foreach ($data['files'] as $file) {
@@ -63,12 +52,16 @@ class QueueProcessCommand extends Command
             $mailMessage = base64_encode($mime->getMessage());
             $googleMessage->setRaw($mailMessage);
 
-            $mailService->users_messages->send(
+            $request =  $mailService->users_messages->send(
                 $userId,
                 $googleMessage,
             );
+            $message->ack();
+            GetNewMessagesHelper::getNewMessages($mailService,$userId, $request);
         }
-        $message->ack();
+
+
+
     }
 
 
