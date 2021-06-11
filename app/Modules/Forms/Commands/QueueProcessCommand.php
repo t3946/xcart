@@ -32,6 +32,11 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $group_product  */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) {
+            if( strtotime($data['time'])<strtotime(date('Y-m-d') && $data['time'] !== ''))
+            {
+                $message->nack();
+            }
+
             $userId = 'vr@s3stores.com';
             $client = GmailHelper::getClient($userId);
 

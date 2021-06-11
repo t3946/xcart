@@ -56,7 +56,7 @@ export const EmailSendInput: React.FC = () => {
   };
 
   const handleInputValueChange = (e) => {
-    setWidth(e.target.value.length * 8);
+    setWidth(e.target.value.length * 10);
   };
 
   return (
