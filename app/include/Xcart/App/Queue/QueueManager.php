@@ -55,6 +55,14 @@ class QueueManager
     {
         $this->connect();
 
+        $this->channel->exchange_declare($queue,
+            'direct',
+            false,
+            true,
+            false,
+            false
+        );
+
         $this->channel->queue_declare(
             $queue,    #queue name - Имя очереди может содержать до 255 байт UTF-8 символов
             false,        #passive - может использоваться для проверки того, инициирован ли обмен, без того, чтобы изменять состояние сервера
@@ -62,10 +70,21 @@ class QueueManager
             false,        #exclusive - используется только одним соединением, и очередь будет удалена при закрытии соединения
             false,        #autodelete - очередь удаляется, когда отписывается последний подписчик
             false,
-            $requeue ? new AMQPTable(["x-dead-letter-exchange" =>"{$queue}_requeue"]) : []
+            $requeue ? new AMQPTable(["x-dead-letter-exchange" => "{$queue}_requeue"]) : []
         );
 
+        $this->channel->queue_bind($queue, $queue);
+
         if ($requeue) {
+            $this->channel->exchange_declare(
+                "{$queue}_requeue",
+                'direct',
+                false,
+                true,
+                false,
+                false
+            );
+
             $this->channel->queue_declare(
                 "{$queue}_requeue",
                 false,
@@ -73,15 +92,15 @@ class QueueManager
                 false,
                 false,
                 false,
-                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl=300000'])
+                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl' => 300000])
             );
+            $this->channel->queue_bind("{$queue}_requeue", "{$queue}_requeue");
         }
 
         $msg = new AMQPMessage($message);
 
         $this->channel->basic_publish(
             $msg,
-            '',
             $queue
         );
 
