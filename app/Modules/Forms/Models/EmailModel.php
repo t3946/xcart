@@ -11,6 +11,7 @@ use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -152,6 +153,10 @@ class EmailModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => __CLASS__,
                 'link' => ['thread_id' => 'message_id'],
+            ],
+            'contains_action' => [
+                'field' => 'action_value',
+                'class' => BooleanField::class,
             ]
         ];
     }
@@ -174,6 +179,26 @@ class EmailModel extends Model
     public function getAttachment()
     {
         return $this->attachments->asArray()->all();
+    }
+
+    public function isContainsAction()
+    {
+        return $this->contains_action;
+    }
+
+    public function getEmailType(int $id)
+    {
+        $data = EmailEntityModel::objects()->filter(['email_id' => $id]);
+
+        switch ( $data[0]['model']){
+            case 'Modules\Distributor\Models\DistributorModel':
+            {
+                return 'distributor';
+            }
+            default :{
+                return 'any';
+            }
+        }
     }
 
     public function getAction(int $id)

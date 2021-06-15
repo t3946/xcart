@@ -77,6 +77,8 @@ class ApiEmailDashboardAdmin extends Controller
                 $email['favorite'] = $model->isFavorite();
                 $email['attachment'] = $model->getAttachment();
                 $email['body'] = (string)$model->body;
+                $email['emailType'] = $model->getEmailType($model->id);
+                $email['contains_action'] = $model->isContainsAction();
                 $emails[] = $email;
             }
 

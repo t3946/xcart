@@ -45,7 +45,7 @@ const List: React.FC<any> = ({
       square={true}
       className={`list-item-wrap ${theme}`}
     >
-      <Grid alignItems="center" container>
+      <Grid zeroMinWidth alignItems="center" container>
         <Checkbox
           checked={checked}
           onClick={editChecked}
@@ -65,17 +65,21 @@ const List: React.FC<any> = ({
             </span>
           </div>
         </Grid>
-        <Grid xs={4}>
+        <Grid xs={itemData.contains_action ? 4 : 6}>
           <div className="text-name">
             <span>{itemData.subject}</span>
           </div>
         </Grid>
+        <Grid xs>
+          {itemData.contains_action && (
+            <ReadedSwitch
+              actionName={itemData.action?.name}
+              editAction={editAction}
+              readed={itemData.action.action}
+            />
+          )}
+        </Grid>
 
-        <ReadedSwitch
-          actionName={itemData.action?.name}
-          editAction={editAction}
-          readed={itemData.action.action}
-        />
         <div className="date">
           <span>{moment(itemData.date).format("D MMM")}</span>
         </div>

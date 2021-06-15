@@ -13,9 +13,9 @@ export const EmailList: React.FC<any> = ({ emails }) => {
         return (
           <EmailListItem
             theme={
-              addStyleToViewed(email.item.viewed) +
+              emailStyle(email.item.type === "sent", email.item?.emailType) +
               " " +
-              emailStyle(email.item?.emailType, email.item?.emailCustomer)
+              addStyleToViewed(email.item.viewed)
             }
             checked={email.checked}
             itemData={email.item}

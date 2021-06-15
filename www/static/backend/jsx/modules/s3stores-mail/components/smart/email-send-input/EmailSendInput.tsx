@@ -32,7 +32,7 @@ export const EmailSendInput: React.FC = () => {
       ref.current.blur();
 
       if (ref.current.value.trim()) {
-        addNewRecipient(ref.current.value);
+        addNewRecipient(ref.current.value.trim());
       }
       ref.current.value = "";
       setWidth(10);
@@ -42,7 +42,7 @@ export const EmailSendInput: React.FC = () => {
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) {
       if (ref.current.value.trim()) {
-        addNewRecipient(ref.current.value);
+        addNewRecipient(ref.current.value.trim());
       }
       ref.current.value = "";
       setWidth(10);

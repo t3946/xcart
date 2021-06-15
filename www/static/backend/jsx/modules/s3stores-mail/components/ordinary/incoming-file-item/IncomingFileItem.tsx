@@ -1,31 +1,7 @@
 import React from "react";
 import { Button, Grid } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
-
-function checkFileExtension(fileName: string, src) {
-  const wordsMass = fileName.split(".");
-
-  const extension = wordsMass[wordsMass.length - 1].toLowerCase();
-
-  if (
-    extension === "svg" ||
-    extension === "png" ||
-    extension === "jpg" ||
-    extension === "gif"
-  ) {
-    return {
-      image: true,
-      iconMini: `/static/backend/images/icons/file-${extension}-mini.svg`,
-      src,
-    };
-  }
-
-  return {
-    image: false,
-    icon: `/static/backend/images/icons/file-${extension}.svg`,
-    iconMini: `/static/backend/images/icons/file-${extension}-mini.svg`,
-  };
-}
+import { checkFileExtension } from "../../../utils/check-file-extension";
 
 export const IncomingFileItem: React.FC<any> = ({ incomingFile }) => {
   const file = checkFileExtension(

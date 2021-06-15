@@ -120,6 +120,9 @@ function* sendEmail(action: AnyAction): Generator {
         });
         return;
       }
+      if (key === "date" && value) {
+        value = value.getTime() / 1000;
+      }
       formData.append(key, value);
     });
 
