@@ -47,7 +47,7 @@ class DistributorGeneralForm extends DistributorForm
                 'html' => [
                     'style' => 'border: none; width: 100%'
                 ],
-                'value' => $provider . $dx->pk ? " on {$created->format('d F Y')}" : '',
+                'value' => $provider . $dx->pk && $created ? " on {$created->format('d F Y')}" : '',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
             ],
