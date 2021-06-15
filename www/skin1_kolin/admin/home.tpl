@@ -4,12 +4,12 @@
 <head>
     <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
     {include file="meta.tpl"}
-
     {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
+    {Modules\Core\Helpers\AdminHelper::getMenu()}
+
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <script src="{$SkinDir}/js/common.min.js" type="text/javascript"></script>
-    {Modules\Sites\Helpers\StorageHelper::print()}
 </head>
 <body{$reading_direction_tag}>
 
@@ -27,40 +27,7 @@
             <table width="100%" cellpadding="0" cellspacing="0" align="center">
                 <tr>
                     <td class="VertMenuLeftColumn">
-                        <div class="menu-changer hide">
-                            <a href="#" class=""
-                               onclick="javascript: window.event.preventDefault(); $('.admin-menu').toggleClass('active') ">
-                                <i class="fa fa-bars"></i>
-                            </a>
-                        </div>
-                        <div class="admin-menu">
-                            {if $login eq "" }
-                                {*{ include file="auth.tpl" }*}
-                            {else}
-                                {include file="admin/menu.tpl"}
-
-                                {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
-                                    {include file="admin/menu_admin.tpl"}
-                                {/if}
-
-                                {if $active_modules.XAffiliate ne ''}
-                                    {include file="admin/menu_affiliate.tpl"}
-                                {/if}
-
-                                {*{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}*}
-                                {*{ include file="menu_profile.tpl" }*}
-                                {*{/if}*}
-
-                            {/if}
-
-                            {if $login eq ""}
-                                {capture name=menu}
-                                    <a href="error_message.php?antibot_error" class="VertMenuItems">Authentication</a>
-                                {/capture}
-                                {include file="menu_admin.tpl" dingbats="dingbats_help.gif" menu_title=$lng.lbl_help menu_content=$smarty.capture.menu}
-                            {/if}
-
-                        </div>
+                        <div id="sidebar-menu-target"></div>
                     </td>
                     <td class="admin-main-content" valign="top">
                         <!-- central space -->
@@ -697,6 +664,7 @@
         </div>
     </div>
 </div>
-{$xcartApp->template->render('inSmarty/footer_admin.tpl')}
+
+{Modules\Sites\Helpers\StorageHelper::print()}
 </body>
 </html>

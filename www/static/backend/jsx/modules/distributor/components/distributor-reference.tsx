@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Accordion, Card } from "react-bootstrap";
-import ContextAwareToggle from "./context-aware-toggle";
+import ContextAwareToggle from "@admin/modules/common/components/accordion/context-aware-toggle";
 import appData from "@admin/utils/app-data";
 
 const DistributorReference: React.FC<any> = (props: any) => {
@@ -65,7 +65,8 @@ const DistributorReference: React.FC<any> = (props: any) => {
   }
 
   function callButtonTemplate() {
-    const { isGoodTimeToSendEmail, normalizedPhone } = appData().distributor.reference;
+    const { isGoodTimeToSendEmail, normalizedPhone } =
+      appData().distributor.reference;
 
     if (!normalizedPhone) {
       return;
@@ -144,72 +145,75 @@ const DistributorReference: React.FC<any> = (props: any) => {
   }
 
   return (
-    <div>
-      <Accordion defaultActiveKey="0">
-        <Card className={classNames(["border-0", "rounded-0"])}>
-          <Card.Header className={classNames(["p-0", "border-0"])}>
-            <ContextAwareToggle
-              eventKey={eventKey}
-              onChange={(newEventKey) => setIsCurrentEventKey(newEventKey)}
-            >
-              {hatTemplate()}
-            </ContextAwareToggle>
-          </Card.Header>
+    <Accordion defaultActiveKey="0">
+      <Card className={classNames(["border-0", "rounded-0"])}>
+        <Card.Header className={classNames(["p-0", "border-0"])}>
+          <ContextAwareToggle
+            eventKey={eventKey}
+            onChange={(newEventKey) => setIsCurrentEventKey(newEventKey)}
+          >
+            {hatTemplate()}
+          </ContextAwareToggle>
+        </Card.Header>
 
-          <Accordion.Collapse eventKey="0">
-            <Card.Body className={"p-0"}>
-              <div className="summary">
-                <div className="row distributor_row-layout">
-                  <div className="col-6 distributor-layout-column">
-                    <p className={"m-0"} dangerouslySetInnerHTML={{__html: appData().distributor.reference.description}} />
-                  </div>
+        <Accordion.Collapse eventKey="0">
+          <Card.Body className={"p-0"}>
+            <div className="summary">
+              <div className="row distributor_row-layout">
+                <div className="col-6 distributor-layout-column">
+                  <p
+                    className={"m-0"}
+                    dangerouslySetInnerHTML={{
+                      __html: appData().distributor.reference.description,
+                    }}
+                  />
+                </div>
 
-                  <div className="col-6 distributor-layout-column">
-                    <ul
-                      className={classNames([
-                        "list-unstyled",
-                        "summary-options",
-                        "summary_options",
-                      ])}
-                    >
-                      {summaryOptionTemplate(
-                        "Distributor time",
-                        appData().distributor.reference.time
-                      )}
-                      {summaryOptionTemplate(
-                        "Distributor phone",
-                        appData().distributor.reference.phone
-                      )}
-                    </ul>
-                    {callButtonTemplate()}
-                  </div>
+                <div className="col-6 distributor-layout-column">
+                  <ul
+                    className={classNames([
+                      "list-unstyled",
+                      "summary-options",
+                      "summary_options",
+                    ])}
+                  >
+                    {summaryOptionTemplate(
+                      "Distributor time",
+                      appData().distributor.reference.time
+                    )}
+                    {summaryOptionTemplate(
+                      "Distributor phone",
+                      appData().distributor.reference.phone
+                    )}
+                  </ul>
+                  {callButtonTemplate()}
                 </div>
               </div>
+            </div>
 
-              <div className={"distributor-sections"}>
-                <div className="row distributor_row-layout">
-                  <div className="col-6 distributor-layout-column">
-                    <ul className="list-unstyled m-0">
-                      {sectionsListTemplate(
-                        appData().distributor.sections.slice(0, 4)
-                      )}
-                    </ul>
-                  </div>
+            <div className={"distributor-sections"}>
+              <div className="row distributor_row-layout">
+                <div className="col-6 distributor-layout-column">
+                  <ul className="list-unstyled m-0">
+                    {sectionsListTemplate(
+                      appData().distributor.sections.slice(0, 4)
+                    )}
+                  </ul>
+                </div>
 
-                  <div className="col-6 distributor-layout-column">
-                    <ul className="list-unstyled m-0">
-                      {sectionsListTemplate(
-                        appData().distributor.sections.slice(4)
-                      )}
-                    </ul>
-                  </div>
+                <div className="col-6 distributor-layout-column">
+                  <ul className="list-unstyled m-0">
+                    {sectionsListTemplate(
+                      appData().distributor.sections.slice(4)
+                    )}
+                  </ul>
                 </div>
               </div>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-    </div>
+            </div>
+          </Card.Body>
+        </Accordion.Collapse>
+      </Card>
+    </Accordion>
   );
 };
 
