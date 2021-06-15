@@ -140,30 +140,6 @@ Profiler::getInstance()->addPoint();
 
 include_once($xcart_dir . "/include/bench.php");
 
-#
-# Connect to database
-#
-/*$db_connect_limit = 5;
-while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) { }
-db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");*/
-
-
-if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
-    define("X_MYSQL_VERSION", $match[1]);
-
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
-        db_query("SET sql_mode = 'MYSQL40'");
-    }
-
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.17") > 0) {
-        define("X_MYSQL5_COMP_MODE", true);
-    }
-
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.18") == 0) {
-        define("X_MYSQL5018_COMP_MODE", true);
-    }
-}
-
 Profiler::getInstance()->addPoint();
 
 #
