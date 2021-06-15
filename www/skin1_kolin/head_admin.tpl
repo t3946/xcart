@@ -1,4 +1,6 @@
-<table class="admin-hat" cellpadding="0" cellspacing="0" width="100%">
+<div id="admin-hat-target"></div>
+
+<table class="admin-hat" cellpadding="0" cellspacing="0" width="100%" style="display: none">
     <tr>
         <td class="HeadLogo_admin" width="*">
             <a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">
@@ -86,6 +88,7 @@
         {/if}
     </tr>
 </table>
+
 {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="headSearchLine">
 <tr>

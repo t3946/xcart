@@ -6,7 +6,10 @@
 namespace Modules\Core\Helpers;
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -22,7 +25,10 @@ class AdminHelper
         return $str . ' ' . LanguageModel::translate('lbl_sf');
     }
 
-    public static function buildMenu()
+    /**
+     * построить данные для меню сайд бара
+    */
+    private static function buildMenuData()
     {
         $menu = [];
         $modules = Xcart::app()->getModulesConfig();
@@ -258,5 +264,57 @@ class AdminHelper
             "new" => $menu,
             "old" => $old_menu ?? null,
         ], null, 'sidebarMenu');
+    }
+
+    /**
+     * построить данные для шапки сайта
+    */
+    private static function buildHatData() {
+        $data = [];
+
+        //time
+        $est_time = date_create('now', timezone_open('EST'));
+        $time = [
+            [
+                "caption" => "CA time",
+                "time" => date_create('now', timezone_open('America/Los_Angeles'))->format('H:i'),
+            ],
+            [
+                "caption" => "EST time",
+                "time" => $est_time->format('H:i'),
+            ],
+            [
+                "caption" => "NY time",
+                "time" => date_create('now', timezone_open('America/New_York'))->format('H:i'),
+            ],
+        ];
+
+        $data["time"] = $time;
+
+        //time
+        $data["date"] = $est_time->format('F j, Y');
+
+        //holiday
+        $holiday = WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')));
+        $days = $holiday->getDaysUntil();
+        $data["holiday"] = sprintf("%d day%s until %s", $days, $days > 1 ? 's' : '', (string)$holiday);
+
+        //user
+        $data["user"] = Xcart::app()->getUser()->login;
+
+        //site logo
+        $site_code = strtolower(Xcart::app()->getModule('Sites')->getSelectedSite()->code);
+        $data["logoUrl"] = Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg";
+
+        StorageHelper::push($data, null, 'hat');
+    }
+
+    /**
+     * Сформировать массивы из данных, которые используются на всех страницах,
+     * для последующей передачи на frontend
+    */
+    public static function buildCommonData() {
+        self::buildMenuData();
+        self::buildHatData();
     }
 }

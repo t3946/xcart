@@ -1,0 +1,38 @@
+.logout-button {
+    height: rem-calc(29);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    font-size: rem-calc(18);
+    padding: 0 rem-calc(10);
+    color: #000000;
+    font-weight: normal;
+    text-transform: none;
+    position: relative;
+    overflow: visible;
+    transition: all 0.125s ease-out;
+
+    &:after {
+        display: block;
+        content: '';
+        opacity: 0;
+        height: 2px;
+        width: 100%;
+        background: #000000;
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        transition: opacity 0.125s ease-out;
+    }
+
+    &:hover {
+        &:after {
+            opacity: 1;
+        }
+    }
+
+    &:active {
+        background: #fffcef;
+    }
+}
