@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Accordion, Card } from "react-bootstrap";
 import ContextAwareToggle from "@admin/modules/common/components/accordion/context-aware-toggle";
 import appData from "@admin/utils/app-data";
-import { RoundedCorner } from "@admin/icons/icons";
+import { RoundedCornerIcon } from "@admin/icons/icons";
 
 const NewMenu: React.FC<any> = function (props: any) {
   const defaultActive = true;
@@ -70,7 +70,7 @@ const NewMenu: React.FC<any> = function (props: any) {
           >
             <div className={classNames(hatClasses)}>
               <h3 className="sidebar-menu-header m-0">Modules menu</h3>
-              <RoundedCorner className="sidebar-menu-header-icon" />
+              <RoundedCornerIcon className="sidebar-menu-header-icon" />
             </div>
           </ContextAwareToggle>
         </Card.Header>

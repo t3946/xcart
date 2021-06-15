@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 
-export const RoundedCorner: React.FC<any> = function (props: any) {
+export const RoundedCornerIcon: React.FC<any> = function (props: any) {
   return (
     <i className={classNames(props.className)}>
       <svg
