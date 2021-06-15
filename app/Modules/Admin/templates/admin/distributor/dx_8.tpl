@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name=$section_title}
+    {smarty_admin_block is_show_title=false}
     {raw $form->renderBegin([
     'action' => $.app->router->url('admin:section', ['mid' => $distributorModel->manufacturerid, 'section' => $section]),
     'method' => 'POST',
