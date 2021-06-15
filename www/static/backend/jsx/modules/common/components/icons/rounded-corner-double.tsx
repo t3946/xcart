@@ -1,9 +1,9 @@
 import React from "react";
-import classNames from "classnames";
+import Icon from "@admin/icons/icon";
 
 export const RoundedCornerDoubleIcon: React.FC<any> = function (props: any) {
   return (
-    <i className={classNames(props.className)}>
+    <Icon props>
       <svg
         width="10"
         height="10"
@@ -18,6 +18,6 @@ export const RoundedCornerDoubleIcon: React.FC<any> = function (props: any) {
           fill={props.color || "#8A8A8A"}
         />
       </svg>
-    </i>
+    </Icon>
   );
 };

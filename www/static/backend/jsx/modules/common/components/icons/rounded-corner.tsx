@@ -1,9 +1,9 @@
 import React from "react";
-import classNames from "classnames";
+import Icon from "@admin/icons/icon";
 
 export const RoundedCornerIcon: React.FC<any> = function (props: any) {
   return (
-    <i className={classNames(props.className)}>
+    <Icon {...props}>
       <svg
         width="10"
         height="6"
@@ -19,6 +19,6 @@ export const RoundedCornerIcon: React.FC<any> = function (props: any) {
           strokeLinejoin="round"
         />
       </svg>
-    </i>
+    </Icon>
   );
 };
