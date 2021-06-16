@@ -1,0 +1,8 @@
+.dropdown-menu__popover {
+    transform: none !important;
+    right: rem-calc(-70);
+    inset: 0 auto auto 0 !important;
+    min-width: rem-calc(230);
+    border: none;
+    border-radius: 0;
+}

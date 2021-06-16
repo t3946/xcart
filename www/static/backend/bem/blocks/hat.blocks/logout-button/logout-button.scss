@@ -13,26 +13,11 @@
     overflow: visible;
     transition: all 0.125s ease-out;
 
-    &:after {
-        display: block;
-        content: '';
-        opacity: 0;
-        height: 2px;
-        width: 100%;
-        background: #000000;
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        transition: opacity 0.125s ease-out;
-    }
-
     &:hover {
-        &:after {
-            opacity: 1;
-        }
+        background: #ffebb2;
     }
 
     &:active {
-        background: #fffcef;
+        background: #ffe7a3;
     }
 }

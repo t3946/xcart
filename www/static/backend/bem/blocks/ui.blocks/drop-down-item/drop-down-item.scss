@@ -1,0 +1,16 @@
+.drop-down-item {
+    transition: all 0.1s linear;
+    text-decoration: none;
+    color: #494949;
+    font-size: rem-calc(15);
+
+    &:hover {
+        color: #000000;
+        background: #ffebb2;
+    }
+
+    &:active {
+        color: #000000;
+        background: #ffe7a3;
+    }
+}

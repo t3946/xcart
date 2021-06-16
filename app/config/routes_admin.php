@@ -51,6 +51,11 @@ return [
         'namespace' => 'product'
     ],
     [
+        'route' => '/admin/sites',
+        'path' => 'Modules.Sites.routes_admin',
+        'namespace' => 'site'
+    ],
+    [
         'route' => '/admin/editor',
         'path' => 'Modules.Editor.routes',
         'namespace' => 'editor'

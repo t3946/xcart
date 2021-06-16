@@ -656,9 +656,6 @@
                         <!-- /central space -->
                         &nbsp;
                     </td>
-                    <td>
-                        <img src="{$ImagesDir}/spacer.gif" width="20" height="1" alt=""/>
-                    </td>
                 </tr>
             </table>
             {include file="rectangle_bottom.tpl"}

@@ -1,10 +1,14 @@
 import React from "react";
-import { RoundedCornerIcon } from "@admin/icons/icons";
+import { Dropdown } from "react-bootstrap";
 import { RoundedCornerDoubleIcon } from "@admin/icons/icons";
+import { RoundedCornerIcon } from "@admin/icons/icons";
 import appData from "@admin/utils/app-data";
+import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/drop-popover-menu";
+import $ from "jquery";
 
 const HatReference: React.FC<any> = function () {
-  const logo = appData().hat.logoUrl;
+  const [logo, setLogo] = React.useState(appData().hat.logoUrl);
+  const menuRef = React.createRef();
 
   function timeTemplate(): any {
     const timeList = [];
@@ -21,17 +25,67 @@ const HatReference: React.FC<any> = function () {
     return <ul className="m-0 time-list list-unstyled">{timeList}</ul>;
   }
 
+  const closeMenu = function () {
+    document.body.click();
+  };
+
+  function menuTemplate(): any {
+    const items = [];
+
+    for (const site of appData().hat.sites) {
+      items.push(
+        <Dropdown.Item
+          className="pl-3.25 pr-3.25 pt-1 pb-1 drop-down-item"
+          data-value={site.id}
+        >
+          <img
+            src={"/static/backend/dist/images/icons/sites/" + site.icon}
+            width={24}
+            height={24}
+            className="mr-4"
+          />
+          {site.name}
+        </Dropdown.Item>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <div
+          className="select-distributor-menu-logo pl-3.25 pr-3.25 pt-3 pb-4 d-flex justify-content-between align-items-center pointer"
+          onClick={closeMenu}
+        >
+          <img src={logo} alt="logo" width="130" />
+          <RoundedCornerIcon />
+        </div>
+
+        <ul className="list-unstyled mb-0 drop-popover-menu">{items}</ul>
+      </React.Fragment>
+    );
+  }
+
   return (
     <div className="pt-4 pb-4">
       <div className="row">
         <div className="col column__left">
-          <div className="d-flex align-items-center">
-            <div className="flex-grow-1">
-              <img src={logo} alt="logo" />
-            </div>
-            <RoundedCornerIcon className="ml-2.5" color="#000000" />
-          </div>
+          <DropPopoverMenu
+            button={<img className="hat-logo" src={logo} alt="logo" />}
+            menu={menuTemplate()}
+            menuClasses="pb-3 pt-0"
+            ref={menuRef}
+            onSelect={(value) => {
+              $.ajax({
+                url: `/admin/sites/set-site/${value}`,
+                method: "POST",
+                dataType: "json",
+                success(res) {
+                  setLogo(res.logoUrl);
+                },
+              });
+            }}
+          />
         </div>
+
         <div className="col">
           <div className="column-right-wrapper">
             <div className="holiday-block hat_holiday-block">
@@ -45,7 +99,7 @@ const HatReference: React.FC<any> = function () {
         <div className="col column__right align-items-end d-flex flex-column">
           <button className="logout-button button">
             Log out
-            <RoundedCornerDoubleIcon className="logout-button_icon" />
+            <RoundedCornerDoubleIcon className="logout-button_icon ml-2" />
           </button>
           <div className="logged-as mt-2">
             {appData().hat.user} is logged in!

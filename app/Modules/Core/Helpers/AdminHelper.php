@@ -306,6 +306,25 @@ class AdminHelper
         $site_code = strtolower(Xcart::app()->getModule('Sites')->getSelectedSite()->code);
         $data["logoUrl"] = Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg";
 
+        //sites
+        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
+
+        foreach ($site_list as $site) {
+
+            $default_icon = "photo-video-supply.svg";
+            $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
+
+            if (in_array($site->code, ['GF', 'AT', 'RD', 'DS', 'S3', 'FR', 'FM', 'TR', 'TC', 'FP'])) {
+                $icon = $default_icon;
+            }
+
+            $data["sites"][] = [
+                "name" => $site->getName(),
+                "id" => (int)$site->storefrontid,
+                "icon" => $icon,
+            ];
+        }
+
         StorageHelper::push($data, null, 'hat');
     }
 
