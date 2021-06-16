@@ -1,0 +1,11 @@
+.modal-close {
+    display: block;
+    width: rem-calc(20);
+    height: rem-calc(20);
+    opacity: .7;
+    background-repeat: no-repeat;
+    background-image: url('/static/frontend/dist/images/icons/modal/close_grey.svg');
+    background-position: 50%;
+    background-size: contain;
+    cursor: pointer;
+}

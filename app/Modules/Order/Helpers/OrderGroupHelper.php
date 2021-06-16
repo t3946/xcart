@@ -5,6 +5,7 @@ namespace Modules\Order\Helpers;
 
 use DateTime;
 use DateTimeZone;
+use Xcart\App\Exceptions\Exception;
 use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -152,16 +153,23 @@ class OrderGroupHelper
                 $tracking_number = trim($params['tracking_number'][$_k]);
                 $t_shipdate = trim($params['tracking_ship_date'][$_k]);
                 $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
-                $tri = [
+                $tr_params = [
                     'linkid' => $params['tracking_shipper'][$_k] ?? 0,
                     'tracknum' => $tracking_number ?: null,
                     'shipping_date' => $t_shipdate ? DateTime::createFromFormat('m/d/Y H:i:s', "{$t_shipdate} 00:00:00", new DateTimeZone('EST')) : null,
                     'carrier_id' => $sh,
                     'order_group_id' => $group->order_group_id
                 ];
-                $trackingModel = new OrderTrackingModel($tri);
-                $trackingModel->save();
-                $tracking[] = $trackingModel;
+                $tri = [
+                    'tracknum' => $tracking_number ?: null,
+                    'order_group_id' => $group->order_group_id
+                ];
+                [$trackingModel, $is_new] = OrderTrackingModel::objects()->getOrNew($tri);
+                if ($is_new){
+                    $trackingModel->setAttributes($tr_params);
+                    $trackingModel->save();
+                    $tracking[] = $trackingModel;
+                }
             }
         }
         return $tracking ?? [];

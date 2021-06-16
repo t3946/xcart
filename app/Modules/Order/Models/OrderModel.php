@@ -459,23 +459,29 @@ class OrderModel extends Model
 
     public function getAddressInfo(): array
     {
+        if ($this->s_country) {
+            $s_state = $this->shipping_state ?: $this->s_state;
+        }
         $info[] = [
             'address' => explode("\n", $this->s_address, 2),
             'firstname' => $this->s_firstname,
             'company' => $this->s_company,
             'city' => $this->s_city,
-            'state' => $this->shipping_state ?: $this->s_state,
+            'state' => $s_state ?? $this->s_state,
             'country' => $this->shipping_country,
             'zipcode' => $this->s_zipcode,
         ];
 
         if ($this->b_firstname || $this->b_company || $this->b_address || $this->b_city || $this->b_state || $this->b_country || $this->b_zipcode !== null) {
+            if ($this->b_country) {
+                $b_state = $this->billing_state ?: $this->b_state;
+            }
             $info[] = [
                 'address' => explode("\n", $this->b_address, 2),
                 'firstname' => $this->b_firstname,
                 'company' => $this->b_company,
                 'city' => $this->b_city,
-                'state' => $this->billing_state ?: $this->b_state,
+                'state' => $b_state ?? $this->b_state,
                 'country' => !empty($this->b_country) ? $this->billing_country : null,
                 'zipcode' => $this->b_zipcode,
             ];

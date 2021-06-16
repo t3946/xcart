@@ -169,14 +169,25 @@ class GmailHelper
 
         return $labels;
     }
-
     public static function getAttachments(Google_Service_Gmail $service, Google_Service_Gmail_Message $message): array
     {
         foreach ($message->getPayload()->getParts() as $part) {
             if (isset($part['filename']) && $part['filename']) {
                 $att = $service->users_messages_attachments->get(
                     $service->getClient()->getConfig('subject'), $message->getId(), $part['body']['attachmentId']);
-                $res[] = ['filename' => $part['filename'], 'data' => self::decodeBody($att['data'])];
+
+                if ($disposition = self::getHeader($part['headers'], 'Content-Disposition')) {
+                    $cid = stripos($disposition, 'inline;') !== false
+                        ? self::getHeader($part['headers'], 'Content-ID')
+                        : null;
+                    $cid = $cid ? str_replace(['<', '>'], '', $cid) : null;
+                }
+
+                $res[] = [
+                    'filename' => $part['filename'],
+                    'data' => self::decodeBody($att['data']),
+                    'cid' => $cid ?? null
+                ];
             }
         }
         return $res ?? [];

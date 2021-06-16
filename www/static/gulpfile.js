@@ -402,7 +402,11 @@ gulp.task("backend:scripts", function (done) {
   ];
 
   GulpAssets.isProduction() && args.push("-p");
-
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
   const cmd = spawn("node", args, { stdio: "inherit" });
 
   cmd.on("close", function (code) {
@@ -497,6 +501,12 @@ gulp.task("watch:backend:scripts", function (done) {
   ];
 
   GulpAssets.isProduction() && args.push("-p");
+
+  if (argv.mode) {
+    args.push(`--mode=${argv.mode}`);
+  } else {
+    args.push("--mode=development");
+  }
 
   args.push("--progress");
   args.push("-w");

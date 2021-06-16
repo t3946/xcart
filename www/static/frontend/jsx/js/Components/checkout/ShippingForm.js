@@ -220,10 +220,10 @@ export const ShippingForm = (function () {
    * автозаполнение адреса shipping формы
    */
   initAddressAutocompleteFields(
-    CheckoutForm_s_country,
-    CheckoutForm_s_state,
-    CheckoutForm_s_city,
-    CheckoutForm_s_zipcode
+    document.getElementById('CheckoutForm_s_country'),
+    document.getElementById('CheckoutForm_s_state'),
+    document.getElementById('CheckoutForm_s_city'),
+    document.getElementById('CheckoutForm_s_zipcode')
   );
 
   /**
@@ -236,10 +236,10 @@ export const ShippingForm = (function () {
     typeof CheckoutForm_b_zipcode !== "undefined"
   ) {
     initAddressAutocompleteFields(
-      CheckoutForm_b_country,
-      CheckoutForm_b_state,
-      CheckoutForm_b_city,
-      CheckoutForm_b_zipcode
+      document.getElementById('CheckoutForm_b_country'),
+      document.getElementById('CheckoutForm_b_state'),
+      document.getElementById('CheckoutForm_b_city'),
+      document.getElementById('CheckoutForm_b_zipcode')
     );
   }
 

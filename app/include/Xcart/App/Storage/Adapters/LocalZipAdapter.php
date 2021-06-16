@@ -122,7 +122,12 @@ class LocalZipAdapter extends ZipArchiveAdapter implements AdapterExtInterface
 
     public function has($path)
     {
-       $d = $this->getMetadata($path);
-       return !empty($d);
+       try {
+           $d = $this->getMetadata($path);
+           return !empty($d);
+       } catch (\Exception $e) {
+
+       }
+       return false;
     }
 }

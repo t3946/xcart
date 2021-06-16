@@ -88,7 +88,7 @@ class SearchController extends AbstractCatalogController
         if (preg_match('/^([a-z0-9]{3,4}-).++/i', $this->q)) {
             $this->isSKU = true;
             $tqs = clone $qs;
-            $tqs->filter(['productcode__contains' => $this->q]);
+            $tqs->filter(['productcode__startswith' => $this->q]);
 
             if (($count = $tqs->count()) && $count == 1) {
                 /** @var ProductModel $product */
@@ -203,7 +203,7 @@ class SearchController extends AbstractCatalogController
                     ->filter(['sites__storefrontid' => $siteModule->getSite()->storefrontid]);
 
         if ($this->isSKU) {
-            return $qs->filter(['productcode__contains' => $this->q]);
+            return $qs->filter(['productcode__startswith' => $this->q]);
         }
 
         return $qs->filter(['productid__in' => $this->ids]);

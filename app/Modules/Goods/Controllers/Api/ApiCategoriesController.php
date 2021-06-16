@@ -26,24 +26,11 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderNew(): void
     {
-        $site = Xcart::app()->getModule('Sites')->getSite();
-
-        $category_new = CategoryModel::objects()->filter(
-            [
-                'category' => GoodsModule::t('New Products'),
-                'storefrontid' => $site->pk,
-                'level' => 1
-            ]
-        )->limit(1)->get();
-
         $qs = parent::getQS()->filter(
             [
                 'images__image_path__isnull' => false,
-                'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(
-                    ['pk']
-                ),
             ]
-        );
+        )->order(['-add_date'])->group(['productid'])->limit(1000)->cache(3600);
 
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getPaginatedProducts($qs));
@@ -67,7 +54,6 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderAlsoBought($id): void
     {
-        /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
         if ($products) {
             $data = $this->getProductData($products);
@@ -125,11 +111,9 @@ class ApiCategoriesController extends AbstractCatalogController
 
         $pager = $this->getPager($qs);
         $this->setCanonical($this->model);
-        $pagerView = $pager->createView();
         $products = $pager->paginate();
 
         return [
-            'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
             'items' => $this->getProductData($products),
             'pager' => [
                 'pageSize' => $pager->getPageSize(),
@@ -170,7 +154,7 @@ class ApiCategoriesController extends AbstractCatalogController
     private function getProductData($products): array
     {
         if (!\is_array($products)) {
-            $products->limit(20)->cache(10);
+            $products->limit(20)->cache(3600);
         }
 
         $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
@@ -255,7 +239,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 'isNew' => $product->isNewProduct(),
                 'isSale' => $product->isSaleSticker(),
                 'isGroupRoot' => $product->isGroupRoot(),
-                'childrenNumber' => $product->getFrontendChilds()->count(),
+                'childrenNumber' => $product->isGroupRoot() ? $product->getFrontendChilds()->count() : 0,
 
                 'price' => [
                     'number' => $product->getFrontendPrice(),

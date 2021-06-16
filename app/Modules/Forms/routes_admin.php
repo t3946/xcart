@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Forms\Controllers\EmailDashboardAdmin;
 use Modules\Forms\Controllers\SnippetController;
 
 return [
@@ -12,6 +13,26 @@ return [
         'route' => '/snippet/{i:id}',
         'target' => [SnippetController::class, 'edit'],
         'name' => 'edit'
+    ],
+    [
+        'route' => '/email-dashboard/page/{i:page}',
+        'target' => [EmailDashboardAdmin::class, 'index'],
+        'name' => 'page'
+    ],
+    [
+        'route' => '/email-dashboard/email-info/{i:info}',
+        'target' => [EmailDashboardAdmin::class, 'index'],
+        'name' => 'info'
+    ],
+    [
+        'route' => '/email-dashboard',
+        'target' => [EmailDashboardAdmin::class, 'index'],
+        'name' => 'index'
+    ],
+    [
+        'route' => '/api',
+        'path' => 'Modules.Forms.routes_admin_api',
+        'namespace' => 'api'
     ],
 
 ];

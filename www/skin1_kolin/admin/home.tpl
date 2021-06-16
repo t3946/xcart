@@ -4,6 +4,7 @@
 <head>
     <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
     {include file="meta.tpl"}
+
     {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
     {Modules\Core\Helpers\AdminHelper::getMenu()}
 
@@ -664,6 +665,7 @@
         </div>
     </div>
 </div>
+{$xcartApp->template->render('inSmarty/footer_admin.tpl')}
 
 {Modules\Sites\Helpers\StorageHelper::print()}
 </body>
