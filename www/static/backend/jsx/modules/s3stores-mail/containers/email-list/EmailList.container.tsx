@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { SceletonEmailList } from "@s3stores-mail/components/ordinary/sceleton-email-list/SceletonEmailList";
@@ -12,6 +12,7 @@ import {
 import { EmailLIstContext } from "@s3stores-mail/contexts/email-list-context/EmailLIst.context";
 import { EmailList } from "@s3stores-mail/components/ordinary/email-list/EmailList";
 import { isFavoriteItemsTrue } from "@s3stores-mail/utils/edit-fields-on-email";
+import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
 export const EmailListContainer: React.FC = () => {
   const history = useHistory();
@@ -20,12 +21,14 @@ export const EmailListContainer: React.FC = () => {
 
   const loading = useSelector((state: StoreDto) => state.loading);
 
+  const routers = useContext(EmailRouterContext);
+
   const email = useSelector((state: StoreDto) => {
     return state.emailInfo;
   });
 
   const handleItemClick = (id) => {
-    history.push(`/admin/forms/email-dashboard/email-info/${id}`);
+    history.push(`${routers.infoRouter}${id}`);
   };
 
   const editFavorite = (e, id) => {

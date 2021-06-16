@@ -65,12 +65,20 @@ const List: React.FC<any> = ({
             </span>
           </div>
         </Grid>
-        <Grid xs={itemData.contains_action ? 4 : 6}>
+        <Grid
+          container
+          justify="flex-start"
+          xs={itemData.contains_action ? 3 : 5}
+        >
           <div className="text-name">
             <span>{itemData.subject}</span>
           </div>
         </Grid>
-        <Grid xs>
+        <Grid
+          justify={"center"}
+          container
+          xs={itemData.contains_action ? 3 : 1}
+        >
           {itemData.contains_action && (
             <ReadedSwitch
               actionName={itemData.action?.name}

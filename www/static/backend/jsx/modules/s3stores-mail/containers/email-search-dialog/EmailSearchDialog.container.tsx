@@ -5,6 +5,8 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { editSearchOptions, getPage, setLoading } from "@redux/actions";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
+import { emailStore } from "../../../../redux/stores";
+import { EmailRouterContext } from "../../contexts/email-router-context/EmailRouter.context";
 
 export const EmailSearchDialogContainer: React.FC = () => {
   const history = useHistory();
@@ -13,10 +15,17 @@ export const EmailSearchDialogContainer: React.FC = () => {
 
   const { handleClose } = useContext(EmailDialogContext);
 
+  const routers = useContext(EmailRouterContext);
+
   const editSearchValues = (values) => {
-    dispatch(editSearchOptions(values));
+    dispatch(
+      editSearchOptions({
+        ...values,
+        distributorId: emailStore.getState().searchOptions.distributorId,
+      })
+    );
     handleClose();
-    history.push(`/admin/forms/email-dashboard/page/${1}`);
+    history.push(`${routers.listRouter}${1}`);
     dispatch(setLoading());
     dispatch(getPage(Number(1), values));
   };

@@ -119,6 +119,16 @@ return [
         'name' => 'section'
     ],
     [
+        'route' => '/distributor/{i:mid}/{i:section}/email-dashboard/page/{i:page}',
+        'target' => [DistributorController::class, 'index'],
+        'name' => 'page'
+    ],
+    [
+        'route' => '/distributor/{i:mid}/{i:section}/email-dashboard/email/{i:info}',
+        'target' => [DistributorController::class, 'index'],
+        'name' => 'email_info'
+    ],
+    [
         'route' => '/distributor/add',
         'target' => [DistributorController::class, 'index'],
         'name' => 'dx_add'

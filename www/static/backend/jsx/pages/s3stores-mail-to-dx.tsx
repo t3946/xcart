@@ -5,16 +5,16 @@ import { Provider } from "react-redux";
 import { MailRouters } from "@s3stores-mail/routers";
 import { EmailSnackbar } from "@s3stores-mail/containers/email-snackbar/EmailSnackbar";
 import { BrowserRouter } from "react-router-dom";
-import { EmailRouterContext } from "../modules/s3stores-mail/contexts/email-router-context/EmailRouter.context";
+import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
 (() => {
-  const elem = document.getElementsByClassName("email-dashboard");
+  const elem: HTMLElement = document.querySelector(".admin-page");
 
-  if (!elem[0]) return;
+  console.log(elem);
 
-  const listRouter = "/admin/forms/email-dashboard/page/";
+  const listRouter = "/admin/distributor/253/50/email-dashboard/page/";
 
-  const infoRouter = "/admin/email-dashboard/email-info/";
+  const infoRouter = "/admin/distributor/253/50/email-dashboard/email/";
 
   ReactDOM.render(
     <Provider store={emailStore as any}>
@@ -26,11 +26,11 @@ import { EmailRouterContext } from "../modules/s3stores-mail/contexts/email-rout
       >
         <EmailSnackbar>
           <BrowserRouter>
-            <MailRouters />
+            <MailRouters distributorId={elem?.dataset?.id} />
           </BrowserRouter>
         </EmailSnackbar>
       </EmailRouterContext.Provider>
     </Provider>,
-    elem[0]
+    elem
   );
 })();

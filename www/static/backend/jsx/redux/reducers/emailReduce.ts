@@ -9,7 +9,7 @@ import {
   isFavoriteItemsTrue,
   isViewedItemsTrue,
 } from "@s3stores-mail/utils/edit-fields-on-email";
-import { editSelectViewValue } from "../../modules/s3stores-mail/utils/edit-select-view-value";
+import { editSelectViewValue } from "@s3stores-mail/utils/edit-select-view-value";
 
 const emailReducer = (
   state: StoreDto = initialValues,
@@ -197,7 +197,6 @@ const emailReducer = (
       return {
         ...state,
         searchOptions: action.searchOptions,
-        page: 1,
       };
     default:
       return state;

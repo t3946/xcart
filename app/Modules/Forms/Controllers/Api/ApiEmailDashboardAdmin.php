@@ -6,6 +6,7 @@ namespace Modules\Forms\Controllers\Api;
 
 use Modules\Forms\Models\EmailActionLogModel;
 use Modules\Forms\Models\EmailActionModel;
+use Modules\Forms\Models\EmailEntityModel;
 use Modules\Forms\Models\EmailFavoriteModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\EmailViewedModel;
@@ -30,7 +31,7 @@ class ApiEmailDashboardAdmin extends Controller
 
         $searchParams = $searchParams->searchParams;
 
-
+        $qs = EmailModel::objects()->getQuerySet()->order(['-id']);
         if($searchParams->hasAttachment)
         {
             $actionItem =   array_merge($actionItem, ['attachments__attachment__isnull' => false]);
@@ -59,8 +60,12 @@ class ApiEmailDashboardAdmin extends Controller
         {
             $actionItem =   array_merge($actionItem, ['date__lte' => $searchParams->dateBefore]);
         }
+        if($searchParams->distributorId)
+        {
+            $qs =  $qs->filter(["dx_models__manufacturerid" => $searchParams->distributorId]);
+        }
 
-        $qs = EmailModel::objects()->getQuerySet()->filter($actionItem)->order(['-id']);
+        $qs = $qs->filter($actionItem);
 
         $pagination = new Pagination($qs, [
             'page' => $page,

@@ -191,7 +191,7 @@ class EmailModel extends Model
         $data = EmailEntityModel::objects()->filter(['email_id' => $id]);
 
         switch ( $data[0]['model']){
-            case 'Modules\Distributor\Models\DistributorModel':
+            case DistributorModel::class:
             {
                 return 'distributor';
             }

@@ -23,6 +23,7 @@ import {
 import { editEmailAddress } from "@s3stores-mail/utils/edit-email-address";
 import { addPrefixToSubject } from "@s3stores-mail/utils/add-prefix-to-subject";
 import { SceletonEmailInfo } from "../../components/simple/sceleton-email-info/SceletonEmailInfo";
+import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
 export const EmailInfoContainer: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -59,8 +60,10 @@ export const EmailInfoContainer: React.FC = () => {
 
   const templates = useSelector((state: StoreDto) => state.templates);
 
+  const routers = useContext(EmailRouterContext);
+
   const editViewed = () => {
-    history.push(`/admin/forms/email-dashboard/page/${page}`);
+    history.push(`${routers.listRouter}${page}`);
     dispatch(
       setViewed([email.item.id], isViewedItemsTrue(emails, [email.item.id]))
     );

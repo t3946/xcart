@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { viewPaginateInfo } from "@s3stores-mail/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { pageSize } from "@s3stores-mail/ts/consts";
@@ -11,11 +11,14 @@ import {
   isFavoriteItemsTrue,
   isViewedItemsTrue,
 } from "@s3stores-mail/utils/edit-fields-on-email";
+import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
 export const EmailListHeaderContainer: React.FC = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
+
+  const routers = useContext(EmailRouterContext);
 
   const { page }: { page?: string } = useParams();
 
@@ -30,7 +33,7 @@ export const EmailListHeaderContainer: React.FC = () => {
   const items = useSelector((state: StoreDto) => state.items);
 
   const getNewPage = (count: number) => {
-    history.push(`/admin/forms/email-dashboard/page/${thisPage + count}`);
+    history.push(`${routers.listRouter}${thisPage + count}`);
   };
 
   const paginate = () => {

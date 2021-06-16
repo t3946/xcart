@@ -6,7 +6,6 @@ import { EmailListHeaderContainer } from "../../containers";
 import { EmailListTitle } from "@s3stores-mail/components/ordinary/email-list-title/EmailListTitle";
 import { EmailListContainer } from "@s3stores-mail/containers/email-list/EmailList.container";
 import { StoreDto } from "../../ts/types";
-import { initialValues } from "../../ts/consts";
 export const Email: React.FC = () => {
   const dispatch = useDispatch();
 

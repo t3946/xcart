@@ -10,6 +10,7 @@ export const initialValues: StoreDto = {
     dateAfter: null,
     dateBefore: null,
     hasAttachment: false,
+    distributorId: undefined,
   },
   emailInfo: {
     account_id: "",

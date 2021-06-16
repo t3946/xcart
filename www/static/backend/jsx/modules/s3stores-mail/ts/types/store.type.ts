@@ -46,4 +46,5 @@ export interface SearchDataDto {
   dateAfter: Date | string;
   dateBefore: Date | string;
   hasAttachment: boolean;
+  distributorId: string | undefined;
 }
