@@ -3,7 +3,7 @@ import Icon from "@admin/icons/icon";
 
 export const RoundedCornerDoubleIcon: React.FC<any> = function (props: any) {
   return (
-    <Icon props>
+    <Icon {...props}>
       <svg
         width="10"
         height="10"
