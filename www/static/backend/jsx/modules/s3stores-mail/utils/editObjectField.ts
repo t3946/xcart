@@ -1,5 +1,3 @@
-import { EmailStoreItems } from "../ts/types";
-
 export function editObjectField<T, D>(
   object: T,
   field: string,

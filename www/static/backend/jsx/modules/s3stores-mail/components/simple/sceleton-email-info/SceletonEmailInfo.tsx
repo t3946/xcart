@@ -1,12 +1,5 @@
 import React from "react";
 import { Grid, Paper } from "@material-ui/core";
-import {
-  EmailInfoBodyData,
-  ReadedSwitch,
-} from "@s3stores-mail/components/simple";
-import { EmailInfoHeaderIcons } from "@s3stores-mail/components/ordinary/email-info-header-icons/EmailInfoHeaderIcons";
-import { IncomingFilesList } from "@s3stores-mail/components/ordinary/incoming-files-list/IncomingFilesList";
-import { EmailInfoDataFooter } from "@s3stores-mail/components/smart";
 
 export const SceletonEmailInfo = () => {
   return (

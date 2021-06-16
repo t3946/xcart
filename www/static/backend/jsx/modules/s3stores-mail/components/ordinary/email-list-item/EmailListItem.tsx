@@ -1,8 +1,6 @@
 import React from "react";
 import { Checkbox, Grid, Paper } from "@material-ui/core";
 import CallMadeIcon from "@material-ui/icons/CallMade";
-import EditIcon from "@material-ui/icons/Edit";
-import { EmailType } from "../../../ts/consts";
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { ReadedSwitch } from "@s3stores-mail/components/simple";
 import moment from "moment";

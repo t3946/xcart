@@ -2,13 +2,8 @@ import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { SceletonEmailList } from "@s3stores-mail/components/ordinary/sceleton-email-list/SceletonEmailList";
-import { useHistory, useParams } from "react-router-dom";
-import {
-  editActions,
-  editCheckedItems,
-  editFavorites,
-  getPage,
-} from "@redux/actions";
+import { useHistory } from "react-router-dom";
+import { editActions, editCheckedItems, editFavorites } from "@redux/actions";
 import { EmailLIstContext } from "@s3stores-mail/contexts/email-list-context/EmailLIst.context";
 import { EmailList } from "@s3stores-mail/components/ordinary/email-list/EmailList";
 import { isFavoriteItemsTrue } from "@s3stores-mail/utils/edit-fields-on-email";
@@ -22,10 +17,6 @@ export const EmailListContainer: React.FC = () => {
   const loading = useSelector((state: StoreDto) => state.loading);
 
   const routers = useContext(EmailRouterContext);
-
-  const email = useSelector((state: StoreDto) => {
-    return state.emailInfo;
-  });
 
   const handleItemClick = (id) => {
     history.push(`${routers.infoRouter}${id}`);

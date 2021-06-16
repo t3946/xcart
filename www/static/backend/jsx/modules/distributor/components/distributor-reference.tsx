@@ -65,8 +65,10 @@ const DistributorReference: React.FC<any> = (props: any) => {
   }
 
   function callButtonTemplate() {
-    const { isGoodTimeToSendEmail, normalizedPhone } =
-      appData().distributor.reference;
+    const {
+      isGoodTimeToSendEmail,
+      normalizedPhone,
+    } = appData().distributor.reference;
 
     if (!normalizedPhone) {
       return;

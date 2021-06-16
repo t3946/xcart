@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getPage, setEmailInfo, setLoading } from "../../../../redux/actions";
+import { getPage, setLoading } from "../../../../redux/actions";
 import { EmailListHeaderContainer } from "../../containers";
 import { EmailListTitle } from "@s3stores-mail/components/ordinary/email-list-title/EmailListTitle";
 import { EmailListContainer } from "@s3stores-mail/containers/email-list/EmailList.container";
