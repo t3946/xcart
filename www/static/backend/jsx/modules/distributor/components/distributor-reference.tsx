@@ -58,7 +58,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
       return (
         <li>
           <b>{name}: </b>
-          {value}
+          <span className="summary-option-value">{value}</span>
         </li>
       );
     }
@@ -164,7 +164,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
               <div className="row distributor_row-layout">
                 <div className="col-6 distributor-layout-column">
                   <p
-                    className={"m-0"}
+                    className="m-0 distributor-description"
                     dangerouslySetInnerHTML={{
                       __html: appData().distributor.reference.description,
                     }}

@@ -6,7 +6,10 @@
 namespace Modules\Core\Helpers;
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -22,9 +25,18 @@ class AdminHelper
         return $str . ' ' . LanguageModel::translate('lbl_sf');
     }
 
-    public static function getMenu()
+    /**
+     * построить данные для меню сайд бара
+     */
+    private static function menuData()
     {
-        $menu = [];
+        $new_menu = [];
+
+        if (!Xcart::app()->getUser()->login) {
+            StorageHelper::push([], null, 'sidebarMenu');
+            return;
+        }
+
         $modules = Xcart::app()->getModulesConfig();
 
         //новое меню
@@ -34,7 +46,7 @@ class AdminHelper
                 $class = $config['class'];
                 $moduleMenu = $class::getAdminMenu();
                 if ($moduleMenu) {
-                    $menu[] = [
+                    $new_menu[] = [
                         'name' => $class::getVerboseName(),
                         'key' => $name,
                         'class' => $config['class'],
@@ -255,8 +267,108 @@ class AdminHelper
         }
 
         StorageHelper::push([
-            "new" => $menu,
+            "new" => $new_menu,
             "old" => $old_menu ?? null,
         ], null, 'sidebarMenu');
+    }
+
+    /**
+     * построить данные для шапки сайта
+     */
+    private static function hatData()
+    {
+        $data = [];
+
+        //time
+        $est_time = date_create('now', timezone_open('EST'));
+        $time = [
+            [
+                "caption" => "CA time",
+                "time" => date_create('now', timezone_open('America/Los_Angeles'))->format('H:i'),
+            ],
+            [
+                "caption" => "EST time",
+                "time" => $est_time->format('H:i'),
+            ],
+            [
+                "caption" => "NY time",
+                "time" => date_create('now', timezone_open('America/New_York'))->format('H:i'),
+            ],
+        ];
+
+        $data["time"] = $time;
+
+        //dateXcart::app()->
+        $data["date"] = $est_time->format('F j, Y');
+
+        //holiday
+        $holiday = WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')));
+        $days = $holiday->getDaysUntil();
+        $data["holiday"] = sprintf("%d day%s until %s", $days, $days > 1 ? 's' : '', (string)$holiday);
+
+        //user
+        $data["user"] = Xcart::app()->getUser()->login;
+
+        //site info
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $site_code = strtolower($site->code);
+        $data["site"] = [
+            "logoUrl" => Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg",
+            "name" => $site->getName(),
+        ];
+
+        //sites
+        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
+
+        foreach ($site_list as $site) {
+            switch ($site->code) {
+                case 'RD':
+                    $icon = "go-freddy.svg";
+                    break;
+                default:
+                    $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
+            }
+
+            $data["sites"][] = [
+                "name" => $site->getName(),
+                "id" => (int)$site->storefrontid,
+                "icon" => $icon,
+                "code" => $site->code,
+            ];
+        }
+
+        StorageHelper::push($data, null, 'hat');
+    }
+
+    /**
+     * данные об авторизованном пользователе
+     */
+    private static function userData()
+    {
+        $user = Xcart::app()->getUser();
+
+        StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+    }
+
+    /**
+     * данные по текущему сайту
+    */
+    private static function siteData()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+
+        StorageHelper::push($site->getAttributes(), null, 'site');
+    }
+
+    /**
+     * Сформировать массивы из данных, которые используются на всех страницах,
+     * для последующей передачи на frontend
+     */
+    public static function buildCommonData()
+    {
+        self::menuData();
+        self::hatData();
+        self::userData();
+        self::siteData();
     }
 }

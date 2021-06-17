@@ -6,7 +6,8 @@
     {include file="meta.tpl"}
 
     {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
-    {Modules\Core\Helpers\AdminHelper::getMenu()}
+
+    {Modules\Core\Helpers\AdminHelper::buildCommonData()}
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -655,9 +656,6 @@
 
                         <!-- /central space -->
                         &nbsp;
-                    </td>
-                    <td>
-                        <img src="{$ImagesDir}/spacer.gif" width="20" height="1" alt=""/>
                     </td>
                 </tr>
             </table>

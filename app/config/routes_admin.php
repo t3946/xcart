@@ -21,6 +21,11 @@ return [
         'namespace' => 'id_check',
     ],
     [
+        'route' => '/admin/user',
+        'path' => 'Modules.User.routes_admin',
+        'namespace' => 'user',
+    ],
+    [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'
@@ -49,6 +54,11 @@ return [
         'route' => '/admin/goods',
         'path' => 'Modules.Goods.routes_admin',
         'namespace' => 'product'
+    ],
+    [
+        'route' => '/admin/sites',
+        'path' => 'Modules.Sites.routes_admin',
+        'namespace' => 'site'
     ],
     [
         'route' => '/admin/editor',

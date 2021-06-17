@@ -1,0 +1,25 @@
+.drop-popover-menu {
+    max-height: rem-calc(300);
+    overflow-y: scroll;
+}
+
+
+/* width */
+.drop-popover-menu::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+.drop-popover-menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+.drop-popover-menu::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.drop-popover-menu::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
