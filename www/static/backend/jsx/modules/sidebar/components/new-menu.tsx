@@ -6,7 +6,6 @@ import appData from "@admin/utils/app-data";
 import { RoundedCornerIcon } from "@admin/icons/icons";
 
 const NewMenu: React.FC<any> = function (props: any) {
-  const defaultActive = true;
   const [eventKey, setEventKey] = React.useState("0");
   const [isCurrentEventKey, setIsCurrentEventKey] = React.useState(false);
 
