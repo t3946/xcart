@@ -7,8 +7,18 @@ import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/
 import $ from "jquery";
 
 const HatReference: React.FC<any> = function () {
-  const [logo, setLogo] = React.useState(appData().hat.logoUrl);
+  const [logo, setLogo] = React.useState(appData().hat.site.logoUrl);
   const menuRef = React.createRef();
+
+  function logout() {
+    $.ajax({
+      url: "/admin/logout",
+      method: "POST",
+      success(res) {
+        document.location.reload();
+      },
+    });
+  }
 
   function timeTemplate(): any {
     const timeList = [];
@@ -37,6 +47,7 @@ const HatReference: React.FC<any> = function () {
         <Dropdown.Item
           className="pl-3.25 pr-3.25 pt-1 pb-1 drop-down-item"
           data-value={site.id}
+          title={`(${site.code}) ${site.name}`}
         >
           <img
             src={"/static/backend/dist/images/icons/sites/" + site.icon}
@@ -55,7 +66,7 @@ const HatReference: React.FC<any> = function () {
           className="select-distributor-menu-logo pl-3.25 pr-3.25 pt-3 pb-4 d-flex justify-content-between align-items-center pointer"
           onClick={closeMenu}
         >
-          <img src={logo} alt="logo" width="130" />
+          <img src={logo} alt={appData().hat.site.name} width="130" />
           <RoundedCornerIcon />
         </div>
 
@@ -64,27 +75,66 @@ const HatReference: React.FC<any> = function () {
     );
   }
 
+  function loginButton(): any {
+    if (!appData().hat.user) {
+      return (
+        <a
+          href="/admin/error_message.php?antibot_error"
+          className="logout-button button"
+        >
+          Log in
+          <RoundedCornerDoubleIcon className="logout-button_icon ml-2.5" />
+        </a>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <button className="logout-button button" onClick={logout}>
+            Log out
+            <RoundedCornerDoubleIcon className="logout-button_icon ml-2.5" />
+          </button>
+
+          <div className="logged-as mt-2">
+            {appData().hat.user} is logged in!
+          </div>
+        </React.Fragment>
+      );
+    }
+  }
+
+  function selectSiteTemplate(): any {
+    if (!appData().user) {
+      return (
+        <img className="hat-logo" src={logo} alt={appData().hat.site.name} />
+      );
+    }
+
+    return (
+      <DropPopoverMenu
+        button={
+          <img className="hat-logo" src={logo} alt={appData().hat.site.name} />
+        }
+        menu={menuTemplate()}
+        menuClasses="pb-3 pt-0"
+        ref={menuRef}
+        onSelect={(value) => {
+          $.ajax({
+            url: `/admin/sites/set-site/${value}`,
+            method: "POST",
+            dataType: "json",
+            success(res) {
+              setLogo(res.logoUrl);
+            },
+          });
+        }}
+      />
+    );
+  }
+
   return (
     <div className="pt-4 pb-4">
       <div className="row">
-        <div className="col column__left">
-          <DropPopoverMenu
-            button={<img className="hat-logo" src={logo} alt="logo" />}
-            menu={menuTemplate()}
-            menuClasses="pb-3 pt-0"
-            ref={menuRef}
-            onSelect={(value) => {
-              $.ajax({
-                url: `/admin/sites/set-site/${value}`,
-                method: "POST",
-                dataType: "json",
-                success(res) {
-                  setLogo(res.logoUrl);
-                },
-              });
-            }}
-          />
-        </div>
+        <div className="col column__left">{selectSiteTemplate()}</div>
 
         <div className="col">
           <div className="column-right-wrapper">
@@ -97,13 +147,7 @@ const HatReference: React.FC<any> = function () {
           </div>
         </div>
         <div className="col column__right align-items-end d-flex flex-column">
-          <button className="logout-button button">
-            Log out
-            <RoundedCornerDoubleIcon className="logout-button_icon ml-2" />
-          </button>
-          <div className="logged-as mt-2">
-            {appData().hat.user} is logged in!
-          </div>
+          {loginButton()}
         </div>
       </div>
     </div>

@@ -62,23 +62,23 @@ const NewMenu: React.FC<any> = function (props: any) {
   }
 
   return (
-      <Card className="border-0 rounded-0 sidebar-menu_section">
-        <Card.Header className="p-0 border-0 m-0">
-          <ContextAwareToggle
-            eventKey={eventKey}
-            onChange={(newEventKey) => setIsCurrentEventKey(newEventKey)}
-          >
-            <div className={classNames(hatClasses)}>
-              <h3 className="sidebar-menu-header m-0">Modules menu</h3>
-              <RoundedCornerIcon className="sidebar-menu-header-icon" />
-            </div>
-          </ContextAwareToggle>
-        </Card.Header>
+    <Card className="border-0 rounded-0 sidebar-menu_section">
+      <Card.Header className="p-0 border-0 m-0">
+        <ContextAwareToggle
+          eventKey={eventKey}
+          onChange={(newEventKey) => setIsCurrentEventKey(newEventKey)}
+        >
+          <div className={classNames(hatClasses)}>
+            <h3 className="sidebar-menu-header m-0">Modules menu</h3>
+            <RoundedCornerIcon className="sidebar-menu-header-icon" />
+          </div>
+        </ContextAwareToggle>
+      </Card.Header>
 
-        <Accordion.Collapse eventKey="0">
-          <Card.Body className="p-0">{menuGroupsTemplate()}</Card.Body>
-        </Accordion.Collapse>
-      </Card>
+      <Accordion.Collapse eventKey="0">
+        <Card.Body className="p-0">{menuGroupsTemplate()}</Card.Body>
+      </Accordion.Collapse>
+    </Card>
   );
 };
 

@@ -67,7 +67,9 @@ class SitesModule extends Module
     {
         if (!$this->_selected_site)
         {
-            if ( $sf_id = Xcart::app()->request->session->get('current_storefront') ) {
+            $sf_id = Xcart::app()->request->session->get('current_storefront');
+
+            if ( $sf_id !== null ) {
                 $this->setSelectedSite(SiteModel::objects()->get(['pk' => $sf_id]));
             }
             else {

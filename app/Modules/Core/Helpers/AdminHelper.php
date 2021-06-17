@@ -27,10 +27,16 @@ class AdminHelper
 
     /**
      * построить данные для меню сайд бара
-    */
-    private static function buildMenuData()
+     */
+    private static function menuData()
     {
-        $menu = [];
+        $new_menu = [];
+
+        if (!Xcart::app()->getUser()->login) {
+            StorageHelper::push([], null, 'sidebarMenu');
+            return;
+        }
+
         $modules = Xcart::app()->getModulesConfig();
 
         //новое меню
@@ -40,7 +46,7 @@ class AdminHelper
                 $class = $config['class'];
                 $moduleMenu = $class::getAdminMenu();
                 if ($moduleMenu) {
-                    $menu[] = [
+                    $new_menu[] = [
                         'name' => $class::getVerboseName(),
                         'key' => $name,
                         'class' => $config['class'],
@@ -261,15 +267,16 @@ class AdminHelper
         }
 
         StorageHelper::push([
-            "new" => $menu,
+            "new" => $new_menu,
             "old" => $old_menu ?? null,
         ], null, 'sidebarMenu');
     }
 
     /**
      * построить данные для шапки сайта
-    */
-    private static function buildHatData() {
+     */
+    private static function hatData()
+    {
         $data = [];
 
         //time
@@ -291,7 +298,7 @@ class AdminHelper
 
         $data["time"] = $time;
 
-        //time
+        //dateXcart::app()->
         $data["date"] = $est_time->format('F j, Y');
 
         //holiday
@@ -302,26 +309,31 @@ class AdminHelper
         //user
         $data["user"] = Xcart::app()->getUser()->login;
 
-        //site logo
-        $site_code = strtolower(Xcart::app()->getModule('Sites')->getSelectedSite()->code);
-        $data["logoUrl"] = Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg";
+        //site info
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $site_code = strtolower($site->code);
+        $data["site"] = [
+            "logoUrl" => Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg",
+            "name" => $site->getName(),
+        ];
 
         //sites
         $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
 
         foreach ($site_list as $site) {
-
-            $default_icon = "photo-video-supply.svg";
-            $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
-
-            if (in_array($site->code, ['GF', 'AT', 'RD', 'DS', 'S3', 'FR', 'FM', 'TR', 'TC', 'FP'])) {
-                $icon = $default_icon;
+            switch ($site->code) {
+                case 'RD':
+                    $icon = "go-freddy.svg";
+                    break;
+                default:
+                    $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
             }
 
             $data["sites"][] = [
                 "name" => $site->getName(),
                 "id" => (int)$site->storefrontid,
                 "icon" => $icon,
+                "code" => $site->code,
             ];
         }
 
@@ -329,11 +341,34 @@ class AdminHelper
     }
 
     /**
+     * данные об авторизованном пользователе
+     */
+    private static function userData()
+    {
+        $user = Xcart::app()->getUser();
+
+        StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+    }
+
+    /**
+     * данные по текущему сайту
+    */
+    private static function siteData()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+
+        StorageHelper::push($site->getAttributes(), null, 'site');
+    }
+
+    /**
      * Сформировать массивы из данных, которые используются на всех страницах,
      * для последующей передачи на frontend
-    */
-    public static function buildCommonData() {
-        self::buildMenuData();
-        self::buildHatData();
+     */
+    public static function buildCommonData()
+    {
+        self::menuData();
+        self::hatData();
+        self::userData();
+        self::siteData();
     }
 }

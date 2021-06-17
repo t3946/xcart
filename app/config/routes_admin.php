@@ -21,6 +21,11 @@ return [
         'namespace' => 'id_check',
     ],
     [
+        'route' => '/admin/user',
+        'path' => 'Modules.User.routes_admin',
+        'namespace' => 'user',
+    ],
+    [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'

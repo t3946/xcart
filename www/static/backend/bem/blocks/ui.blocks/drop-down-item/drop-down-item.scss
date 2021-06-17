@@ -4,6 +4,10 @@
     color: #494949;
     font-size: rem-calc(15);
 
+    &:focus {
+        background: #fff7de;
+    }
+
     &:hover {
         color: #000000;
         background: #ffebb2;
@@ -11,6 +15,6 @@
 
     &:active {
         color: #000000;
-        background: #ffe7a3;
+        background: #fde39b;
     }
 }
