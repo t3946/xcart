@@ -249,21 +249,21 @@
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-related">
             {set $link}{url 'catalog:related' id=$model->pk}{/set}
             {set $lbl}{t 'Similar products'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-viewed">
             {set $link}{url 'catalog:viewed'}{/set}
             {set $lbl}{t 'You recently viewed items'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
 {/block}
