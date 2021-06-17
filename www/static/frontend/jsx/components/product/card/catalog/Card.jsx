@@ -26,6 +26,8 @@ export default class Card extends Component {
     for (let i = 0; product.images && i < product.images.length; i++) {
       this.imgList.push(<ImgCatalog image={product.images[i]} />);
     }
+
+    console.log(1);
   }
 
   /**
@@ -295,10 +297,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <Price
-                currency={product.currency}
-                price={product.price.number}
-              />
+              <Price currency={product.currency} price={product.price.number} />
             </span>
           </div>
         </div>

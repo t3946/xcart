@@ -1,25 +1,27 @@
-import CatalogContext from '@/components/catalog/CatalogContext';
+import CatalogContext from "@/components/catalog/CatalogContext";
 
 export default class PageCount extends Component {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    render() {
-        const $pager = this.context.pager;
-        const pageSize = $pager.pageSize;
-        const currentPage = $pager.currentPage;
-        const currentPageSize = $pager.paginateCount;
-        const total = $pager.total;
+  render() {
+    const $pager = this.context.pager;
+    const pageSize = $pager.pageSize;
+    const currentPage = $pager.currentPage;
+    const currentPageSize = $pager.paginateCount;
+    const total = $pager.total;
 
-        return (
-            <span className="page_count">
-                <span className="count">{ pageSize * ( currentPage - 1 ) + currentPageSize }</span>
-                <span> / </span>
-                <span className="full">{ total }</span>
-                <span> items shown</span>
-            </span>
-        );
-    }
+    return (
+      <span className="page_count">
+        <span className="count">
+          {$pager ? pageSize * (currentPage - 1) + currentPageSize : "Loading"}
+        </span>
+        <span> / </span>
+        <span className="full">{$pager ? total : "Loading"}</span>
+        <span> items shown</span>
+      </span>
+    );
+  }
 }
 PageCount.contextType = CatalogContext;
