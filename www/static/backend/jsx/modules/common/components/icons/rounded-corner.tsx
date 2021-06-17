@@ -1,9 +1,9 @@
 import React from "react";
-import classNames from "classnames";
+import Icon from "@admin/icons/icon";
 
-export const Arrow: React.FC<any> = function (props: any) {
+export const RoundedCornerIcon: React.FC<any> = function (props: any) {
   return (
-    <i className={classNames(props.className)}>
+    <Icon {...props}>
       <svg
         width="10"
         height="6"
@@ -13,12 +13,12 @@ export const Arrow: React.FC<any> = function (props: any) {
       >
         <path
           d="M9 5L5 1L1 5"
-          stroke="#8A8A8A"
+          stroke={props.color || "#8A8A8A"}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
-    </i>
+    </Icon>
   );
 };

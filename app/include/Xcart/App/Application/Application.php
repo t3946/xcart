@@ -273,6 +273,12 @@ class Application
 
         return null;
     }
+
+    public function logout() {
+        $auth = $this->getComponent('auth');
+        $auth->logout();
+    }
+
     public function handleWebRequest()
     {
         /** @var HttpRequest $request */

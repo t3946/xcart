@@ -26,12 +26,3 @@
     font-weight: 500;
   }
 }
-
-a {
-  &.button {
-    //@extend .button;
-    &, &:visited, &:hover {
-      color: #fff;
-    }
-  }
-}
