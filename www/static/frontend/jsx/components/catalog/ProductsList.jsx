@@ -67,7 +67,9 @@ export default class ProductsList extends Component {
       .then(
         (res) => {
           this.props.onEndLoading();
-          this.state.items = [];
+          if (this.state.nextPage === 1) {
+            this.state.items = [];
+          }
           this.state.items.push(...res.items);
           this.setState({
             items: this.state.items,
