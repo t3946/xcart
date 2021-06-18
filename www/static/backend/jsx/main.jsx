@@ -24,6 +24,7 @@ import "@/js/mTooltip";
 import "@/js/prevention";
 import "@/js/tablePosition";
 import "@/js/translates";
+import "./theme";
 
 (function () {
   "use strict";

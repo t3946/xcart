@@ -357,7 +357,7 @@ class AdminHelper
 
     /**
      * данные по текущему сайту
-    */
+     */
     private static function siteData()
     {
         $site = Xcart::app()->getModule('Sites')->getSelectedSite();
