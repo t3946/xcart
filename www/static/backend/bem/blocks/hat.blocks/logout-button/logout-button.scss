@@ -11,14 +11,8 @@
     text-transform: none;
     position: relative;
     overflow: visible;
-    transition: all 0.125s ease-out;
 
     &:hover {
-        background: #ffebb2;
         text-decoration: none;
-    }
-
-    &:active {
-        background: #ffe7a3;
     }
 }

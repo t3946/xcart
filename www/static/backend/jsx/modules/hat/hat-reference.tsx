@@ -45,7 +45,7 @@ const HatReference: React.FC<any> = function () {
     for (const site of appData().hat.sites) {
       items.push(
         <Dropdown.Item
-          className="pl-3.25 pr-3.25 pt-1 pb-1 drop-down-item"
+          className="pl-3.25 pr-3.25 pt-1 pb-1 drop-down-item clickable clickable__yellow"
           data-value={site.id}
           title={`(${site.code}) ${site.name}`}
         >
@@ -80,7 +80,7 @@ const HatReference: React.FC<any> = function () {
       return (
         <a
           href="/admin/error_message.php?antibot_error"
-          className="logout-button button"
+          className="logout-button button clickable clickable__yellow"
         >
           Log in
           <RoundedCornerDoubleIcon className="logout-button_icon ml-2.5" />
@@ -89,7 +89,10 @@ const HatReference: React.FC<any> = function () {
     } else {
       return (
         <React.Fragment>
-          <button className="logout-button button" onClick={logout}>
+          <button
+            className="logout-button button clickable clickable__yellow"
+            onClick={logout}
+          >
             Log out
             <RoundedCornerDoubleIcon className="logout-button_icon ml-2.5" />
           </button>
