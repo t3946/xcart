@@ -26,8 +26,6 @@ export default class Card extends Component {
     for (let i = 0; product.images && i < product.images.length; i++) {
       this.imgList.push(<ImgCatalog image={product.images[i]} />);
     }
-
-    console.log(1);
   }
 
   /**
@@ -367,6 +365,7 @@ export default class Card extends Component {
                       <AddToCartButton
                         classes={addToCartClasses}
                         onChangeMode={this.addToCartChangeMode.bind(this)}
+                        quantity={this.state.quantityAdd}
                       />
                     </div>
 

@@ -128,87 +128,91 @@ $("a.select-order").click(function () {
 });
 ///var/www/html/app/Modules/Dashboard/templates/dashboard/layouts/dashboard_layout.tpl
 (function () {
-  $(".admin select[data-ajax-from]").on("select2:select", function (e) {
-    $(this).append(
-      $("option[selected]", {
-        value: e.params.data.id,
-        text: e.params.data.text,
-      })
-    );
-  });
+  const $select = $(".dashboard-search-form select");
 
-  $(".admin select:not([data-ajax-from])")
+  $select
+    .filter("[data-ajax-from]")
+    .on("select2:select", function (e) {
+      $(this).append(
+        $("option[selected]", {
+          value: e.params.data.id,
+          text: e.params.data.text,
+        })
+      );
+    })
+    .select2({
+      allowClear: true,
+      placeholder: "Click to type and select",
+      tags: true,
+      closeOnSelect: false,
+      minimumInputLength: 3,
+      createTag: function (params) {
+        if (!this.$element.data("combobox")) {
+          return null;
+        }
+
+        var term = $.trim(params.term);
+
+        if (term === "") {
+          return null;
+        }
+
+        return {
+          id: appData().app.manualString + term,
+          text: appData().app.manualString + term,
+        };
+      },
+      ajax: {
+        cache: true,
+        dataType: "json",
+        delay: 500,
+        url: function (params) {
+          // var url = '{url 'dashboard:search_suggestion'}';
+          var url = "/admin/dashboard/search_suggestion";
+          var combobox = 0;
+          var delimiter = "?";
+          if ($(this).data("combobox")) {
+            combobox = 1;
+          }
+
+          if (url.indexOf(delimiter, 0) !== -1) {
+            delimiter = "&";
+          }
+
+          return (
+            url +
+            delimiter +
+            "from=" +
+            $(this).data("ajax-from") +
+            "&combobox=" +
+            combobox
+          );
+        },
+        processResults: function (data) {
+          if (data) {
+            return {
+              results: data,
+            };
+          }
+          return { results: {} };
+        },
+      },
+      language: {
+        inputTooShort: function (args) {
+          var remainingChars = args.minimum - args.input.length;
+          var message = "Type at least " + remainingChars + " letters";
+
+          return message;
+        },
+      },
+    });
+
+  $select
+    .filter(":not([data-ajax-from])")
     .not(".page-size select, .not-select2")
     .select2({
       allowClear: true,
       closeOnSelect: false,
       placeholder: "Click to select",
     });
-
-  $(".admin select[data-ajax-from]").select2({
-    allowClear: true,
-    placeholder: "Click to type and select",
-    tags: true,
-    closeOnSelect: false,
-    minimumInputLength: 3,
-    createTag: function (params) {
-      if (!this.$element.data("combobox")) {
-        return null;
-      }
-
-      var term = $.trim(params.term);
-
-      if (term === "") {
-        return null;
-      }
-
-      return {
-        id: appData().app.manualString + term,
-        text: appData().app.manualString + term,
-      };
-    },
-    ajax: {
-      cache: true,
-      dataType: "json",
-      delay: 500,
-      url: function (params) {
-        // var url = '{url 'dashboard:search_suggestion'}';
-        var url = "/admin/dashboard/search_suggestion";
-        var combobox = 0;
-        var delimiter = "?";
-        if ($(this).data("combobox")) {
-          combobox = 1;
-        }
-
-        if (url.indexOf(delimiter, 0) !== -1) {
-          delimiter = "&";
-        }
-
-        return (
-          url +
-          delimiter +
-          "from=" +
-          $(this).data("ajax-from") +
-          "&combobox=" +
-          combobox
-        );
-      },
-      processResults: function (data) {
-        if (data) {
-          return {
-            results: data,
-          };
-        }
-        return { results: {} };
-      },
-    },
-    language: {
-      inputTooShort: function (args) {
-        var remainingChars = args.minimum - args.input.length;
-        var message = "Type at least " + remainingChars + " letters";
-
-        return message;
-      },
-    },
-  });
 })();

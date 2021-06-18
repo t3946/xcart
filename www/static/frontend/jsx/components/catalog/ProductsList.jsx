@@ -17,8 +17,6 @@ export default class ProductsList extends Component {
     };
 
     this.loadData();
-
-    console.log(this.props.isLoading);
   }
 
   getUrl() {
@@ -57,7 +55,6 @@ export default class ProductsList extends Component {
 
     const url = this.getUrl();
 
-    console.log(url);
     fetch(url, {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
@@ -131,7 +128,6 @@ export default class ProductsList extends Component {
       <div className={classnames(classes)}>
         {this.state.items.map((item) => {
           if (!this.props.isLoading) {
-            console.log(viewMode);
             if (viewMode === "tile") {
               return <CardSceletonBlock />;
             } else {
