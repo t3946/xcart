@@ -328,7 +328,7 @@ class AdminHelper
                 case 'RD':
                 case 'AT':
                 case 'DS':
-                    $icon = "go-freddy.svg";
+                    $icon = "dummy.svg";
                     break;
                 default:
                     $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
