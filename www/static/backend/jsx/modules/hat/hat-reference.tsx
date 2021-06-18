@@ -25,7 +25,7 @@ const HatReference: React.FC<any> = function () {
 
     for (const time of appData().hat.time) {
       timeList.push(
-        <li className="time-item time-list_item">
+        <li className="time-item time-list_item" title={time.title}>
           <span className="time-number">{time.time}</span>
           <span className="time-cation">{time.caption}</span>
         </li>

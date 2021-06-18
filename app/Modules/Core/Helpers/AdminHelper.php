@@ -285,14 +285,17 @@ class AdminHelper
             [
                 "caption" => "CA time",
                 "time" => date_create('now', timezone_open('America/Los_Angeles'))->format('H:i'),
+                "title" => "California state time",
             ],
             [
                 "caption" => "EST time",
                 "time" => $est_time->format('H:i'),
+                "title" => "Est time",
             ],
             [
                 "caption" => "NY time",
                 "time" => date_create('now', timezone_open('America/New_York'))->format('H:i'),
+                "title" => "New York state time",
             ],
         ];
 
