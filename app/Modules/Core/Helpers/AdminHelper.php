@@ -326,7 +326,9 @@ class AdminHelper
         foreach ($site_list as $site) {
             switch ($site->code) {
                 case 'RD':
-                    $icon = "go-freddy.svg";
+                case 'AT':
+                case 'DS':
+                    $icon = "dummy.svg";
                     break;
                 default:
                     $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
@@ -355,7 +357,7 @@ class AdminHelper
 
     /**
      * данные по текущему сайту
-    */
+     */
     private static function siteData()
     {
         $site = Xcart::app()->getModule('Sites')->getSelectedSite();

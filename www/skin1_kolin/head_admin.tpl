@@ -99,19 +99,6 @@
 
     <td width="34%" align="center" class="HeadLine">
     {if $usertype eq 'A' && $login}
-        <script type="text/javascript">
-        {literal}
-
-        $(document).ready(function () {
-            $('#select_searchstring_by').change(function () {
-                var select_searchstring_by = $('#select_searchstring_by').val();
-                $('#searchstring').attr("name", "search" + select_searchstring_by);
-            });
-        });
-
-        {/literal}
-        </script>
-
         <form method="post" action="{$xcartApp->router->url('dashboard:search')}" name="productsearchform">
             <input type="hidden" name="fast_search" value="Y"/>
             <table cellpadding="0" cellspacing="0">
