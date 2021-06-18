@@ -8,9 +8,9 @@ import { BrowserRouter } from "react-router-dom";
 import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
 (() => {
-  const elem: HTMLElement = document.querySelector(".admin-page");
+  const elem: HTMLElement = document.querySelector(".dx-mails");
 
-  console.log(elem);
+  if (!elem) return;
 
   const listRouter = "/admin/distributor/253/50/email-dashboard/page/";
 
