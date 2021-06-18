@@ -39,7 +39,7 @@ class StorageHelper
             if ($key) {
                 $target[$key] = $data;
             } else {
-                $target = $data;
+                $target = array_merge($target, $data);
             }
         } else {
             if (!$key) {

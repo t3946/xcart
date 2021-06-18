@@ -2,7 +2,7 @@
 {add $isNested = false}
 {var $actions = $admin->getListGroupActions()}
 
-<div class="list-block" data-list data-id="{$id}-list">
+<div class="list-block email-list" data-list data-id="{$id}-list">
     {if $search}
         <div class="list-top clearfix">
             <div class="top-search-block left">
@@ -17,12 +17,6 @@
                 {var $cols = 0}
 
                 <tr class="list-head">
-                    {*<th class="checker full">
-                        <input type="checkbox" id="{$id}-check-all" data-checkall-list>
-                        <label for="{$id}-check-all" class="alone"></label>
-                        {var $cols = $cols+1}
-                    </th>*}
-
                     {if $admin->sort}
                         <th class="sort full" data-sort-column>
                                 <span class="title">
@@ -151,7 +145,3 @@
     </div>
 
 </div>
-
-
-<script>
-</script>

@@ -12,6 +12,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Modules\Dashboard\Stores\OrderSearchStore;
 
 class AdminHelper
 {
@@ -365,6 +366,24 @@ class AdminHelper
         StorageHelper::push($site->getAttributes(), null, 'site');
     }
 
+
+    /**
+     * данные по текущему сайту
+     */
+    private static function appData()
+    {
+        $data = [
+            'manualString' => OrderSearchStore::CONST_MANUAL_STRING,
+            'flash' => Xcart::app()->flash->getMessages(),
+            'tinymce' => [
+                "editorIndex" => Xcart::app()->router->url('editor:index'),
+                "editorChanged" => Xcart::app()->router->url('editor:changed'),
+            ]
+        ];
+
+        StorageHelper::push($data, null, 'app');
+    }
+
     /**
      * Сформировать массивы из данных, которые используются на всех страницах,
      * для последующей передачи на frontend
@@ -375,5 +394,6 @@ class AdminHelper
         self::hatData();
         self::userData();
         self::siteData();
+        self::appData();
     }
 }

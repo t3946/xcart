@@ -81,7 +81,7 @@ class Select2Field extends DropDownField
                       return {
                           id: term,
                           text: term,
-                          newTag: true
+                          newTag: true,
                       }
                 }'),
             ];

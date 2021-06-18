@@ -160,14 +160,3 @@
     </div>
 
 </div>
-
-<script>
-    $( function () {
-        $( '[data-id="{$id}-list"]' ).adminList( {
-            url: "{$.request->getUrl()}",
-            groupActionUrl: "{$admin->getGroupActionUrl()}",
-            sortUrl: "{$admin->getSortUrl()}",
-            columnsUrl: "{$admin->getColumnsUrl()}"
-        } );
-    } );
-</script>
