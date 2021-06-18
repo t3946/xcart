@@ -326,6 +326,8 @@ class AdminHelper
         foreach ($site_list as $site) {
             switch ($site->code) {
                 case 'RD':
+                case 'AT':
+                case 'DS':
                     $icon = "go-freddy.svg";
                     break;
                 default:
