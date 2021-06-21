@@ -19,10 +19,17 @@ const NewMenu: React.FC<any> = function (props: any) {
 
     for (const link of links) {
       const { name, route, items } = link;
+      const linkClasses = [
+        "sidebar-menu-link",
+        { "sidebar-menu-link__current": route === document.location.pathname },
+      ];
 
       linkItems.push(
         <li>
-          <a className="sidebar-menu-link" href={route}>
+          <a
+            className={classNames(linkClasses)}
+            href={route === document.location.pathname ? null : route}
+          >
             {name}
           </a>
           <div className="sidebar-menu-links__level-2">

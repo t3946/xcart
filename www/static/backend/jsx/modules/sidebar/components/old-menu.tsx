@@ -4,16 +4,26 @@ import { Accordion, Card } from "react-bootstrap";
 import ContextAwareToggle from "@admin/modules/common/components/accordion/context-aware-toggle";
 import appData from "@admin/utils/app-data";
 import { RoundedCornerIcon } from "@admin/icons/icons";
+import classnames from "classnames";
 
 const OldMenu: React.FC<any> = function (props: any) {
   function sectionLinksTemplate(links): any {
     const menuItems = [];
 
     for (const link of links) {
+      const { name, route } = link;
+      const linkClasses = [
+        "sidebar-menu-link__old",
+        {
+          "sidebar-menu-link__old-current":
+            route === document.location.pathname,
+        },
+      ];
+
       menuItems.push(
         <li>
-          <a className="sidebar-menu-link__old" href={link.route}>
-            {link.name}
+          <a className={classnames(linkClasses)} href={route === document.location.pathname ? null : route}>
+            {name}
           </a>
         </li>
       );
@@ -27,9 +37,7 @@ const OldMenu: React.FC<any> = function (props: any) {
   }
 
   function sectionTemplate(group, sectionEventKey): any {
-    const defaultActive = false;
     const { name, links } = group;
-    const [eventKey, setEventKey] = React.useState("0");
     const [isCurrentEventKey, setIsCurrentEventKey] = React.useState(false);
 
     const hatClasses = [
