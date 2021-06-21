@@ -1,7 +1,6 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
-import { RoundedCornerDoubleIcon } from "@admin/icons/icons";
-import { RoundedCornerIcon } from "@admin/icons/icons";
+import { RoundedCornerDoubleIcon, RoundedCornerIcon } from "@admin/icons/icons";
 import appData from "@admin/utils/app-data";
 import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/drop-popover-menu";
 import $ from "jquery";
