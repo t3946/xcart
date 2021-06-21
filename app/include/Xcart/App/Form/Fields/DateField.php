@@ -22,7 +22,8 @@ class DateField extends CharField
         return "
 <script>
     (function(){ 
-        $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) 
+      //TODO: убрал airdate
+//        $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getJSDate()}) 
     })()
 </script>";
     }

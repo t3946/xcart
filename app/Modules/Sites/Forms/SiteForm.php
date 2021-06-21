@@ -26,18 +26,27 @@ class SiteForm extends ModelForm
         return [
             'corporates' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'label' => 'Corporations',
+                'multiple' => true,
+                'html' => [
+                    'class' => 'select2-field',
+                ],
             ],
             'taxes' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'label' => 'Taxes',
+                'multiple' => true,
+                'html' => [
+                    'class' => 'select2-field',
+                ],
             ],
             'payment_methods' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'label' => 'Payment methods',
+                'multiple' => true,
+                'html' => [
+                    'class' => 'select2-field',
+                ],
             ],
         ];
     }

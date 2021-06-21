@@ -1,6 +1,7 @@
 //скрипты найденные в шаблонах
 
 import $ from "jquery";
+import select2 from "select2";
 import appData from "@admin/utils/app-data";
 
 $(document).ready(function () {
@@ -121,13 +122,14 @@ $(function () {
 //из app/Modules/Dashboard/templates/order/orders_list.tpl
 $("a.select-order").click(function () {
   $(".orders tr").removeClass("selected");
-  let orderid = $(this).closest("tr").data("orderid");
-  let current = $("tr.order_list_row_" + orderid);
+  const orderid = $(this).closest("tr").data("orderid");
+  const current = $("tr.order_list_row_" + orderid);
   current.addClass("selected");
   return true;
 });
 ///var/www/html/app/Modules/Dashboard/templates/dashboard/layouts/dashboard_layout.tpl
 (function () {
+  return;
   const $select = $(".dashboard-search-form select");
 
   $select
@@ -151,7 +153,7 @@ $("a.select-order").click(function () {
           return null;
         }
 
-        var term = $.trim(params.term);
+        const term = $.trim(params.term);
 
         if (term === "") {
           return null;
@@ -168,9 +170,9 @@ $("a.select-order").click(function () {
         delay: 500,
         url: function (params) {
           // var url = '{url 'dashboard:search_suggestion'}';
-          var url = "/admin/dashboard/search_suggestion";
-          var combobox = 0;
-          var delimiter = "?";
+          const url = "/admin/dashboard/search_suggestion";
+          let combobox = 0;
+          let delimiter = "?";
           if ($(this).data("combobox")) {
             combobox = 1;
           }
@@ -199,8 +201,8 @@ $("a.select-order").click(function () {
       },
       language: {
         inputTooShort: function (args) {
-          var remainingChars = args.minimum - args.input.length;
-          var message = "Type at least " + remainingChars + " letters";
+          const remainingChars = args.minimum - args.input.length;
+          const message = "Type at least " + remainingChars + " letters";
 
           return message;
         },
@@ -215,4 +217,169 @@ $("a.select-order").click(function () {
       closeOnSelect: false,
       placeholder: "Click to select",
     });
+})();
+
+//инициализация компонентов select2 из разных шаблонов, с разных страниц админки
+(function () {
+  $(".child-users")
+    .select2({
+      allowClear: false,
+      closeOnSelect: false,
+      placeholder: "Click to select Users",
+    })
+    .on("select2:unselecting", function (e) {
+      if (!e.params.args.originalEvent) {
+        return false;
+      }
+      e.params.args.originalEvent.stopPropagation();
+    });
+
+  $(".select2-field").each((i, elem) => {
+    const $elem = $(elem);
+    const { editable, placeholder } = elem.dataset;
+    const multiple = elem.getAttribute("multiple") !== null;
+
+    const data: Record<any, any> = {
+      multiple,
+      tags: editable,
+      allowClear: true,
+      closeOnSelect: !multiple,
+    };
+
+    data.placeholder = placeholder || "Click to select value";
+    data.width = "resolve";
+
+    data.createTag = function (params) {
+      const term = $.trim(params.term);
+
+      if (term === "") return null;
+
+      return {
+        id: term,
+        text: term,
+        newTag: true,
+      };
+    };
+
+    //dynamic ajax loading
+    if (data.dataUrl) {
+      data.ajax = {
+        url: data.dataUrl,
+        dataType: "json",
+        delay: 250,
+        processResults(data: any, page) {
+          if (data) {
+            return {
+              results: data.items,
+              more: page * 30 < data.total_count,
+            };
+          }
+
+          return { results: {} };
+        },
+      };
+    }
+
+    $elem.select2(data);
+  });
+})();
+
+// www/skin1_kolin/modules/Manufacturers/manufacturers.tpl
+(function () {
+  $(function () {
+    $(".tooltip").tooltip({
+      position: {
+        using: function (position, feedback) {
+          $(this).css(position);
+          $("<div>").addClass("tooltip__s3").appendTo(this);
+        },
+      },
+      content: function () {
+        return $(this).attr("title");
+      },
+      open: function (event, ui) {
+        ui.tooltip.css("max-width", "400px");
+      },
+    });
+  });
+})();
+
+// /www/skin1_kolin/admin/main/reconciliation.tpl
+(function () {
+  $("#net_choises")
+    .select2({
+      allowClear: true,
+      closeOnSelect: false,
+      placeholder: $("#net_choises").attr("title"),
+    })
+    .on("change.select2", function () {
+      const distributor_data = [];
+      $("option:selected", $("#distributor_choises")).each(function () {
+        distributor_data.push($(this).val());
+      });
+      const data = [];
+      $("option:selected", $(this)).each(function () {
+        data.push($(this).val());
+      });
+      $("#distributor_choises").empty().prop("disabled", true);
+      $.post(
+        "/admin/order/api/payable_manufacturers",
+        {
+          period: data,
+        },
+        function (data) {
+          let option = "";
+          let i = 0;
+          $("#distributor_choises").empty();
+          for (; i < data.length; i++) {
+            option = $("<option/>")
+              .attr("value", data[i].manufacturerid)
+              .text(data[i].manufacturer);
+            if (
+              distributor_data.length > 0 &&
+              distributor_data.indexOf(data[i].manufacturerid) >= 0
+            ) {
+              option.prop("selected", true);
+            }
+            $("#distributor_choises").append(option).prop("disabled", false);
+          }
+          $("#distributor_choises").change();
+        }
+      );
+    });
+
+  $("#distributor_choises")
+    .select2({
+      allowClear: true,
+      closeOnSelect: false,
+      placeholder: $("#distributor_choises").attr("title"),
+    })
+    .on("change.select2", function () {
+      const distributor_data = [];
+      $("option:selected", $(this)).each(function () {
+        distributor_data.push($(this).val());
+      });
+      const period_data = [];
+      $("option:selected", $("#net_choises")).each(function () {
+        period_data.push($(this).val());
+      });
+
+      $.post(
+        "/admin/order/api/payable_orders",
+        {
+          period: period_data,
+          distributor: distributor_data,
+        },
+        function (data) {
+          $(".distibutor_payable").empty().css("opacity", 1).html(data);
+        }
+      );
+    });
+
+  $(".net_choises__select_all").click(function () {
+    const net_choises = $(this).parent().siblings("select");
+    net_choises.find("option").prop("selected", "selected");
+    net_choises.trigger("change");
+    return false;
+  });
 })();

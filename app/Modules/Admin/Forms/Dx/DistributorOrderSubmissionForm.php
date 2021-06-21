@@ -42,7 +42,6 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'd_contact_name_for_templates' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'choices' => function () use ($dx): array {
                     foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
                         $result[$contact->id] = $contact->getEmail();
@@ -53,7 +52,11 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Order messages contact',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => ['style' => 'width:100%;'],
+                'html' => [
+                    'style' => 'width:100%;',
+                    'class' => 'select2-field',
+                ],
+                'multiple' => true,
                 'hint' => LanguageModel::translate('help_d_contact_name_for_templates_text'),
                 'required' => true
             ],
@@ -170,7 +173,6 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'email' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'choices' => function () use ($dx): array {
                     foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
                         $result[$contact->id] = $contact->getEmail();
@@ -183,7 +185,11 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'hint' => LanguageModel::translate('help_dx_email_text'),
-                'html' => ['class' => 'by_email', 'style' => 'width:100%;'],
+                'html' => [
+                    'class' => 'by_email select2-field',
+                    'style' => 'width:100%;',
+                ],
+                'multiple' => true,
             ],
 
             'order_submit_template' => [

@@ -74,3 +74,8 @@ html, body {
 .OrderSheet, .OrderSheet td{
     border: 1px solid #000000;
 }
+
+button {
+    border: rem-calc(1) solid #000000;
+    border-radius: rem-calc(2);
+}

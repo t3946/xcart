@@ -24,17 +24,18 @@ class CallsFilterForm extends Form
             ],
             'direction' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'label' => 'Direction',
+                'html' => [
+                    'style' => 'width: 300px',
+                    'class' => 'select2-field',
+                ],
+                'multiple' => true,
                 'choices' => [
                     'in' => 'Inbound',
                     'out' => 'Outbound',
                     'lost' => 'Missed call',
                     'vm' => 'Voicemail',
                 ],
-                'html' => [
-                    'style' => 'width: 300px'
-                ]
             ],
             'orders' => [
                 'class' => CharField::class,
@@ -53,10 +54,11 @@ class CallsFilterForm extends Form
             'user' => [
                 'class' => Select2Field::class,
                 'label' => 'Operator',
-                'multiple' => true,
                 'html' => [
-                    'style' => 'width: 300px'
+                    'style' => 'width: 300px',
+                    'class' => 'select2-field',
                 ],
+                'multiple' => true,
                 'choices' => function () {
                     $op = [];
                     $filter = [
@@ -74,7 +76,7 @@ class CallsFilterForm extends Form
                     }
 
                     return $op;
-                }
+                },
             ],
         ];
     }

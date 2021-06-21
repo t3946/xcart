@@ -28,7 +28,7 @@
             <b>Main SF</b>
         </td>
         <td>
-            <select name="search_site[]" id="o_site" class="big select2" multiple>
+            <select name="search_site[]" id="o_site" class="big select2-field" multiple>
                 {foreach from=$sites item=s}
                     <option value="{$s->storefrontid}" {if in_array($s->storefrontid, $search_site)}selected{/if}>
                         {$s}
@@ -42,7 +42,7 @@
             <b>VRS</b>
         </td>
         <td>
-            <select style="min-width: 290px;" name="search_vrs[]" id="o_vrs" class="big select2" multiple>
+            <select style="min-width: 290px;" name="search_vrs[]" id="o_vrs" class="big select2-field" multiple>
                 {foreach from=$vrs item=s}
                     <option value="{$s->login}" {if in_array($s->login, $search_vrs)}selected{/if}>
                         {$s} ({$s->login})
@@ -58,20 +58,6 @@
         </td>
     </tr>
 </table>
-    <script type="text/javascript">
-        {literal}
-        $('#o_site').select2({
-            allowClear: true,
-            closeOnSelect: false,
-            placeholder: 'Click to select SF'
-        });
-        $('#o_vrs').select2({
-            allowClear: true,
-            closeOnSelect: false,
-            placeholder: 'Click to select VRS'
-        });
-        {/literal}
-    </script>
 </form>
 {/capture}
 
@@ -2134,30 +2120,3 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 {/if}
 {/foreach}
 {/if}
-
-<script type="text/javascript">
-    $( document ).ready(function() {ldelim}
-        var curTitle = document.title;
-        document.title = "{$manufacturer.manufacturer}: (Distributor) " + curTitle;
-    {rdelim});
-    {literal}
-    $(function () {
-        var t= $('.tooltip').tooltip({
-            position: {
-                using: function (position, feedback) {
-                    $(this).css(position);
-                    $("<div>")
-                        .addClass("tooltip__s3")
-                        .appendTo(this);
-                }
-            },
-            content: function(){
-                return $(this).attr('title');
-            },
-            open: function (event, ui) {
-                ui.tooltip.css("max-width", "400px");
-            }
-        });
-    });
-    {/literal}
-</script>

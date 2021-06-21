@@ -268,8 +268,11 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'label' => 'Search keyphrase for reconciliation',
                 'choices' => $phrases,
                 'selected' => $phrases,
-                'html' => ['style' => 'width:100%'],
-                'editable' => true,
+                'html' => [
+                    'style' => 'width:100%',
+                    'data-editable' => true,
+                    'class' => 'select2-field',
+                ],
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,

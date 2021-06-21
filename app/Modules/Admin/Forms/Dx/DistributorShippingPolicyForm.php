@@ -85,9 +85,12 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'label' => 'Distributor ships to/within',
                 'choices' => $countries,
                 'selected' => $countriesSelected,
+                'html' => [
+                    'style' => 'width:400px;',
+                    'class' => 'select2-field',
+                    'data-placeholder' => 'Click to select shipping zone',
+                ],
                 'multiple' => true,
-                'html' => ['style' => 'width:400px;'],
-                'placeholder' => 'Click to select shipping zone',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_ships_to_text') ?? 'help_dx_ships_to_text',
@@ -95,15 +98,18 @@ class DistributorShippingPolicyForm extends DistributorForm
             'carriers' => [
                 'class' => Select2Field::class,
                 'label' => 'Shipping carriers used by distributor',
-                'placeholder' => 'Click to select shipping carriers',
-                'html' => ['style' => 'width:400px;'],
+                'html' => [
+                    'class' => 'select2-field',
+                    'style' => 'width:400px;',
+                    'data-placeholder' => 'Click to select shipping carriers',
+                ],
+                'multiple' => true,
                 'choices' => static function () {
                     foreach (TrackingLinksCarrierModel::objects()->order(['orderby']) as $carrier) {
                         $result[$carrier->pk] = (string)$carrier;
                     }
                     return $result ?? [];
                 },
-                'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_shipping_methods_text') ?? 'help_dx_shipping_methods_text',

@@ -73,6 +73,9 @@ class PagesForm extends ModelForm
 //            'published_at' => DateTimeField::className()
             'sites' => [
                 'class' => Select2Field::class,
+                'html' => [
+                    'class' => 'select2-field',
+                ],
                 'multiple' => true,
                 'choices' => function() {
                     $mass = [];
