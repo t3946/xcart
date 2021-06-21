@@ -1,7 +1,8 @@
 //скрипты найденные в шаблонах
 
 import $ from "jquery";
-import select2 from "select2";
+import "select2";
+import tinymce from "tinymce";
 import appData from "@admin/utils/app-data";
 
 $(document).ready(function () {
@@ -381,5 +382,67 @@ $("a.select-order").click(function () {
     net_choises.find("option").prop("selected", "selected");
     net_choises.trigger("change");
     return false;
+  });
+})();
+// /app/Modules/Editor/templates/editor/fields/editor_field_input.tpl
+(function () {
+  $(".tinymce-field").each((i, elem) => {
+    const { readonly, baseUrl, changedUrl } = elem.dataset;
+
+    tinymce.init({
+      selector: "#" + elem.id,
+      readonly: readonly === "true",
+      setup: (editor) => {
+        editor.on("change", function () {
+          tinymce.triggerSave();
+        });
+      },
+      plugins: [
+        "advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor",
+        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime image imagetools media nonbreaking",
+        "save table contextmenu directionality emoticons template paste textcolor contextmenu",
+      ],
+      relative_urls: false,
+      browser_spellcheck: true,
+      toolbar:
+        "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image",
+      inline_boundaries: true,
+      forced_root_block: true,
+      branding: false,
+      height: "480",
+      image_advtab: true,
+      file_browser_callback: function (field_name, url, type, win) {
+        window.file_browser_window = win;
+        window.file_browser_field = field_name;
+        window.file_browser_url = url;
+        window.file_browser_type = type;
+        let base_url = baseUrl;
+        base_url += base_url.indexOf("?") !== -1 ? "&" : "?";
+
+        $("<a/>")
+          .attr("href", base_url + "field=" + field_name + "&url=" + url)
+          .modal();
+
+        return false;
+      },
+      images_upload_handler: function (blobInfo, success, failure) {
+        let xhr, formData;
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open("POST", changedUrl);
+        xhr.onload = function () {
+          let json;
+          if (xhr.status != 200) {
+            failure("HTTP Error: " + xhr.status);
+            return;
+          }
+          json = JSON.parse(xhr.responseText);
+          success(json.url);
+        };
+        formData = new FormData();
+        formData.append("file", blobInfo.blob(), blobInfo.filename());
+        xhr.send(formData);
+      },
+    });
   });
 })();
