@@ -302,7 +302,7 @@ class AdminHelper
 
         $data["time"] = $time;
 
-        //dateXcart::app()->
+        //date
         $data["date"] = $est_time->format('F j, Y');
 
         //holiday
