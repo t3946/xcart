@@ -73,7 +73,7 @@ const OldMenu: React.FC<any> = function (props: any) {
     for (let i = 0; i < oldMenu.length; i++) {
       const menuSection = oldMenu[i];
 
-      sections.push(sectionTemplate(menuSection, i + 1));
+      sections.push(sectionTemplate(menuSection, (i + 1).toString()));
     }
 
     return sections;
