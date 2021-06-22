@@ -154,7 +154,6 @@
     "gulp-postcss": "^7.0.0",
     "gulp-rimraf": "^0.2.1",
     "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.0",
     "gulp-v3": "^3.12.1",
     "html-webpack-plugin": "^5.3.1",
     "husky": "^6.0.0",
