@@ -31,19 +31,8 @@ input, textarea, select, button {
 }
 
 a {
-  color: #330000;
   text-decoration: underline;
   font-weight: 400;
-
-  &:visited {
-    color: #330000;
-  }
-  &:hover {
-    color: #550000;
-  }
-  &:active {
-    color: #330000;
-  }
 }
 
 H1 {
