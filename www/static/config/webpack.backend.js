@@ -6,7 +6,8 @@ const config = _.merge(baseConfig, {
   entry: "./backend/jsx/main.jsx",
   output: {
     path: path.resolve("./backend/dist/js"),
-    filename: "[name].js",
+    filename: "[name].[hash].js",
+    clean: true,
   },
   resolve: {
     alias: {
