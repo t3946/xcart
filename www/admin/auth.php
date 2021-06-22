@@ -66,10 +66,6 @@ $current_area="A";
 
 include $xcart_dir."/include/get_language.php";
 
-if (!empty($active_modules['Multiple_Storefronts'])) {
-	include $xcart_dir . '/modules/Multiple_Storefronts/init.php';
-}
-
 $location = array();
 $location[] = array(func_get_langvar_by_name("lbl_main_page"), "home.php");
 
