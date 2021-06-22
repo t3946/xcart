@@ -126,14 +126,14 @@ services:
     container_name: node
     image: "node:14"
     user: "node"
-    working_dir: /home/node/app
+    working_dir: /home/node/app/www/static
     tty: true
     networks:
       - frontend
     #environment:
     #  - NODE_ENV=production
     volumes:
-      - ./www/static:/home/node/app
+      - ./:/home/node/app
 
 
 networks:
