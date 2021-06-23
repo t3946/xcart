@@ -64,39 +64,52 @@ const SearchLine: React.FC<any> = function (props: any) {
               ref={menuRef}
             />
           </div>
-          <div className="col layout-column__right align-items-center d-flex">
-            <form
-              action="/admin/dashboard/fast-search"
-              method="GET"
-              className="align-items-center d-flex"
-            >
-              <label className="search-label m-0" htmlFor="search-string">
-                <b>Order # / PO # / Zip code / SKU</b>
-              </label>
+          <div className="col layout-column__right align-items-center d-flex justify-content-between">
+            <div className="d-flex">
+              <form
+                action="/admin/dashboard/fast-search"
+                method="GET"
+                className="align-items-center d-flex"
+              >
+                <label className="search-label m-0" htmlFor="search-string">
+                  <b>Order # / PO # / Zip code / SKU</b>
+                </label>
 
-              <input
-                id="search-string"
-                type="text"
-                name="search_string"
-                className="search-string ml-2 mr-1"
-              />
+                <input
+                  id="search-string"
+                  type="text"
+                  name="search_string"
+                  className="search-string ml-2 mr-1"
+                />
 
-              <button type="submit" className="search-button">
-                Search
-              </button>
-            </form>
+                <button type="submit" className="search-button">
+                  Search
+                </button>
+              </form>
 
-            <div className="hat_customer-care">
+              <div className="hat_customer-care">
+                <img
+                  className="common-icon"
+                  src="/static/backend/dist/images/icons/hat/search-line/heart.svg"
+                  alt="🖤"
+                />
+
+                <a
+                  className="customer-care-link ml-2.25"
+                  href="/admin/dashboard"
+                >
+                  Customer Care Dashboard
+                </a>
+              </div>
+            </div>
+
+            <a href="/admin" className="p-2.5 mr-2.25">
               <img
                 className="common-icon"
-                src="/static/backend/dist/images/icons/hat/search-line/heart.svg"
+                src="/static/backend/dist/images/icons/hat/search-line/home.svg"
                 alt="🖤"
               />
-
-              <a className="customer-care-link ml-2.25" href="/admin/dashboard">
-                Customer Care Dashboard
-              </a>
-            </div>
+            </a>
           </div>
         </div>
       </div>
