@@ -76,6 +76,11 @@ return [
         'name' => 'search'
     ],
     [
+        'route' => '/fast-search',
+        'target' => [SearchController::class, 'fastSearch'],
+        'name' => 'fast-search'
+    ],
+    [
         'route' => '/search_suggestion',
         'target' => [SearchController::class, 'search_ajax_suggestion'],
         'name' => 'search_suggestion'
