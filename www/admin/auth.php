@@ -34,6 +34,8 @@
 # $Id: auth.php,v 1.40 2006/02/10 14:27:30 svowl Exp $
 #
 
+use Modules\Sites\Models\SiteModel;
+
 define('AREA_TYPE', 'A');
 
 @include_once "./top.inc.php";
@@ -212,23 +214,6 @@ $additional_shipping_statuses = array (
 	"U" => "Unwaive"
 );
 $smarty->assign('additional_shipping_statuses', $additional_shipping_statuses);
-
-#
-##
-###
-if (!empty($orderid)){
-	$tmp_productid = func_query_first_cell("SELECT productid FROM $sql_tbl[order_details] WHERE orderid='$orderid'");
-	$product_sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$tmp_productid'");
-	
-	$order_storefront_info = func_get_storefront_info($product_sfid);
-
-	$smarty->assign('order_storefront_info', $order_storefront_info);
-	$mail_smarty->assign('order_storefront_info', $order_storefront_info);
-//func_print_r($order_storefront_info);
-}
-###
-##
-#
 
 $product_question_statuses = array(
         "question_received_from_cust" => "Question received from customer",

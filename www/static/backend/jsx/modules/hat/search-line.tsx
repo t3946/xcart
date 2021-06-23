@@ -65,7 +65,11 @@ const SearchLine: React.FC<any> = function (props: any) {
             />
           </div>
           <div className="col layout-column__right align-items-center d-flex">
-            <form className="align-items-center d-flex">
+            <form
+              action="/admin/dashboard/fast-search"
+              method="GET"
+              className="align-items-center d-flex"
+            >
               <label className="search-label m-0" htmlFor="search-string">
                 <b>Order # / PO # / Zip code / SKU</b>
               </label>
@@ -73,9 +77,8 @@ const SearchLine: React.FC<any> = function (props: any) {
               <input
                 id="search-string"
                 type="text"
-                name="search-string"
+                name="search_string"
                 className="search-string ml-2 mr-1"
-                size="18"
               />
 
               <button type="submit" className="search-button">
