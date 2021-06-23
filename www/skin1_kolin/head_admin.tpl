@@ -22,8 +22,6 @@
                         <div><a style="color: #140BFC" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">Product questions</a></div>
                         <div><a style="color: #140BFC" href="/admin/pbx/pbxcalls">Call recordings</a></div>
                         <div><a style="color: #140BFC" href="/admin/reports">Order reports</a></div>
-                    </div>
-                    <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/reconciliation.php">Reconciliation / AP & AR</a></div>
                         <div><a style="color: #140BFC" href="/admin/checks_deposited.php">Checks deposited</a></div>
                         <div><a style="color: #140BFC" href="/admin/reports.php">Reports</a></div>
@@ -90,6 +88,9 @@
 </table>
 
 {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+    <div id="admin-search-line-target"></div>
+    <hr>
+
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="headSearchLine">
 <tr>
     <td class="HeadLine" height="22" width="33%">

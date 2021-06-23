@@ -49,7 +49,7 @@ const HatReference: React.FC<any> = function () {
           title={`(${site.code}) ${site.name}`}
         >
           <img
-            src={"/static/backend/dist/images/icons/sites/" + site.icon}
+            src={"/static/backend/dist/images/icons/hat/sites/" + site.icon}
             width={24}
             height={24}
             className="mr-4"
@@ -134,22 +134,24 @@ const HatReference: React.FC<any> = function () {
   }
 
   return (
-    <div className="pt-4 pb-4">
-      <div className="row">
-        <div className="col column__left">{selectSiteTemplate()}</div>
+    <div className="container">
+      <div className="pt-4 pb-4">
+        <div className="row">
+          <div className="col layout-column__left">{selectSiteTemplate()}</div>
 
-        <div className="col">
-          <div className="column-right-wrapper">
-            <div className="holiday-block hat_holiday-block">
-              <div className="hat-date">{appData().hat.date}</div>
-              <div className="until-holiday">{appData().hat.holiday}</div>
+          <div className="col">
+            <div className="column-right-wrapper">
+              <div className="holiday-block hat_holiday-block">
+                <div className="hat-date">{appData().hat.date}</div>
+                <div className="until-holiday">{appData().hat.holiday}</div>
+              </div>
+
+              <div className="time-block">{timeTemplate()}</div>
             </div>
-
-            <div className="time-block">{timeTemplate()}</div>
           </div>
-        </div>
-        <div className="col column__right align-items-end d-flex flex-column">
-          {loginButton()}
+          <div className="col column__right align-items-end d-flex flex-column">
+            {loginButton()}
+          </div>
         </div>
       </div>
     </div>

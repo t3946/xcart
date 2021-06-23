@@ -343,6 +343,33 @@ class AdminHelper
             ];
         }
 
+        //quick links
+        $data["quickLinks"] = [
+            [
+                "title" => "Product questions",
+                "route" => "/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y"
+            ],
+            [
+                "title" => "Call recordings",
+                "route" => "/admin/pbx/pbxcalls"
+            ],
+            [
+                "title" => "Order reports",
+                "route" => "/admin/reports"
+            ],
+            [
+                "title" => "Reconciliation / AP & AR",
+                "route" => "/admin/reconciliation.php"
+            ],
+            [
+                "title" => "Checks deposited",
+                "route" => "/admin/checks_deposited.php"
+            ],
+            [
+                "title" => "Reports",
+                "route" => "/admin/reports.php"
+            ],
+        ];
         StorageHelper::push($data, null, 'hat');
     }
 
