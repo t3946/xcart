@@ -34,8 +34,6 @@
 # $Id: auth.php,v 1.40 2006/02/10 14:27:30 svowl Exp $
 #
 
-use Modules\Sites\Models\SiteModel;
-
 define('AREA_TYPE', 'A');
 
 @include_once "./top.inc.php";

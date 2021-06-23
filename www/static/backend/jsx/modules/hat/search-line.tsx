@@ -80,6 +80,7 @@ const SearchLine: React.FC<any> = function (props: any) {
                   type="text"
                   name="search_string"
                   className="search-string ml-2 mr-1"
+                  autoComplete="off"
                 />
 
                 <button type="submit" className="search-button">
