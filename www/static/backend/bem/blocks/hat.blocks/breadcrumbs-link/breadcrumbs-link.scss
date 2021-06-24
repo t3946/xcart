@@ -1,0 +1,15 @@
+.breadcrumbs-link {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    font-weight: inherit;
+    cursor: inherit;
+    padding: rem-calc(12) rem-calc(4);
+    font-size: rem-calc(13);
+
+    &:hover {
+        color: inherit;
+        text-decoration: inherit;
+        cursor: inherit;
+    }
+}
