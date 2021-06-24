@@ -98,6 +98,4 @@ services:
 
 networks:
   frontend:
-    --net=host
   backend:
-    --net=host
