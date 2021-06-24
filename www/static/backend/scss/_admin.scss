@@ -3,6 +3,15 @@
   outline: none;
 }
 
+a {
+  &:active, &:link, &:visited {
+    color: #464646;
+  }
+  &:hover {
+    color: #000000;
+  }
+}
+
 strong, b {
   font-weight: 700;
 }
