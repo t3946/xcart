@@ -16,6 +16,18 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 
 class AdminHelper
 {
+    private static function routesData()
+    {
+        $routes_map = [];
+        $routes = Xcart::app()->router->getRoutes();
+
+        foreach ($routes as $route) {
+            $routes_map[$route[3]] = $route[1];
+        }
+
+        StorageHelper::push($routes_map, null, 'routes');
+    }
+
     /**
      * через пробел добавляет SF(store fronts) суффикс к строке
      * @param string $str
@@ -417,6 +429,7 @@ class AdminHelper
      */
     public static function buildCommonData()
     {
+        self::routesData();
         self::menuData();
         self::hatData();
         self::userData();

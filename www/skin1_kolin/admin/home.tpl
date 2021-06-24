@@ -667,8 +667,8 @@
     </div>
 </div>
 
+{Modules\Sites\Helpers\StorageHelper::print()}
 {$xcartApp->template->render('inSmarty/footer_admin.tpl')}
 
-{Modules\Sites\Helpers\StorageHelper::print()}
 </body>
 </html>
