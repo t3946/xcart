@@ -31,6 +31,10 @@
         <td class="VertMenuLeftColumn">
             <div id="sidebar-menu-target"></div>
         </td>
+        <div class="row">
+            <div class="col layout-column__left"></div>
+            <div class="col layout-column__right">{$breadcrumbs}</div>
+        </div>
         <td class="admin-main-content" valign="top">
             <!-- central space -->
             {include file="location.tpl"}

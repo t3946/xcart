@@ -16,11 +16,6 @@
     <div id="wrapper" class="wrapper {block 'wrapper_block_class'}{/block}">
         {block 'content-header'}
             <div class="content-header">
-                {block 'breadcrumbs'}
-                    {if !$.request->getIsAjax()}
-                        {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
-                    {/if}
-                {/block}
                 <div class="row">
                     <div class="column large-12">
 
