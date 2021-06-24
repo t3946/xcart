@@ -242,6 +242,7 @@
             padding: $height-padding $width-padding;
             font-size: 13px;
             vertical-align: middle;
+            background-clip: padding-box !important;
 
             &.actions {
               //width: 130px;

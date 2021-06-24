@@ -1,0 +1,13 @@
+.common-link {
+    color: #494949;
+
+    &:visited,
+    &:link,
+    &:active {
+        color: #494949;
+    }
+
+    &:hover {
+        color: #000000;
+    }
+}

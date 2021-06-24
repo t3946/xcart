@@ -1,5 +1,5 @@
 <div class="messages-block">
-    <div class="row">
+    <div class="row m-0">
         <div class="columns large-11">
             <div class="multiline line">
                 No 'Paid' orders have been received in the last 60 minutes. Please place a test order to
