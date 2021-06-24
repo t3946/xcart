@@ -1,7 +1,4 @@
 {if !$.request->getIsAjax()}
-    {*<link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_version resource='main.css'}">*}
-    {*<script src="/static/backend/dist/js/main.js?v={backend_version resource='main.js'}"></script>*}
-
     {* Another head information *}
     {block 'head'}{/block}
 
