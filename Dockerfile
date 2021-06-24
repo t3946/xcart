@@ -2,8 +2,7 @@ FROM php:7.4-fpm
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
-    install-php-extensions gd xdebug
+RUN chmod +x /usr/local/bin/install-php-extensions && sync
 
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
@@ -18,7 +17,7 @@ RUN apt-get update
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -27,11 +26,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copy existing application directory contents
-COPY docker /var/www
-
-# Copy existing application directory permissions
-COPY --chown=www:www docker /var/www
 
 # Change current user to www
 USER www
