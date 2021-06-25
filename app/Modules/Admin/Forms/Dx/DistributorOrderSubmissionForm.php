@@ -140,7 +140,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'value' => $dx->order_entry_template->message_body,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message body',
-                'html' => ['class' => 'by_site'],
+                'html' => ['class' => 'by_site tinymce-field'],
                 'hint' => LanguageModel::translate('help_template_1_text'),
             ],
             'order_entry_special_instructions' => [
@@ -226,7 +226,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => 'Dispatch message body',
                 'readonly' => true,
-                'html' => ['class' => 'by_email'],
+                'html' => ['class' => 'by_email tinymce-field'],
                 'hint' => LanguageModel::translate('help_template_2_text'),
             ],
             'd_subject_line_8' => [
@@ -251,7 +251,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => '<span style="color:red">Special dispatch instructions</span>',
-                'html' => ['class' => 'by_email'],
+                'html' => ['class' => 'by_email tinymce-field'],
                 'hint' => LanguageModel::translate('help_order_submit_special_instructions_text'),
             ],
             'd_dispatch_instructions' => [
