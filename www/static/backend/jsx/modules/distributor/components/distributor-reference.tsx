@@ -41,7 +41,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
         </div>
 
         <div className="col-2 position-static">
-          <svg className="icon accordion-icon accordion_icon">
+          <svg className="accordion-icon accordion_icon">
             <use
               xlinkHref={`/static/frontend/images/icons/sprite.svg#${
                 isCurrentEventKey ? "switcher-minus__ash" : "switcher-plus__ash"
