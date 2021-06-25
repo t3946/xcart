@@ -118,6 +118,14 @@ $(function () {
 
     $(`[data-id="${id}-list"]`).adminList(cron);
   }
+
+  const cruds = appData().app.cruds;
+
+  if (cruds) {
+    for (const id in cruds) {
+      $(`[data-id="${id}-list"]`).adminList(cruds[id].links);
+    }
+  }
 });
 
 //из app/Modules/Dashboard/templates/order/orders_list.tpl
