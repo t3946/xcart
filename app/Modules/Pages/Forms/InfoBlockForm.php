@@ -22,7 +22,10 @@ class InfoBlockForm extends ModelForm
         return [
             'text' => [
                 'class' => EditorField::class,
-                'label' => 'Text'
+                'label' => 'Text',
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
             ],
             'language' => [
                 'class' => DropDownField::class,
