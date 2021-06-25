@@ -4,9 +4,12 @@ import AccordionPanel from "@admin/modules/common/components/accordion-panel/Acc
 
 const CorporationEditSections: React.FC<any> = (props: any) => {
   function headerTemplate() {
+    const { currentSectionSlug, companyName, allSections } =
+      appData().adminModule.corporationSections;
+    const currentSectionTitle = allSections[currentSectionSlug].title;
     return (
       <h2 className="m-0 accordion-panel-header text-center">
-        {appData().adminModule.corporationSections.companyName + " sections"}
+        {`${currentSectionTitle}: ${companyName}`}
       </h2>
     );
   }
