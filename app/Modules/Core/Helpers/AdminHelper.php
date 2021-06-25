@@ -363,7 +363,7 @@ class AdminHelper
             ],
             [
                 "title" => "Call recordings",
-                "route" => "/admin/pbx/pbxcalls"
+                "route" => "/admin/list/PBX/PBXAdmin"
             ],
             [
                 "title" => "Order reports",
