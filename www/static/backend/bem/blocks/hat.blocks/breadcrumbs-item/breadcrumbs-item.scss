@@ -8,7 +8,6 @@
     &:hover {
         color: #000000;
         cursor: pointer;
-        text-decoration: underline;
     }
 
     &:first-child {
@@ -27,7 +26,6 @@
     &:last-child:hover {
         color: #8a8a8a;
         cursor: default;
-        text-decoration: none;
     }
 
     &:before {

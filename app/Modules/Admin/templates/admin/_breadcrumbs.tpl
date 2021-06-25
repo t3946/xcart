@@ -3,7 +3,7 @@
         {if count($breadcrumbs)}
             <a href="{url route="admin:index"}" class="breadcrumbs-link">Home</a>
         {else}
-            <span class="breadcrumbs-link">Home</span>
+            <span class="breadcrumbs-link text-decoration-none">Home</span>
         {/if}
     </li>
 
@@ -11,8 +11,9 @@
         <li class="breadcrumbs-item">
             {if !$last}
                 <a href="{$item['url']}" class="breadcrumbs-link">{$item['name']}</a>
+            {else}
+                <span class="breadcrumbs-link text-decoration-none">{$item['name']}</span>
             {/if}
-            <span class="breadcrumbs-link">{$item['name']}</span>
         </li>
     {/foreach}
 </ul>
