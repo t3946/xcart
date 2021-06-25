@@ -451,3 +451,41 @@ $("a.select-order").click(function () {
     $(".tabs").tabs({ active: 1 });
   });
 })();
+
+// from /app/Modules/Reports/templates/reports/layouts/search_layout.tpl
+(function () {
+  $(".shapeshift .shapeshift-container")
+    .shapeshift({
+      colWidth: 200,
+    })
+    .on("ss-rearranged ss-added ss-removed", function (e, selected) {
+      $("> div", $(this)).each(function (i, elem) {
+        $(elem).attr("data-index", ++i);
+      });
+    });
+  $("#report_form").submit(function (e) {
+    const submit_form = $(this).closest("form");
+    $("input.hidden_groups", submit_form).remove();
+    const containers = $(".shapeshift .shapeshift-container.for-save");
+    containers.each(function () {
+      const cur_container = $(this);
+      $(this)
+        .find("> div")
+        .each(function () {
+          const input = $("<input>")
+            .attr("type", "hidden")
+            .addClass("hidden_groups")
+            .attr(
+              "name",
+              "search[report][" +
+                cur_container.attr("data-param-name") +
+                "][" +
+                $(this).attr("data-index") +
+                "]"
+            )
+            .val($(this).attr("data-model"));
+          submit_form.append($(input));
+        });
+    });
+  });
+})();
