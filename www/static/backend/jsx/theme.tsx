@@ -1,9 +1,10 @@
-//скрипты найденные в шаблонах
+//скрипты найденные в шаблонах перемещены в этот файл с целью отделить разметку от скриптов
 
 import $ from "jquery";
 import "select2";
 import tinymce from "tinymce";
 import appData from "@admin/utils/app-data";
+import InitSelect2 from "@admin/utils/init-select2";
 
 $(document).ready(function () {
   $("#select_searchstring_by").change(function () {
@@ -244,52 +245,7 @@ $("a.select-order").click(function () {
     });
 
   $(".select2-field").each((i, elem) => {
-    const $elem = $(elem);
-    const { editable, placeholder } = elem.dataset;
-    const multiple = elem.getAttribute("multiple") !== null;
-
-    const data: Record<any, any> = {
-      multiple,
-      tags: editable,
-      allowClear: true,
-      closeOnSelect: !multiple,
-    };
-
-    data.placeholder = placeholder || "Click to select value";
-    data.width = "resolve";
-
-    data.createTag = function (params) {
-      const term = $.trim(params.term);
-
-      if (term === "") return null;
-
-      return {
-        id: term,
-        text: term,
-        newTag: true,
-      };
-    };
-
-    //dynamic ajax loading
-    if (data.dataUrl) {
-      data.ajax = {
-        url: data.dataUrl,
-        dataType: "json",
-        delay: 250,
-        processResults(data: any, page) {
-          if (data) {
-            return {
-              results: data.items,
-              more: page * 30 < data.total_count,
-            };
-          }
-
-          return { results: {} };
-        },
-      };
-    }
-
-    $elem.select2(data);
+    InitSelect2(elem);
   });
 })();
 
