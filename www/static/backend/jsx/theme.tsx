@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 
 $(function () {
-  const t = $(".tooltip").tooltip({
+  const t = $(".field-tooltip").tooltip({
     position: {
       using: function (position, feedback) {
         $(this).css(position);
@@ -246,26 +246,6 @@ $("a.select-order").click(function () {
 
   $(".select2-field").each((i, elem) => {
     InitSelect2(elem);
-  });
-})();
-
-// www/skin1_kolin/modules/Manufacturers/manufacturers.tpl
-(function () {
-  $(function () {
-    $(".tooltip").tooltip({
-      position: {
-        using: function (position, feedback) {
-          $(this).css(position);
-          $("<div>").addClass("tooltip__s3").appendTo(this);
-        },
-      },
-      content: function () {
-        return $(this).attr("title");
-      },
-      open: function (event, ui) {
-        ui.tooltip.css("max-width", "400px");
-      },
-    });
   });
 })();
 
