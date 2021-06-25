@@ -25,7 +25,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
         </div>
 
         <div className="col-8">
-          <h2 className="distributor-reference-header text-center">
+          <h2 className="accordion-panel-header m-0 text-center">
             {appData().distributor.reference.mainInfoTitle}
             {" / "}
             <a
@@ -160,7 +160,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
 
         <Accordion.Collapse eventKey="0">
           <Card.Body className={"p-0"}>
-            <div className="summary">
+            <div className="summary accordion-panel-container">
               <div className="row distributor_row-layout">
                 <div className="col-6 distributor-layout-column">
                   <p
@@ -193,7 +193,7 @@ const DistributorReference: React.FC<any> = (props: any) => {
               </div>
             </div>
 
-            <div className={"distributor-sections"}>
+            <div className="accordion-panel-container">
               <div className="row distributor_row-layout">
                 <div className="col-6 distributor-layout-column">
                   <ul className="list-unstyled m-0">
