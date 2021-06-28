@@ -17,7 +17,7 @@ RUN apt-get update
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
