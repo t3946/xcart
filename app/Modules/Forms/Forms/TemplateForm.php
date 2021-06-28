@@ -29,6 +29,9 @@ class TemplateForm extends ModelForm
         return [
             'message_body' => [
                 'class' => EditorField::class,
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
             ],
             'category' => [
                 'class' => DropDownField::class,
