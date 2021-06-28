@@ -430,7 +430,7 @@ export default class Card extends Component {
 
     classes.product.push("catalog-product", "item");
     classes.image = {
-      link: `product-image__catalog-${self.context.viewMode}`,
+      link: `product-image__catalog-${self.context.viewMode} product-image-link`,
       container: [
         "product-card-image",
         `product-card-image__catalog-${self.context.viewMode}`,
