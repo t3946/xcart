@@ -338,10 +338,12 @@ class AdminHelper
 
         foreach ($site_list as $site) {
             switch ($site->code) {
-                case 'RD':
                 case 'AT':
                 case 'DS':
                     $icon = "dummy.svg";
+                    break;
+                case 'RD':
+                    $icon = "go-freddy.svg";
                     break;
                 default:
                     $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
