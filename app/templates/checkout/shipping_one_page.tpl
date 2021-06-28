@@ -144,7 +144,7 @@
                                                     </div>
 
                                                     <div class="grid-remove table-column remove">
-                                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart-remove-item-button">
+                                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="cart-remove-item-button">
                                                             <svg class="cart-remove-icon">
                                                                 <use xlink:href="/static/frontend/images/icons/sprite.svg#cross"></use>
                                                             </svg>
