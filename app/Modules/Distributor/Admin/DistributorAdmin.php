@@ -69,12 +69,12 @@ class DistributorAdmin extends Admin
     {
         switch ($property) {
             case 'manufacturer' :
-                return "<a href='{$item->getAdminUrl()}'>{$item}</a>";
+                return "<a href='{$item->getAdminUrl()}'>$item</a>";
             case 'sites' :
                 return implode(
                     '',
                     array_map(
-                        static fn(SiteModel $i) => "<div><a target='_blank' href='{$i->getAbsoluteUrl(true)}'>{$i}</a></div>",
+                        static fn(SiteModel $i) => "<div><a target='_blank' href='{$i->getAbsoluteUrl()}'>$i</a></div>",
                         $item->$property->all()
                     )
                 );
@@ -83,9 +83,29 @@ class DistributorAdmin extends Admin
             case 'active_products' :
                 return $item->products_active->count();
             case 'feed' :
-                return 10;
+                $i_count = $item->feed_I_E->count();
+                $p_count = $item->feed_P_E->count();
+                $value = '';
+                if ($i_count) {
+                    $value .= "I($i_count)";
+                }
+                if ($p_count) {
+                    $value .= "P($p_count)";
+                }
+                return $value;
             case 'feed_source' :
-                return 130;
+                $value = '';
+                foreach ($item->feeds as $feed) {
+                    $field_source = $feed->getField('feed_source');
+                    $feed_date = $feed->getField('feed_source_date')->getValue();
+                    $date = $feed_date ? "({$feed_date->format('Y-m-d')})" : '';
+                    $value .= "{$field_source->toText()} $date<br/>";
+                }
+                return $value;
+            case 'created_at' :
+                return $item->getField('created_at')->getValue()->format('Y-m-d');
+            case 'provider' :
+                return $item->provider_model . "<br/> ({$item->provider})";
         }
         return parent::getItemProperty($item, $property);
     }
