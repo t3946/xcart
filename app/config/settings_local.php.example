@@ -5,6 +5,7 @@ use Xcart\App\Cache\Drivers\File;
 use Xcart\App\Cache\Cache;
 use Xcart\App\Orm\Cache\FilesystemCache;
 use Xcart\App\Main\ErrorHandler;
+use Xcart\App\Orm\Cache\RedisCache;
 
 defined('APP_DEBUG')?:define('APP_DEBUG', true);
 defined('APP_LOCAL')?:define('APP_LOCAL', true);
@@ -33,14 +34,14 @@ return [
         'db' => [
             'connections' => [
                 'default' => [
-                    'host' => 'localhost',
+                    'host' => 'mysql',
                     'dbname' => 'xcart_k',
                     'user' => 'xcart_k',
                     'password' => 'i250923lst',
                     'wrapper' => false,
                     'cache' => [
-                        'class' => FilesystemCache::class,
-                        'directory' => 'base.runtime.query_cache'
+                        'class' => RedisCache::class,
+                        'host' => 'redis'
                     ],
                 ]
             ],
