@@ -13,9 +13,10 @@ const CustomToggle = React.forwardRef((props: any, ref: any) => {
         e.preventDefault();
         props.onClick(e);
       }}
-      className="d-flex align-items-center pointer"
+      className="d-flex align-items-center pointer pl-3 pr-3"
     >
       <div className="flex-grow-1">{props.children}</div>
+
       <RoundedCornerIcon
         className="drop-down-icon ml-2.5 drop-down-icon__down"
         color="#000000"

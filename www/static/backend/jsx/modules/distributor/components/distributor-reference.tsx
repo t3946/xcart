@@ -11,43 +11,45 @@ const DistributorReference: React.FC<any> = (props: any) => {
   // шапка аккордеона
   function hatTemplate() {
     return (
-      <div className="accordion-trigger row">
-        <div className="col-2">
-          <a
-            href={appData().distributor.reference.distributorsLink}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className={classNames(["common-link", "distributors-link"])}
-          >
-            Distributors
-          </a>
-        </div>
-
-        <div className="col-8">
-          <h2 className="accordion-panel-header m-0 text-center">
-            {appData().distributor.reference.mainInfoTitle}
-            {" / "}
+      <div className="container">
+        <div className="accordion-trigger row">
+          <div className="col-2">
             <a
-              href={appData().distributor.reference.lastOrderHistoryLink}
+              href={appData().distributor.reference.distributorsLink}
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className={classNames(["common-link", "last-order-history-link"])}
+              className={classNames(["common-link", "distributors-link"])}
             >
-              Last 6 months of order history
+              Distributors
             </a>
-          </h2>
-        </div>
+          </div>
 
-        <div className="col-2 position-static">
-          <svg className="accordion-icon accordion_icon">
-            <use
-              xlinkHref={`/static/frontend/images/icons/sprite.svg#${
-                isCurrentEventKey ? "switcher-minus__ash" : "switcher-plus__ash"
-              }`}
-            />
-          </svg>
+          <div className="col-8">
+            <h2 className="accordion-panel-header m-0 text-center">
+              {appData().distributor.reference.mainInfoTitle}
+              {" / "}
+              <a
+                href={appData().distributor.reference.lastOrderHistoryLink}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                className={classNames(["common-link", "last-order-history-link"])}
+              >
+                Last 6 months of order history
+              </a>
+            </h2>
+          </div>
+
+          <div className="col-2">
+            <svg className="accordion-icon accordion_icon">
+              <use
+                xlinkHref={`/static/frontend/images/icons/sprite.svg#${
+                  isCurrentEventKey ? "switcher-minus__ash" : "switcher-plus__ash"
+                }`}
+              />
+            </svg>
+          </div>
         </div>
       </div>
     );
