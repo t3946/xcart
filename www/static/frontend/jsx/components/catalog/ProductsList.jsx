@@ -58,6 +58,10 @@ export default class ProductsList extends Component {
 
     const url = this.getUrl();
 
+    for (let i = 0; i < skeletonsNumber; i++) {
+      this.state.items.push(1);
+    }
+
     fetch(url, {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
@@ -66,6 +70,10 @@ export default class ProductsList extends Component {
       .then((res) => res.json())
       .then(
         (res) => {
+          for (let i = 0; i < skeletonsNumber; i++) {
+            this.state.items.pop();
+          }
+
           this.props.onEndLoading();
           if (this.state.nextPage === 1) {
             this.state.items = [];
@@ -130,7 +138,7 @@ export default class ProductsList extends Component {
     return (
       <div className={classnames(classes)}>
         {this.state.items.map((item) => {
-          if (this.props.isLoading === true || item === 1) {
+          if (item === 1) {
             if (viewMode === "tile") {
               return <CardSceletonBlock />;
             } else {
