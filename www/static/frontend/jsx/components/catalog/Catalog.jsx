@@ -93,7 +93,6 @@ export default class Catalog extends Component {
   }
 
   loadMoreButtonTemplate() {
-    console.log('loadMoreButtonTemplate');
     // все товары были загружены
     if (this.state.next === false) {
       return;
@@ -127,7 +126,7 @@ export default class Catalog extends Component {
             catalogUrl={this.state.baseUrl}
             onBeginLoading={this.onBeginLoading}
             onEndLoading={this.onEndLoading}
-            isLoading={this.state.loaded}
+            isLoading={this.state.isLoading}
             sortKey={this.state.sortKey}
             searchText={this.props.searchText}
           />

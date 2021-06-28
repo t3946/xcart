@@ -228,6 +228,7 @@ export default class Card extends Component {
    */
   productPriceBlock() {
     const product = this.product;
+
     const quantityGroupClasses = { group: [] };
     const addToCartClasses = {
       mainWrapper: ["add-to-cart-button_catalog"],
