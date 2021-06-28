@@ -94,7 +94,7 @@ export default class Catalog extends Component {
 
   loadMoreButtonTemplate() {
     // все товары были загружены
-    if (this.state.next === false) {
+    if (!this.state.next) {
       return;
     }
 
