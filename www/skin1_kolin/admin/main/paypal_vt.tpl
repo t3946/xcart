@@ -43,8 +43,7 @@
         <input type="hidden" name="m_id_for_additional_shipping_status" id="m_id_for_additional_shipping_status"
                value=""/>
 
-        <table cellspacing="5" cellpadding="0" align="center">
-
+        <table cellspacing="5" cellpadding="0" align="center" style="border-collapse: separate">
             <tr>
                 <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
                 <td></td>

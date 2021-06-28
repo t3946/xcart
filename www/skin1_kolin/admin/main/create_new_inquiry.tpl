@@ -27,7 +27,7 @@
  <tr>
   <td width="*" nowrap="nowrap"><B>Message body:</B></td>
   <td align="center">
-        <textarea class="new_editor" name="add_inq_subject" value="" style="width: 80%;" cols="60" rows="20" maxlength="500" /></textarea>
+        <textarea class="new_editor tinymce-field" name="add_inq_subject" value="" style="width: 80%;" cols="60" rows="20" maxlength="500" /></textarea>
   </td>
 </tr>
 
