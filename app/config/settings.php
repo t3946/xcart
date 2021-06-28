@@ -69,11 +69,9 @@ return array_replace_recursive([
                        'enum' => 'string'
                    ],
                    'wrapperClass' => false,
-                   'cache' => (defined('APP_DEBUG') && APP_DEBUG) ? [
-                       'class' => FilesystemCache::class,
-                       'directory' => 'base.runtime.query_cache'
-                   ] : [ //PRODUCTION CACHE
+                   'cache' => [
                        'class' => RedisCache::class,
+                       'host' => '127.0.0.1'
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,

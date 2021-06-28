@@ -61,6 +61,8 @@ abstract class Admin
      */
     public ?string $sort = null;
 
+    public ?string $order = null;
+
     public bool $innerRender = false;
 
     public bool $autoFixSort = true;
@@ -409,7 +411,7 @@ abstract class Admin
      */
     public function getOrder()
     {
-        $order = $_GET['order'] ?? null;
+        $order = $_GET['order'] ?? $this->order;
         if ($order) {
             $clean = $order;
             $asc = true;
@@ -739,7 +741,6 @@ abstract class Admin
             $this->getConfig()->page_size = $request->get->get($pagination->getPageSizeKey());
             $this->getConfig()->save();
         }
-
         $this->renderInternal($this->allTemplate, [
             'objects' => $pagination->paginate(),
             'pagination' => $pagination,
