@@ -38,6 +38,7 @@ import  "./_binds/checkout";
 import  "./_binds/pages/product";
 import  "./_binds/pages/categories";
 import  "./_binds/pages/cart";
+import "./_binds/pages/help"
 
 import  "./ext/jq-swipe";
 import  "./components/Flash";
