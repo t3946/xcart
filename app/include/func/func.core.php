@@ -3297,12 +3297,11 @@ function func_get_signature($sfid = false, $products = false, $order = null)
             break;
         }
     }
-    elseif ($current_storefront != "") {
-        $use_storefrontid = $current_storefront;
+    else {
+        $use_storefrontid = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
     }
 
-
-    $cur_storefront_info = SiteModel::objects()->get(["storefrontid" => $sfid]);
+    $cur_storefront_info = SiteModel::objects()->get(["storefrontid" => $use_storefrontid]);
 
     if ($order) {
         $params = [

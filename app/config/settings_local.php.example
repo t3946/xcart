@@ -1,0 +1,82 @@
+<?php
+
+use Xcart\App\Cache\Drivers\Memory;
+use Xcart\App\Cache\Drivers\File;
+use Xcart\App\Cache\Cache;
+use Xcart\App\Orm\Cache\FilesystemCache;
+use Xcart\App\Main\ErrorHandler;
+use Xcart\App\Orm\Cache\RedisCache;
+
+defined('APP_DEBUG')?:define('APP_DEBUG', true);
+defined('APP_LOCAL')?:define('APP_LOCAL', true);
+defined('SMARTY_AUTO_RECOMPILE')?:define('SMARTY_AUTO_RECOMPILE', true);
+
+return [
+    'modules' => [
+        'Sites'  => ['defaultStore' => 'AR'],
+    ],
+    'components' => [
+        'errorHandler' => [
+            'class' => ErrorHandler::class,
+            'useTemplate' => true,
+            'debug' => true,
+            'errHandler' => true,
+            'excHandler' => true,
+            'ignoringTypes' => [
+                E_DEPRECATED,
+                E_USER_DEPRECATED,
+                E_NOTICE,
+                E_USER_NOTICE,
+                E_WARNING,
+                E_USER_WARNING,
+            ]
+        ],
+        'db' => [
+            'connections' => [
+                'default' => [
+                    'host' => 'mysql',
+                    'dbname' => 'xcart_k',
+                    'user' => 'xcart_k',
+                    'password' => 'i250923lst',
+                    'wrapper' => false,
+                    'cache' => [
+                        'class' => RedisCache::class,
+                        'host' => 'redis'
+                    ],
+                ]
+            ],
+        ],
+        'template' => [
+            'forceCompile' => true,
+//            'autoReload' => true
+        ],
+
+        /*'request' => [
+            'httpRequest' => [
+                'from_get' => 'path'
+            ],
+        ],
+        'router' => [
+            'mode' => 'get',
+            'basePath' => '/controller.php?',
+        ],*/
+        'cache' => [
+           'class' => Cache::class,
+           'saveInMemory' => true,
+           'memoryDriver' => 'memory',
+           'drivers' => [
+               'default' =>  [
+                   'class' => File::class,
+               ],
+               'memory' =>  [
+                   'class' => Memory::class,
+                   'numCacheQuery' => 30,
+               ]
+           ]
+       ],
+    ],
+    'autoloadComponents' => [
+        'errorHandler',
+        'db',
+    ]
+];

@@ -39,7 +39,6 @@ export default class Catalog extends Component {
   }
 
   onUpdateProductList(pager, nextPageUrl) {
-    console.log('onUpdateProductList PAGER = ', pager);
     this.setState({ pager, loaded: true, nextPageUrl });
   }
 

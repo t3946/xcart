@@ -141,9 +141,9 @@
                     </div>
                     <div class="confidence">
                         <span id="bbb">
-                            <a rel="nofollow" target="_blank" href="https://www.bbb.org/western-ontario/business-reviews/online-retailer/s3-stores-in-chatham-on-1054268#bbbseal" title="S3 Stores, Inc., Online Retailer, Chatham, ON">
-                                <img class="lazy-img bbb-logo show-for-large" data-src="https://seal-london.bbb.org/logo/erhzbum/s3-stores-1054268.png" alt="S3 Stores, Inc., Online Retailer, Chatham, ON" style="opacity: 0">
-                            </a>
+                            {ignore}
+                                <a target="_blank" id="bbblink" class="rbhzbul" href="https://www.bbb.org/ca/on/chatham/profile/furniture-stores/s3-stores-inc-0187-1054268#bbbseal" title="S3 Stores, Inc., Furniture Stores, Chatham, ON" style="display: none;position: relative;overflow: hidden; width: 200px; height: 76px; margin: 0px; padding: 0px;"><img style="padding: 0px; border: none;" id="bbblinkimg" src="https://seal-london.bbb.org/logo/rbhzbul/s3-stores-1054268.png" width="400" height="76" alt="S3 Stores, Inc., Furniture Stores, Chatham, ON" /></a><script type="text/javascript">var bbbprotocol = ( ("https:" == document.location.protocol) ? "https://" : "http://" ); (function(){var s=document.createElement('script');s.src=bbbprotocol + 'seal-london.bbb.org' + unescape('%2Flogo%2Fs3-stores-1054268.js');s.type='text/javascript';s.async=true;var st=document.getElementsByTagName('script');st=st[st.length-1];var pt=st.parentNode;pt.insertBefore(s,pt.nextSibling);})();</script>
+                        {/ignore}
                         </span>
 
                         <span id="g_review"></span>

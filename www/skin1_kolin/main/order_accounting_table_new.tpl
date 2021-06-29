@@ -1296,12 +1296,15 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 <br />
 <div align="center">
 <input style="font-size: 14px;" type="button" value="Update" onclick="javascript: $('#mode_accounting_page').val('accounting_apply'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
-{if $order_manufacturers[$m_id].distributor_charges_for_each_order_twice_and_split_invoices == 'Y' && count($v.invoices) == 1}
-<span style="color: #f00000; line-height:25px; position: absolute; right: 21px; font-size: 13px; font-weight: bold;">
-    Clicking Update button will generate another invoice because distributor charges for each order twice: one charge for products and one charge for shipping
-</span>
-{/if}
+
+
 </div>
+    {if $order_manufacturers[$m_id].distributor_charges_for_each_order_twice_and_split_invoices == 'Y' && count($v.invoices) == 1}
+        <div style="color: #f00000; line-height:25px; position: relative; left: 30px; font-size: 13px; font-weight: bold;">
+            Clicking Update button will generate another invoice because distributor charges for each order twice: one
+            charge for products and one charge for shipping
+        </div>
+    {/if}
 {/if}
 
 

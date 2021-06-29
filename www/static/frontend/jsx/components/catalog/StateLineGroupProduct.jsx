@@ -92,7 +92,6 @@ export default class StateLine extends Component {
     }
 
     render(props) {
-        console.log('StateLineGroup', this.context.pager);
         return (
             <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) }>
                 <div className="state-line-counter padding-left-1">

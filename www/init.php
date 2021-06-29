@@ -151,16 +151,18 @@ db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Pleas
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
     define("X_MYSQL_VERSION", $match[1]);
 
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
-        db_query("SET sql_mode = 'MYSQL40'");
-    }
+    if (func_version_compare(X_MYSQL_VERSION, "8.0.0") < 0) {
+        if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
+            db_query("SET sql_mode = 'MYSQL40'");
+        }
 
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.17") > 0) {
-        define("X_MYSQL5_COMP_MODE", true);
-    }
+        if (func_version_compare(X_MYSQL_VERSION, "5.0.17") > 0) {
+            define("X_MYSQL5_COMP_MODE", true);
+        }
 
-    if (func_version_compare(X_MYSQL_VERSION, "5.0.18") == 0) {
-        define("X_MYSQL5018_COMP_MODE", true);
+        if (func_version_compare(X_MYSQL_VERSION, "5.0.18") == 0) {
+            define("X_MYSQL5018_COMP_MODE", true);
+        }
     }
 }
 

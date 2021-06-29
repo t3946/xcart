@@ -103,8 +103,6 @@ export default class StateLine extends Component {
             },
         ]
 
-        console.log('CLASSES',stateLineClasses);
-
         return (
             <div className={ classnames(stateLineClasses) } style="display:block">
                 <div className="row">
