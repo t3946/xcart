@@ -14,7 +14,7 @@ const AccordionPanel: React.FC<any> = (props: any) => {
 
         <div className="col-8">{props.header}</div>
 
-        <div className="col-2 position-static">
+        <div className="col-2">
           <svg className="accordion-icon accordion_icon">
             <use
               xlinkHref={`/static/frontend/images/icons/sprite.svg#${

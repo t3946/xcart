@@ -1,24 +1,8 @@
 .accordion-trigger {
   background-color: #ffebb2;
   height: rem-calc(40);
-  padding: 0 rem-calc(41);
+  padding: 0 rem-calc(25);
   align-items: center;
   position: relative;
   cursor: pointer;
-}
-
-.last-order-history-link{
-  font-weight: 400;
-}
-
-.common-link {
-  color: #000000;
-
-  &:hover, &:active, &:visited {
-    color: #000000;
-  }
-}
-
-.distributors-link {
-  font-size: rem-calc(15);
 }

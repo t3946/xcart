@@ -92,6 +92,29 @@ export default class Catalog extends Component {
     this.setState({ printStateLines: true, isLoading: false });
   }
 
+  loadMoreButtonTemplate() {
+    // все товары были загружены
+    if (this.state.next === false) {
+      return;
+    }
+
+    // сейчас товары уже загружаются
+    if (this.state.isLoading === true) {
+      return;
+    }
+
+    return (
+      <LoadMore
+        onNext={this.onNext}
+        next={this.state.next}
+        classes={[
+          "catalog_load-more",
+          { "margin-0": this.state.printStateLines === false },
+        ]}
+      />
+    );
+  }
+
   render() {
     return (
       <div className="catalog">
@@ -103,24 +126,14 @@ export default class Catalog extends Component {
             catalogUrl={this.state.baseUrl}
             onBeginLoading={this.onBeginLoading}
             onEndLoading={this.onEndLoading}
-            isLoading={this.state.loaded}
+            isLoading={this.state.isLoading}
             sortKey={this.state.sortKey}
             searchText={this.props.searchText}
           />
 
           {this.printStateLine()}
 
-          {this.state.loaded && (
-            <LoadMore
-              onNext={this.onNext}
-              next={this.state.next}
-              classes={[
-                "catalog_load-more",
-                { "margin-0": this.state.printStateLines === false },
-              ]}
-              isLoading={this.state.loaded}
-            />
-          )}
+          {this.loadMoreButtonTemplate()}
         </CatalogContext.Provider>
       </div>
     );

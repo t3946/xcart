@@ -5,12 +5,15 @@ import { CardSceletonBlock } from "../product/card/catalog/CardSceletonBlock";
 import { CardSceletonLine } from "../product/card/catalog/CardSceletonLine";
 import React from "react";
 
+// сколько вывести скелетов, когда нет продуктов
+const skeletonsNumber = 12;
+
 export default class ProductsList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      items: Array(6).fill(1),
+      items: Array(skeletonsNumber).fill(1),
       nextPage: 1,
       sort: null,
       sortWasChanged: false,
@@ -105,7 +108,7 @@ export default class ProductsList extends Component {
     if (nextProps.sortKey !== this.props.sortKey) {
       nextState.sort = nextProps.sortKey;
       nextState.nextPage = 1;
-      nextState.items = [];
+      nextState.items = Array(skeletonsNumber).fill(1);
       this.loadData();
     }
 
@@ -127,13 +130,14 @@ export default class ProductsList extends Component {
     return (
       <div className={classnames(classes)}>
         {this.state.items.map((item) => {
-          if (!this.props.isLoading) {
+          if (this.props.isLoading === true || item === 1) {
             if (viewMode === "tile") {
               return <CardSceletonBlock />;
             } else {
               return <CardSceletonLine />;
             }
           }
+
           return this.productItem(item, viewMode);
         })}
       </div>

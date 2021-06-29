@@ -459,13 +459,9 @@ TD.OptionLabel {
 	Vertical menu
 */
 .VertMenuLeftColumn {
-	/*WIDTH: 150px;*/
 	width: 190px;
 	min-width: 190px;
 	VERTICAL-ALIGN: top;
-	padding-top: 5px;
-	/*PADDING-LEFT: 6px;*/
-	/*PADDING-RIGHT: 20px;*/
 	border-collapse: collapse;
 }
 .VertMenuRightColumn {
@@ -1943,8 +1939,7 @@ div.ui.error.message ul.list li {
 }
 
 .admin-main-content {
-	padding-top: 10px;
-	padding-left: 20px;
+	padding-left: 32px;
 }
 
 .main-menu-modules {

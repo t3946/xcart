@@ -6,7 +6,7 @@
     display: block;
     text-decoration: none;
     transition: all .125s ease-out;
-    color: #000000;
+    color: #000000 !important;
 
     &:before, &:after {
         content: '';

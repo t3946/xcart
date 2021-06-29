@@ -88,7 +88,7 @@ const SearchLine: React.FC<any> = function (props: any) {
                 </button>
               </form>
 
-              <div className="hat_customer-care">
+              <div className="hat_customer-care d-flex align-items-center">
                 <img
                   className="common-icon"
                   src="/static/backend/dist/images/icons/hat/search-line/heart.svg"
