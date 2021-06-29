@@ -46,6 +46,9 @@ export default class ProductsList extends Component {
     //catalog modifier (need for match response format)
     url += "isCatalogPage=1";
 
+    //get filter parameters form filter form
+    url += "&" + $("#filter_form").serialize();
+
     return url;
   }
 
