@@ -3,7 +3,6 @@
 use Modules\Core\Helpers\CoreHelper;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
-use Modules\Sites\Models\SiteModel;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -3297,11 +3296,11 @@ function func_get_signature($sfid = false, $products = false, $order = null)
             break;
         }
     }
-    else {
-        $use_storefrontid = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
+    elseif ($current_storefront != "") {
+        $use_storefrontid = $current_storefront;
     }
 
-    $cur_storefront_info = SiteModel::objects()->get(["storefrontid" => $use_storefrontid]);
+    $cur_storefront_info = func_get_storefront_info($use_storefrontid);
 
     if ($order) {
         $params = [

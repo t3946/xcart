@@ -5,7 +5,8 @@
         </div>
 
         <div class="columns large-5">
-            <select name="search[order][distributor][]" id="o_distributor" class="big select2-field" multiple>
+            <select name="search[order][distributor][]" id="o_distributor" class="big" multiple>
+
                 {foreach $distributors as $distributor}
                     <option value="{raw $distributor.manufacturerid}" {if $form_data_raw.order.distributor && $distributor.manufacturerid in list $form_data_raw.order.distributor}selected{/if}>{raw $distributor.manufacturer}</option>
                 {/foreach}

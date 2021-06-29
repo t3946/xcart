@@ -1,8 +1,4 @@
 <?php
-/**
- * ТУТ СОБИРАЕТСЯ ВЕРХНЕЕ МЕНЮ
-*/
-
 
 namespace Modules\Admin\Traits;
 

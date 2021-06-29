@@ -34,9 +34,6 @@ class StaticNotificationForm extends ModelForm
             ],
             'description' => [
                 'class' => EditorField::className(),
-                'html' => [
-                    'class' => 'tinymce-field',
-                ],
             ],
             'site' => [
                 'class' => DropdownField::className(),

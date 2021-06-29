@@ -246,6 +246,7 @@ class CartController extends BaseCartController
 
     public function actionCalculateShipping()
     {
+
         $shippingForm = new CountShippingForm();
 
         if (Xcart::app()->request->getIsPost() && $shippingForm->populate(Xcart::app()->request->post)->isValid()) {
@@ -254,22 +255,14 @@ class CartController extends BaseCartController
 
                 /** @var ShippingModule $shm */
                 $shm = Xcart::app()->getModule('Shipping');
-                $result = [];
-
                 foreach ($cart_groups as $g => $cart_group)
                 {
                     if ($rates = $shm::getShipping($g, new OrderModel($shippingForm->getAttributes()), $cart_group)) {
                         foreach ($rates as $rate) {
                             $ship_m = $rate->shipping;
-                            $name = $ship_m->getFrontendName() . ' - '. $ship_m->shipping_time;
-                            $price = "US$ {$rate->getShippingCharge()}";
-                            $result[] = "$name: $price";
+                            $result[$ship_m->getFrontendName() . ' - '. $ship_m->shipping_time] = "US$ {$rate->getShippingCharge()}";
                         }
                     }
-                }
-
-                if (count($result) === 0) {
-                    $result[] = "Shipping cost could not be calculated";
                 }
 
                 $this->jsonResponse([
@@ -280,9 +273,9 @@ class CartController extends BaseCartController
             }
         }
 
-        $this->jsonResponse([
-            'errors' => $shippingForm->getErrors(),
-        ], 402);
+        $this->display('cart/calculate_shipping.tpl', [
+            'form' => $shippingForm
+        ]);
     }
 
     protected function addInternal($uniqueId, $quantity = 1, $data = [])

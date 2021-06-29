@@ -183,13 +183,13 @@
 
 </div>
 
-{set $crud_data = [
-    "id" => $id,
-    "links" => [
-        "url" => $.request->getUrl(),
-        "groupActionUrl" => $admin->getGroupActionUrl(),
-        "sortUrl" => $admin->getSortUrl(),
-        "columnsUrl" => $admin->getColumnsUrl(),
-    ]
-]}
-{store data=$crud_data key=$id ctx="app/cruds"}
+<script>
+    $(function () {
+        $('[data-id="{$id}-list"]').adminList({
+            url: "{$.request->getUrl()}",
+            groupActionUrl: "{$admin->getGroupActionUrl()}",
+            sortUrl: "{$admin->getSortUrl()}",
+            columnsUrl: "{$admin->getColumnsUrl()}"
+        });
+    });
+</script>

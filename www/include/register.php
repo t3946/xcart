@@ -1282,7 +1282,7 @@ foreach($share_fields as $v) {
 $smarty->assign("ship2diff", $ship2diff);
 $smarty->assign("subscription", $subscription);
 
-	if (!empty($active_modules['Multiple_Storefronts'])) {
+if (!empty($active_modules['Multiple_Storefronts'])) {
 	$sf_condition = "AND storefrontid=$current_storefront";
 } else {
 	$sf_condition = '';
@@ -1296,7 +1296,6 @@ if (isset($mailchimp_subscription)) {
 }
 
 if(!empty($active_modules['Mailchimp_Subscription'])) {
-	$current_storefront = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
 $mc_newslists = func_query("SELECT * FROM $sql_tbl[mailchimp_newslists] WHERE avail='Y' AND lngcode='$shop_language' AND storefrontid=$current_storefront");
 $smarty->assign('mc_newslists', $mc_newslists);
 }

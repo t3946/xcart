@@ -15,6 +15,7 @@ class TranslatesFilterForm extends Form
         return [
             'name' => [
                 'class' => Select2Field::class,
+                'multiple' => true,
                 'label' => 'Language',
                 'choices' => function () {
                     /**
@@ -27,9 +28,7 @@ class TranslatesFilterForm extends Form
                     return $languages ?? [];
                 },
                 'html' => [
-                    'style' => 'width: 300px',
-                    'multiple' => true,
-                    'class' => 'select2-field',
+                    'style' => 'width: 300px'
                 ],
             ],
             'text' => [

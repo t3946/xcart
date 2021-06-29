@@ -12,7 +12,7 @@
                     {include 'admin/form/_form.tpl'}
                     <div class="row" style="margin-top: 15px;">
                         <button name="filter" type="submit" value="filter">Filter</button>
-                        <button id="clear_filter" class="ml-1" name="clear" type="submit" value="clear">Clear filter</button>
+                        <button id="clear_filter" name="clear" type="submit" value="clear">Clear filter</button>
                     </div>
                 </div>
             </form>

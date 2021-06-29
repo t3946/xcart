@@ -17,7 +17,6 @@ namespace Xcart\App\Template;
 
 use Fenom;
 use Modules\Sites\Helpers\CurrentSiteHelper;
-use Modules\Sites\Helpers\StorageHelper;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
@@ -163,19 +162,6 @@ class TemplateManager
             define('DIST', '/static/frontend/');
 
             return ($prefix ?? '') . DIST . ltrim($url, '/');
-        });
-
-        /**
-         * Позволяет добавлять данные в хранилище для передачи на frontend
-         * Можно передвать до 3х параметров и обозначать их ключами data, key, context или ctx
-         * data(any) и key(string) -- обязяательные параметры, context(string) опциональный
-        */
-        $this->_renderer->addFunction('store', function($params) {
-            $data = $params[0] ?: $params['data'];
-            $key = $params[1] ?: $params['key'];
-            $context = $params[2] ?: $params['context'] ?: $params['ctx'];
-
-            StorageHelper::push($data, $key, $context);
         });
     }
 

@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block is_show_title=false}
+    {smarty_admin_block name=$section_title}
         {include 'admin/distributor/dx.tpl'}
     {/smarty_admin_block}
 {/block}

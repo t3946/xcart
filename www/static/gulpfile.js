@@ -25,6 +25,7 @@ const inlineImage = require("gulp-inline-image");
 const sass = require("gulp-sass");
 const hashSum = require("gulp-hashsum");
 const babel = require("gulp-babel");
+const uglify = require("gulp-uglify");
 const imagemin = require("gulp-imagemin");
 const rimraf = require("gulp-rimraf");
 const argv = require("yargs").argv;
@@ -342,7 +343,7 @@ gulp.task(
 
     stream = stream.pipe(concat(backend.config.name + ".css"));
 
-    if (process.env.NODE_ENV === "production") {
+    if (argv.production) {
       stream = stream.pipe(cssnano());
     }
 
@@ -377,7 +378,38 @@ gulp.task("backend:jsx", function () {
   return pipe.pipe(gulp.dest(backend.dst.jsx));
 });
 
-gulp.task("backend:scripts", GulpAssets.buildAdminScripts);
+gulp.task(
+  "backend:js",
+  gulp.series("backend:jsx", function () {
+    let pipe = gulp.src(backend.src.js, { allowEmpty: true });
+
+    if (backend.config.compress) {
+      pipe = pipe.pipe(uglify(backend.config.uglify));
+    }
+
+    return pipe
+      .pipe(concat(backend.config.name + ".js"))
+      .pipe(gulp.dest(backend.dst.js))
+      .pipe(hashSum({ filename: "backend/versions/js.yml", hash: "md5" }));
+  })
+);
+
+gulp.task("backend:scripts", function (done) {
+  const args = [
+    "./node_modules/webpack/bin/webpack.js",
+    "--config",
+    "./config/webpack.backend.js",
+  ];
+
+  GulpAssets.isProduction() && args.push("-p");
+
+  const cmd = spawn("node", args, { stdio: "inherit" });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
+});
 
 /**
  *
@@ -437,26 +469,33 @@ gulp.task(
   "watch:backend",
   gulp.series(function watchALL() {
     gulp.watch(backend.src.raw, ["backend:raw"]);
-    gulp.watch(backend.src.js, ["backend:scripts"]);
+    gulp.watch(backend.src.jsx, ["backend:js"]);
+    gulp.watch(backend.src.js, ["backend:js"]);
     gulp.watch(backend.src.scss, ["backend:styles"]);
     gulp.watch(backend.src.css, ["backend:styles"]);
     gulp.watch(backend.src.fonts, ["backend:fonts"]);
   })
 );
 
-gulp.task(
-  "watch:backend:styles",
-  gulp.series("backend:styles", function (done) {
-    gulp.watch(
-      ["backend/bem/blocks/**/*.scss", ...backend.src.scss],
-      gulp.parallel("backend:styles")
-    );
+gulp.task("watch:backend:scripts", function (done) {
+  const args = [
+    "./node_modules/webpack/bin/webpack.js",
+    "--config",
+    "./config/webpack.backend.js",
+  ];
 
-    done();
-  })
-);
+  GulpAssets.isProduction() && args.push("-p");
 
-gulp.task("watch:backend:scripts", GulpAssets.buildAdminScripts);
+  args.push("--progress");
+  args.push("-w");
+
+  const cmd = spawn("node", args, { stdio: "inherit" });
+
+  cmd.on("close", function (code) {
+    console.log("frontend:jsx exited with code " + code);
+    done(code);
+  });
+});
 
 /**
  *

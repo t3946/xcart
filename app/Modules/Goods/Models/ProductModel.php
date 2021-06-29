@@ -4,8 +4,6 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
-use Modules\Goods\Helpers\ProductHelper;
-use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -88,7 +86,6 @@ use Xcart\Product;
  * @property mixed verification_statusid
  * @property VerificationStatusModel verification_status
  * @property int last_verify_date
- * @property string hash_product
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -218,11 +215,7 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductFileModel::class,
                 'link' => ['productid' => 'productid'],
             ],
-            'hash_product' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
+
             'descr' => [
                 'class' => CharField::class,
                 'null' => false,
@@ -399,31 +392,6 @@ class ProductModel extends Model implements ICartItem
                 'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
-            ],
-            'weight_lock' => [
-                'class' => BooleanCharField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'shipping_weight_lock' => [
-                'class' => BooleanCharField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'dim_lock' => [
-                'class' => BooleanCharField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'shipping_dim_lock' => [
-                'class' => BooleanCharField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'eta_date_lock' => [
-                'class' => BooleanCharField::class,
-                'null' => false,
-                'default' => false,
             ],
             'prevent_search_indexing_this_product_page' => [
                 'class' => BooleanCharField::class,
@@ -945,64 +913,6 @@ class ProductModel extends Model implements ICartItem
             return $date;
         }
         return null;
-    }
-
-    public function setAttribute($name, $value)
-    {
-        if ($name === 'brand_name' && trim($value)) {
-            if (!$brand = BrandModel::objects()->limit(1)->get(['brand' => trim($value)])) {
-                $brand = new BrandModel([
-                    'brand' => trim($value),
-                    'orderby' => 10,
-                    'prevent_search_indexing_of_all_brand_products' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'avail' => true
-                ]);
-            }
-            $brand->save();
-            $this->brand = $brand;
-        }
-
-        if (($name === 'upc') && $upc = ProductHelper::calculateUPC($value)) {
-            $value = $upc;
-        }
-
-        if ($name === 'eta_date_mm_dd_yyyy' && $this->eta_date_lock) {
-            $value = $this->eta_date_mm_dd_yyyy;
-        }
-        if ($name === 'weight' && $this->weight_lock) {
-            $value = $this->weight;
-        }
-        if ($name === 'shipping_weight' && $this->shipping_weight_lock) {
-            $value = $this->shipping_weight;
-        }
-        if ($name === 'dim_x' && $this->dim_lock) {
-            $value = $this->dim_x;
-        }
-        if ($name === 'dim_y' && $this->dim_lock) {
-            $value = $this->dim_y;
-        }
-        if ($name === 'dim_z' && $this->dim_lock) {
-            $value = $this->dim_z;
-        }
-        if ($name === 'shipping_dim_x' && $this->shipping_dim_lock) {
-            $value = $this->shipping_dim_x;
-        }
-        if ($name === 'shipping_dim_y' && $this->shipping_dim_lock) {
-            $value = $this->shipping_dim_y;
-        }
-        if ($name === 'shipping_dim_y' && $this->shipping_dim_lock) {
-            $value = $this->shipping_dim_y;
-        }
-
-        parent::setAttribute($name, $value);
-    }
-
-    public function beforeSave($owner, $isNew)
-    {
-        if ($isNew) {
-            $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
-        }
     }
 
 }

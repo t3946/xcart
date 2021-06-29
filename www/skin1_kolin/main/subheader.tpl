@@ -40,27 +40,27 @@
             <tr>
                 <td class="Green2">{$title}</td>
                 <td align="right">
-                    <table cellspacing="0" cellpadding="0" class="ButtonsRow buttons-row" border="0">
+                    <table cellspacing="0" cellpadding="0" class="ButtonsRow" border="0">
                         <tr>
-                            <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                            <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 {assign var=invoice_url value=$xcartApp->router->url('convert:pdf')}
                                 <a target="_blank" style="color: blue; font-weight: bold;"
                                    href="{$invoice_url}?orderid={$order.orderid}&p={$oOrder->getOrderHash()}&mode=print">{$lng.lbl_xpdf_pdf_invoice}</a>
                             </td>
-                            <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                            <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 <a target="_blank" style="color: blue; font-weight: bold;"
                                    href="{$xcartApp->router->url('order:api:export',['order_id' => $order.orderid])}">Export</a>
                             </td>
                             {if $active_modules.RMA ne '' && $current_membership_flag ne 'FS'}
                                 {if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $return_products ne ''}
-                                    <td class="ButtonsRow buttons-row" align="right"
+                                    <td class="ButtonsRow" align="right"
                                         style="padding-right: 0px; padding-left: 12px;">
                                         <a target="_blank" style="color: blue; font-weight: bold;"
                                            href="#returns">{$lng.lbl_create_return}</a>
                                     </td>
                                 {/if}
                                 {if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $order.is_returns}
-                                    <td class="ButtonsRow buttons-row" align="right"
+                                    <td class="ButtonsRow" align="right"
                                         style="padding-right: 0px; padding-left: 12px;">
                                         <a target="_blank" style="color: blue; font-weight: bold;"
                                            href="returns.php?mode=search&search[orderid]={$order.orderid}">{$lng.lbl_order_returns}</a>
@@ -68,34 +68,34 @@
                                 {/if}
                             {/if}
                             {if $active_modules.Shipping_Label_Generator ne '' && ($usertype eq 'A' || $usertype eq 'P')}
-                                <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                                <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                     <a target="_blank" style="color: blue; font-weight: bold;"
                                        href="generator.php?orderid={$order.orderid}">{$lng.lbl_shipping_label}</a>
                                 </td>
                             {/if}
 
                             {if $order.refund_groups ne ""}
-                                <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                                <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                     <a target="_blank" style="color: blue; font-weight: bold;"
                                        href="order.php?orderid={$order.orderid}&mode=invoice&action=incorrect">Print
                                         incorrect invoice</a>
                                 </td>
                             {/if}
 
-                            <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                            <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 {assign var=invoice_url value=$xcartApp->router->url('convert:print')}
                                 <a target="_blank" style="color: blue; font-weight: bold;"
                                    href="{$invoice_url}?orderid={$order.orderid}&p={$oOrder->getOrderHash()}&mode=print">{$lng.lbl_print_invoice_target}</a>
                             </td>
                             {if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) and $active_modules.Advanced_Order_Management}
-                                <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                                <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                     <a target="_blank" style="color: blue; font-weight: bold;"
                                        href="order.php?orderid={$order.orderid}&mode=edit">{$lng.lbl_modify}</a>
                                 </td>
                             {/if}
 
                             {if ($usertype eq "A" or ($usertype eq "P" and $active_modules.Simple_Mode)) and $order.orderid ne ""}
-                                <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
+                                <td class="ButtonsRow" align="right" style="padding-right: 0px; padding-left: 12px;">
                                     <form action="order.php" method="post" name="clone_order">
                                         <input type="hidden" name="mode" value="clone_order"/>
                                         <input type="hidden" name="orderid" value="{$order.orderid}"/>

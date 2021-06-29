@@ -2,7 +2,7 @@
 {add $isNested = false}
 {var $actions = $admin->getListGroupActions()}
 
-<div class="list-block email-list" data-list data-id="{$id}-list">
+<div class="list-block" data-list data-id="{$id}-list">
     {if $search}
         <div class="list-top clearfix">
             <div class="top-search-block left">
@@ -17,6 +17,12 @@
                 {var $cols = 0}
 
                 <tr class="list-head">
+                    {*<th class="checker full">
+                        <input type="checkbox" id="{$id}-check-all" data-checkall-list>
+                        <label for="{$id}-check-all" class="alone"></label>
+                        {var $cols = $cols+1}
+                    </th>*}
+
                     {if $admin->sort}
                         <th class="sort full" data-sort-column>
                                 <span class="title">
@@ -146,13 +152,28 @@
 
 </div>
 
-{set $crud_data = [
-    "id" => $id,
-    "links" => [
-        "url" => $.request->getUrl(),
-        "groupActionUrl" => $admin->getGroupActionUrl(),
-        "sortUrl" => $admin->getSortUrl(),
-        "columnsUrl" => $admin->getColumnsUrl(),
-    ]
-]}
-{store data=$crud_data key=$id ctx="app/cruds"}
+<script>
+    $(function () {
+        $('[data-id="{$id}-list"]').adminList({
+            url: "{$.request->getUrl()}",
+            groupActionUrl: "{$admin->getGroupActionUrl()}",
+            sortUrl: "{$admin->getSortUrl()}",
+            columnsUrl: "{$admin->getColumnsUrl()}"
+        });
+    });
+</script>
+
+
+<script>
+    $('.actions').on('click', function() {
+        const a = $('a', $(this));
+        const i = $('i', a);
+        const id = $(this).closest('tr').data('thread-id');
+        const child = $('.child[data-thread-id='+id+']');
+        if (i.hasClass('fa-plus')) {
+            child.show(); i.addClass('fa-minus').removeClass('fa-plus'); event.stopPropagation(); return false;
+        } else {
+            child.hide(); i.addClass('fa-plus').removeClass('fa-minus'); event.stopPropagation(); return false;
+        }
+    });
+</script>

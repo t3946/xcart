@@ -42,6 +42,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'd_contact_name_for_templates' => [
                 'class' => Select2Field::class,
+                'multiple' => true,
                 'choices' => function () use ($dx): array {
                     foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
                         $result[$contact->id] = $contact->getEmail();
@@ -52,11 +53,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'label' => 'Order messages contact',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
-                'html' => [
-                    'style' => 'width:100%;',
-                    'class' => 'select2-field',
-                ],
-                'multiple' => true,
+                'html' => ['style' => 'width:100%;'],
                 'hint' => LanguageModel::translate('help_d_contact_name_for_templates_text'),
                 'required' => true
             ],
@@ -140,7 +137,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'value' => $dx->order_entry_template->message_body,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => 'Order entry message body',
-                'html' => ['class' => 'by_site tinymce-field'],
+                'html' => ['class' => 'by_site'],
                 'hint' => LanguageModel::translate('help_template_1_text'),
             ],
             'order_entry_special_instructions' => [
@@ -149,7 +146,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'by_email_or_and_fax',
                 'label' => '<span style="color:red">Special order entry instructions</span>',
-                'html' => ['class' => 'by_site tinymce-field'],
+                'html' => ['class' => 'by_site'],
                 'hint' => LanguageModel::translate('help_order_entry_special_instructions_text'),
             ],
             'allow_dispatch_off_working_hours' => [
@@ -173,6 +170,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
             ],
             'email' => [
                 'class' => Select2Field::class,
+                'multiple' => true,
                 'choices' => function () use ($dx): array {
                     foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
                         $result[$contact->id] = $contact->getEmail();
@@ -185,11 +183,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'hint' => LanguageModel::translate('help_dx_email_text'),
-                'html' => [
-                    'class' => 'by_email select2-field',
-                    'style' => 'width:100%;',
-                ],
-                'multiple' => true,
+                'html' => ['class' => 'by_email', 'style' => 'width:100%;'],
             ],
 
             'order_submit_template' => [
@@ -226,7 +220,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => 'Dispatch message body',
                 'readonly' => true,
-                'html' => ['class' => 'by_email tinymce-field'],
+                'html' => ['class' => 'by_email'],
                 'hint' => LanguageModel::translate('help_template_2_text'),
             ],
             'd_subject_line_8' => [
@@ -243,7 +237,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'html' => ['class' => 'by_email tinymce-field'],
+                'html' => ['class' => 'by_email'],
             ],
             'order_submit_special_instructions' => [
                 'class' => EditorField::class,
@@ -251,7 +245,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
                 'label' => '<span style="color:red">Special dispatch instructions</span>',
-                'html' => ['class' => 'by_email tinymce-field'],
+                'html' => ['class' => 'by_email'],
                 'hint' => LanguageModel::translate('help_order_submit_special_instructions_text'),
             ],
             'd_dispatch_instructions' => [
@@ -260,7 +254,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx->submit_to_operator === 'through_distributor_website',
-                'html' => ['class' => 'by_email tinymce-field'],
+                'html' => ['class' => 'by_email'],
             ],
             'd_shipping_options' => [
                 'class' => CharField::class,

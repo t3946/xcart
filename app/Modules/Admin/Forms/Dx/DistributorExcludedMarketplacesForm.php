@@ -25,15 +25,12 @@ class DistributorExcludedMarketplacesForm extends DistributorForm
             'disabled_marketplaces' => [
                 'class' => Select2Field::class,
                 'label' => 'Forbidden API interactions',
+                'placeholder' => 'Click to select',
+                'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_disabled_marketplaces_text'),
-                'html' => [
-                    'style' => 'width:400px;',
-                    'class' => 'select2-field',
-                    'data-placeholder' => 'Click to select',
-                ],
-                'multiple' => true,
+                'html' => ['style' => 'width:400px;']
             ],
         ];
     }

@@ -43,7 +43,8 @@
         <input type="hidden" name="m_id_for_additional_shipping_status" id="m_id_for_additional_shipping_status"
                value=""/>
 
-        <table cellspacing="5" cellpadding="0" align="center" style="border-collapse: separate">
+        <table cellspacing="5" cellpadding="0" align="center">
+
             <tr>
                 <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
                 <td></td>
@@ -58,8 +59,8 @@
                 </td>
             </tr>
             <tr>
-                <td align="right" style="font-size: 0.8125rem;"><b>Grand total:</b></td>
-                <td><input style="font-size: 0.8125rem;" type="text" name="paypal_vt[grand_total]" value="{$order.oOrder->getOrderTotalGross()}"
+                <td align="right" style="font-size: .93rem;"><b>Grand total:</b></td>
+                <td><input style="font-size: .93rem;" type="text" name="paypal_vt[grand_total]" value="{$order.oOrder->getOrderTotalGross()}"
                            size="8" required pattern="^\d+(\.?\d+|)$"
                            id="paypal_vt_grand_total"/></td>
             </tr>

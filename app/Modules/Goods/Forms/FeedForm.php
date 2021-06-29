@@ -49,10 +49,7 @@ class FeedForm extends ModelForm
                     }
                     return $res ?? [];
                 },
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                ],
+                'html' => ['style' => 'width:300px;']
             ],
             'site' => [
                 'class' => Select2Field::class,
@@ -63,22 +60,17 @@ class FeedForm extends ModelForm
                     }
                     return $res ?? [];
                 },
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                ],
+                'html' => ['style' => 'width:300px;']
             ],
             'base_category' => [
                 'class' => Select2Field::class,
+                'ajaxUrl' => (new FeedAdmin)->getSuggestionUrl('category'),
                 'choices' => $choices ?? [],
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                    'data-ajax-url' => (new FeedAdmin)->getSuggestionUrl('category'),
-                ],
+                'html' => ['style' => 'width:300px;']
             ],
             'dont_update_fields' => [
                 'class' => Select2Field::class,
+                'multiple' => true,
                 'choices' => [
                     'productcode' => 'SKU',
                     'product' => 'Product Name',
@@ -92,11 +84,7 @@ class FeedForm extends ModelForm
                     'r_avail' => 'Avail',
                 ],
                 'selected' => $feed->dont_update_fields,
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                ],
-                'multiple' => true,
+                'html' => ['style' => 'width:300px;']
             ],
             'feed_file_name' => [
                 'class' => CharField::class,

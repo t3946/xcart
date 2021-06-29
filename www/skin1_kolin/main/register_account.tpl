@@ -80,7 +80,7 @@
 		{if $oCustomer}
 		{assign var=childs value=$oCustomer->childs->valuesList(['id'], true)}
 		{/if}
-		<select name="child_users[]" class="child-users" multiple="multiple" style="width: 285px">
+		<select name="child_users[]" class="child_users" multiple="multiple" style="width: 285px">
 			<option></option>
 			{foreach Modules\User\Models\UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->order(['firstname']) as $uModel}
 				<option {if $childs && in_array($uModel->id, $childs)}selected="selected"{/if} value="{$uModel->id}">{$uModel}</option>
@@ -88,6 +88,14 @@
 		</select>
 	</td>
 	{literal}
+	<script type="text/javascript">
+		$('.child_users').select2({
+			allowClear: false,
+			closeOnSelect: false,
+			placeholder: 'Click to select Users'
+		}).on("select2:unselecting", function(e){if (!e.params.args.originalEvent) {return false;}e.params.args.originalEvent.stopPropagation();});
+
+	</script>
 	<style>.select2-results__option[aria-selected=true] {display: none;}</style>
 	{/literal}
 </tr>

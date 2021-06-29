@@ -111,16 +111,17 @@ class ApiCategoriesController extends AbstractCatalogController
 
         $pager = $this->getPager($qs);
         $this->setCanonical($this->model);
+        $pagerView = $pager->createView();
         $products = $pager->paginate();
 
         return [
+            'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
             'items' => $this->getProductData($products),
             'pager' => [
                 'pageSize' => $pager->getPageSize(),
                 'currentPage' => $pager->getPage(),
                 'paginateCount' => count($products),
                 'total' => $pager->getTotal(),
-                'pagesCount' => $pager->getPagesCount(),
             ],
         ];
     }
@@ -240,7 +241,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 'isNew' => $product->isNewProduct(),
                 'isSale' => $product->isSaleSticker(),
                 'isGroupRoot' => $product->isGroupRoot(),
-                'childrenNumber' => $product->isGroupRoot() ? $product->getFrontendChilds()->count() : 0,
+                'childrenNumber' => $product->getFrontendChilds()->count(),
 
                 'price' => [
                     'number' => $product->getFrontendPrice(),

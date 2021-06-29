@@ -1,9 +1,64 @@
-<textarea
-        id="{$id}"
-        name="{$name}"
-        {raw $html}
-        data-base-url="{url route="editor:index"}"
-        data-changed-url="{url route="editor:changed"}"
->
-    {$value}
-</textarea>
+<textarea id="{$id}" name="{$name}" {raw $html}>{$value}</textarea>
+
+<script>
+    {if $.request->getIsAjax()}
+        tinymce.remove();
+    {/if}
+
+    tinymce.init({
+        selector: '#{$id}',
+        readonly: {$field->readonly ?: 'false'},
+        setup: editor => {
+            editor.on('change', function () {
+                tinymce.triggerSave();
+            });
+        },
+//        language: 'ru',
+        plugins: [
+            'advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime image imagetools media nonbreaking',
+            'save table contextmenu directionality emoticons template paste textcolor contextmenu'
+        ],
+        content_css: '/static/frontend/dist/css/main.css?t=' + new Date().getTime(),
+        relative_urls: false,
+        browser_spellcheck : true,
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image',
+        inline_boundaries: true,
+        {if (true || $field->disable_forced_root_block)}
+            forced_root_block: false,
+        {/if}
+        branding: false,
+        height : "480",
+        image_advtab: true,
+        file_browser_callback: function(field_name, url, type, win) {
+            window.file_browser_window = win;
+            window.file_browser_field = field_name;
+            window.file_browser_url = url;
+            window.file_browser_type = type;
+            var base_url = "{url route="editor:index"}";
+            base_url += (base_url.indexOf('?') !== -1) ? '&':'?';
+
+            $('<a/>').attr('href', base_url+ "field=" + field_name + "&url=" + url).modal();
+            return false;
+        },
+        images_upload_handler: function(blobInfo, success, failure){
+            var xhr, formData;
+            xhr = new XMLHttpRequest();
+            xhr.withCredentials = false;
+            xhr.open('POST','{url route="editor:changed"}');
+            xhr.onload = function() {
+                var json;
+                if (xhr.status != 200) {
+                    failure('HTTP Error: ' + xhr.status);
+                    return;
+                }
+                json = JSON.parse(xhr.responseText);
+                success(json.url);
+            };
+            formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            xhr.send(formData);
+        }
+    });
+
+</script>

@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block is_show_title=false}
+    {smarty_admin_block name=$section_title}
         <p style="margin-left: 20px">The person responsible for answering product questions</p>
         {raw $form->render()}
         <p style="margin-left: 20px">

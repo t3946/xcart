@@ -242,8 +242,4 @@ return [
     "external_verification_feeds"             => "xcart_external_verification_feeds",
     "shipping_cache_quotes"                   => "xcart_shipping_cache_quotes",
     "images_splash"                           => "xcart_images_splash",
-    //storefronts plugin
-    "storefronts" => "xcart_storefronts",
-    "products_sf" => "xcart_products_sf",
-    "storefront_links" => "xcart_storefront_links",
 ];

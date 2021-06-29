@@ -4,8 +4,6 @@ const gulp = require("gulp");
 const hashSum = require("gulp-hashsum");
 const concat = require("gulp-concat");
 const fs = require("fs");
-const argv = require("yargs").argv;
-const spawn = require("child_process").spawn;
 
 exports["default"] = {
   /**
@@ -59,35 +57,10 @@ exports["default"] = {
     gulp
       .src(src)
       .pipe(concat("main.js"))
-      .pipe(hashSum({ filename: "frontend/versions/js.yml", hash: "md5" }))
+      .pipe(
+        hashSum({ filename: "frontend/versions/js.yml", hash: "md5" })
+      )
       .pipe(gulp.dest(dst));
-
-    cmd.on("close", function (code) {
-      console.log("frontend:jsx exited with code " + code);
-      done(code);
-    });
-  },
-
-  /**
-   * собирает скрипты административной части
-   */
-  buildAdminScripts: function (done) {
-    const args = [
-      "./node_modules/webpack/bin/webpack.js",
-      "--config",
-      "./config/webpack.backend.js",
-    ];
-
-    const taskName = argv._[0];
-
-    // если в названии таска было watch то собирать в режиме watch
-    if (taskName.indexOf("watch") !== -1) {
-      args.push("-w");
-    }
-
-    args.push("--progress");
-
-    const cmd = spawn("node", args, { stdio: "inherit" });
 
     cmd.on("close", function (code) {
       console.log("frontend:jsx exited with code " + code);

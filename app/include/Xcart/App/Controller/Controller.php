@@ -150,21 +150,10 @@ class Controller
         throw new HttpException($code, $message);
     }
 
-    public function jsonResponse($data = [], $code = 200)
+    public function jsonResponse($data = [])
     {
         header('Content-Type: application/json');
-        http_response_code($code);
         echo json_encode($data);
-    }
-
-    public function response($data = null, $code = 200)
-    {
-        header('Content-Type: application/json');
-        http_response_code($code);
-
-        if ($data !== null) {
-            echo $data;
-        }
     }
 
     private function checkMiddleware()

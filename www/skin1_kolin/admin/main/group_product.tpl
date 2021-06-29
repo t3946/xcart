@@ -23,7 +23,7 @@
                 {foreach from=$oProduct->childs item=child}
                     <tr data-product-id="{$child->productid}">
                         <td><a href="{$child->getAdminUrl()}" target="_blank">{$child->productcode}</a></td>
-                        <td><a href="{$child->getAbsoluteUrl(true)}" target="_blank">{$child->product}</a></td>
+                        <td><a href="{$child->getUrl()}" target="_blank">{$child->product}</a></td>
                         <td align="center">{$child->forsale}</td>
                         <td align="center">{$child->r_avail}</td>
                         <td align="center">{$child->cost_to_us}</td>

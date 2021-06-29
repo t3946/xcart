@@ -6,7 +6,6 @@ use Modules\Admin\Controllers\BackendController;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Helpers\IdentityCheckHelper;
 use Xcart\App\Main\Xcart;
-use Modules\User\Components\Auth;
 
 class IdentityCheckController extends BackendController
 {
@@ -96,10 +95,5 @@ class IdentityCheckController extends BackendController
             ]);
 
         }
-    }
-
-    public function logout() {
-        Xcart::app()->getComponent('auth')->logout();
-        $this->jsonResponse('logout');
     }
 }

@@ -129,17 +129,11 @@ class CorporatesForm extends ModelForm
                     }
                     return $mass;
                 },
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                ],
+                'html' => ['style' => 'width:300px;'],
             ],
             'taxes' => [
                 'class' => Select2Field::class,
-                'html' => [
-                    'style' => 'width:300px;',
-                    'class' => 'select2-field',
-                ],
+                'html' => ['style' => 'width:300px;'],
             ]
         ];
     }

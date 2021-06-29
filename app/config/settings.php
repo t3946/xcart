@@ -39,7 +39,6 @@ return array_replace_recursive([
        'base'   => realpath(implode(DS, [__DIR__, '..'])),
        'root'   => realpath(implode(DS, [__DIR__, '..', '..'])),
        'www'    => realpath(implode(DS, [__DIR__, '..', '..', 'www'])),
-       'dist'   => implode(DS, ['', 'static', 'frontend', 'dist']),
    ],
    'globals' => [
        'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',

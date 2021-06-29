@@ -32,12 +32,7 @@ class StoreFront extends Data
     public static function getStoreFrontByProductId($iProductId)
     {
         $obj = null;
-        $sF = SQLBuilder::getInstance()
-            ->addSelect('sfid')
-            ->addFromTable('products_sf')
-            ->addCondition('productid='.$iProductId)
-            ->query_first()
-            ->getQueryResult();
+        $sF = SQLBuilder::getInstance()->addSelect('sfid')->addFromTable('products_sf')->addCondition('productid='.$iProductId)->query_first()->getQueryResult();
         if (!empty($sF)) {
             if ($sF['sfid'] != 0)
                 $obj = new StoreFront(['storefrontid'=>$sF['sfid']]);

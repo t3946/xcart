@@ -1,15 +1,11 @@
 import $ from "jquery";
-import "@/_binds/_head";
-
 import "jquery-ui-dist/jquery-ui";
 import "select2";
 import "jquery-form";
-import "air-datepicker";
-import "air-datepicker/dist/js/i18n/datepicker.en";
-import "./pages/s3stores-mail";
-import "./pages/s3stores-mail-to-dx";
+import "air-datepicker"
+import "air-datepicker/dist/js/i18n/datepicker.en"
 
-import "@/../components/jquery.shapeshift/core/jquery.shapeshift";
+import "@/../components/jquery.shapeshift/core/jquery.shapeshift"
 import "@/js/ajaxTooltip";
 import "@/js/CCDashboard";
 import "@/js/flash";
@@ -24,7 +20,6 @@ import "@/js/mTooltip";
 import "@/js/prevention";
 import "@/js/tablePosition";
 import "@/js/translates";
-import "./theme";
 
 (function () {
   "use strict";

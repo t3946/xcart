@@ -1,6 +1,4 @@
-<div id="admin-hat-target"></div>
-
-<table class="admin-hat" cellpadding="0" cellspacing="0" width="100%" style="display: none">
+<table cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td class="HeadLogo_admin" width="*">
             <a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">
@@ -22,6 +20,8 @@
                         <div><a style="color: #140BFC" href="/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y">Product questions</a></div>
                         <div><a style="color: #140BFC" href="/admin/pbx/pbxcalls">Call recordings</a></div>
                         <div><a style="color: #140BFC" href="/admin/reports">Order reports</a></div>
+                    </div>
+                    <div style="float:left; margin-right:7px;">
                         <div><a style="color: #140BFC" href="/admin/reconciliation.php">Reconciliation / AP & AR</a></div>
                         <div><a style="color: #140BFC" href="/admin/checks_deposited.php">Checks deposited</a></div>
                         <div><a style="color: #140BFC" href="/admin/reports.php">Reports</a></div>
@@ -86,7 +86,114 @@
         {/if}
     </tr>
 </table>
-
 {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
-    <div id="admin-search-line-target"></div>
+<table cellpadding="0" cellspacing="0" width="100%" border="0" class="headSearchLine">
+<tr>
+    <td class="HeadLine" height="22" width="33%">
+            {include file="main/search.tpl"}
+    </td>
+
+
+    <td width="34%" align="center" class="HeadLine">
+    {if $usertype eq 'A' && $login}
+        <script type="text/javascript">
+        {literal}
+
+        $(document).ready(function () {
+            $('#select_searchstring_by').change(function () {
+                var select_searchstring_by = $('#select_searchstring_by').val();
+                $('#searchstring').attr("name", "search" + select_searchstring_by);
+            });
+        });
+
+        {/literal}
+        </script>
+
+        <form method="post" action="{$xcartApp->router->url('dashboard:search')}" name="productsearchform">
+            <input type="hidden" name="fast_search" value="Y"/>
+            <table cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <select id="select_searchstring_by">
+                            <option value="[order][id][from]">Order # / Amazon order ID</option>
+                            <option value="[order][po]">PO #</option>
+                            <option value="[customer][zip_code]">Zip code</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text"
+                               id="searchstring"
+                               name="search[order][id][from]"
+                               size="18"
+                               value=""/>
+                    </td>
+                    <td>
+                        <input type="submit" value="Search"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    {/if}
+    </td>
+
+
+{*
+<td class="HeadLine" align="right" height="22">
+{if ($usertype eq "P" or $usertype eq "A") and $login and $all_languages_cnt gt 1}
+<form action="{$smarty.server.REQUEST_URI|amp}" method="post" name="asl_form">
+<table cellpadding="0" cellspacing="0">
+<tr>
+    <td><b>{$lng.lbl_current_language}:</b>&nbsp;</td>
+    <td>
+<input type="hidden" name="redirect" value="{$smarty.server.QUERY_STRING|amp}" />
+<select name="asl" onchange="javascript: document.asl_form.submit()">
+{section name=ai loop=$all_languages}
+<option value="{$all_languages[ai].code}"{if $current_language eq $all_languages[ai].code} selected="selected"{/if}>{$all_languages[ai].language}</option>
+{/section}
+</select>
+    </td>
+</tr>
+</table>
+</form>
+{else}
+&nbsp;
+{/if}
+</td>
+*}
+
+
+    <td class="HeadLine" align="right" height="22" width="33%">
+
+    {if $active_modules.Multiple_Storefronts && $usertype eq "A" && $login && $current_membership_flag ne 'FS'}
+        {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
+            <div style="float: right;">
+                <input type="button"
+                       name="SF properties"
+                       value="SF properties"
+                       onclick="location.href='/admin/configuration.php?option=Multiple_Storefronts'">
+            </div>
+        {/if}
+    {/if}
+
+        {if $active_modules.Multiple_Storefronts && ($usertype eq 'A' && $current_membership_flag ne 'FS' || $usertype eq 'P') && $login}
+            <div style="float: right;">
+	<form action="{$smarty.server.REQUEST_URI|amp}" method="post" name="storefrontsform">
+	<input type="hidden" name="mode" value="change_storefront"/>
+		<select name="cur_sf" onchange="document.storefrontsform.submit();">
+            {foreach from=$sd_selects key=key item=sf}
+                <option value="{$key}"{if $current_storefront eq $key} selected="selected" disabled="disabled" {/if}>{$sf}</option>
+            {/foreach}
+		</select>
+	</form>
+</div>
+        {else}
+            &nbsp;
+        {/if}
+
+</td>
+
+
+
+</tr>
+</table>
 {/if}

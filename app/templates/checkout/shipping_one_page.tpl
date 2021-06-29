@@ -144,7 +144,7 @@
                                                     </div>
 
                                                     <div class="grid-remove table-column remove">
-                                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="cart-remove-item-button">
+                                                        <a href="{url 'cart:delete' key=$key}" title="{t 'Delete' }" class="icon cart-remove-item-button">
                                                             <svg class="cart-remove-icon">
                                                                 <use xlink:href="/static/frontend/images/icons/sprite.svg#cross"></use>
                                                             </svg>
@@ -159,8 +159,7 @@
                                 <div class="warehouse_subtotal wh_{$gi}" data-wh="{$gi}" data-minamount="{$warehouse->getMinimalAmount()}">
                                     <div class="table">
                                         <div class="table-body">
-                                            {if count($.app->cart->getItemsGroupedBy()) > 1}
-                                                <div class="cart-table-row cart-table-row_subtotal">
+                                            <div class="cart-table-row cart-table-row_subtotal">
                                                 {if isset($taxes['sales_tax'])}
                                                     <div class="total-tax total-sales-tax">
                                                         {t 'Sales Tax' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
@@ -181,16 +180,13 @@
                                                 {/if}
 
                                                 <div class="table-column extended_remove format_price">
-                                                    <span class="cart-subtotal-wrapper">
-                                                        {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                                        <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>
-                                                            {$site_currency->getCurrencyFormat($group.subtotal)}
-                                                        </span>
-                                                        {if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                                    {t 'Subtotal' }: {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
+                                                    <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>
+                                                        {$site_currency->getCurrencyFormat($group.subtotal)}
                                                     </span>
+                                                    {if $site_currency->after}&nbsp;{$site_currency}{/if}
                                                 </div>
                                             </div>
-                                            {/if}
                                         </div>
                                     </div>
                                 </div>
@@ -199,6 +195,8 @@
 
                         <div class="checkout-cart-footer{if count($.app->cart->getItemsGroupedBy()) > 1} checkout-cart-footer__bordered{/if}">
                             <div class="order-total">
+                                <div class="preloader order-total_preloader preloader__checkout-cart-footer"></div>
+
                                 <div class="order-total-wrapper">
                                     <div class="total-tax checkout__total-tax">
                                         {set $taxes = $order->getTaxes()}
@@ -215,11 +213,9 @@
                                     </div>
 
                                     <div class="grand-total order-total__grand">
-                                        <span class="grand-total-wrapper">
-                                            <span class="label">{t 'Grand Total' }</span>
-                                            <span class="sum">{$order->total|site_currency}</span>
-                                        </span>
-                                    </div>
+                                    <span class="label">{t 'Grand Total' }</span>
+                                    <span class="sum">{$order->total|site_currency}</span>
+                                </div>
                                 </div>
                             </div>
                         </div>

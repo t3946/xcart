@@ -167,11 +167,10 @@ export default class AddToCartButton extends Component {
         });
       }
 
-      console.log(this.props);
       let data = [
         {
           id: product.dataset.product,
-          quantity: this.props.quantity,
+          quantity: this.props.quantity || 1,
           options: opt,
         },
       ];

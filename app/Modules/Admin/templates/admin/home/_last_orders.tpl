@@ -21,7 +21,7 @@
     {foreach $last_orders as $order}
         {set $cs_time = $order->getCxDateTime(false)}
         <tr class="{cycle ['SectionBox','TableSubHead']}">
-            <td class="borderr-gray"><a class="common-link" target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
+            <td class="borderr-gray"><a target="_blank" href="{$order->getAdminUrl()}">{$order->getOrderNumber()}</a></td>
             <td class="borderb-gray">{$order->date|date_format:'%b %e, %Y %H:%M:%S'}</td>
             <td class="borderb-gray">{if $cs_time}{$cs_time->format('H:i')}{/if}</td>
             <td class="borderb-gray">{$order->s_firstname}</td>

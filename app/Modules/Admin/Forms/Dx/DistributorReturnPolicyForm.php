@@ -98,9 +98,6 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_d_distributor_return_policy_text'),
-                'html' => [
-                    'class' => 'tinymce-field',
-                ],
             ],
             'd_frontend_return_policy' => [
                 'class' => EditorField::class,
@@ -108,9 +105,6 @@ class DistributorReturnPolicyForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_d_frontend_return_policy_text'),
-                'html' => [
-                    'class' => 'tinymce-field',
-                ],
             ]
         ];
     }

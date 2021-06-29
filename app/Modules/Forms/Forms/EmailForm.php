@@ -25,13 +25,7 @@ class EmailForm extends ModelForm
             'to_address' => ['class' => CharField::class, 'verboseName' => 'To'],
             'subject' => ['class' => CharField::class],
             'attachments' => ['class' => FileField::class],
-            'body' => [
-                'class' => EditorField::class,
-                'verboseName' => ' ',
-                'html' => [
-                    'class' => 'tinymce-field',
-                ],
-            ],
+            'body' => ['class' => EditorField::class, 'verboseName' => ' '],
             'date' => ['class' => DateTimeField::class],
         ];
     }

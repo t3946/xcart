@@ -52,9 +52,6 @@ class PagesForm extends ModelForm
             'content' => [
                 'class' => EditorField::className(),
                 'label' => 'Content',
-                'html' => [
-                    'class' => "tinymce-field",
-                ],
             ],
             'view' => [
                 'class' => DropDownField::className(),
@@ -76,9 +73,6 @@ class PagesForm extends ModelForm
 //            'published_at' => DateTimeField::className()
             'sites' => [
                 'class' => Select2Field::class,
-                'html' => [
-                    'class' => 'select2-field',
-                ],
                 'multiple' => true,
                 'choices' => function() {
                     $mass = [];

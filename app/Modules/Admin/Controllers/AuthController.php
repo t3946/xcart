@@ -41,7 +41,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Xcart::app()->auth->logout(false);
+        Xcart::app()->auth->logout();
         $this->redirect('admin:login');
     }
 }

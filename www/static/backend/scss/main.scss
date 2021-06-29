@@ -1,16 +1,13 @@
-@import "settings";
-@import "__cds_index";
-@import "node_modules/bootstrap/dist/css/bootstrap.min";
-@import "utils/bootstrap-extends";
 @import "node_modules/jquery-ui-dist/jquery-ui";
 @import "node_modules/select2/dist/css/select2";
 @import "node_modules/air-datepicker/dist/css/datepicker";
+@import "settings";
+@import "__cds_index";
 @import "vendors/mmodal";
 @import "vendors/modal";
 @import "vendors/mnotify";
 @import "vendors/mtooltip";
 
-//стандартные настройки стилей
 @import "admin";
 
 @import "mixins/base";
@@ -19,6 +16,7 @@
 @import "base/defaults";
 @import "base/buttons";
 @import "base/forms";
+@import "base/breadcrumbs";
 @import "base/typo";
 @import "base/heading";
 @import "base/modal";
@@ -48,34 +46,7 @@
 @import "pages/amazon_restocking";
 
 @import "blocks/blocks";
-@import "../static/local_modules/mindy-sass/mindy/_functions";
+
 @import "../fonts/GothamPro/css/GothamPro";
-@import "../fonts/lato";
 @import "../fonts/icons/css/style";
 @import "../bem/bem";
-
-html, body {
-    font-size: initial;
-}
-
-.admin-main-content,
-.VertMenuBorder,
-.headSearchLine,
-.select2-container {
-    font-size: 13px;
-}
-
-@media (min-width: 1200px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl {
-        max-width: 1310px;
-    }
-}
-
-.OrderSheet, .OrderSheet td{
-    border: 1px solid #000000;
-}
-
-button {
-    border: rem-calc(1) solid #000000;
-    border-radius: rem-calc(2);
-}

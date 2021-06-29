@@ -34,12 +34,5 @@
 {/block}
 
 {block 'before-content'}
-    {if $model->pk !== null && $form->getSections()}
-        {set $sections = $form->getSections()[0]}
-        {foreach $sections as $key => $section}
-            {set $sections[$key] = ['title' => $section['title'], 'route' => $form->getInstance()->getAdminUrl($key)]}
-        {/foreach}
-        {store data=[ "companyName" => $form->getInstance()->name, "allSections" => $sections, "currentSectionSlug" => $admin->section] key="corporationSections" ctx="adminModule"}
-        <div id="corporations-sections-target" class="mb-4"></div>
-    {/if}
+    {include 'admin/sections.tpl' current_section=$admin->section sections=$form->getSections()}
 {/block}

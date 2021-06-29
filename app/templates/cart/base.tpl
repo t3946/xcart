@@ -7,6 +7,7 @@
 
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
+
         <section class="logo_menu">
             <div class="row align-justify">
                 <div class="columns shop-logo-block">
@@ -25,8 +26,10 @@
                          class="secured-logo-big">
                 </div>*}
                 <div class="columns s3-logo-block">
-                    <div class="s3-logo-big-link logo-link">
-                        <div id="calculate-shipping-target" data-uri="{$uri}"></div>
+                    <div href="" class="s3-logo-big-link logo-link">
+                        <img src="{$uri}/static/frontend/dist/images/logos/s3stores.svg"
+                             alt="s3stores"
+                             class="show-for-large s3-logo-big">
                     </div>
 
                     {*<a href="" class="secured-logo-big-link logo-link">

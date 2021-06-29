@@ -172,36 +172,4 @@ class DistributorForm extends ModelForm
         }
         return $res ?? [];
     }
-
-    /**
-     * переделать ассоциативный массив секций в обычный, чтобы при переводе в json порядок не нарушался
-     * @param callable|null $map позволяет модифицировать элементы массива
-    */
-    public static function getSectionsArray(?callable $map): array
-    {
-        $sections = self::getSections();
-        $array = [];
-
-        foreach ($sections as $name => $sub_sections_list) {
-            $item = [
-                'name' => $name,
-                'sub_sections' => [],
-            ];
-
-            foreach ($sub_sections_list as $key => $sub_section) {
-                $sub_section['key'] = $key;
-
-                if ($map){
-                    $map($sub_section);
-                }
-
-                $item['sub_sections'][] = $sub_section;
-            }
-
-
-            $array[] = $item;
-        }
-
-        return $array;
-    }
 }

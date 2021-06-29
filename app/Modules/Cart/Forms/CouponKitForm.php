@@ -44,12 +44,7 @@ class CouponKitForm extends ModelForm
                 'required' => true,
                 'hint' => 'Max discount by subtotal cart'
             ],
-            'description' => [
-                'class' => EditorField::className(),
-                'html' => [
-                    'class' => 'tinymce-field',
-                ],
-            ],
+            'description' => EditorField::className(),
             'type' => RadioField::className(),
             'restrictions' => [
                 'class' => ListViewField::className(),
