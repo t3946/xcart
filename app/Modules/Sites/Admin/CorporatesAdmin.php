@@ -83,6 +83,6 @@ class CorporatesAdmin extends Admin
 
     public function isAjaxCreate(): bool
     {
-        return true;
+        return false;
     }
 }

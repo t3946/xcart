@@ -1,15 +1,11 @@
 .shipping-radio-label {
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-align: center;
   align-items: center;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   height: 100%;
-}
+  line-height: rem-calc(20);
 
-@include breakpoint(lg up) {
-  .shipping-radio-label {
-    padding: 0 46px 0 63px;
+  @include breakpoint(lg up) {
+    padding: 0 0 0 rem-calc(63);
   }
 }

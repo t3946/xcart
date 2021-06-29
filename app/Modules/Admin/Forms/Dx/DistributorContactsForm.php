@@ -81,9 +81,12 @@ class DistributorContactsForm extends ModelForm
             ],
             'utility' => [
                 'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width:100%',
+                    'class' => 'select2-field',
+                    'data-placeholder' => 'Click to select a function',
+                ],
                 'multiple' => true,
-                'html' => ['style' => 'width:100%'],
-                'placeholder' => 'Click to select a function',
                 'hint' => LanguageModel::translate('help_distributor_contact_utility_text'),
                 'hintTemplate' => $this->hintTemplate,
             ]

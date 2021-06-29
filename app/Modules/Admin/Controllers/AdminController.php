@@ -3,12 +3,28 @@
 namespace Modules\Admin\Controllers;
 
 use Modules\Admin\Contrib\Admin;
+use Modules\Sites\Helpers\StorageHelper;
+use Xcart\App\Main\Xcart;
 
 class AdminController extends BackendController
 {
     public function all($module, $admin, $id = null)
     {
         $admin = $this->getAdmin($module, $admin);
+
+        //передача данных на frontend
+        $data = [
+            "flash" => Xcart::app()->flash->read(),
+            "id" => $admin->getId(),
+            "cron" => [
+                "url" => Xcart::app()->request->getUrl(),
+                "groupActionUrl" => $admin->getGroupActionUrl(),
+                "sortUrl" => $admin->getSortUrl(),
+                "columnsUrl" => $admin->getColumnsUrl(),
+            ],
+        ];
+        StorageHelper::push($data, null, 'app');
+
         $admin->all($id);
     }
 

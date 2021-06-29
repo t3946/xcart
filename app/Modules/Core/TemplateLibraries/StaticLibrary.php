@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Core\TemplateLibraries;
 
 
@@ -45,8 +46,7 @@ class StaticLibrary extends TemplateLibrary
 
     protected static function initFrontend()
     {
-        if (empty(self::$frontend))
-        {
+        if (empty(self::$frontend)) {
             $dir = self::getFrontendVersionsDir() . DIRECTORY_SEPARATOR;
 
             self::$frontend = array_merge(self::$frontend, self::getVersions($dir . 'css.yml'));
@@ -57,8 +57,7 @@ class StaticLibrary extends TemplateLibrary
 
     protected static function initBackend()
     {
-        if (empty(self::$backend))
-        {
+        if (empty(self::$backend)) {
             $dir = self::getBackendVersionsDir() . DIRECTORY_SEPARATOR;
 
             self::$backend = array_merge(self::$backend, self::getVersions($dir . 'css.yml'));
@@ -109,6 +108,24 @@ class StaticLibrary extends TemplateLibrary
     }
 
     /**
+     * Находит бандл файл со скриптами для административной части и возвращает его путь
+     * @kind function
+     * @name admin_script
+     * @return int
+     */
+    public static function getAdminScript()
+    {
+        $static_path = "/static/backend/dist/js/";
+
+        $files = scandir($_SERVER['DOCUMENT_ROOT'] . $static_path);
+        $result = array_filter($files, function($file_name) {
+            return preg_match('/main\.\w+?\.js/', $file_name);
+        });
+
+        return $static_path . array_shift($result);
+    }
+
+    /**
      * @kind function
      * @name inline
      * @return string
@@ -133,8 +150,7 @@ class StaticLibrary extends TemplateLibrary
     {
         if ($type == 'decode') {
             return base64_decode($data);
-        }
-        else if ($type == 'encode') {
+        } else if ($type == 'encode') {
             return base64_encode($data);
         }
     }

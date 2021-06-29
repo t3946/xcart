@@ -8,48 +8,48 @@
     <input type="hidden" id="send_request_orderid" name="send_request_orderid" value="{$oOrder->getOrderId()}"/>
     <input type="hidden" id="invoice_next_number" name="invoice_next_number" value="{$oOrder->getCustomerInvoiceNextNumber()}"/>
     <div class="ui centered loader"></div>
-    <table cellspacing="5" cellpadding="0" align="center">
+    <table cellspacing="5" cellpadding="0" align="center" style="border-spacing: 5px; border-collapse: initial;">
         <tr>
-            <td align="right" style="font-size: .93rem;">
+            <td align="right" style="font-size: 0.8125rem;">
                 <b>Invoice #</b>
             </td>
             <td>
-                <input readonly="readonly" class="field" style="font-size: .93rem;" type="text" name="paypal_request_invoice_number" value="{$oOrder->getDisplayOrderNumber()}-{$oOrder->getCustomerInvoiceNextNumber()}" size="20" id="paypal_request_invoice_number" />
+                <input readonly="readonly" class="field" style="font-size: 0.8125rem;" type="text" name="paypal_request_invoice_number" value="{$oOrder->getDisplayOrderNumber()}-{$oOrder->getCustomerInvoiceNextNumber()}" size="20" id="paypal_request_invoice_number" />
             </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>‘Bill to’ Full name</b></td>
+            <td align="right" style="font-size: 0.8125rem;"><b>‘Bill to’ Full name</b></td>
             <td>
-                <input class="field" style="font-size: .93rem;" type="text" name="b_firstname" value="{$oOrder->b_firstname}" size="64" id="paypal_b_firstname" />
+                <input class="field" style="font-size: 0.8125rem;" type="text" name="b_firstname" value="{$oOrder->b_firstname}" size="64" id="paypal_b_firstname" />
             </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;">
+            <td align="right" style="font-size: 0.8125rem;">
                 <b>‘Bill to’ Email</b>
             </td>
             <td>
-                <input class="field" style="font-size: .93rem;" type="text" name="paypal_request_email" value="{$oOrder->getEmail()}" size="64" id="paypal_request_email" />
+                <input class="field" style="font-size: 0.8125rem;" type="text" name="paypal_request_email" value="{$oOrder->getEmail()}" size="64" id="paypal_request_email" />
             </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Payment request subject line</b>
+            <td align="right" style="font-size: 0.8125rem;"><b>Payment request subject line</b>
                 <div class="cidev_field_descr">(should contain S3 Stores Inc. and order #)</div>
             </td>
-            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_subject" value="PayPal money request for order # {$oOrder->getDisplayOrderNumber()} from S3 Stores, Inc." size="64" id="paypal_request_subject" /></td>
+            <td><input class="field" style="font-size: 0.8125rem;" type="text" name="paypal_request_subject" value="PayPal money request for order # {$oOrder->getDisplayOrderNumber()} from S3 Stores, Inc." size="64" id="paypal_request_subject" /></td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Invoice description</b>
+            <td align="right" style="font-size: 0.8125rem;"><b>Invoice description</b>
             </td>
             {assign var="site" value=$oOrder->site}
             {assign var="site_config" value=$site->getConfig()}
-            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_notes" size="64" id="paypal_request_notes"
+            <td><input class="field" style="font-size: 0.8125rem;" type="text" name="paypal_request_notes" size="64" id="paypal_request_notes"
                 value="{$site_config.company_name} order # {$oOrder->getDisplayOrderNumber()}"
                 /></td>
         </tr>
         <tr>
-            <td align="right" style="font-size: .93rem;"><b>Amount due</b> </td>
-            <td><input class="field" style="font-size: .93rem;" type="text" name="paypal_request_amount" value="{$oOrder->total|number_format:2:'.':''}" size="8" id="paypal_request_amount" />
-                <select style="font-size: .93rem; padding: 2px;" name="paypal_request_currency" id="paypal_request_currency">
+            <td align="right" style="font-size: 0.8125rem;"><b>Amount due</b> </td>
+            <td><input class="field" style="font-size: 0.8125rem;" type="text" name="paypal_request_amount" value="{$oOrder->total|number_format:2:'.':''}" size="8" id="paypal_request_amount" />
+                <select style="font-size: 0.8125rem; padding: 2px;" name="paypal_request_currency" id="paypal_request_currency">
                     <option value="USD">US Dollars</option>
                     <option value="CAD">CA Dollars</option>
                 </select>

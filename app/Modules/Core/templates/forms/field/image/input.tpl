@@ -1,8 +1,8 @@
 <div style="height:0px;overflow:hidden">
     <input type="{$type}" accept="{$field->getHtmlAccept()}" value="{$value}" id="{$id}" name="{$name}" {raw $html}>
 </div>
-<button type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image file</button>
-<button type="button" onclick="uploadUrl(this)">Upload from URL</button>
+<button class="button__gray" type="button" onclick="$('#{$id}').attr('type', 'file').click();">Upload image file</button>
+<button class="button__gray" type="button" onclick="uploadUrl(this)">Upload from URL</button>
 <br>
 <a target="_blank" class="{$id}_current-image" style="
         margin: 10px;

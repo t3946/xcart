@@ -3,13 +3,22 @@
   outline: none;
 }
 
+a {
+  &:active, &:link, &:visited {
+    color: #464646;
+  }
+  &:hover {
+    color: #000000;
+  }
+}
+
 strong, b {
   font-weight: 700;
 }
 
 html,
 body {
-  font-family: GothamPro, Arial, Helvetica, sans-serif;
+  font-family: Lato, GothamPro, Arial, Helvetica, sans-serif;
   font-size: 13px;
   line-height: 1.3;
   color: #111;
@@ -31,19 +40,8 @@ input, textarea, select, button {
 }
 
 a {
-  color: #330000;
   text-decoration: underline;
   font-weight: 400;
-
-  &:visited {
-    color: #330000;
-  }
-  &:hover {
-    color: #550000;
-  }
-  &:active {
-    color: #330000;
-  }
 }
 
 H1 {
@@ -362,10 +360,6 @@ td.refund-prod-title {
   font-weight: normal;
 }
 
-.OrderSheetCell a {
-  color: blue;
-}
-
 .OrderSheetFirst td {
   border-top: 1px solid black;
 }
@@ -482,7 +476,6 @@ TD.OptionLabel {
   width: 190px;
   min-width: 190px;
   VERTICAL-ALIGN: top;
-  padding-top: 5px;
   border-collapse: collapse;
 }
 
@@ -2020,9 +2013,6 @@ div.ui.error.message ul.list {
 }
 
 .admin-main-content {
-  padding-top: 10px;
-  padding-left: 20px;
-
   .heading{
     a {
       color: blue;

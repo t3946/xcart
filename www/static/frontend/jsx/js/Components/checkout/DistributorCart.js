@@ -133,6 +133,14 @@ export const DistributorCart = (function () {
               function () {
                 $warehouse.remove();
 
+                //hide cart subtotals and grand total line if left only one cart
+                if ($(".distributor-cart").length < 2) {
+                  $(".cart-table-row_subtotal").hide();
+                  $(".checkout-cart-footer").removeClass(
+                    "checkout-cart-footer__bordered"
+                  );
+                }
+
                 // removed last product in last cart
                 if ($warehouseList.find(".warehouse_products").length === 0) {
                   window.location.href = "/cart/";

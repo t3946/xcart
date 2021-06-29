@@ -14,7 +14,13 @@ export class ShippingPixabayAutocomplete {
     this.variants = null;
     this.forceCompleted = false;
     this.input = null;
+
     this.input = typeof elem === "string" ? document.querySelector(elem) : elem;
+
+    if (this.input.constructor !== HTMLInputElement) {
+      console.error("Passed element is not a html INPUT element", this.input);
+      return;
+    }
 
     new AutoComplete({
       selector: this.input,

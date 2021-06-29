@@ -251,12 +251,3 @@
 
     {/foreach}
 </table>
-<script>
-    $('a.select-order').click(function () {
-        $('.orders tr').removeClass('selected');
-        let orderid = $(this).closest('tr').data('orderid');
-        let current = $('tr.order_list_row_' + orderid);
-        current.addClass('selected');
-        return true;
-    });
-</script>

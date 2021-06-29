@@ -5,7 +5,7 @@
         </div>
 
         <div class="columns large-5">
-            <select type="text" name="search[order][source][]" id="o_source" class="big" multiple>
+            <select type="text" name="search[order][source][]" id="o_source" class="big select2-field" multiple>
                 {foreach $sources as $code => $name}
                     <option value="{$code}" {if $form_data.order.source && $code in list $form_data.order.source}selected{/if}>{$name}</option>
                 {/foreach}

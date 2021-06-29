@@ -27,6 +27,8 @@ class EmailSorterForm extends ModelForm
     {
         $form = $this;
         $model = $this->getInstance();
+        $ajax_url = (new EmailSorterAdmin)->getSuggestionUrl($form->getField('entity')->getValue() ?? DistributorModel::class);
+
         return [
             'filter_field' => [
                 'class' => DropDownField::class
@@ -55,25 +57,16 @@ class EmailSorterForm extends ModelForm
             ],
             'target' => [
                 'class' => Select2Field::class,
-                'ajaxUrl' => (static function () use ($form) {
-                    return (new EmailSorterAdmin)->getSuggestionUrl($form->getField('entity')->getValue() ?? DistributorModel::class);
-                }),
                 'choices' => static function () use ($form) {
                     $class = $form->getField('entity')->getValue() ?? DistributorModel::class;
                     $target = new $class;
                     return $form->getInstance()->target ?
                         [$form->getInstance()->target => $target::objects()->get([$target::getPrimaryKeyName() => $form->getInstance()->target])] : [];
                 },
-
-                /*'choices' => static function () use ($form) {
-                    $class = $form->getField('entity')->getValue() ?? DistributorModel::class;
-                    $model = new $class;
-                    foreach ($model::objects() as $m) {
-                        $result[$m->pk] = (string) $m;
-                    }
-                    asort($result);
-                    return $result ?? [];
-                }*/
+                'html' => [
+                    'data-ajax-url' => $ajax_url,
+                    'class' => 'select2-field',
+                ]
             ],
             'related_value' => [
                 'class' => DropDownField::class,

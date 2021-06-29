@@ -1,7 +1,4 @@
 {if !$.request->getIsAjax()}
-    {*<link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_version resource='main.css'}">*}
-    {*<script src="/static/backend/dist/js/main.js?v={backend_version resource='main.js'}"></script>*}
-
     {* Another head information *}
     {block 'head'}{/block}
 
@@ -19,11 +16,6 @@
     <div id="wrapper" class="wrapper {block 'wrapper_block_class'}{/block}">
         {block 'content-header'}
             <div class="content-header">
-                {block 'breadcrumbs'}
-                    {if !$.request->getIsAjax()}
-                        {render_breadcrumbs:raw template="admin/_breadcrumbs.tpl"}
-                    {/if}
-                {/block}
                 <div class="row">
                     <div class="column large-12">
 
@@ -66,30 +58,6 @@
         <div id="push"></div>
     </div>
 {/filter}
-
-{block 'js'}
-    <script>
-        $(function () {
-            const t = $('.tooltip').tooltip({
-                position: {
-                    using: function (position, feedback) {
-                        $(this).css(position);
-                        $("<div>")
-                            .addClass("tooltip__s3")
-                            .appendTo(this);
-                    }
-                },
-                content: function () {
-                    return $(this).attr('title');
-                },
-                open: function (event, ui) {
-                    ui.tooltip.css("max-width", "650px");
-                },
-                hide: { delay: 1000 }
-            });
-        });
-    </script>
-{/block}
 
 {filter|unescape}
 {get_assets type="css"}

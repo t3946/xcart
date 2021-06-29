@@ -257,6 +257,10 @@ class LoggerManager
      */
     public function debug($message, array $context = [], $logger = 'default')
     {
+        if (is_array($message)) {
+            $message = json_encode($message, JSON_PRETTY_PRINT);
+        }
+
         return $this->getLogger($logger)->addDebug($message, $context);
     }
 

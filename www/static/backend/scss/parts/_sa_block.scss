@@ -56,7 +56,8 @@
     }
 
     .content-block {
-        padding: 10px;
+        padding: 12px 40px;
+        font-size: 13px;
     }
 
     .buttons-block {
@@ -67,18 +68,18 @@
     }
 
     .title-block {
-      min-height: 15px;
-      //background-color: #FF8600;
-      background-color: $primary-color;
-        //background-image: url('/skin1_kolin/images/dialog_bg_n.gif');
+        min-height: 15px;
+        background-color: #ffebb2;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
 
         .title {
           display: inline-block;
-            padding: 5px 10px;
-            //padding-left: 20px;
-            color: #fff !important;
             font-weight: 500;
             line-height: 15px;
+            font-size: 15px;
 
             &.right {
                 float:right;

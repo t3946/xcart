@@ -228,6 +228,7 @@ export default class Card extends Component {
    */
   productPriceBlock() {
     const product = this.product;
+
     const quantityGroupClasses = { group: [] };
     const addToCartClasses = {
       mainWrapper: ["add-to-cart-button_catalog"],
@@ -295,10 +296,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <Price
-                currency={product.currency}
-                price={product.price.number}
-              />
+              <Price currency={product.currency} price={product.price.number} />
             </span>
           </div>
         </div>
@@ -368,6 +366,7 @@ export default class Card extends Component {
                       <AddToCartButton
                         classes={addToCartClasses}
                         onChangeMode={this.addToCartChangeMode.bind(this)}
+                        quantity={this.state.quantityAdd}
                       />
                     </div>
 
@@ -431,7 +430,7 @@ export default class Card extends Component {
 
     classes.product.push("catalog-product", "item");
     classes.image = {
-      link: `product-image__catalog-${self.context.viewMode}`,
+      link: `product-image__catalog-${self.context.viewMode} product-image-link`,
       container: [
         "product-card-image",
         `product-card-image__catalog-${self.context.viewMode}`,
