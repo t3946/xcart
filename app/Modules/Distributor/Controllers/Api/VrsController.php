@@ -4,6 +4,7 @@
 namespace Modules\Distributor\Controllers\Api;
 
 
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\VrsHelperMessagesModel;
 use Modules\Distributor\Models\VrsHelperSitesModel;
 use Modules\User\Models\UserModel;
@@ -24,15 +25,35 @@ class VrsController extends Controller
   {
    $thisSite = VrsHelperSitesModel::objects()->filter(['domain' => $url]);
 
+   $status = 'first-time';
+
    if(!($thisSite->count() > 0))
    {
-       VrsHelperSitesModel::objects()->getOrCreate(['domain'=>$url, 'status'=>'visited']);
+       $dx = [];
+       $status = 'visited';
+       foreach (  DistributorModel::objects()->asArray(true)->all() as $distributor)
+       {
+           if(str_contains($distributor['url'],$url ))
+           {
+               $dx = $distributor;
+           }
+       }
+       if($dx)
+       {
+           $status = 'inactive';
+           if($dx['avail'] === 'Y'){
+               $status = 'active';
+           }
+       }
 
-       $this->jsonResponse(['status' => 'first-time']);
+       VrsHelperSitesModel::objects()->getOrCreate(['domain'=>$url, 'status'=>$status]);
+       $this->jsonResponse(['status' => $status]);
        return;
    }
 
-   $this->jsonResponse(['status'=>$thisSite[0]['status']]);
+
+
+        $this->jsonResponse(['status'=>$thisSite[0]['status']]);
   }
 
   public function getMessageFromDomain(string $domain){
@@ -126,7 +147,7 @@ class VrsController extends Controller
   {
       $data = json_decode(file_get_contents("php://input"), true);
 
-      $jwt=$data['jwt'];
+      $jwt = $data['jwt'];
 
       if($jwt) {
           try {
