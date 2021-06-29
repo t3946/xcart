@@ -120,6 +120,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 'currentPage' => $pager->getPage(),
                 'paginateCount' => count($products),
                 'total' => $pager->getTotal(),
+                'pagesCount' => $pager->getPagesCount(),
             ],
         ];
     }
