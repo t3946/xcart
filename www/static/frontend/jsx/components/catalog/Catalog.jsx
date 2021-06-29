@@ -20,8 +20,6 @@ export default class Catalog extends Component {
 
     this.productList = React.createRef();
 
-    console.log('CATALOG PROPS', props);
-
     this.state = {
       ...props,
       viewMode: Storage.get(this.VIEW_MODE_STORAGE_KEY, "tile"),
