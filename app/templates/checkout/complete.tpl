@@ -412,10 +412,10 @@
                         {if $product}
                         {
                             'id': '{$product->productid}',
-                            'name': "{$product->getFrontendName()|escape}",
+                            'name': {$product->getFrontendName()|escape:'js'},
                             'sku': '{$product->productcode}',
-                            'brand': "{$product->brand->brand|escape}",
-                            'category': "{$category->category|escape}",
+                            'brand': {$product->brand->brand|escape:'js'},
+                            'category': {$category->category|escape:'js'},
                             'price': '{$detail->price|number_format:2:'.':''}',
                             'quantity': '{$detail->amount}'
                         },
