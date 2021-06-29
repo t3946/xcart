@@ -34,10 +34,12 @@ export default class Catalog extends Component {
       //ссылка на следующую страницу каталога
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
+      pager: null,
     };
   }
 
   onUpdateProductList(pager, nextPageUrl) {
+    console.log('onUpdateProductList PAGER = ', pager);
     this.setState({ pager, loaded: true, nextPageUrl });
   }
 

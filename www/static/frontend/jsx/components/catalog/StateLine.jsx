@@ -2,6 +2,7 @@ import PageCount       from '@/components/catalog/PageCount';
 import classnames      from 'classnames';
 import CatalogViewMode from '@/components/catalog/CatalogViewMode';
 import { createRef }   from "preact";
+import CatalogContext  from "@/components/catalog/CatalogContext";
 
 export default class StateLine extends Component {
     constructor( props ) {
@@ -93,12 +94,23 @@ export default class StateLine extends Component {
     }
 
     render(props) {
+        const stateLineClasses = [
+            props.classes.container,
+            "products-state-line",
+            "pcont",
+            {
+                "skeleton-box": this.context.pager === null,
+            },
+        ]
+
+        console.log('CLASSES',stateLineClasses);
+
         return (
-            <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) } style="display:block">
+            <div className={ classnames(stateLineClasses) } style="display:block">
                 <div className="row">
                     <div className="columns large-3 show-for-large">
                         <div className="page_count_wrap">
-                            <PageCount/>
+                            { this.context.pager && <PageCount/> }
                         </div>
                     </div>
                     <div className="columns small-12 large-9">
@@ -115,3 +127,5 @@ export default class StateLine extends Component {
         );
     }
 }
+
+StateLine.contextType = CatalogContext;
