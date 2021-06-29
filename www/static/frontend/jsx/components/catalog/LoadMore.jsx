@@ -17,7 +17,7 @@ export default class LoadMore extends Component {
     return (
       <div className={classnames("front-endless-pager", this.props.classes)}>
         <a
-          href={this.next}
+          href={this.nextPageUrl}
           className="show-more button yellow-white waves waves-orange"
           itemScope
           itemProp="relatedLink/pagination"

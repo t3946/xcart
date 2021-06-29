@@ -20,6 +20,8 @@ export default class Catalog extends Component {
 
     this.productList = React.createRef();
 
+    console.log('CATALOG PROPS', props);
+
     this.state = {
       ...props,
       viewMode: Storage.get(this.VIEW_MODE_STORAGE_KEY, "tile"),
@@ -31,13 +33,14 @@ export default class Catalog extends Component {
       isLoading: false,
       // next page url in catalog
       baseUrl: props.catalogUrl.split("?")[0],
-      next: props.catalogUrl,
+      //ссылка на следующую страницу каталога
+      nextPageUrl: props.catalogUrl,
       printStateLines: true,
     };
   }
 
-  onUpdateProductList(pager, next) {
-    this.setState({ pager, loaded: true, next });
+  onUpdateProductList(pager, nextPageUrl) {
+    this.setState({ pager, loaded: true, nextPageUrl });
   }
 
   onViewModeChange(viewMode) {
@@ -94,7 +97,7 @@ export default class Catalog extends Component {
 
   loadMoreButtonTemplate() {
     // все товары были загружены
-    if (this.state.next === false) {
+    if (!this.state.nextPageUrl) {
       return;
     }
 
@@ -106,7 +109,7 @@ export default class Catalog extends Component {
     return (
       <LoadMore
         onNext={this.onNext}
-        next={this.state.next}
+        nextPageUrl={this.state.nextPageUrl}
         classes={[
           "catalog_load-more",
           { "margin-0": this.state.printStateLines === false },
