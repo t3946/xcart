@@ -17,7 +17,7 @@ class SearchController extends PrototypeAdminController
     //набор шаблонов для функции быстрого поиска
     private const PATTERNS = [
         "sku" => "/^[a-zA-Z]{3}-[\w\d_-]+$/i",
-        "order_id_with_prefix" => "/^[a-z]{1,4}-(\d+)$/i",
+        "order_id_with_prefix" => "/^([a-z]{2}-)?(\d{6})$/i",
         "order_amazon_id" => "/\d+-\d+-\d+/",
     ];
 
@@ -98,19 +98,19 @@ class SearchController extends PrototypeAdminController
     public function fastSearch(): void
     {
         if (!$search_string = trim($_GET['search_string'])) {
-            $this->getRequest()->redirect('/admin/');
+            $this->getRequest()->redirect('admin:index');
             return;
         }
 
         // search by ORDER ID with prefix
         if (preg_match(self::PATTERNS['order_id_with_prefix'], $search_string, $matches) === 1) {
-            $order = OrderModel::objects()->get(['orderid' => $matches[1]]);
+            $order = OrderModel::objects()->get(['orderid' => $matches[2]]);
         }
+
         // search by ORDER AMAZON ID
         elseif (preg_match(self::PATTERNS['order_amazon_id'], $search_string, $matches) === 1) {
             $order = OrderModel::objects()->get(['amazonorderid' => $matches[2]]);
         }
-
         // redirect if ORDER FOUND
         if (isset($order)) {
             $this->redirect($order->getAdminUrl());
@@ -147,7 +147,7 @@ class SearchController extends PrototypeAdminController
             }
         }
 
-        $this->getRequest()->redirect('/admin/');
+        $this->getRequest()->redirect('admin:index');
     }
 
     public function search_ajax_suggestion()
