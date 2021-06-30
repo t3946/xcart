@@ -18,7 +18,7 @@ abstract class AbstractCatalogController extends FrontendController
     public $view = '';
     public $model = null;
     public $sort = null;
-    public $pageSize = 20;
+    public $pageSize = 80;
     public $filters = ['price', 'brand', 'filter'];
 
     public function getAdvancedCacheData(): array
