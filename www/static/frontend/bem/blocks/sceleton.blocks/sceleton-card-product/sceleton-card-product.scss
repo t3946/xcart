@@ -5,13 +5,15 @@
 .sceleton-block-wrapper{
   width: 202px;
   padding: 15px;
-
+  @media(max-width: 540px) {
+    width: 50%;
+  }
   @media(min-width: 540px) {
-    width: 282px;
+    width: 33%;
   }
 
   @media(min-width: 1150px) {
-    width: 256px;
+    width: 25%;
   }
 }
 
