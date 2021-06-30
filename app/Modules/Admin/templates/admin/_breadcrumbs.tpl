@@ -1,21 +1,19 @@
-    <div class="breadcrumbs-block">
-        <ul class="breadcrumbs-list">
-            <li>
-                <a href="{url route="admin:index"}" class="">
-                    Home
-                </a>
-            </li>
+<ul class="list-unstyled m-0">
+    <li class="breadcrumbs-item">
+        {if count($breadcrumbs)}
+            <a href="{url route="admin:index"}" class="breadcrumbs-link">Home</a>
+        {else}
+            <span class="breadcrumbs-link text-decoration-none">Home</span>
+        {/if}
+    </li>
 
-            {foreach $breadcrumbs as $item}
-                <li class="delimiter">
-                    »
-                </li>
-
-                <li>
-                    <a href="{$item['url']}" class="">
-                        {$item['name']}
-                    </a>
-                </li>
-            {/foreach}
-        </ul>
-    </div>
+    {foreach $breadcrumbs as $item last=$last}
+        <li class="breadcrumbs-item">
+            {if !$last}
+                <a href="{$item['url']}" class="breadcrumbs-link">{$item['name']}</a>
+            {else}
+                <span class="breadcrumbs-link text-decoration-none">{$item['name']}</span>
+            {/if}
+        </li>
+    {/foreach}
+</ul>

@@ -1,6 +1,7 @@
 <?php
 namespace Xcart\App\Traits;
 
+use Modules\Core\TemplateLibraries\CommonLibrary;
 use Xcart\App\Main\Xcart;
 
 trait SmartyRenderTrait
@@ -20,6 +21,8 @@ trait SmartyRenderTrait
                 $render->assign($name, $param);
             }
         }
+
+        $render->assign('breadcrumbs', CommonLibrary::renderBreadcrumbs(['template' => 'admin/_breadcrumbs.tpl']));
 
         Xcart::app()->errorHandler->errHandler = false;
 

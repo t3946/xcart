@@ -29,7 +29,6 @@ class OrderStatusForm extends ModelForm
             ],
             'availability_statuses' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'choices' => function () use ($model) {
                     $result = [];
                     $manager = OrderStatusModel::objects()->filter(['type' => $model->type]);
@@ -41,8 +40,12 @@ class OrderStatusForm extends ModelForm
                     return $result;
                 },
                 'selected' => OrderStatusAvailabilityModel::objects()->filter(['source_status_id' => $model->status_id])->valuesList(['destination_status_id'], true),
-                'html' => ['style' => 'width:100%']
-            ]
+                'html' => [
+                    'class' => 'select2-field',
+                    'style' => 'width:100%',
+                ],
+                'multiple' => true,
+            ],
         ];
     }
 

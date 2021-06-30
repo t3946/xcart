@@ -120,15 +120,24 @@ class ProductAdminForm extends ModelForm
                 'class' => EditorField::class,
                 'label' => 'Detailed description',
                 'required' => true,
-                'readonly' => $this->getInstance()->distributor->feed_fields->filter(['field_name' => 'fulldescr', new QOr(['locked' => 'Y', 'admin_lock' => 'Y'])])->count() > 0
+                'readonly' => $this->getInstance()->distributor->feed_fields->filter(['field_name' => 'fulldescr', new QOr(['locked' => 'Y', 'admin_lock' => 'Y'])])->count() > 0,
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
             ],
             'seo_fulldescr' => [
                 'class' => EditorField::class,
                 'label' => 'SEO Detailed description',
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
             ],
             'descr' => [
                 'class' => EditorField::class,
                 'label' => 'Short description',
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
             ],
             'lead_time_message' => [
                 'class' => CharField::class,
@@ -170,12 +179,18 @@ class ProductAdminForm extends ModelForm
             'distributor' => [
                 'class' => Select2Field::class,
                 'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
-                'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('distributor'),
+                'html' => [
+                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
+                    'class' => 'select2-field',
+                ],
             ],
             'brand' => [
                 'class' => Select2Field::class,
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
-                'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('brand'),
+                'html' => [
+                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
+                    'class' => 'select2-field',
+                ],
             ],
             'category' => [
                 'class' => Select2Field::class,
@@ -183,7 +198,10 @@ class ProductAdminForm extends ModelForm
                 'choices' => $category ? [$category->categoryid => (string)implode('/', array_map(function ($a) {
                     return $a['name'];
                 }, $category->getBreadcrumbs()->get()))] : [],
-                'ajaxUrl' => (new ProductAdmin)->getSuggestionUrl('category'),
+                'html' => [
+                    'class' => 'select2-field',
+                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('category'),
+                ],
                 'label' => 'Main category'
             ],
             'main_category_id' => [

@@ -1,3 +1,5 @@
+import InitSelect2 from "@admin/utils/init-select2";
+
 $(function () {
     var list = {
         options: {
@@ -274,6 +276,7 @@ $(function () {
         e.preventDefault();
         const $this = $(this);
 
+
         if (typeof this.dataset.prevention === 'undefined') {
             const list = getList($this)
             list.setLoading();
@@ -282,7 +285,15 @@ $(function () {
                     list.setLoading();
                     this._submitHandlerDefault.call(this, element);
                 },
-                onAfterOpen: () => list.unsetLoading(),
+                onAfterOpen: function () {
+                    list.unsetLoading();
+
+                    // для форм загруженных по ajax нужно инициализировать компоненты select2
+                    const $form = $('.mmodal-container form');
+                    $form.find(".select2-field").each((i, elem) => {
+                        InitSelect2(elem);
+                    });
+                },
                 onSuccess: () => list.update(),
             });
         }

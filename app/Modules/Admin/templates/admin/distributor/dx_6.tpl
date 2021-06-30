@@ -2,7 +2,7 @@
 
 {block 'content'}
     {parent}
-    {smarty_admin_block name=$section_title}
+    {smarty_admin_block is_show_title=false}
         <div>
             Enter the address of the main distributor warehouse.
             <br/>

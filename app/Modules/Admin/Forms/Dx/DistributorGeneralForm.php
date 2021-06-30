@@ -86,6 +86,9 @@ class DistributorGeneralForm extends DistributorForm
             'sites' => [
                 'class' => Select2Field::class,
                 'label' => 'Main SF',
+                'html' => [
+                    'class' => 'select2-field',
+                ],
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
@@ -98,6 +101,9 @@ class DistributorGeneralForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hint' => LanguageModel::translate('help_dx_instructions_text'),
+                'html' => [
+                    'class' => 'tinymce-field',
+                ]
             ],
             'dx_eta_date' => [
                 'class' => DateField::class,

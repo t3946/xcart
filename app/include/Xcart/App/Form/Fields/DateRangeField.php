@@ -25,7 +25,8 @@ class DateRangeField extends DateField
         return "
 <script>
     (function(){ 
-        $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getRenderValue()}) 
+      //TODO: убрал airdate
+//        $('#$id').airdate({$airOptions}).data('airdate').selectDate({$this->getRenderValue()}) 
     })()
 </script>";
     }

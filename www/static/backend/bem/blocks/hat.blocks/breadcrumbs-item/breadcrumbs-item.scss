@@ -1,0 +1,39 @@
+.breadcrumbs-item {
+    display: flex;
+    color: #494949;
+    font-weight: bold;
+    float: left;
+    align-items: center;
+
+    &:hover {
+        color: #000000;
+        cursor: pointer;
+    }
+
+    &:first-child {
+        margin: 0 0 0 rem-calc(-4);
+        padding: 0 0 0 rem-calc(16);
+
+        &:before {
+            content: none;
+        }
+    }
+
+    &:last-child {
+        color: #8a8a8a;
+        font-weight: normal;
+    }
+
+    &:last-child:hover {
+        color: #8a8a8a;
+        cursor: default;
+    }
+
+    &:before {
+        content: "»";
+        color: #494949;
+        font-weight: bold;
+        position: relative;
+        top: rem-calc(-1.5);
+    }
+}

@@ -111,7 +111,7 @@ function remove_order_manually_row(index, r_id) {
 	</td>
         <td width="10">&nbsp;</td>
         <td width="320">
-            <select id="o_dx" name="posted_data[manufacturers][]" multiple="multiple" class="select2">
+            <select id="o_dx" name="posted_data[manufacturers][]" multiple="multiple" class="select2-field">
                 {foreach from=$manufacturers item=mnf key=mid}
                     <option value="{$mid}"
                             {if $search_prefilled.manufacturers ne ""}
@@ -124,16 +124,6 @@ function remove_order_manually_row(index, r_id) {
             </select>
         </td>
 </tr>
-    <script type="text/javascript">
-        {literal}
-        $('#o_dx').select2({
-            allowClear: true,
-            closeOnSelect: false,
-            placeholder: 'Click to select Dx'
-        });
-        {/literal}
-    </script>
-
 </table>
 <br />
 {/if}
@@ -749,73 +739,6 @@ function func_show_full_info(id){
         <div style="margin-top:20px;" class="distibutor_payable"></div>
         <br/>
         <br/>
-    {literal}
-        <script type="text/javascript">
-            $('#net_choises').select2({
-                allowClear: true,
-                closeOnSelect: false,
-                placeholder: $('#net_choises').attr('title')
-            }).on('change.select2', function () {
-                var distributor_data = [];
-                $('option:selected', $('#distributor_choises')).each(function(){
-                    distributor_data.push($(this).val());
-                });
-                var data = [];
-                $('option:selected', $(this)).each(function(){
-                    data.push($(this).val());
-                });
-                $('#distributor_choises').empty().prop("disabled", true);
-                $.post('/admin/order/api/payable_manufacturers',{
-                        period : data
-                    },
-                    function (data) {
-                        var option = '';
-                        var i = 0;
-                        $('#distributor_choises').empty();
-                        for (; i < data.length; i++) {
-                            option = $('<option/>').attr('value', data[i].manufacturerid).text(data[i].manufacturer);
-                            if (distributor_data.length > 0 && distributor_data.indexOf(data[i].manufacturerid) >= 0){
-                                option.prop('selected', true);
-                            }
-                            $('#distributor_choises').append(option).prop("disabled", false);
-                        }
-                        $('#distributor_choises').change();
-                    });
-            });
-
-            $('#distributor_choises').select2({
-                allowClear: true,
-                closeOnSelect: false,
-                placeholder: $('#distributor_choises').attr('title')
-            }).on('change.select2', function(){
-                var distributor_data = [];
-                $('option:selected', $(this)).each(function(){
-                    distributor_data.push($(this).val());
-                });
-                var period_data = [];
-                $('option:selected', $('#net_choises')).each(function(){
-                    period_data.push($(this).val());
-                });
-
-                $.post('/admin/order/api/payable_orders',{
-                        period : period_data,
-                        distributor : distributor_data
-                    },
-                    function (data) {
-                        $('.distibutor_payable').empty().css('opacity', 1).html(data);
-                    });
-
-            });
-
-            $('.net_choises__select_all').click(function(){
-                var net_choises = $(this).parent().siblings('select');
-                net_choises.find('option').prop("selected","selected");
-                net_choises.trigger("change");
-                return false;
-            });
-
-        </script>
-    {/literal}
 
 
   {if $all_manufacturers_orders ne ""}

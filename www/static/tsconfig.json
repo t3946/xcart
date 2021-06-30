@@ -1,14 +1,35 @@
 {
   "compileOnSave": true,
+
   "compilerOptions": {
     "target": "es5",
+    "lib": ["es2019"],
     "removeComments": true,
     "baseUrl": "./",
     "sourceMap": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
+      //административная часть
+      "@admin/icons/*": [
+        "backend/jsx/modules/common/components/icons/*",
+      ],
+      "@admin/modules/*": [
+        "backend/jsx/modules/*",
+      ],
+      "@admin/*": [
+        "backend/jsx/*",
+      ],
+
+      //клиентская часть
       "@modules/*": [
         "frontend/jsx/modules/*"
+      ],
+      "@redux/*": [
+        "backend/jsx/redux/*"
+      ],
+      "@s3stores-mail/*": [
+        "backend/jsx/modules/s3stores-mail/*"
       ]
     },
     "jsx": "react"

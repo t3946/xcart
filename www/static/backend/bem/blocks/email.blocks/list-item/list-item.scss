@@ -1,0 +1,97 @@
+.list-item-wrap{
+    position: relative;
+    padding: 3px 40px;
+    cursor: pointer;
+    color: #494949 !important;
+    font-weight: 600;
+    z-index: 1;
+    &:hover{
+        color: #000000;
+        z-index: 3;
+        box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.faxage-text{
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.checkbox{
+    width: 45px;
+}
+
+.text-name{
+    margin: 0 10px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.favorites{
+    color: #FFB400;
+}
+
+.readed-item{
+    bottom: -3px;
+    background-color: #ED7070;
+    position: absolute;
+    left: 0;
+    width: 6px;
+    height: 26px;
+    margin: 0 5px;
+    transition: .3s linear;
+}
+
+.readed{
+    margin-left: 159px;
+    background-color: #999999;
+}
+
+.readed-wrap{
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    width: 170px;
+    height: 20px;
+    &:hover{
+        .readed-taked-time{
+            opacity: 1;
+        }
+    }
+}
+
+.readed-taked-time{
+    font-size: 10px;
+    padding: 5px 5px;
+    font-weight: 700;
+    color: white;
+    background-color: #494949;
+    opacity: 0;
+    transition: .4s linear;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.readed-slide{
+    background-color: white;
+    height: 20px;
+    border: 1px solid #8A8A8A;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: .3s linear;
+}
+
+.slide-readed{
+  background-color: inherit;
+}
+
+.date{
+  margin: 0 22px 0 30px;
+}
+
+.message-type-wrap{
+  margin-top: 0
+}

@@ -47,7 +47,6 @@ class DistributorRequestAvailForm extends DistributorForm
             ],
             'request_avail_emails' => [
                 'class' => Select2Field::class,
-                'multiple' => true,
                 'choices' => function () use ($dx): array {
                     foreach ($dx->contacts_model->filter(['email__isnt' => '']) as $contact) {
                         $result[$contact->id] = $contact->getEmail();
@@ -58,7 +57,11 @@ class DistributorRequestAvailForm extends DistributorForm
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
-                'html' => ['class' => 'click_hide', 'style' => 'width:100%;'],
+                'html' => [
+                    'class' => 'click_hide select2-field',
+                    'style' => 'width:100%;',
+                ],
+                'multiple' => true,
                 'label' => 'Availability request contact',
                 'hint' => LanguageModel::translate('help_dx_request_avail_emails_text'),
             ],
@@ -91,7 +94,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'class' => EditorField::class,
                 'value' => $dx->request_avail_template->message_body,
                 'label' => 'Availability request message body',
-                'html' => ['class' => 'click_hide'],
+                'html' => ['class' => 'click_hide tinymce-field'],
                 'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'hint' => LanguageModel::translate('help_dx_template_1_text'),

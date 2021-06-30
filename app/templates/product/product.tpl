@@ -14,11 +14,11 @@
             'ecommerce': {
                 'detail': {
                     'products': [{
-                        'name': '{$model->getFrontendName()|escape}',         // Name or ID is required.
+                        'name': {$model->getFrontendName()|escape:'js'},         // Name or ID is required.
                         'id': '{$model->productid}',
                         'price': '{$model->getFrontendPrice()}',
-                        'brand': '{$brand->brand|escape}',
-                        'category': '{$category->category|escape}',
+                        'brand': {$brand->brand|escape:'js'},
+                        'category': {$category->category|escape:'js'},
                     }]
                 }
             }
@@ -105,6 +105,17 @@
         <div class="row">
             <div class="column small-12 ml-6 large-6 block__image">
                 <div class="product__images-slider">
+                    <div class="product-slider-sceleton-wrapper">
+                        <div class="product-slider-imgs-sceleton-wrapper">
+                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                        </div>
+                        <div class="sceleton product-slider-big-img-sceleton"></div>
+                    </div>
+
                     {add $site = $model->sites->limit(1)->get()}
 
                     {if $model->isGroupRoot()}
@@ -238,21 +249,21 @@
         <div class="small-12 column slider-also_bought">
             {set $link}{url 'catalog:also_bound' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-related">
             {set $link}{url 'catalog:related' id=$model->pk}{/set}
             {set $lbl}{t 'Similar products'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
         <div class="small-12 column slider-viewed">
             {set $link}{url 'catalog:viewed'}{/set}
             {set $lbl}{t 'You recently viewed items'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=true hide_link=true}
+            {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
 {/block}
