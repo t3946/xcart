@@ -7,7 +7,7 @@ import $ from "jquery";
  */
 export default function InitSelect2(elem: any): void {
   const $elem = $(elem);
-  const { editable, placeholder } = elem.dataset;
+  const { editable, placeholder, url } = elem.dataset;
   const multiple = elem.getAttribute("multiple") !== null;
 
   const data: Record<any, any> = {
@@ -33,9 +33,10 @@ export default function InitSelect2(elem: any): void {
   };
 
   //dynamic ajax loading
-  if (data.dataUrl) {
+  if (url) {
     data.ajax = {
-      url: data.dataUrl,
+      cache: true,
+      url: url,
       dataType: "json",
       delay: 250,
       processResults(data: any, page) {
@@ -47,6 +48,13 @@ export default function InitSelect2(elem: any): void {
         }
 
         return { results: {} };
+      },
+    };
+    data.minimumInputLength = 3;
+    data.language = {
+      inputTooShort: function (args) {
+        const remainingChars = args.minimum - args.input.length;
+        return "Type at least " + remainingChars + " letters";
       },
     };
   }

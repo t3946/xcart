@@ -8,8 +8,6 @@ export default class PageCount extends Component {
   render() {
     const $pager = this.context.pager;
 
-    console.log('PageCount PAGER', $pager);
-
     const pageSize = $pager.pageSize;
     const currentPage = $pager.currentPage || 1;
     const currentPageSize = $pager.paginateCount;

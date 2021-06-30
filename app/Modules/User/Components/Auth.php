@@ -177,6 +177,6 @@ class Auth implements AuthInterface
     public function removeCookie()
     {
         Xcart::app()->request->cookie->remove($this->authCookieName);
-        Xcart::app()->request->cookie->remove('xid41');
+        Xcart::app()->request->cookie->remove(Xcart::app()->request->session->getSessionKey());
     }
 }

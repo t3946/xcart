@@ -2,7 +2,8 @@ import PageCount       from '@/components/catalog/PageCount';
 import classnames      from 'classnames';
 import CatalogViewMode from '@/components/catalog/CatalogViewMode';
 import { createRef }   from "preact";
-import t from '@/i18n';
+import t               from '@/i18n';
+import CatalogContext  from "@/components/catalog/CatalogContext";
 
 export default class StateLine extends Component {
     constructor( props ) {
@@ -95,7 +96,7 @@ export default class StateLine extends Component {
             <div className={ classnames([props.classes.container, "products-state-line", "pcont"]) }>
                 <div className="state-line-counter padding-left-1">
                     <span className="state-line-title">{t('Product line')}</span>
-                    <PageCount/>
+                    { this.context.pager && <PageCount/> }
                 </div>
                 <div className="state-line-actions">
                     <CatalogViewMode/>
@@ -104,3 +105,5 @@ export default class StateLine extends Component {
         );
     }
 }
+
+StateLine.contextType = CatalogContext;

@@ -33,7 +33,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][name][]" id="c_name" class="big select2-field" multiple data-ajax-from="search_customer_name" data-combobox="1">
+                    <select name="search[customer][name][]" id="c_name" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=search_customer_name">
                         {foreach $form_data.customer.name as $value}
                             <option value="{raw $value}" selected>{raw $value}</option>
                         {/foreach}
@@ -53,7 +55,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][phone][]" id="c_phone" class="big select2-field" multiple data-ajax-from="search_phone" data-combobox="1">
+                    <select name="search[customer][phone][]" id="c_phone" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=search_phone">
                         {foreach $form_data.customer.phone as $value}
                             <option value="{raw $value}" selected>{raw $value}</option>
                         {/foreach}
@@ -74,7 +78,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][email][]" id="c_email" class="big select2-field" multiple data-ajax-from="search_email" data-combobox="1">
+                    <select name="search[customer][email][]" id="c_email" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=search_email">
                         {foreach $form_data.customer.email as $value}
                             <option value="{raw $value}" selected>{raw $value}</option>
                         {/foreach}
@@ -116,7 +122,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][company][]" id="c_company" class="big select2-field" multiple data-ajax-from="company">
+                    <select name="search[customer][company][]" id="c_company" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=company">
                         {foreach $form_data.customer.company as $value}
                             <option value="{raw $value}" selected>{raw $value}</option>
                         {/foreach}
@@ -137,7 +145,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][address][]" id="c_street" class="big select2-field" multiple data-ajax-from="search_street" data-combobox="1">
+                    <select name="search[customer][address][]" id="c_street" class="big select2-field" multiple
+                        data-placeholder="Click to type and select"
+                        data-url="{url 'dashboard:search_suggestion'}?from=search_street">
                         {foreach $form_data.customer.address as $value}
                             <option value="{raw $value.id}" selected>{raw $value.text}</option>
                         {/foreach}
@@ -158,7 +168,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][city][]" id="c_city" class="big select2-field" multiple data-ajax-from="search_city">
+                    <select name="search[customer][city][]" id="c_city" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=search_city">
                         {foreach $form_data.customer.city as $value}
                             <option value="{raw $value.id}" selected>{raw $value.text}</option>
                         {/foreach}
@@ -179,7 +191,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[customer][state][]" id="c_state" class="big select2-field" multiple data-ajax-from="search_state">
+                    <select name="search[customer][state][]" id="c_state" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=search_state">
                         {foreach $form_data.customer.state as $value}
                             <option value="{raw $value.id}" selected>{raw $value.text}</option>
                         {/foreach}
@@ -222,7 +236,7 @@
                 </div>
 
                 <div class="columns large-5">
-                    <input type="text" name="search[customer][zip_code]" id="c_zip" class="big" multiple data-ajax-from="search_zip" data-combobox="1" value="{$form_data.customer.zip_code}">
+                    <input type="text" name="search[customer][zip_code]" id="c_zip" class="big" value="{$form_data.customer.zip_code}">
                 </div>
 
                 <div class="columns large-3 not">
@@ -233,7 +247,7 @@
         </li>
 
         {if !$report_mode}
-        {include "dashboard/parts/_order_distributor.tpl"}
+            {include "dashboard/parts/_order_distributor.tpl"}
         {/if}
     </ul>
 
@@ -685,7 +699,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select type="text" name="search[order][operator][]" id="o_operator" class="big select2-field" data-ajax-from="operator" multiple>
+                    <select type="text" name="search[order][operator][]" id="o_operator" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=operator">
                         {foreach $form_data.order.operator as $value}
                             <option value="{raw $value.id}" selected>
                                 {raw $value.text}
@@ -708,7 +724,9 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select type="text" name="search[order][submit_operator][]" id="o_submit_operator" class="big select2-field" data-ajax-from="operator" multiple>
+                    <select type="text" name="search[order][submit_operator][]" id="o_submit_operator" class="big select2-field" multiple
+                            data-placeholder="Click to type and select"
+                            data-url="{url 'dashboard:search_suggestion'}?from=operator">
                         {foreach $form_data.order.submit_operator as $value}
                             <option value="{raw $value.id}" selected>
                                 {raw $value.text}

@@ -212,12 +212,12 @@ $(function() {ldelim}
 <tr>
 <td valign="top" width="48%">
         {include file="main/subheader.tpl" title="Product question"}
-        <textarea name="question" cols="60" rows="10">{$product_question.question|escape:"html"}</textarea>
+        <textarea name="question" id="question" class="tinymce-field" cols="60" rows="10">{$product_question.question|escape:"html"}</textarea>
 </td>
 <td></td>
 <td valign="top" width="48%">
         {include file="main/subheader.tpl" title="Product answer"}
-        <textarea name="answer" cols="60" rows="10">{$product_question.answer|escape:"html"}</textarea>
+        <textarea name="answer" id="answer" class="tinymce-field" cols="60" rows="10">{$product_question.answer|escape:"html"}</textarea>
 </td>
 </tr>
 

@@ -277,6 +277,18 @@ class AdminHelper
                     ],
                 ],
             ];
+        } else {
+            $old_menu = [
+                [
+                    "name" => "Management",
+                    "links" => [
+                        [
+                            'name' => (string)LanguageModel::translate('lbl_manufacturers'),
+                            'route' => '/admin/manufacturers.php?word=num',
+                        ],
+                    ],
+                ]
+            ];
         }
 
         StorageHelper::push([

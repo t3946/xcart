@@ -98,8 +98,9 @@ class IdentityCheckController extends BackendController
         }
     }
 
-    public function logout() {
-        Xcart::app()->getComponent('auth')->logout();
+    public function logout()
+    {
+        Xcart::app()->auth->logout(false);
         $this->jsonResponse('logout');
     }
 }
