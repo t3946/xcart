@@ -10,9 +10,6 @@
         {include 'admin/list/_list.tpl'}
         {store data=$admin->getId() key='id' ctx="goodsModule"}
     </div>
-{/block}
-
-{block 'js'}
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
         <input id="verified_product_id" type="hidden" value=""/>
         <input id="verified_product_status_id" type="hidden" value=""/>

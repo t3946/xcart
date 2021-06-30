@@ -504,7 +504,7 @@ $(function () {
     const textarea = note_form.find("textarea");
     if (status_id > 0 && status_id < 3) {
       const position = $(this).offset();
-      note_form.css("left", position.left - 342).css("top", position.top);
+      note_form.css("right", 0).css("top", position.top - 150);
       textarea.val("");
       if (status_id === 1) {
         textarea.attr(

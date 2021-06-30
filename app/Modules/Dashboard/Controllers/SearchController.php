@@ -159,6 +159,6 @@ class SearchController extends PrototypeAdminController
             $data = SearchHelper::autoCompleteClearNewLines($data);
         }
 
-        $this->jsonResponse($data);
+        $this->jsonResponse(['items' => $data]);
     }
 }
