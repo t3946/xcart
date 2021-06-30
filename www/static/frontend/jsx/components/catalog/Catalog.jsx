@@ -34,7 +34,6 @@ export default class Catalog extends Component {
       //ссылка на следующую страницу каталога
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
-      pager: null,
     };
   }
 

@@ -46,10 +46,14 @@
             </div>
 
             <div class="columns large-10">
+                {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
+
                 <div class="catalog-component"
                      data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
                      data-current-sorting-key="{$sort}"
                      data-hide-sort="{$hide_sort}"
+                     data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
+                     data-catalog-url="{$pager->createView()->getUrl(1)}"
                      data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
                      data-search-text="{$q|escape}"
                 ></div>

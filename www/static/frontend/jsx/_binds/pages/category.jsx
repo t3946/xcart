@@ -11,14 +11,15 @@ export default (() => {
 
   const sortingOptions = JSON.parse(elem.dataset.sortingOptions);
   const hideSort = !!elem.dataset.hideSort;
-  const catalogUrl = "/api" + document.location.pathname;
+  const pager = JSON.parse(elem.dataset.pager);
 
   return render(
     <Catalog
       sortingOptions={sortingOptions}
       sortKey={elem.dataset.currentSortingKey}
       hideSort={hideSort}
-      catalogUrl={catalogUrl}
+      pager={pager}
+      catalogUrl={"/api" + elem.dataset.catalogUrl}
       checkoutUrl={elem.dataset.checkoutUrl}
       searchText={elem.dataset.searchText}
     />,
