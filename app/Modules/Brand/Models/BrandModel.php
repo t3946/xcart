@@ -213,7 +213,7 @@ class BrandModel extends Model
     {
         if ($this->brandid) {
 
-            $url = Xcart::app()->router->url('brand:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): '']);
+            $url = Xcart::app()->router->url('brand:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): $this->pk]);
 
             if ($full) {
                 $site = Xcart::app()->getModule('Sites')->getSite();
