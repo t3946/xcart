@@ -5,19 +5,25 @@
 .sceleton-block-wrapper{
   width: 202px;
   padding: 15px;
-
+  @media(max-width: 540px) {
+    width: 50%;
+  }
   @media(min-width: 540px) {
-    width: 282px;
+    width: 33%;
   }
 
   @media(min-width: 1150px) {
-    width: 256px;
+    width: 25%;
   }
 }
 
 .sceleton-slider-card-wrapper{
   width: 174px;
   padding: 15px;
+  @media(max-width: 774px) {
+    width: 140px;
+    padding: 0;
+  }
 
   @media(min-width: 1150px) {
     width: 172px;
@@ -32,6 +38,10 @@
   align-items: center;
   margin-bottom: 40px;
   margin-top: 20px;
+
+  @media (max-width: 1000px) {
+    width: 1000px;
+  }
 }
 
 .product-slider-sceleton-wrapper{

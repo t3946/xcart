@@ -21,7 +21,10 @@ export const EmailInfoDataFooter: React.FC<any> = ({
           className="email-info-btn"
           variant="outlined"
         >
-          <ReplyIcon className="email-info-btn-icon-reply" />
+          <img
+            src="/static/backend/dist/images/icons/arrow-reply.svg"
+            className="email-info-btn-icon-reply"
+          />
           <span>REPLY</span>
         </Button>
       </Grid>
