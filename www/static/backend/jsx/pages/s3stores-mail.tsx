@@ -14,7 +14,7 @@ import { EmailRouterContext } from "../modules/s3stores-mail/contexts/email-rout
 
   const listRouter = "/admin/forms/email-dashboard/page/";
 
-  const infoRouter = "/admin/email-dashboard/email-info/";
+  const infoRouter = "/admin/forms/email-dashboard/email-info/";
 
   ReactDOM.render(
     <Provider store={emailStore as any}>

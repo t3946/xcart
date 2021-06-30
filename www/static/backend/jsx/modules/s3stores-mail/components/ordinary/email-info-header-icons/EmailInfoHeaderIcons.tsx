@@ -7,6 +7,11 @@ import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/Ema
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { EditViewStateIcon } from "@s3stores-mail/components/simple/edit-view-state-icon/EditViewStateIcon";
 import ReactToPrint from "react-to-print";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import MarkunreadIcon from "@material-ui/icons/Markunread";
+import { IconButton } from "@material-ui/core";
+import StarIcon from "@material-ui/icons/Star";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 export const EmailInfoHeaderIcons: React.FC<any> = () => {
   const {
@@ -34,16 +39,26 @@ export const EmailInfoHeaderIcons: React.FC<any> = () => {
         )}
         content={() => componentRef.current}
       />
-      <EditViewStateIcon
-        viewed={emailInfo.viewed}
-        editView={() => {
+      <IconConstruct
+        onClick={() => {
           editViewed();
         }}
-      />
-      <FavoriteButton
-        favorite={emailInfo.favorite}
-        editFavorite={editFavorite}
-      />
+        title={emailInfo.item.viewed ? "Make unviewed  " : "Make viewed"}
+      >
+        {emailInfo.item.viewed ? <MailOutlineIcon /> : <MarkunreadIcon />}
+      </IconConstruct>
+      <IconConstruct
+        onClick={editFavorite}
+        title={
+          emailInfo.item.favorite ? "Remove from favorites" : "Add to favorites"
+        }
+      >
+        {emailInfo.item.favorite ? (
+          <StarIcon className="favorites" />
+        ) : (
+          <StarBorderIcon />
+        )}
+      </IconConstruct>
     </React.Fragment>
   );
 };

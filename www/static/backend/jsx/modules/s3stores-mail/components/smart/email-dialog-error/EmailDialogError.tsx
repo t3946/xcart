@@ -22,9 +22,7 @@ export const EmailDialogError: React.FC<any> = ({
       }}
     >
       <EmailDialogHeader handleClose={handleClose}>
-        <div className="email-send-header-children">
-          <p>Error</p>
-        </div>
+        <div className="email-send-header-children">Error</div>
       </EmailDialogHeader>
       <div className="email-send-body-wrapper">
         <p>{errorText}</p>
