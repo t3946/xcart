@@ -3,6 +3,9 @@ export const addPrefixToSubject = (
   secondValue: string,
   subject: string
 ): string => {
+  if (!subject) {
+    return firstValue;
+  }
   const prefix = subject.split(" ")[0];
 
   if (prefix === firstValue) {

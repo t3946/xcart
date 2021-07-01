@@ -18,9 +18,9 @@
         {if $active}
         <span class="order {if $active}active{/if}">
             {if $order && $order['desc'] && $active}
-                <i class="icon-triangle rotate"></i>
-            {else}
                 <i class="icon-triangle"></i>
+            {else}
+                <i class="icon-triangle rotate"></i>
             {/if}
         </span>
         {/if}

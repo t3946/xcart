@@ -57,5 +57,5 @@
             color: inherit;
         }
     </style>
-    <h1 style="text-align: center">{$selected_section['title']}</h1>
+    <h1 class="mb-3.25" style="text-align: center">{$selected_section['title']}</h1>
 {/block}

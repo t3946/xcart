@@ -14,11 +14,11 @@
             'ecommerce': {
                 'detail': {
                     'products': [{
-                        'name': '{$model->getFrontendName()|escape}',         // Name or ID is required.
+                        'name': {$model->getFrontendName()|escape:'js'},         // Name or ID is required.
                         'id': '{$model->productid}',
                         'price': '{$model->getFrontendPrice()}',
-                        'brand': '{$brand->brand|escape}',
-                        'category': '{$category->category|escape}',
+                        'brand': {$brand->brand|escape:'js'},
+                        'category': {$category->category|escape:'js'},
                     }]
                 }
             }

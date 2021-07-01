@@ -94,7 +94,7 @@ class DistributorRequestAvailForm extends DistributorForm
                 'class' => EditorField::class,
                 'value' => $dx->request_avail_template->message_body,
                 'label' => 'Availability request message body',
-                'html' => ['class' => 'click_hide'],
+                'html' => ['class' => 'click_hide tinymce-field'],
                 'readonly' => true,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
                 'hint' => LanguageModel::translate('help_dx_template_1_text'),

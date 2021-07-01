@@ -120,7 +120,7 @@
                 <td align="left" class="TopLabel">
                     {if $oProduct->forsale != "N"}
                         <span class="detail-title" style="font-weight: normal;">
-                            <a href="{$oProduct->getUrl()}" title="" target="_blank">{$oProduct->getFrontendName()}</a>
+                            <a href="{$oProduct->getAbsoluteUrl(true)}" title="" target="_blank">{$oProduct->getFrontendName()}</a>
                         </span>
                     {else}
                         <span class="detail-title" style="font-weight: normal;">{$oProduct->getFrontendName()}</span>

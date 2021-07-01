@@ -393,7 +393,7 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select name="search[order][payment_processor][]" id="o_payment" class="big select2-field" multiple>
+                    <select name="search[order][payment_processor][]" id="o_payment_2" class="big select2-field" multiple>
                         {foreach $payment_methods as $method}
                             <option value="{$method.paymentid}" title="{$method.payment_details}" {if $form_data.order.payment_processor && $method.paymentid in list $form_data.order.payment_processor}selected{/if}>
                                 {$method.payment_method}
@@ -510,7 +510,7 @@
                 </div>
 
                 <div class="columns large-5">
-                    <select type="text" name="search[order][c2a_status][]" id="o_c2a" class="big select2-field" multiple>
+                    <select type="text" name="search[order][c2a_status][]" id="o_c2a_2" class="big select2-field" multiple>
                         {foreach $order_statuses.C2 as $status}
                             <option value="{$status.code}" {if $form_data.order.c2a_status && $status.code in list $form_data.order.c2a_status}selected{/if}>
                                 {$status.name}

@@ -121,50 +121,17 @@ abstract class AbstractCatalogController extends FrontendController
 
         $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
 
-        if ($this->getRequest()->getIsAjax()) {
-            $pqs = $fh->getFiltrateQS();
-            $pqs = $this->getSortedQS($pqs);
-        }
-
-        $pager = $this->getPager($pqs);
-
         $this->setCanonical($model);
 
-        if ($this->getRequest()->getIsAjax())
-        {
-            $pagerView = $pager->createView();
-
-            $products = $this->getProductData(($pager->paginate()));
-
-            $this->jsonResponse([
-                'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
-                'content' => $this->render(
-                    $this->view,
-                    array_replace(
-                        [ 'model' => $model, 'pager' => $pager,],
-                        $this->getAdvancedData($model)
-                    )
-                ),
-                'items' => $products,
-                'pager' => [
-                    'pageSize' => $pager->getPageSize(),
-                    'currentPage' => $pager->getPage(),
-                    'paginateCount' => count($pager->paginate()),
-                    'total' => $pager->getTotal(),
-                ],
-            ]);
-        }
-        else {
-            $this->display($this->view,
-                array_replace([
+        $this->display($this->view,
+            array_replace([
                 'model' => $model,
-                'pager' => $pager->setPage(0),
                 'sort'  => $orderBy,
                 'sort_arr'  => ProductSortHelper::getOrderBy(),
                 'breadcrumbs' => $this->getBreadcrumbsFromData($model),
                 'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
-            ], $this->getAdvancedData($model)));
-        }
+            ], $this->getAdvancedData($model))
+        );
     }
     /**
      * get array of main product fields (product has many excess data because this method takes only needed info) and return this

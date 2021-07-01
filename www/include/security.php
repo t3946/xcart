@@ -1,13 +1,14 @@
 <?php
 
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 if (empty($login)) {
-	func_header_location("error_message.php?access_denied&id=37");
+	func_header_location("error_message.php?antibot_error");
 }
 
 /** @var \Modules\User\Models\RoleModel $role */
-if (($uModel = \Modules\User\Models\UserModel::objects()->get(['login' => $login])) && $role = $uModel->role) {
+if (($uModel = Xcart\App\Main\Xcart::app()->user) && $role = $uModel->role) {
     if (!$role->canRequest(\Xcart\App\Main\Xcart::app()->request)) {
         \Xcart\App\Main\Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
     }

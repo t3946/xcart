@@ -79,3 +79,14 @@
         </div>
     </div>
 </div>
+
+{set $crud_data = [
+    "id" => $id,
+    "links" => [
+        "url" => $.request->getUrl(),
+        "groupActionUrl" => $admin->getGroupActionUrl(),
+        "sortUrl" => $admin->getSortUrl(),
+        "columnsUrl" => $admin->getColumnsUrl(),
+    ]
+]}
+{store data=$crud_data key=$id ctx="app/cruds"}

@@ -213,23 +213,6 @@ $additional_shipping_statuses = array (
 );
 $smarty->assign('additional_shipping_statuses', $additional_shipping_statuses);
 
-#
-##
-###
-if (!empty($orderid)){
-	$tmp_productid = func_query_first_cell("SELECT productid FROM $sql_tbl[order_details] WHERE orderid='$orderid'");
-	$product_sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$tmp_productid'");
-	
-	$order_storefront_info = func_get_storefront_info($product_sfid);
-
-	$smarty->assign('order_storefront_info', $order_storefront_info);
-	$mail_smarty->assign('order_storefront_info', $order_storefront_info);
-//func_print_r($order_storefront_info);
-}
-###
-##
-#
-
 $product_question_statuses = array(
         "question_received_from_cust" => "Question received from customer",
         "question_sent_to_distr_brand" => "Question sent to distributor/brand",

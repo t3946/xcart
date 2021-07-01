@@ -19,12 +19,14 @@ export const EmailInfoHeader: React.FC<any> = ({ info }) => {
           </span>
         </Grid>
         <Grid>
-          <ReadedSwitch
-            inHeader={true}
-            actionName={info.action.name}
-            editAction={context.editAction}
-            readed={info.action.action}
-          />
+          {info.action_value && (
+            <ReadedSwitch
+              inHeader={true}
+              actionName={info.action.name}
+              editAction={context.editAction}
+              readed={info.action.action}
+            />
+          )}
         </Grid>
         <Grid>
           <EmailInfoHeaderIcons />

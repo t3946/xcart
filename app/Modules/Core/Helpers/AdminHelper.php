@@ -16,6 +16,18 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 
 class AdminHelper
 {
+    private static function routesData()
+    {
+        $routes_map = [];
+        $routes = Xcart::app()->router->getRoutes();
+
+        foreach ($routes as $route) {
+            $routes_map[$route[3]] = $route[1];
+        }
+
+        StorageHelper::push($routes_map, null, 'routes');
+    }
+
     /**
      * через пробел добавляет SF(store fronts) суффикс к строке
      * @param string $str
@@ -265,6 +277,18 @@ class AdminHelper
                     ],
                 ],
             ];
+        } else {
+            $old_menu = [
+                [
+                    "name" => "Management",
+                    "links" => [
+                        [
+                            'name' => (string)LanguageModel::translate('lbl_manufacturers'),
+                            'route' => '/admin/manufacturers.php?word=num',
+                        ],
+                    ],
+                ]
+            ];
         }
 
         StorageHelper::push([
@@ -326,10 +350,12 @@ class AdminHelper
 
         foreach ($site_list as $site) {
             switch ($site->code) {
-                case 'RD':
                 case 'AT':
                 case 'DS':
                     $icon = "dummy.svg";
+                    break;
+                case 'RD':
+                    $icon = "go-freddy.svg";
                     break;
                 default:
                     $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
@@ -343,6 +369,33 @@ class AdminHelper
             ];
         }
 
+        //quick links
+        $data["quickLinks"] = [
+            [
+                "title" => "Product questions",
+                "route" => "/admin/product_question_search.php?mode=search&status=all&from_dashboard=Y"
+            ],
+            [
+                "title" => "Call recordings",
+                "route" => "/admin/list/PBX/PBXAdmin"
+            ],
+            [
+                "title" => "Order reports",
+                "route" => "/admin/reports"
+            ],
+            [
+                "title" => "Reconciliation / AP & AR",
+                "route" => "/admin/reconciliation.php"
+            ],
+            [
+                "title" => "Checks deposited",
+                "route" => "/admin/checks_deposited.php"
+            ],
+            [
+                "title" => "Reports",
+                "route" => "/admin/reports.php"
+            ],
+        ];
         StorageHelper::push($data, null, 'hat');
     }
 
@@ -390,6 +443,7 @@ class AdminHelper
      */
     public static function buildCommonData()
     {
+        self::routesData();
         self::menuData();
         self::hatData();
         self::userData();

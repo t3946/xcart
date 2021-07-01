@@ -4,12 +4,22 @@ namespace Modules\Dashboard\Controllers;
 
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class SearchController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
+
+    //набор шаблонов для функции быстрого поиска
+    private const PATTERNS = [
+        "sku" => "/^[a-zA-Z]{3}-[\w\d_-]+$/i",
+        "order_id_with_prefix" => "/^[a-z]{1,4}-(\d+)$/i",
+        "order_amazon_id" => "/\d+-\d+-\d+/",
+    ];
 
     public function index(): void
     {
@@ -32,7 +42,7 @@ class SearchController extends PrototypeAdminController
         }
 
 
-        if (!empty($request['fast_search']) && !empty($form_data['order']['id']['from'])) {
+        if (!empty($form_data['order']['id']['from'])) {
 
             $oid = $form_data['order']['id']['from'];
 
@@ -41,7 +51,8 @@ class SearchController extends PrototypeAdminController
                     $oid = substr($oid, 3);
                     /** @var array $form_data */
                     $form_data['order']['id']['from'] = $oid;
-                } else {
+                }
+                else {
                     /** @var array $form_data */
                     $form_data['order']['id']['from'] = null;
                     /** @var array $form_data */
@@ -51,13 +62,6 @@ class SearchController extends PrototypeAdminController
         }
 
         $orderStore = new OrderSearchStore($form_data);
-
-        if (!empty($request['fast_search'])) {
-            $qs = $orderStore->getQuerySet();
-            if ($qs->count() === 1 && $model = $qs->limit(1)->get()) {
-                $this->redirect($model->getAdminUrl());
-            }
-        }
 
         if ($this->getRequest()->getIsPost()) {
             $url = Xcart::app()->router->url('dashboard:search', [], ['search' => $form_data]);
@@ -85,6 +89,65 @@ class SearchController extends PrototypeAdminController
                     'form_collapse' => $form_collapse,
                 ])
         );
+    }
+
+    /**
+     * Искать продукты и заказы по Order # / PO # / Zip code / SKU
+     * @return void
+    */
+    public function fastSearch(): void
+    {
+        if (!$search_string = trim($_GET['search_string'])) {
+            $this->getRequest()->redirect('/admin/');
+            return;
+        }
+
+        // search by ORDER ID with prefix
+        if (preg_match(self::PATTERNS['order_id_with_prefix'], $search_string, $matches) === 1) {
+            $order = OrderModel::objects()->get(['orderid' => $matches[1]]);
+        }
+        // search by ORDER AMAZON ID
+        elseif (preg_match(self::PATTERNS['order_amazon_id'], $search_string, $matches) === 1) {
+            $order = OrderModel::objects()->get(['amazonorderid' => $matches[2]]);
+        }
+
+        // redirect if ORDER FOUND
+        if (isset($order)) {
+            $this->redirect($order->getAdminUrl());
+            return;
+        }
+
+        //search by ORDER PO NUMBER
+        $order = OrderModel::objects()->filter(['po_number' => $search_string]);
+
+        if (isset($order) && $order->count()) {
+            $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['order' => ['po' => $search_string]]]);
+            $this->getRequest()->redirect($url);
+        }
+
+        //search by ORDER ZIPCODE
+        $order = OrderModel::objects()->filter(new QOr([
+            's_zipcode' => $search_string,
+            'b_zipcode' => $search_string,
+        ]));
+
+        if (isset($order) && $order->count()) {
+            $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['customer' => ['zip_code' => $search_string]]]);
+            $this->getRequest()->redirect($url);
+        }
+
+        // search by PRODUCT SKU
+        if (preg_match(self::PATTERNS['sku'], $search_string, $matches) === 1) {
+            $product = ProductModel::objects()->get(['productcode' => $matches[0]]);
+
+            //redirect if found
+            if ($product) {
+                $this->redirect($product->getAdminUrl());
+                return;
+            }
+        }
+
+        $this->getRequest()->redirect('/admin/');
     }
 
     public function search_ajax_suggestion()

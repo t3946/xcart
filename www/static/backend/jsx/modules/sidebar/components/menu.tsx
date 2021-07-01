@@ -36,12 +36,10 @@ const Menu: React.FC<any> = function (props: any) {
   }
 
   return (
-    <div>
-      <Accordion defaultActiveKey={getActiveKey()}>
-        {appData().sidebarMenu.new && <NewMenu />}
-        {appData().sidebarMenu.old && <OldMenu />}
-      </Accordion>
-    </div>
+    <Accordion defaultActiveKey={getActiveKey()}>
+      {appData().sidebarMenu.new && <NewMenu />}
+      {appData().sidebarMenu.old && <OldMenu />}
+    </Accordion>
   );
 };
 

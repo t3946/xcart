@@ -52,6 +52,9 @@ class PagesForm extends ModelForm
             'content' => [
                 'class' => EditorField::className(),
                 'label' => 'Content',
+                'html' => [
+                    'class' => "tinymce-field",
+                ],
             ],
             'view' => [
                 'class' => DropDownField::className(),

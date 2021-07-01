@@ -157,6 +157,16 @@ class Controller
         echo json_encode($data);
     }
 
+    public function response($data = null, $code = 200)
+    {
+        header('Content-Type: application/json');
+        http_response_code($code);
+
+        if ($data !== null) {
+            echo $data;
+        }
+    }
+
     private function checkMiddleware()
     {
         $app = Xcart::app();

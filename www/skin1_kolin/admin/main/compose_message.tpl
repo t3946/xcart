@@ -2,33 +2,6 @@
 
 {include file="main/include_js.tpl" src="main/popup_image_selection.js"}
 
-{*
-<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-*}
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-tinymce.init({
-    selector: "textarea",
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false
-});
-
-{/literal}
-//]]>
-</script>
-
 {assign var="order_details_name" value="Compose message (Order # `$order.order_prefix``$order.orderid`)"}
 {include file="page_title.tpl" title=$order_details_name}
 
@@ -60,7 +33,7 @@ tinymce.init({
   {include file="main/textarea_def.tpl" name="body" cols="60" rows="30" class="InputWidth" data=$body width="99%" btn_rows="30"}
 *}
 
-<textarea name="body" cols="60" rows="20">{$body|escape:"html"}</textarea>
+<textarea class="tinymce-field" id="foo-id" name="body" cols="60" rows="20">{$body|escape:"html"}</textarea>
 
 {*
   <INPUT type="button" value="Send" onclick="disableEditor('body','body'); document.compose_message_form.submit();">
@@ -75,30 +48,6 @@ tinymce.init({
 </tr>
 <tr>
 <td>
-<script type="text/javascript">
-<!--
-        p_f_row_max_index = 1000;
-
-        function p_f_add_upload_row(multi_id) {ldelim}
-                p_f_row_max_index = p_f_row_max_index + 1;
-                var tr = document.getElementById('p_f_upload_row_'+multi_id);
-                var new_row = tr.parentNode.parentNode.insertRow(tr.rowIndex+1);
-                new_row.id = 'p_f_upload_row_'+p_f_row_max_index;
-                var td = new_row.insertCell(-1);
-                td.innerHTML = 'Attach file:';
-                td = new_row.insertCell(-1);
-                td.innerHTML = "<input type=\"file\" size=\"25\" name=\"userfile_D_"+p_f_row_max_index+"\" id=\"userfile_"+p_f_row_max_index+"\" />";
-                td = new_row.insertCell(-1);
-                td.innerHTML = "<a href=\"javascript: void(0);\" onclick=\"javascript: p_f_add_upload_row("+p_f_row_max_index+");\"><img src=\"{$ImagesDir}/plus.gif\" alt=\"{$lng.lbl_add_row|escape:'javascript'}\" /></a>&nbsp;<a href=\"javascript: void(0);\" onclick=\"javascript: p_f_remove_upload_row("+p_f_row_max_index+");\"><img src=\"{$ImagesDir}/minus.gif\" alt=\"{$lng.lbl_remove_row|escape:'javascript'}\" /></a>";
-        {rdelim}
-
-
-        function p_f_remove_upload_row(multi_id) {ldelim}
-                var tr = document.getElementById('p_f_upload_row_'+multi_id);
-                tr.parentNode.parentNode.deleteRow(tr.rowIndex);
-        {rdelim}
--->
-</script>
 
 
  <table cellpadding="4" cellspacing="0" align="left">
@@ -112,20 +61,6 @@ tinymce.init({
  </tr>
 
  </table>
-{*
-<script type="text/javascript">
-<!--
- //       p_f_add_upload_row(1000);
-    {literal}
-    $('body').delegate('input[id^=userfile]', 'change', function() {
-        id = $(this).attr('id').substring(9, 13);
-        $('#plus_' + id).attr('disabled', 'disabled');
-    });
-    {/literal}
--->
-</script>
-*}
-{* ---------------------------- *}
 
 
 </td>
@@ -145,21 +80,6 @@ Upon clicking “Send” button, the following attention tag will be added to th
 {/capture}
 {include file="dialog.tpl" title="Compose message" content=$smarty.capture.dialog extra='width="100%"'}
 
-{*
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-function turn_Editor(){
-//	disableEditor('body','body');
-	enableEditor('body','body');
-}
-
-window.onload = turn_Editor();
-{/literal}
-//]]>
-</script>
-*}
 
 {else}
 

@@ -1,9 +1,10 @@
-//скрипты найденные в шаблонах
+//скрипты найденные в шаблонах перемещены в этот файл с целью отделить разметку от скриптов
 
 import $ from "jquery";
 import "select2";
 import tinymce from "tinymce";
 import appData from "@admin/utils/app-data";
+import InitSelect2 from "@admin/utils/init-select2";
 
 $(document).ready(function () {
   $("#select_searchstring_by").change(function () {
@@ -13,7 +14,7 @@ $(document).ready(function () {
 });
 
 $(function () {
-  const t = $(".tooltip").tooltip({
+  const t = $(".field-tooltip").tooltip({
     position: {
       using: function (position, feedback) {
         $(this).css(position);
@@ -117,6 +118,14 @@ $(function () {
     const { id, cron } = appData().app;
 
     $(`[data-id="${id}-list"]`).adminList(cron);
+  }
+
+  const cruds = appData().app.cruds;
+
+  if (cruds) {
+    for (const id in cruds) {
+      $(`[data-id="${id}-list"]`).adminList(cruds[id].links);
+    }
   }
 });
 
@@ -236,72 +245,7 @@ $("a.select-order").click(function () {
     });
 
   $(".select2-field").each((i, elem) => {
-    const $elem = $(elem);
-    const { editable, placeholder } = elem.dataset;
-    const multiple = elem.getAttribute("multiple") !== null;
-
-    const data: Record<any, any> = {
-      multiple,
-      tags: editable,
-      allowClear: true,
-      closeOnSelect: !multiple,
-    };
-
-    data.placeholder = placeholder || "Click to select value";
-    data.width = "resolve";
-
-    data.createTag = function (params) {
-      const term = $.trim(params.term);
-
-      if (term === "") return null;
-
-      return {
-        id: term,
-        text: term,
-        newTag: true,
-      };
-    };
-
-    //dynamic ajax loading
-    if (data.dataUrl) {
-      data.ajax = {
-        url: data.dataUrl,
-        dataType: "json",
-        delay: 250,
-        processResults(data: any, page) {
-          if (data) {
-            return {
-              results: data.items,
-              more: page * 30 < data.total_count,
-            };
-          }
-
-          return { results: {} };
-        },
-      };
-    }
-
-    $elem.select2(data);
-  });
-})();
-
-// www/skin1_kolin/modules/Manufacturers/manufacturers.tpl
-(function () {
-  $(function () {
-    $(".tooltip").tooltip({
-      position: {
-        using: function (position, feedback) {
-          $(this).css(position);
-          $("<div>").addClass("tooltip__s3").appendTo(this);
-        },
-      },
-      content: function () {
-        return $(this).attr("title");
-      },
-      open: function (event, ui) {
-        ui.tooltip.css("max-width", "400px");
-      },
-    });
+    InitSelect2(elem);
   });
 })();
 
@@ -446,3 +390,186 @@ $("a.select-order").click(function () {
     });
   });
 })();
+
+(function () {
+  const url_dashboard_update = appData().routes["dashboard:index"];
+  const url_dashboard_my_sort = appData().routes["dashboard:sort_my_filters"];
+
+  $(document).ready(function () {
+    $(document).dashboard({
+      ajax: {
+        url: url_dashboard_update,
+      },
+    });
+
+    $(".dashboard-filters.index a[data-id]").majaxtooltip({
+      onAfterSubmit: function () {
+        this.setContent("<div class='load'></div>");
+      },
+      onAfterSuccess: function () {
+        $.mnotify({
+          title: '"My dashboard" changed',
+          message: "Refresh the page to display\\hide the elements",
+        });
+      },
+    });
+
+    $(".my_dashboard .dashboard-filters ").tablePositions({
+      draggableSelector: ".button, .empty",
+      dropSelector: ".container",
+
+      onMove: function (el, to) {
+        const def = $.Deferred();
+        $.ajax({
+          type: "POST",
+          url: url_dashboard_my_sort,
+          data: {
+            position_row: $(to).data("row"),
+            position_column: $(to).data("col"),
+            id: $(el).data("id"),
+          },
+          success: function (data) {
+            if (data) {
+              $.mnotify({
+                title: "Position saved",
+                message: data.message,
+              });
+
+              def.resolve(true, data);
+            }
+            def.reject(false);
+          },
+          error: function () {
+            def.reject(false);
+          },
+        });
+
+        return def.promise();
+      },
+    });
+
+    $(".tabs").tabs({ active: 1 });
+  });
+})();
+
+// from /app/Modules/Reports/templates/reports/layouts/search_layout.tpl
+(function () {
+  $(".shapeshift .shapeshift-container")
+    .shapeshift({
+      colWidth: 200,
+    })
+    .on("ss-rearranged ss-added ss-removed", function (e, selected) {
+      $("> div", $(this)).each(function (i, elem) {
+        $(elem).attr("data-index", ++i);
+      });
+    });
+  $("#report_form").submit(function (e) {
+    const submit_form = $(this).closest("form");
+    $("input.hidden_groups", submit_form).remove();
+    const containers = $(".shapeshift .shapeshift-container.for-save");
+    containers.each(function () {
+      const cur_container = $(this);
+      $(this)
+        .find("> div")
+        .each(function () {
+          const input = $("<input>")
+            .attr("type", "hidden")
+            .addClass("hidden_groups")
+            .attr(
+              "name",
+              "search[report][" +
+                cur_container.attr("data-param-name") +
+                "][" +
+                $(this).attr("data-index") +
+                "]"
+            )
+            .val($(this).attr("data-model"));
+          submit_form.append($(input));
+        });
+    });
+  });
+})();
+
+// /html/app/Modules/Goods/templates/verification/all.tpl
+$(function () {
+  if (!appData().goodsModule) {
+    console.log("no goodsModule");
+    return;
+  }
+
+  $(".admin-page").on("change", "select[id$=verification_status]", function () {
+    const status_id = parseInt($(this).val());
+    const product_id = parseInt($(this).closest("tr").data("pk"));
+    const note_form = $("#send_note_for_product");
+    const textarea = note_form.find("textarea");
+    if (status_id > 0 && status_id < 3) {
+      const position = $(this).offset();
+      note_form.css("left", position.left - 342).css("top", position.top);
+      textarea.val("");
+      if (status_id === 1) {
+        textarea.attr(
+          "placeholder",
+          "Please describe the problem and explain why you didn't fix it."
+        );
+      }
+      if (status_id === 2) {
+        textarea.attr(
+          "placeholder",
+          "Please describe what was the problem and how did you fix it."
+        );
+      }
+      note_form.find("#verified_product_id").val(product_id);
+      note_form.find("#verified_product_status_id").val(status_id);
+      note_form.show();
+      textarea.focus();
+    } else {
+      const id = appData().goodsModule.id;
+      const list = $('[data-id="' + id + '-list"]').data("object");
+      list.setLoading();
+      $.post(
+        "/api/products/verify",
+        {
+          product_id: product_id,
+          status_id: status_id,
+        },
+        (data) => {
+          if (data && data.result) {
+            list.update();
+          } else {
+            list.unsetLoading();
+          }
+        }
+      );
+    }
+  });
+
+  $("#send_note_for_product")
+    .on("click", "#cancel_message_button", () => {
+      $("#send_note_for_product").hide();
+    })
+    .on("click", "#post_message", () => {
+      const product_id = parseInt($("#verified_product_id").val());
+      const status_id = parseInt($("#verified_product_status_id").val());
+      const form = $("#send_note_for_product");
+      const textarea = form.find("textarea");
+      form.hide();
+      const id = appData().goodsModule.id;
+      const list = $('[data-id="' + id + '-list"]').data("object");
+      list.setLoading();
+      $.post(
+        "/api/products/verify",
+        {
+          product_id: product_id,
+          status_id: status_id,
+          note_text: textarea.val(),
+        },
+        (data) => {
+          if (data && data.result) {
+            list.update();
+          } else {
+            list.unsetLoading();
+          }
+        }
+      );
+    });
+});
