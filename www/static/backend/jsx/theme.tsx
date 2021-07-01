@@ -573,3 +573,113 @@ $(function () {
       );
     });
 });
+
+// /www/skin1_kolin/admin/main/paypal_request.tpl
+$('#main_order_tabs-container').on('tabsactivate', function(event, ui) {
+  if (ui.newTab.find('a').attr('href') === '#main_order_tabs-paypal_request'){
+    $('.invoice_list_row[data-status=new]').each(function(){
+      var row = $(this);
+      var inv_number = $(this).find('.pp_invoice_number').data('inv-number');
+      row.find('.inv_status').addClass('active').text('');
+      $.post('ajax_admin.php', {
+            ajax_action: 'get_paypal_invoice_status',
+            paypal_invoice_id: inv_number
+          },
+          function (data) {
+            if (data.result) {
+              row.attr('data-status', 'updated');
+              row.find('.inv_status').removeClass('active').removeClass('ui').text(data.status);
+            }
+          }, 'json');
+    })
+  }
+});
+
+const paypal_form = $('.ui.form.paypal_request');
+if (paypal_form.length) {
+  $.fn.form.settings.rules.gtzero = function(value) {
+    return (value > 0)
+  };
+  paypal_form
+      .form({
+        onValid: function(){
+          $('.ui.error.message').empty();
+        },
+        onSuccess: function () {
+          $('.ui.error.message').empty();
+          if ($('#order_email').val() != $('#paypal_request_email').val()) {
+            if (!window.confirm("Payer email is different from order's email. Are you sure?")) {
+              return false;
+            }
+          }
+          var form = $(this);
+          var param = form.css('opacity', 0.4).find('.ui.loader').addClass('active').end().serializeArray();
+          form.find('#send_paypal_request').attr('disabled', 'disabled');
+          param.push({name: 'ajax_action', value: 'send_paypal_request'});
+          $.post('ajax_admin.php', param,
+              function (data) {
+                form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
+                if (data.result) {
+                  form.find('#paypal_request_amount').val('0.00').end()
+                      .find('#paypal_request_notes').val('').end();
+                  alert('The Invoice has been send');
+                } else {
+                  alert('An error occurred');
+                }
+                window.location.reload();
+              }, 'json');
+          return false;
+        },
+        fields: {
+          paypal_request_email: {
+            identifier  : 'paypal_request_email',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Payer email</b>: Mandatory field is empty!'
+              },
+              {
+                type   : 'email',
+                prompt : '<b>Payer email</b>: Email address is incorrect'
+              }
+            ]
+          },
+          paypal_request_subject: {
+            identifier  : 'paypal_request_subject',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Payment Request subject</b>: Mandatory field is empty!'
+              }
+            ]
+          },
+          paypal_request_notes: {
+            identifier  : 'paypal_request_notes',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Short payment description</b>: Mandatory field is empty!'
+              }
+            ]
+          },
+          paypal_request_amount: {
+            identifier  : 'paypal_request_amount',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Request amount</b>: Mandatory field is empty!'
+              },
+              {
+                type   : 'regExp[/^[0-9]*[.]{0,1}[0-9]{0,2}$/]',
+                prompt : '<b>Request amount</b>: Value is incorrect!'
+              },
+              {
+                type   : 'gtzero',
+                prompt : '<b>Request amount</b>: Value must be greater then 0!'
+              }
+            ]
+          }
+        }
+      });
+}
+
