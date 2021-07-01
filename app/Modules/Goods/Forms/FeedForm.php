@@ -74,7 +74,7 @@ class FeedForm extends ModelForm
                 'html' => [
                     'style' => 'width:300px;',
                     'class' => 'select2-field',
-                    'data-ajax-url' => (new FeedAdmin)->getSuggestionUrl('category'),
+                    'data-url' => (new FeedAdmin())->getSuggestionUrl('category'),
                 ],
             ],
             'dont_update_fields' => [
