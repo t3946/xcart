@@ -97,8 +97,10 @@ class SearchController extends PrototypeAdminController
     */
     public function fastSearch(): void
     {
-        $search_type = json_decode($_GET['search_type'],true);
-        if (!$search_string = trim($_GET['search_string'])) {
+
+        $search_type = json_decode($this->getRequest()->get->get('search_type'),true);
+
+        if (!$search_string = trim($this->getRequest()->get->get('search_string'))) {
             $this->getRequest()->redirect('admin:index');
             return;
         }
