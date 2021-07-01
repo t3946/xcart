@@ -5,3 +5,12 @@
     padding: 0 rem-calc(5) rem-calc(4);
     width: rem-calc(150);
 }
+
+
+.search-select-option{
+    &:hover{
+        background-color: #F0F0F0 !important;
+    }
+    font-size: 13px;
+    color: #000000;
+}

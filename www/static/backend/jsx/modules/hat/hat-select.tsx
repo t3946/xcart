@@ -4,14 +4,15 @@ import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
 
 interface EmailSelectSendDto {
   items: SelectItemDto[];
-  value: SelectItemDto;
-  onChange: (item: SelectItemDto) => void;
   name?: string;
 }
 
-export const EmailSelect: React.FC<any> = ({ items, onClick, value, name }) => {
+export const HatSelect: React.FC<any> = ({ items, name }) => {
   const [open, setOpen] = useState(false);
+
+  const [value, setValue] = useState(items[0]);
   useCLickListener(setOpen);
+
   return (
     <div
       className={`select select-send ${open && "open"}`}
@@ -21,17 +22,17 @@ export const EmailSelect: React.FC<any> = ({ items, onClick, value, name }) => {
       }}
     >
       <input
-        value={value}
+        value={JSON.stringify(value)}
         className="select__input"
         type="hidden"
         name={name}
       />
-      <div className="select__head">{value.name}</div>
-      <ul className={`select__list`}>
-        {items.map(([item]) => {
+      <div className="select__head hat">{value.viewValue}</div>
+      <ul className={`select__list hat`}>
+        {items.map((item) => {
           return (
-            <li onClick={() => onClick(item)} className="select__item">
-              {item.name}
+            <li onClick={() => setValue(item)} className="select__item">
+              {item.viewValue}
             </li>
           );
         })}
