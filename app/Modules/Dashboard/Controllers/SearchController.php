@@ -97,56 +97,67 @@ class SearchController extends PrototypeAdminController
     */
     public function fastSearch(): void
     {
+        $search_type = json_decode($_GET['search_type'],true);
         if (!$search_string = trim($_GET['search_string'])) {
             $this->getRequest()->redirect('admin:index');
             return;
         }
 
-        // search by ORDER ID with prefix
-        if (preg_match(self::PATTERNS['order_id_with_prefix'], $search_string, $matches) === 1) {
-            $order = OrderModel::objects()->get(['orderid' => $matches[2]]);
+        if (!$search_type = $search_type['value'])
+        {
+            // search by PRODUCT SKU
+            if (preg_match(self::PATTERNS['sku'], $search_string, $matches) === 1) {
+                $product = ProductModel::objects()->get(['productcode' => $matches[0]]);
+
+                //redirect if found
+                if ($product) {
+                    $this->redirect($product->getAdminUrl());
+                    return;
+                }
+            }
+
+            $this->getRequest()->redirect('admin:index');
         }
 
-        // search by ORDER AMAZON ID
-        elseif (preg_match(self::PATTERNS['order_amazon_id'], $search_string, $matches) === 1) {
-            $order = OrderModel::objects()->get(['amazonorderid' => $matches[2]]);
-        }
-        // redirect if ORDER FOUND
-        if (isset($order)) {
-            $this->redirect($order->getAdminUrl());
-            return;
-        }
+        if($search_type === 'id'){
+            // search by ORDER ID with prefix
+            if (preg_match(self::PATTERNS['order_id_with_prefix'], $search_string, $matches) === 1) {
+                $order = OrderModel::objects()->get(['orderid' => $matches[2]]);
+            }
 
-        //search by ORDER PO NUMBER
-        $order = OrderModel::objects()->filter(['po_number' => $search_string]);
-
-        if (isset($order) && $order->count()) {
-            $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['order' => ['po' => $search_string]]]);
-            $this->getRequest()->redirect($url);
-        }
-
-        //search by ORDER ZIPCODE
-        $order = OrderModel::objects()->filter(new QOr([
-            's_zipcode' => $search_string,
-            'b_zipcode' => $search_string,
-        ]));
-
-        if (isset($order) && $order->count()) {
-            $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['customer' => ['zip_code' => $search_string]]]);
-            $this->getRequest()->redirect($url);
-        }
-
-        // search by PRODUCT SKU
-        if (preg_match(self::PATTERNS['sku'], $search_string, $matches) === 1) {
-            $product = ProductModel::objects()->get(['productcode' => $matches[0]]);
-
-            //redirect if found
-            if ($product) {
-                $this->redirect($product->getAdminUrl());
+            // search by ORDER AMAZON ID
+            elseif (preg_match(self::PATTERNS['order_amazon_id'], $search_string, $matches) === 1) {
+                $order = OrderModel::objects()->get(['amazonorderid' => $matches[2]]);
+            }
+            // redirect if ORDER FOUND
+            if (isset($order)) {
+                $this->redirect($order->getAdminUrl());
                 return;
             }
         }
 
+        if($search_type === 'order_po'){
+            //search by ORDER PO NUMBER
+            $order = OrderModel::objects()->filter(['po_number' => $search_string]);
+
+            if (isset($order) && $order->count()) {
+                $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['order' => ['po' => $search_string]]]);
+                $this->getRequest()->redirect($url);
+            }
+        }
+
+        if($search_type === 'zip'){
+            //search by ORDER ZIPCODE
+            $order = OrderModel::objects()->filter(new QOr([
+                's_zipcode' => $search_string,
+                'b_zipcode' => $search_string,
+            ]));
+
+            if (isset($order) && $order->count()) {
+                $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['customer' => ['zip_code' => $search_string]]]);
+                $this->getRequest()->redirect($url);
+            }
+        }
         $this->getRequest()->redirect('admin:index');
     }
 
