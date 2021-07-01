@@ -1,58 +1,57 @@
-import _ from 'lodash';
+import _ from "lodash";
 import ScreenSize from "../utils/ScreenSize";
-import { actionMedia } from '../redusers/appHeadReduser';
+import { actionMedia } from "../redux/redusers/appHeadReduser";
 
 class ResizeMonitor {
+  constructor() {
+    this.screen = new ScreenSize();
 
-    constructor() {
+    this.onResize = _.throttle(this.onResize.bind(this), 200);
+    this.screen.setCallback(this.onResize);
 
-        this.screen = new ScreenSize();
+    this.state = this.screen.getInfo();
+    actionMedia(this.state.media);
+  }
 
-        this.onResize = _.throttle(this.onResize.bind(this), 200);
-        this.screen.setCallback(this.onResize);
+  createNewState(state, info) {
+    let newState;
 
-        this.state = this.screen.getInfo();
-        actionMedia(this.state.media);
+    if (state.media != info.media) {
+      newState = _.extend(state, info);
     }
 
-    createNewState(state, info) {
-        let newState;
+    return newState;
+  }
 
-        if (state.media != info.media) {
-            newState = _.extend(state, info);
-        }
-
-        return newState;
+  onResize(info) {
+    let newState = this.createNewState(this.state, info);
+    if (newState) {
+      this.fireEvent(newState);
+      this.state = newState;
+      actionMedia(this.state.media);
     }
+  }
 
-    onResize(info) {
-        let newState = this.createNewState(this.state, info);
-        if (newState) {
-            this.fireEvent(newState);
-            this.state = newState;
-            actionMedia(this.state.media);
-        }
-    };
+  fireEvent(state) {
+    // component.sly.resize
+    let event = new CustomEvent("resize_monitor.media_change", {
+      detail: state,
+    });
+    document.dispatchEvent(event);
+  }
 
-    fireEvent(state) {
-        // component.sly.resize
-        let event = new CustomEvent('resize_monitor.media_change', { 'detail': state });
-        document.dispatchEvent(event);
-    }
-
-    destructor() {
-        this.screen.destructor();
-    }
+  destructor() {
+    this.screen.destructor();
+  }
 }
 
 var resizeMonitorExample;
 
-export default function() {
-    if(resizeMonitorExample) {
-        return resizeMonitorExample;
-    }
-
-    resizeMonitorExample = new ResizeMonitor();
+export default function () {
+  if (resizeMonitorExample) {
     return resizeMonitorExample;
-}
+  }
 
+  resizeMonitorExample = new ResizeMonitor();
+  return resizeMonitorExample;
+}

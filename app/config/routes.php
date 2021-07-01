@@ -122,5 +122,10 @@ return array_merge($admin_routes, [
         'path' => 'Modules.Subscribe.routes',
         'namespace' => 'subscribe'
     ],
+    [
+        'route' => '/account',
+        'path' => 'Modules.Account.routes',
+        'namespace' => 'account'
+    ],
 
 ]);

@@ -1,11 +1,11 @@
 import { h, Component } from "preact";
-import storeApp from "../stores/StoreApp";
+import storeApp from "../redux/stores/StoreApp";
 import renderToStringr from "preact-render-to-string";
 import { videoLinkToObject } from "../utils/video";
 import SwiperCore, { Navigation } from "swiper";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from "lodash";
-import { actionMedia } from "../redusers/appHeadReduser";
+import { actionMedia } from "../redux/redusers/appHeadReduser";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
