@@ -2,9 +2,26 @@ import React from "react";
 import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/drop-popover-menu";
 import appData from "@admin/utils/app-data";
 import { RoundedCornerIcon } from "@admin/icons/rounded-corner";
+import { EmailSelect } from "@s3stores-mail/components/smart/email-select/EmailSelect";
+import { HatSelect } from "@admin/modules/hat/hat-select";
 
 const SearchLine: React.FC<any> = function (props: any) {
   const menuRef = React.createRef();
+
+  const selectOptions = [
+    {
+      value: "id",
+      viewValue: "Order # / Amazon order ID",
+    },
+    {
+      value: "order_po",
+      viewValue: "PO",
+    },
+    {
+      value: "zip",
+      viewValue: "Zip code",
+    },
+  ];
 
   const menuListHatTemplate = function () {
     return (
@@ -71,10 +88,35 @@ const SearchLine: React.FC<any> = function (props: any) {
                 method="GET"
                 className="align-items-center d-flex"
               >
-                <label className="search-label m-0" htmlFor="search-string">
-                  <b>Order # / PO # / Zip code / SKU</b>
-                </label>
+                <input
+                  id="search-string"
+                  type="text"
+                  name="search_string"
+                  placeholder="Product SKU"
+                  className="search-string ml-2 mr-1"
+                  autoComplete="off"
+                />
 
+                <button type="submit" className="search-button left-form">
+                  Search
+                </button>
+              </form>
+
+              <form
+                action="/admin/dashboard/fast-search"
+                method="GET"
+                className="align-items-center d-flex"
+              >
+                <HatSelect name="search_type" items={selectOptions} />
+                {/*<select className="search-string ml-2 mr-1" name="search_type">*/}
+                {/*  {selectOptions.map((e) => {*/}
+                {/*    return (*/}
+                {/*      <option className="search-select-option" value={e.value}>*/}
+                {/*        {e.viewValue}*/}
+                {/*      </option>*/}
+                {/*    );*/}
+                {/*  })}*/}
+                {/*</select>*/}
                 <input
                   id="search-string"
                   type="text"
