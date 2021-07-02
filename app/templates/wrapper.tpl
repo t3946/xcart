@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com/">
 
 
-    <link rel="preload" href="{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="jsx/main.js"}" as="script">
+    <link rel="preload" href="{front_script}" as="script">
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
