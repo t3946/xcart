@@ -48,8 +48,10 @@ class ApiDxController extends Controller
                 'name' => $dx->manufacturer,
                 'prefix' => $dx->code . '-',
                 'source' => $dx->url,
-                'login' => $dx->d_login ? CoreHelper::cipherText($dx->d_login): '',
-                'password' => $dx->d_password ? CoreHelper::cipherText($dx->d_password) : '',
+                'authenticate' => [
+                    'login' => $dx->d_login ? CoreHelper::cipherText($dx->d_login) : '',
+                    'password' => $dx->d_password ? CoreHelper::cipherText($dx->d_password) : ''
+                ],
                 'feeds' => $feedData
             ]);
         }
