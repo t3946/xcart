@@ -2,6 +2,7 @@
 
 
 use Modules\Distributor\Controllers\Api\ApiDxController;
+use Modules\Distributor\Controllers\Api\VrsController;
 
 return [
     [
@@ -29,5 +30,29 @@ return [
         'target' => [ApiDxController::class, 'getDxInfo'],
         'name' => 'dx_info'
     ],
-
+    [
+        'route' => "vrs/get-status/{*:url}",
+        'target' => [VrsController::class, 'getSiteStatus'],
+        'name' => 'vrs_status'
+    ],
+    [
+        'route' => "vrs/get-messages/{*:domain}",
+        'target' => [VrsController::class, 'getMessages'],
+        'name' => 'vrs_messages'
+    ],
+    [
+        'route' => "vrs/send-message",
+        'target' => [VrsController::class, 'sendMessage'],
+        'name' => 'vrs_send_message'
+    ],
+    [
+        'route' => "vrs/account-login",
+        'target' => [VrsController::class, 'userAuthorization'],
+        'name' => 'vrs_login'
+    ],
+    [
+        'route' => "vrs/jwt-account-login",
+        'target' => [VrsController::class, 'userJWTAuthorization'],
+        'name' => 'vrs_login_jwt'
+    ],
 ];

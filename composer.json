@@ -19,6 +19,7 @@
         "fabpot/goutte": "^3.2",
         "facebook/php-business-sdk": "^3.2",
         "fenom/fenom": "^2.12",
+        "firebase/php-jwt": "^5.4",
         "gabrielbull/ups-api": "^0.8.0",
         "geoip2/geoip2": "^2.7",
         "gettext/gettext": "^4.6",

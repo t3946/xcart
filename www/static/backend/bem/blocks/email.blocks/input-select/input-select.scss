@@ -20,6 +20,7 @@
 
   .select__list{
     border: 1px solid #C4C4C4;
+    bottom: 44px;
   }
 }
 
@@ -28,12 +29,17 @@
     border: 1px solid #C4C4C4;
     font-size: 13px;
     padding: 5px 35px 5px 10px;
+    &.hat{
+      border: 0;
+    }
    }
 
   .select__list{
     border: 1px solid #FFB400;
-    top: 0;
-    bottom: 44px;
+
+    &.hat{
+      border: 0;
+    }
   }
 }
 
@@ -61,7 +67,6 @@
 .select__list {
   display: none;
   position: absolute;
-  top: 100%;
   left: 0;
   right: 0;
   background: #fff;
