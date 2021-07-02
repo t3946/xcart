@@ -224,7 +224,7 @@
 
         window.addEventListener("load", function(event) {
 
-            createJsElement("{$uri}/static/frontend/dist/js/main.js?v={frontend_version resource="jsx/main.js"}");
+            createJsElement("{front_script}");
 
             setTimeout(function() {
 
