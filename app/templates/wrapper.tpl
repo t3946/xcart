@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com/">
 
 
-    <link rel="preload" href="{front_script}" as="script">
+    <link rel="preload" href="{$uri}{front_script}" as="script">
 
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -224,7 +224,7 @@
 
         window.addEventListener("load", function(event) {
 
-            createJsElement("{front_script}");
+            createJsElement("{$uri}{front_script}");
 
             setTimeout(function() {
 
