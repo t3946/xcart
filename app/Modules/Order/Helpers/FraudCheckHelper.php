@@ -1021,6 +1021,10 @@ class FraudCheckHelper
         return [$fraud_result, $fraud_score, [
             'CallerID' => $callerId,
             'Phone' => $res['Phone'] ?? '',
+            'City' => $res['City'] ?? '',
+            'State' => $res['State'] ?? '',
+            'PostalCode' => $res['PostalCode'] ?? '',
+            'CountryCode' => $res['CountryCode'] ?? '',
         ], $manual_action ?? 'N'];
     }
 
