@@ -8,6 +8,7 @@ use Cron\CronExpression;
 use DateInterval;
 use DateTime;
 use Modules\Core\Helpers\Cache;
+use Modules\Core\Helpers\CoreHelper;
 use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
@@ -41,11 +42,14 @@ class ApiDxController extends Controller
                     'source_date' => $feed->feed_source_date,
                 ];
             }
+
             $this->jsonResponse([
                 'id' => $dx->manufacturerid,
                 'name' => $dx->manufacturer,
                 'prefix' => $dx->code . '-',
                 'source' => $dx->url,
+                'login' => $dx->d_login ? CoreHelper::cipherText($dx->d_login): '',
+                'password' => $dx->d_password ? CoreHelper::cipherText($dx->d_password) : '',
                 'feeds' => $feedData
             ]);
         }
