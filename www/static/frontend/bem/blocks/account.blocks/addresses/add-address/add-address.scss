@@ -1,0 +1,17 @@
+.address-container{
+  border: 1px solid #C4C4C4;
+  width: 323px;
+  height: 244px;
+}
+
+.add-address{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.add-address-label{
+  font-size: 18px;
+  color: #055A93;
+}
