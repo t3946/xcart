@@ -9,6 +9,7 @@ use Modules\Distributor\Forms\DxFilterForm;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Form;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -158,6 +159,11 @@ class DistributorAdmin extends Admin
         }
 
         return parent::handleFilter($qs, $form);
+    }
+
+    public function getCreateUrl(): string
+    {
+        return Xcart::app()->router->url('admin:dx_add');
     }
 
 }

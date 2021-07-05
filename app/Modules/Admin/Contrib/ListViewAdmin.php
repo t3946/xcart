@@ -95,7 +95,7 @@ abstract class ListViewAdmin extends Admin
         ]);
     }
 
-    public function getCreateUrl()
+    public function getCreateUrl(): string
     {
         return Xcart::app()->router->url('admin:create_owned', [
             'module' => static::getModuleName(),

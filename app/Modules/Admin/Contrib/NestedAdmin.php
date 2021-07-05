@@ -131,7 +131,7 @@ abstract class NestedAdmin extends Admin
         return $this->getAllUrl();
     }
 
-    public function getCreateUrl()
+    public function getCreateUrl(): string
     {
         if ($this->parent_pk) {
             return Xcart::app()->router->url('admin:create_nested', [
