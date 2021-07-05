@@ -33,7 +33,7 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $group_product  */
         try {
             if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) {
-                if( $data['date'] > time() && $data['date'] !== null)
+                if($data['date'] !== null && $data['date'] > time())
                 {
                     echo ('nack');
                     $message->nack();
@@ -44,7 +44,7 @@ class QueueProcessCommand extends Command
                 $client = GmailHelper::getClient($userId);
 
                 $mailService = new Google_Service_Gmail($client);
-                $googleMessage = new Google_Service_Gmail_Message;
+                $googleMessage = new Google_Service_Gmail_Message();
 
                 $recipients = implode(',', $data['to']);
 
@@ -69,13 +69,8 @@ class QueueProcessCommand extends Command
             }
         } catch (JsonException $e)
         {
+            echo "Error:{$e->getMessage()}\n";
             $message->ack();
         }
-
-
-
-
     }
-
-
 }
