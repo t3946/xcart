@@ -105,17 +105,6 @@
         <div class="row">
             <div class="column small-12 ml-6 large-6 block__image">
                 <div class="product__images-slider">
-                    <div class="product-slider-sceleton-wrapper">
-                        <div class="product-slider-imgs-sceleton-wrapper">
-                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                            <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                        </div>
-                        <div class="sceleton product-slider-big-img-sceleton"></div>
-                    </div>
-
                     {add $site = $model->sites->limit(1)->get()}
 
                     {if $model->isGroupRoot()}
@@ -128,7 +117,19 @@
                     {else}
                         {set $images = $model->images->filter(['avail' => 'Y'])->order(['orderby'])->all()}
                     {/if}
+
                     {if $images}
+                        <div class="product-slider-sceleton-wrapper">
+                            <div class="product-slider-imgs-sceleton-wrapper">
+                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                            </div>
+                            <div class="sceleton product-slider-big-img-sceleton"></div>
+                        </div>
+
                         <noscript>
                             {foreach $images as $image}
                                 {if $image}
