@@ -65,6 +65,10 @@ html, body {
     font-size: 13px;
 }
 
+.container {
+    min-width: 1280px;
+}
+
 @media (min-width: 1200px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl {
         max-width: 1310px;
