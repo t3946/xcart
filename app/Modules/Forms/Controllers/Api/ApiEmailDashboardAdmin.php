@@ -193,7 +193,6 @@ class ApiEmailDashboardAdmin extends Controller
 
     public function addTemplate($categories)
     {
-        $result = [];
         if($categories === []){
             return $categories;
         }
@@ -208,10 +207,10 @@ class ApiEmailDashboardAdmin extends Controller
             }
             $categories[$key]['items'] = $this->addTemplate($category['items']);
         }
-        return $result = $categories;
+        return $categories;
     }
 
-    public function actionSendEmail()
+    public function actionSendEmail(): void
     {
         $files = self::diverse_array($_FILES['files']);
         $convert_files = [];
@@ -224,7 +223,8 @@ class ApiEmailDashboardAdmin extends Controller
             ];
         }
         $email = $this->getRequest()->post->all();
-        $email['files'] =$convert_files;
+        $email['files'] = $convert_files;
+        $email['user_id'] = Xcart::app()->user->id;
 
         Xcart::app()->queue->send('emails', json_encode($email, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), true);
 
@@ -238,9 +238,11 @@ class ApiEmailDashboardAdmin extends Controller
 
     public static function diverse_array($vector) {
         $result = array();
-        foreach($vector as $key1 => $value1)
-            foreach($value1 as $key2 => $value2)
+        foreach($vector as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
                 $result[$key2][$key1] = $value2;
+            }
+        }
         return $result;
     }
 

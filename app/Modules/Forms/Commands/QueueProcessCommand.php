@@ -14,6 +14,7 @@ use Mail_mime;
 use Modules\Goods\Models\ProductModel;
 use Modules\Mail\Helpers\GetNewMessagesHelper;
 use Modules\Mail\Helpers\GmailHelper;
+use Modules\User\Models\UserModel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Xcart\App\Commands\Command;
 use Xcart\App\Exceptions\Exception;
@@ -57,7 +58,19 @@ class QueueProcessCommand extends Command
                     $mime->addAttachment(base64_decode($file['content']), $file['type'], $file['name'], false);
                 }
 
-                $mailMessage = base64_encode($mime->getMessage(true,null,[ 'Sender' => Xcart::app()->user->email , 'X-Google-Sender-Delegation' =>Xcart::app()->user->email, "X-Original-Sender" =>Xcart::app()->user->email]));
+                $user = UserModel::objects()->get(['id' => $data['user_id']]);
+
+                $mailMessage = base64_encode(
+                    $mime->getMessage(
+                        true,
+                        null,
+                        $user->email ? [
+                            'Sender' => $user->email,
+                            'X-Google-Sender-Delegation' => $user->email,
+                            'X-Original-Sender' => $user->email
+                        ] : null
+                    )
+                );
 
                 $googleMessage->setRaw($mailMessage);
 
