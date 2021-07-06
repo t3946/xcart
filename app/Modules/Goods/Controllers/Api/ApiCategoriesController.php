@@ -63,7 +63,6 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderRelatedProducts($id): void
     {
-        /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('similar_products', $id);
 
         if ($products) {
