@@ -155,7 +155,7 @@ class DistributorAdmin extends Admin
     public function handleFilter(QuerySet $qs, $form): QuerySet
     {
         if (($dx_field = $form->getField('manufacturer_code')) && $dx_value = trim($dx_field->getValue())) {
-            $qs->filter(['manufacturer' => new QOr(['manufacturer' => $dx_value, 'code' => $dx_value])]);
+            $qs->filter(['manufacturer' => new QOr(['manufacturer__contains' => $dx_value, 'code' => $dx_value])]);
         }
 
         return parent::handleFilter($qs, $form);
