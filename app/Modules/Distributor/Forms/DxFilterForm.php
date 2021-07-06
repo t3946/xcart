@@ -14,6 +14,7 @@ class DxFilterForm extends Form
 {
     public function getFields()
     {
+        $word_range = range('A', 'Z');
         return [
             'manufacturer_code' => [
                 'class' => CharField::class,
@@ -69,6 +70,11 @@ class DxFilterForm extends Form
 
                     return $op;
                 },
+            ],
+            'letter' => [
+                'class' => Select2Field::class,
+                'label' => 'Alphabetic order',
+                'choices' => array_merge(['' => '',], array_combine($word_range, $word_range))
             ],
             'avail' => [
                 'class' => Select2Field::class,

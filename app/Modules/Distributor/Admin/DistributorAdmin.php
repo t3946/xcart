@@ -158,6 +158,10 @@ class DistributorAdmin extends Admin
             $qs->filter(['manufacturer' => new QOr(['manufacturer__contains' => $dx_value, 'code' => $dx_value])]);
         }
 
+        if (($letter = $form->getField('letter')) && $letter_value = trim($letter->getValue())) {
+            $qs->filter(['manufacturer__startswith' => $letter_value]);
+        }
+
         return parent::handleFilter($qs, $form);
     }
 
