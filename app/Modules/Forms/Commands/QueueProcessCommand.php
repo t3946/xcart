@@ -57,7 +57,8 @@ class QueueProcessCommand extends Command
                     $mime->addAttachment(base64_decode($file['content']), $file['type'], $file['name'], false);
                 }
 
-                $mailMessage = base64_encode($mime->getMessage());
+                $mailMessage = base64_encode($mime->getMessage(true,null,[ 'Sender' => Xcart::app()->user->email , 'X-Google-Sender-Delegation' =>Xcart::app()->user->email, "X-Original-Sender" =>Xcart::app()->user->email]));
+
                 $googleMessage->setRaw($mailMessage);
 
                 $request =  $mailService->users_messages->send(
