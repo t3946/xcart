@@ -74,13 +74,13 @@ class DxFilterForm extends Form
             'letter' => [
                 'class' => Select2Field::class,
                 'label' => 'Alphabetic order',
-                'choices' => array_merge(['' => '',], array_combine($word_range, $word_range))
+                'choices' => array_merge(['' => 'All'], array_combine($word_range, $word_range))
             ],
             'avail' => [
                 'class' => Select2Field::class,
                 'label' => 'Active',
                 'choices' => [
-                    '' => '',
+                    '' => 'All',
                     'Y' => 'Y',
                     'N' => 'N',
                 ]

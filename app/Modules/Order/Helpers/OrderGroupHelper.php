@@ -154,7 +154,7 @@ class OrderGroupHelper
                 $t_shipdate = trim($params['tracking_ship_date'][$_k]);
                 $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
                 $tr_params = [
-                    'linkid' => $params['tracking_shipper'][$_k] ?? 0,
+                    'linkid' => $params['tracking_shipper'][$_k] ?: null,
                     'tracknum' => $tracking_number ?: null,
                     'shipping_date' => $t_shipdate ? DateTime::createFromFormat('m/d/Y H:i:s', "{$t_shipdate} 00:00:00", new DateTimeZone('EST')) : null,
                     'carrier_id' => $sh,
