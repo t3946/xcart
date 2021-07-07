@@ -20,10 +20,7 @@ class GmailFetchCommand extends Command
 
         $service = new Google_Service_Gmail($client);
 
-
-        $m = GmailHelper::getMessage($service, $userId, '17a7c462e76a53da');
-
-        foreach ($labels = GmailHelper::listLabels($service, $userId) as $label) {
+        foreach (GmailHelper::listLabels($service, $userId) as $label) {
             [$labelModel] = LabelModel::objects()->getOrNew(['label_id' => $label->getId()]);
             $labelModel->setAttributes([
                 'name' => $label->getName(),
@@ -34,8 +31,7 @@ class GmailFetchCommand extends Command
             $labelModel->save();
         }
 
-        $messages = GmailHelper::listMessages($service, $userId);
-        foreach ($messages as $message) {
+        foreach (GmailHelper::listMessages($service, $userId) as $message) {
             GetNewMessagesHelper::getNewMessage($service, $userId, $message);
         }
     }

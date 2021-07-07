@@ -4,6 +4,7 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Modules\Core\Helpers\CoreHelper;
 use Modules\Goods\Helpers\ProductHelper;
 use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
@@ -579,23 +580,21 @@ class ProductModel extends Model implements ICartItem
 
     public function getAbsoluteUrl($full = false)
     {
+        $url = '';
         if ($this->productid) {
             $url = Xcart::app()->router->url(
                 'catalog:product:view',
                 [
                     'id' => $this->pk,
-                    'slug' => $this->getSlugPart()
+                    'slug' => $this->getSlugPart() ?: $this->pk
                 ]
             );
 
             if ($full) {
                 $url = '//' . $this->getDomain() . $url;
             }
-
-            return $url;
         }
-
-        return false;
+        return $url;
     }
 
     public function getBaseDomain()
@@ -1004,14 +1003,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getSlugPart(): string
     {
-        if (!$this->product) {
-            return (string) $this->productid;
-        }
-        $url = preg_replace('~[^\\pL0-9_]+~u', '-', $this->product);
-        $url = trim($url, "-");
-        $url = iconv("utf-8", "us-ascii//TRANSLIT", $url);
-        $url = strtolower($url);
-        return preg_replace('~[^-a-z0-9_]+~', '', $url);
+        return $this->createSlug($this->product);
     }
 
 }

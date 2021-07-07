@@ -4,6 +4,7 @@
 namespace Modules\Forms\Controllers\Api;
 
 
+use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\EmailActionLogModel;
 use Modules\Forms\Models\EmailActionModel;
 use Modules\Forms\Models\EmailEntityModel;
@@ -225,6 +226,14 @@ class ApiEmailDashboardAdmin extends Controller
         $email = $this->getRequest()->post->all();
         $email['files'] = $convert_files;
         $email['user_id'] = Xcart::app()->user->id;
+
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $params = [
+            'site' => $site,
+            'user' => Xcart::app()->user,
+        ];
+
+        $email['body'] = SnippetHelper::render($email['body'], $params);
 
         Xcart::app()->queue->send('emails', json_encode($email, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), true);
 
