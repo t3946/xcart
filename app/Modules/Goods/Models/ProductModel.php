@@ -18,7 +18,6 @@ use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\SurfPathModel;
@@ -72,7 +71,6 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
- * @property null|CleanUrlModel clean_url
  * @property null|\Xcart\App\Orm\Manager|\Modules\Goods\Models\CategoryModel[] categories
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  * @property mixed cost_to_us
@@ -154,13 +152,6 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => PricingModel::class,
                 'through' => QuickPricingModel::class,
-            ],
-
-            'clean_url' => [
-                'class' => HasToOneField::class,
-                'modelClass' => CleanUrlModel::class,
-                'link' => ['productid' => 'resource_id'],
-                'extra' => ['resource_type' => 'P'],
             ],
 
             'order_details' => [
@@ -589,7 +580,13 @@ class ProductModel extends Model implements ICartItem
     public function getAbsoluteUrl($full = false)
     {
         if ($this->productid) {
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): '']);
+            $url = Xcart::app()->router->url(
+                'catalog:product:view',
+                [
+                    'id' => $this->pk,
+                    'slug' => $this->getSlugPart()
+                ]
+            );
 
             if ($full) {
                 $url = '//' . $this->getDomain() . $url;
@@ -1003,6 +1000,18 @@ class ProductModel extends Model implements ICartItem
         if ($isNew) {
             $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
         }
+    }
+
+    public function getSlugPart(): string
+    {
+        if (!$this->product) {
+            return (string) $this->productid;
+        }
+        $url = preg_replace('~[^\\pL0-9_]+~u', '-', $this->product);
+        $url = trim($url, "-");
+        $url = iconv("utf-8", "us-ascii//TRANSLIT", $url);
+        $url = strtolower($url);
+        return preg_replace('~[^-a-z0-9_]+~', '', $url);
     }
 
 }

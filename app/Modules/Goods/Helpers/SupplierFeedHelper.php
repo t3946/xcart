@@ -196,9 +196,6 @@ class SupplierFeedHelper
                 'productid' => $model->productid,
                 'sfid' => $feed->storefront_id]))
                 ->save();
-            [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'P', 'resource_id' => $model->productid]);
-            $url->clean_url = func_clean_url_autogenerate('P', $model->productid, ['product' => $model->getFrontendName(), 'productcode' => $model->productcode]);
-            $url->save();
         }
 
         self::feedImages($model, $feed, $data);
