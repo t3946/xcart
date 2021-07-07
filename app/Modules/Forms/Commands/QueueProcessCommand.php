@@ -62,7 +62,7 @@ class QueueProcessCommand extends Command
 
                 $mailMessage = base64_encode(
                     $mime->getMessage(
-                        true,
+                        null,
                         null,
                         $user->email ? [
                             'Sender' => $user->email,
@@ -79,7 +79,7 @@ class QueueProcessCommand extends Command
                     $googleMessage,
                 );
                 $message->ack();
-                GetNewMessagesHelper::getNewMessages($mailService,$userId, $request);
+                GetNewMessagesHelper::getNewMessage($mailService, $userId, $request);
             }
         } catch (JsonException $e)
         {

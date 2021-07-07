@@ -78,6 +78,12 @@ class EmailModel extends Model
                 'verboseName' => "From",
                 'null' => true,
             ],
+            'original_sender' => [
+                'class' => CharField::class,
+                'verboseName' => "Original sender",
+                'default' => null,
+                'null' => true,
+            ],
             'to_address' => [
                 'class' => CharField::class,
                 'verboseName' => "To",
