@@ -704,7 +704,7 @@ class OrderSearchStore extends BaseStore
             }
         }
 
-        $qs->filter($this->where)->having($this->having);
+        $qs->filter($this->where)->addGroup(['orderid'])->having($this->having);
         $this->qs = $qs;
     }
 
