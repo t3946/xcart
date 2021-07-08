@@ -18,16 +18,15 @@ class GetNewMessagesHelper
 {
     public static function  getNewMessage($service, $userId, $message):? EmailModel
     {
-        $single_message = GmailHelper::getMessage($service, $userId, $message->id);
-        $email_type = GmailHelper::getEmailType($single_message);
-        if (!$email_type) {
-            return null;
-        }
-
         /** @var EmailModel $model */
         [$model, $new] = EmailModel::objects()->getOrNew(['message_id' => $message->id]);
 
         if ($new) {
+            $single_message = GmailHelper::getMessage($service, $userId, $message->id);
+            $email_type = GmailHelper::getEmailType($single_message);
+            if (!$email_type) {
+                return null;
+            }
             $body = GmailHelper::getBody($single_message);
             $headers = $single_message->getPayload()->getHeaders();
             $subject = GmailHelper::getHeader($headers, 'Subject');
