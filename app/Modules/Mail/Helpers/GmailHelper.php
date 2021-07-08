@@ -9,6 +9,8 @@ use Google_Client;
 use Google_Service_Gmail;
 use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
+use Google_Service_Gmail_ModifyMessageRequest;
+use Modules\Forms\Models\LabelModel;
 use Xcart\App\Helpers\Paths;
 
 class GmailHelper
@@ -69,6 +71,21 @@ class GmailHelper
     {
         try {
             $message = $service->users_messages->get($userId, $messageId);
+
+        } catch (Exception $e) {
+            print 'An error occurred: ' . $e->getMessage();
+        }
+        return $message ?? null;
+    }
+
+    public static function updateMessage(Google_Service_Gmail $service, $userId, $messageId, array $addLabelIds = [], array $removeLabelIds = []): ?Google_Service_Gmail_Message
+    {
+        try {
+            $request = new Google_Service_Gmail_ModifyMessageRequest();
+            $request->setAddLabelIds($addLabelIds);
+            $request->setRemoveLabelIds($removeLabelIds);
+
+            $message = $service->users_messages->modify($userId, $messageId, $request);
 
         } catch (Exception $e) {
             print 'An error occurred: ' . $e->getMessage();
@@ -152,7 +169,7 @@ class GmailHelper
      * @param $userId
      * @return Google_Service_Gmail_Label[]
      */
-    public static function listLabels(Google_Service_Gmail $service, $userId): array
+    public static function listLabels(Google_Service_Gmail $service, string $userId): array
     {
         $labels = array();
 
@@ -169,6 +186,7 @@ class GmailHelper
 
         return $labels;
     }
+
     public static function getAttachments(Google_Service_Gmail $service, Google_Service_Gmail_Message $message): array
     {
         foreach ($message->getPayload()->getParts() as $part) {
@@ -191,5 +209,16 @@ class GmailHelper
             }
         }
         return $res ?? [];
+    }
+
+    public static function getOrCreateLabel(Google_Service_Gmail $service, string $userId, string $name): string
+    {
+        if ($model = LabelModel::objects()->limit(1)->all(['name' => $name])[0]) {
+            return $model->label_id;
+        }
+        $label = new Google_Service_Gmail_Label();
+        $label->setName($name);
+        $result = $service->users_labels->create($userId, $label);
+        return $result->getId();
     }
 }

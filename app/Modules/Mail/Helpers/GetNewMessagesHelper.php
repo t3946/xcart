@@ -18,6 +18,7 @@ class GetNewMessagesHelper
 {
     public static function getNewMessage($service, $userId, $message): void
     {
+        /** @var EmailModel $model */
         [$model, $new] = EmailModel::objects()->getOrNew(['message_id' => $message->id]);
 
         if ($new && $single_message = GmailHelper::getMessage($service, $userId, $message->id)) {
@@ -44,6 +45,13 @@ class GetNewMessagesHelper
                 ]
             );
             $model->save();
+
+            if ($model->isChild() && $parent = $model->parent) {
+                $labels_ids = array_map(static fn($l) => $l->label_id, $parent->labels->filter(['type' => LabelModel::LABEL_TYPE_USER]));
+                if ($labels_ids) {
+                    GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
+                }
+            }
 
             [$emailModel, $isNew] = EmailBodyModel::objects()->getOrNew(['email_id' => $model->id]);
 

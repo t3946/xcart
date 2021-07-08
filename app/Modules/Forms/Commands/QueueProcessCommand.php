@@ -58,6 +58,7 @@ class QueueProcessCommand extends Command
                     $mime->addAttachment(base64_decode($file['content']), $file['type'], $file['name'], false);
                 }
 
+                /** @var UserModel $user */
                 $user = UserModel::objects()->get(['id' => $data['user_id']]);
 
                 $mailMessage = base64_encode(
@@ -79,6 +80,11 @@ class QueueProcessCommand extends Command
                     $googleMessage,
                 );
                 $message->ack();
+
+                $label_id = GmailHelper::getOrCreateLabel($mailService, $userId,$user->getShortSurname());
+
+                GmailHelper::updateMessage($mailService, $userId, $request->id, [$label_id]);
+
                 GetNewMessagesHelper::getNewMessage($mailService, $userId, $request);
             }
         } catch (JsonException $e)

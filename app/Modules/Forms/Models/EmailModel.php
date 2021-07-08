@@ -23,6 +23,8 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property string|null from_address
+ * @property string message_id
+ * @property string thread_id
  */
 class EmailModel extends Model
 {
@@ -259,7 +261,7 @@ class EmailModel extends Model
         return $this->to_address ?: $this->delivered_to_address ;
     }
 
-    public function getSubject()
+    public function getSubject(): string
     {
         $res = $this->subject;
         if (!$this->isViewed()) {
@@ -284,9 +286,14 @@ class EmailModel extends Model
         return $lbl . $res;
     }
 
-    public function setViewed()
+    public function setViewed(): void
     {
         $this->getField('viewed')->setValue(Xcart::app()->user);
         $this->save();
+    }
+
+    public function isChild(): bool
+    {
+        return $this->message_id !== $this->thread_id;
     }
 }
