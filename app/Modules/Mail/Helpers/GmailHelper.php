@@ -46,11 +46,11 @@ class GmailHelper
     {
         $pageToken = NULL;
         $messages = [];
-        $opt_param = [];
+        $opt_param = ['maxResults' => 500, 'includeSpamTrash' => true];
         do {
             try {
                 if ($pageToken) {
-                    $opt_param = ['pageToken' => $pageToken, 'includeSpamTrash' => true];
+                    $opt_param =  array_merge($opt_param, ['pageToken' => $pageToken]);
                 }
                 $messagesResponse = $service->users_messages->listUsersMessages($userId, $opt_param);
                 if ($messagesResponse->getMessages()) {
