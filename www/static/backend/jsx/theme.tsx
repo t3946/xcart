@@ -305,6 +305,9 @@ $("a.select-order").click(function () {
   const url_dashboard_my_sort = appData().routes["dashboard:sort_my_filters"];
 
   $(document).ready(function () {
+    if (!$('#dashboard').length) {
+      return
+    }
     $(document).dashboard({
       ajax: {
         url: url_dashboard_update,
