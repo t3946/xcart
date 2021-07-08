@@ -252,8 +252,14 @@ class GmailHelper
     {
         $labels = $message->getLabelIds();
         if (in_array('DRAFT', $labels, true)) {
-            return 'draft';
+            return '';
         }
-        return in_array('SENT', $labels, true) ? 'sent' : 'inbox';
+        if (in_array('SENT', $labels, true)) {
+            return 'sent';
+        }
+        if (in_array('INBOX', $labels, true)) {
+            return 'inbox';
+        }
+        return '';
     }
 }

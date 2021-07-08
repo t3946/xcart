@@ -16,13 +16,18 @@ use Xcart\App\Storage\Files\ResourceFile;
 
 class GetNewMessagesHelper
 {
-    public static function getNewMessage($service, $userId, $message): EmailModel
+    public static function getNewMessage($service, $userId, $message):? EmailModel
     {
+        $single_message = GmailHelper::getMessage($service, $userId, $message->id);
+        $email_type = GmailHelper::getEmailType($single_message);
+        if (!$email_type) {
+            return null;
+        }
+
         /** @var EmailModel $model */
         [$model, $new] = EmailModel::objects()->getOrNew(['message_id' => $message->id]);
 
-        if ($new && $single_message = GmailHelper::getMessage($service, $userId, $message->id)) {
-
+        if ($new) {
             $body = GmailHelper::getBody($single_message);
             $headers = $single_message->getPayload()->getHeaders();
             $subject = GmailHelper::getHeader($headers, 'Subject');
@@ -55,15 +60,17 @@ class GetNewMessagesHelper
                         $service->users_messages->get($userId, $model->thread_id)
                     );
                 }
-                $labels_ids = array_map(
-                    static fn($l) => $l->label_id,
-                    $parent->labels->filter(['type' => LabelModel::LABEL_TYPE_USER])->all()
-                );
+                if ($parent) {
+                    $labels_ids = array_map(
+                        static fn($l) => $l->label_id,
+                        $parent->labels->filter(['type' => LabelModel::LABEL_TYPE_USER])->all()
+                    );
 
-                if ($labels_ids) {
-                    $updated_message = GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
-                    $model->labels = LabelModel::objects()->all(['label_id__in' => $updated_message->getLabelIds() ?? []]);
-                    $model->save();
+                    if ($labels_ids) {
+                        $updated_message = GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
+                        $model->labels = LabelModel::objects()->all(['label_id__in' => $updated_message->getLabelIds() ?? []]);
+                        $model->save();
+                    }
                 }
             }
 
