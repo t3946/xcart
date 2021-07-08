@@ -61,7 +61,9 @@ class GetNewMessagesHelper
                 );
 
                 if ($labels_ids) {
-                    GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
+                    $updated_message = GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
+                    $model->labels = LabelModel::objects()->all(['label_id__in' => $updated_message->getLabelIds() ?? []]);
+                    $model->save();
                 }
             }
 

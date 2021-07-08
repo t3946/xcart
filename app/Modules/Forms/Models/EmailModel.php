@@ -25,6 +25,7 @@ use Xcart\App\Orm\Model;
  * @property string|null from_address
  * @property string message_id
  * @property string thread_id
+ * @property LabelModel[] labels
  */
 class EmailModel extends Model
 {
