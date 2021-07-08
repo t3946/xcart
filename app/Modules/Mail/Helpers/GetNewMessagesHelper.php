@@ -16,12 +16,13 @@ use Xcart\App\Storage\Files\ResourceFile;
 
 class GetNewMessagesHelper
 {
-    public static function getNewMessage($service, $userId, $message): void
+    public static function getNewMessage($service, $userId, $message): EmailModel
     {
         /** @var EmailModel $model */
         [$model, $new] = EmailModel::objects()->getOrNew(['message_id' => $message->id]);
 
         if ($new && $single_message = GmailHelper::getMessage($service, $userId, $message->id)) {
+
             $body = GmailHelper::getBody($single_message);
             $headers = $single_message->getPayload()->getHeaders();
             $subject = GmailHelper::getHeader($headers, 'Subject');
@@ -46,8 +47,19 @@ class GetNewMessagesHelper
             );
             $model->save();
 
-            if ($model->isChild() && $parent = $model->parent) {
-                $labels_ids = array_map(static fn($l) => $l->label_id, $parent->labels->filter(['type' => LabelModel::LABEL_TYPE_USER]));
+            if ($model->isChild()) {
+                if (!$parent = $model->parent) {
+                    $parent = self::getNewMessage(
+                        $service,
+                        $userId,
+                        $service->users_messages->get($userId, $model->thread_id)
+                    );
+                }
+                $labels_ids = array_map(
+                    static fn($l) => $l->label_id,
+                    $parent->labels->filter(['type' => LabelModel::LABEL_TYPE_USER])->all()
+                );
+
                 if ($labels_ids) {
                     GmailHelper::updateMessage($service, $userId, $model->message_id, $labels_ids);
                 }
@@ -82,5 +94,6 @@ class GetNewMessagesHelper
 
             echo("{$message->id} : {$subject} {$single_message->getSnippet()} \n");
         }
+        return $model;
     }
 }

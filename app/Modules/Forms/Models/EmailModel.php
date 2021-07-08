@@ -158,7 +158,7 @@ class EmailModel extends Model
                 'link' => ['thread_id' => 'thread_id'],
             ],
             'parent' => [
-                'class' => ForeignField::class,
+                'class' => HasToOneField::class,
                 'modelClass' => __CLASS__,
                 'link' => ['thread_id' => 'message_id'],
             ],
