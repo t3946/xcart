@@ -35,7 +35,7 @@ class GetNewMessagesHelper
                     'subject' => GmailHelper::getHeader($headers, 'Subject'),
                     'thread_id' => $message->getThreadId(),
                     'snippet' => strip_tags(html_entity_decode($single_message->getSnippet())),
-                    'type' => in_array('SENT', $single_message->getLabelIds(), true) ? 'sent' : 'inbox',
+                    'type' => GmailHelper::getEmailType($single_message),
                     'delivered_to_address' => GmailHelper::getHeader($headers, 'Delivered-To'),
                     'to_address' => GmailHelper::getHeader($headers, 'To'),
                     'from_address' => GmailHelper::getHeader($headers, 'From'),

@@ -247,4 +247,13 @@ class GmailHelper
             $labelModel->save();
         }
     }
+
+    public static function getEmailType(Google_Service_Gmail_Message $message): string
+    {
+        $labels = $message->getLabelIds();
+        if (in_array('DRAFT', $labels, true)) {
+            return 'draft';
+        }
+        return in_array('SENT', $labels, true) ? 'sent' : 'inbox';
+    }
 }
