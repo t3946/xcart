@@ -16,7 +16,7 @@ use Xcart\App\Storage\Files\ResourceFile;
 
 class GetNewMessagesHelper
 {
-    public static function getNewMessage($service, $userId, $message):? EmailModel
+    public static function  getNewMessage($service, $userId, $message):? EmailModel
     {
         $single_message = GmailHelper::getMessage($service, $userId, $message->id);
         $email_type = GmailHelper::getEmailType($single_message);

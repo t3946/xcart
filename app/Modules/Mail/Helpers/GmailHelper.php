@@ -66,6 +66,9 @@ class GmailHelper
             }
         } while ($pageToken);
 
+        $cnt = count($messages);
+
+        echo "Fetched {$cnt} emails\n";
         return $messages;
     }
 
@@ -257,9 +260,6 @@ class GmailHelper
         if (in_array('SENT', $labels, true)) {
             return 'sent';
         }
-        if (in_array('INBOX', $labels, true)) {
-            return 'inbox';
-        }
-        return '';
+        return 'inbox';
     }
 }
