@@ -5,12 +5,14 @@ namespace Modules\Mail\Helpers;
 
 
 use Exception;
+use Google\Service\Exception as GoogleServiceException;
 use Google_Client;
 use Google_Service_Gmail;
 use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
 use Google_Service_Gmail_ModifyMessageRequest;
 use Modules\Forms\Models\LabelModel;
+use Throwable;
 use Xcart\App\Helpers\Paths;
 
 class GmailHelper
@@ -213,12 +215,36 @@ class GmailHelper
 
     public static function getOrCreateLabel(Google_Service_Gmail $service, string $userId, string $name): string
     {
+        self::fetchLabels($service, $userId);
+
         if ($model = LabelModel::objects()->limit(1)->all(['name' => $name])[0]) {
             return $model->label_id;
         }
         $label = new Google_Service_Gmail_Label();
         $label->setName($name);
-        $result = $service->users_labels->create($userId, $label);
-        return $result->getId();
+        try {
+            $gmail_label = $service->users_labels->create($userId, $label);
+            $result = $gmail_label->getId();
+        }
+        catch (Throwable $e) {
+            $result = '';
+        }
+        return $result ?? '';
+    }
+
+    public static function fetchLabels(Google_Service_Gmail $service, string $userId): void
+    {
+        foreach (self::listLabels($service, $userId) as $label) {
+            [$labelModel] = LabelModel::objects()->getOrNew(['label_id' => $label->getId()]);
+            $labelModel->setAttributes(
+                [
+                    'name' => $label->getName(),
+                    'background_color' => $label->getColor() ? $label->getColor()->getBackgroundColor() : '',
+                    'color' => $label->getColor() ? $label->getColor()->getTextColor() : '',
+                    'type' => $label->getType(),
+                ]
+            );
+            $labelModel->save();
+        }
     }
 }

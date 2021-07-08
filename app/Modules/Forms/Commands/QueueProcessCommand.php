@@ -81,9 +81,10 @@ class QueueProcessCommand extends Command
                 );
                 $message->ack();
 
-                $label_id = GmailHelper::getOrCreateLabel($mailService, $userId,$user->getShortSurname());
-
-                GmailHelper::updateMessage($mailService, $userId, $request->id, [$label_id]);
+                $label_id = GmailHelper::getOrCreateLabel($mailService, $userId, $user->getShortSurname());
+                if ($label_id) {
+                    GmailHelper::updateMessage($mailService, $userId, $request->id, [$label_id]);
+                }
 
                 GetNewMessagesHelper::getNewMessage($mailService, $userId, $request);
             }
