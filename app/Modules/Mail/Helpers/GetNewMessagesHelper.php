@@ -11,6 +11,7 @@ use Modules\Forms\Models\EmailBodyModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\LabelModel;
 use Modules\Mail\Helpers\GmailHelper;
+use Throwable;
 use Xcart\App\Commands\Command;
 use Xcart\App\Storage\Files\ResourceFile;
 
@@ -53,11 +54,16 @@ class GetNewMessagesHelper
 
             if ($model->isChild()) {
                 if (!$parent = $model->parent) {
-                    $parent = self::getNewMessage(
-                        $service,
-                        $userId,
-                        $service->users_messages->get($userId, $model->thread_id)
-                    );
+                    try {
+                        $parent = self::getNewMessage(
+                            $service,
+                            $userId,
+                            $service->users_messages->get($userId, $model->thread_id)
+                        );
+                    } catch (Throwable $e){
+                        $parent = null;
+                    }
+
                 }
                 if ($parent) {
                     $labels_ids = array_map(
