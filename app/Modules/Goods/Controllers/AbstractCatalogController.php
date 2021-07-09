@@ -83,7 +83,8 @@ abstract class AbstractCatalogController extends FrontendController
         return new Pagination($qs, [
             'pageSize' => $this->pageSize,
             'view' => 'core/pager/front_endless.tpl',
-            'pageKey' => 'page'
+            'pageKey' => 'page',
+            'is_ajax' => $this->getRequest()->getIsAjax()
         ], new QuerySetDataSource());
     }
 

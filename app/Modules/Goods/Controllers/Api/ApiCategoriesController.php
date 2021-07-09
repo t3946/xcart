@@ -11,6 +11,7 @@ use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\SurfMetaModel;
 use Xcart\App\Main\Xcart;
 
 class ApiCategoriesController extends AbstractCatalogController
@@ -73,13 +74,13 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderViewed(): void
     {
-        /** @var ProductModel[] $products */
-        $products = SliderDataHelper::getSliderData('recently_viewed_products');
+        $meta_id = SurfMetaModel::getInstance()->id;
+        $qs = parent::getQS()
+            ->distinct()
+            ->filter(['surf_path__meta_id' => $meta_id])
+            ->order(['-surf_path__position']);
 
-        if ($products) {
-            $data = $this->getProductData($products);
-            $this->jsonResponse(['items' => $data]);
-        }
+        $this->jsonResponse($this->getPaginatedProducts($qs));
     }
 
     public function getQS($data)
