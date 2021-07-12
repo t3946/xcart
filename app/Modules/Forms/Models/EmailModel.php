@@ -164,7 +164,6 @@ class EmailModel extends Model
                 'link' => ['thread_id' => 'message_id'],
             ],
             'contains_action' => [
-                'field' => 'action_value',
                 'class' => BooleanField::class,
             ]
         ];
