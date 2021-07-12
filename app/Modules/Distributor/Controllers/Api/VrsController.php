@@ -57,20 +57,37 @@ class VrsController extends Controller
   }
 
   public function getMessageFromDomain(string $domain){
-      $id = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0]['site_id'];
-
-      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->count() > 0))
+      $site_model = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0];
+      if($site_model['status'] === 'active' || $site_model['status'] === 'inactive' )
       {
+          $dx = DistributorModel::objects()->limit(1)->get(['url__contains' => $domain]);
+          $status = $site_model['status'];
+          $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => '2008-05-16 08:19:23', 'user' => $dx->provider_model::objects()->asArray(true)->all()[0]];
+      }
+
+
+      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->count() > 0))
+      {
+          if($first_message){
+              return  [$first_message];
+          }
           return [];
       }
-      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->order(['date'])->asArray(true)->all();
 
+
+      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->order(['date'])->asArray(true)->all();
       $a = [];
       foreach ($messages as $message)
       {
           $message['user'] = UserModel::objects()->filter(['id'=>$message['user_id']])->asArray(true)->all()[0];
 
           $a[] = $message;
+      }
+
+
+      if($first_message)
+      {
+          array_unshift($a, $first_message);
       }
 
       return $a;
