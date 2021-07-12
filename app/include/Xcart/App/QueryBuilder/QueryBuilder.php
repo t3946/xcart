@@ -695,7 +695,7 @@ class QueryBuilder
             } else {
                 $operand = $this->parseCondition($operand);
             }
-            if ($operand !== '') {
+            if ($operand !== null && $operand !== '') {
                 $parts[] = $this->getAdapter()->quoteSql($operand);
             }
         }

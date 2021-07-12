@@ -14,6 +14,7 @@ use Mail_mime;
 use Modules\Goods\Models\ProductModel;
 use Modules\Mail\Helpers\GetNewMessagesHelper;
 use Modules\Mail\Helpers\GmailHelper;
+use Modules\User\Models\UserModel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Xcart\App\Commands\Command;
 use Xcart\App\Exceptions\Exception;
@@ -33,7 +34,7 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $group_product  */
         try {
             if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) {
-                if( $data['date'] > time() && $data['date'] !== null)
+                if($data['date'] !== null && $data['date'] > time())
                 {
                     echo ('nack');
                     $message->nack();
@@ -44,7 +45,7 @@ class QueueProcessCommand extends Command
                 $client = GmailHelper::getClient($userId);
 
                 $mailService = new Google_Service_Gmail($client);
-                $googleMessage = new Google_Service_Gmail_Message;
+                $googleMessage = new Google_Service_Gmail_Message();
 
                 $recipients = implode(',', $data['to']);
 
@@ -57,7 +58,21 @@ class QueueProcessCommand extends Command
                     $mime->addAttachment(base64_decode($file['content']), $file['type'], $file['name'], false);
                 }
 
-                $mailMessage = base64_encode($mime->getMessage());
+                /** @var UserModel $user */
+                $user = UserModel::objects()->get(['id' => $data['user_id']]);
+
+                $mailMessage = base64_encode(
+                    $mime->getMessage(
+                        null,
+                        null,
+                        $user->email ? [
+                            'Sender' => $user->email,
+                            'X-Google-Sender-Delegation' => $user->email,
+                            'X-Original-Sender' => $user->email
+                        ] : null
+                    )
+                );
+
                 $googleMessage->setRaw($mailMessage);
 
                 $request =  $mailService->users_messages->send(
@@ -65,17 +80,18 @@ class QueueProcessCommand extends Command
                     $googleMessage,
                 );
                 $message->ack();
-                GetNewMessagesHelper::getNewMessages($mailService,$userId, $request);
+
+                $label_id = GmailHelper::getOrCreateLabel($mailService, $userId, $user->getShortSurname());
+                if ($label_id) {
+                    GmailHelper::updateMessage($mailService, $userId, $request->id, [$label_id]);
+                }
+
+                GetNewMessagesHelper::getNewMessage($mailService, $userId, $request);
             }
         } catch (JsonException $e)
         {
+            echo "Error:{$e->getMessage()}\n";
             $message->ack();
         }
-
-
-
-
     }
-
-
 }

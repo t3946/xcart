@@ -22,7 +22,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_total">Condition:</label>
+                    <label for="email_condition">Condition:</label>
                 </div>
 
                 <div class="columns large-5">
@@ -36,11 +36,29 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_total">Value:</label>
+                    <label for="email_condition_value">Value:</label>
                 </div>
 
                 <div class="columns large-5">
                     <input name="search[email][value]" id="email_condition_value" value="{$form_data.email.value}" class="big"/>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="email_condition_contains_action">Action required:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <input type="checkbox"
+                           name="search[email][contains_action]"
+                           id="email_condition_contains_action"
+                            {if $form_data.email.contains_action == 1}
+                                checked
+                            {/if}
+                           value="1"
+                           />
                 </div>
             </div>
         </li>

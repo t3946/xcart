@@ -95,7 +95,7 @@ class DxContactsAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getCreateUrl()
+    public function getCreateUrl(): string
     {
         return Xcart::app()->router->url('admin:dx_contact_create', [
             'mid' => $this->dxModel->pk

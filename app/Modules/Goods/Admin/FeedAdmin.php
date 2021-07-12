@@ -33,15 +33,12 @@ class FeedAdmin extends Admin
         return [
             'feed_id',
             'distributor',
-            'feed_name',
             'feed_type',
             'site',
             'feed_file_name',
             'process_time',
             'last_update_time',
             'last_update_items_count',
-            'add_new_only',
-            'enabled'
         ];
     }
 
@@ -61,10 +58,6 @@ class FeedAdmin extends Admin
             'distributor' => [
                 'template' => $this->columnDefaultTemplate,
                 'title' => 'DX',
-            ],
-            'feed_name' => [
-                'template' => $this->columnDefaultTemplate,
-                'title' => 'Name'
             ],
             'feed_type' => [
                 'template' => $this->columnDefaultTemplate,
@@ -96,13 +89,6 @@ class FeedAdmin extends Admin
                 'title' => 'Process time',
                 'order' => 'process_time',
             ],
-            'add_new_only' => [
-                'template' => $this->columnDefaultTemplate,
-                'title' => 'New'
-            ],
-            'enabled' => [
-                'template' => $this->columnDefaultTemplate,
-            ],
         ];
     }
 
@@ -130,32 +116,16 @@ class FeedAdmin extends Admin
         if ($property === 'average_update_period') {
             return $item->getAverageUpdatePeriod();
         }
+        if ($property === 'site') {
+            $site = $item->site;
+            return "[$site->code] {$site->getName()}";
+        }
         if ($property === 'last_update_time') {
             $date = new DateTime;
             $date->setTimestamp($item->$property);
             return $date->format('Y-M-d H:i');
         }
         return parent::getItemProperty($item, $property);
-    }
-
-    public function renderInternal($view, $params)
-    {
-        $params = array_replace($this->getCommonData(), $params);
-
-        if (
-            Xcart::app()->request->getIsAjax()
-            || Xcart::app()->request->get->has('popup')
-            || $this->innerRender
-        ) {
-            echo $this->render($view, $params);
-        } else {
-            echo $this->renderSmarty("admin/home.tpl", [
-                'single_mode' => true,
-                'width' => '100%',
-                'main' => 'raw_html',
-                'content' => $this->render($view, $params),
-            ]);
-        }
     }
 
     public function applyOrder($qs)

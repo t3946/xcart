@@ -9,8 +9,6 @@
             <div class="col-8">
                 {raw $input}
                 {raw $errors}
-            </div>
-            <div class="col-1">
                 {raw $ext}
             </div>
         </div>

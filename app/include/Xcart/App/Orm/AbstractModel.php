@@ -5,6 +5,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Table;
 use Exception;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\App\Orm\Fields\RelatedField;
@@ -116,20 +117,20 @@ class AbstractModel extends Base
                 $values[$field] = $this->getAttribute($field);
             }
             foreach ($this->getPrimaryKeyValues() as $name => $value) {
-                if ($value) {
+                if ($value !== null) {
                     $values[$name] = $value;
                 }
             }
         }
         else {
             foreach ($this->getAttributes() as $name => $value) {
-                if ($value) {
+                if ($value !== null) {
                     $values[$name] = $value;
                 }
             }
         }
 
-        /** @var \Xcart\App\Orm\Fields\Field $field */
+        /** @var Field $field */
         foreach (static::getMeta()->getFields() as $name => $field)
         {
             if ($field->getSqlType()

@@ -25,7 +25,10 @@ class DistributorController extends BackendController
     public function index($mid = null, $section = 1)
     {
         $user = Xcart::app()->user;
-        $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+        if ($mid !== null) {
+            $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
+        }
+
         $distributor_section = DistributorForm::getSection($section);
         if ($distributor_section['form']){
             //инициализация формы
@@ -37,24 +40,25 @@ class DistributorController extends BackendController
             $general_form = new DistributorGeneralForm($dx);
 
             //данные для клиентской части
+            if ($dx) {
+                $distributor_base_data = [
+                    'reference' => [
+                        'mainInfoTitle' => "$dx ({$dx->code})",
+                        'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
+                        'time' => $dx->getDistributorTime()->format('H:i'),
+                        'phone' => $dx->getPhoneNormalized(),
+                        'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
+                        'normalizedPhone' => $dx->getPhoneNormalized(),
+                        'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
+                        'distributorsLink' => '/admin/manufacturers.php?word=num',
+                        'currentSectionKey' => (int)$section,
+                    ],
 
-            $distributor_base_data = [
-                'reference' => [
-                    'mainInfoTitle' => "$dx ({$dx->code})",
-                    'description' => (string)LanguageModel::translate('txt_manufacturers_top_text'),
-                    'time' => $dx->getDistributorTime()->format('H:i'),
-                    'phone' => $dx->getPhoneNormalized(),
-                    'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
-                    'normalizedPhone' => $dx->getPhoneNormalized(),
-                    'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
-                    'distributorsLink' => '/admin/manufacturers.php?word=num',
-                    'currentSectionKey' => (int)$section,
-                ],
-
-                'sections' => $general_form->getSectionsArray(function (&$sub_section) use($form) {
-                    $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
-                }),
-            ];
+                    'sections' => $general_form::getSectionsArray(function (&$sub_section) use($form) {
+                        $sub_section['url'] = $form->getInstance()->getAdminUrl($sub_section['key']);
+                    }),
+                ];
+            }
 
             StorageHelper::push($distributor_base_data, null, 'distributor');
         }

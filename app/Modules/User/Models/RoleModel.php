@@ -33,6 +33,8 @@ class RoleModel extends Model
             $path = $request->getPath();
             $permission = strpos($path, 'manufacturers.php') !== false;
             $permission = $permission || strpos($path, '/admin/create/Admin/') !== false;
+            $permission = $permission || strpos($path, '/admin/list/Distributor/') !== false;
+            $permission = $permission || strpos($path, '/admin/forms/') !== false;
             $permission = $permission || strpos($path, '/admin/logout') !== false;
             $permission = $permission || strpos($path, '/admin/login') !== false;
             return $permission || strpos($path, 'admin/distributor/') !== false;

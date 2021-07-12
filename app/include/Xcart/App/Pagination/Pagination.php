@@ -15,6 +15,7 @@ class Pagination extends BasePagination
     use RenderTrait;
     
     public $view = "core/pager/pager.tpl";
+    public bool $is_ajax = false;
 
     /**
      * Pagination constructor.
@@ -28,6 +29,8 @@ class Pagination extends BasePagination
         if (!empty($config['view'])) {
             $this->view = $config['view'];
         }
+
+        $this->is_ajax = $config['is_ajax'] ?? false;
         
         $handler = new NativePaginationHandler();
         parent::__construct($source, $config, $handler, $dataSource);

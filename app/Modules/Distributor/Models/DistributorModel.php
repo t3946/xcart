@@ -451,6 +451,11 @@ class DistributorModel extends Model
                 'null' => true,
                 'default' => null,
             ],
+            'd_search_keyphrase_for_reconciliation' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => '',
+            ],
             'parents' => [
                 'class' => HasManyField::class,
                 'modelClass' => DistributorModel::class,

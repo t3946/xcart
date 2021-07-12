@@ -57,11 +57,33 @@
  <td>
 <input type="file" size="25" name="userfile_D_1000" id="userfile_1000" {* style="border: solid 1px #b7b7b7;" *} />
  </td>
- <td><a href="javascript: void(0);" onclick="javascript: p_f_add_upload_row(1000);"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a></td>
+ <td><a href="javascript: void(0);" onclick="p_f_add_upload_row(1000);"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a></td>
  </tr>
 
  </table>
 
+    <script type="text/javascript">
+        p_f_row_max_index = 1000;
+
+        function p_f_add_upload_row(multi_id) {
+            p_f_row_max_index = p_f_row_max_index + 1;
+            var tr = document.getElementById('p_f_upload_row_' + multi_id);
+            var new_row = tr.parentNode.parentNode.insertRow(tr.rowIndex + 1);
+            new_row.id = 'p_f_upload_row_' + p_f_row_max_index;
+            var td = new_row.insertCell(-1);
+            td.innerHTML = 'Attach file:';
+            td = new_row.insertCell(-1);
+            td.innerHTML = "<input type=\"file\" size=\"25\" name=\"userfile_D_" + p_f_row_max_index + "\" id=\"userfile_" + p_f_row_max_index + "\" />";
+            td = new_row.insertCell(-1);
+            td.innerHTML = "<a href=\"javascript: void(0);\" onclick=\"javascript: p_f_add_upload_row(" + p_f_row_max_index + ");\"><img src=\"{$ImagesDir}/plus.gif\" alt=\"{$lng.lbl_add_row|escape:'javascript'}\" /></a>&nbsp;<a href=\"javascript: void(0);\" onclick=\"javascript: p_f_remove_upload_row(" + p_f_row_max_index + ");\"><img src=\"{$ImagesDir}/minus.gif\" alt=\"{$lng.lbl_remove_row|escape:'javascript'}\" /></a>";
+        }
+
+
+        function p_f_remove_upload_row(multi_id) {
+            var tr = document.getElementById('p_f_upload_row_'+multi_id);
+            tr.parentNode.parentNode.deleteRow(tr.rowIndex);
+            }
+    </script>
 
 </td>
 </tr>
