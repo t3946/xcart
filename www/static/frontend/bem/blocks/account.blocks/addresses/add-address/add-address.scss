@@ -2,6 +2,13 @@
   border: 1px solid #C4C4C4;
   width: 323px;
   height: 244px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.addresses-list-container{
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .add-address{
@@ -9,9 +16,85 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  cursor: pointer;
+  transition: .3s all;
+
+  &:hover{
+    background-color: #dedede;
+  }
 }
 
 .add-address-label{
   font-size: 18px;
   color: #055A93;
 }
+
+.address-header{
+  width: 100%;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  padding-left: 23px;
+}
+
+.address-header-default{
+  background-color: #F4F4F4;
+  border-bottom: 1px solid #C4C4C4;
+  margin-bottom: 10px;
+  height: 37px;
+}
+
+.address-name{
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.address-name-default{
+  margin-bottom: 10px;
+}
+
+.address-text{
+  line-height: 20px;
+}
+
+.address-text-address{
+  text-transform: uppercase;
+}
+
+.address-phone-wrapper{
+  display: flex;
+}
+
+.address-footer{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 43px;
+}
+
+.address-footer-left-part{
+  display: flex;
+  align-items: center;
+}
+
+.address-footer-barrier{
+  margin: 0 10px;
+  width: 1px;
+  height: 17px;
+  background-color: black;
+}
+
+.address-footer-btn{
+  color: #055A93;
+  transition: .3s all;
+  cursor: pointer;
+  border-radius: 3px;
+
+  &:hover{
+    color: #011622;
+  }
+}
+
+.address-content{
+  padding: 0 24px 29px 24px;
+}
+
