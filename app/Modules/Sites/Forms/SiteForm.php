@@ -2,6 +2,7 @@
 
 namespace Modules\Sites\Forms;
 
+use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
@@ -9,7 +10,6 @@ use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
-use Xcart\App\Orm\Fields\BooleanField;
 
 class SiteForm extends ModelForm
 {
@@ -150,17 +150,28 @@ class SiteForm extends ModelForm
                 'class' => CharField::class,
                 'label' => 'Preferred served country',
             ],
+            'currency' => [
+                'class' => DropDownField::class,
+                'label' => 'Storefront currency',
+                'choices' => (static function () {
+                    foreach (CurrencyModel::objects() as $model) {
+                        $res[$model->pk] = $model->currency_code;
+                    }
+                    return $res ?? [];
+                })(),
+            ],
             'flat_shipping_enabled' => [
                 'class' => CheckboxField::class,
                 'label' => 'Flat Shipping',
             ],
-            'lang_id' => [
+            'lang' => [
                 'class' => DropDownField::class,
                 'label' => 'Preferred language',
             ],
-/*            'file_edit_image_favicon' => [
+            'file_edit_image_favicon' => [
                 'class' => ImageField::class,
-            ]*/
+                'label' => 'Storefront favicon',
+            ],
         ];
     }
 

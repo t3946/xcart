@@ -1,7 +1,6 @@
 <?php
 namespace Modules\Sites\Models;
 
-use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
@@ -12,7 +11,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignCharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\HasToOneField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
@@ -251,15 +250,28 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => null,
             ],
+            'currency' => [
+                'field' => 'currency_id',
+                'class' => ForeignField::class,
+                'modelClass' => CurrencyModel::class,
+                'link' => ['currency_id' => 'currency_id'],
+            ],
             'flat_shipping_enabled' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false,
             ],
-            'lang_id' => [
+            'lang' => [
+                'field' => 'lang_id',
                 'class' => ForeignField::class,
                 'modelClass' => LanguageModel::class,
                 'link' => ['lang_id' => 'lang_id'],
+            ],
+            'file_edit_image_favicon' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/favicons/',
+                'null' => true,
             ],
 
             /*
