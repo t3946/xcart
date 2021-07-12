@@ -3,7 +3,6 @@ namespace Modules\Goods\Models;
 
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Helpers\CategoryCalculateHelper;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -28,7 +27,6 @@ use Xcart\Category;
  * @property string categoryid_path
  * @property mixed categoryid
  * @property string category Name of category
- * @property null|CleanUrlModel url
  * @property null|\Modules\Sites\Models\SiteModel site
  * @property Manager|ProductModel[] products
  */
@@ -59,14 +57,6 @@ class CategoryModel extends TreeModel
                      'class' => ManyToManyField::className(),
                      'modelClass' => ProductModel::className(),
                      'through' => ProductCategoriesModel::className(),
-                 ],
-
-                 'url' => [
-                     'field' => 'categoryid',
-                     'class' => ForeignField::className(),
-                     'modelClass' => CleanUrlModel::className(),
-                     'link' => ['categoryid' => 'resource_id'],
-                     'extra' => ['resource_type' => 'C'],
                  ],
 
                 'site' => [
@@ -140,21 +130,21 @@ class CategoryModel extends TreeModel
         return $bread;
     }
 
-    public function getAbsoluteUrl($full = false)
+    public function getAbsoluteUrl($full = false): string
     {
+        $url = Xcart::app()->router->url(
+            'catalog:view',
+            [
+                'id' => $this->pk,
+                'slug' => $this->getSlugPart() ?: $this->pk
+            ]
+        );
+
         if ($full) {
-            if ($this->categoryid && $this->url)
-            {
-                return $this->url->urlFromCode('catalog:view', $full, $this->site);
-            }
+            $site = $this->site ?: Xcart::app()->getModule('Sites')->getSite();
+            $url = '//' . $site->domain . $url;
         }
-        else {
-            $slug = $this->createSlug($this->category);
-            return Xcart::app()->router->url('catalog:view', ['id' => $this->pk, 'slug' => empty($slug) ? $this->pk : $slug]);
-        }
-
-
-        return false;
+        return $url;
     }
 
     public function getFrontendName()
@@ -240,5 +230,10 @@ class CategoryModel extends TreeModel
                 CategoryCalculateHelper::recalcParents($this->parentid, true);
             }
         }
+    }
+
+    public function getSlugPart(): string
+    {
+        return $this->createSlug($this->category);
     }
 }

@@ -7,7 +7,8 @@ config = {
   entry: paths.src.jsx_bundles,
   output: {
     path: path.resolve("./" + paths.dst.jsx),
-    filename: "[name].js",
+    filename: "[name].[hash].js",
+    clean: true
   },
   target: "web",
   resolve: {

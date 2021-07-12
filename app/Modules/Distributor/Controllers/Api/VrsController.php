@@ -9,6 +9,7 @@ use Modules\Distributor\Models\VrsHelperMessagesModel;
 use Modules\Distributor\Models\VrsHelperSitesModel;
 use Modules\User\Models\UserModel;
 use Modules\User\UserModule;
+use Throwable;
 use Xcart\App\Controller\Controller;
 use \Firebase\JWT\JWT;
 use Xcart\App\Exceptions\Exception;
@@ -156,10 +157,7 @@ class VrsController extends Controller
                 $this->jsonResponse(['user' => $user]);
                 return;
           }
-
-          catch (Exception $e){
-
-              // код ответа
+          catch (Throwable $e){
               $this->jsonResponse('jwt dead');
           }
       }

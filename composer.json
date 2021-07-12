@@ -15,6 +15,7 @@
         "claviska/simpleimage": "^3.3",
         "cocur/slugify": "^3.0",
         "dariuszp/cli-progress-bar": "^1.0",
+        "doctrine/cache": "1.4",
         "doctrine/dbal": "^3.0",
         "fabpot/goutte": "^3.2",
         "facebook/php-business-sdk": "^3.2",

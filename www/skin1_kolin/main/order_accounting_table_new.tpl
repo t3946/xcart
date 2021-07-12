@@ -295,7 +295,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
   <td>{if $v.total.net eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$v.total.net}{/if}</td>
   <td>
   {if !$static || $static eq 'O'}
-  <select name="groups{if $static eq 'O'}[{$v.oOrderGroup->getOrderId()}]{/if}[{$v.oOrderGroup->getManufacturerId()}][paymentid]">
+  <select style="width=180px" name="groups{if $static eq 'O'}[{$v.oOrderGroup->getOrderId()}]{/if}[{$v.oOrderGroup->getManufacturerId()}][paymentid]">
       <option value="0"></option>
       {html_options options=$v.oOrderGroup->getPaymentMethodsAvailForOrderGroup() selected=$v.oOrderGroup->getPaymentMethodId()}
   </select>

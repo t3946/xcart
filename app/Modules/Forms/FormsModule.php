@@ -15,7 +15,7 @@ class FormsModule extends Module
         $menu = [];
         $menu[] =  [
             'name' => 'Inbox/Sorting dashboard',
-            'route' => '/admin/forms/email-dashboard/page/1',
+            'route' => Xcart::app()->router->url('forms:page', ['page' => 1])
         ];
         $adminClasses = static::getAdminClasses();
         foreach ($adminClasses as $adminClass) {

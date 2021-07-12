@@ -38,11 +38,6 @@ class SnippetsAdmin extends Admin
                 'template' => $this->columnDefaultTemplate,
                 'order' => 'name'
             ],
-            'description' => [
-                'title' => 'Description',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'code'
-            ],
         ];
     }
 

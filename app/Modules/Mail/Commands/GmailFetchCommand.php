@@ -20,21 +20,10 @@ class GmailFetchCommand extends Command
 
         $service = new Google_Service_Gmail($client);
 
+        GmailHelper::fetchLabels($service, $userId);
 
-        foreach ($labels = GmailHelper::listLabels($service, $userId) as $label) {
-            [$labelModel] = LabelModel::objects()->getOrNew(['label_id' => $label->getId()]);
-            $labelModel->setAttributes([
-                'name' => $label->getName(),
-                'background_color' => $label->getColor() ? $label->getColor()->getBackgroundColor() : '',
-                'color' => $label->getColor() ? $label->getColor()->getTextColor() : '',
-                'type' => $label->getType(),
-            ]);
-            $labelModel->save();
-        }
-
-        $messages = GmailHelper::listMessages($service, $userId);
-        foreach ($messages as $message) {
-            GetNewMessagesHelper::getNewMessages($service,$userId,$message);
+        foreach (GmailHelper::listMessages($service, $userId) as $message) {
+            GetNewMessagesHelper::getNewMessage($service, $userId, $message);
         }
     }
 }

@@ -21,7 +21,6 @@ use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Goods\Stores\SupplierFeedStore;
-use Modules\Menu\Models\CleanUrlModel;
 use Xcart\App\Helpers\Paths;
 
 class SupplierFeedHelper
@@ -196,9 +195,6 @@ class SupplierFeedHelper
                 'productid' => $model->productid,
                 'sfid' => $feed->storefront_id]))
                 ->save();
-            [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'P', 'resource_id' => $model->productid]);
-            $url->clean_url = func_clean_url_autogenerate('P', $model->productid, ['product' => $model->getFrontendName(), 'productcode' => $model->productcode]);
-            $url->save();
         }
 
         self::feedImages($model, $feed, $data);
@@ -353,11 +349,6 @@ class SupplierFeedHelper
                 ]);
 
                 $brand->save();
-
-
-                [$url] = CleanUrlModel::objects()->getOrNew(['resource_type' => 'M', 'resource_id' => $brand->brandid]);
-                $url->clean_url = func_clean_url_autogenerate('M', $brand->brandid, array('brand' => $data));
-                $url->save();
             }
 
             BrandStorefrontModel::objects()->getOrCreate([

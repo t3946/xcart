@@ -158,13 +158,6 @@ SQL;
             $fba_pids = [];
             $i_ids = array_map(function($item){ return $item['needed_resource_id']; }, $pids);
 
-            if (!\in_array($section_name, ['related_products', 'recently_viewed_products'])
-                && $fba_pids = Product::getRandFbaProducts($fba_limit, array_merge($i_ids, [$productid]), $site->pk))
-            {
-                $fba_pids = array_map(function($item){ return $item['needed_resource_id']; }, $fba_pids);
-                $i_ids = array_merge($fba_pids, $i_ids);
-            }
-
             if (($key = array_search($productid, $i_ids, true)) !== false) {
                 unset($i_ids[$key]);
             }
