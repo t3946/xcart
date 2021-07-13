@@ -1,15 +1,17 @@
 <?php
 namespace Modules\Sites\Models;
 
-use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignCharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\HasToOneField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
@@ -150,11 +152,132 @@ class SiteModel extends Model
                     'D' => 'Disabled'
                 ],
             ],
-            /*'company_name',
-            'company_website',
+            'company_name' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'opt_shop_closed' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'shop_closed_method' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => '',
+                'choices' => [
+                    '',
+                    1 => 'show closed storefront banner',
+                    2 => 'redirect to storefront home page',
+                    3 => 'keep all visits on and show suggested links to other storefronts',
+                    4 =>'try to redirect visit to proper product on other storefronts',
+                ],
+                'verboseName' => 'Behavior of processing visits'
+            ],
+            'company_website' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'cidev_top_header_code' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'local_phone' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'fax_number' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'cidev_header_code' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'customer_service_working_time' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'opt_order_prefix' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'newsletter_email' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'start_year' => [
+                'class' => IntField::class,
+                'length' => 4,
+                'default' => null,
+            ],
+            'search_all_website_show' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'Enable_CDN' => [
+              'class' => BooleanField::class,
+              'null' => false,
+              'default' => false,
+            ],
+            'CDN_domain' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'Google_Trusted_Store_ID' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'Enable_surf_stats' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'Preferred_served_country' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => null,
+            ],
+            'currency' => [
+                'field' => 'currency_id',
+                'class' => ForeignField::class,
+                'modelClass' => CurrencyModel::class,
+                'link' => ['currency_id' => 'currency_id'],
+            ],
+            'flat_shipping_enabled' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'lang' => [
+                'field' => 'lang_id',
+                'class' => ForeignField::class,
+                'modelClass' => LanguageModel::class,
+                'link' => ['lang_id' => 'lang_id'],
+            ],
+            'file_edit_image_favicon' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/favicons/',
+                'null' => true,
+            ],
+
+            /*
             'cidev_top_header_code',
-            'local_phone',
-            'fax_number',
+            'local_phone', +
+            'fax_number', +
             'cidev_footer_code',
             'cidev_header_code',
             'customer_service_working_time',
@@ -162,12 +285,12 @@ class SiteModel extends Model
             'cidev_yandex_code_number',
             'opt_order_prefix',
             'newsletter_email',
-            'start_year',
+            'start_year', +
             'search_all_website_show',
             'shop_closed_method',
             'shop_closed',
             'Enable_CDN',
-            'CDN_domain',
+            'CDN_domain', +
             'Enable_surf_stats',
             'Preferred_served_country',
             'Preferred_language',

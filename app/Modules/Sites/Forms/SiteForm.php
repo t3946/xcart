@@ -2,8 +2,12 @@
 
 namespace Modules\Sites\Forms;
 
+use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
@@ -47,6 +51,126 @@ class SiteForm extends ModelForm
                 'html' => [
                     'class' => 'select2-field',
                 ],
+            ],
+            'company_name' => [
+                'class' => CharField::class,
+                'label' => 'Company name',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'opt_shop_closed' => [
+                'class' => CheckboxField::class,
+                'label' => 'Check this to close your shop temporarily',
+            ],
+            'company_website' => [
+                'class' => CharField::class,
+                'label' => 'Company website',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'cidev_top_header_code' => [
+                'class' => CharField::class,
+                'label' => 'Toll free customer service phone',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'local_phone' => [
+                'class' => CharField::class,
+                'label' => 'Local phone',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'fax_number' => [
+                'class' => CharField::class,
+                'label' => 'Fax number',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'cidev_header_code' => [
+                'class' => CharField::class,
+                'label' => 'Search string text',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'customer_service_working_time' => [
+                'class' => CharField::class,
+                'label' => 'Working time',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'opt_order_prefix' => [
+                'class' => CharField::class,
+                'label' => 'Order prefix',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'newsletter_email' => [
+                'class' => CharField::class,
+                'label' => 'Reply-To newsletter email address',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'start_year' => [
+                'class' => CharField::class,
+                'label' => 'Year when the store started its operation',
+            ],
+            'search_all_website_show' => [
+                'class' => CheckboxField::class,
+                'label' => "Search on s3stores.com must contain this SF's products",
+            ],
+            'Enable_CDN' => [
+                'class' => CheckboxField::class,
+                'label' => "Enable CDN",
+            ],
+            'CDN_domain' => [
+                'class' => CharField::class,
+                'label' => 'CDN domain',
+                'html' => [
+                    'class' => 'common-input'
+                ]
+            ],
+            'Google_Trusted_Store_ID' => [
+                'class' => CharField::class,
+                'label' => 'Google Trusted Store ID',
+            ],
+            'Enable_surf_stats' => [
+                'class' => CheckboxField::class,
+                'label' => 'Enable surf stats',
+            ],
+            'Preferred_served_country' => [
+                'class' => CharField::class,
+                'label' => 'Preferred served country',
+            ],
+            'currency' => [
+                'class' => DropDownField::class,
+                'label' => 'Storefront currency',
+                'choices' => (static function () {
+                    foreach (CurrencyModel::objects() as $model) {
+                        $res[$model->pk] = $model->currency_code;
+                    }
+                    return $res ?? [];
+                })(),
+            ],
+            'flat_shipping_enabled' => [
+                'class' => CheckboxField::class,
+                'label' => 'Flat Shipping',
+            ],
+            'lang' => [
+                'class' => DropDownField::class,
+                'label' => 'Preferred language',
+            ],
+            'file_edit_image_favicon' => [
+                'class' => ImageField::class,
+                'label' => 'Storefront favicon',
             ],
         ];
     }
