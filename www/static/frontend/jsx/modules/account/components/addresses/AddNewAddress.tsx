@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { AddressDialogContext } from "../../contexts/address-dialog-context/AddressDialogContext";
+import { AddressDialogContext } from "../../contexts/AddressDialogContext";
 
 export const AddNewAddress = () => {
   const dialog = useContext(AddressDialogContext);
   return (
-    <div className="add-address address-container">
-      <div onClick={() => dialog.handleClickOpen()}>
+    <div
+      onClick={() => dialog.handleClickOpen()}
+      className="add-address address-container"
+    >
+      <div>
         <img src="/static/frontend/images/icons/account/plus.svg" />
       </div>
       <div className="add-address-label">Add new address</div>

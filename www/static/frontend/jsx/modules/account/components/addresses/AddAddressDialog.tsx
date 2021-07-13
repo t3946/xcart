@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Dialog } from "@material-ui/core";
-import { AddressDialogContext } from "../../contexts/address-dialog-context/AddressDialogContext";
+import { AddressDialogContext } from "../../contexts/AddressDialogContext";
 import { DialogHeader } from "../dialog/DialogHeader";
 
 export const AddAddressDialog = () => {

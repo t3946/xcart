@@ -1,5 +1,5 @@
 import React from "react";
-import { AddressDialogContext } from "../contexts/address-dialog-context/AddressDialogContext";
+import { AddressDialogContext } from "../contexts/AddressDialogContext";
 
 export const AddressDialogHOC = (
   component: React.ReactNode,
@@ -17,15 +17,17 @@ export const AddressDialogHOC = (
       setOpen(false);
       func && func();
     };
-
-    const dialog = {
-      open,
-      handleClickOpen,
-      handleClose,
-    };
+    //
+    // const dialog = {
+    //   open,
+    //   handleClickOpen,
+    //   handleClose,
+    // };
 
     return (
-      <AddressDialogContext.Provider value={dialog}>
+      <AddressDialogContext.Provider
+        value={{ open, handleClickOpen, handleClose }}
+      >
         {component}
         {dialog}
       </AddressDialogContext.Provider>
