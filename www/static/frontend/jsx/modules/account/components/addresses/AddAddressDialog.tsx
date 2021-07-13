@@ -21,7 +21,6 @@ export const AddAddressDialog = () => {
       }}
     >
       <DialogHeader label="Add address" onClose={dialog.handleClose} />
-      123213123
     </Dialog>
   );
 };
