@@ -154,12 +154,12 @@ class SiteModel extends Model
             ],
             'company_name' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'opt_shop_closed' => [
                 'class' => BooleanField::class,
-                'null' => false,
+                'null' => true,
                 'default' => false,
             ],
             'shop_closed_method' => [
@@ -177,47 +177,48 @@ class SiteModel extends Model
             ],
             'company_website' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'cidev_top_header_code' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'local_phone' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'fax_number' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'cidev_header_code' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'customer_service_working_time' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'opt_order_prefix' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'newsletter_email' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'start_year' => [
                 'class' => IntField::class,
                 'length' => 4,
+                'null' => true,
                 'default' => null,
             ],
             'search_all_website_show' => [
@@ -232,12 +233,12 @@ class SiteModel extends Model
             ],
             'CDN_domain' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'Google_Trusted_Store_ID' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'Enable_surf_stats' => [
@@ -247,7 +248,7 @@ class SiteModel extends Model
             ],
             'Preferred_served_country' => [
                 'class' => CharField::class,
-                'null' => false,
+                'null' => true,
                 'default' => null,
             ],
             'currency' => [
@@ -265,6 +266,8 @@ class SiteModel extends Model
                 'field' => 'lang_id',
                 'class' => ForeignField::class,
                 'modelClass' => LanguageModel::class,
+                'null' => true,
+                'default' => null,
                 'link' => ['lang_id' => 'lang_id'],
             ],
             'file_edit_image_favicon' => [
