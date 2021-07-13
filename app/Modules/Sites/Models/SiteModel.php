@@ -27,12 +27,12 @@ use Xcart\App\Orm\Model;
  * @property null|Manager favicons
  * @property string code
  * @property Manager|TaxModel[] taxes
+ * @property CurrencyModel currency
  */
 class SiteModel extends Model
 {
     private $_config = [];
     private $_globalConfig = [];
-    private $currency;
 
 
     public function __toString()
@@ -59,12 +59,12 @@ class SiteModel extends Model
         return "[{$this->code}] {$this->getName()}{$str}";
     }
 
-    public static function tableName() : string
+    public static function tableName(): string
     {
         return 'xcart_storefronts';
     }
 
-    public static function getFields() :array
+    public static function getFields(): array
     {
         return [
 
@@ -157,7 +157,7 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => null,
             ],
-            'opt_shop_closed' => [
+            'shop_closed' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false,
@@ -171,7 +171,7 @@ class SiteModel extends Model
                     1 => 'show closed storefront banner',
                     2 => 'redirect to storefront home page',
                     3 => 'keep all visits on and show suggested links to other storefronts',
-                    4 =>'try to redirect visit to proper product on other storefronts',
+                    4 => 'try to redirect visit to proper product on other storefronts',
                 ],
                 'verboseName' => 'Behavior of processing visits'
             ],
@@ -226,9 +226,9 @@ class SiteModel extends Model
                 'default' => false,
             ],
             'Enable_CDN' => [
-              'class' => BooleanField::class,
-              'null' => false,
-              'default' => false,
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
             ],
             'CDN_domain' => [
                 'class' => CharField::class,
@@ -273,28 +273,6 @@ class SiteModel extends Model
                 'uploadTo' => 'images/favicons/',
                 'null' => true,
             ],
-
-            /*
-            'cidev_top_header_code',
-            'local_phone', +
-            'fax_number', +
-            'cidev_footer_code',
-            'cidev_header_code',
-            'customer_service_working_time',
-            'cidev_ga_code_number',
-            'cidev_yandex_code_number',
-            'opt_order_prefix',
-            'newsletter_email',
-            'start_year', +
-            'search_all_website_show',
-            'shop_closed_method',
-            'shop_closed',
-            'Enable_CDN',
-            'CDN_domain', +
-            'Enable_surf_stats',
-            'Preferred_served_country',
-            'Preferred_language',
-            'currency',*/
         ];
     }
 
@@ -306,6 +284,7 @@ class SiteModel extends Model
             foreach ($config as $item) {
                 $this->_config[$item['name']] = $item['value'];
             }
+            $this->_config = array_merge($this->_config, $this->getAttributes());
         }
 
         return $this->_config;
@@ -333,19 +312,13 @@ class SiteModel extends Model
 
     public function isWork()
     {
-        if ($config = $this->getConfig()) {
-            return (empty($config['shop_closed']) || $config['shop_closed'] === 'N');
-        }
-
-        return ($this->status !== 'D');
+        return !$this->shop_closed;
     }
 
     public function showInLists()
     {
         if ($this->isWork()) {
-            if ($config = $this->getConfig()) {
-                return (empty($config['search_all_website_show']) || $config['search_all_website_show'] === 'Y');
-            }
+            return $this->search_all_website_show;
         }
 
         return false;
@@ -411,11 +384,8 @@ class SiteModel extends Model
         return $this->code. '-';
     }
 
-    public function getCurrency():? CurrencyModel
+    public function getCurrency(): CurrencyModel
     {
-        if ($this->currency === null) {
-            $this->currency = CurrencyModel::objects()->get(['currency_id' => $this->getConfig()['currency'] ?? 1]);
-        }
         return $this->currency;
     }
 

@@ -48,7 +48,7 @@
                                         </div>
 
                                         <div class="columns show-for-medium medium-5 large-4">
-                                            {if $config.flat_shipping_enabled !== 'N'}
+                                            {if $config.flat_shipping_enabled}
                                             <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>
@@ -82,7 +82,7 @@
                                 <div class="mobile-banner hide-for-medium">
                                     <div class="row align-justify">
                                         <div class="columns banner">
-                                            {if $config.flat_shipping_enabled !== 'N'}
+                                            {if $config.flat_shipping_enabled}
                                             <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>

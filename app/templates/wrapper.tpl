@@ -11,7 +11,7 @@
     {set $gConfig = $site->getGlobalConfig()}
     {set $site_currency = $site->getCurrency()}
     {set $uri = $is_dev_mode ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
-    {set $translates = $.call.Modules.Translate.Classes.I18nextManager::getTranslates($config[ 'Preferred_language' ])}
+    {set $translates = $.call.Modules.Translate.Classes.I18nextManager::getTranslates($site->lang->lang_code)}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -69,7 +69,7 @@
 
     {block 'noindex'}{/block}
 
-    <link rel="shortcut icon" href="{$site->favicons->get()}" type="image/png" />
+    <link rel="shortcut icon" href="{$uri}{$site->file_edit_image_favicon->getValue()}" type="image/png" />
 <style>
     #lex-web-ui-iframe{
         display: none;

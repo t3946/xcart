@@ -59,7 +59,7 @@ class SiteForm extends ModelForm
                     'class' => 'common-input'
                 ]
             ],
-            'opt_shop_closed' => [
+            'shop_closed' => [
                 'class' => CheckboxField::class,
                 'label' => 'Check this to close your shop temporarily',
             ],
