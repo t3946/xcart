@@ -62,7 +62,8 @@ class VrsController extends Controller
       {
           $dx = DistributorModel::objects()->limit(1)->get(['url__contains' => $domain]);
           $status = $site_model['status'];
-          $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => '2008-05-16 08:19:23', 'user' => $dx->provider_model::objects()->asArray(true)->all()[0]];
+          $dx_created_user = ['b_firstname' => $dx->provider_model->getAttributes()['b_firstname'], 'b_lastname' => $dx->provider_model->getAttributes()['b_lastname']];
+          $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => $dx->created_at, 'user' => $dx_created_user];
       }
 
 
