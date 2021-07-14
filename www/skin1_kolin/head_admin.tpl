@@ -1,4 +1,4 @@
-<div id="admin-hat-target"></div>
+<div id="admin-hat-target" style="height: 101px"></div>
 
 <table class="admin-hat" cellpadding="0" cellspacing="0" width="100%" style="display: none">
     <tr>
@@ -88,5 +88,5 @@
 </table>
 
 {if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
-    <div id="admin-search-line-target"></div>
+    <div id="admin-search-line-target" style="height: 45px"></div>
 {/if}
