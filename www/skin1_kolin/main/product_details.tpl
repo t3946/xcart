@@ -376,8 +376,13 @@
                         </select>
 
                         {if $usertype eq "A"}
+                            {if $oProduct}
+                                <a href="{$oProduct->distributor->getAdminUrl()}" target="_blank">Link to
+                                    Distributor's page on back-end ({$product.manufacturer})</a>
+                            {else}
                             <a href="manufacturers.php?manufacturerid={$product.manufacturerid}" target="_blank">Link to
                                 Distributor's page on back-end ({$product.manufacturer})</a>
+                            {/if}
                         {/if}
 
                     </td>
