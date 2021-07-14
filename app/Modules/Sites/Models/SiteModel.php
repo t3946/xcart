@@ -262,6 +262,11 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => false,
             ],
+            'show_full_state_country' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
             'lang' => [
                 'field' => 'lang_id',
                 'class' => ForeignField::class,

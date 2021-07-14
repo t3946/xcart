@@ -164,6 +164,10 @@ class SiteForm extends ModelForm
                 'class' => CheckboxField::class,
                 'label' => 'Flat Shipping',
             ],
+            'show_full_state_country' => [
+                'class' => CheckboxField::class,
+                'label' => 'Show full State & Country Name',
+            ],
             'lang' => [
                 'class' => DropDownField::class,
                 'label' => 'Preferred language',
