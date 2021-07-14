@@ -5,6 +5,8 @@ import CatalogContext from "@/components/catalog/CatalogContext";
 import LoadMore from "@/components/catalog/LoadMore";
 import Storage from "@/utils/localStorage/storage";
 
+import $ from "jquery";
+
 export default class Catalog extends Component {
   constructor(props) {
     super(props);
@@ -35,7 +37,50 @@ export default class Catalog extends Component {
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
       pager: null,
+      infinityLoad: true,
     };
+
+    if (this.state.infinityLoad) {
+      //загрузить ещё товары, если видно днище каталога
+      let scrollTimeOut = null;
+      const $document = $(document);
+
+      $document.scroll(() => {
+        clearTimeout(scrollTimeOut);
+
+        //товары уже загружаются
+        if (this.state.isLoading) {
+          return;
+        }
+
+        //все товары уже загружены
+        if (this.state.nextPageUrl === null) {
+          return;
+        }
+
+        scrollTimeOut = setTimeout(() => {
+          const $catalog = $(".catalog-component");
+          const catalogOffsetTop = $catalog.offset().top;
+          const catalogOffsetHeight = $catalog.height();
+
+          // начинать загрузку ещё до того как будет прокручено до днища
+          const expandBorder = document.body.clientHeight / 3;
+          const catalogBottomOffset = catalogOffsetTop + catalogOffsetHeight;
+          const topScreenBorderOffset = $document.scrollTop() + expandBorder;
+          const bottomScreenBorderOffset =
+            topScreenBorderOffset + document.body.clientHeight + expandBorder;
+
+          if (
+            catalogBottomOffset >= topScreenBorderOffset &&
+            catalogBottomOffset <= bottomScreenBorderOffset
+          ) {
+            this.productList.current.loadData();
+          }
+        }, 300);
+      });
+    }
+
+    $(".catalog-skeleton").remove();
   }
 
   onUpdateProductList(pager, nextPageUrl) {
@@ -95,6 +140,11 @@ export default class Catalog extends Component {
   }
 
   loadMoreButtonTemplate() {
+    // новый режим авто-подгрузки товаров
+    if (this.state.infinityLoad) {
+      return;
+    }
+
     // все товары были загружены
     if (!this.state.nextPageUrl) {
       return;
@@ -132,8 +182,6 @@ export default class Catalog extends Component {
             sortKey={this.state.sortKey}
             searchText={this.props.searchText}
           />
-
-          {this.printStateLine()}
 
           {this.loadMoreButtonTemplate()}
         </CatalogContext.Provider>

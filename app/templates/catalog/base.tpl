@@ -52,7 +52,25 @@
                      data-hide-sort="{$hide_sort}"
                      data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
                      data-search-text="{$q|escape}"
-                ></div>
+                >
+                    {*скелеты*}
+                    <div class="catalog-skeleton">
+                        <div class="skeleton-box products-state-line"></div>
+                        <div class="product-items tile-view product-items__tile">
+                            {for $counter=1 to=20}
+                                <div class="catalog-product__tile catalog-product_tile catalog-product item">
+                                    <div class="skeleton-box" style="margin: 0 0 10px 0; height: 172px"></div>
+                                    <div class="skeleton-box" style="margin: 0 0 5px 0; height: 40px"></div>
+                                    <div class="skeleton-box" style="margin: 0 0 5px 0; height: 15px"></div>
+                                    <div style="justify-content: space-between; display: flex">
+                                        <div class="skeleton-box" style="width: 47.5%; height: 35px"></div>
+                                        <div class="skeleton-box" style="width: 47.5%; height: 35px"></div>
+                                    </div>
+                                </div>
+                            {/for}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
