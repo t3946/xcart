@@ -63,7 +63,9 @@
 
                                         <div class="columns hide-for-large small-6 medium-4 small-offset-0 medium-offset-0 text-align--right mobile-header">
 
-                                            <a href="tel:18009292431" class="mobile__call-btn middle-inline-block right-icon"></a>
+                                            {if $.workingDayTimeNow}
+                                                <a href="tel:18009292431" class="mobile__call-btn middle-inline-block right-icon"></a>
+                                            {/if}
 
                                             <a class="mobile__search-btn middle-inline-block right-icon" data-swich="search_container"></a>
                                             {*data-swich="search_container"*}
