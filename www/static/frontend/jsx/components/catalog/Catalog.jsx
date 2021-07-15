@@ -4,7 +4,6 @@ import ProductsList from "@/components/catalog/ProductsList";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import LoadMore from "@/components/catalog/LoadMore";
 import Storage from "@/utils/localStorage/storage";
-
 import $ from "jquery";
 
 export default class Catalog extends Component {
@@ -37,47 +36,29 @@ export default class Catalog extends Component {
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
       pager: null,
-      infinityLoad: true,
+      infinityLoad: false,
+      observeProduct: null,
+      infinityLoadObserver: null,
     };
 
     if (this.state.infinityLoad) {
-      //загрузить ещё товары, если видно днище каталога
-      let scrollTimeOut = null;
-      const $document = $(document);
+      const options = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5,
+      };
 
-      $document.scroll(() => {
-        clearTimeout(scrollTimeOut);
-
-        //товары уже загружаются
-        if (this.state.isLoading) {
-          return;
-        }
-
-        //все товары уже загружены
-        if (this.state.nextPageUrl === null) {
-          return;
-        }
-
-        scrollTimeOut = setTimeout(() => {
-          const $catalog = $(".catalog-component");
-          const catalogOffsetTop = $catalog.offset().top;
-          const catalogOffsetHeight = $catalog.height();
-
-          // начинать загрузку ещё до того как будет прокручено до днища
-          const expandBorder = document.body.clientHeight / 3;
-          const catalogBottomOffset = catalogOffsetTop + catalogOffsetHeight;
-          const topScreenBorderOffset = $document.scrollTop() + expandBorder;
-          const bottomScreenBorderOffset =
-            topScreenBorderOffset + document.body.clientHeight + expandBorder;
-
-          if (
-            catalogBottomOffset >= topScreenBorderOffset &&
-            catalogBottomOffset <= bottomScreenBorderOffset
-          ) {
-            this.productList.current.loadData();
-          }
-        }, 300);
-      });
+      this.state.infinityLoadObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              observer.unobserve(this.state.observeProduct);
+              this.productList.current.loadData();
+            }
+          });
+        },
+        options
+      );
     }
 
     $(".catalog-skeleton").remove();
@@ -136,7 +117,28 @@ export default class Catalog extends Component {
   }
 
   onEndLoading() {
-    this.setState({ printStateLines: true, isLoading: false });
+    this.setState({
+      printStateLines: true,
+      isLoading: false,
+    });
+  }
+  componentDidUpdate() {
+    if (this.state.infinityLoad) {
+      const newObserveProduct = $(".product-items .catalog-product").last()[0];
+
+      if (
+        newObserveProduct &&
+        this.state.observeProduct !== newObserveProduct
+      ) {
+        this.setState({
+          observeProduct: newObserveProduct,
+        });
+
+        if (this.state.nextPageUrl) {
+          this.state.infinityLoadObserver.observe(newObserveProduct);
+        }
+      }
+    }
   }
 
   loadMoreButtonTemplate() {
