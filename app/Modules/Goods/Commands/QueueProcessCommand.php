@@ -5,6 +5,7 @@ namespace Modules\Goods\Commands;
 
 
 use Modules\Goods\Helpers\ProductHelper;
+use Modules\Goods\Models\GroupIndexModel;
 use Modules\Goods\Models\ProductModel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Xcart\App\Commands\Command;
@@ -29,6 +30,8 @@ class QueueProcessCommand extends Command
                 }
             }
         }
+        //$group = new GroupIndexModel();
+        //$group->save();
         return ProductHelper::getNewGroupSKU($data['manufacturerid']);
     }
 
