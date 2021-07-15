@@ -8,7 +8,11 @@
     font-size: rem-calc(13);
 
     &:hover {
-        background: #f1f1f1;
+        background: #fff1c9;
+    }
+
+    &:active {
+        background: #fde192;
     }
 }
 

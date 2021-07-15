@@ -135,20 +135,34 @@ const HatReference: React.FC<any> = function () {
 
   return (
     <div className="container">
-      <div className="pt-4 pb-4">
+      <div className="hat-reference">
         <div className="row">
-          <div className="col layout-column__left">{selectSiteTemplate()}</div>
+          <div className="col layout-column__left">
+            <a href="/admin" className="hat-logo-link">
+              <img
+                src="/static/frontend/images/logos/s3stores_footer.svg"
+                alt="s3stores"
+              />
+            </a>
+          </div>
 
           <div className="col">
-            <div className="column-right-wrapper">
-              <div className="holiday-block hat_holiday-block">
-                <div className="hat-date">{appData().hat.date}</div>
-                <div className="until-holiday">{appData().hat.holiday}</div>
+            <div className="column-right-wrapper row hat-reference_right-column">
+              <div className="col-3">
+                <div className="holiday-block hat_holiday-block">
+                  <div className="hat-date">{appData().hat.date}</div>
+                  <div className="until-holiday">{appData().hat.holiday}</div>
+                </div>
               </div>
 
-              <div className="time-block">{timeTemplate()}</div>
+              <div className="col-6 text-center">
+                <div className="time-block">{timeTemplate()}</div>
+              </div>
+
+              <div className="col-3">{selectSiteTemplate()}</div>
             </div>
           </div>
+
           <div className="col column__right align-items-end d-flex flex-column">
             {loginButton()}
           </div>

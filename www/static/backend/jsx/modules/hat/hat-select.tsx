@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { useCLickListener } from "@s3stores-mail/hooks/useCLickListener";
+import classNames from "classnames";
 
-export const HatSelect: React.FC<any> = ({ items, name }) => {
+export const HatSelect: React.FC<any> = (props) => {
+  const { items, name, className } = props;
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(items[0]);
+  const searchSelectTaxonomyClasses = classNames([
+    className,
+    "select select-send search-select-taxonomy",
+    { open },
+  ]);
 
   useCLickListener(setOpen);
 
   return (
     <div
-      className={`select select-send ${open && "open"}`}
+      className={searchSelectTaxonomyClasses}
       onClick={(e) => {
         e.stopPropagation();
         setOpen(!open);
@@ -22,7 +29,9 @@ export const HatSelect: React.FC<any> = ({ items, name }) => {
         name={name}
       />
 
-      <div className="select__head hat">{value.viewValue}</div>
+      <div className="select__head hat search-select-taxonomy-button">
+        {value.viewValue}
+      </div>
 
       <ul className={`select__list hat`}>
         {items.map((item) => {
