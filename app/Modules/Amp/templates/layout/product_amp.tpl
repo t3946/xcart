@@ -18,6 +18,7 @@
 {/block}
 </head>
 <body>
+<amp-analytics config="https://www.googletagmanager.com/amp.json?id=GTM-K6QLRLX&gtm.url=SOURCE_URL" data-credentials="include"></amp-analytics>
 <div id="main">
     {block 'main'}
         <div class="main-content">
