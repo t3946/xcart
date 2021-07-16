@@ -350,7 +350,6 @@ $("a.select-order").click(function () {
 // /html/app/Modules/Goods/templates/verification/all.tpl
 $(function () {
   if (!appData().goodsModule) {
-    console.log("no goodsModule");
     return;
   }
 
