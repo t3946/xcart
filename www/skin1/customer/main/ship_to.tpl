@@ -1,1 +1,0 @@
-Ship To:    <INPUT type="text" name="Ship_To_name" size="30" maxlength="255" value="{$userinfo.firstname} {$userinfo.lastname}"><BR>
