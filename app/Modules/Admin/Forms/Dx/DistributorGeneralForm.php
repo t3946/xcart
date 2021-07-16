@@ -45,7 +45,8 @@ class DistributorGeneralForm extends DistributorForm
                 'label' => 'Added by',
                 'hint' => LanguageModel::translate('help_dx_provider_text'),
                 'html' => [
-                    'style' => 'border: none; width: 100%'
+                    'style' => 'border: none; width: 100%',
+                    'readonly' => true,
                 ],
                 'value' => $provider . ($created ? " on {$created}" : ''),
                 'fieldTemplate' => $this->fieldTemplate,

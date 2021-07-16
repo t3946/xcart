@@ -1,7 +1,10 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -127,31 +130,6 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'default' => '',
             ],
-            'corporates' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => CorporateModel::class,
-                'through' => CorporateStorefrontsModel::class,
-            ],
-            'taxes' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => TaxModel::class,
-                'through' => SiteTaxModel::class,
-            ],
-            'payment_methods' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => PaymentMethodModel::class,
-                'through' => SitePaymentMethodModel::class,
-            ],
-            'status' => [
-                'class' => CharField::class,
-                'null' => false,
-                'default' => 'D',
-                'choices' => [
-                    'Y' => 'Enabled',
-                    'E' => 'Service',
-                    'D' => 'Disabled'
-                ],
-            ],
             'company_name' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -246,10 +224,9 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => false,
             ],
-            'Preferred_served_country' => [
+            'country_code' => [
                 'class' => CharField::class,
-                'null' => true,
-                'default' => null,
+                'field' => 'country',
             ],
             'currency' => [
                 'field' => 'currency_id',
@@ -280,6 +257,31 @@ class SiteModel extends Model
                 'adapterName' => 'www',
                 'uploadTo' => 'images/favicons/',
                 'null' => true,
+            ],
+            'corporates' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => CorporateModel::class,
+                'through' => CorporateStorefrontsModel::class,
+            ],
+            'taxes' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => TaxModel::class,
+                'through' => SiteTaxModel::class,
+            ],
+            'payment_methods' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => PaymentMethodModel::class,
+                'through' => SitePaymentMethodModel::class,
+            ],
+            'status' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => 'D',
+                'choices' => [
+                    'Y' => 'Enabled',
+                    'E' => 'Service',
+                    'D' => 'Disabled'
+                ],
             ],
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Modules\Sites\Forms;
 
+use Modules\Core\Models\CountryModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
@@ -62,6 +63,12 @@ class SiteForm extends ModelForm
             'shop_closed' => [
                 'class' => CheckboxField::class,
                 'label' => 'Check this to close your shop temporarily',
+            ],
+            'shop_closed_method' => [
+                'class' => Select2Field::class,
+                'html' => [
+                    'class' => 'select2-field'
+                ],
             ],
             'company_website' => [
                 'class' => CharField::class,
@@ -146,12 +153,21 @@ class SiteForm extends ModelForm
                 'class' => CheckboxField::class,
                 'label' => 'Enable surf stats',
             ],
-            'Preferred_served_country' => [
-                'class' => CharField::class,
+            'country_code' => [
+                'class' => Select2Field::class,
                 'label' => 'Preferred served country',
+                'choices' => function () {
+                    foreach (CountryModel::objects() as $model) {
+                        $result[$model->code] = "{$model->code}: {$model->name}";
+                    }
+                    return $result ?? [];
+                },
+                'html' => [
+                    'class' => 'select2-field'
+                ],
             ],
             'currency' => [
-                'class' => DropDownField::class,
+                'class' => Select2Field::class,
                 'label' => 'Storefront currency',
                 'choices' => (static function () {
                     foreach (CurrencyModel::objects() as $model) {
@@ -159,6 +175,9 @@ class SiteForm extends ModelForm
                     }
                     return $res ?? [];
                 })(),
+                'html' => [
+                    'class' => 'select2-field'
+                ],
             ],
             'flat_shipping_enabled' => [
                 'class' => CheckboxField::class,
@@ -169,8 +188,11 @@ class SiteForm extends ModelForm
                 'label' => 'Show full State & Country Name',
             ],
             'lang' => [
-                'class' => DropDownField::class,
+                'class' => Select2Field::class,
                 'label' => 'Preferred language',
+                'html' => [
+                    'class' => 'select2-field'
+                ],
             ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,

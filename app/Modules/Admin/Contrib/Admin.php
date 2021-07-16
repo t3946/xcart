@@ -3,6 +3,8 @@
 namespace Modules\Admin\Contrib;
 
 
+use Xcart\App\Form\Fields\DateRangeField;
+use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -477,7 +479,20 @@ abstract class Admin
                     } else {
                         $qs->filter([$key => $value]);
                     }
-                } elseif (is_array($value)) {
+                }
+                elseif ($model_field instanceof DateField) {
+                    $ar_time = explode('-', $value);
+                    $ar_time = array_map(function ($a) {
+                        $date_time = \DateTime::createFromFormat('m/d/Y', trim($a));
+                        $date_time->setTime(0,0,0);
+                        return $date_time;
+                    }, $ar_time);
+                    $qs->filter(["{$key}__gte" => $ar_time[0]]);
+                    if(isset($ar_time[1])) {
+                        $qs->filter(["{$key}__lte" => $ar_time[1]]);
+                    }
+                }
+                elseif (is_array($value)) {
                     $qs->filter(["{$key}__in" => $value]);
                 } else {
                     $qs->filter([$key => $value]);
