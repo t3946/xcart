@@ -122,7 +122,7 @@ class TemplateManager
         });
 
         $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
-            return CurrentSiteHelper::formatCurrency($variable);
+            return CurrentSiteHelper::formatCurrency($variable, $param ?: null);
         });
 
         $this->_renderer->addAccessorSmart("app", "app", Fenom::ACCESSOR_PROPERTY);
