@@ -62,12 +62,10 @@
 }
 
 .product-slider-big-img-sceleton{
-  @include breakpoint(sm up) {
     max-width: 300px;
     height: rem-calc(267);
     margin-top: 0;
     margin-bottom: 10px;
-  }
 
   @include breakpoint(md up) {
     max-width: 600px;
@@ -75,8 +73,9 @@
     margin-top: 0;
   }
 
-  @include breakpoint(lg up) {
+  @include breakpoint(ml up) {
     max-width: 400px;
-    height: 400px;
+    height: rem-calc(390);
+    margin-bottom: rem-calc(10);
   }
 }
