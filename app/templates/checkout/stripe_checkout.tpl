@@ -1,7 +1,6 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    <script src="https://js.stripe.com/v3/"></script>
     <section class="page pages receipt-confirmation bg-dark-blue" style="padding-top: 5em; padding-bottom: 5em;">
         <div class="vertical-middle">
             <div class="row w1280 align-middle">
