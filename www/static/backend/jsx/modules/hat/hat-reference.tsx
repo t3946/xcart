@@ -78,7 +78,7 @@ const HatReference: React.FC<any> = function () {
     if (!appData().hat.user) {
       return (
         <a
-          href="/admin/error_message.php?antibot_error"
+          href="/admin/login"
           className="logout-button button clickable clickable__yellow"
         >
           Log in

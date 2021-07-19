@@ -36,11 +36,12 @@ export default class Catalog extends Component {
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
       pager: null,
-      infinityLoad: false,
+      infinityLoad: true,
       observeProduct: null,
       infinityLoadObserver: null,
     };
 
+    console.log(this.state.infinityLoad);
     if (this.state.infinityLoad) {
       const options = {
         root: null,

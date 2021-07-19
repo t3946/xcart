@@ -3,10 +3,10 @@
 {block 'main_block'}
 
     <div class="smarty-admin-block">
-        <div class="title-block"><b>Authentication</b></div>
+        <div class="title-block"><b>Forgot password?</b></div>
 
         <div class="white-back content-block">
-            <div id="login-form-target"></div>
+            <div id="recovery-password-target"></div>
         </div>
     </div>
 

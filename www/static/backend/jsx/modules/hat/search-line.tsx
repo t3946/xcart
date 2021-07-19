@@ -134,7 +134,7 @@ const SearchLine: React.FC<any> = function (props: any) {
                   className="align-items-center d-flex"
                 >
                   <input
-                    id="search-string"
+                    id="search-string2"
                     type="text"
                     name="search_string"
                     placeholder="Product SKU"

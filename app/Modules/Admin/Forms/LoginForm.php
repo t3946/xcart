@@ -45,18 +45,18 @@ class LoginForm extends Form
         if ($isValid) {
             $attributes = $this->getAttributes();
 
-            $email = $attributes['login'];
+            $login = $attributes['login'];
             $password = $attributes['password'];
 
             $hasher = UserModule::getPasswordHasher();
 
-            $user = $this->getUser($email);
+            $user = $this->getUser($login);
             if ($user) {
                 if (!$hasher::verify($password, $user->password)) {
                     $this->addError('password', 'Incorrect password');
                 }
             } else {
-                $this->addError('email', 'User not found');
+                $this->addError('login', 'User not found');
             }
         }
     }
@@ -68,6 +68,11 @@ class LoginForm extends Form
         if ($user) {
             Xcart::app()->auth->login($user);
         }
+
+        $session = Xcart::app()->request->session;
+        $session_key = Xcart::app()->request->session->getSessionKey();
+        $session_id = $session->getId();
+        Xcart::app()->request->cookie->add($session_key, $session_id);
     }
 
     public function getUser($login)
