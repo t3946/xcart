@@ -41,7 +41,6 @@ export default class Catalog extends Component {
       infinityLoadObserver: null,
     };
 
-    console.log(this.state.infinityLoad);
     if (this.state.infinityLoad) {
       const options = {
         root: null,
