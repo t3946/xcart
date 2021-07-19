@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { SidebarItemDto } from "@modules/account/ts/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
+import { useAccordion } from "../../hooks/useAccordion";
 
 interface sideBarMenuItemPropsDto extends SidebarItemDto {
   routerItems: SidebarItemDto[];
@@ -12,36 +12,27 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = ({
   label,
   routerItems,
 }) => {
-  const [height, setHeight] = useState(0);
-
-  const [open, setOpen] = useState(false);
-
-  const ref = useRef<HTMLDivElement>();
-
-  const onItemClick = () => {
-    if (!open) {
-      setHeight(ref.current.scrollHeight);
-    } else {
-      setHeight(0);
-    }
-    setOpen(!open);
-  };
+  const accordion = useAccordion();
 
   return (
     <React.Fragment>
       <div
-        onClick={onItemClick}
+        onClick={accordion.onItemClick}
         className={`sidebar-menu-container accordion ${
-          open && "sidebar-menu-accordion-open"
+          accordion.open && "sidebar-menu-accordion-open"
         }`}
       >
         <div>{label}</div>
-        <div className="accordion-arrow" />
+        <div
+          className={`accordion-arrow ${
+            accordion.open && "accordion-arrow-open"
+          }`}
+        />
       </div>
       <div
-        ref={ref}
+        ref={accordion.ref}
         style={{
-          height,
+          height: accordion.height,
           width: 190,
         }}
         className="sidebar-menu-accordion-content"

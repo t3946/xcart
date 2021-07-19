@@ -1,3 +1,4 @@
+import { Button } from "@material-ui/core";
 import React from "react";
 import { FormInput } from "../shared/FormInput";
 
@@ -9,6 +10,7 @@ export const AddAddressForm = () => {
       <FormInput label={"Hello"} />
       <FormInput label={"Hello"} />
       <FormInput label={"Hello"} />
+      <Button className="account-submit-btn add-address-btn">Add</Button>
     </div>
   );
 };

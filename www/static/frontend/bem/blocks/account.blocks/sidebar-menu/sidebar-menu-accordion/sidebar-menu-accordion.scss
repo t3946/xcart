@@ -9,9 +9,6 @@
     background-color: white !important;
     border-bottom: 1px solid #C4C4C4 !important;
 
-    .accordion-arrow{
-      transform: rotate(180deg);
-    }
   }
 
   &-item{
@@ -35,13 +32,17 @@
   height: 44px !important;
   justify-content: space-between;
   border-bottom: 1px solid #F4F4F4;
+}
 
-  &-arrow{
-    width: 12px;
-    height: 7px;
-    background: url("/static/frontend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
-    transition: .3s linear;
-  }
+.accordion-arrow{
+  width: 12px;
+  height: 7px;
+  background: url("/static/frontend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
+  transition: .3s linear;
+}
+
+.accordion-arrow-open{
+  transform: rotate(180deg);
 }
 
 .accordion-active{

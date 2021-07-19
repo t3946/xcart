@@ -1,0 +1,26 @@
+.account-submit-btn{
+  background-color: #FFB500 !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  padding: 10px 30px 6px !important;
+  max-height: 34px;
+  transition: .2s linear;
+
+  &:hover{
+    background-color: #fdcb3a !important;
+  }
+}
+
+.account-submit-btn-outline{
+  border: 1px solid #FFB500 !important;
+  background-color: #FFFFFF !important;
+
+  &:hover{
+    background-color: #d4d4d4 !important;
+  }
+}
+
+.add-address-btn{
+  margin-left: 251px !important;
+}
+

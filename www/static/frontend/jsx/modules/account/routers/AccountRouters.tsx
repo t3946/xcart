@@ -5,6 +5,8 @@ import { BreadCrumbs } from "../components/sidebar-menu/BreadCrumbs";
 import { SideBarMenu } from "../components/sidebar-menu/SideBarMenu";
 import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
+import { Transactions } from "../pages/Transactions";
+import { Wallet } from "../pages/Wallet";
 
 export const AccountRouters = () => {
   return (
@@ -18,6 +20,12 @@ export const AccountRouters = () => {
               exact
               path="/account/addresses"
               component={AddressDialogHOC(<Addresses />, <AddAddressDialog />)}
+            />
+            <Route exact path="/account/payments/wallet" component={Wallet} />
+            <Route
+              exact
+              path="/account/payments/transactions"
+              component={Transactions}
             />
           </Switch>
         </div>

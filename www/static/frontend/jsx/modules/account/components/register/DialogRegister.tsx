@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { Dialog } from "@material-ui/core";
-import { AddressDialogContext } from "../../contexts/AddressDialogContext";
-import { DialogHeader } from "../dialog/DialogHeader";
-import { AddAddressForm } from "./AddAddressForm";
+import { AddressDialogContext } from "@modules/account/contexts/AddressDialogContext";
 
-export const AddAddressDialog = () => {
+export const DialogRegister = () => {
   const dialog = useContext(AddressDialogContext);
   return (
     <Dialog
+      maxWidth={"sm"}
       className="email-send-dialog"
       fullWidth={true}
       onClose={dialog.handleClose}
@@ -19,8 +18,7 @@ export const AddAddressDialog = () => {
         },
       }}
     >
-      <DialogHeader label="Add address" onClose={dialog.handleClose} />
-      <AddAddressForm />
+      Registration
     </Dialog>
   );
 };
