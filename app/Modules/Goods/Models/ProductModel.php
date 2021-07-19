@@ -86,6 +86,9 @@ use Xcart\Product;
  * @property VerificationStatusModel verification_status
  * @property int last_verify_date
  * @property string hash_product
+ * @property ProductModel parent
+ * @property string group_mask
+ * @property int group_root
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)

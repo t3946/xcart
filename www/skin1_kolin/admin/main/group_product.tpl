@@ -36,7 +36,7 @@
                 {if $parent}
                     <tr data-product-id="{$oProduct->productid}">
                         <td><a href="{$parent->getAdminUrl()}" target="_blank">{$parent->productcode}</a></td>
-                        <td><a href="{$parent->getUrl()}" target="_blank">{$parent->product}</a></td>
+                        <td><a href="{$parent->getAbsoluteUrl(true)}" target="_blank">{$parent->product}</a></td>
                         <td align="center">{$parent->forsale}</td>
                         <td align="center"><a href="#" class="remove_group"><img src="/skin1_kolin/images/minus.gif" alt="Remove" /></a></td>
                     </tr>

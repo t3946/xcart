@@ -4,6 +4,8 @@ namespace Modules\Goods\Helpers;
 
 
 use Exception;
+use Modules\Goods\Models\GroupIndexModel;
+use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -208,29 +210,13 @@ class ProductHelper
         return mb_substr_count($option, ' ');
     }
 
-    public static function getNewGroupSKU($manufacturer_id)
+    public static function getNewGroupSKU($manufacturer_id): string
     {
-        $new_sku = null;
-
         $format = '%s-GROUP-%d';
-
-        if ($last = ProductModel::objects()->filter(
-            [
-                'group_root__isnull' => false,
-                'group_root' => new Expression('productid')
-            ])
-                                ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
-                                ->limit(1)
-                                ->get()
-        ) {
-            if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
-                if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
-                    $new_sku = sprintf($format, $model->code, intval($m[1]) + 1);
-                }
-            }
-        }
-
-        return $new_sku;
+        $model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id]);
+        $group = new GroupIndexModel();
+        $group->save();
+        return sprintf($format, $model->code, $group->pk);
     }
 
     public static function calculateUPC($upc_code)

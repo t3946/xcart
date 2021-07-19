@@ -52,9 +52,13 @@ class CurrentSiteHelper
         }
     }
 
-    public static function formatCurrency($value): string
+    public static function formatCurrency($value, SiteModel $site = null): string
     {
-        if (($site = Xcart::app()->getModule('Sites')->getSite()) && $site_currency = $site->getCurrency()) {
+        if ($site === null) {
+            $site = Xcart::app()->getModule('Sites')->getSite();
+        }
+
+        if ($site && $site_currency = $site->getCurrency()) {
             $arr = [
                 $site_currency->symbol_prefix,
                 !$site_currency->after ? $site_currency : '',
