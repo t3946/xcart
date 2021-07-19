@@ -35,7 +35,7 @@ class TaxHelper
                 $tax_value = $tax_rate->rate_value;
                 break;
         }
-        return $tax_value;
+        return round($tax_value, 2);
     }
 
     /**
