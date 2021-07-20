@@ -109,6 +109,11 @@ return [
         'name' => 'login'
     ],
     [
+        'route' => '/recovery-password',
+        'target' => [AuthController::class, 'recoveryPassword'],
+        'name' => 'recovery-password',
+    ],
+    [
         'route' => '/logout',
         'target' => [AuthController::class, 'logout'],
         'name' => 'logout'

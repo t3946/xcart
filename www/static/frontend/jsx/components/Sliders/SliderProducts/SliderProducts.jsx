@@ -3,6 +3,7 @@ import SwiperCore, { Lazy, Scrollbar } from "swiper";
 import classnames from "classnames";
 import ProductCard from "@/components/product/card/slider/Card";
 import { CardSceleton } from "@/components/product/card/slider/CardSceleton";
+import $ from "jquery";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
@@ -24,6 +25,8 @@ export default class SliderProducts extends Component {
       isEnd: true,
       isBeginning: true,
     };
+
+    this.swiperRef = React.createRef();
   }
 
   loadNewItems() {
@@ -68,6 +71,13 @@ export default class SliderProducts extends Component {
         isEnd: this.swiperObject.isEnd,
         isBeginning: this.swiperObject.isBeginning,
       });
+    }
+
+    if (this.state.items.length === 0) {
+      $(this.swiperRef.current)
+        .parents(".slider-block")
+        .find(".title_container")
+        .hide();
     }
   }
 
@@ -154,6 +164,7 @@ export default class SliderProducts extends Component {
           }}
           onSlideChange={this.updateSlideBordersFlags}
           onReachEnd={this.onReachEndHandler}
+          ref={this.swiperRef}
         >
           {items.map((product, i) => (
             <SwiperSlide className="products-slider-slide" key={i}>

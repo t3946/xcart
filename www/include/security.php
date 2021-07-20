@@ -1,10 +1,11 @@
 <?php
 
+return;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 if (empty($login)) {
-	func_header_location("error_message.php?antibot_error");
+	func_header_location("/admin/login");
 }
 
 /** @var \Modules\User\Models\RoleModel $role */

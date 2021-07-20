@@ -81,78 +81,73 @@ const SearchLine: React.FC<any> = function (props: any) {
               ref={menuRef}
             />
           </div>
-          <div className="col layout-column__right align-items-center d-flex justify-content-between">
-            <div className="d-flex">
-              <form
-                action="/admin/dashboard/fast-search"
-                method="GET"
-                className="align-items-center d-flex"
-              >
-                <input
-                  id="search-string"
-                  type="text"
-                  name="search_string"
-                  placeholder="Product SKU"
-                  className="search-string ml-2 mr-1"
-                  autoComplete="off"
-                />
 
-                <button type="submit" className="search-button left-form">
-                  Search
-                </button>
-              </form>
-
-              <form
-                action="/admin/dashboard/fast-search"
-                method="GET"
-                className="align-items-center d-flex"
-              >
-                <HatSelect name="search_type" items={selectOptions} />
-                {/*<select className="search-string ml-2 mr-1" name="search_type">*/}
-                {/*  {selectOptions.map((e) => {*/}
-                {/*    return (*/}
-                {/*      <option className="search-select-option" value={e.value}>*/}
-                {/*        {e.viewValue}*/}
-                {/*      </option>*/}
-                {/*    );*/}
-                {/*  })}*/}
-                {/*</select>*/}
-                <input
-                  id="search-string"
-                  type="text"
-                  name="search_string"
-                  className="search-string ml-2 mr-1"
-                  autoComplete="off"
-                />
-
-                <button type="submit" className="search-button">
-                  Search
-                </button>
-              </form>
-
-              <div className="hat_customer-care d-flex align-items-center">
-                <img
-                  className="common-icon"
-                  src="/static/backend/dist/images/icons/hat/search-line/heart.svg"
-                  alt="🖤"
-                />
-
-                <a
-                  className="customer-care-link ml-2.25"
-                  href="/admin/dashboard"
+          <div className="col align-items-center d-flex justify-content-between state-line_column-right">
+            <div className="row flex-grow-1">
+              <div className="col-5">
+                <form
+                  action="/admin/dashboard/fast-search"
+                  method="GET"
+                  className="align-items-center d-flex"
                 >
-                  Customer Care Dashboard
-                </a>
+                  <HatSelect
+                    name="search_type"
+                    items={selectOptions}
+                    className="mr-1"
+                  />
+
+                  <input
+                    id="search-string"
+                    type="text"
+                    name="search_string"
+                    className="search-string mr-1"
+                    autoComplete="off"
+                  />
+
+                  <button type="submit" className="search-button">
+                    Search
+                  </button>
+                </form>
+              </div>
+
+              <div className="col-4 align-items-center d-flex">
+                <div className="hat_customer-care d-flex align-items-center">
+                  <img
+                    className="common-icon"
+                    src="/static/backend/dist/images/icons/hat/search-line/heart.svg"
+                    alt="🖤"
+                  />
+
+                  <a
+                    className="customer-care-link ml-2.25"
+                    href="/admin/dashboard"
+                  >
+                    Customer Care Dashboard
+                  </a>
+                </div>
+              </div>
+
+              <div className="col-3 d-flex justify-content-end">
+                <form
+                  action="/admin/dashboard/fast-search"
+                  method="GET"
+                  className="align-items-center d-flex"
+                >
+                  <input
+                    id="search-string2"
+                    type="text"
+                    name="search_string"
+                    placeholder="Product SKU"
+                    className="search-string mr-1"
+                    autoComplete="off"
+                  />
+
+                  <button type="submit" className="search-button">
+                    Search
+                  </button>
+                </form>
               </div>
             </div>
-
-            <a href="/admin" className="p-2.5 mr-2.25">
-              <img
-                className="common-icon"
-                src="/static/backend/dist/images/icons/hat/search-line/home.svg"
-                alt="🖤"
-              />
-            </a>
           </div>
         </div>
       </div>
