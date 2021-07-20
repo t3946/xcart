@@ -69,7 +69,7 @@
 
     {block 'noindex'}{/block}
 
-    <link rel="shortcut icon" href="{$uri}{$site->file_edit_image_favicon->getValue()}" type="image/png" />
+    <link rel="shortcut icon" href="{$uri}/{$site->file_edit_image_favicon->getValue()}" type="image/png" />
 <style>
     #lex-web-ui-iframe{
         display: none;
