@@ -13,6 +13,7 @@ trait DataModelTrait
     private $dataModel = null;
 
     /**
+     * для получения данных из старого кода
      * @return string class of Data
      */
     public static function getDataModelClass(): string
