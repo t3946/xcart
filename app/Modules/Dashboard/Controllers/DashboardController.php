@@ -133,7 +133,7 @@ class DashboardController extends PrototypeAdminController
     private function prepare(): array
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
-        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
+        $myModels = Xcart::app()->user ? DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all() : [];
         $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
         $inquiries = InquiryTypeModel::objects()->filter(['active' => 'Y'])->order('inquiry_type')->all();
         $inquiries_tags = InquiryAttentionTagModel::objects()->filter(['active' => 'Y'])->order(['inquiry_attn_tag'])->all();
