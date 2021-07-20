@@ -11,8 +11,8 @@ if (!$user || $user->getIsGuest()) {
 }
 
 /** @var \Modules\User\Models\RoleModel $role */
-if (($uModel = Xcart\App\Main\Xcart::app()->user) && $role = $uModel->role) {
-    if (!$role->canRequest(\Xcart\App\Main\Xcart::app()->request)) {
-        \Xcart\App\Main\Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
+if (($uModel = Xcart::app()->user) && $role = $uModel->role) {
+    if (!$role->canRequest(Xcart::app()->request)) {
+        Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
     }
 }
