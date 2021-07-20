@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Mail\LogHandlers;
 
+use Modules\User\Models\UserModel;
 use \Monolog\Handler\MailHandler as MonologMailHandler;
 use Xcart\App\Main\Xcart;
 
@@ -21,7 +22,7 @@ class MailHandler extends MonologMailHandler
             $session = Xcart::app()->request->session;
 
             if ($session) {
-                $login = $session->get('admin_login') ?: $session->get('admin_login');
+                $login = Xcart::app()->user->login;
             }
 
             $msg .= $this->format('Site', $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']);
