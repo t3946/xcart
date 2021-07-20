@@ -93,12 +93,14 @@
                                 </span>
                         </div>
                     {/if}
-                    {if $order_group->total_tax}
+                    {if $is_tax_applied}
                         {foreach $order_group->tax_rates as $group_tax}
                             <div class="sum-info tax-info">
-                                <div class="sum underline">
-                                    {$group_tax->tax_rate->tax}: {$group_tax->value|site_currency}
-                                </div>
+                                <span class="sum-info-label underline">
+                                    {$group_tax->tax_rate->tax}:
+                                </span><span class="sum underline">
+                                     {$group_tax->value|site_currency}
+                                </span>
                             </div>
                         {/foreach}
                     {/if}
@@ -135,7 +137,7 @@
             <div class="info-row tax-info">
                 {foreach $order->getTaxes() as $tax_name => $tax_rate}
                     <div class="sum-info tax-info">
-                        <span class="label">{t 'Total'}  {$tax_name}:</span>
+                        <span class="label">{t 'Total'} {$tax_name} taxes:</span>
                         <span class="sum">{$tax_rate|site_currency}</span>
                     </div>
                 {/foreach}
