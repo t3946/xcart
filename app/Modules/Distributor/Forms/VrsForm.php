@@ -53,6 +53,7 @@ class VrsForm extends ModelForm
                     'style' => 'width: 300px',
                     'class' => 'select2-field',
                 ],
+                'inline_editor' => true,
             ],
             'status' => [
                 'class' => Select2Field::class,
@@ -61,6 +62,7 @@ class VrsForm extends ModelForm
                     'style' => 'width: 300px',
                     'class' => 'select2-field',
                 ],
+                'inline_editor' => true,
             ],
             'date' => [
                 'class' => DateField::class,

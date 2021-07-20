@@ -165,6 +165,7 @@ class SiteForm extends ModelForm
                 'html' => [
                     'class' => 'select2-field'
                 ],
+                'inline_editor' => true,
             ],
             'currency' => [
                 'class' => Select2Field::class,

@@ -23,6 +23,7 @@ abstract class Field implements IValidateField
 {
     use Accessors, Configurator, ValidateField, RenderTrait;
 
+    public $inline_editor = false;
 
     public $requiredMessage = '';
     /**
@@ -34,7 +35,7 @@ abstract class Field implements IValidateField
      * @var string
      */
     public $successClass = 'success';
-
+    public $inlineClass = 'updates-admin';
     /**
      * @var string
      */
@@ -356,6 +357,9 @@ abstract class Field implements IValidateField
 
         if ($this->filledOutSuccessfully()){
             $classes[] = $this->successClass;
+        }
+        if ($this->inline_editor) {
+            $classes[] = $this->inlineClass;
         }
 
         return implode(' ', $classes);

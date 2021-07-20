@@ -4,7 +4,9 @@ namespace Modules\Admin\Controllers;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Sites\Helpers\StorageHelper;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Model;
 
 class AdminController extends BackendController
 {
@@ -123,5 +125,25 @@ class AdminController extends BackendController
             return new $class();
         }
         $this->error(404);
+    }
+
+    public function updateSelectField() : void
+    {
+        $result = ['result' => false];
+        $post = $this->getRequest()->post->all();
+        /** @var ModelForm $form */
+        $form = new $post['form']();
+        $instance = $form->getInstance();
+        /** @var Model $model */
+        $model = $instance::objects()->get(['pk' => $post['id']]);
+        $form->setInstance($model);
+        if ($form->populate($post))
+        {
+            $model->getIsNewRecord(false);
+            if ($form->save()) {
+                $result = ['result' => true];
+            }
+        }
+        $this->jsonResponse($result);
     }
 }
