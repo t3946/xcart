@@ -241,7 +241,7 @@ gulp.task("watch:frontend:scripts", function (done) {
   //count hash for bundle
   const webpackBundle = frontend.dst.jsx + "/main.js";
   gulp.watch(webpackBundle, function (done) {
-    gulp.src(webpackBundle).pipe(
+    gulp.src(webpackBundle, { allowEmpty: true }).pipe(
       hashSum({
         filename: "frontend/versions/vendor_js.yml",
         hash: "md5",
