@@ -37,6 +37,7 @@ class RoleModel extends Model
             $permission = $permission || strpos($path, '/admin/forms/') !== false;
             $permission = $permission || strpos($path, '/admin/logout') !== false;
             $permission = $permission || strpos($path, '/admin/login') !== false;
+            $permission = $permission || strpos($path, '/Distributor/VrsAdmin') !== false;
             return $permission || strpos($path, 'admin/distributor/') !== false;
         }
         return true;

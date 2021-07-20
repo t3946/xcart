@@ -172,7 +172,7 @@
                     {if $payment_methods}
                         <div class="payment-methods radio-list-table">
                             {foreach $payment_methods as $method first=$first}
-                                {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Ordering')}
+                                {if !$phone_order_only || ($phone_order_only && $method->payment_method === 'Phone Order')}
                                     <div class="table-row {cycle ["odd", ""]}">
                                         <div class="table-cell payment-method">
                                             <input {if $first || $phone_order_only || ($method->paymentid == $order->paymentid)}checked{/if}

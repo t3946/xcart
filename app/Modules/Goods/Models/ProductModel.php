@@ -840,8 +840,7 @@ class ProductModel extends Model implements ICartItem
     public function isFlatRate()
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $config = $site->getConfig();
-        return $config['flat_shipping_enabled'] !== 'N';
+        return $site->flat_shipping_enabled;
     }
 
     public function getExtraMarginValue(int $forQuantity = 1) :? float
