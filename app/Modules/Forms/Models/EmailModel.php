@@ -23,6 +23,9 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property string|null from_address
+ * @property string message_id
+ * @property string thread_id
+ * @property LabelModel[] labels
  */
 class EmailModel extends Model
 {
@@ -76,6 +79,12 @@ class EmailModel extends Model
             'from_address' => [
                 'class' => CharField::class,
                 'verboseName' => "From",
+                'null' => true,
+            ],
+            'original_sender' => [
+                'class' => CharField::class,
+                'verboseName' => "Original sender",
+                'default' => null,
                 'null' => true,
             ],
             'to_address' => [
@@ -150,12 +159,11 @@ class EmailModel extends Model
                 'link' => ['thread_id' => 'thread_id'],
             ],
             'parent' => [
-                'class' => ForeignField::class,
+                'class' => HasToOneField::class,
                 'modelClass' => __CLASS__,
                 'link' => ['thread_id' => 'message_id'],
             ],
             'contains_action' => [
-                'field' => 'action_value',
                 'class' => BooleanField::class,
             ]
         ];
@@ -253,7 +261,7 @@ class EmailModel extends Model
         return $this->to_address ?: $this->delivered_to_address ;
     }
 
-    public function getSubject()
+    public function getSubject(): string
     {
         $res = $this->subject;
         if (!$this->isViewed()) {
@@ -278,9 +286,14 @@ class EmailModel extends Model
         return $lbl . $res;
     }
 
-    public function setViewed()
+    public function setViewed(): void
     {
         $this->getField('viewed')->setValue(Xcart::app()->user);
         $this->save();
+    }
+
+    public function isChild(): bool
+    {
+        return $this->message_id !== $this->thread_id;
     }
 }

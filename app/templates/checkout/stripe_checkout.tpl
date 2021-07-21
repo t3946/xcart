@@ -1,7 +1,6 @@
 {extends "checkout/base.tpl"}
 
 {block 'content'}
-    <script src="https://js.stripe.com/v3/"></script>
     <section class="page pages receipt-confirmation bg-dark-blue" style="padding-top: 5em; padding-bottom: 5em;">
         <div class="vertical-middle">
             <div class="row w1280 align-middle">
@@ -11,7 +10,7 @@
                         <form id="payment-form" style="width:100%; background-color:#efefef;">
                             <div id="payment-request-button"></div>
                             <h1 style="text-align: center; margin-bottom: 10px; padding-top: 0;">Secure credit card payment</h1>
-                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$site_currency}{$site_currency->getCurrencyFormat($order->total)}</span></div>
+                            <div style="font-size:21px; text-align: center; margin-bottom: 2rem;">Total: <span style="font-size:21px">{$order->total|site_currency}</span></div>
                             <div id="card-element">
                             </div>
                             <div id="card-errors" role="alert" style="text-align: center"></div>

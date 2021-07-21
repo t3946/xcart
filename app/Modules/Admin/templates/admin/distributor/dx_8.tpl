@@ -15,15 +15,22 @@
             </tr>
             {raw $form->getField('d_url_to_login_to_distributor_website')->render()}
             <tr class="link_unhide">
-                <td>
-                    <b>Login/Username</b>
-                    <a title="{$.call.Modules.Core.Models.LanguageModel::translate('help_d_login_text')}" class="tooltip">
-                        <i class="fa fa-question-circle pointer"></i>
-                    </a>
+                <td colspan="3">
+                    <div class="row">
+                        <div class="col-3">
+                            <b>Login/Username</b>
+                            <a title="{$.call.Modules.Core.Models.LanguageModel::translate('help_d_login_text')}" class="tooltip">
+                                <i class="fa fa-question-circle pointer"></i>
+                            </a>
+                        </div>
+                        <div class="col-8">
+                            <a style="color: blue; border-bottom: 1px dotted blue; text-decoration: none;"
+                               href="javascript: void(0);"
+                               onclick="$('.unhide').closest('tr').show();$('.link_unhide').hide();">Unhide</a>
+                        </div>
+                    </div>    
                 </td>
-                <td><a style="color: blue; border-bottom: 1px dotted blue; text-decoration: none;"
-                       href="javascript: void(0);"
-                       onclick="$('.unhide').closest('tr').show();$('.link_unhide').hide();">Unhide</a>
+                <td>
                 </td>
 
             </tr>

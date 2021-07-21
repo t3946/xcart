@@ -83,9 +83,9 @@
 
             <div class="column small-12 medium-4 footer-right-column">
                 <div class="footer-socials show-for-medium footer_socials">
-                    <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
+                    <a href="https://www.facebook.com/s3stores/" rel="nofollow noopener" target="_blank" class="facebook"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow noopener" class="pinterest"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow noopener" target="_blank" class="youtube"></a>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
                     <div class="confidence">
                         <span id="bbb">
                             {ignore}
-                                <a target="_blank" id="bbblink" class="rbhzbul" href="https://www.bbb.org/ca/on/chatham/profile/furniture-stores/s3-stores-inc-0187-1054268#bbbseal" title="S3 Stores, Inc., Furniture Stores, Chatham, ON" style="display: none;position: relative;overflow: hidden; width: 200px; height: 76px; margin: 0px; padding: 0px;"><img style="padding: 0px; border: none;" id="bbblinkimg" src="https://seal-london.bbb.org/logo/rbhzbul/s3-stores-1054268.png" width="400" height="76" alt="S3 Stores, Inc., Furniture Stores, Chatham, ON" /></a><script type="text/javascript">var bbbprotocol = ( ("https:" == document.location.protocol) ? "https://" : "http://" ); (function(){var s=document.createElement('script');s.src=bbbprotocol + 'seal-london.bbb.org' + unescape('%2Flogo%2Fs3-stores-1054268.js');s.type='text/javascript';s.async=true;var st=document.getElementsByTagName('script');st=st[st.length-1];var pt=st.parentNode;pt.insertBefore(s,pt.nextSibling);})();</script>
+                                <a rel="nofollow noopener" target="_blank" id="bbblink" class="rbhzbul" href="https://www.bbb.org/ca/on/chatham/profile/furniture-stores/s3-stores-inc-0187-1054268#bbbseal" title="S3 Stores, Inc., Furniture Stores, Chatham, ON" style="display: none;position: relative;overflow: hidden; width: 200px; height: 76px; margin: 0px; padding: 0px;"><img style="padding: 0px; border: none;" id="bbblinkimg" src="https://seal-london.bbb.org/logo/rbhzbul/s3-stores-1054268.png" width="400" height="76" alt="S3 Stores, Inc., Furniture Stores, Chatham, ON" /></a><script type="text/javascript">var bbbprotocol = ( ("https:" == document.location.protocol) ? "https://" : "http://" ); (function(){var s=document.createElement('script');s.src=bbbprotocol + 'seal-london.bbb.org' + unescape('%2Flogo%2Fs3-stores-1054268.js');s.type='text/javascript';s.async=true;var st=document.getElementsByTagName('script');st=st[st.length-1];var pt=st.parentNode;pt.insertBefore(s,pt.nextSibling);})();</script>
                         {/ignore}
                         </span>
 
@@ -166,9 +166,9 @@
 
                 {*mobile socials*}
                 <div class="footer-socials footer_socials hide-for-medium">
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow" target="_blank" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow" class="pinterest"></a>
-                    <a href="https://www.facebook.com/s3stores/" rel="nofollow" target="_blank" class="facebook"></a>
+                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow noopener" target="_blank" class="youtube"></a>
+                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow noopener" class="pinterest"></a>
+                    <a href="https://www.facebook.com/s3stores/" rel="nofollow noopener" target="_blank" class="facebook"></a>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@ class NativePaginationHandler implements PaginationHandlerInterface
 
     private function defaultWrongPageCallback()
     {
-        if ($this->pager->getPagesCount()) {
+        if (!$this->pager->is_ajax && $this->pager->getPagesCount()) {
             header("Location: " . $this->getUrlForQueryParam($this->pager->getPageKey(), $this->pager->getPagesCount()), true, 302);
             die();
         }

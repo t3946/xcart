@@ -10,6 +10,9 @@ use Xcart\App\Orm\Model;
 
 class LabelModel extends Model
 {
+    public const LABEL_TYPE_SYSTEM = 'system';
+    public const LABEL_TYPE_USER = 'user';
+
     public static function getFields()
     {
         return [

@@ -103,7 +103,7 @@ class Auth implements AuthInterface
     {
         $class = $this->class;
         /** @var UserModel $class */
-        return $class::objects()->filter(['login' => $id])->limit(1)->get();
+        return $class::objects()->filter(['id' => $id])->limit(1)->get();
     }
 
     public function getSessionUser()

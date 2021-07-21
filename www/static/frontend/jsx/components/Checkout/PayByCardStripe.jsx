@@ -1,5 +1,5 @@
 import { Fragment, createRef } from "preact";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
 import InputError from "@/components/Checkout/InputError";
 import "regenerator-runtime/runtime";
 import _ from "lodash";

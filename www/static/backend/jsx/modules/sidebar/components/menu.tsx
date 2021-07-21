@@ -10,6 +10,10 @@ const Menu: React.FC<any> = function (props: any) {
    * eventKey if it has current route else return first section event key
    */
   function getActiveKey() {
+    if (!appData().sidebarMenu.old) {
+      return;
+    }
+
     const currentRoute = document.location.pathname;
 
     //search in new menu

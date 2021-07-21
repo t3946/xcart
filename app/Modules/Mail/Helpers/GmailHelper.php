@@ -5,10 +5,14 @@ namespace Modules\Mail\Helpers;
 
 
 use Exception;
+use Google\Service\Exception as GoogleServiceException;
 use Google_Client;
 use Google_Service_Gmail;
 use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
+use Google_Service_Gmail_ModifyMessageRequest;
+use Modules\Forms\Models\LabelModel;
+use Throwable;
 use Xcart\App\Helpers\Paths;
 
 class GmailHelper
@@ -42,13 +46,14 @@ class GmailHelper
     {
         $pageToken = NULL;
         $messages = [];
-        $opt_param = [];
+        $opt_param = ['maxResults' => 500, 'includeSpamTrash' => true];
         do {
             try {
                 if ($pageToken) {
-                    $opt_param = ['pageToken' => $pageToken, 'includeSpamTrash' => true];
+                    $opt_param =  array_merge($opt_param, ['pageToken' => $pageToken]);
                 }
                 $messagesResponse = $service->users_messages->listUsersMessages($userId, $opt_param);
+                $pageToken = null;
                 if ($messagesResponse->getMessages()) {
                     $messages = array_merge($messages, $messagesResponse->getMessages());
                     $pageToken = $messagesResponse->getNextPageToken();
@@ -62,6 +67,9 @@ class GmailHelper
             }
         } while ($pageToken);
 
+        $cnt = count($messages);
+
+        echo "Fetched {$cnt} emails\n";
         return $messages;
     }
 
@@ -69,6 +77,21 @@ class GmailHelper
     {
         try {
             $message = $service->users_messages->get($userId, $messageId);
+
+        } catch (Exception $e) {
+            print 'An error occurred: ' . $e->getMessage();
+        }
+        return $message ?? null;
+    }
+
+    public static function updateMessage(Google_Service_Gmail $service, $userId, $messageId, array $addLabelIds = [], array $removeLabelIds = []): ?Google_Service_Gmail_Message
+    {
+        try {
+            $request = new Google_Service_Gmail_ModifyMessageRequest();
+            $request->setAddLabelIds($addLabelIds);
+            $request->setRemoveLabelIds($removeLabelIds);
+
+            $message = $service->users_messages->modify($userId, $messageId, $request);
 
         } catch (Exception $e) {
             print 'An error occurred: ' . $e->getMessage();
@@ -152,7 +175,7 @@ class GmailHelper
      * @param $userId
      * @return Google_Service_Gmail_Label[]
      */
-    public static function listLabels(Google_Service_Gmail $service, $userId): array
+    public static function listLabels(Google_Service_Gmail $service, string $userId): array
     {
         $labels = array();
 
@@ -169,6 +192,7 @@ class GmailHelper
 
         return $labels;
     }
+
     public static function getAttachments(Google_Service_Gmail $service, Google_Service_Gmail_Message $message): array
     {
         foreach ($message->getPayload()->getParts() as $part) {
@@ -191,5 +215,52 @@ class GmailHelper
             }
         }
         return $res ?? [];
+    }
+
+    public static function getOrCreateLabel(Google_Service_Gmail $service, string $userId, string $name): string
+    {
+        self::fetchLabels($service, $userId);
+
+        if ($model = LabelModel::objects()->limit(1)->all(['name' => $name])[0]) {
+            return $model->label_id;
+        }
+        $label = new Google_Service_Gmail_Label();
+        $label->setName($name);
+        try {
+            $gmail_label = $service->users_labels->create($userId, $label);
+            $result = $gmail_label->getId();
+        }
+        catch (Throwable $e) {
+            $result = '';
+        }
+        return $result ?? '';
+    }
+
+    public static function fetchLabels(Google_Service_Gmail $service, string $userId): void
+    {
+        foreach (self::listLabels($service, $userId) as $label) {
+            [$labelModel] = LabelModel::objects()->getOrNew(['label_id' => $label->getId()]);
+            $labelModel->setAttributes(
+                [
+                    'name' => $label->getName(),
+                    'background_color' => $label->getColor() ? $label->getColor()->getBackgroundColor() : '',
+                    'color' => $label->getColor() ? $label->getColor()->getTextColor() : '',
+                    'type' => $label->getType(),
+                ]
+            );
+            $labelModel->save();
+        }
+    }
+
+    public static function getEmailType(Google_Service_Gmail_Message $message): string
+    {
+        $labels = $message->getLabelIds();
+        if (in_array('DRAFT', $labels, true)) {
+            return '';
+        }
+        if (in_array('SENT', $labels, true)) {
+            return 'sent';
+        }
+        return 'inbox';
     }
 }

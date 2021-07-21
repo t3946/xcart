@@ -5,9 +5,14 @@ namespace Modules\Distributor\Admin;
 
 
 use Modules\Admin\Contrib\Admin;
+use Modules\Distributor\Forms\DxFilterForm;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Form\Form;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
+use Xcart\App\Orm\QuerySet;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class DistributorAdmin extends Admin
 {
@@ -36,22 +41,22 @@ class DistributorAdmin extends Admin
                 'title' => 'DX Company Name',
             ],
             'code' => [
-                'title' => 'DX Prefix',
+                'title' => 'DX<br/>Prefix',
             ],
             'sites' => [
                 'title' => 'Main SF',
             ],
             'products' => [
-                'title' => 'All SKUs',
+                'title' => 'All<br/>SKUs',
             ],
             'active_products' => [
-                'title' => 'Active SKUs',
+                'title' => "Active<br/>SKUs",
             ],
             'feed' => [
                 'title' => 'Feed',
             ],
             'feed_source' => [
-                'title' => 'Feed source',
+                'title' => 'Feed<br/>source',
             ],
             'provider' => [
                 'title' => 'Added by',
@@ -74,7 +79,7 @@ class DistributorAdmin extends Admin
                 return implode(
                     '',
                     array_map(
-                        static fn(SiteModel $i) => "<div><a target='_blank' href='{$i->getAbsoluteUrl()}'>$i</a></div>",
+                        static fn(SiteModel $i) => "<div><a title='{$i->getName()}' target='_blank' href='{$i->getAbsoluteUrl()}'>$i->code</a></div>",
                         $item->$property->all()
                     )
                 );
@@ -99,13 +104,14 @@ class DistributorAdmin extends Admin
                     $field_source = $feed->getField('feed_source');
                     $feed_date = $feed->getField('feed_source_date')->getValue();
                     $date = $feed_date ? "({$feed_date->format('Y-m-d')})" : '';
-                    $value .= "{$field_source->toText()} $date<br/>";
+                    $value .= "{$field_source->toText()}<br/> $date<br/>";
                 }
                 return $value;
             case 'created_at' :
                 return $item->getField('created_at')->getValue()->format('Y-m-d');
             case 'provider' :
-                return $item->provider_model . "<br/> ({$item->provider})";
+                $provider = $item->provider_model;
+                return $provider ? $provider->getShortSurname() . "<br/> ({$item->provider})" : '';
         }
         return parent::getItemProperty($item, $property);
     }
@@ -119,18 +125,49 @@ class DistributorAdmin extends Admin
         return new DistributorModel();
     }
 
-    public function isAjaxUpdate(): bool
+    public static function getName()
     {
-        return true;
+        return 'Distributors';
     }
 
-    public function isAjaxCreate(): bool
+    public function getListItemActions()
     {
-        return true;
+        return [];
     }
 
-    public function getUpdateUrl($pk = null)
+    public function getFilterForm(): ?Form
     {
+        return new DxFilterForm();
+    }
+
+    public function getSuggestionColumns()
+    {
+        return [
+            'distributor' => [
+                'class' => DistributorModel::class,
+                'columns' => [
+                    'manufacturer', 'code'
+                ],
+            ],
+        ];
+    }
+
+    public function handleFilter(QuerySet $qs, $form): QuerySet
+    {
+        if (($dx_field = $form->getField('manufacturer_code')) && $dx_value = trim($dx_field->getValue())) {
+            $qs->filter(['manufacturer' => new QOr(['manufacturer__contains' => $dx_value, 'code' => $dx_value])]);
+        }
+
+        if (($letter = $form->getField('letter')) && $letter_value = trim($letter->getValue())) {
+            $qs->filter(['manufacturer__startswith' => $letter_value]);
+        }
+
+        return parent::handleFilter($qs, $form);
+    }
+
+    public function getCreateUrl(): string
+    {
+        return Xcart::app()->router->url('admin:dx_add');
     }
 
 }

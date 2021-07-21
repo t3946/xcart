@@ -753,6 +753,12 @@ class OrderSearchStore extends BaseStore
                 default:
                     {
                         $user = Xcart::app()->user;
+                        $joins = $qs->getQueryBuilder()->getJoins();
+                        $joins = array_keys($joins);
+                        if (!in_array('group', $joins, true)) {
+                            $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+                        }
+                        $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
                         if ($user->show_events) {
                             /** @var QuerySet $qs */
                             $e_qs = OrderHelper::getCountEventsQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
@@ -764,22 +770,12 @@ class OrderSearchStore extends BaseStore
                     }
             }
         }
-
         return $qs;
     }
 
     public function getQSWithSorting()
     {
         $qs = clone $this->qs;
-        $joins = $qs->getQueryBuilder()->getJoins();
-        $joins = array_keys($joins);
-
-        if (!in_array('group', $joins)) {
-            $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-        }
-
-        $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-
 
         if (!$this->sort && $this->model instanceof DashboardFilter) {
             $this->sort = $this->model->sorting;

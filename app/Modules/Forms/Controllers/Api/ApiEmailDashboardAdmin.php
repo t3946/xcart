@@ -4,6 +4,7 @@
 namespace Modules\Forms\Controllers\Api;
 
 
+use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\EmailActionLogModel;
 use Modules\Forms\Models\EmailActionModel;
 use Modules\Forms\Models\EmailEntityModel;
@@ -31,7 +32,7 @@ class ApiEmailDashboardAdmin extends Controller
 
         $searchParams = $searchParams->searchParams;
 
-        $qs = EmailModel::objects()->getQuerySet()->order(['-id']);
+        $qs = EmailModel::objects()->getQuerySet()->order(['-date']);
         if($searchParams->hasAttachment)
         {
             $actionItem =   array_merge($actionItem, ['attachments__attachment__isnull' => false]);
@@ -193,7 +194,6 @@ class ApiEmailDashboardAdmin extends Controller
 
     public function addTemplate($categories)
     {
-        $result = [];
         if($categories === []){
             return $categories;
         }
@@ -208,10 +208,10 @@ class ApiEmailDashboardAdmin extends Controller
             }
             $categories[$key]['items'] = $this->addTemplate($category['items']);
         }
-        return $result = $categories;
+        return $categories;
     }
 
-    public function actionSendEmail()
+    public function actionSendEmail(): void
     {
         $files = self::diverse_array($_FILES['files']);
         $convert_files = [];
@@ -224,7 +224,16 @@ class ApiEmailDashboardAdmin extends Controller
             ];
         }
         $email = $this->getRequest()->post->all();
-        $email['files'] =$convert_files;
+        $email['files'] = $convert_files;
+        $email['user_id'] = Xcart::app()->user->id;
+
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $params = [
+            'site' => $site,
+            'user' => Xcart::app()->user,
+        ];
+
+        $email['body'] = SnippetHelper::render($email['body'], $params);
 
         Xcart::app()->queue->send('emails', json_encode($email, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), true);
 
@@ -238,9 +247,11 @@ class ApiEmailDashboardAdmin extends Controller
 
     public static function diverse_array($vector) {
         $result = array();
-        foreach($vector as $key1 => $value1)
-            foreach($value1 as $key2 => $value2)
+        foreach($vector as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
                 $result[$key2][$key1] = $value2;
+            }
+        }
         return $result;
     }
 

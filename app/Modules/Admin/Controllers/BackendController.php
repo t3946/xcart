@@ -15,7 +15,11 @@ class BackendController extends Controller
         /** @var \Modules\User\Models\UserModel $user */
         $user = Xcart::app()->auth->getUser();
 
-        if (!$user || $user->getIsGuest()) {
+        if ((!$user || $user->getIsGuest())) {
+            if (in_array($action, ['login', 'recoveryPassword'])) {
+                return;
+            }
+
             $this->getRequest()->redirect('admin:login');
         }
         elseif (!($user->getIsSuperuser() || $user->getIsStaff())) {
@@ -27,8 +31,8 @@ class BackendController extends Controller
     {
         return $this->renderSmarty("admin/home.tpl", [
             'single_mode' => true,
-            'main'        => 'raw_html',
-            'content'     =>  $this->render($view, $params),
+            'main' => 'raw_html',
+            'content' => $this->render($view, $params),
         ]);
     }
 }

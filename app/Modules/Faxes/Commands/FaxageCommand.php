@@ -72,6 +72,7 @@ class FaxageCommand extends Command
                                 'date' => $date,
                                 'type' => 'inbox',
                                 'account_id' => 1,
+                                'contains_action' => true,
                                 'subject' => "FAXAGE - New {$faxModel->pagecount} page fax received from {$faxModel->fax_from} {$date->format('Y-m-d H:i:s')}",
                             ]);
                             $model->save();

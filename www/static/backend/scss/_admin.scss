@@ -4,9 +4,8 @@
 }
 
 a {
-  &:active, &:link, &:visited {
-    color: #464646;
-  }
+  color: #464646;
+
   &:hover {
     color: #000000;
   }
@@ -18,7 +17,7 @@ strong, b {
 
 html,
 body {
-  font-family: Lato, GothamPro, Arial, Helvetica, sans-serif;
+  font-family: GothamPro, Arial, Helvetica, sans-serif;
   font-size: 13px;
   line-height: 1.3;
   color: #111;

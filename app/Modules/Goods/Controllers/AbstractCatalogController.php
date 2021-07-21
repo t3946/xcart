@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Xcart\App\QueryBuilder\Q\Q;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Helpers\ProductFilterHelper;
@@ -48,16 +49,16 @@ abstract class AbstractCatalogController extends FrontendController
         $qs = ProductModel::objects();
         $ta = $qs->getTableAlias();
 
-         $qs->filter([
+        $qs->filter([
             'forsale' => 'Y',
             'sites__through__sfid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
             new QOr([
                 ['group_root__isnull' => true],
                 ['group_root__raw' => " = `{$ta}`.`productid`"]
             ])
-         ]);
+        ]);
 
-         return $qs;
+        return $qs;
     }
 
     /**
@@ -83,7 +84,8 @@ abstract class AbstractCatalogController extends FrontendController
         return new Pagination($qs, [
             'pageSize' => $this->pageSize,
             'view' => 'core/pager/front_endless.tpl',
-            'pageKey' => 'page'
+            'pageKey' => 'page',
+            'is_ajax' => $this->getRequest()->getIsAjax()
         ], new QuerySetDataSource());
     }
 
@@ -124,12 +126,11 @@ abstract class AbstractCatalogController extends FrontendController
         $pqs = $fh->getFiltrateQS();
         $pqs = $this->getSortedQS($pqs);
 
-        $pager = $this->getPager($pqs);
-
         $this->setCanonical($model);
 
         if ($this->getRequest()->getIsAjax())
         {
+            $pager = $this->getPager($pqs);
             $pagerView = $pager->createView();
 
             $products = $this->getProductData(($pager->paginate()));
@@ -155,13 +156,12 @@ abstract class AbstractCatalogController extends FrontendController
         else {
             $this->display($this->view,
                 array_replace([
-                'model' => $model,
-                'pager' => $pager->setPage(0),
-                'sort'  => $orderBy,
-                'sort_arr'  => ProductSortHelper::getOrderBy(),
-                'breadcrumbs' => $this->getBreadcrumbsFromData($model),
-                'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
-            ], $this->getAdvancedData($model)));
+                    'model' => $model,
+                    'sort'  => $orderBy,
+                    'sort_arr'  => ProductSortHelper::getOrderBy(),
+                    'breadcrumbs' => $this->getBreadcrumbsFromData($model),
+                    'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
+                ], $this->getAdvancedData($model)));
         }
     }
     /**

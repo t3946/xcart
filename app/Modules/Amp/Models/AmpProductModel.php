@@ -3,6 +3,7 @@
 namespace Modules\Amp\Models;
 
 use Modules\Goods\Models\ProductModel;
+use Xcart\App\Main\Xcart;
 
 class AmpProductModel extends ProductModel
 {
@@ -16,8 +17,18 @@ class AmpProductModel extends ProductModel
 
     public function getAbsoluteUrl($full = false, $amp = false)
     {
-        if ($this->productid && $amp && ($clean = $this->clean_url)) {
-            return $clean->urlFromCode('amp:product', $full, ($full ? $this->sites->limit(1)->get() : null));
+        if ($this->productid && $amp ) {
+            $url = Xcart::app()->router->url(
+                'amp:product',
+                [
+                    'id' => $this->pk,
+                    'slug' => $this->getSlugPart()
+                ]
+            );
+            if ($full) {
+                $url = '//' . $this->getDomain() . $url;
+            }
+            return $url;
         }
 
         return parent::getAbsoluteUrl($full);

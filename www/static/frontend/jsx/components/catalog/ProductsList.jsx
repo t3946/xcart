@@ -90,8 +90,11 @@ export default class ProductsList extends Component {
           let nextPageUrl = null;
 
           //обновить номер следующей страницы
-          if (res.pager.currentPage < res.pager.pagesCount) {
-            this.state.nextPage = res.pager.currentPage + 1;
+          const nextPage = res.pager.currentPage + 1;
+          const maxPage = Math.ceil(res.pager.total / res.pager.pageSize);
+
+          if (nextPage <= maxPage) {
+            this.state.nextPage = nextPage;
             nextPageUrl = this.getNextPageUrl();
           }
 

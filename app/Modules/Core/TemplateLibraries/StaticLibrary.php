@@ -108,6 +108,24 @@ class StaticLibrary extends TemplateLibrary
     }
 
     /**
+     * Находит бандл файл со скриптами для клиентской части и возвращает его путь
+     * @kind function
+     * @name front_script
+     * @return int
+     */
+    public static function getFrontScript()
+    {
+        $static_path = "/static/frontend/dist/js/";
+
+        $files = scandir($_SERVER['DOCUMENT_ROOT'] . $static_path);
+        $result = array_filter($files, function($file_name) {
+            return preg_match('/main\.\w+?\.js/', $file_name);
+        });
+
+        return $static_path . array_shift($result);
+    }
+
+    /**
      * Находит бандл файл со скриптами для административной части и возвращает его путь
      * @kind function
      * @name admin_script

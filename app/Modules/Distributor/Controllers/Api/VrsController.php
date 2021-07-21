@@ -9,6 +9,7 @@ use Modules\Distributor\Models\VrsHelperMessagesModel;
 use Modules\Distributor\Models\VrsHelperSitesModel;
 use Modules\User\Models\UserModel;
 use Modules\User\UserModule;
+use Throwable;
 use Xcart\App\Controller\Controller;
 use \Firebase\JWT\JWT;
 use Xcart\App\Exceptions\Exception;
@@ -57,20 +58,38 @@ class VrsController extends Controller
   }
 
   public function getMessageFromDomain(string $domain){
-      $id = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0]['site_id'];
-
-      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->count() > 0))
+      $site_model = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0];
+      if($site_model['status'] === 'active' || $site_model['status'] === 'inactive' )
       {
+          $dx = DistributorModel::objects()->limit(1)->get(['url__contains' => $domain]);
+          $status = $site_model['status'];
+          $dx_created_user = ['b_firstname' => $dx->provider_model->getAttributes()['b_firstname'], 'b_lastname' => $dx->provider_model->getAttributes()['b_lastname']];
+          $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => $dx->created_at, 'user' => $dx_created_user];
+      }
+
+
+      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->count() > 0))
+      {
+          if($first_message){
+              return  [$first_message];
+          }
           return [];
       }
-      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->order(['date'])->asArray(true)->all();
 
+
+      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->order(['date'])->asArray(true)->all();
       $a = [];
       foreach ($messages as $message)
       {
           $message['user'] = UserModel::objects()->filter(['id'=>$message['user_id']])->asArray(true)->all()[0];
 
           $a[] = $message;
+      }
+
+
+      if($first_message)
+      {
+          array_unshift($a, $first_message);
       }
 
       return $a;
@@ -156,10 +175,7 @@ class VrsController extends Controller
                 $this->jsonResponse(['user' => $user]);
                 return;
           }
-
-          catch (Exception $e){
-
-              // код ответа
+          catch (Throwable $e){
               $this->jsonResponse('jwt dead');
           }
       }

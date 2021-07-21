@@ -11,6 +11,7 @@ use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\SurfMetaModel;
 use Xcart\App\Main\Xcart;
 
 class ApiCategoriesController extends AbstractCatalogController
@@ -54,16 +55,26 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderAlsoBought($id): void
     {
-        $products = SliderDataHelper::getSliderData('products_also_bought_with_this_product', $id);
-        if ($products) {
-            $data = $this->getProductData($products);
-            $this->jsonResponse(['items' => $data]);
-        }
+        $qs = parent::getQS();
+        $qs = $qs->getQuerySet();
+        $qs->select(['p2.*'])
+            ->distinct()
+            ->filter([
+                'order_details__order_group__cb_status' => 'P',
+                'productid' => $id
+            ]
+        );
+        $qs->join('inner join', 'xcart_order_details', ['xcart_products_1.productid' => 'xcart_order_details_1.productid'], 'xcart_order_details_1');
+        $qs->join('inner join', 'xcart_order_group', ['xcart_order_details_1.order_group_id' => 'xcart_order_groups_1.order_group_id'], 'xcart_order_groups_1');
+        $qs->join('inner join', 'xcart_order_details', ['xcart_order_details_1.order_group_id' => 'xcart_order_details_2.order_group_id'], 'xcart_order_details_2');
+        $qs->join('inner join', 'xcart_products', ['xcart_order_details_2.productid' => 'p2.productid'], 'p2');
+        $qs->exclude(['p2.productid' => $id]);
+
+        $this->jsonResponse($this->getPaginatedProducts($qs));
     }
 
     public function actionSliderRelatedProducts($id): void
     {
-        /** @var ProductModel[] $products */
         $products = SliderDataHelper::getSliderData('similar_products', $id);
 
         if ($products) {
@@ -74,12 +85,13 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderViewed(): void
     {
-        /** @var ProductModel[] $products */
-        $products = SliderDataHelper::getSliderData('recently_viewed_products');
+        if ($meta_id = SurfMetaModel::getInstance()->id) {
+            $qs = parent::getQS()
+                ->distinct()
+                ->filter(['surf_path__meta_id' => $meta_id])
+                ->order(['-surf_path__position']);
 
-        if ($products) {
-            $data = $this->getProductData($products);
-            $this->jsonResponse(['items' => $data]);
+            $this->jsonResponse($this->getPaginatedProducts($qs));
         }
     }
 

@@ -5,7 +5,6 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Helpers\ProductHelper;
-use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -18,7 +17,6 @@ use Modules\Cart\Interfaces\ICartItem;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\SurfPathModel;
@@ -72,7 +70,6 @@ use Xcart\Product;
  * @property int mod_date
  * @property mixed|string upc
  * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
- * @property null|CleanUrlModel clean_url
  * @property null|\Xcart\App\Orm\Manager|\Modules\Goods\Models\CategoryModel[] categories
  * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
  * @property mixed cost_to_us
@@ -89,6 +86,9 @@ use Xcart\Product;
  * @property VerificationStatusModel verification_status
  * @property int last_verify_date
  * @property string hash_product
+ * @property ProductModel parent
+ * @property string group_mask
+ * @property int group_root
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -154,13 +154,6 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => PricingModel::class,
                 'through' => QuickPricingModel::class,
-            ],
-
-            'clean_url' => [
-                'class' => HasToOneField::class,
-                'modelClass' => CleanUrlModel::class,
-                'link' => ['productid' => 'resource_id'],
-                'extra' => ['resource_type' => 'P'],
             ],
 
             'order_details' => [
@@ -588,17 +581,21 @@ class ProductModel extends Model implements ICartItem
 
     public function getAbsoluteUrl($full = false)
     {
+        $url = '';
         if ($this->productid) {
-            $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->pk, 'slug' => ($clean_url = $this->clean_url) ? $clean_url->getSlugPart(): '']);
+            $url = Xcart::app()->router->url(
+                'catalog:product:view',
+                [
+                    'id' => $this->pk,
+                    'slug' => $this->getSlugPart() ?: $this->pk
+                ]
+            );
 
             if ($full) {
                 $url = '//' . $this->getDomain() . $url;
             }
-
-            return $url;
         }
-
-        return false;
+        return $url;
     }
 
     public function getBaseDomain()
@@ -1003,6 +1000,11 @@ class ProductModel extends Model implements ICartItem
         if ($isNew) {
             $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
         }
+    }
+
+    public function getSlugPart(): string
+    {
+        return $this->createSlug($this->product);
     }
 
 }

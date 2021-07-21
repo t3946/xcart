@@ -5,6 +5,7 @@ import "select2";
 import tinymce from "tinymce";
 import appData from "@admin/utils/app-data";
 import InitSelect2 from "@admin/utils/init-select2";
+import InitTinymce from "@admin/utils/init-tinymce";
 
 $(document).ready(function () {
   $("#select_searchstring_by").change(function () {
@@ -137,97 +138,6 @@ $("a.select-order").click(function () {
   current.addClass("selected");
   return true;
 });
-///var/www/html/app/Modules/Dashboard/templates/dashboard/layouts/dashboard_layout.tpl
-(function () {
-  return;
-  const $select = $(".dashboard-search-form select");
-
-  $select
-    .filter("[data-ajax-from]")
-    .on("select2:select", function (e) {
-      $(this).append(
-        $("option[selected]", {
-          value: e.params.data.id,
-          text: e.params.data.text,
-        })
-      );
-    })
-    .select2({
-      allowClear: true,
-      placeholder: "Click to type and select",
-      tags: true,
-      closeOnSelect: false,
-      minimumInputLength: 3,
-      createTag: function (params) {
-        if (!this.$element.data("combobox")) {
-          return null;
-        }
-
-        const term = $.trim(params.term);
-
-        if (term === "") {
-          return null;
-        }
-
-        return {
-          id: appData().app.manualString + term,
-          text: appData().app.manualString + term,
-        };
-      },
-      ajax: {
-        cache: true,
-        dataType: "json",
-        delay: 500,
-        url: function (params) {
-          // var url = '{url 'dashboard:search_suggestion'}';
-          const url = "/admin/dashboard/search_suggestion";
-          let combobox = 0;
-          let delimiter = "?";
-          if ($(this).data("combobox")) {
-            combobox = 1;
-          }
-
-          if (url.indexOf(delimiter, 0) !== -1) {
-            delimiter = "&";
-          }
-
-          return (
-            url +
-            delimiter +
-            "from=" +
-            $(this).data("ajax-from") +
-            "&combobox=" +
-            combobox
-          );
-        },
-        processResults: function (data) {
-          if (data) {
-            return {
-              results: data,
-            };
-          }
-          return { results: {} };
-        },
-      },
-      language: {
-        inputTooShort: function (args) {
-          const remainingChars = args.minimum - args.input.length;
-          const message = "Type at least " + remainingChars + " letters";
-
-          return message;
-        },
-      },
-    });
-
-  $select
-    .filter(":not([data-ajax-from])")
-    .not(".page-size select, .not-select2")
-    .select2({
-      allowClear: true,
-      closeOnSelect: false,
-      placeholder: "Click to select",
-    });
-})();
 
 //инициализация компонентов select2 из разных шаблонов, с разных страниц админки
 (function () {
@@ -331,63 +241,7 @@ $("a.select-order").click(function () {
 // /app/Modules/Editor/templates/editor/fields/editor_field_input.tpl
 (function () {
   $(".tinymce-field").each((i, elem) => {
-    const { readonly, baseUrl, changedUrl } = elem.dataset;
-
-    tinymce.init({
-      selector: "#" + elem.id,
-      readonly: readonly === "true",
-      setup: (editor) => {
-        editor.on("change", function () {
-          tinymce.triggerSave();
-        });
-      },
-      plugins: [
-        "advlist autolink link image autoresize colorpicker autosave lists charmap print preview hr anchor",
-        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime image imagetools media nonbreaking",
-        "save table contextmenu directionality emoticons template paste textcolor contextmenu",
-      ],
-      relative_urls: false,
-      browser_spellcheck: true,
-      toolbar:
-        "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image",
-      inline_boundaries: true,
-      forced_root_block: true,
-      branding: false,
-      height: "480",
-      image_advtab: true,
-      file_browser_callback: function (field_name, url, type, win) {
-        window.file_browser_window = win;
-        window.file_browser_field = field_name;
-        window.file_browser_url = url;
-        window.file_browser_type = type;
-        let base_url = baseUrl;
-        base_url += base_url.indexOf("?") !== -1 ? "&" : "?";
-
-        $("<a/>")
-          .attr("href", base_url + "field=" + field_name + "&url=" + url)
-          .modal();
-
-        return false;
-      },
-      images_upload_handler: function (blobInfo, success, failure) {
-        let xhr, formData;
-        xhr = new XMLHttpRequest();
-        xhr.withCredentials = false;
-        xhr.open("POST", changedUrl);
-        xhr.onload = function () {
-          let json;
-          if (xhr.status != 200) {
-            failure("HTTP Error: " + xhr.status);
-            return;
-          }
-          json = JSON.parse(xhr.responseText);
-          success(json.url);
-        };
-        formData = new FormData();
-        formData.append("file", blobInfo.blob(), blobInfo.filename());
-        xhr.send(formData);
-      },
-    });
+    InitTinymce(elem);
   });
 })();
 
@@ -396,6 +250,9 @@ $("a.select-order").click(function () {
   const url_dashboard_my_sort = appData().routes["dashboard:sort_my_filters"];
 
   $(document).ready(function () {
+    if (!$('#dashboard').length) {
+      return
+    }
     $(document).dashboard({
       ajax: {
         url: url_dashboard_update,
@@ -493,7 +350,6 @@ $("a.select-order").click(function () {
 // /html/app/Modules/Goods/templates/verification/all.tpl
 $(function () {
   if (!appData().goodsModule) {
-    console.log("no goodsModule");
     return;
   }
 
@@ -573,3 +429,113 @@ $(function () {
       );
     });
 });
+
+// /www/skin1_kolin/admin/main/paypal_request.tpl
+$('#main_order_tabs-container').on('tabsactivate', function(event, ui) {
+  if (ui.newTab.find('a').attr('href') === '#main_order_tabs-paypal_request'){
+    $('.invoice_list_row[data-status=new]').each(function(){
+      var row = $(this);
+      var inv_number = $(this).find('.pp_invoice_number').data('inv-number');
+      row.find('.inv_status').addClass('active').text('');
+      $.post('ajax_admin.php', {
+            ajax_action: 'get_paypal_invoice_status',
+            paypal_invoice_id: inv_number
+          },
+          function (data) {
+            if (data.result) {
+              row.attr('data-status', 'updated');
+              row.find('.inv_status').removeClass('active').removeClass('ui').text(data.status);
+            }
+          }, 'json');
+    })
+  }
+});
+
+const paypal_form = $('.ui.form.paypal_request');
+if (paypal_form.length) {
+  $.fn.form.settings.rules.gtzero = function(value) {
+    return (value > 0)
+  };
+  paypal_form
+      .form({
+        onValid: function(){
+          $('.ui.error.message').empty();
+        },
+        onSuccess: function () {
+          $('.ui.error.message').empty();
+          if ($('#order_email').val() != $('#paypal_request_email').val()) {
+            if (!window.confirm("Payer email is different from order's email. Are you sure?")) {
+              return false;
+            }
+          }
+          var form = $(this);
+          var param = form.css('opacity', 0.4).find('.ui.loader').addClass('active').end().serializeArray();
+          form.find('#send_paypal_request').attr('disabled', 'disabled');
+          param.push({name: 'ajax_action', value: 'send_paypal_request'});
+          $.post('ajax_admin.php', param,
+              function (data) {
+                form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
+                if (data.result) {
+                  form.find('#paypal_request_amount').val('0.00').end()
+                      .find('#paypal_request_notes').val('').end();
+                  alert('The Invoice has been send');
+                } else {
+                  alert('An error occurred');
+                }
+                window.location.reload();
+              }, 'json');
+          return false;
+        },
+        fields: {
+          paypal_request_email: {
+            identifier  : 'paypal_request_email',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Payer email</b>: Mandatory field is empty!'
+              },
+              {
+                type   : 'email',
+                prompt : '<b>Payer email</b>: Email address is incorrect'
+              }
+            ]
+          },
+          paypal_request_subject: {
+            identifier  : 'paypal_request_subject',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Payment Request subject</b>: Mandatory field is empty!'
+              }
+            ]
+          },
+          paypal_request_notes: {
+            identifier  : 'paypal_request_notes',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Short payment description</b>: Mandatory field is empty!'
+              }
+            ]
+          },
+          paypal_request_amount: {
+            identifier  : 'paypal_request_amount',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : '<b>Request amount</b>: Mandatory field is empty!'
+              },
+              {
+                type   : 'regExp[/^[0-9]*[.]{0,1}[0-9]{0,2}$/]',
+                prompt : '<b>Request amount</b>: Value is incorrect!'
+              },
+              {
+                type   : 'gtzero',
+                prompt : '<b>Request amount</b>: Value must be greater then 0!'
+              }
+            ]
+          }
+        }
+      });
+}
+

@@ -5,8 +5,8 @@ namespace Modules\Brand\Models;
 use Doctrine\DBAL\Types\Types;
 use Modules\Brand\BrandModule;
 use Modules\Core\Helpers\Cache;
+use Modules\Core\Helpers\CoreHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
-use Modules\Menu\Models\CleanUrlModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
@@ -17,16 +17,17 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
+use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * @property mixed brandid
  */
 class BrandModel extends Model
 {
+    use SlugifyTrait;
 
     public static function tableName()
     {
@@ -179,12 +180,6 @@ class BrandModel extends Model
                 'modelClass' => UserModel::class,
                 'link' => ['provider' => 'login']
             ],
-            'clean_url' => [
-                'class' => HasToOneField::class,
-                'modelClass' => CleanUrlModel::class,
-                'link' => ['brandid' => 'resource_id'],
-                'extra' => ['resource_type' => 'M'],
-            ],
             'markets_disabled' => [
                 'class' => HasManyField::class,
                 'modelClass' => ExternalMarketplaceDisabledModel::class,
@@ -211,28 +206,30 @@ class BrandModel extends Model
 
     public function getAbsoluteUrl($full = false)
     {
+        $url = '';
         if ($this->brandid) {
 
-            $url = Xcart::app()->router->url('brand:view', ['id' => $this->pk, 'slug' => $this->clean_url->getSlugPart()]);
+            $url = Xcart::app()->router->url(
+                'brand:view',
+                ['id' => $this->pk, 'slug' => $this->getSlugPart() ?: $this->pk]
+            );
 
             if ($full) {
                 $site = Xcart::app()->getModule('Sites')->getSite();
-
                 $url = '//' . $site->domain . $url;
             }
-            return $url;
         }
 
-        return false;
+        return $url;
     }
 
     public function getAdminUrl()
     {
         if ($this->isNewRecord) {
             return Xcart::app()->router->url('brand:create_brand');
-        } else {
-            return Xcart::app()->router->url('brand:update_brand', ['id' => $this->brandid]);
         }
+
+        return Xcart::app()->router->url('brand:update_brand', ['id' => $this->brandid]);
     }
 
     public function getUrl()
@@ -309,5 +306,9 @@ class BrandModel extends Model
         return $brands;
     }
 
+    public function getSlugPart(): string
+    {
+        return $this->createSlug($this->brand);
+    }
 
 }
