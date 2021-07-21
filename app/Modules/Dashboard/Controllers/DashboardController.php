@@ -229,7 +229,7 @@ class DashboardController extends PrototypeAdminController
     public function subscription($id): void
     {
         $user = Xcart::app()->user;
-        $super_user = ['pavel','sergey2'];
+        $super_user = ['pavel','sergey2', 'roman_n'];
         $is_super_user = in_array($user->login, $super_user, true);
         $class = UserModel::classNameShort();
 
@@ -267,7 +267,10 @@ class DashboardController extends PrototypeAdminController
                 'is_super_user' => $is_super_user,
                 'all_users' => $is_super_user
                     ? UserModel::objects()
-                        ->exclude(['id__in' => array_merge($u_ids, [$user->id])])
+                        ->exclude([
+                            'id__in' => array_merge($u_ids, [$user->id]),
+                            'position__in' => ['VRS']
+                        ])
                         ->filter(['status' => 'Y', 'usertype' => 'A'])
                         ->order(['firstname'])
                     : []
