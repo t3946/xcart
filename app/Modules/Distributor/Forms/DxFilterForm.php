@@ -35,7 +35,6 @@ class DxFilterForm extends Form
                 'label' => 'Main SF',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => function () {
@@ -50,7 +49,6 @@ class DxFilterForm extends Form
                 'label' => 'VRS',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => function () {

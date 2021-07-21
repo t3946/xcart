@@ -65,7 +65,6 @@ class EmailSorterForm extends ModelForm
                 },
                 'html' => [
                     'data-ajax-url' => $ajax_url,
-                    'class' => 'select2-field',
                 ]
             ],
             'related_value' => [

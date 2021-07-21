@@ -33,25 +33,16 @@ class SiteForm extends ModelForm
                 'class' => Select2Field::class,
                 'label' => 'Corporations',
                 'multiple' => true,
-                'html' => [
-                    'class' => 'select2-field',
-                ],
             ],
             'taxes' => [
                 'class' => Select2Field::class,
                 'label' => 'Taxes',
                 'multiple' => true,
-                'html' => [
-                    'class' => 'select2-field',
-                ],
             ],
             'payment_methods' => [
                 'class' => Select2Field::class,
                 'label' => 'Payment methods',
                 'multiple' => true,
-                'html' => [
-                    'class' => 'select2-field',
-                ],
             ],
             'company_name' => [
                 'class' => CharField::class,
@@ -66,9 +57,6 @@ class SiteForm extends ModelForm
             ],
             'shop_closed_method' => [
                 'class' => Select2Field::class,
-                'html' => [
-                    'class' => 'select2-field'
-                ],
             ],
             'company_website' => [
                 'class' => CharField::class,
@@ -162,9 +150,6 @@ class SiteForm extends ModelForm
                     }
                     return $result ?? [];
                 },
-                'html' => [
-                    'class' => 'select2-field'
-                ],
                 'inline_editor' => true,
             ],
             'currency' => [
@@ -176,9 +161,6 @@ class SiteForm extends ModelForm
                     }
                     return $res ?? [];
                 })(),
-                'html' => [
-                    'class' => 'select2-field'
-                ],
             ],
             'flat_shipping_enabled' => [
                 'class' => CheckboxField::class,
@@ -191,9 +173,6 @@ class SiteForm extends ModelForm
             'lang' => [
                 'class' => Select2Field::class,
                 'label' => 'Preferred language',
-                'html' => [
-                    'class' => 'select2-field'
-                ],
             ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,

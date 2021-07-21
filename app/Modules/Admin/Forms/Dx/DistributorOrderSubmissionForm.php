@@ -54,7 +54,6 @@ class DistributorOrderSubmissionForm extends DistributorForm
                 'hintTemplate' => $this->hintTemplate,
                 'html' => [
                     'style' => 'width:100%;',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'hint' => LanguageModel::translate('help_d_contact_name_for_templates_text'),

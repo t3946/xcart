@@ -75,7 +75,6 @@ class BrandForm extends ModelForm
                 'label' => 'Forbidden API interactions',
                 'html' => [
                     'style' => 'width:400px;',
-                    'class' => 'select2-field',
                     'data-placeholder' => 'Click to select',
                 ],
                 'multiple' => true,

@@ -29,7 +29,6 @@ class VrsFilterForm extends Form
                 'multiple' => true,
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'choices' => function () {
                     $options = [];
@@ -47,7 +46,6 @@ class VrsFilterForm extends Form
                 'multiple' => true,
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'choices' => VrsModel::STATUS_CHOICES,
             ],
@@ -57,7 +55,6 @@ class VrsFilterForm extends Form
                 'class' => Select2Field::class,
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'choices' => function () {
                     $op = [];

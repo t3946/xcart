@@ -51,7 +51,6 @@ class VrsForm extends ModelForm
                 'label' => 'SF',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'inline_editor' => true,
             ],
@@ -60,7 +59,6 @@ class VrsForm extends ModelForm
                 'label' => 'Status',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'inline_editor' => true,
             ],
