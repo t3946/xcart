@@ -3,6 +3,7 @@
 namespace Modules\Goods;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\BrandAdmin;
 use Modules\Goods\Admin\FeedAdmin;
 use Modules\Goods\Admin\OptionAdmin;
 use Modules\Goods\Admin\ProductAdmin;
@@ -117,6 +118,17 @@ class GoodsModule extends Module
                     [
                         'module' => static::getModuleName(),
                         'admin' => FeedAdmin::classNameShort()
+                    ]
+                ),
+            ],
+            [
+                'name' => 'Brands',
+                'icon' => 'fa fa-list',
+                'route' => $router->url(
+                    'admin:list',
+                    [
+                        'module' => static::getModuleName(),
+                        'admin' => BrandAdmin::classNameShort()
                     ]
                 ),
             ]

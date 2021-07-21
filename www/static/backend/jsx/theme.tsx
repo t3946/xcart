@@ -418,7 +418,11 @@ $(function () {
     $.post('/admin/field/update',
         formData,
     (data) => {
-      list.unsetLoading();
+      if (data) {
+        list.update();
+      } else {
+        list.unsetLoading();
+      }
     }
   )
     ;

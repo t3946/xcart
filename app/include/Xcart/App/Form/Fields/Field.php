@@ -36,6 +36,7 @@ abstract class Field implements IValidateField
      */
     public $successClass = 'success';
     public $inlineClass = 'updates-admin';
+    public $select2FieldClass = 'select2-field';
     /**
      * @var string
      */
@@ -334,6 +335,18 @@ abstract class Field implements IValidateField
 
         return array_replace($this->_attributes, $t);
     }
+    public function getCommonClassesInput(?array $defClasses = [])
+    {
+        $classes = $this->getCommonClasses($defClasses);
+        if ($this instanceof Select2Field) {
+            $classes[] = $this->select2FieldClass;
+        }
+        return $this->separationClasses($classes);
+    }
+    public function separationClasses(?array $classes)
+    {
+        return implode(' ', $classes);
+    }
 
     public function getCommonClasses(?array $defClasses = [])
     {
@@ -361,8 +374,7 @@ abstract class Field implements IValidateField
         if ($this->inline_editor) {
             $classes[] = $this->inlineClass;
         }
-
-        return implode(' ', $classes);
+        return $classes;
     }
 
     public function filledOutSuccessfully()
@@ -377,7 +389,7 @@ abstract class Field implements IValidateField
     public function getAttributesInput()
     {
         $attributes = $this->getAttributes();
-        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClasses( [ $this->inputClass ] ));
+        $attributes = $this->extendAttribute($attributes, 'class', $this->getCommonClassesInput( [ $this->inputClass ] ));
         return $attributes;
     }
 
@@ -387,8 +399,9 @@ abstract class Field implements IValidateField
      */
     public function getAttributesCommon(array $classes = [])
     {
+        $classes = $this->getCommonClasses($classes);
         return [
-            'class' => $this->getCommonClasses($classes)
+            'class' => $this->separationClasses($classes)
         ];
     }
 
