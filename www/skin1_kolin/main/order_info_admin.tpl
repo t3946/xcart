@@ -506,7 +506,7 @@ function check_r_fields() {
                                 {/foreach}
                             {/if}
                         </td>
-                        <td>
+                        <td style="word-wrap: anywhere">
                             {if $current_membership_flag ne 'FS'}
                                 <a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>
                             {else}
