@@ -57,10 +57,10 @@ class Auth implements AuthInterface
         $this->_user = null;
     }
 
-    public function getUser()
+    public function getUser($new_user = false)
     {
         if (!$this->_user) {
-            $this->_user = $this->fetchUser();
+            $this->_user = $this->fetchUser($new_user);
         }
         return $this->_user;
     }
@@ -72,12 +72,12 @@ class Auth implements AuthInterface
         $this->updateSession($user);
     }
 
-    public function fetchUser()
+    public function fetchUser($new_user = false)
     {
         $user = null;
 
         if (!Cli::isCli()) {
-            $user = $this->getSessionUser();
+            $user = $this->getSessionUser($new_user);
             if (!$user) {
                 if ($user = $this->getCookieUser()) {
                     $this->updateSession($user);
@@ -97,20 +97,25 @@ class Auth implements AuthInterface
      * Find user in database by id or login
      *
      * @param int|string $id
+     * @param bool $new_user true если нужно работать с моделью новго пользователя
      * @return mixed
      */
-    public function findUser($id)
+    public function findUser($id, $new_user = false)
     {
-        $class = $this->class;
-        /** @var UserModel $class */
-        return $class::objects()->filter(['id' => $id])->limit(1)->get();
+        if ($new_user) {
+            $class = \Modules\User\Models\UserAccount\UserModel::class;
+            return $class::objects()->filter(['user_id' => $id])->limit(1)->get();
+        } else {
+            $class = $this->class;
+            return $class::objects()->filter(['id' => $id])->limit(1)->get();
+        }
     }
 
-    public function getSessionUser()
+    public function getSessionUser($new_user = false)
     {
         $id = $this->getSession();
         if ($id) {
-            return $this->findUser($id);
+            return $this->findUser($id, $new_user);
         }
         return null;
     }
@@ -140,14 +145,20 @@ class Auth implements AuthInterface
 
     public function updateCookie( $user)
     {
-        $value = implode(':', [$user->id, password_hash($user->email . $user->password, PASSWORD_DEFAULT)]);
+        $login = $user->login ??$user->email;
+        $id = $user->id ?? $user->user_id;
+
+        $value = implode(':', [$id, password_hash($login . $user->password, PASSWORD_DEFAULT)]);
         $this->setCookie($value);
     }
 
     public function setSession($user)
     {
-        Xcart::app()->request->session->add($this->authSessionName, $user->id);
-        Xcart::app()->request->session->add('login', $user->login);
+        $login = $user->login ??$user->email;
+        $id = $user->id ?? $user->user_id;
+
+        Xcart::app()->request->session->add($this->authSessionName, $id);
+        Xcart::app()->request->session->add('login',  $login);
     }
 
     public function getSession()

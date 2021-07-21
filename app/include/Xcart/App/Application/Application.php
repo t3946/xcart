@@ -264,11 +264,16 @@ class Application
         return !self::getIsCliMode();
     }
 
-    public function getUser():?UserModel
+    /**
+     * @param bool $new_user true если нужно работать с новой моделью пользователя UserAccount\UserModel
+     * @return UserModel|\Modules\User\Models\UserAccount\UserModel|null
+     * @throws UnknownPropertyException
+     */
+    public function getUser(bool $new_user = false)
     {
         /** @var AuthInterface $auth */
         if ($auth = $this->getComponent('auth')) {
-            return $auth->getUser();
+            return $auth->getUser($new_user);
         }
 
         return null;

@@ -22,7 +22,7 @@ interface AuthInterface
 
     public function logout($clearSession = true);
 
-    public function getUser();
+    public function getUser($new_user = false);
 
     public function setUser($user);
 }
