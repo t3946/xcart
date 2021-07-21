@@ -1,0 +1,21 @@
+.hat-login-button {
+    background: #145f8b;
+    color: #ffffff;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    &:hover {
+        background: #1579b4;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    &:before {
+        content: url("/static/frontend/images/icons/account/person.svg");
+        margin: 0 rem-calc(9) 0 0;
+    }
+}
