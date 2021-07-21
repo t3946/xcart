@@ -270,7 +270,7 @@ class DashboardController extends PrototypeAdminController
                         ->exclude([
                             'id__in' => array_merge($u_ids, [$user->id])
                         ])
-                        ->exclude(['position__in' => ['VRS']])
+                        ->exclude(['position__in' => ['VRS', 'programmer']])
                         ->filter(['status' => 'Y', 'usertype' => 'A'])
                         ->order(['firstname'])
                     : []
