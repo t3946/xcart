@@ -7,9 +7,13 @@
     justify-content: center;
     text-transform: uppercase;
     font-weight: 700;
+    transition: all 0.15s ease-out;
 
-    &:hover {
+    &:hover, {
         background: #1579b4;
+    }
+
+    &:hover, &:focus {
         color: #ffffff;
         text-decoration: none;
     }
