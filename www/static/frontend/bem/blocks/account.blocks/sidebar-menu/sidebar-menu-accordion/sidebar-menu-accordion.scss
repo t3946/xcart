@@ -1,0 +1,50 @@
+.sidebar-menu-accordion{
+  &-content{
+    transition: .3s all;
+    overflow: hidden;
+  }
+
+  &-open{
+    font-weight: 700 !important;
+    background-color: white !important;
+    border-bottom: 1px solid #C4C4C4 !important;
+
+  }
+
+  &-item{
+    background-color: #FFFFFF !important;
+    color: #a7a7a7 !important;
+    text-decoration: none !important;
+
+    &:hover{
+      background-color: #e2e2e2 !important;
+       color: black !important;
+    }
+
+    &:focus{
+      color: black !important;
+    }
+  }
+}
+
+
+.accordion{
+  height: 44px !important;
+  justify-content: space-between;
+  border-bottom: 1px solid #F4F4F4;
+}
+
+.accordion-arrow{
+  width: 12px;
+  height: 7px;
+  background: url("/static/frontend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
+  transition: .3s linear;
+}
+
+.accordion-arrow-open{
+  transform: rotate(180deg);
+}
+
+.accordion-active{
+  color: black !important;
+}

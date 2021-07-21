@@ -1,0 +1,21 @@
+.form-input{
+  border: 1px solid #C4C4C4;
+  padding: 9px 14px;
+  width: 100%;
+  max-width: 300px;
+
+  &::placeholder{
+    font-style: italic;
+    font-size: 14px;
+    color: #959595;
+  }
+}
+
+.form-input-label{
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.form-input-container{
+  margin-bottom: 20px;
+}

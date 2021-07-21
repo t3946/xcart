@@ -1,8 +1,8 @@
 import { Fragment, render } from "preact";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import MiniCartItems from "../components/MiniCart";
 import MiniCartInfo from "@/modules/mini-cart/components/info";
-import storeCart from "../stores/StoreCart";
+import storeCart from "../redux/stores/StoreCart";
 
 let miniCart = document.querySelector(".mini-cart-container");
 
