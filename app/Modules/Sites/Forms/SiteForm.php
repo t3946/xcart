@@ -33,22 +33,24 @@ class SiteForm extends ModelForm
                 'class' => Select2Field::class,
                 'label' => 'Corporations',
                 'multiple' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'taxes' => [
                 'class' => Select2Field::class,
                 'label' => 'Taxes',
                 'multiple' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'payment_methods' => [
                 'class' => Select2Field::class,
                 'label' => 'Payment methods',
                 'multiple' => true,
-            ],
-            'company_name' => [
-                'class' => CharField::class,
-                'label' => 'Company name',
                 'html' => [
-                    'class' => 'common-input'
+                    'style' => 'width: 300px'
                 ]
             ],
             'shop_closed' => [
@@ -57,66 +59,9 @@ class SiteForm extends ModelForm
             ],
             'shop_closed_method' => [
                 'class' => Select2Field::class,
-            ],
-            'company_website' => [
-                'class' => CharField::class,
-                'label' => 'Company website',
                 'html' => [
-                    'class' => 'common-input'
+                    'style' => 'width: 300px'
                 ]
-            ],
-            'cidev_top_header_code' => [
-                'class' => CharField::class,
-                'label' => 'Toll free customer service phone',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'local_phone' => [
-                'class' => CharField::class,
-                'label' => 'Local phone',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'fax_number' => [
-                'class' => CharField::class,
-                'label' => 'Fax number',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'cidev_header_code' => [
-                'class' => CharField::class,
-                'label' => 'Search string text',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'customer_service_working_time' => [
-                'class' => CharField::class,
-                'label' => 'Working time',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'opt_order_prefix' => [
-                'class' => CharField::class,
-                'label' => 'Order prefix',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'newsletter_email' => [
-                'class' => CharField::class,
-                'label' => 'Reply-To newsletter email address',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'start_year' => [
-                'class' => CharField::class,
-                'label' => 'Year when the store started its operation',
             ],
             'search_all_website_show' => [
                 'class' => CheckboxField::class,
@@ -125,17 +70,6 @@ class SiteForm extends ModelForm
             'Enable_CDN' => [
                 'class' => CheckboxField::class,
                 'label' => "Enable CDN",
-            ],
-            'CDN_domain' => [
-                'class' => CharField::class,
-                'label' => 'CDN domain',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'Google_Trusted_Store_ID' => [
-                'class' => CharField::class,
-                'label' => 'Google Trusted Store ID',
             ],
             'Enable_surf_stats' => [
                 'class' => CheckboxField::class,
@@ -151,6 +85,9 @@ class SiteForm extends ModelForm
                     return $result ?? [];
                 },
                 'inline_editor' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'currency' => [
                 'class' => Select2Field::class,
@@ -161,6 +98,9 @@ class SiteForm extends ModelForm
                     }
                     return $res ?? [];
                 })(),
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'flat_shipping_enabled' => [
                 'class' => CheckboxField::class,
@@ -172,12 +112,23 @@ class SiteForm extends ModelForm
             ],
             'lang' => [
                 'class' => Select2Field::class,
-                'label' => 'Preferred language',
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
                 'label' => 'Storefront favicon',
             ],
+            'status' => [
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
+            ],
+            'logo' => [
+                'class' => ImageField::class,
+            ]
         ];
     }
 

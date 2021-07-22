@@ -51,8 +51,8 @@ class SitesController extends BackendController
     public function setSite(int $site_id)
     {
         Xcart::app()->request->session->add('current_storefront', $site_id);
-        //site logo
-        $site_code = strtolower(Xcart::app()->getModule('Sites')->getSelectedSite()->code);
-        $this->jsonResponse(["logoUrl" => Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg"]);
+        $site_model = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $logo = $site_model->logo->getValue() ?? '';
+        $this->jsonResponse(["logoUrl" => "/{$logo}"]);
     }
 }
