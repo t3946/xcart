@@ -11,10 +11,11 @@ interface FormInputPropsDto {
   errorMessage?: string;
   handleChange: () => void;
   classes?: {
-    group: string;
-    label: string;
+    group: string | string[] | null;
+    label: string | string[] | null;
   };
   width?: string;
+  value: any;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -27,20 +28,23 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   errorMessage,
   handleChange,
   width = "100%",
+  value,
 }) => {
   return (
     <Grid
-      className={classnames("form-input-container", classes.group)}
+      className={classnames("form-input-container", classes?.group)}
       container
       justify="space-between"
       alignItems="center"
     >
-      <label
-        htmlFor={id}
-        className={classnames("form-input-label", classes.label)}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className={classnames("form-input-label", classes?.label)}
+        >
+          {label}
+        </label>
+      )}
 
       <input
         placeholder={placeholder}
@@ -52,6 +56,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
         style={{
           width,
         }}
+        value={value}
       />
 
       {errorMessage && <div className="form-input-caption">{errorMessage}</div>}

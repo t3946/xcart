@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarItemDto } from "@modules/account/ts/sidebar-item.type";
+import { SidebarItemDto } from "@modules/account/ts/types/sidebar-item.type";
 import { NavLink } from "react-router-dom";
 
 export const SideBarMenuAccordIonItem: React.FC<SidebarItemDto> = ({

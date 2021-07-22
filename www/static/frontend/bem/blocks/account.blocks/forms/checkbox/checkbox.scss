@@ -1,0 +1,58 @@
+.form-checkbox {
+  position: absolute; // take it out of document flow
+  opacity: 0; // hide it
+
+  & + .checkbox-label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+  }
+
+  // Box.
+  & + .checkbox-label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: 1px solid #C4C4C4;
+  }
+
+  &:hover + .checkbox-label:before {
+    background: #e3e3e3;
+  }
+
+  &:focus + .checkbox-label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+  }
+
+  &:disabled + .checkbox-label {
+    color: #b8b8b8;
+    cursor: auto;
+  }
+
+  &:disabled + .checkbox-label:before {
+    box-shadow: none;
+    background: #ddd;
+  }
+
+  // Checkmark. Could be replaced with an image
+  &:checked + .checkbox-label:after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    background: url("/static/frontend/dist/images/icons/account/checkbox-arrow.svg") no-repeat center / cover;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.label-text{
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 4px;
+}
