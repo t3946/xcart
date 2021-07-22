@@ -630,7 +630,7 @@ if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'submit_message' && $type === 'empty') {
 
-        func_log_order($orderid, 'EL', '  ', $login);
+        func_log_order($orderid, 'EL', '  ', Xcart::app()->user->login);
     }
 
     if ($mode === 'submit_message' && !empty($notes) && !empty($orderid))
@@ -677,8 +677,8 @@ if ($REQUEST_METHOD === "POST") {
 
         func_log_order($orderid, 'S', $log2, $user->login);
 
-        $body = "{$notes}\n\nposted by {$userfullname} ({$user->login})";
-        $from = $userfullname . '<helpdesk@s3stores.com>';
+        $body = "{$notes}\n\nposted by {$user} ({$user->login})";
+        $from = $user . '<helpdesk@s3stores.com>';
         $to   = 'orders@s3stores.com';
 
         $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
