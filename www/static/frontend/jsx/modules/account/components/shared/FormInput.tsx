@@ -35,12 +35,14 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
       justify="space-between"
       alignItems="center"
     >
-      <label
-        htmlFor={id}
-        className={classnames("form-input-label", classes.label)}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className={classnames("form-input-label", classes.label)}
+        >
+          {label}
+        </label>
+      )}
 
       <input
         placeholder={placeholder}
