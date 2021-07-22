@@ -81,15 +81,26 @@ class UserModel extends Model
         }
 
         //TODO: сохранить сессию
+        //сохранить сессию
         Xcart::app()->auth->login($this);
 
         //сохранить сессионную куку
         $session = Xcart::app()->request->session;
         $session_key = Xcart::app()->request->session->getSessionKey();
         $session_id = $session->getId();
+
+        if (!$session_id) {
+            Xcart::app()->request->session->start();
+        }
+
         Xcart::app()->request->cookie->add($session_key, $session_id);
 
         return true;
+    }
+
+    public function logout(): bool
+    {
+
     }
 
     public function getAttributes(): array
@@ -97,5 +108,10 @@ class UserModel extends Model
         $attributes = parent::getAttributes();
         unset($attributes['password']);
         return $attributes;
+    }
+
+    public function getIsGuest()
+    {
+        return $this->isNewRecord;
     }
 }

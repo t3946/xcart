@@ -2,21 +2,25 @@
 
 namespace Modules\User\Helpers;
 
-
 use Xcart\App\Helpers\ClassNames;
 
 class PasswordHelper
 {
     use ClassNames;
 
-    public static function hash($raw, $algo = PASSWORD_DEFAULT, $options = [])
+    public static function hash($password, $algo = PASSWORD_DEFAULT, $options = [])
     {
-//        return password_hash($raw, $algo, $options);
-        return text_crypt($raw);
+        return password_hash($password, $algo, $options);
     }
 
-    public static function verify($raw, $hashed)
+    /**
+     * проверяет соответствие хеша и пароля
+     * @param string $password пароль
+     * @param string $hash хеш пароля
+     * @return boolean true если хеш соотносится с паролем иначе false
+    */
+    public static function verify(string $password, string $hash): bool
     {
-        return ($raw == text_decrypt($hashed));
+        return password_verify($password, $hash);
     }
 }
