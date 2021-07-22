@@ -22,13 +22,15 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Customer;
 
-global $login, $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
+global $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
 
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['update', 'mnf_body'];
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
+
+$login = Xcart::app()->user->login;
 
 x_session_register("order_search_condition");
 x_session_register("show_intershipper_rates");
