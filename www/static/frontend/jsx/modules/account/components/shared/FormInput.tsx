@@ -2,23 +2,32 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
-export const FormInput = (props: any) => {
-  const { label, placeholder, classes, name, id, type, caption, handleChange } =
-    props;
+interface FormInputPropsDto {
+  label?: string;
+  placeholder?: string;
+  name: string;
+  id?: string;
+  type?: string;
+  errorMessage?: string;
+  handleChange: () => void;
+  classes?: {
+    group: string;
+    label: string;
+  };
+  width?: string;
+}
 
-  function labelTemplate() {
-    if (label) {
-      return (
-        <label
-          htmlFor={id}
-          className={classnames("form-input-label", classes.label)}
-        >
-          {label}
-        </label>
-      );
-    }
-  }
-
+export const FormInput: React.FC<FormInputPropsDto> = ({
+  label,
+  placeholder,
+  classes,
+  name,
+  id,
+  type,
+  errorMessage,
+  handleChange,
+  width = "100%",
+}) => {
   return (
     <Grid
       className={classnames("form-input-container", classes.group)}
@@ -26,7 +35,12 @@ export const FormInput = (props: any) => {
       justify="space-between"
       alignItems="center"
     >
-      {labelTemplate()}
+      <label
+        htmlFor={id}
+        className={classnames("form-input-label", classes.label)}
+      >
+        {label}
+      </label>
 
       <input
         placeholder={placeholder}
@@ -35,9 +49,12 @@ export const FormInput = (props: any) => {
         id={id}
         type={type ? type : "text"}
         onChange={handleChange}
+        style={{
+          width,
+        }}
       />
 
-      {caption && <div className="form-input-caption">{caption}</div>}
+      {errorMessage && <div className="form-input-caption">{errorMessage}</div>}
     </Grid>
   );
 };
