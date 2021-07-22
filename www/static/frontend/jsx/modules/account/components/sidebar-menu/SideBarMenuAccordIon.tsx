@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SidebarItemDto } from "@modules/account/ts/sidebar-item.type";
+import { SidebarItemDto } from "@modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
 import { useAccordion } from "../../hooks/useAccordion";
 

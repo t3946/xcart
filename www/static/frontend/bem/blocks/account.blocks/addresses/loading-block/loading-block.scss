@@ -1,0 +1,18 @@
+.address-loading-block{
+  position: absolute;
+  display: none;
+  width: 323px;
+  z-index: 10;
+  height: 244px;
+  background-color:  #C4C4C4;
+  opacity: 0.3;
+  top: 0;
+}
+
+.address-loading-block-is-loading{
+display: block;
+}
+
+.address-loading-container{
+  position: relative;
+}
