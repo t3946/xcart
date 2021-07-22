@@ -307,7 +307,7 @@ class SiteModel extends Model
 
     public function getLogo()
     {
-        return $this->logo ?? null;
+        return $this->logo->getValue() ?? '';
     }
 
     public function getConfig()
