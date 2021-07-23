@@ -4,6 +4,8 @@ namespace Modules\Goods\Helpers;
 
 
 use Exception;
+use Modules\Brand\Models\BrandModel;
+use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
@@ -492,5 +494,33 @@ class ProductHelper
             $qs->exclude(['fv_id__in' => $fv_ids]);
         }
         $qs->delete(['productid' => $model->productid, 'is_feed' => 1]);
+    }
+
+    public static function setProductBrand(ProductModel $model, $value, SiteModel $site): void
+    {
+        $value = trim($value);
+        if ($value && !BrandModel::objects()->limit(1)->get(['brand' => $value])) {
+            $brand = new BrandModel(
+                [
+                    'brand' => $value,
+                    'orderby' => 10,
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                    'avail' => true
+                ]
+            );
+            $brand->save();
+            BrandStorefrontModel::objects()->getOrCreate(
+                [
+                    'brandid' => $brand->brandid,
+                    'sfid' => $site->storefront_id,
+                ]
+            );
+
+            if ($brand->parent_brand_id) {
+                $brand = $brand->parent;
+            }
+            $model->brand = $brand;
+        }
     }
 }

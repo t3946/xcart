@@ -37,6 +37,7 @@ class QueueProcessCommand extends Command
     {
         /** @var ProductModel $product  */
         /** @var ProductModel $group_product  */
+        /** @var SiteModel $site */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
 
@@ -58,8 +59,9 @@ class QueueProcessCommand extends Command
                     print("$product_code\n");
                     $product->setAttributes($data);
                     $product->sites = [$site];
-                    $product->save();
+                    ProductHelper::setProductBrand($product, $data['brand_name'], $site);
                     ProductHelper::setProductAttributes($product, $data['attributes'], $site);
+                    $product->save();
                 }
             } elseif ($data['is_group']) {
 
@@ -74,8 +76,9 @@ class QueueProcessCommand extends Command
                     $group_product->sites = [$site];
                     $group_product->save();
                     $group_product->parent = $group_product;
+                    ProductHelper::setProductBrand($group_product, $data['brand_name'], $site);
+                    ProductHelper::setProductAttributes($group_product, $data['attributes'], $site);
                     $group_product->save();
-                    ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                 }
 
                 foreach ($data['child_products'] as $child) {
@@ -89,8 +92,9 @@ class QueueProcessCommand extends Command
                         $product->parent = $group_product;
                         $product->group_mask = $group_product->product;
                         $product->sites = [$site];
+                        ProductHelper::setProductBrand($product, $child['brand_name'], $site);
+                        ProductHelper::setProductAttributes($product, $child['attributes'], $site);
                         $product->save();
-                        ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                     }
                 }
             }

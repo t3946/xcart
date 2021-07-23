@@ -4,6 +4,7 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -945,19 +946,6 @@ class ProductModel extends Model implements ICartItem
 
     public function setAttribute($name, $value)
     {
-        if ($name === 'brand_name' && trim($value)) {
-            if (!$brand = BrandModel::objects()->limit(1)->get(['brand' => trim($value)])) {
-                $brand = new BrandModel([
-                    'brand' => trim($value),
-                    'orderby' => 10,
-                    'prevent_search_indexing_of_all_brand_products' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'avail' => true
-                ]);
-            }
-            $brand->save();
-            $this->brand = $brand;
-        }
 
         if (($name === 'upc') && $upc = ProductHelper::calculateUPC($value)) {
             $value = $upc;
