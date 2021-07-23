@@ -12,8 +12,8 @@
                 <div class="top-block">
                     {set $image = $model->getImage()}
                     {if $image}
-                    <div class="image">
-                        <img src="//cdn.{$.getSite->getBaseDomain()}{$image->getURL()}" alt="{$model.brand}" itemprop="image">
+                    <div class="image test">
+                        <img src="//cdn.{$.getSite->getBaseDomain()}/{$image}" alt="{$model.brand}" itemprop="image">
                     </div>
                     {/if}
                 </div>

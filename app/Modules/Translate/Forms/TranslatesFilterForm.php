@@ -29,7 +29,6 @@ class TranslatesFilterForm extends Form
                 'html' => [
                     'style' => 'width: 300px',
                     'multiple' => true,
-                    'class' => 'select2-field',
                 ],
             ],
             'text' => [

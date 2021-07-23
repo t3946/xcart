@@ -68,8 +68,6 @@ class VrsAdmin extends Admin
         {
             case 'company':
                 return "<a href='{$item->getWebSiteUrl()}'>{$item->$property}</a>";
-            case 'status':
-                return $item->getField($property)->toText();
         }
         return parent::getItemProperty($item, $property);
     }

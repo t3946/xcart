@@ -271,7 +271,6 @@ class DistributorPaymentToDxForm extends DistributorForm
                 'html' => [
                     'style' => 'width:100%',
                     'data-editable' => true,
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,

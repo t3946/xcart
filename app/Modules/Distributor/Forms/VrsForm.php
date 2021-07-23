@@ -51,16 +51,16 @@ class VrsForm extends ModelForm
                 'label' => 'SF',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
+                'inline_editor' => true,
             ],
             'status' => [
                 'class' => Select2Field::class,
                 'label' => 'Status',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
+                'inline_editor' => true,
             ],
             'date' => [
                 'class' => DateField::class,

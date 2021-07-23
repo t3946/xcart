@@ -181,7 +181,6 @@ class ProductAdminForm extends ModelForm
                 'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'html' => [
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
-                    'class' => 'select2-field',
                 ],
             ],
             'brand' => [
@@ -189,7 +188,6 @@ class ProductAdminForm extends ModelForm
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'html' => [
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
-                    'class' => 'select2-field',
                 ],
             ],
             'category' => [
@@ -199,7 +197,6 @@ class ProductAdminForm extends ModelForm
                     return $a['name'];
                 }, $category->getBreadcrumbs()->get()))] : [],
                 'html' => [
-                    'class' => 'select2-field',
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('category'),
                 ],
                 'label' => 'Main category'

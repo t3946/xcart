@@ -36,6 +36,7 @@
         "mobiledetect/mobiledetectlib": "^2.8",
         "monolog/monolog": "^1.22",
         "mpdf/mpdf": "^8.0",
+        "nao-pon/flysystem-google-drive": "~1.1",
         "omnipay/paypal": "^3.0",
         "omnipay/stripe": "^3.0",
         "paypal/rest-api-sdk-php": "*",

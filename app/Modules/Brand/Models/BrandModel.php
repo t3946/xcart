@@ -6,8 +6,12 @@ use Doctrine\DBAL\Types\Types;
 use Modules\Brand\BrandModule;
 use Modules\Core\Helpers\Cache;
 use Modules\Core\Helpers\CoreHelper;
+use Modules\Goods\Models\ImageDModel;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledBrandModel;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledDxModel;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Marketplace\Models\ExternalMarketPlaceModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Components\Breadcrumbs;
@@ -17,6 +21,8 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\HasToOneField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
@@ -36,6 +42,7 @@ class BrandModel extends Model
 
     public static function getFields()
     {
+        $alias = ExternalMarketplaceDisabledModel::objects()->getTableAlias();
         return [
             'brandid' => [
                 'class' => AutoField::class,
@@ -60,10 +67,14 @@ class BrandModel extends Model
                 'verboseName' => 'SEO meta description'
             ],
             'avail' => [
-                'class' => BooleanCharField::class,
+                'class' => CharField::class,
                 'null' => false,
-                'default' => true,
-                'verboseName' => 'Availability'
+                'default' => 'Y',
+                'choices' => [
+                    'Y' => 'Yes',
+                    'N' => 'No',
+                ],
+                'verboseName' => 'Status',
             ],
             'prevent_search_indexing_of_all_brand_products' => [
                 'class' => BooleanCharField::class,
@@ -87,12 +98,13 @@ class BrandModel extends Model
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => "Title (<title>)"
+                'verboseName' => "Title (title)"
             ],
             'url' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+                'verboseName' => 'URL (include http://)'
             ],
             'orderby' => [
                 'class' => IntField::class,
@@ -104,58 +116,58 @@ class BrandModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Product brand name'
             ],
             'customer_service_name' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+                'verboseName' => 'Customer service name'
             ],
             'leadtime_from' => [
                 'class' => IntField::class,
                 'null' => true,
-                'default' => null,
+                'default' => 0,
             ],
             'leadtime_to' => [
                 'class' => IntField::class,
                 'null' => true,
-                'default' => null,
+                'default' => 0,
             ],
             'link_to_us_url' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+                'verboseName' => 'Link to us URL (include http://)'
             ],
             'customer_service_email' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+                'verboseName' => 'Customer service email'
             ],
             'customer_service_phone' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
+                'verboseName' => 'Customer service phone'
             ],
             'SEO_brand_name_h1' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => 'SEO brand name (<H1>)'
+                'verboseName' => 'SEO brand name (H1)'
             ],
             'SEO_h2' => [
                 'class' => CharField::class,
                 'null' => false,
                 'default' => '',
-                'verboseName' => "SEO (<H2>)"
+                'verboseName' => "SEO (H2)"
             ],
             'brand_storefront' => [
                 'class' => HasManyField::class,
                 'modelClass' => BrandStorefrontModel::class,
                 'link' => ['brandid' => 'brandid']
-            ],
-            'storefront' => [
-                'class' => ManyToManyField::class,
-                'modelClass' => SiteModel::class,
-                'through' => BrandStorefrontModel::class,
             ],
             'child_brands' => [
                 'class' => HasManyField::class,
@@ -166,6 +178,12 @@ class BrandModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['brandid' => 'brandid']
+            ],
+            'image' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/B/%Y-%m-%d/',
+                'null' => true,
             ],
             'parent' => [
                 'field' => 'parent_brand_id',
@@ -181,18 +199,11 @@ class BrandModel extends Model
                 'link' => ['provider' => 'login']
             ],
             'markets_disabled' => [
-                'class' => HasManyField::class,
-                'modelClass' => ExternalMarketplaceDisabledModel::class,
-                'link' => ['brandid' => 'resource_id'],
-                'extra' => ['resource_type' => 'B']
+                'class' => ManyToManyField::class,
+                'modelClass' => ExternalMarketPlaceModel::class,
+                'through' => ExternalMarketplaceDisabledBrandModel::class,
             ],
-
         ];
-    }
-
-    public function getImage()
-    {
-        return ImageBModel::objects()->limit(1)->get(['id' => $this->brandid]);
     }
 
     public function getBreadcrumbs(): Breadcrumbs
@@ -202,6 +213,10 @@ class BrandModel extends Model
         $bread->add(BrandModule::t('Brands'), 'brand:list');
         $bread->add($this->brand, $this->getAbsoluteUrl());
         return $bread;
+    }
+    public function getImage()
+    {
+        return $this->image->getValue() ?? null;
     }
 
     public function getAbsoluteUrl($full = false)
@@ -236,18 +251,6 @@ class BrandModel extends Model
     {
         /** TODO rewrite on new router */
         return "/brand/{$this->brandid}";
-    }
-
-    public function __toString()
-    {
-        $code = '';
-        if ($st = $this->storefront->limit(1)->get()) {
-            $code .=  $st->code .":";
-        }
-
-        $code .= $this->pk;
-
-        return "[{$code}] {$this->brand}";
     }
 
     public function getProductFrontendName()

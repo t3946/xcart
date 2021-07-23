@@ -4,6 +4,8 @@ namespace Modules\Admin\Contrib;
 
 
 use Xcart\App\Form\Fields\DateRangeField;
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
@@ -723,11 +725,17 @@ abstract class Admin
     public function getItemProperty(Model $item, $property)
     {
         $value = $item;
-        $data = explode('__', $property);
-        foreach ($data as $name) {
-            $value = ($value->$name instanceof Model) ? (string)$value->$name : $value->$name;
+        if ($form = $this->getForm())
+        {
+            $form->setInstance($item);
+            if ($field = $form->getField($property))
+            {
+                if ($field instanceof DropDownField && $field->inline_editor) {
+                    return $field->renderInput();
+                }
+            }
         }
-        return $value;
+        return ($value->$property instanceof Model) ? (string)$value->$property : $value->$property;
     }
 
     public function all($pk = null)

@@ -87,9 +87,6 @@ class DistributorGeneralForm extends DistributorForm
             'sites' => [
                 'class' => Select2Field::class,
                 'label' => 'Main SF',
-                'html' => [
-                    'class' => 'select2-field',
-                ],
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,

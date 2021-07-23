@@ -12,7 +12,6 @@ use Modules\User\UserModule;
 use Throwable;
 use Xcart\App\Controller\Controller;
 use \Firebase\JWT\JWT;
-use Xcart\App\Exceptions\Exception;
 
 class VrsController extends Controller
 {

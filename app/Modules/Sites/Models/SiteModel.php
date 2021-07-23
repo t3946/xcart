@@ -134,6 +134,7 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Company name'
             ],
             'shop_closed' => [
                 'class' => BooleanField::class,
@@ -157,47 +158,56 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Company website'
             ],
             'cidev_top_header_code' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Toll free customer service phone'
             ],
             'local_phone' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Local phone'
             ],
             'fax_number' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Fax number'
             ],
             'cidev_header_code' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Search string text',
             ],
             'customer_service_working_time' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Working time'
             ],
             'opt_order_prefix' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Order prefix'
             ],
             'newsletter_email' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Reply-To newsletter email address'
             ],
             'start_year' => [
                 'class' => IntField::class,
                 'length' => 4,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Year when the store started its operation'
             ],
             'search_all_website_show' => [
                 'class' => BooleanField::class,
@@ -213,11 +223,13 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'CDN domain'
             ],
             'Google_Trusted_Store_ID' => [
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null,
+                'verboseName' => 'Google Trusted Store ID'
             ],
             'Enable_surf_stats' => [
                 'class' => BooleanField::class,
@@ -251,12 +263,7 @@ class SiteModel extends Model
                 'null' => true,
                 'default' => null,
                 'link' => ['lang_id' => 'lang_id'],
-            ],
-            'file_edit_image_favicon' => [
-                'class' => ImageField::class,
-                'adapterName' => 'www',
-                'uploadTo' => 'images/favicons/',
-                'null' => true,
+                'verboseName' => 'Preferred language'
             ],
             'corporates' => [
                 'class' => ManyToManyField::class,
@@ -283,7 +290,24 @@ class SiteModel extends Model
                     'D' => 'Disabled'
                 ],
             ],
+            'logo' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/logo/',
+                'null' => true,
+            ],
+            'file_edit_image_favicon' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/favicons/',
+                'null' => true,
+            ],
         ];
+    }
+
+    public function getLogo()
+    {
+        return $this->logo->getValue() ?? '';
     }
 
     public function getConfig()
