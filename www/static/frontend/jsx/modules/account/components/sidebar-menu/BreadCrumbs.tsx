@@ -18,7 +18,6 @@ export const BreadCrumbs = () => {
       .join(" ");
   }
 
-  console.log(location);
   return (
     <div className="bread-crumbs-container">
       {breadCrumbs.map((e, index) => {
