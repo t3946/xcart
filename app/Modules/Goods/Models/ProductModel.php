@@ -919,7 +919,7 @@ class ProductModel extends Model implements ICartItem
         $c = $this->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
         if (!$c) {
             if ($this->brand) {
-                $b = $this->brand->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+                $b = $this->brand->markets_disabled->filter(['id' => $marketpalce_id])->count();
             }
             if (!$b) {
                 $d = $this->distributor->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
