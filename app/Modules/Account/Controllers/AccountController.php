@@ -2,12 +2,12 @@
 
 namespace Modules\Account\Controllers;
 
-use Modules\Account\Forms\LoginForm;
-use Modules\Account\Forms\RegistrationForm;
+use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Sites\Helpers\StorageHelper;
-use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
@@ -24,10 +24,26 @@ class AccountController extends FrontendController
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         StorageHelper::push([
+            "code" => strtolower($site->code),
             "shortName" => $site->short_name,
             "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
-            "cidev_top_header_code" => GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value,
         ], null, 'site');
+
+        StorageHelper::push([
+            "quantity" => Xcart::app()->cart->getQuantity(),
+        ], null, 'Cart');
+
+        StorageHelper::push([
+            "cidev_top_header_code" => GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value,
+            "companyName" => GlobalConfigModel::objects()->get(['name' => 'company_name'])->value,
+        ], null, 'config');
+
+        StorageHelper::push([
+            "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
+            "mainMenu" => MenuLibrary::getMenu(['code' => 'main-menu']),
+        ], null, 'templates');
+
+        AdminHelper::routesData();
 
         $this->display('account/base.tpl');
     }

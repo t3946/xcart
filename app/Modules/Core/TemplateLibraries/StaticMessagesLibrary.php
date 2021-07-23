@@ -17,7 +17,7 @@ class StaticMessagesLibrary extends TemplateLibrary
      * @kind function
      * @return string
      */
-    public static function renderStaticMessages($params)
+    public static function renderStaticMessages($params = [])
     {
         $template = isset($params['template']) ? $params['template'] : 'base/_notifications.tpl';
         /** @var SiteModel $site */
