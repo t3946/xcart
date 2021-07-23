@@ -22,16 +22,17 @@ return [
     ],
 
     [
-        'route' => '/user-info/',
-        'target' => [AccountController::class, 'info'],
-        'name' => 'info',
-    ],
-
-    [
         'route' => '/logout/',
         'target' => [AccountController::class, 'logout'],
         'name' => 'logout',
     ],
+
+    [
+        'route' => '/api/authorization',
+        'path' => 'Modules.Account.routes.routes_authorization_api',
+        'namespace' => 'authorization_api'
+    ],
+
     [
         'route' => '/api/addresses',
         'path' => 'Modules.Account.routes.routes_addresses_api',

@@ -6,34 +6,36 @@ import { SagaIterator } from "redux-saga";
 const api = new ApiService();
 
 function* register(action: AnyAction) {
-  console.log("Saga generator register", action);
-
-  yield api
-    .post<any>(`/account/register/`, JSON.stringify(action.registerForm))
-    .then((response) => response);
-}
-
-function* login(action: AnyAction) {
-  console.log("Saga generator login", action);
-
   const { form, callback } = action.payload;
   const postData = {
-    LoginForm: form,
+    RegistrationForm: form,
   };
 
   yield api
-    .post<any>(`/account/login/`, JSON.stringify(postData))
+    .post<any>(`/account/api/authorization/register`, JSON.stringify(postData))
     .then((response) => {
       callback();
       return response;
     });
 }
 
-function* logout(action: AnyAction) {
-  console.log("Saga generator logout", action);
+function* login(action: AnyAction) {
+  const { form, callback } = action.payload;
+  const postData = {
+    LoginForm: form,
+  };
 
   yield api
-    .post<any>(`/account/logout/`, JSON.stringify(action.logoutForm))
+    .post<any>(`/account/api/authorization/login`, JSON.stringify(postData))
+    .then((response) => {
+      callback();
+      return response;
+    });
+}
+
+function* logout() {
+  yield api
+    .get<any>(`/account/api/authorization/logout`)
     .then((response) => response);
 }
 
