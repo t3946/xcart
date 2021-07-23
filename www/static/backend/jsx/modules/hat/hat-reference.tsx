@@ -123,7 +123,7 @@ const HatReference: React.FC<any> = function () {
             method: "POST",
             dataType: "json",
             success(res) {
-              setLogo(res.logoUrl);
+              setLogo('/' + res.logoUrl);
             },
           });
         }}
