@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, FocusEventHandler } from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
@@ -9,13 +9,15 @@ interface FormInputPropsDto {
   id?: string;
   type?: string;
   errorMessage?: string;
-  handleChange: () => void;
+  handleChange: (e: string | ChangeEvent<any>) => void;
   classes?: {
-    group: string | string[] | null;
-    label: string | string[] | null;
+    group?: string | string[] | null;
+    label?: string | string[] | null;
+    input?: string | string[] | null;
   };
-  width?: string;
   value: any;
+  touched?: boolean;
+  handleBlur: FocusEventHandler<HTMLInputElement>;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -27,14 +29,15 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   type,
   errorMessage,
   handleChange,
-  width = "100%",
   value,
+  touched,
+  handleBlur,
 }) => {
   return (
     <Grid
       className={classnames("form-input-container", classes?.group)}
       container
-      justify="space-between"
+      justify={label ? "space-between" : "flex-end"}
       alignItems="center"
     >
       {label && (
@@ -45,21 +48,21 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
           {label}
         </label>
       )}
-
-      <input
-        placeholder={placeholder}
-        className="form-input"
-        name={name}
-        id={id}
-        type={type ? type : "text"}
-        onChange={handleChange}
-        style={{
-          width,
-        }}
-        value={value}
-      />
-
-      {errorMessage && <div className="form-input-caption">{errorMessage}</div>}
+      <div className={classnames(classes?.input)}>
+        <input
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className={classnames("form-input")}
+          name={name}
+          id={id}
+          type={type ? type : "text"}
+          onChange={handleChange}
+          value={value}
+        />
+        {errorMessage && touched && (
+          <div className="form-input-caption">{errorMessage}</div>
+        )}
+      </div>
     </Grid>
   );
 };

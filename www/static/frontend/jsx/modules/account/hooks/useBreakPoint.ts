@@ -13,7 +13,6 @@ export function useBreakPoint() {
 }
 
 function changeBreakPoints(resolution: number) {
-  console.log(resolution);
   if (resolution > 1366) {
     return {
       is1920: true,

@@ -6,6 +6,7 @@ use Modules\User\Helpers\PasswordHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -62,6 +63,11 @@ class UserModel extends Model
                 'null' => true,
                 'unique' => false,
             ],
+            'cart_number' => [
+                'class' => IntField::className(),
+                'null' => false,
+                'default' => 0,
+            ]
         ];
     }
 
@@ -71,17 +77,11 @@ class UserModel extends Model
         $this->save();
     }
 
-    public function login(string $password): bool
+    /**
+     * авторизует пользователя в сессии и сохраняет сессионные куки
+    */
+    public function authenticate(): void
     {
-        $hash = $this->getAttribute('password');
-
-        // проверка подлинности не пройдена
-        if (!PasswordHelper::verify($password, $hash)) {
-            return false;
-        }
-
-        //TODO: сохранить сессию
-        //сохранить сессию
         Xcart::app()->auth->login($this);
 
         //сохранить сессионную куку
@@ -94,24 +94,37 @@ class UserModel extends Model
         }
 
         Xcart::app()->request->cookie->add($session_key, $session_id);
+    }
+
+    public function login(string $password): bool
+    {
+        $hash = $this->getAttribute('password');
+
+        // проверка подлинности не пройдена
+        if (!PasswordHelper::verify($password, $hash)) {
+            return false;
+        }
+
+        $this->authenticate();
 
         return true;
-    }
-
-    public function logout(): bool
-    {
-
-    }
-
-    public function getAttributes(): array
-    {
-        $attributes = parent::getAttributes();
-        unset($attributes['password']);
-        return $attributes;
     }
 
     public function getIsGuest()
     {
         return $this->isNewRecord;
+    }
+
+    /**
+     * получить массив данных о пользователе (нужно для передачи на frontend)
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->user_id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
     }
 }

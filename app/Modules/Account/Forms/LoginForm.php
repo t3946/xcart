@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\User\Forms;
+namespace Modules\Account\Forms;
 
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Form\Fields\CharCleanField;

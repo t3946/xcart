@@ -9,33 +9,51 @@ import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
 import { Provider } from "react-redux";
 import { accountStore } from "../../../redux/stores/StoreAccount";
+import LoginForm from "../../account/components/authorization/LoginForm";
+import RegisterForm from "../../account/components/authorization/RegisterForm";
 
 export const AccountRouters = () => {
   return (
     <Provider store={accountStore as any}>
       <div className="account-container">
-        <BrowserRouter>
-          <BreadCrumbs />
-          <div className="content-container">
-            <SideBarMenu />
-            <Switch>
-              <Route
-                exact
-                path="/account/addresses"
-                component={AddressDialogHOC(
-                  <Addresses />,
-                  <AddAddressDialog />
-                )}
-              />
-              <Route exact path="/account/payments/wallet" component={Wallet} />
-              <Route
-                exact
-                path="/account/payments/transactions"
-                component={Transactions}
-              />
-            </Switch>
-          </div>
-        </BrowserRouter>
+        <div className="container">
+          <BrowserRouter>
+            <BreadCrumbs />
+            <div className="content-container">
+              <SideBarMenu />
+              <Switch>
+                <Route
+                  exact
+                  path="/account/addresses"
+                  component={AddressDialogHOC(
+                    <Addresses />,
+                    <AddAddressDialog />
+                  )}
+                />
+
+                <Route
+                  exact
+                  path="/account/payments/wallet"
+                  component={Wallet}
+                />
+
+                <Route
+                  exact
+                  path="/account/payments/transactions"
+                  component={Transactions}
+                />
+
+                <Route exact path="/account/login/" component={LoginForm} />
+
+                <Route
+                  exact
+                  path="/account/register/"
+                  component={RegisterForm}
+                />
+              </Switch>
+            </div>
+          </BrowserRouter>
+        </div>
       </div>
     </Provider>
   );

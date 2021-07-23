@@ -2,9 +2,12 @@
   background-color: #FFB500 !important;
   text-transform: uppercase !important;
   font-weight: 700 !important;
-  padding: 10px 30px 9px !important;
+  padding: 0 30px !important;
+  height: rem-calc(34);
   max-height: 34px;
   transition: .2s linear;
+  font-family: 'Lato', sans-serif;
+  width: 100%;
 
   &:hover{
     background-color: #fdcb3a !important;
