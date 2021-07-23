@@ -197,7 +197,7 @@ class SupplierFeedHelper
                 ->save();
         }
 
-        self::feedImages($model, $feed, $data);
+        //self::feedImages($model, $feed, $data);
 
         self::feedFiles($model, $data);
 
