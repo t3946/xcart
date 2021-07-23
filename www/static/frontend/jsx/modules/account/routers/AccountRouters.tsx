@@ -11,10 +11,13 @@ import { Provider } from "react-redux";
 import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
+import TopLine from "../../account/components/hat/TopLine";
 
 export const AccountRouters = () => {
   return (
     <Provider store={accountStore as any}>
+      <TopLine />
+
       <div className="account-container">
         <div className="container">
           <BrowserRouter>

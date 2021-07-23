@@ -89,3 +89,55 @@
 @import "pages/product_view_list";
 
 @import '../bem/bem';
+
+.top-header {
+    overflow: hidden;
+    height: rem-calc(30);
+    line-height: rem-calc(30);
+    background: #e4e4e4;
+    font-family: 'Lato', sans-serif;
+}
+
+.call-after-hours-clock {
+    width: rem-calc(12);
+    height: rem-calc(12);
+}
+
+.online-ordering-time {
+    text-transform: uppercase;
+    font-size: rem-calc(14);
+}
+
+.top-line-lang-icon {
+    display: inline-block;
+    width: rem-calc(18);
+    height: rem-calc(18);
+    position: relative;
+    top: rem-calc(2);
+    background: url("/static/frontend/images/icons/header/multilanguage_clicking.svg") no-repeat;
+}
+
+.top-line_lang-icon {
+    position: relative;
+    top: rem-calc(5);
+    display: block;
+    margin: 0 0 0 rem-calc(5);
+}
+
+.top-line-site-name {
+    display: inline-block;
+    height: rem-calc(30);
+    background-color: #ffffff;
+    text-transform: uppercase;
+    padding: 0 rem-calc(12);
+    font-size: rem-calc(12);
+}
+
+.top-line-call-us {
+    height: rem-calc(30);
+}
+
+.call-us-green-check {
+    width: rem-calc(12);
+    height: rem-calc(12);
+}
