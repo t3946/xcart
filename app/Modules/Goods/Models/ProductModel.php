@@ -991,14 +991,14 @@ class ProductModel extends Model implements ICartItem
             $value = $this->shipping_dim_y;
         }
 
+
+
         parent::setAttribute($name, $value);
     }
 
     public function beforeSave($owner, $isNew)
     {
-        if ($isNew) {
-            $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
-        }
+       $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
     }
 
     public function getSlugPart(): string

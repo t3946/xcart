@@ -59,6 +59,7 @@ class QueueProcessCommand extends Command
                     $product->setAttributes($data);
                     $product->sites = [$site];
                     $product->save();
+                    ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                 }
             } elseif ($data['is_group']) {
 
@@ -74,6 +75,7 @@ class QueueProcessCommand extends Command
                     $group_product->save();
                     $group_product->parent = $group_product;
                     $group_product->save();
+                    ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                 }
 
                 foreach ($data['child_products'] as $child) {
@@ -88,6 +90,7 @@ class QueueProcessCommand extends Command
                         $product->group_mask = $group_product->product;
                         $product->sites = [$site];
                         $product->save();
+                        ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                     }
                 }
             }

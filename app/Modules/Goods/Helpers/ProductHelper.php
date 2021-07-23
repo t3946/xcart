@@ -4,7 +4,11 @@ namespace Modules\Goods\Helpers;
 
 
 use Exception;
+use Modules\Goods\Models\FilterModel;
+use Modules\Goods\Models\FilterProductModel;
+use Modules\Goods\Models\FilterValueModel;
 use Modules\Goods\Models\GroupIndexModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -448,5 +452,45 @@ class ProductHelper
             $product->forsale === 'Y' &&
             $product->isMarketPlaceEnabled(1) &&
             $product->getMainImage();
+    }
+
+    public static function setProductAttributes(ProductModel $model, array $attributes, SiteModel $site): void
+    {
+        $fv_ids = [];
+
+        foreach ($attributes as $f_name => $fv_name_arr) {
+            $f_name = trim($f_name);
+            if (!$fv_name_arr || strlen($f_name) > 128) {
+                continue;
+            }
+
+            [$filterModel] = FilterModel::objects()->getOrCreate(
+                ['f_name' => $f_name, 'storefrontid' => $site->storefront_id]
+            );
+
+            if (!is_array($fv_name_arr)) {
+                $fv_name_arr = [$fv_name_arr];
+            }
+            foreach ($fv_name_arr as $fv_name) {
+                if (($fv_name = trim($fv_name)) && strlen($fv_name) <= 768) {
+                    [$filterValueModel] = FilterValueModel::objects()->getOrCreate(
+                        ['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]
+                    );
+                    FilterProductModel::objects()->getOrCreate(
+                        [
+                            'fv_id' => $filterValueModel->fv_id,
+                            'productid' => $model->productid,
+                            'is_feed' => 1
+                        ]
+                    );
+                    $fv_ids[] = $filterValueModel->fv_id;
+                }
+            }
+        }
+        $qs = FilterProductModel::objects();
+        if ($fv_ids) {
+            $qs->exclude(['fv_id__in' => $fv_ids]);
+        }
+        $qs->delete(['productid' => $model->productid, 'is_feed' => 1]);
     }
 }
