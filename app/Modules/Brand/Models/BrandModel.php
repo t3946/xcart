@@ -271,8 +271,8 @@ class BrandModel extends Model
         $qs = static::objects()->filter([
             'parent_brand_id__isnull' => true,
             'avail' => 'Y',
-            'storefront__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
-            'storefront__through__products_count__gt' => 0,
+            'brand_storefront__sfid' => Xcart::app()->getModule('Sites')->getSite(),
+            'brand_storefront__products_count__gt' => 0,
         ])->cache(Cache::CACHE_DAY);
 
         return $qs->order(['brand'])->all();
