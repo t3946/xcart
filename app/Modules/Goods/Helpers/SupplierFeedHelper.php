@@ -543,7 +543,9 @@ class SupplierFeedHelper
             }
 
             if ($d_products) {
-                ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
+                ProductModel::objects()
+                    ->filter(['productcode__in' => $d_products])
+                    ->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
             }
         }
         return $discontinued_products_count;

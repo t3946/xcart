@@ -23,6 +23,7 @@ class FeedForm extends ModelForm
         'last_update_time',
         'feed_source_date',
         'process_time',
+        'base_category'
     ];
 
     public function getModel()
@@ -32,9 +33,8 @@ class FeedForm extends ModelForm
 
     public function getFields()
     {
-        if ($feed = $this->getInstance()) {
-            $choices[$feed->base_category_id] = (string)$feed->base_category;
-        }
+        $feed = $this->getInstance();
+
         return [
             'feed_name' => [
                 'class' => CharField::class,
@@ -64,14 +64,6 @@ class FeedForm extends ModelForm
                 },
                 'html' => [
                     'style' => 'width:300px;',
-                ],
-            ],
-            'base_category' => [
-                'class' => Select2Field::class,
-                'choices' => $choices ?? [],
-                'html' => [
-                    'style' => 'width:300px;',
-                    'data-url' => (new FeedAdmin())->getSuggestionUrl('category'),
                 ],
             ],
             'dont_update_fields' => [

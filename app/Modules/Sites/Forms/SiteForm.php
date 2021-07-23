@@ -3,11 +3,10 @@
 namespace Modules\Sites\Forms;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Sites\Admin\SitesAdmin;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
@@ -128,7 +127,15 @@ class SiteForm extends ModelForm
             ],
             'logo' => [
                 'class' => ImageField::class,
-            ]
+            ],
+            'base_category' => [
+                'class' => Select2Field::class,
+                'choices' => $choices ?? [],
+                'html' => [
+                    'style' => 'width: 300px',
+                    'data-url' => (new SitesAdmin())->getSuggestionUrl('category')."?site={$this->getInstance()->pk}",
+                ],
+            ],
         ];
     }
 

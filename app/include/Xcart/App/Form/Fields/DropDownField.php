@@ -148,7 +148,7 @@ class DropDownField extends Field
                 $this->multiple = true;
 
                 $modelClass = $field->modelClass;
-                $models = $modelClass::objects()->all();
+                $models = $modelClass::objects()->limit(1000)->all();
 
                 if ($value = $this->getValue()) {
                     if ($value instanceof Manager) {
@@ -195,6 +195,7 @@ class DropDownField extends Field
                 if (($value = $this->getValue()) !== null) {
                     $selected[] = $value instanceof Model ? $value->{$to} : $value;
                 }
+                $qs->limit(1000);
                 foreach ($qs->all() as $item) {
                     $data[$item->{$to}] = (string)$item;
                 }
