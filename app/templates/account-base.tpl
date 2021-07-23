@@ -123,8 +123,13 @@
                                                     {insert "_parts/_menu_desktop.tpl"}
                                                 {/if}
                                             </div>
-                                            <div class="col-lg-7 col-sm-12">
+
+                                            <div class="col-lg-5 col-sm-12">
                                                 {insert "_parts/_search.tpl"}
+                                            </div>
+
+                                            <div class="large-2 show-for-large hat-login-button-column">
+                                                <a href="/account/login/" class="hat-login-button">log in</a>
                                             </div>
 
                                             <div class="col-lg-2 show-for-large">
