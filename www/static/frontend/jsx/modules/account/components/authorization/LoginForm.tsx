@@ -51,7 +51,7 @@ const LoginForm: React.FC<any> = (props: any) => {
             name="name"
             component="div"
           />
-          <a href="#" className={"login-form-info"}>
+          <a href="#" className={"login-form-info common-link"}>
             Forgot your email?
           </a>
         </React.Fragment>
@@ -75,7 +75,7 @@ const LoginForm: React.FC<any> = (props: any) => {
             }
           >
             <span>{initialValues.login}</span>
-            <a href="#" onClick={backToLoginInput}>
+            <a href="#" onClick={backToLoginInput} className="common-link">
               Change
             </a>
           </p>
@@ -166,8 +166,8 @@ const LoginForm: React.FC<any> = (props: any) => {
 
             <p className={"login-form-info"}>
               By continuing, you agree to S3 Stores Inc{" "}
-              <a href="#">Conditions of Use</a> and{" "}
-              <a href="#">Privacy Notice</a>.
+              <a href="#" className="common-link">Conditions of Use</a> and{" "}
+              <a href="#" className="common-link">Privacy Notice</a>.
             </p>
 
             <p className={"login-form-info"}>
@@ -177,7 +177,7 @@ const LoginForm: React.FC<any> = (props: any) => {
                   e.preventDefault();
                   setShowHelpInfo(!showHelpInfo);
                 }}
-                className={classnames("link-arrow", {
+                className={classnames("link-arrow common-link", {
                   "link-arrow__to-top": showHelpInfo,
                 })}
               >
@@ -185,9 +185,9 @@ const LoginForm: React.FC<any> = (props: any) => {
               </a>
               {showHelpInfo && (
                 <div>
-                  <a href="#">Forgot your password?</a>
+                  <a href="#" className="common-link">Forgot your password?</a>
                   <br />
-                  <a href="#">Other issues with Sign-In</a>
+                  <a href="#" className="common-link">Other issues with Sign-In</a>
                 </div>
               )}
             </p>
@@ -204,7 +204,7 @@ const LoginForm: React.FC<any> = (props: any) => {
       <NavLink
         to="/account/register/"
         exact={true}
-        className="form-button form-button__outline"
+        className="form-button form-button__outline common-link"
       >
         Create your account
       </NavLink>
