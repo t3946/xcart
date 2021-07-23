@@ -1,0 +1,5 @@
+.link-arrow__to-top {
+    &:after {
+        transform: rotateZ(180deg);
+    }
+}

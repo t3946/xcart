@@ -125,7 +125,7 @@
                                         </div>
 
                                         <div class="large-2 show-for-large hat-login-button-column">
-                                            <a href="/user/login" class="hat-login-button"><span class="hat-login-button_text">log in</span></a>
+                                            <a href="{$.app->router->url('account:login')}" class="hat-login-button"><span class="hat-login-button_text">log in</span></a>
                                         </div>
 
                                         <div class="columns large-2 show-for-large">

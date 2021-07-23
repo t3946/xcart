@@ -1,13 +1,36 @@
 <?php
 
-use Modules\Account\Controllers\AccountDashboard;
-use Modules\Forms\Controllers\EmailDashboardAdmin;
+use Modules\Account\Controllers\AccountController;
 
 return [
     [
-        'route' => '/*',
-        'target' => [AccountDashboard::class, 'actionIndex'],
-        'name' => 'home'
+        'route' => '/',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'index'
+    ],
+
+    [
+        'route' => '/register/',
+        'target' => [AccountController::class, 'register'],
+        'name' => 'register',
+    ],
+
+    [
+        'route' => '/login/',
+        'target' => [AccountController::class, 'login'],
+        'name' => 'login',
+    ],
+
+    [
+        'route' => '/user-info/',
+        'target' => [AccountController::class, 'info'],
+        'name' => 'info',
+    ],
+
+    [
+        'route' => '/logout/',
+        'target' => [AccountController::class, 'logout'],
+        'name' => 'logout',
     ],
     [
         'route' => '/api/addresses',

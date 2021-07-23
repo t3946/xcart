@@ -43,7 +43,9 @@ import  "./ext/jq-swipe";
 import  "./components/Flash";
 
 import './ext/foundation-init';
-import '../../vendors/wNumb.js'
+import '../../vendors/wNumb.js';
+import "./_binds/account/login-form";
+import "./_binds/account/register-form";
 
 import sendAnalytics from './utils/sendAnalytics'
 import LazyLoad from "vanilla-lazyload";

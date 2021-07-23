@@ -1,16 +1,27 @@
 <?php
 
+namespace Modules\Account\Controllers;
 
-namespace Modules\User\Controllers;
-
-use Modules\User\Forms\RegistrationForm;
-use Modules\User\Forms\LoginForm;
+use Modules\Account\Forms\LoginForm;
+use Modules\Account\Forms\RegistrationForm;
+use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class UserController extends FrontendController
+class AccountController extends FrontendController
 {
+    public function actionIndex()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user->getIsGuest()) {
+            StorageHelper::push($user->toArray(), null, 'user');
+        }
+
+        $this->display('account/base.tpl');
+    }
+
     public function register()
     {
         if (Xcart::app()->request->getIsPost()) {
@@ -21,20 +32,23 @@ class UserController extends FrontendController
                  * @var UserModel $user
                  */
                 $user = $form->getInstance();
-                $this->jsonResponse($user->getAttributes());
-
                 $user->register();
+                $user = UserModel::objects()->filter(['email' =>  $user->email])->get();
+                $user->authenticate();
             }
             else {
-                $this->jsonResponse($form->getErrors());
+                $this->jsonResponse($form->getErrors(), 400);
             }
+        } else {
+            $this->actionIndex();
         }
     }
 
     public function login()
     {
         if (Xcart::app()->request->getIsPost()) {
-            $form = (new LoginForm)->populate($_POST);
+            $json = json_decode(file_get_contents('php://input'), true);
+            $form = (new LoginForm)->populate($json);
 
             if ($form->isValid()) {
                 $attributes = $form->getAttributes();
@@ -51,35 +65,22 @@ class UserController extends FrontendController
                 }
 
                 if ($form->hasErrors()) {
-                    $this->jsonResponse($form->getErrors());
+                    $this->jsonResponse($form->getErrors(), 401);
                     return;
                 }
 
-                $this->jsonResponse($user->getAttributes());
-
-//                $user->register();
+                $this->jsonResponse($user->toArray());
             }
             else {
                 $this->jsonResponse($form->getErrors());
             }
+        } else {
+            $this->actionIndex();
         }
-    }
-
-    public function info()
-    {
-        $user = Xcart::app()->getUser(true);
-
-        if ($user->getIsGuest()) {
-            dd("НЕ Авторизован");
-        }
-
-        dd($user);
     }
 
     public function logout()
     {
         Xcart::app()->auth->logout(false);
-        //TODO: 'account:account-login'
-        $this->redirect('user:account-login');
     }
 }

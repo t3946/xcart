@@ -1,0 +1,17 @@
+.form-input {
+    border: 1px solid #C4C4C4;
+    padding: 0 rem-calc(14);
+    width: 100%;
+    line-height: rem-calc(32);
+
+    &::placeholder{
+        font-style: italic;
+        font-size: 14px;
+        color: #959595;
+    }
+
+    &:focus {
+        border-color: #f2b405;
+        box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
+    }
+}

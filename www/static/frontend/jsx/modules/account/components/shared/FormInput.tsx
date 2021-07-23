@@ -16,6 +16,7 @@ interface FormInputPropsDto {
   };
   width?: string;
   value: any;
+  autocomplete?: string;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -29,6 +30,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   handleChange,
   width = "100%",
   value,
+  autocomplete,
 }) => {
   return (
     <Grid
@@ -57,6 +59,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
           width,
         }}
         value={value}
+        autoComplete={autocomplete}
       />
 
       {errorMessage && <div className="form-input-caption">{errorMessage}</div>}
