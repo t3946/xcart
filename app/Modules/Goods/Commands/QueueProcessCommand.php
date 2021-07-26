@@ -54,7 +54,7 @@ class QueueProcessCommand extends Command
             if (!$data['is_group']) {
                 //Simple product process
                 $product_code = $data['productcode'];
-                [$product] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
+                [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
                 if ($product->hash_product !== $data['hash_product']) {
                     print("$product_code\n");
                     $product->setAttributes($data);
@@ -62,13 +62,16 @@ class QueueProcessCommand extends Command
                     ProductHelper::setProductBrand($product, $data['brand_name'], $site);
                     ProductHelper::setProductAttributes($product, $data['attributes'], $site);
                     $product->save();
+                    if ($is_new) {
+                        $product->setMainCategory($site->base_category);
+                    }
                 }
             } elseif ($data['is_group']) {
 
                 //Group product process
                 $group_code = self::getGroupProductCode($data);
                 /** @var ProductModel $group_product */
-                [$group_product] = ProductModel::objects()->getOrNew(['productcode' => $group_code]);
+                [$group_product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $group_code]);
                 if ($group_product->hash_product !== $data['hash_product']) {
                     $group_product->setAttributes($data);
                     $group_product->group_root = $group_product->productid;
@@ -79,6 +82,9 @@ class QueueProcessCommand extends Command
                     ProductHelper::setProductBrand($group_product, $data['brand_name'], $site);
                     ProductHelper::setProductAttributes($group_product, $data['attributes'], $site);
                     $group_product->save();
+                    if ($is_new) {
+                        $group_product->setMainCategory($site->base_category);
+                    }
                 }
 
                 foreach ($data['child_products'] as $child) {
@@ -95,6 +101,9 @@ class QueueProcessCommand extends Command
                         ProductHelper::setProductBrand($product, $child['brand_name'], $site);
                         ProductHelper::setProductAttributes($product, $child['attributes'], $site);
                         $product->save();
+                        if ($is_new) {
+                            $product->setMainCategory($site->base_category);
+                        }
                     }
                 }
             }

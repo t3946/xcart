@@ -140,6 +140,7 @@ class SupplierFeedHelper
     {
 
         $model->manufacturerid = $feed->manufacturerid;
+        $site = $feed->site;
 
         $discontinuedDate = $data['discontinued_date'];
         if (!empty($discontinuedDate)) {
@@ -197,7 +198,7 @@ class SupplierFeedHelper
                 ->save();
         }
 
-        //self::feedImages($model, $feed, $data);
+        self::feedImages($model, $feed, $data);
 
         self::feedFiles($model, $data);
 
@@ -207,7 +208,7 @@ class SupplierFeedHelper
 
         $model = self::feedAttributes($model, $feed, $data['attributes']);
 
-        $model = self::feedCategories($model, $is_created, $feed, $data['supplier_categories']);
+        $model = self::feedCategories($model, $is_created, $site->base_category_id, $data['supplier_categories']);
 
         return $model;
     }
@@ -419,15 +420,13 @@ class SupplierFeedHelper
      * @return ProductModel
      * @throws Exception
      */
-    public static function feedCategories($model, $is_created, $feed, $categories): ProductModel
+    public static function feedCategories($model, $is_created, $base_category_id, $categories): ProductModel
     {
-        $product_sfid = null;
-
         if (!$is_created && !$model->isGroupRoot()) {
             return $model;
         }
         /** @var CategoryModel $cat */
-        if ($feed->base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
+        if ($base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $base_category_id])) {
             $model->setMainCategory($cat);
         }
 
