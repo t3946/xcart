@@ -3,6 +3,7 @@
 namespace Modules\Sites\Forms;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\Admin\SitesAdmin;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
@@ -130,7 +131,16 @@ class SiteForm extends ModelForm
             ],
             'base_category' => [
                 'class' => Select2Field::class,
-                'choices' => $choices ?? [],
+                'choices' => (function () {
+                    $res[] = '';
+                    foreach (CategoryModel::objects()->filter([
+                        'storefrontid' => $this->getInstance()->pk,
+                        'level' => 1
+                    ]) as $cat) {
+                        $res[$cat->pk] = (string) $cat;
+                    }
+                    return $res ?? [];
+                }),
                 'html' => [
                     'style' => 'width: 300px',
                     'data-url' => (new SitesAdmin())->getSuggestionUrl('category')."?site={$this->getInstance()->pk}",
