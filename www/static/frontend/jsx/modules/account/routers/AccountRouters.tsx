@@ -13,12 +13,14 @@ import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import TopLine from "../components/hat/TopLine";
 import HatNavigation from "../components/hat/HatNavigation";
+import HatSearchLine from "../components/hat/HatSearchLine";
 
 export const AccountRouters = () => {
   return (
     <Provider store={accountStore as any}>
       <TopLine />
       <HatNavigation />
+      <HatSearchLine />
 
       <div className="account-container">
         <div className="container">

@@ -7,6 +7,8 @@ $search_input_large_height: rem-calc(36);
 .category-menu-list-wrapper {
   position: absolute;
   width: 100%;
+  padding: 0 15px;
+  left: 0;
   //max-width: 80rem;
   //max-width: $global-width;
   @include grid-row-size();
@@ -415,7 +417,7 @@ $search_input_large_height: rem-calc(36);
         .submenu-container {
           display: block;
           //width: 350%;
-          width: calc(300% + 120px);
+          width: calc(300% + 90px);
           left: 100%;
         }
       }
@@ -490,7 +492,7 @@ $search_input_large_height: rem-calc(36);
       .menu-block {
         display: inline-block;
         padding: 0 0 rem-calc(15);
-        min-width: 100%;
+        width: 25%;
 
         &.liquid {
           display: block;

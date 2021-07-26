@@ -7,6 +7,7 @@ use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -31,17 +32,26 @@ class AccountController extends FrontendController
 
         StorageHelper::push([
             "quantity" => Xcart::app()->cart->getQuantity(),
+            "checkoutUrl" => OrderHelper::getCheckoutUrl(),
         ], null, 'Cart');
 
+        $config = GlobalConfigModel::objects();
+
         StorageHelper::push([
-            "cidev_top_header_code" => GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value,
-            "companyName" => GlobalConfigModel::objects()->get(['name' => 'company_name'])->value,
+            "cidev_top_header_code" => $config->get(['name' => 'cidev_top_header_code'])->value,
+            "cidev_header_code" => $config->get(['name' => 'cidev_header_code'])->value,
+            "companyName" => $config->get(['name' => 'company_name'])->value,
         ], null, 'config');
 
         StorageHelper::push([
             "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
             "mainMenu" => MenuLibrary::getMenu(['code' => 'main-menu']),
+            "menuDesktop" => $this->render("_parts/_menu_desktop_cached.tpl"),
         ], null, 'templates');
+
+        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
+
+        StorageHelper::push(APP_LOCAL,  'APP_LOCAL');
 
         AdminHelper::routesData();
 
