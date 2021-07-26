@@ -137,11 +137,7 @@ FROM_UNIXTIME(OL.date) last_action_date
 
 }
 
-$operators = UserModel::objects()
-    ->exclude(['position__in' => ['VRS', 'programmer']])
-    ->filter(['usertype' => 'A'])
-    ->order(['-status', 'firstname']);
-$smarty->assign("operators", $operators);
+$smarty->assign("operators", UserModel::admins()->order(['-status', 'firstname']));
 
 
 # Assign the current location line

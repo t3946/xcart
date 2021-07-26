@@ -266,13 +266,10 @@ class DashboardController extends PrototypeAdminController
                 'model' => $user,
                 'is_super_user' => $is_super_user,
                 'all_users' => $is_super_user
-                    ? UserModel::objects()
+                    ? UserModel::admins()
                         ->exclude([
                             'id__in' => array_merge($u_ids, [$user->id])
                         ])
-                        ->exclude(['position__in' => ['VRS', 'programmer']])
-                        ->filter(['status' => 'Y', 'usertype' => 'A'])
-                        ->order(['firstname'])
                     : []
             ]);
         }
