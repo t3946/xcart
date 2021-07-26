@@ -1,4 +1,7 @@
 <?php
+
+use Modules\User\Models\UserModel;
+
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
@@ -134,7 +137,10 @@ FROM_UNIXTIME(OL.date) last_action_date
 
 }
 
-$operators = func_query_hash("SELECT usertype, login, status, activity, firstname FROM $sql_tbl[customers] WHERE usertype='A' ORDER BY status DESC, firstname", "login",true);
+$operators = UserModel::objects()
+    ->exclude(['position__in' => ['VRS', 'programmer']])
+    ->filter(['usertype' => 'A'])
+    ->order(['-status', 'firstname']);
 $smarty->assign("operators", $operators);
 
 
