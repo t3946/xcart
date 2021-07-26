@@ -1,0 +1,62 @@
+@mixin iconSize {
+    width: rem-calc(24);
+    height: rem-calc(25);
+
+    @include breakpoint(md up) {
+        width: rem-calc(46);
+        height: rem-calc(48);
+    }
+}
+
+.navigation-login-button {
+    @include iconSize;
+
+    cursor: pointer;
+}
+
+.navigation-login-button__not-logged {
+    background: url("/static/frontend/dist/images/icons/account/profile-not-logged.svg") no-repeat;
+    background-size: cover;
+}
+
+.navigation-login-button__logged {
+    position: relative;
+    
+    &:before, &:after {
+        content: '';
+        @include iconSize;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    &:before {
+        background-image: url("/static/frontend/dist/images/icons/account/profile-logged.svg");
+        opacity: 1;
+    }
+
+    &:after {
+        background-image: url("/static/frontend/dist/images/icons/account/profile-logged-active.svg");
+        opacity: 0;
+    }
+
+    &:active {
+        &:before {
+            opacity: 0;
+        }
+        &:after{
+            opacity: 1;
+        }
+    }
+}
+
+.hat-icons-container {
+    max-width: rem-calc(175);
+
+    @include breakpoint(md up) {
+        max-width: rem-calc(250);
+    }
+}

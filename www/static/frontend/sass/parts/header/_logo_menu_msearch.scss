@@ -20,19 +20,6 @@ header {
       margin: rem-calc(7) 0;
     }
 
-    .right-icon {
-      //margin-left: rem-calc(30);
-      margin-left: rem-calc(10);
-
-      @include breakpoint(medium) {
-        margin-left: rem-calc(24);
-      }
-
-      &:first-child{
-        margin-left: 0;
-      }
-    }
-
     @include breakpoint(large up) {
       line-height: rem-calc(62);
       height: rem-calc(62);
@@ -125,21 +112,20 @@ header {
     }
 
     .mobile__search-btn {
-      //background: url("../images/icons/header/magnifier.svg") no-repeat;
       background: url("../images/icons/header/magnifier_thin.svg") no-repeat;
-      width: rem-calc(30);
-      height: rem-calc(30);
+      width: rem-calc(25);
+      height: rem-calc(25);
 
       @include breakpoint(medium){
-        width: rem-calc(48);
+        width: rem-calc(45);
         height: rem-calc(48);
       }
     }
 
     .mobile__call-btn {
       background: url("../images/icons/header/phone-call1.svg") no-repeat;
-      width: rem-calc(30);
-      height: rem-calc(30);
+      width: rem-calc(25);
+      height: rem-calc(25);
 
       @include breakpoint(medium){
         width: rem-calc(48);
@@ -150,11 +136,11 @@ header {
     .mobile__cart {
       background: url("../images/icons/header/cart.svg") no-repeat;
       position: relative;
-      width: rem-calc(40);
-      height: rem-calc(30);
+      width: rem-calc(33);
+      height: rem-calc(25);
 
       @include breakpoint(medium){
-        width: rem-calc(67);
+        width: rem-calc(63);
         height: rem-calc(48);
       }
 
