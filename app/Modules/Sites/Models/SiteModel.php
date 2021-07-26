@@ -100,7 +100,6 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'length' => 10,
                 'null' => false,
-                'default' => '',
             ],
             'domain' => [
                 'class' => CharField::class,
