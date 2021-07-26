@@ -67,8 +67,8 @@ class SitesAdmin extends Admin
     public function handleSuggestion($entity, $search)
     {
         $qs = parent::handleSuggestion($entity, $search);
-
-        if (($site = Xcart::app()->request->get->get('site')) !== null) {
+        $site = Xcart::app()->request->get->get('site');
+        if ($site !== null && $site !== '') {
             $qs->filter([
                 'site__storefrontid' => $site,
                 'level' => 1

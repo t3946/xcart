@@ -133,6 +133,9 @@ class SiteForm extends ModelForm
                 'class' => Select2Field::class,
                 'choices' => (function () {
                     $res[] = '';
+                    if (!$this->getInstance()->pk) {
+                        return $res;
+                    }
                     foreach (CategoryModel::objects()->filter([
                         'storefrontid' => $this->getInstance()->pk,
                         'level' => 1
