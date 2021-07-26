@@ -48,7 +48,13 @@ if (!$fraud_checks) {
 }
 
 $smarty->assign("fraud_checks", $fraud_checks);
-$users = UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->order(['firstname'])->all();
+
+$users = UserModel::objects()
+    ->exclude(['position__in' => ['VRS', 'programmer']])
+    ->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])
+    ->order(['firstname'])
+    ->all();
+
 $smarty->assign("users", $users);
 $site = Xcart::app()->getModule('Sites')->getSite();
 $smarty->assign('global_config', $site->getGlobalConfig());
