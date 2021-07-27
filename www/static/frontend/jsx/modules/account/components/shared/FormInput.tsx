@@ -1,6 +1,7 @@
-import React from "react";
+import React, { ChangeEvent, FocusEventHandler } from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
+import { FormikErrors, FormikTouched } from "formik";
 
 interface FormInputPropsDto {
   label?: string;
@@ -8,15 +9,16 @@ interface FormInputPropsDto {
   name: string;
   id?: string;
   type?: string;
-  errorMessage?: string;
-  handleChange: () => void;
+  errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[];
+  handleChange: (e: string | ChangeEvent<any>) => void;
   classes?: {
-    group: string | string[] | null;
-    label: string | string[] | null;
+    group?: string | string[] | null;
+    label?: string | string[] | null;
+    input?: string | string[] | null;
   };
-  width?: string;
   value: any;
-  autocomplete?: string;
+  touched?: boolean | FormikTouched<any> | FormikTouched<any>[];
+  handleBlur?: FocusEventHandler<HTMLInputElement>;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -28,41 +30,43 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   type,
   errorMessage,
   handleChange,
-  width = "100%",
   value,
-  autocomplete,
+  touched,
+  handleBlur,
 }) => {
+  const error = errorMessage && touched;
   return (
     <Grid
       className={classnames("form-input-container", classes?.group)}
       container
-      justify="space-between"
+      justify={label ? "space-between" : "flex-end"}
       alignItems="center"
     >
       {label && (
         <label
           htmlFor={id}
-          className={classnames("form-input-label", classes?.label)}
+          className={classnames(
+            "form-input-label",
+            classes?.label,
+            `${error && "form-input-label-error"}`
+          )}
         >
           {label}
         </label>
       )}
-
-      <input
-        placeholder={placeholder}
-        className="form-input"
-        name={name}
-        id={id}
-        type={type ? type : "text"}
-        onChange={handleChange}
-        style={{
-          width,
-        }}
-        value={value}
-        autoComplete={autocomplete}
-      />
-
-      {errorMessage && <div className="form-input-caption">{errorMessage}</div>}
+      <div className={classnames(classes?.input)}>
+        <input
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className={classnames("form-input", `${error && "form-input-error"}`)}
+          name={name}
+          id={id}
+          type={type ? type : "text"}
+          onChange={handleChange}
+          value={value}
+        />
+        {error && <div className="form-input-caption">{errorMessage}</div>}
+      </div>
     </Grid>
   );
 };

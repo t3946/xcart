@@ -20,4 +20,14 @@ return [
         'target' => [AccountAddressesApi::class, 'removeAddress'],
         'name' => 'remove'
     ],
+    [
+        'route' => '/add-address',
+        'target' => [AccountAddressesApi::class, 'addAddress'],
+        'name' => 'add'
+    ],
+    [
+        'route' => '/edit-address',
+        'target' => [AccountAddressesApi::class, 'editAddress'],
+        'name' => 'edit'
+    ],
 ];

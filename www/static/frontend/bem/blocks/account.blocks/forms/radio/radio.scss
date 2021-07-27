@@ -1,0 +1,35 @@
+.form_radio input[type=radio] {
+  display: none;
+}
+.form_radio label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  line-height: 18px;
+  width: 100%;
+  user-select: none;
+  padding: 10px 25px 10px 45px;
+  margin: 0;
+}
+.form_radio label:before {
+  content: "";
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  background: url("/static/frontend/dist/images/icons/account/radio.svg") no-repeat center / cover;
+}
+
+.form_radio input[type=radio]:checked + label:before {
+  background: url("/static/frontend/dist/images/icons/account/radio-checked.svg") no-repeat center / cover;
+}
+
+.form_radio label:hover:before {
+  filter: brightness(120%);
+}
+
+.form_radio input[type=radio]:disabled + label:before {
+  filter: grayscale(100%);
+}

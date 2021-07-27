@@ -1,63 +1,123 @@
 import React from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
 } from "../../ts/consts/add-address-form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addAddress,
+  editAddress,
+} from "../../../../redux/actions/account-actions/AddressActions";
+import { useHistory } from "react-router-dom";
 
-export const AddAddressForm = () => {
-  const selectItems = [
-    { value: 1, viewValue: "2" },
-    { value: 1, viewValue: "2" },
-    { value: 1, viewValue: "2" },
-    { value: 1, viewValue: "2" },
-    { value: 1, viewValue: "2" },
-    { value: 1, viewValue: "2" },
-  ];
+export const AddAddressForm = ({ addressInfo }) => {
+  const dispatch = useDispatch();
+
+  const history = useHistory();
+
+  const countries = useSelector((e: any) => e.main.countries);
+
+  const states = useSelector((e: any) => e.main.states);
+
+  const addressFormLoading = useSelector(
+    (e: any) => e.addresses.addressFormLoading
+  );
+
+  const getStates = (states, countryCode) => {
+    return states.filter((state) => state.countryCode === countryCode);
+  };
+
+  const onPended = () => {
+    history.push("/account/addresses");
+  };
+
+  const submitForm = (values) => {
+    const newAddress = {
+      ...values,
+      country: values.country.value,
+      state: values.state.value,
+    };
+
+    if (addressInfo) {
+      dispatch(editAddress(newAddress, onPended));
+      return;
+    }
+    dispatch(addAddress(newAddress, onPended));
+  };
   return (
     <div className="add-address-form-container">
       <Formik
-        initialValues={initialAddAddressFormValue}
-        onSubmit={null}
+        initialValues={addressInfo || initialAddAddressFormValue}
+        onSubmit={submitForm}
         validationSchema={addAddressFormValidationSchema}
       >
-        {({ errors, setFieldValue, values, touched }) => {
+        {({
+          errors,
+          setFieldValue,
+          values,
+          touched,
+          handleChange,
+          handleBlur,
+        }) => {
           return (
             <Form className="your-order-form" encType="multipart/form-data">
               <FormSelect
-                items={selectItems}
+                items={countries}
                 value={values.country}
                 label={"Country"}
+                classes={{ input: "add-address-input" }}
+                onClick={(value) => {
+                  setFieldValue("country", value);
+                  setFieldValue("state", initialAddAddressFormValue.state);
+                }}
+                name={"state"}
               />
               <FormInput
                 label={"Full Name (First and Last name)"}
                 placeholder={"Albert H. Einstein"}
-                value={values.name}
-                name={"name"}
-                errorMessage={errors.name}
+                value={values.full_name}
+                name={"full_name"}
+                errorMessage={errors.full_name}
+                handleChange={handleChange}
+                touched={touched.full_name}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
               <FormInput
                 label={"Phone Number"}
-                value={values.phone}
-                name={"phone"}
-                errorMessage={errors.phone}
+                value={values.phone_number}
+                name={"phone_number"}
+                errorMessage={errors.phone_number}
+                handleChange={handleChange}
+                touched={touched.phone_number}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"
                 label={"Address"}
-                value={values.address_street}
-                name={"address_street"}
-                errorMessage={errors.address_street}
+                value={values.street}
+                name={"street"}
+                errorMessage={errors.street}
+                handleChange={handleChange}
+                touched={touched.street}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
               <FormInput
                 placeholder="Apt, suite, unit, building, floor, etc."
-                value={values.address}
-                name={"address"}
-                errorMessage={errors.address}
+                value={values.detailed}
+                name={"detailed"}
+                errorMessage={errors.detailed}
+                handleChange={handleChange}
+                touched={touched.detailed}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
               <FormInput
                 label={"City"}
@@ -65,11 +125,18 @@ export const AddAddressForm = () => {
                 value={values.city}
                 name={"city"}
                 errorMessage={errors.city}
+                handleChange={handleChange}
+                touched={touched.city}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
               <FormSelect
-                items={selectItems}
+                classes={{ input: "add-address-input" }}
+                items={getStates(states, values.country.value)}
                 value={values.state}
                 label={"State/Province"}
+                onClick={(value) => setFieldValue("state", value)}
+                name={"state"}
               />
               <FormInput
                 label={"Zip/Postal Code"}
@@ -77,15 +144,36 @@ export const AddAddressForm = () => {
                 value={values.zip}
                 errorMessage={errors.zip}
                 name={"zip"}
+                handleChange={handleChange}
+                touched={touched.zip}
+                classes={{ input: "add-address-input" }}
+                handleBlur={handleBlur}
               />
-              <FormCheckBox
-                label={"Make this my default address"}
-                value={values.default}
-                name={"default"}
-              />
-              <Button type={"submit"} className="account-submit-btn">
-                Add
-              </Button>
+              <Grid
+                className="add-address-checkbox"
+                container
+                justify="flex-end"
+              >
+                <Grid xs={6}>
+                  <FormCheckBox
+                    label={"Make this my default address"}
+                    value={values.is_default}
+                    name={"is_default"}
+                    handleChange={handleChange}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container justify="flex-end">
+                <Grid xs={6}>
+                  <Button
+                    disabled={addressFormLoading}
+                    type={"submit"}
+                    className="account-submit-btn"
+                  >
+                    {addressInfo ? "Save changes" : "Add"}
+                  </Button>
+                </Grid>
+              </Grid>
             </Form>
           );
         }}

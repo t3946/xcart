@@ -15,6 +15,8 @@ use Xcart\App\Orm\Model;
  */
 class UserModel extends Model
 {
+    const SALT = 'Alexander';
+
     public static function tableName()
     {
         return 'xcart_users';

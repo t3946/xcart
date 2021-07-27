@@ -4,3 +4,16 @@
   display: flex;
   justify-content: space-between;
 }
+
+.add-new-payment{
+  max-width: 265px !important;
+}
+
+.add-new-payment-input{
+  width: 60%;
+}
+
+.add-new-payment-select{
+  width: auto;
+  margin-right: 5px;
+}

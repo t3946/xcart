@@ -1,6 +1,6 @@
 import React from "react";
 
-export const FormCheckBox = ({ name, label, value }) => {
+export const FormCheckBox = ({ name, label, value, handleChange }) => {
   return (
     <div className="form-checkbox-container">
       <input
@@ -8,6 +8,9 @@ export const FormCheckBox = ({ name, label, value }) => {
         id="styled-checkbox-2"
         type="checkbox"
         value={value}
+        name={name}
+        onChange={handleChange}
+        checked={value}
       />
       <label className={"checkbox-label"} htmlFor="styled-checkbox-2">
         <div className={"label-text"}>{label}</div>

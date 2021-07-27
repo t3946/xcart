@@ -11,3 +11,15 @@ export const removeAddress = (id: number): any => ({
   type: "REMOVE_ADDRESS",
   id,
 });
+
+export const addAddress = (address: any, onPendingEnd): any => ({
+  type: "ADD_ADDRESS",
+  address,
+  onPendingEnd,
+});
+
+export const editAddress = (address: any, onPendingEnd): any => ({
+  type: "EDIT_ADDRESS",
+  address,
+  onPendingEnd,
+});

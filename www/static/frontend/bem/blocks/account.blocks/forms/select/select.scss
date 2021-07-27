@@ -1,9 +1,12 @@
 .select {
   position: relative;
   display: block;
-  min-width: 220px;
   width: 100%;
   margin-bottom: 20px;
+}
+
+.select-wrapper{
+  position: relative;
 }
 
 .form-checkbox-container{
@@ -19,7 +22,7 @@
   background-color: white;
   border: 1px solid #C4C4C4;
   font-size: 16px;
-  padding: 9px 14px;
+  padding: 9px 30px 9px 14px;
   position: relative;
 
   &:after {

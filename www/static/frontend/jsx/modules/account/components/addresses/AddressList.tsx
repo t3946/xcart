@@ -2,10 +2,8 @@ import React from "react";
 import { AddressItem } from "./AddressItem";
 import { useSelector } from "react-redux";
 
-export const AddressList = () => {
-  const addresses = useSelector((e: any) => e.addresses);
-
-  const loading = useSelector((e: any) => e.loading);
+export const AddressList = ({ addresses }) => {
+  const loading = useSelector((e: any) => e.addresses.loading);
   return (
     <React.Fragment>
       {addresses.map((e) => {

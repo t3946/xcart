@@ -1,36 +1,35 @@
 import React, { useState } from "react";
 import { useCLickListener } from "../../hooks/useClikcListener";
 import { Grid } from "@material-ui/core";
+import classnames from "classnames";
 
 export const FormSelect = ({
   items,
   onClick,
   value,
   name,
-  label,
-  width = "100%",
+  label = "",
+  classes = undefined,
 }) => {
   const [open, setOpen] = useState(false);
 
   useCLickListener(setOpen);
   return (
     <Grid
-      className={`select select-send ${open && "open"}`}
       onClick={(e) => {
         e.stopPropagation();
         setOpen(!open);
       }}
+      className={classnames(
+        `select select-send ${open && "open"}`,
+        classes?.group
+      )}
       container
       alignItems="center"
       justify="space-between"
-      value={value}
     >
       {label && <label className="form-input-label">{label}</label>}
-      <div
-        style={{
-          width,
-        }}
-      >
+      <div className={classnames("select-wrapper", classes?.input)}>
         <input
           value={value}
           className="select__input"

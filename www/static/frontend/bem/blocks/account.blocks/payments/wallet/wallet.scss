@@ -5,6 +5,9 @@
   margin-bottom: 10px;
 }
 
+.wallet-card-container{
+  margin-bottom: 10px;
+}
 .wallet-container{
   width: 100%;
 }
@@ -17,13 +20,17 @@
   cursor: pointer;
 }
 
+.wallet-card-header-first{
+  border-top: 1px solid #C4C4C4;
+}
+
 .wallet-card-content{
   padding: 15px 25px;
   border: 1px solid #C4C4C4;
   border-top: 0;
   display: flex;
-
 }
+
 
 .wallet-card-content-container{
   transition: .3s all;
@@ -57,7 +64,7 @@ font-weight: 700;
   align-items: center;
 }
 
-.card-img{
+.wallet-card-img{
   margin-right: 10px ;
 }
 
@@ -68,6 +75,19 @@ font-weight: 700;
   width: 33%;
 }
 
-.cards-list-container{
+.wallet-cards-list-container{
   margin-bottom: 31px;
+}
+
+.add-card-input{
+  width: 58%;
+}
+
+
+.add-card-select-expiration-month{
+  width: 341px !important;
+}
+
+.add-card-select-expiration-years{
+  width: 165px !important;
 }
