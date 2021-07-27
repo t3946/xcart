@@ -34,13 +34,20 @@ const SideBarMenu = () => {
     <div className="sidebar-menu-wrapper">
       {menuItems.map((e) => {
         if (!e.routerItems) {
-          return <SideBarMenuItem to={e.to} label={e.label} />;
+          return (
+            <SideBarMenuItem
+              to={e.to}
+              label={e.label}
+              className={"sidebar-menu__top-level-item"}
+            />
+          );
         }
         return (
           <SideBarMenuAccordion
             to={e.to}
             label={e.label}
             routerItems={e.routerItems}
+            classes={{ handlerClass: "sidebar-menu__top-level-item" }}
           />
         );
       })}
