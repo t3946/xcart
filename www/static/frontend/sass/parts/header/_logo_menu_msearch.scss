@@ -66,6 +66,11 @@ header {
         li {
           display: inline-block;
           line-height: rem-calc(39);
+          margin: 0 rem-calc(15) 0 0;
+
+          &:last-child {
+            margin: 0;
+          }
 
           @include breakpoint(large up) {
             line-height: rem-calc(62);

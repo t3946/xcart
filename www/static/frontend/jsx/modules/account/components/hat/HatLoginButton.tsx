@@ -5,7 +5,9 @@ import SidebarMenu from "../sidebar-menu/SideBarMenu";
 
 const LoginButton = (props) => {
   function mobileTemplate() {
-    const classes = ["navigation-login-button d-md-none common-icon"];
+    const classes = [
+      "navigation-login-button d-md-none common-icon d-flex align-items-center",
+    ];
 
     if (appData.user) {
       classes.push("navigation-login-button__logged");
