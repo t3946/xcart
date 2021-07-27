@@ -29,8 +29,8 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = ({
       <div onClick={accordion.onItemClick} className={classNames(handlerClasses)}>
         <div>{label}</div>
         <div
-          className={`accordion-arrow ${
-            accordion.open && "accordion-arrow-open"
+          className={`accordion-arrow arrow-rotatable ${
+            accordion.open && "arrow-rotatable__rotated"
           }`}
         />
       </div>
@@ -38,7 +38,6 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = ({
         ref={accordion.ref}
         style={{
           height: accordion.height,
-          width: 190,
         }}
         className="sidebar-menu-accordion-content"
       >
