@@ -32,6 +32,7 @@ use Xcart\App\Orm\Model;
  * @property string code
  * @property Manager|TaxModel[] taxes
  * @property CurrencyModel currency
+ * @property CategoryModel base_category
  */
 class SiteModel extends Model
 {
@@ -299,6 +300,13 @@ class SiteModel extends Model
                 'uploadTo' => '/images/logo/',
                 'null' => true,
             ],
+            'logo_mobile' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/logo/',
+                'null' => true,
+                'verboseName' => 'Mobile logo'
+            ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
                 'adapterName' => 'www',
@@ -311,6 +319,11 @@ class SiteModel extends Model
     public function getLogo()
     {
         return $this->logo->getValue() ?? '';
+    }
+
+    public function getMobileLogo()
+    {
+        return $this->logo_mobile->getValue() ?? $this->getLogo();
     }
 
     public function getConfig()

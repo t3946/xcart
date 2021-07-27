@@ -129,6 +129,9 @@ class SiteForm extends ModelForm
             'logo' => [
                 'class' => ImageField::class,
             ],
+            'logo_mobile' => [
+                'class' => ImageField::class,
+            ],
             'base_category' => [
                 'class' => Select2Field::class,
                 'choices' => (function () {

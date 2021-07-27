@@ -39,10 +39,10 @@
                                         <div class="columns small-3 medium-2">
                                             <a href="/">
                                                 <img src="{$uri}/{$site->getLogo()}"
-                                                     alt="{$.getSiteConfig->company_name->value}"
+                                                     alt="{$site->company_name}"
                                                      class="show-for-large logo-big">
-                                                <img src="{$uri}/{$site->getLogo()}"
-                                                     alt="{$.getSiteConfig->company_name->value}"
+                                                <img src="{$uri}/{$site->getMobileLogo()}"
+                                                     alt="{$site->company_name}"
                                                      class="show-for-small hide-for-large logo-small">
                                             </a>
                                         </div>
