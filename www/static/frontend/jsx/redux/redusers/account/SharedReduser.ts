@@ -1,0 +1,16 @@
+import { AnyAction } from "redux";
+import { AccountMainStoreDto } from "../../../modules/account/ts/types/account-store.type";
+import { accountMainStoreInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
+
+const accountSharedReducer = (
+  state: AccountMainStoreDto = accountMainStoreInitialValue,
+  action: AnyAction
+): AccountMainStoreDto => {
+  switch (action.type) {
+    case "SET_TERRITORY":
+      return { ...state, states: action.states, countries: action.countries };
+    default:
+      return state;
+  }
+};
+export default accountSharedReducer;

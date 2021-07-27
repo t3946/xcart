@@ -4,6 +4,9 @@
 namespace Modules\Account\Models;
 
 
+use Doctrine\DBAL\Types\Types;
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
@@ -29,8 +32,12 @@ class AddressesModel extends Model
             'full_name' => [
                 'class' => CharField::class,
             ],
-            'country' => [
-                'class' => CharField::class,
+            'country_model' => [
+                'field' => 'country',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'sqlType' => Types::STRING,
+                'link' => ['country' => 'code'],
             ],
             'phone_number' => [
                 'class' => CharField::class,
@@ -44,8 +51,11 @@ class AddressesModel extends Model
             'city' => [
                 'class' => CharField::class,
             ],
-            'state' => [
-                'class' => CharField::class,
+            'state_model' => [
+                'field' => 'state',
+                'class' => ForeignField::class,
+                'modelClass' => StateModel::class,
+                'link' => ['state' => 'stateid'],
             ],
             'zip' => [
                 'class' => CharField::class,

@@ -8,6 +8,18 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'
     ],
+    [
+        'route' => '/addresses',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'addresses'
+    ],
+
+    [
+        'route' => '/payments/wallet',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'wallet'
+    ],
+
 
     [
         'route' => '/register/',
@@ -39,8 +51,13 @@ return [
         'namespace' => 'addresses_api'
     ],
     [
-        'route' => '/api/addresses',
-        'path' => 'Modules.Account.routes.routes_addresses_api',
-        'namespace' => 'addresses_api'
+        'route' => '/api',
+        'path' => 'Modules.Account.routes.routes_api',
+        'namespace' => 'api'
+    ],
+    [
+        'route' => '/api/wallet',
+        'path' => 'Modules.Account.routes.routes_wallet_api',
+        'namespace' => 'api'
     ],
 ];

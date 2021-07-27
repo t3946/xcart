@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
-import { AddressDialogContext } from "../../contexts/AddressDialogContext";
+import React from "react";
+import { useHistory } from "react-router-dom";
 
 export const AddNewAddress = () => {
-  const dialog = useContext(AddressDialogContext);
+  const history = useHistory();
+
   return (
     <div
-      onClick={() => dialog.handleClickOpen()}
+      onClick={() => history.push("/account/addresses/add")}
       className="add-address address-container"
     >
       <div>

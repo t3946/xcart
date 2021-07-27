@@ -20,7 +20,6 @@ export const AddAddressDialog = () => {
       }}
     >
       <DialogHeader label="Add address" onClose={dialog.handleClose} />
-      <AddAddressForm />
     </Dialog>
   );
 };

@@ -32,28 +32,7 @@ export const SideBarMenu = () => {
     { to: "/account/public-profile", label: "Public profile" },
     { to: "/account/rewards", label: "Rewards" },
   ];
-  const routerItems = [
-    {
-      to: "12",
-      label: "123",
-    },
-    {
-      to: "13",
-      label: "123",
-    },
-    {
-      to: "14",
-      label: "123",
-    },
-    {
-      to: "15",
-      label: "123",
-    },
-    {
-      to: "16",
-      label: "123",
-    },
-  ];
+
   return (
     <div className="sidebar-menu-wrapper">
       {menuItems.map((e) => {

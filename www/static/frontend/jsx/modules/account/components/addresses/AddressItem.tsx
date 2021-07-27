@@ -4,6 +4,7 @@ import {
   changeDefaultAddress,
   removeAddress,
 } from "../../../../redux/actions/account-actions/AddressActions";
+import { useHistory } from "react-router-dom";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
@@ -17,6 +18,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   loading,
 }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const changeDefault = () => {
     dispatch(changeDefaultAddress(addressInfo.addresses_id));
@@ -24,6 +26,13 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
 
   const handleRemoveAddress = () => {
     dispatch(removeAddress(addressInfo.addresses_id));
+  };
+
+  const editAddress = () => {
+    history.push({
+      pathname: "/account/addresses/add",
+      state: { addressInfo: addressInfo },
+    });
   };
 
   return (
@@ -45,19 +54,21 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           <div
             className={`address-name ${defaultItem && "address-name-default"}`}
           >
-            Sergei Vorozhtsov
+            {addressInfo.full_name}
           </div>
           <div className="address-text address-text-address">
-            1370 BRIDGETON HILL RD UPPER BLACK EDDY, PA 18972-9725
+            {addressInfo.street}, {addressInfo.detailed}
           </div>
-          <div className="address-text">United States</div>
+          <div className="address-text">{addressInfo.country.viewValue}</div>
           <div className="address-phone-wrapper">
             <div className="address-text">Phone number:</div>
-            <div className="address-text">(763) 635-4364</div>
+            <div className="address-text">{addressInfo.phone_number}</div>
           </div>
           <div className="address-footer">
             <div className="address-footer-left-part">
-              <div className="address-footer-btn">Edit</div>
+              <div onClick={editAddress} className="address-footer-btn">
+                Edit
+              </div>
               <div className="address-footer-barrier" />
               <div onClick={handleRemoveAddress} className="address-footer-btn">
                 Remove

@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FocusEventHandler } from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
+import { FormikErrors, FormikTouched } from "formik";
 
 interface FormInputPropsDto {
   label?: string;
@@ -8,7 +9,7 @@ interface FormInputPropsDto {
   name: string;
   id?: string;
   type?: string;
-  errorMessage?: string;
+  errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[];
   handleChange: (e: string | ChangeEvent<any>) => void;
   classes?: {
     group?: string | string[] | null;
@@ -16,8 +17,8 @@ interface FormInputPropsDto {
     input?: string | string[] | null;
   };
   value: any;
-  touched?: boolean;
-  handleBlur: FocusEventHandler<HTMLInputElement>;
+  touched?: boolean | FormikTouched<any> | FormikTouched<any>[];
+  handleBlur?: FocusEventHandler<HTMLInputElement>;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -33,6 +34,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   touched,
   handleBlur,
 }) => {
+  const error = errorMessage && touched;
   return (
     <Grid
       className={classnames("form-input-container", classes?.group)}
@@ -43,7 +45,11 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
       {label && (
         <label
           htmlFor={id}
-          className={classnames("form-input-label", classes?.label)}
+          className={classnames(
+            "form-input-label",
+            classes?.label,
+            `${error && "form-input-label-error"}`
+          )}
         >
           {label}
         </label>
@@ -52,16 +58,14 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
         <input
           onBlur={handleBlur}
           placeholder={placeholder}
-          className={classnames("form-input")}
+          className={classnames("form-input", `${error && "form-input-error"}`)}
           name={name}
           id={id}
           type={type ? type : "text"}
           onChange={handleChange}
           value={value}
         />
-        {errorMessage && touched && (
-          <div className="form-input-caption">{errorMessage}</div>
-        )}
+        {error && <div className="form-input-caption">{errorMessage}</div>}
       </div>
     </Grid>
   );

@@ -32,7 +32,19 @@ class StateModel extends Model
             ],
             'timezone' => [
                 'class' => CharField::class
-            ]
+            ],
+            'state_name' => [
+                'field'=> 'state',
+                'class' => CharField::class
+            ],
+            'code' => [
+                'class' => CharField::class
+            ],
+            'model_country_code' => [
+                'field' => 'country_code',
+                'class' => CharField::class
+            ],
+
         ];
     }
 

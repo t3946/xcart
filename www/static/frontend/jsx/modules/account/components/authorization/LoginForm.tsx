@@ -83,7 +83,7 @@ const LoginForm: React.FC<any> = (props: any) => {
             label={"Password"}
             name={"password"}
             type={"password"}
-            caption={"Passwords must be at least 6 characters"}
+            errorMessage={"Passwords must be at least 6 characters"}
             handleChange={handleChange}
             classes={FormInputClasses}
             value={value}
@@ -166,8 +166,14 @@ const LoginForm: React.FC<any> = (props: any) => {
 
             <p className={"login-form-info"}>
               By continuing, you agree to S3 Stores Inc{" "}
-              <a href="#" className="common-link">Conditions of Use</a> and{" "}
-              <a href="#" className="common-link">Privacy Notice</a>.
+              <a href="#" className="common-link">
+                Conditions of Use
+              </a>{" "}
+              and{" "}
+              <a href="#" className="common-link">
+                Privacy Notice
+              </a>
+              .
             </p>
 
             <p className={"login-form-info"}>
@@ -185,9 +191,13 @@ const LoginForm: React.FC<any> = (props: any) => {
               </a>
               {showHelpInfo && (
                 <div>
-                  <a href="#" className="common-link">Forgot your password?</a>
+                  <a href="#" className="common-link">
+                    Forgot your password?
+                  </a>
                   <br />
-                  <a href="#" className="common-link">Other issues with Sign-In</a>
+                  <a href="#" className="common-link">
+                    Other issues with Sign-In
+                  </a>
                 </div>
               )}
             </p>
