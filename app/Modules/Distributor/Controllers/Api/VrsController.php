@@ -84,6 +84,8 @@ class VrsController extends Controller
               $message['user'] = [
                   'id' => $user_model->id,
                   'firstname' => $user_model->firstname,
+                  'b_firstname' => $user_model->firstname,
+                  's_firstname' => $user_model->firstname,
                   'login' => $user_model->login,
               ];
 
