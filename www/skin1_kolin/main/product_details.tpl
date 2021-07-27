@@ -389,37 +389,14 @@
                 </tr>
             {/if}
 
-            {if $active_modules.Brands ne ""}
-                <tr>
-                    {if $geid ne ''}
-                        <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[brand]"/></td>
-                    {/if}
-                    <td class="FormButton" nowrap="nowrap">{$lng.lbl_brand}:</td>
-                    <td class="ProductDetails">
-                        <select name="brandid">
-                            <option value=''{if $product.brandid eq ''} selected="selected"{/if}>{$lng.lbl_no_brand}</option>
-                            {foreach from=$brands item=v}
-                                <option value='{$v.brandid}'{if $v.brandid eq $product.brandid} selected="selected" {assign var="product_brand" value=$v.brand} {/if}>{$v.brand}</option>
-                            {/foreach}
-                        </select>
-
-                        {if $usertype eq "A"}
-                            <a href="brands.php?brandid={$product.brandid}" target="_blank">Link to Brand's page on
-                                back-end ({$product_brand})</a>
-                        {/if}
-
-                    </td>
-                </tr>
-            {/if}
-
-            {*<tr>
+            <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">
                     &nbsp;</td>{/if}
                 <td nowrap="nowrap">{$lng.lbl_main_category}:</td>
                 <td class="ProductDetails">{include file="main/category_selector.tpl" field="categoryid_text" extra=' style="width: 100%;"' categoryid=$product.categoryid|default:$default_categoryid override_onchange="javascript: document.getElementById('categoryid_input').value=this.options[this.selectedIndex].value;" display_only_selected=$product.productid|default:"Y"}
                 </td>
-            </tr>*}
+            </tr>
 
             <tr>
                 {if $geid ne ''}
