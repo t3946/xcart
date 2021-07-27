@@ -147,7 +147,7 @@ window.name="prodmodwin";
 
 {* start_modification_CIDEV -> CIDEV_Best_Search_Filter *}
 {* {if $active_modules.CIDEV_Best_Search_Filter ne ""} *}
-{include file="modules/CIDEV_Best_Search_Filter/main/product_modify.tpl"}
+{*{include file="modules/CIDEV_Best_Search_Filter/main/product_modify.tpl"}*}
 {* {/if} *}
 {* end_modification_CIDEV -> CDEV_Best_Search_Filter *}
 
