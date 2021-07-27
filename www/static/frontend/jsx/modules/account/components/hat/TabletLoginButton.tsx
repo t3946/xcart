@@ -51,12 +51,7 @@ const TabletLoginButton: React.FC<any> = () => {
   return (
     <Dropdown>
       <Dropdown.Toggle id="dropdown-basic" as={CustomToggle} />
-
-      <Dropdown.Menu as={CustomMenu}>
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </Dropdown.Menu>
+      <Dropdown.Menu as={CustomMenu} />
     </Dropdown>
   );
 };
