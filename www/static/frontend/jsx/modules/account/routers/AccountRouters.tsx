@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/sidebar-menu/BreadCrumbs";
-import { SideBarMenu } from "../components/sidebar-menu/SideBarMenu";
+import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
