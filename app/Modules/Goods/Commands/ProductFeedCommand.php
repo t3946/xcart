@@ -91,11 +91,10 @@ class ProductFeedCommand extends Command
 
             foreach ($supplierFeed->products as $kp => $prod) {
                 $products = [];
-                if ($prod['is_group'] && $prod['child_products'] && $supplierFeed->supplier_name !== 'Amazon' ) {
-                        $products = SupplierFeedHelper::feedChilds($prod, $supplierFeed);
-                } else {
-                    $products[] = $prod;
+                if ($prod['is_group'] && $prod['child_products'] && $supplierFeed->supplier_name !== 'Amazon') {
+                    $products = SupplierFeedHelper::feedChilds($prod, $supplierFeed);
                 }
+                $products[] = $prod;
 
                 foreach ($products as $aProduct) {
                     $aProduct['manufacturerid'] = $feed->manufacturerid;
