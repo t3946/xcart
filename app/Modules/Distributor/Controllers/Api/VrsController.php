@@ -80,9 +80,15 @@ class VrsController extends Controller
       $a = [];
       foreach ($messages as $message)
       {
-          $message['user'] = UserModel::objects()->filter(['id'=>$message['user_id']])->asArray(true)->all()[0];
+          if ($user_model = UserModel::objects()->get(['id'=>$message['user_id']])) {
+              $message['user'] = [
+                  'id' => $user_model->id,
+                  'firstname' => $user_model->firstname,
+                  'login' => $user_model->login,
+              ];
 
-          $a[] = $message;
+              $a[] = $message;
+          }
       }
 
 
