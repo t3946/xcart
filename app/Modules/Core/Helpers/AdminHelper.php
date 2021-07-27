@@ -16,7 +16,7 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 
 class AdminHelper
 {
-    private static function routesData()
+    public static function routesData()
     {
         $routes_map = [];
         $routes = Xcart::app()->router->getRoutes();

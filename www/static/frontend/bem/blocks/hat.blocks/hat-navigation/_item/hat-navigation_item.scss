@@ -1,0 +1,15 @@
+.hat-navigation_item {
+    margin: 0 0 0 rem-calc(10);
+
+    &:first-child {
+        margin: 0;
+    }
+
+    @include breakpoint(md up) {
+        margin: 0 0 0 rem-calc(20);
+
+        &:first-child {
+            margin: 0;
+        }
+    }
+}

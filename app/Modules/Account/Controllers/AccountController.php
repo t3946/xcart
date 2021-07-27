@@ -2,10 +2,13 @@
 
 namespace Modules\Account\Controllers;
 
-use Modules\Account\Forms\LoginForm;
-use Modules\Account\Forms\RegistrationForm;
+use Modules\Core\Helpers\AdminHelper;
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
+use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Menu\TemplateLibraries\MenuLibrary;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
-use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
@@ -18,6 +21,39 @@ class AccountController extends FrontendController
         if (!$user->getIsGuest()) {
             StorageHelper::push($user->toArray(), null, 'user');
         }
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        StorageHelper::push([
+            "code" => strtolower($site->code),
+            "shortName" => $site->short_name,
+            "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+        ], null, 'site');
+
+        StorageHelper::push([
+            "quantity" => Xcart::app()->cart->getQuantity(),
+            "checkoutUrl" => OrderHelper::getCheckoutUrl(),
+        ], null, 'Cart');
+
+        $config = GlobalConfigModel::objects();
+
+        StorageHelper::push([
+            "cidev_top_header_code" => $config->get(['name' => 'cidev_top_header_code'])->value,
+            "cidev_header_code" => $config->get(['name' => 'cidev_header_code'])->value,
+            "companyName" => $config->get(['name' => 'company_name'])->value,
+        ], null, 'config');
+
+        StorageHelper::push([
+            "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
+            "mainMenu" => MenuLibrary::getMenu(['code' => 'main-menu']),
+            "menuDesktop" => $this->render("_parts/_menu_desktop_cached.tpl"),
+        ], null, 'templates');
+
+        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
+
+        StorageHelper::push(APP_LOCAL,  'APP_LOCAL');
+
+        AdminHelper::routesData();
 
         $this->display('account/base.tpl');
     }

@@ -1,11 +1,8 @@
 import React from "react";
-import { useBreakPoint } from "../../hooks/useBreakPoint";
-import { BreadCrumbs } from "./BreadCrumbs";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 
-export const SideBarMenu = () => {
-  const breakpoints = useBreakPoint();
+const SideBarMenu = () => {
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
@@ -37,16 +34,25 @@ export const SideBarMenu = () => {
     <div className="sidebar-menu-wrapper">
       {menuItems.map((e) => {
         if (!e.routerItems) {
-          return <SideBarMenuItem to={e.to} label={e.label} />;
+          return (
+            <SideBarMenuItem
+              to={e.to}
+              label={e.label}
+              className={"sidebar-menu__top-level-item"}
+            />
+          );
         }
         return (
           <SideBarMenuAccordion
             to={e.to}
             label={e.label}
             routerItems={e.routerItems}
+            classes={{ handlerClass: "sidebar-menu__top-level-item" }}
           />
         );
       })}
     </div>
   );
 };
+
+export default SideBarMenu;
