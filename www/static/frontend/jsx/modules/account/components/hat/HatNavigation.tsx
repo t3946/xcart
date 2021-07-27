@@ -1,19 +1,7 @@
 import React from "react";
-import classNames from "classnames";
+import HatLoginButton from "./HatLoginButton";
 
 const HatNavigation = (props) => {
-  function loginButton() {
-    const classes = ["navigation-login-button common-icon"];
-
-    if (appData.user) {
-      classes.push("navigation-login-button__logged");
-    } else {
-      classes.push("navigation-login-button__not-logged");
-    }
-
-    return <i className={classNames(classes)} />;
-  }
-
   return (
     <div id="top-header-content">
       <div id="top-header-menu">
@@ -26,8 +14,8 @@ const HatNavigation = (props) => {
 
           <div className="logo_menu">
             <div className="container">
-              <div className="row align-justify">
-                <div className="col-2 col-md-1 show-for-small hide-for-large">
+              <div className="row">
+                <div className="col-md-1 col-2 d-flex align-items-center">
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
@@ -35,7 +23,7 @@ const HatNavigation = (props) => {
                   />
                 </div>
 
-                <div className="col-3 col-md-2">
+                <div className="col-4 col-md-3 d-flex align-items-center">
                   <a href="/">
                     <img
                       src={`/static/frontend/dist/images/logos/sites/${appData.site.code}/logo.svg`}
@@ -50,7 +38,7 @@ const HatNavigation = (props) => {
                   </a>
                 </div>
 
-                <div className="col-1 col-md-5 show-for-large">
+                <div className="col-lg-8 d-lg-flex d-none justify-content-end">
                   <div className="main-menu-wrap">
                     <ul
                       className="main-menu no-bullet show-for-medium"
@@ -61,23 +49,25 @@ const HatNavigation = (props) => {
                   </div>
                 </div>
 
-                <div className="col-6 col-md-4 hide-for-large small-offset-0 medium-offset-0 mobile-header d-flex align-items-center justify-content-end">
-                  <div className="hat-icons-container d-flex justify-content-between w-100">
+                <div className="col-lg-3 col-md-8 col-6 small-offset-0 medium-offset-0 mobile-header d-flex align-items-center justify-content-end d-lg-none">
+                  <div className="hat-icons-container d-flex w-100 align-items-center justify-content-end">
                     <a
                       href="tel:18009292431"
-                      className="mobile__call-btn middle-inline-block right-icon"
+                      className="mobile__call-btn middle-inline-block right-icon hat-navigation_item"
                     ></a>
 
                     <a
-                      className="mobile__search-btn middle-inline-block right-icon"
+                      className="mobile__search-btn middle-inline-block right-icon hat-navigation_item"
                       data-swich="search_container"
                     />
 
-                    {loginButton()}
+                    <div className="hat-navigation_item">
+                      <HatLoginButton />
+                    </div>
 
                     <a
                       href={appData.routes["cart:list"]}
-                      className="mobile__cart middle-inline-block right-icon"
+                      className="mobile__cart middle-inline-block right-icon hat-navigation_item"
                     >
                       <span className="count">
                         <span className="mc_count">

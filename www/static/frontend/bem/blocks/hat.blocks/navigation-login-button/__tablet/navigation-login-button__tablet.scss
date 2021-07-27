@@ -1,0 +1,18 @@
+.navigation-login-button__tablet {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-size: rem-calc(24);
+    padding: 0 rem-calc(24);
+    height: rem-calc(80);
+    width: rem-calc(290);
+
+    &:before {
+        content: '';
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url("/static/frontend/dist/images/icons/account/profile-not-logged-white.svg") ;
+        width: rem-calc(46);
+        height: rem-calc(48);
+    }
+}

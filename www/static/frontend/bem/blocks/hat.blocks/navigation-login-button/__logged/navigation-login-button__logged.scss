@@ -1,0 +1,40 @@
+.navigation-login-button__logged {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &:before, &:after {
+        @include iconSize;
+
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        @include breakpoint(md up) {
+            display: none;
+        }
+    }
+
+    &:before {
+        background-image: url("/static/frontend/dist/images/icons/account/profile-logged.svg");
+        opacity: 1;
+    }
+
+    &:after {
+        background-image: url("/static/frontend/dist/images/icons/account/profile-logged-active.svg");
+        opacity: 0;
+    }
+
+    &:active {
+        &:before {
+            opacity: 0;
+        }
+        &:after{
+            opacity: 1;
+        }
+    }
+}

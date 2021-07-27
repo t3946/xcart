@@ -5,14 +5,12 @@ header {
   border-bottom: 1px solid #cdcdcd;
 
   .logo_menu {
-    padding: rem-calc(7) 0;
     height: rem-calc(53);
-    line-height: rem-calc(39);
+    display: flex;
+    align-items: center;
 
     @include breakpoint(medium) {
-      //padding: rem-calc(17) 0;
       height: rem-calc(80);
-      line-height: rem-calc(63);
     }
 
     @include breakpoint(large) {
@@ -21,7 +19,6 @@ header {
     }
 
     @include breakpoint(large up) {
-      line-height: rem-calc(62);
       height: rem-calc(62);
     }
 

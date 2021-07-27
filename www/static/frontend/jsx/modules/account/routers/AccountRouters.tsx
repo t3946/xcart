@@ -18,13 +18,13 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 export const AccountRouters = () => {
   return (
     <Provider store={accountStore as any}>
-      <TopLine />
-      <HatNavigation />
-      <HatSearchLine />
+      <BrowserRouter>
+        <TopLine />
+        <HatNavigation />
+        <HatSearchLine />
 
-      <div className="account-container">
-        <div className="container">
-          <BrowserRouter>
+        <div className="account-container">
+          <div className="container">
             <BreadCrumbs />
             <div className="content-container">
               <SideBarMenu />
@@ -59,9 +59,9 @@ export const AccountRouters = () => {
                 />
               </Switch>
             </div>
-          </BrowserRouter>
+          </div>
         </div>
-      </div>
+      </BrowserRouter>
     </Provider>
   );
 };
