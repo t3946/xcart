@@ -45,11 +45,10 @@ export const AccountRouters = () => {
                   )}
                 />
                 <Route
-                    exact
-                    path="/account/addresses/add"
-                    component={AddAddressPage}
+                  exact
+                  path="/account/addresses/add"
+                  component={AddAddressPage}
                 />
-
                 <Route
                   exact
                   path="/account/payments/wallet"
