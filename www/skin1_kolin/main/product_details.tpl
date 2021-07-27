@@ -412,14 +412,14 @@
                 </tr>
             {/if}
 
-            <tr>
+            {*<tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">
-                    &nbsp;{* <input type="checkbox" value="Y" name="fields[categoryid]" /> *}</td>{/if}
-                <td {* class="FormButton" *} nowrap="nowrap">{$lng.lbl_main_category}:</td>
+                    &nbsp;</td>{/if}
+                <td nowrap="nowrap">{$lng.lbl_main_category}:</td>
                 <td class="ProductDetails">{include file="main/category_selector.tpl" field="categoryid_text" extra=' style="width: 100%;"' categoryid=$product.categoryid|default:$default_categoryid override_onchange="javascript: document.getElementById('categoryid_input').value=this.options[this.selectedIndex].value;" display_only_selected=$product.productid|default:"Y"}
                 </td>
-            </tr>
+            </tr>*}
 
             <tr>
                 {if $geid ne ''}
