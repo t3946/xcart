@@ -51,6 +51,12 @@ class DistributorForm extends ModelForm
                 'form' => DistributorPriceForm::class,
                 'required' => true,
             ],
+            15 => [
+                'title' => 'Upload file pricing',
+                'form' => DistributorPriceForm::class,
+                'required' => true,
+                'hidden' => true,
+            ],
             22 => [
                 'title' => 'Product page locked fields',
                 'hidden' => true

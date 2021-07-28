@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { EmailSnackbarContext } from "@s3stores-mail/contexts/email-snackbar/EmailSnackbar.context";
+import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert, { Color } from "@material-ui/lab/Alert";
 
-export const EmailSnackbar: React.FC = ({ children }) => {
+export const SnackBar: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);
 
   const [message, setMessage] = useState("");
@@ -28,13 +28,13 @@ export const EmailSnackbar: React.FC = ({ children }) => {
   };
   return (
     <div>
-      <EmailSnackbarContext.Provider
+      <SnackbarContext.Provider
         value={{
           showSnackbar,
         }}
       >
         {children}
-      </EmailSnackbarContext.Provider>
+      </SnackbarContext.Provider>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

@@ -7,18 +7,22 @@ namespace Modules\Distributor\Controllers\Api;
 use Cron\CronExpression;
 use DateInterval;
 use DateTime;
-use Modules\Core\Helpers\Cache;
+use Modules\Core\Classes\GoogleDrive;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Distributor\Helpers\SchedulerHelper;
+use Modules\Distributor\Models\ColumnTableSaveModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
 class ApiDxController extends Controller
 {
     private const FEEDS_START_TIME = '00:00';
+    private const COUNT_ITEMS_TABLE = 30;
     private const TIME_FRAME_SEC = 32400;
 
     public function getDxInfo($code, $sfId = null): void
@@ -151,5 +155,122 @@ class ApiDxController extends Controller
             }, $runForces));
             $this->jsonResponse($nextRunning);
         }
+
+    }
+
+    public function savePrice()
+    {
+        $post = Xcart::app()->request->post;
+        $dx = DistributorModel::objects()->get(['manufacturerid' => $post['dx']]);
+        $output = ['status' => false];
+        try {
+            $google_drive = new GoogleDrive('Test', '1m0heCJuDhMuBlzfY-vKWKIi58Xa98U2r');
+            $code = strtoupper($dx->code);
+            $ar_file = $google_drive->uploadFile($code, $_FILES['d_price_list']);
+
+            if (!empty($ar_file)) {
+                $link = $google_drive->getLink($ar_file['dirname']);
+                $dx->d_price_list = $link;
+                if ($dx->save()) {
+                    $reader = IOFactory::createReaderForFile($_FILES['d_price_list']['tmp_name']);
+                    $excel_obj = $reader->load($_FILES['d_price_list']['tmp_name']);
+                    $ar_data = [];
+                    $ar_tables = [];
+                    for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
+                        $ar_excel = $excel_obj->getSheet($t)->toArray();
+                        for ($i = 0; $i < count($ar_excel); $i++) {
+                            $count_good = 0;
+                            $row = $ar_excel[$i];
+                            for ($d = 0; $d < count($row); $d++) {
+                                if (!empty($row[$d]) && !is_null($row[$d])) {
+                                    $count_good++;
+                                }
+                            }
+                            if ($count_good > (count($row) / 100) * 30) {
+                                $ar_data[$t][] = $row;
+                            }
+                            if (count($ar_data[$t]) === self::COUNT_ITEMS_TABLE) {
+                                break;
+                            }
+                        }
+                        if (!empty($ar_data[$t])) {
+                            $ar_tables[] = $excel_obj->getSheetNames()[$t];
+                        }
+                    }
+                    $output = [
+                        'status' => true,
+                        'data' => $ar_data,
+                        'tableNames' => $ar_tables,
+                    ];
+                }
+            }
+        } catch (\Exception $exception) {
+            $output['error'] = $exception->getMessage();
+        } finally {
+            $this->jsonResponse($output);
+        }
+    }
+
+    public function saveProductsPrice()
+    {
+        set_time_limit(0);
+        $post = Xcart::app()->request->post;
+        $select = json_decode($post->select, true);
+        $file = $_FILES['file'];
+        $ar_update_field = [];
+        $result = ['status' => false, 'countUpdate' => 0];
+        $dx = DistributorModel::objects()->get(['manufacturerid' => $post->dx]);
+
+        $reader = IOFactory::createReaderForFile($file['tmp_name']);
+        $excel_obj = $reader->load($file['tmp_name']);
+        $ar_excel = $excel_obj->getActiveSheet()->toArray();
+
+        foreach ($select as $key => $field) {
+            $value = array_column($ar_excel, $key);
+            $ar_update_field[$field] = $value;
+        }
+        try {
+            foreach ($ar_update_field['productcode'] as $key => $code) {
+                $ar_field = [];
+                $product = ProductModel::objects()->get(['productcode' => "{$dx->code}-{$code}"]);
+                if ($product) {
+                    foreach ($ar_update_field as $field => $items) {
+                        if ($field === 'productcode') {
+                            $ar_field[$field] = "{$dx->code}-{$items[$key]}";
+                        } else {
+                            $ar_field[$field] = $items[$key];
+                        }
+                        $product->$field = $ar_field[$field];
+                    }
+                    /*                    Xcart::app()->queue->send('products', json_encode($ar_field));*/
+                    if ($product->save()) {
+                        $result['countUpdate']++;
+                    }
+                }
+            }
+            $result['status'] = true;
+        } finally {
+            $id_list = ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx->pk])->valuesList(['id'], true);
+            if ($id_list) {
+                ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
+            }
+            foreach ($select as $index => $field) {
+                $column = new ColumnTableSaveModel();
+                $column->num_column = $index;
+                $column->option_name = $field;
+                $column->manufacture = $dx;
+                $column->save();
+            }
+            $this->jsonResponse($result);
+        }
+    }
+    public function getColumnByDx(int $dx)
+    {
+        $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
+        $ar_column = [];
+        foreach (ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx_model->pk]) as $column) {
+            $ar_column[$column->num_column] = $column->option_name;
+        }
+        $this->jsonResponse($ar_column);
     }
 }

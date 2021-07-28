@@ -8,19 +8,21 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Fields\FileField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\UrlField;
 
 class DistributorPriceForm extends DistributorForm
 {
     public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
-
+    public $section;
+    public $ownerField = 'manufacturerid';
+    public $allTemplate = 'admin/distributor/dx_price.tpl';
     public function getFieldsets()
     {
         return [[
             'd_website_search_for_sku_url',
             'd_product_catalog',
-            'd_price_list',
             'd_currency',
             'cost_to_us_coef_x',
             'price_label',
@@ -53,14 +55,6 @@ class DistributorPriceForm extends DistributorForm
                 'class' => UrlField::class,
                 'label' => 'Product catalog URL',
                 'hint' => LanguageModel::translate('help_dx_catalog_url_text') ?? 'help_dx_catalog_url_text',
-                'fieldTemplate' => $this->fieldTemplate,
-                'hintTemplate' => $this->hintTemplate,
-                'extend' => 'Open'
-            ],
-            'd_price_list' => [
-                'class' => UrlField::class,
-                'label' => 'Price-list URL',
-                'hint' => LanguageModel::translate('help_dx_price_list_text') ?? 'help_dx_price_list_text',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'extend' => 'Open'

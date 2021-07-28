@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
-import { EmailSnackbarContext } from "@s3stores-mail/contexts/email-snackbar/EmailSnackbar.context";
+import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 
 export const EmailSendBodyContainer: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ export const EmailSendBodyContainer: React.FC = () => {
 
   const dialog = useContext(EmailDialogContext);
 
-  const { showSnackbar } = useContext(EmailSnackbarContext);
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const changeField = (field, value) => {
     dispatch(editSendData(value, field));
