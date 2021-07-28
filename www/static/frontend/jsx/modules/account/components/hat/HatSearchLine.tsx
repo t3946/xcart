@@ -68,25 +68,6 @@ const HatSearchLine = (props) => {
     );
   }
 
-  function menuTemplate() {
-    if (appData.APP_LOCAL) {
-      return (
-        <React.Fragment>
-          {/*{cache key = '_parts/_menu_desktop.tpl'}*/}
-          <div
-            dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }}
-          />
-        </React.Fragment>
-      );
-    } else {
-      <React.Fragment>
-        <div
-          dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }}
-        />
-      </React.Fragment>;
-    }
-  }
-
   return (
     <div className="sticky-menu-container">
       <div className="sticky def-zi2">
