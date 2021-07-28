@@ -38,6 +38,11 @@
   width: 12px;
   height: 7px;
   background: url("/static/frontend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
+  transition: .2s all;
+}
+
+.accordion-arrow-open{
+  transform: rotate(180deg);
 }
 
 .accordion-active{

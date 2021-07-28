@@ -1,6 +1,6 @@
 .form-input{
   border: 1px solid #C4C4C4;
-  padding: 9px 14px;
+  padding: 5px 14px;
 
   &::placeholder{
     font-style: italic;
@@ -20,4 +20,9 @@
 
 .form-input-container{
   margin-bottom: 20px;
+}
+
+.error-message-input-container{
+  display: flex;
+  justify-content: flex-end;
 }

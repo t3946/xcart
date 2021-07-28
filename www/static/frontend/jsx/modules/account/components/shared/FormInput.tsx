@@ -36,37 +36,45 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
 }) => {
   const error = errorMessage && touched;
   return (
-    <Grid
-      className={classnames("form-input-container", classes?.group)}
-      container
-      justify={label ? "space-between" : "flex-end"}
-      alignItems="center"
-    >
-      {label && (
-        <label
-          htmlFor={id}
-          className={classnames(
-            "form-input-label",
-            classes?.label,
-            `${error && "form-input-label-error"}`
-          )}
-        >
-          {label}
-        </label>
-      )}
-      <div className={classnames(classes?.input)}>
-        <input
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          className={classnames("form-input", `${error && "form-input-error"}`)}
-          name={name}
-          id={id}
-          type={type ? type : "text"}
-          onChange={handleChange}
-          value={value}
-        />
+    <div className={classnames("form-input-container", classes?.group)}>
+      <Grid
+        container
+        justify={label ? "space-between" : "flex-end"}
+        alignItems="center"
+      >
+        {label && (
+          <label
+            htmlFor={id}
+            className={classnames(
+              "form-input-label",
+              classes?.label,
+              `${error && "form-input-label-error"}`
+            )}
+          >
+            {label}
+          </label>
+        )}
+        <div className={classnames(classes?.input)}>
+          <input
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            className={classnames(
+              "form-input",
+              `${error && "form-input-error"}`
+            )}
+            name={name}
+            id={id}
+            type={type ? type : "text"}
+            onChange={handleChange}
+            value={value}
+          />
+        </div>
+      </Grid>
+      <div
+        className={classnames(classes?.input, "error-message-input-container")}
+      >
         {error && <div className="form-input-caption">{errorMessage}</div>}
       </div>
-    </Grid>
+    </div>
   );
 };

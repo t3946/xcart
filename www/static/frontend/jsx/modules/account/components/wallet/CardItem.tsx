@@ -2,10 +2,11 @@ import React from "react";
 import { useAccordion } from "../../hooks/useAccordion";
 import { Button } from "@material-ui/core";
 import { useDialog } from "../../hooks/useDialog";
-import { EditCardDialog } from "./EditCardDialog";
+import { CardDialog } from "./CardDialog";
 import { RemoveCardDialog } from "./RemoveCardDialog";
 import { useDispatch } from "react-redux";
 import { changeDefaultCard } from "../../../../redux/actions/account-actions/WalletActions";
+import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 
 export const CardItem = ({ cardInfo, firstChild }) => {
   const accordion = useAccordion();
@@ -89,7 +90,9 @@ export const CardItem = ({ cardInfo, firstChild }) => {
           </div>
         </div>
       </div>
-      <EditCardDialog
+      <CardDialog
+        contentType={BillingAddressFormEnum.EDIT}
+        actionType={BillingAddressFormEnum.EDIT}
         open={editDialog.open}
         handleClose={editDialog.handleClose}
       />

@@ -1,5 +1,5 @@
 import storeApp from "../redux/stores/StoreApp";
-import { hideAll } from "../redux/redusers/appHeadReduser";
+import { hideAll } from "../redux/reduсers/appHeadReduсer";
 
 (() => {
   $(".shadow").on("click touchstart", hideAll);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
 import { Button, Grid } from "@material-ui/core";
@@ -9,46 +9,22 @@ import {
   addAddressFormValidationSchema,
 } from "../../ts/consts/add-address-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addAddress,
-  editAddress,
-} from "../../../../redux/actions/account-actions/AddressActions";
-import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
+import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
+import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 
-export const AddAddressForm = ({ addressInfo }) => {
-  const dispatch = useDispatch();
-  const history = useHistory();
+export const AddBillingAddressForm = () => {
+  const context = useContext(WalletCardsDialogContext);
+
   const countries = useSelector((e: any) => e.main.countries);
+
   const states = useSelector((e: any) => e.main.states);
-
-  const addressFormLoading = useSelector(
-    (e: any) => e.addresses.addressFormLoading
-  );
-
-  const onPended = () => {
-    history.push("/account/addresses");
-  };
-
-  const submitForm = (values) => {
-    const newAddress = {
-      ...values,
-      country: values.country.value,
-      state: values.state.value,
-    };
-
-    if (addressInfo) {
-      dispatch(editAddress(newAddress, onPended));
-      return;
-    }
-
-    dispatch(addAddress(newAddress, onPended));
-  };
   return (
-    <div className="add-address-form-container">
+    <Grid xs={8} className="billing-address-container">
+      <div className="dialog-title">Select a billing address</div>
       <Formik
-        initialValues={addressInfo || initialAddAddressFormValue}
-        onSubmit={submitForm}
+        initialValues={initialAddAddressFormValue}
+        onSubmit={null}
         validationSchema={addAddressFormValidationSchema}
       >
         {({
@@ -144,28 +120,22 @@ export const AddAddressForm = ({ addressInfo }) => {
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
               />
-              <Grid
-                className="add-address-checkbox"
-                container
-                justify="flex-end"
-              >
-                <Grid xs={6}>
-                  <FormCheckBox
-                    label={"Make this my default address"}
-                    value={values.is_default}
-                    name={"is_default"}
-                    handleChange={handleChange}
-                  />
-                </Grid>
-              </Grid>
               <Grid container justify="flex-end">
-                <Grid xs={6}>
+                <Grid xs={6} container>
                   <Button
-                    disabled={addressFormLoading}
+                    onClick={() =>
+                      context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
+                    }
                     type={"submit"}
-                    className="account-submit-btn"
+                    className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
                   >
-                    {addressInfo ? "Save changes" : "Add"}
+                    Back
+                  </Button>
+                  <Button
+                    type={"submit"}
+                    className="account-submit-btn auto-width-button"
+                  >
+                    USE tHIS aDDRESS
                   </Button>
                 </Grid>
               </Grid>
@@ -173,6 +143,6 @@ export const AddAddressForm = ({ addressInfo }) => {
           );
         }}
       </Formik>
-    </div>
+    </Grid>
   );
 };

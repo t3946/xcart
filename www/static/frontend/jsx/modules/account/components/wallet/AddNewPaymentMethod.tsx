@@ -1,7 +1,8 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { AddCardDialog } from "./AddCardDialog";
+import { CardDialog } from "./CardDialog";
 import { useDialog } from "../../hooks/useDialog";
+import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 
 export const AddNewPaymentMethod = () => {
   const addDialog = useDialog();
@@ -14,7 +15,9 @@ export const AddNewPaymentMethod = () => {
         Add a credit or debit card
       </Button>
       <div>S3 Stores Inc accepts major credit and debit cards</div>
-      <AddCardDialog
+      <CardDialog
+        contentType={BillingAddressFormEnum.ADD_CARD}
+        actionType={BillingAddressFormEnum.ADD_CARD}
         open={addDialog.open}
         handleClose={addDialog.handleClose}
       />

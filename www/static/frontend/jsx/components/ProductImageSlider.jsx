@@ -5,7 +5,7 @@ import { videoLinkToObject } from "../utils/video";
 import SwiperCore, { Navigation } from "swiper";
 import PhotoSwipe from "./PhotoSwipeContainer";
 import _ from "lodash";
-import { actionMedia } from "../redux/redusers/appHeadReduser";
+import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";

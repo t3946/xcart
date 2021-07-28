@@ -64,7 +64,6 @@ const TabletLoginButton: React.FC<any> = () => {
     <Dropdown
       show={isTabletMenuVisible}
       onToggle={(prop) => {
-        console.log("onToggle", prop);
         dispatch(setTabletMenuIsVisible(prop));
       }}
       onClick={(e) => e.stopPropagation()}

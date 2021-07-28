@@ -16,19 +16,11 @@ export const Addresses = () => {
     }
   }, []);
   return (
-    <div className={"container"}>
-      <div className="row">
-        <div className="col account-page-left-column d-none d-lg-block">
-          <SideBarMenu />
-        </div>
-
-        <div className="col account-page-right-column">
-          <div className="page-label">Addresses</div>
-          <div className="addresses-list-container">
-            <AddNewAddress />
-            {addresses && <AddressList addresses={addresses} />}
-          </div>
-        </div>
+    <div>
+      <div className="page-label">Addresses</div>
+      <div className="addresses-list-container">
+        <AddNewAddress />
+        {addresses && <AddressList addresses={addresses} />}
       </div>
     </div>
   );

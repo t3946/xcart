@@ -1,11 +1,7 @@
 import { AnyAction } from "redux";
 import { accountMenuInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
 
-const MenuReducer = (
-  state = accountMenuInitialValue,
-  action: AnyAction
-) => {
-  console.log(action);
+const MenuReducer = (state = accountMenuInitialValue, action: AnyAction) => {
   switch (action.type) {
     case "SET_MOBILE_MENU_VISIBLE":
       state.isMobileMenuVisible = action.isMobileMenuVisible;
