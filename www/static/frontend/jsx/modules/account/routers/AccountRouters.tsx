@@ -18,11 +18,12 @@ import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 
 export const AccountRouters = () => {
-  console.log(accountStore.getState());
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getTerritory());
   }, []);
+
   return (
     <Provider store={accountStore as any}>
       <BrowserRouter>
