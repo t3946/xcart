@@ -24,6 +24,38 @@ const MobileMenu: React.FC<any> = () => {
     ],
   };
 
+  function signInButton() {
+    if (appData.user) {
+      return (
+        <NavLink
+          to="/account/dashboard"
+          className="common-link text-decoration-none"
+          exact={true}
+          onClick={() => dispatch(setMobileMenuVisible(false))}
+        >
+          <b>{appData.user.name}</b>
+        </NavLink>
+      );
+    }
+
+    return (
+      <NavLink
+        to="/account/login/"
+        className="common-link text-decoration-none"
+        exact={true}
+      >
+        <a
+          className={
+            "form-button form-button__outline w-auto pl-4 pr-4 common-link"
+          }
+          onClick={() => dispatch(setMobileMenuVisible(false))}
+        >
+          sign in
+        </a>
+      </NavLink>
+    );
+  }
+
   return (
     <React.Fragment>
       <div
@@ -41,20 +73,7 @@ const MobileMenu: React.FC<any> = () => {
             }
           />
 
-          <NavLink
-            to="/account/login/"
-            className="common-link text-decoration-none"
-            exact={true}
-          >
-            <a
-              className={
-                "form-button form-button__outline w-auto pl-4 pr-4 common-link"
-              }
-              onClick={() => dispatch(setMobileMenuVisible(false))}
-            >
-              sign in
-            </a>
-          </NavLink>
+          {signInButton()}
         </div>
         <SidebarMenu />
       </div>
