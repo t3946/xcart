@@ -15,6 +15,9 @@
 
 Для сборки на windows `NODE_ENV=production` нужно заменить на соответствующий терминалу аналог 
 
+#JavaScript Style Guide
+[Airbnb](https://github.com/airbnb/javascript)
+
 # Project hierarchy
 
 ```
@@ -37,11 +40,6 @@ Fenom is site template engine.
 You can find it on [Github](https://github.com/fenom-template/fenom).
 
 Fenom has good [Documentation](https://github.com/fenom-template/fenom/tree/master/docs).
-
-## Field Behaviours
-
-Determine strategy of form fields behaviour as what can and can't field does, his template rendering and validation.
-This is similar to controllers but for fields.
 
 Before work on Branches setup these files:
 
@@ -104,11 +102,3 @@ Model - Должен описывать функции ```static tableName() ```
 
 AutoMetaTrait - позволяет отказаться от полного описания всех полей таблицы, но необходимо описать ключевые поля, так-же
 следует помнить, что описание полей может быть приведено не корректно.
-
-##Checkout
-###Пересчёт цен
-Пересчёт происходит в success после ajax-запроса на /api/checkout/update
-
-Есть 2 ценовые группы:
-- Корзина дистрибьютора DistributorCart.js 
-- Общая для всей корзины Checkout.js
