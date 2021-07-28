@@ -73,4 +73,9 @@ class AccountController extends FrontendController
         Xcart::app()->auth->logout(false);
         $this->actionIndex();
     }
+
+    public function dashboard ()
+    {
+        $this->actionIndex();
+    }
 }
