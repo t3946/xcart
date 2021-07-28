@@ -18,11 +18,8 @@ import { getStates } from "../../utils/get-states";
 
 export const AddAddressForm = ({ addressInfo }) => {
   const dispatch = useDispatch();
-
   const history = useHistory();
-
   const countries = useSelector((e: any) => e.main.countries);
-
   const states = useSelector((e: any) => e.main.states);
 
   const addressFormLoading = useSelector(
@@ -44,6 +41,7 @@ export const AddAddressForm = ({ addressInfo }) => {
       dispatch(editAddress(newAddress, onPended));
       return;
     }
+
     dispatch(addAddress(newAddress, onPended));
   };
   return (

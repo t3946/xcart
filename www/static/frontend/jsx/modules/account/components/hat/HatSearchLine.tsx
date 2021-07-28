@@ -4,6 +4,7 @@ import MiniCartItems from "../../../../components/MiniCart";
 import MiniCartInfo from "../../../../modules/mini-cart/components/info";
 import storeCart from "../../../../redux/stores/StoreCart";
 import classNames from "classnames";
+import { NavLink } from "react-router-dom";
 
 const HatSearchLine = (props) => {
   function miniCartTemplate() {
@@ -57,34 +58,36 @@ const HatSearchLine = (props) => {
             content={appData.routes["catalog:search"] + "?q={query}"}
           />
 
-          <button className="button-search show-for-large"></button>
+          <button className="button-search show-for-large" />
+
           <a
             className={classNames("button-clear", {
               active: appData.params.get.q,
             })}
-          ></a>
+          />
         </form>
       </div>
     );
   }
 
-  function menuTemplate() {
-    if (appData.APP_LOCAL) {
+  function accountButton() {
+    if (!appData.user) {
       return (
-        <React.Fragment>
-          {/*{cache key = '_parts/_menu_desktop.tpl'}*/}
-          <div
-            dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }}
-          />
-        </React.Fragment>
+        <NavLink to="/account/login" exact={true} className="hat-login-button">
+          log in
+        </NavLink>
       );
-    } else {
-      <React.Fragment>
-        <div
-          dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }}
-        />
-      </React.Fragment>;
     }
+
+    return (
+      <NavLink
+        to="/account/dashboard"
+        exact={true}
+        className="hat-login-button"
+      >
+        {appData.user.name}
+      </NavLink>
+    );
   }
 
   return (
@@ -97,22 +100,24 @@ const HatSearchLine = (props) => {
         >
           <div className="container">
             <div className="row">
-              <div className="col-lg-3 show-for-large">
+              <div className="account-page-left-column">
                 <div className="category-menu-container">
                   <div className="category-menu">
                     <span className="menu-icon"></span>
                     <span className="category-menu-title">Departments</span>
                   </div>
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: appData.templates.menuDesktop,
+                  }}
+                />
               </div>
 
-              <div className="col-lg-5 col-sm-12">{searchTemplate()}</div>
+              <div className="col account-page-right-column">{searchTemplate()}</div>
 
               <div className="large-2 show-for-large hat-login-button-column">
-                <a href="/account/login/" className="hat-login-button">
-                  log in
-                </a>
+                {accountButton()}
               </div>
 
               <div className="col-lg-2 show-for-large">

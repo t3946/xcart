@@ -19,15 +19,19 @@ export const BreadCrumbs = () => {
   }
 
   return (
-    <div className="bread-crumbs-container">
-      {breadCrumbs.map((e, index) => {
-        const lastChild = index === breadCrumbs.length - 1;
-        return (
-          <span className={`bread-crumbs ${lastChild && "bread-crumbs-last"}`}>
-            {editRouteToLabel(e)} {!lastChild && " > "}
-          </span>
-        );
-      })}
+    <div className="container">
+      <div className="bread-crumbs-container">
+        {breadCrumbs.map((e, index) => {
+          const lastChild = index === breadCrumbs.length - 1;
+          return (
+            <span
+              className={`bread-crumbs ${lastChild && "bread-crumbs-last"}`}
+            >
+              {editRouteToLabel(e)} {!lastChild && " > "}
+            </span>
+          );
+        })}
+      </div>
     </div>
   );
 };

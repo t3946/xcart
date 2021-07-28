@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useCLickListener } from "../../hooks/useClikcListener";
+import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 

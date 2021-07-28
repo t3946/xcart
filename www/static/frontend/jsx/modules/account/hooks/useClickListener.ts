@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 
-export function useCLickListener(func: (arg: boolean) => void): void {
+function useCLickListener(func: (arg: boolean) => void): void {
   const handleFunction = () => {
     func(false);
   };
+
   useEffect(() => {
     window.addEventListener("click", handleFunction);
     return () => {
@@ -11,3 +12,5 @@ export function useCLickListener(func: (arg: boolean) => void): void {
     };
   }, []);
 }
+
+export default useCLickListener;
