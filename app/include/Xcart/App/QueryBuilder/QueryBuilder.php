@@ -844,12 +844,12 @@ class QueryBuilder
 
     public function generateUpdateSql()
     {
-        [, $values] = $this->_update;
+        [$tableName, $values] = $this->_update;
         $columns = $this->getAdapter()->updateValues($values);
         $columns = array_map(fn($column) => $this->addColumnAlias($column), $columns);
         $where = $this->buildWhere();
         $join = $this->buildJoin();
-        $update = $this->buildUpdate($this->_queryOptions);
+        $update = $this->buildUpdate($tableName, $this->_queryOptions);
 
         return strtr('{update}{join}{set}{where}', [
             '{update}' => $update,
@@ -1193,12 +1193,15 @@ class QueryBuilder
         return empty($sql) ? '' : ' FROM ' . $sql;
     }
 
-    public function buildUpdate($options = '')
+    public function buildUpdate($tableName = '', $options = '')
     {
         if (!empty($this->_alias) && !is_array($this->_from)) {
             $from = [$this->_alias => $this->_from];
         } else {
             $from = $this->_from;
+        }
+        if (!$from) {
+            $from = $tableName;
         }
         $sql = $this->getAdapter()->sqlFrom($from);
         return empty($sql) ? '' : "UPDATE $options " . $sql;
