@@ -16,7 +16,7 @@ import { getTerritory } from "../../../redux/actions/account-actions/MainActions
 import TopLine from "../components/hat/TopLine";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
-import MobileMenuHat from "../components/hat/MobileMenuHat";
+import MobileMenu from "../components/hat/MobileMenu";
 
 export const AccountRouters = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export const AccountRouters = () => {
         <TopLine />
         <HatNavigation />
         <HatSearchLine />
-        <MobileMenuHat />
+        <MobileMenu />
 
         <div className="account-container">
           <div className="container">

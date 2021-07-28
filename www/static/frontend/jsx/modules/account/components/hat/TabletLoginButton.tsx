@@ -15,7 +15,12 @@ const TabletLoginButton: React.FC<any> = () => {
           onClick(e);
         }}
         ref={ref}
-        className="navigation-login-button d-none d-md-flex navigation-login-button__tablet align-items-center justify-content-between"
+        className={classNames(
+          "navigation-login-button d-none d-md-flex navigation-login-button__tablet align-items-center justify-content-between",
+          {
+            "navigation-login-button__active": props["aria-expanded"],
+          }
+        )}
       >
         {text}
 
