@@ -32,6 +32,9 @@ function DialogTablePrice({state, arTable, file, dx, arTableName}) {
     }
 
     const onChangeSelectHandler = (event) => {
+        if (event.target.value === '') {
+            return;
+        }
         setSelect(prev => ({...prev, ...{[event.target.id]: event.target.value}}));
     }
     useEffect(() => {
