@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { NavLink } from "react-router-dom";
-import { setMobileMenuVisible } from "../../../../redux/actions/account-actions/MobileMenuActions";
+import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
 
 const MobileMenu: React.FC<any> = () => {
   const dispatch = useDispatch();
-  const isVisible = useSelector((e: any) => e.mobileMenu.isVisible);
+  const isVisible = useSelector((e: any) => e.mobileMenu.isMobileMenuVisible);
 
   const classes = {
     menu: [
@@ -31,7 +31,7 @@ const MobileMenu: React.FC<any> = () => {
           to="/account/dashboard"
           className="common-link text-decoration-none"
           exact={true}
-          onClick={() => dispatch(setMobileMenuVisible(false))}
+          onClick={() => dispatch(hideAllMenu())}
         >
           <b>{appData.user.name}</b>
         </NavLink>
@@ -48,7 +48,7 @@ const MobileMenu: React.FC<any> = () => {
           className={
             "form-button form-button__outline w-auto pl-4 pr-4 common-link"
           }
-          onClick={() => dispatch(setMobileMenuVisible(false))}
+          onClick={() => dispatch(hideAllMenu())}
         >
           sign in
         </a>

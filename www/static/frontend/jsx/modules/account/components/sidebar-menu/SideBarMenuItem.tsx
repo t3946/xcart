@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { setMobileMenuVisible } from "../../../../redux/actions/account-actions/MobileMenuActions";
+import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
 
 interface sideBarMenuItemPropsDto {
@@ -24,7 +24,7 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemPropsDto> = ({
       exact={true}
       activeClassName="active-route"
       className={classNames("sidebar-menu-container", className)}
-      onClick={() => dispatch(setMobileMenuVisible(false))}
+      onClick={() => dispatch(hideAllMenu(false))}
     >
       <span>{label}</span>
     </NavLink>

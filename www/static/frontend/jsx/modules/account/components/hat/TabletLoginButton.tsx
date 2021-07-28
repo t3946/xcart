@@ -2,8 +2,11 @@ import classNames from "classnames";
 import React from "react";
 import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setTabletMenuIsVisible } from "../../../../redux/actions/account-actions/MenuActions";
 
 const TabletLoginButton: React.FC<any> = () => {
+  const dispatch = useDispatch();
   const text = appData.user ? appData.user.name : "log in";
 
   const CustomToggle = React.forwardRef((props, ref) => {
@@ -53,8 +56,19 @@ const TabletLoginButton: React.FC<any> = () => {
     }
   );
 
+  const isTabletMenuVisible = useSelector(
+    (e: any) => e.mobileMenu.isTabletMenuVisible
+  );
+
   return (
-    <Dropdown>
+    <Dropdown
+      show={isTabletMenuVisible}
+      onToggle={(prop) => {
+        console.log("onToggle", prop);
+        dispatch(setTabletMenuIsVisible(prop));
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
       <Dropdown.Toggle id="dropdown-basic" as={CustomToggle} />
       <Dropdown.Menu as={CustomMenu} />
     </Dropdown>

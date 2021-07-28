@@ -1,6 +1,9 @@
 import classNames from "classnames";
 import React from "react";
-import { setMobileMenuVisible } from "../../../../redux/actions/account-actions/MobileMenuActions";
+import {
+  hideAllMenu,
+  setMobileMenuIsVisible,
+} from "../../../../redux/actions/account-actions/MenuActions";
 import { useDispatch, useSelector } from "react-redux";
 import useCLickListener from "../../hooks/useClickListener";
 
@@ -15,18 +18,21 @@ const MobileTemplate: React.FC<any> = () => {
   }
 
   useCLickListener(() => {
-    dispatch(setMobileMenuVisible(false));
+    dispatch(hideAllMenu());
   });
 
   const isVisible = useSelector((e: any) => e.mobileMenu.isVisible);
 
   function openMenu(e) {
     e.stopPropagation();
-    dispatch(setMobileMenuVisible(!isVisible));
+    dispatch(setMobileMenuIsVisible(!isVisible));
   }
 
   return (
-    <div onClick={openMenu} className="d-md-none hat-navigation-item d-flex align-items-center">
+    <div
+      onClick={openMenu}
+      className="d-md-none hat-navigation-item d-flex align-items-center"
+    >
       <i className={classNames(classes)} />
     </div>
   );

@@ -18,6 +18,7 @@ export const accountStoreInitialValue = {
   addresses: accountAddressesInitialValue,
 };
 
-export const accountMobileMenuInitialValue = {
-  isVisible: false,
+export const accountMenuInitialValue = {
+  isMobileMenuVisible: false,
+  isTabletMenuVisible: false,
 };
