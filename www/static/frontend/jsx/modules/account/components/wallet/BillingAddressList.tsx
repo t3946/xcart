@@ -11,7 +11,8 @@ export const BillingAddressList = () => {
       };
     });
 
-  const [value, setValue] = useState(mass[0]);
+  const [value, setValue] = useState(mass[0].id);
+
   return (
     <div className="billing-address-list-container">
       {mass.map((e) => {

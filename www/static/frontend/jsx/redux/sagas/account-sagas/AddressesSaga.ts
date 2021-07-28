@@ -8,40 +8,55 @@ const api = new ApiService();
 function* getAddresses(): Generator {
   const result: any = yield api
     .get<any>(`/account/api/addresses/get-addresses`)
-    .then((response) => response);
+    .then((response) => response)
+    .catch((error) => console.log(error));
 
-  yield put({
-    type: "SET_ADDRESSES",
-    addresses: result.addresses,
-    countries: result.countries,
-    states: result.states,
-  });
+  try {
+    yield put({
+      type: "SET_ADDRESSES",
+      addresses: result.addresses,
+      countries: result.countries,
+      states: result.states,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function* changeDefaultAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(`/account/api/addresses/change-default-address`, action.id)
-    .then((response) => response);
+    .then((response) => response)
+    .catch((error) => console.log(error));
 
-  yield put({
-    type: "SET_ADDRESSES",
-    addresses: result.addresses,
-    countries: result.countries,
-    states: result.states,
-  });
+  try {
+    yield put({
+      type: "SET_ADDRESSES",
+      addresses: result.addresses,
+      countries: result.countries,
+      states: result.states,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function* removeAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(`/account/api/addresses/remove-address`, action.id)
-    .then((response) => response);
+    .then((response) => response)
+    .catch((error) => console.log(error));
 
-  yield put({
-    type: "SET_ADDRESSES",
-    addresses: result.addresses,
-    countries: result.countries,
-    states: result.states,
-  });
+  try {
+    yield put({
+      type: "SET_ADDRESSES",
+      addresses: result.addresses,
+      countries: result.countries,
+      states: result.states,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function* addAddress(action: AnyAction): Generator {
@@ -50,14 +65,20 @@ function* addAddress(action: AnyAction): Generator {
       `/account/api/addresses/add-address`,
       JSON.stringify(action.address)
     )
-    .then((response) => response);
+    .then((response) => response)
+    .catch((error) => console.log(error));
 
-  yield put({
-    type: "SET_ADDRESSES",
-    addresses: result.addresses,
-    countries: result.countries,
-    states: result.states,
-  });
+  try {
+    yield put({
+      type: "SET_ADDRESSES",
+      addresses: result.addresses,
+      countries: result.countries,
+      states: result.states,
+    });
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 
   yield action.onPendingEnd();
 }
@@ -68,14 +89,19 @@ function* editAddress(action: AnyAction): Generator {
       `/account/api/addresses/edit-address`,
       JSON.stringify(action.address)
     )
-    .then((response) => response);
+    .then((response) => response)
+    .catch((error) => console.log(error));
 
-  yield put({
-    type: "SET_ADDRESSES",
-    addresses: result.addresses,
-    countries: result.countries,
-    states: result.states,
-  });
+  try {
+    yield put({
+      type: "SET_ADDRESSES",
+      addresses: result.addresses,
+      countries: result.countries,
+      states: result.states,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   yield action.onPendingEnd();
 }

@@ -22,11 +22,15 @@ export const AddCardForm = () => {
 
   const context = useContext(WalletCardsDialogContext);
 
+  const handleSubmit = (values) => {
+    context.setContent(BillingAddressFormEnum.LIST_ADDRESS);
+  };
+
   return (
     <Grid xs={7} className="add-address-form-container">
       <Formik
         initialValues={initialAddCardFormValue}
-        onSubmit={null}
+        onSubmit={handleSubmit}
         validationSchema={addCardFormValidationSchema}
       >
         {({
@@ -95,16 +99,12 @@ export const AddCardForm = () => {
               <Grid container justify="flex-end">
                 <Grid xs={7} container justify="space-between">
                   <Button
-                    type={"submit"}
                     onClick={() => context.handleClose()}
                     className="account-submit-btn account-submit-btn-outline auto-width-button"
                   >
                     Cancel
                   </Button>
                   <Button
-                    onClick={() =>
-                      context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
-                    }
                     type={"submit"}
                     className="account-submit-btn auto-width-button"
                   >
