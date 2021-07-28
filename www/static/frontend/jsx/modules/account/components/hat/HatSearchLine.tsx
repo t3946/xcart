@@ -100,7 +100,7 @@ const HatSearchLine = (props) => {
         >
           <div className="container">
             <div className="row">
-              <div className="col-lg-3 show-for-large">
+              <div className="account-page-left-column">
                 <div className="category-menu-container">
                   <div className="category-menu">
                     <span className="menu-icon"></span>
@@ -114,7 +114,7 @@ const HatSearchLine = (props) => {
                 />
               </div>
 
-              <div className="col-lg-5 col-sm-12">{searchTemplate()}</div>
+              <div className="col account-page-right-column">{searchTemplate()}</div>
 
               <div className="large-2 show-for-large hat-login-button-column">
                 {accountButton()}

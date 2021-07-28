@@ -15,7 +15,7 @@ const HatNavigation = (props) => {
           <div className="logo_menu">
             <div className="container">
               <div className="row">
-                <div className="col-md-1 col-2 d-flex align-items-center">
+                <div className="col-md-1 col-2 d-flex align-items-center d-lg-none">
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
@@ -38,7 +38,7 @@ const HatNavigation = (props) => {
                   </a>
                 </div>
 
-                <div className="col-lg-8 d-lg-flex d-none justify-content-end">
+                <div className="col-lg-9 d-lg-flex d-none justify-content-end">
                   <div className="main-menu-wrap">
                     <ul
                       className="main-menu no-bullet show-for-medium"

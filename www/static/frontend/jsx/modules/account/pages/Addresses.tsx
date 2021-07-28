@@ -3,6 +3,7 @@ import { AddNewAddress } from "../components/addresses/AddNewAddress";
 import { AddressList } from "../components/addresses/AddressList";
 import { useDispatch, useSelector } from "react-redux";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
+import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 
 export const Addresses = () => {
   const dispatch = useDispatch();
@@ -15,11 +16,19 @@ export const Addresses = () => {
     }
   }, []);
   return (
-    <div>
-      <div className="page-label">Addresses</div>
-      <div className="addresses-list-container">
-        <AddNewAddress />
-        {addresses && <AddressList addresses={addresses} />}
+    <div className={"container"}>
+      <div className="row">
+        <div className="col account-page-left-column d-none d-lg-block">
+          <SideBarMenu />
+        </div>
+
+        <div className="col account-page-right-column">
+          <div className="page-label">Addresses</div>
+          <div className="addresses-list-container">
+            <AddNewAddress />
+            {addresses && <AddressList addresses={addresses} />}
+          </div>
+        </div>
       </div>
     </div>
   );
