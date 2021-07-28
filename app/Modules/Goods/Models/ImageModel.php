@@ -104,7 +104,7 @@ class ImageModel extends Model
     public function getCdnURL($width = null): string
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $pref = ($site->getConfig()['Enable_CDN'] === "Y") ? 'cdn.': 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         return '//' .$pref . $domain . $this->getURL($width);
     }
