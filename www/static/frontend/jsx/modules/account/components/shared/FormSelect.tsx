@@ -16,10 +16,6 @@ export const FormSelect = ({
   useCLickListener(setOpen);
   return (
     <Grid
-      onClick={(e) => {
-        e.stopPropagation();
-        setOpen(!open);
-      }}
       className={classnames(
         `select select-send ${open && "open"}`,
         classes?.group
@@ -29,7 +25,13 @@ export const FormSelect = ({
       justify="space-between"
     >
       {label && <label className="form-input-label">{label}</label>}
-      <div className={classnames("select-wrapper", classes?.input)}>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(!open);
+        }}
+        className={classnames("select-wrapper", classes?.input)}
+      >
         <input
           value={value}
           className="select__input"

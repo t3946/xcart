@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Dialog } from "@material-ui/core";
 import { DialogHeader } from "../dialog/DialogHeader";
 import { BillingAddress } from "./BillingAddress";
@@ -6,13 +6,14 @@ import { AddBillingAddressForm } from "./AddBillingAddressForm";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { AddCardForm } from "./AddCardForm";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
+import { EditCard } from "./EditCard";
 
-export const AddCardDialog = ({ handleClose, open, contentType }) => {
+export const CardDialog = ({ handleClose, open, contentType, actionType }) => {
   const [content, setContent] = useState(contentType);
 
   const onDialogClose = () => {
     handleClose();
-    setContent(BillingAddressFormEnum.ADD_CARD);
+    setContent(actionType);
   };
 
   const showContent = (type) => {
@@ -25,6 +26,9 @@ export const AddCardDialog = ({ handleClose, open, contentType }) => {
       }
       case BillingAddressFormEnum.LIST_ADDRESS: {
         return <BillingAddress />;
+      }
+      case BillingAddressFormEnum.EDIT: {
+        return <EditCard />;
       }
     }
   };
@@ -44,8 +48,17 @@ export const AddCardDialog = ({ handleClose, open, contentType }) => {
         },
       }}
     >
-      <DialogHeader label="Add Card" onClose={onDialogClose} />
-      <WalletCardsDialogContext.Provider value={{ setContent }}>
+      <DialogHeader
+        label={`${
+          actionType === BillingAddressFormEnum.ADD_ADDRESS
+            ? "Add Card"
+            : "Edit Card"
+        }`}
+        onClose={onDialogClose}
+      />
+      <WalletCardsDialogContext.Provider
+        value={{ setContent, actionType, handleClose }}
+      >
         {showContent(content)}
       </WalletCardsDialogContext.Provider>
     </Dialog>

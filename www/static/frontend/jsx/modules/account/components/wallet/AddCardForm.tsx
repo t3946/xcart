@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 import { Form, Formik } from "formik";
 import { FormSelect } from "../shared/FormSelect";
-import {
-  addAddressFormValidationSchema,
-  initialAddAddressFormValue,
-} from "../../ts/consts/add-address-form";
 import { FormInput } from "../shared/FormInput";
 import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import {
+  addCardFormValidationSchema,
+  initialAddCardFormValue,
+} from "../../ts/consts/add-card-form";
 
 export const AddCardForm = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -22,14 +22,12 @@ export const AddCardForm = () => {
 
   const context = useContext(WalletCardsDialogContext);
 
-  console.log(context);
-
   return (
     <Grid xs={7} className="add-address-form-container">
       <Formik
-        initialValues={initialAddAddressFormValue}
+        initialValues={initialAddCardFormValue}
         onSubmit={null}
-        validationSchema={addAddressFormValidationSchema}
+        validationSchema={addCardFormValidationSchema}
       >
         {({
           errors,
@@ -43,40 +41,40 @@ export const AddCardForm = () => {
             <Form className="your-order-form" encType="multipart/form-data">
               <FormInput
                 label={"Card number"}
-                placeholder={"Albert H. Einstein"}
-                value={values.full_name}
-                name={"full_name"}
-                errorMessage={errors.full_name}
+                placeholder={"5026 2457 5478 5984"}
+                value={values.cardNumber}
+                name={"cardNumber"}
+                errorMessage={errors.cardNumber}
                 handleChange={handleChange}
-                touched={touched.full_name}
+                touched={touched.cardNumber}
                 classes={{ input: "add-card-input" }}
                 handleBlur={handleBlur}
               />
               <FormInput
                 label={"Name on card"}
-                value={values.phone_number}
-                name={"phone_number"}
-                errorMessage={errors.phone_number}
+                value={values.name}
+                name={"name"}
+                errorMessage={errors.name}
                 handleChange={handleChange}
-                touched={touched.phone_number}
+                touched={touched.name}
                 classes={{ input: "add-card-input" }}
                 handleBlur={handleBlur}
               />
               <Grid container justify="space-between">
                 <FormSelect
                   items={monthsValues}
-                  value={values.state}
+                  value={values.expiration_month}
                   classes={{ group: "add-card-select-expiration-month" }}
                   label={"Expiration date"}
-                  onClick={(value) => setFieldValue("state", value)}
-                  name={"state"}
+                  onClick={(value) => setFieldValue("expiration_month", value)}
+                  name={"expiration_month"}
                 />
                 <FormSelect
                   items={yearsValues}
                   classes={{ group: "add-card-select-expiration-years" }}
-                  value={values.state}
-                  onClick={(value) => setFieldValue("state", value)}
-                  name={"state"}
+                  value={values.expiration_year}
+                  onClick={(value) => setFieldValue("expiration_year", value)}
+                  name={"expiration_year"}
                 />
               </Grid>
 
@@ -98,6 +96,7 @@ export const AddCardForm = () => {
                 <Grid xs={7} container justify="space-between">
                   <Button
                     type={"submit"}
+                    onClick={() => context.handleClose()}
                     className="account-submit-btn account-submit-btn-outline auto-width-button"
                   >
                     Cancel
