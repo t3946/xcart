@@ -4,6 +4,7 @@ import MiniCartItems from "../../../../components/MiniCart";
 import MiniCartInfo from "../../../../modules/mini-cart/components/info";
 import storeCart from "../../../../redux/stores/StoreCart";
 import classNames from "classnames";
+import { NavLink } from "react-router-dom";
 
 const HatSearchLine = (props) => {
   function miniCartTemplate() {
@@ -57,14 +58,35 @@ const HatSearchLine = (props) => {
             content={appData.routes["catalog:search"] + "?q={query}"}
           />
 
-          <button className="button-search show-for-large"></button>
+          <button className="button-search show-for-large" />
+
           <a
             className={classNames("button-clear", {
               active: appData.params.get.q,
             })}
-          ></a>
+          />
         </form>
       </div>
+    );
+  }
+
+  function accountButton() {
+    if (!appData.user) {
+      return (
+        <NavLink to="/account/login" exact={true} className="hat-login-button">
+          log in
+        </NavLink>
+      );
+    }
+
+    return (
+      <NavLink
+        to="/account/dashboard"
+        exact={true}
+        className="hat-login-button"
+      >
+        {appData.user.name}
+      </NavLink>
     );
   }
 
@@ -85,15 +107,17 @@ const HatSearchLine = (props) => {
                     <span className="category-menu-title">Departments</span>
                   </div>
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: appData.templates.menuDesktop }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: appData.templates.menuDesktop,
+                  }}
+                />
               </div>
 
               <div className="col-lg-5 col-sm-12">{searchTemplate()}</div>
 
               <div className="large-2 show-for-large hat-login-button-column">
-                <a href="/account/login/" className="hat-login-button">
-                  log in
-                </a>
+                {accountButton()}
               </div>
 
               <div className="col-lg-2 show-for-large">
