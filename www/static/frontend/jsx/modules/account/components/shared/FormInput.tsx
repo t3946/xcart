@@ -70,10 +70,10 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
           />
         </div>
       </Grid>
-      <div
-        className={classnames(classes?.input, "error-message-input-container")}
-      >
-        {error && <div className="form-input-caption">{errorMessage}</div>}
+      <div className="error-message-input-container">
+        <div className={classnames(classes?.input)}>
+          {error && <div className="form-input-caption">{errorMessage}</div>}
+        </div>
       </div>
     </div>
   );

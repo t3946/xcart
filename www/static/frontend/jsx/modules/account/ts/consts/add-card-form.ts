@@ -9,6 +9,6 @@ export const initialAddCardFormValue = {
 };
 
 export const addCardFormValidationSchema = Yup.object().shape({
-  cardNumber: Yup.object().required("Required field"),
+  cardNumber: Yup.string().required("Required field"),
   name: Yup.string().required("Required field"),
 });
