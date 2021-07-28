@@ -160,16 +160,17 @@ header {
         padding: 0 5px;
         color: $white;
         position: absolute;
-        left: -3px;
-        top: -1px;
+        left: -5px;
+        top: 11px;
         line-height: 1.2;
         min-width: 1.5em;
         text-align: center;
 
         @include breakpoint(medium) {
           font-size: rem-calc(20);
+          left: -5px;
+          top: 15px;
         }
-
 
         .mc_count {
           display: inline-block;

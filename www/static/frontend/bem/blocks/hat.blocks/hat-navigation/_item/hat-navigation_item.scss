@@ -1,15 +1,18 @@
-.hat-navigation_item {
-    margin: 0 0 0 rem-calc(10);
-
-    &:first-child {
-        margin: 0;
-    }
+.hat-navigation-item-wrapper {
+    padding: 0 rem-calc(5);
+    height: rem-calc(53);
 
     @include breakpoint(md up) {
-        margin: 0 0 0 rem-calc(20);
-
-        &:first-child {
-            margin: 0;
-        }
+        padding: 0 rem-calc(10);
+        height: rem-calc(80);
     }
+}
+
+.hat-navigation-item {
+    background-position: center !important;
+    height: 100% !important;
+}
+
+.hat-navigation_items-wrapper {
+    margin: 0 rem-calc(-5);
 }
