@@ -6,3 +6,17 @@
 .billing-address-item-container-selected{
  background-color: #F4F4F4;
 }
+
+.billing-address-list-container{
+  max-height: 200px;
+  overflow-y: scroll;
+  margin-bottom: 23px;
+}
+
+.billing-address-container{
+  padding: 18px 24px;
+}
+
+.add-billing-address-btn{
+  margin-right: 5px !important;
+}

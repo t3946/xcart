@@ -1,5 +1,5 @@
 import CreateWaitButton from "@/components/AnimateWaitButton";
-import { cartAdd } from "@/redux/redusers/appCartRediser";
+import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import Storage from "@/utils/localStorage/storage";
 
 const SIMPLE_MODE = 1;

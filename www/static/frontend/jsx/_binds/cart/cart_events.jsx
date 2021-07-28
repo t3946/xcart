@@ -3,8 +3,8 @@ import storeCart from "../../redux/stores/StoreCart";
 import storeApp from "../../redux/stores/StoreApp";
 import CreateWaitButton from "../../components/AnimateWaitButton";
 
-import { hideAll, action } from "../../redux/redusers/appHeadReduser";
-import { cartAdd } from "../../redux/redusers/appCartRediser";
+import { hideAll, action } from "../../redux/reduсers/appHeadReduсer";
+import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import { AddToCartButton } from "@/js/Classes/AddToCartButton";
 
 import { h, render } from "preact";

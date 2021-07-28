@@ -1,7 +1,7 @@
 import { h, render } from "preact";
 import storeApp from "../redux/stores/StoreApp";
 import SuggestionsListForAll from "./SuggestionsListForAll";
-import { checkOff, action } from "../redux/redusers/appHeadReduser";
+import { checkOff, action } from "../redux/reduсers/appHeadReduсer";
 
 export default class SearchSuggestion {
   constructor(elements = ".search-form-container .search") {

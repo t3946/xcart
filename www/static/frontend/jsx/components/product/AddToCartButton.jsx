@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import CatalogContext from "@/components/catalog/CatalogContext";
-import { cartAdd } from "@/redux/redusers/appCartRediser";
+import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import * as preact from "preact";
 import CreateWaitButton from "@/components/AnimateWaitButton";
 import t from "@/i18n";

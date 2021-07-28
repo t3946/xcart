@@ -1,7 +1,7 @@
-.form_radio input[type=radio] {
+.form-radio input[type=radio] {
   display: none;
 }
-.form_radio label {
+.form-radio label {
   display: inline-block;
   cursor: pointer;
   position: relative;
@@ -11,7 +11,11 @@
   padding: 10px 25px 10px 45px;
   margin: 0;
 }
-.form_radio label:before {
+
+.form-radio-checked{
+  background-color: #F4F4F4;
+}
+.form-radio label:before {
   content: "";
   display: inline-block;
   width: 19px;
@@ -22,14 +26,14 @@
   background: url("/static/frontend/dist/images/icons/account/radio.svg") no-repeat center / cover;
 }
 
-.form_radio input[type=radio]:checked + label:before {
+.form-radio input[type=radio]:checked + label:before {
   background: url("/static/frontend/dist/images/icons/account/radio-checked.svg") no-repeat center / cover;
 }
 
-.form_radio label:hover:before {
+.form-radio label:hover:before {
   filter: brightness(120%);
 }
 
-.form_radio input[type=radio]:disabled + label:before {
+.form-radio input[type=radio]:disabled + label:before {
   filter: grayscale(100%);
 }

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import ScreenSize from "../utils/ScreenSize";
-import { actionMedia } from "../redux/redusers/appHeadReduser";
+import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 
 class ResizeMonitor {
   constructor() {

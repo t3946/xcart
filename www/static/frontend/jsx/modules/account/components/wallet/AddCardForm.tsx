@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Formik } from "formik";
 import { FormSelect } from "../shared/FormSelect";
 import {
@@ -9,6 +9,8 @@ import { FormInput } from "../shared/FormInput";
 import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";
+import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
+import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 
 export const AddCardForm = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -17,6 +19,10 @@ export const AddCardForm = () => {
     new Date().getFullYear(),
     new Date().getFullYear() + 10
   );
+
+  const context = useContext(WalletCardsDialogContext);
+
+  console.log(context);
 
   return (
     <Grid xs={7} className="add-address-form-container">
@@ -97,6 +103,9 @@ export const AddCardForm = () => {
                     Cancel
                   </Button>
                   <Button
+                    onClick={() =>
+                      context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
+                    }
                     type={"submit"}
                     className="account-submit-btn auto-width-button"
                   >
