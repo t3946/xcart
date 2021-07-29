@@ -6,7 +6,7 @@ import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
@@ -17,15 +17,30 @@ import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
-import { AddNewAddress } from "@modules/account/components/addresses/AddNewAddress";
-import { AddressList } from "@modules/account/components/addresses/AddressList";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import classNames from "classnames";
 
 export const AccountRouters = () => {
   const dispatch = useDispatch();
+  const user = useSelector((e: StoreDto) => e.user);
 
   useEffect(() => {
     dispatch(getTerritory());
   }, []);
+
+  const leftColumnClasses = [
+    "col account-page-left-column d-none",
+    {
+      "d-lg-block": user !== null,
+    },
+  ];
+
+  const rightColumnClasses = [
+    "col",
+    {
+      "account-page-right-column": user !== null,
+    },
+  ];
 
   return (
     <Provider store={accountStore as any}>
@@ -35,13 +50,14 @@ export const AccountRouters = () => {
         <HatSearchLine />
         <MobileMenu />
         <BreadCrumbs />
+
         <div className={"container"}>
           <div className="row">
-            <div className="col account-page-left-column d-none d-lg-block">
+            <div className={classNames(leftColumnClasses)}>
               <SideBarMenu />
             </div>
 
-            <div className="col account-page-right-column">
+            <div className={classNames(rightColumnClasses)}>
               <div className="content-container">
                 <Switch>
                   <Route
