@@ -156,7 +156,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
             <p className={"margin-0 login-form-info"}>
               Already have an account?{" "}
               <NavLink
-                to="/account/login/"
+                to={appData.routes["account:login"]}
                 className="common-link"
                 exact={true}
               >Sign-In</NavLink>
