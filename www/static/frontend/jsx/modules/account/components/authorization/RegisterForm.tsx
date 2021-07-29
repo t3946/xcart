@@ -3,9 +3,12 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { FormInput } from "../shared/FormInput";
 import $ from "jquery";
-import { NavLink } from "react-router-dom";
+import {NavLink, Redirect} from "react-router-dom";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import { useSelector } from "react-redux";
 
 const RegisterForm: React.FC<any> = (props: any) => {
+  const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
     name: "",
     email: "",
@@ -62,6 +65,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
 
   return (
     <div className="account-login-form">
+      {user && <Redirect to="/account/" />}
       <h1 className="account-form-header">Create account</h1>
 
       <Formik
