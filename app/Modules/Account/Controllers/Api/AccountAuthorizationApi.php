@@ -8,7 +8,7 @@ use Xcart\App\Main\Xcart;
 use Modules\Account\Forms\LoginForm;
 use Modules\Account\Forms\RegistrationForm;
 
-class AuthorizationApi extends FrontendController
+class AccountAuthorizationApi extends FrontendController
 {
     public function register()
     {

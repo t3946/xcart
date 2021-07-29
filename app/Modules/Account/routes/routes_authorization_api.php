@@ -1,23 +1,23 @@
 <?php
 
-use Modules\Account\Controllers\Api\AuthorizationApi;
+use Modules\Account\Controllers\Api\AccountAuthorizationApi;
 
 return [
     [
         'route' => '/register',
-        'target' => [AuthorizationApi::class, 'register'],
+        'target' => [AccountAuthorizationApi::class, 'register'],
         'name' => 'register',
     ],
 
     [
         'route' => '/login',
-        'target' => [AuthorizationApi::class, 'login'],
+        'target' => [AccountAuthorizationApi::class, 'login'],
         'name' => 'login',
     ],
 
     [
         'route' => '/logout',
-        'target' => [AuthorizationApi::class, 'logout'],
+        'target' => [AccountAuthorizationApi::class, 'logout'],
         'name' => 'logout',
     ],
 ];
