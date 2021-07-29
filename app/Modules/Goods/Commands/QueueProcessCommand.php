@@ -62,7 +62,7 @@ class QueueProcessCommand extends Command
                     [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
                     if ($product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
-                        $product->fulldescr = ProductHelper::cleanProductFullDescription($product->fulldescr);
+                        //$product->fulldescr = ProductHelper::cleanProductFullDescription($product->fulldescr);
                         $product->sites = [$site];
                         ProductHelper::setProductBrand($product, $data['brand_name'], $site);
                         $changed = SupplierFeedHelper::getChanged($product);
@@ -85,7 +85,7 @@ class QueueProcessCommand extends Command
                         $group_product->setAttributes($data);
                         $group_product->group_root = $group_product->productid;
                         $group_product->productcode = $group_code;
-                        $group_product->fulldescr = ProductHelper::cleanProductFullDescription($group_product->fulldescr);
+                        //$group_product->fulldescr = ProductHelper::cleanProductFullDescription($group_product->fulldescr);
                         $group_product->sites = [$site];
                         $group_product->save();
                         $group_product->parent = $group_product;
@@ -110,7 +110,7 @@ class QueueProcessCommand extends Command
                             $product->setAttributes($child);
                             $product->parent = $group_product;
                             $product->group_mask = $group_product->product;
-                            $product->fulldescr = ProductHelper::cleanProductFullDescription($product->fulldescr);
+                            //$product->fulldescr = ProductHelper::cleanProductFullDescription($product->fulldescr);
                             $product->sites = [$site];
                             ProductHelper::setProductBrand($product, $child['brand_name'], $site);
                             $changed = SupplierFeedHelper::getChanged($product);
