@@ -43,17 +43,11 @@ const MobileMenu: React.FC<any> = () => {
     return (
       <NavLink
         to="/account/login/"
-        className="common-link text-decoration-none"
+        className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4"
         exact={true}
+        onClick={() => dispatch(hideAllMenu())}
       >
-        <a
-          className={
-            "form-button form-button__outline w-auto pl-4 pr-4 common-link"
-          }
-          onClick={() => dispatch(hideAllMenu())}
-        >
-          sign in
-        </a>
+        sign in
       </NavLink>
     );
   }
