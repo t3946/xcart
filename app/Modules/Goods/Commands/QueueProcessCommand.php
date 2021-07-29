@@ -27,7 +27,7 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $parent */
         foreach ($data['child_products'] as $child_product) {
             $model = ProductModel::objects()->get(['productcode' => $child_product['productcode']]);
-            if ($model && $parent = $model->parent && strpos($parent->productcode, 'GROUP') !== false) {
+            if ($model && ($parent = $model->parent) && strpos($parent->productcode, 'GROUP') !== false) {
                 return $parent->productcode;
             }
         }

@@ -956,8 +956,15 @@ class ProductModel extends Model implements ICartItem
             $value = $upc;
         }
 
-        if ($name === 'eta_date_mm_dd_yyyy' && $this->eta_date_lock) {
-            $value = $this->eta_date_mm_dd_yyyy;
+        if ($name === 'eta_date_mm_dd_yyyy' ) {
+            if ($this->eta_date_lock) {
+                $value = $this->eta_date_mm_dd_yyyy;
+            } else {
+                if ($value !== '') {
+                    $value = strtotime($value);
+                }
+            }
+
         }
         if ($name === 'weight' && $this->weight_lock) {
             $value = $this->weight;
