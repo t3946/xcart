@@ -1,4 +1,4 @@
-import { takeLatest, all } from "redux-saga/effects";
+import { takeLatest } from "redux-saga/effects";
 import { ApiService } from "../../../modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
@@ -20,16 +20,32 @@ function* register(action: AnyAction) {
 }
 
 function* login(action: AnyAction) {
-  const { form, callback } = action.payload;
-  const postData = {
+  const { form, success, error } = action.payload;
+
+  const data = JSON.stringify({
     LoginForm: form,
-  };
+  });
+
+  yield api.post<any>(`/account/api/authorization/login`, data).then((res) => {
+    res.errors ? error(res.errors) : success(res);
+
+    return res;
+  });
+}
+
+function* checkUserLogin(action: AnyAction) {
+  const { form, success, error } = action.payload;
+
+  const data = JSON.stringify({
+    LoginForm: form,
+  });
 
   yield api
-    .post<any>(`/account/api/authorization/login`, JSON.stringify(postData))
-    .then((response) => {
-      callback();
-      return response;
+    .post<any>(appData.routes["account:authorization_api:check-login"], data)
+    .then((res) => {
+      res.errors ? error(res.errors) : success(res);
+
+      return res;
     });
 }
 
@@ -47,6 +63,7 @@ function* logout(action: AnyAction) {
 function* authorizationActionWatcher(): SagaIterator {
   yield takeLatest("ACCOUNT_REGISTER", register);
   yield takeLatest("ACCOUNT_LOGIN", login);
+  yield takeLatest("ACCOUNT_CHECK_USER_LOGIN", checkUserLogin);
   yield takeLatest("ACCOUNT_LOGOUT", logout);
 }
 

@@ -16,6 +16,12 @@ return [
     ],
 
     [
+        'route' => '/check-login',
+        'target' => [AccountAuthorizationApi::class, 'checkLogin'],
+        'name' => 'check-login',
+    ],
+
+    [
         'route' => '/logout',
         'target' => [AccountAuthorizationApi::class, 'logout'],
         'name' => 'logout',

@@ -41,22 +41,46 @@ class AccountAuthorizationApi extends FrontendController
              */
             $user = UserModel::objects()->filter(['email' => $attributes['login']])->get();
 
-            if ($user) {
-                $user->login($attributes['password']);
-            }
-            else {
+            if (!$user) {
                 $form->addError('login', 'User with that email or phone not found');
             }
 
+            if (!$user->login($attributes['password'])) {
+                $form->addError('password', 'Password is incorrect');
+            }
+
             if ($form->hasErrors()) {
-                $this->jsonResponse($form->getErrors(), 401);
+                $this->jsonResponse(["errors" => $form->getErrors()]);
                 return;
             }
 
             $this->jsonResponse($user->toArray());
         }
         else {
-            $this->jsonResponse($form->getErrors());
+            $this->jsonResponse(["errors" => $form->getErrors()]);
+        }
+    }
+
+    public function checkLogin()
+    {
+        $json = json_decode(file_get_contents('php://input'), true);
+        $form = (new LoginForm)->populate($json);
+        $form->isValid();
+
+        if (!isset($form->getErrors()['login'])) {
+            $email = $form->getAttributes()["login"];
+            $user = UserModel::objects()->filter(["email" => $email])->get();
+
+            if (!$user) {
+                $form->addError('login', "User not found");
+                $this->jsonResponse(["errors" => $form->getErrors()]);
+                return;
+            }
+
+            $this->jsonResponse($user->toArray());
+        }
+        else {
+            $this->jsonResponse(["errors" => $form->getErrors()]);
         }
     }
 

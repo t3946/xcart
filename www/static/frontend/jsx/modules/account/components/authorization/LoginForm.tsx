@@ -1,141 +1,153 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { FormInput } from "../shared/FormInput";
 import classnames from "classnames";
-import { loginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
+import {
+  checkUserLoginAction,
+  loginAction,
+} from "../../../../redux/actions/account-actions/AutorizationActions";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { Form as RBForm } from "react-bootstrap";
+import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
 
 const LoginForm: React.FC<any> = (props: any) => {
+  const history = useHistory();
   const INPUT_LOGIN_MODE = 0;
   const INPUT_PASSWORD_MODE = 1;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
+  const [userLogin, setUserLogin] = React.useState("");
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
 
-  const initialValues = {
-    login: "vendor@s3stores.com",
-    password: "123qwe",
-  };
+  function loginInputTemplate(handleChange, values, touched, errors) {
+    const Form = RBForm;
 
-  const validationSchema = yup.object().shape({
-    login: yup.string().required("Login is a required field"),
-    password: yup
-      .string()
-      .required("Password is a required field")
-      .min(6, "Password must be at least 6 characters")
-      .max(32, "Password must be at most 32 characters"),
-  });
-
-  const FormInputClasses = {
-    group: ["login-from_input-group"],
-    label: ["login-from_label"],
-  };
-
-  const formRef = React.useRef();
-
-  function loginInputTemplate(handleChange, value) {
     if (mode === INPUT_LOGIN_MODE) {
       return (
-        <React.Fragment>
-          <FormInput
-            label={"Email or mobile phone number"}
-            name={"login"}
-            handleChange={handleChange}
-            classes={FormInputClasses}
-            value={value}
+        <Form.Group controlId="LoginFormLogin">
+          <Form.Label className={"form-input-label"}>Email or mobile phone number</Form.Label>
+
+          <Form.Control
+            type="text"
+            name="login"
+            value={values.login}
+            onChange={handleChange}
+            className={"form-input"}
+            isInvalid={errors.login}
           />
-          <ErrorMessage
-            className={"login-form-error"}
-            name="name"
-            component="div"
-          />
-          <a href="#" className={"login-form-info common-link"}>
-            Forgot your email?
-          </a>
-        </React.Fragment>
+
+          <Form.Control.Feedback type="invalid">
+            {errors.login}
+          </Form.Control.Feedback>
+        </Form.Group>
       );
     }
   }
 
-  function passwordInputTemplate(handleChange, value) {
-    function backToLoginInput(e) {
-      e.preventDefault();
-
-      setMode(INPUT_LOGIN_MODE);
-    }
+  function passwordInputTemplate(handleChange, values, touched, errors) {
+    const Form = RBForm;
 
     if (mode === INPUT_PASSWORD_MODE) {
       return (
-        <React.Fragment>
-          <p
-            className={
-              "login-form-info d-flex justify-content-between mt-3 mb-3"
-            }
-          >
-            <span>{initialValues.login}</span>
-            <a href="#" onClick={backToLoginInput} className="common-link">
-              Change
+        <Form.Group controlId="LoginFormPassword">
+          <Form.Label className="d-flex justify-content-between align-items-center">
+            <span className={"form-input-label"}>Password</span>
+
+            <a href="#" className="common-link auth-form-info">
+              Forgot your password?
             </a>
-          </p>
-          <FormInput
-            label={"Password"}
-            name={"password"}
-            type={"password"}
-            errorMessage={"Passwords must be at least 6 characters"}
-            handleChange={handleChange}
-            classes={FormInputClasses}
-            value={value}
-          />
-          <ErrorMessage
-            className={"login-form-error"}
+          </Form.Label>
+
+          <Form.Control
+            type="password"
             name="password"
-            component="div"
+            value={values.password}
+            onChange={handleChange}
+            className={"form-input form-input__password"}
+            isInvalid={errors.password}
           />
-        </React.Fragment>
+
+          <Form.Control.Feedback type="invalid">
+            {errors.password}
+          </Form.Control.Feedback>
+        </Form.Group>
       );
     }
   }
 
   function buttonTemplate() {
-    const text = mode === INPUT_LOGIN_MODE ? "continue" : "sing in";
-    const type = mode === INPUT_LOGIN_MODE ? "button" : "submit";
-
-    function click(e) {
-      if (mode === INPUT_LOGIN_MODE) {
-        setMode(INPUT_PASSWORD_MODE);
-        e.preventDefault();
-      }
-    }
+    const text = mode === INPUT_LOGIN_MODE ? "continue" : "sign-in";
 
     return (
-      <button
-        type={type}
-        className="form-button login-form_submit-button"
-        onClick={click}
-      >
+      <button type="submit" className="form-button login-form_submit-button">
         {text}
       </button>
     );
   }
 
-  function submit(values) {
-    const data = {
-      "LoginForm[login]": values["login"],
-      "LoginForm[password]": values["password"],
-    };
+  function submit(values, actions) {
+    if (mode === INPUT_LOGIN_MODE) {
+      dispatch(
+        checkUserLoginAction({
+          form: { login: values.login },
 
-    dispatch(
-      loginAction({
-        form: { login: "vendor@s3stores.com", password: "123qwe" },
-        callback: function () {
-          console.log("callback");
-        },
-      })
-    );
+          success() {
+            setMode(INPUT_PASSWORD_MODE);
+            setUserLogin(values.login);
+          },
+
+          error(err) {
+            actions.setErrors({ login: err.login[0] });
+          },
+        })
+      );
+    } else {
+      dispatch(
+        loginAction({
+          form: { login: userLogin, password: values.password },
+
+          success(res) {
+            dispatch(userSetAction(res));
+            history.push(appData.routes["account:index"]);
+          },
+
+          error(err) {
+            actions.setErrors({ password: err.password[0] });
+          },
+        })
+      );
+    }
+  }
+
+  function getInitValues() {
+    if (mode === INPUT_LOGIN_MODE) {
+      return {
+        login: userLogin,
+      };
+    } else {
+      return {
+        password: "",
+      };
+    }
+  }
+
+  function getValidationSchema() {
+    if (mode === INPUT_LOGIN_MODE) {
+      return yup.object().shape({
+        login: yup.string().required("Login is a required field"),
+      });
+    } else {
+      return yup.object().shape({
+        password: yup
+          .string()
+          .required("Password is a required field")
+          .min(6, "Password must be at least 6 characters")
+          .max(32, "Password must be at most 32 characters"),
+      });
+    }
   }
 
   return (
@@ -144,58 +156,78 @@ const LoginForm: React.FC<any> = (props: any) => {
       {user && <Redirect to="/account/" />}
 
       <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={(e) => submit(e)}
-        ref={formRef}
+        initialValues={getInitValues()}
+        validationSchema={getValidationSchema()}
+        onSubmit={submit}
+        ref={React.useRef()}
       >
-        {({ isSubmitting, handleChange, values }) => (
-          <Form>
-            {loginInputTemplate(handleChange, values["login"])}
+        {({ isSubmitting, handleChange, values, touched, errors }) => {
+          return (
+            <Form>
+              {loginInputTemplate(handleChange, values, touched, errors)}
 
-            {passwordInputTemplate(handleChange, values["password"])}
+              {mode === INPUT_PASSWORD_MODE && (
+                <p
+                  className={
+                    "auth-form-info d-flex justify-content-between mt-3 mb-3"
+                  }
+                >
+                  <span>{userLogin}</span>
 
-            <p className={"login-form-info"}>
-              By continuing, you agree to S3 Stores Inc{" "}
-              <a href="#" className="common-link">
-                Conditions of Use
-              </a>{" "}
-              and{" "}
-              <a href="#" className="common-link">
-                Privacy Notice
-              </a>
-              .
-            </p>
-
-            <p className={"login-form-info"}>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowHelpInfo(!showHelpInfo);
-                }}
-                className={classnames("link-arrow common-link", {
-                  "link-arrow__to-top": showHelpInfo,
-                })}
-              >
-                Need help?
-              </a>
-              {showHelpInfo && (
-                <div>
-                  <a href="#" className="common-link">
-                    Forgot your password?
+                  <a
+                    href="#"
+                    onClick={() => setMode(INPUT_LOGIN_MODE)}
+                    className="common-link"
+                  >
+                    Change
                   </a>
-                  <br />
-                  <a href="#" className="common-link">
-                    Other issues with Sign-In
-                  </a>
-                </div>
+                </p>
               )}
-            </p>
 
-            {buttonTemplate()}
-          </Form>
-        )}
+              {passwordInputTemplate(handleChange, values, touched, errors)}
+
+              <p className={"auth-form-info"}>
+                By continuing, you agree to S3 Stores Inc{" "}
+                <a href="#" className="common-link">
+                  Conditions of Use
+                </a>{" "}
+                and{" "}
+                <a href="#" className="common-link">
+                  Privacy Notice
+                </a>
+                .
+              </p>
+
+              <p className={"auth-form-info"}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowHelpInfo(!showHelpInfo);
+                  }}
+                  className={classnames("link-arrow common-link", {
+                    "link-arrow__to-top": showHelpInfo,
+                  })}
+                >
+                  Need help?
+                </a>
+                {showHelpInfo && (
+                  <div>
+                    <a href="#" className="common-link">
+                      Forgot your password?
+                    </a>
+                    <br />
+                    <a href="#" className="common-link">
+                      Other issues with Sign-In
+                    </a>
+                  </div>
+                )}
+              </p>
+
+              {buttonTemplate()}
+            </Form>
+          );
+        }}
       </Formik>
 
       <div className="form-divider form-divider__with-content login-form_divider">
@@ -203,7 +235,7 @@ const LoginForm: React.FC<any> = (props: any) => {
       </div>
 
       <NavLink
-        to="/account/register/"
+        to="/account/register"
         exact={true}
         className="form-button form-button__outline common-link"
       >

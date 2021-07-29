@@ -3,6 +3,11 @@ export const register = (payload: any): any => ({
   payload,
 });
 
+export const checkUserLoginAction = (payload: any): any => ({
+  type: "ACCOUNT_CHECK_USER_LOGIN",
+  payload,
+});
+
 export const loginAction = (payload: any): any => ({
   type: "ACCOUNT_LOGIN",
   payload,
