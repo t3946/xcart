@@ -8,6 +8,7 @@ import accountRootSaga from "../sagas/account-sagas/MainSaga";
 import accountSharedReducer from "../reduсers/account/SharedReduсer";
 import WalletReducer from "../reduсers/account/WalletReducer";
 import MenuReducer from "../reduсers/account/MenuReducer";
+import UserReducer from "../reduсers/account/UserReduсer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -17,6 +18,7 @@ export const accountStore: Store<AccountStoreDto> = createStore(
     main: accountSharedReducer,
     wallet: WalletReducer,
     mobileMenu: MenuReducer,
+    user: UserReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

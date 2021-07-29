@@ -22,3 +22,9 @@ export const accountMenuInitialValue = {
   isMobileMenuVisible: false,
   isTabletMenuVisible: false,
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const appData = window.appData;
+
+export const accountUserInitialValue = appData.user || null;
