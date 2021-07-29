@@ -23,8 +23,8 @@ class ProductImageModel extends Model
             'image_id' => AutoField::class,
             'path' => [
                 'class' => ImageField::class,
-                'adapterName' => 'local',
-                //'uploadTo' => '%Y-%m-%d',
+                'adapterName' => 's3',
+                'uploadTo' => '%Y-%m-%d',
                 'sizes' => [
                     'thumb' => [
                         174,

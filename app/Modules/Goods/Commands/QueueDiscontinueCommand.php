@@ -33,7 +33,7 @@ class QueueDiscontinueCommand extends Command
                     'manufacturerid' => $dx->manufacturerid,
                     'sites__storefrontid' => $data['storefront']
                 ])
-                ->exclude(['productcode__in' => $data['active_sku']])
+                ->exclude(['productcode__in' => $data['active_sku'] ?? []])
                 ->update(['forsale' => 'N']);
 
             $feed->update([
@@ -45,7 +45,7 @@ class QueueDiscontinueCommand extends Command
                 'products_in_feed' => $data['products_in_feed']
             ]);
 
-            echo "Discontinued {$data['dx_code']}: $dis_count products";
+            echo "Discontinued {$data['dx_code']}: $dis_count products\n";
 
             $message->ack();
         }

@@ -143,7 +143,7 @@ return array_replace_recursive([
                ],
                's3' => [
                    'class' => S3Adapter::class,
-                   'bucket' => 's3-feeds',
+                   'bucket' => 's3-product-images',
                    'client' => new S3Client(
                        [
                            'credentials' => [

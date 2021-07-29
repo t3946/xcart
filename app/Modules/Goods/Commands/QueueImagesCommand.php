@@ -22,6 +22,8 @@ class QueueImagesCommand extends Command
 
     public function consume(AMQPMessage $message): void
     {
+        /** @var ProductModel $product */
+
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
                 $images = [];

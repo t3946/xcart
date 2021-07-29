@@ -344,7 +344,8 @@ class ImageField extends FileField
         $path = $this->getNameHasher()->resolveUploadPath(
             $this->getFilesystem(),
             $this->getUploadTo(),
-            $file->getFilename()
+            $file->getFilename(),
+            'jpg'
         );
 
         $this->_original = $this->getImagine()->load($contents);
