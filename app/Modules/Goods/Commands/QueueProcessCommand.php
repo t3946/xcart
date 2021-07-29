@@ -49,7 +49,6 @@ class QueueProcessCommand extends Command
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
                 } else {
                     echo "Empty site for product {$data['productcode']}\n";
-                    $message->ack();
                     return;
                 }
 
@@ -58,7 +57,6 @@ class QueueProcessCommand extends Command
                     $product_code = $data['productcode'];
                     if (!$product_code) {
                         echo "Empty productcode, skip product\n";
-                        $message->ack();
                         return;
                     }
                     [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
