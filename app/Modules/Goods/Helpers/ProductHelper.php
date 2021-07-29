@@ -399,7 +399,7 @@ class ProductHelper
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $model->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] === 'Y') ? 'cdn.' : 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.' : 'www.';
         $domain = $site->getBaseDomain();
         $domain = '//' . $pref . $domain;
 
@@ -467,7 +467,7 @@ class ProductHelper
             }
 
             [$filterModel] = FilterModel::objects()->getOrCreate(
-                ['f_name' => $f_name, 'storefrontid' => $site->storefront_id]
+                ['f_name' => $f_name, 'storefrontid' => $site->storefrontid]
             );
 
             if (!is_array($fv_name_arr)) {
@@ -513,7 +513,7 @@ class ProductHelper
             BrandStorefrontModel::objects()->getOrCreate(
                 [
                     'brandid' => $brand->brandid,
-                    'sfid' => $site->storefront_id,
+                    'sfid' => $site->storefrontid,
                 ]
             );
 
@@ -521,6 +521,10 @@ class ProductHelper
                 $brand = $brand->parent;
             }
             $model->brand = $brand;
+
+            if ($model && $model->forsale === 'Y') {
+                $model->forsale = $brand->avail;
+            }
         }
     }
 }

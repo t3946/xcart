@@ -103,6 +103,10 @@ class DistributorModel extends Model
                 'default' => '',
                 'null' => false
             ],
+            'code' => [
+                'class' => CharField::class,
+                'null' => false
+            ],
             'manufact_text_displayed' => [
                 'class' => CharField::class,
                 'default' => '',

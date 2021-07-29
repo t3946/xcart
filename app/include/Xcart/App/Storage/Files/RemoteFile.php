@@ -3,33 +3,39 @@
 namespace Xcart\App\Storage\Files;
 
 use Exception;
+use GuzzleHttp\Client;
 
 /**
  * Class RemoteFile.
  */
 class RemoteFile extends ResourceFile
 {
+    private Client $client;
+
     public function __construct($url, $name = null, $tempDir = null)
     {
+        $this->client = new Client(['verify' => false, 'timeout' => 10]);
+
         if (!$this->urlExists($url)) {
-            throw new Exception("File {$url} not found");
+            throw new Exception("File not found");
         }
 
         $name = $name ?: basename(strtok($url, '?'));
-        parent::__construct(file_get_contents($url), $name);
+        parent::__construct($this->client->get($url, ['http_errors' => false])->getBody()->getContents(), $name);
     }
 
     public function urlExists($url)
     {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $res = $this->client->head($url, ['http_errors' => false]);
 
-        return $code == 200;
+        $code = $res->getStatusCode();
+
+        if ($code === 200) {
+            return true;
+        }
+        if ($code === 404) {
+            return false;
+        }
+        throw new Exception($res->getReasonPhrase());
     }
 }

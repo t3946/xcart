@@ -106,6 +106,7 @@ class SupplierFeedHelper
 
     /**
      * @param ProductModel $model
+     * @deprecated
      */
     public static function getVideos(ProductModel $model): void
     {
@@ -279,6 +280,7 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @param array $data
      * @throws Exception
+     * @deprecated
      */
     public static function feedFiles($model, $data): void
     {

@@ -149,7 +149,7 @@ class FileField extends CharField
      */
     public function delete()
     {
-        return $this->getFilesystem()->delete($this->value);
+        return $this->getFilesystem()->delete($this->getValue());
     }
 
     public function get()

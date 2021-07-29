@@ -196,6 +196,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => FilterValueModel::class,
                 'through' => FilterProductModel::class,
             ],
+            'detail_images' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ProductImageModel::class,
+                'through' => ProductImagesModel::class,
+            ],
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageDModel::class,
