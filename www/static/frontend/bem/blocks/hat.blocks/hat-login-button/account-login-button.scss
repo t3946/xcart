@@ -10,12 +10,16 @@
     transition: all 0.15s ease-out;
 
     &:hover, {
-        background: #1579b4;
+        background: #0f75b0;
     }
 
     &:hover, &:focus {
         color: #ffffff;
         text-decoration: none;
+    }
+
+    &:active {
+        background: #0768a0;
     }
 
     &:before {
