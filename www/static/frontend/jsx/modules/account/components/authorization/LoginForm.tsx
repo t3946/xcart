@@ -4,8 +4,9 @@ import * as yup from "yup";
 import { FormInput } from "../shared/FormInput";
 import classnames from "classnames";
 import { loginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, Redirect } from "react-router-dom";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const LoginForm: React.FC<any> = (props: any) => {
   const INPUT_LOGIN_MODE = 0;
@@ -13,6 +14,7 @@ const LoginForm: React.FC<any> = (props: any) => {
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((e: StoreDto) => e.user);
 
   const initialValues = {
     login: "vendor@s3stores.com",
@@ -139,6 +141,7 @@ const LoginForm: React.FC<any> = (props: any) => {
   return (
     <div className="account-login-form">
       <h1 className="account-form-header">Sign-In</h1>
+      {user && <Redirect to="/account/" />}
 
       <Formik
         initialValues={initialValues}
