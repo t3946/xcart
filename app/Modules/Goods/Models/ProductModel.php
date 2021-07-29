@@ -989,11 +989,6 @@ class ProductModel extends Model implements ICartItem
         parent::setAttribute($name, $value);
     }
 
-    public function beforeSave($owner, $isNew)
-    {
-       $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
-    }
-
     public function getSlugPart(): string
     {
         return $this->createSlug($this->product);
