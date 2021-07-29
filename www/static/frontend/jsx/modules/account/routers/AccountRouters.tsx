@@ -39,6 +39,8 @@ export const AccountRouters = () => {
     "col",
     {
       "account-page-right-column": user !== null,
+      "d-flex": user === null,
+      "justify-content-center": user === null,
     },
   ];
 
@@ -49,7 +51,8 @@ export const AccountRouters = () => {
         <HatNavigation />
         <HatSearchLine />
         <MobileMenu />
-        <BreadCrumbs />
+
+        {user && <BreadCrumbs />}
 
         <div className={"container"}>
           <div className="row">

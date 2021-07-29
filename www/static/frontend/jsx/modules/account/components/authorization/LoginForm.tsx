@@ -139,7 +139,7 @@ const LoginForm: React.FC<any> = (props: any) => {
   }
 
   return (
-    <div className="account-login-form">
+    <div className="account-login-form account_auth-form">
       <h1 className="account-form-header">Sign-In</h1>
       {user && <Redirect to="/account/" />}
 

@@ -64,7 +64,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
   }
 
   return (
-    <div className="account-login-form">
+    <div className="account-login-form account_auth-form">
       {user && <Redirect to="/account/" />}
       <h1 className="account-form-header">Create account</h1>
 
