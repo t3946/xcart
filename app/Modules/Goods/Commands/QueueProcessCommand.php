@@ -47,9 +47,6 @@ class QueueProcessCommand extends Command
 
                 if ($data['storefront'] !== null) {
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
-                } else {
-                    echo "Empty site for product {$data['productcode']}\n";
-                    return;
                 }
 
                 if (!$data['is_group']) {
@@ -60,23 +57,33 @@ class QueueProcessCommand extends Command
                         return;
                     }
                     [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
+                    if ($is_new && !$site) {
+                        echo "Empty site for product {$data['productcode']}\n";
+                        return;
+                    }
                     if ($product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
-                        $product->sites = [$site];
-                        ProductHelper::setProductBrand($product, $data['brand_name'], $site);
+                        if ($site) {
+                            $product->sites = [$site];
+                            ProductHelper::setProductBrand($product, $data['brand_name'], $site);
+                            if ($is_new) {
+                                $product->setMainCategory($site->base_category);
+                            }
+                        }
                         $changed = SupplierFeedHelper::getChanged($product);
                         $product->save();
                         ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
-                        if ($is_new) {
-                            $product->setMainCategory($site->base_category);
-                        }
                         SupplierFeedHelper::feedFiles($product, $data);
                         SupplierFeedHelper::getVideos($product);
-                        print($is_new ? "Adding" : '' . "$product_code\n");
+                        print(($is_new ? 'Adding' : '') . "$product->productcode\n");
                         print_r($changed);
                     }
                 } elseif ($data['is_group']) {
                     //Group product process
+                    if (!$site) {
+                        echo "Empty site for group product\n";
+                        return;
+                    }
                     $group_code = self::getGroupProductCode($data);
                     /** @var ProductModel $group_product */
                     [$group_product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $group_code]);
@@ -102,7 +109,7 @@ class QueueProcessCommand extends Command
                             echo "Empty child productcode of {$group_code} group, skip product\n";
                             continue;
                         }
-                        [$product] = ProductModel::objects()->getOrNew(['productcode' => $child_code]);
+                        [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $child_code]);
                         if ($product->hash_product !== $child['hash_product'] || $product->group_root != $group_product->productid) {
                             $child += ['manufacturerid' => $group_product['manufacturerid']];
                             $product->setAttributes($child);
@@ -118,7 +125,7 @@ class QueueProcessCommand extends Command
                             }
                             SupplierFeedHelper::feedFiles($product, $data);
                             SupplierFeedHelper::getVideos($product);
-                            print($is_new ? "Adding" : '' . "$child_code\n");
+                            print(($is_new ? 'Adding' : '') . "$product->productcode\n");
                             print_r($changed);
                         }
                     }
