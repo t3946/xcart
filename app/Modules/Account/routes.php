@@ -3,6 +3,7 @@
 use Modules\Account\Controllers\AccountController;
 
 return [
+    //страницы
     [
         'route' => '/',
         'target' => [AccountController::class, 'actionIndex'],
@@ -19,7 +20,6 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'wallet'
     ],
-
 
     [
         'route' => '/register/',
@@ -40,6 +40,13 @@ return [
     ],
 
     [
+        'route' => '/dashboard',
+        'target' => [AccountController::class, 'dashboard'],
+        'namespace' => 'dashboard'
+    ],
+
+    //api
+    [
         'route' => '/api/authorization',
         'path' => 'Modules.Account.routes.routes_authorization_api',
         'namespace' => 'authorization_api'
@@ -50,11 +57,13 @@ return [
         'path' => 'Modules.Account.routes.routes_addresses_api',
         'namespace' => 'addresses_api'
     ],
+
     [
         'route' => '/api',
         'path' => 'Modules.Account.routes.routes_api',
         'namespace' => 'api'
     ],
+
     [
         'route' => '/api/wallet',
         'path' => 'Modules.Account.routes.routes_wallet_api',

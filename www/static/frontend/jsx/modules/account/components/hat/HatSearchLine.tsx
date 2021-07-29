@@ -100,7 +100,7 @@ const HatSearchLine = (props) => {
         >
           <div className="container">
             <div className="row">
-              <div className="account-page-left-column">
+              <div className="account-page-left-column col">
                 <div className="category-menu-container">
                   <div className="category-menu">
                     <span className="menu-icon"></span>

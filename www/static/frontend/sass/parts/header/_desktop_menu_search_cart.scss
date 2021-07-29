@@ -338,7 +338,6 @@ $search_input_large_height: rem-calc(36);
       color: $white;
       font-size: rem-calc(14);
       font-weight: 800;
-      margin-left: 5px;
       text-transform: uppercase;
     }
 
@@ -416,8 +415,15 @@ $search_input_large_height: rem-calc(36);
       &:hover {
         .submenu-container {
           display: block;
-          //width: 350%;
-          width: calc(300% + 90px);
+
+          @include breakpoint(lg up) {
+            width: rem-calc(740);
+          }
+
+          @include breakpoint(xl up) {
+            width: rem-calc(1060);
+          }
+
           left: 100%;
         }
       }
