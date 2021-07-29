@@ -71,11 +71,15 @@ export const AccountRouters = () => {
                     component={Transactions}
                   />
 
-                  <Route exact path="/account/login/" component={LoginForm} />
+                  <Route
+                    exact
+                    path={appData.routes["account:login"]}
+                    component={LoginForm}
+                  />
 
                   <Route
                     exact
-                    path="/account/register/"
+                    path={appData.routes["account:register"]}
                     component={RegisterForm}
                   />
                 </Switch>
