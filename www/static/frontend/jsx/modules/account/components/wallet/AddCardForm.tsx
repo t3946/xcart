@@ -27,7 +27,7 @@ export const AddCardForm = () => {
   };
 
   return (
-    <Grid xs={7} className="add-address-form-container">
+    <Grid xs={7} className="billing-address-container">
       <Formik
         initialValues={initialAddCardFormValue}
         onSubmit={handleSubmit}

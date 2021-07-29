@@ -149,7 +149,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 container
                 justify="flex-end"
               >
-                <Grid xs={6}>
+                <Grid className="add-address-input">
                   <FormCheckBox
                     label={"Make this my default address"}
                     value={values.is_default}
@@ -159,7 +159,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 </Grid>
               </Grid>
               <Grid container justify="flex-end">
-                <Grid xs={6}>
+                <Grid className="add-address-input">
                   <Button
                     disabled={addressFormLoading}
                     type={"submit"}
