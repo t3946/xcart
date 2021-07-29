@@ -6,7 +6,7 @@ export const DropZoneFileForm: React.FC<any> = ({onChange, value}) => {
 
     return (<Dropzone maxFiles={1}
                       onDrop={(fileInfo) => onChange(fileInfo[0])}
-                      accept='.xlsx, .xls'
+                      accept='.xlsx, .xls, .csv'
                       name='image'
                       noDrag={true}
     >

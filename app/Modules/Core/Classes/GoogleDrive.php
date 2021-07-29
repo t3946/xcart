@@ -45,15 +45,21 @@ class GoogleDrive {
 
     public function getFolderByName(array $list_content, string $folder_name)
     {
-        return array_filter($list_content, function ($element) use ($folder_name) {
-            return $element['name'] === $folder_name && $element['type'] === 'dir';
-        })[0];
+        foreach ($list_content as $attr) {
+            if ($attr['name'] === $folder_name && $attr['type'] === 'dir') {
+                return $attr;
+            }
+        }
+        return null;
     }
     public function getFileByName(array $list_content, string $file_name)
     {
-        return array_filter($list_content, function ($element) use ($file_name) {
-            return $element['name'] === $file_name && $element['type'] === 'file';
-        })[0];
+        foreach ($list_content as $attr) {
+            if ($attr['name'] === $file_name && $attr['type'] === 'file') {
+                return $attr;
+            }
+        }
+        return null;
     }
     public function uploadFile(string $name_folder, $file)
     {

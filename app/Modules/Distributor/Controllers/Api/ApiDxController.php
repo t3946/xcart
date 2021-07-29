@@ -223,10 +223,16 @@ class ApiDxController extends Controller
 
         $reader = IOFactory::createReaderForFile($file['tmp_name']);
         $excel_obj = $reader->load($file['tmp_name']);
-        $ar_excel = $excel_obj->getActiveSheet()->toArray();
+        $ar_save = [];
+        for ($i=0; $i<$excel_obj->getSheetCount(); $i++) {
+            foreach ($excel_obj->getSheet($i)->toArray() as $column)
+            {
+                $ar_save[] = $column;
+            }
+        }
 
         foreach ($select as $key => $field) {
-            $value = array_column($ar_excel, $key);
+            $value = array_column($ar_save, $key);
             $ar_update_field[$field] = $value;
         }
         try {
@@ -234,21 +240,29 @@ class ApiDxController extends Controller
                 $ar_field = [];
                 $product = ProductModel::objects()->get(['productcode' => "{$dx->code}-{$code}"]);
                 if ($product) {
-                    foreach ($ar_update_field as $field => $items) {
-                        if ($field === 'productcode') {
-                            $ar_field[$field] = "{$dx->code}-{$items[$key]}";
-                        } else {
-                            $ar_field[$field] = $items[$key];
+                    foreach ($ar_update_field as $field => $items)
+                    {
+                        switch ($field)
+                        {
+                            case 'productcode':
+                                $ar_field[$field] = "{$dx->code}-{$items[$key]}";
+                                break;
+                            case 'images':
+                                $ar_field[$field] = [$items[$key]];
+                                break;
+                            default:
+                                $ar_field[$field] = $items[$key];
+                                break;
                         }
                         $product->$field = $ar_field[$field];
                     }
-                    /*                    Xcart::app()->queue->send('products', json_encode($ar_field));*/
-                    if ($product->save()) {
-                        $result['countUpdate']++;
-                    }
+                    Xcart::app()->queue->send('products', json_encode($ar_field));
+                    $result['countUpdate']++;
                 }
             }
             $result['status'] = true;
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
         } finally {
             $id_list = ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx->pk])->valuesList(['id'], true);
             if ($id_list) {

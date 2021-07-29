@@ -3,18 +3,23 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import {Grid, Tab, Tabs, Typography} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import LoadingDialog from "@admin/modules/distributor/components/dialog-table-price/loading";
 import {ApiService} from "@admin/modules/shared/services/api.service";
 import {SnackbarContext} from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import {TabsTable} from "@admin/modules/distributor/components/dialog-table-price/tabs-table";
 
-
-function DialogTablePrice({state, arTable, file, dx, arTableName}) {
+interface IDialogTablePrice{
+    state: {get: any, set: any},
+    arTable: [],
+    file: object,
+    dx: number,
+    arTableName: []
+}
+export const DialogTablePrice: React.FC<IDialogTablePrice> = ({state, arTable, file, dx, arTableName}) => {
     const api = new ApiService();
     const [select, setSelect] = useState({});
     const [loading, setLoading] = useState(true);
-    const [column, setColumn] = useState([]);
     const {showSnackbar} = useContext(SnackbarContext);
 
     const onSaveHandler = () => {
@@ -73,5 +78,3 @@ function DialogTablePrice({state, arTable, file, dx, arTableName}) {
         </Dialog>
     );
 }
-
-export default DialogTablePrice

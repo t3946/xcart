@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import {FormPrice} from "@admin/modules/distributor/components/form-price/form-price";
+import {SnackBar} from "@admin/modules/shared/components/snack-bar/SnackBar";
 
 (() => {
     const elem: HTMLElement = document.querySelector(".dx-price");
@@ -8,7 +9,9 @@ import {FormPrice} from "@admin/modules/distributor/components/form-price/form-p
     if (!elem) return;
 
     ReactDOM.render(
-        <FormPrice distributorId={elem?.dataset?.id}/>,
+        <SnackBar>
+            <FormPrice distributorId={elem?.dataset?.id}/>
+        </SnackBar>,
         elem
     );
 })();
