@@ -33,10 +33,15 @@ function* login(action: AnyAction) {
     });
 }
 
-function* logout() {
+function* logout(action: AnyAction) {
+  const { callback } = action.payload;
+
   yield api
-    .get<any>(`/account/api/authorization/logout`)
-    .then((response) => response);
+    .get<any>(appData.routes["account:authorization_api:logout"])
+    .then((response) => {
+      callback();
+      return response;
+    });
 }
 
 function* authorizationActionWatcher(): SagaIterator {

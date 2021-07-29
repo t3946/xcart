@@ -1,8 +1,14 @@
 import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
+import { logoutAction } from "../../../../redux/actions/account-actions/AutorizationActions";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { userClearAction } from "../../../../redux/actions/account-actions/UserActions";
 
 const SideBarMenu = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
@@ -30,6 +36,18 @@ const SideBarMenu = () => {
     { to: "/account/rewards", label: "Rewards" },
   ];
 
+  function logout() {
+    dispatch(
+      logoutAction({
+        form: { login: "vendor@s3stores.com", password: "123qwe" },
+        callback: function () {
+          dispatch(userClearAction());
+          history.push("/account/login");
+        },
+      })
+    );
+  }
+
   return (
     <div className="sidebar-menu-wrapper">
       {menuItems.map((e) => {
@@ -51,6 +69,15 @@ const SideBarMenu = () => {
           />
         );
       })}
+
+      <button
+        className={
+          "form-button form-button__outline logout-button pt-2.5 pb-2.5 mt-4 rounded-0 w-100"
+        }
+        onClick={logout}
+      >
+        log out
+      </button>
     </div>
   );
 };

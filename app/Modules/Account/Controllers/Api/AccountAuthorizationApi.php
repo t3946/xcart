@@ -63,5 +63,7 @@ class AccountAuthorizationApi extends FrontendController
     public function logout()
     {
         Xcart::app()->auth->logout(false);
+
+        $this->jsonResponse([]);
     }
 }

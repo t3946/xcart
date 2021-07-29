@@ -8,7 +8,7 @@ export const loginAction = (payload: any): any => ({
   payload,
 });
 
-export const removeAddress = (payload: any): any => ({
+export const logoutAction = (payload: any): any => ({
   type: "ACCOUNT_LOGOUT",
   payload,
 });
