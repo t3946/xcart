@@ -4,10 +4,12 @@ import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setTabletMenuIsVisible } from "../../../../redux/actions/account-actions/MenuActions";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const TabletLoginButton: React.FC<any> = () => {
   const dispatch = useDispatch();
-  const text = appData.user ? appData.user.name : "log in";
+  const user = useSelector((e: StoreDto) => e.user);
+  const text = user ? user.name : "log in";
 
   const CustomToggle = React.forwardRef((props, ref) => {
     const { onClick } = props;
