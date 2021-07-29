@@ -60,12 +60,24 @@ class AccountController extends FrontendController
 
     public function register()
     {
-        $this->actionIndex();
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user->getIsGuest()) {
+            $this->getRequest()->redirect("account:index");
+        } else {
+            $this->actionIndex();
+        }
     }
 
     public function login()
     {
-        $this->actionIndex();
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user->getIsGuest()) {
+            $this->getRequest()->redirect("account:index");
+        } else {
+            $this->actionIndex();
+        }
     }
 
     public function logout()
