@@ -134,18 +134,6 @@ const LoginForm: React.FC<any> = (props: any) => {
         },
       })
     );
-
-    // $.ajax({
-    //   method: "POST",
-    //   data,
-    //   url: "/account/login/",
-    //   success() {
-    //     document.location.href = "/account/";
-    //   },
-    //   error(err) {
-    //     console.log(err);
-    //   },
-    // });
   }
 
   return (
