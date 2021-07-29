@@ -2,16 +2,17 @@
     height: rem-calc(32);
     border: 1px solid #ffb500;
     color: #4a4949;
+    background-color: #ffffff;
 
-    &:active, &:focus {
-        color: #4a4949;
+    &:hover, &:focus {
+        background-color: #fffaef;
     }
 
-    &:hover {
+    &:active {
+        background-color: #fff3d7;
+    }
+
+    &:hover, &:active, &:focus {
         color: #000000;
-    }
-
-    &, &:hover, &:active, &:focus {
-        background: none;
     }
 }
