@@ -65,12 +65,14 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const indexTable = event.target.dataset.indexTable;
-    if (select[indexTable][event.target.id] && event.target.value === "") {
-      setSelect((prevState) => {
-        delete prevState[indexTable][event.target.id];
-        return { ...prevState };
-      });
-      return;
+    if (select[indexTable]) {
+      if (select[indexTable][event.target.id] && event.target.value === "") {
+        setSelect((prevState) => {
+          delete prevState[indexTable][event.target.id];
+          return { ...prevState };
+        });
+        return;
+      }
     }
     setSelect((prev) => ({
       ...prev,
