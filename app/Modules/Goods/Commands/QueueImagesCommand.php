@@ -4,6 +4,7 @@
 namespace Modules\Goods\Commands;
 
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -31,13 +32,21 @@ class QueueImagesCommand extends Command
                 try {
                     foreach ($data['images'] as $image_url) {
                         $file = new RemoteFile($image_url);
-                        [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $file->getHash()]);
+                        $hash =  $file->getHash();
+                        [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
                         if ($is_new) {
-                            $model->path = $file;
-                            $model->save();
-                            [$model->width, $model->height] = $model->path->getImageSizes();
-                            $model->save();
-                            $uploaded ++;
+                            try {
+                                $model->path = $file;
+                                $model->save();
+                                [$model->width, $model->height] = $model->path->getImageSizes();
+                                $model->save();
+                                $uploaded++;
+                            } catch (UniqueConstraintViolationException $exception) {
+                                //Duplicate image
+                                if ($exception->getCode() === 1062) {
+                                    $model = ProductImageModel::objects()->get(['hash' => $hash]);
+                                }
+                            }
                         }
                         $images[] = $model;
                     }
