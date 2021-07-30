@@ -27,7 +27,8 @@ class VrsHelperSitesModel extends Model
             ],
             'status' => [
                 'class' => CharField::class,
-                'field' => 'status'
+                'field' => 'status',
+                'default' => 'visited'
             ],
         ];
     }

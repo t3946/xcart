@@ -24,15 +24,13 @@ class VrsController extends Controller
   public function getSiteStatus(string $url): void
   {
       [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrNew(['domain' => $url]);
+
       $status = $is_new ? 'first-time' : $vrs->status;
-      if ($is_new) {
-          $vrs->status = 'visited';
-          $vrs->save();
-      }
 
       /** @var DistributorModel $dx */
       if ($dx = DistributorModel::objects()->filter(['url__contains' => $url])->limit(1)->get()) {
-          $status = $dx->avail ? 'active' : 'inactive';
+          $vrs->status = $status = $dx->avail ? 'active' : 'inactive';
+          $vrs->save();
       }
 
       $this->jsonResponse(['status' => $status]);
