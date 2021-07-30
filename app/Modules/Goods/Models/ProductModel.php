@@ -960,9 +960,9 @@ class ProductModel extends Model implements ICartItem
             if ($this->eta_date_lock) {
                 $value = $this->eta_date_mm_dd_yyyy;
             } else {
-                if ($value !== '') {
+                /*if ($value !== '') {
                     $value = strtotime($value);
-                }
+                }*/
             }
 
         }
