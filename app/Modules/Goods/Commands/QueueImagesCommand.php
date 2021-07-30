@@ -56,13 +56,26 @@ class QueueImagesCommand extends Command
                     return;
                 }
 
-                $product->detail_images = $images;
-                $product->save();
+                self::saveImages($product, $images);
 
                 $count = count($images);
                 echo "$product->productcode:  Uploaded: $uploaded, Total: $count \n";
             }
             $message->ack();
         }
+    }
+
+    private static function saveImages($product, $images): void
+    {
+        try {
+            $product->detail_images = $images;
+            $product->save();
+        } catch(Throwable $exception) {
+            echo "{$exception->getCode()} {$exception->getMessage()}\n";
+            echo "sleep 5 sec\n";
+            sleep(5);
+            self::saveImages($product, $images);
+        }
+
     }
 }
