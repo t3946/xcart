@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
 import classnames from "classnames";
 import {
@@ -9,8 +9,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { Form as RBForm } from "react-bootstrap";
+import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 
 const LoginForm: React.FC<any> = (props: any) => {
   const history = useHistory();
@@ -28,7 +30,9 @@ const LoginForm: React.FC<any> = (props: any) => {
     if (mode === INPUT_LOGIN_MODE) {
       return (
         <Form.Group controlId="LoginFormLogin">
-          <Form.Label className={"form-input-label"}>Email or mobile phone number</Form.Label>
+          <Form.Label className={"form-input-label"}>
+            Email or mobile phone number
+          </Form.Label>
 
           <Form.Control
             type="text"
@@ -78,11 +82,15 @@ const LoginForm: React.FC<any> = (props: any) => {
     }
   }
 
-  function buttonTemplate() {
+  function buttonTemplate(isSubmitting) {
     const text = mode === INPUT_LOGIN_MODE ? "continue" : "sign-in";
 
     return (
-      <button type="submit" className="form-button login-form_submit-button">
+      <button
+        type="submit"
+        className="form-button login-form_submit-button"
+        disabled={isSubmitting}
+      >
         {text}
       </button>
     );
@@ -102,12 +110,20 @@ const LoginForm: React.FC<any> = (props: any) => {
           error(err) {
             actions.setErrors({ login: err.login[0] });
           },
+
+          complete() {
+            actions.setSubmitting(false);
+          },
         })
       );
     } else {
       dispatch(
         loginAction({
-          form: { login: userLogin, password: values.password },
+          form: {
+            login: userLogin,
+            password: values.password,
+            remember_me: values.rememberMe,
+          },
 
           success(res) {
             dispatch(userSetAction(res));
@@ -116,6 +132,10 @@ const LoginForm: React.FC<any> = (props: any) => {
 
           error(err) {
             actions.setErrors({ password: err.password[0] });
+          },
+
+          complete() {
+            actions.setSubmitting(false);
           },
         })
       );
@@ -130,6 +150,7 @@ const LoginForm: React.FC<any> = (props: any) => {
     } else {
       return {
         password: "",
+        rememberMe: false,
       };
     }
   }
@@ -146,7 +167,78 @@ const LoginForm: React.FC<any> = (props: any) => {
           .required("Password is a required field")
           .min(6, "Password must be at least 6 characters")
           .max(32, "Password must be at most 32 characters"),
+        rememberMe: yup
+          .bool()
+          .required()
+          .oneOf([true], "Terms must be accepted"),
       });
+    }
+  }
+
+  function formFooterTemplate(handleChange, values) {
+    console.log(values);
+    if (mode === INPUT_LOGIN_MODE) {
+      return (
+        <>
+          <div className="form-divider form-divider__with-content login-form_divider">
+            <span className="form-divider-text">New to S3 Stores?</span>
+          </div>
+
+          <NavLink
+            to="/account/register"
+            exact={true}
+            className="form-button form-button__outline common-link"
+          >
+            Create your account
+          </NavLink>
+        </>
+      );
+    } else {
+      return (
+        <RBForm.Group className="mb-3">
+          <RBForm.Check
+            required
+            name="rememberMe"
+            onChange={handleChange}
+            id="rememberMe"
+            className={"form-checkbox"}
+          />
+
+          <RBForm.Label for={"rememberMe"} className={"checkbox-label"}>
+            <div className="auth-form-info">
+              Keep me signed in.{" "}
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip
+                    id="tooltip-details"
+                    className={"common-tooltip common-tooltip__login-form"}
+                  >
+                    <h2 className="common-tooltip-header">
+                      "Keep Me Signed In" Checkbox
+                    </h2>
+
+                    <p className={"text-align--left auth-form-info"}>
+                      Choosing "Keep me signed in" reduces the number of times
+                      you're asked to Sign-In on this device.
+                    </p>
+
+                    <p className={"text-align--left auth-form-info mb-0"}>
+                      To keep your account secure, use this option only on your
+                      personal devices.
+                    </p>
+                  </Tooltip>
+                }
+              >
+                <span className={"common-link"}>
+                  Details
+                  <FontAwesomeIcon className={"ml-1"} icon={faQuestionCircle} />
+                </span>
+              </OverlayTrigger>
+            </div>
+          </RBForm.Label>
+        </RBForm.Group>
+      );
     }
   }
 
@@ -186,61 +278,54 @@ const LoginForm: React.FC<any> = (props: any) => {
 
               {passwordInputTemplate(handleChange, values, touched, errors)}
 
-              <p className={"auth-form-info"}>
-                By continuing, you agree to S3 Stores Inc{" "}
-                <a href="#" className="common-link">
-                  Conditions of Use
-                </a>{" "}
-                and{" "}
-                <a href="#" className="common-link">
-                  Privacy Notice
-                </a>
-                .
-              </p>
+              {mode === INPUT_LOGIN_MODE && (
+                <p className={"auth-form-info"}>
+                  By continuing, you agree to S3 Stores Inc{" "}
+                  <a href="#" className="common-link">
+                    Conditions of Use
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="common-link">
+                    Privacy Notice
+                  </a>
+                  .
+                </p>
+              )}
 
-              <p className={"auth-form-info"}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowHelpInfo(!showHelpInfo);
-                  }}
-                  className={classnames("link-arrow common-link", {
-                    "link-arrow__to-top": showHelpInfo,
-                  })}
-                >
-                  Need help?
-                </a>
-                {showHelpInfo && (
-                  <div>
-                    <a href="#" className="common-link">
-                      Forgot your password?
-                    </a>
-                    <br />
-                    <a href="#" className="common-link">
-                      Other issues with Sign-In
-                    </a>
-                  </div>
-                )}
-              </p>
+              {mode === INPUT_LOGIN_MODE && (
+                <p className={"auth-form-info"}>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowHelpInfo(!showHelpInfo);
+                    }}
+                    className={classnames("link-arrow common-link", {
+                      "link-arrow__to-top": showHelpInfo,
+                    })}
+                  >
+                    Need help?
+                  </a>
+                  {showHelpInfo && (
+                    <div>
+                      <a href="#" className="common-link">
+                        Forgot your password?
+                      </a>
+                      <br />
+                      <a href="#" className="common-link">
+                        Other issues with Sign-In
+                      </a>
+                    </div>
+                  )}
+                </p>
+              )}
 
-              {buttonTemplate()}
+              {buttonTemplate(isSubmitting)}
+              {formFooterTemplate(handleChange, values)}
             </Form>
           );
         }}
       </Formik>
-
-      <div className="form-divider form-divider__with-content login-form_divider">
-        <span className="form-divider-text">New to S3 Stores?</span>
-      </div>
-
-      <NavLink
-        to="/account/register"
-        exact={true}
-        className="form-button form-button__outline common-link"
-      >
-        Create your account
-      </NavLink>
     </div>
   );
 };

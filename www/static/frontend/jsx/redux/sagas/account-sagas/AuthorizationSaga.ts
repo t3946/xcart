@@ -23,7 +23,7 @@ function* register(action: AnyAction) {
 }
 
 function* login(action: AnyAction) {
-  const { form, success, error } = action.payload;
+  const { form, success, error, complete } = action.payload;
 
   const data = JSON.stringify({
     LoginForm: form,
@@ -32,12 +32,14 @@ function* login(action: AnyAction) {
   yield api.post<any>(`/account/api/authorization/login`, data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
+    complete();
+
     return res;
   });
 }
 
 function* checkUserLogin(action: AnyAction) {
-  const { form, success, error } = action.payload;
+  const { form, success, error, complete } = action.payload;
 
   const data = JSON.stringify({
     LoginForm: form,
@@ -47,6 +49,8 @@ function* checkUserLogin(action: AnyAction) {
     .post<any>(appData.routes["account:authorization_api:check-login"], data)
     .then((res) => {
       res.errors ? error(res.errors) : success(res);
+
+      complete();
 
       return res;
     });
