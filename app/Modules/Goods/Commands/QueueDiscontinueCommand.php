@@ -36,7 +36,7 @@ class QueueDiscontinueCommand extends Command
                 ->exclude(['productcode__in' => $data['active_sku'] ?? []])
                 ->update(['forsale' => 'N']);
 
-            $feed->update([
+            $feed->setAttributes([
                 'process_time' => $data['process_time'],
                 'last_update_time' => time(),
                 'last_update_period' => time() - $feed->last_update_time,
@@ -44,6 +44,7 @@ class QueueDiscontinueCommand extends Command
                 'feed_source_date' => $data['feed_source_date'],
                 'products_in_feed' => $data['products_in_feed']
             ]);
+            $feed->save();
 
             echo "Discontinued {$data['dx_code']}: $dis_count products\n";
 
