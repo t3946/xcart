@@ -21,39 +21,21 @@ class VrsController extends Controller
     public int $iat = 1356999524;
     public int $nbf = 1357000000;
 
-  public function getSiteStatus(string $url)
+  public function getSiteStatus(string $url): void
   {
-   $thisSite = VrsHelperSitesModel::objects()->filter(['domain' => $url]);
+      [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrNew(['domain' => $url]);
+      $status = $is_new ? 'first-time' : $vrs->status;
+      if ($is_new) {
+          $vrs->status = 'visited';
+          $vrs->save();
+      }
 
-   $status = 'first-time';
+      /** @var DistributorModel $dx */
+      if ($dx = DistributorModel::objects()->filter(['url__contains' => $url])->limit(1)->get()) {
+          $status = $dx->avail ? 'active' : 'inactive';
+      }
 
-   if(!($thisSite->count() > 0))
-   {
-       $dx = [];
-       $status = 'visited';
-       foreach (  DistributorModel::objects()->asArray(true)->all() as $distributor)
-       {
-           if(str_contains($distributor['url'],$url ))
-           {
-               $dx = $distributor;
-           }
-       }
-       if($dx)
-       {
-           $status = 'inactive';
-           if($dx['avail'] === 'Y'){
-               $status = 'active';
-           }
-       }
-
-       VrsHelperSitesModel::objects()->getOrCreate(['domain'=>$url, 'status'=>$status]);
-       $this->jsonResponse(['status' => $status]);
-       return;
-   }
-
-
-
-        $this->jsonResponse(['status'=>$thisSite[0]['status']]);
+      $this->jsonResponse(['status' => $status]);
   }
 
   public function getMessageFromDomain(string $domain){
