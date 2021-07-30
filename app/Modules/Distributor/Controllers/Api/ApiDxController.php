@@ -8,6 +8,7 @@ use Cron\CronExpression;
 use DateInterval;
 use DateTime;
 use Modules\Core\Classes\GoogleDrive;
+use Modules\Core\Classes\SaveFilePrice;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\ColumnTableSaveModel;
@@ -18,6 +19,7 @@ use Modules\Sites\Models\SiteModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Base;
 
 class ApiDxController extends Controller
 {
@@ -60,6 +62,7 @@ class ApiDxController extends Controller
             ]);
         }
     }
+
     public function getDxInfoSfCode($code, $sfCode = null): void
     {
         if ($sfCode && $site = SiteModel::objects()->get(['code' => $sfCode])) {
@@ -217,73 +220,54 @@ class ApiDxController extends Controller
         $post = Xcart::app()->request->post;
         $select = json_decode($post->select, true);
         $file = $_FILES['file'];
-        $ar_update_field = [];
         $result = ['status' => false, 'countUpdate' => 0];
+        $search_by = json_decode($post->checkField, true);
         $dx = DistributorModel::objects()->get(['manufacturerid' => $post->dx]);
 
         $reader = IOFactory::createReaderForFile($file['tmp_name']);
         $excel_obj = $reader->load($file['tmp_name']);
         $ar_save = [];
-        for ($i=0; $i<$excel_obj->getSheetCount(); $i++) {
-            foreach ($excel_obj->getSheet($i)->toArray() as $column)
-            {
-                $ar_save[] = $column;
+        for ($i = 0; $i < $excel_obj->getSheetCount(); $i++) {
+            foreach ($excel_obj->getSheet($i)->toArray() as $column) {
+                $ar_save[$i][] = $column;
             }
         }
-
-        foreach ($select as $key => $field) {
-            $value = array_column($ar_save, $key);
-            $ar_update_field[$field] = $value;
-        }
-        try {
-            foreach ($ar_update_field['productcode'] as $key => $code) {
-                $ar_field = [];
-                $product = ProductModel::objects()->get(['productcode' => "{$dx->code}-{$code}"]);
-                if ($product) {
-                    foreach ($ar_update_field as $field => $items)
-                    {
-                        switch ($field)
-                        {
-                            case 'productcode':
-                                $ar_field[$field] = "{$dx->code}-{$items[$key]}";
-                                break;
-                            case 'images':
-                                $ar_field[$field] = [$items[$key]];
-                                break;
-                            default:
-                                $ar_field[$field] = $items[$key];
-                                break;
-                        }
-                        $product->$field = $ar_field[$field];
-                    }
-                    Xcart::app()->queue->send('products', json_encode($ar_field));
-                    $result['countUpdate']++;
+        if ($dx instanceof DistributorModel) {
+            $ob_save_price = new SaveFilePrice($dx, $search_by);
+            try {
+                $ob_save_price->collectField($select, $ar_save);
+                $ob_save_price->savePrice();
+                $ob_save_price->sendStats();
+                $result['status'] = true;
+                $result['countUpdate'] = $ob_save_price->count_update;
+            } catch (\Exception $exception) {
+                $result['error'] = $exception->getMessage();
+            } finally {
+                $id_list = ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx->pk])->valuesList(['id'], true);
+                if ($id_list) {
+                    ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
                 }
+                foreach ($select as $table_index => $fields) {
+                    foreach ($fields as $key => $field) {
+                        $column = new ColumnTableSaveModel();
+                        $column->num_column = $key;
+                        $column->option_name = $field;
+                        $column->manufacture = $dx;
+                        $column->num_table = $table_index;
+                        $column->save();
+                    }
+                }
+                $this->jsonResponse($result);
             }
-            $result['status'] = true;
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage());
-        } finally {
-            $id_list = ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx->pk])->valuesList(['id'], true);
-            if ($id_list) {
-                ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
-            }
-            foreach ($select as $index => $field) {
-                $column = new ColumnTableSaveModel();
-                $column->num_column = $index;
-                $column->option_name = $field;
-                $column->manufacture = $dx;
-                $column->save();
-            }
-            $this->jsonResponse($result);
         }
     }
+
     public function getColumnByDx(int $dx)
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];
         foreach (ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx_model->pk]) as $column) {
-            $ar_column[$column->num_column] = $column->option_name;
+            $ar_column[$column->num_table][$column->num_column] = $column->option_name;
         }
         $this->jsonResponse($ar_column);
     }

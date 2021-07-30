@@ -18,7 +18,7 @@ export const DropZoneFileForm: React.FC<any> = ({onChange, value}) => {
                         <Box mt={1}>
                             <Grid container justify='center'>
                                 <label htmlFor="contained-button-file">
-                                    <Button style={{backgroundColor: '#ffb400'}} variant="contained" color="primary" component="span">
+                                    <Button variant="contained" component="span">
                                         Select file
                                     </Button>
                                 </label>

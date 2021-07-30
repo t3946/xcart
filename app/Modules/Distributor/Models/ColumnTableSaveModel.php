@@ -31,6 +31,9 @@ class ColumnTableSaveModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
+            ],
+            'num_table' => [
+                'class' => IntField::class
             ]
         ];
     }
