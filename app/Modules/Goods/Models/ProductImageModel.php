@@ -24,7 +24,7 @@ class ProductImageModel extends Model
             'path' => [
                 'class' => ImageField::class,
                 'adapterName' => 's3',
-                'uploadTo' => '%Y-%m-%d',
+                'uploadTo' => 'images/%Y-%m-%d',
                 'sizes' => [
                     'thumb' => [
                         174,
