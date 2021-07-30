@@ -23,7 +23,7 @@ class VrsController extends Controller
 
   public function getSiteStatus(string $url): void
   {
-      [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrNew(['domain' => $url]);
+      [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrCreate(['domain' => $url]);
 
       $status = $is_new ? 'first-time' : $vrs->status;
 
