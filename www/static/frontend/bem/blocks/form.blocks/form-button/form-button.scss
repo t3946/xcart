@@ -35,4 +35,8 @@
         box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
         background-color: #d59701;
     }
+
+    &:disabled {
+        opacity: 0.6;
+    }
 }

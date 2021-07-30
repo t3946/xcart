@@ -15,6 +15,18 @@ class AccountAuthorizationApi extends FrontendController
         $json = json_decode(file_get_contents('php://input'), true);
         $form = (new RegistrationForm)->populate($json);
 
+        $email = $form->getAttributes()["email"];
+        $user = UserModel::objects()->filter(["email" => $email])->get();
+
+        if ($user) {
+            $this->jsonResponse(
+                [
+                    "errors" => ["email" => "This Email already registered"],
+                ]
+            );
+            return;
+        }
+
         if ($form->isValid()) {
             /**
              * @var UserModel $user
@@ -23,9 +35,10 @@ class AccountAuthorizationApi extends FrontendController
             $user->register();
             $user = UserModel::objects()->filter(['email' => $user->email])->get();
             $user->authenticate();
+            $this->jsonResponse($user->toArray());
         }
         else {
-            $this->jsonResponse($form->getErrors(), 400);
+            $this->jsonResponse(["errors" => $form->getErrors()]);
         }
     }
 

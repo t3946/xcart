@@ -1,4 +1,4 @@
-export const register = (payload: any): any => ({
+export const registerAction = (payload: any): any => ({
   type: "ACCOUNT_REGISTER",
   payload,
 });

@@ -6,16 +6,19 @@ import { SagaIterator } from "redux-saga";
 const api = new ApiService();
 
 function* register(action: AnyAction) {
-  const { form, callback } = action.payload;
+  const { form, success, error, complete } = action.payload;
   const postData = {
     RegistrationForm: form,
   };
 
   yield api
     .post<any>(`/account/api/authorization/register`, JSON.stringify(postData))
-    .then((response) => {
-      callback();
-      return response;
+    .then((res) => {
+      res.errors ? error(res.errors) : success(res);
+
+      complete(res);
+
+      return res;
     });
 }
 
