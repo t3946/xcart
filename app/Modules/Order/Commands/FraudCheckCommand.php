@@ -8,6 +8,7 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -79,6 +80,10 @@ class FraudCheckCommand extends Command
             $new_fraud_status = $overallFraudScore > $config['Overall_FC_threshold_for_Clear_status'] ?
                 FraudStatusModel::objects()->get(['code' => $config['Threshold_status']]) :
                 FraudStatusModel::objects()->get(['code' => $config['below_threshold_status']]);
+
+            if ($order->groups->filter(['manufacturer__expertise' => true])->count()) {
+                $new_fraud_status = FraudStatusModel::objects()->get(['code' => 'E']);
+            }
 
             /** @var FraudStatusModel $current_fraud_status */
             $current_fraud_status = $order->fraud_status_model;
