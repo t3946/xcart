@@ -93,7 +93,7 @@ const LoginFormInputPassword = function (props) {
                   value={values.password}
                   onChange={handleChange}
                   className={"form-input form-input__password"}
-                  isInvalid={errors.password}
+                  isInvalid={!!errors.password}
                 />
 
                 <RBForm.Control.Feedback type="invalid">

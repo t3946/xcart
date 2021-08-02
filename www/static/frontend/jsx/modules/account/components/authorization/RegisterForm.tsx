@@ -84,7 +84,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
                 value={values.name}
                 onChange={handleChange}
                 className={"form-input"}
-                isInvalid={touched.name && errors.name}
+                isInvalid={!!touched.name && !!errors.name}
                 isValid={touched.name && !errors.name}
               />
 
@@ -102,7 +102,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
                 value={values.email}
                 onChange={handleChange}
                 className={"form-input"}
-                isInvalid={touched.email && errors.email}
+                isInvalid={!!touched.email && !!errors.email}
                 isValid={touched.email && !errors.email}
               />
 
@@ -122,7 +122,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
                 value={values.password}
                 onChange={handleChange}
                 className={"form-input form-input__password"}
-                isInvalid={touched.password && errors.password}
+                isInvalid={touched.password && !!errors.password}
                 isValid={touched.password && !errors.password}
                 placeholder={"At least 6 characters "}
               />
@@ -149,7 +149,9 @@ const RegisterForm: React.FC<any> = (props: any) => {
                 value={values.password_confirm}
                 onChange={handleChange}
                 className={"form-input form-input__password"}
-                isInvalid={touched.password_confirm && errors.password_confirm}
+                isInvalid={
+                  touched.password_confirm && !!errors.password_confirm
+                }
                 isValid={touched.password_confirm && !errors.password_confirm}
               />
 
@@ -180,7 +182,9 @@ const RegisterForm: React.FC<any> = (props: any) => {
 
             <div className="d-sm-none">
               <div className="form-divider form-divider__with-content auth-form_divider">
-                <span className="form-divider-text">Already have an account?</span>
+                <span className="form-divider-text">
+                  Already have an account?
+                </span>
               </div>
 
               <NavLink
@@ -195,7 +199,9 @@ const RegisterForm: React.FC<any> = (props: any) => {
             <div className="d-none d-sm-block">
               <div className="form-divider auth-form_divider mb-0" />
 
-              <p className={"auth-form-info register-form_already-have-account"}>
+              <p
+                className={"auth-form-info register-form_already-have-account"}
+              >
                 Already have an account?{" "}
                 <NavLink
                   to={appData.routes["account:login"]}
@@ -206,7 +212,6 @@ const RegisterForm: React.FC<any> = (props: any) => {
                 </NavLink>
               </p>
             </div>
-
           </Form>
         )}
       </Formik>
