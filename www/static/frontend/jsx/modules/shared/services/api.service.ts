@@ -11,6 +11,7 @@ export class ApiService {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     });
+
     return response.json();
   }
 
@@ -27,6 +28,7 @@ export class ApiService {
       referrerPolicy: "no-referrer",
       body: data,
     });
+
     return response.json();
   }
 }

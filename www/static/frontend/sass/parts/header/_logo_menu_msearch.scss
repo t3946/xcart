@@ -99,7 +99,7 @@ header {
 
               &:before {
                 content: '';
-                background: url("../images/stop-corona_sm.png") no-repeat;
+                background: url("/dist/images/stop-corona_sm.png") no-repeat;
                 position:relative;
                 width: rem-calc(46);
                 height: rem-calc(46);
@@ -114,7 +114,7 @@ header {
     }
 
     .mobile__search-btn {
-      background: url("../images/icons/header/magnifier_thin.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/magnifier_thin.svg") no-repeat;
       width: rem-calc(25);
       height: rem-calc(25);
 
@@ -125,7 +125,7 @@ header {
     }
 
     .mobile__call-btn {
-      background: url("../images/icons/header/phone-call1.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/phone-call1.svg") no-repeat;
       width: rem-calc(25);
       height: rem-calc(25);
 
@@ -136,7 +136,7 @@ header {
     }
 
     .mobile__cart {
-      background: url("../images/icons/header/cart.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/cart.svg") no-repeat;
       position: relative;
       width: rem-calc(33);
       height: rem-calc(25);

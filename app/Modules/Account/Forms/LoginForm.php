@@ -5,6 +5,7 @@ namespace Modules\Account\Forms;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Modules\Core\Forms\FrontendModelForm;
+use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\EmailField;
 use Xcart\App\Validation\EmailValidator;
 use Xcart\App\Validation\MaxLengthValidator;
@@ -30,6 +31,9 @@ class LoginForm extends FrontendModelForm
                     new MinLengthValidator(6),
                     new MaxLengthValidator(32),
                 ]
+            ],
+            'remember_me' => [
+                'class' => CheckboxField::class,
             ],
         ];
     }

@@ -7,6 +7,10 @@ const UserReducer = (
   action: AnyAction
 ): UserStoreDto => {
   switch (action.type) {
+    case "USER_CLEAR":
+      return null;
+    case "USER_SET":
+      return action.user;
     default:
       return state;
   }

@@ -1,0 +1,28 @@
+.common-tooltip {
+    &.show {
+        opacity: 1;
+    }
+
+    .tooltip-inner {
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 rem-calc(2) rem-calc(3) rgba(0, 0, 0, 0.13);
+        border: rem-calc(1) solid #cdcdcd;
+    }
+
+    .arrow {
+        &:before {
+            border-top-color: #cdcdcd;
+        }
+
+        &:after {
+            position: absolute;
+            top: rem-calc(-2);
+            content: "";
+            border-width: .4rem .4rem 0;
+            border-style: solid;
+            border-color: transparent;
+            border-top-color: #ffffff;
+        }
+    }
+}

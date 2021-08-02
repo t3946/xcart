@@ -22,19 +22,19 @@ return [
     ],
 
     [
-        'route' => '/register/',
+        'route' => '/register',
         'target' => [AccountController::class, 'register'],
         'name' => 'register',
     ],
 
     [
-        'route' => '/login/',
+        'route' => '/login',
         'target' => [AccountController::class, 'login'],
         'name' => 'login',
     ],
 
     [
-        'route' => '/logout/',
+        'route' => '/logout',
         'target' => [AccountController::class, 'logout'],
         'name' => 'logout',
     ],

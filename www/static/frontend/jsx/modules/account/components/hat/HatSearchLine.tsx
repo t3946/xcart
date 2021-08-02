@@ -5,8 +5,12 @@ import MiniCartInfo from "../../../../modules/mini-cart/components/info";
 import storeCart from "../../../../redux/stores/StoreCart";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const HatSearchLine = (props) => {
+  const user = useSelector((e: StoreDto) => e.user);
+
   function miniCartTemplate() {
     const labels = {
       lng_checkout: "Checkout",
@@ -71,7 +75,7 @@ const HatSearchLine = (props) => {
   }
 
   function accountButton() {
-    if (!appData.user) {
+    if (!user) {
       return (
         <NavLink to="/account/login" exact={true} className="hat-login-button">
           log in
@@ -85,7 +89,7 @@ const HatSearchLine = (props) => {
         exact={true}
         className="hat-login-button"
       >
-        {appData.user.name}
+        {user.name}
       </NavLink>
     );
   }
@@ -114,7 +118,9 @@ const HatSearchLine = (props) => {
                 />
               </div>
 
-              <div className="col account-page-right-column">{searchTemplate()}</div>
+              <div className="col account-page-right-column">
+                {searchTemplate()}
+              </div>
 
               <div className="large-2 show-for-large hat-login-button-column">
                 {accountButton()}

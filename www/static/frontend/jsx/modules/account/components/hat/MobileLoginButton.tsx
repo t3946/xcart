@@ -6,12 +6,14 @@ import {
 } from "../../../../redux/actions/account-actions/MenuActions";
 import { useDispatch, useSelector } from "react-redux";
 import useCLickListener from "../../hooks/useClickListener";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const MobileTemplate: React.FC<any> = () => {
+  const user = useSelector((e: StoreDto) => e.user);
   const classes = ["navigation-login-button d-flex align-items-center"];
   const dispatch = useDispatch();
 
-  if (appData.user) {
+  if (user) {
     classes.push("navigation-login-button__logged");
   } else {
     classes.push("navigation-login-button__not-logged");

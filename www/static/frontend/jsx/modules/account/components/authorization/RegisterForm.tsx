@@ -1,17 +1,24 @@
 import React from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { FormInput } from "../shared/FormInput";
-import $ from "jquery";
-import { NavLink } from "react-router-dom";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import { useDispatch, useSelector } from "react-redux";
+import { Form as RBForm } from "react-bootstrap";
+import { registerAction } from "../../../../redux/actions/account-actions/AutorizationActions";
+import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
 
 const RegisterForm: React.FC<any> = (props: any) => {
+  const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
     name: "",
     email: "",
     password: "",
     password_confirm: "",
   };
+  const formRef = React.useRef();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is a required field"),
@@ -28,40 +35,34 @@ const RegisterForm: React.FC<any> = (props: any) => {
       .string()
       .required("Password confirm required")
       .min(6, "Password must be at least 6 characters")
-      .max(32, "Password must be at most 32 characters"),
+      .max(32, "Password must be at most 32 characters")
+      .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
 
-  const FormInputClasses = {
-    group: ["login-from_input-group"],
-    label: ["login-from_label"],
-  };
+  function submit(values, actions) {
+    dispatch(
+      registerAction({
+        form: values,
 
-  const formRef = React.useRef();
+        success(res) {
+          dispatch(userSetAction(res));
+          history.push(appData.routes["account:index"]);
+        },
 
-  function submit() {
-    const data = {
-      "RegistrationForm[name]": formRef.current.base["name"].value,
-      "RegistrationForm[email]": formRef.current.base["email"].value,
-      "RegistrationForm[password]": formRef.current.base["password"].value,
-      "RegistrationForm[password_confirm]":
-        formRef.current.base["password_confirm"].value,
-    };
+        error(err) {
+          actions.setErrors(err);
+        },
 
-    $.ajax({
-      method: "POST",
-      data,
-      url: "/account/register/",
-      success() {
-        document.location.href = "/account/";
-      },
-      error(err) {
-        console.log(err);
-      },
-    });
+        complete() {
+          actions.setSubmitting(false);
+        },
+      })
+    );
   }
 
   return (
-    <div className="account-login-form">
+    <div className="account-auth-form account_auth-form">
+      {user && <Redirect to="/account/" />}
       <h1 className="account-form-header">Create account</h1>
 
       <Formik
@@ -70,62 +71,92 @@ const RegisterForm: React.FC<any> = (props: any) => {
         onSubmit={submit}
         ref={formRef}
       >
-        {({ isSubmitting, handleChange }) => (
+        {({ isSubmitting, values, errors, touched, handleChange }) => (
           <Form>
-            <FormInput
-              label={"Your name"}
-              name={"name"}
-              handleChange={handleChange}
-              classes={FormInputClasses}
-              autocomplete={"off"}
-            />
-            <ErrorMessage
-              className={"login-form-error"}
-              name="name"
-              component="div"
-            />
+            <RBForm.Group controlId="RegisterFormName">
+              <RBForm.Label className={"form-input-label"}>
+                Your Name
+              </RBForm.Label>
 
-            <FormInput
-              label={"Email"}
-              name={"email"}
-              handleChange={handleChange}
-              classes={FormInputClasses}
-              autocomplete={"off"}
-            />
-            <ErrorMessage
-              className={"login-form-error"}
-              name="email"
-              component="div"
-            />
+              <RBForm.Control
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                className={"form-input"}
+                isInvalid={touched.name && errors.name}
+                isValid={touched.name && !errors.name}
+              />
 
-            <FormInput
-              label={"Password"}
-              name={"password"}
-              type={"password"}
-              caption={"Passwords must be at least 6 characters"}
-              handleChange={handleChange}
-              classes={FormInputClasses}
-              autocomplete={"off"}
-            />
-            <ErrorMessage
-              className={"login-form-error"}
-              name="password"
-              component="div"
-            />
+              <RBForm.Control.Feedback type="invalid">
+                {errors.name}
+              </RBForm.Control.Feedback>
+            </RBForm.Group>
 
-            <FormInput
-              label={"Re-Enter password"}
-              name={"password_confirm"}
-              type={"password"}
-              handleChange={handleChange}
-              classes={FormInputClasses}
-              autocomplete={"off"}
-            />
-            <ErrorMessage
-              className={"login-form-error"}
-              name="password_confirm"
-              component="div"
-            />
+            <RBForm.Group controlId="RegisterFormEmail">
+              <RBForm.Label className={"form-input-label"}>Email</RBForm.Label>
+
+              <RBForm.Control
+                type="text"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                className={"form-input"}
+                isInvalid={touched.email && errors.email}
+                isValid={touched.email && !errors.email}
+              />
+
+              <RBForm.Control.Feedback type="invalid">
+                {errors.email}
+              </RBForm.Control.Feedback>
+            </RBForm.Group>
+
+            <RBForm.Group controlId="RegisterFormPassword">
+              <RBForm.Label className={"form-input-label"}>
+                Password
+              </RBForm.Label>
+
+              <RBForm.Control
+                type="password"
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+                className={"form-input form-input__password"}
+                isInvalid={touched.password && errors.password}
+                isValid={touched.password && !errors.password}
+                placeholder={"At least 6 characters "}
+              />
+
+              <RBForm.Control.Feedback type="invalid">
+                {errors.password}
+              </RBForm.Control.Feedback>
+
+              {!(touched.password && errors.password) && (
+                <RBForm.Text className={"auth-form-info_input-caption"}>
+                  {"Passwords must be at least 6 characters"}
+                </RBForm.Text>
+              )}
+            </RBForm.Group>
+
+            <RBForm.Group controlId="RegisterForm">
+              <RBForm.Label className={"form-input-label"}>
+                Re-Enter password
+              </RBForm.Label>
+
+              <RBForm.Control
+                type="password"
+                name="password_confirm"
+                value={values.password_confirm}
+                onChange={handleChange}
+                className={"form-input form-input__password"}
+                isInvalid={touched.password_confirm && errors.password_confirm}
+                isValid={touched.password_confirm && !errors.password_confirm}
+              />
+
+              <RBForm.Control.Feedback type="invalid">
+                {errors.password_confirm}
+              </RBForm.Control.Feedback>
+            </RBForm.Group>
 
             <button
               type="submit"
@@ -135,7 +166,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
               Create your account
             </button>
 
-            <p className={"margin-0 login-form-info"}>
+            <p className={"margin-0 auth-form-info"}>
               By continuing, you agree to S3 Stores Inc{" "}
               <a href="#" className="common-link">
                 Conditions of Use
@@ -147,16 +178,35 @@ const RegisterForm: React.FC<any> = (props: any) => {
               .
             </p>
 
-            <div className="form-divider login-form_divider" />
+            <div className="d-sm-none">
+              <div className="form-divider form-divider__with-content auth-form_divider">
+                <span className="form-divider-text">Already have an account?</span>
+              </div>
 
-            <p className={"margin-0 login-form-info"}>
-              Already have an account?{" "}
               <NavLink
-                to="/account/login/"
-                className="common-link"
+                to={appData.routes["account:login"]}
                 exact={true}
-              >Sign-In</NavLink>
-            </p>
+                className="form-button form-button__outline common-link"
+              >
+                sign in
+              </NavLink>
+            </div>
+
+            <div className="d-none d-sm-block">
+              <div className="form-divider auth-form_divider mb-0" />
+
+              <p className={"auth-form-info register-form_already-have-account"}>
+                Already have an account?{" "}
+                <NavLink
+                  to={appData.routes["account:login"]}
+                  className="common-link"
+                  exact={true}
+                >
+                  Sign-In
+                </NavLink>
+              </p>
+            </div>
+
           </Form>
         )}
       </Formik>

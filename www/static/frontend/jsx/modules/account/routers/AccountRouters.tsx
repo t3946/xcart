@@ -18,9 +18,12 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import classNames from "classnames";
 
 export const AccountRouters = () => {
   const dispatch = useDispatch();
+  const user = useSelector((e: StoreDto) => e.user);
 
   const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
@@ -30,6 +33,22 @@ export const AccountRouters = () => {
     }
   }, []);
 
+  const leftColumnClasses = [
+    "col account-page-left-column d-none",
+    {
+      "d-lg-block": user !== null,
+    },
+  ];
+
+  const rightColumnClasses = [
+    "col",
+    {
+      "account-page-right-column": user !== null,
+      "d-flex": user === null,
+      "justify-content-center": user === null,
+    },
+  ];
+
   return (
     <Provider store={accountStore as any}>
       <BrowserRouter>
@@ -37,16 +56,17 @@ export const AccountRouters = () => {
         <HatNavigation />
         <HatSearchLine />
         <MobileMenu />
-        <BreadCrumbs />
+
+        {user && <BreadCrumbs />}
+
         <div className={"container"}>
           <div className="row">
-            <div className="col account-page-left-column d-none d-lg-block">
+            <div className={classNames(leftColumnClasses)}>
               <SideBarMenu />
             </div>
 
-            <div className="col account-page-right-column">
-              <div className="content-container">
-                <Switch>
+            <div className={classNames(rightColumnClasses)}>
+              <Switch>
                   <Route
                     exact
                     path="/account/addresses"
@@ -74,15 +94,18 @@ export const AccountRouters = () => {
                     component={Transactions}
                   />
 
-                  <Route exact path="/account/login/" component={LoginForm} />
+                  <Route
+                    exact
+                    path={appData.routes["account:login"]}
+                    component={LoginForm}
+                  />
 
                   <Route
                     exact
-                    path="/account/register/"
+                    path={appData.routes["account:register"]}
                     component={RegisterForm}
                   />
                 </Switch>
-              </div>
             </div>
           </div>
         </div>

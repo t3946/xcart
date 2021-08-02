@@ -16,7 +16,7 @@ return [
     'Goods',
     'Order',
     'Shipping',
-    'User'   => ['sessionTime' => 15552000],
+    'User'   => ['EXP_TIME_S' => 180 * 24 * 60 * 60],
     'Sites'  => ['defaultStore' => 'AR'],
     'Amazon',
     'Order',

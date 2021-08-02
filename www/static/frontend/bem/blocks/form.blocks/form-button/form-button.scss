@@ -8,7 +8,7 @@
     font-size: rem-calc(16);
     font-weight: 900;
     border: none;
-    transition: all .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: all .15s ease-in-out;
     font-family: 'Lato', sans-serif;
     text-transform: uppercase;
     width: 100%;
@@ -19,7 +19,7 @@
     &:focus {
         background-color: #ffb400;
         color: #000000;
-        box-shadow: 0 0 0 0 rgba(242, 180, 5, 0.34);
+        box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
         text-decoration: none;
     }
 
@@ -34,5 +34,9 @@
         border-color: #f2b405;
         box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
         background-color: #d59701;
+    }
+
+    &:disabled {
+        opacity: 0.6;
     }
 }

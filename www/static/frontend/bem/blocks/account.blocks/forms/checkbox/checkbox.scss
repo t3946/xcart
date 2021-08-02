@@ -9,24 +9,26 @@
     display: flex;
   }
 
-  // Box.
   & + .checkbox-label:before {
     content: '';
-    margin-right: 10px;
+    margin-right: rem-calc(10);
     display: inline-block;
     vertical-align: text-top;
-    width: 30px;
-    height: 30px;
+    width: rem-calc(30);
+    height: rem-calc(30);
     background: white;
     border: 1px solid #C4C4C4;
+    transition: all 0.15s ease-out;
   }
 
   &:hover + .checkbox-label:before {
-    background: #e3e3e3;
+    background: #fffaef;
   }
 
   &:focus + .checkbox-label:before {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    background: #fff3d7;
+    border-color: #f2b405;
+    box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
   }
 
   &:disabled + .checkbox-label {
@@ -43,16 +45,16 @@
   &:checked + .checkbox-label:after {
     content: '';
     position: absolute;
-    left: 8px;
-    top: 8px;
+    left: rem-calc(8);
+    top: rem-calc(8);
     background: url("/static/frontend/dist/images/icons/account/checkbox-arrow.svg") no-repeat center / cover;
-    width: 15px;
-    height: 15px;
+    width: rem-calc(15);
+    height: rem-calc(15);
   }
 }
 
 .label-text{
   font-weight: 700;
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: rem-calc(14);
+  margin-top: rem-calc(5);
 }

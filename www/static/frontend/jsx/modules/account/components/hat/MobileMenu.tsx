@@ -4,9 +4,11 @@ import classNames from "classnames";
 import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { NavLink } from "react-router-dom";
 import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const MobileMenu: React.FC<any> = () => {
   const dispatch = useDispatch();
+  const user = useSelector((e: StoreDto) => e.user);
   const isVisible = useSelector((e: any) => e.mobileMenu.isMobileMenuVisible);
 
   const classes = {
@@ -25,7 +27,7 @@ const MobileMenu: React.FC<any> = () => {
   };
 
   function signInButton() {
-    if (appData.user) {
+    if (user) {
       return (
         <NavLink
           to="/account/dashboard"
@@ -33,7 +35,7 @@ const MobileMenu: React.FC<any> = () => {
           exact={true}
           onClick={() => dispatch(hideAllMenu())}
         >
-          <b>{appData.user.name}</b>
+          <b>{user.name}</b>
         </NavLink>
       );
     }
@@ -41,17 +43,11 @@ const MobileMenu: React.FC<any> = () => {
     return (
       <NavLink
         to="/account/login/"
-        className="common-link text-decoration-none"
+        className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4"
         exact={true}
+        onClick={() => dispatch(hideAllMenu())}
       >
-        <a
-          className={
-            "form-button form-button__outline w-auto pl-4 pr-4 common-link"
-          }
-          onClick={() => dispatch(hideAllMenu())}
-        >
-          sign in
-        </a>
+        sign in
       </NavLink>
     );
   }
