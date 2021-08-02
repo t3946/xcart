@@ -45,6 +45,11 @@ class ProductImageModel extends Model
                 'class' => CharField::class,
                 'default' => ''
             ],
+            'link' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ],
             'width' => [
                 'class' => IntField::class,
                 'default' => null,
