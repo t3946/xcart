@@ -70,7 +70,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                   value={values.login}
                   onChange={handleChange}
                   className={"form-input"}
-                  isInvalid={errors.login}
+                  isInvalid={!!errors.login}
                 />
 
                 <RBForm.Control.Feedback type="invalid">

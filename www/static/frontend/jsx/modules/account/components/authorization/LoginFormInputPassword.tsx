@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 const LoginFormInputPassword = function (props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const inputRef = React.createRef();
+  const inputRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -93,7 +93,7 @@ const LoginFormInputPassword = function (props) {
                   value={values.password}
                   onChange={handleChange}
                   className={"form-input form-input__password"}
-                  isInvalid={errors.password}
+                  isInvalid={!!errors.password}
                 />
 
                 <RBForm.Control.Feedback type="invalid">
