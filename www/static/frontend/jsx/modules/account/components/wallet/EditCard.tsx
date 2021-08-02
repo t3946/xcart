@@ -9,25 +9,59 @@ import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 
 export const EditCard = () => {
+  const monthsValues = fillMassToSelect(1, 12);
+
+  const yearsValues = fillMassToSelect(
+    new Date().getFullYear(),
+    new Date().getFullYear() + 10
+  );
   const context = useContext(WalletCardsDialogContext);
   return (
     <div className="billing-address-container">
-      <Grid container justify="space-between" className="edit-card-top-part">
-        <Grid xs={4} container direction="column">
-          <div className="wallet-card-content-label label-card-block">
-            Payment method
+      <div className="edit-card-content">
+        <div>
+          <Grid
+            container
+            justify="space-between"
+            className="edit-card-top-part"
+          >
+            <Grid container direction="column">
+              <div className="wallet-card-content-label label-card-block">
+                Payment method
+              </div>
+              <div className="wallet-card-name wallet-card-name-header full-width">
+                <img
+                  className="wallet-card-img"
+                  src={`/static/frontend/dist/images/icons/account/cards/visa.svg`}
+                />
+                <div>Mastercard ending in 1234</div>
+              </div>
+            </Grid>
+          </Grid>
+          <Grid alignContent={"center"} justify="space-between" container>
+            <div className="wallet-card-content-label label-card-block">
+              Billing address
+            </div>
+            <div
+              className="change-address-btn"
+              onClick={() =>
+                context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
+              }
+            >
+              Change
+            </div>
+          </Grid>
+          <div className={"address-block"}>
+            <div> 27 Joseph St. </div>
+            <div> Chatham, ON, N7L 3G4 </div>
+            <div> Canada</div>
+            <div> (763) 635-4364</div>
           </div>
-          <div className="wallet-card-name wallet-card-name-header full-width">
-            <img
-              className="wallet-card-img"
-              src={`/static/frontend/dist/images/icons/account/cards/visa.svg`}
-            />
-            <div>Mastercard ending in 1234</div>
-          </div>
-        </Grid>
-        <Grid xs={8}>
+        </div>
+        <div>
           <Formik
             initialValues={initialAddAddressFormValue}
             onSubmit={null}
@@ -43,8 +77,8 @@ export const EditCard = () => {
             }) => {
               return (
                 <Form encType="multipart/form-data">
-                  <Grid justify="space-between" container>
-                    <Grid xs={3}>
+                  <div className="edit-card-from-container">
+                    <div>
                       <div className="wallet-card-content-label">
                         Card number
                       </div>
@@ -57,73 +91,63 @@ export const EditCard = () => {
                         touched={touched.full_name}
                         handleBlur={handleBlur}
                         classes={{
-                          input: ["full-width", "edit-card-input"],
+                          input: [
+                            "full-width",
+                            "edit-card-input",
+                            "edit-card-input-card-name",
+                          ],
                         }}
                       />
-                    </Grid>
+                    </div>
 
-                    <Grid xs={7}>
+                    <div>
                       <div className="wallet-card-content-label">
                         Expiration date
                       </div>
-                      <Grid container>
-                        <Grid xs={5}>
+                      <div className="edit-card-expirations-container">
+                        <div className="edit-card-select-expirations edit-card-select-expirations-months">
                           <FormSelect
-                            items={[]}
+                            items={monthsValues}
                             value={values.state}
                             classes={{
-                              group: "add-card-select-expiration-month",
+                              group:
+                                "add-card-select-expiration-month, full-width",
                               input: "edit-card-input",
                             }}
                             onClick={(value) => setFieldValue("state", value)}
                             name={"state"}
+                            id="edit-card-expiration-month"
                           />
-                        </Grid>
-                        <Grid xs={4}>
+                        </div>
+                        <div className="edit-card-select-expirations">
                           <FormSelect
-                            items={[]}
+                            items={yearsValues}
                             classes={{
-                              group: "add-card-select-expiration-month",
+                              group:
+                                "add-card-select-expiration-month, full-width",
                               input: "edit-card-input",
                             }}
                             value={values.state}
                             onClick={(value) => setFieldValue("state", value)}
                             name={"state"}
+                            id="edit-card-expiration-year"
                           />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </Form>
               );
             }}
           </Formik>
-        </Grid>
-      </Grid>
-      <Grid alignContent={"center"} justify="space-between" container xs={3}>
-        <div className="wallet-card-content-label label-card-block">
-          Billing address
         </div>
-        <div
-          className="change-address-btn"
-          onClick={() =>
-            context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
-          }
-        >
-          Change
-        </div>
-      </Grid>
-      <div className={"address-block"}>
-        <div> 27 Joseph St. </div>
-        <div> Chatham, ON, N7L 3G4 </div>
-        <div> Canada</div>
-        <div> (763) 635-4364</div>
       </div>
-      <Grid container xs={3} justify="space-between">
+
+      <div className="edit-card-btns">
         <Button
           onClick={() => context.handleClose()}
           type={"submit"}
-          className="account-submit-btn account-submit-btn-outline auto-width-button"
+          className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
         >
           Cancel
         </Button>
@@ -133,7 +157,7 @@ export const EditCard = () => {
         >
           Save
         </Button>
-      </Grid>
+      </div>
     </div>
   );
 };

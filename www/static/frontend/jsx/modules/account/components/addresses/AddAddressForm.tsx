@@ -71,6 +71,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                   setFieldValue("state", initialAddAddressFormValue.state);
                 }}
                 name={"state"}
+                id={"add-address-country"}
               />
               <FormInput
                 label={"Full Name (First and Last name)"}
@@ -92,6 +93,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 touched={touched.phone_number}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
+                mask={"+7 (999) 999 99 99"}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"
@@ -132,6 +134,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 label={"State/Province"}
                 onClick={(value) => setFieldValue("state", value)}
                 name={"state"}
+                id={"add-address-state"}
               />
               <FormInput
                 label={"Zip/Postal Code"}

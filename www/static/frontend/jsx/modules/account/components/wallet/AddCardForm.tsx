@@ -11,6 +11,8 @@ import {
   addCardFormValidationSchema,
   initialAddCardFormValue,
 } from "../../ts/consts/add-card-form";
+import { useDispatch } from "react-redux";
+import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/WalletActions";
 
 export const AddCardForm = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -22,12 +24,24 @@ export const AddCardForm = () => {
 
   const context = useContext(WalletCardsDialogContext);
 
+  const dispatch = useDispatch();
+
   const handleSubmit = (values) => {
     context.setContent(BillingAddressFormEnum.LIST_ADDRESS);
+
+    dispatch(
+      addDataFromSubmitCardForm({
+        name: values.name,
+        card_number: values.cardNumber,
+        expires:
+          values.expiration_month.value + "/" + values.expiration_year.value,
+        is_default: values.is_default,
+      })
+    );
   };
 
   return (
-    <Grid xs={7} className="billing-address-container">
+    <div className="billing-address-container add-card-form-container">
       <Formik
         initialValues={initialAddCardFormValue}
         onSubmit={handleSubmit}
@@ -47,6 +61,7 @@ export const AddCardForm = () => {
                 label={"Card number"}
                 placeholder={"5026 2457 5478 5984"}
                 value={values.cardNumber}
+                mask={"9999 9999 9999 9999"}
                 name={"cardNumber"}
                 errorMessage={errors.cardNumber}
                 handleChange={handleChange}
@@ -64,22 +79,28 @@ export const AddCardForm = () => {
                 classes={{ input: "add-card-input" }}
                 handleBlur={handleBlur}
               />
-              <Grid container justify="space-between">
-                <FormSelect
-                  items={monthsValues}
-                  value={values.expiration_month}
-                  classes={{ group: "add-card-select-expiration-month" }}
-                  label={"Expiration date"}
-                  onClick={(value) => setFieldValue("expiration_month", value)}
-                  name={"expiration_month"}
-                />
-                <FormSelect
-                  items={yearsValues}
-                  classes={{ group: "add-card-select-expiration-years" }}
-                  value={values.expiration_year}
-                  onClick={(value) => setFieldValue("expiration_year", value)}
-                  name={"expiration_year"}
-                />
+              <Grid container justify="space-between" alignContent="center">
+                <label className="form-input-label">Expiration date</label>
+                <div className="expirations-date-container add-card-input">
+                  <FormSelect
+                    items={monthsValues}
+                    value={values.expiration_month}
+                    classes={{ group: "add-card-select-expiration" }}
+                    onClick={(value) =>
+                      setFieldValue("expiration_month", value)
+                    }
+                    name={"expiration_month"}
+                    id={"select-expiration-month"}
+                  />
+                  <FormSelect
+                    items={yearsValues}
+                    classes={{ group: "add-card-select-expiration" }}
+                    value={values.expiration_year}
+                    onClick={(value) => setFieldValue("expiration_year", value)}
+                    name={"expiration_year"}
+                    id={"select-expirations-year"}
+                  />
+                </div>
               </Grid>
 
               <Grid
@@ -87,20 +108,20 @@ export const AddCardForm = () => {
                 container
                 justify="flex-end"
               >
-                <Grid xs={7}>
+                <div className="add-card-input">
                   <FormCheckBox
-                    label={"Make this my default address"}
+                    label={"Make this my default card"}
                     value={values.is_default}
                     name={"is_default"}
                     handleChange={handleChange}
                   />
-                </Grid>
+                </div>
               </Grid>
               <Grid container justify="flex-end">
-                <Grid xs={7} container justify="space-between">
+                <div className="add-card-form-btns">
                   <Button
                     onClick={() => context.handleClose()}
-                    className="account-submit-btn account-submit-btn-outline auto-width-button"
+                    className="account-submit-btn account-submit-btn-outline auto-width-button cancel-btn"
                   >
                     Cancel
                   </Button>
@@ -110,12 +131,12 @@ export const AddCardForm = () => {
                   >
                     Add your card
                   </Button>
-                </Grid>
+                </div>
               </Grid>
             </Form>
           );
         }}
       </Formik>
-    </Grid>
+    </div>
   );
 };

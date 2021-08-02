@@ -6,17 +6,20 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\DeliveryTypesModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Main\Xcart;
 
 class AccountAddressesApi extends FrontendController
 {
     public function getAddresses()
     {
-        $addresses = AddressesModel::objects()->order(['-is_default'])->all();
+        $user = UserModel::objects()->get(['user_id' => 1]);
+
 
         $resultMass = [];
 
-        foreach ($addresses as $key => $address )
+        foreach ($user->addresses->order(['-is_default'])->all() as $key => $address )
         {
             $country = $address->country_model;
             $state = $address->state_model;
@@ -35,7 +38,9 @@ class AccountAddressesApi extends FrontendController
     public function changeDefaultAddress()
     {
         $addressId = json_decode(file_get_contents('php://input'));
-        $addresses = AddressesModel::objects()->all();
+
+        $user = UserModel::objects()->get(['user_id' => 1]);
+        $addresses = $user->addresses->all();
 
         foreach ($addresses as $key => $address)
         {
@@ -63,16 +68,17 @@ class AccountAddressesApi extends FrontendController
     public function addAddress()
     {
         $address = json_decode(file_get_contents('php://input'), true);
+        $user = UserModel::objects()->get(['user_id' => 1]);
+        $addresses = $user->addresses->all();
 
-        if($address['is_default']){
-            foreach (AddressesModel::objects()->all() as $key => $addressModel)
-            {
-                $addressModel->is_default = false;
-
-                $addressModel->save();
-            }
+        if($address['is_default'])
+        {
+            $add_arr = array_map(fn($a) => $a->addresses_id, $addresses);
+            AddressesModel::objects()->filter(['addresses_id__in' => $add_arr])->update(['is_default' => false]);
         }
-        AddressesModel::objects()->create($address);
+        $address['user_id'] = 1;
+        $model = new AddressesModel($address);
+        $model->save();
         $this->getAddresses();
     }
 

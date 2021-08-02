@@ -6,7 +6,7 @@ import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
@@ -17,14 +17,17 @@ import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
-import { AddNewAddress } from "@modules/account/components/addresses/AddNewAddress";
-import { AddressList } from "@modules/account/components/addresses/AddressList";
+import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 
 export const AccountRouters = () => {
   const dispatch = useDispatch();
 
+  const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
     dispatch(getTerritory());
+    if (!addresses) {
+      dispatch(getAddresses());
+    }
   }, []);
 
   return (

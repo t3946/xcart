@@ -69,6 +69,15 @@ class AddressesModel extends Model
                 'modelClass' => DeliveryTypesModel::class,
                 'link' => ['delivery_type_id' => 'delivery_type_id'],
             ],
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'user_id'],
+            ],
+            'address_type' => [
+                'class' => CharField::class,
+            ],
         ];
     }
 }

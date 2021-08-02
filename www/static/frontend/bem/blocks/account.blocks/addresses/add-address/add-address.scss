@@ -114,7 +114,7 @@
 }
 
 .add-address-input{
-  width: 50%;
+  width: 50% !important;
   position: relative;
 
 
@@ -128,6 +128,7 @@
 
   .address-container{
     width: 300px;
+    margin-right: 0;
   }
 
   .add-address-label{
@@ -135,7 +136,15 @@
   }
 
   .add-address-input{
-    width: 100%;
+    width: 100% !important;
     position: relative;
   }
+}
+
+@media (max-width: 768px) {
+  .addresses-list-container{
+    justify-content: center;
+  }
+
+
 }

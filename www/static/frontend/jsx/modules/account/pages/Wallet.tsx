@@ -3,6 +3,7 @@ import { CardsList } from "../components/wallet/CardsList";
 import { AddNewPaymentMethod } from "../components/wallet/AddNewPaymentMethod";
 import { useDispatch, useSelector } from "react-redux";
 import { getCards } from "../../../redux/actions/account-actions/WalletActions";
+import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 
 export const Wallet = () => {
   const dispatch = useDispatch();

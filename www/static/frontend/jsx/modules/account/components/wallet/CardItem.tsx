@@ -7,8 +7,11 @@ import { RemoveCardDialog } from "./RemoveCardDialog";
 import { useDispatch } from "react-redux";
 import { changeDefaultCard } from "../../../../redux/actions/account-actions/WalletActions";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import { useBreakPoint } from "../../hooks/useBreakPoint";
+import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
+import classnames from "classnames";
 
-export const CardItem = ({ cardInfo, firstChild }) => {
+export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
   const accordion = useAccordion();
 
   const dispatch = useDispatch();
@@ -43,9 +46,11 @@ export const CardItem = ({ cardInfo, firstChild }) => {
           </div>
         </div>
 
-        <div className="wallet-card-billing">Exp: 10/2021</div>
+        <div className="wallet-card-billing wallet-card-billing-header">
+          Exp: 10/2021
+        </div>
         <div className="wallet-header-arrow-block">
-          <div onClick={changeDefault}>
+          <div className="wallet-header-default-block" onClick={changeDefault}>
             {cardInfo.is_default ? "Default" : "Set default"}
           </div>
           <div
@@ -74,20 +79,31 @@ export const CardItem = ({ cardInfo, firstChild }) => {
               {cardInfo.address.phone_number}
             </div>
           </div>
-          <div className="wallet-card-buttons">
-            <Button
-              className="account-submit-btn edit-card-btn"
-              onClick={editDialog.handleClickOpen}
+          {breakPoint.is768 ? (
+            <AddEditBtnsBlock
+              handleRemove={removeDialog.handleClickOpen}
+              handleEdit={editDialog.handleClickOpen}
+              defaultItem={cardInfo.is_default}
+              changeDefault={changeDefault}
             >
-              Edit
-            </Button>
-            <Button
-              onClick={removeDialog.handleClickOpen}
-              className="account-submit-btn account-submit-btn-outline"
-            >
-              Remove
-            </Button>
-          </div>
+              <div>Default</div>
+            </AddEditBtnsBlock>
+          ) : (
+            <div className="wallet-card-buttons">
+              <Button
+                className="account-submit-btn edit-card-btn"
+                onClick={editDialog.handleClickOpen}
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={removeDialog.handleClickOpen}
+                className="account-submit-btn account-submit-btn-outline"
+              >
+                Remove
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <CardDialog

@@ -1,28 +1,17 @@
 import React, { useState } from "react";
 import { BillingAddressListItem } from "./BillingAddressListItem";
 
-export const BillingAddressList = () => {
-  const mass = Array(15)
-    .fill(1)
-    .map((e, index) => {
-      return {
-        id: index,
-        value: "Azina 44, Kirov, Kirov region, 610027, Russian Federation",
-      };
-    });
-
-  const [value, setValue] = useState(mass[0].id);
-
+export const BillingAddressList = ({ addresses, value, setValue }) => {
   return (
     <div className="billing-address-list-container">
-      {mass.map((e) => {
+      {addresses.map((e) => {
         return (
           <BillingAddressListItem
             name="radio"
-            id={e.id}
-            viewValue={e.value}
+            id={e.addresses_id}
+            viewValue={e.street}
             groupValue={value}
-            radioValue={e.id}
+            radioValue={e.addresses_id}
             onChange={setValue}
           />
         );

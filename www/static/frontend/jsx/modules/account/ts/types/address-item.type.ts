@@ -10,4 +10,10 @@ export interface AddressItemDto {
   zip: string;
   default: boolean;
   delivery_type: string;
+  address_type: AddressTypeEnum;
+}
+
+export enum AddressTypeEnum {
+  SHIPPING = "shipping",
+  BILLING = "billing",
 }

@@ -20,8 +20,8 @@ export const AddBillingAddressForm = () => {
 
   const states = useSelector((e: any) => e.main.states);
   return (
-    <Grid xs={8} className="billing-address-container">
-      <div className="dialog-title">Select a billing address</div>
+    <div className="billing-address-container add-billing-address-container">
+      <div className="dialog-title">Add a billing address</div>
       <Formik
         initialValues={initialAddAddressFormValue}
         onSubmit={null}
@@ -47,6 +47,7 @@ export const AddBillingAddressForm = () => {
                   setFieldValue("state", initialAddAddressFormValue.state);
                 }}
                 name={"state"}
+                id="add-billing-address-country"
               />
               <FormInput
                 label={"Full Name (First and Last name)"}
@@ -108,6 +109,7 @@ export const AddBillingAddressForm = () => {
                 label={"State/Province"}
                 onClick={(value) => setFieldValue("state", value)}
                 name={"state"}
+                id="add-billing-address-state"
               />
               <FormInput
                 label={"Zip/Postal Code"}
@@ -120,14 +122,14 @@ export const AddBillingAddressForm = () => {
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
               />
-              <Grid container justify="flex-end">
-                <Grid xs={6} container>
+              <div className="billing-address-add-btns">
+                <div className="billing-address-add-btns-container">
                   <Button
                     onClick={() =>
                       context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
                     }
                     type={"submit"}
-                    className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+                    className="account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
                   >
                     Back
                   </Button>
@@ -137,12 +139,12 @@ export const AddBillingAddressForm = () => {
                   >
                     USE tHIS aDDRESS
                   </Button>
-                </Grid>
-              </Grid>
+                </div>
+              </div>
             </Form>
           );
         }}
       </Formik>
-    </Grid>
+    </div>
   );
 };

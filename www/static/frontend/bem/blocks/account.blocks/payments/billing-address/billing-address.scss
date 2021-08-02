@@ -17,6 +17,44 @@
   padding: 18px 24px;
 }
 
-.add-billing-address-btn{
+
+.billing-address-back-btn, .add-billing-address-btn{
   margin-right: 5px !important;
+}
+
+.billing-address-add-btns{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.billing-address-add-btns-container{
+  display: flex;
+  width: 50%;
+}
+
+.add-billing-address-container{
+  width: 70%;
+}
+
+@media (max-width: 1000px) {
+  .add-billing-address-container{
+    width: 100%;
+  }
+
+  .billing-address-add-btns-container{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .billing-address-add-btns-container{
+    flex-direction: column;
+  }
+
+  .billing-address-back-btn, .add-billing-address-btn{
+    margin-right: 0px !important;
+    margin-bottom: 10px !important;
+  }
+
 }
