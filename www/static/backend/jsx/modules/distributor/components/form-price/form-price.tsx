@@ -20,6 +20,10 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
     setFileForm(file);
   };
   const formSave = () => {
+    if (!fileForm) {
+      showSnackbar("Please select file", "error");
+      return;
+    }
     const data = new FormData();
     data.append("d_price_list", fileForm);
     data.append("dx", distributorId);
