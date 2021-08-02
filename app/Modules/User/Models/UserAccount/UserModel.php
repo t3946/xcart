@@ -10,7 +10,6 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -71,7 +70,7 @@ class UserModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => AddressesModel::class,
                 'link' => ['user_id' => 'user_id']
-            ]
+            ],
         ];
     }
 
