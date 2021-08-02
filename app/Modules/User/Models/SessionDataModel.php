@@ -78,7 +78,7 @@ class SessionDataModel extends Model
     {
         /** @var UserModule $module */
         if ($isNew && $module = Xcart::app()->getModule('User')) {
-            $owner->expiry = time() + $module->sessionTime;
+            $owner->expiry = time() + $module->EXP_TIME_S;
         }
     }
 

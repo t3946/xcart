@@ -80,12 +80,13 @@ class UserModel extends Model
     /**
      * авторизует пользователя в сессии и сохраняет сессионные куки
     */
-    public function authenticate(): void
+    public function authenticate($remember_me): void
     {
-        Xcart::app()->auth->login($this);
+        Xcart::app()->auth->login($this, $remember_me);
 
         //сохранить сессионную куку
         $session = Xcart::app()->request->session;
+        $session->updateSessionTime();
         $session_key = Xcart::app()->request->session->getSessionKey();
         $session_id = $session->getId();
 
@@ -96,7 +97,7 @@ class UserModel extends Model
         Xcart::app()->request->cookie->add($session_key, $session_id);
     }
 
-    public function login(string $password): bool
+    public function login(string $password, bool $remember_me = false): bool
     {
         $hash = $this->getAttribute('password');
 
@@ -105,7 +106,7 @@ class UserModel extends Model
             return false;
         }
 
-        $this->authenticate();
+        $this->authenticate($remember_me);
 
         return true;
     }

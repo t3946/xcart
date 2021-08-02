@@ -26,4 +26,11 @@ return [
         'target' => [AccountAuthorizationApi::class, 'logout'],
         'name' => 'logout',
     ],
+
+
+    [
+        'route' => '/info',
+        'target' => [AccountAuthorizationApi::class, 'info'],
+        'name' => 'info',
+    ],
 ];

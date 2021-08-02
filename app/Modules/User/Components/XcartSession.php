@@ -135,11 +135,18 @@ class XcartSession extends Session
         return $this;
     }
 
+    /**
+     * Обновить срок хранения сессии
+    */
+    public function updateSessionTime() {
+        $session_time = Xcart::app()->getModule('User')->EXP_TIME_S;
+        $this->model->expiry = time() + $session_time;
+        $this->request->cookie->add($this->getSessionKey(), $this->getId(), $this->model->expiry);
+    }
+
     public function start($id = null)
     {
-        $isNew = false;
-
-        if ($this->startValidate() || $id) {
+        if ($id || $this->startValidate()) {
             if ($id || $id = $this->getSessionId()) {
                 if ($this->model = SessionDataModel::objects()->get(['sessid' => $id])) {
                     $this->data = $this->model->data;
@@ -150,28 +157,37 @@ class XcartSession extends Session
                 }
             }
 
+            //создать новую сессию
             if (!$this->model) {
-//                $id = $this->genSessId();
-//                list($this->model, $isNew) = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
-
                 $this->model = new SessionDataModel();
 
                 if (APP_LOCAL === true || !\defined('IS_ROBOT')) {
                     $this->model->save();
                 }
 
-                $isNew = true;
+                $this->updateSessionTime();
 
                 $this->data = [];
                 $this->unpacked = [];
             }
 
-            $sessionTime = Xcart::app()->getModule('User')->sessionTime;
+            //если срок хранения сессии вышел более чем на треть -- обновить его
+            $exp_time = Xcart::app()->getModule('User')->EXP_TIME_S;
+            $start_time = $this->model->expiry - $exp_time;
+            $passed_time = time() - $start_time;
+            $one_third_exp_time = $exp_time / 3;
 
-            if ($isNew || ($this->model->expiry < (($sessionTime + time()) / 3)))
-            {
-                $this->model->expiry = time() + $sessionTime;
-                $this->request->cookie->add($this->getSessionKey(), $this->getId(), $this->model->expiry);
+            if ($passed_time >= $one_third_exp_time) {
+                $this->updateSessionTime();
+            }
+
+            //де-аутентифицировать пользователя если сессия устарела
+            $two_hours_s = 2 * 60 * 60;
+            if (
+                $passed_time > $exp_time
+                || ($this->get('remember_me') === false && $passed_time > $two_hours_s)
+            ) {
+                Xcart::app()->request->session->remove((new Auth)->authSessionName);
             }
 
             if ($this->registerGlobals) {

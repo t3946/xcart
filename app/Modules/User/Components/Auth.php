@@ -37,12 +37,10 @@ class Auth implements AuthInterface
 
     public $class = 'Modules\User\Models\UserModel';
 
-    public function login($user, $rememberMe = true)
+    public function login($user, $remember_me = false)
     {
         $this->updateSession($user);
-        if ($rememberMe) {
-            $this->updateCookie($user);
-        }
+        Xcart::app()->request->session->add('remember_me', $remember_me);
         $this->setUser($user);
     }
 
@@ -113,10 +111,12 @@ class Auth implements AuthInterface
 
     public function getSessionUser($new_user = false)
     {
-        $id = $this->getSession();
-        if ($id) {
-            return $this->findUser($id, $new_user);
+        $user_id = $this->getSession();
+
+        if ($user_id) {
+            return $this->findUser($user_id, $new_user);
         }
+
         return null;
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Modules\Account\Controllers\Api;
 
 use Modules\User\Models\UserAccount\UserModel;
@@ -58,7 +57,7 @@ class AccountAuthorizationApi extends FrontendController
                 $form->addError('login', 'User with that email or phone not found');
             }
 
-            if (!$user->login($attributes['password'])) {
+            if (!$user->login($attributes['password'], $attributes['remember_me'])) {
                 $form->addError('password', 'Password is incorrect');
             }
 
@@ -102,5 +101,16 @@ class AccountAuthorizationApi extends FrontendController
         Xcart::app()->auth->logout(false);
 
         $this->jsonResponse([]);
+    }
+
+    public function info()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            $this->jsonResponse("guest");
+        } else {
+            $this->jsonResponse($user->toArray());
+        }
     }
 }
