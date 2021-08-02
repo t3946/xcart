@@ -2,13 +2,15 @@ import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 import { logoutAction } from "../../../../redux/actions/account-actions/AutorizationActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { userClearAction } from "../../../../redux/actions/account-actions/UserActions";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const SideBarMenu = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const user = useSelector((e: StoreDto) => e.user);
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
@@ -70,14 +72,16 @@ const SideBarMenu = () => {
         );
       })}
 
-      <button
-        className={
-          "form-button form-button__outline logout-button pt-2.5 pb-2.5 mt-4 rounded-0 w-100"
-        }
-        onClick={logout}
-      >
-        log out
-      </button>
+      {user && (
+        <button
+          className={
+            "form-button form-button__outline logout-button pt-2.5 pb-2.5 mt-4 rounded-0 w-100"
+          }
+          onClick={logout}
+        >
+          log out
+        </button>
+      )}
     </div>
   );
 };
