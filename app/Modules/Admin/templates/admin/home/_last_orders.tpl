@@ -27,7 +27,7 @@
             <td class="borderb-gray">{$order->s_firstname}</td>
             <td class="borderb-gray">{$order->s_city}, {$order->s_state}, {$order->s_zipcode}</td>
             <td class="borderb-gray">{$order->cb_status_model}</td>
-            <td class="borderb-gray" align="right">{$order->total|site_currency}</td>
+            <td class="borderb-gray" align="right">{$order->total|site_currency:$order->site}</td>
             <td class="borderb-gray" align="center">{$order->is_new_checkout ? 'Y' : 'N'}</td>
         </tr>
     {/foreach}

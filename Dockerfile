@@ -21,11 +21,7 @@ RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Add user for laravel application
-#RUN groupadd -g 1000 www
-#RUN useradd -u 1000 -ms /bin/bash -g www www
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 
 # Change current user to www

@@ -127,4 +127,9 @@ abstract class File extends \SplFileInfo
 
         return $max;
     }
+
+    public function getHash()
+    {
+        return hash_file('md5', $this->getPathname());
+    }
 }

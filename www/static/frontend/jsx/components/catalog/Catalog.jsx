@@ -4,6 +4,7 @@ import ProductsList from "@/components/catalog/ProductsList";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import LoadMore from "@/components/catalog/LoadMore";
 import Storage from "@/utils/localStorage/storage";
+import $ from "jquery";
 
 export default class Catalog extends Component {
   constructor(props) {
@@ -34,7 +35,33 @@ export default class Catalog extends Component {
       //ссылка на следующую страницу каталога
       nextPageUrl: props.catalogUrl,
       printStateLines: true,
+      pager: null,
+      infinityLoad: true,
+      observeProduct: null,
+      infinityLoadObserver: null,
     };
+
+    if (this.state.infinityLoad) {
+      const options = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5,
+      };
+
+      this.state.infinityLoadObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              observer.unobserve(this.state.observeProduct);
+              this.productList.current.loadData();
+            }
+          });
+        },
+        options
+      );
+    }
+
+    $(".catalog-skeleton").remove();
   }
 
   onUpdateProductList(pager, nextPageUrl) {
@@ -90,10 +117,36 @@ export default class Catalog extends Component {
   }
 
   onEndLoading() {
-    this.setState({ printStateLines: true, isLoading: false });
+    this.setState({
+      printStateLines: true,
+      isLoading: false,
+    });
+  }
+  componentDidUpdate() {
+    if (this.state.infinityLoad) {
+      const newObserveProduct = $(".product-items .catalog-product").last()[0];
+
+      if (
+        newObserveProduct &&
+        this.state.observeProduct !== newObserveProduct
+      ) {
+        this.setState({
+          observeProduct: newObserveProduct,
+        });
+
+        if (this.state.nextPageUrl) {
+          this.state.infinityLoadObserver.observe(newObserveProduct);
+        }
+      }
+    }
   }
 
   loadMoreButtonTemplate() {
+    // новый режим авто-подгрузки товаров
+    if (this.state.infinityLoad) {
+      return;
+    }
+
     // все товары были загружены
     if (!this.state.nextPageUrl) {
       return;
@@ -131,8 +184,6 @@ export default class Catalog extends Component {
             sortKey={this.state.sortKey}
             searchText={this.props.searchText}
           />
-
-          {this.printStateLine()}
 
           {this.loadMoreButtonTemplate()}
         </CatalogContext.Provider>

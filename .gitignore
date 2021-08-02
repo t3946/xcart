@@ -8,7 +8,6 @@ thumbs.db
 Thumbs.db
 .DS_Store
 package-lock.json
-composer.lock
 ###################################
 ## scripts to exclude
 /app/config/*_local.php
@@ -27,7 +26,8 @@ node_modules
 /www/static/**/temp/
 /www/skin1_kolin/pages/
 /app/runtime/
-/log/
+!.gitkeep
+/log/debug_cache/
 /html_cache/
 /app/Modules/Translate/lang/*.i18next.json
 /www/static/frontend/dist
@@ -37,7 +37,6 @@ node_modules
 /www/static/backend/versions
 /www/static/backend/bem/bem.scss
 /app/include/vendors
-!.gitkeep
 !/skin1_kolin/
 /docker/mysql/data/
 /docker/redis/data/

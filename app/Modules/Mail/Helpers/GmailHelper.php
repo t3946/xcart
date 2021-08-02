@@ -53,6 +53,7 @@ class GmailHelper
                     $opt_param =  array_merge($opt_param, ['pageToken' => $pageToken]);
                 }
                 $messagesResponse = $service->users_messages->listUsersMessages($userId, $opt_param);
+                $pageToken = null;
                 if ($messagesResponse->getMessages()) {
                     $messages = array_merge($messages, $messagesResponse->getMessages());
                     $pageToken = $messagesResponse->getNextPageToken();

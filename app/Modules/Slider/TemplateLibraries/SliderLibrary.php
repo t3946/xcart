@@ -79,6 +79,7 @@ class SliderLibrary extends TemplateLibrary
                 'title' => 'Everyday unbeatable',
                 'description' => 'LOW PRICES up to 50% off',
                 'image' => PromotionalProductsHelper::getSliderImage($model),
+                'link' => $model->getAbsoluteUrl(true)
             ];
         }
         return $res ?? [];

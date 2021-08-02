@@ -18,15 +18,15 @@
   }
 
   .facebook {
-    background-image: url(../images/icons/footer/facebook.svg);
+    background-image: url(/static/frontend/images/icons/footer/facebook.svg);
   }
 
   .youtube {
-    background-image: url(../images/icons/footer/youtube.svg);
+    background-image: url(/static/frontend/images/icons/footer/youtube.svg);
   }
 
   .pinterest {
-    background-image: url(../images/icons/footer/pinterest.svg);
+    background-image: url(/static/frontend/images/icons/footer/pinterest.svg);
   }
 
   @include breakpoint(md up) {

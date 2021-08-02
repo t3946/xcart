@@ -34,7 +34,6 @@
                         </div>
                         <div class="row">
                             <div id="sidebar-menu-target" class="col layout-column__left"></div>
-
                             <div class="col layout-column__right">
                                 <div class="admin-main-content" valign="top">
                                     <!-- central space -->

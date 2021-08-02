@@ -424,7 +424,8 @@ class CheckoutController extends FrontendController
                                 'order_group_id' => $group->order_group_id,
                                 'tax_rate_id' => $tax_rate->rateid,
                             ]);
-                            $tax_group->update(['value' => $tax_value]);
+                            $tax_group->value = $tax_value;
+                            $tax_group->save();
                             $tax_value_total += $tax_value;
                         }
                     }

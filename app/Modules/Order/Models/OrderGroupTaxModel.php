@@ -27,13 +27,15 @@ class OrderGroupTaxModel extends Model
                 'field' => 'order_group_id',
                 'class' => ForeignField::class,
                 'modelClass' => OrderGroupModel::class,
-                'link' => ['order_group_id' => 'order_group_id']
+                'link' => ['order_group_id' => 'order_group_id'],
+                'primary' => true
             ],
             'tax_rate' => [
                 'field' => 'tax_rate_id',
                 'class' => ForeignField::class,
                 'modelClass' => TaxRatesModel::class,
-                'link' => ['tax_rate_id' => 'rateid']
+                'link' => ['tax_rate_id' => 'rateid'],
+                'primary' => true
             ],
             'value' => [
                 'class' => DecimalField::class,

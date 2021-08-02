@@ -448,8 +448,8 @@ URL;
     {
         $taxes = [];
         foreach ($this->tax_rates as $group_tax) {
-            $is_vat = $group_tax->tax_rate->tax->is_vat;
-            $taxes[$is_vat ? 'vat_tax' : 'sales_tax'] += $group_tax->value;
+            $tax = $group_tax->tax_rate->tax->tax_name;
+            $taxes[$tax] += $group_tax->value;
         }
         return $taxes ?? [];
     }

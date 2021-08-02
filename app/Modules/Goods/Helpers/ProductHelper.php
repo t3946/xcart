@@ -4,6 +4,14 @@ namespace Modules\Goods\Helpers;
 
 
 use Exception;
+use Modules\Brand\Models\BrandModel;
+use Modules\Brand\Models\BrandStorefrontModel;
+use Modules\Goods\Models\FilterModel;
+use Modules\Goods\Models\FilterProductModel;
+use Modules\Goods\Models\FilterValueModel;
+use Modules\Goods\Models\GroupIndexModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -208,29 +216,13 @@ class ProductHelper
         return mb_substr_count($option, ' ');
     }
 
-    public static function getNewGroupSKU($manufacturer_id)
+    public static function getNewGroupSKU($manufacturer_id): string
     {
-        $new_sku = null;
-
         $format = '%s-GROUP-%d';
-
-        if ($last = ProductModel::objects()->filter(
-            [
-                'group_root__isnull' => false,
-                'group_root' => new Expression('productid')
-            ])
-                                ->order([new Expression("-COALESCE(CAST(SUBSTRING_INDEX(productcode, '-', -1) AS UNSIGNED), 1)")])
-                                ->limit(1)
-                                ->get()
-        ) {
-            if (preg_match('/-(\d+)$/', $last->productcode, $m)) {
-                if ($model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id])) {
-                    $new_sku = sprintf($format, $model->code, intval($m[1]) + 1);
-                }
-            }
-        }
-
-        return $new_sku;
+        $model = DistributorModel::objects()->get(['manufacturerid' => $manufacturer_id]);
+        $group = new GroupIndexModel();
+        $group->save();
+        return sprintf($format, $model->code, $group->pk);
     }
 
     public static function calculateUPC($upc_code)
@@ -407,7 +399,7 @@ class ProductHelper
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $model->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] === 'Y') ? 'cdn.' : 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.' : 'www.';
         $domain = $site->getBaseDomain();
         $domain = '//' . $pref . $domain;
 
@@ -462,5 +454,79 @@ class ProductHelper
             $product->forsale === 'Y' &&
             $product->isMarketPlaceEnabled(1) &&
             $product->getMainImage();
+    }
+
+    public static function setProductAttributes(ProductModel $model, array $attributes, SiteModel $site): void
+    {
+        $fv_ids = [];
+
+        foreach ($attributes as $f_name => $fv_name_arr) {
+            $f_name = trim($f_name);
+            if (!$fv_name_arr || strlen($f_name) > 128) {
+                continue;
+            }
+
+            [$filterModel] = FilterModel::objects()->getOrCreate(
+                ['f_name' => $f_name, 'storefrontid' => $site->storefrontid]
+            );
+
+            if (!is_array($fv_name_arr)) {
+                $fv_name_arr = [$fv_name_arr];
+            }
+            foreach ($fv_name_arr as $fv_name) {
+                if (($fv_name = trim($fv_name)) && strlen($fv_name) <= 768) {
+                    [$filterValueModel] = FilterValueModel::objects()->getOrCreate(
+                        ['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]
+                    );
+                    FilterProductModel::objects()->getOrCreate(
+                        [
+                            'fv_id' => $filterValueModel->fv_id,
+                            'productid' => $model->productid,
+                            'is_feed' => 1
+                        ]
+                    );
+                    $fv_ids[] = $filterValueModel->fv_id;
+                }
+            }
+        }
+        $qs = FilterProductModel::objects();
+        if ($fv_ids) {
+            $qs->exclude(['fv_id__in' => $fv_ids]);
+        }
+        $qs->delete(['productid' => $model->productid, 'is_feed' => 1]);
+    }
+
+    public static function setProductBrand(ProductModel $model, $value, SiteModel $site): void
+    {
+        $value = trim($value);
+        if ($value && !$brand = BrandModel::objects()->limit(1)->get([
+            'brand' => $value,
+        ])) {
+            $brand = new BrandModel(
+                [
+                    'brand' => $value,
+                    'orderby' => 10,
+                    'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                    'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
+                ]
+            );
+            $brand->save();
+        }
+
+        BrandStorefrontModel::objects()->getOrCreate(
+            [
+                'brandid' => $brand->brandid,
+                'sfid' => $site->storefrontid,
+            ]
+        );
+
+        if ($brand->parent_brand_id) {
+            $brand = $brand->parent;
+        }
+        $model->brand = $brand;
+
+        if ($model && $model->forsale === 'Y') {
+            $model->forsale = $brand->avail;
+        }
     }
 }

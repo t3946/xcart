@@ -1,24 +1,13 @@
-{extends "admin/base_login.tpl"}
-
-{block 'menu_block'}
-{/block}
-
-{block 'main_block_class'}wide{/block}
+{extends "admin/base.tpl"}
 
 {block 'main_block'}
-    <div class="admin-page login-page">
-        <div class="login-block">
-            <h1>Login</h1>
 
-            <form action="" method="post">
-                {raw $form->render()}
+    <div class="smarty-admin-block">
+        <div class="title-block"><b>Authentication</b></div>
 
-                <div class="buttons">
-                    <button type="submit" class="button round default">
-                        Login
-                    </button>
-                </div>
-            </form>
+        <div class="white-back content-block">
+            <div id="login-form-target"></div>
         </div>
     </div>
+
 {/block}

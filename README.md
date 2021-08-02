@@ -78,6 +78,7 @@ return [
 - Use BEM methodology form yandex company
 - For BEM blocks and BEM elements to create new directory
 - Don't use scss many-level css rules (rule inside rule)
+- Use rem(rem-calc) instead px
 - Don't use !important in styles
 
 ## Naming

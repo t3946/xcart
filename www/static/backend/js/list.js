@@ -1,4 +1,5 @@
 import InitSelect2 from "@admin/utils/init-select2";
+import InitTinymce from "@admin/utils/init-tinymce";
 
 $(function () {
     var list = {
@@ -297,6 +298,10 @@ $(function () {
                     const $form = $('.mmodal-container form');
                     $form.find(".select2-field").each((i, elem) => {
                         InitSelect2(elem);
+                    });
+
+                    $form.find(".tinymce-field").each((i, elem) => {
+                        InitTinymce(elem);
                     });
                 },
                 onSuccess: () => list.update(),

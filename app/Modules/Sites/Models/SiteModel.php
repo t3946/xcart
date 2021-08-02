@@ -5,6 +5,7 @@ use Doctrine\DBAL\Types\Types;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -31,6 +32,7 @@ use Xcart\App\Orm\Model;
  * @property string code
  * @property Manager|TaxModel[] taxes
  * @property CurrencyModel currency
+ * @property CategoryModel base_category
  */
 class SiteModel extends Model
 {
@@ -99,7 +101,6 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'length' => 10,
                 'null' => false,
-                'default' => '',
             ],
             'domain' => [
                 'class' => CharField::class,
@@ -225,11 +226,14 @@ class SiteModel extends Model
                 'default' => null,
                 'verboseName' => 'CDN domain'
             ],
-            'Google_Trusted_Store_ID' => [
-                'class' => CharField::class,
+            'base_category' => [
+                'field' => 'base_category_id',
+                'class' => ForeignField::class,
+                'modelClass' => CategoryModel::class,
+                'link' => ['base_category_id' => 'categoryid'],
                 'null' => true,
                 'default' => null,
-                'verboseName' => 'Google Trusted Store ID'
+                'verboseName' => 'Base category',
             ],
             'Enable_surf_stats' => [
                 'class' => BooleanField::class,
@@ -296,6 +300,13 @@ class SiteModel extends Model
                 'uploadTo' => '/images/logo/',
                 'null' => true,
             ],
+            'logo_mobile' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/logo/',
+                'null' => true,
+                'verboseName' => 'Mobile logo'
+            ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
                 'adapterName' => 'www',
@@ -308,6 +319,11 @@ class SiteModel extends Model
     public function getLogo()
     {
         return $this->logo->getValue() ?? '';
+    }
+
+    public function getMobileLogo()
+    {
+        return $this->logo_mobile->getValue() ?? $this->getLogo();
     }
 
     public function getConfig()

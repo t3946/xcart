@@ -9,6 +9,6 @@ class MD5NameHasher extends DefaultHasher
      */
     public function hash($fileName)
     {
-        return md5($fileName);
+        return md5($fileName . mt_rand());
     }
 }

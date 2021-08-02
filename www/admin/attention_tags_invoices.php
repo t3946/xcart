@@ -38,7 +38,6 @@ $smarty->assign("attention_tags_values", $attention_tags_values);
 
 $ca_statuses = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' AND status!='' ORDER BY orderby");
 $smarty->assign('ca_statuses', $ca_statuses);
-$users = UserModel::objects()->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])->all();
-$smarty->assign('users', $users);
+$smarty->assign('users', UserModel::admins()->all());
 $site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
 $smarty->assign('global_config', $site->getGlobalConfig());

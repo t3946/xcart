@@ -327,7 +327,7 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                 <tr>
                         <td>Add the following Attention tag when order note is left:</td>
                         <td>
-                                <select id="o_status" style="width:230px;" class="select2"  name="order_note_tag">
+                                <select id="o_status" style="width:230px;" class="select2-field"  name="order_note_tag">
                                         <option></option>
                                         {foreach from=$ca_statuses item=item_v key=key_k}
                                                 <option {if $global_config.order_note_tag == $item_v.status_id}selected="selected"{/if}value="{$item_v.status_id}">{$item_v.status}</option>
@@ -339,7 +339,7 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                 <tr>
                         <td>Do NOT apply Attention tag when order note is left by:</td>
                         <td>
-                                <select style="width:230px;" id="o_users" multiple class="select2" name="order_note_tag_users[]">
+                                <select style="width:230px;" id="o_users" multiple class="select2-field" name="order_note_tag_users[]">
                                         <option></option>
                                         {foreach from=$users item=item_u key=key_k}
                                                 <option {if in_array($item_u->id, ','|explode:$global_config.order_note_tag_users)}selected="selected"{/if} value="{$item_u->id}">{$item_u}</option>
@@ -354,17 +354,3 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
                 </tr>
         </table>
 </form>
-<script type="text/javascript">
-        {literal}
-        $('#o_status').select2({
-                allowClear: false,
-                placeholder: 'Click to select Attention Tag'
-        });
-        $('#o_users').select2({
-                allowClear: false,
-                closeOnSelect: false,
-                placeholder: 'Click to select Users'
-        });
-        {/literal}
-</script>
-

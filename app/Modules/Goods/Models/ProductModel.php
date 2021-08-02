@@ -4,6 +4,7 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -86,6 +87,9 @@ use Xcart\Product;
  * @property VerificationStatusModel verification_status
  * @property int last_verify_date
  * @property string hash_product
+ * @property ProductModel parent
+ * @property string group_mask
+ * @property int group_root
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -191,6 +195,11 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => FilterValueModel::class,
                 'through' => FilterProductModel::class,
+            ],
+            'detail_images' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ProductImageModel::class,
+                'through' => ProductImagesModel::class,
             ],
             'images' => [
                 'class' => HasManyField::class,
@@ -916,7 +925,7 @@ class ProductModel extends Model implements ICartItem
         $c = $this->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
         if (!$c) {
             if ($this->brand) {
-                $b = $this->brand->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
+                $b = $this->brand->markets_disabled->filter(['id' => $marketpalce_id])->count();
             }
             if (!$b) {
                 $d = $this->distributor->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
@@ -942,26 +951,15 @@ class ProductModel extends Model implements ICartItem
 
     public function setAttribute($name, $value)
     {
-        if ($name === 'brand_name' && trim($value)) {
-            if (!$brand = BrandModel::objects()->limit(1)->get(['brand' => trim($value)])) {
-                $brand = new BrandModel([
-                    'brand' => trim($value),
-                    'orderby' => 10,
-                    'prevent_search_indexing_of_all_brand_products' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'prevent_search_indexing_brand_page' => $this->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                    'avail' => true
-                ]);
-            }
-            $brand->save();
-            $this->brand = $brand;
-        }
 
         if (($name === 'upc') && $upc = ProductHelper::calculateUPC($value)) {
             $value = $upc;
         }
 
-        if ($name === 'eta_date_mm_dd_yyyy' && $this->eta_date_lock) {
-            $value = $this->eta_date_mm_dd_yyyy;
+        if ($name === 'eta_date_mm_dd_yyyy' ) {
+            if ($this->eta_date_lock) {
+                $value = $this->eta_date_mm_dd_yyyy;
+            }
         }
         if ($name === 'weight' && $this->weight_lock) {
             $value = $this->weight;
@@ -988,14 +986,9 @@ class ProductModel extends Model implements ICartItem
             $value = $this->shipping_dim_y;
         }
 
-        parent::setAttribute($name, $value);
-    }
 
-    public function beforeSave($owner, $isNew)
-    {
-        if ($isNew) {
-            $this->fulldescr = ProductHelper::cleanProductFullDescription($this->fulldescr);
-        }
+
+        parent::setAttribute($name, $value);
     }
 
     public function getSlugPart(): string

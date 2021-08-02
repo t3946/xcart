@@ -12,7 +12,7 @@
   transition: opacity 0.2s ease-out;
 
   &:after {
-    content: url('../images/icons/slider_right_arrow.svg');
+    content: url('/static/frontend/images/icons/slider_right_arrow.svg');
     width: .875rem;
     height: 1.375rem;
     display: block;

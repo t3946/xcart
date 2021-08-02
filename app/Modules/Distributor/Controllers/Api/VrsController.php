@@ -21,56 +21,62 @@ class VrsController extends Controller
     public int $iat = 1356999524;
     public int $nbf = 1357000000;
 
-  public function getSiteStatus(string $url)
+  public function getSiteStatus(string $url): void
   {
-   $thisSite = VrsHelperSitesModel::objects()->filter(['domain' => $url]);
+      [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrCreate(['domain' => $url]);
 
-   $status = 'first-time';
+      $status = $is_new ? 'first-time' : $vrs->status;
 
-   if(!($thisSite->count() > 0))
-   {
-       $dx = [];
-       $status = 'visited';
-       foreach (  DistributorModel::objects()->asArray(true)->all() as $distributor)
-       {
-           if(str_contains($distributor['url'],$url ))
-           {
-               $dx = $distributor;
-           }
-       }
-       if($dx)
-       {
-           $status = 'inactive';
-           if($dx['avail'] === 'Y'){
-               $status = 'active';
-           }
-       }
+      /** @var DistributorModel $dx */
+      if ($dx = DistributorModel::objects()->filter(['url__contains' => $url])->limit(1)->get()) {
+          $vrs->status = $status = $dx->avail ? 'active' : 'inactive';
+          $vrs->save();
+      }
 
-       VrsHelperSitesModel::objects()->getOrCreate(['domain'=>$url, 'status'=>$status]);
-       $this->jsonResponse(['status' => $status]);
-       return;
-   }
-
-
-
-        $this->jsonResponse(['status'=>$thisSite[0]['status']]);
+      $this->jsonResponse(['status' => $status]);
   }
 
   public function getMessageFromDomain(string $domain){
-      $id = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0]['site_id'];
-
-      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->count() > 0))
+      $site_model = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0];
+      if($site_model['status'] === 'active' || $site_model['status'] === 'inactive' )
       {
+          $dx = DistributorModel::objects()->limit(1)->get(['url__contains' => $domain]);
+          $status = $site_model['status'];
+          $dx_created_user = ['b_firstname' => $dx->provider_model->getAttributes()['b_firstname'], 'b_lastname' => $dx->provider_model->getAttributes()['b_lastname']];
+          $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => $dx->created_at, 'user' => $dx_created_user];
+      }
+
+
+      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->count() > 0))
+      {
+          if($first_message){
+              return  [$first_message];
+          }
           return [];
       }
-      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $id])->order(['date'])->asArray(true)->all();
 
+
+      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->order(['date'])->asArray(true)->all();
       $a = [];
       foreach ($messages as $message)
       {
-          $message['user'] = UserModel::objects()->filter(['id'=>$message['user_id']])->asArray(true)->all()[0];
+          if ($user_model = UserModel::objects()->get(['id'=>$message['user_id']])) {
+              $message['user'] = [
+                  'id' => $user_model->id,
+                  'firstname' => $user_model->firstname,
+                  'b_firstname' => $user_model->firstname,
+                  's_firstname' => $user_model->firstname,
+                  'login' => $user_model->login,
+              ];
 
-          $a[] = $message;
+              $a[] = $message;
+          }
+      }
+
+
+      if($first_message)
+      {
+          array_unshift($a, $first_message);
       }
 
       return $a;

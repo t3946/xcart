@@ -2094,12 +2094,12 @@ function func_get_order_manufacturers($orderid)
                                         $tmp_sku = $product_model->productcode;
                                     }
 
-                                    $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
+                                    $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getAbsoluteUrl(true) . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->amount . '</td></tr>';
 
                                     $instock_items = $detail_model->amount - $detail_model->back;
-                                    $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
+                                    $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getAbsoluteUrl(true) . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $instock_items . '</td></tr>';
 
-                                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
+                                    $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $product_model->getAbsoluteUrl(true) . '">' . $detail_model->product . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $detail_model->back . '</td></tr>';
 
                                     $order_products_amount = $detail_model->amount;
 
@@ -2112,9 +2112,9 @@ function func_get_order_manufacturers($orderid)
                                         $order_products_counter++;
 
                                         if ($mv["add_cost_to_us_column_to_dispatch_message"] == "Y") {
-                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
+                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getAbsoluteUrl(true). '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">US$' . number_format($detail_model->item_cost_to_us, 2) . '</td><td align="center">' . $order_products_amount . '</td></tr>';
                                         } else {
-                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getUrl() . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
+                                            $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $product_model->getAbsoluteUrl(true) . '">' . $detail_model->product . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
                                         }
                                     }
                                 }

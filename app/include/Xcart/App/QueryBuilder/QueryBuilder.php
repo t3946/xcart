@@ -844,11 +844,18 @@ class QueryBuilder
 
     public function generateUpdateSql()
     {
-        list($tableName, $values) = $this->_update;
-        $this->setAlias(null);
-        return strtr('{update}{where}', [
-            '{update}' => $this->getAdapter()->sqlUpdate($tableName, $values, $this->_queryOptions),
-            '{where}' => $this->buildWhere(),
+        [$tableName, $values] = $this->_update;
+        $columns = $this->getAdapter()->updateValues($values);
+        $columns = array_map(fn($column) => $this->addColumnAlias($column), $columns);
+        $where = $this->buildWhere();
+        $join = $this->buildJoin();
+        $update = $this->buildUpdate($tableName, $this->_queryOptions);
+
+        return strtr('{update}{join}{set}{where}', [
+            '{update}' => $update,
+            '{join}' => $join,
+            '{set}' => ' SET ' . implode(', ', $columns),
+            '{where}' => $where,
         ]);
     }
 
@@ -1184,5 +1191,19 @@ class QueryBuilder
         }
         $sql = $this->getAdapter()->sqlFrom($from);
         return empty($sql) ? '' : ' FROM ' . $sql;
+    }
+
+    public function buildUpdate($tableName = '', $options = '')
+    {
+        if (!empty($this->_alias) && !is_array($this->_from)) {
+            $from = [$this->_alias => $this->_from];
+        } else {
+            $from = $this->_from;
+        }
+        if (!$from) {
+            $from = $tableName;
+        }
+        $sql = $this->getAdapter()->sqlFrom($from);
+        return empty($sql) ? '' : "UPDATE $options " . $sql;
     }
 }

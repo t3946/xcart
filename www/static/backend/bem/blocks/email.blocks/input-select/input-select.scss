@@ -24,12 +24,13 @@
   }
 }
 
-.select-send{
-  .select__head{
+.select-send {
+  .select__head {
     border: 1px solid #C4C4C4;
     font-size: 13px;
-    padding: 5px 35px 5px 10px;
-    &.hat{
+    padding: rem-calc(5) rem-calc(25) rem-calc(5) rem-calc(10);
+
+    &.hat {
       border: 0;
     }
    }
@@ -49,19 +50,19 @@
   color: #000000;
   cursor: pointer;
   background-color: white;
-}
 
-.select__head::after {
-  width: 10px;
-  height: 6px;
-  background: url("/static/backend/dist/images/icons/arrow-down.svg") no-repeat center / cover;
-  position: absolute;
-  right: 20px;
-  bottom: 50%;
-  transform: translateY(50%);
-  content: '';
-  display: block;
-  transition: .2s ease-in;
+  &:after {
+    width: rem-calc(10);
+    height: rem-calc(6);
+    background: url("/static/backend/dist/images/icons/hat/arrow-down__black.svg") no-repeat center / cover;
+    position: absolute;
+    right: rem-calc(8);
+    bottom: 50%;
+    transform: translateY(50%);
+    content: '';
+    display: block;
+    transition: .2s ease-in;
+  }
 }
 
 .select__list {
