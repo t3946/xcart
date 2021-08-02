@@ -13,10 +13,17 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
     login: yup.string().required("Login is a required field"),
   });
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
+  const inputRef = React.createRef();
 
   const initialState = {
     login: props.userLogin,
   };
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    inputRef.current.focus();
+  });
 
   function submit(values, actions) {
     dispatch(
@@ -56,6 +63,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                 </RBForm.Label>
 
                 <RBForm.Control
+                  ref={inputRef}
                   type="text"
                   name="login"
                   value={values.login}

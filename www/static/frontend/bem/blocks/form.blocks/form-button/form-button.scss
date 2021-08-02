@@ -19,7 +19,7 @@
     &:focus {
         background-color: #ffb400;
         color: #000000;
-        box-shadow: 0 0 0 0 rgba(242, 180, 5, 0.34);
+        box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
         text-decoration: none;
     }
 

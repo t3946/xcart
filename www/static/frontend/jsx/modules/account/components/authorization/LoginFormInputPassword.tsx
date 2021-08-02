@@ -12,6 +12,14 @@ import { useHistory } from "react-router-dom";
 const LoginFormInputPassword = function (props) {
   const history = useHistory();
   const dispatch = useDispatch();
+  const inputRef = React.createRef();
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    inputRef.current.focus();
+  });
+
   const initialState = {
     password: "",
     rememberMe: false,
@@ -79,6 +87,7 @@ const LoginFormInputPassword = function (props) {
                 </RBForm.Label>
 
                 <RBForm.Control
+                  ref={inputRef}
                   type="password"
                   name="password"
                   value={values.password}
@@ -100,14 +109,22 @@ const LoginFormInputPassword = function (props) {
                 sign-in
               </button>
 
-              <RBForm.Group className="mb-3">
-                <RBForm.Check
+              <RBForm.Group className={"mb-0"}>
+                <input
                   name="rememberMe"
                   onChange={handleChange}
                   id="rememberMe"
+                  className="form-checkbox"
+                  type="checkbox"
+                  value={values.rememberMe}
                 />
 
-                <RBForm.Label for={"rememberMe"} className={"checkbox-label"}>
+                <RBForm.Label
+                  className={
+                    "checkbox-label mb-0 align-items-center d-flex form-label"
+                  }
+                  htmlFor={"rememberMe"}
+                >
                   <div className="auth-form-info">
                     Keep me signed in.{" "}
                     <OverlayTrigger
