@@ -167,7 +167,8 @@ class ApiDxController extends Controller
         $dx = DistributorModel::objects()->get(['manufacturerid' => $post['dx']]);
         $output = ['status' => false];
         try {
-            $google_drive = new GoogleDrive('Test', '1m0heCJuDhMuBlzfY-vKWKIi58Xa98U2r');
+
+            $google_drive = new GoogleDrive();
             $code = strtoupper($dx->code);
             $ar_file = $google_drive->uploadFile($code, $_FILES['d_price_list']); // load file to google drive folder
 

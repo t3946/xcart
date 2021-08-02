@@ -6,41 +6,19 @@ use Google_Service_Drive;
 use Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Util;
+use Xcart\App\Main\Xcart;
 
 class GoogleDrive {
-
-    private const CLIENT_ID = '319702114697-87o15ol5ev7pcnn7eenfj9md4slgbttp.apps.googleusercontent.com';
-    private const CLIENT_SECRET = 'BBRU6N-2616AvusKPBzGIinR';
-    private const REFRESH_TOKEN = '1//043_LueXtXhggCgYIARAAGAQSNwF-L9IrB_8s78Mu6fq3tyeYJtayH07_V0healVBWy-4MZbeqzyqaXAqiJ7SikC9VzKCMOPJNsQ';
 
     private Google_Client $ob_client;
     private Google_Service_Drive $ob_service;
     private GoogleDriveAdapter $ob_adapter;
     public string $root_folder = '';
-    public Filesystem $file_system;
+    public ?Filesystem $file_system;
 
-    public function __construct(string $app_name = 'Test', string $folder_id)
+    public function __construct()
     {
-        $client = new Google_Client();
-        $client->setClientId(self::CLIENT_ID);
-        $client->setClientSecret(self::CLIENT_SECRET);
-        $client->refreshToken(self::REFRESH_TOKEN);
-        $client->setApplicationName($app_name);
-
-        $this->root_folder = $folder_id;
-        $this->ob_client = $client;
-
-        $this->initAdapter();
-        $this->createFileSystem();
-    }
-    private function initAdapter() : void
-    {
-        $this->ob_service = new Google_Service_Drive($this->ob_client);
-        $this->ob_adapter = new GoogleDriveAdapter($this->ob_service, $this->root_folder);
-    }
-    private function createFileSystem() : void
-    {
-        $this->file_system = new Filesystem($this->ob_adapter);
+        $this->file_system = Xcart::app()->storage->getFilesystem('google');
     }
 
     public function getFolderByName(array $list_content, string $folder_name)

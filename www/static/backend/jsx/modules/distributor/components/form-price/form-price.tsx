@@ -61,7 +61,7 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
         </div>
         {dialogOpen && (
           <DialogTablePrice
-            file={fileForm}
+            file={{ get: fileForm, set: setFileForm }}
             dx={distributorId}
             arTable={table}
             state={{ get: dialogOpen, set: setDialogOpen }}

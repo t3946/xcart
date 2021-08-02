@@ -52,7 +52,7 @@ class DistributorForm extends ModelForm
                 'required' => true,
             ],
             15 => [
-                'title' => 'Upload file pricing',
+                'title' => 'Upload file lists',
                 'form' => DistributorPriceForm::class,
                 'required' => true,
                 'hidden' => true,

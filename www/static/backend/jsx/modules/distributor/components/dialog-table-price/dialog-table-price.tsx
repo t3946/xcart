@@ -16,7 +16,7 @@ import CloseIcon from "@material-ui/icons/Close";
 interface IDialogTablePrice {
   state: { get: any; set: any };
   arTable: [];
-  file: any;
+  file: { get: any; set: any };
   dx: number;
   arTableName: [];
 }
@@ -43,7 +43,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const onSaveHandler = () => {
     if (validFileData(select, mainCheck)) {
       const data = new FormData();
-      data.append("file", file);
+      data.append("file", file.get);
       data.append("select", JSON.stringify(select));
       data.append("dx", dx);
       data.append("checkField", JSON.stringify(mainCheck));
@@ -108,6 +108,10 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       ...{ [indexTable]: !event.target.checked ? "productcode" : "upc" },
     }));
   };
+  const onCloseDialog = () => {
+    file.set(null);
+    state.set(false);
+  };
 
   return (
     <Dialog
@@ -121,7 +125,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
           <CloseIcon
             cursor="pointer"
             fontSize="medium"
-            onClick={() => state.set(false)}
+            onClick={onCloseDialog}
           />
         </div>
         <Typography align="center" variant="h6">

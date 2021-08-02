@@ -10,7 +10,7 @@ use Xcart\App\Main\Xcart;
 
 class SaveFilePrice
 {
-    public int $time_exec = 0;
+    public int $time_exec = 0; // count seconds of request execution
     public int $count_update = 0;
     private int $count_image_field = 0;
     private array $ar_update_field;
@@ -62,7 +62,7 @@ class SaveFilePrice
             }
         }
     }
-
+    /* Through tables and rows of the table and searches for the product, if it finds, updates */
     public function savePrice(): void
     {
         $time_start = time();
