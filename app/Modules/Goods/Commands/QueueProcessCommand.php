@@ -64,7 +64,7 @@ class QueueProcessCommand extends Command
                     if ($product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
                         if ($data['eta_date_mm_dd_yyyy']) {
-                            $product->eta_date = strtotime($data['eta_date_mm_dd_yyyy']);
+                            $product->eta_date_mm_dd_yyyy = strtotime($data['eta_date_mm_dd_yyyy']);
                         }
                         if ($site) {
                             $product->sites = [$site];
@@ -117,7 +117,7 @@ class QueueProcessCommand extends Command
                             $child += ['manufacturerid' => $group_product['manufacturerid']];
                             $product->setAttributes($child);
                             if ($data['eta_date_mm_dd_yyyy']) {
-                                $product->eta_date = strtotime($data['eta_date_mm_dd_yyyy']);
+                                $product->eta_date_mm_dd_yyyy = strtotime($child['eta_date_mm_dd_yyyy']);
                             }
                             $product->parent = $group_product;
                             $product->group_mask = $group_product->product;
