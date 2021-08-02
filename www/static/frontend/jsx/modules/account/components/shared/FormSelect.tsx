@@ -49,15 +49,17 @@ export const FormSelect = ({
         <div id={id} className="select__head">
           {value.viewValue}
         </div>
-        <ul className={`select__list`}>
-          {items.map((item) => {
-            return (
-              <li onClick={() => onClick(item)} className="select__item">
-                {item.viewValue}
-              </li>
-            );
-          })}
-        </ul>
+        {open && (
+          <ul className={`select__list`}>
+            {items.map((item) => {
+              return (
+                <li onClick={() => onClick(item)} className="select__item">
+                  {item.viewValue}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </Grid>
   );

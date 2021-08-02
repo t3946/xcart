@@ -13,7 +13,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
     login: yup.string().required("Login is a required field"),
   });
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
-  const inputRef = React.createRef();
+  const inputRef = React.createRef<HTMLInputElement>();
 
   const initialState = {
     login: props.userLogin,
@@ -55,6 +55,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         ref={React.useRef()}
       >
         {({ isSubmitting, handleChange, values, touched, errors }) => {
+          console.log(11);
           return (
             <Form>
               <RBForm.Group controlId="LoginFormLogin">

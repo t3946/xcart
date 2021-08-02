@@ -67,45 +67,45 @@ export const AccountRouters = () => {
 
             <div className={classNames(rightColumnClasses)}>
               <Switch>
-                  <Route
-                    exact
-                    path="/account/addresses"
-                    component={AddressDialogHOC(
-                      <Addresses />,
-                      <AddAddressDialog />
-                    )}
-                  />
+                <Route
+                  exact
+                  path="/account/addresses"
+                  component={AddressDialogHOC(
+                    <Addresses />,
+                    <AddAddressDialog />
+                  )}
+                />
 
-                  <Route
-                    exact
-                    path="/account/addresses/add"
-                    component={AddAddressPage}
-                  />
+                <Route
+                  exact
+                  path="/account/addresses/add"
+                  component={AddAddressPage}
+                />
 
-                  <Route
-                    exact
-                    path="/account/payments/wallet"
-                    component={Wallet}
-                  />
+                <Route
+                  exact
+                  path="/account/payments/wallet"
+                  component={Wallet}
+                />
 
-                  <Route
-                    exact
-                    path="/account/payments/transactions"
-                    component={Transactions}
-                  />
+                <Route
+                  exact
+                  path="/account/payments/transactions"
+                  component={Transactions}
+                />
 
-                  <Route
-                    exact
-                    path={appData.routes["account:login"]}
-                    component={LoginForm}
-                  />
+                <Route
+                  exact
+                  path={window?.appData.routes["account:login"]}
+                  component={LoginForm}
+                />
 
-                  <Route
-                    exact
-                    path={appData.routes["account:register"]}
-                    component={RegisterForm}
-                  />
-                </Switch>
+                <Route
+                  exact
+                  path={window?.appData.routes["account:register"]}
+                  component={RegisterForm}
+                />
+              </Switch>
             </div>
           </div>
         </div>

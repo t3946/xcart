@@ -79,10 +79,10 @@ export const AddAddressForm = ({ addressInfo }) => {
                 value={values.full_name}
                 name={"full_name"}
                 errorMessage={errors.full_name}
-                handleChange={handleChange}
                 touched={touched.full_name}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
+                handleChange={handleChange}
               />
               <FormInput
                 label={"Phone Number"}
