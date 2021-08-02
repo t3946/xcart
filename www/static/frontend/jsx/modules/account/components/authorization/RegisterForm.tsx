@@ -11,10 +11,10 @@ import { userSetAction } from "../../../../redux/actions/account-actions/UserAct
 const RegisterForm: React.FC<any> = (props: any) => {
   const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
-    name: "Jimmy",
-    email: "e" + Math.round(Math.random() * 10000) + "@gmail.com",
-    password: "123qwe",
-    password_confirm: "123qwe",
+    name: "",
+    email: "",
+    password: "",
+    password_confirm: "",
   };
   const formRef = React.useRef();
   const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
   }
 
   return (
-    <div className="account-login-form account_auth-form">
+    <div className="account-auth-form account_auth-form">
       {user && <Redirect to="/account/" />}
       <h1 className="account-form-header">Create account</h1>
 
@@ -178,7 +178,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
               .
             </p>
 
-            <div className="form-divider login-form_divider mb-0" />
+            <div className="form-divider auth-form_divider mb-0" />
 
             <p className={"auth-form-info register-form_already-have-account"}>
               Already have an account?{" "}

@@ -61,8 +61,7 @@ export const AccountRouters = () => {
             </div>
 
             <div className={classNames(rightColumnClasses)}>
-              <div className="content-container">
-                <Switch>
+              <Switch>
                   <Route
                     exact
                     path="/account/addresses"
@@ -102,7 +101,6 @@ export const AccountRouters = () => {
                     component={RegisterForm}
                   />
                 </Switch>
-              </div>
             </div>
           </div>
         </div>

@@ -127,7 +127,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         }}
       </Formik>
 
-      <div className="form-divider form-divider__with-content login-form_divider">
+      <div className="form-divider form-divider__with-content auth-form_divider">
         <span className="form-divider-text">New to S3 Stores?</span>
       </div>
 
