@@ -67,11 +67,6 @@ class UserModel extends Model
                 'null' => true,
                 'unique' => false,
             ],
-            'cart_number' => [
-                'class' => IntField::class,
-                'null' => false,
-                'default' => 0,
-            ],
             'addresses' => [
                 'class' => HasManyField::class,
                 'modelClass' => AddressesModel::class,
