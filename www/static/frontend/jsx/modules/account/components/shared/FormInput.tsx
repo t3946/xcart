@@ -2,6 +2,7 @@ import React, { ChangeEvent, FocusEventHandler } from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { FormikErrors, FormikTouched } from "formik";
+import InputMask from "react-input-mask";
 
 interface FormInputPropsDto {
   label?: string;
@@ -19,6 +20,7 @@ interface FormInputPropsDto {
   value: any;
   touched?: boolean | FormikTouched<any> | FormikTouched<any>[];
   handleBlur?: FocusEventHandler<HTMLInputElement>;
+  mask?: string;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -33,6 +35,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   value,
   touched,
   handleBlur,
+  mask,
 }) => {
   const error = errorMessage && touched;
   return (
@@ -55,19 +58,28 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
           </label>
         )}
         <div className={classnames(classes?.input)}>
-          <input
-            onBlur={handleBlur}
-            placeholder={placeholder}
-            className={classnames(
-              "form-input",
-              `${error && "form-input-error"}`
-            )}
-            name={name}
-            id={id}
-            type={type ? type : "text"}
-            onChange={handleChange}
+          <InputMask
+            mask={mask}
             value={value}
-          />
+            onChange={handleChange}
+            onBlur={handleBlur}
+          >
+            {(inputProps) => (
+              <input
+                onBlur={handleBlur}
+                placeholder={placeholder}
+                className={classnames(
+                  "form-input",
+                  `${error && "form-input-error"}`
+                )}
+                name={name}
+                id={id}
+                type={type ? type : "text"}
+                onChange={handleChange}
+                value={value}
+              />
+            )}
+          </InputMask>
         </div>
       </Grid>
       <div className="error-message-input-container">

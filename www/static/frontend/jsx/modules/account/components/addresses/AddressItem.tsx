@@ -5,6 +5,7 @@ import {
   removeAddress,
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
+import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
@@ -64,22 +65,12 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
             <div className="address-text">Phone number:</div>
             <div className="address-text">{addressInfo.phone_number}</div>
           </div>
-          <div className="address-footer">
-            <div className="address-footer-left-part">
-              <div onClick={editAddress} className="address-footer-btn">
-                Edit
-              </div>
-              <div className="address-footer-barrier" />
-              <div onClick={handleRemoveAddress} className="address-footer-btn">
-                Remove
-              </div>
-            </div>
-            {!defaultItem && (
-              <div onClick={changeDefault} className="address-footer-btn">
-                Set as Default
-              </div>
-            )}
-          </div>
+          <AddEditBtnsBlock
+            handleEdit={editAddress}
+            defaultItem={defaultItem}
+            changeDefault={changeDefault}
+            handleRemove={handleRemoveAddress}
+          />
         </div>
       </div>
       <div

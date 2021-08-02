@@ -2,11 +2,15 @@
 
 namespace Modules\User\Models\UserAccount;
 
+use Modules\Account\Models\AddressesModel;
+use Modules\Account\Models\UserAddressModel;
 use Modules\User\Helpers\PasswordHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -34,9 +38,9 @@ class UserModel extends Model
                 'default' => '',
             ],
             'avatar_id' => [
-                'class' => AutoField::class,
+                'class' => IntField::class,
                 'null' => true,
-                'default' => '',
+                'default' => null,
             ],
             'rate_us' => [
                 'class' => CharField::class,
@@ -64,9 +68,14 @@ class UserModel extends Model
                 'unique' => false,
             ],
             'cart_number' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
+            ],
+            'addresses' => [
+                'class' => HasManyField::class,
+                'modelClass' => AddressesModel::class,
+                'link' => ['user_id' => 'user_id']
             ]
         ];
     }

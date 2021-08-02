@@ -20,7 +20,6 @@ class AccountWalletApi  extends FrontendController
         {
             $cards[$key] = $model->getAttributes();
             $cards[$key]['address'] = $model->address_model->getAttributes();
-
         }
 
         $this->jsonResponse($cards);
@@ -34,12 +33,34 @@ class AccountWalletApi  extends FrontendController
         foreach ($cards as $card)
         {
             if($card->credit_card_id == $cardId){
-
                 $card->is_default = true;
             } else{
                 $card->is_default = false;
             }
             $card->save();
+        }
+
+        $this->getCards();
+    }
+
+    public function addNewCard()
+    {
+        $cardInfo = json_decode(file_get_contents('php://input'), true);
+
+        $newCard = $cardInfo['card'];
+
+        $address = $cardInfo['address'];
+
+        if ($address['address_id']) {
+            $newCard['address_id'] = $address['address_id'];
+        }
+        else
+        {
+            $address['address_type'] = 'billing';
+            $address['user_id'] = 1;
+            $model = new AddressesModel($address);
+            $model->save();
+            $newCard['address_id'] = $model->address_id;
         }
 
         $this->getCards();

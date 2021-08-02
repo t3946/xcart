@@ -1,16 +1,23 @@
-import { useEffect } from "react";
-
-function useCLickListener(func: (arg: boolean) => void): void {
-  const handleFunction = () => {
+function useCLickListener(func: (arg: boolean) => void, id?): any {
+  const handleFunction = (e) => {
+    if (e.target.id === id) {
+      return;
+    }
     func(false);
   };
 
-  useEffect(() => {
+  const startListen = () => {
     window.addEventListener("click", handleFunction);
-    return () => {
-      window.removeEventListener("click", handleFunction);
-    };
-  }, []);
+  };
+
+  const endListen = () => {
+    window.removeEventListener("click", handleFunction);
+  };
+
+  return {
+    startListen,
+    endListen,
+  };
 }
 
 export default useCLickListener;

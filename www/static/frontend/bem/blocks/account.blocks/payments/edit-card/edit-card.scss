@@ -19,3 +19,64 @@
     text-decoration: underline;
   }
 }
+
+.edit-card-from-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-card-input-card-name{
+  margin-right: 40px;
+}
+
+.edit-card-select-expirations{
+ width: 50% !important;
+}
+
+.edit-card-select-expirations-months{
+  margin-right: 15px;
+}
+
+.edit-card-expirations-container{
+  display: flex;
+}
+
+.edit-card-content{
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-card-btns{
+  display: flex;
+}
+
+.cancel-edit-card-btn{
+  margin-right: 10px !important;
+}
+
+
+
+@media (max-width: 1000px) {
+  .edit-card-input-card-name{
+    margin-right: 0;
+  }
+
+  .edit-card-from-container{
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 670px) {
+  .edit-card-input-card-name{
+    margin-right: 0;
+  }
+
+  .edit-card-content, .edit-card-btns{
+    flex-direction: column;
+  }
+
+  .cancel-edit-card-btn{
+    margin-right: 0px !important;
+    margin-bottom: 10px !important;
+  }
+}

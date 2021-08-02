@@ -3,18 +3,15 @@ import { AddNewAddress } from "../components/addresses/AddNewAddress";
 import { AddressList } from "../components/addresses/AddressList";
 import { useDispatch, useSelector } from "react-redux";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
+import { AddressTypeEnum } from "../ts/types/address-item.type";
 
 export const Addresses = () => {
-  const dispatch = useDispatch();
+  const addresses = useSelector((e: any) => {
+    return e.addresses.addressesList?.filter(
+      (address) => address.address_type === AddressTypeEnum.SHIPPING
+    );
+  });
 
-  const addresses = useSelector((e: any) => e.addresses.addressesList);
-
-  useEffect(() => {
-    if (!addresses) {
-      dispatch(getAddresses());
-    }
-  }, []);
   return (
     <div>
       <div className="page-label">Addresses</div>

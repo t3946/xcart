@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
@@ -10,10 +10,19 @@ export const FormSelect = ({
   name,
   label = "",
   classes = undefined,
+  id = undefined,
 }) => {
   const [open, setOpen] = useState(false);
 
-  useCLickListener(setOpen);
+  const clickListener = useCLickListener(setOpen, id);
+
+  useEffect(() => {
+    clickListener.startListen();
+
+    return () => {
+      clickListener.endListen();
+    };
+  });
   return (
     <Grid
       className={classnames(
@@ -27,7 +36,6 @@ export const FormSelect = ({
       {label && <label className="form-input-label">{label}</label>}
       <div
         onClick={(e) => {
-          e.stopPropagation();
           setOpen(!open);
         }}
         className={classnames("select-wrapper", classes?.input)}
@@ -38,7 +46,9 @@ export const FormSelect = ({
           type="hidden"
           name={name}
         />
-        <div className="select__head">{value.viewValue}</div>
+        <div id={id} className="select__head">
+          {value.viewValue}
+        </div>
         <ul className={`select__list`}>
           {items.map((item) => {
             return (

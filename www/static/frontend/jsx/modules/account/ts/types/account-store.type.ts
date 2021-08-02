@@ -20,4 +20,5 @@ export interface AccountMainStoreDto {
 export interface AccountWalletStoreDto {
   cards: any[];
   cardsLoading: boolean;
+  submitFormData?: any;
 }

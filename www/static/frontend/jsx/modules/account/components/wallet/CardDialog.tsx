@@ -13,7 +13,10 @@ export const CardDialog = ({ handleClose, open, contentType, actionType }) => {
 
   const onDialogClose = () => {
     handleClose();
-    setContent(actionType);
+
+    setTimeout(() => {
+      setContent(actionType);
+    }, 200);
   };
 
   const showContent = (type) => {

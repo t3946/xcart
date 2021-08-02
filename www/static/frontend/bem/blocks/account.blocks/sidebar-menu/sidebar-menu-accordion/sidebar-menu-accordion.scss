@@ -1,5 +1,6 @@
 .sidebar-menu-accordion{
   &-content{
+    -webkit-transition: .3s all;
     transition: .3s all;
     overflow: hidden;
   }
@@ -47,4 +48,8 @@
 
 .accordion-active{
   color: black !important;
+}
+
+.accordion-content-close{
+  height: 0;
 }

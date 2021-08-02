@@ -17,6 +17,7 @@ import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
+import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
 
@@ -24,8 +25,12 @@ export const AccountRouters = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
 
+  const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
     dispatch(getTerritory());
+    if (!addresses) {
+      dispatch(getAddresses());
+    }
   }, []);
 
   const leftColumnClasses = [

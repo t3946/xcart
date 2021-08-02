@@ -100,11 +100,13 @@
 }
 
 .add-address-form-container{
-  padding: 0 24px 35px;
+  padding: 20px 24px 20px;
+  border: 1px solid  #C4C4C4;
 }
 
 .add-address-page{
   width: 100%;
+  max-width: 660px;
 }
 
 .add-address-checkbox{
@@ -112,6 +114,37 @@
 }
 
 .add-address-input{
-  width: 50%;
+  width: 50% !important;
   position: relative;
+
+
+}
+
+@media (max-width: 640px) {
+  .add-address{
+    flex-direction: initial;
+    height: 70px;
+  }
+
+  .address-container{
+    width: 300px;
+    margin-right: 0;
+  }
+
+  .add-address-label{
+    margin-left: 10px;
+  }
+
+  .add-address-input{
+    width: 100% !important;
+    position: relative;
+  }
+}
+
+@media (max-width: 768px) {
+  .addresses-list-container{
+    justify-content: center;
+  }
+
+
 }
