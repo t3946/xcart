@@ -12,7 +12,7 @@ return [
     ],
     [
         'route' => 'dx/price/save',
-        'target' => [ApiDxController::class, 'savePrice'],
+        'target' => [ApiDxController::class, 'savePriceListFile'],
         'name' => 'save_price'
     ],
     [
@@ -27,7 +27,7 @@ return [
     ],
     [
         'route' => 'dx/products-price/save',
-        'target' => [ApiDxController::class, 'saveProductsPrice'],
+        'target' => [ApiDxController::class, 'updateProductsFromPriceList'],
         'name' => 'save_products_price'
     ],
     [

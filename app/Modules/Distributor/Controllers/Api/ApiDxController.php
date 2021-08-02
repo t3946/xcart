@@ -161,7 +161,7 @@ class ApiDxController extends Controller
 
     }
 
-    public function savePrice()
+    public function savePriceListFile()
     {
         $post = Xcart::app()->request->post;
         $dx = DistributorModel::objects()->get(['manufacturerid' => $post['dx']]);
@@ -169,7 +169,7 @@ class ApiDxController extends Controller
         try {
             $google_drive = new GoogleDrive('Test', '1m0heCJuDhMuBlzfY-vKWKIi58Xa98U2r');
             $code = strtoupper($dx->code);
-            $ar_file = $google_drive->uploadFile($code, $_FILES['d_price_list']);
+            $ar_file = $google_drive->uploadFile($code, $_FILES['d_price_list']); // load file to google drive folder
 
             if (!empty($ar_file)) {
                 $link = $google_drive->getLink($ar_file['dirname']);
@@ -179,17 +179,18 @@ class ApiDxController extends Controller
                     $excel_obj = $reader->load($_FILES['d_price_list']['tmp_name']);
                     $ar_data = [];
                     $ar_tables = [];
+                    /* looking from excel file first 30 rows which not empty */
                     for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
                         $ar_excel = $excel_obj->getSheet($t)->toArray();
                         for ($i = 0; $i < count($ar_excel); $i++) {
-                            $count_good = 0;
+                            $count_good = 0; // count not empty field
                             $row = $ar_excel[$i];
                             for ($d = 0; $d < count($row); $d++) {
                                 if (!empty($row[$d]) && !is_null($row[$d])) {
                                     $count_good++;
                                 }
                             }
-                            if ($count_good > (count($row) / 100) * 30) {
+                            if ($count_good > (count($row) / 100) * 30) { // if count not empty column in row > 30%
                                 $ar_data[$t][] = $row;
                             }
                             if (count($ar_data[$t]) === self::COUNT_ITEMS_TABLE) {
@@ -214,7 +215,8 @@ class ApiDxController extends Controller
         }
     }
 
-    public function saveProductsPrice()
+    /* Update products by rows from excel file */
+    public function updateProductsFromPriceList()
     {
         set_time_limit(0);
         $post = Xcart::app()->request->post;
@@ -243,6 +245,7 @@ class ApiDxController extends Controller
             } catch (\Exception $exception) {
                 $result['error'] = $exception->getMessage();
             } finally {
+                // overwriting column order in excel table
                 $id_list = ColumnTableSaveModel::objects()->filter(['manufactureid' => $dx->pk])->valuesList(['id'], true);
                 if ($id_list) {
                     ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
@@ -262,6 +265,7 @@ class ApiDxController extends Controller
         }
     }
 
+    /* Get order columns by manufacturerid */
     public function getColumnByDx(int $dx)
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);

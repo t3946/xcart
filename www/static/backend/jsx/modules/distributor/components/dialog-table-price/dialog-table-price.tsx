@@ -11,6 +11,7 @@ import { TabsPanelTable } from "@admin/modules/distributor/components/tabs-table
 import { TabContext, TabList } from "@material-ui/lab";
 import { TabListTable } from "@admin/modules/distributor/components/tabs-table/tab-list-table";
 import { validFileData } from "@admin/modules/distributor/components/dialog-table-price/constants";
+import CloseIcon from "@material-ui/icons/Close";
 
 interface IDialogTablePrice {
   state: { get: any; set: any };
@@ -116,6 +117,13 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       aria-labelledby="max-width-dialog-title"
     >
       <TabContext value={tabIndex}>
+        <div className="close-dialog__button">
+          <CloseIcon
+            cursor="pointer"
+            fontSize="medium"
+            onClick={() => state.set(false)}
+          />
+        </div>
         <Typography align="center" variant="h6">
           Price List
         </Typography>

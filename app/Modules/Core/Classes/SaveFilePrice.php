@@ -25,6 +25,9 @@ class SaveFilePrice
         $this->search_by = $search_by;
     }
 
+    /** Send data about full query save price from RabbitMQ
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
     public function sendStats(): void
     {
         $site = Xcart::app()->getModule('Sites')->getSelectedSite();
@@ -32,7 +35,7 @@ class SaveFilePrice
             'active_sku' => $this->success_productcode,
             'dx_code' => $this->dx_code,
             'process_time' => $this->time_exec,
-            'feed_source' => 'price',
+            'feed_source' => 'manual',
             'products_in_feed' => $this->count_update,
             'feed_source_date' => date('Y-m-d H:i:s'),
             'storefront' => $site->pk
@@ -40,6 +43,10 @@ class SaveFilePrice
         Xcart::app()->queue->send('products_active_test', json_encode($ar_active));
     }
 
+    /** Collect data
+     * @param array $select
+     * @param $ar_save
+     */
     public function collectField(array $select, $ar_save): void
     {
         foreach ($select as $table_index => $ar_key) {
@@ -100,6 +107,11 @@ class SaveFilePrice
         }
     }
 
+    /** Sends image data to RabbitMQ
+     * @param ProductModel $productModel
+     * @param int $table_index - number table from excel table
+     * @param int $num_row
+     */
     private function sendImageData(ProductModel $productModel, int $table_index, int $num_row)
     {
         $ar_images = [];

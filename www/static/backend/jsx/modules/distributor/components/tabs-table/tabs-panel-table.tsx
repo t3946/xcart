@@ -17,7 +17,7 @@ export const TabsPanelTable: React.FC<ITabsPanelTable> = ({
     <>
       {arTable.map((table, i) => {
         return (
-          <TabPanel value={`${i}`}>
+          <TabPanel style={{ padding: "12px" }} value={`${i}`}>
             <TablePrice
               arTable={arTable[i]}
               indexTable={i}
