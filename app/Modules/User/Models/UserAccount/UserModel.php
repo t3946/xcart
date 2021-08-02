@@ -89,7 +89,7 @@ class UserModel extends Model
     /**
      * авторизует пользователя в сессии и сохраняет сессионные куки
     */
-    public function authenticate($remember_me): void
+    public function authenticate($remember_me = false): void
     {
         Xcart::app()->auth->login($this, $remember_me);
 
