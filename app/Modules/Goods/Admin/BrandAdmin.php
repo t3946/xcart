@@ -75,7 +75,7 @@ class BrandAdmin extends Admin
                         if (is_array($value)) {
                             $params_filter .= '__in';
                         }
-                        $filter->filter([$params_filter => $value])->group(['products__manufacturerid']);
+                        $filter->distinct()->filter([$params_filter => $value]);
                         break;
                 }
             }
