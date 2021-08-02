@@ -31,23 +31,29 @@ class QueueImagesCommand extends Command
                 $uploaded = 0;
                 try {
                     foreach ($data['images'] as $image_url) {
-                        $file = new RemoteFile($image_url);
-                        $hash =  $file->getHash();
-                        [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
-                        if ($is_new) {
-                            try {
-                                $model->path = $file;
-                                $model->save();
-                                [$model->width, $model->height] = $model->path->getImageSizes();
-                                $model->save();
-                                $uploaded++;
-                            } catch (UniqueConstraintViolationException $exception) {
-                                //Duplicate image
-                                if ($exception->getCode() === 1062) {
-                                    $model = ProductImageModel::objects()->get(['hash' => $hash]);
+                        $link_hash = md5($image_url .':'. $data['product_code']);
+
+                        if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
+                            $file = new RemoteFile($image_url);
+                            $hash = $file->getHash();
+                            [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
+                            if ($is_new) {
+                                try {
+                                    $model->path = $file;
+                                    $model->link = $link_hash;
+                                    $model->save();
+                                    [$model->width, $model->height] = $model->path->getImageSizes();
+                                    $model->save();
+                                    $uploaded++;
+                                } catch (UniqueConstraintViolationException $exception) {
+                                    //Duplicate image
+                                    if ($exception->getCode() === 1062) {
+                                        $model = ProductImageModel::objects()->get(['hash' => $hash]);
+                                    }
                                 }
                             }
                         }
+
                         $images[] = $model;
                     }
                 } catch (Throwable $exception) {
