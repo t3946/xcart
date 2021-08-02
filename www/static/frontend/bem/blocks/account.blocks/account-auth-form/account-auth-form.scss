@@ -1,5 +1,6 @@
 .account-auth-form {
     width: 100%;
+    padding: 0 0 rem-calc(30) 0;
 
     @include breakpoint(sm up) {
         padding: rem-calc(20) rem-calc(24) rem-calc(32);

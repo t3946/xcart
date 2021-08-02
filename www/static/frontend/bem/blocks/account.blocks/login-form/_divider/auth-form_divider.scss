@@ -1,7 +1,7 @@
 .auth-form_divider{
     margin: rem-calc(20) 0;
 
-    @include breakpoint(md up) {
+    @include breakpoint(sm up) {
         margin: rem-calc(20) rem-calc(-24);
     }
 }

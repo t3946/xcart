@@ -178,18 +178,35 @@ const RegisterForm: React.FC<any> = (props: any) => {
               .
             </p>
 
-            <div className="form-divider auth-form_divider mb-0" />
+            <div className="d-sm-none">
+              <div className="form-divider form-divider__with-content auth-form_divider">
+                <span className="form-divider-text">Already have an account?</span>
+              </div>
 
-            <p className={"auth-form-info register-form_already-have-account"}>
-              Already have an account?{" "}
               <NavLink
                 to={appData.routes["account:login"]}
-                className="common-link"
                 exact={true}
+                className="form-button form-button__outline common-link"
               >
-                Sign-In
+                sign in
               </NavLink>
-            </p>
+            </div>
+
+            <div className="d-none d-sm-block">
+              <div className="form-divider auth-form_divider mb-0" />
+
+              <p className={"auth-form-info register-form_already-have-account"}>
+                Already have an account?{" "}
+                <NavLink
+                  to={appData.routes["account:login"]}
+                  className="common-link"
+                  exact={true}
+                >
+                  Sign-In
+                </NavLink>
+              </p>
+            </div>
+
           </Form>
         )}
       </Formik>
