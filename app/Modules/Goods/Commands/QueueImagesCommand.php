@@ -37,13 +37,13 @@ class QueueImagesCommand extends Command
                             $file = new RemoteFile($image_url);
                             $hash = $file->getHash();
                             [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
+                            $model->link = $link_hash;
                             if ($is_new) {
                                 try {
                                     $model->path = $file;
                                     $model->link = $link_hash;
                                     $model->save();
                                     [$model->width, $model->height] = $model->path->getImageSizes();
-                                    $model->save();
                                     $uploaded++;
                                 } catch (UniqueConstraintViolationException $exception) {
                                     //Duplicate image
@@ -52,6 +52,7 @@ class QueueImagesCommand extends Command
                                     }
                                 }
                             }
+                            $model->save();
                         }
 
                         $images[] = $model;
