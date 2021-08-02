@@ -63,6 +63,9 @@ class QueueProcessCommand extends Command
                     }
                     if ($product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
+                        if ($data['eta_date_mm_dd_yyyy']) {
+                            $product->eta_date = strtotime($data['eta_date_mm_dd_yyyy']);
+                        }
                         if ($site) {
                             $product->sites = [$site];
                             ProductHelper::setProductBrand($product, $data['brand_name'], $site);
@@ -113,6 +116,9 @@ class QueueProcessCommand extends Command
                         if ($product->hash_product !== $child['hash_product'] || $product->group_root != $group_product->productid) {
                             $child += ['manufacturerid' => $group_product['manufacturerid']];
                             $product->setAttributes($child);
+                            if ($data['eta_date_mm_dd_yyyy']) {
+                                $product->eta_date = strtotime($data['eta_date_mm_dd_yyyy']);
+                            }
                             $product->parent = $group_product;
                             $product->group_mask = $group_product->product;
                             $product->sites = [$site];
