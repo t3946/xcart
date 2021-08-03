@@ -34,10 +34,9 @@ class UserModel extends Model
                 'null' => false,
                 'default' => '',
             ],
-            'avatar_id' => [
-                'class' => IntField::class,
-                'null' => true,
-                'default' => null,
+            'avatar_uri' => [
+                'class' => CharField::class,
+                'required' => true,
             ],
             'rate_us' => [
                 'class' => CharField::class,
