@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
-import { BreadCrumbs } from "../components/sidebar-menu/BreadCrumbs";
+import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
@@ -57,9 +57,9 @@ export const AccountRouters = () => {
         <HatSearchLine />
         <MobileMenu />
 
-        {user && <BreadCrumbs />}
-
         <div className={"container"}>
+          {user && <BreadCrumbs />}
+
           <div className="row">
             <div className={classNames(leftColumnClasses)}>
               <SideBarMenu />
