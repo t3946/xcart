@@ -617,7 +617,7 @@ $(function () {
       },
       actions: {
         confirm: {
-          text: "Okey",
+          text: "Ok",
           callback: function (confirm, cancel) {
             $.ajax({
               url: url,
