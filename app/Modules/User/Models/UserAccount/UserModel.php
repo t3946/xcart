@@ -3,14 +3,11 @@
 namespace Modules\User\Models\UserAccount;
 
 use Modules\Account\Models\AddressesModel;
-use Modules\Account\Models\UserAddressModel;
 use Modules\User\Helpers\PasswordHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\IntField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -37,10 +34,9 @@ class UserModel extends Model
                 'null' => false,
                 'default' => '',
             ],
-            'avatar_id' => [
-                'class' => IntField::class,
-                'null' => true,
-                'default' => null,
+            'avatar_uri' => [
+                'class' => CharField::class,
+                'required' => true,
             ],
             'rate_us' => [
                 'class' => CharField::class,
@@ -67,15 +63,15 @@ class UserModel extends Model
                 'null' => true,
                 'unique' => false,
             ],
-            'cart_number' => [
-                'class' => IntField::class,
-                'null' => false,
-                'default' => 0,
-            ],
             'addresses' => [
                 'class' => HasManyField::class,
                 'modelClass' => AddressesModel::class,
                 'link' => ['user_id' => 'user_id']
+            ],
+            'cart_number' => [
+                'class' => CharField::class,
+                'null' => true,
+                'unique' => false,
             ]
         ];
     }
@@ -103,7 +99,8 @@ class UserModel extends Model
             Xcart::app()->request->session->start();
         }
 
-        Xcart::app()->request->cookie->add($session_key, $session_id);
+        $expiry = time() + Xcart::app()->getModule('User')->EXP_TIME_S;
+        Xcart::app()->request->cookie->add($session_key, $session_id, $expiry);
     }
 
     public function login(string $password, bool $remember_me = false): bool
