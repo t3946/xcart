@@ -18,6 +18,7 @@ export interface StoreDto {
   moreViewed: boolean;
   templates?: any;
   user: any;
+  breadcrumbs: Record<string, string>;
 }
 
 export interface EmailStoreItems {

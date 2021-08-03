@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
@@ -11,27 +11,21 @@ import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import { AddAddressPage } from "../pages/AddAddressPage";
-import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
 import TopLine from "../components/hat/TopLine";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
-import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
+import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
+import { staticRoutes } from "../ts/consts/breadcrumbs";
 
-export const AccountRouters = () => {
+export const AccountRouters = (): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
 
-  const addresses = useSelector((e: any) => e.addresses.addressesList);
-  useEffect(() => {
-    dispatch(getTerritory());
-    if (!addresses) {
-      dispatch(getAddresses());
-    }
-  }, []);
+  dispatch(setBreadcrumbsAddresses(staticRoutes));
 
   const leftColumnClasses = [
     "col account-page-left-column d-none",
@@ -67,45 +61,45 @@ export const AccountRouters = () => {
 
             <div className={classNames(rightColumnClasses)}>
               <Switch>
-                  <Route
-                    exact
-                    path="/account/addresses"
-                    component={AddressDialogHOC(
-                      <Addresses />,
-                      <AddAddressDialog />
-                    )}
-                  />
+                <Route
+                  exact
+                  path="/account/addresses"
+                  component={AddressDialogHOC(
+                    <Addresses />,
+                    <AddAddressDialog />
+                  )}
+                />
 
-                  <Route
-                    exact
-                    path="/account/addresses/add"
-                    component={AddAddressPage}
-                  />
+                <Route
+                  exact
+                  path="/account/addresses/add"
+                  component={AddAddressPage}
+                />
 
-                  <Route
-                    exact
-                    path="/account/payments/wallet"
-                    component={Wallet}
-                  />
+                <Route
+                  exact
+                  path="/account/payments/wallet"
+                  component={Wallet}
+                />
 
-                  <Route
-                    exact
-                    path="/account/payments/transactions"
-                    component={Transactions}
-                  />
+                <Route
+                  exact
+                  path="/account/payments/transactions"
+                  component={Transactions}
+                />
 
-                  <Route
-                    exact
-                    path={appData.routes["account:login"]}
-                    component={LoginForm}
-                  />
+                <Route
+                  exact
+                  path={appData.routes["account:login"]}
+                  component={LoginForm}
+                />
 
-                  <Route
-                    exact
-                    path={appData.routes["account:register"]}
-                    component={RegisterForm}
-                  />
-                </Switch>
+                <Route
+                  exact
+                  path={appData.routes["account:register"]}
+                  component={RegisterForm}
+                />
+              </Switch>
             </div>
           </div>
         </div>

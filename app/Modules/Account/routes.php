@@ -9,10 +9,17 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'
     ],
+
     [
         'route' => '/addresses',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'addresses'
+    ],
+
+    [
+        'route' => '/addresses/add',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'addresses-add'
     ],
 
     [

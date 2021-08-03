@@ -2,7 +2,7 @@ import React from "react";
 import { AddressItem } from "./AddressItem";
 import { useSelector } from "react-redux";
 
-export const AddressList = ({ addresses }) => {
+export const AddressList = ({ addresses }: Record<any, any>): any => {
   const loading = useSelector((e: any) => e.addresses.loading);
   return (
     <React.Fragment>

@@ -1,29 +1,31 @@
 import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
-export const BreadCrumbs = () => {
-  const location = useLocation();
+export const BreadCrumbs = (): any => {
+  useLocation();
+  const breadcrumbsStore = useSelector((e: StoreDto) => e.breadcrumbs);
+  const breadcrumbsList = [];
+  const subPathsList = window.location.pathname.split("/");
 
-  const breadCrumbsNames = location.pathname.split("/").filter((e) => e !== "");
+  for (let i = 0, path = ""; i < subPathsList.length; i++) {
+    const subPath = subPathsList[i];
 
-  const breadCrumbs = breadCrumbsNames.map((name) => {
-    return {
-      name: editRouteToLabel(name),
-      path: "#",
-    };
-  });
+    if (subPath === "") {
+      continue;
+    }
 
-  function editRouteToLabel(route: string) {
-    const labels = route.split("-");
+    path += `/${subPath}`;
+    const name = breadcrumbsStore[path] || breadcrumbsStore[path + "/"];
 
-    return labels
-      .map((e) => {
-        const word = e.split("");
-        word[0] = word[0].toLocaleUpperCase();
-        return word.join("");
-      })
-      .join(" ");
+    if (name) {
+      breadcrumbsList.push({
+        name,
+        path,
+      });
+    }
   }
 
   return (
@@ -34,29 +36,29 @@ export const BreadCrumbs = () => {
       resistance={true}
       resistanceRatio={0}
       className="breadcrumb-list no-bullet mb-2.25 mt-2.25"
-      itemType="http://schema.org/BreadcrumbList"
+      itemType="https://schema.org/BreadcrumbList"
       itemProp="breadcrumb"
       itemScope
-      onSwiper={(swiper) => swiper.slideToLoop(breadCrumbs.length)}
+      onSwiper={(swiper) => swiper.slideToLoop(breadcrumbsList.length)}
     >
-      {breadCrumbs.map((item, i) => {
-        const last = i + 1 === breadCrumbs.length;
+      {breadcrumbsList.map((item, i) => {
+        const last = i + 1 === breadcrumbsList.length;
 
         if (!last) {
           return (
             <SwiperSlide key={i} className="breadcrumb-slide">
               <NavLink
-                to={"#"}
+                to={item.path}
                 className="breadcrumb-link"
                 itemScope
-                itemType="http://schema.org/Thing"
+                itemType="https://schema.org/Thing"
                 itemProp="item"
                 id={item.path}
                 href={item.path}
               >
                 <span itemProp="name">{item.name}</span>
               </NavLink>
-              <meta itemProp="position" content={i + 1} />
+              <meta itemProp="position" content={(i + 1).toString()} />
             </SwiperSlide>
           );
         } else {
@@ -64,13 +66,13 @@ export const BreadCrumbs = () => {
             <SwiperSlide key={i} className="breadcrumb-slide">
               <span
                 itemScope
-                itemType="http://schema.org/Thing"
+                itemType="https://schema.org/Thing"
                 itemProp="item"
                 id={item.path}
               >
                 <span itemProp="name">{item.name}</span>
               </span>
-              <meta itemProp="position" content={i + 1} />
+              <meta itemProp="position" content={(i + 1).toString()} />
             </SwiperSlide>
           );
         }
