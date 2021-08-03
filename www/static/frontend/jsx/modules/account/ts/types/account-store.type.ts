@@ -4,6 +4,7 @@ import { SelectValueDto } from "@modules/account/ts/types/select-value.type";
 export interface AccountStoreDto {
   addresses: AccountAddressesStoreDto;
   main: AccountMainStoreDto;
+  user: any;
 }
 
 export interface AccountAddressesStoreDto {

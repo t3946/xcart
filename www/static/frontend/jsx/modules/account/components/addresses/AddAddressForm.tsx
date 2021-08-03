@@ -15,6 +15,7 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
 
 export const AddAddressForm = ({ addressInfo }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ export const AddAddressForm = ({ addressInfo }) => {
       return;
     }
 
-    dispatch(addAddress(newAddress, onPended));
+    dispatch(addAddress(newAddress, onPended, accountStore.getState().user.id));
   };
   return (
     <div className="add-address-form-container">

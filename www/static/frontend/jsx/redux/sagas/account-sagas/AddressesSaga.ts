@@ -2,13 +2,12 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "../../../modules/shared/services/api.service";
 import { AnyAction } from "redux";
-import { useDispatch, useSelector } from "react-redux";
 
 const api = new ApiService();
 
-function* getAddresses(): Generator {
+function* getAddresses(action): Generator {
   const result: any = yield api
-    .get<any>(`/account/api/addresses/get-addresses`)
+    .post<any>(`/account/api/addresses/get-addresses`, action.userId)
     .then((response) => response)
     .catch((error) => console.log(error));
 
@@ -26,7 +25,13 @@ function* getAddresses(): Generator {
 
 function* changeDefaultAddress(action: AnyAction): Generator {
   const result: any = yield api
-    .post<any>(`/account/api/addresses/change-default-address`, action.id)
+    .post<any>(
+      `/account/api/addresses/change-default-address`,
+      JSON.stringify({
+        user: action.userId,
+        addressId: action.id,
+      })
+    )
     .then((response) => response)
     .catch((error) => console.log(error));
 
@@ -64,7 +69,12 @@ function* addAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
       `/account/api/addresses/add-address`,
-      JSON.stringify(action.address)
+      JSON.stringify(
+        JSON.stringify({
+          user: action.userId,
+          address: action.address,
+        })
+      )
     )
     .then((response) => response)
     .catch((error) => console.log(error));

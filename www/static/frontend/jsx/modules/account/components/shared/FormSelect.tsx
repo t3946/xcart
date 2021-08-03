@@ -35,7 +35,7 @@ export const FormSelect = ({
     >
       {label && <label className="form-input-label">{label}</label>}
       <div
-        onClick={(e) => {
+        onClick={() => {
           setOpen(!open);
         }}
         className={classnames("select-wrapper", classes?.input)}

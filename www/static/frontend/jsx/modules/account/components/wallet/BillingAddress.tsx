@@ -15,18 +15,21 @@ export const BillingAddress = () => {
     );
   });
 
-  const [value, setValue] = useState(billingAddresses[0].addresses_id);
+  const [value, setValue] = useState(billingAddresses[0]?.addresses_id);
 
   return (
     <div className="billing-address-container">
       <div className="dialog-title">Select a billing address</div>
-      {billingAddresses && (
+      {billingAddresses ? (
         <BillingAddressList
           value={value}
           setValue={setValue}
           addresses={billingAddresses}
         />
+      ) : (
+        <div>You have not added any addresses yet</div>
       )}
+
       <Grid container>
         <Button
           type={"submit"}

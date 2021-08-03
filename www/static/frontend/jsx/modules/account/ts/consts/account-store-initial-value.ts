@@ -16,6 +16,7 @@ export const accountAddressesInitialValue = {
 export const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
+  user: {},
 };
 
 export const accountMenuInitialValue = {

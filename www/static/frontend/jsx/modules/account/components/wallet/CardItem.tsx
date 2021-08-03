@@ -7,9 +7,7 @@ import { RemoveCardDialog } from "./RemoveCardDialog";
 import { useDispatch } from "react-redux";
 import { changeDefaultCard } from "../../../../redux/actions/account-actions/WalletActions";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
-import { useBreakPoint } from "../../hooks/useBreakPoint";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
-import classnames from "classnames";
 
 export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
   const accordion = useAccordion();

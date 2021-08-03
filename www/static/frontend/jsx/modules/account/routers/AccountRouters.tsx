@@ -25,12 +25,14 @@ export const AccountRouters = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
 
+  const data: any = window;
+
   const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
     dispatch(getTerritory());
-    if (!addresses) {
-      dispatch(getAddresses());
-    }
+    // if (!addresses) {
+    //   dispatch(getAddresses(accountStore.getState().user.id));
+    // }
   }, []);
 
   const leftColumnClasses = [
@@ -96,13 +98,13 @@ export const AccountRouters = () => {
 
                 <Route
                   exact
-                  path={window?.appData.routes["account:login"]}
+                  path={data?.appData.routes["account:login"]}
                   component={LoginForm}
                 />
 
                 <Route
                   exact
-                  path={window?.appData.routes["account:register"]}
+                  path={data?.appData.routes["account:register"]}
                   component={RegisterForm}
                 />
               </Switch>

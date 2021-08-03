@@ -2,10 +2,18 @@ import React, { useEffect } from "react";
 import { AddNewAddress } from "../components/addresses/AddNewAddress";
 import { AddressList } from "../components/addresses/AddressList";
 import { useDispatch, useSelector } from "react-redux";
-import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { AddressTypeEnum } from "../ts/types/address-item.type";
 
+import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
+import { accountStore } from "../../../redux/stores/StoreAccount";
+
 export const Addresses = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!addresses) {
+      dispatch(getAddresses(accountStore.getState().user.id));
+    }
+  }, []);
   const addresses = useSelector((e: any) => {
     return e.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
