@@ -18,12 +18,16 @@ export const BreadCrumbs = (): any => {
     }
 
     path += `/${subPath}`;
-    const name = breadcrumbsStore[path] || breadcrumbsStore[path + "/"];
 
-    if (name) {
+    if (breadcrumbsStore[path]) {
       breadcrumbsList.push({
-        name,
+        name: breadcrumbsStore[path],
         path,
+      });
+    } else if (breadcrumbsStore[path + "/"]) {
+      breadcrumbsList.push({
+        name: breadcrumbsStore[path + "/"],
+        path: path + "/",
       });
     }
   }
