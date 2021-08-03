@@ -31,11 +31,13 @@ export const AddCardForm = () => {
 
     dispatch(
       addDataFromSubmitCardForm({
-        name: values.name,
-        card_number: values.cardNumber,
-        expires:
-          values.expiration_month.value + "/" + values.expiration_year.value,
-        is_default: values.is_default,
+        card: {
+          name: values.name,
+          card_number: values.cardNumber,
+          expires:
+            values.expiration_month.value + "/" + values.expiration_year.value,
+          is_default: values.is_default,
+        },
       })
     );
   };

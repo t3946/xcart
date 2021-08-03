@@ -60,7 +60,7 @@ export const CardDialog = ({ handleClose, open, contentType, actionType }) => {
         onClose={onDialogClose}
       />
       <WalletCardsDialogContext.Provider
-        value={{ setContent, actionType, handleClose }}
+        value={{ setContent, actionType, handleClose: onDialogClose }}
       >
         {showContent(content)}
       </WalletCardsDialogContext.Provider>

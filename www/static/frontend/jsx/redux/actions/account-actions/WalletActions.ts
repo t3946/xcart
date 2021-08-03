@@ -11,3 +11,9 @@ export const addDataFromSubmitCardForm = (data: any): any => ({
   type: "ADD_SUBMIT_DATA",
   data,
 });
+
+export const addCard = (cardInfo: any, onRequestEnd): any => ({
+  type: "ADD_CARD",
+  cardInfo,
+  onRequestEnd,
+});

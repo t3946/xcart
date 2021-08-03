@@ -30,9 +30,9 @@ export const AccountRouters = () => {
   const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
     dispatch(getTerritory());
-    // if (!addresses) {
-    //   dispatch(getAddresses(accountStore.getState().user.id));
-    // }
+    if (!addresses) {
+      dispatch(getAddresses(accountStore.getState().user.id));
+    }
   }, []);
 
   const leftColumnClasses = [

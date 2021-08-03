@@ -10,9 +10,20 @@ const accountWalletReducer = (
     case "GET_CARDS":
       return { ...state, cardsLoading: true };
     case "SET_CARDS":
-      return { ...state, cards: action.cards, cardsLoading: false };
+      return {
+        ...state,
+        cards: action.cards,
+        cardsLoading: false,
+        submitCardFormLoading: true,
+      };
     case "ADD_SUBMIT_DATA":
       return { ...state, submitFormData: action.data };
+    case "ADD_CARD":
+      return {
+        ...state,
+        submitFormData: {},
+        submitCardFormLoading: true,
+      };
     default:
       return state;
   }

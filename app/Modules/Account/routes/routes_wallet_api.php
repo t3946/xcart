@@ -15,4 +15,9 @@ return [
         'target' => [AccountWalletApi::class, 'changeDefault'],
         'name' => 'default'
     ],
+    [
+        'route' => '/add-card',
+        'target' => [AccountWalletApi::class, 'addNewCard'],
+        'name' => 'add'
+    ],
 ];

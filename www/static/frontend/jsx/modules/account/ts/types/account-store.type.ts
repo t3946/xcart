@@ -22,4 +22,5 @@ export interface AccountWalletStoreDto {
   cards: any[];
   cardsLoading: boolean;
   submitFormData?: any;
+  submitCardFormLoading?: boolean;
 }

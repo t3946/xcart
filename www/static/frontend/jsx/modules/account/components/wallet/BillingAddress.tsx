@@ -3,11 +3,13 @@ import { BillingAddressList } from "./BillingAddressList";
 import { Button, Grid } from "@material-ui/core";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AddressTypeEnum } from "../../ts/types/address-item.type";
-
+import { addCard } from "../../../../redux/actions/account-actions/WalletActions";
 export const BillingAddress = () => {
   const context = useContext(WalletCardsDialogContext);
+
+  const dispatch = useDispatch();
 
   const billingAddresses = useSelector((e: any) => {
     return e.addresses.addressesList?.filter(
@@ -17,18 +19,31 @@ export const BillingAddress = () => {
 
   const [value, setValue] = useState(billingAddresses[0]?.addresses_id);
 
+  const cardSubmitData = useSelector((e: any) => e.wallet.submitFormData);
+
+  const onSubmit = () => {
+    dispatch(
+      addCard(
+        {
+          ...cardSubmitData,
+          address: {
+            address_id: value,
+          },
+        },
+        context.handleClose
+      )
+    );
+  };
+
   return (
     <div className="billing-address-container">
       <div className="dialog-title">Select a billing address</div>
-      {billingAddresses ? (
-        <BillingAddressList
-          value={value}
-          setValue={setValue}
-          addresses={billingAddresses}
-        />
-      ) : (
-        <div>You have not added any addresses yet</div>
-      )}
+
+      <BillingAddressList
+        value={value}
+        setValue={setValue}
+        addresses={billingAddresses}
+      />
 
       <Grid container>
         <Button
@@ -41,6 +56,8 @@ export const BillingAddress = () => {
         <Button
           type={"submit"}
           className="account-submit-btn auto-width-button"
+          disabled={!value}
+          onClick={onSubmit}
         >
           USE THIS ADDRESS
         </Button>

@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
-import { Button, Grid } from "@material-ui/core";
-import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik, useFormik } from "formik";
+import { Button } from "@material-ui/core";
+import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -12,19 +11,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStates } from "../../utils/get-states";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import { addCard } from "../../../../redux/actions/account-actions/WalletActions";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
 
 export const AddBillingAddressForm = () => {
+  const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
 
   const countries = useSelector((e: any) => e.main.countries);
 
+  const cardSubmitData = useSelector((e: any) => e.wallet.submitFormData);
+
+  const onSubmit = (values) => {
+    const newAddress = {
+      ...values,
+      country: values.country.value,
+      state: values.state.value,
+    };
+
+    dispatch(
+      addCard(
+        {
+          ...cardSubmitData,
+          address: newAddress,
+          userId: accountStore.getState().user.id,
+        },
+        context.handleClose
+      )
+    );
+  };
   const states = useSelector((e: any) => e.main.states);
   return (
     <div className="billing-address-container add-billing-address-container">
       <div className="dialog-title">Add a billing address</div>
       <Formik
         initialValues={initialAddAddressFormValue}
-        onSubmit={null}
+        onSubmit={onSubmit}
         validationSchema={addAddressFormValidationSchema}
       >
         {({
