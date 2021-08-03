@@ -63,3 +63,11 @@
 {get_assets type="css"}
 {get_assets type="js"}
 {/filter}
+<script>
+    if (window.appData) {
+        const cruds = window.appData['app']['cruds'];
+        for (const id in cruds) {
+            $("[data-id='"+id+"-list']").adminList(cruds[id].links);
+        }
+    }
+</script>

@@ -250,8 +250,8 @@ $("a.select-order").click(function () {
   const url_dashboard_my_sort = appData().routes["dashboard:sort_my_filters"];
 
   $(document).ready(function () {
-    if (!$('#dashboard').length) {
-      return
+    if (!$("#dashboard").length) {
+      return;
     }
     $(document).dashboard({
       ajax: {
@@ -348,31 +348,26 @@ $("a.select-order").click(function () {
 })();
 
 $(function () {
-
-  $(document).on('change', '.list-update-block .updates-admin', event => {
-    const ob = event.target.closest('tr');
-    const name : string = event.target.name.toString();
+  $(document).on("change", ".list-update-block .updates-admin", (event) => {
+    const ob = event.target.closest("tr");
+    const name: string = event.target.name.toString();
     const id = ob.dataset.pk;
     const newValue = event.target.value;
-    const form = $(event.target).data('form');
+    const form = $(event.target).data("form");
 
-    const formData = {id: id, [name]: newValue, form: form};
-    const list = $('.list-block').data("object");
+    const formData = { id: id, [name]: newValue, form: form };
+    const list = $(".list-block").data("object");
     list.setLoading();
 
-    $.post('/admin/field/update',
-        formData,
-    (data) => {
+    $.post("/admin/field/update", formData, (data) => {
       if (data) {
         list.update();
       } else {
         list.unsetLoading();
       }
-    }
-  )
-    ;
-  })
-})
+    });
+  });
+});
 
 // /html/app/Modules/Goods/templates/verification/all.tpl
 $(function () {
@@ -380,51 +375,55 @@ $(function () {
     return;
   }
 
-  $(".admin-page").on("change", 'select[name$="ProductVerificationForm[verification_status]"]', function () {
-    const status_id = parseInt($(this).val());
-    const product_id = parseInt($(this).closest("tr").data("pk"));
-    const note_form = $("#send_note_for_product");
-    const textarea = note_form.find("textarea");
-    if (status_id > 0 && status_id < 3) {
-      const position = $(this).offset();
-      note_form.css("right", 0).css("top", position.top - 150);
-      textarea.val("");
-      if (status_id === 1) {
-        textarea.attr(
-          "placeholder",
-          "Please describe the problem and explain why you didn't fix it."
-        );
-      }
-      if (status_id === 2) {
-        textarea.attr(
-          "placeholder",
-          "Please describe what was the problem and how did you fix it."
-        );
-      }
-      note_form.find("#verified_product_id").val(product_id);
-      note_form.find("#verified_product_status_id").val(status_id);
-      note_form.show();
-      textarea.focus();
-    } else {
-      const id = appData().goodsModule.id;
-      const list = $('[data-id="' + id + '-list"]').data("object");
-      list.setLoading();
-      $.post(
-        "/api/products/verify",
-        {
-          product_id: product_id,
-          status_id: status_id,
-        },
-        (data) => {
-          if (data && data.result) {
-            list.update();
-          } else {
-            list.unsetLoading();
-          }
+  $(".admin-page").on(
+    "change",
+    'select[name$="ProductVerificationForm[verification_status]"]',
+    function () {
+      const status_id = parseInt($(this).val());
+      const product_id = parseInt($(this).closest("tr").data("pk"));
+      const note_form = $("#send_note_for_product");
+      const textarea = note_form.find("textarea");
+      if (status_id > 0 && status_id < 3) {
+        const position = $(this).offset();
+        note_form.css("right", 0).css("top", position.top - 150);
+        textarea.val("");
+        if (status_id === 1) {
+          textarea.attr(
+            "placeholder",
+            "Please describe the problem and explain why you didn't fix it."
+          );
         }
-      );
+        if (status_id === 2) {
+          textarea.attr(
+            "placeholder",
+            "Please describe what was the problem and how did you fix it."
+          );
+        }
+        note_form.find("#verified_product_id").val(product_id);
+        note_form.find("#verified_product_status_id").val(status_id);
+        note_form.show();
+        textarea.focus();
+      } else {
+        const id = appData().goodsModule.id;
+        const list = $('[data-id="' + id + '-list"]').data("object");
+        list.setLoading();
+        $.post(
+          "/api/products/verify",
+          {
+            product_id: product_id,
+            status_id: status_id,
+          },
+          (data) => {
+            if (data && data.result) {
+              list.update();
+            } else {
+              list.unsetLoading();
+            }
+          }
+        );
+      }
     }
-  });
+  );
 
   $("#send_note_for_product")
     .on("click", "#cancel_message_button", () => {
@@ -458,111 +457,183 @@ $(function () {
 });
 
 // /www/skin1_kolin/admin/main/paypal_request.tpl
-$('#main_order_tabs-container').on('tabsactivate', function(event, ui) {
-  if (ui.newTab.find('a').attr('href') === '#main_order_tabs-paypal_request'){
-    $('.invoice_list_row[data-status=new]').each(function(){
-      var row = $(this);
-      var inv_number = $(this).find('.pp_invoice_number').data('inv-number');
-      row.find('.inv_status').addClass('active').text('');
-      $.post('ajax_admin.php', {
-            ajax_action: 'get_paypal_invoice_status',
-            paypal_invoice_id: inv_number
-          },
-          function (data) {
-            if (data.result) {
-              row.attr('data-status', 'updated');
-              row.find('.inv_status').removeClass('active').removeClass('ui').text(data.status);
-            }
-          }, 'json');
-    })
+$("#main_order_tabs-container").on("tabsactivate", function (event, ui) {
+  if (ui.newTab.find("a").attr("href") === "#main_order_tabs-paypal_request") {
+    $(".invoice_list_row[data-status=new]").each(function () {
+      const row = $(this);
+      const inv_number = $(this).find(".pp_invoice_number").data("inv-number");
+      row.find(".inv_status").addClass("active").text("");
+      $.post(
+        "ajax_admin.php",
+        {
+          ajax_action: "get_paypal_invoice_status",
+          paypal_invoice_id: inv_number,
+        },
+        function (data) {
+          if (data.result) {
+            row.attr("data-status", "updated");
+            row
+              .find(".inv_status")
+              .removeClass("active")
+              .removeClass("ui")
+              .text(data.status);
+          }
+        },
+        "json"
+      );
+    });
   }
 });
 
-const paypal_form = $('.ui.form.paypal_request');
+const paypal_form = $(".ui.form.paypal_request");
 if (paypal_form.length) {
-  $.fn.form.settings.rules.gtzero = function(value) {
-    return (value > 0)
+  $.fn.form.settings.rules.gtzero = function (value) {
+    return value > 0;
   };
-  paypal_form
-      .form({
-        onValid: function(){
-          $('.ui.error.message').empty();
-        },
-        onSuccess: function () {
-          $('.ui.error.message').empty();
-          if ($('#order_email').val() != $('#paypal_request_email').val()) {
-            if (!window.confirm("Payer email is different from order's email. Are you sure?")) {
-              return false;
-            }
-          }
-          var form = $(this);
-          var param = form.css('opacity', 0.4).find('.ui.loader').addClass('active').end().serializeArray();
-          form.find('#send_paypal_request').attr('disabled', 'disabled');
-          param.push({name: 'ajax_action', value: 'send_paypal_request'});
-          $.post('ajax_admin.php', param,
-              function (data) {
-                form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
-                if (data.result) {
-                  form.find('#paypal_request_amount').val('0.00').end()
-                      .find('#paypal_request_notes').val('').end();
-                  alert('The Invoice has been send');
-                } else {
-                  alert('An error occurred');
-                }
-                window.location.reload();
-              }, 'json');
+  paypal_form.form({
+    onValid: function () {
+      $(".ui.error.message").empty();
+    },
+    onSuccess: function () {
+      $(".ui.error.message").empty();
+      if ($("#order_email").val() != $("#paypal_request_email").val()) {
+        if (
+          !window.confirm(
+            "Payer email is different from order's email. Are you sure?"
+          )
+        ) {
           return false;
-        },
-        fields: {
-          paypal_request_email: {
-            identifier  : 'paypal_request_email',
-            rules: [
-              {
-                type   : 'empty',
-                prompt : '<b>Payer email</b>: Mandatory field is empty!'
-              },
-              {
-                type   : 'email',
-                prompt : '<b>Payer email</b>: Email address is incorrect'
-              }
-            ]
-          },
-          paypal_request_subject: {
-            identifier  : 'paypal_request_subject',
-            rules: [
-              {
-                type   : 'empty',
-                prompt : '<b>Payment Request subject</b>: Mandatory field is empty!'
-              }
-            ]
-          },
-          paypal_request_notes: {
-            identifier  : 'paypal_request_notes',
-            rules: [
-              {
-                type   : 'empty',
-                prompt : '<b>Short payment description</b>: Mandatory field is empty!'
-              }
-            ]
-          },
-          paypal_request_amount: {
-            identifier  : 'paypal_request_amount',
-            rules: [
-              {
-                type   : 'empty',
-                prompt : '<b>Request amount</b>: Mandatory field is empty!'
-              },
-              {
-                type   : 'regExp[/^[0-9]*[.]{0,1}[0-9]{0,2}$/]',
-                prompt : '<b>Request amount</b>: Value is incorrect!'
-              },
-              {
-                type   : 'gtzero',
-                prompt : '<b>Request amount</b>: Value must be greater then 0!'
-              }
-            ]
-          }
         }
-      });
+      }
+      const form = $(this);
+      const param = form
+        .css("opacity", 0.4)
+        .find(".ui.loader")
+        .addClass("active")
+        .end()
+        .serializeArray();
+      form.find("#send_paypal_request").attr("disabled", "disabled");
+      param.push({ name: "ajax_action", value: "send_paypal_request" });
+      $.post(
+        "ajax_admin.php",
+        param,
+        function (data) {
+          form
+            .css("opacity", 1)
+            .find(".ui.loader")
+            .removeClass("active")
+            .end()
+            .find("#send_paypal_request")
+            .removeAttr("disabled");
+          if (data.result) {
+            form
+              .find("#paypal_request_amount")
+              .val("0.00")
+              .end()
+              .find("#paypal_request_notes")
+              .val("")
+              .end();
+            alert("The Invoice has been send");
+          } else {
+            alert("An error occurred");
+          }
+          window.location.reload();
+        },
+        "json"
+      );
+      return false;
+    },
+    fields: {
+      paypal_request_email: {
+        identifier: "paypal_request_email",
+        rules: [
+          {
+            type: "empty",
+            prompt: "<b>Payer email</b>: Mandatory field is empty!",
+          },
+          {
+            type: "email",
+            prompt: "<b>Payer email</b>: Email address is incorrect",
+          },
+        ],
+      },
+      paypal_request_subject: {
+        identifier: "paypal_request_subject",
+        rules: [
+          {
+            type: "empty",
+            prompt: "<b>Payment Request subject</b>: Mandatory field is empty!",
+          },
+        ],
+      },
+      paypal_request_notes: {
+        identifier: "paypal_request_notes",
+        rules: [
+          {
+            type: "empty",
+            prompt:
+              "<b>Short payment description</b>: Mandatory field is empty!",
+          },
+        ],
+      },
+      paypal_request_amount: {
+        identifier: "paypal_request_amount",
+        rules: [
+          {
+            type: "empty",
+            prompt: "<b>Request amount</b>: Mandatory field is empty!",
+          },
+          {
+            type: "regExp[/^[0-9]*[.]{0,1}[0-9]{0,2}$/]",
+            prompt: "<b>Request amount</b>: Value is incorrect!",
+          },
+          {
+            type: "gtzero",
+            prompt: "<b>Request amount</b>: Value must be greater then 0!",
+          },
+        ],
+      },
+    },
+  });
 }
 
+$(function () {
+  $(document).on("click", "a[data-prevention]", function (e) {
+    e.preventDefault();
+    const $this = $(this);
+    const data = $this.data();
+    const url = $this.attr("href");
+    const type = data.type ? data.type : "post";
+    const trigger = data.trigger ? data.trigger : null;
+    const text = data.text ? data.text : null;
+    const title = data.title ? data.title : null;
+
+    $(event.target).confirmAction({
+      title: {
+        text: title,
+      },
+      message: {
+        text: text,
+      },
+      actions: {
+        confirm: {
+          text: "Okey",
+          callback: function (confirm, cancel) {
+            $.ajax({
+              url: url,
+              type: type,
+              dataType: "json",
+              success: (data) => {
+                if (data.success && trigger) {
+                  $(document).trigger(trigger, [$this, data]);
+                }
+                confirm();
+              },
+            });
+          },
+        },
+      },
+    });
+  });
+  /*    $("a[data-prevention]").;*/
+});

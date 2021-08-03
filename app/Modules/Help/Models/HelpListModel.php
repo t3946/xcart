@@ -27,6 +27,7 @@ class HelpListModel extends Model
             ],
             'active_icon' => [
                 'class' => CharField::class,
+                'verboseName' => 'Active icon'
             ],
             'title' => [
                 'class' => CharField::class,
@@ -39,6 +40,7 @@ class HelpListModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => HelpMenuContentModel::class,
                 'link' => ['menu_id' => 'menu_id'],
+                'verboseName' => 'Menu items'
             ]
         ];
     }

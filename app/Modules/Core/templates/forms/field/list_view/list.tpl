@@ -17,11 +17,12 @@
                 {var $cols = 0}
 
                 <tr class="list-head">
-                    {*<th class="checker full">
+{*<th class="checker full">
                         <input type="checkbox" id="{$id}-check-all" data-checkall-list>
                         <label for="{$id}-check-all" class="alone"></label>
                         {var $cols = $cols+1}
                     </th>*}
+
 
                     {if $admin->sort}
                         <th class="sort full" data-sort-column>
@@ -158,4 +159,6 @@
         "columnsUrl" => $admin->getColumnsUrl(),
     ]
 ]}
-{store data=$crud_data key=$id ctx="app/cruds"}
+<script>
+    window.appData['app']['cruds']["{$id}"] = {json_encode($crud_data, true)};
+</script>

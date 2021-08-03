@@ -60,7 +60,9 @@ class ListViewField extends Field
         if ($field instanceof RelatedField) {
             /** @var  RelatedField $field */
             $manager = $field->getManager();
-
+            if (!$model->pk) {
+                return [];
+            }
             return $manager->order($this->defaultOrder)->all();
         }
         return [];
@@ -79,6 +81,7 @@ class ListViewField extends Field
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
         $admin->ownerField = $this->getName();
         $qs = $admin->getQuerySet();
+        $qs = $admin->applyOrder($qs);
         $qs = $admin->fixSort($qs);
 
         return $this->innerRender($this->listTemplate, [

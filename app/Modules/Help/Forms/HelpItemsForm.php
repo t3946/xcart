@@ -15,4 +15,12 @@ class HelpItemsForm extends ModelForm
     {
         return new HelpMenuContentModel();
     }
+    public function getFieldsets()
+    {
+        return [[
+            'form_type',
+            'answer',
+            'question',
+        ]];
+    }
 }

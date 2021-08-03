@@ -17,6 +17,8 @@ import "@/js/flash";
 import "@/js/form";
 import "@/js/formUtils";
 import "@/js/jquery.mindy.modal";
+import "@/../components/confirm-modal/jquery.confirm-action";
+import "@/../components/confirm/jquery.confirm";
 import "@/js/list";
 import "@/js/main";
 import "@/js/mFieldset";

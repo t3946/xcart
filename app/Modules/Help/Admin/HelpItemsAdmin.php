@@ -12,6 +12,7 @@ class HelpItemsAdmin extends ListViewAdmin
 {
     public ?string $sort = 'order_by';
     public $ownerField = 'menu';
+    public static $public = false;
 
     public function getListColumns()
     {
