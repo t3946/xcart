@@ -49,7 +49,7 @@ return [
     [
         'route' => '/dashboard',
         'target' => [AccountController::class, 'dashboard'],
-        'namespace' => 'dashboard'
+        'name' => 'dashboard'
     ],
 
     //api
