@@ -6,6 +6,9 @@ import tinymce from "tinymce";
 import appData from "@admin/utils/app-data";
 import InitSelect2 from "@admin/utils/init-select2";
 import InitTinymce from "@admin/utils/init-tinymce";
+import { cuteAlert } from "../../components/alert-master/cute-alert";
+
+const a = require("../../components/alert-master/cute-alert");
 
 $(document).ready(function () {
   $("#select_searchstring_by").change(function () {
@@ -608,32 +611,25 @@ $(function () {
     const text = data.text ? data.text : null;
     const title = data.title ? data.title : null;
 
-    $(event.target).confirmAction({
-      title: {
-        text: title,
-      },
-      message: {
-        text: text,
-      },
-      actions: {
-        confirm: {
-          text: "Ok",
-          callback: function (confirm, cancel) {
-            $.ajax({
-              url: url,
-              type: type,
-              dataType: "json",
-              success: (data) => {
-                if (data.success && trigger) {
-                  $(document).trigger(trigger, [$this, data]);
-                }
-                confirm();
-              },
-            });
+    cuteAlert({
+      type: "question",
+      title: title,
+      message: "",
+      confirmText: "Ok",
+      cancelText: "Cancel",
+    }).then((e) => {
+      if (e == "confirm") {
+        $.ajax({
+          url: url,
+          type: type,
+          dataType: "json",
+          success: (data) => {
+            if (data.success && trigger) {
+              $(document).trigger(trigger, [$this, data]);
+            }
           },
-        },
-      },
+        });
+      }
     });
   });
-  /*    $("a[data-prevention]").;*/
 });
