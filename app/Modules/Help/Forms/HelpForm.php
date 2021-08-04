@@ -36,4 +36,8 @@ class HelpForm extends ModelForm
             ]
         ];
     }
+    public function getName()
+    {
+        return '';
+    }
 }

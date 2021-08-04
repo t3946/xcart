@@ -44,4 +44,8 @@ class HelpListModel extends Model
             ]
         ];
     }
+    public function __toString()
+    {
+        return (string)($this->pk ? $this->title : 'Help list item');
+    }
 }

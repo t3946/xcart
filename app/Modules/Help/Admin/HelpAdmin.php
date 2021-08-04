@@ -39,4 +39,8 @@ class HelpAdmin extends Admin
     {
         return true;
     }
+    public static function getName()
+    {
+        return 'Help center';
+    }
 }

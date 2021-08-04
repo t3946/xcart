@@ -27,7 +27,8 @@ class HelpMenuContentModel extends Model
                 'default' => null,
                 'choices' => [
                     'question' => 'Question'
-                ]
+                ],
+                'verboseName' => 'Form type'
             ],
             'answer' => [
                 'class' => CharField::class,
