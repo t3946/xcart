@@ -55,6 +55,9 @@ class Auth implements AuthInterface
         $this->_user = null;
     }
 
+    /**
+     * @param bool $new_user если true -- то работать будет с пользователем из xcart_users(из обновы с личным кабинетом)
+     */
     public function getUser($new_user = false)
     {
         if (!$this->_user) {
