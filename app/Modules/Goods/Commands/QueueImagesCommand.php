@@ -29,6 +29,7 @@ class QueueImagesCommand extends Command
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
                 $images = [];
                 $uploaded = 0;
+                $cached = 0;
                 try {
                     foreach ($data['images'] as $image_url) {
                         $link_hash = md5($image_url .':'. $data['product_code']);
@@ -53,6 +54,8 @@ class QueueImagesCommand extends Command
                                 }
                             }
                             $model->save();
+                        } else {
+                            $cached++;
                         }
 
                         $images[] = $model;
@@ -66,7 +69,7 @@ class QueueImagesCommand extends Command
                 self::saveImages($product, $images);
 
                 $count = count($images);
-                echo "$product->productcode:  Uploaded: $uploaded, Total: $count \n";
+                echo "$product->productcode:  Uploaded: $uploaded, Cached: $cached, Total: $count \n";
             }
             $message->ack();
         }
