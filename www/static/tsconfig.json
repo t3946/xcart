@@ -20,17 +20,20 @@
       "@admin/*": [
         "backend/jsx/*",
       ],
-
-      //клиентская часть
-      "@modules/*": [
-        "frontend/jsx/modules/*"
-      ],
       "@redux/*": [
         "backend/jsx/redux/*"
       ],
       "@s3stores-mail/*": [
         "backend/jsx/modules/s3stores-mail/*"
-      ]
+      ],
+
+      //клиентская часть
+      "@client/modules/*": [
+        "frontend/jsx/modules//*"
+      ],
+      "@client/*": [
+        "frontend/*"
+      ],
     },
     "jsx": "react"
   }
