@@ -34,12 +34,13 @@ class QueueImagesCommand extends Command
                 try {
                     foreach ($data['images'] as $image_url) {
                         $link_hash = md5($image_url .':'. $data['product_code']);
+                        $link_hash_new = md5($image_url);
 
-                        if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
+                        if (!$model = ProductImageModel::objects()->get(['link__in' => [$link_hash, $link_hash_new]])) {
                             $file = new RemoteFile($image_url);
                             $hash = $file->getHash();
                             [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
-                            $model->link = $link_hash;
+                            $model->link = $link_hash_new;
                             if ($is_new) {
                                 try {
                                     $model->path = $file;
@@ -54,10 +55,11 @@ class QueueImagesCommand extends Command
                                 }
                             } else {
                                 $fixed++;
-                                print_r($data['images']);
                             }
                             $model->save();
                         } else {
+                            $model->link = $link_hash_new;
+                            $model->save(); //TODO remove after change hash
                             $cached++;
                         }
 
