@@ -15,6 +15,10 @@ export const route = function (
 
   const interpolations = path.match(/{\w+:\w+}/gi);
 
+  if (!interpolations) {
+    return path;
+  }
+
   if (interpolations.length !== routeParams.length) {
     throw new Error(
       `Expected ${interpolations.length} parameter(s) but got ${routeParams.length}`
