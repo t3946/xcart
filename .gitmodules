@@ -1,0 +1,3 @@
+[submodule "www/static/local_modules/bootstrap"]
+	path = www/static/local_modules/bootstrap
+	url = https://github.com/alexander-gvozd/bootstrap.git
