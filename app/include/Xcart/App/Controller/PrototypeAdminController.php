@@ -8,10 +8,11 @@
 
 namespace Xcart\App\Controller;
 
+use Modules\Admin\Controllers\BackendController;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\SmartyRenderTrait;
 
-class PrototypeAdminController extends Controller
+class PrototypeAdminController extends BackendController
 {
     use SmartyRenderTrait;
 

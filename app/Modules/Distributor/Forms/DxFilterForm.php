@@ -35,7 +35,6 @@ class DxFilterForm extends Form
                 'label' => 'Main SF',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => function () {
@@ -50,7 +49,6 @@ class DxFilterForm extends Form
                 'label' => 'VRS',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => function () {
@@ -74,7 +72,10 @@ class DxFilterForm extends Form
             'letter' => [
                 'class' => Select2Field::class,
                 'label' => 'Alphabetic order',
-                'choices' => array_merge(['' => 'All'], array_combine($word_range, $word_range))
+                'choices' => array_merge(['' => 'All'], array_combine($word_range, $word_range)),
+                'html' => [
+                    'style' => 'width: 300px',
+                ],
             ],
             'avail' => [
                 'class' => Select2Field::class,
@@ -83,7 +84,10 @@ class DxFilterForm extends Form
                     '' => 'All',
                     'Y' => 'Y',
                     'N' => 'N',
-                ]
+                ],
+                'html' => [
+                    'style' => 'width: 300px',
+                ],
             ]
         ];
     }

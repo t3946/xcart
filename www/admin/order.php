@@ -22,13 +22,15 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Customer;
 
-global $login, $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
+global $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
 
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['update', 'mnf_body'];
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
+
+$login = Xcart::app()->user->login;
 
 x_session_register("order_search_condition");
 x_session_register("show_intershipper_rates");
@@ -630,7 +632,7 @@ if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'submit_message' && $type === 'empty') {
 
-        func_log_order($orderid, 'EL', '  ', $login);
+        func_log_order($orderid, 'EL', '  ', Xcart::app()->user->login);
     }
 
     if ($mode === 'submit_message' && !empty($notes) && !empty($orderid))
@@ -677,8 +679,8 @@ if ($REQUEST_METHOD === "POST") {
 
         func_log_order($orderid, 'S', $log2, $user->login);
 
-        $body = "{$notes}\n\nposted by {$userfullname} ({$user->login})";
-        $from = $userfullname . '<helpdesk@s3stores.com>';
+        $body = "{$notes}\n\nposted by {$user} ({$user->login})";
+        $from = $user . '<helpdesk@s3stores.com>';
         $to   = 'orders@s3stores.com';
 
         $oMail = \Xcart\App\Main\Xcart::app()->oldMail;

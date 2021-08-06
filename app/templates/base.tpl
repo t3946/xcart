@@ -38,17 +38,17 @@
                                         </div>
                                         <div class="columns small-3 medium-2">
                                             <a href="/">
-                                                <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
-                                                     alt="{$.getSiteConfig->company_name->value}"
+                                                <img src="{$uri}/{$site->getLogo()}"
+                                                     alt="{$site->company_name}"
                                                      class="show-for-large logo-big">
-                                                <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
-                                                     alt="{$.getSiteConfig->company_name->value}"
+                                                <img src="{$uri}/{$site->getMobileLogo()}"
+                                                     alt="{$site->company_name}"
                                                      class="show-for-small hide-for-large logo-small">
                                             </a>
                                         </div>
 
                                         <div class="columns show-for-medium medium-5 large-4">
-                                            {if $config.flat_shipping_enabled !== 'N'}
+                                            {if $config.flat_shipping_enabled}
                                             <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>
@@ -84,7 +84,7 @@
                                 <div class="mobile-banner hide-for-medium">
                                     <div class="row align-justify">
                                         <div class="columns banner">
-                                            {if $config.flat_shipping_enabled !== 'N'}
+                                            {if $config.flat_shipping_enabled}
                                             <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>

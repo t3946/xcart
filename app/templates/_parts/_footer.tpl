@@ -36,10 +36,22 @@
                             <div>
                                 <div class="footer-info-block-title">Telephone Customer Service</div>
                                 <ul class="no-bullet menu-list">
-                                    <li class="footer-info-block-item">{t 'Mon-Fri: 8 A.M. to 4 P.M. EST'}</li>
-                                    <li class="footer-info-block-item">{t 'Toll Free: '}<span class="footer-phone">1-800-929-2431</span></li>
-                                    <li class="footer-info-block-item">{t 'Tel: (616) 259-5711'}</li>
-                                    <li class="footer-info-block-item">{t 'Fax: 1-800-929-2835'}</li>
+                                    <li class="footer-info-block-item">{$site->customer_service_working_time}</li>
+                                    <li class="footer-info-block-item">
+                                        {if $site->cidev_top_header_code}
+                                            {t 'Toll Free: '} <span class="footer-phone">{$site->cidev_top_header_code}</span>
+                                        {/if}
+                                    </li>
+                                    <li class="footer-info-block-item">
+                                        {if $site->local_phone}
+                                            {t 'Tel:'} {$site->local_phone}
+                                        {/if}
+                                    </li>
+                                    <li class="footer-info-block-item">
+                                        {if $site->fax_number}
+                                            {t 'Fax:'} {$site->fax_number}
+                                        {/if}
+                                    </li>
                                 </ul>
                             </div>
                         </div>

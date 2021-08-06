@@ -27,16 +27,18 @@ use Xcart\Category;
  * @property string categoryid_path
  * @property mixed categoryid
  * @property string category Name of category
- * @property null|\Modules\Sites\Models\SiteModel site
+ * @property null|SiteModel site
  * @property Manager|ProductModel[] products
  */
 class CategoryModel extends TreeModel
 {
-    use DataModelTrait, AutoMetaTrait, SlugifyTrait;
+    use AutoMetaTrait;
+    use DataModelTrait;
+    use SlugifyTrait;
 
-    public static function getDataModelClass()
+    public static function getDataModelClass(): string
     {
-        return Category::className();
+        return Category::class;
     }
 
     public static function tableName()
@@ -54,42 +56,42 @@ class CategoryModel extends TreeModel
                  ],
 
                  'products' => [
-                     'class' => ManyToManyField::className(),
-                     'modelClass' => ProductModel::className(),
-                     'through' => ProductCategoriesModel::className(),
+                     'class' => ManyToManyField::class,
+                     'modelClass' => ProductModel::class,
+                     'through' => ProductCategoriesModel::class,
                  ],
 
                 'site' => [
                     'field' => 'storefrontid',
-                    'class' => ForeignField::className(),
-                    'modelClass' => SiteModel::className(),
+                    'class' => ForeignField::class,
+                    'modelClass' => SiteModel::class,
                     'link' => ['storefrontid' => 'storefrontid'],
                     'null' => false,
                 ],
 
                 'categoryid' => [
-                    'class' => AutoField::className(),
+                    'class' => AutoField::class,
                     'primary' => true,
                     'null' => false,
                 ],
 
                 'parentid' => [
-                    'class' => IntField::className(),
+                    'class' => IntField::class,
                     'default' => 0,
                 ],
 
                 'description' => [
-                    'class' => CharField::className(),
+                    'class' => CharField::class,
                     'null' => false,
                     'default' => '',
                 ],
                 'google_product_category' => [
-                    'class' => CharField::className(),
+                    'class' => CharField::class,
                     'null' => false,
                     'default' => '',
                 ],
                  'SEO_h2' => [
-                     'class' => CharField::className(),
+                     'class' => CharField::class,
                      'null' => false,
                      'default' => '',
                  ],
@@ -111,7 +113,7 @@ class CategoryModel extends TreeModel
 
         $code .= $this->pk;
 
-        return "[{$code}] {$this->category}";
+        return "[$code] $this->category";
     }
 
     public function getBreadcrumbs()

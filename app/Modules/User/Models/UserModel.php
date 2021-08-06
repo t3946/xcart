@@ -11,12 +11,14 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Customer;
 
 /**
  * @property mixed login
+ * @method static Manager admins()
  */
 class UserModel extends Model
 {
@@ -151,5 +153,13 @@ class UserModel extends Model
             return $role->getObjects()->filter(['slug__in' => $roles])->count() > 0;
         }
         return false;
+    }
+
+    public static function adminsManager($instance = null): Manager
+    {
+        return static::objects($instance)
+            ->exclude(['position__in' => ['VRS', 'programmer']])
+            ->filter(['usertype' => 'A', 'status' => 'Y', 'activity' => 'Y'])
+            ->order(['firstname']);
     }
 }

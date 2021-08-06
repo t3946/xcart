@@ -34,7 +34,7 @@ if ($REQUEST_METHOD === 'POST' && $mode === 'unlock_order') {
     $smarty->assign('order_unlocked', 'Y');
     $smarty->assign('unlock_message', $unlock_message);
 } elseif ($REQUEST_METHOD === 'POST' && $mode === 'unlock_orders') {
-    OrderModel::objects()->filter(['login_last_opened_or_saved' => $login])->update(['time_last_opened_or_saved' => 0]);
+    OrderModel::objects()->filter(['login_last_opened_or_saved' => Xcart::app()->user->login])->update(['time_last_opened_or_saved' => 0]);
     $unlock_message = 'All orders unlocked.';
     $smarty->assign('order_unlocked', 'Y');
     $smarty->assign('unlock_message', $unlock_message);
@@ -45,11 +45,11 @@ if ($REQUEST_METHOD === 'POST' && $mode === 'unlock_order') {
     $time_last_opened_or_saved = $orderModel->time_last_opened_or_saved;
     $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
     $you_have_right_to_change_order = true;
-    if ($login_last_opened_or_saved === $login) {
+    if ($login_last_opened_or_saved === Xcart::app()->user->login) {
         $orderModel->time_last_opened_or_saved = $current_time;
         $time_last_opened_or_saved = $current_time;
     } else if ($diff_time_in_mins > $time_for_order_in_mins) {
-        $orderModel->login_last_opened_or_saved = $login;
+        $orderModel->login_last_opened_or_saved = Xcart::app()->user->login;
         $orderModel->time_last_opened_or_saved = $current_time;
         $time_last_opened_or_saved = $current_time;
     } else {
@@ -76,7 +76,7 @@ If you need to make urgent changes to the order, ask {$operator_firstname} to un
         $lock_message = 'You locked this order. Nobody can make any changes to it. The order will be unlocked at ' . date("G:i", $time_unlock) . '. You can also ';
         $smarty->assign('lock_message', $lock_message);
         $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
-        $count_locked_orders = OrderModel::objects()->filter(['login_last_opened_or_saved' => $login, 'time_last_opened_or_saved__gt' => $tmp_diff_time])->count();
+        $count_locked_orders = OrderModel::objects()->filter(['login_last_opened_or_saved' => Xcart::app()->user->login, 'time_last_opened_or_saved__gt' => $tmp_diff_time])->count();
         $smarty->assign('count_locked_orders', $count_locked_orders);
     }
 }
@@ -198,7 +198,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
         }
 
         if ($log) {
-            func_log_order($orderid, 'X', $log, $login);
+            func_log_order($orderid, 'X', $log, Xcart::app()->user->login);
         }
     }
 

@@ -57,7 +57,7 @@
                     <div class="catalog-skeleton">
                         <div class="sceleton products-state-line"></div>
                         <div class="product-items tile-view product-items__tile">
-                            {for $counter=1 to=20}
+                            {foreach 1..20 as $counter}
                                 <div class="catalog-product__tile catalog-product_tile catalog-product item">
                                     <div class="sceleton" style="margin: 0 0 10px 0; height: 172px"></div>
                                     <div class="sceleton" style="margin: 0 0 5px 0; height: 40px"></div>
@@ -67,7 +67,7 @@
                                         <div class="sceleton" style="width: 47.5%; height: 35px"></div>
                                     </div>
                                 </div>
-                            {/for}
+                            {/foreach}
                         </div>
                     </div>
                 </div>

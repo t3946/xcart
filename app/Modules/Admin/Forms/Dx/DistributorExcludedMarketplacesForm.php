@@ -30,7 +30,6 @@ class DistributorExcludedMarketplacesForm extends DistributorForm
                 'hint' => LanguageModel::translate('help_dx_disabled_marketplaces_text'),
                 'html' => [
                     'style' => 'width:400px;',
-                    'class' => 'select2-field',
                     'data-placeholder' => 'Click to select',
                 ],
                 'multiple' => true,

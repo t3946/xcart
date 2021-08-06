@@ -49,7 +49,7 @@ class AmpProductModel extends ProductModel
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $this->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] === "Y") ? 'cdn.': 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//" .$pref . $domain;
 

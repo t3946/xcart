@@ -2,8 +2,9 @@
     border: none;
     outline: none;
     height: rem-calc(25);
-    padding: 0 rem-calc(5) rem-calc(4);
+    padding: 0 rem-calc(5) rem-calc(2);
     width: rem-calc(150);
+    font-size: rem-calc(13);
 }
 
 
@@ -11,6 +12,6 @@
     &:hover{
         background-color: #F0F0F0 !important;
     }
-    font-size: 13px;
+    font-size: rem-calc(13);
     color: #000000;
 }

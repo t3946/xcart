@@ -137,7 +137,7 @@
             <div class="info-row tax-info">
                 {foreach $order->getTaxes() as $tax_name => $tax_rate}
                     <div class="sum-info tax-info">
-                        <span class="label">{t 'Total'} {$tax_name} taxes:</span>
+                        <span class="label">{t 'Total'} {$tax_name}:</span>
                         <span class="sum">{$tax_rate|site_currency}</span>
                     </div>
                 {/foreach}

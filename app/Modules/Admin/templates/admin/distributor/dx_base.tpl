@@ -10,7 +10,7 @@
         {set $prohibited = $distributorModel->getProhibitedProducts()}
         {set $approval = $distributorModel->getApprovalProducts()}
         {if $prohibited || $approval}
-        <div class="enter_on_site align_left">
+        <div class="enter_on_site align_left margin_bottom">
             <div style="padding: 12px 0 0; ">
                 {if $prohibited}
                     <span style="margin-left: 1rem; font-size: 14px;">Dx offers the following products <b>prohibited by PayPal</b></span>

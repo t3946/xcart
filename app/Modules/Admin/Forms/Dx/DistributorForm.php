@@ -75,6 +75,10 @@ class DistributorForm extends ModelForm
                 'form' => DistributorQuestionableProductsForm::class,
                 'required' => true,
             ],
+            52 => [
+                'title' => 'Active products',
+                'form' => DistributorProductsForm::class,
+            ],
         ],
         'Submitting order to distributor' => [
             14 => [

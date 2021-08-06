@@ -17,7 +17,7 @@ class DefaultHasher implements FileNameHasherInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name)
+    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '')
     {
         $uploadTo = ltrim($uploadTo, '/');
 
@@ -25,7 +25,7 @@ class DefaultHasher implements FileNameHasherInterface
             throw new \RuntimeException('Empty file name received');
         }
 
-        $ext = pathinfo($name, PATHINFO_EXTENSION);
+        $ext = pathinfo($name, PATHINFO_EXTENSION) ?: $default_extension;
         $hash = $this->hash(pathinfo($name, PATHINFO_FILENAME));
 
         $i = 0;
