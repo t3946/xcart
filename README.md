@@ -3,8 +3,14 @@
 # Сборка проекта
 Пусть корень проекта `/`.
 ## Установка зависимостей
-`cd / && composer install`
-`cd /www/static && npm i`
+`cd / && composer install`<br/>
+`cd /www/static && npm i`<br/>
+
+Установить git модули<br/>
+`git submodule init && git submodule update`<br/>
+
+Скомпилировать коды библиотеки bootstrap<br/>
+`cd www/static/local_modules/bootstrap && npm i && npm run css`<br/>
 ## Сборка frontend
 `cd /www/static && gulp build:frontend && gulp build:backend`
 ### Production 
