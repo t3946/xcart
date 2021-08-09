@@ -1,0 +1,40 @@
+.section-item-block {
+  color: #494949;
+  line-height: 1.25rem;
+  font-size: 0.8125rem
+}
+
+.section-item-link {
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: #000000;
+    text-decoration: underline;
+  }
+}
+
+.section-config-block {
+  padding: 0 25px;
+}
+
+.up-config-panel {
+  background-color: #ffebb2;
+  height: 2.5rem;
+  padding: 0 1.5625rem;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  flex-wrap: wrap;
+  justify-content: center;
+  display: flex;
+}
+
+.icon-config-collapse-block {
+  right: 0px;
+  position: absolute;
+}
+.config-header-title{
+  font-size: 1.25rem;
+  font-weight: 700;
+}
