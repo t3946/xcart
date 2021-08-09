@@ -52,11 +52,23 @@ return [
         'name' => 'dashboard'
     ],
 
+    [
+        'route' => '/public-profile',
+        'target' => [AccountController::class, 'publicProfile'],
+        'name' => 'public-profile'
+    ],
+
     //api
     [
         'route' => '/api/authorization',
         'path' => 'Modules.Account.routes.routes_authorization_api',
         'namespace' => 'authorization_api'
+    ],
+
+    [
+        'route' => '/api/profile',
+        'path' => 'Modules.Account.routes.routes_profile_api',
+        'namespace' => 'profile_api'
     ],
 
     [

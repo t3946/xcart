@@ -29,8 +29,13 @@
 
       //клиентская часть
       "@client/modules/*": [
-        "frontend/jsx/modules//*"
+        "frontend/jsx/modules/*"
       ],
+
+      "@client/redux/*": [
+        "frontend/redux/*"
+      ],
+
       "@client/*": [
         "frontend/*"
       ],

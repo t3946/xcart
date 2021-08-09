@@ -21,6 +21,7 @@ config = {
       "create-react-class": "preact/compat/lib/create-react-class",
       "@": path.resolve("./frontend/jsx"),
       "@client/modules": path.resolve("./frontend/jsx/modules"),
+      "@client/redux": path.resolve("./frontend/jsx/redux"),
       "@client": path.resolve("./frontend"),
     },
 

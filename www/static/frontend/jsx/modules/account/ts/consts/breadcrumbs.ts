@@ -18,4 +18,9 @@ export const staticRoutes = [
     name: "Wallet",
     path: routes["account:wallet"],
   },
+
+  {
+    name: "Public Profile",
+    path: routes["account:public-profile"],
+  },
 ];

@@ -18,6 +18,7 @@ import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
+import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
 
@@ -98,6 +99,12 @@ export const AccountRouters = (): any => {
                   exact
                   path={appData.routes["account:register"]}
                   component={RegisterForm}
+                />
+
+                <Route
+                  exact
+                  path={appData.routes["account:public-profile"]}
+                  component={PublicProfile}
                 />
               </Switch>
             </div>
