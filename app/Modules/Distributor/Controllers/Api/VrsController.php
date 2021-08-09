@@ -12,7 +12,6 @@ use Modules\User\UserModule;
 use Throwable;
 use Xcart\App\Controller\Controller;
 use \Firebase\JWT\JWT;
-use Xcart\App\Exceptions\Exception;
 
 class VrsController extends Controller
 {
@@ -22,39 +21,19 @@ class VrsController extends Controller
     public int $iat = 1356999524;
     public int $nbf = 1357000000;
 
-  public function getSiteStatus(string $url)
+  public function getSiteStatus(string $url): void
   {
-   $thisSite = VrsHelperSitesModel::objects()->filter(['domain' => $url]);
+      [$vrs, $is_new] = VrsHelperSitesModel::objects()->getOrCreate(['domain' => $url]);
 
-   $status = 'first-time';
+      $status = $is_new ? 'first-time' : $vrs->status;
 
-   if(!($thisSite->count() > 0))
-   {
-       $dx = [];
-       $status = 'visited';
-       foreach (  DistributorModel::objects()->asArray(true)->all() as $distributor)
-       {
-           if(str_contains($distributor['url'],$url ))
-           {
-               $dx = $distributor;
-           }
-       }
-       if($dx)
-       {
-           $status = 'inactive';
-           if($dx['avail'] === 'Y'){
-               $status = 'active';
-           }
-       }
+      /** @var DistributorModel $dx */
+      if ($dx = DistributorModel::objects()->filter(['url__contains' => $url])->limit(1)->get()) {
+          $vrs->status = $status = $dx->avail ? 'active' : 'inactive';
+          $vrs->save();
+      }
 
-       VrsHelperSitesModel::objects()->getOrCreate(['domain'=>$url, 'status'=>$status]);
-       $this->jsonResponse(['status' => $status]);
-       return;
-   }
-
-
-
-        $this->jsonResponse(['status'=>$thisSite[0]['status']]);
+      $this->jsonResponse(['status' => $status]);
   }
 
   public function getMessageFromDomain(string $domain){
@@ -81,9 +60,17 @@ class VrsController extends Controller
       $a = [];
       foreach ($messages as $message)
       {
-          $message['user'] = UserModel::objects()->filter(['id'=>$message['user_id']])->asArray(true)->all()[0];
+          if ($user_model = UserModel::objects()->get(['id'=>$message['user_id']])) {
+              $message['user'] = [
+                  'id' => $user_model->id,
+                  'firstname' => $user_model->firstname,
+                  'b_firstname' => $user_model->firstname,
+                  's_firstname' => $user_model->firstname,
+                  'login' => $user_model->login,
+              ];
 
-          $a[] = $message;
+              $a[] = $message;
+          }
       }
 
 

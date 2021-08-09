@@ -30,19 +30,6 @@ class DashboardController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
 
-    public function beforeAction($action, $params)
-    {
-        /** check hide_no_orders_test_checkout form */
-
-        if (!empty($_POST['mode']) && $_POST['mode'] === 'hide_no_orders_test_checkout_message') {
-            Xcart::app()->request->session->add("no_orders_test_checkout_hide_time", time());
-
-            $log_text = Xcart::app()->user->firstname . " (" . Xcart::app()->user->login . ") clicked 'Done'.";
-            func_backprocess_log("Test_checkout", $log_text);
-            $this->getRequest()->refresh();
-        }
-    }
-
     public function index(): void
     {
         [$models, $myModels, $questionModels, $inquiries, $inquiries_tags] = $this->prepare();
@@ -133,7 +120,7 @@ class DashboardController extends PrototypeAdminController
     private function prepare(): array
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->cache(60)->all();
-        $myModels = DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all();
+        $myModels = Xcart::app()->user ? DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all() : [];
         $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
         $inquiries = InquiryTypeModel::objects()->filter(['active' => 'Y'])->order('inquiry_type')->all();
         $inquiries_tags = InquiryAttentionTagModel::objects()->filter(['active' => 'Y'])->order(['inquiry_attn_tag'])->all();
@@ -242,7 +229,7 @@ class DashboardController extends PrototypeAdminController
     public function subscription($id): void
     {
         $user = Xcart::app()->user;
-        $super_user = ['pavel','sergey2'];
+        $super_user = ['pavel','sergey2', 'roman_n'];
         $is_super_user = in_array($user->login, $super_user, true);
         $class = UserModel::classNameShort();
 
@@ -279,10 +266,10 @@ class DashboardController extends PrototypeAdminController
                 'model' => $user,
                 'is_super_user' => $is_super_user,
                 'all_users' => $is_super_user
-                    ? UserModel::objects()
-                        ->exclude(['id__in' => array_merge($u_ids, [$user->id])])
-                        ->filter(['status' => 'Y', 'usertype' => 'A'])
-                        ->order(['firstname'])
+                    ? UserModel::admins()
+                        ->exclude([
+                            'id__in' => array_merge($u_ids, [$user->id])
+                        ])
                     : []
             ]);
         }

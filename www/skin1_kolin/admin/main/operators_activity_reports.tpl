@@ -87,9 +87,9 @@ function managedate(status) {
 	<td class="FormButton" nowrap="nowrap">Operators:</td>
 	<td width="10">&nbsp;</td>
 	<td>
-  <select name="posted_data[operators][]" multiple="multiple" size="10">
-  {foreach from=$operators item=mnf key=mid}
-    <option value="{$mid}">{$mnf[0].firstname}</option>
+  <select name="posted_data[operators][]" multiple="multiple" size="10" class="select2-field">
+  {foreach from=$operators item=opt}
+    <option value="{$opt->login}">{$opt}</option>
   {/foreach}
   </select>
 		{if $search_prefilled.date_period ne "C"}

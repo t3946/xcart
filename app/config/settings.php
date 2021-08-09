@@ -1,5 +1,6 @@
 <?php
 
+use Aws\S3\S3Client;
 use Xcart\App\Main\ErrorHandler;
 use Modules\User\Components\Auth;
 use Modules\Mail\Components\Mailer;
@@ -22,6 +23,7 @@ use Xcart\App\Request\HttpRequest;
 use Modules\User\Components\XcartSession;
 use Xcart\App\Request\CliRequest;
 use Xcart\App\Router\Router;
+use Xcart\App\Storage\Adapters\S3Adapter;
 use Xcart\App\Template\TemplateManager;
 use Xcart\App\Storage\Storage;
 use Xcart\App\Storage\Adapters\LocalAdapter;
@@ -138,6 +140,20 @@ return array_replace_recursive([
                'www' => [
                    'class' => LocalAdapter::class,
                    'root' => 'www',
+               ],
+               's3' => [
+                   'class' => S3Adapter::class,
+                   'bucket' => 's3-product-images',
+                   'client' => new S3Client(
+                       [
+                           'credentials' => [
+                               'key' => 'AKIAJPPHD4UZNVAWOBZQ',
+                               'secret' => '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'
+                           ],
+                           'region' => 'us-east-1',
+                           'version' => 'latest',
+                       ]
+                   )
                ],
                'zip' => [
                    'class' => LocalZipAdapter::class,

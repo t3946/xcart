@@ -165,7 +165,7 @@ class AmpHelper
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $image_path = (string)$site->images[0]->image_path;
-        $pref = ($site->getConfig()['Enable_CDN'] === 'Y') ? 'cdn.' : 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.' : 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//{$pref}{$domain}";
 

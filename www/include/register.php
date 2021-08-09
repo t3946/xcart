@@ -480,7 +480,6 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		$profile_values['parent'] = $parent;
 		$profile_values['pending_plan_id'] = $pending_plan_id;
 		$profile_values['show_events'] = (!empty($show_events) ? $show_events : 0);
-		$profile_values['show_events_min_date'] = $show_events_min_date;
 
 #
 ##

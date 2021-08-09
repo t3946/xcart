@@ -26,4 +26,9 @@ class ResourceFile extends File
 
         parent::__construct($path);
     }
+
+    public function __destruct()
+    {
+        unlink($this->getPathname());
+    }
 }

@@ -327,14 +327,6 @@ class AdminHelper
         //user
         $data["user"] = Xcart::app()->getUser()->login;
 
-        //site info
-        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
-        $site_code = strtolower($site->code);
-        $data["site"] = [
-            "logoUrl" => Paths::get('dist') . "/images/logos/sites/$site_code/logo.svg",
-            "name" => $site->getName(),
-        ];
-
         //sites
         $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
 
@@ -356,6 +348,7 @@ class AdminHelper
                 "id" => (int)$site->storefrontid,
                 "icon" => $icon,
                 "code" => $site->code,
+                'favicon' => $site->file_edit_image_favicon->getValue() ?? ''
             ];
         }
 
@@ -405,8 +398,10 @@ class AdminHelper
     private static function siteData()
     {
         $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $attr = $site->getAttributes();
+        $attr['name'] = $site->getName();
 
-        StorageHelper::push($site->getAttributes(), null, 'site');
+        StorageHelper::push($attr, null, 'site');
     }
 
 

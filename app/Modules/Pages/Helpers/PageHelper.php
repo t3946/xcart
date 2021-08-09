@@ -72,7 +72,7 @@ class PageHelper
             $filter['url'] = ltrim($url, '/');
         }
 
-        $filter['language__lang_code'] = $site_model->getConfig()['Preferred_language'];
+        $filter['lang_id'] = $site_model->lang_id;
 
         $filter['sites__through__storefront_id'] = $site_model->storefrontid;
 

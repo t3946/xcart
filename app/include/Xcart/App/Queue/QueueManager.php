@@ -29,6 +29,7 @@ class QueueManager
                 $this->password #password
             );
             $this->channel = $this->connection->channel();
+            $this->channel->basic_qos( null, 50, null );
         }
     }
 

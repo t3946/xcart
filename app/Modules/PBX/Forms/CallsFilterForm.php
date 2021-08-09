@@ -27,7 +27,6 @@ class CallsFilterForm extends Form
                 'label' => 'Direction',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => [
@@ -56,7 +55,6 @@ class CallsFilterForm extends Form
                 'label' => 'Operator',
                 'html' => [
                     'style' => 'width: 300px',
-                    'class' => 'select2-field',
                 ],
                 'multiple' => true,
                 'choices' => function () {

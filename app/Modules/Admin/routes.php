@@ -153,4 +153,9 @@ return [
         'target' => [FieldController::class, 'field_reload'],
         'name' => 'field_reload'
     ],
+    [
+        'route' => '/field/update',
+        'target' => [AdminController::class, 'updateSelectField'],
+        'name' => 'updateSelectField'
+    ],
 ];

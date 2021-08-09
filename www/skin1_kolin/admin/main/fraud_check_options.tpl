@@ -49,7 +49,7 @@
             Under review users:
         </td>
         <td width="*" class="TableSubHead">
-            <select style="width:230px;" id="o_users" multiple class="select2" name="Under_review_users[]">
+            <select style="width:230px;" id="o_users" multiple class="select2-field" name="Under_review_users[]">
                 <option></option>
                 {foreach from=$users item=item_u key=key_k}
                     <option {if in_array($item_u->id, ','|explode:$global_config.Under_review_users)}selected="selected"{/if}

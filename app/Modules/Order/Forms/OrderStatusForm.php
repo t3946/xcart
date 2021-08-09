@@ -41,7 +41,6 @@ class OrderStatusForm extends ModelForm
                 },
                 'selected' => OrderStatusAvailabilityModel::objects()->filter(['source_status_id' => $model->status_id])->valuesList(['destination_status_id'], true),
                 'html' => [
-                    'class' => 'select2-field',
                     'style' => 'width:100%',
                 ],
                 'multiple' => true,

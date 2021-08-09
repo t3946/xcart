@@ -106,6 +106,7 @@ class SupplierFeedHelper
 
     /**
      * @param ProductModel $model
+     * @deprecated
      */
     public static function getVideos(ProductModel $model): void
     {
@@ -140,6 +141,7 @@ class SupplierFeedHelper
     {
 
         $model->manufacturerid = $feed->manufacturerid;
+        $site = $feed->site;
 
         $discontinuedDate = $data['discontinued_date'];
         if (!empty($discontinuedDate)) {
@@ -207,7 +209,7 @@ class SupplierFeedHelper
 
         $model = self::feedAttributes($model, $feed, $data['attributes']);
 
-        $model = self::feedCategories($model, $is_created, $feed, $data['supplier_categories']);
+        $model = self::feedCategories($model, $is_created, $site->base_category_id, $data['supplier_categories']);
 
         return $model;
     }
@@ -278,6 +280,7 @@ class SupplierFeedHelper
      * @param ProductModel $model
      * @param array $data
      * @throws Exception
+     * @deprecated
      */
     public static function feedFiles($model, $data): void
     {
@@ -419,15 +422,13 @@ class SupplierFeedHelper
      * @return ProductModel
      * @throws Exception
      */
-    public static function feedCategories($model, $is_created, $feed, $categories): ProductModel
+    public static function feedCategories($model, $is_created, $base_category_id, $categories): ProductModel
     {
-        $product_sfid = null;
-
         if (!$is_created && !$model->isGroupRoot()) {
             return $model;
         }
         /** @var CategoryModel $cat */
-        if ($feed->base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $feed->base_category_id])) {
+        if ($base_category_id && $cat = CategoryModel::objects()->get(['categoryid' => $base_category_id])) {
             $model->setMainCategory($cat);
         }
 
@@ -543,7 +544,9 @@ class SupplierFeedHelper
             }
 
             if ($d_products) {
-                ProductModel::objects()->filter(['productcode__in' => $d_products])->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
+                ProductModel::objects()
+                    ->filter(['productcode__in' => $d_products])
+                    ->update(['r_avail' => 0, 'forsale' => 'N', 'update_search_index' => 'D']);
             }
         }
         return $discontinued_products_count;

@@ -51,8 +51,8 @@ class ImageField extends FileField
         'resolution-units' => ImageInterface::RESOLUTION_PIXELSPERINCH,
         'resolution-x' => 72,
         'resolution-y' => 72,
-        'jpeg_quality' => 100,
-        'quality' => 100,
+        'jpeg_quality' => 80,
+        'quality' => 80,
         'png_compression_level' => 0
     ];
     /**
@@ -289,9 +289,9 @@ class ImageField extends FileField
             if ($file instanceof File) {
                 $absPath = $this->getFilesystem()->getAdapter()->getPathPrefix() . $file->getPath();
 
-                if ($this->_originalName != $absPath) {
+                if ($this->_original === null) {
                     $this->_originalName = $absPath;
-                    $this->_original = $this->getImagine()->open($absPath);
+                    $this->_original = $this->getImagine()->load($file->read());
                 }
 
                 $this->processSource($this->_original->copy(), true, [$prefix]);
@@ -299,6 +299,12 @@ class ImageField extends FileField
         }
 
         return $this->getFilesystem()->getAdapter()->getUrl($path);
+    }
+
+    public function getFile()
+    {
+        $value = $this->getValue();
+        return $this->getFilesystem()->get($value);
     }
 
 
@@ -319,6 +325,42 @@ class ImageField extends FileField
         }
 
         return $newPrefix;
+    }
+
+    public function getImageSizes(): array
+    {
+        if (!$this->_original) {
+            return [];
+        }
+        $size = $this->_original->getSize();
+        return [$size->getWidth(), $size->getHeight()];
+    }
+
+    public function saveFile(\Xcart\App\Storage\Files\File $file)
+    {
+        $contents = file_get_contents($file->getRealPath());
+        $ext = pathinfo($file->getRealPath(), PATHINFO_EXTENSION);
+
+        $path = $this->getNameHasher()->resolveUploadPath(
+            $this->getFilesystem(),
+            $this->getUploadTo(),
+            $file->getFilename(),
+            'jpg'
+        );
+
+        $this->_original = $this->getImagine()->load($contents);
+
+        if ($this->maxWidth !== null) {
+            [$width, $height] = $this->imageScale($this->_original, $this->maxWidth);
+            $newSource = $this->resize($this->_original->copy(), $width, $height, $this->defaultResize);
+            $contents = $newSource->get($ext, $this->options);
+        }
+
+        if (!$this->getFilesystem()->write($path, $contents)) {
+            throw new Exception('Failed to save file');
+        }
+
+        return $path;
     }
 
 }

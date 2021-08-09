@@ -87,7 +87,6 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'selected' => $countriesSelected,
                 'html' => [
                     'style' => 'width:400px;',
-                    'class' => 'select2-field',
                     'data-placeholder' => 'Click to select shipping zone',
                 ],
                 'multiple' => true,
@@ -99,7 +98,6 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'class' => Select2Field::class,
                 'label' => 'Shipping carriers used by distributor',
                 'html' => [
-                    'class' => 'select2-field',
                     'style' => 'width:400px;',
                     'data-placeholder' => 'Click to select shipping carriers',
                 ],

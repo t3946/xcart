@@ -20,5 +20,5 @@ interface FileNameHasherInterface
      *
      * @return string
      */
-    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name);
+    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '');
 }

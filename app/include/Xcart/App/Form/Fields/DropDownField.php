@@ -27,7 +27,7 @@ class DropDownField extends Field
      * Span tag needed because: http://stackoverflow.com/questions/23920990/firefox-30-is-not-hiding-select-box-arrows-anymore
      * @var string
      */
-    public $inputTemplate = 'forms/field/dropdown/input.tpl';
+    public $inputTemplate = 'forms/field/dropdown/new_input.tpl';
     public $fieldType = 'dropdown';
     /**
      * @var bool

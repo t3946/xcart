@@ -135,11 +135,6 @@
                     <td align="right"><label for="s_events_date">Show events, minimal date</label></td>
                     <td></td>
                     <td>
-
-                        <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
-                        <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js" type="text/javascript"></script>
-                        <script src="/static/vendors/air-datepicker/dist/js/i18n/datepicker.en.js" type="text/javascript"></script>
-
                         <input type="text"
                                value="{$userinfo.show_events_min_date}"
                                name="show_events_min_date"
@@ -150,7 +145,6 @@
                                class="datepicker-here"
                                size="32"
                         >
-
                     </td>
                 </tr>
 
