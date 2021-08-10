@@ -5,8 +5,12 @@ import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContex
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { useDispatch, useSelector } from "react-redux";
 import { AddressTypeEnum } from "../../ts/types/address-item.type";
-import { addCard } from "../../../../redux/actions/account-actions/WalletActions";
-export const BillingAddress = () => {
+import {
+  addCard,
+  addDataFromSubmitCardForm,
+} from "../../../../redux/actions/account-actions/WalletActions";
+
+export const BillingAddress = ({ cardInfo }) => {
   const context = useContext(WalletCardsDialogContext);
 
   const dispatch = useDispatch();
@@ -16,12 +20,30 @@ export const BillingAddress = () => {
       (address) => address.address_type === AddressTypeEnum.BILLING
     );
   });
-
-  const [value, setValue] = useState(billingAddresses[0]?.addresses_id);
-
   const cardSubmitData = useSelector((e: any) => e.wallet.submitFormData);
 
+  const submitCardFormLoading = useSelector(
+    (e: any) => e.wallet.submitCardFormLoading
+  );
+
+  const [value, setValue] = useState(
+    cardSubmitData?.address?.address_id ||
+      cardInfo?.address_id ||
+      billingAddresses[0]?.addresses_id
+  );
+
   const onSubmit = () => {
+    if (cardInfo) {
+      dispatch(
+        addDataFromSubmitCardForm({
+          address: {
+            address_id: value,
+          },
+        })
+      );
+      context.setContent(BillingAddressFormEnum.EDIT);
+      return;
+    }
     dispatch(
       addCard(
         {
@@ -44,8 +66,7 @@ export const BillingAddress = () => {
         setValue={setValue}
         addresses={billingAddresses}
       />
-
-      <Grid container>
+      <div className="billing-address-butns">
         <Button
           type={"submit"}
           onClick={() => context.setContent(BillingAddressFormEnum.ADD_ADDRESS)}
@@ -56,12 +77,12 @@ export const BillingAddress = () => {
         <Button
           type={"submit"}
           className="account-submit-btn auto-width-button"
-          disabled={!value}
+          disabled={!value || submitCardFormLoading}
           onClick={onSubmit}
         >
           USE THIS ADDRESS
         </Button>
-      </Grid>
+      </div>
     </div>
   );
 };

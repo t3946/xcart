@@ -14,14 +14,29 @@ const accountWalletReducer = (
         ...state,
         cards: action.cards,
         cardsLoading: false,
-        submitCardFormLoading: true,
+        submitCardFormLoading: false,
+        submitFormData: {},
       };
     case "ADD_SUBMIT_DATA":
       return { ...state, submitFormData: action.data };
     case "ADD_CARD":
       return {
         ...state,
-        submitFormData: {},
+        submitCardFormLoading: true,
+      };
+    case "CHANGE_DEFAULT_CARD":
+      return {
+        ...state,
+        submitCardFormLoading: true,
+      };
+    case "EDIT_CARD":
+      return {
+        ...state,
+        submitCardFormLoading: true,
+      };
+    case "REMOVE_CARD":
+      return {
+        ...state,
         submitCardFormLoading: true,
       };
     default:

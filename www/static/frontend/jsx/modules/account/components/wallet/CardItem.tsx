@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { changeDefaultCard } from "../../../../redux/actions/account-actions/WalletActions";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
+import { useHistory } from "react-router";
+import { CardHeader } from "./CardHeader";
 
 export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
   const accordion = useAccordion();
@@ -18,11 +20,26 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
 
   const editDialog = useDialog();
 
+  const history = useHistory();
+
+  const expires = new Date(Number(cardInfo.expires));
+
   const changeDefault = (e) => {
     e.stopPropagation();
     if (!cardInfo.is_default) {
       dispatch(changeDefaultCard(cardInfo.credit_card_id));
     }
+  };
+
+  const openCardDialog = (dialog, path) => {
+    if (breakPoint.is768) {
+      history.push({
+        pathname: path,
+        state: { cardInfo: cardInfo },
+      });
+      return;
+    }
+    dialog.handleClickOpen();
   };
 
   return (
@@ -33,22 +50,20 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
           firstChild && "wallet-card-header-first"
         }`}
       >
-        <div className="wallet-card-name wallet-card-name-header">
-          <img
-            className="wallet-card-img"
-            src={`/static/frontend/dist/images/icons/account/cards/${cardInfo.card_type}.svg`}
-          />
-          <div>
-            Mastercard ending in{" "}
-            {cardInfo.card_number.substr(cardInfo.card_number.length - 4)}
-          </div>
-        </div>
-
+        <CardHeader
+          cardNumber={cardInfo.card_number}
+          cardType={cardInfo.card_type}
+        />
         <div className="wallet-card-billing wallet-card-billing-header">
-          Exp: 10/2021
+          Exp: {expires.getMonth() + "/" + expires.getFullYear()}
         </div>
         <div className="wallet-header-arrow-block">
-          <div className="wallet-header-default-block" onClick={changeDefault}>
+          <div
+            className={`wallet-header-default-block ${
+              cardInfo.is_default && "wallet-header-default-block_is-default"
+            }`}
+            onClick={changeDefault}
+          >
             {cardInfo.is_default ? "Default" : "Set default"}
           </div>
           <div
@@ -79,23 +94,36 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
           </div>
           {breakPoint.is768 ? (
             <AddEditBtnsBlock
-              handleRemove={removeDialog.handleClickOpen}
-              handleEdit={editDialog.handleClickOpen}
+              handleRemove={() =>
+                openCardDialog(removeDialog, "/account/payments/wallet/remove")
+              }
+              handleEdit={() =>
+                openCardDialog(editDialog, "/account/payments/wallet/edit")
+              }
               defaultItem={cardInfo.is_default}
               changeDefault={changeDefault}
             >
-              <div>Default</div>
+              <div className={"wallet-header-default-block_is-default"}>
+                Default
+              </div>
             </AddEditBtnsBlock>
           ) : (
             <div className="wallet-card-buttons">
               <Button
                 className="account-submit-btn edit-card-btn"
-                onClick={editDialog.handleClickOpen}
+                onClick={() =>
+                  openCardDialog(editDialog, "/account/payments/wallet/edit")
+                }
               >
                 Edit
               </Button>
               <Button
-                onClick={removeDialog.handleClickOpen}
+                onClick={() =>
+                  openCardDialog(
+                    removeDialog,
+                    "/account/payments/wallet/remove"
+                  )
+                }
                 className="account-submit-btn account-submit-btn-outline"
               >
                 Remove
@@ -108,11 +136,13 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
         contentType={BillingAddressFormEnum.EDIT}
         actionType={BillingAddressFormEnum.EDIT}
         open={editDialog.open}
+        cardInfo={cardInfo}
         handleClose={editDialog.handleClose}
       />
       <RemoveCardDialog
         open={removeDialog.open}
         handleClose={removeDialog.handleClose}
+        cardInfo={cardInfo}
       />
     </div>
   );

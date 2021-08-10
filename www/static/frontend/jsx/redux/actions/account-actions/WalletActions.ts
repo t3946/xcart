@@ -17,3 +17,15 @@ export const addCard = (cardInfo: any, onRequestEnd): any => ({
   cardInfo,
   onRequestEnd,
 });
+
+export const editCard = (cardInfo: any, onRequestEnd): any => ({
+  type: "EDIT_CARD",
+  cardInfo,
+  onRequestEnd,
+});
+
+export const removeCard = (id: number, onRequestEnd) => ({
+  type: "REMOVE_CARD",
+  id,
+  onRequestEnd,
+});

@@ -9,6 +9,11 @@ const accountSharedReducer = (
   switch (action.type) {
     case "SET_TERRITORY":
       return { ...state, states: action.states, countries: action.countries };
+    case "SET_BREAKPOINT":
+      return {
+        ...state,
+        breakpoint: action.breakpoint,
+      };
     default:
       return state;
   }

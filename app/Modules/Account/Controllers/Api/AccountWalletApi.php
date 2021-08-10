@@ -6,13 +6,22 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\CreditCardsModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 
 class AccountWalletApi  extends FrontendController
 {
     public function getCards()
     {
-        $models = CreditCardsModel::objects()->order(['-is_default'])->all();
+        $user = json_decode(file_get_contents('php://input'));
+        $this->jsonResponse($this->getCardsFromBase($user));
+    }
+
+    public function getCardsFromBase(int $id)
+    {
+        $user = UserModel::objects()->get(['user_id' => $id]);
+
+        $models = $user->cards->order(['-is_default'])->all();
 
         $cards = [];
 
@@ -22,13 +31,18 @@ class AccountWalletApi  extends FrontendController
             $cards[$key]['address'] = $model->address_model->getAttributes();
         }
 
-        $this->jsonResponse($cards);
+        return $cards;
+
     }
 
     public function changeDefault()
     {
-        $cardId = json_decode(file_get_contents('php://input'));
-        $cards = CreditCardsModel::objects()->all();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $cardId = $data['cardId'];
+        $userId = $data['user'];
+
+        $user = UserModel::objects()->get(['user_id' => $userId]);
+        $cards = $user->cards->order(['-is_default'])->all();
 
         foreach ($cards as $card)
         {
@@ -40,19 +54,24 @@ class AccountWalletApi  extends FrontendController
             $card->save();
         }
 
-        $this->getCards();
+        $this->jsonResponse( $this->getCardsFromBase($userId));
     }
 
     public function addNewCard()
     {
-        $cardInfo = json_decode(file_get_contents('php://input'), true);
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        $newCard = $cardInfo['card'];
+        $userId = $data['user'];
 
-        $address = $cardInfo['address'];
+        $newCard = $data['card'];
+
+        $newCard['user_id'] = $userId;
+
+        $address = $data['address'];
 
         if ($address['address_id']) {
             $newCard['address_id'] = $address['address_id'];
+
         }
         else
         {
@@ -74,6 +93,51 @@ class AccountWalletApi  extends FrontendController
         }
         CreditCardsModel::objects()->create($newCard);
 
-        $this->getCards();
+        $this->jsonResponse( $this->getCardsFromBase($userId));
+    }
+
+    public function editCard()
+    {
+        $cardInfo = json_decode(file_get_contents('php://input'), true);
+
+        $userId = $cardInfo['user'];
+
+        $editCard = $cardInfo['card'];
+
+        $address = $cardInfo['address'];
+
+        if ($address['address_id']) {
+            $editCard['address_id'] = $address['address_id'];
+        }
+        else if($address)
+        {
+            $address['address_type'] = 'billing';
+            $address['user_id'] = $cardInfo['userId'];
+            $model = new AddressesModel($address);
+            $model->save();
+
+            $editCard['address_id'] = $model->addresses_id;
+        }
+
+        $addressModel = CreditCardsModel::objects()->get(['credit_card_id' => $editCard['credit_card_id']]);
+
+
+        $addressModel->setAttributes($editCard);
+
+        $addressModel->save();
+        $this->jsonResponse( $this->getCardsFromBase($userId));
+    }
+
+    public function removeCard()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $userId = $data['user'];
+
+        $cardId = $data['card'];
+
+        CreditCardsModel::objects()->delete(['credit_card_id' => $cardId]);
+
+        $this->jsonResponse( $this->getCardsFromBase($userId));
     }
 }

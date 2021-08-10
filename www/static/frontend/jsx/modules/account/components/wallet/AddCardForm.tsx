@@ -13,6 +13,7 @@ import {
 } from "../../ts/consts/add-card-form";
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/WalletActions";
+import { detectCardType } from "../../utils/detect-card-type";
 
 export const AddCardForm = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -34,9 +35,14 @@ export const AddCardForm = () => {
         card: {
           name: values.name,
           card_number: values.cardNumber,
-          expires:
-            values.expiration_month.value + "/" + values.expiration_year.value,
+          expires: Date.parse(
+            new Date(
+              values.expiration_year.value,
+              values.expiration_month.value
+            ).toString()
+          ),
           is_default: values.is_default,
+          card_type: detectCardType(values.cardNumber),
         },
       })
     );

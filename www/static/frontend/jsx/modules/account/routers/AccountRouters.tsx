@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/sidebar-menu/BreadCrumbs";
@@ -20,6 +20,10 @@ import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
+import { AddCard } from "../pages/AddCard";
+import { EditCard } from "../pages/EditCard";
+import { useBreakPoint } from "../hooks/useBreakPoint";
+import { RemoveCardPage } from "../pages/RemoveCardPage";
 
 export const AccountRouters = () => {
   const dispatch = useDispatch();
@@ -29,6 +33,7 @@ export const AccountRouters = () => {
 
   const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
+    useBreakPoint();
     dispatch(getTerritory());
     if (!addresses) {
       dispatch(getAddresses(accountStore.getState().user.id));
@@ -88,6 +93,21 @@ export const AccountRouters = () => {
                   exact
                   path="/account/payments/wallet"
                   component={Wallet}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/add"
+                  component={AddCard}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/edit"
+                  component={EditCard}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/remove"
+                  component={RemoveCardPage}
                 />
 
                 <Route

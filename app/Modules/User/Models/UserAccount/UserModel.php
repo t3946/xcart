@@ -3,6 +3,7 @@
 namespace Modules\User\Models\UserAccount;
 
 use Modules\Account\Models\AddressesModel;
+use Modules\Account\Models\CreditCardsModel;
 use Modules\User\Helpers\PasswordHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
@@ -66,6 +67,11 @@ class UserModel extends Model
             'addresses' => [
                 'class' => HasManyField::class,
                 'modelClass' => AddressesModel::class,
+                'link' => ['user_id' => 'user_id']
+            ],
+            'cards' => [
+                'class' => HasManyField::class,
+                'modelClass' => CreditCardsModel::class,
                 'link' => ['user_id' => 'user_id']
             ],
             'cart_number' => [

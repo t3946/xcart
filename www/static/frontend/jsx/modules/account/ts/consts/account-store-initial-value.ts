@@ -13,12 +13,6 @@ export const accountAddressesInitialValue = {
   addressesList: undefined,
 };
 
-export const accountStoreInitialValue = {
-  main: accountMainStoreInitialValue,
-  addresses: accountAddressesInitialValue,
-  user: undefined,
-};
-
 export const accountMenuInitialValue = {
   isMobileMenuVisible: false,
   isTabletMenuVisible: false,
@@ -29,3 +23,11 @@ export const accountMenuInitialValue = {
 const appData = window.appData;
 
 export const accountUserInitialValue = appData.user || null;
+
+export const accountStoreInitialValue = {
+  main: accountMainStoreInitialValue,
+  addresses: accountAddressesInitialValue,
+  user: undefined,
+  wallet: accountWalletStoreInitialValue,
+  mobileMenu: accountMenuInitialValue,
+};

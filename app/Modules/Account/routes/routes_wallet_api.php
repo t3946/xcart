@@ -20,4 +20,14 @@ return [
         'target' => [AccountWalletApi::class, 'addNewCard'],
         'name' => 'add'
     ],
+    [
+        'route' => '/edit-card',
+        'target' => [AccountWalletApi::class, 'editCard'],
+        'name' => 'edit'
+    ],
+    [
+        'route' => '/remove-card',
+        'target' => [AccountWalletApi::class, 'removeCard'],
+        'name' => 'remove'
+    ],
 ];

@@ -94,7 +94,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 touched={touched.phone_number}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
-                mask={"+7 (999) 999 99 99"}
+                mask={"+9 (999) 999 99 99"}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"

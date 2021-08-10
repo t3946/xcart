@@ -2,6 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "../../../modules/shared/services/api.service";
 import { AnyAction } from "redux";
+import { accountStore } from "../../stores/StoreAccount";
 
 const api = new ApiService();
 
@@ -14,9 +15,7 @@ function* getAddresses(action): Generator {
   try {
     yield put({
       type: "SET_ADDRESSES",
-      addresses: result.addresses,
-      countries: result.countries,
-      states: result.states,
+      addresses: result,
     });
   } catch (error) {
     console.log(error);
@@ -38,9 +37,7 @@ function* changeDefaultAddress(action: AnyAction): Generator {
   try {
     yield put({
       type: "SET_ADDRESSES",
-      addresses: result.addresses,
-      countries: result.countries,
-      states: result.states,
+      addresses: result,
     });
   } catch (error) {
     console.log(error);
@@ -49,16 +46,20 @@ function* changeDefaultAddress(action: AnyAction): Generator {
 
 function* removeAddress(action: AnyAction): Generator {
   const result: any = yield api
-    .post<any>(`/account/api/addresses/remove-address`, action.id)
+    .post<any>(
+      `/account/api/addresses/remove-address`,
+      JSON.stringify({
+        addressId: action.id,
+        user: accountStore.getState().user.id,
+      })
+    )
     .then((response) => response)
     .catch((error) => console.log(error));
 
   try {
     yield put({
       type: "SET_ADDRESSES",
-      addresses: result.addresses,
-      countries: result.countries,
-      states: result.states,
+      addresses: result,
     });
   } catch (error) {
     console.log(error);
@@ -69,12 +70,10 @@ function* addAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
       `/account/api/addresses/add-address`,
-      JSON.stringify(
-        JSON.stringify({
-          user: action.userId,
-          address: action.address,
-        })
-      )
+      JSON.stringify({
+        user: action.userId,
+        address: action.address,
+      })
     )
     .then((response) => response)
     .catch((error) => console.log(error));
@@ -82,9 +81,7 @@ function* addAddress(action: AnyAction): Generator {
   try {
     yield put({
       type: "SET_ADDRESSES",
-      addresses: result.addresses,
-      countries: result.countries,
-      states: result.states,
+      addresses: result,
     });
   } catch (error) {
     console.log(error);
@@ -98,7 +95,10 @@ function* editAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
       `/account/api/addresses/edit-address`,
-      JSON.stringify(action.address)
+      JSON.stringify({
+        address: action.address,
+        user: accountStore.getState().user.id,
+      })
     )
     .then((response) => response)
     .catch((error) => console.log(error));
@@ -106,9 +106,7 @@ function* editAddress(action: AnyAction): Generator {
   try {
     yield put({
       type: "SET_ADDRESSES",
-      addresses: result.addresses,
-      countries: result.countries,
-      states: result.states,
+      addresses: result,
     });
   } catch (error) {
     console.log(error);

@@ -75,6 +75,14 @@ font-weight: 700;
   width: 33%;
 }
 
+.wallet-header-default-block{
+  color: #055A93;
+}
+
+.wallet-header-default-block_is-default{
+  color: #83132B;
+}
+
 .wallet-cards-list-container{
   margin-bottom: 31px;
 }
@@ -95,9 +103,6 @@ font-weight: 700;
   margin-bottom: 10px !important;
   }
 
-  .wallet-card-billing-header{
-    text-align: center;
-  }
 }
 
 @media (max-width: 768px) {

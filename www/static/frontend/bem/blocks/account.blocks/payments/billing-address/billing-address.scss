@@ -36,6 +36,10 @@
   width: 70%;
 }
 
+.billing-address-butns{
+  display: flex;
+}
+
 @media (max-width: 1000px) {
   .add-billing-address-container{
     width: 100%;
@@ -55,6 +59,10 @@
   .billing-address-back-btn, .add-billing-address-btn{
     margin-right: 0px !important;
     margin-bottom: 10px !important;
+  }
+
+  .billing-address-butns{
+    flex-direction: column;
   }
 
 }

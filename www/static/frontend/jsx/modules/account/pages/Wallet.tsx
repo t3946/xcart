@@ -3,7 +3,6 @@ import { CardsList } from "../components/wallet/CardsList";
 import { AddNewPaymentMethod } from "../components/wallet/AddNewPaymentMethod";
 import { useDispatch, useSelector } from "react-redux";
 import { getCards } from "../../../redux/actions/account-actions/WalletActions";
-import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 
 export const Wallet = () => {
   const dispatch = useDispatch();
@@ -19,7 +18,7 @@ export const Wallet = () => {
     <div className="wallet-container">
       <div className="page-label">Wallet</div>
       <div className="wallet-label">Credit and debit cards</div>
-      {cards && <CardsList cards={cards} />}
+      <CardsList cards={cards} />
       <div className="wallet-label">Add a new payment method</div>
       <AddNewPaymentMethod />
     </div>

@@ -11,10 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStates } from "../../utils/get-states";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
-import { addCard } from "../../../../redux/actions/account-actions/WalletActions";
+import {
+  addCard,
+  addDataFromSubmitCardForm,
+} from "../../../../redux/actions/account-actions/WalletActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 
-export const AddBillingAddressForm = () => {
+export const AddBillingAddressForm = ({ edit }) => {
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
 
@@ -28,6 +31,16 @@ export const AddBillingAddressForm = () => {
       country: values.country.value,
       state: values.state.value,
     };
+
+    if (edit) {
+      dispatch(
+        addDataFromSubmitCardForm({
+          address: newAddress,
+        })
+      );
+      context.setContent(BillingAddressFormEnum.EDIT);
+      return;
+    }
 
     dispatch(
       addCard(
@@ -91,6 +104,7 @@ export const AddBillingAddressForm = () => {
                 touched={touched.phone_number}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
+                mask={"+9 (999) 999 99 99"}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"

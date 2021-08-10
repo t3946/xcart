@@ -5,6 +5,8 @@ export interface AccountStoreDto {
   addresses: AccountAddressesStoreDto;
   main: AccountMainStoreDto;
   user: any;
+  wallet: AccountWalletStoreDto;
+  mobileMenu: any;
 }
 
 export interface AccountAddressesStoreDto {
@@ -16,6 +18,7 @@ export interface AccountAddressesStoreDto {
 export interface AccountMainStoreDto {
   countries: SelectValueDto<string, string>[];
   states: any;
+  breakpoint?: any;
 }
 
 export interface AccountWalletStoreDto {

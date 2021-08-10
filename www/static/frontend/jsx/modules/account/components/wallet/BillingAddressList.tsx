@@ -4,7 +4,7 @@ import { BillingAddressListItem } from "./BillingAddressListItem";
 export const BillingAddressList = ({ addresses, value, setValue }) => {
   return (
     <div className="billing-address-list-container">
-      {addresses.length !== 0 ? (
+      {addresses.length ? (
         addresses.map((e) => {
           return (
             <BillingAddressListItem
