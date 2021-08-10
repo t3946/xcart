@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
-import { BreadCrumbs } from "../components/sidebar-menu/BreadCrumbs";
 import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
@@ -27,6 +26,7 @@ import { RemoveCardPage } from "../pages/RemoveCardPage";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
+import { BreadCrumbs } from "@client/modules/account/components/bread-crubms/BreadCrumbs";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -132,14 +132,12 @@ export const AccountRouters = (): any => {
                   component={RegisterForm}
                 />
 
-                  <Route
-                      exact
-                      path={data?.appData.routes["account:public-profile"]}
-                      component={PublicProfile}
-                  />
+                <Route
+                  exact
+                  path={data?.appData.routes["account:public-profile"]}
+                  component={PublicProfile}
+                />
               </Switch>
-
-            
             </div>
           </div>
         </div>
