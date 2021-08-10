@@ -51,10 +51,10 @@ class PromotionalProductsHelper
         $qs = ProductModel::showed();
         $qs->filter(['images__image_path__isnull' => false, 'images__image_x__gt' => 730]);
         /** @var ProductModel $product */
-        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->all()) {
+        if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(5)->all()) {
             return $product;
         }
-        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->all();
+        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(5)->all();
         return $product;
     }
 

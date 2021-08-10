@@ -9,6 +9,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -35,9 +36,13 @@ class UserModel extends Model
                 'null' => false,
                 'default' => '',
             ],
-            'avatar_uri' => [
-                'class' => CharField::class,
+            'avatar_image' => [
+                'class' => ImageField::class,
                 'required' => true,
+                'adapterName' => 'www',
+                'uploadTo' => 'images/user_avatar/',
+                'maxSize' => 100 * 1024,
+                'types' => ['png', 'jpeg', 'jpg'],
             ],
             'rate_us' => [
                 'class' => CharField::class,
@@ -138,6 +143,7 @@ class UserModel extends Model
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'avatar_image' => '/' . $this->avatar_image->getValue(),
         ];
     }
 }

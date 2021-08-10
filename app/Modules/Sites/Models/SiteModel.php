@@ -1,7 +1,11 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Doctrine\DBAL\Types\Types;
 use Modules\Core\Components\GlobalConfig;
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -27,12 +31,13 @@ use Xcart\App\Orm\Model;
  * @property null|Manager favicons
  * @property string code
  * @property Manager|TaxModel[] taxes
+ * @property CurrencyModel currency
+ * @property CategoryModel base_category
  */
 class SiteModel extends Model
 {
     private $_config = [];
     private $_globalConfig = [];
-    private $currency;
 
 
     public function __toString()
@@ -59,12 +64,12 @@ class SiteModel extends Model
         return "[{$this->code}] {$this->getName()}{$str}";
     }
 
-    public static function tableName() : string
+    public static function tableName(): string
     {
         return 'xcart_storefronts';
     }
 
-    public static function getFields() :array
+    public static function getFields(): array
     {
         return [
 
@@ -96,7 +101,6 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'length' => 10,
                 'null' => false,
-                'default' => '',
             ],
             'domain' => [
                 'class' => CharField::class,
@@ -127,6 +131,144 @@ class SiteModel extends Model
                 'class' => CharField::class,
                 'default' => '',
             ],
+            'company_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company name'
+            ],
+            'shop_closed' => [
+                'class' => BooleanField::class,
+                'null' => true,
+                'default' => false,
+            ],
+            'shop_closed_method' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => '',
+                'choices' => [
+                    '',
+                    1 => 'show closed storefront banner',
+                    2 => 'redirect to storefront home page',
+                    3 => 'keep all visits on and show suggested links to other storefronts',
+                    4 => 'try to redirect visit to proper product on other storefronts',
+                ],
+                'verboseName' => 'Behavior of processing visits'
+            ],
+            'company_website' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Company website'
+            ],
+            'cidev_top_header_code' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Toll free customer service phone'
+            ],
+            'local_phone' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Local phone'
+            ],
+            'fax_number' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Fax number'
+            ],
+            'cidev_header_code' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Search string text',
+            ],
+            'customer_service_working_time' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Working time'
+            ],
+            'opt_order_prefix' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Order prefix'
+            ],
+            'newsletter_email' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Reply-To newsletter email address'
+            ],
+            'start_year' => [
+                'class' => IntField::class,
+                'length' => 4,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Year when the store started its operation'
+            ],
+            'search_all_website_show' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'Enable_CDN' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'CDN_domain' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'CDN domain'
+            ],
+            'base_category' => [
+                'field' => 'base_category_id',
+                'class' => ForeignField::class,
+                'modelClass' => CategoryModel::class,
+                'link' => ['base_category_id' => 'categoryid'],
+                'null' => true,
+                'default' => null,
+                'verboseName' => 'Base category',
+            ],
+            'Enable_surf_stats' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'country_code' => [
+                'class' => CharField::class,
+                'field' => 'country',
+            ],
+            'currency' => [
+                'field' => 'currency_id',
+                'class' => ForeignField::class,
+                'modelClass' => CurrencyModel::class,
+                'link' => ['currency_id' => 'currency_id'],
+            ],
+            'flat_shipping_enabled' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'show_full_state_country' => [
+                'class' => BooleanField::class,
+                'null' => false,
+                'default' => false,
+            ],
+            'lang' => [
+                'field' => 'lang_id',
+                'class' => ForeignField::class,
+                'modelClass' => LanguageModel::class,
+                'null' => true,
+                'default' => null,
+                'link' => ['lang_id' => 'lang_id'],
+                'verboseName' => 'Preferred language'
+            ],
             'corporates' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => CorporateModel::class,
@@ -152,123 +294,18 @@ class SiteModel extends Model
                     'D' => 'Disabled'
                 ],
             ],
-            'company_name' => [
-                'class' => CharField::class,
+            'logo' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/logo/',
                 'null' => true,
-                'default' => null,
             ],
-            'opt_shop_closed' => [
-                'class' => BooleanField::class,
+            'logo_mobile' => [
+                'class' => ImageField::class,
+                'adapterName' => 'www',
+                'uploadTo' => '/images/logo/',
                 'null' => true,
-                'default' => false,
-            ],
-            'shop_closed_method' => [
-                'class' => CharField::class,
-                'null' => false,
-                'default' => '',
-                'choices' => [
-                    '',
-                    1 => 'show closed storefront banner',
-                    2 => 'redirect to storefront home page',
-                    3 => 'keep all visits on and show suggested links to other storefronts',
-                    4 =>'try to redirect visit to proper product on other storefronts',
-                ],
-                'verboseName' => 'Behavior of processing visits'
-            ],
-            'company_website' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'cidev_top_header_code' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'local_phone' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'fax_number' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'cidev_header_code' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'customer_service_working_time' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'opt_order_prefix' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'newsletter_email' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'start_year' => [
-                'class' => IntField::class,
-                'length' => 4,
-                'null' => true,
-                'default' => null,
-            ],
-            'search_all_website_show' => [
-                'class' => BooleanField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'Enable_CDN' => [
-              'class' => BooleanField::class,
-              'null' => false,
-              'default' => false,
-            ],
-            'CDN_domain' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'Google_Trusted_Store_ID' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'Enable_surf_stats' => [
-                'class' => BooleanField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'Preferred_served_country' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-            ],
-            'currency' => [
-                'field' => 'currency_id',
-                'class' => ForeignField::class,
-                'modelClass' => CurrencyModel::class,
-                'link' => ['currency_id' => 'currency_id'],
-            ],
-            'flat_shipping_enabled' => [
-                'class' => BooleanField::class,
-                'null' => false,
-                'default' => false,
-            ],
-            'lang' => [
-                'field' => 'lang_id',
-                'class' => ForeignField::class,
-                'modelClass' => LanguageModel::class,
-                'null' => true,
-                'default' => null,
-                'link' => ['lang_id' => 'lang_id'],
+                'verboseName' => 'Mobile logo'
             ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
@@ -276,29 +313,17 @@ class SiteModel extends Model
                 'uploadTo' => 'images/favicons/',
                 'null' => true,
             ],
-
-            /*
-            'cidev_top_header_code',
-            'local_phone', +
-            'fax_number', +
-            'cidev_footer_code',
-            'cidev_header_code',
-            'customer_service_working_time',
-            'cidev_ga_code_number',
-            'cidev_yandex_code_number',
-            'opt_order_prefix',
-            'newsletter_email',
-            'start_year', +
-            'search_all_website_show',
-            'shop_closed_method',
-            'shop_closed',
-            'Enable_CDN',
-            'CDN_domain', +
-            'Enable_surf_stats',
-            'Preferred_served_country',
-            'Preferred_language',
-            'currency',*/
         ];
+    }
+
+    public function getLogo()
+    {
+        return $this->logo->getValue() ?? '';
+    }
+
+    public function getMobileLogo()
+    {
+        return $this->logo_mobile->getValue() ?? $this->getLogo();
     }
 
     public function getConfig()
@@ -309,6 +334,7 @@ class SiteModel extends Model
             foreach ($config as $item) {
                 $this->_config[$item['name']] = $item['value'];
             }
+            $this->_config = array_merge($this->_config, $this->getAttributes());
         }
 
         return $this->_config;
@@ -336,19 +362,13 @@ class SiteModel extends Model
 
     public function isWork()
     {
-        if ($config = $this->getConfig()) {
-            return (empty($config['shop_closed']) || $config['shop_closed'] === 'N');
-        }
-
-        return ($this->status !== 'D');
+        return !$this->shop_closed;
     }
 
     public function showInLists()
     {
         if ($this->isWork()) {
-            if ($config = $this->getConfig()) {
-                return (empty($config['search_all_website_show']) || $config['search_all_website_show'] === 'Y');
-            }
+            return $this->search_all_website_show;
         }
 
         return false;
@@ -414,11 +434,8 @@ class SiteModel extends Model
         return $this->code. '-';
     }
 
-    public function getCurrency():? CurrencyModel
+    public function getCurrency(): CurrencyModel
     {
-        if ($this->currency === null) {
-            $this->currency = CurrencyModel::objects()->get(['currency_id' => $this->getConfig()['currency'] ?? 1]);
-        }
         return $this->currency;
     }
 

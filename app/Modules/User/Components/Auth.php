@@ -36,6 +36,7 @@ class Auth implements AuthInterface
     public $authSessionName = 'admin_login';
 
     public $class = 'Modules\User\Models\UserModel';
+    public $newUserClass = 'Modules\User\Models\UserAccount\UserModel';
 
     public function login($user, $remember_me = false)
     {
@@ -55,6 +56,9 @@ class Auth implements AuthInterface
         $this->_user = null;
     }
 
+    /**
+     * @param bool $new_user если true -- то работать будет с пользователем из xcart_users(из обновы с личным кабинетом)
+     */
     public function getUser($new_user = false)
     {
         if (!$this->_user) {
@@ -76,15 +80,16 @@ class Auth implements AuthInterface
 
         if (!Cli::isCli()) {
             $user = $this->getSessionUser($new_user);
+
             if (!$user) {
-                if ($user = $this->getCookieUser()) {
+                if ($user = $this->getCookieUser($new_user)) {
                     $this->updateSession($user);
                 }
             }
         }
 
         if (!$user) {
-            $class = $this->class;
+            $class = $new_user ? $this->newUserClass : $this->class;
             $user = new $class();
         }
 
@@ -120,7 +125,7 @@ class Auth implements AuthInterface
         return null;
     }
 
-    public function getCookieUser()
+    public function getCookieUser($new_user = false)
     {
         $cookie = $this->getCookie();
         if ($cookie) {
@@ -129,7 +134,7 @@ class Auth implements AuthInterface
                 $id = $data[0];
                 $key = $data[1];
 
-                $user = $this->findUser($id);
+                $user = $this->findUser($id, $new_user);
                 if ($user && password_verify($user->email . $user->password, $key)) {
                     return $user;
                 }

@@ -2239,6 +2239,10 @@ a.ui-button:active,
   padding: 1px;
   border:2px solid #FF0000;
 
+  &.margin_bottom {
+    margin-bottom: 18px;
+  }
+
   .enter_on_site__content {
     text-align: center;
     font-size: 16px;
@@ -2260,8 +2264,6 @@ a.ui-button:active,
         color:#FE8E00;
       }
     }
-
-
   }
 }
 

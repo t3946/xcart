@@ -1,0 +1,9 @@
+.form-group__md-row {
+    @include breakpoint(md up) {
+        display: flex;
+        flex-direction: row;
+    }
+    @include breakpoint(lg up) {
+        display: block;
+    }
+}

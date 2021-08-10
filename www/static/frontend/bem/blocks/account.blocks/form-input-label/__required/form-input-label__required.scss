@@ -1,0 +1,8 @@
+.form-input-label__required {
+    &:after {
+        position: absolute;
+        content: "*";
+        color: #eb2d04;
+        font-weight: normal;
+    }
+}

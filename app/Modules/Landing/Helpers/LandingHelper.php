@@ -20,7 +20,7 @@ class LandingHelper
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $image_path = (string)$site->images[0]->image_path;
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//" .$pref . $domain;
 
@@ -38,7 +38,7 @@ class LandingHelper
 
         /** @var \Modules\Sites\Models\SiteModel $site */
         $site = $this->model->sites->limit(1)->get();
-        $pref = ($site->getConfig()['Enable_CDN'] == "Y") ? 'cdn.': 'www.';
+        $pref = $site->Enable_CDN ? 'cdn.': 'www.';
         $domain = $site->getBaseDomain();
         $domain = "//" .$pref . $domain;
 

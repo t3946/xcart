@@ -83,7 +83,6 @@ class DistributorContactsForm extends ModelForm
                 'class' => Select2Field::class,
                 'html' => [
                     'style' => 'width:100%',
-                    'class' => 'select2-field',
                     'data-placeholder' => 'Click to select a function',
                 ],
                 'multiple' => true,

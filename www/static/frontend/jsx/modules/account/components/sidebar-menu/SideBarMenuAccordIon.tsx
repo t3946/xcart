@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { SidebarItemDto } from "@modules/account/ts/types/sidebar-item.type";
+import React from "react";
+import { SidebarItemDto } from "@client/modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
 import { useAccordion } from "../../hooks/useAccordion";
 import classNames from "classnames";
@@ -26,7 +26,10 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = ({
 
   return (
     <React.Fragment>
-      <div onClick={accordion.onItemClick} className={classNames(handlerClasses)}>
+      <div
+        onClick={accordion.onItemClick}
+        className={classNames(handlerClasses)}
+      >
         <div>{label}</div>
         <div
           className={`accordion-arrow arrow-rotatable ${

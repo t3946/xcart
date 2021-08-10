@@ -45,7 +45,8 @@ class DistributorGeneralForm extends DistributorForm
                 'label' => 'Added by',
                 'hint' => LanguageModel::translate('help_dx_provider_text'),
                 'html' => [
-                    'style' => 'border: none; width: 100%'
+                    'style' => 'border: none; width: 100%',
+                    'readonly' => true,
                 ],
                 'value' => $provider . ($created ? " on {$created}" : ''),
                 'fieldTemplate' => $this->fieldTemplate,
@@ -86,9 +87,6 @@ class DistributorGeneralForm extends DistributorForm
             'sites' => [
                 'class' => Select2Field::class,
                 'label' => 'Main SF',
-                'html' => [
-                    'class' => 'select2-field',
-                ],
                 'multiple' => true,
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,

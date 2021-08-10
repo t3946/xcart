@@ -24,8 +24,11 @@ import { AddCard } from "../pages/AddCard";
 import { EditCard } from "../pages/EditCard";
 import { useBreakPoint } from "../hooks/useBreakPoint";
 import { RemoveCardPage } from "../pages/RemoveCardPage";
+import PublicProfile from "../components/public-profile/PublicProfile";
+import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
+import { staticRoutes } from "../ts/consts/breadcrumbs";
 
-export const AccountRouters = () => {
+export const AccountRouters = (): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
 
@@ -39,6 +42,7 @@ export const AccountRouters = () => {
       dispatch(getAddresses(accountStore.getState().user.id));
     }
   }, []);
+  dispatch(setBreadcrumbsAddresses(staticRoutes));
 
   const leftColumnClasses = [
     "col account-page-left-column d-none",
@@ -64,9 +68,9 @@ export const AccountRouters = () => {
         <HatSearchLine />
         <MobileMenu />
 
-        {user && <BreadCrumbs />}
-
         <div className={"container"}>
+          {user && <BreadCrumbs />}
+
           <div className="row">
             <div className={classNames(leftColumnClasses)}>
               <SideBarMenu />
@@ -127,7 +131,15 @@ export const AccountRouters = () => {
                   path={data?.appData.routes["account:register"]}
                   component={RegisterForm}
                 />
+
+                  <Route
+                      exact
+                      path={data?.appData.routes["account:public-profile"]}
+                      component={PublicProfile}
+                  />
               </Switch>
+
+            
             </div>
           </div>
         </div>

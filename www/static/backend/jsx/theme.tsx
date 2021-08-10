@@ -347,13 +347,40 @@ $("a.select-order").click(function () {
   });
 })();
 
+$(function () {
+
+  $(document).on('change', '.list-update-block .updates-admin', event => {
+    const ob = event.target.closest('tr');
+    const name : string = event.target.name.toString();
+    const id = ob.dataset.pk;
+    const newValue = event.target.value;
+    const form = $(event.target).data('form');
+
+    const formData = {id: id, [name]: newValue, form: form};
+    const list = $('.list-block').data("object");
+    list.setLoading();
+
+    $.post('/admin/field/update',
+        formData,
+    (data) => {
+      if (data) {
+        list.update();
+      } else {
+        list.unsetLoading();
+      }
+    }
+  )
+    ;
+  })
+})
+
 // /html/app/Modules/Goods/templates/verification/all.tpl
 $(function () {
   if (!appData().goodsModule) {
     return;
   }
 
-  $(".admin-page").on("change", "select[id$=verification_status]", function () {
+  $(".admin-page").on("change", 'select[name$="ProductVerificationForm[verification_status]"]', function () {
     const status_id = parseInt($(this).val());
     const product_id = parseInt($(this).closest("tr").data("pk"));
     const note_form = $("#send_note_for_product");

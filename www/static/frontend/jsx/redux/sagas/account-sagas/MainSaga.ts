@@ -3,6 +3,7 @@ import { addressesActionWatcher } from "./AddressesSaga";
 import authorizationActionWatcher from "./AuthorizationSaga";
 import { sharedActionWatcher } from "./SharedSaga";
 import { walletActionWatcher } from "./WalletSaga";
+import profileActionWatcher from "./ProfileSaga";
 
 export default function* accountRootSaga(): Generator {
   yield all([
@@ -10,5 +11,6 @@ export default function* accountRootSaga(): Generator {
     authorizationActionWatcher(),
     sharedActionWatcher(),
     walletActionWatcher(),
+    profileActionWatcher(),
   ]);
 }

@@ -153,21 +153,6 @@ class FeedAdmin extends Admin
         return 'Feeds';
     }
 
-    public function getSuggestionColumns()
-    {
-        return [
-            'category' => [
-                'class' => CategoryModel::class,
-                'columns' => [
-                    'category', 'pk'
-                ],
-                'filter' => [
-                    'avail' => 'Y'
-                ]
-            ],
-        ];
-    }
-
     public function isAjaxCreate(): bool
     {
         return true;

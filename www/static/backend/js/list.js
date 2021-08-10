@@ -80,7 +80,6 @@ $(function () {
         update: function () {
             var me = this;
             me.setLoading();
-
             this._searchRequest = $.ajax({
                 url: this.currentUrl,
                 beforeSend: () => {
@@ -90,6 +89,7 @@ $(function () {
                     var $page = $('<div/>').append(page);
                     var ubSelector = me.getUpdateBlockSelector();
                     $(ubSelector).replaceWith($page.find(ubSelector));
+                    me.reloadSelect2Field();
                     me.initSort();
                     me.unsetLoading();
                 }
@@ -102,6 +102,11 @@ $(function () {
                 pkList.push($checkbox.val());
             });
             return pkList;
+        },
+        reloadSelect2Field: function () {
+            $(".select2-field").each((i, elem) => {
+                InitSelect2(elem);
+            });
         },
         groupAction: function (action) {
             var me = this;

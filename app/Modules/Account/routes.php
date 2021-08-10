@@ -9,10 +9,17 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'
     ],
+
     [
         'route' => '/addresses',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'addresses'
+    ],
+
+    [
+        'route' => '/addresses/add',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'addresses-add'
     ],
 
     [
@@ -42,7 +49,13 @@ return [
     [
         'route' => '/dashboard',
         'target' => [AccountController::class, 'dashboard'],
-        'namespace' => 'dashboard'
+        'name' => 'dashboard'
+    ],
+
+    [
+        'route' => '/public-profile',
+        'target' => [AccountController::class, 'publicProfile'],
+        'name' => 'public-profile'
     ],
 
     //api
@@ -50,6 +63,12 @@ return [
         'route' => '/api/authorization',
         'path' => 'Modules.Account.routes.routes_authorization_api',
         'namespace' => 'authorization_api'
+    ],
+
+    [
+        'route' => '/api/profile',
+        'path' => 'Modules.Account.routes.routes_profile_api',
+        'namespace' => 'profile_api'
     ],
 
     [

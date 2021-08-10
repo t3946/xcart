@@ -370,9 +370,8 @@ abstract class BaseAdapter implements ISQLGenerator
         }
     }
 
-    public function sqlUpdate($tableName, array $columns, $options = '')
+    public function updateValues(array $columns)
     {
-        $tableName = $this->getRawTableName($tableName);
         $parts = [];
         foreach ($columns as $column => $value) {
             if ($value instanceof Expression) {
@@ -391,6 +390,14 @@ abstract class BaseAdapter implements ISQLGenerator
             }
             $parts[] = $this->quoteColumn($column) . '=' . $val;
         }
+        return $parts;
+    }
+
+    public function sqlUpdate($tableName, array $columns, $options = '')
+    {
+        $tableName = $this->getRawTableName($tableName);
+
+        $parts = $this->updateValues($columns);
 
         return 'UPDATE '. $options . ' ' . $this->quoteTableName($tableName) . ' SET ' . implode(', ', $parts);
     }

@@ -8,7 +8,7 @@ config = {
   output: {
     path: path.resolve("./" + paths.dst.jsx),
     filename: "[name].[hash].js",
-    clean: true
+    clean: true,
   },
   target: "web",
   resolve: {
@@ -20,6 +20,9 @@ config = {
       // Not necessary unless you consume a module using `createClass`
       "create-react-class": "preact/compat/lib/create-react-class",
       "@": path.resolve("./frontend/jsx"),
+      "@client/modules": path.resolve("./frontend/jsx/modules"),
+      "@client/redux": path.resolve("./frontend/jsx/redux"),
+      "@client": path.resolve("./frontend"),
     },
 
     modules: [

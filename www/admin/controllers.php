@@ -27,6 +27,4 @@ if (isset($_POST['cur_sf']) && $_POST['mode'] == 'change_storefront') {
     func_header_location($_SERVER['REQUEST_URI']);
 }
 
-require $xcart_dir."/include/security.php";
-
 Xcart::app()->handleRequest();

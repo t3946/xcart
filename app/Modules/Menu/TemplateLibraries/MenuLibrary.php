@@ -68,8 +68,7 @@ class MenuLibrary extends TemplateLibrary
         switch ($code) {
             case 'main-menu':
                 $pages = ['/shipping-delivery', '/purchase-orders', '/about-us'];
-                $site_model = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
-                $pages = array_filter(array_map(static function ($p) use($site_model) {
+                $pages = array_filter(array_map(static function ($p) {
                     if ($model = PageHelper::getPage($p)) {
                         return [
                             'url' => "/{$model->url}",
@@ -80,13 +79,12 @@ class MenuLibrary extends TemplateLibrary
                     }
                     return null;
                 }, $pages));
-                $pages = array_merge($pages, [[
+                return array_merge($pages, [[
                     'url' => \Xcart\App\Main\Xcart::app()->router->url('main:contact_us_form'),
                     'name' => MenuModule::t('Contact Us'),
                     'class' => '',
                     'items' => [],
                 ]]);
-                return $pages;
 
             case 'pages-menu':
                 return [

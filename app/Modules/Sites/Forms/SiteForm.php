@@ -2,11 +2,12 @@
 
 namespace Modules\Sites\Forms;
 
+use Modules\Core\Models\CountryModel;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Sites\Admin\SitesAdmin;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
@@ -33,95 +34,34 @@ class SiteForm extends ModelForm
                 'label' => 'Corporations',
                 'multiple' => true,
                 'html' => [
-                    'class' => 'select2-field',
-                ],
+                    'style' => 'width: 300px'
+                ]
             ],
             'taxes' => [
                 'class' => Select2Field::class,
                 'label' => 'Taxes',
                 'multiple' => true,
                 'html' => [
-                    'class' => 'select2-field',
-                ],
+                    'style' => 'width: 300px'
+                ]
             ],
             'payment_methods' => [
                 'class' => Select2Field::class,
                 'label' => 'Payment methods',
                 'multiple' => true,
                 'html' => [
-                    'class' => 'select2-field',
-                ],
-            ],
-            'company_name' => [
-                'class' => CharField::class,
-                'label' => 'Company name',
-                'html' => [
-                    'class' => 'common-input'
+                    'style' => 'width: 300px'
                 ]
             ],
-            'opt_shop_closed' => [
+            'shop_closed' => [
                 'class' => CheckboxField::class,
                 'label' => 'Check this to close your shop temporarily',
             ],
-            'company_website' => [
-                'class' => CharField::class,
-                'label' => 'Company website',
+            'shop_closed_method' => [
+                'class' => Select2Field::class,
                 'html' => [
-                    'class' => 'common-input'
+                    'style' => 'width: 300px'
                 ]
-            ],
-            'cidev_top_header_code' => [
-                'class' => CharField::class,
-                'label' => 'Toll free customer service phone',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'local_phone' => [
-                'class' => CharField::class,
-                'label' => 'Local phone',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'fax_number' => [
-                'class' => CharField::class,
-                'label' => 'Fax number',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'cidev_header_code' => [
-                'class' => CharField::class,
-                'label' => 'Search string text',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'customer_service_working_time' => [
-                'class' => CharField::class,
-                'label' => 'Working time',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'opt_order_prefix' => [
-                'class' => CharField::class,
-                'label' => 'Order prefix',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'newsletter_email' => [
-                'class' => CharField::class,
-                'label' => 'Reply-To newsletter email address',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'start_year' => [
-                'class' => CharField::class,
-                'label' => 'Year when the store started its operation',
             ],
             'search_all_website_show' => [
                 'class' => CheckboxField::class,
@@ -131,27 +71,26 @@ class SiteForm extends ModelForm
                 'class' => CheckboxField::class,
                 'label' => "Enable CDN",
             ],
-            'CDN_domain' => [
-                'class' => CharField::class,
-                'label' => 'CDN domain',
-                'html' => [
-                    'class' => 'common-input'
-                ]
-            ],
-            'Google_Trusted_Store_ID' => [
-                'class' => CharField::class,
-                'label' => 'Google Trusted Store ID',
-            ],
             'Enable_surf_stats' => [
                 'class' => CheckboxField::class,
                 'label' => 'Enable surf stats',
             ],
-            'Preferred_served_country' => [
-                'class' => CharField::class,
+            'country_code' => [
+                'class' => Select2Field::class,
                 'label' => 'Preferred served country',
+                'choices' => function () {
+                    foreach (CountryModel::objects() as $model) {
+                        $result[$model->code] = "{$model->code}: {$model->name}";
+                    }
+                    return $result ?? [];
+                },
+                'inline_editor' => true,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'currency' => [
-                'class' => DropDownField::class,
+                'class' => Select2Field::class,
                 'label' => 'Storefront currency',
                 'choices' => (static function () {
                     foreach (CurrencyModel::objects() as $model) {
@@ -159,18 +98,59 @@ class SiteForm extends ModelForm
                     }
                     return $res ?? [];
                 })(),
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'flat_shipping_enabled' => [
                 'class' => CheckboxField::class,
                 'label' => 'Flat Shipping',
             ],
+            'show_full_state_country' => [
+                'class' => CheckboxField::class,
+                'label' => 'Show full State & Country Name',
+            ],
             'lang' => [
-                'class' => DropDownField::class,
-                'label' => 'Preferred language',
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
             ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
                 'label' => 'Storefront favicon',
+            ],
+            'status' => [
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 300px'
+                ]
+            ],
+            'logo' => [
+                'class' => ImageField::class,
+            ],
+            'logo_mobile' => [
+                'class' => ImageField::class,
+            ],
+            'base_category' => [
+                'class' => Select2Field::class,
+                'choices' => (function () {
+                    $res[] = '';
+                    if (!$this->getInstance()->pk) {
+                        return $res;
+                    }
+                    foreach (CategoryModel::objects()->filter([
+                        'storefrontid' => $this->getInstance()->pk,
+                        'level' => 1
+                    ]) as $cat) {
+                        $res[$cat->pk] = (string) $cat;
+                    }
+                    return $res ?? [];
+                }),
+                'html' => [
+                    'style' => 'width: 300px',
+                    'data-url' => (new SitesAdmin())->getSuggestionUrl('category')."?site={$this->getInstance()->pk}",
+                ],
             ],
         ];
     }

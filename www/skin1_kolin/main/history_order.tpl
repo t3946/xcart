@@ -133,7 +133,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                                 <input type="hidden" name="mode" value="submit_message"/>
                                 <input type="hidden" name="send_email" value="N"/>
                                 <input type="hidden" name="orderid" value="{$order.orderid}"/>
-                                {$cidev_firstname} ({$login}) note:<br/>
+                                {$xcartApp->user} ({$xcartApp->user->login}) note:<br/>
                                 Write a note below or
                                 <button style="font-size: 1em; display: inline; border: none; padding: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; word-wrap: break-word;"
                                         value="empty"

@@ -60,6 +60,7 @@ use Xcart\Manufacturer;
  * @property TemplateModel order_submit_template
  * @property bool allow_dispatch_off_working_hours
  * @property DistributorContactsModel[]|Manager contacts_model
+ * @property bool avail
  */
 class DistributorModel extends Model
 {
@@ -101,6 +102,10 @@ class DistributorModel extends Model
             'url' => [
                 'class' => CharField::class,
                 'default' => '',
+                'null' => false
+            ],
+            'code' => [
+                'class' => CharField::class,
                 'null' => false
             ],
             'manufact_text_displayed' => [

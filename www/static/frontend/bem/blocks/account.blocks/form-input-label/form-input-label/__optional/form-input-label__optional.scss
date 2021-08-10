@@ -1,0 +1,8 @@
+.form-input-label__optional {
+    &:after {
+        content: " (optional)";
+        color: #959595;
+        font-size: rem-calc(12);
+        font-weight: normal;
+    }
+}

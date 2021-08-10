@@ -348,14 +348,14 @@ function check_r_fields() {
         <tr class="TableHead bg__yellow">
             <td width="35%"></td>
             <td width="17%"></td>
-            <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
+            <td width="7%" nowrap="nowrap"><font style="font-size: 13px;">Cost to us</font></td>
             <td width="5%"></td>
             <td width="*"></td>
             <td width="5%"></td>
             <td width="7%"></td>
-            <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
+            <td width="7%" nowrap="nowrap"><font style="font-size: 13px;">Cost to us</font></td>
             <td width="7%"></td>
-            <td width="7%" nowrap="nowrap"><font style="font-size: .87rem;">Cost to us</font></td>
+            <td width="7%" nowrap="nowrap"><font style="font-size: 13px;">Cost to us</font></td>
             {if !$static}
             <td width="5%">{else}
             <td>{/if}</td>
@@ -506,7 +506,7 @@ function check_r_fields() {
                                 {/foreach}
                             {/if}
                         </td>
-                        <td>
+                        <td style="word-wrap: anywhere">
                             {if $current_membership_flag ne 'FS'}
                                 <a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>
                             {else}

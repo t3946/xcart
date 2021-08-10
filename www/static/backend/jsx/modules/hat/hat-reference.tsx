@@ -6,7 +6,7 @@ import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/
 import $ from "jquery";
 
 const HatReference: React.FC<any> = function () {
-  const [logo, setLogo] = React.useState(appData().hat.site.logoUrl);
+  const [logo, setLogo] = React.useState(appData().site.logo ? `/${appData().site.logo}` : '');
   const menuRef = React.createRef();
 
   function logout() {
@@ -40,7 +40,6 @@ const HatReference: React.FC<any> = function () {
 
   function menuTemplate(): any {
     const items = [];
-
     for (const site of appData().hat.sites) {
       items.push(
         <Dropdown.Item
@@ -49,7 +48,7 @@ const HatReference: React.FC<any> = function () {
           title={`(${site.code}) ${site.name}`}
         >
           <img
-            src={"/static/backend/dist/images/icons/hat/sites/" + site.icon}
+            src={`/${site.favicon}`}
             width={24}
             height={24}
             className="mr-4"
@@ -58,14 +57,13 @@ const HatReference: React.FC<any> = function () {
         </Dropdown.Item>
       );
     }
-
     return (
       <React.Fragment>
         <div
           className="select-distributor-menu-logo pl-3.25 pr-3.25 pt-3 pb-4 d-flex justify-content-between align-items-center pointer"
           onClick={closeMenu}
         >
-          <img src={logo} alt={appData().hat.site.name} width="130" />
+          <img src={logo} alt={appData().site.name} width="130" />
           <RoundedCornerIcon />
         </div>
 
@@ -107,14 +105,14 @@ const HatReference: React.FC<any> = function () {
   function selectSiteTemplate(): any {
     if (!appData().user) {
       return (
-        <img className="hat-logo" src={logo} alt={appData().hat.site.name} />
+        <img className="hat-logo" src={logo} alt={appData().site.name} />
       );
     }
 
     return (
       <DropPopoverMenu
         button={
-          <img className="hat-logo" src={logo} alt={appData().hat.site.name} />
+          <img className="hat-logo" src={logo} alt={appData().site.name} />
         }
         menu={menuTemplate()}
         menuClasses="pb-3 pt-0"
@@ -125,7 +123,7 @@ const HatReference: React.FC<any> = function () {
             method: "POST",
             dataType: "json",
             success(res) {
-              setLogo(res.logoUrl);
+              setLogo('/' + res.logoUrl);
             },
           });
         }}
