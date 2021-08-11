@@ -39,7 +39,7 @@ export const BreadCrumbs = (): any => {
       slidesPerView="auto"
       resistance={true}
       resistanceRatio={0}
-      className="breadcrumb-list no-bullet mb-2.25 mt-2.25"
+      className="breadcrumb-list no-bullet mb-20 mt-20"
       itemType="https://schema.org/BreadcrumbList"
       itemProp="breadcrumb"
       itemScope
