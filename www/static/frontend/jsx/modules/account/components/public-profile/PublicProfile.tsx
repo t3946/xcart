@@ -103,7 +103,6 @@ const PublicProfile = (): any => {
   }
 
   function avatarImageUrl(): string {
-    console.log("avatarImageUrl");
     if (removeAvatar === true) {
       return DEFAULT_AVATAR_IMAGE;
     }
