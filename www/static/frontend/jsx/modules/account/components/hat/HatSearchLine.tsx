@@ -122,7 +122,7 @@ const HatSearchLine = (props) => {
                 {searchTemplate()}
               </div>
 
-              <div className="large-2 show-for-large hat-login-button-column">
+              <div className="col-lg-2 show-for-large hat-login-button-column">
                 {accountButton()}
               </div>
 

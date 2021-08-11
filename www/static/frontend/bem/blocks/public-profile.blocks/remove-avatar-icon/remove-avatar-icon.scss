@@ -1,0 +1,11 @@
+.remove-avatar-icon {
+  color: #c4c4c4;
+  width: rem-calc(24);
+  height: rem-calc(24);
+  transition: color 0.15s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    color: #8e8e8e;
+  }
+}

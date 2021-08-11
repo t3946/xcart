@@ -1,27 +1,19 @@
 @import 'compass';
-//@import url(https://fonts.googleapis.com/css?family=Lato&subset=latin&display=swap);
 @import "fonts/fonts";
 @import url(https://fonts.googleapis.com/css?family=Roboto&display=swap);
 @import 'settings/colors';
 @import 'settings/icons';
 
-//@import 'settings/bootstrap_variables';
 @import 'settings/foundation_settings';
 @import 'settings/foundation_includes';
 
-//@import 'mixins/gen';
 @import 'mixins/mixins';
 @import 'mixins/array_maps';
 @import 'mixins/menu';
 @import 'mixins/bem';
 @import 'mixins/global_mixins';
-@import "node_modules/bootstrap/dist/css/bootstrap.min";
-@import "base/_bootstrap-overrides";
+@import "local_modules/bootstrap/dist/css/bootstrap.min";
 
-
-//@import 'mixins/bootstrap_mixins';
-
-//@import "mindy/global";
 @import 'base/base';
 @import 'base/typography';
 @import 'base/global';
@@ -29,7 +21,6 @@
 
 @import 'vendor/wave/waves';
 @import 'vendor/pace/pace';
-//@import 'vendor/mmodal/mmodal';
 @import 'vendor/swiper/swiper';
 @import 'vendor/photoswipe/_photoswipe';
 @import '../libs/photoswipe/dist/photoswipe';
@@ -41,7 +32,6 @@
 @import 'parts/footer';
 @import 'parts/up_down_buttons';
 
-//@import 'parts/default_form';
 @import 'parts/icons';
 @import 'parts/fe_pager';
 @import 'parts/img_notavail';
@@ -87,8 +77,6 @@
 @import 'pages/checkout_options_form';
 @import "pages/checkout_shipping";
 @import "pages/product_view_list";
-
-@import '../bem/bem';
 
 .top-header {
     overflow: hidden;

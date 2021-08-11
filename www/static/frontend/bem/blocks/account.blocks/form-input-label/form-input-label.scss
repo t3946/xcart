@@ -1,4 +1,4 @@
-.form-input-label{
+.form-input-label {
     font-weight: 700;
     font-size: rem-calc(14);
     color: #000000;
@@ -10,5 +10,6 @@
 
     @include breakpoint(lg up) {
         font-size: rem-calc(14);
+        line-height: rem-calc(34);
     }
 }

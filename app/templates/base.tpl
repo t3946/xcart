@@ -124,7 +124,7 @@
                                             {insert "_parts/_search.tpl"}
                                         </div>
 
-                                        <div class="large-2 show-for-large hat-login-button-column">
+                                        <div class="show-for-large col hat-login-button-column">
                                             <a href="{$.app->router->url('account:login')}" class="hat-login-button">log in</a>
                                         </div>
 

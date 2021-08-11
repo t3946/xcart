@@ -21,6 +21,12 @@ class ProfileApi extends FrontendController
         }
 
         $form = new PublicProfileForm();
+
+        if ($_POST['remove_avatar'] === "true" && !$_FILES["PublicProfileForm"]) {
+            $_FILES["PublicProfileForm"] = null;
+            $user->setAttribute("avatar_image", null);
+        }
+
         $form->setInstance($user);
         $form->populate($_POST, $_FILES);
 

@@ -1,12 +1,9 @@
-.sidebar-column {
-}
-
-.account-page-left-column {
+div.account-page-left-column {
     flex: 0 0 rem-calc(220);
     max-width: rem-calc(220);
 }
 
-.account-page-right-column {
+div.account-page-right-column {
     padding: 0 rem-calc(10);
 
     @include breakpoint(lg up) {
