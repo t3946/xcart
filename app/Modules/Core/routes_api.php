@@ -24,4 +24,9 @@ return [
 		'target' => [FraudCheckController::class, 'getAll'],
 		'name' => 'get_fraud_all'
 	],
+    [
+        'route' => 'fraud/update/weight',
+        'target' => [FraudCheckController::class, 'updateWeight'],
+        'name' => 'update_fraud_weight'
+    ]
 ];

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ApiService } from "@admin/modules/shared/services/api.service";
-import { Collapse, Grid } from "@material-ui/core";
+import { Collapse, Grid, Typography } from "@material-ui/core";
 import { ConfigPanelSection } from "@admin/modules/general-settings/components/config-panel/config-panel-section";
 import { HeaderConfigPanel } from "@admin/modules/general-settings/components/config-panel/header-config-panel";
 
@@ -14,17 +14,23 @@ export const ConfigPanel: React.FC<any> = () => {
   const [collapse, setCollapse] = useState(true);
   useEffect(() => {
     api.get("/api/config/get/all").then((result: {}) => {
-      // const result = convertObjectToArray(res);
       if (result) {
-        const countCiel = Math.ceil(result.config.length / 3);
-        const newConfig = { section: [] };
-        let startSlice = 0;
+        const countItemSection = Math.ceil(result.options.length / 3);
+        const countModuleSection = Math.ceil(result.modules.length / 3);
+        const startSlice = { module: 0, options: 0 };
+        const newConfig = { options: [], modules: [] };
         for (let i = 0; i < 3; i++) {
-          newConfig.section[i] = result.config.slice(
-            startSlice,
-            startSlice + countCiel
+          newConfig.options[i] = result.options.slice(
+            startSlice.options,
+            startSlice.options + countItemSection
           );
-          startSlice += countCiel;
+          newConfig.modules[i] = result.modules.slice(
+            startSlice.module,
+            startSlice.module + countModuleSection
+          );
+
+          startSlice.module += countModuleSection;
+          startSlice.options += countItemSection;
         }
         setConfigList((prev) => ({ ...prev, ...newConfig }));
       }
@@ -42,14 +48,27 @@ export const ConfigPanel: React.FC<any> = () => {
       <Collapse in={collapse}>
         <Grid
           container
-          direction="row"
+          direction="column"
           justifyContent="center"
           alignItems="center"
         >
-          {configList.section &&
-            configList.section.map((section) => (
-              <ConfigPanelSection arItems={section} />
-            ))}
+          <Grid container direction="row" alignItems="center">
+            {configList.options &&
+              configList.options.map((section) => (
+                <ConfigPanelSection arItems={section} />
+              ))}
+          </Grid>
+          <div className="panel-module-block">
+            <Typography variant="h5" align="center">
+              Modules options
+            </Typography>
+          </div>
+          <Grid container direction="row" alignItems="center">
+            {configList.modules &&
+              configList.modules.map((section) => (
+                <ConfigPanelSection arItems={section} />
+              ))}
+          </Grid>
         </Grid>
       </Collapse>
     </div>

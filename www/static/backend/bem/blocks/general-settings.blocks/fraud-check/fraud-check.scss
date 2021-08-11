@@ -1,0 +1,36 @@
+.table-header-fraud{
+  background-color: #ffebb2;
+  font-size: 14px;
+  cursor: default;
+  padding: 0 10px;
+  font-weight: 500;
+  width: 100px;
+}
+.table-header-fraud-empty{
+  font-weight: 400;
+}
+.btn_save_fraud{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 10px;
+}
+.input__fraud_edit {
+  outline: none;
+  border: none;
+  background-color: #efefef;
+  width: 100px;
+}
+.frauds__full_name_table{
+
+}
+.hr__fraud_table {
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid #1f1209;
+  box-shadow: 0 20px 20px -20px #333;
+  width: 95%;
+}
+.table__change_item{
+  cursor: pointer;
+}
