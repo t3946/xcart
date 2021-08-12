@@ -10,6 +10,7 @@ import WalletReducer from "../reduсers/account/WalletReducer";
 import MenuReducer from "../reduсers/account/MenuReducer";
 import UserReducer from "../reduсers/account/UserReduсer";
 import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
+import ShadowPanelReducer from "@client/jsx/redux/reduсers/account/ShadowPanelReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -21,6 +22,7 @@ export const accountStore: Store<AccountStoreDto> = createStore(
     mobileMenu: MenuReducer,
     user: UserReducer,
     breadcrumbs: BreadcrumbsReducer,
+    shadowPanel: ShadowPanelReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
