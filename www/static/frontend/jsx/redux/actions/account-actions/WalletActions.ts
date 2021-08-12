@@ -1,3 +1,5 @@
+import { SubmitFormDataDto } from "../../../modules/account/ts/types/wallet.type";
+
 export const getCards = (): any => ({
   type: "GET_CARDS",
 });
@@ -7,7 +9,7 @@ export const changeDefaultCard = (id: number): any => ({
   id,
 });
 
-export const addDataFromSubmitCardForm = (data: any): any => ({
+export const addDataFromSubmitCardForm = (data: SubmitFormDataDto): any => ({
   type: "ADD_SUBMIT_DATA",
   data,
 });

@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 
-export function useAccordion() {
+interface AccordionData {
+  height: string | number;
+  open: boolean;
+  ref: MutableRefObject<HTMLDivElement>;
+  onItemClick: () => void;
+}
+
+export function useAccordion(): AccordionData {
   const [height, setHeight] = useState<string | number>(0);
 
   const [open, setOpen] = useState(false);

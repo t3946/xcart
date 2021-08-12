@@ -1,4 +1,4 @@
-export interface UserStoreDto {
+export interface UserStore {
   email: string;
   id: string;
   name: string;

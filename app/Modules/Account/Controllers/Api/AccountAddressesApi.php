@@ -73,7 +73,7 @@ class AccountAddressesApi extends FrontendController
 
         $userId = $data['user'];
 
-        AddressesModel::objects()->delete(['addresses_id' => $addressId]);
+        AddressesModel::objects()->delete(['address_id' => $addressId]);
 
         $this->jsonResponse($this->getAddressesFromBase($userId));
     }
@@ -91,7 +91,7 @@ class AccountAddressesApi extends FrontendController
         if($address['is_default'])
         {
             $add_arr = array_map(fn($a) => $a->addresses_id, $addresses);
-            AddressesModel::objects()->filter(['addresses_id__in' => $add_arr])->update(['is_default' => false]);
+            AddressesModel::objects()->filter(['address_id__in' => $add_arr])->update(['is_default' => false]);
         }
         $address['user_id'] = $userId;
         $address['address_type'] = 'shipping';
@@ -117,7 +117,7 @@ class AccountAddressesApi extends FrontendController
             }
         }
 
-        $addressModel = AddressesModel::objects()->get(['addresses_id' => $address['addresses_id']]);
+        $addressModel = AddressesModel::objects()->get(['address_id' => $address['address_id']]);
 
         $addressModel->setAttributes($address);
         $addressModel->save();

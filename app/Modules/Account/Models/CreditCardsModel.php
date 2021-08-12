@@ -32,7 +32,7 @@ class CreditCardsModel extends Model
                 'field' => 'address_id',
                 'class' => ForeignField::class,
                 'modelClass' => AddressesModel::class,
-                'link' => ['address_id' => 'addresses_id'],
+                'link' => ['address_id' => 'address_id'],
             ],
             'is_default' => [
                 'class' => BooleanField::class,

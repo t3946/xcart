@@ -1,5 +1,7 @@
+import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
+
 export interface AddressItemDto {
-  addresses_id: number;
+  address_id?: number;
   full_name: string;
   country: string;
   phone_number: string;
@@ -11,9 +13,4 @@ export interface AddressItemDto {
   default: boolean;
   delivery_type: string;
   address_type: AddressTypeEnum;
-}
-
-export enum AddressTypeEnum {
-  SHIPPING = "shipping",
-  BILLING = "billing",
 }

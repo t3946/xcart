@@ -6,8 +6,16 @@ import { BillingAddress } from "./BillingAddress";
 import { AddCardForm } from "./AddCardForm";
 import { EditCard } from "./EditCard";
 import { useSelector } from "react-redux";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
-export const CardAction = ({
+interface CardActionProps {
+  contentType: BillingAddressFormEnum;
+  actionType: BillingAddressFormEnum;
+  cardInfo?: CardItemDto;
+  onDialogClose?: () => void;
+}
+
+export const CardAction: React.FC<CardActionProps> = ({
   contentType,
   actionType,
   cardInfo = undefined,
@@ -28,7 +36,7 @@ export const CardAction = ({
   const showContent = (type) => {
     switch (type) {
       case BillingAddressFormEnum.ADD_ADDRESS: {
-        return <AddBillingAddressForm edit={cardInfo && cardInfo} />;
+        return <AddBillingAddressForm edit={Boolean(cardInfo)} />;
       }
       case BillingAddressFormEnum.ADD_CARD: {
         return <AddCardForm />;

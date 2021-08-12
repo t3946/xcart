@@ -1,0 +1,122 @@
+.transaction-body{
+  transition: .8s all;
+  overflow: hidden;
+  border: 1px solid #c4c4c4;
+  border-top: 0;
+  border-bottom: 0;
+  background-color: #FFF8E4;
+
+  p{
+    margin-bottom: 10px;
+  }
+}
+
+.transaction-top-block-container{
+  border-bottom: 2px solid #000000;
+  padding: 11px 25px 0px;
+  display: flex;
+}
+
+.transaction-name{
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.transaction-name-block{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.transaction-top-info{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.btn-entry{
+  display: flex;
+}
+
+.btn-icon{
+  margin-right: 15px;
+}
+
+.transaction-button{
+  padding: 8px 20px !important;
+}
+
+.print-button{
+  margin-right: 10px !important;
+}
+
+.transaction-btns{
+  display: flex;
+}
+
+.transaction-top-info-left-part-label{
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.label-info-item{
+  font-weight: 700;
+}
+
+.info-item-container{
+  display: flex;
+}
+
+.transaction-top-info-right-part{
+  width: 53%;
+}
+
+.info-item-container-spacing{
+  width: 100%;
+  justify-content: space-between;
+}
+
+.left-part{
+  width: 60%;
+}
+
+.right-part{
+  width: 40%;
+  text-align: left;
+}
+
+.transaction-top-content-container{
+  width: 100%;
+}
+
+.transaction-top-block-logo{
+  width: 195px;
+  margin-top: 40px;
+  margin-right: 70px;
+}
+
+.transaction-contact-info-container{
+  padding: 20px 25px 10px;
+  border-bottom: 2px solid #c4c4c4;
+}
+
+.transaction-contact-info{
+  width: 58%;
+}
+
+.transaction-addresses-container{
+  padding: 20px 25px 10px;
+  display: flex;
+}
+
+.transaction-billing-address{
+  width: 42%;
+}
+
+.transaction-shipping-address{
+  width: 62%;
+}
+

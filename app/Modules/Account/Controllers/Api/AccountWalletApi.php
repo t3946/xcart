@@ -76,11 +76,11 @@ class AccountWalletApi  extends FrontendController
         else
         {
             $address['address_type'] = 'billing';
-            $address['user_id'] = $cardInfo['userId'];
+            $address['user_id'] = $userId;
             $model = new AddressesModel($address);
             $model->save();
 
-            $newCard['address_id'] = $model->addresses_id;
+            $newCard['address_id'] = $model->address_id;
         }
         if($newCard['is_default']){
             $cards = CreditCardsModel::objects()->all();
@@ -116,7 +116,7 @@ class AccountWalletApi  extends FrontendController
             $model = new AddressesModel($address);
             $model->save();
 
-            $editCard['address_id'] = $model->addresses_id;
+            $editCard['address_id'] = $model->address_id;
         }
 
         $addressModel = CreditCardsModel::objects()->get(['credit_card_id' => $editCard['credit_card_id']]);

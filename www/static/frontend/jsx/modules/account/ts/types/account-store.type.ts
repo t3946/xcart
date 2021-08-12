@@ -1,29 +1,30 @@
-import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
-import { SelectValueDto } from "@modules/account/ts/types/select-value.type";
+import { AddressItemDto } from "./address-item.type";
+import { SelectValue } from "./select-value.type";
+import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 
-export interface AccountStoreDto {
-  addresses: AccountAddressesStoreDto;
-  main: AccountMainStoreDto;
+export interface AccountStore {
+  addresses: AccountAddressesStore;
+  main: AccountMainStore;
   user: any;
-  wallet: AccountWalletStoreDto;
+  wallet: AccountWalletStore;
   mobileMenu: any;
 }
 
-export interface AccountAddressesStoreDto {
+export interface AccountAddressesStore {
   addressesList: AddressItemDto[];
   loading: boolean;
   addressFormLoading?: boolean;
 }
 
-export interface AccountMainStoreDto {
-  countries: SelectValueDto<string, string>[];
+export interface AccountMainStore {
+  countries: SelectValue<string, string>[];
   states: any;
   breakpoint?: any;
 }
 
-export interface AccountWalletStoreDto {
-  cards: any[];
+export interface AccountWalletStore {
+  cards: CardItemDto[];
   cardsLoading: boolean;
-  submitFormData?: any;
+  submitFormData?: SubmitFormDataDto | null;
   submitCardFormLoading?: boolean;
 }

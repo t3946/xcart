@@ -1,7 +1,17 @@
 import React from "react";
 import classnames from "classnames";
 
-export const CardHeader = ({ cardNumber, cardType, containerClass = null }) => {
+interface CardHeaderProps {
+  cardNumber: string;
+  cardType: string;
+  containerClass?: string | string[];
+}
+
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  cardNumber,
+  cardType,
+  containerClass,
+}) => {
   return (
     <div
       className={classnames(
@@ -14,7 +24,7 @@ export const CardHeader = ({ cardNumber, cardType, containerClass = null }) => {
         src={`/static/frontend/dist/images/icons/account/cards/${cardType}.svg`}
       />
       <div>
-        {cardType[0].toUpperCase() + cardType.slice(1)} ending in{" "}
+        <b>{cardType[0].toUpperCase() + cardType.slice(1)}</b> ending in{" "}
         {cardNumber.substr(cardNumber.length - 4)}
       </div>
     </div>

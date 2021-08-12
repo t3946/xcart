@@ -1,0 +1,50 @@
+.transactions-completed-header{
+  border: 1px solid #C4C4C4;
+  background-color: #f4f4f4;
+  padding: 14px 25px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.transactions-header{
+  padding: 14px 24px;
+  border: 1px solid #C4C4C4;
+  border-collapse: collapse;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.transactions-header-date{
+  width: 15%;
+}
+
+.transactions-header-card{
+  width: 25%;
+  font-weight: 700;
+}
+
+.transactions-header-name{
+  width: 25%;
+  text-align: center;
+  color: #055A93;
+  cursor: pointer;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.transactions-header-price{
+  font-size: 18px;
+  font-weight: 700;
+  text-align: right;
+  width: 30%;
+}
+
+.transactions-header-arrow{
+  width: 5%;
+  display: flex;
+  justify-content: flex-end;
+}
+

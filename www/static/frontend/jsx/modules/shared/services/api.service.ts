@@ -25,7 +25,6 @@ export class ApiService {
     try {
       return response.json();
     } catch (e) {
-      console.log(e);
       return null;
     }
   }

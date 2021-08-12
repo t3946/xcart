@@ -3,10 +3,11 @@ import { CardsList } from "../components/wallet/CardsList";
 import { AddNewPaymentMethod } from "../components/wallet/AddNewPaymentMethod";
 import { useDispatch, useSelector } from "react-redux";
 import { getCards } from "../../../redux/actions/account-actions/WalletActions";
+import { AccountStore } from "../ts/types/account-store.type";
 
-export const Wallet = () => {
+export const Wallet: React.FC = () => {
   const dispatch = useDispatch();
-  const cards = useSelector((e: any) => e.wallet.cards);
+  const cards = useSelector((e: AccountStore) => e.wallet.cards);
 
   useEffect(() => {
     if (!cards) {

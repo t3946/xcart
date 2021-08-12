@@ -13,8 +13,14 @@ import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { useHistory } from "react-router";
 import { CardHeader } from "./CardHeader";
 import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
+import { AccountStore } from "../../ts/types/account-store.type";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
-export const EditCard = ({ cardInfo }) => {
+interface EditCardProps {
+  cardInfo: CardItemDto;
+}
+
+export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   const monthsValues = fillMassToSelect(1, 12);
 
   const yearsValues = fillMassToSelect(
@@ -23,7 +29,7 @@ export const EditCard = ({ cardInfo }) => {
   );
 
   const submitCardFormLoading = useSelector(
-    (e: any) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.wallet.submitCardFormLoading
   );
 
   const history = useHistory();
@@ -46,8 +52,7 @@ export const EditCard = ({ cardInfo }) => {
       card.address = accountStore
         .getState()
         .addresses.addressesList.filter(
-          (address) =>
-            address.addresses_id === cardSubmitData.address.address_id
+          (address) => address.address_id === cardSubmitData.address.address_id
         )
         .map((e: any) => {
           return {

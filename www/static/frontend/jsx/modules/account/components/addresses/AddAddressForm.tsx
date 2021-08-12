@@ -169,7 +169,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                     type={"submit"}
                     className="account-submit-btn"
                   >
-                    {addressInfo ? "Save changes" : "Add"}
+                    {addressInfo ? "Save changes" : "Add Address"}
                   </Button>
                 </Grid>
               </Grid>

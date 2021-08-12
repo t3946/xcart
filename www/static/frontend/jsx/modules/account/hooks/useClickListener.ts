@@ -1,4 +1,12 @@
-function useCLickListener(func: (arg: boolean) => void, id?): any {
+interface ClickListenerData {
+  endListen: () => void;
+  startListen: () => void;
+}
+
+function useCLickListener(
+  func: (arg: boolean) => void,
+  id?: string
+): ClickListenerData {
   const handleFunction = (e) => {
     if (e.target.id === id) {
       return;

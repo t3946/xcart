@@ -6,7 +6,7 @@ import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-typ
 import { useHistory } from "react-router";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 
-export const AddNewPaymentMethod = () => {
+export const AddNewPaymentMethod: React.FC = () => {
   const history = useHistory();
 
   const addDialog = useDialog();

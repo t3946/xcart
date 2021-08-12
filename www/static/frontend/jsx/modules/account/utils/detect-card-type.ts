@@ -1,4 +1,4 @@
-export function detectCardType(numberNoSpace: string) {
+export function detectCardType(numberNoSpace: string): string {
   const number = numberNoSpace.replace(/\s/g, "");
   let re = new RegExp("^4");
   if (number.match(re) != null) {

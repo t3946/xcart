@@ -6,8 +6,14 @@ import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCard } from "../../../../redux/actions/account-actions/WalletActions";
 import { CardHeader } from "./CardHeader";
+import { AccountStore } from "../../ts/types/account-store.type";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
-export const RemoveCard = ({ cardInfo }) => {
+interface RemoveCardProps {
+  cardInfo: CardItemDto;
+}
+
+export const RemoveCard: React.FC<RemoveCardProps> = ({ cardInfo }) => {
   const history = useHistory();
 
   const context = useContext(WalletCardsDialogContext);
@@ -15,7 +21,7 @@ export const RemoveCard = ({ cardInfo }) => {
   const dispatch = useDispatch();
 
   const submitCardFormLoading = useSelector(
-    (e: any) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.wallet.submitCardFormLoading
   );
 
   const onRemoveEnd = () => {
@@ -45,6 +51,7 @@ export const RemoveCard = ({ cardInfo }) => {
         <Button
           onClick={onRemoveEnd}
           className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
+          disabled={submitCardFormLoading}
         >
           Cancel
         </Button>

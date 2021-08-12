@@ -17,12 +17,6 @@ export const AddressDialogHOC = (
       setOpen(false);
       func && func();
     };
-    //
-    // const dialog = {
-    //   open,
-    //   handleClickOpen,
-    //   handleClose,
-    // };
 
     return (
       <AddressDialogContext.Provider

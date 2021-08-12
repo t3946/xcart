@@ -1,11 +1,11 @@
 import { AnyAction } from "redux";
-import { AccountAddressesStoreDto } from "../../../modules/account/ts/types/account-store.type";
+import { AccountAddressesStore } from "../../../modules/account/ts/types/account-store.type";
 import { accountAddressesInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
 
 const accountAddressesReducer = (
-  state: AccountAddressesStoreDto = accountAddressesInitialValue,
+  state: AccountAddressesStore = accountAddressesInitialValue,
   action: AnyAction
-): AccountAddressesStoreDto => {
+): AccountAddressesStore => {
   switch (action.type) {
     case "GET_ADDRESSES":
       return { ...state, loading: true };

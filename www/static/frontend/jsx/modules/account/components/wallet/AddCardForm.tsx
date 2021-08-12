@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/WalletActions";
 import { detectCardType } from "../../utils/detect-card-type";
 
-export const AddCardForm = () => {
+export const AddCardForm: React.FC = () => {
   const monthsValues = fillMassToSelect(1, 12);
 
   const yearsValues = fillMassToSelect(

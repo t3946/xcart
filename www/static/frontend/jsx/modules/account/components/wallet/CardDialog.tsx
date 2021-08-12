@@ -3,13 +3,22 @@ import { Dialog } from "@material-ui/core";
 import { DialogHeader } from "../dialog/DialogHeader";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { CardAction } from "./CardAction";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
-export const CardDialog = ({
+interface CardDialogProps {
+  handleClose: () => void;
+  open: boolean;
+  contentType: BillingAddressFormEnum;
+  actionType: BillingAddressFormEnum;
+  cardInfo?: CardItemDto;
+}
+
+export const CardDialog: React.FC<CardDialogProps> = ({
   handleClose,
   open,
   contentType,
   actionType,
-  cardInfo = undefined,
+  cardInfo,
 }) => {
   return (
     <Dialog

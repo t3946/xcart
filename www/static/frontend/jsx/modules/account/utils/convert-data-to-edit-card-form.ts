@@ -1,4 +1,6 @@
-export const convertDataToEditCardForm = (data) => {
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+
+export const convertDataToEditCardForm = (data: CardItemDto) => {
   const expires = new Date(Number(data.expires));
 
   let viewMonth = expires.getMonth().toString();

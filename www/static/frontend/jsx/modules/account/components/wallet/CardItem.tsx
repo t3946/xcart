@@ -4,52 +4,39 @@ import { Button } from "@material-ui/core";
 import { useDialog } from "../../hooks/useDialog";
 import { CardDialog } from "./CardDialog";
 import { RemoveCardDialog } from "./RemoveCardDialog";
-import { useDispatch } from "react-redux";
-import { changeDefaultCard } from "../../../../redux/actions/account-actions/WalletActions";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
-import { useHistory } from "react-router";
 import { CardHeader } from "./CardHeader";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import { Breakpoint } from "@client/modules/account/ts/types/breakpoint.type";
 
-export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
+interface CardItemProps {
+  cardInfo: CardItemDto;
+  breakPoint: Breakpoint;
+  changeDefault: (
+    cardInfo: CardItemDto,
+    e: React.MouseEvent<HTMLDivElement>
+  ) => void;
+  openCardDialog: (cardInfo: CardItemDto, dialog: any, path: string) => void;
+}
+
+export const CardItem: React.FC<CardItemProps> = ({
+  cardInfo,
+  breakPoint,
+  changeDefault,
+  openCardDialog,
+}) => {
   const accordion = useAccordion();
-
-  const dispatch = useDispatch();
 
   const removeDialog = useDialog();
 
   const editDialog = useDialog();
 
-  const history = useHistory();
-
   const expires = new Date(Number(cardInfo.expires));
-
-  const changeDefault = (e) => {
-    e.stopPropagation();
-    if (!cardInfo.is_default) {
-      dispatch(changeDefaultCard(cardInfo.credit_card_id));
-    }
-  };
-
-  const openCardDialog = (dialog, path) => {
-    if (breakPoint.is768) {
-      history.push({
-        pathname: path,
-        state: { cardInfo: cardInfo },
-      });
-      return;
-    }
-    dialog.handleClickOpen();
-  };
 
   return (
     <div className="wallet-card-container">
-      <div
-        onClick={accordion.onItemClick}
-        className={`wallet-card-header ${
-          firstChild && "wallet-card-header-first"
-        }`}
-      >
+      <div onClick={accordion.onItemClick} className={`wallet-card-header `}>
         <CardHeader
           cardNumber={cardInfo.card_number}
           cardType={cardInfo.card_type}
@@ -62,7 +49,7 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
             className={`wallet-header-default-block ${
               cardInfo.is_default && "wallet-header-default-block_is-default"
             }`}
-            onClick={changeDefault}
+            onClick={(e) => changeDefault(cardInfo, e)}
           >
             {cardInfo.is_default ? "Default" : "Set default"}
           </div>
@@ -95,13 +82,21 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
           {breakPoint.is768 ? (
             <AddEditBtnsBlock
               handleRemove={() =>
-                openCardDialog(removeDialog, "/account/payments/wallet/remove")
+                openCardDialog(
+                  cardInfo,
+                  removeDialog,
+                  "/account/payments/wallet/remove"
+                )
               }
               handleEdit={() =>
-                openCardDialog(editDialog, "/account/payments/wallet/edit")
+                openCardDialog(
+                  cardInfo,
+                  editDialog,
+                  "/account/payments/wallet/edit"
+                )
               }
               defaultItem={cardInfo.is_default}
-              changeDefault={changeDefault}
+              changeDefault={(e) => changeDefault(cardInfo, e)}
             >
               <div className={"wallet-header-default-block_is-default"}>
                 Default
@@ -112,7 +107,11 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
               <Button
                 className="account-submit-btn edit-card-btn"
                 onClick={() =>
-                  openCardDialog(editDialog, "/account/payments/wallet/edit")
+                  openCardDialog(
+                    cardInfo,
+                    editDialog,
+                    "/account/payments/wallet/edit"
+                  )
                 }
               >
                 Edit
@@ -120,6 +119,7 @@ export const CardItem = ({ cardInfo, firstChild, breakPoint }) => {
               <Button
                 onClick={() =>
                   openCardDialog(
+                    cardInfo,
                     removeDialog,
                     "/account/payments/wallet/remove"
                   )

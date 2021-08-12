@@ -3,8 +3,19 @@ import { Dialog } from "@material-ui/core";
 import { DialogHeader } from "../dialog/DialogHeader";
 import { RemoveCard } from "./RemoveCard";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
+import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
-export const RemoveCardDialog = ({ handleClose, open, cardInfo }) => {
+interface RemoveCardDialogProps {
+  handleClose: () => void;
+  open: boolean;
+  cardInfo: CardItemDto;
+}
+
+export const RemoveCardDialog: React.FC<RemoveCardDialogProps> = ({
+  handleClose,
+  open,
+  cardInfo,
+}) => {
   return (
     <Dialog
       className="email-send-dialog"

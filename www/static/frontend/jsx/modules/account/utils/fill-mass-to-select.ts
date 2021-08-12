@@ -1,4 +1,9 @@
-export function fillMassToSelect(start: number, end: number) {
+import { SelectValue } from "../ts/types/select-value.type";
+
+export function fillMassToSelect(
+  start: number,
+  end: number
+): SelectValue<string, string>[] {
   const result = [];
 
   while (start <= end) {

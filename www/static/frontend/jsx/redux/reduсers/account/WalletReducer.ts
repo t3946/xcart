@@ -1,11 +1,11 @@
 import { AnyAction } from "redux";
-import { AccountWalletStoreDto } from "../../../modules/account/ts/types/account-store.type";
+import { AccountWalletStore } from "../../../modules/account/ts/types/account-store.type";
 import { accountWalletStoreInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
 
 const accountWalletReducer = (
-  state: AccountWalletStoreDto = accountWalletStoreInitialValue,
+  state: AccountWalletStore = accountWalletStoreInitialValue,
   action: AnyAction
-): AccountWalletStoreDto => {
+): AccountWalletStore => {
   switch (action.type) {
     case "GET_CARDS":
       return { ...state, cardsLoading: true };
@@ -15,7 +15,7 @@ const accountWalletReducer = (
         cards: action.cards,
         cardsLoading: false,
         submitCardFormLoading: false,
-        submitFormData: {},
+        submitFormData: null,
       };
     case "ADD_SUBMIT_DATA":
       return { ...state, submitFormData: action.data };

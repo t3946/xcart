@@ -1,6 +1,12 @@
 import React from "react";
 
-export function useDialog(func?) {
+interface DialogReturnData {
+  open: boolean;
+  handleClickOpen: () => void;
+  handleClose: () => void;
+}
+
+export function useDialog(func?: () => void): DialogReturnData {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -9,7 +15,7 @@ export function useDialog(func?) {
 
   const handleClose = () => {
     setOpen(false);
-    func && func();
+    func?.();
   };
 
   return {

@@ -16,14 +16,27 @@ import {
   addDataFromSubmitCardForm,
 } from "../../../../redux/actions/account-actions/WalletActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
+import { AccountStore } from "../../ts/types/account-store.type";
 
-export const AddBillingAddressForm = ({ edit }) => {
+interface AddBillingAddressFormProps {
+  edit: boolean;
+}
+
+export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
+  edit,
+}) => {
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
 
-  const countries = useSelector((e: any) => e.main.countries);
+  const countries = useSelector((e: AccountStore) => e.main.countries);
 
-  const cardSubmitData = useSelector((e: any) => e.wallet.submitFormData);
+  const submitCardFormLoading = useSelector(
+    (e: AccountStore) => e.wallet.submitCardFormLoading
+  );
+
+  const cardSubmitData = useSelector(
+    (e: AccountStore) => e.wallet.submitFormData
+  );
 
   const onSubmit = (values) => {
     const newAddress = {
@@ -165,11 +178,13 @@ export const AddBillingAddressForm = ({ edit }) => {
                       context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
                     }
                     type={"submit"}
+                    disabled={submitCardFormLoading}
                     className="account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
                   >
                     Back
                   </Button>
                   <Button
+                    disabled={submitCardFormLoading}
                     type={"submit"}
                     className="account-submit-btn auto-width-button"
                   >

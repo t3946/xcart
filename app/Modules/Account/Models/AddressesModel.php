@@ -26,7 +26,7 @@ class AddressesModel extends Model
     public static function getFields()
     {
         return [
-            'addresses_id' => [
+            'address_id' => [
                 'class' => AutoField::class,
             ],
             'full_name' => [
