@@ -2,18 +2,15 @@
 
 namespace Modules\Goods\TemplateLibraries;
 
-use Xcart\App\QueryBuilder\Expression;
-use Xcart\App\QueryBuilder\Q\QOr;
+use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Goods\Models\CategoryModel;
-use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Template\TemplateLibrary;
-use Xcart\App\Traits\RenderTrait;
 
 class MenuLibrary extends TemplateLibrary
 {
     const MAX_POINTS_IN_COLUMN = 26;
-    const MAX_POINTS = 78; //26 * 3
+    const MAX_POINTS = 26 * 3;
     const LVL2_POINT = 4;
     const LVL3_POINT = 1;
 
@@ -150,5 +147,41 @@ class MenuLibrary extends TemplateLibrary
         }
 
         return ['menu' => $menu, 'columns' => ceil($points / self::MAX_POINTS_IN_COLUMN)];
+    }
+
+    public static function toArray() {
+        $menu_array = [];
+        $menu_lvl_1 = self::getCategoryMenu();
+
+        foreach ($menu_lvl_1 as $category) {
+            $menu_lvl_2 = self::getDepartmentSubmenu($category);
+            $menu_array_item = [
+                'id' => $category->categoryid,
+                'url' => $category->getAbsoluteUrl(),
+                'name' => $category->category,
+                'groups' => [],
+            ];
+
+            foreach ($menu_lvl_2['menu'] as $sub_menu_group) {
+                $menu_array_group = [
+                    'link' => $sub_menu_group['link'],
+                    'name' => $sub_menu_group['name'],
+                    'items' => [],
+                ];
+
+                foreach ($sub_menu_group['items'] as $item) {
+                    $menu_array_group['items'][] = [
+                        'link' => $item['link'],
+                        'name' => $item['name'],
+                    ];
+                }
+
+                $menu_array_item['groups'][] = $menu_array_group;
+            }
+
+            $menu_array[] = $menu_array_item;
+        }
+
+        return $menu_array;
     }
 }

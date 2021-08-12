@@ -1,21 +1,21 @@
 @import "../all_pages/page_width";
 
 header {
-
   border-bottom: 1px solid #cdcdcd;
 
   .logo_menu {
     height: rem-calc(53);
     display: flex;
     align-items: center;
+    background-color: #ffffff;
+    box-sizing: content-box;
 
     @include breakpoint(medium) {
       height: rem-calc(80);
     }
 
     @include breakpoint(large) {
-      padding: 0;
-      margin: rem-calc(7) 0;
+      padding: rem-calc(7) 0;
     }
 
     @include breakpoint(large up) {

@@ -7,11 +7,13 @@ function useCLickListener(func: (arg: boolean) => void, id?): any {
   };
 
   const startListen = () => {
-    window.addEventListener("click", handleFunction);
+    console.log('startListen');
+    document.body.addEventListener("click", handleFunction);
   };
 
   const endListen = () => {
-    window.removeEventListener("click", handleFunction);
+    console.log('endListen');
+    document.body.removeEventListener("click", handleFunction);
   };
 
   return {

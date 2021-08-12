@@ -11,7 +11,6 @@ import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import { AddAddressPage } from "../pages/AddAddressPage";
-import TopLine from "../components/hat/TopLine";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
@@ -21,6 +20,7 @@ import classNames from "classnames";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
+import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ export const AccountRouters = (): any => {
   return (
     <Provider store={accountStore as any}>
       <BrowserRouter>
-        <TopLine />
+        <ShadowPanel />
         <HatNavigation />
         <HatSearchLine />
         <MobileMenu />

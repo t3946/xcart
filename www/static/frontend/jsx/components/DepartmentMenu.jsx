@@ -2,6 +2,7 @@ import storeApp from "../redux/stores/StoreApp";
 
 export default class DepartmentMenu {
   constructor() {
+    return;
     this.timers = {};
     this.elemets = {};
     this.options = {
