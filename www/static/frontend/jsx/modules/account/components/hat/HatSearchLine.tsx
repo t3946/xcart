@@ -3,13 +3,26 @@ import { Provider } from "react-redux";
 import MiniCartItems from "../../../../components/MiniCart";
 import MiniCartInfo from "../../../../modules/mini-cart/components/info";
 import storeCart from "../../../../redux/stores/StoreCart";
-import classNames from "classnames";
+import classnames from "classnames";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import DepartmentsMenu from "./DepartmentsMenu";
+import {
+  showShadowPanelAction,
+  hideShadowPanelAction,
+} from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 
-const HatSearchLine = (props) => {
+const HatSearchLine = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
+  const shadowPanelIsVisible = useSelector(
+    (e: StoreDto) => e.shadowPanel.isVisible
+  );
+  const [isVisibleDepartmentsMenu, setIsVisibleDepartmentsMenu] =
+    React.useState(false);
+  const dispatch = useDispatch();
+
+  setIsVisibleDepartmentsMenu(shadowPanelIsVisible);
 
   function miniCartTemplate() {
     const labels = {
@@ -65,7 +78,7 @@ const HatSearchLine = (props) => {
           <button className="button-search show-for-large" />
 
           <a
-            className={classNames("button-clear", {
+            className={classnames("button-clear", {
               active: appData.params.get.q,
             })}
           />
@@ -94,35 +107,53 @@ const HatSearchLine = (props) => {
     );
   }
 
+  function toggleDepartmentsMenu() {
+    isVisibleDepartmentsMenu ? closeDepartmentsMenu() : openDepartmentsMenu();
+  }
+
+  function openDepartmentsMenu() {
+    setIsVisibleDepartmentsMenu(true);
+    dispatch(showShadowPanelAction());
+  }
+
+  function closeDepartmentsMenu() {
+    setIsVisibleDepartmentsMenu(false);
+    dispatch(hideShadowPanelAction());
+  }
+
   return (
     <div className="sticky-menu-container">
       <div className="sticky def-zi2">
         <div
           id="search_container"
-          className="desktop_menu_search_cart show-for-large"
+          className="desktop_menu_search_cart show-for-large position-relative"
           data-toggler="show-for-large"
         >
+          <DepartmentsMenu
+            className={"search-line_departments-menu"}
+            isVisible={isVisibleDepartmentsMenu}
+            closeMenu={closeDepartmentsMenu}
+          />
+
           <div className="container">
             <div className="row">
-              <div className="account-page-left-column col">
+              <div className="account-page-left-column col pe-0">
                 <div className="category-menu-container">
-                  <div className="category-menu">
-                    <span className="menu-icon"></span>
+                  <div
+                    className={classnames("category-menu", {"is-active": isVisibleDepartmentsMenu})}
+                    onClick={toggleDepartmentsMenu}
+                  >
+                    <span className="menu-icon" />
                     <span className="category-menu-title">Departments</span>
                   </div>
                 </div>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: appData.templates.menuDesktop,
-                  }}
-                />
               </div>
 
               <div className="col account-page-right-column">
                 {searchTemplate()}
               </div>
 
-              <div className="large-2 show-for-large hat-login-button-column">
+              <div className="col-lg-2 show-for-large hat-login-button-column">
                 {accountButton()}
               </div>
 

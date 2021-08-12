@@ -36,9 +36,20 @@ class UserModel extends Model
                 'null' => false,
                 'default' => '',
             ],
+            'location' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => '',
+            ],
+            'public_name' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => '',
+            ],
             'avatar_image' => [
                 'class' => ImageField::class,
-                'required' => true,
+                'required' => false,
+                'null' => true,
                 'adapterName' => 'www',
                 'uploadTo' => 'images/user_avatar/',
                 'maxSize' => 100 * 1024,
@@ -138,12 +149,16 @@ class UserModel extends Model
      */
     public function toArray(): array
     {
+        $avatar_image = $this->avatar_image->getValue();
+
         return [
             'id' => $this->user_id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'avatar_image' => '/' . $this->avatar_image->getValue(),
+            'avatar_image' => $avatar_image ? '/' . $avatar_image : '',
+            'location' => $this->location,
+            'public_name' => $this->public_name,
         ];
     }
 }

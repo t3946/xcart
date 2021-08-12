@@ -1,10 +1,13 @@
 import React from "react";
 import HatLoginButton from "./HatLoginButton";
+import TopLine from "@client/modules/account/components/hat/TopLine";
 
-const HatNavigation = (props) => {
+const HatNavigation = (): any => {
   return (
     <div id="top-header-content">
       <div id="top-header-menu">
+        <TopLine />
+
         <header id="top-header" itemScope itemType="http://schema.org/WPHeader">
           <div
             dangerouslySetInnerHTML={{

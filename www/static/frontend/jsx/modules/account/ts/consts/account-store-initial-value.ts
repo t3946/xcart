@@ -31,3 +31,5 @@ export const accountStoreInitialValue = {
   wallet: accountWalletStoreInitialValue,
   mobileMenu: accountMenuInitialValue,
 };
+
+export const shadowPanelInitialValue = { isVisible: false };

@@ -13,7 +13,7 @@ class ProfileApi extends FrontendController
     {
         /**
          * @var $user UserModel
-        */
+        *fix code style/
         $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {
@@ -21,6 +21,12 @@ class ProfileApi extends FrontendController
         }
 
         $form = new PublicProfileForm();
+
+        if ($_POST['remove_avatar'] === "true" && !$_FILES["PublicProfileForm"]) {
+            $_FILES["PublicProfileForm"] = null;
+            $user->setAttribute("avatar_image", null);
+        }
+
         $form->setInstance($user);
         $form->populate($_POST, $_FILES);
 

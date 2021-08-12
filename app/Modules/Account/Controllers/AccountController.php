@@ -11,6 +11,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
+use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 
 class AccountController extends FrontendController
 {
@@ -46,12 +47,12 @@ class AccountController extends FrontendController
         StorageHelper::push([
             "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
             "mainMenu" => MenuLibrary::getMenu(['code' => 'main-menu']),
-            "menuDesktop" => $this->render("_parts/_menu_desktop_cached.tpl"),
+            "menuDesktop" => GoodsMenuLibrary::toArray(),
         ], null, 'templates');
 
         StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
-        StorageHelper::push(APP_LOCAL,  'APP_LOCAL');
+        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
         AdminHelper::routesData();
 
@@ -86,12 +87,12 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    public function dashboard ()
+    public function dashboard()
     {
         $this->actionIndex();
     }
 
-    public function publicProfile ()
+    public function publicProfile()
     {
         $this->actionIndex();
     }

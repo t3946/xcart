@@ -4,4 +4,6 @@ export interface UserStore {
   name: string;
   phone: string;
   avatar_image: string;
+  public_name: string;
+  location: string;
 }

@@ -19,6 +19,10 @@ export interface StoreDto {
   templates?: any;
   user: any;
   breadcrumbs: Record<string, string>;
+  shadowPanel: {
+    isVisible: boolean;
+    zIndex?: number;
+  };
 }
 
 export interface EmailStoreItems {

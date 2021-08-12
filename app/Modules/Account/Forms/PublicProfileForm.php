@@ -12,7 +12,7 @@ class PublicProfileForm extends FrontendModelForm
     public function getFields(): array
     {
         return [
-            'publicName' => [
+            'public_name' => [
                 'class' => CharCleanField::class,
             ],
             'location' => [
@@ -22,6 +22,7 @@ class PublicProfileForm extends FrontendModelForm
                 'class' => ImageField::class,
                 'maxSize' => 100 * 1024,
                 'types' => ['png', 'jpeg', 'jpg'],
+                'required' => false,
             ],
         ];
     }
