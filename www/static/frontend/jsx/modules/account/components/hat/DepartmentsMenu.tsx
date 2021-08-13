@@ -190,6 +190,11 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
             className="ps-0 col"
             onMouseOver={() => setIsMouseOverCategoryDetails(true)}
             onMouseLeave={() => setIsMouseOverCategoryDetails(false)}
+            onClick={() => {
+              if (selectedCategory === null) {
+                props.closeMenu();
+              }
+            }}
           >
             <div
               className={classnames([
