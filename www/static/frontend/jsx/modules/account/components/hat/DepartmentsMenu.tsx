@@ -129,10 +129,6 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
             className={classnames(linkClasses)}
             onMouseOver={() => {
               setSelectedCategory(category);
-              setIsMouseOverMenuItem(true);
-            }}
-            onMouseLeave={() => {
-              setIsMouseOverMenuItem(false);
             }}
           >
             {category.name}
@@ -169,7 +165,15 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       >
         <div className="row">
           <div className="account-page-left-column account-page-left-column__departments-menu col pe-0">
-            <div className="category-menu-list">
+            <div
+              className="category-menu-list"
+              onMouseOver={() => {
+                setIsMouseOverMenuItem(true);
+              }}
+              onMouseLeave={() => {
+                setIsMouseOverMenuItem(false);
+              }}
+            >
               <ul className="no-bullet list-unstyled m-0">
                 {topLevelMenuTemplate()}
               </ul>
