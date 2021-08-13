@@ -140,7 +140,7 @@ const HatSearchLine = (): any => {
               <div className="account-page-left-column account-page-left-column__departments-menu col pe-0">
                 <div className="category-menu-container">
                   <div
-                    className={classnames("category-menu", {"is-active": isVisibleDepartmentsMenu})}
+                    className={classnames("category-menu category-menu__new", {"is-active": isVisibleDepartmentsMenu})}
                     onClick={toggleDepartmentsMenu}
                   >
                     <span className="menu-icon" />
