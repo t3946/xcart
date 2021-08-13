@@ -1,0 +1,19 @@
+.category-view-all-link {
+  font-size: rem-calc(14);
+  color: #055a93;
+
+  &:hover {
+    text-decoration: underline;
+    color: #055a93;
+  }
+
+  &:before {
+    content: '';
+    display: inline-block;
+    width: rem-calc(16);
+    height: rem-calc(14);
+    margin-right: rem-calc(5);
+    background: url("/static/frontend/images/icons/header/view_all_departments_blue.svg") center center no-repeat;
+    background-size: contain;
+  }
+}
