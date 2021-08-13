@@ -1,5 +1,5 @@
 const newWindow: any = window;
-const routes = newWindow.appData.routes;
+const routes = newWindow.appData.routes || {};
 
 export const staticRoutes = [
   {
