@@ -23,4 +23,9 @@ export const staticRoutes = [
     name: "Public Profile",
     path: routes["account:public-profile"],
   },
+
+  {
+    name: "Login & security",
+    path: routes["account:login-and-security"],
+  },
 ];

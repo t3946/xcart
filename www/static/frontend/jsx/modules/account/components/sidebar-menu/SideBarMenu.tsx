@@ -33,7 +33,7 @@ const SideBarMenu = () => {
         { to: "transactions", label: "Transactions" },
       ],
     },
-    { to: "/account/login-security", label: "Login & security" },
+    { to: "/account/login-and-security", label: "Login & security" },
     { to: "/account/public-profile", label: "Public profile" },
     { to: "/account/rewards", label: "Rewards" },
   ];

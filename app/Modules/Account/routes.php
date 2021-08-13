@@ -53,6 +53,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'login-and-security'
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'

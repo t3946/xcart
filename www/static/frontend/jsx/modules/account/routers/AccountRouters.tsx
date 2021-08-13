@@ -21,6 +21,7 @@ import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
 import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
+import LoginAndSecurity from "@client/modules/account/components/login-and-security/LoginAndSecurity";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -105,6 +106,12 @@ export const AccountRouters = (): any => {
                   exact
                   path={appData.routes["account:public-profile"]}
                   component={PublicProfile}
+                />
+
+                <Route
+                  exact
+                  path={appData.routes["account:login-and-security"]}
+                  component={LoginAndSecurity}
                 />
               </Switch>
             </div>
