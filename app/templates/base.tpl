@@ -30,7 +30,7 @@
                                     </div>
                                 </div>
                                 {render_static_notifications}
-                                <div class="logo_menu">
+                                <div class="logo_menu logo-menu__old">
                                     <div class="row align-justify">
                                         <div class="columns small-2 medium-1 show-for-small hide-for-large">
                                             <a href="#" data-toggle="offCanvasLeft"
@@ -124,7 +124,7 @@
                                             {insert "_parts/_search.tpl"}
                                         </div>
 
-                                        <div class="show-for-large col hat-login-button-column">
+                                        <div class="show-for-large col hat-login-button-column large-2">
                                             <a href="{$.app->router->url('account:login')}" class="hat-login-button">log in</a>
                                         </div>
 
