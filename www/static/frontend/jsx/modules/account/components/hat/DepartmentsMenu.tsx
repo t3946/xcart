@@ -20,7 +20,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     !isMouseOverMenuItem &&
     !isMouseOverCategoryDetails &&
     !closeTimeout &&
-    selectedCategory
+    props.isVisible
   ) {
     setCloseTimeOut(
       setTimeout(() => {
