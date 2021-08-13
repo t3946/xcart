@@ -291,6 +291,13 @@ gulp.task(
   )
 );
 
+gulp.task("copy:bootstrap", function (done) {
+  const src = "local_modules/bootstrap/dist/css/bootstrap.min.css";
+
+  gulp.src(src).pipe(gulp.dest(frontend.dst.css));
+  done();
+});
+
 /**
  *
  *          [FRONTEND END]

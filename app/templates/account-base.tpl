@@ -24,3 +24,23 @@
         </div>
     </div>
 {/block}
+
+{block "noindex"}
+    <link rel="stylesheet" href="/static/frontend/dist/css/bootstrap.min.css#{mt_rand(0, 1000)}">
+{/block}
+
+{block "noindex-footer"}
+    {*
+        resolve bootsrap and foundation grid systems conflict problem
+    *}
+    <style>
+        .row {
+            max-width: initial;
+            -ms-flex-flow: initial;
+            flex-flow: initial;
+            margin-top: calc(var(--bs-gutter-y) * -1);
+            margin-right: calc(var(--bs-gutter-x) * -.5);
+            margin-left: calc(var(--bs-gutter-x) * -.5);
+        }
+    </style>
+{/block}

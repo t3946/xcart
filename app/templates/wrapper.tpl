@@ -272,5 +272,6 @@
 
 <div id="containerUpDown" class="show-for-large" data-lng_up="{t 'UP'}" data-lng_down="{t 'DOWN'}"></div>
 
+{block 'noindex-footer'}{/block}
 </body>
 </html>
