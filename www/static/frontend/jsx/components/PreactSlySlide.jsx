@@ -1,55 +1,63 @@
-import { h, Component, render } from 'preact';
-import _ from 'lodash';
+import { h, Component, render } from "preact";
+import _ from "lodash";
 
-export default class PreactSlySlide extends Component
-{
-    constructor(...args) {
-        super(...args);
+export default class PreactSlySlide extends Component {
+  constructor(...args) {
+    super(...args);
 
-        this.refs = {};
-        this['$refs'] = {};
+    this.refs = {};
+    this["$refs"] = {};
 
-        this.options = _.extend({
-            horizontal: 1,
-            itemNav: 'basic',
-            speed: 300,
-            mouseDragging: 1,
-            touchDragging: 1,
-            activatePageOn: 'click',
-            onSlideActive: null
-        }, args[0].options || {});
+    this.options = _.extend(
+      {
+        horizontal: 1,
+        itemNav: "basic",
+        speed: 300,
+        mouseDragging: 1,
+        touchDragging: 1,
+        activatePageOn: "click",
+        onSlideActive: null,
+      },
+      args[0].options || {}
+    );
+  }
 
+  componentDidMount() {
+    this.$refs.wrap = $(this.refs.wrap);
+    this.$refs.wrap.sly(this.options);
+    if (this.options.onSlideActive) {
+      this.$refs.wrap.sly(
+        "on",
+        "active",
+        _.throttle(this.options.onSlideActive, 200)
+      );
     }
 
-    componentDidMount() {
-        this.$refs.wrap = $(this.refs.wrap);
-        this.$refs.wrap.sly(this.options);
-        if(this.options.onSlideActive) {
-            this.$refs.wrap.sly('on', 'active', _.throttle(this.options.onSlideActive, 200));
-        }
+    document.addEventListener(
+      "resize_monitor.media_change",
+      _.throttle(this.onResize.bind(this))
+    );
+  }
 
-
-        document.addEventListener('resize_monitor.media_change', _.throttle(this.onResize.bind(this)));
+  componentWillReceiveProps(props, prev) {
+    if (this.$refs.wrap) {
+      this.$refs.wrap.sly("activate", props.pos);
     }
+  }
 
-    componentWillReceiveProps(props, prev)
-    {
-        if (this.$refs.wrap) {
-            this.$refs.wrap.sly('activate', props.pos);
-        }
-    }
+  componentWillUnmount() {
+    document.removeEventListener("resize_monitor.media_change", this.onResize);
+  }
 
-    componentWillUnmount() {
-        document.removeEventListener('resize_monitor.media_change', this.onResize)
-    }
+  onResize() {
+    this.$refs.wrap.sly("reload");
+  }
 
-    onResize() {
-        this.$refs.wrap.sly('reload');
-    }
-
-    render({children}) {
-        return <div className={'wrap'} ref={el => this.refs.wrap = el }>
-            {children}
-        </div>;
-    }
+  render({ children }) {
+    return (
+      <div className={"wrap"} ref={(el) => (this.refs.wrap = el)}>
+        {children}
+      </div>
+    );
+  }
 }

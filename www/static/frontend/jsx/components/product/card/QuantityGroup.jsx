@@ -1,4 +1,4 @@
-import {createRef} from "preact";
+import { createRef } from "preact";
 import classnames from "classnames";
 import _ from "lodash";
 
