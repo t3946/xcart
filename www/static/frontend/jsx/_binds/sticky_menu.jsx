@@ -1,5 +1,6 @@
 import isMedia from "../utils/isMedia";
 import cssFileLoaded from "../utils/cssFileLoaded";
+import throttle from "lodash/throttle";
 
 (() => {
     console.log('st menu')
@@ -20,7 +21,7 @@ import cssFileLoaded from "../utils/cssFileLoaded";
 
         let sticky = stickyContainer.find('.sticky');
 
-        let processScroll = _.throttle(function () {
+        let processScroll = throttle(function () {
 
             lastKnownScrollPosition = window.scrollY;
             if (!ticking) {
@@ -59,7 +60,7 @@ import cssFileLoaded from "../utils/cssFileLoaded";
             window.addEventListener('scroll', processScroll, {'passive': true});
         };
 
-        let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
+        let initStickyMenuOnResize = throttle(initStickyMenu, 50);
 
         function checkMenuPosition(lastKnownScrollPosition) {
             console.log('checkMenuPosition');
