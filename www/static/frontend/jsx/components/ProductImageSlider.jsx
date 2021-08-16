@@ -152,11 +152,10 @@ export default class ProductImageSlider extends Component {
             ),
             onTap: (item, pswp) => {
               if (!item.videoShow) {
-                $(item.container).find(
-                  ".video-wrapper"
-                )[0].innerHTML = renderToStringr(
-                  this.renderVideoItem(item.originalItem, true, true)
-                );
+                $(item.container).find(".video-wrapper")[0].innerHTML =
+                  renderToStringr(
+                    this.renderVideoItem(item.originalItem, true, true)
+                  );
               }
 
               item.videoShow = true;
@@ -164,11 +163,8 @@ export default class ProductImageSlider extends Component {
             onBlur: (item, pswp) => {
               if (item.container && item.videoShow) {
                 item.videoShow = false;
-                $(item.container).find(
-                  ".video-wrapper"
-                )[0].innerHTML = renderToStringr(
-                  this.renderVideoItem(item.originalItem)
-                );
+                $(item.container).find(".video-wrapper")[0].innerHTML =
+                  renderToStringr(this.renderVideoItem(item.originalItem));
               }
             },
           });
