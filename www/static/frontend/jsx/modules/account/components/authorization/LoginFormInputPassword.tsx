@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import faQuestionCircle from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { loginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
