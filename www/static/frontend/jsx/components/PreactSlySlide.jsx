@@ -1,5 +1,6 @@
 import { h, Component, render } from "preact";
-import _ from "lodash";
+import extend from "lodash/extend";
+import throttle from "lodash/throttle";
 
 export default class PreactSlySlide extends Component {
   constructor(...args) {
@@ -8,7 +9,7 @@ export default class PreactSlySlide extends Component {
     this.refs = {};
     this["$refs"] = {};
 
-    this.options = _.extend(
+    this.options = extend(
       {
         horizontal: 1,
         itemNav: "basic",
@@ -29,13 +30,13 @@ export default class PreactSlySlide extends Component {
       this.$refs.wrap.sly(
         "on",
         "active",
-        _.throttle(this.options.onSlideActive, 200)
+        throttle(this.options.onSlideActive, 200)
       );
     }
 
     document.addEventListener(
       "resize_monitor.media_change",
-      _.throttle(this.onResize.bind(this))
+      throttle(this.onResize.bind(this))
     );
   }
 

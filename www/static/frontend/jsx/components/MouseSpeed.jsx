@@ -1,4 +1,4 @@
-import _ from "lodash";
+import extend from "lodash/extend";
 
 export default class MouseSpeed {
   constructor(options) {
@@ -7,7 +7,7 @@ export default class MouseSpeed {
     };
 
     if (options) {
-      _.extend(this.options, options);
+      extend(this.options, options);
     }
 
     this.lastmousex = -1;

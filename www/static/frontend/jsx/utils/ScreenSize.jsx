@@ -1,9 +1,9 @@
-import _ from "lodash";
+import throttle from "lodash/throttle";
 import getMediaJs from "./getMediaJs";
 
 export default class ScreenSize {
   constructor() {
-    this.onResize = _.throttle(this.onResize.bind(this), 200);
+    this.onResize = throttle(this.onResize.bind(this), 200);
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.ratio = window.devicePixelRatio;

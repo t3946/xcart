@@ -1,5 +1,5 @@
 import { h, render, Component } from "preact";
-import _ from "lodash";
+import map from "lodash/map";
 import renderToStringr from "preact-render-to-string";
 
 export default class SuggestionsListForPhrase extends Component {
@@ -11,7 +11,7 @@ export default class SuggestionsListForPhrase extends Component {
 
   initState(props) {
     let re = new RegExp("(" + props.search.split(" ").join("|") + ")", "gi");
-    let suggestions = _.map(props.suggestions, (item, n) => {
+    let suggestions = map(props.suggestions, (item, n) => {
       // экранирует спецсимволы если они были в строке
       let string = renderToStringr(item + "");
       return {
@@ -43,7 +43,7 @@ export default class SuggestionsListForPhrase extends Component {
     this.initState(props);
 
     // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
-    return _.map(this.state.list, (item, n) => {
+    return map(this.state.list, (item, n) => {
       return (
         <li
           onClick={(e) => {

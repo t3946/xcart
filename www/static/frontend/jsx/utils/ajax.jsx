@@ -1,5 +1,7 @@
-import _ from "lodash";
 import "whatwg-fetch";
+import isArray from "lodash/isArray";
+import isObject from "lodash/isObject";
+import each from "lodash/each";
 
 let prepareUrl = (url) =>
   (url += (url.indexOf("?") ? "?" : "&") + "__=" + new Date().getTime());
@@ -11,10 +13,10 @@ let paramsToForm = (data, form = new FormData()) => serialize(form, data);
 
 let serialize = (form, obj, traditional, scope) => {
   let type,
-    array = _.isArray(obj),
-    hash = _.isObject(obj);
+    array = isArray(obj),
+    hash = isObject(obj);
 
-  _.each(obj, (value, key) => {
+  each(obj, (value, key) => {
     type = typeof value;
     if (scope) {
       key = traditional

@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "lodash";
+import throttle from "lodash/throttle";
 
 (() => {
   //need for prevent excess change events
@@ -77,7 +77,7 @@ import _ from "lodash";
     });
   };
 
-  let recheckActives_throttled = _.throttle(recheckActives, 20);
+  let recheckActives_throttled = throttle(recheckActives, 20);
   recheckActives = (e, params) => {
     let group = e.target.closest(".quantity-group");
 

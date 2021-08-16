@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import _ from "lodash";
+import merge from "lodash/merge";
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";
 const _MEDIA_MOBILE = ["small", "sm", "medium", "ml"];
@@ -10,8 +10,8 @@ let ACTIONS = {
   SET: (state, action) => {
     if (action.data) {
       let new_state = {};
-      new_state = _.merge(new_state, state);
-      new_state = _.merge(new_state, action.data);
+      new_state = merge(new_state, state);
+      new_state = merge(new_state, action.data);
 
       return new_state;
     }

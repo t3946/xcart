@@ -1,5 +1,5 @@
 import { h, Component, render } from "preact";
-import _ from "lodash";
+import map from "lodash/map";
 import Price from "@/components/product/card/components/Price";
 
 class MiniCart extends Component {
@@ -78,7 +78,7 @@ class MiniCart extends Component {
       return;
     }
 
-    return _.map(options, (oneOption) => {
+    return map(options, (oneOption) => {
       if (oneOption.type === "color") {
         let colorStyle = "background-color:" + oneOption.value + ";";
         return (
@@ -101,7 +101,7 @@ class MiniCart extends Component {
 
   renderProducts(props, state) {
     if (this.state.cart.items) {
-      return _.map(this.state.cart.items, (item, key) => (
+      return map(this.state.cart.items, (item, key) => (
         <div className="item" key={key} data-product={item.id}>
           <div className="image">{this.renderImage(item, props)}</div>
 

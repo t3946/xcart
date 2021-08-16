@@ -1,5 +1,5 @@
 import { h, render, Component } from "preact";
-import _ from "lodash";
+import map from "lodash/map";
 import renderToStringr from "preact-render-to-string";
 import SuggestionsListForPhrase from "./SuggestionsListForPhrase";
 
@@ -9,7 +9,7 @@ export default class SuggestionsListForCategory extends SuggestionsListForPhrase
       "(" + props.search.split(" ").join("|") + ")",
       "gi"
     );
-    let suggestions = _.map(props.suggestions, (item, n) => {
+    let suggestions = map(props.suggestions, (item, n) => {
       return {
         // экранирует спецсимволы если они были в строке
         value: renderToStringr(item.name),
@@ -38,7 +38,7 @@ export default class SuggestionsListForCategory extends SuggestionsListForPhrase
     // Добавляет в состояние найденные строки, шифрует экранированы
     this.initState(props);
     // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
-    return _.map(this.state.list, (item, n) => (
+    return map(this.state.list, (item, n) => (
       <li
         dangerouslySetInnerHTML={{ __html: item.html }}
         className={"item" + n}

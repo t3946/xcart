@@ -1,5 +1,5 @@
 import { h, Component, render } from "preact";
-import _ from "lodash";
+import map from "lodash/map";
 
 export default class CustomSelectOptions extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ export default class CustomSelectOptions extends Component {
 
   render(props, state) {
     let self = this;
-    let options = _.map(props.items, this.renderOneItem.bind(self));
+    let options = map(props.items, this.renderOneItem.bind(self));
     return (
       <div>
         <div className="title">{this.title}</div>

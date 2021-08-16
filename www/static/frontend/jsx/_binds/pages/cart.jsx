@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "lodash";
+import throttle from "lodash/throttle";
 import Checkout from "@/js/Components/checkout/Checkout";
 import Pace from "pace-js";
 
@@ -52,7 +52,7 @@ import Pace from "pace-js";
       }
     };
 
-    let sync = _.throttle((product) => {
+    let sync = throttle((product) => {
       let key = product.dataset.key;
       let quantity = parseInt(product.dataset.quantity) || 1;
       let number_request = ++n_request;
@@ -96,7 +96,7 @@ import Pace from "pace-js";
       });
     }, 200);
 
-    let updateCart = _.throttle((product) => {
+    let updateCart = throttle((product) => {
       recalc();
       sync(product);
     }, 200);

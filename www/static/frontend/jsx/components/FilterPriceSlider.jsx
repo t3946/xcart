@@ -1,10 +1,10 @@
-import _ from "lodash";
+import extend from "lodash/extend";
 
 export default class FilterPriceSlider {
   constructor(slider, inputs, options = {}) {
     this.slider = slider;
     this.inputs = inputs;
-    this.options = _.extend(
+    this.options = extend(
       {
         cssPrefix: "range-",
         format: wNumb({

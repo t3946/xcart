@@ -1,5 +1,4 @@
 import { h, Component, render } from "preact";
-import _ from "lodash";
 import CustomSelectOptions from "./CustomSelectOptions";
 
 export default class CustomColorOptions extends CustomSelectOptions {

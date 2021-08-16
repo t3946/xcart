@@ -1,4 +1,4 @@
-import _ from "lodash";
+import map from "lodash/map";
 import { h, render, Component } from "preact";
 import CustomSelectOptions from "./CustomSelectOptions";
 import CustomColorOptions from "./CustomColorOptions";
@@ -29,7 +29,7 @@ class CustomSelectField {
 
   openOptions() {
     let options = this.select.getElementsByTagName("option");
-    let items = _.map(options, (el) => selectOption(this.button, el));
+    let items = map(options, (el) => selectOption(this.button, el));
     let self = this;
 
     $(this.win).mmodal({

@@ -1,6 +1,6 @@
 import { createRef } from "preact";
 import classnames from "classnames";
-import _ from "lodash";
+import merge from "lodash/merge";
 
 export default class QuantityGroup extends Component {
   constructor(props) {
@@ -78,7 +78,7 @@ export default class QuantityGroup extends Component {
     const incIconId = minBorder ? "switcher-minus__ash" : "switcher-minus";
     const decIconId = maxBorder ? "switcher-plus__ash" : "switcher-plus";
 
-    const classes = _.merge(props.classes, {
+    const classes = merge(props.classes, {
       group: ["quantity-group"],
       dec: [
         "quantity-group-btn",
