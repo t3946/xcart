@@ -28,6 +28,7 @@ const babel = require("gulp-babel");
 const imagemin = require("gulp-imagemin");
 const rimraf = require("gulp-rimraf");
 const argv = require("yargs").argv;
+require("./gulp/tasks");
 
 const spawn = require("child_process").spawn;
 

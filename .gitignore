@@ -32,7 +32,7 @@ node_modules
 /app/Modules/Translate/lang/*.i18next.json
 /www/static/frontend/dist
 /www/static/frontend/versions
-/www/static/frontend/bem/bem.scss
+/www/static/frontend/bem/dist/*
 /www/static/backend/dist
 /www/static/backend/versions
 /www/static/backend/bem/bem.scss

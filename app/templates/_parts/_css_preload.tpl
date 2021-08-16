@@ -1,10 +1,22 @@
 <style>{inline file="static/frontend/dist/css/base.css"}</style>
-<link rel="preload" href="{$uri}/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}" as="style"
-      onload="this.onload=null;this.rel='stylesheet';
+
+<link rel="preload"
+      href="{$uri}/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"
+      as="style"
+      onload="this.onload=null; this.rel='stylesheet';
               var url = parseUrl(this.href);
               window.app.assets.css[url.document].loaded = true;
-              document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));">
+              document.dispatchEvent(new CustomEvent('cssLoad', { 'file': url.document }));"
+>
+
+{if constant('APP_LOCAL')}
+    <link rel="stylesheet"
+          href="{$uri}/static/frontend/dist/css/bem.css?v={mt_rand(0, 1000)}"
+    >
+{/if}
+
 <noscript><link rel="stylesheet" href="{$uri}/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"></noscript>
+
 <script>
     /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
     /* This file is meant as a standalone workflow for
