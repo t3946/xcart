@@ -72,9 +72,7 @@ gulp.task("frontend:scss", function () {
     .src(frontend.src.scss)
     .pipe(
       sass({
-        includePaths: frontend.src.scss_include
-          ? frontend.src.scss_include
-          : [],
+        includePaths: frontend.src.scss_include || [],
       }).on("error", sass.logError)
     )
     .pipe(inlineImage())
