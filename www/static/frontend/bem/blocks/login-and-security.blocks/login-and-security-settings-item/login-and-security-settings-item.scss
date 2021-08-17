@@ -1,0 +1,8 @@
+.login-and-security-settings-item {
+  border-bottom: 1px solid #c4c4c4;
+  padding: rem-calc(20) rem-calc(25) rem-calc(20) rem-calc(30);
+
+  &:last-child {
+    border: none;
+  }
+}
