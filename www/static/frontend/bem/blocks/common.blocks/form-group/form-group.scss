@@ -1,0 +1,5 @@
+.form-group {
+  @include breakpoint(lg up) {
+    max-width: rem-calc(600) !important;
+  }
+}

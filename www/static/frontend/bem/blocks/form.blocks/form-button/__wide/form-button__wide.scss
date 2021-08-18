@@ -1,0 +1,5 @@
+.form-button__wide {
+  @include breakpoint(lg up) {
+    height: rem-calc(39);
+  }
+}

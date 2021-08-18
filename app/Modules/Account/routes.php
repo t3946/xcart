@@ -59,6 +59,30 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/edit-name',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'edit-name',
+    ],
+
+    [
+        'route' => '/login-and-security/edit-email',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'edit-email',
+    ],
+
+    [
+        'route' => '/login-and-security/edit-phone',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'edit-phone',
+    ],
+
+    [
+        'route' => '/login-and-security/edit-password',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'edit-password',
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
@@ -93,5 +117,11 @@ return [
         'route' => '/api/wallet',
         'path' => 'Modules.Account.routes.routes_wallet_api',
         'namespace' => 'api'
+    ],
+
+    [
+        'route' => '/api/login-and-security',
+        'path' => 'Modules.Account.routes.routes_login-and-securities_api',
+        'namespace' => 'api',
     ],
 ];

@@ -22,7 +22,9 @@ import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/
 import { staticRoutes } from "../ts/consts/breadcrumbs";
 import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
 import LoginAndSecurity from "@client/modules/account/components/login-and-security/LoginAndSecurity";
+import FormEditUserName from "@client/modules/account/components/login-and-security/FormEditUserName";
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
+import { route } from "@client/jsx/utils/AppData";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -114,6 +116,30 @@ export const AccountRouters = (): any => {
                     exact
                     path={appData.routes["account:login-and-security"]}
                     component={LoginAndSecurity}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:edit-name")}
+                    component={FormEditUserName}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:edit-phone")}
+                    component={FormEditUserName}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:edit-email")}
+                    component={FormEditUserName}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:edit-password")}
+                    component={FormEditUserName}
                   />
                 </Switch>
               </div>

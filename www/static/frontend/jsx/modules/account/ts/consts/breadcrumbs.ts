@@ -28,4 +28,24 @@ export const staticRoutes = [
     name: "Login & security",
     path: routes["account:login-and-security"],
   },
+
+  {
+    name: "Change your name",
+    path: routes["account:edit-name"],
+  },
+
+  {
+    name: "Change your email address",
+    path: routes["account:edit-email"],
+  },
+
+  {
+    name: "Change mobile phone number",
+    path: routes["account:edit-phone"],
+  },
+
+  {
+    name: "Change password",
+    path: routes["account:edit-password"],
+  },
 ];

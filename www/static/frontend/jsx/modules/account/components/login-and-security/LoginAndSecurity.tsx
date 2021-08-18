@@ -13,18 +13,22 @@ const LoginAndSecurity = (): any => {
     {
       title: "full name",
       caption: user.name,
+      route: route("account:edit-name"),
     },
     {
       title: "email",
       caption: user.email,
+      route: route("account:edit-email"),
     },
     {
       title: "mobile phone number",
       caption: user.phone,
+      route: route("account:edit-phone"),
     },
     {
       title: "password",
       caption: "********",
+      route: route("account:edit-password"),
     },
     {
       title: "two-step verification (2SV) settings",
@@ -32,6 +36,7 @@ const LoginAndSecurity = (): any => {
       classes: {
         caption: "settings-item-caption__small",
       },
+      route: "",
     },
     {
       title: "secure your account",
@@ -40,6 +45,7 @@ const LoginAndSecurity = (): any => {
       classes: {
         caption: "settings-item-caption__small",
       },
+      route: "",
     },
   ];
 
@@ -63,9 +69,15 @@ const LoginAndSecurity = (): any => {
               </span>
             </div>
 
-            <button className={"form-button form-button__outline w-auto"}>
-              edit
-            </button>
+            <NavLink
+              to={listItem.route}
+              exact={true}
+              className="common-link login-and-security_submit-button d-inline-block text-decoration-none"
+            >
+              <button className={"form-button form-button__outline w-auto"}>
+                edit
+              </button>
+            </NavLink>
           </div>
         </li>
       );
@@ -86,7 +98,7 @@ const LoginAndSecurity = (): any => {
       <NavLink
         to={route("account:dashboard")}
         exact={true}
-        className="common-link login-and-security_submit-button d-inline-block mt-4"
+        className="common-link login-and-security_submit-button d-inline-block mt-4 text-decoration-none"
       >
         <button
           className={"admin-form-control form-button w-md-auto d-inline-block"}
