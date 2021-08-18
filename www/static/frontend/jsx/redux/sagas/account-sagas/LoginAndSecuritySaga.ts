@@ -13,9 +13,39 @@ function* editName(action: AnyAction) {
     EditNameForm: form,
   });
 
-  console.log(form, data);
-
   yield api.post<any>(route("account:api:edit-name"), data).then((res) => {
+    res.errors ? error(res.errors) : success(res);
+
+    complete();
+
+    return res;
+  });
+}
+
+function* editEmail(action: AnyAction) {
+  const { form, success, error, complete } = action.payload;
+
+  const data = JSON.stringify({
+    EditEmailForm: form,
+  });
+
+  yield api.post<any>(route("account:api:edit-email"), data).then((res) => {
+    res.errors ? error(res.errors) : success(res);
+
+    complete();
+
+    return res;
+  });
+}
+
+function* editPhone(action: AnyAction) {
+  const { form, success, error, complete } = action.payload;
+
+  const data = JSON.stringify({
+    EditPhoneForm: form,
+  });
+
+  yield api.post<any>(route("account:api:edit-phone"), data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
     complete();
@@ -26,6 +56,8 @@ function* editName(action: AnyAction) {
 
 function* loginAndSecuritySaga(): SagaIterator {
   yield takeLatest("ACCOUNT_EDIT_NAME", editName);
+  yield takeLatest("ACCOUNT_EDIT_EMAIL", editEmail);
+  yield takeLatest("ACCOUNT_EDIT_PHONE", editEmail);
 }
 
 export default loginAndSecuritySaga;

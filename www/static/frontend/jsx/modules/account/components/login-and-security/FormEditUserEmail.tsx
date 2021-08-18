@@ -6,24 +6,27 @@ import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { editNameAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import { editEmailAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
-const FormEditUserName = (): any => {
+const FormEditUserEmail = (): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
-    name: user.name,
+    email: user.email,
   };
 
   const validationSchema = yup.object().shape({
-    name: yup.string().required("Name is a required field"),
+    email: yup
+      .string()
+      .required("Email is a required field")
+      .email("Email must be a valid email"),
   });
 
   function submit(values, actions) {
     dispatch(
-      editNameAction({
+      editEmailAction({
         form: values,
 
         success(res) {
@@ -45,7 +48,7 @@ const FormEditUserName = (): any => {
   return (
     <div>
       <h1 className="account-page_header text-center text-lg-start">
-        Change your name
+        Change your email address
       </h1>
 
       <Formik
@@ -58,35 +61,37 @@ const FormEditUserName = (): any => {
             <Form>
               <div className="content-panel">
                 <p className="form-info">
-                  If you want to change the name associated with your S3 Stores
-                  customer account, you may do so below. Be sure to click the{" "}
-                  <b>Save Changes</b> button when you are done.
+                  Current email address: <b>{user.email}</b>
+                  <br />
+                  Enter the new email address you would like to associate with
+                  your account below. We will send a One Time Password (OTP) to
+                  that address.
                 </p>
 
-                <RBForm.Group controlId="EditUserName" className={"row"}>
+                <RBForm.Group controlId="EditUserEmail" className={"row"}>
                   <div
                     className={
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                     }
                   >
                     <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
-                      New Full name
+                      Change your email address
                     </RBForm.Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
                     <RBForm.Control
                       type="text"
-                      name="name"
-                      value={values.name}
+                      name="email"
+                      value={values.email}
                       onChange={handleChange}
                       className={"form-input"}
-                      isInvalid={!!touched.name && !!errors.name}
-                      isValid={touched.name && !errors.name}
+                      isInvalid={!!touched.email && !!errors.email}
+                      isValid={touched.email && !errors.email}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
-                      {errors.name}
+                      {errors.email}
                     </RBForm.Control.Feedback>
                   </div>
                 </RBForm.Group>
@@ -110,4 +115,4 @@ const FormEditUserName = (): any => {
   );
 };
 
-export default FormEditUserName;
+export default FormEditUserEmail;

@@ -23,6 +23,8 @@ import { staticRoutes } from "../ts/consts/breadcrumbs";
 import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
 import LoginAndSecurity from "@client/modules/account/components/login-and-security/LoginAndSecurity";
 import FormEditUserName from "@client/modules/account/components/login-and-security/FormEditUserName";
+import FormEditUserEmail from "@client/modules/account/components/login-and-security/FormEditUserEmail";
+import FormEditUserPhone from "@client/modules/account/components/login-and-security/FormEditUserPhone";
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
 
@@ -126,14 +128,14 @@ export const AccountRouters = (): any => {
 
                   <Route
                     exact
-                    path={route("account:edit-phone")}
-                    component={FormEditUserName}
+                    path={route("account:edit-email")}
+                    component={FormEditUserEmail}
                   />
 
                   <Route
                     exact
-                    path={route("account:edit-email")}
-                    component={FormEditUserName}
+                    path={route("account:edit-phone")}
+                    component={FormEditUserPhone}
                   />
 
                   <Route

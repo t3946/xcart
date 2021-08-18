@@ -6,12 +6,12 @@ use Modules\User\Models\UserAccount\UserModel;
 use Modules\Core\Forms\FrontendModelForm;
 use Xcart\App\Form\Fields\CharCleanField;
 
-class EditNameForm extends FrontendModelForm
+class EditPhoneForm extends FrontendModelForm
 {
     public function getFields(): array
     {
         return [
-            'name' => [
+            'phone' => [
                 'class' => CharCleanField::class,
                 'required' => true,
             ],

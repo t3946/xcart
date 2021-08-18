@@ -2,47 +2,61 @@
 
 namespace Modules\Account\Controllers\Api;
 
+use Modules\Account\Forms\EditEmailForm;
 use Modules\Account\Forms\EditNameForm;
+use Modules\Account\Forms\EditPhoneForm;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
 class LoginAndSecuritiesApi extends FrontendController
 {
-    public function editName() {
+    /**
+     * edit current user
+     */
+    private function editUser($form): array
+    {
         /**
          * @var $user UserModel
          */
         $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {
-            return;
+            return [];
         }
 
-        $json = json_decode(file_get_contents('php://input'), true);
-        $form = new EditNameForm();
+        $data = json_decode(file_get_contents('php://input'), true);
         $form->setInstance($user);
-        $form->populate($json);
+        $form->populate($data);
 
         if ($form->isValid()) {
             $form->setInstance($user);
-            $form->populate($json);
+            $form->populate($data);
             $form->save();
-            $this->jsonResponse(['user' => $user->toArray()]);
+
+            return ['user' => $user->toArray()];
         } else {
-            $this->jsonResponse(['errors' => $form->getErrors()]);
+            return ['errors' => $form->getErrors()];
         }
     }
 
-    public function editEmailAddress() {
-        dd($_GET);
+    public function editName()
+    {
+        $this->jsonResponse($this->editUser(new EditNameForm()));
     }
 
-    public function editPhoneNumber() {
-        dd($_GET);
+    public function editEmailAddress()
+    {
+        $this->jsonResponse($this->editUser(new EditEmailForm()));
     }
 
-    public function editPassword() {
+    public function editPhoneNumber()
+    {
+        $this->jsonResponse($this->editUser(new EditPhoneForm()));
+    }
+
+    public function editPassword()
+    {
         dd($_POST);
     }
 }
