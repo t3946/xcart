@@ -5,10 +5,19 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import classnames from "classnames";
+import { getCountryByCode } from "@client/jsx/utils/Countries";
 
 const LoginAndSecurity = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
   const { showSnackbar } = useContext(SnackbarContext);
+  const countries = useSelector((e: any) => e.countries);
+
+  function formatPhoneNumber() {
+    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
+    const countryPrefix = "+" + phoneCountry.phone_code;
+    return user.phone.replace(countryPrefix, `${countryPrefix} `);
+  }
+
   const listItems = [
     {
       title: "full name",
@@ -22,7 +31,7 @@ const LoginAndSecurity = (): any => {
     },
     {
       title: "mobile phone number",
-      caption: user.phone,
+      caption: formatPhoneNumber(),
       route: route("account:edit-phone"),
     },
     {
