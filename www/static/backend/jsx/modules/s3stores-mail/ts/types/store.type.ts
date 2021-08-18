@@ -1,4 +1,5 @@
 import { EmailDto } from "./email.type";
+import CountryDto from "@client/modules/account/ts/types/country.type";
 
 export interface StoreDto {
   items: EmailStoreItems[];
@@ -23,6 +24,7 @@ export interface StoreDto {
     isVisible: boolean;
     zIndex?: number;
   };
+  countries: CountryDto[];
 }
 
 export interface EmailStoreItems {

@@ -15,6 +15,10 @@ class EditPhoneForm extends FrontendModelForm
                 'class' => CharCleanField::class,
                 'required' => true,
             ],
+            'phone_country_code' => [
+                'class' => CharCleanField::class,
+                'required' => true,
+            ],
         ];
     }
 

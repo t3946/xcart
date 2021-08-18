@@ -30,3 +30,5 @@ const appData = window.appData;
 export const accountUserInitialValue = appData.user || {};
 
 export const shadowPanelInitialValue = { isVisible: false };
+
+export const countries = appData.countries || [];

@@ -57,7 +57,7 @@ function* editPhone(action: AnyAction) {
 function* loginAndSecuritySaga(): SagaIterator {
   yield takeLatest("ACCOUNT_EDIT_NAME", editName);
   yield takeLatest("ACCOUNT_EDIT_EMAIL", editEmail);
-  yield takeLatest("ACCOUNT_EDIT_PHONE", editEmail);
+  yield takeLatest("ACCOUNT_EDIT_PHONE", editPhone);
 }
 
 export default loginAndSecuritySaga;

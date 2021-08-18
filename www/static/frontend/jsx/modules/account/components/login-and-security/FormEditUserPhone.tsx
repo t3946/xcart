@@ -1,4 +1,4 @@
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import React from "react";
 import { Formik, Form } from "formik";
@@ -8,23 +8,63 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
+import { getCountryByCode } from "@client/jsx/utils/Countries";
 
 const FormEditUserPhone = (): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
+  const countries = useSelector((e: StoreDto) => e.countries);
+
+  let initialCountryCode;
+
+  if (user.phone_country_code) {
+    const country = getCountryByCode(user.phone_country_code, countries);
+
+    initialCountryCode = {
+      viewValue: country.name + " +" + country.phone_code,
+      previewValue: country.code + " +" + country.phone_code,
+      value: country.code,
+    };
+  } else {
+    initialCountryCode = { viewValue: "Code" };
+  }
+
+  const [countryCode, setCountryCode] = React.useState(initialCountryCode);
+
+  /**
+   * Get phone number without country code prefix
+   */
+  function getPhoneNumberInnerPart(countryCode, phoneNumber) {
+    const phoneCountryCodePrefix =
+      "+" + getCountryByCode(countryCode, countries).phone_code;
+    return phoneNumber.replace(phoneCountryCodePrefix, "");
+  }
+
   const initialValues = {
-    phone: user.phone,
+    phone: getPhoneNumberInnerPart(user.phone_country_code, user.phone),
+    phone_country_code: countryCode,
   };
 
   const validationSchema = yup.object().shape({
     phone: yup.string().required("Name is a required field"),
+    phone_country_code: yup.string().required("Name is a required field"),
   });
 
   function submit(values, actions) {
+    const phoneCode = getCountryByCode(
+      values.phone_country_code,
+      countries
+    ).phone_code;
+    const form = {
+      phone_country_code: values.phone_country_code,
+      phone: `+${phoneCode}${values.phone}`,
+    };
+
     dispatch(
       editPhoneAction({
-        form: values,
+        form,
 
         success(res) {
           dispatch(userSetAction(res.user));
@@ -42,10 +82,26 @@ const FormEditUserPhone = (): any => {
     );
   }
 
+  function getSelectItems() {
+    const codes = [];
+
+    for (const country of countries) {
+      if (country.phone_code) {
+        codes.push({
+          viewValue: country.name + " +" + country.phone_code,
+          previewValue: country.code + " +" + country.phone_code,
+          value: country.code,
+        });
+      }
+    }
+
+    return codes;
+  }
+
   return (
     <div>
       <h1 className="account-page_header text-center text-lg-start">
-        Change your email address
+        Change Mobile Phone Number
       </h1>
 
       <Formik
@@ -53,33 +109,46 @@ const FormEditUserPhone = (): any => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {function ({ isSubmitting, values, errors, touched, handleChange }) {
+        {function ({
+          isSubmitting,
+          setFieldValue,
+          values,
+          errors,
+          touched,
+          handleChange,
+        }) {
           return (
             <Form>
               <div className="content-panel">
-                <p className="form-info">
-                  Current email address: <b>{user.email}</b>
-                  <br />
-                  Enter the new email address you would like to associate with
-                  your account below. We will send a One Time Password (OTP) to
-                  that address.
-                </p>
-
                 <RBForm.Group controlId="EditUserPhone" className={"row"}>
                   <div
                     className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
+                      "col-12 col-md-3 col-lg-3 text-md-end text-lg-start"
                     }
                   >
                     <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
-                      Change your email address
+                      New Mobile number
                     </RBForm.Label>
                   </div>
 
-                  <div className={"col-12 col-md-6 col-lg-6"}>
+                  <div className={"col-4 col-md-3 col-lg-3"}>
+                    <FormSelect
+                      items={getSelectItems()}
+                      classes={{ selectList: "form-select-list__fit-content" }}
+                      value={countryCode}
+                      onClick={(item) => {
+                        setFieldValue("phone_country_code", item.value);
+                        setCountryCode(item);
+                      }}
+                      name={"phone_country_code"}
+                      id={"add-address-state"}
+                    />
+                  </div>
+
+                  <div className={"col-8 col-md-6 col-lg-6"}>
                     <RBForm.Control
                       type="text"
-                      name="name"
+                      name="phone"
                       value={values.phone}
                       onChange={handleChange}
                       className={"form-input"}
@@ -92,6 +161,14 @@ const FormEditUserPhone = (): any => {
                     </RBForm.Control.Feedback>
                   </div>
                 </RBForm.Group>
+
+                <p className="form-info">
+                  By enrolling a mobile phone number, you consent to receive
+                  automated text messages from or on behalf of S3 Stores related
+                  to account management and security. Remove your number in{" "}
+                  <b>Login & Security</b> to cancel. Message and data rates may
+                  apply.
+                </p>
               </div>
 
               <div className="account-page_footer text-center text-lg-start">
@@ -100,8 +177,9 @@ const FormEditUserPhone = (): any => {
                     "admin-form-control form-button form-button__wide w-md-auto d-inline-block"
                   }
                   disabled={isSubmitting}
+                  type="submit"
                 >
-                  save changes
+                  continue
                 </button>
               </div>
             </Form>
