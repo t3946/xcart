@@ -138,7 +138,7 @@ const PublicProfile = (): any => {
                   >
                     <div
                       className={
-                        "col-12 col-md-6 col-lg-6 text-md-right text-lg-left"
+                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                       }
                     >
                       <RBForm.Label
@@ -176,7 +176,7 @@ const PublicProfile = (): any => {
                     controlId="PublicProfileFormLocation"
                     className={"row"}
                   >
-                    <div className="col-12 col-md-6 col-lg-6 text-md-right text-lg-left">
+                    <div className="col-12 col-md-6 col-lg-6 text-md-end text-lg-start">
                       <RBForm.Label
                         className={
                           "form-input-label form-input-label__optional"
