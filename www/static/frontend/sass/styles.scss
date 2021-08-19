@@ -12,8 +12,6 @@
 @import 'mixins/menu';
 @import 'mixins/bem';
 @import 'mixins/global_mixins';
-@import "local_modules/bootstrap/dist/css/bootstrap.min";
-
 @import 'base/base';
 @import 'base/typography';
 @import 'base/global';
@@ -76,4 +74,4 @@
 @import "pages/checkout_shipping";
 @import "pages/product_view_list";
 
-@import '../bem/bem';
+@import '../bem/dist/bem';

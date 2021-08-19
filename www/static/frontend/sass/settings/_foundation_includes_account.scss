@@ -1,0 +1,17 @@
+@import 'foundation';
+
+$global-flexbox: true;
+
+@include foundation-global-styles;
+@include foundation-flex-classes;
+@include foundation-typography;
+@include foundation-accordion;
+@include foundation-accordion-menu;
+@include foundation-button-group;
+@include foundation-off-canvas;
+@include foundation-sticky;
+@include foundation-tabs;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
+@include foundation-prototype-spacing;
+@include foundation-prototype-overflow;

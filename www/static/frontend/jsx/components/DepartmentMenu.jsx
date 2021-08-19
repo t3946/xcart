@@ -2,7 +2,10 @@ import storeApp from "../redux/stores/StoreApp";
 
 export default class DepartmentMenu {
   constructor() {
-    return;
+    if ($(".category-menu__new").length) {
+      return;
+    }
+
     this.timers = {};
     this.elemets = {};
     this.options = {

@@ -1,4 +1,5 @@
-import _ from "lodash";
+import throttle from "lodash/throttle";
+import extend from "lodash/extend";
 import ScreenSize from "../utils/ScreenSize";
 import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 
@@ -6,7 +7,7 @@ class ResizeMonitor {
   constructor() {
     this.screen = new ScreenSize();
 
-    this.onResize = _.throttle(this.onResize.bind(this), 200);
+    this.onResize = throttle(this.onResize.bind(this), 200);
     this.screen.setCallback(this.onResize);
 
     this.state = this.screen.getInfo();
@@ -17,7 +18,7 @@ class ResizeMonitor {
     let newState;
 
     if (state.media != info.media) {
-      newState = _.extend(state, info);
+      newState = extend(state, info);
     }
 
     return newState;

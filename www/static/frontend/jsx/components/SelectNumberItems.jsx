@@ -1,6 +1,4 @@
 import {h, render, Component} from "preact";
-//import renderToStringr from 'preact-render-to-string';
-//import _ from 'lodash';
 
 export default class SelectNumberItems extends Component {
 

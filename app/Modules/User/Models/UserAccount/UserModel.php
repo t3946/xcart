@@ -76,6 +76,10 @@ class UserModel extends Model
                 'null' => false,
                 'unique' => true,
             ],
+            'phone_country_code' => [
+                'class' => CharField::class,
+                'required' => true,
+            ],
             'password' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -151,7 +155,7 @@ class UserModel extends Model
     }
 
     /**
-     * получить массив данных о пользователе (нужно для передачи на frontend)
+     * Получить массив данных о пользователе (нужно для передачи на frontend)
      */
     public function toArray(): array
     {
@@ -165,6 +169,7 @@ class UserModel extends Model
             'avatar_image' => $avatar_image ? '/' . $avatar_image : '',
             'location' => $this->location,
             'public_name' => $this->public_name,
+            'phone_country_code' => $this->phone_country_code,
         ];
     }
 }

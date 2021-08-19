@@ -12,6 +12,7 @@ export const FormSelect = ({
   classes = undefined,
   id = undefined,
 }) => {
+  const selectedItem = value;
   const [open, setOpen] = useState(false);
 
   const clickListener = useCLickListener(setOpen, id);
@@ -23,6 +24,7 @@ export const FormSelect = ({
       clickListener.endListen();
     };
   });
+
   return (
     <Grid
       className={classnames(
@@ -31,7 +33,7 @@ export const FormSelect = ({
       )}
       container
       alignItems="center"
-      justify="space-between"
+      justifyContent="space-between"
     >
       {label && <label className="form-input-label">{label}</label>}
       <div
@@ -41,13 +43,13 @@ export const FormSelect = ({
         className={classnames("select-wrapper", classes?.input)}
       >
         <input
-          value={value}
+          value={selectedItem}
           className="select__input"
           type="hidden"
           name={name}
         />
-        <div id={id} className="select__head">
-          {value.viewValue}
+        <div id={id} className="form-select-head">
+          {selectedItem.previewValue || selectedItem.viewValue}
         </div>
         {open && (
           <ul className={`select__list`}>

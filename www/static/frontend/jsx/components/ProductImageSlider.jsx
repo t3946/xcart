@@ -4,7 +4,9 @@ import renderToStringr from "preact-render-to-string";
 import { videoLinkToObject } from "../utils/video";
 import SwiperCore, { Navigation } from "swiper";
 import PhotoSwipe from "./PhotoSwipeContainer";
-import _ from "lodash";
+import throttle from "lodash/throttle";
+import extend from "lodash/extend";
+import map from "lodash/map";
 import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
@@ -27,7 +29,7 @@ export default class ProductImageSlider extends Component {
     this.preparedItems = null;
     this.refs = {};
 
-    this.onResize = _.throttle(this.onResize.bind(this), 200);
+    this.onResize = throttle(this.onResize.bind(this), 200);
 
     // добавить слушатель события resize
     document.addEventListener("resize_monitor.media_change", this.onResize);
@@ -51,7 +53,7 @@ export default class ProductImageSlider extends Component {
       media: media,
     };
 
-    this.state = _.extend(state, this.createNewState(state, { media: media }));
+    this.state = extend(state, this.createNewState(state, { media: media }));
     this.prepareItems(this.state.items);
   }
 
@@ -73,7 +75,7 @@ export default class ProductImageSlider extends Component {
     }
 
     if (state.media != info.media || state.showThumbs != showThumbs) {
-      newState = _.extend(state, {
+      newState = extend(state, {
         media: info.media,
         showThumbs: showThumbs,
       });
@@ -105,7 +107,7 @@ export default class ProductImageSlider extends Component {
       if (item.type === "video") {
         videoLinkToObject(item.href, (meta) => {
           let wait = --this.state.wait;
-          items[i] = _.extend(item, { meta: meta });
+          items[i] = extend(item, { meta: meta });
 
           this.setState({
             wait: wait,
@@ -152,11 +154,10 @@ export default class ProductImageSlider extends Component {
             ),
             onTap: (item, pswp) => {
               if (!item.videoShow) {
-                $(item.container).find(
-                  ".video-wrapper"
-                )[0].innerHTML = renderToStringr(
-                  this.renderVideoItem(item.originalItem, true, true)
-                );
+                $(item.container).find(".video-wrapper")[0].innerHTML =
+                  renderToStringr(
+                    this.renderVideoItem(item.originalItem, true, true)
+                  );
               }
 
               item.videoShow = true;
@@ -164,11 +165,8 @@ export default class ProductImageSlider extends Component {
             onBlur: (item, pswp) => {
               if (item.container && item.videoShow) {
                 item.videoShow = false;
-                $(item.container).find(
-                  ".video-wrapper"
-                )[0].innerHTML = renderToStringr(
-                  this.renderVideoItem(item.originalItem)
-                );
+                $(item.container).find(".video-wrapper")[0].innerHTML =
+                  renderToStringr(this.renderVideoItem(item.originalItem));
               }
             },
           });
@@ -221,7 +219,7 @@ export default class ProductImageSlider extends Component {
   }
 
   renderThumbs() {
-    return _.map(this.state.items, (item, n) => {
+    return map(this.state.items, (item, n) => {
       let is_active = this.state.index == n ? " active" : "";
       //let is_active = '';
 
@@ -317,7 +315,7 @@ export default class ProductImageSlider extends Component {
   }
 
   renderAllDetails() {
-    return _.map(this.state.items, (item, n) => {
+    return map(this.state.items, (item, n) => {
       let is_active = "";
       let position = n + 1;
       let key = "detail." + position;
@@ -383,7 +381,7 @@ export default class ProductImageSlider extends Component {
     if (this.state.showThumbs || this.state.count < 2) {
       return;
     }
-    return _.map(this.state.items, (item, n) => {
+    return map(this.state.items, (item, n) => {
       let index = n + 1;
       let key = "detailClick." + index;
       let classList = "clickBarItem";

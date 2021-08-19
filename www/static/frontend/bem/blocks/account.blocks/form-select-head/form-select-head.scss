@@ -1,0 +1,36 @@
+.form-select-head {
+  width: 100%;
+  max-width: 100%;
+  color: #000000;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #C4C4C4;
+  font-size: 16px;
+  padding: 0 40px 0 14px;
+  position: relative;
+  height: rem-calc(38);
+  line-height: rem-calc(38);
+
+  &:after {
+    width: rem-calc(12);
+    height: rem-calc(8);
+    background: url("/static/frontend/dist/images/icons/account/arrow-down__black.svg") no-repeat center / cover;
+    position: absolute;
+    right: rem-calc(12);
+    bottom: 50%;
+    transform: translateY(50%);
+    content: '';
+    display: block;
+    transition: .2s ease-in;
+  }
+
+  @include breakpoint(md up) {
+    height: rem-calc(42);
+    line-height: rem-calc(42);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(34);
+    line-height: rem-calc(34);
+  }
+}

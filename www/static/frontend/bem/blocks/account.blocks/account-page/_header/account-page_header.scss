@@ -1,0 +1,7 @@
+.account-page_header {
+  margin: 0 0 rem-calc(15) 0;
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(15) rem-calc(30);
+  }
+}

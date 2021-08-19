@@ -3,6 +3,7 @@
 namespace Modules\Account\Controllers;
 
 use Modules\Core\Helpers\AdminHelper;
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
@@ -15,6 +16,23 @@ use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 
 class AccountController extends FrontendController
 {
+    private function getCountryPhoneCodes(): array
+    {
+        $codes = [];
+
+        $countries = CountryModel::objects()->all();
+
+        foreach ($countries as $country) {
+            $codes[] = [
+                "name" => $country->name,
+                "code" => $country->code,
+                "phone_code" => $country->phone_code,
+            ];
+        }
+
+        return $codes;
+    }
+
     public function actionIndex()
     {
 
@@ -53,6 +71,8 @@ class AccountController extends FrontendController
         StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
+
+        StorageHelper::push($this->getCountryPhoneCodes(), null, 'countries');
 
         AdminHelper::routesData();
 

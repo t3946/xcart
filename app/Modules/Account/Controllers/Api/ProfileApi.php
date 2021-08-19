@@ -13,7 +13,7 @@ class ProfileApi extends FrontendController
     {
         /**
          * @var $user UserModel
-        *fix code style/
+        */
         $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {

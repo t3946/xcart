@@ -34,3 +34,5 @@ export const accountStoreInitialValue = {
 };
 
 export const shadowPanelInitialValue = { isVisible: false };
+
+export const countries = appData.countries || [];

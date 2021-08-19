@@ -28,6 +28,7 @@ const babel = require("gulp-babel");
 const imagemin = require("gulp-imagemin");
 const rimraf = require("gulp-rimraf");
 const argv = require("yargs").argv;
+require("./gulp/tasks");
 
 const spawn = require("child_process").spawn;
 
@@ -64,7 +65,7 @@ gulp.task("frontend:bem", async function () {
   return gulp
     .src(bemOrderedPaths)
     .pipe(concat("bem.scss"))
-    .pipe(gulp.dest("frontend/bem/"));
+    .pipe(gulp.dest("frontend/bem/dist/"));
 });
 
 gulp.task("frontend:scss", function () {
@@ -72,9 +73,7 @@ gulp.task("frontend:scss", function () {
     .src(frontend.src.scss)
     .pipe(
       sass({
-        includePaths: frontend.src.scss_include
-          ? frontend.src.scss_include
-          : [],
+        includePaths: frontend.src.scss_include || [],
       }).on("error", sass.logError)
     )
     .pipe(inlineImage())
@@ -264,7 +263,7 @@ gulp.task(
   gulp.series("frontend:bem", function watchStyles() {
     gulp.watch("frontend/bem/blocks/**/*.scss", gulp.parallel("frontend:bem"));
     gulp.watch(
-      ["frontend/bem/bem.scss", "frontend/sass/**/*"],
+      ["frontend/bem/dist/bem.scss", "frontend/sass/**/*"],
       gulp.parallel("frontend:css")
     );
   })
@@ -290,6 +289,13 @@ gulp.task(
     "frontend:images"
   )
 );
+
+gulp.task("copy:bootstrap", function (done) {
+  const src = "local_modules/bootstrap/dist/css/bootstrap.min.css";
+
+  gulp.src(src).pipe(gulp.dest(frontend.dst.css));
+  done();
+});
 
 /**
  *

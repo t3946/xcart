@@ -28,6 +28,13 @@ import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
 import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
+import LoginAndSecurity from "@client/modules/account/components/login-and-security/LoginAndSecurity";
+import FormEditUserName from "@client/modules/account/components/login-and-security/FormEditUserName";
+import FormEditUserEmail from "@client/modules/account/components/login-and-security/FormEditUserEmail";
+import FormEditUserPhone from "@client/modules/account/components/login-and-security/FormEditUserPhone";
+import FormChangePassword from "@client/modules/account/components/login-and-security/FormChangePassword";
+import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
+import { route } from "@client/jsx/utils/AppData";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -63,6 +70,7 @@ export const AccountRouters = (): any => {
 
   return (
     <Provider store={accountStore as any}>
+      <Snackbar>
       <BrowserRouter>
         <ShadowPanel />
         <HatNavigation />
@@ -99,21 +107,6 @@ export const AccountRouters = (): any => {
                   path="/account/payments/wallet"
                   component={Wallet}
                 />
-                <Route
-                  exact
-                  path="/account/payments/wallet/add"
-                  component={AddCard}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet/edit"
-                  component={EditCard}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet/remove"
-                  component={RemoveCardPage}
-                />
 
                 <Route
                   exact
@@ -123,26 +116,56 @@ export const AccountRouters = (): any => {
 
                 <Route
                   exact
-                  path={data?.appData.routes["account:login"]}
+                  path={appData.routes["account:login"]}
                   component={LoginForm}
                 />
 
                 <Route
                   exact
-                  path={data?.appData.routes["account:register"]}
+                  path={appData.routes["account:register"]}
                   component={RegisterForm}
                 />
 
                 <Route
                   exact
-                  path={data?.appData.routes["account:public-profile"]}
+                  path={appData.routes["account:public-profile"]}
                   component={PublicProfile}
+                />
+                <Route
+                    exact
+                    path={appData.routes["account:login-and-security"]}
+                    component={LoginAndSecurity}
+                />
+
+                <Route
+                    exact
+                    path={route("account:edit-name")}
+                    component={FormEditUserName}
+                />
+
+                <Route
+                    exact
+                    path={route("account:edit-email")}
+                    component={FormEditUserEmail}
+                />
+
+                <Route
+                    exact
+                    path={route("account:edit-phone")}
+                    component={FormEditUserPhone}
+                />
+
+                <Route
+                    exact
+                    path={route("account:edit-password")}
+                    component={FormChangePassword}
                 />
               </Switch>
             </div>
           </div>
         </div>
       </BrowserRouter>
+      </Snackbar>
     </Provider>
   );
 };

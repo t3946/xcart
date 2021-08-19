@@ -1,5 +1,6 @@
 import isMedia from "../utils/isMedia";
 import cssFileLoaded from "../utils/cssFileLoaded";
+import throttle from "lodash/throttle";
 
 (() => {
     // После загрузки css
@@ -21,7 +22,7 @@ import cssFileLoaded from "../utils/cssFileLoaded";
         let prevPosition = 0;
         let delta = 50;
 
-        let processScroll = _.throttle(function () {
+        let processScroll = throttle(function () {
 
             lastKnownScrollPosition = window.scrollY;
             if (!ticking) {
@@ -65,7 +66,7 @@ import cssFileLoaded from "../utils/cssFileLoaded";
             window.addEventListener('scroll', processScroll, {'passive': true});
         };
 
-        let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
+        let initStickyMenuOnResize = throttle(initStickyMenu, 50);
 
         function changePrevPosition(currentPosition){
             if(prevPosition <= currentPosition){
