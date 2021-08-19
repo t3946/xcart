@@ -1,7 +1,16 @@
-<style>{inline file="static/frontend/dist/css/base.css"}</style>
+{*если зашёл в аккаунт -- использовать специальные стили для аккаунта*}
+{if (str_starts_with($.request->getUrl(), "/account"))}
+    {set $styles_name = "styles-account.css"}
+    {set $base_name = "base-account.css"}
+{else}
+    {set $styles_name = "styles.css"}
+    {set $base_name = "base.css"}
+{/if}
+
+<style>{inline file="static/frontend/dist/css/$base_name"}</style>
 
 <link rel="preload"
-      href="{$uri}/static/frontend/dist/css/styles.css?v={frontend_version resource='css/styles.css'}"
+      href="{$uri}/static/frontend/dist/css/{$styles_name}?v={frontend_version resource="css/$styles_name"}"
       as="style"
       onload="this.onload=null; this.rel='stylesheet';
               var url = parseUrl(this.href);

@@ -65,7 +65,7 @@ gulp.task("frontend:bem", async function () {
   return gulp
     .src(bemOrderedPaths)
     .pipe(concat("bem.scss"))
-    .pipe(gulp.dest("frontend/bem/"));
+    .pipe(gulp.dest("frontend/bem/dist/"));
 });
 
 gulp.task("frontend:scss", function () {
@@ -263,7 +263,7 @@ gulp.task(
   gulp.series("frontend:bem", function watchStyles() {
     gulp.watch("frontend/bem/blocks/**/*.scss", gulp.parallel("frontend:bem"));
     gulp.watch(
-      ["frontend/bem/bem.scss", "frontend/sass/**/*"],
+      ["frontend/bem/dist/bem.scss", "frontend/sass/**/*"],
       gulp.parallel("frontend:css")
     );
   })
