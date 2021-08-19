@@ -54,10 +54,27 @@ function* editPhone(action: AnyAction) {
   });
 }
 
+function* changePassword(action: AnyAction) {
+  const { form, success, error, complete } = action.payload;
+
+  const data = JSON.stringify({
+    ChangePasswordForm: form,
+  });
+
+  yield api.post<any>(route("account:api:edit-password"), data).then((res) => {
+    res.errors ? error(res.errors) : success(res);
+
+    complete();
+
+    return res;
+  });
+}
+
 function* loginAndSecuritySaga(): SagaIterator {
   yield takeLatest("ACCOUNT_EDIT_NAME", editName);
   yield takeLatest("ACCOUNT_EDIT_EMAIL", editEmail);
   yield takeLatest("ACCOUNT_EDIT_PHONE", editPhone);
+  yield takeLatest("ACCOUNT_EDIT_PASSWORD", changePassword);
 }
 
 export default loginAndSecuritySaga;

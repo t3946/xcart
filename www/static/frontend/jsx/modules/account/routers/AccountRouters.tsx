@@ -25,6 +25,7 @@ import LoginAndSecurity from "@client/modules/account/components/login-and-secur
 import FormEditUserName from "@client/modules/account/components/login-and-security/FormEditUserName";
 import FormEditUserEmail from "@client/modules/account/components/login-and-security/FormEditUserEmail";
 import FormEditUserPhone from "@client/modules/account/components/login-and-security/FormEditUserPhone";
+import FormChangePassword from "@client/modules/account/components/login-and-security/FormChangePassword";
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
 
@@ -141,7 +142,7 @@ export const AccountRouters = (): any => {
                   <Route
                     exact
                     path={route("account:edit-password")}
-                    component={FormEditUserName}
+                    component={FormChangePassword}
                   />
                 </Switch>
               </div>

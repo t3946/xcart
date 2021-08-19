@@ -5,6 +5,8 @@ namespace Modules\Account\Controllers\Api;
 use Modules\Account\Forms\EditEmailForm;
 use Modules\Account\Forms\EditNameForm;
 use Modules\Account\Forms\EditPhoneForm;
+use Modules\Account\Forms\ChangePasswordForm;
+use Modules\User\Helpers\PasswordHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -57,6 +59,26 @@ class LoginAndSecuritiesApi extends FrontendController
 
     public function editPassword()
     {
-        dd($_POST);
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            return;
+        }
+
+        $form = new ChangePasswordForm();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $form->setInstance($user);
+        $form->populate($data);
+
+        if ($form->isValid()) {
+            $attributes = $form->getAttributes();
+            $new_password_hash = PasswordHelper::hash($attributes['new_password']);
+            $user->setAttribute('password', $new_password_hash);
+            $user->save();
+
+            $this->jsonResponse(['user' => $user->toArray()]);
+        } else {
+            $this->jsonResponse(['errors' => $form->getErrors()]);
+        }
     }
 }

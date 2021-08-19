@@ -12,3 +12,8 @@ export const editPhoneAction = (payload: Record<any, any>): any => ({
   type: "ACCOUNT_EDIT_PHONE",
   payload,
 });
+
+export const changePasswordAction = (payload: Record<any, any>): any => ({
+  type: "ACCOUNT_EDIT_PASSWORD",
+  payload,
+});
