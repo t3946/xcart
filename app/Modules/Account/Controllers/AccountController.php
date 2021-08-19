@@ -64,9 +64,9 @@ class AccountController extends FrontendController
 
         StorageHelper::push([
             "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
-            "mainMenu" => MenuLibrary::getMenu(['code' => 'main-menu']),
-            "menuDesktop" => GoodsMenuLibrary::toArray(),
         ], null, 'templates');
+
+        StorageHelper::push(GoodsMenuLibrary::toArray(), null, 'departmentsMenu');
 
         StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 

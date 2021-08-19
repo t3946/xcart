@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import classnames from "classnames";
+import { StoreDto } from "@s3stores-mail/ts/types";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
@@ -14,6 +16,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
     React.useState(false);
   const [closeTimeout, setCloseTimeOut] = React.useState(null);
+  const departmentsMenu = useSelector((e: StoreDto) => e.departmentsMenu);
 
   // close menu by timeout if cursor leave menu
   if (
@@ -106,10 +109,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
   function topLevelMenuTemplate() {
     const items = [];
-    const categories = appData.templates.menuDesktop.slice(
-      0,
-      MAX_CATEGORIES_NUMBER
-    );
+    const categories = departmentsMenu.slice(0, MAX_CATEGORIES_NUMBER);
 
     for (const category of categories) {
       const linkClasses = [

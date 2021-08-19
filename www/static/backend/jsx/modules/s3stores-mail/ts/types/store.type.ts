@@ -25,6 +25,7 @@ export interface StoreDto {
     zIndex?: number;
   };
   countries: CountryDto[];
+  departmentsMenu: Record<any, any>[];
 }
 
 export interface EmailStoreItems {
