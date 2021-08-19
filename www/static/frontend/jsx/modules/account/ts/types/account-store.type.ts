@@ -6,7 +6,7 @@ export interface AccountStore {
   addresses: AccountAddressesStore;
   main: AccountMainStore;
   user: any;
-  wallet: AccountWalletStore;
+  payments: AccountPaymentsStore;
   mobileMenu: any;
 }
 
@@ -22,9 +22,10 @@ export interface AccountMainStore {
   breakpoint?: any;
 }
 
-export interface AccountWalletStore {
+export interface AccountPaymentsStore {
   cards: CardItemDto[];
   cardsLoading: boolean;
   submitFormData?: SubmitFormDataDto | null;
   submitCardFormLoading?: boolean;
+  transactions: any;
 }

@@ -39,7 +39,7 @@ export const AccountRouters = (): any => {
   useEffect(() => {
     useBreakPoint();
     dispatch(getTerritory());
-    if (!addresses) {
+    if (accountStore.getState().user) {
       dispatch(getAddresses(accountStore.getState().user.id));
     }
   }, []);

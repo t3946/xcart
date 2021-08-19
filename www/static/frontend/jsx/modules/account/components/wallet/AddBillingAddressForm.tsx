@@ -14,7 +14,7 @@ import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-typ
 import {
   addCard,
   addDataFromSubmitCardForm,
-} from "../../../../redux/actions/account-actions/WalletActions";
+} from "../../../../redux/actions/account-actions/PaymentsActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { AccountStore } from "../../ts/types/account-store.type";
 
@@ -31,11 +31,11 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
   const countries = useSelector((e: AccountStore) => e.main.countries);
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
   const cardSubmitData = useSelector(
-    (e: AccountStore) => e.wallet.submitFormData
+    (e: AccountStore) => e.payments.submitFormData
   );
 
   const onSubmit = (values) => {

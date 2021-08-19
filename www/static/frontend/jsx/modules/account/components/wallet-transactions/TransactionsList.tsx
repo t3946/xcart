@@ -1,14 +1,17 @@
 import React from "react";
 import { TransactionItem } from "./TransactionItem";
+import { TransactionItemRefund } from "./TransactionItemRefund";
 
-export const TransactionsList = () => {
-  const mass = [1, 2, 3, 4, 5, 6];
+export const TransactionsList = ({ transactions }) => {
   return (
     <div>
-      <div className={"transactions-completed-header"}>Completed</div>
-
-      {mass.map((e) => {
-        return <TransactionItem />;
+      {transactions.map((info, index) => {
+        if (info.type === "refund") {
+          return (
+            <TransactionItemRefund first={index === 0} transactionInfo={info} />
+          );
+        }
+        return <TransactionItem first={index === 0} transactionInfo={info} />;
       })}
     </div>
   );

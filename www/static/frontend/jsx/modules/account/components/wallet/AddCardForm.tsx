@@ -12,7 +12,7 @@ import {
   initialAddCardFormValue,
 } from "../../ts/consts/add-card-form";
 import { useDispatch } from "react-redux";
-import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/WalletActions";
+import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
 
 export const AddCardForm: React.FC = () => {

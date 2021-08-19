@@ -31,3 +31,7 @@ export const removeCard = (id: number, onRequestEnd) => ({
   id,
   onRequestEnd,
 });
+
+export const getTransaction = () => ({
+  type: "GET_TRANSACTIONS",
+});

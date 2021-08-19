@@ -96,10 +96,22 @@ function* removeCard(action: AnyAction): Generator {
   yield action.onRequestEnd();
 }
 
-export function* walletActionWatcher(): SagaIterator {
+function* getTransactions(): Generator {
+  const transactions: any = yield api
+    .post<any>(`/account/api/wallet/get-transactions`, getUser().id)
+    .then((response) => response);
+
+  yield put({
+    type: "SET_TRANSACTIONS",
+    transactions,
+  });
+}
+
+export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("GET_CARDS", getCards);
   yield takeLatest("CHANGE_DEFAULT_CARD", changeDefault);
   yield takeLatest("ADD_CARD", addCard);
   yield takeLatest("EDIT_CARD", editCard);
   yield takeLatest("REMOVE_CARD", removeCard);
+  yield takeLatest("GET_TRANSACTIONS", getTransactions);
 }

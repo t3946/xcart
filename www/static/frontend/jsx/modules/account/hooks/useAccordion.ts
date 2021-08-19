@@ -7,7 +7,7 @@ interface AccordionData {
   onItemClick: () => void;
 }
 
-export function useAccordion(): AccordionData {
+export function useAccordion(timeout = 300): AccordionData {
   const [height, setHeight] = useState<string | number>(0);
 
   const [open, setOpen] = useState(false);
@@ -19,7 +19,7 @@ export function useAccordion(): AccordionData {
       setHeight(ref.current.scrollHeight);
       setTimeout(() => {
         setHeight("auto");
-      }, 300);
+      }, timeout);
     } else {
       setHeight(ref.current.clientHeight);
       setTimeout(() => {

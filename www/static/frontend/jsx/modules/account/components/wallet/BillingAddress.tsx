@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addCard,
   addDataFromSubmitCardForm,
-} from "../../../../redux/actions/account-actions/WalletActions";
+} from "../../../../redux/actions/account-actions/PaymentsActions";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { CardItemDto } from "../../ts/types/wallet.type";
 import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
@@ -27,11 +27,11 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
     );
   });
   const cardSubmitData = useSelector(
-    (e: AccountStore) => e.wallet.submitFormData
+    (e: AccountStore) => e.payments.submitFormData
   );
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
   const [value, setValue] = useState(

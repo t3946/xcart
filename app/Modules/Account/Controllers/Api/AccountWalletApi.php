@@ -6,6 +6,9 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\CreditCardsModel;
+use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 
@@ -139,5 +142,49 @@ class AccountWalletApi  extends FrontendController
         CreditCardsModel::objects()->delete(['credit_card_id' => $cardId]);
 
         $this->jsonResponse( $this->getCardsFromBase($userId));
+    }
+
+    public function getTransactions()
+    {
+        $user_id = json_decode(file_get_contents('php://input'));
+
+        $user = UserModel::objects()->get(['user_id' => $user_id]);
+        $transactions = [];
+
+        foreach ($user->transactions->all() as $key => $item)
+        {
+            $transactions[$key]['transaction_id'] = $item->transaction_id;
+            $transactions[$key]['orderInfo'] = $item->order->getAttributes();
+            $transactions[$key]['cardInfo'] = $item->credit_card->getAttributes();
+
+            if (OrderGroupModel::objects()->filter(['orderid' => $item->order->orderid])->count()) {
+                $transactions[$key]['orderInfo']['orderGroups'] = OrderGroupModel::objects()->filter(['orderid' => $item->order->orderid])->asArray()->all();
+                $transactions[$key]['type'] = 'shipping';
+            } else {
+                $transactions[$key]['orderInfo']['orderGroups'] = OrderGroupRefundModel::objects()->filter(['orderid' => $item->order->orderid])->asArray()->all();
+                $transactions[$key]['type'] = 'refund';
+            }
+
+            foreach ( $transactions[$key]['orderInfo']['orderGroups'] as $group_key => $group_item)
+            {
+                if(  $transactions[$key]['type'] === 'refund')
+                {
+                    foreach ( OrderGroupRefundModel::objects()->filter(['orderid' => $item->order->orderid])->all() as $refund_key => $refund_item)
+                    {
+                        foreach ( $refund_item->products as $refund_products_key => $refund_product){
+                            $transactions[$key]['orderInfo']['orderGroups'][$group_key]['orderGroupsItems'][$refund_key] = array_merge($refund_product->product->getAttributes(),$refund_product->order_detail->asArray()->all());
+                        }
+                    }
+                }
+                else{
+                    $transactions[$key]['orderInfo']['orderGroups'][$group_key]['orderGroupsItems'] = OrderDetailModel::objects()->
+                    filter(['order_group_id' =>  $transactions[$key]['orderInfo']['orderGroups'][$group_key]['order_group_id']])->
+                    asArray()->all();
+                }
+
+            }
+        }
+
+      $this->jsonResponse($transactions);
     }
 }

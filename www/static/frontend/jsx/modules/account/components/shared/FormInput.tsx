@@ -69,7 +69,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
                 onBlur={handleBlur}
                 placeholder={placeholder}
                 className={classnames(
-                  "form-input",
+                  "account-form-input",
                   `${error && "form-input-error"}`
                 )}
                 name={name}

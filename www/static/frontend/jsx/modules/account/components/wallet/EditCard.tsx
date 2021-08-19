@@ -8,7 +8,7 @@ import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-typ
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 import { convertDataToEditCardForm } from "../../utils/convert-data-to-edit-card-form";
 import { useDispatch, useSelector } from "react-redux";
-import { editCard } from "../../../../redux/actions/account-actions/WalletActions";
+import { editCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { useHistory } from "react-router";
 import { CardHeader } from "./CardHeader";
@@ -29,14 +29,14 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   );
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
   const history = useHistory();
 
   const context = useContext(WalletCardsDialogContext);
 
-  const cardSubmitData = useSelector((e: any) => e.wallet.submitFormData);
+  const cardSubmitData = useSelector((e: any) => e.payments.submitFormData);
 
   const dispatch = useDispatch();
 

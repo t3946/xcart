@@ -2,7 +2,6 @@
 
 use Modules\Account\Controllers\AccountDashboard;
 use Modules\Account\Controllers\Api\AccountWalletApi;
-use Modules\Forms\Controllers\EmailDashboardAdmin;
 
 return [
     [
@@ -29,5 +28,10 @@ return [
         'route' => '/remove-card',
         'target' => [AccountWalletApi::class, 'removeCard'],
         'name' => 'remove'
+    ],
+    [
+        'route' => '/get-transactions',
+        'target' => [AccountWalletApi::class, 'getTransactions'],
+        'name' => 'transactions'
     ],
 ];

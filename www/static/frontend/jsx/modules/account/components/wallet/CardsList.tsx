@@ -3,7 +3,7 @@ import { CardItem } from "./CardItem";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingContainer } from "../shared/LoadingContainer";
 import { AccountStore } from "../../ts/types/account-store.type";
-import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/WalletActions";
+import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/PaymentsActions";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { useHistory } from "react-router";
 
@@ -15,7 +15,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
   const breakPoint = useSelector((e: any) => e.main.breakpoint);
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
   const dispatch = useDispatch();

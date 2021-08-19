@@ -1,11 +1,16 @@
+const thisWindow: any = window;
+
+const appData = thisWindow.appData;
+
 export const accountMainStoreInitialValue = {
   countries: [],
   states: [],
 };
 
-export const accountWalletStoreInitialValue = {
+export const accountPaymentsStoreInitialValue = {
   cards: undefined,
   cardsLoading: false,
+  transactions: undefined,
 };
 
 export const accountAddressesInitialValue = {
@@ -18,17 +23,13 @@ export const accountMenuInitialValue = {
   isTabletMenuVisible: false,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const appData = window.appData;
-
 export const accountUserInitialValue = appData.user || null;
 
 export const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
   user: undefined,
-  wallet: accountWalletStoreInitialValue,
+  payments: accountPaymentsStoreInitialValue,
   mobileMenu: accountMenuInitialValue,
 };
 

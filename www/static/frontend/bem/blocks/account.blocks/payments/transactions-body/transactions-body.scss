@@ -2,18 +2,40 @@
   transition: .8s all;
   overflow: hidden;
   border: 1px solid #c4c4c4;
-  border-top: 0;
+border-top: 0;
   border-bottom: 0;
-  background-color: #FFF8E4;
-
   p{
     margin-bottom: 10px;
   }
 }
 
+.transaction-body-open{
+  border: 1px solid #c4c4c4;
+}
+
+
+
 .transaction-top-block-container{
   border-bottom: 2px solid #000000;
   padding: 11px 25px 0px;
+  display: flex;
+}
+
+.transaction-top-block-refund-container{
+  background-color: #FFF8E4;
+}
+
+.transaction-top-name-btns{
+  justify-content: space-between;
+}
+
+.transaction-top-info-container{
+  justify-content: flex-end;
+  display: flex;
+}
+
+.transaction-top-name-btns, .transaction-top-info{
+  width: 77%;
   display: flex;
 }
 
@@ -31,9 +53,9 @@
 }
 
 .transaction-top-info{
-  display: flex;
   align-items: flex-end;
   justify-content: space-between;
+
 }
 
 .btn-entry{
@@ -93,23 +115,40 @@
 }
 
 .transaction-top-block-logo{
-  width: 195px;
+  width: 23%;
   margin-top: 40px;
-  margin-right: 70px;
+  padding-right: 40px;
 }
 
 .transaction-contact-info-container{
   padding: 20px 25px 10px;
   border-bottom: 2px solid #c4c4c4;
+  background-color: #F9F9F9;
+}
+
+.transaction-contact-info-refund-container{
+  background-color: #FFF8E4;
 }
 
 .transaction-contact-info{
   width: 58%;
 }
 
-.transaction-addresses-container{
+.transaction-addresses-container, .transaction-order-info-container, .transaction-total-container{
   padding: 20px 25px 10px;
   display: flex;
+}
+
+.transaction-total-container{
+  justify-content: space-between;
+}
+
+.transaction-addresses-container{
+  background-color: #F9F9F9;
+}
+
+.transaction-addresses-refund-container{
+  background-color: #FFF8E4;
 }
 
 .transaction-billing-address{
@@ -119,4 +158,181 @@
 .transaction-shipping-address{
   width: 62%;
 }
+
+.order-information{
+  background-color: #F2F2F2;
+  margin-bottom: 25px;
+}
+
+.transaction-items-label{
+  width: 100%;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.transaction-items-sublabel{
+font-size: 18px;
+}
+
+.transaction-items-list-header, .transaction-items-list-item{
+  padding: 12px 25px 12px 25px;
+  display: flex;
+}
+
+.transaction-items-list-header{
+  background-color: #EBEBEB;
+}
+
+.transaction-items-list-refund-header{
+  background-color: #FFF2CD;
+}
+
+.transaction-items-list-item{
+  border-bottom: 1px solid #E1E1E1;
+}
+
+.transaction-items-sku-block{
+  width: 15%;
+  text-align: left;
+}
+
+.transaction-items-name-block{
+  width: 40%;
+  text-align: center;
+}
+
+.transaction-items-extended-block, .transaction-items-qty-block, .transaction-items-price-block{
+  width: 19%;
+  text-align: center;
+}
+
+.transaction-items-extended-block{
+  text-align: right;
+}
+
+.transaction-checkbox{
+ padding: 0 25px 40px;
+}
+
+.total-right-side{
+  width: 23%;
+}
+
+.total-left-side{
+  width: 40%
+}
+
+.regular{
+  color: #2A8C3E
+}
+
+.tax{
+  color: #154159
+}
+
+.subtotal{
+  color: #83132B;
+}
+
+.transaction-body-refund{
+  background-color: #FFF8E4;
+}
+
+@media(max-width: 1400px){
+  .transaction-top-block-logo{
+    width: 180px;
+  }
+}
+
+@media(max-width: 1250px){
+  .left-part{
+    width: 45%;
+  }
+
+  .transaction-btns{
+    display: none;
+  }
+
+  .transaction-top-info{
+    width: 100%;
+  }
+
+  .transaction-top-block-logo{
+    margin-top: 0;
+  }
+
+  .info-item-container-spacing{
+    justify-content: flex-start;
+  }
+
+  .transaction-billing-address, .transaction-shipping-address, .transaction-contact-info, .transaction-top-info-right-part{
+    width: 50%;
+  }
+}
+
+
+
+
+@media(max-width: 768px){
+  .transaction-addresses-container, .transaction-order-info-container{
+    flex-direction: column
+  }
+
+  .transaction-contact-info, .transaction-shipping-address, .transaction-billing-address, .transaction-order-info-container{
+    width: 100%;
+  }
+
+  .transaction-top-info-right-part{
+    display: none;
+  }
+
+  .transaction-checkbox{
+   padding-bottom: 25px;
+  }
+
+  .transaction-name-block{
+    display: block;
+  }
+
+  .transaction-items-qty-block{
+    display: none;
+  }
+
+  .transaction-items-list-item, .transaction-items-list-header{
+
+    justify-content: space-between;
+  }
+
+  .total-left-side{
+    display: none;
+  }
+
+  .total-right-side{
+    width: 100%;
+  }
+
+  .transaction-total-container{
+    justify-content: flex-end;
+  }
+
+
+  .transaction-addresses-container, .transaction-order-info-container, .transaction-total-container, .transaction-top-block-container, .transaction-contact-info-container{
+    padding: 10px 10px 10px;
+  }
+
+  .left-part{
+    width: 58%;
+  }
+
+  .transaction-billing-address, .transaction-shipping-address, .transaction-contact-info, .transaction-top-info-right-part{
+    width: 100%;
+  }
+
+  .transaction{
+    margin-bottom: 10px;
+  }
+}
+
 

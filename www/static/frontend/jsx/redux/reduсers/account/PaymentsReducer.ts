@@ -1,11 +1,11 @@
 import { AnyAction } from "redux";
-import { AccountWalletStore } from "../../../modules/account/ts/types/account-store.type";
-import { accountWalletStoreInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
+import { AccountPaymentsStore } from "@client/modules/account/ts/types/account-store.type";
+import { accountPaymentsStoreInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
 
 const accountWalletReducer = (
-  state: AccountWalletStore = accountWalletStoreInitialValue,
+  state: AccountPaymentsStore = accountPaymentsStoreInitialValue,
   action: AnyAction
-): AccountWalletStore => {
+): AccountPaymentsStore => {
   switch (action.type) {
     case "GET_CARDS":
       return { ...state, cardsLoading: true };
@@ -38,6 +38,11 @@ const accountWalletReducer = (
       return {
         ...state,
         submitCardFormLoading: true,
+      };
+    case "SET_TRANSACTIONS":
+      return {
+        ...state,
+        transactions: action.transactions,
       };
     default:
       return state;

@@ -24,8 +24,8 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
         src={`/static/frontend/dist/images/icons/account/cards/${cardType}.svg`}
       />
       <div>
-        <b>{cardType[0].toUpperCase() + cardType.slice(1)}</b> ending in{" "}
-        {cardNumber.substr(cardNumber.length - 4)}
+        <b>{cardType[0].toUpperCase() + cardType.slice(1)}</b> ending in
+        {` ${cardNumber.substr(cardNumber.length - 4)}`}
       </div>
     </div>
   );

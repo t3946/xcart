@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { useDispatch, useSelector } from "react-redux";
-import { removeCard } from "../../../../redux/actions/account-actions/WalletActions";
+import { removeCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { CardHeader } from "./CardHeader";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
@@ -21,7 +21,7 @@ export const RemoveCard: React.FC<RemoveCardProps> = ({ cardInfo }) => {
   const dispatch = useDispatch();
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.wallet.submitCardFormLoading
+    (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
   const onRemoveEnd = () => {
