@@ -1,15 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { NavLink, Redirect } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import classnames from "classnames";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
 
 const LoginAndSecurity = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
-  const { showSnackbar } = useContext(SnackbarContext);
   const countries = useSelector((e: any) => e.countries);
 
   function formatPhoneNumber() {

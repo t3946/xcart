@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
@@ -10,12 +10,14 @@ import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/Login
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 const FormEditUserPhone = (): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const countries = useSelector((e: StoreDto) => e.countries);
+  const { showSnackbar } = useContext(SnackbarContext);
 
   let initialCountryCode;
 
@@ -44,7 +46,7 @@ const FormEditUserPhone = (): any => {
 
   const initialValues = {
     phone: getPhoneNumberInnerPart(user.phone_country_code, user.phone),
-    phone_country_code: countryCode,
+    phone_country_code: initialCountryCode,
   };
 
   const validationSchema = yup.object().shape({
@@ -69,6 +71,11 @@ const FormEditUserPhone = (): any => {
         success(res) {
           dispatch(userSetAction(res.user));
           history.push(route("account:login-and-security"));
+          showSnackbar({
+            header: "Success",
+            message: "You have successfully modified your account!",
+            theme: "success",
+          });
         },
 
         error(err) {

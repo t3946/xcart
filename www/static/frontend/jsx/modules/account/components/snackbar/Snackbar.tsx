@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import UISnackbar from "@material-ui/core/Snackbar";
-import { Color } from "@material-ui/lab/Alert";
 import classnames from "classnames";
 import FaCheckLight from "@client/modules/icon/components/font-awesome/check/Light";
 import FaExclamationTriangleLight from "@client/modules/icon/components/font-awesome/exclamation-triangle/Light";
 
-//TODO: rename it
 const Snackbar: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [header, setHeader] = useState("");
