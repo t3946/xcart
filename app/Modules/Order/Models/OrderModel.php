@@ -9,8 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
+use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
@@ -67,6 +69,8 @@ use Xcart\Order;
  * @property string orig_po
  * @property string po_number
  * @property string firstname
+ * @property string login_last_opened_or_saved
+ * @property string|int time_last_opened_or_saved
  * @property int storefrontid
  * @property mixed transactions
  * @property mixed b_company
@@ -671,5 +675,63 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getGoogleShippingAddress(): string
+    {
+        $result_address = '';
+        if ($address = $this->getAddressInfo()) {
+            foreach ($address as $key => $a) {
+                $addr = $a['address'][0] . (!empty($a['address'][1]) ? " {$a['address'][1]}" : '') . " {$a['city']} {$a['state']} {$a['zipcode']}";
+                $addr = str_replace([' ', '#', '&'], ['+', '', 'and'], $addr);
+                if ($key) {
+                    $result_address = $addr;
+                }
+            }
+        }
+        return $result_address;
+    }
+
+    public function getFirstTransaction()
+    {
+        if ($log = $this->transactions_log->limit(1)->order(['date'])->get()) {
+            return $log->transaction;
+        }
+        return $this->transactions->limit(1)->order(['-date'])->get();
+    }
+
+    public function orderFraudCheck()
+    {
+        foreach (FraudCheckModel::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
+            $fraud_score = $fraud->getScore($this);
+            [$fraud_result, $fraud_weight, $additional_info, $manual_action] = $fraud->getMethodResult($this);
+            [$orderFraud] = OrderFraudCheckModel::objects()->updateOrCreate([
+                'orderid' => $this->orderid,
+                'question_id' => $fraud->id
+            ], [
+                'manual_action' => $manual_action,
+                'fraud_score' => $fraud_score,
+                'fraud_result' => $fraud_result,
+                'additional_info' => $additional_info
+            ]);
+            $orderFraud->save();
+        }
+
+        $fa_heler = new FraudCheckFAHelper($this);
+        $fa_heler->fetchBaseDataOrder();
+        /** @var FraudFAQuestionModel $fraud_fa */
+        foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
+            [$fraud_result, $fraud_score, $info] = $fraud_fa->getScore($this, true, $fa_heler);
+            [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
+                'order_id' => $this->orderid,
+                'question_id' => $fraud_fa->question_id
+            ], [
+                'fraud_result' => $fraud_result,
+                'fraud_score' => $fraud_score,
+                'additional_info' => $info ?? null
+            ]);
+            /** @var OrderFraudFACheckModel $order_fraud_fa */
+            $order_fraud_fa->save();
+        }
     }
 }

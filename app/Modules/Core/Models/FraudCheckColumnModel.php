@@ -7,6 +7,13 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class FraudCheckColumnModel
+ * @package Modules\Core\Models
+ * @property string type
+ * @property string fraud_code
+ * @property string fraud_name
+ */
 class FraudCheckColumnModel extends Model
 {
 	public static function tableName()

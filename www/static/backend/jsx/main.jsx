@@ -9,7 +9,8 @@ import "air-datepicker/dist/js/i18n/datepicker.en";
 import "./pages/s3stores-mail";
 import "./pages/s3stores-price";
 import "./pages/s3stores-mail-to-dx";
-import './pages/s3stores-settings';
+import "./pages/s3stores-settings";
+import "./pages/s3stores-fraud-order";
 
 import "@/../components/jquery.shapeshift/core/jquery.shapeshift";
 import "@/js/ajaxTooltip";

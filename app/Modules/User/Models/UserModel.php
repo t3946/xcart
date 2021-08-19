@@ -92,6 +92,11 @@ class UserModel extends Model
                 'modelClass' => UserModel::class,
                 'link' => ['id' => 'parent_user_id']
             ],
+            'firstname' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
+            ]
         ];
     }
 

@@ -2,6 +2,7 @@
 
 use Modules\Core\Controllers\Api\FraudCheckController;
 use Modules\Core\Controllers\Api\GeneralSettingsController;
+use Modules\Order\Controllers\Api\OrderFraudCheckController;
 
 return [
 	[
@@ -28,5 +29,15 @@ return [
         'route' => 'fraud/update/weight',
         'target' => [FraudCheckController::class, 'updateWeight'],
         'name' => 'update_fraud_weight'
-    ]
+    ],
+    [
+        'route' => 'fraud/settings/get',
+        'target' => [FraudCheckController::class, 'getBaseSettings'],
+        'name' => 'get_fraud_settings'
+    ],
+    [
+        'route' => 'fraud/settings/save',
+        'target' => [FraudCheckController::class, 'updateFraudSettings'],
+        'name' => 'update_fraud_settings'
+    ],
 ];

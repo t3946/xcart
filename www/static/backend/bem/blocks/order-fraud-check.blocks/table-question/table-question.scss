@@ -1,0 +1,21 @@
+.table-head__fraud-check-question {
+  background-color: #eaeaea;
+}
+.table-item-positive__fraud-check-question{
+  background-color: #D9EAD3;
+  color: black;
+  font-size: 13px;
+}
+.table-item-negative__fraud-check-question{
+  background-color: #F4CCCC;
+  color: black;
+  font-size: 13px;
+}
+.question-code-title{
+  text-align: center;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.matrix-question-answer{
+  cursor: pointer;
+}

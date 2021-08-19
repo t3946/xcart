@@ -2,18 +2,15 @@ import React, { useContext, useState } from "react";
 import { Button, Grid } from "@material-ui/core";
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
+import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/data-table";
+import { ResponseFraudSave } from "@admin/modules/general-settings/ts/types/fraud-check/response";
 
 interface ITableFraud {
   columns: string[];
-  data: {}[];
-  section: string[];
+  data: TableDataResponse[];
 }
 const api = new ApiService();
-export const TableFraud: React.FC<ITableFraud> = ({
-  columns,
-  data,
-  section,
-}) => {
+export const TableFraud: React.FC<ITableFraud> = ({ columns, data }) => {
   const [change, setOnChange] = useState("");
   const [dataChange, setDataChange] = useState({});
   const { showSnackbar } = useContext(SnackbarContext);
@@ -46,14 +43,16 @@ export const TableFraud: React.FC<ITableFraud> = ({
   const onSave = () => {
     const frm = new FormData();
     frm.append("update", JSON.stringify(dataChange));
-    api.post("/api/fraud/update/weight", frm).then((res) => {
+    api.post("/api/fraud/update/weight", frm).then((res: ResponseFraudSave) => {
       if (res.status) {
         showSnackbar("You have successfully updated the data");
+      } else if (res.error || !res.status) {
+        showSnackbar(`error: ${res.error ?? "unexpected error"}`, "error");
       }
     });
   };
   const onKeyPressInput = (event) => {
-    if (["Enter", "Escape"].includes(event.key)) {
+    if (["Enter"].includes(event.key)) {
       setOnChange("");
     }
   };
@@ -66,7 +65,7 @@ export const TableFraud: React.FC<ITableFraud> = ({
             <th className="table-header-fraud">{column}</th>
           ))}
         </tr>
-        {columns.map((column, zi) => {
+        {columns.map((column) => {
           return (
             <tr>
               {[""].concat(columns).map((col, d) => {

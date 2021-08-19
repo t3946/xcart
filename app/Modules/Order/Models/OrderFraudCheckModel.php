@@ -2,20 +2,30 @@
 
 namespace Modules\Order\Models;
 
+use Modules\Core\Models\FraudAllQuestionModel;
 use Modules\Goods\Models\ProductHardResellModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null fraud_result
+ * Class OrderFraudCheckModel
+ * @package Modules\Order\Models
+ * @property OrderModel order
+ * @property FraudCheckModel question
+ * @property string fraud_result
+ * @property string|float fraud_score
+ * @property string|int question_id
  */
 class OrderFraudCheckModel extends Model
 {
     use AutoMetaTrait;
+    public const FRAUD_RESULT_POSITIVE = 'positive';
+    public const FRAUD_RESULT_NEGATIVE = 'negative';
 
     public static function tableName()
     {
@@ -33,6 +43,13 @@ class OrderFraudCheckModel extends Model
                 'null' => false,
                 'default' => []
             ],
+            'question' => [
+                'field' => 'question_id',
+                'class' => ForeignField::class,
+                'modelClass' => FraudCheckModel::class,
+                'link' => ['question_id' => 'id'],
+                'null' => false,
+            ],
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::class,
@@ -40,6 +57,15 @@ class OrderFraudCheckModel extends Model
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
+            'fraud_result' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => true,
+                'choices' => [
+                    self::FRAUD_RESULT_POSITIVE,
+                    self::FRAUD_RESULT_NEGATIVE,
+                ]
+            ]
         ];
     }
 

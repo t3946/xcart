@@ -4,11 +4,13 @@
 namespace Modules\Order\Commands;
 
 
+use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
-use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -21,14 +23,11 @@ class FraudCheckCommand extends Command
     public function handle($arguments = [])
     {
         $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
-
+        /** @var OrderModel $order */
         foreach (OrderModel::objects()->filter([
             'groups__cb_status__in' => [
                 OrderStatusModel::ORDER_STATUS_UNPAID_PO,
                 OrderStatusModel::ORDER_STATUS_AUTHORIZED,
-                OrderStatusModel::ORDER_STATUS_COMPLETED,
-                OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
-                OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
             ],
             'fraud_status' => FraudStatusModel::STATUS_NOT_YET_STARTED
         ])->group(['orderid']) as $order) {
@@ -42,31 +41,46 @@ class FraudCheckCommand extends Command
                 $extraModel->ip = $ip;
                 $extraModel->save();
             }
-
             /** @var FraudCheckModel $fraud */
-            foreach (FraudCheckModel::objects()->order(['orderby']) as $fraud) {
+            foreach (FraudCheckModel::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
                 $fraud_score = $fraud->getScore($order);
-                [$fraud_result, $bare_fraud_score, $additional_info, $manual_action] = $fraud->getMethodResult($order);
+                [$fraud_result, $fraud_weight, $additional_info, $manual_action] = $fraud->getMethodResult($order);
                 [$orderFraud] = OrderFraudCheckModel::objects()->updateOrCreate([
                     'orderid' => $order->orderid,
-                    'question_code' => $fraud->question_code
+                    'question_id' => $fraud->id
                 ], [
                     'manual_action' => $manual_action,
                     'fraud_score' => $fraud_score,
-                    'bare_fraud_score' => $bare_fraud_score,
                     'fraud_result' => $fraud_result,
                     'additional_info' => $additional_info
                 ]);
-                [$orderFraud->fraud_score, $orderFraud->bare_fraud_score, $orderFraud->fraud_result] = $orderFraud->getScore($fraud);
-                $overallFraudScore += (float) $orderFraud->fraud_score;
+/*                [$orderFraud->fraud_score, $orderFraud->f, $orderFraud->fraud_result] = $orderFraud->getScore($fraud);
+                $overallFraudScore += (float)$orderFraud->fraud_score;
                 if ($fraud->question_code !== 'CHECK_TOTAL') {
-                    $bareFraudScore += (float) $orderFraud->fraud_score;
-                }
+                    $bareFraudScore += (float)$orderFraud->fraud_score;
+                }*/
                 $orderFraud->save();
             }
 
-            $current_overall_fraud_score = (float) $order->overall_fraud_score;
-            $current_bare_fraud_score = (float) $order->bare_fraud_score;
+            $fa_heler = new FraudCheckFAHelper($order);
+            $fa_heler->fetchBaseDataOrder();
+            /** @var FraudFAQuestionModel $fraud_fa */
+            foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
+                [$fraud_result, $fraud_score, $info] = $fraud_fa->getScore($order, true, $fa_heler);
+                [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
+                    'order_id' => $order->orderid,
+                    'question_id' => $fraud_fa->question_id
+                ], [
+                    'fraud_result' => $fraud_result,
+                    'fraud_score' => $fraud_score,
+                    'additional_info' => $info ?? null
+                ]);
+                /** @var OrderFraudFACheckModel $order_fraud_fa */
+                $order_fraud_fa->save();
+            }
+
+            $current_overall_fraud_score = (float)$order->overall_fraud_score;
+            $current_bare_fraud_score = (float)$order->bare_fraud_score;
 
             if ($current_overall_fraud_score !== $overallFraudScore) {
                 $log .= "overall_fraud_score: {$current_overall_fraud_score} -> {$overallFraudScore}<br/>";
