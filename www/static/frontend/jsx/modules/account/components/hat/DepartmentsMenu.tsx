@@ -16,7 +16,9 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
     React.useState(false);
   const [closeTimeout, setCloseTimeOut] = React.useState(null);
-  const departmentsMenu = useSelector((e: StoreDto) => e.departmentsMenu);
+  const departmentsMenu = useSelector(
+    (e: StoreDto) => e.departmentsMenu.desktop
+  );
 
   // close menu by timeout if cursor leave menu
   if (
