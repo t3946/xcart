@@ -34,3 +34,7 @@ export const shadowPanelInitialValue = { isVisible: false };
 export const countries = appData.countries || [];
 
 export const departmentsMenu = appData.departmentsMenu || [];
+
+export const departmentsMenuMobile = {
+  isVisible: false,
+};

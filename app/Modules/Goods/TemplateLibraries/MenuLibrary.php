@@ -48,7 +48,7 @@ class MenuLibrary extends TemplateLibrary
      * @name getDepartmentSubmenu
      * @return array
      */
-    public static function getDepartmentSubmenu(CategoryModel $category ,$has_banner = false)
+    public static function getDepartmentSubmenu(CategoryModel $category, $has_banner = false)
     {
         $collection = $category->getSubcategories(true, 2);
 //        $collection = [];
@@ -64,6 +64,7 @@ class MenuLibrary extends TemplateLibrary
                 $items[$key]['level'] = $item->level;
                 $items[$key]['link'] = $item->getAbsoluteUrl();
                 $items[$key]['items'] = [];
+                $items[$key]['active_product_count'] = (int)$item->active_product_count;
 
                 // Number of stack items
                 $l = count($stack);
@@ -101,13 +102,14 @@ class MenuLibrary extends TemplateLibrary
         $lvl3_count = 0;
 
         $max_show_lvl3 = 100;
-        $max_points = self::MAX_POINTS - (($has_banner) ? ceil(self::MAX_POINTS_IN_COLUMN / 3 * 2) : 0 );
+        $max_points = self::MAX_POINTS - (($has_banner) ? ceil(self::MAX_POINTS_IN_COLUMN / 3 * 2) : 0);
 
         foreach ($tmp_menu as $key => $item) {
             $lvl3_count += count($item['items']);
-            $menu[ $key ] = [
+            $menu[$key] = [
                 'name' => $item['name'],
                 'link' => $item['link'],
+                'active_product_count' => $item['active_product_count'],
                 'more_items' => false,
                 'items' => [],
             ];
@@ -117,8 +119,7 @@ class MenuLibrary extends TemplateLibrary
             }
         }
 
-        if ($lvl3_count > 0)
-        {
+        if ($lvl3_count > 0) {
             if (($lvl3_count * self::LVL3_POINT) > $max_points) {
                 $max_show_lvl3 = floor($lvl3_count / $lvl2_count);
             }
@@ -129,14 +130,13 @@ class MenuLibrary extends TemplateLibrary
                     if (!empty($item['items'])) {
 
                         if (count($item['items']) > $max_show_lvl3 || (count($item['items']) * self::LVL3_POINT + $points) > $max_points) {
-                            $menu[ $key ]['more_items'] = true;
+                            $menu[$key]['more_items'] = true;
                         }
 
                         $show = count($item['items']) > $max_show_lvl3 ? $max_show_lvl3 : count($item['items']);
 
-                        for ($i = 0; $i < $show; $i++ )
-                        {
-                            $menu[ $key ]['items'][] = $item['items'][$i];
+                        for ($i = 0; $i < $show; $i++) {
+                            $menu[$key]['items'][] = $item['items'][$i];
                             if (($points += self::LVL3_POINT) >= $max_points) {
                                 break;
                             }
@@ -149,16 +149,18 @@ class MenuLibrary extends TemplateLibrary
         return ['menu' => $menu, 'columns' => ceil($points / self::MAX_POINTS_IN_COLUMN)];
     }
 
-    public static function toArray() {
+    public static function toArrayDesktop(): array
+    {
         $menu_array = [];
         $menu_lvl_1 = self::getCategoryMenu();
 
         foreach ($menu_lvl_1 as $category) {
             $menu_lvl_2 = self::getDepartmentSubmenu($category);
             $menu_array_item = [
-                'id' => $category->categoryid,
+                'id' => (int)$category->categoryid,
                 'url' => $category->getAbsoluteUrl(),
                 'name' => $category->category,
+                'activeProductCount' => (int)$category->active_product_count,
                 'groups' => [],
             ];
 
@@ -166,6 +168,7 @@ class MenuLibrary extends TemplateLibrary
                 $menu_array_group = [
                     'link' => $sub_menu_group['link'],
                     'name' => $sub_menu_group['name'],
+                    'activeProductCount' => $sub_menu_group['active_product_count'],
                     'items' => [],
                 ];
 
@@ -177,6 +180,35 @@ class MenuLibrary extends TemplateLibrary
                 }
 
                 $menu_array_item['groups'][] = $menu_array_group;
+            }
+
+            $menu_array[] = $menu_array_item;
+        }
+
+        return $menu_array;
+    }
+
+    public static function toArrayMobile (): array
+    {
+        $menu_array = [];
+        $menu_lvl_1 = self::getCategoryMenu();
+
+        foreach ($menu_lvl_1 as $category) {
+            $menu_lvl_2 = $category->getSubcategories();
+            $menu_array_item = [
+                'id' => (int)$category->categoryid,
+                'url' => $category->getAbsoluteUrl(),
+                'name' => $category->category,
+                'activeProductCount' => (int)$category->active_product_count,
+                'subCategories' => [],
+            ];
+
+            foreach ($menu_lvl_2 as $sub_category) {
+                $menu_array_item['subCategories'][] = [
+                    'link' => $sub_category->getAbsoluteUrl(),
+                    'name' => $sub_category->category,
+                    'activeProductCount' => $sub_category->active_product_count,
+                ];
             }
 
             $menu_array[] = $menu_array_item;

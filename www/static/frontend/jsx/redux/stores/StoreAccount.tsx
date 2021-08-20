@@ -13,6 +13,7 @@ import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
 import ShadowPanelReducer from "@client/jsx/redux/reduсers/account/ShadowPanelReducer";
 import CountriesReducer from "@client/jsx/redux/reduсers/account/CountriesReducer";
 import DepartmentsMenuReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuReducer";
+import DepartmentsMenuMobileReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuMobileReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -27,6 +28,7 @@ export const accountStore: Store<AccountStoreDto> = createStore(
     shadowPanel: ShadowPanelReducer,
     countries: CountriesReducer,
     departmentsMenu: DepartmentsMenuReducer,
+    departmentsMenuMobile: DepartmentsMenuMobileReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

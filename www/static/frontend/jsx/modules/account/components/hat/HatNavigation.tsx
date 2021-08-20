@@ -1,8 +1,19 @@
 import React from "react";
 import HatLoginButton from "./HatLoginButton";
 import TopLine from "@client/modules/account/components/hat/TopLine";
+import { useDispatch } from "react-redux";
+import { showAction as showMobileMenu } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
+import { showShadowPanelAction as showShadow } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 
 const HatNavigation = (): any => {
+  const dispatch = useDispatch();
+
+  function openMobileMenu(e) {
+    e.stopPropagation();
+    dispatch(showMobileMenu());
+    dispatch(showShadow());
+  }
+
   return (
     <div id="top-header-content">
       <div id="top-header-menu">
@@ -23,6 +34,7 @@ const HatNavigation = (): any => {
                     href="#"
                     data-toggle="offCanvasLeft"
                     className="mobile_menu middle-inline-block hamburger"
+                    onClick={openMobileMenu}
                   />
                 </div>
 
@@ -91,7 +103,7 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
-      <div className="shadow"></div>
+      <div className="shadow" />
     </div>
   );
 };

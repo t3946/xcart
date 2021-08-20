@@ -28,6 +28,7 @@ import FormEditUserPhone from "@client/modules/account/components/login-and-secu
 import FormChangePassword from "@client/modules/account/components/login-and-security/FormChangePassword";
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
+import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -55,6 +56,9 @@ export const AccountRouters = (): any => {
     <Provider store={accountStore as any}>
       <Snackbar>
         <BrowserRouter>
+          <DepartmentsMenuMobile
+            classes={{ container: "hat-navigation_departments-menu-mobile" }}
+          />
           <ShadowPanel />
           <HatNavigation />
           <HatSearchLine />
