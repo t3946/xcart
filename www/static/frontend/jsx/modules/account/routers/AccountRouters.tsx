@@ -71,100 +71,100 @@ export const AccountRouters = (): any => {
   return (
     <Provider store={accountStore as any}>
       <Snackbar>
-      <BrowserRouter>
-        <ShadowPanel />
-        <HatNavigation />
-        <HatSearchLine />
-        <MobileMenu />
+        <BrowserRouter>
+          <ShadowPanel />
+          <HatNavigation />
+          <HatSearchLine />
+          <MobileMenu />
 
-        <div className={"container"}>
-          {user && <BreadCrumbs />}
+          <div className={"container"}>
+            {user && <BreadCrumbs />}
 
-          <div className="row">
-            <div className={classNames(leftColumnClasses)}>
-              <SideBarMenu />
-            </div>
+            <div className="row">
+              <div className={classNames(leftColumnClasses)}>
+                <SideBarMenu />
+              </div>
 
-            <div className={classNames(rightColumnClasses)}>
-              <Switch>
-                <Route
-                  exact
-                  path="/account/addresses"
-                  component={AddressDialogHOC(
-                    <Addresses />,
-                    <AddAddressDialog />
-                  )}
-                />
-
-                <Route
-                  exact
-                  path="/account/addresses/add"
-                  component={AddAddressPage}
-                />
-
-                <Route
-                  exact
-                  path="/account/payments/wallet"
-                  component={Wallet}
-                />
-
-                <Route
-                  exact
-                  path="/account/payments/transactions"
-                  component={Transactions}
-                />
-
-                <Route
-                  exact
-                  path={appData.routes["account:login"]}
-                  component={LoginForm}
-                />
-
-                <Route
-                  exact
-                  path={appData.routes["account:register"]}
-                  component={RegisterForm}
-                />
-
-                <Route
-                  exact
-                  path={appData.routes["account:public-profile"]}
-                  component={PublicProfile}
-                />
-                <Route
+              <div className={classNames(rightColumnClasses)}>
+                <Switch>
+                  <Route
                     exact
-                    path={appData.routes["account:login-and-security"]}
-                    component={LoginAndSecurity}
-                />
+                    path="/account/addresses"
+                    component={AddressDialogHOC(
+                      <Addresses />,
+                      <AddAddressDialog />
+                    )}
+                  />
 
-                <Route
+                  <Route
+                    exact
+                    path="/account/addresses/add"
+                    component={AddAddressPage}
+                  />
+
+                  <Route
+                    exact
+                    path="/account/payments/wallet"
+                    component={Wallet}
+                  />
+
+                  <Route
+                    exact
+                    path="/account/payments/transactions"
+                    component={Transactions}
+                  />
+
+                  <Route
+                    exact
+                    path={data.appData.routes["account:login"]}
+                    component={LoginForm}
+                  />
+
+                  <Route
+                    exact
+                    path={data.appData.routes["account:register"]}
+                    component={RegisterForm}
+                  />
+
+                  <Route
+                    exact
+                    path={data.appData.routes["account:public-profile"]}
+                    component={PublicProfile}
+                  />
+                  <Route
+                    exact
+                    path={data.appData.routes["account:login-and-security"]}
+                    component={LoginAndSecurity}
+                  />
+
+                  <Route
                     exact
                     path={route("account:edit-name")}
                     component={FormEditUserName}
-                />
+                  />
 
-                <Route
+                  <Route
                     exact
                     path={route("account:edit-email")}
                     component={FormEditUserEmail}
-                />
+                  />
 
-                <Route
+                  <Route
                     exact
                     path={route("account:edit-phone")}
                     component={FormEditUserPhone}
-                />
+                  />
 
-                <Route
+                  <Route
                     exact
                     path={route("account:edit-password")}
                     component={FormChangePassword}
-                />
-              </Switch>
+                  />
+                </Switch>
+              </div>
             </div>
           </div>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
       </Snackbar>
     </Provider>
   );

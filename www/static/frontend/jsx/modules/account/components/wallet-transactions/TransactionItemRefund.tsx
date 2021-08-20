@@ -50,6 +50,39 @@ export const TransactionItemRefund = ({ transactionInfo, first }) => {
         {transactionInfo.orderInfo.orderGroups.map((e) => {
           return <TransactionItems refund info={e} />;
         })}
+        <div className="transaction-total-container">
+          <div className="total-left-side" />
+          <div className="total-right-side total-group-right-side">
+            <div className="info-item-container info-item-container-spacing regular">
+              <p className="total-text  total-text-left">
+                Shipping Cost Refund:{" "}
+              </p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.shipping_gross}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <div className="total-text  total-text-left">
+                Sales Tax Refund:
+              </div>
+              <div className="total-text">
+                US$ {transactionInfo.orderInfo.total_pst}
+              </div>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <p className="total-text  total-text-left">VAT Tax Refund: </p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.total_tax}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing subtotal">
+              <p className="total-text total-text-left">Total Refund: </p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.total_gross}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export const TransactionItemsListTotal = ({ orderInfo }) => {
           <p className="left-part">{orderInfo.a2c_status}</p>
         </div>
       </div>
-      <div className="total-right-side">
+      <div className="total-group-right-side">
         <div className="info-item-container info-item-container-spacing regular">
           <p className=""> Regular shipping:</p>
           <p className="">US$ {orderInfo.shipping_gross}</p>

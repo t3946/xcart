@@ -34,12 +34,17 @@ export const TransactionItemTopBlock = ({
                 )}
                 content={() => componentRef.current}
               />
-              <Button className="account-submit-btn-outline transaction-button">
-                <div className="btn-entry">
-                  <PictureAsPdfIcon className="btn-icon" />
-                  <div>OPEN PDF</div>
-                </div>
-              </Button>
+              <ReactToPrint
+                trigger={() => (
+                  <Button className="account-submit-btn-outline transaction-button">
+                    <div className="btn-entry">
+                      <PictureAsPdfIcon className="btn-icon" />
+                      <div>OPEN PDF</div>
+                    </div>
+                  </Button>
+                )}
+                content={() => componentRef.current}
+              />
             </div>
           </div>
         </div>

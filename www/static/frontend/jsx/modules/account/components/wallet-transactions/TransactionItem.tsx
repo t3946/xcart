@@ -59,6 +59,44 @@ export const TransactionItem = ({ transactionInfo, first }) => {
         {transactionInfo.orderInfo.orderGroups.map((e) => {
           return <TransactionItems info={e} />;
         })}
+        <div className="transaction-total-container total-shipping">
+          <div className="total-left-side" />
+          <div className="total-right-side total-group-right-side total-right-side">
+            <div className="info-item-container info-item-container-spacing">
+              <p className="total-text total-text-left"> Total Items Cost:</p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.shipping_gross}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing regular">
+              <p className="total-text total-text-left">
+                {" "}
+                Total Shipping Cost:
+              </p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.shipping_gross}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <div className="total-text total-text-left">Total Sales Tax:</div>
+              <div className="total-text">
+                US$ {transactionInfo.orderInfo.total_pst}
+              </div>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <p className="total-text total-text-left">Total VAT Tax: </p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.total_tax}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing subtotal">
+              <p className="total-text total-text-left">GRAND TOTAL:</p>
+              <p className="total-text">
+                US$ {transactionInfo.orderInfo.total_gross}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -216,7 +216,7 @@ font-size: 18px;
  padding: 0 25px 40px;
 }
 
-.total-right-side{
+.total-group-right-side{
   width: 23%;
 }
 
@@ -238,6 +238,24 @@ font-size: 18px;
 
 .transaction-body-refund{
   background-color: #FFF8E4;
+}
+
+.total-text{
+  font-size: 18px;
+}
+
+.total-text-left{
+  width: 70%;
+  text-align: right;
+}
+
+.total-right-side{
+  width: 40%
+}
+
+.total-shipping{
+  padding-top: 29px;
+  border-top: 2px solid #8A8A8A;
 }
 
 @media(max-width: 1400px){
@@ -309,7 +327,7 @@ font-size: 18px;
     display: none;
   }
 
-  .total-right-side{
+  .total-group-right-side{
     width: 100%;
   }
 
@@ -332,6 +350,10 @@ font-size: 18px;
 
   .transaction{
     margin-bottom: 10px;
+  }
+
+  .total-text-left{
+    text-align: left;
   }
 }
 

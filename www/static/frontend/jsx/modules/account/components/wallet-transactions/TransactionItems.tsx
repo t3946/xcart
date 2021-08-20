@@ -33,7 +33,7 @@ export const TransactionItems = ({ refund = undefined, info }) => {
           />
         );
       })}
-      <TransactionItemsListTotal orderInfo={info} />
+      {!refund && <TransactionItemsListTotal orderInfo={info} />}
     </div>
   );
 };
