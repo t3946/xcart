@@ -5,4 +5,12 @@
   justify-content: space-between;
   height: rem-calc(52);
   font-size: rem-calc(14);
+
+  &:hover, &:focus {
+    text-decoration: none;
+
+    .subcategory-link-text {
+      text-decoration: underline;
+    }
+  }
 }

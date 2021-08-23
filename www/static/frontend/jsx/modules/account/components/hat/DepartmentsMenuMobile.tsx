@@ -82,7 +82,8 @@ const DepartmentsMenuMobile = (props: Record<any, any>): any => {
             href={subCategory.link}
           >
             <div>
-              {subCategory.name}
+              <span className="subcategory-link-text">{subCategory.name}</span>
+
               <span className="subcategory-product-counter ms-2">
                 ({subCategory.activeProductCount})
               </span>
