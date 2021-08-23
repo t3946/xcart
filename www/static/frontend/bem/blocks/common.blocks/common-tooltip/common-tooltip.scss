@@ -1,28 +1,42 @@
 .common-tooltip {
-    &.show {
-        opacity: 1;
+  &.show {
+    opacity: 1;
+  }
+
+  $tooltip-background-color: #fef8ea;
+  $tooltip-border-color: #e8e1cc;
+  $tooltip-shadow-color: rgba(64, 60, 50, 0.13);
+
+  .tooltip-inner {
+    text-align: left;
+    background: $tooltip-background-color;
+    color: #000000;
+    box-shadow: 0 rem-calc(2) rem-calc(3) $tooltip-shadow-color;
+    border: rem-calc(1) solid $tooltip-border-color;
+    border-radius: 0;
+  }
+
+  .arrow {
+    width: 100%;
+    bottom: rem-calc(6);
+
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      border-width: .4rem .4rem 0;
+      border-style: solid;
+      border-color: transparent;
+      border-top-color: $tooltip-background-color;
+      left: 50%;
+      transform: translateX(rem-calc(-6));
     }
 
-    .tooltip-inner {
-        background: #ffffff;
-        color: #000000;
-        box-shadow: 0 rem-calc(2) rem-calc(3) rgba(0, 0, 0, 0.13);
-        border: rem-calc(1) solid #cdcdcd;
+    &:before {
+      border-top-color: $tooltip-border-color;
     }
 
-    .arrow {
-        &:before {
-            border-top-color: #cdcdcd;
-        }
-
-        &:after {
-            position: absolute;
-            top: rem-calc(-2);
-            content: "";
-            border-width: .4rem .4rem 0;
-            border-style: solid;
-            border-color: transparent;
-            border-top-color: #ffffff;
-        }
+    &:after {
+      top: rem-calc(-2);
     }
+  }
 }
