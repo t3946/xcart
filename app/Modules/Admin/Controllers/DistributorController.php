@@ -7,6 +7,7 @@ namespace Modules\Admin\Controllers;
 use Modules\Admin\Admin\DxCommunicationAdmin;
 use Modules\Admin\Admin\DxContactAdmin;
 use Modules\Admin\Admin\DxContactsAdmin;
+use Modules\Admin\Admin\DxProductsAdmin;
 use Modules\Admin\AdminModule;
 use Modules\Admin\Forms\Dx\DistributorContactForm;
 use Modules\Admin\Forms\Dx\DistributorForm;
@@ -14,6 +15,7 @@ use Modules\Admin\Forms\Dx\DistributorGeneralForm;
 use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\ProductAdmin;
 use Modules\Sites\Helpers\StorageHelper;
 use Throwable;
 use Xcart\App\Exceptions\Exception;
@@ -32,7 +34,7 @@ class DistributorController extends BackendController
         $distributor_section = DistributorForm::getSection($section);
         if ($distributor_section['form']){
             //инициализация формы
-            $form = new $distributor_section['form'];
+            $form = new $distributor_section['form']();
 
             if ($dx) {
                 $form->setInstance($dx);
@@ -84,6 +86,12 @@ class DistributorController extends BackendController
         } elseif ($section == 50) {
             $admin = new DxCommunicationAdmin();
             //$admin->dxModel = $dx;
+            $admin->section = $section;
+            $admin->all($dx->pk);
+            exit;
+        }elseif ($section == 52) {
+            $admin = new DxProductsAdmin();
+            $admin->dxModel = $dx;
             $admin->section = $section;
             $admin->all($dx->pk);
             exit;
