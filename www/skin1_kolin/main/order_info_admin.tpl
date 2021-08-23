@@ -639,9 +639,9 @@ function check_r_fields() {
                             {* --- *}
 
                         </td>
-                        <td align="center">{if !$static}<input type="checkbox" value="Y"
-                                                               name="items[{$product.itemid}][delete]"
-                                                               {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
+                        <td align="center">{if !$static}
+                            <input type="checkbox" value="Y" name="items[{$product.itemid}][delete]"
+                            {if $v.cb_status === 'P' || $order.amazonorderid || $v.allow_dispatch_off_working_hours_functionality_enabled === 'Y'}disabled="disabled"{/if} />{else}&nbsp;{/if}
                         </td>
                     </tr>
                 {/foreach}
