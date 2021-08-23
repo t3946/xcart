@@ -27,7 +27,7 @@ export const accountMenuInitialValue = {
 // @ts-ignore
 const appData = window.appData;
 
-export const accountUserInitialValue = appData.user || {};
+export const accountUserInitialValue = appData.user || null;
 
 export const shadowPanelInitialValue = { isVisible: false };
 

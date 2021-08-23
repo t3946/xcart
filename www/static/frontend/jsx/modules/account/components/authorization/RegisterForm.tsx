@@ -1,15 +1,19 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { useDispatch, useSelector } from "react-redux";
 import { Form as RBForm } from "react-bootstrap";
-import { registerAction } from "../../../../redux/actions/account-actions/AutorizationActions";
-import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
+import { registerAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
+import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { route } from "@client/jsx/utils/AppData";
 
-const RegisterForm: React.FC<any> = (props: any) => {
+const RegisterForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);
+
+  user && useHistory().push(route("account:index"));
+
   const initialValues = {
     name: "",
     email: "",
@@ -46,7 +50,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
 
         success(res) {
           dispatch(userSetAction(res));
-          history.push(appData.routes["account:index"]);
+          history.push(route("account:index"));
         },
 
         error(err) {
@@ -62,7 +66,6 @@ const RegisterForm: React.FC<any> = (props: any) => {
 
   return (
     <div className="account-auth-form account_auth-form">
-      {user && <Redirect to="/account/" />}
       <h1 className="account-form-header">Create account</h1>
 
       <Formik
@@ -188,7 +191,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
               </div>
 
               <NavLink
-                to={appData.routes["account:login"]}
+                to={route("account:login")}
                 exact={true}
                 className="form-button form-button__outline common-link"
               >
@@ -204,7 +207,7 @@ const RegisterForm: React.FC<any> = (props: any) => {
               >
                 Already have an account?{" "}
                 <NavLink
-                  to={appData.routes["account:login"]}
+                  to={route("account:login")}
                   className="common-link"
                   exact={true}
                 >

@@ -3,14 +3,18 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import { useSelector } from "react-redux";
 import LoginFormInputLogin from "./LoginFormInputLogin";
 import LoginFormInputPassword from "./LoginFormInputPassword";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { route } from "@client/jsx/utils/AppData";
 
-const LoginForm: React.FC<any> = (props: any) => {
+const LoginForm: React.FC<any> = () => {
+  const user = useSelector((e: StoreDto) => e.user);
+
+  user && useHistory().push(route("account:index"));
+
   const INPUT_LOGIN_MODE = 0;
   const INPUT_PASSWORD_MODE = 1;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
   const [userLogin, setUserLogin] = React.useState("");
-  const user = useSelector((e: StoreDto) => e.user);
 
   function onChangeLogin(login) {
     setUserLogin(login);
@@ -44,14 +48,10 @@ const LoginForm: React.FC<any> = (props: any) => {
   }
 
   return (
-    <>
-      {user && <Redirect to="/account/" />}
-
-      <div className="account-auth-form account_auth-form">
-        <h1 className="account-form-header">Sign-In</h1>
-        {formTemplate()}
-      </div>
-    </>
+    <div className="account-auth-form account_auth-form">
+      <h1 className="account-form-header">Sign-In</h1>
+      {formTemplate()}
+    </div>
   );
 };
 
