@@ -83,6 +83,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification-settings',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings',
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'

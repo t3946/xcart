@@ -43,7 +43,7 @@ const LoginAndSecurity = (): any => {
       classes: {
         caption: "settings-item-caption__small",
       },
-      route: "",
+      route: route("account:two-step-verification-settings"),
     },
     {
       title: "secure your account",

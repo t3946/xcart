@@ -29,6 +29,7 @@ import FormChangePassword from "@client/modules/account/components/login-and-sec
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
+import TwoStepVerificationSettings from "@client/modules/account/components/login-and-security/TwoStepVerificationSettings";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -103,25 +104,25 @@ export const AccountRouters = (): any => {
 
                   <Route
                     exact
-                    path={appData.routes["account:login"]}
+                    path={route("account:login")}
                     component={LoginForm}
                   />
 
                   <Route
                     exact
-                    path={appData.routes["account:register"]}
+                    path={route("account:register")}
                     component={RegisterForm}
                   />
 
                   <Route
                     exact
-                    path={appData.routes["account:public-profile"]}
+                    path={route("account:public-profile")}
                     component={PublicProfile}
                   />
 
                   <Route
                     exact
-                    path={appData.routes["account:login-and-security"]}
+                    path={route("account:login-and-security")}
                     component={LoginAndSecurity}
                   />
 
@@ -147,6 +148,12 @@ export const AccountRouters = (): any => {
                     exact
                     path={route("account:edit-password")}
                     component={FormChangePassword}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-settings")}
+                    component={TwoStepVerificationSettings}
                   />
                 </Switch>
               </div>
