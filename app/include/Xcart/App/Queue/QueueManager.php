@@ -19,6 +19,8 @@ class QueueManager
     private ?AMQPStreamConnection $connection = null;
     private ?AMQPChannel $channel = null;
 
+    private array $init_queues = [];
+
     private function connect(): void
     {
         if ($this->connection === null) {
@@ -45,6 +47,55 @@ class QueueManager
         $this->connect();
     }
 
+    private function init_queue(string $queue, $requeue = false): void
+    {
+        if (!isset($this->init_queues[$queue])) {
+            $this->channel->exchange_declare($queue,
+                                             'direct',
+                                             false,
+                                             true,
+                                             false,
+                                             false
+            );
+
+            $this->channel->queue_declare(
+                $queue,    #queue name - Имя очереди может содержать до 255 байт UTF-8 символов
+                false,        #passive - может использоваться для проверки того, инициирован ли обмен, без того, чтобы изменять состояние сервера
+                true,        #durable - убедимся, что RabbitMQ никогда не потеряет очередь при падении - очередь переживёт перезагрузку брокера
+                false,        #exclusive - используется только одним соединением, и очередь будет удалена при закрытии соединения
+                false,        #autodelete - очередь удаляется, когда отписывается последний подписчик
+                false,
+                $requeue ? new AMQPTable(["x-dead-letter-exchange" => "{$queue}_requeue"]) : []
+            );
+
+            $this->channel->queue_bind($queue, $queue);
+
+            if ($requeue) {
+                $this->channel->exchange_declare(
+                    "{$queue}_requeue",
+                    'direct',
+                    false,
+                    true,
+                    false,
+                    false
+                );
+
+                $this->channel->queue_declare(
+                    "{$queue}_requeue",
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl' => 60000])
+                );
+                $this->channel->queue_bind("{$queue}_requeue", "{$queue}_requeue");
+            }
+
+            $this->init_queues[$queue] = true;
+        }
+    }
+
     /**
      * Отправляет сообщение в очередь
      *
@@ -56,47 +107,7 @@ class QueueManager
     {
         $this->connect();
 
-        $this->channel->exchange_declare($queue,
-            'direct',
-            false,
-            true,
-            false,
-            false
-        );
-
-        $this->channel->queue_declare(
-            $queue,    #queue name - Имя очереди может содержать до 255 байт UTF-8 символов
-            false,        #passive - может использоваться для проверки того, инициирован ли обмен, без того, чтобы изменять состояние сервера
-            true,        #durable - убедимся, что RabbitMQ никогда не потеряет очередь при падении - очередь переживёт перезагрузку брокера
-            false,        #exclusive - используется только одним соединением, и очередь будет удалена при закрытии соединения
-            false,        #autodelete - очередь удаляется, когда отписывается последний подписчик
-            false,
-            $requeue ? new AMQPTable(["x-dead-letter-exchange" => "{$queue}_requeue"]) : []
-        );
-
-        $this->channel->queue_bind($queue, $queue);
-
-        if ($requeue) {
-            $this->channel->exchange_declare(
-                "{$queue}_requeue",
-                'direct',
-                false,
-                true,
-                false,
-                false
-            );
-
-            $this->channel->queue_declare(
-                "{$queue}_requeue",
-                false,
-                true,
-                false,
-                false,
-                false,
-                new AMQPTable(["x-dead-letter-exchange" => $queue, 'x-message-ttl' => 60000])
-            );
-            $this->channel->queue_bind("{$queue}_requeue", "{$queue}_requeue");
-        }
+        $this->init_queue($queue, $requeue);
 
         $msg = new AMQPMessage($message);
 
