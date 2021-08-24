@@ -46,7 +46,6 @@ class QueueImagesCommand extends Command
                         $found_images[] = $model->image_id;
                         $images[] = $model;
                     }
-                    self::saveImages($product, $images);
 
                     if ($found_images) {
                         //delete not existed images from product
@@ -73,7 +72,7 @@ class QueueImagesCommand extends Command
                         }
                     }
 
-
+                    self::saveImages($product, $images);
 
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
