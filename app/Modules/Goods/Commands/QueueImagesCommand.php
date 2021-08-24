@@ -89,10 +89,6 @@ class QueueImagesCommand extends Command
             $product->save();
         } catch(Throwable $exception) {
             echo "{$exception->getCode()} {$exception->getMessage()}\n";
-            echo "sleep 5 sec\n";
-            sleep(5);
-            self::saveImages($product, $images);
         }
-
     }
 }
