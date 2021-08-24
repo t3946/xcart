@@ -42,11 +42,12 @@ class QueueImagesCommand extends Command
                             ];
                             Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                             print_r($action);
-                        } else {
-                            $found_images[] = $model->image_id;
                         }
+                        $found_images[] = $model->image_id;
                         $images[] = $model;
                     }
+                    self::saveImages($product, $images);
+
                     if ($found_images) {
                         //delete not existed images from product
                         /** @var ProductImagesModel $product_image */
@@ -72,7 +73,7 @@ class QueueImagesCommand extends Command
                         }
                     }
 
-                    self::saveImages($product, $images);
+
 
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
