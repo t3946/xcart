@@ -56,12 +56,16 @@ class QueueImagesCommand extends Command
                             $image = $product_image->image;
                             $product_image->delete();
                             if (!$image->products->count()) {
-                                //delete image from s3 cloud
-                                $action = [
-                                    'image_path' => $image->path->getValue(),
-                                    'action' => 'delete'
-                                ];
-                                Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+
+                                if ($image->path->getValue()) {
+                                    //delete image from s3 cloud
+                                    $action = [
+                                        'image_path' => $image->path->getValue(),
+                                        'action' => 'delete'
+                                    ];
+                                    Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+                                }
+
                                 $image->delete();
                                 print_r($action);
                             }
