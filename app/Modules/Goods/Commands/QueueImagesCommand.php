@@ -26,24 +26,26 @@ class QueueImagesCommand extends Command
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
-                $found_images = [];
+                $found_images = $images = [];
                 try {
                     foreach ($data['images'] as $key => $image_link) {
                         $link_hash = md5($image_link);
 
-                        if ($model = ProductImageModel::objects()->get(['link' => $link_hash])) {
-                            $found_images[] = $model->image_id;
-                        } else {
+                        [$model, $is_new] = ProductImageModel::objects()->getOrCreate(['link' => $link_hash]);
+                        if ($is_new) {
                             //create image
                             $action = [
-                                'product_id' => $product->pk,
+                                'image_id' => $model->pk,
                                 'image_position' => ($key + 1) * 10,
                                 'image_link' => $image_link,
                                 'action' => 'create'
                             ];
                             Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                             print_r($action);
+                        } else {
+                            $found_images[] = $model->image_id;
                         }
+                        $images[] = $model;
                     }
                     if ($found_images) {
                         //delete not existed images from product
@@ -66,11 +68,27 @@ class QueueImagesCommand extends Command
                         }
                     }
 
+                    self::saveImages($product, $images);
+
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
                 }
             }
         }
         $message->ack();
+    }
+
+    private static function saveImages($product, $images): void
+    {
+        try {
+            $product->detail_images = $images;
+            $product->save();
+        } catch(Throwable $exception) {
+            echo "{$exception->getCode()} {$exception->getMessage()}\n";
+            echo "sleep 5 sec\n";
+            sleep(5);
+            self::saveImages($product, $images);
+        }
+
     }
 }

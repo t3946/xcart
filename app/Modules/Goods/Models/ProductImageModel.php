@@ -5,6 +5,7 @@ namespace Modules\Goods\Models;
 
 
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
@@ -44,16 +45,16 @@ class ProductImageModel extends Model
                         'method' => 'adaptiveResize'
                     ]
                 ],
-                'null' => false
+                'null' => true,
+                'default' => null
             ],
             'hash' => [
                 'class' => CharField::class,
-                'default' => ''
+                'null' => true,
+                'default' => null
             ],
             'link' => [
                 'class' => CharField::class,
-                'null' => true,
-                'default' => null
             ],
             'width' => [
                 'class' => IntField::class,
@@ -62,6 +63,10 @@ class ProductImageModel extends Model
             'height' => [
                 'class' => IntField::class,
                 'default' => null,
+            ],
+            'is_downloaded' => [
+                'class' => BooleanField::class,
+                'default' => false
             ],
             'products' => [
                 'class' => ManyToManyField::class,
