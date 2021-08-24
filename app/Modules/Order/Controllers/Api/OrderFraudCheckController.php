@@ -98,9 +98,9 @@ class OrderFraudCheckController extends Controller
             $ar_result['answer'] = array_merge($ar_result['answer'], ['payment' => $ar_payment_answer]);
         }
         $ar_settings['manual_action'] = $this->getManualAction($ar_answer);
-        $ar_settings['bare_result'] = $order_model->bare_fraud_score;
-        $ar_settings['overall_result'] = $order_model->overall_fraud_score;
-        $ar_settings['risk_score'] = $order_model->getRiskScore();
+        $ar_settings['bare_result'] = $order_model->bare_fraud_score_v2;
+        $ar_settings['overall_result'] = $order_model->overall_fraud_score_v2;
+        $ar_settings['risk_score'] = $order_model->overall_fraud_score_v2;
         $ar_settings['fraud_status'] = [
             'name' => $order_model->fraud_status_model->name,
             'code' => $order_model->fraud_status
@@ -410,14 +410,14 @@ HTML;
                                 $order_answer->fraud_score = $order_answer->question->weight;
                                 $order_answer->manual_action = 'Y';
 
-                                $order_model->overall_fraud_score += $order_answer->question->weight;
-                                $order_model->bare_fraud_score += $order_answer->question->weight;
+                                $order_model->overall_fraud_score_v2 += $order_answer->question->weight;
+                                $order_model->bare_fraud_score_v2 += $order_answer->question->weight;
                                 break;
                             case 'N':
                                 $order_answer->fraud_result = 'negative';
                                 $order_answer->fraud_score = 0.00;
-                                $order_model->overall_fraud_score -= $order_answer->question->weight;
-                                $order_model->bare_fraud_score -= $order_answer->question->weight;
+                                $order_model->overall_fraud_score_v2 -= $order_answer->question->weight;
+                                $order_model->bare_fraud_score_v2 -= $order_answer->question->weight;
                                 break;
                         }
                         $order_answer->manual_action = $value;
@@ -427,9 +427,9 @@ HTML;
             }
             $order_model->save();
             $ar_result['fraud_result'] = [
-                'bare_result' => $order_model->bare_fraud_score,
-                'overall_result' => $order_model->overall_fraud_score,
-                'risk_score' => $order_model->getRiskScore()
+                'bare_result' => $order_model->bare_fraud_score_v2,
+                'overall_result' => $order_model->overall_fraud_score_v2,
+                'risk_score' => $order_model->overall_fraud_score_v2,
             ];
         } catch (\Exception $exception) {
             $ar_result = ['status' => false, 'error' => $exception->getMessage()];

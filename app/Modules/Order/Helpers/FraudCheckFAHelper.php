@@ -147,7 +147,7 @@ class FraudCheckFAHelper
             "value{$fraud->t_fraud->fraud_code}" => $this->getStringAddressByArray($owner_address_info) ?: self::ADDITIONAL_INFO_NULL_CHECK
         ], true);
         $outcome = 0;
-        if (!is_null($address_compare)) {
+        if (isset($address_compare, $owner_info)) {
             $outcome = $this->compareAddress($address_compare, $owner_address_info);
             if ($outcome) {
                 $result = 'positive';
@@ -168,7 +168,7 @@ class FraudCheckFAHelper
     {
         $result = 'negative';
         $outcome = 0;
-        $info = $this->getNullDataInfo($fraud->f_fraud->fraud_code, $fraud->t_fraud->fraud_code);
+        $info = $this->getNullDataInfo($fraud->f_fraud->fraud_code, $fraud->t_fraud->fraud_code, $this->getStringAddressByArray($address_compare));
         if (!is_null($this->ob_melissa->phone_data)) {
             $state = $this->ob_melissa->phone_data['State'] ?? '';
             /** @var CountryModel $country_model */
@@ -388,10 +388,10 @@ class FraudCheckFAHelper
         return [$result, $fraud->weight, $info, $result === 'positive'];
     }
 
-    private function getNullDataInfo(string $first_code, string $two_code): string
+    private function getNullDataInfo(string $first_code, string $two_code, string $first_value = null): string
     {
         return json_encode([
-            "value{$first_code}" => self::ADDITIONAL_INFO_NULL_CHECK,
+            "value{$first_code}" => $first_value ?? self::ADDITIONAL_INFO_NULL_CHECK,
             "value{$two_code}" => self::ADDITIONAL_INFO_NULL_CHECK
         ], true);
     }

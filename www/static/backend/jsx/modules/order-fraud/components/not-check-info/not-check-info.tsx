@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import { ResponseForceFraudCheck } from "@admin/modules/order-fraud/ts/types/response";
+import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 const api = new ApiService();
 interface NotCheckInfo {
   orderId: string | number;
@@ -15,14 +16,17 @@ export const NotCheckInfo: React.FC<NotCheckInfo> = ({
   handlerFraudInfo,
   setLoading,
 }) => {
+  const { showSnackbar } = useContext(SnackbarContext);
   const fraudCheckHandler = () => {
+    setLoading(true);
     api
       .get(`/api/order/fraud-check/force-check/${orderId}`)
       .then((res: ResponseForceFraudCheck) => {
-        setLoading(true);
         if (res.status) {
           setNotCheck(false);
           handlerFraudInfo();
+        } else {
+          showSnackbar(`error: ${res.error}`, "error");
         }
       });
   };

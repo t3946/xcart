@@ -101,6 +101,8 @@ use Xcart\Order;
  * @property mixed|Field|FileField|ModelFieldInterface dc_status
  * @property FraudStatusModel fraud_status_model
  * @property string fraud_status
+ * @property float|string bare_fraud_score_v2
+ * @property float|string overall_fraud_score_v2
  */
 class OrderModel extends Model
 {
@@ -383,6 +385,14 @@ class OrderModel extends Model
                 'class' => FloatField::class,
                 'default' => 0
             ],
+            'bare_fraud_score_v2' => [
+                'class' => FloatField::class,
+                'default' => 0,
+            ],
+            'overall_fraud_score_v2' => [
+                'class' => FloatField::class,
+                'default' => 0
+            ]
         ];
     }
 
@@ -705,7 +715,7 @@ class OrderModel extends Model
 
     public function orderFraudCheck()
     {
-        $overallFraudScore = $bareFraudScore = 0;
+        $overall_score = $bare_score = 0;
         /** @var BaseFraudCheckModelV2 $fraud */
         foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
             [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
@@ -719,16 +729,15 @@ class OrderModel extends Model
                     'fraud_result' => $fraud_result,
                     'additional_info' => $additional_info
                 ]);
-                $overallFraudScore += (float)$orderFraud->fraud_score;
+                $overall_score += (float)$orderFraud->fraud_score;
                 if ($fraud->question_code !== 'CHECK_TOTAL') {
-                    $bareFraudScore += (float)$orderFraud->fraud_score;
+                    $bare_score += (float)$orderFraud->fraud_score;
                 }
                 $orderFraud->save();
             }
         }
 
         $fa_heler = new FraudCheckFAHelper($this);
-/*        $fa_heler->test_data = true;*/
         $fa_heler->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
@@ -742,12 +751,12 @@ class OrderModel extends Model
                 'fraud_score' => $fraud_score,
                 'additional_info' => $info ?? null
             ]);
-            $overallFraudScore += (float)$order_fraud_fa->fraud_score;
-            $bareFraudScore += (float)$order_fraud_fa->fraud_score;
+            $overall_score += (float)$order_fraud_fa->fraud_score;
+            $bare_score += (float)$order_fraud_fa->fraud_score;
             $order_fraud_fa->save();
         }
-        $this->overall_fraud_score = $overallFraudScore;
-        $this->bare_fraud_score = $bareFraudScore;
+        $this->overall_fraud_score_v2 = $overall_score;
+        $this->bare_fraud_score_v2 = $bare_score;
         $this->save();
     }
 }
