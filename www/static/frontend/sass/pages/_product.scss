@@ -134,9 +134,10 @@
   }
 
   .pinterest-bookmark {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 32px;
+    position: relative;
+    bottom: rem-calc(10);
+    right: rem-calc(10);
+    float: right;
+    height: rem-calc(32);
   }
 }
