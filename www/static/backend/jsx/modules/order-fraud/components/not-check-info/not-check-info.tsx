@@ -40,9 +40,11 @@ export const NotCheckInfo: React.FC<NotCheckInfo> = ({
             For Basic FC to start C2B payment status must be Authorized or
             Unpaid:PO
           </Typography>
-          <Button variant="contained" onClick={fraudCheckHandler}>
-            Force Basic Fraud Check
-          </Button>
+          <div className="fraud-force-check-button">
+            <Button variant="contained" onClick={fraudCheckHandler}>
+              Force Basic Fraud Check
+            </Button>
+          </div>
         </Grid>
       </Paper>
     </div>

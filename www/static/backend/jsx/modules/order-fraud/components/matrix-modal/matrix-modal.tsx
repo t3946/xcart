@@ -1,21 +1,14 @@
 import React, { useContext } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from "@material-ui/core";
+import { Dialog, DialogContent, DialogContentText } from "@material-ui/core";
 import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
+import { DialogTitle } from "@admin/modules/order-fraud/ts/consts/matrix-modal";
 
 export const MatrixModal: React.FC = () => {
   const { dialog, template } = useContext(FraudCheckOrderContext);
   return (
     <Dialog open={dialog.get} onClose={dialog.set}>
-      <DialogTitle id="alert-dialog-slide-title">
-        <Typography align="center" variant="h6">
-          Info question
-        </Typography>
+      <DialogTitle id="customized-dialog-title" onClose={dialog.set}>
+        Detailed information
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">

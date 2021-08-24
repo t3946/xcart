@@ -13,6 +13,13 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class CountryModel
+ * @package Modules\Core\Models
+ * @property string code
+ * @property string name
+ * @property string active
+ */
 class CountryModel extends Model
 {
     use AutoMetaTrait;

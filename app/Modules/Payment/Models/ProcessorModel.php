@@ -10,11 +10,14 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property mixed processor_name
+ * @property string|null processor_name
  */
 class ProcessorModel extends Model
 {
     use AutoMetaTrait;
+    public const PAYMENT_NAME_PAYPAL = 'PayPal';
+    public const PAYMENT_NAME_STRIPE = 'Stripe';
+    public const PAYMENT_NAME_BLUEPAY = 'BluePay';
 
     public static function tableName()
     {

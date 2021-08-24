@@ -2,7 +2,9 @@
 
 use Modules\Order\Controllers\Api\AfterShipController;
 use Modules\Order\Controllers\Api\InvoiceConventerController;
+use Modules\Order\Controllers\Api\OrderFraudCheckController;
 use Modules\Order\Controllers\Api\OrderLexBotController;
+use Modules\Order\Controllers\FraudCheckController;
 use Modules\Order\Controllers\OrderProcessController;
 
 return [

@@ -13,6 +13,7 @@ export interface MainAnswer {
   question_code: string;
   question_weight: number | string;
   question_auto: string;
+  manual_action: string;
 }
 export interface FAAnswer {
   fraud_result: string;
@@ -21,4 +22,5 @@ export interface FAAnswer {
   question_weight: number | string;
   f_fraud_name: number | string;
   t_fraud_name: number | string;
+  manual_action: string;
 }

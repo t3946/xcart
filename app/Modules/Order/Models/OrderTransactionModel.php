@@ -22,7 +22,7 @@ use Xcart\App\Orm\Model;
  * @property OrderModel order
  * @property mixed transaction_id
  * @property mixed paymentid
- * @property mixed payment_method_model
+ * @property PaymentMethodModel payment_method_model
  * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null transaction_response
  * @property mixed date
  */

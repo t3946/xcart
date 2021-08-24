@@ -6,9 +6,11 @@ import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/Frau
 import { MainAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 interface FraudTableQuestion {
   listAnswer: MainAnswer[];
+  nameTable: string;
 }
 export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
   listAnswer,
+  nameTable,
 }) => {
   return (
     <table>
@@ -38,10 +40,13 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                 </Grid>
               </td>
               <td>
-                {answer.question_auto === "Y" ? (
+                {answer.question_auto === "Y" && !answer.manual_action ? (
                   "Auto"
                 ) : (
-                  <FraudRadioField fraudCode={answer.question_code} />
+                  <FraudRadioField
+                    section={nameTable}
+                    fraudCode={answer.question_code}
+                  />
                 )}
               </td>
               <td>{answer.fraud_result === "positive" ? 1 : 0}</td>

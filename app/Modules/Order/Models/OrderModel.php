@@ -13,7 +13,7 @@ use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\FraudCheckFAHelper;
-use Modules\Order\Helpers\FraudCheckHelper;
+use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -93,11 +93,14 @@ use Xcart\Order;
  * @property StateModel billing_state
  * @property StateModel shipping_state
  * @property SiteModel site
+ * @property string order_prefix
  * @property mixed|Field|FileField|ModelFieldInterface currency
  * @property mixed|Field|FileField|ModelFieldInterface payment_method_model
  * @property mixed|Field|FileField|ModelFieldInterface overall_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface bare_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface dc_status
+ * @property FraudStatusModel fraud_status_model
+ * @property string fraud_status
  */
 class OrderModel extends Model
 {
@@ -612,7 +615,7 @@ class OrderModel extends Model
 
     public function getRiskScore(): float
     {
-        return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
+        return BaseFraudCheckHelperV2::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
     }
 
     public function getTrackingNumbers(): array
@@ -702,26 +705,35 @@ class OrderModel extends Model
 
     public function orderFraudCheck()
     {
-        foreach (FraudCheckModel::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
-            $fraud_score = $fraud->getScore($this);
-            [$fraud_result, $fraud_weight, $additional_info, $manual_action] = $fraud->getMethodResult($this);
-            [$orderFraud] = OrderFraudCheckModel::objects()->updateOrCreate([
-                'orderid' => $this->orderid,
-                'question_id' => $fraud->id
-            ], [
-                'manual_action' => $manual_action,
-                'fraud_score' => $fraud_score,
-                'fraud_result' => $fraud_result,
-                'additional_info' => $additional_info
-            ]);
-            $orderFraud->save();
+        $overallFraudScore = $bareFraudScore = 0;
+        /** @var BaseFraudCheckModelV2 $fraud */
+        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
+            [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
+            if (!is_null($fraud_result)) {
+                [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
+                    'order_id' => $this->orderid,
+                    'question_id' => $fraud->id
+                ], [
+                    'manual_action' => $manual_action,
+                    'fraud_score' => $fraud_score,
+                    'fraud_result' => $fraud_result,
+                    'additional_info' => $additional_info
+                ]);
+                $overallFraudScore += (float)$orderFraud->fraud_score;
+                if ($fraud->question_code !== 'CHECK_TOTAL') {
+                    $bareFraudScore += (float)$orderFraud->fraud_score;
+                }
+                $orderFraud->save();
+            }
         }
 
         $fa_heler = new FraudCheckFAHelper($this);
+/*        $fa_heler->test_data = true;*/
         $fa_heler->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
             [$fraud_result, $fraud_score, $info] = $fraud_fa->getScore($this, true, $fa_heler);
+            /** @var OrderFraudFACheckModel $order_fraud_fa */
             [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
                 'order_id' => $this->orderid,
                 'question_id' => $fraud_fa->question_id
@@ -730,8 +742,12 @@ class OrderModel extends Model
                 'fraud_score' => $fraud_score,
                 'additional_info' => $info ?? null
             ]);
-            /** @var OrderFraudFACheckModel $order_fraud_fa */
+            $overallFraudScore += (float)$order_fraud_fa->fraud_score;
+            $bareFraudScore += (float)$order_fraud_fa->fraud_score;
             $order_fraud_fa->save();
         }
+        $this->overall_fraud_score = $overallFraudScore;
+        $this->bare_fraud_score = $bareFraudScore;
+        $this->save();
     }
 }

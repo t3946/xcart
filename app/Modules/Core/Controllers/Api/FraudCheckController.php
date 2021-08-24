@@ -3,7 +3,7 @@
 namespace Modules\Core\Controllers\Api;
 
 use Modules\Core\Models\FraudCheckColumnModel;
-use Modules\Core\Models\FraudCheckModel;
+use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\User\Models\UserModel;
@@ -14,12 +14,12 @@ class FraudCheckController extends Controller
 {
     public function getFraudFullName()
     {
-        return FraudCheckModel::objects()->filter(['type' => 'full_name']);
+        return FraudFAQuestionModel::objects()->filter(['type' => 'full_name']);
     }
 
     public function getFraudAddress()
     {
-        return FraudCheckModel::objects()->filter(['type' => 'address']);
+        return FraudFAQuestionModel::objects()->filter(['type' => 'address']);
     }
 
     public function getAll()
@@ -57,7 +57,8 @@ class FraudCheckController extends Controller
                 $ar_fraud = explode(':', $fraud_group);
                 $f_fraud_column = FraudCheckColumnModel::objects()->get(['fraud_name' => $ar_fraud[0]]);
                 $t_fraud_column = FraudCheckColumnModel::objects()->get(['fraud_name' => $ar_fraud[1]]);
-                $fraud = FraudCheckModel::objects()->get(['f_fraud_id' => $f_fraud_column, 't_fraud_id' => $t_fraud_column]);
+                /** @var FraudFAQuestionModel $fraud */
+                $fraud = FraudFAQuestionModel::objects()->get(['f_fraud_id' => $f_fraud_column, 't_fraud_id' => $t_fraud_column]);
                 $fraud->weight = $value;
                 $fraud->save();
             }

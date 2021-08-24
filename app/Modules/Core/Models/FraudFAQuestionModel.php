@@ -3,7 +3,7 @@
 namespace Modules\Core\Models;
 
 use Modules\Order\Helpers\FraudCheckFAHelper;
-use Modules\Order\Helpers\FraudCheckHelper;
+use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
@@ -147,10 +147,10 @@ class FraudFAQuestionModel extends Model
             case 'FN_CI':
                 return $order->firstname;
             case 'FN_SA':
-                return $order->s_firstname;
+                return $order->s_firstname ?? null;
             case 'FN_CH':
             case 'FN_BA':
-                return $order->b_firstname;
+                return $order->b_firstname ?? null;
             case 'FN_T_SA':
                 return $helper->ob_melissa->melissa_address['shipping']['address']['NameFull'];
             case 'FN_O_SA':
@@ -186,20 +186,36 @@ class FraudFAQuestionModel extends Model
                 return null;
             case 'CSZ_TN':
                 if (!is_null($helper->ob_melissa->phone_data)) {
-                    return [
-                        'state' => $helper->ob_melissa->phone_data['State'],
-                        'city' => $helper->ob_melissa->phone_data['City'],
-                        'zipcode' => $helper->ob_melissa->phone_data['PostalCode'],
-                    ];
+                    /** @var CountryModel $country_model */
+                    $country_model = CountryModel::objects()->get(['name' => $helper->ob_melissa->ip_data['CountryName']]);
+                    if (!is_null($country_model)) {
+                        /** @var StateModel $state_model */
+                        $state_model = StateModel::objects()->get(['state' => $helper->ob_melissa->phone_data['State'], 'country_code' => 'US']);
+                        if (!is_null($state_model)) {
+                            return [
+                                'state' => $state_model->code,
+                                'city' => $helper->ob_melissa->phone_data['City'],
+                                'zipcode' => $helper->ob_melissa->phone_data['PostalCode'],
+                            ];
+                        }
+                    }
                 }
                 return null;
             case 'CSZ_IP':
                 if (!is_null($helper->ob_melissa->ip_data)) {
-                    return [
-                        'state' => $helper->ob_melissa->ip_data['State'],
-                        'city' => $helper->ob_melissa->ip_data['City'],
-                        'zipcode' => $helper->ob_melissa->ip_data['PostalCode'],
-                    ];
+                    /** @var CountryModel $country_model */
+                    $country_model = CountryModel::objects()->get(['name' => $helper->ob_melissa->ip_data['Country']]);
+                    if (!is_null($country_model)) {
+                        /** @var StateModel $state_model */
+                        $state_model = StateModel::objects()->get(['state' => $helper->ob_melissa->ip_data['State'], 'country_code' => $country_model->code]);
+                        if (!is_null($state_model)) {
+                            return [
+                                'state' => $state_model->code,
+                                'city' => $helper->ob_melissa->ip_data['City'],
+                                'zipcode' => $helper->ob_melissa->ip_data['PostalCode'],
+                            ];
+                        }
+                    }
                 }
                 return null;
         }

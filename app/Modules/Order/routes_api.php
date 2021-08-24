@@ -28,5 +28,10 @@ return [
         'route' => '/api/order/fraud-check/force-check/{:order_id}',
         'target' => [OrderFraudCheckController::class, 'forceFraudCheck'],
         'name' => 'order_force_check',
+    ],
+    [
+        'route' => '/api/order/fraud-check/change-result',
+        'target' => [OrderFraudCheckController::class, 'changeFraudCheckResult'],
+        'name' => 'order_change_result',
     ]
 ];

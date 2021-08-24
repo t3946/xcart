@@ -1,7 +1,4 @@
-<div class="fraud-page-order" data-order="{$orderid}">
-
-</div>
-{*<div style="font-size: 15px; font-weight: bold; margin: 15px;" align="center">Fraud check for
+<div style="font-size: 15px; font-weight: bold; margin: 15px;" align="center">Fraud check for
     <a style="color: #550000;" href="{$orderModel->getAdminUrl()}">order # {$orderModel->getOrderNumber()}</a></div>
 
 {if $you_cannot_modify_order eq "Y"}
@@ -238,4 +235,4 @@
 
     </form>
 {/capture}
-{include file="dialog.tpl" title="Fraud check questions" content=$smarty.capture.dialog extra='width="100%"'}*}
+{include file="dialog.tpl" title="Fraud check questions" content=$smarty.capture.dialog extra='width="100%"'}

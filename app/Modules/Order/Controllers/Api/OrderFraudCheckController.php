@@ -7,9 +7,11 @@ namespace Modules\Order\Controllers\Api;
 use Modules\Core\Models\FraudCheckColumnModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\LanguageModel;
-use Modules\Order\Helpers\FraudCheckHelper;
+use Modules\Order\Helpers\BaseFraudCheckHelperV2;
+use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
+use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
@@ -25,7 +27,7 @@ class OrderFraudCheckController extends Controller
     {
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 
-        $count_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
+        $count_frauds = OrderBaseFraudCheckModelV2::objects()->filter(['order_id' => $order_model->orderid])->count();
         $count_fa_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
         $ar_result = [
             'status' => false
@@ -80,13 +82,11 @@ class OrderFraudCheckController extends Controller
         $ar_settings['lang'] = [
             'basement' => LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section'])->value
         ];
+        $ar_settings['order_prefix'] = $order_model->order_prefix;
         $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
         $ar_settings['column_fn'] = FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList($base_list);
         $ar_settings['column_address'] = FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList($base_list);
 
-        if (!empty($ar_settings)) {
-            $ar_result['settings'] = $ar_settings;
-        }
 
         $ar_answer = $this->getBaseAnswerOrder($order_model);
         $ar_fa_answer = $this->getAnswerFAOrder($order_model);
@@ -97,7 +97,17 @@ class OrderFraudCheckController extends Controller
         if (!empty($ar_payment_answer)) {
             $ar_result['answer'] = array_merge($ar_result['answer'], ['payment' => $ar_payment_answer]);
         }
-
+        $ar_settings['manual_action'] = $this->getManualAction($ar_answer);
+        $ar_settings['bare_result'] = $order_model->bare_fraud_score;
+        $ar_settings['overall_result'] = $order_model->overall_fraud_score;
+        $ar_settings['risk_score'] = $order_model->getRiskScore();
+        $ar_settings['fraud_status'] = [
+            'name' => $order_model->fraud_status_model->name,
+            'code' => $order_model->fraud_status
+        ];
+        if (!empty($ar_settings)) {
+            $ar_result['settings'] = $ar_settings;
+        }
         $ar_result['status'] = true;
         $this->jsonResponse($ar_result);
     }
@@ -130,9 +140,9 @@ class OrderFraudCheckController extends Controller
     public function getAnswerPaymentFrauds(OrderModel $order_model): array
     {
         $ar_payment_frauds = [];
-        $frauds_payment = OrderFraudCheckModel::objects()->filter([
-            'orderid' => $order_model->orderid,
-            'question__type' => FraudCheckModel::FRAUD_TYPE_PAY_PAL
+        $frauds_payment = OrderBaseFraudCheckModelV2::objects()->filter([
+            'order_id' => $order_model->orderid,
+            'question__type__in' => [BaseFraudCheckModelV2::FRAUD_TYPE_PAY_PAL, BaseFraudCheckModelV2::FRAUD_TYPE_STRIPE, BaseFraudCheckModelV2::FRAUD_TYPE_GENERAL_PAYMENT]
         ]);
         if ($frauds_payment->count() > 0) {
             $oTransaction = $order_model->getFirstTransaction();
@@ -143,20 +153,40 @@ class OrderFraudCheckController extends Controller
                 $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
                 $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
             }
-            /** @var OrderFraudCheckModel $answer_item */
+            $avs_code = $brand_card = $name_card = '';
+            /** @var OrderBaseFraudCheckModelV2 $answer_item */
             foreach ($frauds_payment as $answer_item) {
+                switch ($answer_item->question->question_code)
+                {
+                    case 'CHECK_AVS_ADDRESS':
+                        $avs_code = $answer_item->additional_info['AVS'];
+                        break;
+                    case 'CHECK_BRAND_CARD':
+                        $brand_card = $answer_item->additional_info['card_type'];
+                        break;
+                    case 'CHECK_STRIPE_DEBIT_OR_CREDIT_CARD':
+                        $name_card = $answer_item->additional_info['name_card'];
+                        break;
+
+                }
                 $template = str_replace(
                     [
                         '{{link_to_paypal_transaction}}',
                         '{{shipping_address}}',
                         '{{payment_method}}',
-                        '{{customer_email}}'
+                        '{{customer_email}}',
+                        '{{avs_code}}',
+                        '{{type_card}}',
+                        '{{name_card}}'
                     ],
                     [
                         $sTransactionReplaceText,
                         $order_model->getShippingAddressString(),
                         $sPaymentMethodReplaceText,
-                        $order_model->email
+                        $order_model->email,
+                        $avs_code,
+                        $brand_card,
+                        $name_card
                     ],
                     $answer_item->question->question_template_body
                 );
@@ -242,7 +272,7 @@ class OrderFraudCheckController extends Controller
                 case 'CSZ_TN':
                     $template = ['{{telephone_address}}' => $ar_info["value{$code}"]];
                     break;
-                case 'CSZ-IP':
+                case 'CSZ_IP':
                     $template = ['{{ip_address}}' => $ar_info["value{$code}"]];
                     break;
             }
@@ -254,8 +284,8 @@ class OrderFraudCheckController extends Controller
     public function getBaseAnswerOrder(OrderModel $orderModel): array
     {
         $ar_res_answer = ['diagonal' => [], 'red_flags' => []];
-        $base_answer_fraud = OrderFraudCheckModel::objects()->filter([
-            'orderid' => $orderModel->orderid,
+        $base_answer_fraud = OrderBaseFraudCheckModelV2::objects()->filter([
+            'order_id' => $orderModel->orderid,
             'question__active' => 'Y',
             'question__type__in' => ['diagonal', 'red_flags']
         ]);
@@ -263,10 +293,16 @@ class OrderFraudCheckController extends Controller
         $email_domain_temp = <<<HTML
 <a target="_blank" href="//www.{$email_domain}" style="color: #1F08F8;">www.{$email_domain}</a>
 HTML;
+        $google_shipping_l = <<<HTML
+<a target="_blank" href="https://www.google.com/search?q={$orderModel->getGoogleShippingAddress()}" style="color: #1F08F8;">Google shipping address</a>
+HTML;
         $shipping_address = $orderModel->getShippingAddressString();
         $customer_email = $orderModel->email;
         $orders_full_names = "{$orderModel->s_firstname}<br />{$orderModel->b_firstname}<br />{$orderModel->firstname}";
         $orders_company_names = "{$orderModel->s_company}<br />{$orderModel->b_company}";
+        if ($aProductLinks = BaseFraudCheckHelperV2::getProductList($orderModel)) {
+            $links_to_ordered_products = implode('<br>', $aProductLinks);
+        }
         /** @var OrderFraudCheckModel $answer */
         foreach ($base_answer_fraud as $answer) {
             $template = str_replace(
@@ -276,7 +312,9 @@ HTML;
                     '{{shipping_address}}',
                     '{{customer_email}}',
                     '{{orders_full_names}}',
-                    '{{orders_company_names}}'
+                    '{{orders_company_names}}',
+                    '{{links_to_ordered_products}}',
+                    '{{google_shipping}}'
                 ],
                 [
                     "@{$email_domain}",
@@ -284,7 +322,9 @@ HTML;
                     $shipping_address,
                     $customer_email,
                     $orders_full_names,
-                    $orders_company_names
+                    $orders_company_names,
+                    $links_to_ordered_products ?? '',
+                    $google_shipping_l
                 ],
                 $answer->question->question_template_body
             );
@@ -295,7 +335,8 @@ HTML;
                 'fraud_score' => $answer->fraud_score,
                 'question_id' => $answer->question_id,
                 'question_auto' => $answer->question->auto,
-                'question_weight' => $answer->question->weight
+                'question_weight' => $answer->question->weight,
+                'manual_action' => $answer->manual_action ?? null
             ];
             array_push($ar_res_answer[$answer->question->type], $ar_answer);
         }
@@ -322,13 +363,74 @@ HTML;
 
     public function forceFraudCheck(int $order_id = null): void
     {
-        $ar_result = ['status' => false];
+        $ar_result = ['status' => true];
         try {
             $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
             if ($order_model instanceof OrderModel) {
                 $order_model->orderFraudCheck();
                 $ar_result['status'] = true;
             }
+        } catch (\Exception $exception) {
+            $ar_result = ['status' => false, 'error' => $exception->getMessage()];
+        } finally {
+            $this->jsonResponse($ar_result);
+        }
+    }
+
+    public function getManualAction(array $base_answer): array
+    {
+        $ar_action = [];
+        foreach ($base_answer as $section => $answer_list) {
+            foreach ($answer_list as $answer) {
+                if (!is_null($answer['manual_action'])) {
+                    $ar_action[$section][$answer['question_code']] = $answer['manual_action'];
+                }
+            }
+        }
+        return $ar_action;
+    }
+
+    public function changeFraudCheckResult(): void
+    {
+        $ar_result = ['status' => true];
+        try {
+            $data = Xcart::app()->request->post;
+            $field_change = json_decode($data->field, true);
+            $order_id = $data->order_id;
+            /** @var OrderModel $order_model */
+            $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+            foreach ($field_change as $section => $item) {
+                foreach ($item as $question_code => $value) {
+                    /** @var OrderBaseFraudCheckModelV2 $order_answer */
+                    $order_answer = OrderBaseFraudCheckModelV2::objects()->get(['question__question_code' => $question_code, 'order_id' => $order_id]);
+                    if ($order_answer->manual_action !== $value) {
+                        switch ($value) {
+                            case 'Y':
+                                $order_answer->fraud_result = 'positive';
+                                $order_answer->fraud_score = $order_answer->question->weight;
+                                $order_answer->manual_action = 'Y';
+
+                                $order_model->overall_fraud_score += $order_answer->question->weight;
+                                $order_model->bare_fraud_score += $order_answer->question->weight;
+                                break;
+                            case 'N':
+                                $order_answer->fraud_result = 'negative';
+                                $order_answer->fraud_score = 0.00;
+                                $order_model->overall_fraud_score -= $order_answer->question->weight;
+                                $order_model->bare_fraud_score -= $order_answer->question->weight;
+                                break;
+                        }
+                        $order_answer->manual_action = $value;
+                        $order_answer->save();
+                    }
+                }
+            }
+            $order_model->save();
+            $ar_result['fraud_result'] = [
+                'bare_result' => $order_model->bare_fraud_score,
+                'overall_result' => $order_model->overall_fraud_score,
+                'risk_score' => $order_model->getRiskScore()
+            ];
         } catch (\Exception $exception) {
             $ar_result = ['status' => false, 'error' => $exception->getMessage()];
         } finally {

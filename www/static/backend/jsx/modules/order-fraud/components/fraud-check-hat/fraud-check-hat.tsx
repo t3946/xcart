@@ -26,7 +26,10 @@ export const FraudCheckHat: React.FC = () => {
     >
       <div className="title-parent-order_fraud">
         <div className="title-fraud">
-          Fraud check for <a href="#">order # SG-270448</a>
+          Fraud check for&#160;
+          <a href={`/admin/order.php?orderid=${orderId}`}>
+            order #{`${settings.order_prefix}  ${orderId}`}
+          </a>
         </div>
       </div>
       {settings.lock?.status && (

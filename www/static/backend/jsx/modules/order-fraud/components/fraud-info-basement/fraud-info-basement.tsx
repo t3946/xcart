@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -35,6 +35,11 @@ export const FraudInfoBasement: React.FC = () => {
         }
       });
   };
+  useEffect(() => {
+    if (settings.fraud_status.code) {
+      setStatus(settings.fraud_status.code);
+    }
+  }, []);
   const onChangeSelect = (event: React.ChangeEvent<{ value: string }>) => {
     setStatus(event.target.value);
   };
