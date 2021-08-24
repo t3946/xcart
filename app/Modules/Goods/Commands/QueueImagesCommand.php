@@ -60,6 +60,7 @@ class QueueImagesCommand extends Command
                                     'action' => 'delete'
                                 ];
                                 Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+                                $image->delete();
                                 print_r($action);
                             }
                         }
