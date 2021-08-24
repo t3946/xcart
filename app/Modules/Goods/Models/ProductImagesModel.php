@@ -7,6 +7,10 @@ namespace Modules\Goods\Models;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property ProductModel product
+ * @property ProductImageModel image
+ */
 class ProductImagesModel extends Model
 {
     public static function tableName()

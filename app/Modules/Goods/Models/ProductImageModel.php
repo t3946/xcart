@@ -6,10 +6,15 @@ namespace Modules\Goods\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property int image_id
+ */
 class ProductImageModel extends Model
 {
     public static function tableName()
@@ -57,6 +62,11 @@ class ProductImageModel extends Model
             'height' => [
                 'class' => IntField::class,
                 'default' => null,
+            ],
+            'products' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ProductModel::class,
+                'through' => ProductImagesModel::class,
             ]
         ];
     }
