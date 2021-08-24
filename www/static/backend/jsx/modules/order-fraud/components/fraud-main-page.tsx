@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   Grid,
   Paper,
@@ -28,6 +28,7 @@ import { MatrixQuestion } from "./matrix-question/matrix-question";
 import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/matrix-modal";
 import { NotCheckInfo } from "@admin/modules/order-fraud/components/not-check-info/not-check-info";
 import { FraudScoreResult } from "@admin/modules/order-fraud/components/fraud-score-result/fraud-score-result";
+import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 
 const api = new ApiService();
 
@@ -43,6 +44,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
   const [notCheck, setNotCheck] = useState(false);
   const [templateModal, setTemplateModal] = useState("");
   const [loading, setLoading] = useState(true);
+  const { showSnackbar } = useContext(SnackbarContext);
   useEffect(() => {
     handlerFraudCheckInfo();
   }, []);
@@ -88,22 +90,29 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
       .post("/api/order/fraud-check/change-result", frm)
       .then((res: ResponseChangeResultFraudCheck) => {
         if (res.status) {
+          showSnackbar("You have successfully replaced answers");
           setAnswer((prev) => {
             for (const type in fraudManual) {
               for (const question_code in fraudManual[type]) {
                 const changeAnswer = prev[type].find(
                   (ans) => ans.question_code === question_code
                 );
-                switch (fraudManual[type][question_code]) {
-                  case "Y":
-                    changeAnswer.fraud_result = "positive";
-                    changeAnswer.fraud_score = changeAnswer.question_weight;
-                    changeAnswer.break;
-                  case "N":
-                    changeAnswer.fraud_result = "negative";
-                    changeAnswer.fraud_score = 0;
-                    break;
+                if (
+                  changeAnswer.manual_action !==
+                  fraudManual[type][question_code]
+                ) {
+                  switch (fraudManual[type][question_code]) {
+                    case "Y":
+                      changeAnswer.fraud_result = "positive";
+                      changeAnswer.fraud_score = changeAnswer.question_weight;
+                      break;
+                    case "N":
+                      changeAnswer.fraud_result = "negative";
+                      changeAnswer.fraud_score = "0.00";
+                      break;
+                  }
                 }
+                changeAnswer.manual_action = fraudManual[type][question_code];
               }
             }
             return { ...prev };

@@ -30,7 +30,7 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
               <td>
                 <Grid container justifyContent="center" direction="column">
                   <div className="question-code-title">
-                    Question code:{answer.question_code}
+                    Question code: {answer.question_code}
                   </div>
                   <div
                     dangerouslySetInnerHTML={{

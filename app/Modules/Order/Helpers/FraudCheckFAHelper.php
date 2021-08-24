@@ -102,7 +102,7 @@ class FraudCheckFAHelper
         $outcome = $this->compareShippingBillingAddress();
         $info = json_encode([
             "value{$fraud->f_fraud->fraud_code}" => $this->order_model->getShippingAddressString() ?: self::ADDITIONAL_INFO_NULL_CHECK,
-            "value{$fraud->t_fraud->fraud_code}" => $this->order_model->getBillingAddressString() ?: self::ADDITIONAL_INFO_NULL_CHECK,
+            "value{$fraud->t_fraud->fraud_code}" => $this->order_model->b_address ? $this->order_model->getBillingAddressString() : self::ADDITIONAL_INFO_NULL_CHECK,
         ], true);
         if ($outcome) {
             $result = 'positive';
