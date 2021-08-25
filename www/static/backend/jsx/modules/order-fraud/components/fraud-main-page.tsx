@@ -1,15 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import {
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  CircularProgress,
-} from "@material-ui/core";
+import { Grid, Paper, Typography, CircularProgress } from "@material-ui/core";
 import { FraudCheckHat } from "@admin/modules/order-fraud/components/fraud-check-hat/fraud-check-hat";
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import {
@@ -22,6 +12,7 @@ import { FraudTableQuestion } from "@admin/modules/order-fraud/components/fraud-
 import { FraudInfoBasement } from "@admin/modules/order-fraud/components/fraud-info-basement/fraud-info-basement";
 import {
   AnswerFraudOrder,
+  FAAnswer,
   MainAnswer,
 } from "@admin/modules/order-fraud/ts/types/answer";
 import { MatrixQuestion } from "./matrix-question/matrix-question";
@@ -29,6 +20,7 @@ import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/
 import { NotCheckInfo } from "@admin/modules/order-fraud/components/not-check-info/not-check-info";
 import { FraudScoreResult } from "@admin/modules/order-fraud/components/fraud-score-result/fraud-score-result";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
+import { FraudPaymentAnswer } from "@admin/modules/order-fraud/components/fraud-payment-answer/fraud-payment-answer";
 
 const api = new ApiService();
 
@@ -42,7 +34,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
   const [fraudManual, setFraudManual] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [notCheck, setNotCheck] = useState(false);
-  const [templateModal, setTemplateModal] = useState("");
+  const [templateModal, setTemplateModal] = useState<MainAnswer | FAAnswer>({});
   const [loading, setLoading] = useState(true);
   const { showSnackbar } = useContext(SnackbarContext);
   useEffect(() => {
@@ -172,7 +164,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             >
               <div className="table-wrapper__fraud-check-question">
                 <Typography variant="h6" align="center">
-                  Full names fraud check question
+                  Full names: Cross check matrix
                 </Typography>
                 {settingsFraud.column_fn && (
                   <MatrixQuestion
@@ -183,7 +175,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               </div>
               <div className="table-wrapper__fraud-check-question">
                 <Typography variant="h6" align="center">
-                  Address fraud check question
+                  Addresses: Cross check matrix
                 </Typography>
                 {settingsFraud.column_fn && (
                   <MatrixQuestion
@@ -193,34 +185,20 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
                 )}
               </div>
               <div className="table-wrapper__fraud-check-question">
-                <Typography variant="h6" align="center">
-                  Diagonal fraud check question
-                </Typography>
                 <FraudTableQuestion
+                  title="Diagonal checks"
                   nameTable="diagonal"
                   listAnswer={answer.diagonal}
                 />
               </div>
               <div className="table-wrapper__fraud-check-question">
-                <Typography variant="h6" align="center">
-                  Red flags fraud check question
-                </Typography>
                 <FraudTableQuestion
+                  title="Red flags"
                   nameTable="red_flags"
                   listAnswer={answer.red_flags}
                 />
               </div>
-              {answer.payment && (
-                <div className="table-wrapper__fraud-check-question">
-                  <Typography variant="h6" align="center">
-                    Payment fraud check question
-                  </Typography>
-                  <FraudTableQuestion
-                    nameTable="payment"
-                    listAnswer={answer.payment}
-                  />
-                </div>
-              )}
+              <FraudPaymentAnswer answer={answer.payment} />
               <div className="table-wrapper__fraud-check-question">
                 <FraudScoreResult />
               </div>

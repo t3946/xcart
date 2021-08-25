@@ -6,8 +6,12 @@ import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/Frau
 const api = new ApiService();
 export const FraudCheckHat: React.FC = () => {
   const { orderId, settings, setSettings } = useContext(FraudCheckOrderContext);
-  const unlockItNow = () => {
-    api.get(`/api/order/fraud-check/unlock/${orderId}`).then((res) => {
+  const unlockItNow = (all = false) => {
+    let url = `/api/order/fraud-check/unlock/${orderId}`;
+    if (all) {
+      url = "/api/order/fraud-check/unlock-all";
+    }
+    api.get(url).then((res) => {
       if (res.status) {
         setSettings((prev) => {
           delete prev.lock;
@@ -40,6 +44,12 @@ export const FraudCheckHat: React.FC = () => {
           </div>
           <button className="button__unlock-order" onClick={unlockItNow}>
             Unlock it now
+          </button>
+          <button
+            className="button__unlock-order"
+            onClick={() => unlockItNow(true)}
+          >
+            Unlock all orders locked by me
           </button>
         </div>
       )}

@@ -11,17 +11,21 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 /**
  * @property string fraud_result
  * @property mixed fraud_score
- * @property string additional_info
+ * @property array additional_info
+ * @property float outcome
  * @property FraudFAQuestionModel question
+ * @property int question_id
  */
 class OrderFraudFACheckModel extends Model
 {
     use AutoMetaTrait;
+
     public const FRAUD_RESULT_POSITIVE = 'positive';
     public const FRAUD_RESULT_NEGATIVE = 'negative';
 
@@ -54,6 +58,11 @@ class OrderFraudFACheckModel extends Model
                 'class' => DecimalField::class,
                 'null' => true
             ],
+            'outcome' => [
+                'class' => DecimalField::class,
+                'null' => true,
+                'default' => 0.00
+            ],
             'fraud_result' => [
                 'class' => CharField::class,
                 'default' => null,
@@ -64,9 +73,9 @@ class OrderFraudFACheckModel extends Model
                 ]
             ],
             'additional_info' => [
-                'class' => CharField::class,
-                'default' => null,
-                'null' => true
+                'class' => SerializeField::class,
+                'null' => false,
+                'default' => []
             ]
         ];
     }

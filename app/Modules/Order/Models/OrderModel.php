@@ -741,7 +741,7 @@ class OrderModel extends Model
         $fa_heler->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
-            [$fraud_result, $fraud_score, $info] = $fraud_fa->getScore($this, true, $fa_heler);
+            [$fraud_result, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, true, $fa_heler);
             /** @var OrderFraudFACheckModel $order_fraud_fa */
             [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
                 'order_id' => $this->orderid,
@@ -749,7 +749,8 @@ class OrderModel extends Model
             ], [
                 'fraud_result' => $fraud_result,
                 'fraud_score' => $fraud_score,
-                'additional_info' => $info ?? null
+                'additional_info' => $info ?? null,
+                'outcome' => $outcome ?? 0.00
             ]);
             $overall_score += (float)$order_fraud_fa->fraud_score;
             $bare_score += (float)$order_fraud_fa->fraud_score;

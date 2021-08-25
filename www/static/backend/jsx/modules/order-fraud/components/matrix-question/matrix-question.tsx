@@ -18,7 +18,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
   const { dialog, template } = useContext(FraudCheckOrderContext);
 
   const doubleClickHandler = (anwer: FAAnswer) => {
-    template.set(anwer.template);
+    template.set(anwer);
     dialog.set();
   };
   return (
@@ -26,7 +26,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
       <tr>
         <th>code</th>
         {columns.map((column) => (
-          <th>{column.fraud_name}</th>
+          <th className="table-header-fraud">{column.fraud_name}</th>
         ))}
       </tr>
       {columns.map((column) => {
@@ -45,11 +45,13 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
               });
               if (answer) {
                 return (
-                  <td
-                    className="matrix-question-answer"
-                    onDoubleClick={() => doubleClickHandler(answer)}
-                  >
-                    {answer.fraud_score}
+                  <td>
+                    <div
+                      onClick={() => doubleClickHandler(answer)}
+                      className="answer-matrix-detail-text"
+                    >
+                      {answer.fraud_score}
+                    </div>
                   </td>
                 );
               } else {

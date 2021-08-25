@@ -78,7 +78,7 @@ class FraudFAQuestionModel extends Model
     {
         if ($result = $this->getMethodResult($order, $recalc, $helper)) {
             [$fraud_result, $weight, $info, $outcome] = $result;
-            return [$fraud_result, round($weight * $outcome, 2), $info];
+            return [$fraud_result, round($weight * $outcome, 2), $info, $outcome];
         }
         return null;
     }
@@ -164,8 +164,8 @@ class FraudFAQuestionModel extends Model
             case 'SA':
                 return [
                     'state' => $order->s_state,
+                    'city' => $order->s_city,
                     'zipcode' => $order->s_zipcode,
-                    'city' => $order->s_city
                 ];
             case 'BA':
                 return [
@@ -177,17 +177,20 @@ class FraudFAQuestionModel extends Model
             case 'ORA_BA':
                 $type_address = ($fraud_code === 'ORA_BA') ? 'billing' : 'shipping';
                 if (!is_null($helper->ob_melissa->melissa_address[$type_address]['owner'])) {
+                    $zip = trim($helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerZip']);
+                    // Fix от zip кода длинной более 5 символов
+                    $zip = substr($zip, 0, 5);
                     return [
                         'state' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerState'],
-                        'zipcode' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerZip'],
                         'city' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerCity'],
+                        'zipcode' => $zip,
                     ];
                 }
                 return null;
             case 'CSZ_TN':
                 if (!is_null($helper->ob_melissa->phone_data)) {
                     /** @var CountryModel $country_model */
-                    $country_model = CountryModel::objects()->get(['name' => $helper->ob_melissa->ip_data['CountryName']]);
+                    $country_model = CountryModel::objects()->get(['name' => $helper->ob_melissa->phone_data['CountryName']]);
                     if (!is_null($country_model)) {
                         /** @var StateModel $state_model */
                         $state_model = StateModel::objects()->get(['state' => $helper->ob_melissa->phone_data['State'], 'country_code' => 'US']);

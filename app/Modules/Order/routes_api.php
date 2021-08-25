@@ -33,5 +33,10 @@ return [
         'route' => '/api/order/fraud-check/change-result',
         'target' => [OrderFraudCheckController::class, 'changeFraudCheckResult'],
         'name' => 'order_change_result',
+    ],
+    [
+        'route' => '/api/order/fraud-check/unlock-all',
+        'target' => [OrderFraudCheckController::class, 'unlockOrders'],
+        'name' => 'orders_fraud_unlock',
     ]
 ];

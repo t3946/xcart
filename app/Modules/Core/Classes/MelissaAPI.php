@@ -20,7 +20,7 @@ class MelissaAPI
         $this->client = new Client(['verify' => false, 'timeout' => 10]);
     }
 
-    public function getMelissaAddressByList($address_list = [])
+    public function setMelissaAddressByList($address_list = [])
     {
         foreach ($address_list as $key => $attr) {
             $result = $this->fetchMelissaAddress([
@@ -30,9 +30,12 @@ class MelissaAPI
                 'country' => $attr['country'],
                 'zipcode' => $attr['zipcode'],
             ]);
-            if ($result['Value1'] !== 'Invalid Address') {
+            if (isset($result['MAK'])) {
+                $this->melissa_address[$key]['address'] = $result;
                 $owner_info = $this->fetchMelissaAddressOwner($result['MAK']);
-                $this->melissa_address[$key] = ['address' => $result, 'owner' => $owner_info];
+                if (!isset($owner_info['Value1'])) {
+                    $this->melissa_address[$key]['owner'] = $owner_info;
+                }
             } else {
                 $this->melissa_address[$key] = null;
             }
@@ -47,35 +50,38 @@ class MelissaAPI
     {
         $result = $this->fetchMelissaAddress($address);
         $owner_info = $this->fetchMelissaAddressOwner($result['MelissaAddressKey']);
-        foreach ($many_address as $name_address)
-        {
-            if ($result['Value1'] !== 'Invalid Address') {
-                $this->melissa_address[$name_address] = ['address' => $result, 'owner' => $owner_info];
+        foreach ($many_address as $name_address) {
+            if (!isset($result['Value1'])) {
+                $this->melissa_address[$name_address]['address'] = $result;
+                if (!isset($owner_info['Value1'])) {
+                    $this->melissa_address[$name_address]['owner'] = $owner_info;
+                };
             } else {
                 $this->melissa_address[$name_address] = null;
             }
         }
     }
 
-    public function getMelissaEmailInfo(string $email)
+    public function setMelissaEmailInfo(string $email)
     {
         $email_info = $this->fetchMellissaEmail($email);
-        if ($email_info) {
+        if (!isset($email_info['Value1'])) {
             $this->email_data = $email_info;
         }
     }
 
-    public function getMelissaPhoneInfo(string $phone)
+    public function setMelissaPhoneInfo(string $phone)
     {
         $phone_info = $this->fetchMelissaPhone($phone);
-        if ($phone_info['Value1'] != 'Phone Error') {
+        if (!isset($phone_info['Value1'])) {
             $this->phone_data = $phone_info;
         } else $this->phone_data = null;
     }
+
     public function setMelissaIpInfo(string $ip)
     {
         $ip_info = $this->fetchMelissaIp($ip);
-        if ($ip_info['Value1'] !== 'Empty or Malformed (IE01)') {
+        if (!isset($ip_info['Value1'])) {
             $this->ip_data = $ip_info;
         } else {
             $this->ip_data = null;
@@ -89,7 +95,7 @@ class MelissaAPI
             'fmt' => 'json',
             'id' => $this->melissa_key
         ];
-        $url = 'https://www.melissa.com/v2/lookups/addresscheck/address/';
+        $url = 'https://www.melissa.com/v2/lookups/phonecheck/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
                 $res = reset($res);
@@ -134,6 +140,7 @@ class MelissaAPI
         return null;
         //throw new \Exception('Melissa has no answer');
     }
+
     private function fetchMelissaPersonal($info)
     {
         $params = [
@@ -155,6 +162,7 @@ class MelissaAPI
         }
         return null;
     }
+
     private function fetchMelissaIp($ip)
     {
         $params = [

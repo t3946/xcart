@@ -15,10 +15,7 @@ export const FraudScoreResult: React.FC = () => {
         Bare fraud score: {settings.bare_result}
       </Typography>
       <Typography align="right" variant="body2">
-        Effective fraud score: {settings.overall_result}
-      </Typography>
-      <Typography variant="body2" align="right">
-        Risk score: {settings.risk_score}
+        <b>Effective fraud score: {settings.overall_result}</b>
       </Typography>
       <Typography variant="body2" align="right">
         Current fraud check status: {settings.fraud_status.name}

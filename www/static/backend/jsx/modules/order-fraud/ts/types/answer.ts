@@ -1,9 +1,14 @@
 export interface AnswerFraudOrder {
   diagonal?: MainAnswer[];
   red_flags: MainAnswer[];
-  payment?: MainAnswer[];
+  payment?: PaymentAnswer;
   full_name: FAAnswer[];
   address: FAAnswer[];
+}
+export interface PaymentAnswer {
+  general_payment: MainAnswer[] | [];
+  pay_pal?: MainAnswer[] | [];
+  stripe?: MainAnswer[] | [];
 }
 export interface MainAnswer {
   fraud_result: string;
@@ -23,4 +28,5 @@ export interface FAAnswer {
   f_fraud_name: number | string;
   t_fraud_name: number | string;
   manual_action: string;
+  outcome: number | string;
 }

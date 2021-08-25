@@ -139,70 +139,66 @@ class OrderFraudCheckController extends Controller
 
     public function getAnswerPaymentFrauds(OrderModel $order_model): array
     {
-        $ar_payment_frauds = [];
+        $ar_payment_frauds = ['general_payment' => [], 'stripe' => [], 'pay_pal' => []];
         $frauds_payment = OrderBaseFraudCheckModelV2::objects()->filter([
             'order_id' => $order_model->orderid,
             'question__type__in' => [BaseFraudCheckModelV2::FRAUD_TYPE_PAY_PAL, BaseFraudCheckModelV2::FRAUD_TYPE_STRIPE, BaseFraudCheckModelV2::FRAUD_TYPE_GENERAL_PAYMENT]
         ]);
-        if ($frauds_payment->count() > 0) {
-            $oTransaction = $order_model->getFirstTransaction();
-            $sTransactionReplaceText = '';
-            $sPaymentMethodReplaceText = '';
-            if ($oTransaction && $oPaymentMethod = PaymentMethodModel::objects()->get(['paymentid' => $oTransaction->paymentid])) {
-                $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
-                $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
-                $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
-            }
-            $avs_code = $brand_card = $name_card = '';
-            /** @var OrderBaseFraudCheckModelV2 $answer_item */
-            foreach ($frauds_payment as $answer_item) {
-                switch ($answer_item->question->question_code)
-                {
-                    case 'CHECK_AVS_ADDRESS':
-                        $avs_code = $answer_item->additional_info['AVS'];
-                        break;
-                    case 'CHECK_BRAND_CARD':
-                        $brand_card = $answer_item->additional_info['card_type'];
-                        break;
-                    case 'CHECK_STRIPE_DEBIT_OR_CREDIT_CARD':
-                        $name_card = $answer_item->additional_info['name_card'];
-                        break;
-
-                }
-                $template = str_replace(
-                    [
-                        '{{link_to_paypal_transaction}}',
-                        '{{shipping_address}}',
-                        '{{payment_method}}',
-                        '{{customer_email}}',
-                        '{{avs_code}}',
-                        '{{type_card}}',
-                        '{{name_card}}'
-                    ],
-                    [
-                        $sTransactionReplaceText,
-                        $order_model->getShippingAddressString(),
-                        $sPaymentMethodReplaceText,
-                        $order_model->email,
-                        $avs_code,
-                        $brand_card,
-                        $name_card
-                    ],
-                    $answer_item->question->question_template_body
-                );
-                array_push($ar_payment_frauds, [
-                    'template' => $template,
-                    'fraud_result' => $answer_item->fraud_result,
-                    'fraud_score' => $answer_item->fraud_score,
-                    'question_id' => $answer_item->question_id,
-                    'question_code' => $answer_item->question->question_code,
-                    'question_auto' => $answer_item->question->auto,
-                    'question_weight' => $answer_item->question->weight
-                ]);
-            }
-            return $ar_payment_frauds;
+        $oTransaction = $order_model->getFirstTransaction();
+        $sTransactionReplaceText = '';
+        $sPaymentMethodReplaceText = '';
+        if ($oTransaction && $oPaymentMethod = PaymentMethodModel::objects()->get(['paymentid' => $oTransaction->paymentid])) {
+            $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
+            $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
+            $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
         }
-        return [];
+        $avs_code = $brand_card = $name_card = '';
+        /** @var OrderBaseFraudCheckModelV2 $answer_item */
+        foreach ($frauds_payment as $answer_item) {
+            switch ($answer_item->question->question_code) {
+                case 'CHECK_AVS_ADDRESS':
+                    $avs_code = $answer_item->additional_info['AVS'];
+                    break;
+                case 'CHECK_BRAND_CARD':
+                    $brand_card = $answer_item->additional_info['card_type'];
+                    break;
+                case 'CHECK_STRIPE_DEBIT_OR_CREDIT_CARD':
+                    $name_card = $answer_item->additional_info['name_card'];
+                    break;
+
+            }
+            $template = str_replace(
+                [
+                    '{{link_to_paypal_transaction}}',
+                    '{{shipping_address}}',
+                    '{{payment_method}}',
+                    '{{customer_email}}',
+                    '{{avs_code}}',
+                    '{{type_card}}',
+                    '{{name_card}}'
+                ],
+                [
+                    $sTransactionReplaceText,
+                    $order_model->getShippingAddressString(),
+                    $sPaymentMethodReplaceText,
+                    $order_model->email,
+                    $avs_code,
+                    $brand_card,
+                    $name_card
+                ],
+                $answer_item->question->question_template_body
+            );
+            array_push($ar_payment_frauds[$answer_item->question->type], [
+                'template' => $template,
+                'fraud_result' => $answer_item->fraud_result,
+                'fraud_score' => $answer_item->fraud_score,
+                'question_id' => $answer_item->question_id,
+                'question_code' => $answer_item->question->question_code,
+                'question_auto' => $answer_item->question->auto,
+                'question_weight' => $answer_item->question->weight
+            ]);
+        }
+        return $ar_payment_frauds;
     }
 
     public function getAnswerFAOrder(OrderModel $orderModel): array
@@ -218,7 +214,9 @@ class OrderFraudCheckController extends Controller
                 'f_fraud_name' => $fraud->question->f_fraud->fraud_name,
                 't_fraud_name' => $fraud->question->t_fraud->fraud_name,
                 'question_weight' => $fraud->question->weight,
-                'template' => str_replace($replace_template, $replace_value, $fraud->question->template)
+                'template' => str_replace($replace_template, $replace_value, $fraud->question->template),
+                'outcome' => $fraud->outcome
+
             ];
             array_push($ar_anwer[$fraud->question->type], $data);
         }
@@ -227,7 +225,7 @@ class OrderFraudCheckController extends Controller
 
     private function getTemplateData(OrderFraudFACheckModel $answer)
     {
-        $ar_info = json_decode($answer->additional_info, true);
+        $ar_info = $answer->additional_info;
         $result = [];
         $code_list = [$answer->question->f_fraud->fraud_code, $answer->question->t_fraud->fraud_code];
         foreach ($code_list as $code) {
@@ -431,6 +429,17 @@ HTML;
                 'overall_result' => $order_model->overall_fraud_score_v2,
                 'risk_score' => $order_model->overall_fraud_score_v2,
             ];
+        } catch (\Exception $exception) {
+            $ar_result = ['status' => false, 'error' => $exception->getMessage()];
+        } finally {
+            $this->jsonResponse($ar_result);
+        }
+    }
+    public function unlockOrders() : void
+    {
+        $ar_result = ['status' => true];
+        try {
+            OrderModel::objects()->filter(['login_last_opened_or_saved' => Xcart::app()->user->login])->update(['time_last_opened_or_saved' => 0]);
         } catch (\Exception $exception) {
             $ar_result = ['status' => false, 'error' => $exception->getMessage()];
         } finally {

@@ -14,9 +14,18 @@ export const MatrixModal: React.FC = () => {
         <DialogContentText id="alert-dialog-slide-description">
           <div
             dangerouslySetInnerHTML={{
-              __html: template.get,
+              __html: template.get.template,
             }}
           />
+          <div>
+            Outcome: <b>{template.get?.outcome}</b>
+          </div>
+          <div>
+            Weight: <b>{template.get.question_weight}</b>
+          </div>
+          <div>
+            Fraud score subtotal: <b>{template.get.fraud_score}</b>
+          </div>
         </DialogContentText>
       </DialogContent>
     </Dialog>
