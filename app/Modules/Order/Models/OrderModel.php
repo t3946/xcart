@@ -625,7 +625,7 @@ class OrderModel extends Model
 
     public function getRiskScore(): float
     {
-        return BaseFraudCheckHelperV2::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
+        return $this->overall_fraud_score;
     }
 
     public function getTrackingNumbers(): array

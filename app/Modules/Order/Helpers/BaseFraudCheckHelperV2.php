@@ -10,6 +10,7 @@ use Modules\Core\Models\TelephoneAreaModel;
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudCheckModel;
+use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -18,8 +19,6 @@ use Xcart\App\Main\Xcart;
 
 class BaseFraudCheckHelperV2
 {
-    private const MELISSA_KEY = 'lBRkrbaK8DVVghZCwkUO2k**nSAcwXpxhQ0PC2lXxuDAZ-**';
-
     public static function addressAbbreviationsPrepare($field)
     {
         $arr = [
@@ -101,42 +100,50 @@ class BaseFraudCheckHelperV2
 
     public static function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
+        $fraud_result = 'positive';
+        $outcome = 1;
+        $manual_action = 'Y';
         /** @var SiteModel $site */
         if (($app = Xcart::app()) && $site = $app->getModule('Sites')->getSite()) {
             $config = $site->getGlobalConfig();
             if (stripos($config['fraud_domains_free_email_provider'], $order->getEmailDomain()) !== false) {
                 $fraud_result = 'negative';
                 $manual_action = 'N';
+                $outcome = 1;
             }
         }
 
-        return [$fraud_result, $fraud->weight, null, $manual_action];
+        return [$fraud_result, $fraud->weight, null, $manual_action, $outcome];
     }
 
     public static function scoreCHECK_EMAIL_ADDRESS_DOMAIN(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'positive';
+        $outcome = 1;
         if (strpos($order->email, "@mail.com") !== false) {
             $fraud_result = 'negative';
+            $outcome = 0;
         }
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
 
     }
 
     public static function scoreCHECK_STRIPE_DEBIT_OR_CREDIT_CARD(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
         /** @var OrderTransactionModel $transaction_model */
         $transaction_model = $order->getFirstTransaction();
         $data_response = $transaction_model->transaction_response;
         $name_card = '';
         foreach ($data_response['charges']['data'] as $details) {
             $name_card = $details['payment_method_details']['card']['funding'];
-            if ($details['payment_method_details']['card']['funding'] !== 'debit') {
+            if ($details['payment_method_details']['card']['funding'] === 'debit') {
                 $fraud_result = 'positive';
+                $outcome = 1;
             }
         }
-        return [$fraud_result, $fraud->weight, ['name_card' => $name_card]];
+        return [$fraud_result, $fraud->weight, ['name_card' => $name_card], null, $outcome];
     }
 
     private static function checksIsPassByType(array $transaction_response, string $type = 'address_line1_check'): bool
@@ -152,37 +159,43 @@ class BaseFraudCheckHelperV2
     public static function scoreCHECK_STRIPE_CVC(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
         if (self::checksIsPassByType($data_response, 'cvc_check')) {
             $fraud_result = 'positive';
+            $outcome = 1;
         }
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_STRIPE_STREET(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
         if (self::checksIsPassByType($data_response)) {
+            $outcome = 1;
             $fraud_result = 'positive';
         }
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_STRIPE_ZIP(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
         if (self::checksIsPassByType($data_response, 'address_postal_code_check')) {
             $fraud_result = 'positive';
+            $outcome = 1;
         }
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE_FOR_SHIPPING_ADDRESS(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
@@ -196,6 +209,7 @@ class BaseFraudCheckHelperV2
         /** @var OrderTransactionModel $oTransaction */
         $oTransaction = $fraud->getFirstTransaction($order);
         $manual_action = 'N';
+        $outcome = 0;
         $o_address = self::addressAbbreviationsPrepare(self::correctAddress($order->s_address));
         $p_address = self::correctAddress($oTransaction->transaction_response['address_street']);
         $o_address_replaces = str_replace(' ', '\s?', $o_address);
@@ -206,42 +220,49 @@ class BaseFraudCheckHelperV2
             preg_match("/{$o_address_replaces}/", $p_address, $mm)) {
             $fraud_result = 'positive';
             $manual_action = 'Y';
+            $outcome = 1;
         }
-        return [$fraud_result, $fraud->weight, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action];
+        return [$fraud_result, $fraud->weight, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action, $outcome];
     }
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_CONFIRMED(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
         $manual_action = 'N';
+        $outcome = 0;
         [$r] = self::scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING($order, $fraud);
         if ($r === 'positive' && $oTransaction = $fraud->getFirstTransaction($order)) {
             if ($oTransaction->transaction_response['address_status'] === 'confirmed') {
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
+                $outcome = 1;
             }
         }
         return [
             $fraud_result,
             $fraud->weight,
             ['MANUAL_PAYPAL_SHIPPING_EQUAL_BILLING' => $r, 'address_status' => $oTransaction->transaction_response['address_status'] ?? ''],
-            $manual_action
+            $manual_action,
+            $outcome
         ];
     }
 
     public static function scoreMANUAL_IS_FREIGHT_FORWARDER_FOUND(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $manual_action = 'N';
+        $outcome = 0;
 
-        /** @var OrderFraudCheckModel $orderFraud */
-        if ($orderFraudShipping = OrderFraudCheckModel::objects()->get(['orderid' => $order->orderid, 'question_code' => 'MANUAL_GOOGLE_SHIPPING_1'])) {
+        /** @var OrderBaseFraudCheckModelV2 $orderFraudShipping */
+        if ($orderFraudShipping = OrderBaseFraudCheckModelV2::objects()->get(['order_id' => $order->orderid, 'question__question_code' => 'MANUAL_GOOGLE_SHIPPING_1'])) {
             $r = $orderFraudShipping->fraud_result;
             if ($r === 'positive') {
                 $fraud_result = $r;
                 $manual_action = 'Y';
             }
         }
-        if ($orderFraudBilling = OrderFraudCheckModel::objects()->get(['orderid' => $order->orderid, 'question_code' => 'MANUAL_GOOGLE_BILLING_1'])) {
+        /** @var OrderBaseFraudCheckModelV2 $orderFraudBilling */
+        if ($orderFraudBilling = OrderBaseFraudCheckModelV2::objects()->get(['order_id' => $order->orderid, 'question__question_code' => 'MANUAL_GOOGLE_BILLING_1'])) {
             $r2 = $orderFraudBilling->fraud_result;
             if ($r2 === 'positive') {
                 $fraud_result = $r2;
@@ -258,6 +279,9 @@ class BaseFraudCheckHelperV2
             $fraud_result = 'negative';
             $manual_action = 'N';
         }
+        if ($fraud_result === 'positive') {
+            $outcome = 1;
+        }
 
         return [
             $fraud_result,
@@ -267,26 +291,29 @@ class BaseFraudCheckHelperV2
                 'MANUAL_GOOGLE_BILLING_1' => $r2 ?? '',
                 'Commercial_Mail_Receiving_Agency' => $info['Commercial_Mail_Receiving_Agency']
             ],
-            $manual_action
+            $manual_action,
+            $outcome
         ];
     }
 
     public static function scoreMANUAL_PAYPAL_FULLNAME_VERIFIED(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
+        $manual_action = 'N';
+        $payer_status = '';
 
         if ($fraud->isPaypalPayment($order)) {
-            $manual_action = 'N';
-            $payer_status = '';
             if ($oTransaction = $fraud->getFirstTransaction($order)) {
                 $payer_status = $oTransaction->transaction_response['payer_status'];
                 if ($payer_status === 'verified') {
                     $fraud_result = 'positive';
                     $manual_action = 'Y';
+                    $outcome = 1;
                 }
             }
         }
-        return [$fraud_result, $fraud->weight, ['Payer status' => $payer_status], $manual_action];
+        return [$fraud_result, $fraud->weight, ['Payer status' => $payer_status], $manual_action, $outcome];
     }
 
     public static function scoreMANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER(OrderModel $order, BaseFraudCheckModelV2 $fraud)
@@ -294,15 +321,17 @@ class BaseFraudCheckHelperV2
         $fraud_result = 'negative';
         $manual_action = 'N';
         $payer_email = '';
+        $outcome = 0;
         if ($oTransaction = $fraud->getFirstTransaction($order)) {
             $payer_email = $oTransaction->transaction_response['payer_email'];
             if ($oTransaction->transaction_response['payer_email'] === $order->email) {
                 $fraud_result = 'positive';
                 $manual_action = 'Y';
+                $outcome = 1;
             }
         }
 
-        return [$fraud_result, $fraud->weight, ['Payer email' => $payer_email], $manual_action];
+        return [$fraud_result, $fraud->weight, ['Payer email' => $payer_email], $manual_action, $outcome];
     }
 
     public static function scoreIS_EMAIL_DOMAIN_FREE(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
@@ -310,6 +339,7 @@ class BaseFraudCheckHelperV2
 
         $email = $order->email;
         $fraud_result = 'positive';
+        $outcome = 1;
 
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
@@ -320,12 +350,13 @@ class BaseFraudCheckHelperV2
                 $domain = '@' . trim($v);
                 if (stripos($email, $domain) !== false) {
                     $fraud_result = 'negative';
+                    $outcome = 0;
                     break;
                 }
             }
         }
 
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_EMAIL_VS_NAME(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
@@ -333,103 +364,26 @@ class BaseFraudCheckHelperV2
         $fraud_result = 'negative';
         $email_arr = explode('@', $order->email);
         $email_1 = strtoupper($email_arr[0]);
+        $outcome = 0;
 
         if ($email_1 && ($firstname_arr = explode(' ', self::correct($order->firstname)))) {
             foreach ($firstname_arr as $k => $v) {
                 $name = trim($v);
                 if ($name && stripos($email_1, $name) !== false) {
                     $fraud_result = 'positive';
+                    $outcome = 1;
                     break;
                 }
             }
         }
 
-        return [$fraud_result, $fraud->weight, null];
-    }
-
-    public static function scoreORDER_FULLNAMES(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
-    {
-        $fraud_score = -1;
-        $names = [];
-
-        if ($firstname = self::correct($order->firstname)) {
-            $names[] = $firstname;
-        }
-
-        if ($b_firstname = self::correct($order->b_firstname)) {
-            $names[] = $b_firstname;
-        }
-
-        if ($s_firstname = self::correct($order->s_firstname)) {
-            $names[] = $s_firstname;
-        }
-        $names = array_unique($names);
-
-        if (($count_names = count($names)) > 0) {
-            $fraud_score = 1 / $count_names;
-            if ($fraud_score === 1) {
-                $fraud_result = 'positive';
-            } elseif ($fraud_score < 1) {
-                $fraud_result = 'negative';
-            }
-        }
-
-        return [$fraud_result, $fraud->weight, null];
-    }
-
-    public static function scoreCHECK_STATES(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
-    {
-        $fraud_result = 'negative';
-        $geoip_state = $areacode_state = '';
-
-        $s_state = self::correct($order->s_state);
-        $b_state = self::correct($order->b_state);
-
-        if ($geo_litecity_location = $order->getGeoLocation()) {
-            $geoip_state = self::correct($geo_litecity_location->region);
-        }
-
-        $userinfo_phone = str_replace([' ', '(', ')'], '', $order->phone);
-        $userinfo_area_code = trim(substr($userinfo_phone, 0, 3));
-
-        if ($telephoneModel = TelephoneAreaModel::objects()->get(['area_code' => $userinfo_area_code])) {
-            $areacode_state = $telephoneModel->state_code;
-        }
-
-        if ($s_state === $b_state && $b_state === $geoip_state && $s_state === $areacode_state) {
-            $fraud_result = 'positive';
-        }
-
-        return [$fraud_result, $fraud->weight, null];
-    }
-
-    public static function scoreGEOIP_CITY_VS_B_S(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
-    {
-        $fraud_score = -1;
-        $fraud_result = 'negative';
-
-        $s_city = self::correct($order->s_city);
-        $b_city = self::correct($order->b_city);
-
-        if ($geo_litecity_location = $order->getGeoLocation()) {
-            $geoip_city = self::correct($geo_litecity_location->city);
-        }
-
-        $names = array_unique([$s_city, $b_city, $geoip_city ?? null]);
-
-        if (($count_names = count($names)) > 0) {
-            $fraud_score = 1 / $count_names;
-            if ((int)$fraud_score === 1) {
-                $fraud_result = 'positive';
-            }
-        }
-
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_OK_ORDERS_FOR_EMAIL(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
 
         $orders = OrderModel::objects()->filter(['email' => $order->email, 'groups__dc_status__in' => ['S', 'G'], 'date__lte' => $order->date])->group(['orderid'])->order(['-orderid']);
         if (($total_items = $orders->count()) > 0) {
@@ -442,10 +396,11 @@ class BaseFraudCheckHelperV2
         if (($total_items_min_day = $orders->count()) > 0) {
             if (($total_items_min_day / $total_items) > 0) {
                 $fraud_result = 'positive';
+                $outcome = 1;
             }
         }
 
-        return [$fraud_result, $fraud->weight, $additional_info];
+        return [$fraud_result, $fraud->weight, $additional_info ?? null, null, $outcome];
     }
 
     public static function scoreCHECK_TOTAL(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
@@ -455,8 +410,10 @@ class BaseFraudCheckHelperV2
 
         if ($order_total_div >= 1) {
             $fraud_result = 'positive';
+            $outcome = 1;
         } else {
             $fraud_result = 'negative';
+            $outcome = 0;
         }
 
         $num = 50 - $total;
@@ -469,71 +426,43 @@ class BaseFraudCheckHelperV2
 
         $fraud_score = ((max(50, $total) / min(50, $total)) - 1) * $sign;
 
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_SHIPPING_ADDRESS_LINE2(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
 
         $fraud_result = 'positive';
+        $outcome = 1;
 
         [$shipping] = $order->getAddressInfo();
 
         if (isset($shipping['address'][1]) || preg_match('/\bApartment\b|\bApt\b|\bSuite\b|\bSte\b|\bUnit\b|#|\d-\d/i', $shipping['address'][0])) {
             $fraud_result = 'negative';
+            $outcome = 0;
         }
 
-        return [$fraud_result, $fraud->weight, null];
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreCHECK_PURCHASE_ORDER(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
+        $outcome = 0;
 
         if ((int)$order->paymentid === 2) {
             $fraud_result = 'positive';
+            $outcome = 1;
         }
 
-        return [$fraud_result, $fraud->weight, null];
-    }
-
-    private static function depthPicker($arr, $temp_string, &$collect)
-    {
-        if ($temp_string !== '')
-            $collect [] = $temp_string;
-
-        for ($i = 0, $iMax = sizeof($arr); $i < $iMax; $i++) {
-            $arrcopy = $arr;
-            $elem = array_splice($arrcopy, $i, 1); // removes and returns the i'th element
-            if (count($arrcopy) > 0) {
-                self::depthPicker($arrcopy, "{$temp_string} {$elem[0]}", $collect);
-            } else {
-                $collect [] = "{$temp_string} {$elem[0]}";
-            }
-        }
-    }
-
-    private static function getAllVariations($string): array
-    {
-        $array = explode(' ', $string, 4);
-        self::depthPicker($array, "", $collect);
-        return array_filter($collect, static function ($a) {
-            return strpos(trim($a), ' ') !== false;
-        });
-    }
-
-    private static function getLastPart($str)
-    {
-        if ($fNameParts = explode(' ', $str)) {
-            $fLastName = trim(end($fNameParts));
-        }
-        return $fLastName ?? '';
+        return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
     public static function scoreMANUAL_IS_ORDER_ITEMS_EASY_TO_SELL(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
         $maxOrderPriceAmount = 0;
+        $outcome = 0;
         foreach ($order->detail_models as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             if ($hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid])) {
@@ -557,13 +486,14 @@ class BaseFraudCheckHelperV2
         switch ($fraud_result) {
             case 'positive':
                 $manual = 'Y';
+                $outcome = 1;
                 break;
             case 'negative':
                 $manual = 'N';
                 break;
         }
 
-        return [$fraud_result, $fraud->weight, null, $manual ?? null];
+        return [$fraud_result, $fraud->weight, null, $manual ?? null, $outcome];
     }
 
     public static function getProductList(OrderModel $orderModel): array
@@ -597,15 +527,11 @@ HTML;
         return $aProductLinks ?? [];
     }
 
-    public static function getRiskScore($total, $bare_score, $overall_fraud_score): float
-    {
-        return $overall_fraud_score;
-    }
-
     public static function scoreCHECK_BRAND_CARD(OrderModel $order_model, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'positive';
         $type_card = "Couldn't determine";
+        $outcome = 1;
         if (($oTransaction = $order_model->getFirstTransaction())) {
             switch ($processor = $oTransaction->payment_method_model->processor->processor_name) {
                 case 'BluePay':
@@ -626,19 +552,39 @@ HTML;
                     break;
                 case 'PayPal':
                     $fraud_result = 'negative';
+                    break;
             }
         }
-        return [$fraud_result, $fraud->weight, ['card_type' => $type_card]];
+        if ($fraud_result === 'negative') {
+            $outcome = 0;
+        }
+        return [$fraud_result, $fraud->weight, ['card_type' => $type_card], null, $outcome];
     }
 
     public static function scoreCHECK_AVS_ADDRESS(OrderModel $order_model, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
         $code = self::getAVSCodeByOrderModel($order_model);
+        $outcome = 0;
+        switch ($code)
+        {
+            case 'Y':
+            case 'X':
+            case 'M':
+            case 'D':
+                $outcome = 1;
+                break;
+            case 'B':
+                $outcome = 5/6;
+                break;
+            case 'P':
+                $outcome = 4/6;
+                break;
+        }
         if (in_array($code, ['Y', 'X', 'M', 'D'])) {
             $fraud_result = 'positive';
         }
-        return [$fraud_result, $fraud->weight, ['AVS' => $code]];
+        return [$fraud_result, $fraud->weight, ['AVS' => $code], null, $outcome];
     }
 
     private static function getAVSCodeByOrderModel(OrderModel $order_model): string

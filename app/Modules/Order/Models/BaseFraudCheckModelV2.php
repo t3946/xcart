@@ -87,12 +87,9 @@ class BaseFraudCheckModelV2 extends Model
     public function getScore(OrderModel $order, $recalc = true)
     {
         if ($result = $this->getMethodResult($order, $recalc)) {
-            [$fraud_result, $weight, $add_info, $action] = $result;
-            $outcome = 0;
-            if ($fraud_result === 'positive') {
-                $outcome = 1;
-            }
-            return [$fraud_result, round($weight * $outcome, 2), $add_info, $action];
+            [$fraud_result, $weight, $add_info, $action, $outcome] = $result;
+            $fraud_score = (int)$outcome * $weight;
+            return [$fraud_result, round($fraud_score, 2), $add_info, $action];
         }
         return null;
     }
@@ -118,7 +115,7 @@ class BaseFraudCheckModelV2 extends Model
     public function isBluePayPayment(OrderModel $order_model) : bool
     {
         /** @var OrderTransactionModel $transaction_model */
-        if ($transaction_model = $order->getFirstTransaction()) {
+        if ($transaction_model = $order_model->getFirstTransaction()) {
             return ($transaction_model->payment_method_model->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_BLUEPAY);
         }
         return false;
