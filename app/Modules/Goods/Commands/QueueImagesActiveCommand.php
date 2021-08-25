@@ -27,6 +27,10 @@ class QueueImagesActiveCommand extends Command
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($data['image_id'] && $image = ProductImageModel::objects()->get(['image_id' => $data['image_id']])) {
                 try {
+                    if ($old = ProductImageModel::objects()->get(['hash' => $data['image_hash']])) {
+                        $old->delete();
+                    }
+
                     $params = [
                         'width' => $data['image_width'],
                         'height' => $data['image_height'],
