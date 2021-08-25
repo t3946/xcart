@@ -20,6 +20,11 @@ class AccountController extends FrontendController
     private function generateQrCode()
     {
         $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            return;
+        }
+
         $g = new GoogleAuthenticator();
         $account_name = $user->getAttribute('email');
         $secret = $user->getAttribute('tsv_secret');
