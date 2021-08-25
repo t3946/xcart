@@ -28,7 +28,13 @@ class QueueImagesActiveCommand extends Command
             if ($data['image_id'] && $image = ProductImageModel::objects()->get(['image_id' => $data['image_id']])) {
                 try {
                     if ($old = ProductImageModel::objects()->get(['hash' => $data['image_hash']])) {
+                        $action = [
+                            'image_path' => $old->path->getValue(),
+                            'action' => 'delete'
+                        ];
+                        Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                         $old->delete();
+                        print_r($action);
                     }
 
                     $params = [
