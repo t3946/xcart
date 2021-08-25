@@ -26,25 +26,25 @@ class QueueImagesCommand extends Command
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
-                $found_images = $images = [];
+                $found_images = [];
                 try {
                     foreach ($data['images'] as $key => $image_link) {
                         $link_hash = md5($image_link);
 
-                        [$model, $is_new] = ProductImageModel::objects()->getOrCreate(['link' => $link_hash]);
-                        if ($is_new) {
+                        if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
                             //create image
                             $action = [
-                                'image_id' => $model->pk,
+                                'product_id' => $product->pk,
+                                'dx_code' => $product->distributor->code,
                                 'image_position' => ($key + 1) * 10,
                                 'image_link' => $image_link,
                                 'action' => 'create'
                             ];
                             Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                             print_r($action);
+                        } else {
+                            $found_images[] = $model->pk;
                         }
-                        $found_images[] = $model->image_id;
-                        $images[] = $model;
                     }
 
                     if ($found_images) {
@@ -71,8 +71,6 @@ class QueueImagesCommand extends Command
                             }
                         }
                     }
-
-                    self::saveImages($product, $images);
 
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
