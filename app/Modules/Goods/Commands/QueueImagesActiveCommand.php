@@ -25,13 +25,17 @@ class QueueImagesActiveCommand extends Command
         /** @var ProductImageModel $model */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
-            [$image] = ProductImageModel::objects()->getOrCreate(['hash' => $data['image_hash']]);
+            [$image, $is_new] = ProductImageModel::objects()->getOrCreate(['hash' => $data['image_hash']]);
             $image->setAttributes([
                                       'path' => $data['image_path'],
                                       'width' => $data['image_width'],
                                       'height' => $data['image_height'],
-                                      'link' => $data['image_link_hash'],
+
                                   ]);
+            if ($is_new) {
+                $image->link = $data['image_link_hash'];
+            }
+
             $image->save();
 
             if (isset($data['product_id']) && $product = ProductModel::objects()->get(
