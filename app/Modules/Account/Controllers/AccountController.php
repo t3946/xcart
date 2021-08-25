@@ -7,15 +7,39 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
-use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
+use Sonata\GoogleAuthenticator\GoogleAuthenticator;
+use Sonata\GoogleAuthenticator\GoogleQrUrl;
 
 class AccountController extends FrontendController
 {
+    private function generateQrCode()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+        $g = new GoogleAuthenticator();
+        $account_name = $user->getAttribute('email');
+        $secret = $user->getAttribute('tsv_secret');
+
+        if (!$secret) {
+            $secret = $g->generateSecret();
+            $user->setAttribute('tsv_secret', $secret);
+            $user->save();
+        }
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $issuer = $site->company_name;
+        $url = GoogleQrUrl::generate($account_name, $secret, $issuer);
+
+        StorageHelper::push([
+            "url" => $url,
+            "secret" => $secret,
+        ], null, 'tsv');
+    }
+
     private function getCountryPhoneCodes(): array
     {
         $codes = [];
@@ -77,9 +101,16 @@ class AccountController extends FrontendController
 
         StorageHelper::push($this->getCountryPhoneCodes(), null, 'countries');
 
+        $this->generateQrCode();
+
         AdminHelper::routesData();
 
         $this->display('account/base.tpl');
+    }
+
+    public function actionTSVAddNew()
+    {
+        self::actionIndex();
     }
 
     public function register()

@@ -5,6 +5,7 @@ import { sharedActionWatcher } from "./SharedSaga";
 import { walletActionWatcher } from "./WalletSaga";
 import profileActionWatcher from "./ProfileSaga";
 import loginAndSecuritySaga from "@client/jsx/redux/sagas/account-sagas/LoginAndSecuritySaga";
+import TSVSaga from "@client/jsx/redux/sagas/account-sagas/TSVSaga";
 
 export default function* accountRootSaga(): Generator {
   yield all([
@@ -14,5 +15,6 @@ export default function* accountRootSaga(): Generator {
     walletActionWatcher(),
     profileActionWatcher(),
     loginAndSecuritySaga(),
+    TSVSaga(),
   ]);
 }

@@ -53,4 +53,9 @@ export const staticRoutes = [
     name: "Two-Step Verification (2SV) Settings",
     path: routes["account:two-step-verification-settings"],
   },
+
+  {
+    name: "Add New App",
+    path: routes["account:two-step-verification-add-new"],
+  },
 ];

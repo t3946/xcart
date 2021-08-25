@@ -47,3 +47,18 @@
 .two-step-learn-more {
   font-size: rem-calc(13);
 }
+
+.tsv-qr-code {
+  width: rem-calc(120);
+  height: rem-calc(120);
+}
+
+.tsv-code-field {
+  @include breakpoint(md up) {
+    width: rem-calc(190);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(154);
+  }
+}

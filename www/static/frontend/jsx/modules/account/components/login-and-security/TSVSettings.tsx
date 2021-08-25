@@ -2,27 +2,76 @@ import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import { route } from "@client/jsx/utils/AppData";
+import { useHistory, NavLink } from "react-router-dom";
+import {
+  disableAction,
+  setTSVAction,
+} from "@client/jsx/redux/actions/account-actions/TSVActions";
+import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { useDispatch } from "react-redux";
 
-const TwoStepVerificationSettings = (): any => {
+const TSVSettings = (): any => {
+  const user = useSelector((e: StoreDto) => e.user);
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  if (user === null) {
+    history.push(route("account:login"));
+  }
+
+  function tsvCountTemplate() {
+    if (user.tsv_count) {
+      return <div>{user.tsv_count} app(s) enrolled</div>;
+    }
+  }
+
+  function disableTSVHandler() {
+    dispatch(
+      disableAction({
+        success(res) {
+          dispatch(userSetAction(res.user));
+          dispatch(setTSVAction(res.tsv));
+        },
+      })
+    );
+  }
+
+  function disableTSV() {
+    if (user.tsv_count === 0) {
+      return;
+    }
+
+    return (
+      <div className="row">
+        <div className="col-12 col-md-6">
+          <b className="d-block two-step-status-caption">
+            Two-Step Verification
+          </b>
+
+          <span className={"two-step-status-indicator"}>Enabled</span>
+        </div>
+
+        <div className="col-12 col-md-6 d-flex justify-content-end">
+          <button
+            className="form-button form-button__outline w-auto"
+            onClick={disableTSVHandler}
+          >
+            disable
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="account-page_header text-center text-lg-start">
-        <h1>Two-Step Verification (2SV) Settings</h1>
+        <h1 className={"mb-0"}>Two-Step Verification (2SV) Settings</h1>
 
-        <div className="row">
-          <div className="col-12 col-md-6">
-            <b className="d-block two-step-status-caption">
-              Two-Step Verification
-            </b>
-            <span className={"two-step-status-indicator"}>Enabled</span>
-          </div>
-
-          <div className="col-12 col-md-6 d-flex justify-content-end">
-            <button className="form-button form-button__outline w-auto">
-              disable
-            </button>
-          </div>
-        </div>
+        {disableTSV()}
       </div>
 
       <div className="content-panel">
@@ -35,11 +84,17 @@ const TwoStepVerificationSettings = (): any => {
         <div className="row two-step-row__bordered mx-0 pb-2 mb-2">
           <div className="col-3 ps-0">
             Authenticator App
-            <br />5 apps enrolled
+            {tsvCountTemplate()}
           </div>
 
           <div className="col-5">
-            <a href="#">Add new app</a>
+            <NavLink
+              className={"common-link"}
+              exact={true}
+              to={route("account:two-step-verification-add-new")}
+            >
+              Add new app
+            </NavLink>
           </div>
 
           <div className="col-2">
@@ -195,12 +250,8 @@ const TwoStepVerificationSettings = (): any => {
           </div>
         </div>
       </div>
-
-      <div className="account-page_footer text-center text-lg-start">
-        footer
-      </div>
     </>
   );
 };
 
-export default TwoStepVerificationSettings;
+export default TSVSettings;

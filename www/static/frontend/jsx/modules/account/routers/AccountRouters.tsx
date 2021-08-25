@@ -29,7 +29,8 @@ import FormChangePassword from "@client/modules/account/components/login-and-sec
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
-import TwoStepVerificationSettings from "@client/modules/account/components/login-and-security/TwoStepVerificationSettings";
+import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
+import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -153,7 +154,13 @@ export const AccountRouters = (): any => {
                   <Route
                     exact
                     path={route("account:two-step-verification-settings")}
-                    component={TwoStepVerificationSettings}
+                    component={TSVSettings}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-add-new")}
+                    component={TSVAddNewApp}
                   />
                 </Switch>
               </div>

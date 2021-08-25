@@ -16,7 +16,6 @@
     cursor: pointer;
     user-select: none;
     padding: 0 rem-calc(40);
-    min-width: rem-calc(180);
 
     @include breakpoint(md up) {
         height: rem-calc(48);
@@ -45,8 +44,6 @@
         box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
         background-color: #ef8807;
     }
-
-
 
     &:disabled {
         opacity: 0.6;

@@ -14,6 +14,7 @@ import ShadowPanelReducer from "@client/jsx/redux/reduсers/account/ShadowPanelR
 import CountriesReducer from "@client/jsx/redux/reduсers/account/CountriesReducer";
 import DepartmentsMenuReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuReducer";
 import DepartmentsMenuMobileReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuMobileReducer";
+import TSVReducer from "@client/jsx/redux/reduсers/account/TSVReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -29,6 +30,7 @@ export const accountStore: Store<AccountStoreDto> = createStore(
     countries: CountriesReducer,
     departmentsMenu: DepartmentsMenuReducer,
     departmentsMenuMobile: DepartmentsMenuMobileReducer,
+    tsv: TSVReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

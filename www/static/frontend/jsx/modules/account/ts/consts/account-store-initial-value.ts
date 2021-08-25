@@ -38,3 +38,5 @@ export const departmentsMenu = appData.departmentsMenu || [];
 export const departmentsMenuMobile = {
   isVisible: false,
 };
+
+export const TSV = appData?.tsv || null;
