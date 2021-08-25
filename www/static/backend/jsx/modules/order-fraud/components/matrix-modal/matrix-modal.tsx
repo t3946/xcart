@@ -8,7 +8,7 @@ export const MatrixModal: React.FC = () => {
   return (
     <Dialog open={dialog.get} onClose={dialog.set}>
       <DialogTitle id="customized-dialog-title" onClose={dialog.set}>
-        Detailed information
+        Comparing {template.get.f_fraud_name} to {template.get.t_fraud_name}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">

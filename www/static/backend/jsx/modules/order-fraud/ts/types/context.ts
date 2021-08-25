@@ -13,5 +13,5 @@ export interface FraudOrderContext {
   setFraudManual: (event) => void;
   answer?: AnswerFraudOrder;
   dialog: { get: boolean; set: () => void };
-  template: { get: FAAnswer | MainAnswer; set: (template) => void };
+  template: { get: FAAnswer; set: (template) => void };
 }
