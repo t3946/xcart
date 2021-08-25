@@ -27,7 +27,10 @@ class QueueImagesActiveCommand extends Command
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($data['image_id'] && $image = ProductImageModel::objects()->get(['image_id' => $data['image_id']])) {
                 try {
-                    if ($old = ProductImageModel::objects()->get(['hash' => $data['image_hash']])) {
+                    if ($old = ProductImageModel::objects()
+                        ->exclude(['image_id' => $image->pk])
+                        ->get(['hash' => $data['image_hash']])) {
+
                         $action = [
                             'image_path' => $old->path->getValue(),
                             'action' => 'delete'
@@ -48,7 +51,7 @@ class QueueImagesActiveCommand extends Command
                     $image->save();
                     print_r($image->getAttributes());
                 } catch (Throwable $exception) {
-                    echo "$product->productcode: {$exception->getMessage()}\n";
+                    echo "{$exception->getMessage()}\n";
                 }
             }
         }
