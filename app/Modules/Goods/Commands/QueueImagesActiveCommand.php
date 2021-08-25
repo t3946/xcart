@@ -25,36 +25,32 @@ class QueueImagesActiveCommand extends Command
         /** @var ProductImageModel $model */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
-            if ($data['image_id'] && $image = ProductImageModel::objects()->get(['image_id' => $data['image_id']])) {
-                try {
-                    if ($old = ProductImageModel::objects()
-                        ->exclude(['image_id' => $image->pk])
-                        ->get(['hash' => $data['image_hash']])) {
+            [$image] = ProductImageModel::objects()->getOrCreate(['hash' => $data['image_hash']]);
+            $image->setAttributes([
+                                      'path' => $data['image_path'],
+                                      'width' => $data['image_width'],
+                                      'height' => $data['image_height'],
+                                      'link' => $data['image_link_hash'],
+                                  ]);
+            $image->save();
 
-                        $action = [
-                            'image_path' => $old->path->getValue(),
-                            'action' => 'delete'
-                        ];
-                        Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
-                        $old->delete();
-                        print_r($action);
-                    }
-
-                    $params = [
-                        'width' => $data['image_width'],
-                        'height' => $data['image_height'],
-                        'hash' => $data['image_hash'],
-                        'path' => $data['image_path'],
-                        'is_downloaded' => true
-                    ];
-                    $image->setAttributes($params);
-                    $image->save();
-                    print_r($image->getAttributes());
-                } catch (Throwable $exception) {
-                    echo "{$exception->getMessage()}\n";
-                }
+            if (isset($data['product_id']) && $product = ProductModel::objects()->get(
+                    ['productid' => $data['product_id']]
+                )) {
+                self::addProductImage($product, $image);
             }
         }
         $message->ack();
+    }
+
+    private static function addProductImage(ProductModel $product, ProductImageModel $image): void
+    {
+        try {
+            $images = array_merge($product->detail_images->all(), [$image]);
+            $product->detail_images = $images;
+            $product->save();
+        } catch (Throwable $exception) {
+            echo "{$exception->getCode()} {$exception->getMessage()}\n";
+        }
     }
 }
