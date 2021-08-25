@@ -56,6 +56,9 @@ class ProductImageModel extends Model
             'link' => [
                 'class' => CharField::class,
             ],
+            'link_uri' => [
+                'class' => CharField::class,
+            ],
             'width' => [
                 'class' => IntField::class,
                 'default' => null,

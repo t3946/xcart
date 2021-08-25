@@ -32,6 +32,7 @@ class QueueImagesActiveCommand extends Command
                                       'width' => $data['image_width'],
                                       'height' => $data['image_height'],
                                       'link' => $data['image_link_hash'],
+                                      'link_uri'  => $data['image_link'],
                                   ]);
             $image->save();
 
