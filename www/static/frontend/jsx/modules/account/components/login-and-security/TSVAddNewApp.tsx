@@ -13,7 +13,6 @@ import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserAct
 
 const TSVAddNewApp = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
-  const tsv = useSelector((e: StoreDto) => e.tsv);
   const history = useHistory();
   const dispatch = useDispatch();
   const initialValues = {
@@ -88,7 +87,7 @@ const TSVAddNewApp = (): any => {
               <div>
                 <img
                   className={"tsv-qr-code my-12 my-md-14"}
-                  src={tsv.url}
+                  src={user.tsv.url}
                   alt="Scan QR Code"
                   width="120"
                   height="120"
@@ -120,7 +119,7 @@ const TSVAddNewApp = (): any => {
                           In "Enter your key" type the following key (space not
                           required):
                           <br />
-                          <b>{tsv.secret}</b>
+                          <b>{user.tsv.secret}</b>
                         </li>
                         <li>Set key type to "Time based"</li>
                         <li>Tap Add</li>

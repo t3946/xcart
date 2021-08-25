@@ -44,7 +44,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
         },
 
         success(res) {
-          dispatch(userSetAction(res));
+          dispatch(userSetAction(res.user));
           history.push(route("account:index"));
         },
 

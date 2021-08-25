@@ -11,10 +11,21 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
+use Sonata\GoogleAuthenticator\GoogleQrUrl;
+use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 
 /**
  * @property string password
  * @property mixed login
+ * @property string user_id
+ * @property string name
+ * @property string email
+ * @property string phone
+ * @property string location
+ * @property string public_name
+ * @property string phone_country_code
+ * @property string tsv_secret
+ * @property string tsv_count
  */
 class UserModel extends Model
 {
@@ -106,12 +117,14 @@ class UserModel extends Model
     public function register()
     {
         $this->password = PasswordHelper::hash($this->password);
+        $g = new GoogleAuthenticator();
+        $this->tsv_secret =$g->generateSecret();
         $this->save();
     }
 
     /**
      * авторизует пользователя в сессии и сохраняет сессионные куки
-    */
+     */
     public function authenticate($remember_me = false): void
     {
         Xcart::app()->auth->login($this, $remember_me);
@@ -155,6 +168,8 @@ class UserModel extends Model
     public function toArray(): array
     {
         $avatar_image = $this->avatar_image->getValue();
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $issuer = $site->getCompanyName();
 
         return [
             'id' => $this->user_id,
@@ -165,8 +180,11 @@ class UserModel extends Model
             'location' => $this->location,
             'public_name' => $this->public_name,
             'phone_country_code' => $this->phone_country_code,
-            'tsv_secret' => $this->tsv_secret,
-            'tsv_count' => (int)$this->tsv_count,
+            'tsv' => [
+                'url' => GoogleQrUrl::generate($this->email, $this->tsv_secret, $issuer),
+                'secret' => $this->tsv_secret,
+                'count' => (int)$this->tsv_count,
+            ]
         ];
     }
 }

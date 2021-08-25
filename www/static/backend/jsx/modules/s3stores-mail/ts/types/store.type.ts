@@ -32,10 +32,6 @@ export interface StoreDto {
   departmentsMenuMobile: {
     isVisible: boolean;
   };
-  tsv: {
-    url: string;
-    secret: string;
-  };
 }
 
 export interface EmailStoreItems {

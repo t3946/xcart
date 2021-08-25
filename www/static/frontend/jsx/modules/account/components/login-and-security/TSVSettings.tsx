@@ -6,10 +6,7 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 import { useHistory, NavLink } from "react-router-dom";
-import {
-  disableAction,
-  setTSVAction,
-} from "@client/jsx/redux/actions/account-actions/TSVActions";
+import { disableAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 
@@ -23,8 +20,8 @@ const TSVSettings = (): any => {
   }
 
   function tsvCountTemplate() {
-    if (user.tsv_count) {
-      return <div>{user.tsv_count} app(s) enrolled</div>;
+    if (user.tsv.count) {
+      return <div>{user.tsv.count} app(s) enrolled</div>;
     }
   }
 
@@ -33,14 +30,13 @@ const TSVSettings = (): any => {
       disableAction({
         success(res) {
           dispatch(userSetAction(res.user));
-          dispatch(setTSVAction(res.tsv));
         },
       })
     );
   }
 
   function disableTSV() {
-    if (user.tsv_count === 0) {
+    if (user.tsv.count === 0) {
       return;
     }
 

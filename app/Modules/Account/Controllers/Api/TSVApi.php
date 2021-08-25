@@ -2,7 +2,6 @@
 
 namespace Modules\Account\Controllers\Api;
 
-use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Xcart\App\Controller\FrontendController;
