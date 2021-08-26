@@ -40,15 +40,8 @@ class QueueImagesActiveCommand extends Command
                     $product_image->save();
                 }
 
-                $action = [
-                    'image_path' => $image_by_hash->path->getValue(),
-                    'action' => 'delete'
-                ];
-
                 echo "image link changed\n";
                 print_r($action);
-
-                Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
 
                 $image_by_hash->delete();
             }
