@@ -37,7 +37,11 @@ class QueueImagesActiveCommand extends Command
                 // изменилась ссылка у картинки
                 foreach (ProductImagesModel::objects()->filter(['image_id' => $image_by_hash->pk]) as $product_image) {
                     $product_image->image_id = $image_by_link->pk;
-                    $product_image->save();
+                    try {
+                        $product_image->save();
+                    } catch (Throwable $exception) {
+                        echo "{$exception->getMessage()} \n";
+                    }
                 }
 
                 echo "image link changed\n";
