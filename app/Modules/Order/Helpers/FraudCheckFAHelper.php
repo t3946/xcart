@@ -177,10 +177,11 @@ class FraudCheckFAHelper
             /** @var CountryModel $country_model */
             $country_model = CountryModel::objects()->get(['name' => $this->ob_melissa->phone_data['CountryName']]);
             if (!is_null($country_model)) {
+                /** @var StateModel $state */
                 $state = StateModel::objects()->get(['state' => $this->ob_melissa->phone_data['State'], 'country_code' => $country_model->code]);
             }
             $phone_address = [
-                'state' => $state,
+                'state' => $state->code,
                 'city' => $this->ob_melissa->phone_data['City'],
                 'zipcode' => $this->ob_melissa->phone_data['PostalCode']
             ];
