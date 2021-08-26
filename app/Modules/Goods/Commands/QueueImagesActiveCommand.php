@@ -53,7 +53,7 @@ class QueueImagesActiveCommand extends Command
                 $image_by_hash->delete();
             }
 
-            if ($data['image_hash'] !== $image_by_link->hash) {
+            if (!$is_image_by_link_new && $data['image_hash'] !== $image_by_link->hash) {
                 // изменился hash картинки у ссылки
                 $action = [
                     'image_path' => $image_by_link->path->getValue(),
