@@ -1,5 +1,5 @@
 import React from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Form as RBForm } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
@@ -9,11 +9,15 @@ import { useHistory, NavLink } from "react-router-dom";
 import { disableAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
+import { useDialog } from "@client/modules/account/hooks/useDialog";
+import ModalTSVDisable from "@client/modules/account/components/login-and-security/ModalTSVDisable";
 
 const TSVSettings = (): any => {
+  const disableTSVModal = useDialog();
   const user = useSelector((e: StoreDto) => e.user);
   const history = useHistory();
   const dispatch = useDispatch();
+  const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
 
   if (user === null) {
     history.push(route("account:login"));
@@ -26,9 +30,12 @@ const TSVSettings = (): any => {
   }
 
   function disableTSVHandler() {
+    setIsDisableTsvSending(true);
     dispatch(
       disableAction({
         success(res) {
+          disableTSVModal.handleClose();
+          setIsDisableTsvSending(false);
           dispatch(userSetAction(res.user));
         },
       })
@@ -53,7 +60,8 @@ const TSVSettings = (): any => {
         <div className="col-12 col-md-6 d-flex justify-content-end">
           <button
             className="form-button form-button__outline w-auto"
-            onClick={disableTSVHandler}
+            // onClick={disableTSVHandler}
+            onClick={disableTSVModal.handleClickOpen}
           >
             disable
           </button>
@@ -64,6 +72,13 @@ const TSVSettings = (): any => {
 
   return (
     <>
+      <ModalTSVDisable
+        show={disableTSVModal.open}
+        onClose={disableTSVModal.handleClose}
+        onConfirm={disableTSVHandler}
+        ajaxSending={isDisableTsvSending}
+      />
+
       <div className="account-page_header text-center text-lg-start">
         <h1 className={"mb-0"}>Two-Step Verification (2SV) Settings</h1>
 

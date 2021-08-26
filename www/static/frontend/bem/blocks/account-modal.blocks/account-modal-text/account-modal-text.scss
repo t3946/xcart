@@ -1,0 +1,11 @@
+.account-modal-text {
+  font-size: rem-calc(14);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}
