@@ -1,3 +1,12 @@
 .account-modal-header {
-  background-color: #f4f4f4;
+  font-weight: bold;
+  font-size: rem-calc(18);
+
+  @include breakpoint(sm up) {
+    font-size: rem-calc(22);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(18);
+  }
 }

@@ -1,0 +1,10 @@
+.account-modal-hat {
+  height: 0;
+  display: flex;
+  align-items: center;
+
+  @include breakpoint(sm up) {
+    height: rem-calc(66);
+    background-color: #f4f4f4;
+  }
+}

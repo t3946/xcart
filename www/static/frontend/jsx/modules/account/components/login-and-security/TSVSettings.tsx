@@ -1,5 +1,5 @@
 import React from "react";
-import { OverlayTrigger, Tooltip, Form as RBForm } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
@@ -49,7 +49,7 @@ const TSVSettings = (): any => {
 
     return (
       <div className="row">
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-sm-6 my-3 my-sm-0">
           <b className="d-block two-step-status-caption">
             Two-Step Verification
           </b>
@@ -57,10 +57,9 @@ const TSVSettings = (): any => {
           <span className={"two-step-status-indicator"}>Enabled</span>
         </div>
 
-        <div className="col-12 col-md-6 d-flex justify-content-end">
+        <div className="col-12 col-sm-6 d-flex justify-content-end">
           <button
-            className="form-button form-button__outline w-auto"
-            // onClick={disableTSVHandler}
+            className="form-button form-button__outline w-100 w-sm-auto"
             onClick={disableTSVModal.handleClickOpen}
           >
             disable
@@ -79,8 +78,10 @@ const TSVSettings = (): any => {
         ajaxSending={isDisableTsvSending}
       />
 
-      <div className="account-page_header text-center text-lg-start">
-        <h1 className={"mb-0"}>Two-Step Verification (2SV) Settings</h1>
+      <div className="account-page_hat">
+        <h1 className={"mb-0 text-center text-lg-start account-page_header"}>
+          Two-Step Verification (2SV) Settings
+        </h1>
 
         {disableTSV()}
       </div>

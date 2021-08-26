@@ -45,20 +45,22 @@ const ModalTSVDisable: React.FC<any> = function (props: propsDto) {
         </RBForm.Group>
       </div>
 
-      <button
-        className="admin-form-control form-button d-inline-block w-auto"
-        onClick={() => isConfirm && props.onConfirm()}
-        disabled={props.ajaxSending || !isConfirm}
-      >
-        disable
-      </button>
+      <div className={"text-center text-md-start"}>
+        <button
+          className="admin-form-control form-button d-inline-block w-auto"
+          onClick={() => isConfirm && props.onConfirm()}
+          disabled={props.ajaxSending || !isConfirm}
+        >
+          disable
+        </button>
 
-      <button
-        className="form-button form-button__outline d-inline-block w-auto ms-12"
-        onClick={props.onClose}
-      >
-        cancel
-      </button>
+        <button
+          className="form-button form-button__outline d-inline-block w-auto ms-12"
+          onClick={props.onClose}
+        >
+          cancel
+        </button>
+      </div>
     </BootstrapDialogHOC>
   );
 };

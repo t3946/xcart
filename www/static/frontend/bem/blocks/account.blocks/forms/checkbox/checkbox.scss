@@ -31,7 +31,7 @@
     box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
   }
 
-  &:not(:checked) + .checkbox-label:before {
+  &:not(:checked) + .checkbox-labelbefore {
     background: #ffffff;
     border-color: #c4c4c4;
     box-shadow: none;
@@ -61,7 +61,6 @@
     content: '';
     position: absolute;
     left: rem-calc(8);
-    top: rem-calc(8);
     background: url("/static/frontend/dist/images/icons/account/checkbox-arrow.svg") no-repeat center / cover;
     width: rem-calc(15);
     height: rem-calc(15);
