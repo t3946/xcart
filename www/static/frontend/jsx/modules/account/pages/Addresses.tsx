@@ -2,10 +2,11 @@ import React from "react";
 import { AddNewAddress } from "../components/addresses/AddNewAddress";
 import { AddressList } from "../components/addresses/AddressList";
 import { useSelector } from "react-redux";
-import { AddressTypeEnum } from "../ts/types/address-item.type";
+import { AccountStore } from "../ts/types/account-store.type";
+import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
 
-export const Addresses = (): any => {
-  const addresses = useSelector((e: any) => {
+export const Addresses: React.FC = () => {
+  const addresses = useSelector((e: AccountStore) => {
     return e.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     );

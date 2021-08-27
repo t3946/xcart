@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
-import { Button, Grid } from "@material-ui/core";
-import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik, useFormik } from "formik";
+import { Button } from "@material-ui/core";
+import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -12,19 +11,68 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStates } from "../../utils/get-states";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import {
+  addCard,
+  addDataFromSubmitCardForm,
+} from "../../../../redux/actions/account-actions/PaymentsActions";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
+import { AccountStore } from "../../ts/types/account-store.type";
 
-export const AddBillingAddressForm = () => {
+interface AddBillingAddressFormProps {
+  edit: boolean;
+}
+
+export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
+  edit,
+}) => {
+  const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
 
-  const countries = useSelector((e: any) => e.main.countries);
+  const countries = useSelector((e: AccountStore) => e.main.countries);
 
+  const submitCardFormLoading = useSelector(
+    (e: AccountStore) => e.payments.submitCardFormLoading
+  );
+
+  const cardSubmitData = useSelector(
+    (e: AccountStore) => e.payments.submitFormData
+  );
+
+  const onSubmit = (values) => {
+    const newAddress = {
+      ...values,
+      country: values.country.value,
+      state: values.state.value,
+    };
+
+    if (edit) {
+      dispatch(
+        addDataFromSubmitCardForm({
+          address: newAddress,
+        })
+      );
+      context.setContent(BillingAddressFormEnum.EDIT);
+      return;
+    }
+
+    dispatch(
+      addCard(
+        {
+          ...cardSubmitData,
+          address: newAddress,
+          userId: accountStore.getState().user.id,
+        },
+        context.handleClose
+      )
+    );
+  };
   const states = useSelector((e: any) => e.main.states);
   return (
     <div className="billing-address-container add-billing-address-container">
       <div className="dialog-title">Add a billing address</div>
       <Formik
         initialValues={initialAddAddressFormValue}
-        onSubmit={null}
+        onSubmit={onSubmit}
         validationSchema={addAddressFormValidationSchema}
       >
         {({
@@ -69,6 +117,7 @@ export const AddBillingAddressForm = () => {
                 touched={touched.phone_number}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
+                mask={"+9 (999) 999 99 99"}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"
@@ -129,11 +178,13 @@ export const AddBillingAddressForm = () => {
                       context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
                     }
                     type={"submit"}
+                    disabled={submitCardFormLoading}
                     className="account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
                   >
                     Back
                   </Button>
                   <Button
+                    disabled={submitCardFormLoading}
                     type={"submit"}
                     className="account-submit-btn auto-width-button"
                   >

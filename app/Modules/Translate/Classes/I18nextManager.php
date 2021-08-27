@@ -33,7 +33,7 @@ class I18nextManager
      * @param bool $minify -- remove spaces and break lines from result
      * @return string json content
      */
-    public static function getTranslates(string $locale, bool $minify = true): string
+    public static function getTranslates($locale, bool $minify = true): string
     {
         $path = $_SERVER[ 'DOCUMENT_ROOT' ] . "/../app/Modules/Translate/lang/$locale.i18next.json";
 

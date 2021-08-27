@@ -14,8 +14,15 @@ class AccountAddressesApi extends FrontendController
 {
     public function getAddresses()
     {
-        $user = UserModel::objects()->get(['user_id' => 1]);
+        $user_id = json_decode(file_get_contents('php://input'));
 
+        $this->jsonResponse($this->getAddressesFromBase($user_id));
+
+    }
+
+    public function getAddressesFromBase(int $user_id)
+    {
+        $user = UserModel::objects()->get(['user_id' => $user_id]);
 
         $resultMass = [];
 
@@ -30,16 +37,18 @@ class AccountAddressesApi extends FrontendController
             $resultMass[$key]['is_default'] = (bool) $address->is_default;
         }
 
-       $this->jsonResponse(['addresses' => $resultMass]);
+     return $resultMass;
     }
-
-
 
     public function changeDefaultAddress()
     {
-        $addressId = json_decode(file_get_contents('php://input'));
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        $user = UserModel::objects()->get(['user_id' => 1]);
+        $addressId = $data['addressId'];
+
+        $userId = $data['user'];
+
+        $user = UserModel::objects()->get(['user_id' => $userId]);
         $addresses = $user->addresses->all();
 
         foreach ($addresses as $key => $address)
@@ -53,38 +62,51 @@ class AccountAddressesApi extends FrontendController
             $address->save();
         }
 
-        $this->getAddresses();
+        $this->jsonResponse($this->getAddressesFromBase($userId));
     }
 
     public function removeAddress()
     {
-        $addressId = json_decode(file_get_contents('php://input'));
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        AddressesModel::objects()->delete(['addresses_id' => $addressId]);
+        $addressId = $data['addressId'];
 
-        $this->getAddresses();
+        $userId = $data['user'];
+
+        AddressesModel::objects()->delete(['address_id' => $addressId]);
+
+        $this->jsonResponse($this->getAddressesFromBase($userId));
     }
 
     public function addAddress()
     {
-        $address = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->get(['user_id' => 1]);
+        $data = json_decode(file_get_contents('php://input'), true);
+        $address = $data['address'];
+        $userId = $data['user'];
+
+        $user = UserModel::objects()->get(['user_id' => $userId]);
+
         $addresses = $user->addresses->all();
 
         if($address['is_default'])
         {
             $add_arr = array_map(fn($a) => $a->addresses_id, $addresses);
-            AddressesModel::objects()->filter(['addresses_id__in' => $add_arr])->update(['is_default' => false]);
+            AddressesModel::objects()->filter(['address_id__in' => $add_arr])->update(['is_default' => false]);
         }
-        $address['user_id'] = 1;
+        $address['user_id'] = $userId;
+        $address['address_type'] = 'shipping';
         $model = new AddressesModel($address);
         $model->save();
-        $this->getAddresses();
+        $this->jsonResponse($this->getAddressesFromBase($userId));
     }
 
     public function editAddress()
     {
-        $address = json_decode(file_get_contents('php://input'), true);
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $address = $data['address'];
+
+        $userId = $data['user'];
 
         if($address['is_default']){
             foreach (AddressesModel::objects()->all() as $key => $addressModel)
@@ -95,12 +117,12 @@ class AccountAddressesApi extends FrontendController
             }
         }
 
-        $addressModel = AddressesModel::objects()->get(['addresses_id' => $address['addresses_id']]);
+        $addressModel = AddressesModel::objects()->get(['address_id' => $address['address_id']]);
 
         $addressModel->setAttributes($address);
         $addressModel->save();
 
-        $this->getAddresses();
+        $this->jsonResponse($this->getAddressesFromBase($userId));
     }
 
 

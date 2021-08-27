@@ -1,5 +1,5 @@
 import { takeLatest } from "redux-saga/effects";
-import { ApiService } from "../../../modules/shared/services/api.service";
+import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 

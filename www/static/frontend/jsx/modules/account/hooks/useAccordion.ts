@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 
-export function useAccordion() {
+interface AccordionData {
+  height: string | number;
+  open: boolean;
+  ref: MutableRefObject<HTMLDivElement>;
+  onItemClick: () => void;
+}
+
+export function useAccordion(timeout = 300): AccordionData {
   const [height, setHeight] = useState<string | number>(0);
 
   const [open, setOpen] = useState(false);
@@ -12,7 +19,7 @@ export function useAccordion() {
       setHeight(ref.current.scrollHeight);
       setTimeout(() => {
         setHeight("auto");
-      }, 300);
+      }, timeout);
     } else {
       setHeight(ref.current.clientHeight);
       setTimeout(() => {

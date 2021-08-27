@@ -1,47 +1,97 @@
 import React, { useContext, useState } from "react";
 import { BillingAddressList } from "./BillingAddressList";
-import { Button, Grid } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
-import { useSelector } from "react-redux";
-import { AddressTypeEnum } from "../../ts/types/address-item.type";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCard,
+  addDataFromSubmitCardForm,
+} from "../../../../redux/actions/account-actions/PaymentsActions";
+import { AccountStore } from "../../ts/types/account-store.type";
+import { CardItemDto } from "../../ts/types/wallet.type";
+import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
 
-export const BillingAddress = () => {
+interface BillingAddressProps {
+  cardInfo: CardItemDto;
+}
+
+export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
   const context = useContext(WalletCardsDialogContext);
 
-  const billingAddresses = useSelector((e: any) => {
+  const dispatch = useDispatch();
+
+  const billingAddresses = useSelector((e: AccountStore) => {
     return e.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.BILLING
     );
   });
+  const cardSubmitData = useSelector(
+    (e: AccountStore) => e.payments.submitFormData
+  );
 
-  const [value, setValue] = useState(billingAddresses[0].addresses_id);
+  const submitCardFormLoading = useSelector(
+    (e: AccountStore) => e.payments.submitCardFormLoading
+  );
+
+  const [value, setValue] = useState(
+    cardSubmitData?.address?.address_id ||
+      cardInfo?.address_id ||
+      billingAddresses[0]?.address_id
+  );
+
+  const onSubmit = () => {
+    if (cardInfo) {
+      dispatch(
+        addDataFromSubmitCardForm({
+          address: {
+            address_id: value,
+          },
+        })
+      );
+      context.setContent(BillingAddressFormEnum.EDIT);
+      return;
+    }
+    dispatch(
+      addCard(
+        {
+          ...cardSubmitData,
+          address: {
+            address_id: value,
+          },
+        },
+        context.handleClose
+      )
+    );
+  };
 
   return (
     <div className="billing-address-container">
       <div className="dialog-title">Select a billing address</div>
-      {billingAddresses && (
-        <BillingAddressList
-          value={value}
-          setValue={setValue}
-          addresses={billingAddresses}
-        />
-      )}
-      <Grid container>
+
+      <BillingAddressList
+        value={value}
+        setValue={setValue}
+        addresses={billingAddresses}
+      />
+      <div className="billing-address-butns">
         <Button
           type={"submit"}
           onClick={() => context.setContent(BillingAddressFormEnum.ADD_ADDRESS)}
           className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+          disabled={submitCardFormLoading}
         >
           ADD new ADDRESS
         </Button>
         <Button
           type={"submit"}
           className="account-submit-btn auto-width-button"
+          disabled={!value || submitCardFormLoading}
+          onClick={onSubmit}
         >
           USE THIS ADDRESS
         </Button>
-      </Grid>
+      </div>
     </div>
   );
 };

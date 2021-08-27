@@ -2,13 +2,13 @@
   display: none;
 }
 .form-radio label {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   position: relative;
   line-height: 18px;
   width: 100%;
   user-select: none;
-  padding: 10px 25px 10px 45px;
   margin: 0;
 }
 
@@ -18,11 +18,13 @@
 .form-radio label:before {
   content: "";
   display: inline-block;
-  width: 19px;
-  height: 19px;
-  position: absolute;
-  left: 10px;
-  top: 9px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-right: 1.5em;
+  background-position: center center;
+  background-size: 50% 50%;
   background: url("/static/frontend/dist/images/icons/account/radio.svg") no-repeat center / cover;
 }
 

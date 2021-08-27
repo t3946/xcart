@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
@@ -11,12 +11,15 @@ import { accountStore } from "../../../redux/stores/StoreAccount";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import { AddAddressPage } from "../pages/AddAddressPage";
+import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
+import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
+import { useBreakPoint } from "../hooks/useBreakPoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -35,6 +38,14 @@ import TSVAddNewApp from "@client/modules/account/components/login-and-security/
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
+
+  useEffect(() => {
+    useBreakPoint();
+    dispatch(getTerritory());
+    if (accountStore.getState().user) {
+      dispatch(getAddresses(accountStore.getState().user.id));
+    }
+  }, []);
 
   dispatch(setBreadcrumbsAddresses(staticRoutes));
 

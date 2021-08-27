@@ -65,7 +65,6 @@ class AccountController extends FrontendController
     public function actionIndex()
     {
         $user = Xcart::app()->auth->getUser(true);
-
         if (!$user->getIsGuest()) {
             StorageHelper::push($user->toArray(), null, 'user');
         }
@@ -109,6 +108,7 @@ class AccountController extends FrontendController
         $this->generateQrCode();
 
         AdminHelper::routesData();
+
 
         $this->display('account/base.tpl');
     }

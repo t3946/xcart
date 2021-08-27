@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { CardsList } from "../components/wallet/CardsList";
 import { AddNewPaymentMethod } from "../components/wallet/AddNewPaymentMethod";
 import { useDispatch, useSelector } from "react-redux";
-import { getCards } from "../../../redux/actions/account-actions/WalletActions";
-import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
+import { getCards } from "../../../redux/actions/account-actions/PaymentsActions";
+import { AccountStore } from "../ts/types/account-store.type";
 
-export const Wallet = () => {
+export const Wallet: React.FC = () => {
   const dispatch = useDispatch();
-  const cards = useSelector((e: any) => e.wallet.cards);
+  const cards = useSelector((e: AccountStore) => e.payments.cards);
 
   useEffect(() => {
     if (!cards) {
@@ -19,7 +19,7 @@ export const Wallet = () => {
     <div className="wallet-container">
       <div className="page-label">Wallet</div>
       <div className="wallet-label">Credit and debit cards</div>
-      {cards && <CardsList cards={cards} />}
+      <CardsList cards={cards} />
       <div className="wallet-label">Add a new payment method</div>
       <AddNewPaymentMethod />
     </div>

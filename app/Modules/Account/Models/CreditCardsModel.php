@@ -4,6 +4,7 @@
 namespace Modules\Account\Models;
 
 
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -31,7 +32,7 @@ class CreditCardsModel extends Model
                 'field' => 'address_id',
                 'class' => ForeignField::class,
                 'modelClass' => AddressesModel::class,
-                'link' => ['address_id' => 'addresses_id'],
+                'link' => ['address_id' => 'address_id'],
             ],
             'is_default' => [
                 'class' => BooleanField::class,
@@ -44,6 +45,12 @@ class CreditCardsModel extends Model
             ],
             'expires' => [
                 'class' => IntField::class,
+            ],
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'user_id'],
             ],
         ];
     }

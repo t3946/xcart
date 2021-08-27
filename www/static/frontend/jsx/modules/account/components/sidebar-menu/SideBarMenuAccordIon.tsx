@@ -1,11 +1,11 @@
 import React from "react";
-import { SidebarItemDto } from "@client/modules/account/ts/types/sidebar-item.type";
+import { SidebarItem } from "@client/modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
 import { useAccordion } from "../../hooks/useAccordion";
 import classNames from "classnames";
 
-interface sideBarMenuItemPropsDto extends SidebarItemDto {
-  routerItems: SidebarItemDto[];
+interface sideBarMenuItemPropsDto extends SidebarItem {
+  routerItems: SidebarItem[];
   classes?: {
     handlerClass?: any;
   };

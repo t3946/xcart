@@ -1,7 +1,16 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Grid } from "@material-ui/core";
 
-export const BillingAddressListItem = ({
+interface BillingAddressListItemProps {
+  id: number;
+  groupValue: number;
+  radioValue: number;
+  viewValue: string;
+  onChange: Dispatch<number>;
+  name: string;
+}
+
+export const BillingAddressListItem: React.FC<BillingAddressListItemProps> = ({
   id,
   groupValue,
   radioValue,

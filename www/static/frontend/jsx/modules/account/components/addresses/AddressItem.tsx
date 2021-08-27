@@ -6,23 +6,27 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
   addressInfo?: any;
-  loading: boolean;
 }
 
 export const AddressItem: React.FC<AddressItemPropsDto> = ({
   defaultItem = false,
   addressInfo,
-  loading,
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const changeDefault = () => {
-    dispatch(changeDefaultAddress(addressInfo.addresses_id));
+    dispatch(
+      changeDefaultAddress(
+        addressInfo.addresses_id,
+        accountStore.getState().user.id
+      )
+    );
   };
 
   const handleRemoveAddress = () => {
@@ -37,47 +41,34 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   };
 
   return (
-    <div
-      className={`address-loading-container ${
-        loading && "address-loading-block-is-loading"
-      }`}
-    >
-      <div className="address-container address-item">
-        <div
-          className={`address-header ${
-            defaultItem && "address-header-default"
-          } `}
-        >
-          {defaultItem && "Default:"}
-        </div>
-
-        <div className="address-content">
-          <div
-            className={`address-name ${defaultItem && "address-name-default"}`}
-          >
-            {addressInfo.full_name}
-          </div>
-          <div className="address-text address-text-address">
-            {addressInfo.street}, {addressInfo.detailed}
-          </div>
-          <div className="address-text">{addressInfo.country.viewValue}</div>
-          <div className="address-phone-wrapper">
-            <div className="address-text">Phone number:</div>
-            <div className="address-text">{addressInfo.phone_number}</div>
-          </div>
-          <AddEditBtnsBlock
-            handleEdit={editAddress}
-            defaultItem={defaultItem}
-            changeDefault={changeDefault}
-            handleRemove={handleRemoveAddress}
-          />
-        </div>
-      </div>
+    <div className="address-container address-item">
       <div
-        className={`address-loading-block ${
-          loading && "address-loading-block-is-loading"
-        }`}
-      />
+        className={`address-header ${defaultItem && "address-header-default"} `}
+      >
+        {defaultItem && "Default:"}
+      </div>
+
+      <div className="address-content">
+        <div
+          className={`address-name ${defaultItem && "address-name-default"}`}
+        >
+          {addressInfo.full_name}
+        </div>
+        <div className="address-text address-text-address">
+          {addressInfo.street}, {addressInfo.detailed}
+        </div>
+        <div className="address-text">{addressInfo.country.viewValue}</div>
+        <div className="address-phone-wrapper">
+          <div className="address-text">Phone number:</div>
+          <div className="address-text">{addressInfo.phone_number}</div>
+        </div>
+        <AddEditBtnsBlock
+          handleEdit={editAddress}
+          defaultItem={defaultItem}
+          changeDefault={changeDefault}
+          handleRemove={handleRemoveAddress}
+        />
+      </div>
     </div>
   );
 };

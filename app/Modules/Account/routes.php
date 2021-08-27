@@ -27,6 +27,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'wallet'
     ],
+    [
+        'route' => '/payments/transactions',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'transactions'
+    ],
 
     [
         'route' => '/register',
@@ -51,6 +56,7 @@ return [
         'target' => [AccountController::class, 'dashboard'],
         'name' => 'dashboard'
     ],
+
 
     [
         'route' => '/login-and-security',

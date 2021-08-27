@@ -12,10 +12,7 @@ const BreadcrumbsReducer = (
       for (const address of action.addresses) {
         state[address.path] = address.name;
       }
-
       return { ...state };
-    case "GET_BREADCRUMBS_ADDRESSES":
-      return state;
     default:
       return state;
   }

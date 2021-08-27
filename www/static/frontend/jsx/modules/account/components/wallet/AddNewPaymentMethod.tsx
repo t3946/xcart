@@ -3,13 +3,26 @@ import { Button } from "@material-ui/core";
 import { CardDialog } from "@client/modules/account/components/wallet/CardDialog";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import { useHistory } from "react-router";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
 
-export const AddNewPaymentMethod = () => {
+export const AddNewPaymentMethod: React.FC = () => {
+  const history = useHistory();
+
   const addDialog = useDialog();
+
+  const addCard = () => {
+    if (accountStore.getState().main.breakpoint.is768) {
+      history.push("/account/payments/wallet/add");
+      return;
+    }
+    addDialog.handleClickOpen();
+  };
+
   return (
     <div className="add-new-payment-method-container">
       <Button
-        onClick={addDialog.handleClickOpen}
+        onClick={addCard}
         className="account-submit-btn edit-card-btn add-new-payment"
       >
         Add a credit or debit card

@@ -8,7 +8,7 @@
 
 Установить git модули<br/>
 `git submodule init && git submodule update`<br/>
-
+s
 Скомпилировать коды библиотеки bootstrap<br/>
 `cd www/static/local_modules/bootstrap && npm i && npm run css`<br/>
 ## Сборка frontend

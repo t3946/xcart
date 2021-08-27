@@ -15,6 +15,7 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
+import { accountStore } from "../../../../redux/stores/StoreAccount";
 
 export const AddAddressForm = ({ addressInfo }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ export const AddAddressForm = ({ addressInfo }) => {
       return;
     }
 
-    dispatch(addAddress(newAddress, onPended));
+    dispatch(addAddress(newAddress, onPended, accountStore.getState().user.id));
   };
   return (
     <div className="add-address-form-container">
@@ -79,10 +80,10 @@ export const AddAddressForm = ({ addressInfo }) => {
                 value={values.full_name}
                 name={"full_name"}
                 errorMessage={errors.full_name}
-                handleChange={handleChange}
                 touched={touched.full_name}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
+                handleChange={handleChange}
               />
               <FormInput
                 label={"Phone Number"}
@@ -93,7 +94,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 touched={touched.phone_number}
                 classes={{ input: "add-address-input" }}
                 handleBlur={handleBlur}
-                mask={"+7 (999) 999 99 99"}
+                mask={"+9 (999) 999 99 99"}
               />
               <FormInput
                 placeholder="Street address or P.O. Box"
@@ -168,7 +169,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                     type={"submit"}
                     className="account-submit-btn"
                   >
-                    {addressInfo ? "Save changes" : "Add"}
+                    {addressInfo ? "Save changes" : "Add Address"}
                   </Button>
                 </Grid>
               </Grid>

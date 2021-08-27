@@ -14,6 +14,7 @@ export const FormSelect = ({
 }) => {
   const selectedItem = value;
   const [open, setOpen] = useState(false);
+
   const clickListener = useCLickListener(setOpen, id);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export const FormSelect = ({
     >
       {label && <label className="form-input-label">{label}</label>}
       <div
-        onClick={(e) => {
+        onClick={() => {
           setOpen(!open);
         }}
         className={classnames("select-wrapper", classes?.input)}
@@ -50,15 +51,17 @@ export const FormSelect = ({
         <div id={id} className="form-select-head">
           {selectedItem.previewValue || selectedItem.viewValue}
         </div>
-        <ul className={classnames("form-select-list", classes?.selectList)}>
-          {items.map((item) => {
-            return (
-              <li onClick={() => onClick(item)} className="form-select-item">
-                {item.viewValue}
-              </li>
-            );
-          })}
-        </ul>
+        {open && (
+          <ul className={`select__list`}>
+            {items.map((item) => {
+              return (
+                <li onClick={() => onClick(item)} className="select__item">
+                  {item.viewValue}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </Grid>
   );

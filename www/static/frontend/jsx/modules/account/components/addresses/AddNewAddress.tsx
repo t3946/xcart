@@ -7,7 +7,7 @@ export const AddNewAddress = () => {
   return (
     <div
       onClick={() => history.push("/account/addresses/add")}
-      className="add-address address-container"
+      className="add-address address-container address"
     >
       <div>
         <img src="/static/frontend/images/icons/account/plus.svg" />

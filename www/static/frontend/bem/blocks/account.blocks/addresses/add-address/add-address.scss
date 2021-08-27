@@ -2,9 +2,12 @@
   border: 1px solid #C4C4C4;
   width: 323px;
   height: 240px;
+  position: relative;
+}
+
+.address{
   margin-right: 10px;
   margin-bottom: 10px;
-  position: relative;
 }
 
 .addresses-list-container{
@@ -116,8 +119,6 @@
 .add-address-input{
   width: 50% !important;
   position: relative;
-
-
 }
 
 @media (max-width: 640px) {
@@ -145,6 +146,4 @@
   .addresses-list-container{
     justify-content: center;
   }
-
-
 }

@@ -2,7 +2,6 @@
 
 use Modules\Account\Controllers\AccountDashboard;
 use Modules\Account\Controllers\Api\AccountWalletApi;
-use Modules\Forms\Controllers\EmailDashboardAdmin;
 
 return [
     [
@@ -14,5 +13,25 @@ return [
         'route' => '/change-default',
         'target' => [AccountWalletApi::class, 'changeDefault'],
         'name' => 'default'
+    ],
+    [
+        'route' => '/add-card',
+        'target' => [AccountWalletApi::class, 'addNewCard'],
+        'name' => 'add'
+    ],
+    [
+        'route' => '/edit-card',
+        'target' => [AccountWalletApi::class, 'editCard'],
+        'name' => 'edit'
+    ],
+    [
+        'route' => '/remove-card',
+        'target' => [AccountWalletApi::class, 'removeCard'],
+        'name' => 'remove'
+    ],
+    [
+        'route' => '/get-transactions',
+        'target' => [AccountWalletApi::class, 'getTransactions'],
+        'name' => 'transactions'
     ],
 ];

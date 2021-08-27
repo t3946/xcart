@@ -29,6 +29,10 @@ export class ApiService {
       body: data,
     });
 
-    return response.json();
+    try {
+      return response.json();
+    } catch (e) {
+      return null;
+    }
   }
 }

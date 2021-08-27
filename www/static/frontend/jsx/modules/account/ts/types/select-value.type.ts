@@ -1,4 +1,4 @@
-export interface SelectValueDto<A, T> {
+export interface SelectValue<A, T> {
   value: A;
   viewValue: T;
 }
