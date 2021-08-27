@@ -32,6 +32,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'transactions'
     ],
+    [
+        'route' => '/your-lists',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'your-lists'
+    ],
 
     [
         'route' => '/register',
@@ -56,7 +61,6 @@ return [
         'target' => [AccountController::class, 'dashboard'],
         'name' => 'dashboard'
     ],
-
 
     [
         'route' => '/login-and-security',
@@ -146,6 +150,12 @@ return [
     [
         'route' => '/api/tsv',
         'path' => 'Modules.Account.routes.routes_tsv_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/lists',
+        'path' => 'Modules.Account.routes.routes_lists_api',
         'namespace' => 'api',
     ],
 ];

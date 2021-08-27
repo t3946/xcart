@@ -42,7 +42,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
     <div className={classnames("form-input-container", classes?.group)}>
       <Grid
         container
-        justify={label ? "space-between" : "flex-end"}
+        justifyContent={label ? "space-between" : "flex-end"}
         alignItems="center"
       >
         {label && (

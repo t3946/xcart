@@ -5,6 +5,7 @@ const appData = thisWindow.appData;
 export const accountMainStoreInitialValue = {
   countries: [],
   states: [],
+  isList: false,
 };
 
 export const accountPaymentsStoreInitialValue = {
@@ -23,6 +24,10 @@ export const accountMenuInitialValue = {
   isTabletMenuVisible: false,
 };
 
+export const accountListsInitialValue = {
+  lists: undefined,
+};
+
 export const accountUserInitialValue = appData.user || null;
 
 export const accountStoreInitialValue = {
@@ -31,6 +36,7 @@ export const accountStoreInitialValue = {
   user: accountUserInitialValue,
   payments: accountPaymentsStoreInitialValue,
   mobileMenu: accountMenuInitialValue,
+  lists: accountListsInitialValue,
 };
 
 export const shadowPanelInitialValue = { isVisible: false };

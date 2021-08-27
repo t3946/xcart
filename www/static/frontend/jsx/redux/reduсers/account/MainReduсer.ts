@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import { AccountMainStore } from "../../../modules/account/ts/types/account-store.type";
 import { accountMainStoreInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
 
-const accountSharedReducer = (
+const accountMainReducer = (
   state: AccountMainStore = accountMainStoreInitialValue,
   action: AnyAction
 ): AccountMainStore => {
@@ -14,8 +14,13 @@ const accountSharedReducer = (
         ...state,
         breakpoint: action.breakpoint,
       };
+    case "SET_IS_LIST":
+      return {
+        ...state,
+        isList: action.isList,
+      };
     default:
       return state;
   }
 };
-export default accountSharedReducer;
+export default accountMainReducer;

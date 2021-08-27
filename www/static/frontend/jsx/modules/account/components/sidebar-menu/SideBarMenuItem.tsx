@@ -15,16 +15,15 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemPropsDto> = ({
   to,
   label,
   className,
+  onClick,
 }) => {
-  const dispatch = useDispatch();
-
   return (
     <NavLink
       to={to}
       exact={true}
       activeClassName="active-route"
       className={classNames("sidebar-menu-container", className)}
-      onClick={() => dispatch(hideAllMenu(false))}
+      onClick={onClick}
     >
       <span>{label}</span>
     </NavLink>

@@ -49,7 +49,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   const getCardAddressInfo = (cardInfo) => {
     const card = { ...cardInfo };
     if (cardSubmitData?.address?.address_id) {
-      card.address = accountStore
+      [card.address] = accountStore
         .getState()
         .addresses.addressesList.filter(
           (address) => address.address_id === cardSubmitData.address.address_id
@@ -60,7 +60,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
             country: e.country.viewValue,
             state: e.state.viewValue,
           };
-        })[0];
+        });
       return card;
     }
     if (cardSubmitData?.address) {

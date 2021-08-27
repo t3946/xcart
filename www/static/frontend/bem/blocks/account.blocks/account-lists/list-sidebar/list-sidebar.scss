@@ -1,0 +1,42 @@
+.back-account-btn-inner{
+  display: flex;
+justify-content: space-between;
+  align-items: center;
+}
+
+.back-account-btn{
+  width: 100%;
+  padding: 20px 16px !important;
+}
+
+.lists-sidebar-label{
+  padding: 20px 30px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.create-list-btn-container{
+  margin-top: 20px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 25px;
+  border: 1px solid #C4C4C4;
+  cursor: pointer;
+  transition: .3s  linear;
+
+
+  &:hover{
+    background-color: #c4c4c4;
+  }
+}
+
+.sidebar-list-cross{
+  width: 23px;
+}
+
+.create-list-label{
+  text-transform: uppercase;
+  line-height: 27px;
+
+}

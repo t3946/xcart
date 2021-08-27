@@ -8,6 +8,7 @@ export interface AccountStore {
   user: any;
   payments: AccountPaymentsStore;
   mobileMenu: any;
+  lists: AccountListsStore;
 }
 
 export interface AccountAddressesStore {
@@ -20,6 +21,11 @@ export interface AccountMainStore {
   countries: SelectValue<string, string>[];
   states: any;
   breakpoint?: any;
+  isList: boolean;
+}
+
+export interface AccountListsStore {
+  lists: any[];
 }
 
 export interface AccountPaymentsStore {

@@ -31,13 +31,18 @@ import FormEditUserPhone from "@client/modules/account/components/login-and-secu
 import FormChangePassword from "@client/modules/account/components/login-and-security/FormChangePassword";
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
+import { ListsSidebarMenu } from "../components/lists/ListsSidebarMenu";
+import { AccountStore } from "../ts/types/account-store.type";
+import { ListsPage } from "../pages/ListsPage";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelector((e: AccountStore) => e.user);
+
+  const isList = useSelector((e: AccountStore) => e.main.isList);
 
   useEffect(() => {
     useBreakPoint();
@@ -82,7 +87,7 @@ export const AccountRouters = (): any => {
 
             <div className="row">
               <div className={classNames(leftColumnClasses)}>
-                <SideBarMenu />
+                {isList ? <ListsSidebarMenu /> : <SideBarMenu />}
               </div>
 
               <div className={classNames(rightColumnClasses)}>
@@ -112,6 +117,16 @@ export const AccountRouters = (): any => {
                     exact
                     path="/account/payments/transactions"
                     component={Transactions}
+                  />
+                  <Route
+                    exact
+                    path="/account/your-lists/:id"
+                    component={ListsPage}
+                  />
+                  <Route
+                    exact
+                    path="/account/your-lists"
+                    component={ListsPage}
                   />
 
                   <Route
