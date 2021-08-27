@@ -1,0 +1,30 @@
+.list-dialog-container{
+  padding: 11px 25px 35px;
+}
+
+.list-dialog-btns{
+  display: flex;
+  margin-top: 20px;
+}
+
+.create-list-learn-more{
+  color: #055A93;
+  cursor: pointer;
+
+  &:hover{
+    text-decoration:underline;
+  }
+}
+
+.create-list-tooltip-text{
+  padding: 20px;
+  width: 315px;
+}
+
+.list-input{
+  width: 100%
+}
+
+.create-list-learn-more{
+  width: 80px;
+}

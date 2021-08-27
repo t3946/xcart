@@ -1,6 +1,8 @@
 const webpack = require("webpack");
 const path = require("path");
 const paths = require("./gulp.frontend.patchs");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 config = {
   mode: process.env.NODE_ENV || "development",
@@ -127,6 +129,7 @@ config = {
       h: ["preact", "h"],
       Component: ["preact", "Component"],
     }),
+    new BundleAnalyzerPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,

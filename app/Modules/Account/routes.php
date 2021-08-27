@@ -32,6 +32,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'transactions'
     ],
+    [
+        'route' => '/your-lists',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'your-lists'
+    ],
 
     [
         'route' => '/register',
@@ -56,6 +61,8 @@ return [
         'target' => [AccountController::class, 'dashboard'],
         'name' => 'dashboard'
     ],
+
+
 
 
     [
@@ -128,6 +135,12 @@ return [
     [
         'route' => '/api/login-and-security',
         'path' => 'Modules.Account.routes.routes_login-and-securities_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/lists',
+        'path' => 'Modules.Account.routes.routes_lists_api',
         'namespace' => 'api',
     ],
 ];

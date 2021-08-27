@@ -1,0 +1,50 @@
+.list-header-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.list-header-actions{
+  display: flex;
+}
+
+.list-header-action-item, .list-header-share-text{
+  cursor: pointer;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.list-header-name{
+  font-weight: 700;
+  font-size: 24px;
+  margin-right: 40px;
+}
+
+.list-header-shared-block{
+  display: flex;
+}
+
+.list-header-action-item{
+  margin-right: 20px;
+}
+
+.list-header-left-side{
+  display:flex;
+  align-items: center;
+}
+
+.list-header-share-btn{
+  margin-right:10px;
+}
+
+.red{
+  color: #9A1524;
+}
+
+.blue{
+  color: #055A93;
+}

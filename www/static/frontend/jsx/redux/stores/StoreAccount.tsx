@@ -5,26 +5,28 @@ import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
 import { accountStoreInitialValue } from "../../modules/account/ts/consts/account-store-initial-value";
 import { AccountStore } from "../../modules/account/ts/types/account-store.type";
 import accountRootSaga from "../sagas/account-sagas/MainSaga";
-import accountSharedReducer from "../reduсers/account/SharedReduсer";
+import accountMainReducer from "../reduсers/account/MainReduсer";
 import WalletReducer from "../reduсers/account/PaymentsReducer";
 import MenuReducer from "../reduсers/account/MenuReducer";
 import UserReducer from "../reduсers/account/UserReduсer";
 import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
 import ShadowPanelReducer from "@client/jsx/redux/reduсers/account/ShadowPanelReducer";
 import CountriesReducer from "@client/jsx/redux/reduсers/account/CountriesReducer";
+import ListsReducer from "@client/jsx/redux/reduсers/account/ListsReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
 export const accountStore: Store<AccountStore> = createStore(
   combineReducers({
     addresses: accountAddressesReducer,
-    main: accountSharedReducer,
+    main: accountMainReducer,
     payments: WalletReducer,
     mobileMenu: MenuReducer,
     user: UserReducer,
     breadcrumbs: BreadcrumbsReducer,
     shadowPanel: ShadowPanelReducer,
     countries: CountriesReducer,
+    lists: ListsReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

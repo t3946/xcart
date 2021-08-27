@@ -1,0 +1,59 @@
+.tooltip-rating-content-container{
+  padding: 20px 25px 30px;
+}
+
+.tooltip-rating-content-top, .tooltip-rating-content-bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tooltip-rating-content-bar{
+  margin-bottom: 10px;
+}
+
+.tooltip-rating-content-top-label{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.tooltip-rating-content-bar-container{
+  display: flex;
+  flex-direction:  column-reverse;
+}
+
+.rating-bar-container{
+  width: 210px;
+  height: 22px;
+  border: 1px solid #c4c4c4;
+}
+
+.rating-bar-rating{
+  height: 20px;
+  background-color: #FFB400;
+}
+
+.rating-stars-tooltip{
+  width: 352px;
+}
+
+.tooltip-rating-stars-target{
+  width: 140px;
+}
+
+.see-all-ratings-text{
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  color: #055A93;
+  cursor: pointer;
+  transition: .3s all;
+
+  &:hover{
+    color: #072639;
+  }
+}
+
+.rating-bar-score{
+  width: 10%
+}

@@ -6,7 +6,7 @@ export const DialogHeader = ({ label, onClose }) => {
     <Grid
       alignItems="center"
       container
-      justify="space-between"
+      justifyContent="space-between"
       className="dialog-header"
     >
       <div className="dialog-header-label">{label}</div>
