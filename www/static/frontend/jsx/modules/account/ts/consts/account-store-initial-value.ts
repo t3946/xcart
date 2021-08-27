@@ -28,7 +28,7 @@ export const accountUserInitialValue = appData.user || null;
 export const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
-  user: null,
+  user: accountUserInitialValue,
   payments: accountPaymentsStoreInitialValue,
   mobileMenu: accountMenuInitialValue,
 };
