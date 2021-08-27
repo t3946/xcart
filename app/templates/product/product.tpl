@@ -178,7 +178,9 @@
                         </div>
                     {/if}
                         <div class="pinterest-bookmark" id="pinterest-bookmark">
-                            <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true" data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_round_red_32.png" /></a>
+                            <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
+                               data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -278,6 +280,13 @@
 
     <script type="application/ld+json">
     {$helper->getJsonSchema($model)}
+    </script>
+    <script>
+        po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.src = '//assets.pinterest.com/js/pinit.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
     </script>
 
 {/block}

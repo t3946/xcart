@@ -255,12 +255,6 @@
                         } else { f(); }
                     })(document, window, "yandex_metrika_callbacks2");
                     {/if}
-
-                po = document.createElement('script');
-                po.type = 'text/javascript';
-                po.src = '//assets.pinterest.com/js/pinit.js';
-                s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(po, s);
             },5100);
         });
 
