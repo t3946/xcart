@@ -79,7 +79,7 @@ const TSVSettings = (): any => {
       />
 
       <div className="account-page_hat">
-        <h1 className={"mb-0 text-center text-lg-start account-page_header"}>
+        <h1 className={"mb-0 text-center text-lg-start"}>
           Two-Step Verification (2SV) Settings
         </h1>
 

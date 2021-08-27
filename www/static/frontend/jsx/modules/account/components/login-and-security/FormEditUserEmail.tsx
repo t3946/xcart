@@ -54,9 +54,11 @@ const FormEditUserEmail = (): any => {
 
   return (
     <div>
-      <h1 className="account-page_header text-center text-lg-start">
-        Change your email address
-      </h1>
+      <div className="account-page_hat">
+        <h1 className="text-center text-lg-start">
+          Change your email address
+        </h1>
+      </div>
 
       <Formik
         initialValues={initialValues}

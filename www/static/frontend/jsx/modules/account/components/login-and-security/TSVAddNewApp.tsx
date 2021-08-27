@@ -50,7 +50,7 @@ const TSVAddNewApp = (): any => {
 
   return (
     <div>
-      <div className="account-page_header">
+      <div className="account-page_hat">
         <h1 className={"md-0 text-center text-lg-start"}>
           Add a second 2SV authenticator
         </h1>
