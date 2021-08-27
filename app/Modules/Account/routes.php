@@ -62,9 +62,6 @@ return [
         'name' => 'dashboard'
     ],
 
-
-
-
     [
         'route' => '/login-and-security',
         'target' => [AccountController::class, 'actionIndex'],
@@ -93,6 +90,18 @@ return [
         'route' => '/login-and-security/edit-password',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'edit-password',
+    ],
+
+    [
+        'route' => '/login-and-security/two-step-verification/settings',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings',
+    ],
+
+    [
+        'route' => '/login-and-security/two-step-verification/settings/add-new',
+        'target' => [AccountController::class, 'actionTSVAddNew'],
+        'name' => 'two-step-verification-add-new',
     ],
 
     [
@@ -135,6 +144,12 @@ return [
     [
         'route' => '/api/login-and-security',
         'path' => 'Modules.Account.routes.routes_login-and-securities_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/tsv',
+        'path' => 'Modules.Account.routes.routes_tsv_api',
         'namespace' => 'api',
     ],
 

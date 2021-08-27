@@ -1,9 +1,18 @@
-.account-form-input {
-    border: 1px solid #C4C4C4;
+.form-input {
+    border: 1px solid #c4c4c4;
     padding: rem-calc(5) rem-calc(14);
     width: 100%;
     line-height: rem-calc(32);
     border-radius: 0;
+    height: rem-calc(38);
+
+    @include breakpoint(md up) {
+        height: rem-calc(42);
+    }
+
+    @include breakpoint(lg up) {
+        height: rem-calc(34);
+    }
 
     &::placeholder{
         font-style: italic;

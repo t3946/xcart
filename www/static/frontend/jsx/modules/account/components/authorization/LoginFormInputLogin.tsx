@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { checkUserLoginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
 import { Form as RBForm } from "react-bootstrap";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
 
@@ -20,8 +20,6 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
   };
 
   React.useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     inputRef.current.focus();
   });
 
@@ -54,8 +52,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         onSubmit={submit}
         ref={React.useRef()}
       >
-        {({ isSubmitting, handleChange, values, touched, errors }) => {
-          console.log(11);
+        {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
               <RBForm.Group controlId="LoginFormLogin">

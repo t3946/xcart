@@ -25,6 +25,13 @@ export interface StoreDto {
     zIndex?: number;
   };
   countries: CountryDto[];
+  departmentsMenu: {
+    mobile: Record<any, any>[];
+    desktop: Record<any, any>[];
+  };
+  departmentsMenuMobile: {
+    isVisible: boolean;
+  };
 }
 
 export interface EmailStoreItems {

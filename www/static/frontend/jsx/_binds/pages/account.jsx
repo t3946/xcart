@@ -6,6 +6,7 @@ import { accountStore } from "../../redux/stores/StoreAccount";
 
 (() => {
   const elem = document.getElementsByClassName("account")[0];
+
   if (!elem) {
     return;
   }

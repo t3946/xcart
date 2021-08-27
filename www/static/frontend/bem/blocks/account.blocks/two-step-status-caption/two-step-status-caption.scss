@@ -1,0 +1,7 @@
+.two-step-status-caption {
+  font-size: rem-calc(16);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+}

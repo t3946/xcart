@@ -18,8 +18,8 @@
     width: rem-calc(30);
     min-width: rem-calc(30);
     height: rem-calc(30);
-    background: white;
-    border: 1px solid #C4C4C4;
+    background: #ffffff;
+    border: 1px solid #c4c4c4;
     transition: all 0.15s ease-out;
   }
 
@@ -29,6 +29,21 @@
 
   &:focus + .checkbox-label:before {
     background: #fff3d7;
+    border-color: #f2b405;
+    box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
+  }
+
+  &:not(:checked) + .checkbox-labelbefore {
+    background: #ffffff;
+    border-color: #c4c4c4;
+    box-shadow: none;
+  }
+
+  &:hover:not(:checked) + .checkbox-label:before {
+    background: #fffaef;
+  }
+
+  &:focus:not(:checked) + .checkbox-label:before {
     border-color: #f2b405;
     box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
   }

@@ -66,7 +66,9 @@ class AccountAuthorizationApi extends FrontendController
                 return;
             }
 
-            $this->jsonResponse($user->toArray());
+            $this->jsonResponse([
+                "user" => $user->toArray(),
+            ]);
         }
         else {
             $this->jsonResponse(["errors" => $form->getErrors()]);

@@ -1,0 +1,9 @@
+.account-modal-dialog {
+  align-items: flex-end;
+  height: 100%;
+
+  @include breakpoint(ms up) {
+    align-items: center;
+    height: calc(100% - 1rem);
+  }
+}

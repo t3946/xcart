@@ -48,4 +48,14 @@ export const staticRoutes = [
     name: "Change password",
     path: routes["account:edit-password"],
   },
+
+  {
+    name: "Two-Step Verification (2SV) Settings",
+    path: routes["account:two-step-verification-settings"],
+  },
+
+  {
+    name: "Add New App",
+    path: routes["account:two-step-verification-add-new"],
+  },
 ];

@@ -12,6 +12,11 @@ const LoginAndSecurity = (): any => {
 
   function formatPhoneNumber() {
     const phoneCountry = getCountryByCode(user.phone_country_code, countries);
+
+    if (!phoneCountry) {
+      return;
+    }
+
     const countryPrefix = "+" + phoneCountry.phone_code;
     return user.phone.replace(countryPrefix, `${countryPrefix} `);
   }
@@ -43,7 +48,7 @@ const LoginAndSecurity = (): any => {
       classes: {
         caption: "settings-item-caption__small",
       },
-      route: "",
+      route: route("account:two-step-verification-settings"),
     },
     {
       title: "secure your account",

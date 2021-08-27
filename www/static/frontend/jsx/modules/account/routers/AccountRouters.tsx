@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
@@ -12,7 +12,6 @@ import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import { AddAddressPage } from "../pages/AddAddressPage";
 import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
-import TopLine from "../components/hat/TopLine";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
@@ -20,10 +19,7 @@ import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
-import { AddCard } from "../pages/AddCard";
-import { EditCard } from "../pages/EditCard";
 import { useBreakPoint } from "../hooks/useBreakPoint";
-import { RemoveCardPage } from "../pages/RemoveCardPage";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -38,6 +34,9 @@ import { route } from "@client/jsx/utils/AppData";
 import { ListsSidebarMenu } from "../components/lists/ListsSidebarMenu";
 import { AccountStore } from "../ts/types/account-store.type";
 import { ListsPage } from "../pages/ListsPage";
+import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
+import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
+import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -45,9 +44,6 @@ export const AccountRouters = (): any => {
 
   const isList = useSelector((e: AccountStore) => e.main.isList);
 
-  const data: any = window;
-
-  const addresses = useSelector((e: any) => e.addresses.addressesList);
   useEffect(() => {
     useBreakPoint();
     dispatch(getTerritory());
@@ -55,6 +51,7 @@ export const AccountRouters = (): any => {
       dispatch(getAddresses(accountStore.getState().user.id));
     }
   }, []);
+
   dispatch(setBreadcrumbsAddresses(staticRoutes));
 
   const leftColumnClasses = [
@@ -77,6 +74,9 @@ export const AccountRouters = (): any => {
     <Provider store={accountStore as any}>
       <Snackbar>
         <BrowserRouter>
+          <DepartmentsMenuMobile
+            classes={{ container: "hat-navigation_departments-menu-mobile" }}
+          />
           <ShadowPanel />
           <HatNavigation />
           <HatSearchLine />
@@ -131,24 +131,25 @@ export const AccountRouters = (): any => {
 
                   <Route
                     exact
-                    path={data.appData.routes["account:login"]}
+                    path={route("account:login")}
                     component={LoginForm}
                   />
 
                   <Route
                     exact
-                    path={data.appData.routes["account:register"]}
+                    path={route("account:register")}
                     component={RegisterForm}
                   />
 
                   <Route
                     exact
-                    path={data.appData.routes["account:public-profile"]}
+                    path={route("account:public-profile")}
                     component={PublicProfile}
                   />
+
                   <Route
                     exact
-                    path={data.appData.routes["account:login-and-security"]}
+                    path={route("account:login-and-security")}
                     component={LoginAndSecurity}
                   />
 
@@ -174,6 +175,18 @@ export const AccountRouters = (): any => {
                     exact
                     path={route("account:edit-password")}
                     component={FormChangePassword}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-settings")}
+                    component={TSVSettings}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-add-new")}
+                    component={TSVAddNewApp}
                   />
                 </Switch>
               </div>

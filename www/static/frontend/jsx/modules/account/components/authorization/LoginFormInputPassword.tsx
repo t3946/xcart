@@ -8,8 +8,9 @@ import { userSetAction } from "../../../../redux/actions/account-actions/UserAct
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { useHistory } from "react-router-dom";
+import { route } from "@client/jsx/utils/AppData";
 
-const LoginFormInputPassword = function (props) {
+const LoginFormInputPassword = function (props: Record<any, any>): any {
   const history = useHistory();
   const dispatch = useDispatch();
   const inputRef = React.createRef<HTMLInputElement>();
@@ -43,8 +44,8 @@ const LoginFormInputPassword = function (props) {
         },
 
         success(res) {
-          dispatch(userSetAction(res));
-          history.push(appData.routes["account:index"]);
+          dispatch(userSetAction(res.user));
+          history.push(route("account:index"));
         },
 
         error(err) {
@@ -74,7 +75,7 @@ const LoginFormInputPassword = function (props) {
         onSubmit={submit}
         ref={React.useRef()}
       >
-        {({ isSubmitting, handleChange, values, touched, errors }) => {
+        {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
               <RBForm.Group controlId="LoginFormPassword">
@@ -155,7 +156,7 @@ const LoginFormInputPassword = function (props) {
                       <span className={"common-link"}>
                         Details
                         <FontAwesomeIcon
-                          className={"ml-1"}
+                          className={"ms-1"}
                           icon={faQuestionCircle}
                         />
                       </span>

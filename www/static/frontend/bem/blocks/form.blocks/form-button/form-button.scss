@@ -15,27 +15,28 @@
     border-radius: rem-calc(4);
     cursor: pointer;
     user-select: none;
-    padding: 0 rem-calc(40);
-    min-width: rem-calc(180);
+    padding: 0 rem-calc(20);
 
     @include breakpoint(md up) {
         height: rem-calc(48);
+        padding: 0 rem-calc(30);
     }
 
     @include breakpoint(lg up) {
         height: rem-calc(34);
-    }
-
-    &:focus {
-        background-color: #ffb400;
-        color: #000000;
-        box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
-        text-decoration: none;
+        padding: 0 rem-calc(40);
     }
 
     &:hover {
         color: #000000;
-        background-color: #e8a400;
+        text-decoration: none;
+        background-color: #f09e05;
+    }
+
+    &:focus {
+        background-color: #f09e05;
+        color: #000000;
+        box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
         text-decoration: none;
     }
 
@@ -43,7 +44,7 @@
         color: #000000;
         border-color: #f2b405;
         box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
-        background-color: #d59701;
+        background-color: #ef8807;
     }
 
     &:disabled {
