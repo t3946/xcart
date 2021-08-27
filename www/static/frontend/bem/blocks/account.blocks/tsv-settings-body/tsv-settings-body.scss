@@ -1,0 +1,7 @@
+.tsv-settings-body {
+  border: 1px solid #c4c4c4;
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(20) rem-calc(24) rem-calc(30);
+  }
+}

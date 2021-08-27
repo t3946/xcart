@@ -11,6 +11,7 @@ import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserAct
 import { useDispatch } from "react-redux";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import ModalTSVDisable from "@client/modules/account/components/login-and-security/ModalTSVDisable";
+import InnerPage from "@client/jsx/modules/account/components/shared/InnerPage";
 
 const TSVSettings = (): any => {
   const disableTSVModal = useDialog();
@@ -48,8 +49,8 @@ const TSVSettings = (): any => {
     }
 
     return (
-      <div className="row">
-        <div className="col-12 col-sm-6 my-3 my-sm-0">
+      <div className="row mt-3 mt-3">
+        <div className="col-12 col-sm-6 mb-3 mb-sm-0">
           <b className="d-block two-step-status-caption">
             Two-Step Verification
           </b>
@@ -78,15 +79,11 @@ const TSVSettings = (): any => {
         ajaxSending={isDisableTsvSending}
       />
 
-      <div className="account-page_hat">
-        <h1 className={"mb-0 text-center text-lg-start"}>
-          Two-Step Verification (2SV) Settings
-        </h1>
-
-        {disableTSV()}
-      </div>
-
-      <div className="content-panel">
+      <InnerPage
+        header={<>Two-Step Verification (2SV) Settings</>}
+        hat={<>{disableTSV()}</>}
+        bodyClasses={"tsv-settings-body"}
+      >
         <div className="row two-step-row__bordered mx-0 pb-2 mb-2">
           <div className="col-12 px-0">
             <h3 className={"mb-0 content-h3"}>Preferred method</h3>
@@ -261,7 +258,7 @@ const TSVSettings = (): any => {
             <a href="#">Get help with Two-Step Verification</a>
           </div>
         </div>
-      </div>
+      </InnerPage>
     </>
   );
 };

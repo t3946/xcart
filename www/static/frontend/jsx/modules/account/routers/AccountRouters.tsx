@@ -85,7 +85,7 @@ export const AccountRouters = (): any => {
           <div className={"container"}>
             {user && <BreadCrumbs />}
 
-            <div className="row">
+            <div className="row mt-lg-20">
               <div className={classNames(leftColumnClasses)}>
                 {isList ? <ListsSidebarMenu /> : <SideBarMenu />}
               </div>
