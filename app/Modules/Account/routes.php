@@ -99,6 +99,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification/settings/disable',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings-disable',
+    ],
+
+    [
         'route' => '/login-and-security/two-step-verification/settings/add-new',
         'target' => [AccountController::class, 'actionTSVAddNew'],
         'name' => 'two-step-verification-add-new',

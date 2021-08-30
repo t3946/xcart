@@ -3,7 +3,6 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 import { useHistory, NavLink } from "react-router-dom";
 import { disableAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
@@ -12,10 +11,14 @@ import { useDispatch } from "react-redux";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import ModalTSVDisable from "@client/modules/account/components/login-and-security/ModalTSVDisable";
 import InnerPage from "@client/jsx/modules/account/components/shared/InnerPage";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const TSVSettings = (): any => {
+  const breakpoint = useBreakpoint();
   const disableTSVModal = useDialog();
-  const user = useSelector((e: StoreDto) => e.user);
+  useSelector((e: AccountStore) => e.main.breakpoint);
+  const user = useSelector((e: AccountStore) => e.user);
   const history = useHistory();
   const dispatch = useDispatch();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
@@ -43,7 +46,29 @@ const TSVSettings = (): any => {
     );
   }
 
-  function disableTSV() {
+  function disableTSVButtonTemplate() {
+    return breakpoint({
+      xs: (
+        <NavLink
+          className="form-button form-button__outline w-100 w-sm-auto"
+          to={route("account:two-step-verification-settings-disable")}
+          exact={true}
+        >
+          disable
+        </NavLink>
+      ),
+      lg: (
+        <button
+          className="form-button form-button__outline w-100 w-sm-auto"
+          onClick={disableTSVModal.handleClickOpen}
+        >
+          disable
+        </button>
+      ),
+    });
+  }
+
+  function disableTSVTemplate() {
     if (user.tsv.count === 0) {
       return;
     }
@@ -59,12 +84,7 @@ const TSVSettings = (): any => {
         </div>
 
         <div className="col-12 col-sm-6 d-flex justify-content-end">
-          <button
-            className="form-button form-button__outline w-100 w-sm-auto"
-            onClick={disableTSVModal.handleClickOpen}
-          >
-            disable
-          </button>
+          {disableTSVButtonTemplate()}
         </div>
       </div>
     );
@@ -81,7 +101,7 @@ const TSVSettings = (): any => {
 
       <InnerPage
         header={<>Two-Step Verification (2SV) Settings</>}
-        hat={<>{disableTSV()}</>}
+        hat={<>{disableTSVTemplate()}</>}
         bodyClasses={"tsv-settings-body"}
       >
         <div className="row two-step-row__bordered two-step-row__header mx-0 pb-lg-2 lg-2">
@@ -209,11 +229,11 @@ const TSVSettings = (): any => {
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
               <p className={"two-step-info"}>
-                You may suppress future OTP challenges by selecting "Don't require
-                OTP on this browser". As long as the OTP suppression cookie is
-                present, a Sign-In from that browser or application will only
-                require a password. (Note: This option is enabled separately for
-                each browser that you use.)
+                You may suppress future OTP challenges by selecting "Don't
+                require OTP on this browser". As long as the OTP suppression
+                cookie is present, a Sign-In from that browser or application
+                will only require a password. (Note: This option is enabled
+                separately for each browser that you use.)
               </p>
             </div>
           </div>
@@ -221,9 +241,9 @@ const TSVSettings = (): any => {
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
               <p className={"two-step-info"}>
-                To make sure your account is protected, some actions like changing
-                your account security settings, may still require you to enter an
-                OTP
+                To make sure your account is protected, some actions like
+                changing your account security settings, may still require you
+                to enter an OTP
               </p>
             </div>
           </div>
@@ -251,21 +271,22 @@ const TSVSettings = (): any => {
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
               <p className={"two-step-info"}>
-                If you want to generate one time passwords from an app instead of
-                having them sent to your phone, you'll need to clear your two-step
-                verification settings. To do so, tap or click disable, then check
-                the box next to "Also clear my Two-Step Verification settings" on
-                the window that appears. Lastly, re-enable two-step verification
-                using your authenticator app as your preferred method.
+                If you want to generate one time passwords from an app instead
+                of having them sent to your phone, you'll need to clear your
+                two-step verification settings. To do so, tap or click disable,
+                then check the box next to "Also clear my Two-Step Verification
+                settings" on the window that appears. Lastly, re-enable two-step
+                verification using your authenticator app as your preferred
+                method.
               </p>
             </div>
           </div>
 
           <div className="row mx-0">
-          <div className="col-12 px-lg-0">
-            <a href="#">Get help with Two-Step Verification</a>
+            <div className="col-12 px-lg-0">
+              <a href="#">Get help with Two-Step Verification</a>
+            </div>
           </div>
-        </div>
         </div>
       </InnerPage>
     </>
