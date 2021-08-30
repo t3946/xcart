@@ -78,21 +78,23 @@ class QueueImagesActiveCommand extends Command
             if (isset($data['product_id']) && $product = ProductModel::objects()->get(
                     ['productid' => $data['product_id']]
                 )) {
-                self::addProductImage($product, $image_by_link);
+                self::addProductImage($product, $image_by_link, (int)$data['image_position']);
             }
         }
         $message->ack();
     }
 
-    private
-    static function addProductImage(
-        ProductModel $product,
-        ProductImageModel $image
-    ): void {
+    private static function addProductImage(ProductModel $product, ProductImageModel $image, int $order_by): void
+    {
         try {
-            $images = array_merge($product->detail_images->all(), [$image]);
-            $product->detail_images = $images;
-            $product->save();
+            [$model] = ProductImagesModel::objects()->getOrCreate([
+                'product_id' => $product->pk,
+                'image_id' => $image->pk,
+            ]);
+
+            $model->order_by = $order_by;
+
+            $model->save();
         } catch (Throwable $exception) {
             echo "{$exception->getCode()} {$exception->getMessage()}\n";
         }
