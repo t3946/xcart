@@ -234,7 +234,7 @@ const TSVSettings = (): any => {
             </div>
 
             <div className="col-12 col-lg-6 d-md-flex justify-content-lg-end pe-lg-0">
-              <button className="form-button form-button__outline form-button__theme-grey w-100 w-md-auto px-3">
+              <button className="form-button form-button__theme-dark-grey w-100 w-md-auto px-3">
                 Require OTP on all devices
               </button>
             </div>

@@ -1,18 +1,18 @@
-.form-button__theme-grey {
+.form-button__theme-dark-grey {
   font-weight: normal;
   border: rem-calc(2) solid #c4c4c4;
-  background-color: #ffffff;
+  background-color: #f4f4f4;
 
   @include breakpoint(lg up) {
     border-width: rem-calc(1);
   }
 
   &:hover, &:focus {
-    background-color: #f4f4f4;
+    background-color: #e6e6e6;
   }
 
   &:active {
-    background-color: #e6e6e6;
+    background-color: #d2d2d2;
   }
 
   &:active, &:focus {
