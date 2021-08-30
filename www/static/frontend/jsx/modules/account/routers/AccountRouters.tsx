@@ -17,9 +17,8 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import classNames from "classnames";
-import { useBreakPoint } from "../hooks/useBreakPoint";
+import useBreakpoint from "../hooks/useBreakpoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -37,6 +36,7 @@ import { ListsPage } from "../pages/ListsPage";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
+import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -45,8 +45,9 @@ export const AccountRouters = (): any => {
   const isList = useSelector((e: AccountStore) => e.main.isList);
 
   useEffect(() => {
-    useBreakPoint();
+    useBreakpoint();
     dispatch(getTerritory());
+
     if (accountStore.getState().user) {
       dispatch(getAddresses(accountStore.getState().user.id));
     }
@@ -181,6 +182,14 @@ export const AccountRouters = (): any => {
                     exact
                     path={route("account:two-step-verification-settings")}
                     component={TSVSettings}
+                  />
+
+                  <Route
+                    exact
+                    path={route(
+                      "account:two-step-verification-settings-disable"
+                    )}
+                    component={TSVDisable}
                   />
 
                   <Route
