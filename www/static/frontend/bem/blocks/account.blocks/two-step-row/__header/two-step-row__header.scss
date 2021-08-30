@@ -1,0 +1,7 @@
+.two-step-row__header {
+  background-color: #f4f4f4;
+
+  @include breakpoint(lg up) {
+    background-color: transparent;
+  }
+}
