@@ -2397,7 +2397,7 @@ if (!empty($instock_and_outofstock_items_table["discontinued_products_info"]) &&
 }
 
 if (!empty($productids_for_outofstock_disc_cat_urls)) {
-    $cats_for_outofstock_disc_cat_urls = func_query("SELECT xcart_categories.categoryid, xcart_categories.category, xcart_clean_urls.clean_url, xcart_products_sf.sfid FROM xcart_categories LEFT JOIN xcart_products_categories ON xcart_categories.categoryid=xcart_products_categories.categoryid LEFT JOIN xcart_clean_urls ON xcart_clean_urls.resource_id=xcart_categories.categoryid AND xcart_clean_urls.resource_type='C' LEFT JOIN xcart_products_sf ON xcart_products_sf.productid=xcart_products_categories.productid WHERE xcart_products_categories.productid IN ('" . implode("','", $productids_for_outofstock_disc_cat_urls) . "') GROUP BY xcart_categories.categoryid");
+    $cats_for_outofstock_disc_cat_urls = func_query("SELECT xcart_categories.categoryid, xcart_categories.category, xcart_products_sf.sfid FROM xcart_categories LEFT JOIN xcart_products_categories ON xcart_categories.categoryid=xcart_products_categories.categoryid  LEFT JOIN xcart_products_sf ON xcart_products_sf.productid=xcart_products_categories.productid WHERE xcart_products_categories.productid IN ('" . implode("','", $productids_for_outofstock_disc_cat_urls) . "') GROUP BY xcart_categories.categoryid");
 
     if (!empty($cats_for_outofstock_disc_cat_urls) && !empty($products_for_outofstock_disc_cat_urls)) {
         $outofstock_disc_cat_urls = "Alternatively you can replace <B>" . implode("</B> and <B>", $products_for_outofstock_disc_cat_urls) . "</B> with one or several of the following products:\r\n";
