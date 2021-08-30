@@ -31,10 +31,12 @@ export const EmailInfoContainer: React.FC = () => {
   const emails = useSelector((state: StoreDto) => {
     return state.items;
   });
+  const labels = useSelector((state: StoreDto) => {
+    return state.labelsList;
+  });
 
-  const email = emails.filter((e) => e.item.id === id)[0];
+  const email = emails.find((e) => e.item.id === id);
 
-  console.log(email);
   const page = useSelector((e: StoreDto) => e.page);
 
   const history = useHistory();
@@ -134,6 +136,7 @@ export const EmailInfoContainer: React.FC = () => {
     templates: templates[0],
     emailInfo: email,
     componentRef,
+    labels,
   };
   return (
     <EmailInfoContext.Provider value={infoValue}>

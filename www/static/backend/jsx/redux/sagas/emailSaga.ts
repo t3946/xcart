@@ -24,6 +24,7 @@ function* getPage(action: AnyAction): Generator {
     ),
     itemsCount: json.meta.total,
     user: json.userInfo,
+    labelList: json.labelList,
   });
 }
 
@@ -35,6 +36,60 @@ function* getEmailInfo(action: AnyAction): Generator {
   yield put({
     type: "SET_EMAIL_INFO",
     emailInfo: info,
+  });
+}
+
+function* removeEmailLabel(action: AnyAction): Generator {
+  console.log(action);
+  const info: any = yield api
+    .post<any>(
+      `/admin/forms/api/mail/remove-label`,
+      JSON.stringify({
+        messageId: action.messageId,
+        labelId: action.labelId,
+      })
+    )
+    .then((response) => response);
+
+  yield put({
+    type: "REMOVE_LABEL_EMAIL",
+    messageId: action.messageId,
+    labelId: action.labelId,
+  });
+}
+function* createMailLabel(action: AnyAction): Generator {
+  const labelInfo: any = yield api
+    .post<any>(
+      `/admin/forms/api/mail/create-label`,
+      JSON.stringify({
+        messageId: action.messageId,
+        name: action.nameLabel,
+        color: action.color,
+      })
+    )
+    .then((response) => response);
+  yield put({
+    type: "CREATE_MAIL_LABEL",
+    messageId: action.messageId,
+    labelInfo: labelInfo,
+  });
+}
+function* addLabelEMail(action: AnyAction): Generator {
+  console.trace("ОТКУДА?");
+  const info: any = yield api
+    .post<any>(
+      `/admin/forms/api/add-label-email`,
+      JSON.stringify({
+        messageId: action.messageId,
+        labelId: action.labelId,
+      })
+    )
+    .then((response) => response);
+
+  yield put({
+    type: "ADD_LABEL_MAIL",
+    messageId: action.messageId,
+    labelId: action.labelId,
   });
 }
 
@@ -138,6 +193,9 @@ function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_TEMPLATES", getTemplates);
   yield takeLatest("SEND_EMAIL", sendEmail);
   yield takeLatest("GET_EMAIL_INFO", getEmailInfo);
+  yield takeLatest("CREATE_LABEL", createMailLabel);
+  yield takeLatest("REMOVE_LABEL", removeEmailLabel);
+  yield takeLatest("ADD_LABEL", addLabelEMail);
 }
 
 export default function* rootSaga(): Generator {

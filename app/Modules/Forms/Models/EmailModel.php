@@ -285,6 +285,16 @@ class EmailModel extends Model
         }
         return $lbl . $res;
     }
+    public function getLabels() : array
+    {
+        $ar_labels = [];
+        foreach ($this->labels as $label) {
+            if ($label->type !== LabelModel::LABEL_TYPE_SYSTEM) {
+                array_push($ar_labels, $label->getAttributes());
+            }
+        }
+        return $ar_labels;
+    }
 
     public function setViewed(): void
     {

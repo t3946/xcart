@@ -18,6 +18,7 @@ export const EmailSearchDialogContainer: React.FC = () => {
   const routers = useContext(EmailRouterContext);
 
   const editSearchValues = (values) => {
+    console.log(values);
     dispatch(
       editSearchOptions({
         ...values,

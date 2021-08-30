@@ -6,6 +6,7 @@ import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/Ema
 import { EmailDto } from "../../../ts/types/email.type";
 
 export const EmailInfoBodyData: React.FC<{ data: EmailDto }> = ({ data }) => {
+  console.log(data);
   const { componentRef } = useContext(EmailInfoContext);
   return (
     <div ref={componentRef}>
@@ -23,7 +24,7 @@ export const EmailInfoBodyData: React.FC<{ data: EmailDto }> = ({ data }) => {
         <Grid>
           <Grid container>
             <span className="email-info-title-text">
-              {moment(data.date).format("ddd, MMM, h:mm")}
+              {moment(data.date).format("ddd, Do MMM, h:mm")}
               &nbsp;
               {`(${moment(data.date).fromNow()})`}
             </span>

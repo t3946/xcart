@@ -1,6 +1,7 @@
-import { EmailDto } from "./email.type";
+import { EmailDto, EmailLabel } from "./email.type";
 
 export interface StoreDto {
+  labelsList: EmailLabel[];
   items: EmailStoreItems[];
   itemsCount: number;
   searchOptions: SearchDataDto;
@@ -47,4 +48,5 @@ export interface SearchDataDto {
   dateBefore: Date | string;
   hasAttachment: boolean;
   distributorId: string | undefined;
+  label: string[];
 }

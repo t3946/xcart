@@ -1,97 +1,162 @@
-.list-item-wrap{
-    position: relative;
-    padding: 3px 40px;
-    cursor: pointer;
-    color: #494949 !important;
-    font-weight: 600;
-    z-index: 1;
-    &:hover{
-        color: #000000;
-        z-index: 3;
-        box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
+.list-item-wrap {
+  position: relative;
+  padding: 3px 10px;
+  cursor: pointer;
+  color: #494949 !important;
+  font-weight: 600;
+  z-index: 1;
+  display: flex;
+
+  &:hover {
+    color: #000000;
+    z-index: 3;
+    box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.faxage-text {
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px;
+}
+
+.checkbox {
+  width: 45px;
+}
+
+.text-name {
+  margin: 0 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.subject-email-block {
+}
+
+.header-mail-label-item {
+  border-radius: 1px;
+  margin: 5px 5px;
+  padding: 1px 6px 2px;
+  background-color: #ddd;
+}
+
+.delete-label-item {
+  cursor: pointer !important;
+  font-size: 14px !important;
+}
+
+.header-mail-label-text {
+  font-size: 10px;
+  line-height: 12px;
+  text-transform: capitalize;
+  color: #666;
+  cursor: pointer;
+}
+
+.subject-mail-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.subject-email-block {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.label-item-email-wrapper {
+  border-radius: 5px;
+  padding: 3px 5px;
+  background-color: #ddd;
+  margin-left: 5px;
+}
+
+.label-item-email-text {
+  font-size: 12px;
+  line-height: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.favorites {
+  color: #FFB400;
+}
+
+.readed-item {
+  bottom: -3px;
+  background-color: #ED7070;
+  position: absolute;
+  left: 0;
+  width: 6px;
+  height: 26px;
+  margin: 0 5px;
+  transition: .3s linear;
+}
+
+.readed {
+  margin-left: 159px;
+  background-color: #999999;
+}
+
+.readed-wrap {
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  width: 170px;
+  height: 20px;
+
+  &:hover {
+    .readed-taked-time {
+      opacity: 1;
     }
+  }
 }
 
-.faxage-text{
-    margin-top: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.readed-taked-time {
+  font-size: 10px;
+  padding: 5px 5px;
+  font-weight: 700;
+  color: white;
+  background-color: #494949;
+  opacity: 0;
+  transition: .4s linear;
+  margin-top: 5px;
+  border-radius: 5px;
 }
 
-.checkbox{
-    width: 45px;
+.readed-slide {
+  background-color: white;
+  height: 20px;
+  border: 1px solid #8A8A8A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: .3s linear;
 }
 
-.text-name{
-    margin: 0 10px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.favorites{
-    color: #FFB400;
-}
-
-.readed-item{
-    bottom: -3px;
-    background-color: #ED7070;
-    position: absolute;
-    left: 0;
-    width: 6px;
-    height: 26px;
-    margin: 0 5px;
-    transition: .3s linear;
-}
-
-.readed{
-    margin-left: 159px;
-    background-color: #999999;
-}
-
-.readed-wrap{
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    width: 170px;
-    height: 20px;
-    &:hover{
-        .readed-taked-time{
-            opacity: 1;
-        }
-    }
-}
-
-.readed-taked-time{
-    font-size: 10px;
-    padding: 5px 5px;
-    font-weight: 700;
-    color: white;
-    background-color: #494949;
-    opacity: 0;
-    transition: .4s linear;
-    margin-top: 5px;
-    border-radius: 5px;
-}
-
-.readed-slide{
-    background-color: white;
-    height: 20px;
-    border: 1px solid #8A8A8A;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: .3s linear;
-}
-
-.slide-readed{
+.slide-readed {
   background-color: inherit;
 }
 
-.date{
-  margin: 0 22px 0 30px;
+.email-info-item {
+  display: flex;
+  align-items: center;
+}
+.reader-email-item{
+  position: relative;
+  left: 30px;
 }
 
-.message-type-wrap{
-  margin-top: 0
+.date {
+}
+.email-item-block{
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.message-type-wrap {
+  margin: 0 15px 0 17px;
 }

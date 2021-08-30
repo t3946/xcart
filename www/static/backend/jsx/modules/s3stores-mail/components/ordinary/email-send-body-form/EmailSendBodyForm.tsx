@@ -13,14 +13,12 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 
 const SendForm: React.FC = () => {
-  const { changeField, sendTemplate, filesRef } = useContext(
-    EmailSendBodyContext
-  );
+  const { changeField, sendTemplate, filesRef } =
+    useContext(EmailSendBodyContext);
   const files = useSelector((state: StoreDto) => state.sendData.files);
 
   useEffect(() => {
     if (files.length !== 0) {
-      console.log(files);
       filesRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",

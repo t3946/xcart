@@ -8,6 +8,14 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string|null type
+ * @property int id
+ * @property string label_id
+ * @property string name
+ * @property string background_color
+ * @property string color
+ */
 class LabelModel extends Model
 {
     public const LABEL_TYPE_SYSTEM = 'system';

@@ -43,4 +43,19 @@ return [
         'target' => [ApiEmailDashboardAdmin::class, 'actionSendEmail'],
         'name' => 'actionSendEmail'
     ],
+    [
+        'route' => '/mail/remove-label',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionRemoveMailLabel'],
+        'name' => 'actionRemoveMailLabel'
+    ],
+    [
+        'route' => '/mail/create-label',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionCreateMailLabel'],
+        'name' => 'actionCreateMailLabel'
+    ],
+    [
+        'route' => '/add-label-email',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionAddLabelMail'],
+        'name' => 'actionAddLabelMail'
+    ]
 ];

@@ -32,8 +32,6 @@ export const MailRouters: React.FC<any> = ({ distributorId }) => {
 
   const routers = useContext(EmailRouterContext);
 
-  console.log(location);
-
   const Search = EmailDialogHOC(
     <EmailSearchContainer />,
     <EmailSearchDialog />

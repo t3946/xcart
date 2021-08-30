@@ -29,6 +29,7 @@ const emailReducer = (
           prevValue: "0",
         },
         user: action.user,
+        labelsList: action.labelList,
       };
     case "SET_SEARCH_OPTIONS":
       return {
@@ -41,10 +42,51 @@ const emailReducer = (
         loading: true,
       };
     case "SET_EMAIL_INFO":
+      const labels = action.emailInfo.labelList;
+      delete action.emailInfo.labelList;
       return {
         ...state,
         loading: false,
         items: [{ item: action.emailInfo, checked: false }],
+        labelsList: labels,
+      };
+    case "ADD_LABEL_MAIL":
+      return {
+        ...state,
+        items: state.items.map((mess) => {
+          if (mess.item.message_id === action.messageId) {
+            const labelSelect = state.labelsList.find(
+              (label) => label.label_id === action.labelId
+            );
+            mess.item.labels.push(labelSelect);
+          }
+          return mess;
+        }),
+      };
+    case "CREATE_MAIL_LABEL":
+      return {
+        ...state,
+        labelsList: [...state.labelsList, action.labelInfo],
+        items: state.items.map((item) => {
+          if (item.item.message_id === action.messageId) {
+            console.log("PUSH", action.labelInfo);
+            item.item.labels.push(action.labelInfo);
+          }
+          return item;
+        }),
+      };
+    case "REMOVE_LABEL_EMAIL":
+      return {
+        ...state,
+        items: state.items.map((item) => {
+          if (item.item.message_id === action.messageId) {
+            item.item.labels = item.item.labels.filter(
+              (label) => label.label_id !== action.labelId
+            );
+            console.log(item.item.labels);
+          }
+          return item;
+        }),
       };
     case "SET_SEND_TEMPLATE_TYPE":
       return {

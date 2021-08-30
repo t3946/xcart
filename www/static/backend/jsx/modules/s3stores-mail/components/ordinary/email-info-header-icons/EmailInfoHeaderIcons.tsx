@@ -12,8 +12,13 @@ import MarkunreadIcon from "@material-ui/icons/Markunread";
 import { IconButton } from "@material-ui/core";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-
-export const EmailInfoHeaderIcons: React.FC<any> = () => {
+import LabelOutlinedIcon from "@material-ui/icons/LabelOutlined";
+interface EmailInfoHeaderIcons {
+  addLabel: { get: boolean; set: () => void };
+}
+export const EmailInfoHeaderIcons: React.FC<EmailInfoHeaderIcons> = ({
+  addLabel,
+}) => {
   const {
     handleReply,
     editViewed,
@@ -58,6 +63,9 @@ export const EmailInfoHeaderIcons: React.FC<any> = () => {
         ) : (
           <StarBorderIcon />
         )}
+      </IconConstruct>
+      <IconConstruct onClick={addLabel.set} title="Add label">
+        <LabelOutlinedIcon />
       </IconConstruct>
     </React.Fragment>
   );

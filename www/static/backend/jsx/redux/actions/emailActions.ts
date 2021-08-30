@@ -16,6 +16,7 @@ import {
 } from "@s3stores-mail/ts/types";
 import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
 import { EmailDto } from "../../modules/s3stores-mail/ts/types/email.type";
+import { ColorCreateLabel } from "@s3stores-mail/ts/types/label";
 
 export const getPage = (
   page: number,
@@ -137,7 +138,26 @@ export const getEmailInfo = (id: string): any => ({
   type: "GET_EMAIL_INFO",
   id,
 });
-
+export const createLabel = (
+  messageId: string,
+  nameLabel: string,
+  color: ColorCreateLabel
+): any => ({
+  type: "CREATE_LABEL",
+  messageId,
+  nameLabel,
+  color,
+});
+export const addLabelEmail = (messageId: string, labelId: string): any => ({
+  type: "ADD_LABEL",
+  messageId,
+  labelId,
+});
+export const removeLabelEmail = (messageId: string, labelId: string): any => ({
+  type: "REMOVE_LABEL",
+  messageId,
+  labelId,
+});
 export const setEmailInfo = (emailInfo: EmailDto): any => ({
   type: "SET_EMAIL_INFO",
   emailInfo,
