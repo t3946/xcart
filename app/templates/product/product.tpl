@@ -177,9 +177,14 @@
                             <p>{t 'Image not available'}</p>
                         </div>
                     {/if}
-
+                        <div class="pinterest-bookmark" id="pinterest-bookmark">
+                            <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
+                               data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
+                            </a>
+                        </div>
                     </div>
                 </div>
+
                 <div class="column small-12 ml-6 large-6 block__title_price">
 
                 <div class="notifications show-for-ml product_notifications">
@@ -275,6 +280,13 @@
 
     <script type="application/ld+json">
     {$helper->getJsonSchema($model)}
+    </script>
+    <script>
+        po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.src = '//assets.pinterest.com/js/pinit.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
     </script>
 
 {/block}

@@ -14,7 +14,7 @@ class RemoteFile extends ResourceFile
 
     public function __construct($url, $name = null, $tempDir = null)
     {
-        $this->client = new Client(['verify' => false, 'timeout' => 10]);
+        $this->client = new Client(['verify' => false, 'timeout' => 30]);
 
         if (!$this->urlExists($url)) {
             throw new Exception("File not found");

@@ -33,11 +33,11 @@ class ProductAdmin extends Admin
     public function getListColumns()
     {
         return [
-            'forsale',
             'image',
             'productcode',
             'product',
-            'add_date'
+            'add_date',
+            'forsale',
         ];
     }
 
@@ -92,8 +92,11 @@ class ProductAdmin extends Admin
         /** @var ProductModel $image */
         if ($property === 'image') {
             return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(60)}\" title=\"{$item}\" width='60' /></div>"
+                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
                 : '';
+        }
+        if ($property === 'product') {
+            return "<a target='_blank' href='{$item->getAbsoluteUrl()}'>{$item->getFrontendName()}</a>";
         }
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';

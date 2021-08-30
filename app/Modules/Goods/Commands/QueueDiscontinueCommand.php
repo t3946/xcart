@@ -34,7 +34,7 @@ class QueueDiscontinueCommand extends Command
                     'sites__storefrontid' => $data['storefront']
                 ])
                 ->exclude(['productcode__in' => $data['active_sku'] ?? []])
-                ->update(['forsale' => 'N']);
+                ->update(['forsale' => 'N', 'hash_product' => null]);
 
             $feed->setAttributes([
                 'process_time' => $data['process_time'],

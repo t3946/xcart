@@ -3,15 +3,13 @@
 
 namespace Modules\Goods\Commands;
 
-
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Modules\Goods\Models\ProductImageModel;
+use Modules\Goods\Models\ProductImagesModel;
 use Modules\Goods\Models\ProductModel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Throwable;
 use Xcart\App\Commands\Command;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Storage\Files\RemoteFile;
 
 class QueueImagesCommand extends Command
 {
@@ -24,52 +22,62 @@ class QueueImagesCommand extends Command
     public function consume(AMQPMessage $message): void
     {
         /** @var ProductModel $product */
+        /** @var ProductImageModel $model */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
-                $images = [];
-                $uploaded = 0;
+                $found_images = [];
                 try {
-                    foreach ($data['images'] as $image_url) {
-                        $link_hash = md5($image_url .':'. $data['product_code']);
+                    foreach ($data['images'] as $key => $image_link) {
+                        $link_hash = md5($image_link);
 
                         if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
-                            $file = new RemoteFile($image_url);
-                            $hash = $file->getHash();
-                            [$model, $is_new] = ProductImageModel::objects()->getOrNew(['hash' => $hash]);
-                            $model->link = $link_hash;
-                            if ($is_new) {
-                                try {
-                                    $model->path = $file;
-                                    $model->link = $link_hash;
-                                    $model->save();
-                                    [$model->width, $model->height] = $model->path->getImageSizes();
-                                    $uploaded++;
-                                } catch (UniqueConstraintViolationException $exception) {
-                                    //Duplicate image
-                                    if ($exception->getCode() === 1062) {
-                                        $model = ProductImageModel::objects()->get(['hash' => $hash]);
-                                    }
-                                }
-                            }
-                            $model->save();
+                            //create image
+                            $action = [
+                                'product_id' => $product->pk,
+                                'dx_code' => $product->distributor->code,
+                                'image_position' => ($key + 1) * 10,
+                                'image_link' => $image_link,
+                                'action' => 'create'
+                            ];
+                            Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+                            print_r($action);
+                        } else {
+                            $found_images[] = $model->pk;
                         }
-
-                        $images[] = $model;
                     }
+
+                    if ($found_images) {
+                        //delete not existed images from product
+                        /** @var ProductImagesModel $product_image */
+                        foreach (ProductImagesModel::objects()
+                            ->filter(['product_id' => $product->pk])
+                            ->exclude(['image_id__in' => $found_images]) as $product_image) {
+                            $image = $product_image->image;
+                            $product_image->delete();
+                            if (!$image->products->count()) {
+
+                                if ($image->path->getValue()) {
+                                    //delete image from s3 cloud
+                                    $action = [
+                                        'image_path' => $image->path->getValue(),
+                                        'action' => 'delete'
+                                    ];
+                                    Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+                                }
+
+                                $image->delete();
+                                print_r($action);
+                            }
+                        }
+                    }
+
                 } catch (Throwable $exception) {
-                    echo "$product->productcode: {$exception->getMessage()} $image_url\n";
-                    $message->ack();
-                    return;
+                    echo "$product->productcode: {$exception->getMessage()}\n";
                 }
-
-                self::saveImages($product, $images);
-
-                $count = count($images);
-                echo "$product->productcode:  Uploaded: $uploaded, Total: $count \n";
             }
-            $message->ack();
         }
+        $message->ack();
     }
 
     private static function saveImages($product, $images): void
@@ -79,10 +87,6 @@ class QueueImagesCommand extends Command
             $product->save();
         } catch(Throwable $exception) {
             echo "{$exception->getCode()} {$exception->getMessage()}\n";
-            echo "sleep 5 sec\n";
-            sleep(5);
-            self::saveImages($product, $images);
         }
-
     }
 }

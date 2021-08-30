@@ -5,8 +5,13 @@ namespace Modules\Goods\Models;
 
 
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property ProductModel product
+ * @property ProductImageModel image
+ */
 class ProductImagesModel extends Model
 {
     public static function tableName()
@@ -31,6 +36,7 @@ class ProductImagesModel extends Model
                 'link' => ['image_id' => 'image_id'],
                 'primary' => true
             ],
+            'order_by' => IntField::class
         ];
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
+
 if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
-global $login;
 
-if (!in_array($login, ['sergey2', 'elena', 'roman_n']))
+if (!in_array(Xcart\App\Main\Xcart::app()->user->login, ['sergey2', 'elena', 'roman_n']))
     func_header_location("error_message.php?access_denied&id=25");
 global $xcart_dir;
 x_load('crypt');

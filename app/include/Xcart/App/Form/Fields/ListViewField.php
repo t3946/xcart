@@ -1,6 +1,7 @@
 <?php
 namespace Xcart\App\Form\Fields;
 
+use Modules\Admin\Contrib\ListViewAdmin;
 use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
 
@@ -76,7 +77,7 @@ class ListViewField extends Field
             return $this->innerRender($this->emptyTemplate, []);
         }
 
-        /** @var \Modules\Admin\Contrib\ListViewAdmin $admin */
+        /** @var ListViewAdmin $admin */
         $admin = new $this->adminClass();
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
         $admin->ownerField = $this->getName();

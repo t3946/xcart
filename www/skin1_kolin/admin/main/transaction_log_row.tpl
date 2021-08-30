@@ -73,7 +73,7 @@
                                 {foreach from=$model->getLinks() item=link}
                                         {if $link.rel eq "self"}
                                         {elseif $link.rel eq "refund"}
-                                            {if in_array($user_login, array('sergey2', 'roman_n', 'zouhair', 'artyom'))}
+                                            {if in_array($user_login, array('sergey2', 'roman_n', 'zouhair', 'maria'))}
                                                 <div data-type="refund" data-action="{$model->getProcessUrl('refund')}" class="item">Refund transaction</div>
                                             {/if}
                                         {elseif $link.rel eq "void"}

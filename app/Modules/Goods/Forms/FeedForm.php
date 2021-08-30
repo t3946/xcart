@@ -57,7 +57,7 @@ class FeedForm extends ModelForm
                 'class' => Select2Field::class,
                 'choices' => static function () {
                     $res[-1] = '';
-                    foreach (SiteModel::objects()->order(['code']) as $site) {
+                    foreach (SiteModel::objects()->exclude(['code' => 'TA'])->order(['code']) as $site) {
                         $res[$site->storefrontid] = $site;
                     }
                     return $res ?? [];
