@@ -22,6 +22,8 @@ export const ListsPage = () => {
     list = lists[0];
   }
 
+  console.log(list);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export const ListsPage = () => {
     <div>
       {lists ? (
         <React.Fragment>
-          <ListHeader />
+          <ListHeader label={list.name} />
           <ListProductItems info={list} />
         </React.Fragment>
       ) : (

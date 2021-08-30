@@ -4,6 +4,7 @@ import { ListProductItem } from "@client/modules/account/components/lists/ListPr
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import { reorderList } from "../../../../redux/actions/account-actions/ListsActions";
+import { reorderMass } from "@client/modules/account/utils/reorder-mass";
 
 export const ListProductItems = ({ info }) => {
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -18,12 +19,13 @@ export const ListProductItems = ({ info }) => {
     if (!result.destination) {
       return;
     }
+    reorderProductList(result.source.index, result.destination.index);
+  };
 
+  const reorderProductList = (startIndex, endIndex) => {
     dispatch(
       reorderList(
-        info.products.map((e: any) => e.product_id),
-        result.source.index,
-        result.destination.index,
+        reorderMass<string>(info.products, startIndex, endIndex),
         info.product_list_id
       )
     );
@@ -33,7 +35,7 @@ export const ListProductItems = ({ info }) => {
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {info.products.length ? (
+            {info?.products?.length ? (
               info.products.map((e, index) => {
                 return (
                   <Draggable
@@ -51,8 +53,11 @@ export const ListProductItems = ({ info }) => {
                         )}
                       >
                         <ListProductItem
+                          index={index}
                           drag={{ ...provided.dragHandleProps }}
                           info={e}
+                          reorderProductList={reorderProductList}
+                          listId={info.product_list_id}
                         />
                       </div>
                     )}

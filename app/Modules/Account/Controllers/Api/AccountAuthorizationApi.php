@@ -6,6 +6,8 @@ use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Account\Forms\LoginForm;
 use Modules\Account\Forms\RegistrationForm;
+use Modules\Account\Models\ProductListsModel;
+
 
 class AccountAuthorizationApi extends FrontendController
 {
@@ -33,6 +35,8 @@ class AccountAuthorizationApi extends FrontendController
             $user = $form->getInstance();
             $user->register();
             $user = UserModel::objects()->filter(['email' => $user->email])->get();
+            $model = new ProductListsModel(['name' => 'Shipping list', 'user_id' =>  $user->user_id]);
+            $model->save();
             $user->authenticate();
             $this->jsonResponse($user->toArray());
         }

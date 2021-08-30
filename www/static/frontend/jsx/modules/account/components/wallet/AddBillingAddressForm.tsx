@@ -17,6 +17,7 @@ import {
 } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
 import { AccountStore } from "../../ts/types/account-store.type";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 interface AddBillingAddressFormProps {
   edit: boolean;
@@ -37,6 +38,10 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
   const cardSubmitData = useSelector(
     (e: AccountStore) => e.payments.submitFormData
   );
+
+  const states = useSelector((e: any) => e.main.states);
+
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const onSubmit = (values) => {
     const newAddress = {
@@ -62,11 +67,17 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
           address: newAddress,
           userId: accountStore.getState().user.id,
         },
-        context.handleClose
+        () => {
+          context.handleClose();
+          showSnackbar({
+            header: "Success",
+            message: "New card added in your wallet!",
+            theme: "success",
+          });
+        }
       )
     );
   };
-  const states = useSelector((e: any) => e.main.states);
   return (
     <div className="billing-address-container add-billing-address-container">
       <div className="dialog-title">Add a billing address</div>

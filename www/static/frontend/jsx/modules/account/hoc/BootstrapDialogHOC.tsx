@@ -10,7 +10,7 @@ interface propsDto {
   onClose: () => void;
 }
 
-const BootstrapModalHOC: React.FC<any> = function (props: propsDto) {
+const BootstrapModalHOC: React.FC<propsDto> = function (props: propsDto) {
   function headerTemplate(className) {
     return (
       <h2 className={classnames("account-modal-header m-0", className)}>

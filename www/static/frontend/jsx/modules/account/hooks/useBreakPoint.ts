@@ -2,6 +2,12 @@ import { setBreakpoint } from "../../../redux/actions/account-actions/MainAction
 import { accountStore } from "../../../redux/stores/StoreAccount";
 import { Breakpoint } from "@client/modules/account/ts/types/breakpoint.type";
 
+function Breakpoints(is1920, is1366, is768) {
+  this.is1920 = is1920;
+  this.is1920 = is1366;
+  this.is768 = is768;
+}
+
 export function useBreakPoint(): void {
   const isMount = true;
 
@@ -18,22 +24,10 @@ export function useBreakPoint(): void {
 
 function changeBreakPoints(resolution: number): Breakpoint {
   if (resolution > 1366) {
-    return {
-      is1920: true,
-      is1366: false,
-      is768: false,
-    };
+    return new Breakpoints(true, false, false);
   }
   if (resolution > 768) {
-    return {
-      is1920: false,
-      is1366: true,
-      is768: false,
-    };
+    return new Breakpoints(false, true, false);
   }
-  return {
-    is1920: false,
-    is1366: false,
-    is768: true,
-  };
+  return new Breakpoints(false, false, true);
 }

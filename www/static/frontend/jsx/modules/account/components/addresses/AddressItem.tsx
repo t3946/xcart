@@ -35,7 +35,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
 
   const editAddress = () => {
     history.push({
-      pathname: "/account/addresses/add",
+      pathname: "/account/addresses/edit",
       state: { addressInfo: addressInfo },
     });
   };

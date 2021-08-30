@@ -1,11 +1,11 @@
 import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 
-export const ListHeader = () => {
+export const ListHeader = ({ label }) => {
   return (
     <div className="list-header-container">
       <div className="list-header-left-side">
-        <div className="list-header-name">Addresses</div>
+        <div className="list-header-name">{label}</div>
         <div className="list-header-actions">
           <div className="list-header-action-item blue">Manage List</div>
           <div className="list-header-action-item red">Delete List</div>

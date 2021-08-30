@@ -10,13 +10,20 @@ export const createList = (name: string, callback: () => void): any => ({
 
 export const reorderList = (
   listIds: string[],
-  startIndex: number,
-  endIndex: number,
   product_list_id: number
 ): any => ({
   type: "REORDER_LIST",
   listIds,
-  startIndex,
-  endIndex,
   product_list_id,
+});
+
+export const moveProduct = (
+  fromListId: string,
+  toListId: string,
+  product: any
+): any => ({
+  type: "MOVE_PRODUCT",
+  fromListId,
+  toListId,
+  product,
 });

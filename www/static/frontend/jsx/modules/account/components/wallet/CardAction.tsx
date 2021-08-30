@@ -25,7 +25,6 @@ export const CardAction: React.FC<CardActionProps> = ({
 
   const dialogClose = () => {
     onDialogClose();
-
     setTimeout(() => {
       setContent(contentType);
     }, 200);

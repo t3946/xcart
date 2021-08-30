@@ -4,14 +4,14 @@ import classNames from "classnames";
 import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
 
-interface sideBarMenuItemPropsDto {
+interface sideBarMenuItemProps {
   to: string;
   label: string;
   className?: any;
   onClick?: any;
 }
 
-export const SideBarMenuItem: React.FC<sideBarMenuItemPropsDto> = ({
+export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
   to,
   label,
   className,

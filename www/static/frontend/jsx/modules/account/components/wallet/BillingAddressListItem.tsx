@@ -30,11 +30,11 @@ export const BillingAddressListItem: React.FC<BillingAddressListItemProps> = ({
         value={radioValue}
         onChange={() => onChange(radioValue)}
         name={name}
-        id={id}
+        id={String(id)}
         type="radio"
         checked={groupValue === radioValue}
       />
-      <label htmlFor={id}>{viewValue}</label>
+      <label htmlFor={String(id)}>{viewValue}</label>
     </Grid>
   );
 };

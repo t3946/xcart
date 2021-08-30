@@ -37,6 +37,10 @@ import { ListsPage } from "../pages/ListsPage";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
+import { EditCard } from "@client/modules/account/pages/EditCard";
+import { AddCard } from "@client/modules/account/pages/AddCard";
+import { RemoveCard } from "@client/modules/account/components/wallet/RemoveCard";
+import { RemoveCardPage } from "@client/modules/account/pages/RemoveCardPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -106,11 +110,31 @@ export const AccountRouters = (): any => {
                     path="/account/addresses/add"
                     component={AddAddressPage}
                   />
+                  <Route
+                    exact
+                    path="/account/addresses/edit"
+                    component={AddAddressPage}
+                  />
 
                   <Route
                     exact
                     path="/account/payments/wallet"
                     component={Wallet}
+                  />
+                  <Route
+                    exact
+                    path="/account/payments/wallet/edit"
+                    component={EditCard}
+                  />
+                  <Route
+                    exact
+                    path="/account/payments/wallet/add"
+                    component={AddCard}
+                  />
+                  <Route
+                    exact
+                    path="/account/payments/wallet/remove"
+                    component={RemoveCardPage}
                   />
 
                   <Route

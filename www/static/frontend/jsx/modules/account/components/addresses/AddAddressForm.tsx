@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
 import { Button, Grid } from "@material-ui/core";
@@ -16,12 +16,14 @@ import {
 import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 export const AddAddressForm = ({ addressInfo }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const countries = useSelector((e: any) => e.main.countries);
   const states = useSelector((e: any) => e.main.states);
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const addressFormLoading = useSelector(
     (e: any) => e.addresses.addressFormLoading
@@ -29,6 +31,11 @@ export const AddAddressForm = ({ addressInfo }) => {
 
   const onPended = () => {
     history.push("/account/addresses");
+    showSnackbar({
+      header: "Success",
+      message: `${!addressInfo ? "Address added!" : "Address edit!"}`,
+      theme: "success",
+    });
   };
 
   const submitForm = (values) => {

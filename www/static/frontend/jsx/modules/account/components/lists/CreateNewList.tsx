@@ -1,10 +1,10 @@
 import React from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button, Grid } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { useDispatch } from "react-redux";
 import { createList } from "../../../../redux/actions/account-actions/ListsActions";
-import { Form, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 
 export const CreateNewList = ({ onCancelBtnClick }) => {
@@ -24,6 +24,7 @@ export const CreateNewList = ({ onCancelBtnClick }) => {
     }
     dispatch(createList(formik.values.name, onCancelBtnClick));
   };
+
   return (
     <div className="list-dialog-container">
       <form className="your-order-form" encType="multipart/form-data">
@@ -34,7 +35,7 @@ export const CreateNewList = ({ onCancelBtnClick }) => {
           }}
           label={"List Name"}
           handleChange={formik.handleChange}
-          errors={formik.errors.name}
+          errorMessage={formik.errors.name}
           handleBlur={formik.handleBlur}
           touched={formik.touched.name}
           value={formik.values.name}

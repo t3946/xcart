@@ -28,11 +28,11 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
     new Date().getFullYear() + 10
   );
 
+  const history = useHistory();
+
   const submitCardFormLoading = useSelector(
     (e: AccountStore) => e.payments.submitCardFormLoading
   );
-
-  const history = useHistory();
 
   const context = useContext(WalletCardsDialogContext);
 
@@ -69,15 +69,6 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
     return card;
   };
 
-  const onEditEnd = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
-      history.push("/account/payments/wallet");
-      return;
-    }
-
-    context.handleClose();
-  };
-
   const cardInformation = getCardAddressInfo(cardInfo);
 
   const onSubmit = (values, errors) => {
@@ -100,9 +91,18 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
           },
           userId: accountStore.getState().user.id,
         },
-        onEditEnd
+        cardsHandleCancel
       )
     );
+  };
+
+  const cardsHandleCancel = () => {
+    if (accountStore.getState().main.breakpoint.is768) {
+      history.push("/account/payments/wallet");
+      return;
+    }
+
+    context.handleClose();
   };
 
   return (
@@ -111,7 +111,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
         <div>
           <Grid
             container
-            justify="space-between"
+            justifyContent="space-between"
             className="edit-card-top-part"
           >
             <Grid container direction="column">
@@ -125,7 +125,11 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
               />
             </Grid>
           </Grid>
-          <Grid alignContent={"center"} justify="space-between" container>
+          <Grid
+            alignContent={"center"}
+            justifyContent="space-between"
+            container
+          >
             <div className="wallet-card-content-label label-card-block">
               Billing address
             </div>
@@ -210,7 +214,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
 
       <div className="edit-card-btns">
         <Button
-          onClick={onEditEnd}
+          onClick={cardsHandleCancel}
           type={"submit"}
           disabled={submitCardFormLoading}
           className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"

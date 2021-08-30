@@ -45,7 +45,11 @@ function* reorderList(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
       `/account/api/lists/reorder-products`,
-      JSON.stringify(action.listIds)
+      JSON.stringify(
+        action.listIds.map((e) => {
+          return e.product_id;
+        })
+      )
     )
     .then((response) => response);
 }

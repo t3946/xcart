@@ -1,8 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountListsStore } from "../../../modules/account/ts/types/account-store.type";
-import { accountListsInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
-import { reorderList } from "../../actions/account-actions/ListsActions";
-import { reorderMass } from "../../../modules/account/utils/reorder-mass";
+import { AccountListsStore } from "@client/modules/account/ts/types/account-store.type";
+import { accountListsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
 
 const accountListReducer = (
   state: AccountListsStore = accountListsInitialValue,
@@ -23,11 +21,33 @@ const accountListReducer = (
           if (e.product_list_id === action.product_list_id) {
             return {
               ...e,
-              products: reorderMass(
-                e.products,
-                action.startIndex,
-                action.endIndex
-              ),
+              products: action.listIds,
+            };
+          }
+          return e;
+        }),
+      };
+    case "MOVE_PRODUCT":
+      console.log(action.toListId);
+      return {
+        ...state,
+        lists: state.lists.map((e) => {
+          if (action.fromListId === action.toListId.value) {
+            return e;
+          }
+          if (e.product_list_id === action.fromListId) {
+            return {
+              ...e,
+              products: e.products.filter((product) => {
+                if (product.list_items_id !== action.product.list_items_id) {
+                  return product;
+                }
+              }),
+            };
+          } else if (e.product_list_id === action.toListId.value) {
+            return {
+              ...e,
+              products: e.products.concat(action.product),
             };
           }
           return e;

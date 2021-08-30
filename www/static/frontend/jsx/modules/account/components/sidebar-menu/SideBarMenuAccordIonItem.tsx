@@ -1,10 +1,10 @@
 import React from "react";
-import { SidebarItemDto } from "@modules/account/ts/types/sidebar-item.type";
 import { NavLink } from "react-router-dom";
 import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
+import { SidebarItem } from "@client/modules/account/ts/types/sidebar-item.type";
 
-export const SideBarMenuAccordIonItem: React.FC<SidebarItemDto> = ({
+export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
   to,
   label,
 }) => {
