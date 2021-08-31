@@ -66,7 +66,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 items={countries}
                 value={values.country}
                 label={"Country"}
-                classes={{ input: "add-address-input" }}
+                classes={{ input: "add-address-input", group: "mb-20" }}
                 onClick={(value) => {
                   setFieldValue("country", value);
                   setFieldValue("state", initialAddAddressFormValue.state);
@@ -129,7 +129,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                 handleBlur={handleBlur}
               />
               <FormSelect
-                classes={{ input: "add-address-input" }}
+                classes={{ input: "add-address-input", group: "mb-20" }}
                 items={getStates(states, values.country.value)}
                 value={values.state}
                 label={"State/Province"}
