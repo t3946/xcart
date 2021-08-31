@@ -232,7 +232,7 @@ $publication_statuses = array(
 $smarty->assign('publication_statuses', $publication_statuses);
 
 ###   
-    $all_storefronts = $storefronts;
+    $all_storefronts = $storefronts ?? [];
     $site_0 = \Modules\Sites\Models\SiteModel::objects()->get(['storefrontid' => 0]);
     $storefronts_0[0] = $site_0->getAttributes();
     $all_storefronts = array_merge($storefronts_0, $all_storefronts);
