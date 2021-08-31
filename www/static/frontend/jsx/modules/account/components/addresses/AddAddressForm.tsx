@@ -151,7 +151,7 @@ export const AddAddressForm = ({ addressInfo }) => {
               <Grid
                 className="add-address-checkbox"
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
               >
                 <Grid className="add-address-input">
                   <FormCheckBox
@@ -162,7 +162,7 @@ export const AddAddressForm = ({ addressInfo }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container justify="flex-end">
+              <Grid container justifyContent="flex-end">
                 <Grid className="add-address-input">
                   <Button
                     disabled={addressFormLoading}
