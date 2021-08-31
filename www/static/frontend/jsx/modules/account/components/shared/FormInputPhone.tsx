@@ -4,9 +4,9 @@ import { FormSelect } from "@client/modules/account/components/shared/FormSelect
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
-import MaskedInput from "react-text-mask";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import classnames from "classnames";
+import InputMask from "react-input-mask";
 
 interface PropsInterface {
   handleChange: () => any;
@@ -30,22 +30,8 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   const countries = useSelector((e: AccountStore) => e.countries);
   const countryCodeFieldName = name + "CountryCode";
   const phoneExtFieldName = name + "Ext";
-  const phoneMask = [
-    "(",
-    /[1-9]/,
-    /\d/,
-    /\d/,
-    ")",
-    " ",
-    /\d/,
-    /\d/,
-    /\d/,
-    "-",
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/,
-  ];
+  const phoneMask = "(999) 999-9999";
+
   const breakpoint = useBreakpoint();
 
   let initialCountryCode;
@@ -125,18 +111,20 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
           </div>
 
           <div className={classnames(classes.inputPhoneColumn)}>
-            <MaskedInput
-              mask={phoneMask}
-              placeholder="(___) ___-____"
-              type="text"
-              name={name}
-              value={values[name]}
-              onChange={handleChange}
-              className={"form-input form-input__masked"}
-              isInvalid={!!touched[name] && !!errors[name]}
-              isValid={touched[name] && !errors[name]}
-              autoComplete={"off"}
-            />
+            <InputMask mask={phoneMask} value={values[name]} onChange={handleChange}>
+              {() => (
+                <input
+                  placeholder="(___) ___-____"
+                  className={classnames("form-input", {
+                    "form-input-error": !!errors[name],
+                  })}
+                  name={name}
+                  type="text"
+                  onChange={handleChange}
+                  value={values[name]}
+                />
+              )}
+            </InputMask>
 
             <RBForm.Control.Feedback type="invalid">
               {errors[name]}

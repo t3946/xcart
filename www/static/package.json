@@ -94,7 +94,6 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-sly-wrapper": "git+https://github.com/thangkieu/react-sly-wrapper.git",
-    "react-text-mask": "^5.4.3",
     "react-to-print": "^2.12.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
