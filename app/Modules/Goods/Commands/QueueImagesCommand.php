@@ -51,7 +51,7 @@ class QueueImagesCommand extends Command
                         //delete not existed images from product
                         /** @var ProductImagesModel $product_image */
                         foreach (ProductImagesModel::objects()
-                            ->filter(['product_id' => $product->pk])
+                            ->filter(['product_id' => $product->pk, 'image__is_manual' => false])
                             ->exclude(['image_id__in' => $found_images]) as $product_image) {
                             $image = $product_image->image;
                             $product_image->delete();

@@ -72,6 +72,10 @@ class QueueImagesActiveCommand extends Command
                                               'hash' => $data['image_hash']
                                           ]);
 
+            if ((int)$data['image_position'] === 0) {
+                $image_by_link->is_manual = true;
+            }
+
             $image_by_link->save();
             print_r($data);
 

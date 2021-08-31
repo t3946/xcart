@@ -71,6 +71,10 @@ class ProductImageModel extends Model
                 'class' => BooleanField::class,
                 'default' => false
             ],
+            'is_manual' => [
+                'class' => BooleanField::class,
+                'default' => false
+            ],
             'products' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => ProductModel::class,
