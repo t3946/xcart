@@ -14,7 +14,7 @@ class FraudCheckFAHelper
 {
     private OrderModel $order_model;
     public MelissaAPI $ob_melissa;
-    private const ADDITIONAL_INFO_NULL_CHECK = 'Data could not be determined';
+    private const ADDITIONAL_INFO_NULL_CHECK = 'N/A';
     public bool $test_data = false; // Если нужно просто протестировать без запроса в мелису
 
     public function __construct(OrderModel $oder_model)

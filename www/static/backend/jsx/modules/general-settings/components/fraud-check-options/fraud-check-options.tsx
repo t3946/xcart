@@ -1,33 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { ApiService } from "@admin/modules/shared/services/api.service";
 import { AppBar, Container, Grid, Tab, Typography } from "@material-ui/core";
-import { TableFraud } from "@admin/modules/general-settings/components/fraud-check-options/table-fraud/table-fraud";
 import { CheckSettingsForm } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/check-settings-form";
 import { TabContext, TabList, TabPanel } from "@material-ui/lab";
-import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/data-table";
-
-const api = new ApiService();
-
-interface FraudsTableData {
-  address?: { data: TableDataResponse[]; columns: string[] };
-  full_name?: { data: TableDataResponse[]; columns: string[] };
-}
-
-interface ResponseTableData extends FraudsTableData {
-  status: boolean;
-}
+import { TableFraud } from "@admin/modules/general-settings/components/fraud-check-options/table-fraud/table-fraud";
+import { setFraudSettings } from "@redux/actions/fraudSettingsActions";
+import { useDispatch, useSelector } from "react-redux";
+import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
 
 export const FraudCheckOptions: React.FC<any> = () => {
-  const [frauds, setFrauds] = useState<FraudsTableData>({});
   const [tabIndex, setTabIndex] = useState<string>(`0`);
-
+  const fraudSettings = useSelector(
+    (state: StoreGeneralSettings) => state.fraudSettings
+  );
+  const dispatch = useDispatch();
   useEffect(() => {
-    api.get("/api/fraud/get/all").then((res: ResponseTableData) => {
-      if (res.status) {
-        delete res.status;
-        setFrauds(res);
-      }
-    });
+    dispatch(setFraudSettings());
   }, []);
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
@@ -63,10 +50,11 @@ export const FraudCheckOptions: React.FC<any> = () => {
             <Typography variant="h6" align="center">
               Table full name fraud
             </Typography>
-            {frauds.full_name && (
+            {fraudSettings.faQuestions.full_name && (
               <TableFraud
-                data={frauds.full_name.data}
-                columns={frauds.full_name?.columns}
+                data={fraudSettings.faQuestions.full_name.data}
+                columns={fraudSettings.faQuestions.full_name.columns}
+                type="full_name"
               />
             )}
           </Grid>
@@ -81,10 +69,11 @@ export const FraudCheckOptions: React.FC<any> = () => {
             <Typography variant="h6" align="center">
               Table address fraud
             </Typography>
-            {frauds.address && (
+            {fraudSettings.faQuestions.address && (
               <TableFraud
-                columns={frauds.address.columns}
-                data={frauds.address.data}
+                columns={fraudSettings.faQuestions.address.columns}
+                data={fraudSettings.faQuestions.address.data}
+                type="address"
               />
             )}
           </Grid>

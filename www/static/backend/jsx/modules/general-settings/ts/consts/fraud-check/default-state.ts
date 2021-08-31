@@ -12,3 +12,8 @@ export const defaultStateForm: FormDataFraud = {
   fraud_Google_phone_search_exclusions: "",
   fraud_Google_email_search_exclusions: "",
 };
+export const initStateFraudSettings = {
+  faQuestions: {},
+  baseQuestions: {},
+  settings: {},
+};

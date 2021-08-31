@@ -1,14 +1,14 @@
-import React, { useContext, Fragment } from "react";
-import { FraudQuestion } from "@admin/modules/order-fraud/ts/types/settings";
+import React, { Fragment } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { FraudRadioField } from "@admin/modules/order-fraud/components/fraud-table-question/fraud-radio-field";
-import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
 import { MainAnswer } from "@admin/modules/order-fraud/ts/types/answer";
+
 interface FraudTableQuestion {
   listAnswer: MainAnswer[];
   nameTable: string;
   title: string;
 }
+
 export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
   listAnswer,
   nameTable,
@@ -19,13 +19,22 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
       <Typography variant="h6" align="center">
         {title}
       </Typography>
-      <table>
+      <table className="table-base-question" border={1}>
         <tr className="table-head__fraud-check-question">
+          <th>
+            Question
+            <br />
+            code
+          </th>
           <th>Question</th>
-          <th>Auto/Manual</th>
+          <th>
+            Auto
+            <br />
+            Manual
+          </th>
           <th>Outcome</th>
           <th>Weight</th>
-          <th>Fraud score</th>
+          <th>Fraud score subtotal</th>
         </tr>
         {listAnswer &&
           listAnswer.map((answer) => {
@@ -33,11 +42,11 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
               <tr
                 className={`table-item-${answer.fraud_result}__fraud-check-question`}
               >
+                <td className="question-code-header-item">
+                  {answer.question_code}
+                </td>
                 <td>
                   <Grid container justifyContent="center" direction="column">
-                    <div className="question-code-title">
-                      Question code: {answer.question_code}
-                    </div>
                     <div
                       dangerouslySetInnerHTML={{
                         __html: answer.template,
@@ -45,7 +54,7 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                     />
                   </Grid>
                 </td>
-                <td>
+                <td className="center-header-item">
                   {answer.question_auto === "Y" && !answer.manual_action ? (
                     "Auto"
                   ) : (
@@ -55,9 +64,11 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                     />
                   )}
                 </td>
-                <td>{answer.fraud_result === "positive" ? 1 : 0}</td>
-                <td>{answer.question_weight}</td>
-                <td>{answer.fraud_score}</td>
+                <td className="center-header-item">
+                  {answer.fraud_result === "positive" ? 1 : 0}
+                </td>
+                <td className="center-header-item">{answer.question_weight}</td>
+                <td className="center-header-item">{answer.fraud_score}</td>
               </tr>
             );
           })}

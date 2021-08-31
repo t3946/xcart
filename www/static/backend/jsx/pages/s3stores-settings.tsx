@@ -1,14 +1,18 @@
-import React from 'react';
+import React from "react";
 import ReactDOM from "react-dom";
-import {GeneralSettings} from "@admin/modules/general-settings/components/general-settings/general-settings";
+import { Provider } from "react-redux";
+import { GeneralSettings } from "@admin/modules/general-settings/components/general-settings/general-settings";
+import { generalSettingsStore } from "@redux/stores/generalSettingsStore";
 
 (() => {
-    const elem: HTMLElement = document.querySelector(".general-settings");
+  const elem: HTMLElement = document.querySelector(".general-settings");
 
-    if (!elem) return;
+  if (!elem) return;
 
-    ReactDOM.render(
-        <GeneralSettings/>,
-        elem
-    );
+  ReactDOM.render(
+    <Provider store={generalSettingsStore as any}>
+      <GeneralSettings />
+    </Provider>,
+    elem
+  );
 })();

@@ -21,14 +21,19 @@ return [
 		'name' => 'get_fraud_address'
 	],
 	[
-		'route' => 'fraud/get/all',
-		'target' => [FraudCheckController::class, 'getAll'],
-		'name' => 'get_fraud_all'
+		'route' => 'question/fa/get/all',
+		'target' => [FraudCheckController::class, 'getAllFAQuestions'],
+		'name' => 'get_fa_questions'
 	],
     [
-        'route' => 'fraud/update/weight',
-        'target' => [FraudCheckController::class, 'updateWeight'],
-        'name' => 'update_fraud_weight'
+        'route' => 'fraud-check/settings/all',
+        'target' => [FraudCheckController::class, 'getFraudCheckSettings'],
+        'name' => 'get_fraud_check_settings'
+    ],
+    [
+        'route' => 'question/base/get/all',
+        'target' => [FraudCheckController::class, 'getAllBaseQuestions'],
+        'name' => 'get_base_questions'
     ],
     [
         'route' => 'fraud/settings/get',
@@ -40,4 +45,9 @@ return [
         'target' => [FraudCheckController::class, 'updateFraudSettings'],
         'name' => 'update_fraud_settings'
     ],
+    [
+        'route' => 'question/fa/update',
+        'target' => [FraudCheckController::class, 'updateFAQuestion'],
+        'name' => 'update_fa_question'
+    ]
 ];

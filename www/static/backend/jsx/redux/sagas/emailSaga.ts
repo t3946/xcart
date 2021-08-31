@@ -4,6 +4,7 @@ import { emailStore } from "@redux/stores";
 import { editCheckedInEmailItems } from "@s3stores-mail/utils";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
+
 const api = new ApiService();
 
 function* getPage(action: AnyAction): Generator {
@@ -57,6 +58,7 @@ function* removeEmailLabel(action: AnyAction): Generator {
     labelId: action.labelId,
   });
 }
+
 function* createMailLabel(action: AnyAction): Generator {
   const labelInfo: any = yield api
     .post<any>(
@@ -74,8 +76,8 @@ function* createMailLabel(action: AnyAction): Generator {
     labelInfo: labelInfo,
   });
 }
+
 function* addLabelEMail(action: AnyAction): Generator {
-  console.trace("ОТКУДА?");
   const info: any = yield api
     .post<any>(
       `/admin/forms/api/add-label-email`,
@@ -163,8 +165,8 @@ function* setViewed(action: AnyAction): Generator {
     });
   }
 }
+
 function* sendEmail(action: AnyAction): Generator {
-  console.log(action.email);
   try {
     const formData = new FormData();
 

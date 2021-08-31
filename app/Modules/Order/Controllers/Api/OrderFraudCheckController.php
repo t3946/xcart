@@ -9,14 +9,12 @@ use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Models\BaseFraudCheckModelV2;
-use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
-use Modules\Payment\Models\ProcessorModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -86,6 +84,7 @@ class OrderFraudCheckController extends Controller
         $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
         $ar_settings['column_fn'] = FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList($base_list);
         $ar_settings['column_address'] = FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList($base_list);
+        $ar_settings['legend'] = $this->getLenendInfo($order_model);
 
 
         $ar_answer = $this->getBaseAnswerOrder($order_model);
@@ -130,13 +129,6 @@ class OrderFraudCheckController extends Controller
         }
     }
 
-    public function getFAQuestionByType($type = ''): array
-    {
-        $ar_frauds = FraudFAQuestionModel::objects()->filter(['type' => $type])->order('order_by')
-            ->valuesList(['f_fraud_id', 't_fraud_id', 'weight', 'template', 'question_id']);
-        return $ar_frauds;
-    }
-
     public function getAnswerPaymentFrauds(OrderModel $order_model): array
     {
         $ar_payment_frauds = ['general_payment' => [], 'stripe' => [], 'pay_pal' => []];
@@ -150,7 +142,7 @@ class OrderFraudCheckController extends Controller
         if ($oTransaction && $oPaymentMethod = PaymentMethodModel::objects()->get(['paymentid' => $oTransaction->paymentid])) {
             $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
             $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
-            $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
+            $sPaymentMethodReplaceText = "$oPaymentMethod->payment_method ($oPaymentMethod->transaction_link_anchor)";
         }
         $avs_code = $brand_card = $name_card = '';
         /** @var OrderBaseFraudCheckModelV2 $answer_item */
@@ -203,7 +195,7 @@ class OrderFraudCheckController extends Controller
 
     public function getAnswerFAOrder(OrderModel $orderModel): array
     {
-        $ar_anwer = ['full_name' => [], 'address' => []];
+        $ar_answer = ['full_name' => [], 'address' => []];
         /** @var OrderFraudFACheckModel $fraud */
         foreach (OrderFraudFACheckModel::objects()->filter(['order_id' => $orderModel->orderid]) as $fraud) {
             [$replace_template, $replace_value] = $this->getTemplateData($fraud);
@@ -218,9 +210,9 @@ class OrderFraudCheckController extends Controller
                 'outcome' => $fraud->outcome
 
             ];
-            array_push($ar_anwer[$fraud->question->type], $data);
+            array_push($ar_answer[$fraud->question->type], $data);
         }
-        return $ar_anwer;
+        return $ar_answer;
     }
 
     private function getTemplateData(OrderFraudFACheckModel $answer)
@@ -232,20 +224,20 @@ class OrderFraudCheckController extends Controller
             $template = [];
             switch ($code) {
                 case 'FN_CI':
-                    $template = ['{{contact_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{contact_name}}' => $ar_info["value$code"]];
                     break;
                 case 'FN_SA':
-                    $template = ['{{shipping_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{shipping_name}}' => $ar_info["value$code"]];
                     break;
                 case 'FN_BA':
-                    $template = ['{{billing_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{billing_name}}' => $ar_info["value$code"]];
                     break;
                 case 'FN_CH':
-                    $template = ['{{card_owner_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{card_owner_name}}' => $ar_info["value$code"]];
                     break;
                 case 'FN_T_SA':
                 case 'FN_T_BA':
-                    $template = ['{{tenant_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{tenant_name}}' => $ar_info["value$code"]];
                     break;
                 case 'FN_O_SA':
                 case 'FN_O_BA':
@@ -435,7 +427,8 @@ HTML;
             $this->jsonResponse($ar_result);
         }
     }
-    public function unlockOrders() : void
+
+    public function unlockOrders(): void
     {
         $ar_result = ['status' => true];
         try {
@@ -445,5 +438,36 @@ HTML;
         } finally {
             $this->jsonResponse($ar_result);
         }
+    }
+
+    public function getLenendInfo(OrderModel $order_model): array
+    {
+        $ar_history = ['full_name' => [], 'address' => []];
+        /** @var FraudCheckColumnModel $column */
+        foreach (FraudCheckColumnModel::objects()->all() as $column) {
+            /** @var OrderFraudFACheckModel $fraud_model */
+            $fraud_model = OrderFraudFACheckModel::objects()->filter([
+                'question__f_fraud_id' => $column->fraud_id,
+                'order_id' => $order_model->orderid
+            ])->limit(1)->get();
+            if ($fraud_model instanceof OrderFraudFACheckModel) {
+                $value = $fraud_model->additional_info["value{$column->fraud_code}"];
+                // Обрезает у value лишние символы символы и превращает в google link
+                $ar_value = str_replace(',', '', $value);
+                $link = 'https://www.google.com/search?q=';
+                foreach (explode(' ', $ar_value) as $attr_value) {
+                    $link .= "{$attr_value}+";
+                }
+
+                array_push($ar_history[$column->type], [
+                    'value' => $value,
+                    'link' => true,
+                    'columnName' => $column->fraud_name,
+                    'description' => $column->description,
+                    'linkUrl' => $link
+                ]);
+            }
+        }
+        return $ar_history;
     }
 }

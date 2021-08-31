@@ -9,14 +9,17 @@ export interface ResponseFraudCheckOrder {
   settings: SettingsFraudOrder;
   answer: AnswerFraudOrder;
 }
+
 export interface ResponseFraudChangeStatus {
   status: boolean;
   error?: string;
 }
+
 export interface ResponseForceFraudCheck {
   status: boolean;
   error?: string;
 }
+
 export interface ResponseChangeResultFraudCheck {
   status: boolean;
   error?: string;

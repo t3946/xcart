@@ -5,6 +5,7 @@ namespace Modules\Core\Controllers\Api;
 use Modules\Core\Models\FraudCheckColumnModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
@@ -12,75 +13,60 @@ use Xcart\App\Main\Xcart;
 
 class FraudCheckController extends Controller
 {
-    public function getFraudFullName()
-    {
-        return FraudFAQuestionModel::objects()->filter(['type' => 'full_name']);
-    }
 
-    public function getFraudAddress()
+    public function getAllFAQuestions()
     {
-        return FraudFAQuestionModel::objects()->filter(['type' => 'address']);
-    }
-
-    public function getAll()
-    {
-        $ar_result = ['status' => false];
-        foreach ($this->getFraudFullName() as $item) {
-            $ar_result['full_name']['data'][] = [
-                'section' => "{$item->f_fraud->fraud_name}:{$item->t_fraud->fraud_name}",
-                'value' => $item->weight,
-                'f_fraud' => $item->f_fraud->fraud_code,
-                't_fraud' => $item->t_fraud->fraud_code,
+        $ar_result = [];
+        /** @var FraudFAQuestionModel $question */
+        foreach (FraudFAQuestionModel::objects()->all() as $question) {
+            $ar_result[$question->type]['data'][] = [
+                'value' => $question->weight,
+                'f_fraud' => $question->f_fraud->fraud_name,
+                't_fraud' => $question->t_fraud->fraud_name,
+                'template' => $question->template,
+                'questionId' => $question->question_id
             ];
         }
-        $ar_result['full_name']['columns'] = FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList(['fraud_name'], true);
-        foreach ($this->getFraudAddress() as $item) {
-            $ar_result['address']['data'][] = [
-                'section' => "{$item->f_fraud->fraud_name}:{$item->t_fraud->fraud_name}",
-                'value' => $item->weight,
-                'f_fraud' => $item->f_fraud->fraud_name,
-                't_fraud' => $item->t_fraud->fraud_name,
-            ];
+        /** @var FraudCheckColumnModel $column */
+        foreach (FraudCheckColumnModel::objects()->all() as $column) {
+            $ar_result[$column->type]['columns'][] = $column->fraud_name;
         }
-        $ar_result['address']['columns'] = FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList(['fraud_name'], true);
-        $ar_result['status'] = true;
-        $this->jsonResponse($ar_result);
+        return $ar_result;
     }
 
-    public function updateWeight(): void
+    public function getFraudCheckSettings()
     {
-        $post = Xcart::app()->request->post;
-        $ar_result = ['status' => true];
-        $update = json_decode($post['update'], true);
-        try {
-            foreach ($update as $fraud_group => $value) {
-                $ar_fraud = explode(':', $fraud_group);
-                $f_fraud_column = FraudCheckColumnModel::objects()->get(['fraud_name' => $ar_fraud[0]]);
-                $t_fraud_column = FraudCheckColumnModel::objects()->get(['fraud_name' => $ar_fraud[1]]);
-                /** @var FraudFAQuestionModel $fraud */
-                $fraud = FraudFAQuestionModel::objects()->get(['f_fraud_id' => $f_fraud_column, 't_fraud_id' => $t_fraud_column]);
-                $fraud->weight = $value;
-                $fraud->save();
-            }
-        } catch (\Exception $exception) {
-            $ar_result = [
-                'status' => false,
-                'error' => $exception->getMessage(),
-            ];
-        } finally {
-            $this->jsonResponse($ar_result);
-        }
+        $ar_settings = [
+            'faQuestions' => $this->getAllFAQuestions(),
+            'baseQuestions' => $this->getAllBaseQuestions(),
+            'settings' => $this->getBaseSettings(),
+        ];
+        $this->jsonResponse($ar_settings);
     }
 
-    public function getBaseSettings(): void
+    public function getAllBaseQuestions(): array
+    {
+        $ar_result = [];
+        /** @var BaseFraudCheckModelV2 $question */
+        foreach (BaseFraudCheckModelV2::objects()->all() as $question) {
+            $ar_result[] = [
+                'template' => $question->question_template_body,
+                'value' => $question->weight,
+                'questionId' => $question->question_id,
+            ];
+        }
+        return $ar_result;
+    }
+
+    public function getBaseSettings(): array
     {
         global $fraud_Google_address_search_exclusions, $fraud_Google_phone_search_exclusions, $fraud_Google_email_search_exclusions;
-        $ar_result = ['status' => true];
+        $ar_settings = [];
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getGlobalConfig();
 
         $fraud_status = FraudStatusModel::objects()->order('order_by')->valuesList(['code', 'name']);
-        $ar_result['data'] = [
+        $ar_settings['data'] = [
             'fraud_domains_free_email_provider' => $config['fraud_domains_free_email_provider'] ?? '',
             'Overall_RS_threshold_for_Clear_status' => (float)$config['Overall_RS_threshold_for_Clear_status'] ?? 0,
             'Risk_Score_Threshold_status' => $config['Risk_Score_Threshold_status'] ?? '',
@@ -94,11 +80,11 @@ class FraudCheckController extends Controller
                 ? explode(',', $config['Under_review_users'])
                 : [],
         ];
-        $ar_result['settings'] = [
+        $ar_settings['settings'] = [
             'users' => UserModel::admins()->valuesList(['id', 'firstname']),
             'status' => $fraud_status
         ];
-        $this->jsonResponse($ar_result);
+        return $ar_settings;
     }
 
     public function updateFraudSettings(): void
@@ -124,5 +110,15 @@ class FraudCheckController extends Controller
         } finally {
             $this->jsonResponse($ar_result);
         }
+    }
+
+    public function updateFAQuestion()
+    {
+        $update_data = json_decode(file_get_contents('php://input'), true);
+        /** @var FraudFAQuestionModel $question_model */
+        $question_model = FraudFAQuestionModel::objects()->get(['question_id' => $update_data['questionId']]);
+        $question_model->template = $update_data['template'];
+        $question_model->weight = $update_data['weight'];
+        $this->jsonResponse(['update' => $question_model->save()]);
     }
 }

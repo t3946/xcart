@@ -109,7 +109,7 @@ class BaseFraudCheckHelperV2
             if (stripos($config['fraud_domains_free_email_provider'], $order->getEmailDomain()) !== false) {
                 $fraud_result = 'negative';
                 $manual_action = 'N';
-                $outcome = 1;
+                $outcome = 0;
             }
         }
 
@@ -476,7 +476,7 @@ class BaseFraudCheckHelperV2
                 }
             }
         }
-        $hard = array_unique($hard);
+        $hard = array_unique($hard ?? []);
         if (count($hard) === 1) {
             $fraud_result = reset($hard);
         }

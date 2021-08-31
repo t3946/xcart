@@ -17,8 +17,13 @@ export interface SettingsFraudOrder {
     code: string;
     name: string;
   };
+  legend: {
+    full_name: ColumnLegendData[];
+    address: ColumnLegendData[];
+  };
   order_prefix: string;
 }
+
 export interface FraudFAQuestion {
   question_id: string | number;
   f_fraud_id: string | number;
@@ -26,8 +31,16 @@ export interface FraudFAQuestion {
   weight: string | number;
   template: string;
 }
+
 export interface FraudResultCheck {
   bare_result: number | string;
   overall_result: number | string;
   risk_score: number | string;
+}
+export interface ColumnLegendData {
+  description: string;
+  columnName: string;
+  value: string;
+  link: boolean;
+  linkUrl: string;
 }

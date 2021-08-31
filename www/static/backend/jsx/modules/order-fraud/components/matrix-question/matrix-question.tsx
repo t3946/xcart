@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
+import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color-column";
 interface MatrixQuestion {
   columns: {
     fraud_code: string;
@@ -17,22 +18,34 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
 }) => {
   const { dialog, template } = useContext(FraudCheckOrderContext);
 
-  const doubleClickHandler = (anwer: FAAnswer) => {
+  const onClickHandler = (anwer: FAAnswer) => {
     template.set(anwer);
     dialog.set();
   };
   return (
-    <table>
+    <table border={1} className="table-fa-question">
       <tr>
-        <th>code</th>
+        <th className="table-header-code-text">code</th>
         {columns.map((column) => (
-          <th className="table-header-fraud">{column.fraud_name}</th>
+          <th
+            className={`table-header-fraud ${getHeaderClassByName(
+              column.fraud_name
+            )}`}
+          >
+            {column.fraud_name}
+          </th>
         ))}
       </tr>
       {columns.map((column) => {
         return (
           <tr>
-            <td className="table-header-fraud">{column.fraud_name}</td>
+            <td
+              className={`table-header-fraud ${getHeaderClassByName(
+                column.fraud_name
+              )}`}
+            >
+              {column.fraud_name}
+            </td>
             {columns.map((col) => {
               if (col.fraud_id === column.fraud_id) {
                 return <td>&#10003;</td>;
@@ -47,7 +60,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
                 return (
                   <td>
                     <div
-                      onClick={() => doubleClickHandler(answer)}
+                      onClick={() => onClickHandler(answer)}
                       className="answer-matrix-detail-text"
                     >
                       {answer.fraud_score}

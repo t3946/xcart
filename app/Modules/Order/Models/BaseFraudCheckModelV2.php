@@ -22,7 +22,7 @@ use Xcart\App\Orm\Model;
  * @property mixed question_code
  * @property float|string weight
  * @property string type
- * @property int|string id
+ * @property int|string question_id
  */
 class BaseFraudCheckModelV2 extends Model
 {
@@ -50,7 +50,7 @@ class BaseFraudCheckModelV2 extends Model
     public static function getFields()
     {
         return [
-            'id' => [
+            'question_id' => [
                 'class' => AutoField::className(),
             ],
             'question_template_body' => [
@@ -112,7 +112,7 @@ class BaseFraudCheckModelV2 extends Model
         return false;
     }
 
-    public function isBluePayPayment(OrderModel $order_model) : bool
+    public function isBluePayPayment(OrderModel $order_model): bool
     {
         /** @var OrderTransactionModel $transaction_model */
         if ($transaction_model = $order_model->getFirstTransaction()) {

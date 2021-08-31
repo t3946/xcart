@@ -21,6 +21,7 @@ import { NotCheckInfo } from "@admin/modules/order-fraud/components/not-check-in
 import { FraudScoreResult } from "@admin/modules/order-fraud/components/fraud-score-result/fraud-score-result";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { FraudPaymentAnswer } from "@admin/modules/order-fraud/components/fraud-payment-answer/fraud-payment-answer";
+import { MatrixHistory } from "@admin/modules/order-fraud/components/matrix-history/MatrixHistory";
 
 const api = new ApiService();
 
@@ -166,6 +167,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
                 <Typography variant="h6" align="center">
                   Full names: Cross check matrix
                 </Typography>
+                <MatrixHistory historyColumn={settingsFraud.legend.full_name} />
                 {settingsFraud.column_fn && (
                   <MatrixQuestion
                     columns={settingsFraud.column_fn}
@@ -177,6 +179,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
                 <Typography variant="h6" align="center">
                   Addresses: Cross check matrix
                 </Typography>
+                <MatrixHistory historyColumn={settingsFraud.legend.address} />
                 {settingsFraud.column_fn && (
                   <MatrixQuestion
                     columns={settingsFraud.column_address}

@@ -11,10 +11,9 @@ import {
   FormDataFraud,
   SettingsList,
 } from "@admin/modules/general-settings/ts/types/fraud-check/data";
-import {
-  ResponseFraudGet,
-  ResponseFraudSave,
-} from "@admin/modules/general-settings/ts/types/fraud-check/response";
+import { ResponseFraudSave } from "@admin/modules/general-settings/ts/types/fraud-check/response";
+import { useSelector } from "react-redux";
+import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
 
 const api = new ApiService();
 export const CheckSettingsForm: React.FC<any> = () => {
@@ -23,7 +22,6 @@ export const CheckSettingsForm: React.FC<any> = () => {
     users: [],
     status: [],
   });
-  const [loading, setLoading] = useState(true);
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onInputChange = (event) => {
@@ -32,21 +30,6 @@ export const CheckSettingsForm: React.FC<any> = () => {
       ...{ [event.target.name]: event.target.value },
     });
   };
-  useEffect(() => {
-    api.get("/api/fraud/settings/get").then((data: ResponseFraudGet) => {
-      if (data.status) {
-        if (data.settings) {
-          setSettingsList(data.settings);
-        }
-        const newDefaultState = {};
-        for (const attr in data.data) {
-          newDefaultState[attr] = data.data[attr];
-        }
-        setFormData(newDefaultState);
-        setLoading(false);
-      }
-    });
-  }, []);
 
   const onSaveHandler = () => {
     setLoading(true);

@@ -1,3 +1,5 @@
+import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/data-table";
+
 export interface FormDataFraud {
   Under_review_users: string[];
   fraud_domains_free_email_provider: string;
@@ -21,4 +23,9 @@ export interface FraudStatus {
 export interface SettingsList {
   users: FraudUsers[];
   status: FraudStatus[];
+}
+export interface ChangeQuestionDataForm {
+  weight: string | number;
+  template: string;
+  questionId: string | number;
 }
