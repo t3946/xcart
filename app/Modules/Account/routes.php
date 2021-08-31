@@ -111,6 +111,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification/settings/preferred-method',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings-preferred-method',
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'

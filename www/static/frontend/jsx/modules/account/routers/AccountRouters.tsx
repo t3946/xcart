@@ -37,6 +37,7 @@ import DepartmentsMenuMobile from "@client/modules/account/components/hat/Depart
 import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
+import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -196,6 +197,14 @@ export const AccountRouters = (): any => {
                     exact
                     path={route("account:two-step-verification-add-new")}
                     component={TSVAddNewApp}
+                  />
+
+                  <Route
+                    exact
+                    path={route(
+                      "account:two-step-verification-settings-preferred-method"
+                    )}
+                    component={TSVChangePreferredMethod}
                   />
                 </Switch>
               </div>

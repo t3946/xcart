@@ -129,7 +129,15 @@ const TSVSettings = (): any => {
           </div>
 
           <div className="col-6 col-lg-2 text-end text-lg-start">
-            <a href="#">Change</a>
+            <NavLink
+              className={"common-link"}
+              exact={true}
+              to={route(
+                "account:two-step-verification-settings-preferred-method"
+              )}
+            >
+              Change
+            </NavLink>
           </div>
 
           <div className="d-none d-lg-block col-lg-2 pe-0" />

@@ -1,0 +1,6 @@
+.phone-country-code-column {
+  @include breakpoint(md up) {
+    width: rem-calc(140);
+    max-width: rem-calc(140);
+  }
+}

@@ -1,3 +1,5 @@
+import {route} from "@client/jsx/utils/AppData";
+
 const newWindow: any = window;
 const routes = newWindow.appData.routes || {};
 
@@ -63,4 +65,9 @@ export const staticRoutes = [
     name: "Add New App",
     path: routes["account:two-step-verification-add-new"],
   },
+
+  {
+    name: "Change Preferred Method",
+    path: routes["account:two-step-verification-settings-preferred-method"],
+  }
 ];
