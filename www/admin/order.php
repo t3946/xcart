@@ -2152,7 +2152,7 @@ elseif ($mode === 'mode_info_request_survey') {
                                 $log .= "<B>" . $v["productcode"] . ":</B> r_avail: " . $current_r_avail . " -> 0 <br />";
                             }
 
-                            db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='', forsale='N', r_avail='0' WHERE productid='$productid'");
+                            db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy=null, forsale='N', r_avail='0' WHERE productid='$productid'");
                         }
                     }
                 }
