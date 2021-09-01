@@ -47,12 +47,15 @@ class QueueImagesCommand extends Command
                         }
                     }
 
-                    if ($found_images) {
                         //delete not existed images from product
                         /** @var ProductImagesModel $product_image */
-                        foreach (ProductImagesModel::objects()
-                            ->filter(['product_id' => $product->pk, 'image__is_manual' => false])
-                            ->exclude(['image_id__in' => $found_images]) as $product_image) {
+                        $filter = ProductImagesModel::objects()->filter(['product_id' => $product->pk, 'image__is_manual' => false]);
+
+                        if ($found_images) {
+                            $filter->exclude(['image_id__in' => $found_images]);
+                        }
+
+                        foreach ($filter as $product_image) {
                             $image = $product_image->image;
                             $product_image->delete();
                             if (!$image->products->count()) {
@@ -70,7 +73,6 @@ class QueueImagesCommand extends Command
                                 print_r($action);
                             }
                         }
-                    }
 
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
