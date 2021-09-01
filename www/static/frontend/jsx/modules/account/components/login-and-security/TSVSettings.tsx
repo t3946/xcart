@@ -17,11 +17,12 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 const TSVSettings = (): any => {
   const breakpoint = useBreakpoint();
   const disableTSVModal = useDialog();
-  useSelector((e: AccountStore) => e.main.breakpoint);
   const user = useSelector((e: AccountStore) => e.user);
   const history = useHistory();
   const dispatch = useDispatch();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
+
+  useSelector((e: AccountStore) => e.main.breakpoint);
 
   if (user === null) {
     history.push(route("account:login"));
