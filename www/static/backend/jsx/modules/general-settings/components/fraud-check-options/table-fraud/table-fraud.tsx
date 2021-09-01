@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/data-table";
+import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/question-data.type";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { DialogTableEdit } from "@admin/modules/general-settings/components/fraud-check-options/dialog-table-edit/DialogTableEdit";
 
@@ -16,6 +16,7 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
       weight: question.value,
       template: question.template,
       questionId: question.questionId,
+      type,
     });
     setOpen(true);
   };
@@ -54,9 +55,9 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
         })}
       </table>
       <DialogTableEdit
+        type="faQuestions"
         state={{ get: open, set: setOpen }}
         form={{ get: dataChange, set: setDataChange }}
-        type={type}
       />
     </Fragment>
   );

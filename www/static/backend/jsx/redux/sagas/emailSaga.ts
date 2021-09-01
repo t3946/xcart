@@ -41,7 +41,6 @@ function* getEmailInfo(action: AnyAction): Generator {
 }
 
 function* removeEmailLabel(action: AnyAction): Generator {
-  console.log(action);
   const info: any = yield api
     .post<any>(
       `/admin/forms/api/mail/remove-label`,

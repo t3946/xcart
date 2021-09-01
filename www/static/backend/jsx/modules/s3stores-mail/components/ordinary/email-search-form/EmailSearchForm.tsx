@@ -25,7 +25,6 @@ import { name } from "i18next-intervalplural-postprocessor";
 export const EmailSearchForm: React.FC<any> = () => {
   const formValues = useSelector((state: StoreDto) => state.searchOptions);
   const labelList = useSelector((state: StoreDto) => state.labelsList);
-  console.log(labelList);
   const classes = selectStyles();
 
   const { editSearchValues } = useContext(EmailSearchDialogContext);

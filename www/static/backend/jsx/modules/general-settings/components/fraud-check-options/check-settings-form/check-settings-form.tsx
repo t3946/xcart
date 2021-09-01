@@ -1,28 +1,26 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Button, Grid } from "@material-ui/core";
 import { Form, Row } from "react-bootstrap";
-import { ApiService } from "@admin/modules/shared/services/api.service";
 import { SelectFraudStatus } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/select-fraud-status";
 import { InputFraudField } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/input-fraud-field";
 import { UsersFraudSelect } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/users-fraud-select";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { defaultStateForm } from "@admin/modules/general-settings/ts/consts/fraud-check/default-state";
 import { FormDataFraud } from "@admin/modules/general-settings/ts/types/fraud-check/data";
-import { ResponseFraudSave } from "@admin/modules/general-settings/ts/types/fraud-check/response";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
+import { changeFraudSettingsForm } from "@redux/actions/fraudSettingsActions";
 
-const api = new ApiService();
 export const CheckSettingsForm: React.FC<any> = () => {
   const [formData, setFormData] = useState<FormDataFraud>(defaultStateForm);
   const dispatch = useDispatch();
+  const { showSnackbar } = useContext(SnackbarContext);
   const settings = useSelector(
     (state: StoreGeneralSettings) => state.fraudSettings.settings
   );
   useEffect(() => {
     setFormData(settings.data);
-  });
-  const { showSnackbar } = useContext(SnackbarContext);
+  }, [settings]);
 
   const onInputChange = (event) => {
     setFormData({
@@ -31,7 +29,8 @@ export const CheckSettingsForm: React.FC<any> = () => {
     });
   };
   const onSaveForm = () => {
-    dispatch();
+    dispatch(changeFraudSettingsForm(formData));
+    showSnackbar("You have successfully update data", "success");
   };
   return (
     <Grid

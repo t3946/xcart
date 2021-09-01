@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "../sagas/fraudSettingsSaga";
 import { composeWithDevTools } from "redux-devtools-extension";
-import fraudSettingsReducer from "@redux/reducers/fraudSettingsReduce";
+import fraudSettingsReducer from "@redux/reducers/general-settings/fraudSettingsReduce";
 import { initStateGeneralSettings } from "@admin/modules/general-settings/ts/consts/generalSettings";
 
 const sagaMiddleware = createSagaMiddleware();

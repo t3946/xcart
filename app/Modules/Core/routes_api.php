@@ -41,7 +41,7 @@ return [
         'name' => 'get_fraud_settings'
     ],
     [
-        'route' => 'fraud/settings/save',
+        'route' => 'fraud-check/settings/update',
         'target' => [FraudCheckController::class, 'updateFraudSettings'],
         'name' => 'update_fraud_settings'
     ],
@@ -49,5 +49,10 @@ return [
         'route' => 'question/fa/update',
         'target' => [FraudCheckController::class, 'updateFAQuestion'],
         'name' => 'update_fa_question'
+    ],
+    [
+        'route' => 'question/base/update',
+        'target' => [FraudCheckController::class, 'updateBaseQuestion'],
+        'name' => 'update_base_question'
     ]
 ];

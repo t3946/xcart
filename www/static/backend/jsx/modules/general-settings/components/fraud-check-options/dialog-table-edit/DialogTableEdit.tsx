@@ -6,48 +6,39 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField,
 } from "@material-ui/core";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
-import { Form, FormControl, InputGroup } from "react-bootstrap";
-import { ApiService } from "@admin/modules/shared/services/api.service";
+import { Form } from "react-bootstrap";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
-import { ResponseQuestionUpdate } from "@admin/modules/general-settings/ts/types/fraud-check/response";
-import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/data-table";
+import { useDispatch } from "react-redux";
+import {
+  changeFraudBaseQuestionData,
+  changeFraudFAQuestionData,
+} from "@redux/actions/fraudSettingsActions";
 
 interface DialogTableEdit {
   state: { get: boolean; set: (newState: boolean) => void };
   form: { get: ChangeQuestionDataForm; set: (newState: any) => void };
   type: string;
 }
-const api = new ApiService();
 export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   state,
   form,
   type,
 }) => {
+  const dispatch = useDispatch();
   const { showSnackbar } = useContext(SnackbarContext);
   const saveChangeQuestion = () => {
-    api
-      .post("/api/question/fa/update", JSON.stringify(form.get))
-      .then((response: ResponseQuestionUpdate) => {
-        if (response.update) {
-          showSnackbar("You have successfully changed");
-          setData((prev) => {
-            const question: TableDataResponse = prev[type]["data"].find(
-              (question) => question.questionId === form.get.questionId
-            );
-            if (question) {
-              question.template = form.get.template;
-              question.value = form.get.weight;
-            }
-            return { ...prev };
-          });
-          state.set(false);
-        } else {
-          showSnackbar("An error occurred while updating the data");
-        }
-      });
+    switch (type) {
+      case "faQuestions":
+        dispatch(changeFraudFAQuestionData(form.get));
+        break;
+      case "baseQuestions":
+        dispatch(changeFraudBaseQuestionData(form.get));
+        break;
+    }
+    showSnackbar("You have successfully update question data");
+    state.set(!state.get);
   };
   const onChangeField = (event: React.ChangeEvent<HTMLInputElement>) => {
     form.set({ ...form.get, [event.target.name]: event.target.value });

@@ -14,7 +14,7 @@ use Xcart\App\Main\Xcart;
 class FraudCheckController extends Controller
 {
 
-    public function getAllFAQuestions()
+    public function getAllFAQuestions() : array
     {
         $ar_result = [];
         /** @var FraudFAQuestionModel $question */
@@ -50,9 +50,12 @@ class FraudCheckController extends Controller
         /** @var BaseFraudCheckModelV2 $question */
         foreach (BaseFraudCheckModelV2::objects()->all() as $question) {
             $ar_result[] = [
-                'template' => $question->question_template_body,
-                'value' => $question->weight,
                 'questionId' => $question->question_id,
+                'questionCode' => $question->question_code,
+                'auto' => $question->auto,
+                'template' => $question->question_template_body,
+                'weight' => $question->weight,
+                'type' => $question->type,
             ];
         }
         return $ar_result;
@@ -90,26 +93,17 @@ class FraudCheckController extends Controller
     public function updateFraudSettings(): void
     {
         $fraud_settings = json_decode(file_get_contents('php://input'), true);
-        $ar_result = ['status' => true];
-        try {
-            foreach ($fraud_settings as $attr => $value) {
-                switch ($attr) {
-                    case 'Under_review_users':
-                        GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => implode(',', $value)]);
-                        break;
-                    default:
-                        GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => $value]);
-                        break;
-                }
+        foreach ($fraud_settings as $attr => $value) {
+            switch ($attr) {
+                case 'Under_review_users':
+                    GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => implode(',', $value)]);
+                    break;
+                default:
+                    GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => $value]);
+                    break;
             }
-        } catch (\Exception $exception) {
-            $ar_result = [
-                'status' => false,
-                'error' => $exception->getMessage()
-            ];
-        } finally {
-            $this->jsonResponse($ar_result);
         }
+        $this->jsonResponse(['update' => true]);
     }
 
     public function updateFAQuestion()
@@ -118,6 +112,16 @@ class FraudCheckController extends Controller
         /** @var FraudFAQuestionModel $question_model */
         $question_model = FraudFAQuestionModel::objects()->get(['question_id' => $update_data['questionId']]);
         $question_model->template = $update_data['template'];
+        $question_model->weight = $update_data['weight'];
+        $this->jsonResponse(['update' => $question_model->save()]);
+    }
+
+    public function updateBaseQuestion()
+    {
+        $update_data = json_decode(file_get_contents('php://input'), true);
+        /** @var BaseFraudCheckModelV2 $question_model */
+        $question_model = BaseFraudCheckModelV2::objects()->get(['question_id' => $update_data['questionId']]);
+        $question_model->question_template_body = $update_data['template'];
         $question_model->weight = $update_data['weight'];
         $this->jsonResponse(['update' => $question_model->save()]);
     }

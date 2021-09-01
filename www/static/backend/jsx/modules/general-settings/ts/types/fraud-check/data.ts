@@ -1,3 +1,5 @@
+import { ResponseFraudAllSettings } from "@admin/modules/general-settings/ts/types/fraud-check/response";
+
 export interface FormDataFraud {
   Under_review_users: string[];
   fraud_domains_free_email_provider: string;
@@ -26,4 +28,5 @@ export interface ChangeQuestionDataForm {
   weight: string | number;
   template: string;
   questionId: string | number;
+  type: string;
 }

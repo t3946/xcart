@@ -6,6 +6,7 @@ import { TableFraud } from "@admin/modules/general-settings/components/fraud-che
 import { setFraudSettings } from "@redux/actions/fraudSettingsActions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
+import { BaseQuestionTable } from "@admin/modules/general-settings/components/fraud-check-options/base-question-table/BaseQuestionTable";
 
 export const FraudCheckOptions: React.FC<any> = () => {
   const [tabIndex, setTabIndex] = useState<string>(`0`);
@@ -35,6 +36,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
             <Tab label="Check options settings" value="0" />
             <Tab label="Table full name" value="1" />
             <Tab label="Table address" value="2" />
+            <Tab label="Base question list" value="3" />
           </TabList>
         </AppBar>
         <TabPanel value="0">
@@ -76,6 +78,19 @@ export const FraudCheckOptions: React.FC<any> = () => {
                 type="address"
               />
             )}
+          </Grid>
+        </TabPanel>
+        <TabPanel value="3">
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            direction="column"
+          >
+            <Typography variant="h6" align="center">
+              Base fraud check question
+            </Typography>
+            {fraudSettings.baseQuestions && <BaseQuestionTable />}
           </Grid>
         </TabPanel>
       </TabContext>
