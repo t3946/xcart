@@ -13,13 +13,12 @@ export const EmailSendInput: React.FC = () => {
     addNewRecipient,
     editThisRecipient,
     deleteThisRecipient,
+    recipientsInputRef,
   } = useContext(EmailSendBodyContext);
 
   const [focus, setFocus] = useState(false);
 
   const [width, setWidth] = useState(10);
-
-  const ref = useRef<HTMLInputElement>();
 
   const onFocusOut = () => {
     setFocus(false);
@@ -28,30 +27,30 @@ export const EmailSendInput: React.FC = () => {
   useCLickListener(onFocusOut);
 
   useEffect(() => {
-    if (!focus && ref.current) {
-      ref.current.blur();
+    if (!focus && recipientsInputRef.current) {
+      recipientsInputRef.current.blur();
 
-      if (ref.current.value.trim()) {
-        addNewRecipient(ref.current.value.trim());
+      if (recipientsInputRef.current.value.trim()) {
+        addNewRecipient(recipientsInputRef.current.value.trim());
       }
-      ref.current.value = "";
+      recipientsInputRef.current.value = "";
       setWidth(10);
     }
   }, [focus]);
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) {
-      if (ref.current.value.trim()) {
-        addNewRecipient(ref.current.value.trim());
+      if (recipientsInputRef.current.value.trim()) {
+        addNewRecipient(recipientsInputRef.current.value.trim());
       }
-      ref.current.value = "";
+      recipientsInputRef.current.value = "";
       setWidth(10);
     }
   };
 
   const handleItemClick = (e) => {
     e.stopPropagation();
-    ref.current.focus();
+    recipientsInputRef.current.focus();
     setFocus(true);
   };
 
@@ -91,7 +90,7 @@ export const EmailSendInput: React.FC = () => {
         className="recipient-input"
         style={{ width: width }}
         onChange={handleInputValueChange}
-        ref={ref}
+        ref={recipientsInputRef}
       />
     </Grid>
   );

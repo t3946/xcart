@@ -33,9 +33,6 @@
   text-overflow: ellipsis;
 }
 
-.subject-email-block {
-}
-
 .header-mail-label-item {
   border-radius: 1px;
   margin: 5px 5px;
@@ -64,6 +61,7 @@
 .subject-email-block {
   overflow: hidden;
   display: flex;
+  max-width: 270px;
   align-items: center;
 }
 

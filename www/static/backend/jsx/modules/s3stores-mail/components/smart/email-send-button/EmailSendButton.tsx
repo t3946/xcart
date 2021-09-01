@@ -10,18 +10,30 @@ import { EmailSendBodyContext } from "@s3stores-mail/contexts/email-send-body-co
 import { checkValidEmailRecipients } from "@s3stores-mail/utils/check-valid-email-recipients";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { emailStore } from "@redux/stores";
 
 export const SendButton: React.FC<any> = () => {
   const [openScheduleButton, setOpenScheduleButton] = useState(false);
 
   const [open, setOpen] = React.useState(false);
-  const { sendMessage } = useContext(EmailSendBodyContext);
+  const { sendMessage, recipientsInputRef, addNewRecipient } =
+    useContext(EmailSendBodyContext);
 
   const sendData = useSelector((state: StoreDto) => state.sendData);
 
   const sendError = checkValidEmailRecipients(sendData.to);
 
   const dialog = useContext(EmailDialogContext);
+
+  const isValid = () => {
+    return checkValidEmailRecipients(emailStore.getState().sendData.to).valid;
+  };
+  const addDataFromRecipientInput = () => {
+    if (recipientsInputRef.current.value.trim()) {
+      addNewRecipient(recipientsInputRef.current.value.trim());
+      recipientsInputRef.current.value = "";
+    }
+  };
 
   const handleClickOpen = () => {
     if (sendError.valid) {
@@ -32,7 +44,8 @@ export const SendButton: React.FC<any> = () => {
   };
 
   const handleClickSend = () => {
-    if (sendError.valid) {
+    addDataFromRecipientInput();
+    if (isValid()) {
       sendMessage(sendData, "Message send");
       return;
     }

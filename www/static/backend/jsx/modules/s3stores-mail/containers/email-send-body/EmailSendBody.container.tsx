@@ -24,6 +24,8 @@ export const EmailSendBodyContainer: React.FC = () => {
 
   const dialog = useContext(EmailDialogContext);
 
+  const recipientsInputRef = useRef<HTMLInputElement>();
+
   const { showSnackbar } = useContext(SnackbarContext);
 
   const changeField = (field, value) => {
@@ -59,6 +61,7 @@ export const EmailSendBodyContainer: React.FC = () => {
     deleteThisRecipient,
     sendMessage,
     filesRef,
+    recipientsInputRef,
   };
 
   return (
