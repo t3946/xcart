@@ -117,6 +117,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification/recovery',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-recovery',
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'

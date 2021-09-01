@@ -38,6 +38,7 @@ import TSVSettings from "@client/modules/account/components/login-and-security/T
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
 import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
+import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -205,6 +206,12 @@ export const AccountRouters = (): any => {
                       "account:two-step-verification-settings-preferred-method"
                     )}
                     component={TSVChangePreferredMethod}
+                  />
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-recovery")}
+                    component={TSVRecovery}
                   />
                 </Switch>
               </div>

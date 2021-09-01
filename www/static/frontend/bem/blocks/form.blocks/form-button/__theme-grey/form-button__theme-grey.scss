@@ -2,6 +2,7 @@
   font-weight: normal;
   border: rem-calc(2) solid #c4c4c4;
   background-color: #ffffff;
+  color: #4a4949;
 
   @include breakpoint(lg up) {
     border-width: rem-calc(1);
