@@ -25,7 +25,7 @@ class QueueImagesActiveCommand extends Command
         /** @var ProductImageModel $model */
 
         if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
-            [$image_by_link, $is_image_by_link_new] = ProductImageModel::objects()->getOrCreate(
+            [$image_by_link, $is_image_by_link_new] = ProductImageModel::objects()->getOrNew(
                 ['link' => $data['image_link_hash']]
             );
 
@@ -33,34 +33,49 @@ class QueueImagesActiveCommand extends Command
                 ['hash' => $data['image_hash'], 'link__isnt' => $data['image_link_hash']]
             );
 
-            if (!$is_image_by_hash_new) {
-                // изменилась ссылка у картинки
-                foreach (ProductImagesModel::objects()->filter(['image_id' => $image_by_hash->pk]) as $product_image) {
-                    $product_image->image_id = $image_by_link->pk;
-                    try {
-                        $product_image->save();
-                    } catch (Throwable $exception) {
-                        echo "{$exception->getMessage()} \n";
+            if ($is_image_by_link_new) {
+                if ($is_image_by_hash_new) {
+                    // новая картинка
+                    echo "new image\n";
+                } else {
+                    // изменилась ссылка у картинки
+                    echo "image link changed\n";
+                    $image_by_link = $image_by_hash;
+                }
+            } else {
+                if ($is_image_by_hash_new) {
+                    if ($data['image_hash'] !== $image_by_link->hash) {
+                        // изменился hash картинки у ссылки
+                        $action = [
+                            'image_path' => $image_by_link->path->getValue(),
+                            'action' => 'delete'
+                        ];
+
+                        echo "image hash changed\n";
+                        print_r($action);
+
+                        Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+                    }
+                } else {
+                    if ($image_by_link->pk === $image_by_hash->pk) {
+                        // одинаковые картинки
+                        echo "same image\n";
+                    } else {
+                        // изменился hash картинки у ссылки
+                        $action = [
+                            'image_path' => $image_by_link->path->getValue(),
+                            'action' => 'delete'
+                        ];
+                        echo "image hash changed 2\n";
+                        print_r($action);
+
+                        Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+
+                        $image_by_link->delete();
+
+                        $image_by_link = $image_by_hash;
                     }
                 }
-
-                echo "image link changed\n";
-                print_r($action);
-
-                $image_by_hash->delete();
-            }
-
-            if (!$is_image_by_link_new && $data['image_hash'] !== $image_by_link->hash) {
-                // изменился hash картинки у ссылки
-                $action = [
-                    'image_path' => $image_by_link->path->getValue(),
-                    'action' => 'delete'
-                ];
-
-                echo "image hash changed\n";
-                print_r($action);
-
-                Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
             }
 
             $image_by_link->setAttributes([
@@ -77,6 +92,7 @@ class QueueImagesActiveCommand extends Command
             }
 
             $image_by_link->save();
+
             print_r($data);
 
             if (isset($data['product_id']) && $product = ProductModel::objects()->get(
@@ -92,9 +108,9 @@ class QueueImagesActiveCommand extends Command
     {
         try {
             [$model] = ProductImagesModel::objects()->getOrNew([
-                'product_id' => $product->pk,
-                'image_id' => $image->pk,
-            ]);
+                                                                   'product_id' => $product->pk,
+                                                                   'image_id' => $image->pk,
+                                                               ]);
 
             $model->order_by = $order_by;
 
