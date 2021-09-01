@@ -22,11 +22,20 @@ interface PropsInterface {
     phoneExt?: string; // external phone code
   };
   mode?: string; // mobile or ext
+  label: string;
 }
 
 const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
-  const { setFieldValue, handleChange, touched, errors, name, values, mode } =
-    props;
+  const {
+    setFieldValue,
+    handleChange,
+    touched,
+    errors,
+    name,
+    values,
+    mode,
+    label,
+  } = props;
   const countries = useSelector((e: AccountStore) => e.countries);
   const countryCodeFieldName = name + "CountryCode";
   const phoneExtFieldName = name + "Ext";
@@ -87,10 +96,10 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   }
 
   return (
-    <RBForm.Group controlId="EditUserPhone" className={"row"}>
+    <RBForm.Group controlId={name} className={"row"}>
       <div className={"col-12 col-md-6 col-lg-3 label-column"}>
         <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
-          New Mobile number
+          {label}
         </RBForm.Label>
       </div>
 
@@ -111,7 +120,11 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
           </div>
 
           <div className={classnames(classes.inputPhoneColumn)}>
-            <InputMask mask={phoneMask} value={values[name]} onChange={handleChange}>
+            <InputMask
+              mask={phoneMask}
+              value={values[name]}
+              onChange={handleChange}
+            >
               {() => (
                 <input
                   placeholder="(___) ___-____"
@@ -119,6 +132,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
                     "form-input-error": !!errors[name],
                   })}
                   name={name}
+                  id={name}
                   type="text"
                   onChange={handleChange}
                   value={values[name]}

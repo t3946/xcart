@@ -100,6 +100,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
                     phoneExt: values.phoneExt,
                   }}
                   mode={"mobile"}
+                  label={"New Mobile number"}
                 />
 
                 <p className="form-info mt-3 mb-0">
