@@ -17,7 +17,7 @@ interface PropsInterface {
   countryCodeValue?: any;
   initialPhoneValue?: string;
   values: {
-    countryCode?: string; // RU, AU etc
+    phoneCountryCode?: string; // RU, AU etc
     phone: string; // phone without counter code
     phoneExt?: string; // external phone code
   };
@@ -45,8 +45,8 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
 
   let initialCountryCode;
 
-  if (values.countryCode) {
-    const country = getCountryByCode(values.countryCode, countries);
+  if (values.phoneCountryCode) {
+    const country = getCountryByCode(values.phoneCountryCode, countries);
 
     initialCountryCode = {
       viewValue: country.name + " +" + country.phone_code,
@@ -97,7 +97,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
 
   return (
     <RBForm.Group controlId={name} className={"row"}>
-      <div className={"col-12 col-md-6 col-lg-3 label-column"}>
+      <div className={"col-12 col-md-6 col-lg-4 label-column"}>
         <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
           {label}
         </RBForm.Label>

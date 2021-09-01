@@ -95,8 +95,8 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
                   errors={errors}
                   name={"phone"}
                   values={{
-                    phone: values.phone,
                     phoneCountryCode: "RU",
+                    phone: values.phone,
                     phoneExt: values.phoneExt,
                   }}
                   mode={"mobile"}

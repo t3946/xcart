@@ -1,14 +1,15 @@
 .form-input-label{
   font-weight: 700;
-  font-size: 14px;
+  font-size: rem-calc(14);
+  text-transform: capitalize;
 }
 
 .form-input-label-error{
- color: #F02A36;
+ color: #f02a36;
 }
 
 .form-input-container{
-  margin-bottom: 20px;
+  margin-bottom: rem-calc(20);
 }
 
 .error-message-input-container{
