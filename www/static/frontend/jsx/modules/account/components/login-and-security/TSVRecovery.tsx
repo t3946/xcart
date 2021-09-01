@@ -1,9 +1,7 @@
 import React from "react";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 
-interface PropsInterface {}
-
-const TSVRecovery: React.FC<PropsInterface> = function () {
+const TSVRecovery: React.FC<any> = function () {
   return (
     <InnerPage
       header={"Two-Step Verification Account Recovery"}

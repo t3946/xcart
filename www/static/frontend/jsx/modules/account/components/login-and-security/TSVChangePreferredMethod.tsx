@@ -60,18 +60,9 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
           whenever you sign in to your S3 Stores account.
         </p>
       }
-      bodyClasses={"content-panel"}
+      bodyClasses={"p-0"}
       headerClasses={"mb-3"}
     >
-      <h3>Use your phone as a 2SV authenticator</h3>
-
-      <p>
-        Tell us a phone number you'd like to use for 2SV authentication
-        challenges.
-      </p>
-
-      <p>Where should we send the One Time Password (OTP)?</p>
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -87,29 +78,40 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
         }) {
           return (
             <Form>
-              <FormInputPhone
-                setFieldValue={setFieldValue}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                name={"phone"}
-                values={{
-                  phone: values.phone,
-                  phoneCountryCode: "RU",
-                  phoneExt: values.phoneExt,
-                }}
-                mode={"mobile"}
-              />
+              <div className="content-panel">
+                <h3>Use your phone as a 2SV authenticator</h3>
 
-              <p className="form-info mt-3">
-                By enrolling a mobile phone number, you consent to receive
-                automated text messages from or on behalf of S3 Stores related
-                to account management and security. Remove your number in{" "}
-                <b>Login & Security</b> to cancel. Message and data rates may
-                apply.
-              </p>
+                <p>
+                  Tell us a phone number you'd like to use for 2SV
+                  authentication challenges.
+                </p>
 
-              <div className="text-center text-lg-start account-inner-page_expanded-button">
+                <p>Where should we send the One Time Password (OTP)?</p>
+
+                <FormInputPhone
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  touched={touched}
+                  errors={errors}
+                  name={"phone"}
+                  values={{
+                    phone: values.phone,
+                    phoneCountryCode: "RU",
+                    phoneExt: values.phoneExt,
+                  }}
+                  mode={"mobile"}
+                />
+
+                <p className="form-info mt-3 mb-0">
+                  By enrolling a mobile phone number, you consent to receive
+                  automated text messages from or on behalf of S3 Stores related
+                  to account management and security. Remove your number in{" "}
+                  <b>Login & Security</b> to cancel. Message and data rates may
+                  apply.
+                </p>
+              </div>
+
+              <div className="text-center text-lg-start account-page-footer">
                 <button
                   className={
                     "admin-form-control form-button form-button__wide w-md-auto d-inline-block"

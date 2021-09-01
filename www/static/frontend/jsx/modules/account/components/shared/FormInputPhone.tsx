@@ -71,14 +71,14 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   }
 
   const classes = {
-    selectCountryCodeColumn: ["col pe-md-0 phone-country-code-column"],
+    selectCountryCodeColumn: ["col pe-0 phone-country-code-column"],
     inputPhoneColumn: [],
     inputPhoneExt: ["col phone-ext-column d-flex ps-0 align-items-center"],
   };
 
   if (mode === "mobile") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    classes.inputPhoneColumn.push("col-12 col-md");
+    classes.inputPhoneColumn.push("col");
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("d-none");
