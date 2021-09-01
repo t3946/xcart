@@ -9,6 +9,15 @@ const fraudSettingsReducer = (
   switch (action.type) {
     case "SET_FRAUD_SETTINGS":
       return { ...state, ...action.data };
+    // case "SET_SETTINGS_FORM":
+    //   console.log("TESTICK");
+    //   return {
+    //     ...state,
+    //     settings: {
+    //       ...state.settings,
+    //       data: action.form,
+    //     },
+    //   };
     default:
       return state;
   }

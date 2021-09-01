@@ -1,26 +1,26 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Button, Grid } from "@material-ui/core";
-import { Form, Row, Col, Spinner } from "react-bootstrap";
+import { Form, Row } from "react-bootstrap";
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import { SelectFraudStatus } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/select-fraud-status";
 import { InputFraudField } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/input-fraud-field";
 import { UsersFraudSelect } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/users-fraud-select";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { defaultStateForm } from "@admin/modules/general-settings/ts/consts/fraud-check/default-state";
-import {
-  FormDataFraud,
-  SettingsList,
-} from "@admin/modules/general-settings/ts/types/fraud-check/data";
+import { FormDataFraud } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { ResponseFraudSave } from "@admin/modules/general-settings/ts/types/fraud-check/response";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
 
 const api = new ApiService();
 export const CheckSettingsForm: React.FC<any> = () => {
   const [formData, setFormData] = useState<FormDataFraud>(defaultStateForm);
-  const [settingsList, setSettingsList] = useState<SettingsList>({
-    users: [],
-    status: [],
+  const dispatch = useDispatch();
+  const settings = useSelector(
+    (state: StoreGeneralSettings) => state.fraudSettings.settings
+  );
+  useEffect(() => {
+    setFormData(settings.data);
   });
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -30,19 +30,8 @@ export const CheckSettingsForm: React.FC<any> = () => {
       ...{ [event.target.name]: event.target.value },
     });
   };
-
-  const onSaveHandler = () => {
-    setLoading(true);
-    api
-      .post("/api/fraud/settings/save", JSON.stringify(formData))
-      .then((data: ResponseFraudSave) => {
-        if (data.status) {
-          showSnackbar("You have successfully updated the data");
-          setLoading(false);
-        } else if (data.error) {
-          showSnackbar(`error: ${data.error}`, "error");
-        }
-      });
+  const onSaveForm = () => {
+    dispatch();
   };
   return (
     <Grid
@@ -51,10 +40,8 @@ export const CheckSettingsForm: React.FC<any> = () => {
       alignItems="center"
       direction="column"
     >
-      {loading ? (
-        <Spinner animation="grow" variant="warning" />
-      ) : (
-        <React.Fragment>
+      {settings && (
+        <Fragment>
           <Form className="form__check_settings">
             <Form.Group className="form__group_section" as={Row}>
               <Form.Label column sm={2}>
@@ -90,7 +77,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
                   get: formData.Risk_Score_Threshold_status,
                   set: onInputChange,
                 }}
-                list={settingsList.status}
+                list={settings.settings.status}
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
@@ -98,7 +85,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
                 Under review users:
               </Form.Label>
               <UsersFraudSelect
-                userList={settingsList.users}
+                userList={settings.settings.users}
                 state={{ get: formData.Under_review_users, set: onInputChange }}
                 name="Under_review_users"
               />
@@ -122,7 +109,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               <SelectFraudStatus
                 name="Threshold_status"
                 state={{ get: formData.Threshold_status, set: onInputChange }}
-                list={settingsList.status}
+                list={settings.settings.status}
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
@@ -135,7 +122,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
                   get: formData.below_threshold_status,
                   set: onInputChange,
                 }}
-                list={settingsList.status}
+                list={settings.settings.status}
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
@@ -176,11 +163,11 @@ export const CheckSettingsForm: React.FC<any> = () => {
             </Form.Group>
           </Form>
           <div className="form__submit_button">
-            <Button variant="contained" onClick={onSaveHandler}>
+            <Button variant="contained" onClick={onSaveForm}>
               Save
             </Button>
           </div>
-        </React.Fragment>
+        </Fragment>
       )}
     </Grid>
   );

@@ -69,7 +69,6 @@ const emailReducer = (
         labelsList: [...state.labelsList, action.labelInfo],
         items: state.items.map((item) => {
           if (item.item.message_id === action.messageId) {
-            console.log("PUSH", action.labelInfo);
             item.item.labels.push(action.labelInfo);
           }
           return item;
@@ -83,7 +82,6 @@ const emailReducer = (
             item.item.labels = item.item.labels.filter(
               (label) => label.label_id !== action.labelId
             );
-            console.log(item.item.labels);
           }
           return item;
         }),
