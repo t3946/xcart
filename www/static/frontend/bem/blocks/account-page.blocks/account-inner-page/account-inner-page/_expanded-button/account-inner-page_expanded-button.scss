@@ -1,0 +1,7 @@
+.account-inner-page_expanded-button {
+  margin: 0 rem-calc(-10);
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}

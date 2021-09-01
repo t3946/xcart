@@ -54,13 +54,14 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
     <InnerPage
       header={"Change preferred method"}
       hat={
-        <p className={"mb-0"}>
+        <p className={"mb-0 px-10 px-md-0"}>
           If you would like to change your preferred method, you can do so by
           selecting a new or an existing device. This device should be available
           whenever you sign in to your S3 Stores account.
         </p>
       }
       bodyClasses={"content-panel"}
+      headerClasses={"mb-3"}
     >
       <h3>Use your phone as a 2SV authenticator</h3>
 
@@ -108,7 +109,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
                 apply.
               </p>
 
-              <div className="text-center text-lg-start">
+              <div className="text-center text-lg-start account-inner-page_expanded-button">
                 <button
                   className={
                     "admin-form-control form-button form-button__wide w-md-auto d-inline-block"

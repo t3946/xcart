@@ -15,14 +15,17 @@ interface PropsDTO {
 
 const InnerPage: React.FC<any> = function (props: PropsDTO) {
   function headerTemplate() {
+    let headerClasses;
+
+    if (props.headerClasses) {
+      headerClasses = props.headerClasses;
+    } else {
+      headerClasses = "mb-0";
+    }
+
     if (props.header) {
       return (
-        <h1
-          className={classnames(
-            "account-page-header mb-0",
-            props.headerClasses
-          )}
-        >
+        <h1 className={classnames("account-page-header", headerClasses)}>
           {props.header}
         </h1>
       );
