@@ -11,7 +11,7 @@ import { getCountryByCode } from "@client/jsx/utils/Countries";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
 
-const FormEditUserPhone = (): any => {
+const FormEditUserPhone = (props): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
@@ -53,7 +53,9 @@ const FormEditUserPhone = (): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:login-and-security"));
+          const path =
+            props.location.state?.from || route("account:login-and-security");
+          history.push(path);
           showSnackbar({
             header: "Success",
             message: "You have successfully modified your account!",

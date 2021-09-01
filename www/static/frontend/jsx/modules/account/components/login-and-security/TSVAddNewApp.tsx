@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { confirmCodeAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { Link } from "react-router-dom";
 
 const TSVAddNewApp = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
@@ -78,7 +79,46 @@ const TSVAddNewApp = (): any => {
 
         <ol>
           <li>
-            <b>Open</b> your Authenticator App. Need an app?
+            <b>Open</b> your Authenticator App.
+            <OverlayTrigger
+              placement="top"
+              delay={{ show: 250, hide: 1000 }}
+              overlay={
+                <Tooltip
+                  id="tooltip-details"
+                  className={"common-tooltip common-tooltip__login-form"}
+                >
+                  <h2 className={"common-tooltip-header"}>
+                    <b>Your phone number</b>
+                  </h2>
+
+                  <p className={"text-align--left auth-form-info mb-0"}>
+                    This is the number listed as your Mobile Phone Number in
+                    Account Settings. During 2SV challenges, this phone number
+                    will be included as an option to receive the One Time
+                    Password (OTP). To change your phone number,{" "}
+                    <Link
+                      to={{
+                        pathname: route("account:edit-phone"),
+                        state: {
+                          from: route("account:two-step-verification-add-new"),
+                        },
+                      }}
+                    >
+                      click here
+                    </Link>
+                  </p>
+                </Tooltip>
+              }
+            >
+              <span className={"common-link ms-lg-2 d-block d-lg-inline-block"}>
+                Need an app
+                <FontAwesomeIcon
+                  className={"ms-1 two-step-learn-more"}
+                  icon={faQuestionCircle}
+                />
+              </span>
+            </OverlayTrigger>
           </li>
 
           <li>
