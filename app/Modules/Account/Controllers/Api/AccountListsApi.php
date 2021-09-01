@@ -7,7 +7,7 @@ use Modules\Account\Models\ListItemsModel;
 use Modules\Account\Models\ProductListsModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Orm\Base;
-
+use Xcart\App\Main\Xcart;
 
 class AccountListsApi extends FrontendController
 {
@@ -58,5 +58,28 @@ class AccountListsApi extends FrontendController
         }
 
         $this->jsonResponse('success');
+    }
+
+    public function deleteList()
+    {
+        $list_id = json_decode(file_get_contents('php://input'));
+
+
+        $user = Xcart::app()->auth->getUser(true);
+
+       if(!$user)
+       {
+           $this->jsonResponse('user not login');
+           return;
+       }
+
+       if(ProductListsModel::objects()->get([$user->user_id => 'user_id',$list_id => 'product_list_id' ])){
+
+           dd(123);
+           ProductListsModel::objects()->delete([$list_id => 'product_list_id' ]);
+           $this->jsonResponse('delete successfully');
+           return;
+       }
+        $this->jsonResponse('error');
     }
 }

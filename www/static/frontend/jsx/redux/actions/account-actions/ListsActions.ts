@@ -27,3 +27,9 @@ export const moveProduct = (
   toListId,
   product,
 });
+
+export const deleteList = (listId: string, callback: () => void): any => ({
+  type: "DELETE_LIST",
+  listId,
+  callback,
+});

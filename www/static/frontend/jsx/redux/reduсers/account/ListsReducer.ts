@@ -13,6 +13,12 @@ const accountListReducer = (
       return {
         ...state,
         lists: action.lists,
+        listLoading: false,
+      };
+    case "CREATE_LIST":
+      return {
+        ...state,
+        listLoading: true,
       };
     case "REORDER_LIST":
       return {

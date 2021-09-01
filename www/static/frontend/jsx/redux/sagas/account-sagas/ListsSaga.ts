@@ -54,8 +54,27 @@ function* reorderList(action: AnyAction): Generator {
     .then((response) => response);
 }
 
+function* deleteList(action: AnyAction): Generator {
+  const result: any = yield api
+    .post<any>(`/account/api/lists/delete-list`, action.listId)
+    .then((response) => response);
+
+  console.log(result);
+  yield put({
+    type: "SET_LISTS",
+    lists: accountStore.getState().lists.lists.filter((e) => {
+      if (e.product_list_id !== action.listId) {
+        return e;
+      }
+    }),
+  });
+
+  yield action.callback();
+}
+
 export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("GET_LISTS", getLists);
   yield takeLatest("CREATE_LIST", createList);
   yield takeLatest("REORDER_LIST", reorderList);
+  yield takeLatest("DELETE_LIST", deleteList);
 }

@@ -129,7 +129,6 @@ config = {
       h: ["preact", "h"],
       Component: ["preact", "Component"],
     }),
-    new BundleAnalyzerPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
@@ -146,6 +145,7 @@ config = {
   watchOptions: {
     aggregateTimeout: 300,
     poll: 1000,
+    ignored: /node_modules/,
   },
 };
 

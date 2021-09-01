@@ -26,6 +26,7 @@ export interface AccountMainStore {
 
 export interface AccountListsStore {
   lists: any[];
+  listLoading: boolean;
 }
 
 export interface AccountPaymentsStore {

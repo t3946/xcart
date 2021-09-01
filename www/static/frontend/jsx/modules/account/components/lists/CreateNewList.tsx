@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { Button } from "@material-ui/core";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createList } from "../../../../redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
-export const CreateNewList = ({ onCancelBtnClick }) => {
+interface CreateNewListProps {
+  onCancelBtnClick: () => void;
+}
+
+export const CreateNewList: React.FC<CreateNewListProps> = ({
+  onCancelBtnClick,
+}) => {
   const dispatch = useDispatch();
 
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
   const formik = useFormik({
     initialValues: { name: "" },
     validationSchema: Yup.object().shape({
@@ -18,11 +29,20 @@ export const CreateNewList = ({ onCancelBtnClick }) => {
     onSubmit: null,
   });
 
+  const onAddingEnd = () => {
+    onCancelBtnClick();
+    showSnackbar({
+      header: "Success",
+      message: `${formik.values.name} list added successfully`,
+      theme: "success",
+    });
+  };
+
   const handleSubmit = () => {
     if (!formik.values.name) {
       return;
     }
-    dispatch(createList(formik.values.name, onCancelBtnClick));
+    dispatch(createList(formik.values.name, onAddingEnd));
   };
 
   return (
@@ -56,9 +76,9 @@ export const CreateNewList = ({ onCancelBtnClick }) => {
           </div>
         }
       />
-
       <div className="list-dialog-btns">
         <Button
+          disabled={listLoading}
           type={"submit"}
           className="account-submit-btn auto-width-button cancel-edit-card-btn"
           onClick={handleSubmit}
@@ -66,6 +86,7 @@ export const CreateNewList = ({ onCancelBtnClick }) => {
           Confirm
         </Button>
         <Button
+          disabled={listLoading}
           type={"submit"}
           className="account-submit-btn account-submit-btn-outline auto-width-button "
           onClick={onCancelBtnClick}

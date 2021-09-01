@@ -18,4 +18,9 @@ return [
         'target' => [AccountListsApi::class, 'reorderProducts'],
         'name' => 'reorder-list'
     ],
+    [
+        'route' => '/delete-list',
+        'target' => [AccountListsApi::class, 'deleteList'],
+        'name' => 'delete-list'
+    ],
 ];

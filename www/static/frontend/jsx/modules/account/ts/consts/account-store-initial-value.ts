@@ -26,6 +26,7 @@ export const accountMenuInitialValue = {
 
 export const accountListsInitialValue = {
   lists: undefined,
+  listLoading: false,
 };
 
 export const accountUserInitialValue = appData.user || null;
