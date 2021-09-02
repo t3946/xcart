@@ -54,7 +54,7 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
         onSubmit={submit}
         ref={React.useRef()}
       >
-        {({ handleChange, values, errors }) => {
+        {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
               <RBForm.Group controlId="LoginFormPassword">
@@ -102,7 +102,7 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
               <button
                 type="submit"
                 className="form-button mt-4 mb-3"
-                // disabled={isSubmitting}
+                disabled={isSubmitting}
               >
                 sign-in
               </button>
