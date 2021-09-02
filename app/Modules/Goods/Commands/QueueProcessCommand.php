@@ -40,7 +40,7 @@ class QueueProcessCommand extends Command
         /** @var ProductModel $group_product  */
         /** @var SiteModel $site */
 
-        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+        if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
 
             try {
                 $data = array_filter($data, static fn($v) => $v !== null);

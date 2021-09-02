@@ -24,7 +24,7 @@ class QueueImagesActiveCommand extends Command
         /** @var ProductModel $product */
         /** @var ProductImageModel $model */
 
-        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+        if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             [$image_by_link, $is_image_by_link_new] = ProductImageModel::objects()->getOrNew(
                 ['link' => $data['image_link_hash']]
             );

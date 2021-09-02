@@ -24,7 +24,7 @@ class QueueDiscontinueCommand extends Command
         /** @var SupplierFeedModel $feed */
         /** @var DistributorModel $dx */
 
-        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+        if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             $dx = DistributorModel::objects()->get(['code' => $data['dx_code']]);
             $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
             $dis_count = ProductModel::without_group()
