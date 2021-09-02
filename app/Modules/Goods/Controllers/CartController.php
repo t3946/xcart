@@ -6,6 +6,7 @@ use Modules\Cart\CartModule;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Controllers\BaseCartController;
 use Modules\Goods\Models\ImageModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Forms\CountShippingForm;
@@ -181,7 +182,7 @@ class CartController extends BaseCartController
         /** @var ImageModel $image */
         $image = null;
         if ($images = $product->getImages()) {
-            $image = $images[0]->getCdnURL(50);
+            $image = $images[0]->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB);
         }
 
         $price = $product->getFrontendPrice($item->getQuantity());

@@ -10,6 +10,7 @@ use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\SurfMetaModel;
 use Xcart\App\Main\Xcart;
@@ -29,7 +30,7 @@ class ApiCategoriesController extends AbstractCatalogController
     {
         $qs = parent::getQS()->filter(
             [
-                'images__image_path__isnull' => false,
+                'detail_images__image_id__isnull' => false,
             ]
         )->order(['-add_date'])->group(['productid'])->limit(1000)->cache(3600);
 
@@ -181,19 +182,20 @@ class ApiCategoriesController extends AbstractCatalogController
             $images = [];
 
             if ($product->isGroupRoot()) {
+                /** @var ProductModel[] $children */
                 $children = $product->getFrontendChilds()->limit(4)->all();
                 $unique_hash_list = [];
 
                 foreach ($children as $child) {
-                    $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                    $image = $child->getImages()[0];
 
-                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                    if (in_array($image->hash, $unique_hash_list, true) === true) {
                         continue;
                     }
 
-                    $unique_hash_list[] = $image->md5;
+                    $unique_hash_list[] = $image->hash;
 
-                    if ($image && $url = $image->getCdnURL(174)) {
+                    if ($image && $url = $image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                         $images[] = [
                             'url' => $url,
                             'alt' => $child->getFrontendName(),
@@ -201,9 +203,9 @@ class ApiCategoriesController extends AbstractCatalogController
                     }
                 }
             } else {
-                $imageModel = $product->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                $imageModel = $product->getImages()[0];
 
-                if ($imageModel && $url = $imageModel->getCdnURL(174)) {
+                if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                     $images[] = [
                         'url' => $url,
                         'alt' => $product->getFrontendName(),

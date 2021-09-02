@@ -112,10 +112,10 @@
 
                         {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
                         {foreach $childrens as $child}
-                            {set $images[] = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get()}
+                            {set $images[] = $child->getImages()[0]}
                         {/foreach}
                     {else}
-                        {set $images = $model->images->filter(['avail' => 'Y'])->order(['orderby'])->all()}
+                        {set $images = $model->getImages()}
                     {/if}
 
                     {if $images}
@@ -133,7 +133,7 @@
                         <noscript>
                             {foreach $images as $image}
                                 {if $image}
-                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                    <img src="{$image->getCdnURL('detail')}"
                                          alt="{$model->getFrontendName()|escape}"/>
                                 {/if}
                             {/foreach}
@@ -141,10 +141,10 @@
                         <datalist>
                             {foreach $images as $image}
                                 {if $image}
-                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
-                                            data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
-                                            data-id="{$image->imageid}"
+                                    <option value="{$image->getCdnURL('detail')}"
+                                            data-thumb="{$image->getCdnURL('thumb')}"
+                                            data-preview="{$image->getCdnURL('preview')}"
+                                            data-id="{$image->pk}"
                                             type="image">
                                     </option>
                                 {/if}
