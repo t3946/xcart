@@ -6,6 +6,7 @@ use DateTime;
 use Modules\Admin\Forms\Dx\DistributorForm;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\ProductAdmin;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\Model;
 
@@ -51,7 +52,7 @@ class DxProductsAdmin extends ProductAdmin
         /** @var ProductModel $image */
         if ($property === 'image') {
             return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
+                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" title=\"{$item}\" width='60' /></div>"
                 : '';
         }
         if ($property === 'forsale') {
