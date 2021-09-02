@@ -3,21 +3,16 @@ import { Formik, Form } from "formik";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
-import { loginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
-import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
-import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const LoginFormInputPassword = function (props: Record<any, any>): any {
   const history = useHistory();
-  const dispatch = useDispatch();
   const inputRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     inputRef.current.focus();
   });
 
@@ -34,35 +29,48 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
     rememberMe: yup.bool(),
   });
 
-  function submit(values, actions) {
-    dispatch(
-      loginAction({
-        form: {
-          login: props.userLogin,
-          password: values.password,
-          remember_me: values.rememberMe,
-        },
+  async function generateFp() {
+    // Initialize an agent at application startup.
+    const fpPromise = FingerprintJS.load();
 
-        success(res) {
-          dispatch(userSetAction(res.user));
+    return await (async () => {
+      // Get the visitor identifier when you need it.
+      const fp = await fpPromise;
+      const result = await fp.get();
+
+      // This is the visitor identifier:
+      return result.visitorId;
+    })();
+  }
+
+  async function submit(values, actions) {
+    props.submit({
+      actions,
+      form: {
+        login: props.lastSentForm.login,
+        password: values.password,
+        remember_me: values.rememberMe,
+        fingerprint: await generateFp(),
+      },
+
+      success(res) {
+        if (!res.user) {
+          props.goToOTPInput();
+        } else {
           history.push(route("account:index"));
-        },
+        }
+      },
 
-        error(err) {
-          actions.setErrors({ password: err.password[0] });
-        },
-
-        complete() {
-          actions.setSubmitting(false);
-        },
-      })
-    );
+      error(err) {
+        actions.setErrors({ password: err.password[0] });
+      },
+    });
   }
 
   return (
     <>
       <p className={"auth-form-info d-flex justify-content-between mt-3 mb-3"}>
-        <span>{props.userLogin}</span>
+        <span>{props.lastSentForm.login}</span>
 
         <a href="#" onClick={props.goToInputLogin} className="common-link">
           Change

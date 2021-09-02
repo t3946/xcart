@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "@date-io/date-fns": "^1.3.13",
+    "@fingerprintjs/fingerprintjs": "^3.3.0",
     "@flowjs/flow.js": "git+https://github.com/flowjs/flow.js.git",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",

@@ -22,7 +22,7 @@ class LoginForm extends FrontendModelForm
                 'required' => true,
                 'validators' => [
                     new EmailValidator(),
-                ]
+                ],
             ],
             'password' => [
                 'class' => CharCleanField::class,
@@ -30,9 +30,18 @@ class LoginForm extends FrontendModelForm
                 'validators' => [
                     new MinLengthValidator(6),
                     new MaxLengthValidator(32),
-                ]
+                ],
             ],
             'remember_me' => [
+                'class' => CheckboxField::class,
+            ],
+            'fingerprint' => [
+                'class' => CharCleanField::class,
+            ],
+            'otp' => [
+                'class' => CharCleanField::class,
+            ],
+            'rememberBrowser' => [
                 'class' => CheckboxField::class,
             ],
         ];

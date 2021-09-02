@@ -6,6 +6,7 @@ use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\CreditCardsModel;
 use Modules\Account\Models\TransactionsModel;
 use Modules\User\Helpers\PasswordHelper;
+use Modules\User\Models\FingerprintModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
@@ -130,7 +131,7 @@ class UserModel extends Model
     {
         $this->password = PasswordHelper::hash($this->password);
         $g = new GoogleAuthenticator();
-        $this->tsv_secret =$g->generateSecret();
+        $this->tsv_secret = $g->generateSecret();
         $this->save();
     }
 
@@ -155,18 +156,11 @@ class UserModel extends Model
         Xcart::app()->request->cookie->add($session_key, $session_id, $expiry);
     }
 
-    public function login(string $password, bool $remember_me = false): bool
+    public function checkPassword(string $password): bool
     {
         $hash = $this->getAttribute('password');
 
-        // проверка подлинности не пройдена
-        if (!PasswordHelper::verify($password, $hash)) {
-            return false;
-        }
-
-        $this->authenticate($remember_me);
-
-        return true;
+        return PasswordHelper::verify($password, $hash);
     }
 
     public function getIsGuest()
@@ -198,5 +192,28 @@ class UserModel extends Model
                 'count' => (int)$this->tsv_count,
             ]
         ];
+    }
+
+    /**
+     * Match qr-code secret with otp
+     * @param string $otp one time password
+     * @return boolean
+     */
+    public function checkTSVCode(string $otp): bool
+    {
+        $g = new GoogleAuthenticator();
+        $secret = $this->getAttribute('tsv_secret');
+        return $g->checkCode($secret, $otp);
+    }
+
+    public function checkFingerprint(string $fingerprint): bool
+    {
+        $count = FingerprintModel::objects()
+            ->all([
+                'user_id' => $this->getAttribute('user_id'),
+                'fingerprint' => $fingerprint,
+            ]);
+
+        return count($count) > 0;
     }
 }

@@ -18,7 +18,7 @@ namespace Xcart\App\Interfaces;
 
 interface AuthInterface
 {
-    public function login($user);
+    public function login($user, $remember_me);
 
     public function logout($clearSession = true);
 

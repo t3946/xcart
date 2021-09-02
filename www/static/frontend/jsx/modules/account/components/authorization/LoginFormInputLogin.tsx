@@ -16,7 +16,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const inputRef = React.createRef<HTMLInputElement>();
 
   const initialState = {
-    login: props.userLogin,
+    login: props.lastSentForm.login || "",
   };
 
   React.useEffect(() => {
@@ -24,13 +24,15 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
   });
 
   function submit(values, actions) {
+    const form = { login: values.login };
+
     dispatch(
       checkUserLoginAction({
-        form: { login: values.login },
+        form,
 
         success() {
-          props.onChangeLogin(values.login);
           props.goToPasswordInput();
+          props.setLastSentForm(form);
         },
 
         error(err) {

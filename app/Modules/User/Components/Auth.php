@@ -22,7 +22,7 @@ class Auth implements AuthInterface
      * Default: 60 days
      * @var int
      */
-    public $expire = 5184000;
+    public $expire = 60 * 60 * 24 * 60;
 
     /**
      * @var string
@@ -57,7 +57,7 @@ class Auth implements AuthInterface
     }
 
     /**
-     * @param bool $new_user если true -- то работать будет с пользователем из xcart_users(из обновы с личным кабинетом)
+     * @param bool $new_user Если true, то работать будет с пользователем из xcart_users(из обновы с личным кабинетом)
      */
     public function getUser($new_user = false)
     {
