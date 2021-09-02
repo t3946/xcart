@@ -93,7 +93,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                   name="password"
                   value={values.password}
                   onChange={handleChange}
-                  className={"form-input form-input__password"}
+                  className={"form-input"}
                   isInvalid={!!errors.password}
                 />
 

@@ -124,7 +124,7 @@ const RegisterForm: React.FC<any> = () => {
                 name="password"
                 value={values.password}
                 onChange={handleChange}
-                className={"form-input form-input__password"}
+                className={"form-input"}
                 isInvalid={touched.password && !!errors.password}
                 isValid={touched.password && !errors.password}
                 placeholder={"At least 6 characters "}
@@ -151,7 +151,7 @@ const RegisterForm: React.FC<any> = () => {
                 name="password_confirm"
                 value={values.password_confirm}
                 onChange={handleChange}
-                className={"form-input form-input__password"}
+                className={"form-input"}
                 isInvalid={
                   touched.password_confirm && !!errors.password_confirm
                 }
