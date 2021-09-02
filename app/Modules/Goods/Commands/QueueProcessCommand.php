@@ -70,6 +70,7 @@ class QueueProcessCommand extends Command
                             $product->sites = [$site];
                             ProductHelper::setProductBrand($product, $data['brand_name'], $site);
                             if ($is_new) {
+                                $product->save();
                                 $product->setMainCategory($site->base_category);
                             }
                         }
