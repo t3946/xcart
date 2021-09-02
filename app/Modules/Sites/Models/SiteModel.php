@@ -240,7 +240,7 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => false,
             ],
-            'country_code' => [
+            'country' => [
                 'class' => CharField::class,
                 'field' => 'country',
             ],
