@@ -42,7 +42,7 @@ class QueueDiscontinueCommand extends Command
                 'last_update_period' => time() - $feed->last_update_time,
                 'feed_source' => $data['feed_source'],
                 'feed_source_date' => $data['feed_source_date'],
-                'products_in_feed' => $data['products_in_feed']
+                'last_update_items_count' => $data['products_in_feed']
             ]);
             $feed->save();
 
