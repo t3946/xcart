@@ -10,6 +10,7 @@ use Modules\Goods\Models\FilterModel;
 use Modules\Goods\Models\FilterProductModel;
 use Modules\Goods\Models\FilterValueModel;
 use Modules\Goods\Models\GroupIndexModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Base;
 use Xcart\App\QueryBuilder\Expression;
@@ -395,30 +396,19 @@ class ProductHelper
     {
 
         $images = [];
-        $image = null;
 
         /** @var \Modules\Sites\Models\SiteModel $site */
-        $site = $model->sites->limit(1)->get();
-        $pref = $site->Enable_CDN ? 'cdn.' : 'www.';
-        $domain = $site->getBaseDomain();
-        $domain = '//' . $pref . $domain;
 
         if ($model->isGroupRoot()) {
+            /** @var ProductModel[] $product_models */
             $product_models = $model->getFrontendChilds();
+
             foreach ($product_models as $p_model) {
 
-                $images_model = $p_model->getImages();
-
-                if ($images_model) {
-                    $image_model = reset($images_model);
-                }
-                else {
-                    $image_model = $p_model->getThumbnail();
-                }
+                $image_model = $p_model->getMainImage();
 
                 if ($image_model) {
-                    $for_image = ltrim($image_model->image_path, ".");
-                    $images[] = $domain . $for_image;
+                    $images[] = $image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL);
                 }
             }
 
@@ -430,14 +420,10 @@ class ProductHelper
             }
         }
         else {
-                $images_model = $model->images->all();
-                foreach ($images_model as $image){
-                    if($image)
-                    {
-                        $for_image = ltrim($image->image_path, ".");
-                        $images[] = $domain . $for_image;
-                    }
-                }
+            $images_model = $model->getImages();
+            foreach ($images_model as $image) {
+                $images[] = $image->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL);
+            }
             if (!$flag) {
                 return $images;
             }
