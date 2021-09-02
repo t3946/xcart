@@ -97,7 +97,7 @@ class ProductImageModel extends Model
 
     public function __toString()
     {
-        return $this->getCdnURL();
+        return $this->getCdnURL(self::IMAGE_SIZE_DETAIL);
     }
 
     public function getCdnURL(string $size = ''): string

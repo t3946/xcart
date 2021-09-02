@@ -33,7 +33,7 @@
     <meta property="og:url" content="{$model->getAbsoluteUrl(true)}">
     <meta property="og:description" content="{$model->getFrontendDescription()|escape}">
     <meta property="og:type" content="product">
-    <meta property="og:image" content="https:{$model->images->filter(['avail' => 'Y'])->limit(1)->get()}">
+    <meta property="og:image" content="{$model->getMainImage()}">
 {/block}
 
 {block 'seo'}
@@ -275,7 +275,7 @@
 {/block}
 
 {block 'js'}
-    {set $main_image = $model->images->limit(1)->get()}
+    {set $main_image = $model->getMainImage()}
     {add $brand = $model->brand}
 
     <script type="application/ld+json">

@@ -3,6 +3,7 @@
 namespace Modules\Goods\Helpers;
 
 use DateTime;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
@@ -38,15 +39,15 @@ class ApiProductHelper
                 $unique_hash_list = [];
 
                 foreach ($children as $child) {
-                    $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                    $image = $child->getMainImage();
 
-                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                    if (in_array($image->hash, $unique_hash_list, true) === true) {
                         continue;
                     }
 
-                    $unique_hash_list[] = $image->md5;
+                    $unique_hash_list[] = $image->hash;
 
-                    if ($image && $url = $image->getCdnURL(174)) {
+                    if ($image && $url = $image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                         $images[] = [
                             'url' => $url,
                             'alt' => $child->getFrontendName(),
@@ -54,9 +55,9 @@ class ApiProductHelper
                     }
                 }
             } else {
-                $imageModel = $product->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                $imageModel = $product->getMainImage();
 
-                if ($imageModel && $url = $imageModel->getCdnURL(174)) {
+                if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                     $images[] = [
                         'url' => $url,
                         'alt' => $product->getFrontendName(),
