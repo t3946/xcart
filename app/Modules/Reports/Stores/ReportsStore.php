@@ -102,13 +102,13 @@ class ReportsStore extends OrderSearchStore
                 'function' => 'array_sum',
             ],
             'avg_check' => [
-                'name' => 'Avg. order',
+                'name' => 'Mean order',
                 'prefix' => '$',
                 'suffix' => '',
                 'function' => 'array_avg',
             ],
             'median_check' => [
-                'name' => 'Mean order',
+                'name' => 'Median order',
                 'prefix' => '$',
                 'suffix' => '',
                 'function' => 'array_avg',
