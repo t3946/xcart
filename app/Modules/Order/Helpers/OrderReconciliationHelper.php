@@ -4,6 +4,7 @@
 namespace Modules\Order\Helpers;
 
 
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAnd;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -110,7 +111,11 @@ class OrderReconciliationHelper
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));
 
-                $o->filter(['manufacturerid__in' => $distributors]);
+                $o->filter([
+                               'manufacturerid__in' => $distributors,
+                               'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+                               'dc_status' => OrderStatusModel::ORDER_DC_STATUS_SHIPPED
+                           ]);
 
                 return $o->all();
             }
