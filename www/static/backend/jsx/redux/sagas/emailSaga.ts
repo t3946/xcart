@@ -157,7 +157,6 @@ function* setViewed(action: AnyAction): Generator {
 function* sendEmail(action: AnyAction): Generator {
   try {
     const formData = new FormData();
-    console.log("Отправка письма", action);
     Object.entries(action.email).forEach(([key, value]: any) => {
       if (Array.isArray(value)) {
         value.forEach((e) => {

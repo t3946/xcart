@@ -23,7 +23,6 @@ export const EmailSendFooter: React.FC = () => {
   return (
     <Grid className="email-send-footer-wrapper" alignItems="center" container>
       <EmailSendButton />
-      <AlternateEmailIcon className="a" />
       <EmailSendFileUpload onDrop={onDrop} />
     </Grid>
   );

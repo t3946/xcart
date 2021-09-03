@@ -7,8 +7,13 @@ import { IncomingFilesList } from "../incoming-files-list/IncomingFilesList";
 import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 
 export const EmailInfoBody: React.FC<any> = () => {
-  const { handleReply, handleClick, handleForward, templates } =
-    useContext(EmailInfoContext);
+  const {
+    handleReply,
+    handleClick,
+    handleForward,
+    templates,
+    handleReplyByTemplate,
+  } = useContext(EmailInfoContext);
   const { emailInfo } = useContext(EmailThreadContext);
   return (
     <React.Fragment>

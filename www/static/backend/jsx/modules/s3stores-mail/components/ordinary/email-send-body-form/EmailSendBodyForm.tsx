@@ -29,7 +29,6 @@ const SendForm: React.FC = () => {
   const subject = useSelector((state: StoreDto) => state.sendData.subject);
 
   const replyText = useSelector((state: StoreDto) => state.sendData.replyText);
-
   const initialValue =
     sendTemplate.message_body +
     `<br/><blockquote style="margin: 0px 0px 0px 0.8ex; border-left: 1px solid #cccccc; padding-left: 1ex;">${replyText}</blockquote>`;

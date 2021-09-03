@@ -112,7 +112,6 @@ const emailReducer = (
         sendTemplate: action.sendTemplate,
       };
     case "EDIT_SEND_DATA":
-      console.log("EDIT", action);
       const sendData: { [p: string]: any } = Object.fromEntries(
         Object.entries(state.sendData).map(([key, value]) => {
           if (key === action.field) {
@@ -144,7 +143,6 @@ const emailReducer = (
         },
       };
     case "ADD_RECIPIENT":
-      console.log("ADD RECIPIENCE", action);
       return {
         ...state,
         sendData: {
@@ -153,7 +151,6 @@ const emailReducer = (
         },
       };
     case "DELETE_RECIPIENT":
-      console.log("DELETE RECIPIENCE", action);
       return {
         ...state,
         sendData: {

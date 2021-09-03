@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-select/EmailGroupSelect";
 import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
+import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 
 export const EmailInfoDataFooter: React.FC<any> = ({
   handleReply,
@@ -15,6 +16,7 @@ export const EmailInfoDataFooter: React.FC<any> = ({
 }) => {
   const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
   const { emailInfo } = useContext(EmailThreadContext);
+  const { handleReplyByTemplate } = useContext(EmailInfoContext);
   return (
     <Grid container alignItems="center" className="email-info-footer">
       <Grid xs={2}>
@@ -34,7 +36,9 @@ export const EmailInfoDataFooter: React.FC<any> = ({
         <EmailGroupSelect
           label={"REPLY BY TEMPLATE"}
           value={sendTemplate}
-          onClick={handleClick}
+          onClick={(templateSelect) =>
+            handleReplyByTemplate(emailInfo, templateSelect)
+          }
           type="info"
           items={templates.items}
         />

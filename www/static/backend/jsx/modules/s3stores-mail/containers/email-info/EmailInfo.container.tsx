@@ -147,6 +147,19 @@ export const EmailInfoContainer: React.FC = () => {
     dispatch(setSendTemplate(item));
     dialog.handleClickOpen();
   };
+  const handleReplyByTemplate = (
+    item: EmailDto,
+    templateSelect: SelectItemDto
+  ) => {
+    dispatch(setSendTemplateType(templates[0][0]));
+    dispatch(setSendTemplate(templateSelect));
+    dispatch(addRecipient(editEmailAddress(item.from_address)));
+    dispatch(
+      editSendData(addPrefixToSubject("Re:", "Fwd:", item.subject), "subject")
+    );
+    dispatch(editSendData(parentEmail.item.thread_id, "threadId"));
+    dialog.handleClickOpen();
+  };
 
   const editAction = (item: EmailDto) => {
     dispatch(editActions([item.id], parentEmail.item.id));
@@ -166,6 +179,7 @@ export const EmailInfoContainer: React.FC = () => {
     editAction,
     editFavoriteItem,
     handleClick,
+    handleReplyByTemplate,
     handleView,
     handleForward: handleForward,
     handleReply,
