@@ -113,8 +113,18 @@ class OrderReconciliationHelper
 
                 $o->filter([
                                'manufacturerid__in' => $distributors,
-                               'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
-                               'dc_status' => OrderStatusModel::ORDER_DC_STATUS_SHIPPED
+                               'cb_status__in' => [
+                                   OrderStatusModel::ORDER_STATUS_COMPLETED,
+                                   OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO,
+                                   OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_CHARGE_BACKED,
+                               ],
+                               'dc_status__in' => [
+                                   OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
+                                   OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                               ]
                            ]);
 
                 return $o->all();
