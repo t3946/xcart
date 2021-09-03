@@ -50,12 +50,6 @@ function* removeEmailLabel(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
-
-  yield put({
-    type: "REMOVE_LABEL_EMAIL",
-    messageId: action.messageId,
-    labelId: action.labelId,
-  });
 }
 
 function* createMailLabel(action: AnyAction): Generator {
@@ -71,6 +65,7 @@ function* createMailLabel(action: AnyAction): Generator {
     .then((response) => response);
   yield put({
     type: "CREATE_MAIL_LABEL",
+    parentMessageId: action.parentMessageId,
     messageId: action.messageId,
     labelInfo: labelInfo,
   });
@@ -86,12 +81,6 @@ function* addLabelEMail(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
-
-  yield put({
-    type: "ADD_LABEL_MAIL",
-    messageId: action.messageId,
-    labelId: action.labelId,
-  });
 }
 
 function* getTemplates(): Generator {
@@ -168,7 +157,7 @@ function* setViewed(action: AnyAction): Generator {
 function* sendEmail(action: AnyAction): Generator {
   try {
     const formData = new FormData();
-
+    console.log("Отправка письма", action);
     Object.entries(action.email).forEach(([key, value]: any) => {
       if (Array.isArray(value)) {
         value.forEach((e) => {
@@ -185,6 +174,29 @@ function* sendEmail(action: AnyAction): Generator {
     yield api.post(`/admin/forms/api/send-email`, formData);
   } catch (e) {}
 }
+function* getChildList(action: AnyAction): Generator {
+  if (action.error) {
+    return;
+  }
+  const thread: any = yield api
+    .get<any>(`/admin/forms/api/email/children/${action.id}`)
+    .then((response) => response);
+
+  yield put({
+    type: "SET_EMAIL_CHILDREN",
+    messageId: action.id,
+    thread,
+  });
+}
+function* editFavoriteEmail(action: AnyAction): Generator {
+  const data = yield api.post(
+    `/admin/forms/api/edit-favorite`,
+    JSON.stringify({
+      itemsId: [action.messageId],
+      value: action.value,
+    })
+  );
+}
 
 function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_PAGE", getPage);
@@ -196,7 +208,9 @@ function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_EMAIL_INFO", getEmailInfo);
   yield takeLatest("CREATE_LABEL", createMailLabel);
   yield takeLatest("REMOVE_LABEL", removeEmailLabel);
-  yield takeLatest("ADD_LABEL", addLabelEMail);
+  yield takeLatest("ADD_LABEL_MAIL", addLabelEMail);
+  yield takeLatest("GET_CHILD_LIST", getChildList);
+  yield takeLatest("EDIT_FAVORITE_EMAIL", editFavoriteEmail);
 }
 
 export default function* rootSaga(): Generator {

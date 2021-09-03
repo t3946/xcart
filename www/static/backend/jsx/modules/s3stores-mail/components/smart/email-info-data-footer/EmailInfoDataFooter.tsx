@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Grid } from "@material-ui/core";
 import ReplyIcon from "@material-ui/icons/Reply";
 import ForwardIcon from "@material-ui/icons/Forward";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-select/EmailGroupSelect";
+import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 
 export const EmailInfoDataFooter: React.FC<any> = ({
   handleReply,
@@ -13,11 +14,12 @@ export const EmailInfoDataFooter: React.FC<any> = ({
   templates,
 }) => {
   const sendTemplate = useSelector((state: StoreDto) => state.sendTemplate);
+  const { emailInfo } = useContext(EmailThreadContext);
   return (
     <Grid container alignItems="center" className="email-info-footer">
       <Grid xs={2}>
         <Button
-          onClick={handleReply}
+          onClick={() => handleReply(emailInfo)}
           className="email-info-btn"
           variant="outlined"
         >
@@ -39,7 +41,7 @@ export const EmailInfoDataFooter: React.FC<any> = ({
       </Grid>
       <Grid container alignItems="center" xs={6} justify="flex-end">
         <Button
-          onClick={handleForward}
+          onClick={() => handleForward(emailInfo)}
           className="email-info-btn"
           variant="outlined"
         >

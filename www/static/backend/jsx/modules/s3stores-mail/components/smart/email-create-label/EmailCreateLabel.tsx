@@ -22,6 +22,7 @@ import {
   initStateCreateLabelMenu,
 } from "@s3stores-mail/ts/consts/email-label.const";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
+import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 
 export const EmailCreateLabel: React.FC<any> = () => {
   const { modal, messageId } = useContext(EmailLabelContext);
@@ -31,10 +32,13 @@ export const EmailCreateLabel: React.FC<any> = () => {
   );
   const [color, setColor] = useState<ColorCreateLabel>(initColorsCreateLabel);
   const [value, setValue] = useState("");
+  const { parentEmail } = useContext(EmailInfoContext);
   const dispatch = useDispatch();
   const createLabelHandler = () => {
     if (value !== "") {
-      dispatch(createLabel(messageId, value, color));
+      dispatch(
+        createLabel(parentEmail.item.message_id, messageId, value, color)
+      );
       modal.set();
     } else {
       showSnackbar("Please select label name", "error");

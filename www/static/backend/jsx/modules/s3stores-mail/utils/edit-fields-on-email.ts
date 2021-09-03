@@ -1,5 +1,5 @@
 import { editObjectField } from "@s3stores-mail/utils/editObjectField";
-import { EmailActionDto } from "../ts/types/email.type";
+import { EmailActionDto, EmailDto } from "../ts/types/email.type";
 import { EmailStoreItems } from "../ts/types";
 
 export function editFieldsOnEmail<T>(
@@ -32,6 +32,13 @@ export function isFavoriteItemsTrue(
     });
   });
   return getNecessaryValue(favoriteCount, checkedItems);
+}
+export function isFavoriteThreadTrue(
+  emailList: EmailDto[],
+  message_id: string
+): boolean {
+  const email = emailList.find((email) => email.id === message_id);
+  return email.favorite;
 }
 
 export function isViewedItemsTrue(

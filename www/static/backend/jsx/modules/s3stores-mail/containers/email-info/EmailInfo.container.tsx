@@ -1,7 +1,11 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, Fragment } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectItemDto, StoreDto } from "@s3stores-mail/ts/types";
+import {
+  EmailStoreItems,
+  SelectItemDto,
+  StoreDto,
+} from "@s3stores-mail/ts/types";
 import { EmailInfoHeader } from "@s3stores-mail/components/ordinary/email-info-header/EmailInfoHeader";
 import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
@@ -11,19 +15,24 @@ import {
   editFavorites,
   editSendData,
   getEmailInfo,
+  getChildEmailList,
   setSendTemplate,
   setSendTemplateType,
   setViewed,
+  removeLabelEmail,
+  addLabelEmail,
 } from "@redux/actions";
-import { EmailInfoBody } from "@s3stores-mail/components/ordinary/email-info-body/EmailInfoBody";
 import {
   isFavoriteItemsTrue,
+  isFavoriteThreadTrue,
   isViewedItemsTrue,
 } from "@s3stores-mail/utils/edit-fields-on-email";
 import { editEmailAddress } from "@s3stores-mail/utils/edit-email-address";
 import { addPrefixToSubject } from "@s3stores-mail/utils/add-prefix-to-subject";
 import { SceletonEmailInfo } from "../../components/simple/sceleton-email-info/SceletonEmailInfo";
 import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
+import { EmailInfoWrapper } from "@s3stores-mail/containers/email-info-wrapper/EmailInfoWrapper";
+import { EmailDto } from "@s3stores-mail/ts/types/email.type";
 
 export const EmailInfoContainer: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -35,30 +44,38 @@ export const EmailInfoContainer: React.FC = () => {
     return state.labelsList;
   });
 
-  const email = emails.find((e) => e.item.id === id);
+  const parentEmail = emails.find((e) => e.item.id === id);
 
   const page = useSelector((e: StoreDto) => e.page);
 
   const history = useHistory();
 
   useEffect(() => {
-    email
-      ? (email.item.body = replaceCidToImage(
-          email.item.body,
-          email.item.attachment
-        ))
-      : dispatch(getEmailInfo(id));
-    if (Boolean(email?.item.id) && !email.item.viewed) {
+    if (parentEmail) {
+      parentEmail.item.body = replaceCidToImage(
+        parentEmail.item.body,
+        parentEmail.item.attachment
+      );
+    } else {
+      dispatch(getEmailInfo(id));
+    }
+    if (Boolean(parentEmail?.item.id) && !parentEmail.item.viewed) {
       dispatch(
-        setViewed([email.item.id], isViewedItemsTrue(emails, [email.item.id]))
+        setViewed(
+          [parentEmail.item.id],
+          isViewedItemsTrue(emails, [parentEmail.item.id])
+        )
       );
     }
-  }, [email]);
+  }, [parentEmail]);
+  useEffect(() => {
+    if (parentEmail) {
+      dispatch(getChildEmailList(parentEmail.item.message_id));
+    }
+  }, []);
 
   const dialog = useContext(EmailDialogContext);
   const dispatch = useDispatch();
-
-  const componentRef = useRef();
 
   const templates = useSelector((state: StoreDto) => state.templates);
 
@@ -67,15 +84,20 @@ export const EmailInfoContainer: React.FC = () => {
   const editViewed = () => {
     history.push(`${routers.listRouter}${page}`);
     dispatch(
-      setViewed([email.item.id], isViewedItemsTrue(emails, [email.item.id]))
+      setViewed(
+        [parentEmail.item.id],
+        isViewedItemsTrue(emails, [parentEmail.item.id])
+      )
     );
   };
 
-  const editFavorite = () => {
+  const editFavoriteItem = (messageId: string) => {
     dispatch(
       editFavorites(
-        [email.item.id],
-        isFavoriteItemsTrue(emails, [email.item.id])
+        [messageId],
+        !isFavoriteThreadTrue(parentEmail.item.thread, messageId),
+        parentEmail.item.id,
+        messageId
       )
     );
   };
@@ -91,29 +113,33 @@ export const EmailInfoContainer: React.FC = () => {
   }
 
   const sendMessage = () => {
-    dispatch(editSendData(email.item.body, "replyText"));
+    dispatch(editSendData(parentEmail.item.body, "replyText"));
     dialog.handleClickOpen();
   };
 
-  const handleForward = () => {
+  const handleForward = (EmailInfo: EmailDto) => {
     dispatch(
       editSendData(
-        addPrefixToSubject("Fwd:", "Re:", email.item.subject),
+        addPrefixToSubject("Fwd:", "Re:", EmailInfo.subject),
         "subject"
       )
     );
     sendMessage();
   };
 
-  const handleReply = () => {
-    dispatch(addRecipient(editEmailAddress(email.item.from_address)));
+  const handleReply = (emailInfo: EmailDto) => {
+    dispatch(addRecipient(editEmailAddress(emailInfo.from_address)));
     dispatch(
       editSendData(
-        addPrefixToSubject("Re:", "Fwd:", email.item.subject),
+        addPrefixToSubject("Re:", "Fwd:", emailInfo.subject),
         "subject"
       )
     );
+    dispatch(editSendData(parentEmail.item.thread_id, "threadId"));
     sendMessage();
+  };
+  const handleView = (emailInfo: EmailDto) => {
+    dispatch(setViewed([emailInfo.id], true, parentEmail.item.id));
   };
 
   const handleClick = (item: SelectItemDto) => {
@@ -122,30 +148,46 @@ export const EmailInfoContainer: React.FC = () => {
     dialog.handleClickOpen();
   };
 
-  const editAction = () => {
-    dispatch(editActions([email.item.id]));
+  const editAction = (item: EmailDto) => {
+    dispatch(editActions([item.id], parentEmail.item.id));
+  };
+  const onDeleteLabel = (item: EmailDto, labelId: string) => {
+    dispatch(
+      removeLabelEmail(parentEmail.item.message_id, item.message_id, labelId)
+    );
+  };
+  const onAddLabel = (item: EmailDto, labelId: string) => {
+    dispatch(
+      addLabelEmail(parentEmail.item.message_id, item.message_id, labelId)
+    );
   };
 
   const infoValue = {
     editAction,
-    editFavorite,
+    editFavoriteItem,
     handleClick,
+    handleView,
     handleForward: handleForward,
-    handleReply: handleReply,
+    handleReply,
     editViewed,
     templates: templates[0],
-    emailInfo: email,
-    componentRef,
+    parentEmail,
     labels,
+    onDeleteLabel,
+    onAddLabel,
   };
   return (
     <EmailInfoContext.Provider value={infoValue}>
-      {!email?.item.id ? (
+      {!parentEmail?.item.id ? (
         <SceletonEmailInfo />
       ) : (
         <React.Fragment>
-          <EmailInfoHeader info={email.item} />
-          <EmailInfoBody thisRef={componentRef} emailInfo={email.item} />
+          {parentEmail.item.thread.map((child, index) => (
+            <EmailInfoWrapper
+              emailInfo={child}
+              openEmail={parentEmail.item.thread.length === index + 1}
+            />
+          ))}
         </React.Fragment>
       )}
     </EmailInfoContext.Provider>

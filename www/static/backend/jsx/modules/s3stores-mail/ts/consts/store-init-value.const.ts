@@ -50,6 +50,7 @@ export const initialValues: StoreDto = {
     files: [],
     to: [],
     subject: "",
+    threadId: null,
   },
   checkedItems: [],
   checkedItemsOptions: {
@@ -61,4 +62,5 @@ export const initialValues: StoreDto = {
   moreViewed: false,
   moreFavorites: false,
   templates: [],
+  children: [],
 };

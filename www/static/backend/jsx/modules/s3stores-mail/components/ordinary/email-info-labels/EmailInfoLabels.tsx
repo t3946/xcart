@@ -9,17 +9,17 @@ import { values } from "lodash";
 import { initialValues } from "@s3stores-mail/ts/consts";
 import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 import { useHistory } from "react-router-dom";
+import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
+import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 interface EmailInfoLabels {
   labelsList: EmailLabel[];
-  labelDelete: (id: number | string) => void;
 }
-export const EmailInfoLabels: React.FC<EmailInfoLabels> = ({
-  labelsList,
-  labelDelete,
-}) => {
+export const EmailInfoLabels: React.FC<EmailInfoLabels> = ({ labelsList }) => {
   const dispatch = useDispatch();
   const routers = useContext(EmailRouterContext);
   const history = useHistory();
+  const { onDeleteLabel } = useContext(EmailInfoContext);
+  const { emailInfo } = useContext(EmailThreadContext);
   const onClickLabelHandler = (labelId: string) => {
     dispatch(
       editSearchOptions({
@@ -55,7 +55,7 @@ export const EmailInfoLabels: React.FC<EmailInfoLabels> = ({
                 {label.name}
               </span>
               <CloseOutlinedIcon
-                onClick={() => labelDelete(label.label_id)}
+                onClick={() => onDeleteLabel(emailInfo, label.label_id)}
                 className="delete-label-item"
               />
             </Grid>

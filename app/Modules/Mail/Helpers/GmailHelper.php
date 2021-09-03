@@ -11,6 +11,7 @@ use Google_Service_Gmail;
 use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
 use Google_Service_Gmail_ModifyMessageRequest;
+use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\LabelModel;
 use Throwable;
 use Xcart\App\Helpers\Paths;
@@ -46,7 +47,13 @@ class GmailHelper
     {
         $pageToken = NULL;
         $messages = [];
+        /** @var EmailModel $before_model */
+        $before_model = EmailModel::objects()->order(['-date'])->limit(1)->get();
         $opt_param = ['maxResults' => 500, 'includeSpamTrash' => true];
+        if ($before_model) {
+            $after_time = strtotime($before_model->date);
+            $opt_param['q'] = "after:$after_time";
+        }
         do {
             try {
                 if ($pageToken) {

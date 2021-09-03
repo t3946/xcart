@@ -22,6 +22,7 @@ use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
+use Xcart\App\QueryBuilder\Expression;
 
 class ApiEmailDashboardAdmin extends Controller
 {
@@ -66,6 +67,12 @@ class ApiEmailDashboardAdmin extends Controller
         }
 
         $qs = $qs->filter($actionItem);
+        /* Поиск уникальных писем среди отвеченных по дате(то есть выведет на front последний отвеченный */
+        $qs2 = EmailModel::objects()->getQuerySet();
+        $qs2->select(['dt' => new Expression('MAX(date)'), 'thread_id']);
+        $qs2->group(['thread_id']);
+
+        $qs->join('inner join', $qs2->getQueryBuilder(), [$qs->getTableAlias() . '.date' => 'mx.dt', $qs->getTableAlias() . '.thread_id' => 'mx.thread_id'], 'mx');
 
         $pagination = new Pagination($qs, [
             'page' => $page,
@@ -84,6 +91,7 @@ class ApiEmailDashboardAdmin extends Controller
                 $email['labels'] = $model->getLabels();
                 $email['emailType'] = $model->getEmailType($model->id);
                 $email['contains_action'] = $model->isContainsAction();
+                $email['thread'] = [];
                 $emails[] = $email;
             }
 
@@ -109,6 +117,7 @@ class ApiEmailDashboardAdmin extends Controller
         $emailInfo['attachment'] = $email->getAttachment();
         $emailInfo['labels'] = $email->getLabels();
         $emailInfo['body'] = (string)$email->body;
+        $emailInfo['thread'] = $this->getChildList($email);
         $emailInfo['labelList'] = $this->actionGetLabels();
 
         $this->jsonResponse($emailInfo);
@@ -224,6 +233,9 @@ class ApiEmailDashboardAdmin extends Controller
         $email = $this->getRequest()->post->all();
         $email['files'] = $convert_files;
         $email['user_id'] = Xcart::app()->user->id;
+        if ($email['date'] === 'null') {
+            $email['date'] = null;
+        }
 
         $site = Xcart::app()->getModule('Sites')->getSelectedSite();
         $params = [
@@ -280,7 +292,14 @@ class ApiEmailDashboardAdmin extends Controller
     public function actionAddLabelMail()
     {
         $data = json_decode(file_get_contents('php://input'));
+        $userId = 'vr@s3stores.com';
         try {
+            $client = GmailHelper::getClient($userId);
+            $mailService = new \Google_Service_Gmail($client);
+            $mods = new \Google_Service_Gmail_ModifyMessageRequest();
+            $mods->setAddLabelIds($data->labelId);
+            $message = $mailService->users_messages->modify("me", $data->messageId, $mods);
+
             $label_model = LabelModel::objects()->get(['label_id' => $data->labelId, 'type' => LabelModel::LABEL_TYPE_USER]);
             $message_model = EmailModel::objects()->get(['message_id' => $data->messageId]);
             $message_model->labels = array_merge($message_model->labels->all(), [$label_model]);
@@ -333,5 +352,33 @@ class ApiEmailDashboardAdmin extends Controller
     {
         $label_list = LabelModel::objects()->filter(['type' => LabelModel::LABEL_TYPE_USER])->order('name')->asArray(true)->all();
         return $label_list;
+    }
+
+    public function actionGetEmailChildren(string $id = null): void
+    {
+        $ar_children = [];
+        /** @var EmailModel $email_model */
+        $email_model = EmailModel::objects()->get(['message_id' => $id]);
+        $ar_children = $this->getChildList($email_model);
+        $this->jsonResponse($ar_children);
+    }
+
+    public function getChildList(EmailModel $email_model): array
+    {
+        $ar_child = [];
+        /** @var EmailModel $child */
+        foreach ($email_model->children->order(['date']) as $child) {
+            $ar_child[] = array_merge($child->getAttributes(), [
+                'viewed' => $child->isViewed(),
+                'action' => $child->getAction($child->id),
+                'favorite' => $child->isFavorite(),
+                'attachment' => $child->getAttachment(),
+                'body' => (string)$child->getBody(),
+                'labels' => $child->getLabels(),
+                'emailType' => $child->getEmailType($child->id),
+                'contains_action' => $child->isContainsAction(),
+            ]);
+        }
+        return $ar_child;
     }
 }

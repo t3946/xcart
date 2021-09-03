@@ -7,6 +7,8 @@ import { Grid } from "@material-ui/core";
 import { EmailLabelContext } from "@s3stores-mail/contexts/email-label-context/EmailLabelContext";
 import { addLabelEmail, createLabel, removeLabelEmail } from "@redux/actions";
 import { useDispatch } from "react-redux";
+import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
+import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 
 interface EmailMenuLabel {
   labelList: EmailLabel[];
@@ -21,6 +23,8 @@ export const EmailMenuLabel: React.FC<EmailMenuLabel> = ({
   const [searchLabel, setSearchLabel] = useState([]);
   const dispatch = useDispatch();
   const { modal, messageId } = useContext(EmailLabelContext);
+  const { emailInfo } = useContext(EmailThreadContext);
+  const { onAddLabel, onDeleteLabel } = useContext(EmailInfoContext);
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
     setSearchLabel(() => {
@@ -42,9 +46,9 @@ export const EmailMenuLabel: React.FC<EmailMenuLabel> = ({
   });
   const onSelectLabel = (event) => {
     if (event.target.checked) {
-      dispatch(addLabelEmail(messageId, event.target.id));
+      onAddLabel(emailInfo, event.target.id);
     } else {
-      dispatch(removeLabelEmail(messageId, event.target.id));
+      onDeleteLabel(emailInfo, event.target.id);
     }
   };
 

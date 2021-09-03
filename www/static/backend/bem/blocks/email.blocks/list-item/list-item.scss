@@ -58,6 +58,10 @@
   align-items: center;
 }
 
+.email-header-wrapper {
+  position: relative !important;
+}
+
 .subject-email-block {
   overflow: hidden;
   display: flex;
@@ -142,14 +146,16 @@
   display: flex;
   align-items: center;
 }
-.reader-email-item{
+
+.reader-email-item {
   position: relative;
   left: 30px;
 }
 
 .date {
 }
-.email-item-block{
+
+.email-item-block {
   display: flex;
   align-items: center;
   flex: 1;

@@ -32,12 +32,17 @@ class QueueProcessCommand extends Command
     {
         /** @var ProductModel $product  */
         /** @var ProductModel $group_product  */
+        $action = 'ack';
         try {
             if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) {
+                if (!$data['to']) {
+                    return;
+                }
+
                 if($data['date'] !== null && $data['date'] > time())
                 {
                     echo ('nack');
-                    $message->nack();
+                    $action = 'nack';
                     return;
                 }
 
@@ -74,12 +79,13 @@ class QueueProcessCommand extends Command
                 );
 
                 $googleMessage->setRaw($mailMessage);
-
+                if (!empty($data['threadId'])) {
+                    $googleMessage->setThreadId($data['threadId']);
+                }
                 $request =  $mailService->users_messages->send(
                     $userId,
                     $googleMessage,
                 );
-                $message->ack();
 
                 $label_id = GmailHelper::getOrCreateLabel($mailService, $userId, $user->getShortSurname());
                 if ($label_id) {
@@ -91,7 +97,8 @@ class QueueProcessCommand extends Command
         } catch (JsonException $e)
         {
             echo "Error:{$e->getMessage()}\n";
-            $message->ack();
+        } finally {
+            $message->$action();
         }
     }
 }

@@ -7,6 +7,7 @@ export interface EmailDto {
   delivered_to_address: string;
   favorite: boolean;
   from_address: string;
+  contains_action: boolean;
   labels?: EmailLabel[];
   id: string;
   message_id: string;
@@ -18,6 +19,7 @@ export interface EmailDto {
   to_address: string | null;
   type: string;
   viewed: boolean;
+  thread: EmailDto[];
 }
 export interface EmailLabel {
   background_color: string;

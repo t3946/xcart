@@ -45,6 +45,7 @@ export const EmailSendBodyContainer: React.FC = () => {
   };
 
   const sendMessage = (value, message: string) => {
+    console.log("VALUE", value);
     dispatch(sendEmail(value));
     dialog.handleClose();
     showSnackbar(message, "success");

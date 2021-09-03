@@ -57,5 +57,10 @@ return [
         'route' => '/add-label-email',
         'target' => [ApiEmailDashboardAdmin::class, 'actionAddLabelMail'],
         'name' => 'actionAddLabelMail'
-    ]
+    ],
+    [
+        'route' => '/email/children/{:id}',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionGetEmailChildren'],
+        'name' => 'actionGetEmailChildren'
+    ],
 ];

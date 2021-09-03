@@ -20,12 +20,16 @@ use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
+use Xcart\App\QueryBuilder\Expression;
 
 /**
  * @property string|null from_address
  * @property string message_id
  * @property string thread_id
  * @property LabelModel[] labels
+ * @property EmailModel[] children_list
+ * @property EmailModel[] children
+ * @property DateTimeField date
  */
 class EmailModel extends Model
 {
@@ -33,6 +37,8 @@ class EmailModel extends Model
     public static function getFields()
     {
         $alias = EmailEntityModel::objects()->getTableAlias();
+/*        $email_alias = EmailModel::objects()->getTableAlias();*/
+
         return [
             'id' => [
                 'class' => AutoField::class,
@@ -157,6 +163,12 @@ class EmailModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => __CLASS__,
                 'link' => ['thread_id' => 'thread_id'],
+            ],
+            'children_list' => [
+                'class' => HasManyField::class,
+                'modelClass' => __CLASS__,
+                'link' => ['message_id' => 'thread_id'],
+                'extra' => ["message_id__isnt" =>  new Expression('thread_id')]
             ],
             'parent' => [
                 'class' => HasToOneField::class,

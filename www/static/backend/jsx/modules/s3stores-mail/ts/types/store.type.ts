@@ -38,6 +38,7 @@ export interface SendDataDto {
   body: string;
   replyText: string;
   files: File[];
+  threadId: string | null;
 }
 
 export interface SearchDataDto {

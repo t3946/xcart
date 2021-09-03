@@ -4,17 +4,17 @@ import { EmailInfoBodyData } from "@s3stores-mail/components/simple/email-info-b
 import { EmailInfoDataFooter } from "@s3stores-mail/components/smart/email-info-data-footer/EmailInfoDataFooter";
 import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 import { IncomingFilesList } from "../incoming-files-list/IncomingFilesList";
+import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 
-export const EmailInfoBody: React.FC<any> = ({ thisRef, emailInfo }) => {
-  const { handleReply, handleClick, handleForward, templates } = useContext(
-    EmailInfoContext
-  );
-
+export const EmailInfoBody: React.FC<any> = () => {
+  const { handleReply, handleClick, handleForward, templates } =
+    useContext(EmailInfoContext);
+  const { emailInfo } = useContext(EmailThreadContext);
   return (
     <React.Fragment>
       <Paper elevation={0} square={true}>
-        <div ref={thisRef} className="email-info-data-wrapper">
-          <EmailInfoBodyData data={emailInfo} />
+        <div className="email-info-data-wrapper">
+          <EmailInfoBodyData />
         </div>
         {emailInfo.attachment !== [] && (
           <div className="email-info-data-wrapper">

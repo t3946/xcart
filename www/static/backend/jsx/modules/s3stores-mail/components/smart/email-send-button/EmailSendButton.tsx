@@ -25,8 +25,12 @@ export const SendButton: React.FC<any> = () => {
 
   const dialog = useContext(EmailDialogContext);
 
+  const getSendData = () => {
+    return emailStore.getState().sendData;
+  };
+
   const isValid = () => {
-    return checkValidEmailRecipients(emailStore.getState().sendData.to).valid;
+    return checkValidEmailRecipients(getSendData().to).valid;
   };
   const addDataFromRecipientInput = () => {
     if (recipientsInputRef.current.value.trim()) {
@@ -46,7 +50,7 @@ export const SendButton: React.FC<any> = () => {
   const handleClickSend = () => {
     addDataFromRecipientInput();
     if (isValid()) {
-      sendMessage(sendData, "Message send");
+      sendMessage(getSendData(), "Message send");
       return;
     }
     setOpen(true);

@@ -10,6 +10,11 @@ import {
   isViewedItemsTrue,
 } from "@s3stores-mail/utils/edit-fields-on-email";
 import { editSelectViewValue } from "@s3stores-mail/utils/edit-select-view-value";
+import {
+  changeThreadValueByField,
+  getThreadLabelList,
+  removeLabelById,
+} from "@s3stores-mail/utils/email-thread-event";
 
 const emailReducer = (
   state: StoreDto = initialValues,
@@ -51,40 +56,50 @@ const emailReducer = (
         labelsList: labels,
       };
     case "ADD_LABEL_MAIL":
+      const parentMessage = state.items.find(
+        (item) => item.item.message_id === action.parentMessageId
+      );
+      const pastValue = getThreadLabelList(parentMessage, action.messageId);
       return {
         ...state,
-        items: state.items.map((mess) => {
-          if (mess.item.message_id === action.messageId) {
-            const labelSelect = state.labelsList.find(
-              (label) => label.label_id === action.labelId
-            );
-            mess.item.labels.push(labelSelect);
-          }
-          return mess;
-        }),
+        items: changeThreadValueByField(
+          state.items,
+          action.parentMessageId,
+          action.messageId,
+          "labels",
+          [
+            ...pastValue,
+            state.labelsList.find((label) => label.label_id === action.labelId),
+          ],
+          true
+        ),
       };
     case "CREATE_MAIL_LABEL":
+      const parent = state.items.find(
+        (item) => item.item.message_id === action.parentMessageId
+      );
+      const labelList = getThreadLabelList(parent, action.messageId);
       return {
         ...state,
         labelsList: [...state.labelsList, action.labelInfo],
-        items: state.items.map((item) => {
-          if (item.item.message_id === action.messageId) {
-            item.item.labels.push(action.labelInfo);
-          }
-          return item;
-        }),
+        items: changeThreadValueByField(
+          state.items,
+          action.parentMessageId,
+          action.messageId,
+          "labels",
+          [...labelList, action.labelInfo],
+          true
+        ),
       };
-    case "REMOVE_LABEL_EMAIL":
+    case "REMOVE_LABEL":
       return {
         ...state,
-        items: state.items.map((item) => {
-          if (item.item.message_id === action.messageId) {
-            item.item.labels = item.item.labels.filter(
-              (label) => label.label_id !== action.labelId
-            );
-          }
-          return item;
-        }),
+        items: removeLabelById(
+          state.items,
+          action.parentMessageId,
+          action.messageId,
+          action.labelId
+        ),
       };
     case "SET_SEND_TEMPLATE_TYPE":
       return {
@@ -97,6 +112,7 @@ const emailReducer = (
         sendTemplate: action.sendTemplate,
       };
     case "EDIT_SEND_DATA":
+      console.log("EDIT", action);
       const sendData: { [p: string]: any } = Object.fromEntries(
         Object.entries(state.sendData).map(([key, value]) => {
           if (key === action.field) {
@@ -128,6 +144,7 @@ const emailReducer = (
         },
       };
     case "ADD_RECIPIENT":
+      console.log("ADD RECIPIENCE", action);
       return {
         ...state,
         sendData: {
@@ -136,6 +153,7 @@ const emailReducer = (
         },
       };
     case "DELETE_RECIPIENT":
+      console.log("DELETE RECIPIENCE", action);
       return {
         ...state,
         sendData: {
@@ -182,43 +200,89 @@ const emailReducer = (
         moreFavorites: isFavoriteItemsTrue(state.items, checkedItems),
       };
     case "EDIT_FAVORITES":
-      const items = editFieldsOnEmail(
-        state.items,
-        action.favoriteItems,
-        "favorite",
-        action.value
-      );
-      return {
-        ...state,
-        items: items,
-        emailInfo: editEmailInfo(state.emailInfo, items),
-        moreFavorites: isFavoriteItemsTrue(items, action.favoriteItems),
-      };
+      // Зайдет в if если запрос прилетел из отдельного списка выбранного письма
+      if (action.parentMessageId) {
+        return {
+          ...state,
+          items: changeThreadValueByField(
+            state.items,
+            action.parentMessageId,
+            action.messageId,
+            "favorite",
+            action.value
+          ),
+        };
+      } else {
+        const items = editFieldsOnEmail(
+          state.items,
+          action.favoriteItems,
+          "favorite",
+          action.value
+        );
+        return {
+          ...state,
+          items: items,
+          emailInfo: editEmailInfo(state.emailInfo, items),
+          moreFavorites: isFavoriteItemsTrue(items, action.favoriteItems),
+        };
+      }
     case "EDIT_ACTIONS":
-      const actionItems = editFieldsOnEmail(
-        state.items,
-        action.actionItems,
-        "action",
-        isActionItemTrue(state.items, action.actionItems, state.user)
-      );
-      return {
-        ...state,
-        emailInfo: editEmailInfo(state.emailInfo, actionItems),
-        items: actionItems,
-      };
+      if (action.parentMessageId) {
+        const parent = state.items.find(
+          (item) => item.item.id === action.parentMessageId
+        );
+        const thread = parent.item.thread.find(
+          (child) => child.id === action.actionItems[0]
+        );
+        return {
+          ...state,
+          items: changeThreadValueByField(
+            state.items,
+            action.parentMessageId,
+            action.actionItems[0],
+            "action",
+            { action: !thread.action.action }
+          ),
+        };
+      } else {
+        const actionItems = editFieldsOnEmail(
+          state.items,
+          action.actionItems,
+          "action",
+          isActionItemTrue(state.items, action.actionItems, state.user)
+        );
+        return {
+          ...state,
+          emailInfo: editEmailInfo(state.emailInfo, actionItems),
+          items: actionItems,
+        };
+      }
     case "SET_VIEWED":
-      const viewedItems = editFieldsOnEmail(
-        state.items,
-        action.emailId,
-        "viewed",
-        action.value
-      );
-      return {
-        ...state,
-        items: viewedItems,
-        moreViewed: isViewedItemsTrue(viewedItems, action.emailId),
-        emailInfo: editEmailInfo(state.emailInfo, viewedItems),
-      };
+      if (action.parentMessageId) {
+        return {
+          ...state,
+          items: changeThreadValueByField(
+            state.items,
+            action.parentMessageId,
+            action.emailId[0],
+            "viewed",
+            action.value
+          ),
+        };
+      } else {
+        const viewedItems = editFieldsOnEmail(
+          state.items,
+          action.emailId,
+          "viewed",
+          action.value
+        );
+        return {
+          ...state,
+          items: viewedItems,
+          moreViewed: isViewedItemsTrue(viewedItems, action.emailId),
+          emailInfo: editEmailInfo(state.emailInfo, viewedItems),
+        };
+      }
     case "SET_LOADING":
       return {
         ...state,
@@ -237,6 +301,16 @@ const emailReducer = (
       return {
         ...state,
         searchOptions: action.searchOptions,
+      };
+    case "SET_EMAIL_CHILDREN":
+      return {
+        ...state,
+        items: state.items.map((item) => {
+          if (item.item.message_id === action.messageId) {
+            item.item.thread = action.thread;
+          }
+          return item;
+        }),
       };
     default:
       return state;

@@ -2,8 +2,6 @@ import { all, put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { AnyAction } from "redux";
 import { ApiService } from "@admin/modules/shared/services/api.service";
-import { changeFraudSettingsForm } from "@redux/actions/fraudSettingsActions";
-import { ResponseFraudDataUpdate } from "@admin/modules/general-settings/ts/types/fraud-check/response";
 
 const api = new ApiService();
 
