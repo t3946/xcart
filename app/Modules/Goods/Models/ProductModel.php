@@ -267,6 +267,10 @@ class ProductModel extends Model implements ICartItem
                 'null' => true,
                 'default' => null
             ],
+            'discount_table' => [
+                'class' => CharField::class,
+                'default' => '2,3,4,6,8,12',
+            ],
             'source_sfid' => [
                 'class' => IntField::class,
                 'null' => false,
