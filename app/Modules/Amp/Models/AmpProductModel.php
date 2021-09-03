@@ -2,6 +2,7 @@
 
 namespace Modules\Amp\Models;
 
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Main\Xcart;
 
@@ -45,33 +46,18 @@ class AmpProductModel extends ProductModel
     public function getJsonImages($flag = 0){
 
         $images = [];
-        $image = null;
 
         /** @var \Modules\Sites\Models\SiteModel $site */
-        $site = $this->sites->limit(1)->get();
-        $pref = $site->Enable_CDN ? 'cdn.': 'www.';
-        $domain = $site->getBaseDomain();
-        $domain = "//" .$pref . $domain;
 
         if($this->isGroupRoot()){
-            $product_models = $this->getFrontendChilds();
-            foreach ($product_models as $p_model){
 
-                $images_model = $p_model->getImages();
+            foreach ($this->getFrontendChilds() as $p_model){
 
-                if ($images_model)
-                {
-                    $image_model = reset($images_model);
-                }
-                else
-                {
-                    $image_model = $p_model->getThumbnail();
-                }
+                $image_model = $p_model->getImages()[0];
 
                 if($image_model)
                 {
-                    $for_image = ltrim($image_model->image_path, ".");
-                    $images[] = $domain . $for_image;
+                    $images[] = $image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
                 }
             }
 
@@ -82,21 +68,11 @@ class AmpProductModel extends ProductModel
             return json_encode($images);
         }
 
-        $images_model = $this->getImages();
-
-        if ($images_model)
-        {
-            $image_model = reset($images_model);
-        }
-        else
-        {
-            $image_model = $this->getThumbnail();
-        }
+        $image_model = $this->getImages()[0];
 
         if($image_model)
         {
-            $for_image = ltrim($image_model->image_path, ".");
-            $images[] = $domain . $for_image;
+            $images[] = $image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
         }
 
         if (!$flag) {

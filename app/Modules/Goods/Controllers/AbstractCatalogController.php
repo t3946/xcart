@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Goods\Models\ProductImageModel;
 use Xcart\App\QueryBuilder\Q\Q;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -189,16 +190,17 @@ abstract class AbstractCatalogController extends FrontendController
                 $children = $product->getFrontendChilds()->limit(4)->all();
                 $unique_hash_list = [];
 
+                /** @var ProductModel $child */
                 foreach ($children as $child) {
-                    $image = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                    $image = $child->getMainImage();
 
-                    if (in_array($image->md5, $unique_hash_list, true) === true) {
+                    if (in_array($image->hash, $unique_hash_list, true) === true) {
                         continue;
                     }
 
-                    $unique_hash_list[] = $image->md5;
+                    $unique_hash_list[] = $image->hash;
 
-                    if ($image && $url = $image->getCdnURL(174)) {
+                    if ($image && $url = $image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                         $images[] = [
                             'url' => $url,
                             'alt' => $child->getFrontendName(),
@@ -206,9 +208,9 @@ abstract class AbstractCatalogController extends FrontendController
                     }
                 }
             } else {
-                $imageModel = $product->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get();
+                $imageModel = $product->getMainImage();
 
-                if ($imageModel && $url = $imageModel->getCdnURL(174)) {
+                if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
                     $images[] = [
                         'url' => $url,
                         'alt' => $product->getFrontendName(),

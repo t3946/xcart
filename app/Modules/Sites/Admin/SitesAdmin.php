@@ -76,4 +76,11 @@ class SitesAdmin extends Admin
         }
         return $qs;
     }
+
+    public function getListItemActions()
+    {
+        return [
+            'update',
+        ];
+    }
 }

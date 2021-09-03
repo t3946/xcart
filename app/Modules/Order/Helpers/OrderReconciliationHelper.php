@@ -4,6 +4,7 @@
 namespace Modules\Order\Helpers;
 
 
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAnd;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -110,7 +111,21 @@ class OrderReconciliationHelper
                 $o->group(['order_group_id']);
                 $o->having(self::getNetFilter($period));
 
-                $o->filter(['manufacturerid__in' => $distributors]);
+                $o->filter([
+                               'manufacturerid__in' => $distributors,
+                               'cb_status__in' => [
+                                   OrderStatusModel::ORDER_STATUS_COMPLETED,
+                                   OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO,
+                                   OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
+                                   OrderStatusModel::ORDER_STATUS_CHARGE_BACKED,
+                               ],
+                               'dc_status__in' => [
+                                   OrderStatusModel::ORDER_DC_STATUS_SHIPPED,
+                                   OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                               ]
+                           ]);
 
                 return $o->all();
             }

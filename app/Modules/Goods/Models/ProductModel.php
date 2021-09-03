@@ -4,7 +4,6 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
-use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -90,6 +89,7 @@ use Xcart\Product;
  * @property ProductModel parent
  * @property string group_mask
  * @property int group_root
+ * @property ProductImageModel[]|\Xcart\App\Orm\Manager detail_images
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -267,6 +267,10 @@ class ProductModel extends Model implements ICartItem
                 'null' => true,
                 'default' => null
             ],
+            'discount_table' => [
+                'class' => CharField::class,
+                'default' => '2,3,4,6,8,12',
+            ],
             'source_sfid' => [
                 'class' => IntField::class,
                 'null' => false,
@@ -359,6 +363,11 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
+            ],
+            'shipping_freight' => [
+                'class' => DecimalField::class,
+                'null' => false,
+                'default' => 0.01,
             ],
             'weight' => [
                 'class' => DecimalField::class,
@@ -502,7 +511,7 @@ class ProductModel extends Model implements ICartItem
         return false;
     }
 
-    public function isNewProduct()
+    public function isNewProduct(): bool
     {
         $sInDay = (60 * 60 * 24);
 
@@ -510,18 +519,19 @@ class ProductModel extends Model implements ICartItem
     }
 
     /**
-     * @return ImageDModel[]
+     * @return ProductImageModel[] array
      */
-    public function getImages()
+    public function getImages() : array
     {
-        /** @var ImageDModel[] $images */
-        $images = $this->images->filter(['avail' => 'Y'])->order(['orderby'])->all();
-        return $images ?: [];
+        return $this->detail_images
+            ->filter(['xcart_products_images_1.is_active' => true])
+            ->order(['xcart_products_images_1.order_by', 'xcart_products_images_1.image_id'])
+            ->all();
     }
 
-    public function getMainImage():? ImageModel
+    public function getMainImage():? ProductImageModel
     {
-        return ($images = $this->getImages()) ? reset($images) : null;
+        return $this->getImages()[0];
     }
 
     public function isSaleSticker()

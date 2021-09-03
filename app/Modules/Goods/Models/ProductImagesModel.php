@@ -4,6 +4,7 @@
 namespace Modules\Goods\Models;
 
 
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -36,7 +37,12 @@ class ProductImagesModel extends Model
                 'link' => ['image_id' => 'image_id'],
                 'primary' => true
             ],
-            'order_by' => IntField::class
+            'is_active' => [
+                'class' => BooleanField::class,
+                'default' => true,
+            ],
+            'order_by' => IntField::class,
+
         ];
     }
 }

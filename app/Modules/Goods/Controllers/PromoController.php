@@ -62,7 +62,7 @@ class PromoController extends AbstractCatalogController
         if ($this->getRequest()->getIsAjax()) {
 
             $this->renderSliderData($this->getQS()->filter([
-                'images__image_path__isnull' => false,
+                'detail_images__image_id__isnull' => false,
                 'category_main__categoryid__in' => $category_new->getObjects()->descendants(true)->select(['pk']),
             ]));
         }

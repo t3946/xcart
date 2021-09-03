@@ -24,7 +24,7 @@ class QueueDiscontinueCommand extends Command
         /** @var SupplierFeedModel $feed */
         /** @var DistributorModel $dx */
 
-        if ($data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+        if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             $dx = DistributorModel::objects()->get(['code' => $data['dx_code']]);
             $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
             $dis_count = ProductModel::without_group()
@@ -42,7 +42,7 @@ class QueueDiscontinueCommand extends Command
                 'last_update_period' => time() - $feed->last_update_time,
                 'feed_source' => $data['feed_source'],
                 'feed_source_date' => $data['feed_source_date'],
-                'products_in_feed' => $data['products_in_feed']
+                'last_update_items_count' => $data['products_in_feed']
             ]);
             $feed->save();
 

@@ -17,6 +17,7 @@ use Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry;
 use Google_Service_ShoppingContent_ProductShipping;
 use Google_Service_ShoppingContent_ProductShippingDimension;
 use Google_Service_ShoppingContent_ProductShippingWeight;
+use Modules\Goods\Models\ProductImageModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Xcart\App\QueryBuilder\Q\QOrNot;
@@ -239,7 +240,7 @@ class GoogleShoppingProductCommand extends Command
                             $batch->setGtin($product->upc);
                         }
                         if (($images = $product->getImages()) && $image_model = reset($images)) {
-                            $batch->setImageLink('https://cdn.' . $product->getBaseDomain(). $image_model->getURL());
+                            $batch->setImageLink($image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL));
                         }
                         if ($product->mult_order_quantity && $product->min_amount > 1) {
                             $batch->setMultipack($product->min_amount);

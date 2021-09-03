@@ -3,6 +3,7 @@ namespace Modules\Goods\Helpers;
 
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -119,16 +120,16 @@ JSON;
             if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
                 foreach($products as $product) {
                     if (!$product->isGroupRoot()) {
-                        $thumb = $product->images->order(['orderby'])->limit(1)->get();
+                        $thumb = $product->getMainImage();
                     } else {
-                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->images->order(['orderby'])->limit(1)->get() : null;
+                        $thumb = ($child = $product->childs->limit(1)->get()) ? $child->getMainImage() : null;
                     }
 
                     $p_suggestions[] = [
                         'id' => $product->productid,
                         'link' => $product->getAbsoluteUrl(),
                         'name' => $product->getFrontendName(),
-                        'image' => $thumb ? $thumb->getCdnUrl(180) : null
+                        'image' => $thumb ? $thumb->getCdnUrl(ProductImageModel::IMAGE_SIZE_THUMB) : null
                     ];
                 }
             }

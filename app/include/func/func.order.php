@@ -3952,6 +3952,7 @@ function func_get_filter($fid)
 
 function func_instock_and_outofstock_items_table($products, $type_of_message = '')
 {
+    global $config;
 
     $cidev_instock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
     $cidev_instock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;" nowrap="nowrap">Quantity in stock</td></tr>';
@@ -4015,7 +4016,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
 </tr>';
             }
 
-            if ($v["back"] > 0 && $type_of_message === 'compose_message_page') {
+            if ($v["back"] > 0 || $type_of_message === 'compose_message_page') {
                 $is_back = "Y";
 
                 $count_out_of_stock_items++;
@@ -4034,13 +4035,14 @@ function func_instock_and_outofstock_items_table($products, $type_of_message = '
 
                     if (!empty($tmp_eta_date_mm_dd_yyyy) && $tmp_eta_date_mm_dd_yyyy >= time())
                     {
-                        $tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
 
                         if ($type_of_message === 'backorder_decision_request') {
-                            $tmp_time_diff = $tmp_mktime - time();
+                            $tmp_time_diff = $tmp_eta_date_mm_dd_yyyy - time();
                             $tmp_time_diff = $tmp_time_diff / (60 * 60 * 24);
 
-                            if ($tmp_time_diff > 30 && $v["offer_backorder"] !== "Y") {
+                            $tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
+
+                            if ($tmp_time_diff > $config["backorder_decision_request"]["do_not_offer_backorder_if_eta_more_than_days"] && $v["offer_backorder"] !== "Y") {
                                 $tmp_eta_date_mm_dd_yyyy = "unknown";
                                 $count_eta_unknown++;
 
