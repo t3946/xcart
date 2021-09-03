@@ -364,6 +364,11 @@ class ProductModel extends Model implements ICartItem
                 'null' => false,
                 'default' => 0,
             ],
+            'shipping_freight' => [
+                'class' => DecimalField::class,
+                'null' => false,
+                'default' => 0.01,
+            ],
             'weight' => [
                 'class' => DecimalField::class,
                 'null' => false,
