@@ -153,17 +153,22 @@ class OrderGroupHelper
                 $tracking_number = trim($params['tracking_number'][$_k]);
                 $t_shipdate = trim($params['tracking_ship_date'][$_k]);
                 $t_shipdate = $t_shipdate ?: (new DateTime())->format('m/d/Y');
+                $tracking_number  = $tracking_number ?: null;
                 $tr_params = [
                     'linkid' => $params['tracking_shipper'][$_k] ?: null,
-                    'tracknum' => $tracking_number ?: null,
+                    'tracknum' => $tracking_number,
                     'shipping_date' => $t_shipdate ? DateTime::createFromFormat('m/d/Y H:i:s', "{$t_shipdate} 00:00:00", new DateTimeZone('EST')) : null,
                     'carrier_id' => $sh,
                     'order_group_id' => $group->order_group_id
                 ];
                 $tri = [
-                    'tracknum' => $tracking_number ?: null,
                     'order_group_id' => $group->order_group_id
                 ];
+
+                if ($tracking_number) {
+                    $tri['tracknum'] = $tracking_number;
+                }
+
                 [$trackingModel, $is_new] = OrderTrackingModel::objects()->getOrNew($tri);
                 if ($is_new){
                     $trackingModel->setAttributes($tr_params);

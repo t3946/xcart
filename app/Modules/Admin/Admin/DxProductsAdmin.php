@@ -16,6 +16,23 @@ class DxProductsAdmin extends ProductAdmin
 
     public $allTemplate = 'admin/distributor/dx_52.tpl';
 
+    public function getListColumns()
+    {
+        return [
+            'image',
+            'productcode',
+            'mpn',
+            'product',
+            'add_date',
+            'forsale',
+        ];
+    }
+
+    public function getListGroupActions()
+    {
+        return [];
+    }
+
 
     public function getQuerySet()
     {
@@ -49,17 +66,20 @@ class DxProductsAdmin extends ProductAdmin
 
     public function getItemProperty(Model $item, $property)
     {
-        /** @var ProductModel $image */
+        /** @var ProductModel $item */
         if ($property === 'image') {
             return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" title=\"{$item}\" width='60' /></div>"
+                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" width='60' /></div>"
                 : '';
+        }
+        if ($property === 'mpn') {
+            return "<a href={$item->getDistributorUrl()} target='_blank'>{$item->getMpn()}</a>";
         }
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
         }
         if ($property === 'add_date') {
-            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
+            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y');
         }
 
         return parent::getItemProperty($item, $property);
