@@ -89,19 +89,19 @@ export const EmailInfoContainer: React.FC = () => {
     );
   };
 
-  const sendMessage = () => {
-    dispatch(editSendData(parentEmail.item.body, "replyText"));
+  const sendMessage = (body: string) => {
+    dispatch(editSendData(body, "replyText"));
     dialog.handleClickOpen();
   };
 
-  const handleForward = (EmailInfo: EmailDto) => {
+  const handleForward = (emailInfo: EmailDto) => {
     dispatch(
       editSendData(
-        addPrefixToSubject("Fwd:", "Re:", EmailInfo.subject),
+        addPrefixToSubject("Fwd:", "Re:", emailInfo.subject),
         "subject"
       )
     );
-    sendMessage();
+    sendMessage(emailInfo.body);
   };
 
   const handleReply = (emailInfo: EmailDto) => {
@@ -113,7 +113,7 @@ export const EmailInfoContainer: React.FC = () => {
       )
     );
     dispatch(editSendData(parentEmail.item.thread_id, "threadId"));
-    sendMessage();
+    sendMessage(emailInfo.body);
   };
   const handleView = (emailInfo: EmailDto) => {
     dispatch(setViewed([emailInfo.id], true, parentEmail.item.id));
