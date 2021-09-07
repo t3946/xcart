@@ -115,7 +115,6 @@ export const EmailInfoContainer: React.FC = () => {
     templateSelect: SelectItemDto
   ) => {
     dispatch(setSendTemplateType(templates[0][0]));
-    console.log(templateSelect.message_body);
     const template = api
       .post(
         "/admin/forms/api/email/template/render",
@@ -123,6 +122,9 @@ export const EmailInfoContainer: React.FC = () => {
       )
       .then((response: { message_body: string }) => {
         dispatch(setSendTemplate({ ...templateSelect, ...response }));
+      })
+      .catch((er) => {
+        console.log(er);
       });
     dispatch(addRecipient(editEmailAddress(item.from_address)));
     dispatch(
