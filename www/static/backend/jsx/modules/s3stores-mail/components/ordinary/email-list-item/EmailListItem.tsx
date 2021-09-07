@@ -66,7 +66,10 @@ const List: React.FC<any> = ({
         </div>
         <div
           className="subject-email-block"
-          style={{ width: itemData.contains_action ? 415 : 550 }}
+          style={{
+            maxWidth: itemData.contains_action ? 415 : 610,
+            minWidth: itemData.contains_action ? 415 : 610,
+          }}
         >
           <EmailListLabels labels={itemData.labels} />
           <span className="text-name">{itemData.subject}</span>
