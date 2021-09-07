@@ -22,7 +22,7 @@ export const EmailInfoBodyData: React.FC<any> = () => {
           <Grid container>
             <span className="email-info-to">To:</span>
             <span className="email-info-title-text">
-              {emailInfo.to_address}
+              {emailInfo.to_address ?? emailInfo.delivered_to_address}
             </span>
           </Grid>
         </Grid>
