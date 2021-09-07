@@ -29,6 +29,7 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   const dispatch = useDispatch();
   const { showSnackbar } = useContext(SnackbarContext);
   const saveChangeQuestion = () => {
+    console.log(form.get);
     switch (type) {
       case "faQuestions":
         dispatch(changeFraudFAQuestionData(form.get));

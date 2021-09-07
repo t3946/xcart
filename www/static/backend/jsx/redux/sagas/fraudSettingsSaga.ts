@@ -35,6 +35,7 @@ function* changeFAQuestionData(action: AnyAction): Generator {
   });
 }
 function* changeBaseQuestionData(action: AnyAction): Generator {
+  console.log(action);
   const data = yield api
     .post(`/api/question/base/update`, JSON.stringify(action.question))
     .then((response) => response) || { update: false };
