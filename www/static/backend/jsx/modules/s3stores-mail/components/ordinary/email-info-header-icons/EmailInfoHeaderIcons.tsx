@@ -39,9 +39,9 @@ export const EmailInfoHeaderIcons: React.FC<EmailInfoHeaderIcons> = ({
         content={() => templateRef.current}
       />
       <IconConstruct
-        onClick={() => {
-          editViewed(emailInfo);
-        }}
+        onClick={() =>
+          emailInfo.viewed ? editViewed(emailInfo) : open.set(emailInfo)
+        }
         title={emailInfo.viewed ? "Make unviewed  " : "Make viewed"}
       >
         {emailInfo.viewed ? <MailOutlineIcon /> : <MarkunreadIcon />}
