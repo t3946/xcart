@@ -1,0 +1,7 @@
+.account-auth-form-container {
+  width: 100%;
+
+  @include breakpoint(sm up) {
+    width: rem-calc(350);
+  }
+}
