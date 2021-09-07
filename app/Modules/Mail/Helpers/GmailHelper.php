@@ -57,7 +57,7 @@ class GmailHelper
         do {
             try {
                 if ($pageToken) {
-                    $opt_param =  array_merge($opt_param, ['pageToken' => $pageToken]);
+                    $opt_param = array_merge($opt_param, ['pageToken' => $pageToken]);
                 }
                 $messagesResponse = $service->users_messages->listUsersMessages($userId, $opt_param);
                 $pageToken = null;
@@ -163,8 +163,10 @@ class GmailHelper
                     break;
                 }
             }
+            return $FOUND_BODY;
+        } else {
+            return nl2br($FOUND_BODY);
         }
-        return $FOUND_BODY;
     }
 
     public static function getHeader($headers, $name)
@@ -236,8 +238,7 @@ class GmailHelper
         try {
             $gmail_label = $service->users_labels->create($userId, $label);
             $result = $gmail_label->getId();
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $result = '';
         }
         return $result ?? '';

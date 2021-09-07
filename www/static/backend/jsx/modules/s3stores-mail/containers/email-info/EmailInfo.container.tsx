@@ -1,12 +1,7 @@
-import React, { useContext, useEffect, useRef, Fragment } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  EmailStoreItems,
-  SelectItemDto,
-  StoreDto,
-} from "@s3stores-mail/ts/types";
-import { EmailInfoHeader } from "@s3stores-mail/components/ordinary/email-info-header/EmailInfoHeader";
+import { SelectItemDto, StoreDto } from "@s3stores-mail/ts/types";
 import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 import { EmailDialogContext } from "@s3stores-mail/contexts/email-send-context/EmailDialogContext";
 import {
@@ -22,18 +17,15 @@ import {
   removeLabelEmail,
   addLabelEmail,
 } from "@redux/actions";
-import {
-  isFavoriteItemsTrue,
-  isFavoriteThreadTrue,
-  isViewedItemsTrue,
-} from "@s3stores-mail/utils/edit-fields-on-email";
+import { isFavoriteThreadTrue } from "@s3stores-mail/utils/edit-fields-on-email";
 import { editEmailAddress } from "@s3stores-mail/utils/edit-email-address";
 import { addPrefixToSubject } from "@s3stores-mail/utils/add-prefix-to-subject";
 import { SceletonEmailInfo } from "../../components/simple/sceleton-email-info/SceletonEmailInfo";
 import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
 import { EmailDto } from "@s3stores-mail/ts/types/email.type";
 import { EmailInfoWrapper } from "@s3stores-mail/containers/email-info-wrapper/EmailInfoWrapper";
-
+import { ApiService } from "@admin/modules/shared/services/api.service";
+const api = new ApiService();
 export const EmailInfoContainer: React.FC = () => {
   const { id }: { id: string } = useParams();
 
@@ -123,7 +115,15 @@ export const EmailInfoContainer: React.FC = () => {
     templateSelect: SelectItemDto
   ) => {
     dispatch(setSendTemplateType(templates[0][0]));
-    dispatch(setSendTemplate(templateSelect));
+    console.log(templateSelect.message_body);
+    const template = api
+      .post(
+        "/admin/forms/api/email/template/render",
+        JSON.stringify({ body: templateSelect.message_body })
+      )
+      .then((response: { message_body: string }) => {
+        dispatch(setSendTemplate({ ...templateSelect, ...response }));
+      });
     dispatch(addRecipient(editEmailAddress(item.from_address)));
     dispatch(
       editSendData(addPrefixToSubject("Re:", "Fwd:", item.subject), "subject")

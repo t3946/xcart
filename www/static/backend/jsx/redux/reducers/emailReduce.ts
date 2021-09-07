@@ -107,7 +107,6 @@ const emailReducer = (
         templateType: action.templateType,
       };
     case "SET_SEND_TEMPLATE":
-      console.log(action, "SEND TEMPLATE");
       return {
         ...state,
         sendTemplate: action.sendTemplate,

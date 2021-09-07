@@ -250,6 +250,18 @@ class ApiEmailDashboardAdmin extends Controller
         $this->jsonResponse('success');
     }
 
+    public function actionRenderTemplateBody()
+    {
+        $data = json_decode(file_get_contents('php://input'));
+        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
+        $params = [
+            'site' => $site,
+            'user' => Xcart::app()->user,
+        ];
+        $email = SnippetHelper::render($data->body, $params);
+        $this->jsonResponse(['message_body' => $email]);
+    }
+
     public function getTemplate()
     {
         $template = TemplateModel::objects()->get([]);

@@ -63,4 +63,9 @@ return [
         'target' => [ApiEmailDashboardAdmin::class, 'actionGetEmailChildren'],
         'name' => 'actionGetEmailChildren'
     ],
+    [
+        'route' => '/email/template/render',
+        'target' => [ApiEmailDashboardAdmin::class, 'actionRenderTemplateBody'],
+        'name' => 'actionRenderTemplateBody'
+    ]
 ];
