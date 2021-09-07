@@ -30,6 +30,7 @@ use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * @property mixed brandid
+ * @property string brand
  */
 class BrandModel extends Model
 {

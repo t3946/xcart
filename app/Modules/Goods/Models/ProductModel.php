@@ -301,6 +301,7 @@ class ProductModel extends Model implements ICartItem
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixTimestampField::class,
+				'verboseName' => 'ETA date (mm/dd/yyyy)',
             ],
             'category_main' => [
                 'class' => HasManyField::class,
@@ -357,7 +358,8 @@ class ProductModel extends Model implements ICartItem
             'product_options' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductOptionModel::class,
-                'link' => ['productid' => 'product_id']
+                'link' => ['productid' => 'product_id'],
+				'verboseName' => 'Product options',
             ],
             'cost_to_us' => [
                 'class' => DecimalField::class,
