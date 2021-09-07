@@ -39,6 +39,7 @@ import TSVAddNewApp from "@client/modules/account/components/login-and-security/
 import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
 import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
 import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
+import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -212,6 +213,13 @@ export const AccountRouters = (): any => {
                     exact
                     path={route("account:two-step-verification-recovery")}
                     component={TSVRecovery}
+                  />
+
+
+                  <Route
+                    exact
+                    path={route("account:two-step-verification-recovery-password-assistance")}
+                    component={PasswordAssistance}
                   />
                 </Switch>
               </div>

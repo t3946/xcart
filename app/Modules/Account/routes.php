@@ -123,6 +123,12 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification/password-assistance',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-recovery-password-assistance',
+    ],
+
+    [
         'route' => '/public-profile',
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
@@ -174,6 +180,12 @@ return [
     [
         'route' => '/api/lists',
         'path' => 'Modules.Account.routes.routes_lists_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/reset-password',
+        'path' => 'Modules.Account.routes.routes_reset-password_api',
         'namespace' => 'api',
     ],
 ];

@@ -4,7 +4,7 @@ import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
@@ -90,9 +90,14 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                 <RBForm.Label className="d-flex justify-content-between align-items-center">
                   <span className={"form-input-label"}>Password</span>
 
-                  <a href="#" className="common-link auth-form-info">
+                  <Link
+                    to={route(
+                      "account:two-step-verification-recovery-password-assistance"
+                    )}
+                    className={"common-link auth-form-info"}
+                  >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </RBForm.Label>
 
                 <RBForm.Control

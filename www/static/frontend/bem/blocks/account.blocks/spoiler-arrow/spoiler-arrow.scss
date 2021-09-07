@@ -1,0 +1,8 @@
+.spoiler-arrow {
+  color: black;
+  $size: 12;
+  width: rem-calc($size);
+  height: rem-calc($size);
+  transform: rotateZ(0);
+  transition: all 0.15s ease-out;
+}

@@ -69,5 +69,10 @@ export const staticRoutes = [
   {
     name: "Change Preferred Method",
     path: routes["account:two-step-verification-settings-preferred-method"],
-  }
+  },
+
+  {
+    name: "Password Assistance",
+    path: routes["account:two-step-verification-recovery-password-assistance"],
+  },
 ];

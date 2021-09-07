@@ -216,4 +216,10 @@ class UserModel extends Model
 
         return count($count) > 0;
     }
+
+    public function changePassword($new_password): void
+    {
+        $this->password = PasswordHelper::hash($new_password);
+        $this->save();
+    }
 }
