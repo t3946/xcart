@@ -35,8 +35,14 @@ return [
     [
         'route' => '/your-lists',
         'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'your-lists-shipping'
+    ],
+    [
+        'route' => '/your-lists/{i:id}',
+        'target' => [AccountController::class, 'actionIndex'],
         'name' => 'your-lists'
     ],
+
 
     [
         'route' => '/register',

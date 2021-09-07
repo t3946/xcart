@@ -1,0 +1,43 @@
+.moved-product-container{
+  overflow: hidden;
+  background-color: #F2FFE4;
+  border: 1px solid #c4c4c4;
+  margin-top: -1px;
+  animation-duration: 1s;
+  animation-name: slideIn;
+  position: relative;
+  height: 56px;
+}
+
+.moved-product-content{
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+}
+
+.moved-product-label{
+  margin-left: 200px;
+  min-width: 70px;
+}
+
+.list-name{
+  color: #055A93;
+  margin-left: 15px;
+  cursor: pointer;
+  min-width: 200px;
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}

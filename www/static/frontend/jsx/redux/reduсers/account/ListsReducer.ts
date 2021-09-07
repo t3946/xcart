@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { AccountListsStore } from "@client/modules/account/ts/types/account-store.type";
 import { accountListsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
 
 const accountListReducer = (
   state: AccountListsStore = accountListsInitialValue,
@@ -33,30 +34,85 @@ const accountListReducer = (
           return e;
         }),
       };
-    case "MOVE_PRODUCT":
-      console.log(action.toListId);
+    case "DELETE_PRODUCT":
       return {
         ...state,
-        lists: state.lists.map((e) => {
-          if (action.fromListId === action.toListId.value) {
-            return e;
-          }
-          if (e.product_list_id === action.fromListId) {
+        lists: state.lists.map((list) => {
+          if (list.product_list_id === action.product_list_id) {
             return {
-              ...e,
-              products: e.products.filter((product) => {
-                if (product.list_items_id !== action.product.list_items_id) {
-                  return product;
+              ...list,
+              products: list.products.map((product) => {
+                if (product.product_id === action.list_items_id) {
+                  return {
+                    ...product,
+                    typeAction: {
+                      type: AccountListProductActionEnum.DELETE,
+                      productName: product.product.product,
+                    },
+                  };
                 }
+                return product;
               }),
             };
-          } else if (e.product_list_id === action.toListId.value) {
+          }
+          return list;
+        }),
+      };
+    case "UNDO_DELETE_PRODUCT":
+      return {
+        ...state,
+        lists: state.lists.map((list) => {
+          if (list.product_list_id === action.product_list_id) {
             return {
-              ...e,
-              products: e.products.concat(action.product),
+              ...list,
+              products: list.products.map((product) => {
+                if (product.product_id === action.list_items_id) {
+                  delete product.typeAction;
+                  return {
+                    ...product,
+                  };
+                }
+                return product;
+              }),
             };
           }
-          return e;
+          return list;
+        }),
+      };
+    case "MOVE_PRODUCT":
+      return {
+        ...state,
+        lists: state.lists.map((list) => {
+          if (action.fromListId === action.toListId.value) {
+            return list;
+          }
+          if (list.product_list_id === action.fromListId) {
+            return {
+              ...list,
+              products: list.products.map((product) => {
+                if (product.list_items_id === action.product.list_items_id) {
+                  const list = state.lists.find(
+                    (e) => e.product_list_id === action.toListId.value
+                  );
+                  return {
+                    ...product,
+                    typeAction: {
+                      type: AccountListProductActionEnum.MOVE,
+                      toListId: list.cache_url,
+                      listName: list.name,
+                    },
+                  };
+                }
+                return product;
+              }),
+            };
+          } else if (list.product_list_id === action.toListId.value) {
+            return {
+              ...list,
+              products: list.products.concat(action.product),
+            };
+          }
+          return list;
         }),
       };
 

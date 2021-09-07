@@ -1,0 +1,35 @@
+.share-variants-container{
+  display: flex;
+}
+
+.change-list-privacy-label{
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.share-variants-label{
+  color: #055A93;
+cursor: pointer;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.share-variants-label-copy{
+  margin-right: 40px;
+}
+
+.share-list-btn{
+  margin: 15px 0 !important;
+}
+
+.share-list-label{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.share-list-center-line{
+  color: #C4C4C4;
+  margin: 16px 0;
+}

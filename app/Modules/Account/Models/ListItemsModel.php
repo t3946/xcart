@@ -30,7 +30,7 @@ class ListItemsModel extends Model
                 'link' => ['product_id' => 'productid'],
             ],
             'list' => [
-                'field' => 'product_lists_id',
+                'field' => 'product_list_id',
                 'class' => ForeignField::class,
                 'modelClass' => ProductListsModel::class,
                 'link' => ['product_lists_id' => 'product_lists_id'],
@@ -38,7 +38,6 @@ class ListItemsModel extends Model
             'order_by' => [
                 'class' => IntField::class,
             ],
-
         ];
     }
 }

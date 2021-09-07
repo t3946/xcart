@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   background-color: #ffffff;
+  align-items: center;
 }
 
 .product-list-item-image{
@@ -17,7 +18,7 @@
 }
 
 .product-list-item-info{
-width: 60%;
+  width: 60%;
 }
 
 .product-list-item-name, .add-comment-text{

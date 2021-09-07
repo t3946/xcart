@@ -4,7 +4,7 @@ import { FormSelect } from "@client/modules/account/components/shared/FormSelect
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
-export const ListProductItemBtns = ({ onMoveClick }) => {
+export const ListProductItemBtns = ({ onMoveClick, deleteItem }) => {
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
   return (
@@ -12,9 +12,6 @@ export const ListProductItemBtns = ({ onMoveClick }) => {
       <div className="list-product-item-btns-text">Item added May 10, 2021</div>
       <Button className="account-submit-btn  full-width-button">Cancel</Button>
       <div className="list-product-item-btns-container">
-        {/*<Button className="account-submit-btn account-submit-btn-outline auto-width-button list-product-item-btns-move">*/}
-        {/*  MOVE*/}
-        {/*</Button>*/}
         <FormSelect
           items={lists.map((e) => {
             return {
@@ -31,6 +28,7 @@ export const ListProductItemBtns = ({ onMoveClick }) => {
         />
         <Button
           type={"submit"}
+          onClick={deleteItem}
           className="account-submit-btn account-submit-btn-outline auto-width-button "
         >
           delete

@@ -42,7 +42,7 @@ export const ListsSidebarMenu = () => {
       {lists?.map((e, index) => {
         return (
           <SideBarMenuItem
-            to={`/account/your-lists${!index ? "" : "/" + e.product_list_id}`}
+            to={`/account/your-lists${!index ? "" : "/" + e.cache_url}`}
             label={e.name}
             className={"sidebar-menu__top-level-item"}
             onClick={e.onClick}

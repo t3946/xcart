@@ -13,13 +13,14 @@ export const ListProductItem = ({
   reorderProductList,
   index,
   listId,
+  deleteItem,
 }) => {
   const dispatch = useDispatch();
 
   const onMoveClick = (value) => {
     setTimeout((e) => {
       dispatch(moveProduct(listId, value, info));
-    }, 500);
+    }, 100);
   };
 
   return (
@@ -29,10 +30,7 @@ export const ListProductItem = ({
         onDownClick={() => reorderProductList(index, index + 1)}
         drag={drag}
       />
-      <img
-        className="product-list-item-image"
-        src="/static/frontend/images/icons/account/plus.svg"
-      />
+      <img className="product-list-item-image" src={info.image} />
       <div className="product-list-item-info">
         <div className="product-list-item-name">{info.product.product}</div>
         <Tooltip
@@ -52,7 +50,7 @@ export const ListProductItem = ({
         </div>
         <div className="add-comment-text">Add comment, quantity & priority</div>
       </div>
-      <ListProductItemBtns onMoveClick={onMoveClick} />
+      <ListProductItemBtns deleteItem={deleteItem} onMoveClick={onMoveClick} />
     </div>
   );
 };

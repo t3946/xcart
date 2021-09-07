@@ -5,6 +5,8 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\Account\Models\ListItemsModel;
 use Modules\Account\Models\ProductListsModel;
+use Modules\Account\Models\UserListModel;
+use Modules\Core\Helpers\CoreHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Orm\Base;
 use Xcart\App\Main\Xcart;
@@ -13,9 +15,9 @@ class AccountListsApi extends FrontendController
 {
     public function getLists()
     {
-        $user = json_decode(file_get_contents('php://input'));
+        $user = Xcart::app()->auth->getUser(true);
 
-        $lists =  ProductListsModel::objects()->filter(['user_id' => $user])->all();
+        $lists =  $user->lists;
 
         $items = [];
 
@@ -28,6 +30,7 @@ class AccountListsApi extends FrontendController
             {
                 $items[$key]['products'][$product_key] = $product->getAttributes();
                 $items[$key]['products'][$product_key]['product'] = $product->product->getAttributes();
+                $items[$key]['products'][$product_key]['image'] =  (string) $product->product->getMainImage();
             }
 
         }
@@ -37,10 +40,21 @@ class AccountListsApi extends FrontendController
 
     public function createList()
     {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
         $data = json_decode(file_get_contents('php://input'),true);
         $model = new ProductListsModel($data);
         $model->save();
+        $model->cache_url = md5($model->product_list_id + $model->public);
+        $model->save();
 
+        UserListModel::objects()->create(['user_id' => $user->user_id, 'product_list_id' => $model->product_list_id]);
         $this->jsonResponse($model->getAttributes());
     }
 
@@ -64,7 +78,6 @@ class AccountListsApi extends FrontendController
     {
         $list_id = json_decode(file_get_contents('php://input'));
 
-
         $user = Xcart::app()->auth->getUser(true);
 
        if(!$user)
@@ -72,14 +85,44 @@ class AccountListsApi extends FrontendController
            $this->jsonResponse('user not login');
            return;
        }
-
-       if(ProductListsModel::objects()->get([$user->user_id => 'user_id',$list_id => 'product_list_id' ])){
-
-           dd(123);
-           ProductListsModel::objects()->delete([$list_id => 'product_list_id' ]);
+       if(UserListModel::objects()->get(['product_list_id' => $list_id, 'user_id' => $user->user_id])){
+           ProductListsModel::objects()->delete(['product_list_id' => $list_id]);
            $this->jsonResponse('delete successfully');
            return;
        }
-        $this->jsonResponse('error');
+
+        $this->jsonResponse('deleting error');
+    }
+
+    public function moveProduct()
+    {
+        [$fromListId ,$toListId, $product] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        $listItem = ListItemsModel::objects()->get(['product_list_id' => $fromListId, 'product_id' => $product]);
+
+        $listItem->list = $toListId;
+
+        $listItem->save();
+
+        $this->jsonResponse('success');
+    }
+
+    public function getUrlEncrypt()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        $private_type = array_values(json_decode(file_get_contents('php://input')));
+
+        $encrypt_params = CoreHelper::cipherText($user . '/' . $private_type);
+
+        $this->jsonResponse($encrypt_params);
     }
 }

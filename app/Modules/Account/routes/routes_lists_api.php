@@ -23,4 +23,14 @@ return [
         'target' => [AccountListsApi::class, 'deleteList'],
         'name' => 'delete-list'
     ],
+    [
+        'route' => '/move-product',
+        'target' => [AccountListsApi::class, 'moveProduct'],
+        'name' => 'move-product'
+    ],
+    [
+        'route' => '/get-url-encrypt',
+        'target' => [AccountListsApi::class, 'getUrlEncrypt'],
+        'name' => 'encrypt-url'
+    ],
 ];

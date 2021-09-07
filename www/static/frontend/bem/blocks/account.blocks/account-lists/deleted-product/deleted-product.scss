@@ -1,0 +1,28 @@
+.deleted-product-container{
+  overflow: hidden;
+  background-color: #FFF5EC;
+  border: 1px solid #c4c4c4;
+  margin-top: -1px;
+  animation-duration: 1s;
+  animation-name: slideIn;
+  padding: 20px 0;
+}
+
+.deleted-product-content{
+  margin-left: 200px;
+  min-width: 300px;
+}
+
+.deleted-product-actions{
+  display: flex;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
