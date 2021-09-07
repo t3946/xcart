@@ -31,8 +31,8 @@ import { editEmailAddress } from "@s3stores-mail/utils/edit-email-address";
 import { addPrefixToSubject } from "@s3stores-mail/utils/add-prefix-to-subject";
 import { SceletonEmailInfo } from "../../components/simple/sceleton-email-info/SceletonEmailInfo";
 import { EmailRouterContext } from "@s3stores-mail/contexts/email-router-context/EmailRouter.context";
-import { EmailInfoWrapper } from "@s3stores-mail/containers/email-info-wrapper/EmailInfoWrapper";
 import { EmailDto } from "@s3stores-mail/ts/types/email.type";
+import { EmailInfoWrapper } from "@s3stores-mail/containers/email-info-wrapper/EmailInfoWrapper";
 
 export const EmailInfoContainer: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -52,27 +52,19 @@ export const EmailInfoContainer: React.FC = () => {
 
   useEffect(() => {
     if (parentEmail) {
-      parentEmail.item.body = replaceCidToImage(
-        parentEmail.item.body,
-        parentEmail.item.attachment
-      );
+      if (!parentEmail.item.thread.length) {
+        setTimeout(
+          () => dispatch(getChildEmailList(parentEmail.item.message_id)),
+          100
+        );
+      }
     } else {
       dispatch(getEmailInfo(id));
     }
     if (Boolean(parentEmail?.item.id) && !parentEmail.item.viewed) {
-      dispatch(
-        setViewed(
-          [parentEmail.item.id],
-          isViewedItemsTrue(emails, [parentEmail.item.id])
-        )
-      );
+      dispatch(setViewed([parentEmail.item.id], true, parentEmail.item.id));
     }
   }, [parentEmail]);
-  useEffect(() => {
-    if (parentEmail) {
-      dispatch(getChildEmailList(parentEmail.item.message_id));
-    }
-  }, []);
 
   const dialog = useContext(EmailDialogContext);
   const dispatch = useDispatch();
@@ -81,14 +73,9 @@ export const EmailInfoContainer: React.FC = () => {
 
   const routers = useContext(EmailRouterContext);
 
-  const editViewed = () => {
+  const editViewed = (emailInfo: EmailDto) => {
     history.push(`${routers.listRouter}${page}`);
-    dispatch(
-      setViewed(
-        [parentEmail.item.id],
-        isViewedItemsTrue(emails, [parentEmail.item.id])
-      )
-    );
+    dispatch(setViewed([emailInfo.id], !emailInfo.viewed, parentEmail.item.id));
   };
 
   const editFavoriteItem = (messageId: string) => {
@@ -101,16 +88,6 @@ export const EmailInfoContainer: React.FC = () => {
       )
     );
   };
-
-  function replaceCidToImage(body: string, attachments: any[]) {
-    attachments.forEach((e) => {
-      if (e.cid) {
-        body = body.replace(`cid:${e.cid}`, `/${e.attachment}`);
-      }
-    });
-
-    return body;
-  }
 
   const sendMessage = () => {
     dispatch(editSendData(parentEmail.item.body, "replyText"));
@@ -140,12 +117,6 @@ export const EmailInfoContainer: React.FC = () => {
   };
   const handleView = (emailInfo: EmailDto) => {
     dispatch(setViewed([emailInfo.id], true, parentEmail.item.id));
-  };
-
-  const handleClick = (item: SelectItemDto) => {
-    dispatch(setSendTemplateType(templates[0][0]));
-    dispatch(setSendTemplate(item));
-    dialog.handleClickOpen();
   };
   const handleReplyByTemplate = (
     item: EmailDto,
@@ -178,7 +149,6 @@ export const EmailInfoContainer: React.FC = () => {
   const infoValue = {
     editAction,
     editFavoriteItem,
-    handleClick,
     handleReplyByTemplate,
     handleView,
     handleForward: handleForward,

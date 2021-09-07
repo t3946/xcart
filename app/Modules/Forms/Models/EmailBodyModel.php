@@ -16,8 +16,8 @@ class EmailBodyModel extends Model
             'email_body' => [
                 'field' => 'body',
                 'class' => FileField::class,
-                'adapterName' => 'zip',
-                'uploadTo' => 'files/email/body/%Y%m',
+                'adapterName' => 's3',
+                'uploadTo' => 'emails/body/%Y%m',
                 'maxSize' => '35M',
                 'null' => true,
                 'default' => null,
@@ -35,8 +35,9 @@ class EmailBodyModel extends Model
     public function __toString()
     {
         try {
-            if ($res = $this->email_body->get()) {
-                return (string)($res->read() ?: '');
+            if ($adapter = $this->email_body->getFilesystem()->getAdapter()) {
+                $content = $adapter->read($this->email_body->getValue());
+                return (string)$content['contents'];
             }
         } catch (\Exception $exception) {
         }

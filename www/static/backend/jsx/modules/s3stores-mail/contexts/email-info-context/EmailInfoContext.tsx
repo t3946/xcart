@@ -12,6 +12,7 @@ interface EmailInfoContext {
   handleReply: (item: EmailDto) => void;
   handleForward: (item: EmailDto) => void;
   handleView: (item: EmailDto) => void;
+  editViewed: (item: EmailDto) => void;
   handleReplyByTemplate: (
     item: EmailDto,
     templateSelect: SelectItemDto

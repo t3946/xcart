@@ -108,35 +108,6 @@ export const EmailSearchForm: React.FC<any> = () => {
               variant="outlined"
               className={`${classes.formControl} email-search-input`}
             >
-              {/*              <InputLabel id="demo-simple-select-outlined-label">
-                Label
-              </InputLabel>
-              <Select
-                native
-                name="label"
-                onChange={(evt) =>
-                  setFieldValue(
-                    "label",
-                    [].slice
-                      .call(evt.target.selectedOptions)
-                      .map((option) => option.value)
-                  )
-                }
-                fullWidth
-                multiple
-                input={<Input />}
-                renderValue={(selected) => (selected as string[]).join(", ")}
-                MenuProps={MenuProps}
-                value={values.label}
-                label="Age"
-              >
-                {labelList.map((label) => (
-                  <MenuItem key={label.label_id} value={label.label_id}>
-                    <Checkbox checked={true} />
-                    <ListItemText primary={label.label_id} />
-                  </MenuItem>
-                ))}
-              </Select>*/}
               <InputLabel id="demo-mutiple-checkbox-label">Label</InputLabel>
               <Select
                 labelId="demo-mutiple-checkbox-label"
@@ -169,7 +140,15 @@ export const EmailSearchForm: React.FC<any> = () => {
                         values.label && values.label.includes(label.label_id)
                       }
                     />
-                    <ListItemText primary={label.name} />
+                    <div
+                      className="email-search-label-options"
+                      style={{
+                        backgroundColor: label.background_color,
+                        color: label.color,
+                      }}
+                    >
+                      {label.name}
+                    </div>
                   </MenuItem>
                 ))}
               </Select>

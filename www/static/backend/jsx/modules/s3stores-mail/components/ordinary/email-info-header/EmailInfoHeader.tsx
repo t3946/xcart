@@ -35,7 +35,7 @@ export const EmailInfoHeader: React.FC<any> = () => {
           alignItems="center"
         >
           <div className="subject-mail-wrapper">
-            <div className="subject-email-block">
+            <div className="subject-email-block-personal">
               <span
                 style={{
                   fontSize: 15,

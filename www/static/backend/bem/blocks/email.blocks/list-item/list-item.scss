@@ -65,6 +65,12 @@
 .subject-email-block {
   overflow: hidden;
   display: flex;
+  max-width: 380px;
+  align-items: center;
+}
+.subject-email-block-personal {
+  overflow: hidden;
+  display: flex;
   max-width: 270px;
   align-items: center;
 }

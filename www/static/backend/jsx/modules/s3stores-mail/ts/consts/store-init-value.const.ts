@@ -57,7 +57,7 @@ export const initialValues: StoreDto = {
     prevValue: "0",
   },
   user: {},
-  page: 0,
+  page: 1,
   loading: false,
   moreViewed: false,
   moreFavorites: false,

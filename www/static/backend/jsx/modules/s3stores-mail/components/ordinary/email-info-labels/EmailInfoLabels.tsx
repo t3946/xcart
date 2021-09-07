@@ -24,13 +24,13 @@ export const EmailInfoLabels: React.FC<EmailInfoLabels> = ({ labelsList }) => {
     dispatch(
       editSearchOptions({
         ...initialValues.searchOptions,
-        label: labelId,
+        label: [labelId],
       })
     );
     history.push(`${routers.listRouter}${1}`);
     dispatch(setLoading());
     dispatch(
-      getPage(Number(1), { ...initialValues.searchOptions, label: labelId })
+      getPage(Number(1), { ...initialValues.searchOptions, label: [labelId] })
     );
   };
   return (

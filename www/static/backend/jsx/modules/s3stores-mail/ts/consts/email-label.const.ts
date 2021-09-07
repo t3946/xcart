@@ -108,7 +108,7 @@ export const gmailColorList = [
 ];
 export const initColorsCreateLabel: ColorCreateLabel = {
   background: "#ffc107",
-  color: "#f8f9fa",
+  color: "#efefef",
 };
 export const initStateCreateLabelMenu: SelectMenuColor = {
   background: false,

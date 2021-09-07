@@ -24,6 +24,7 @@ use Xcart\App\Request\CliRequest;
 use Xcart\App\Router\Router;
 use Xcart\App\Storage\Adapters\LocalGoogleAdapter;
 use Xcart\App\Storage\Adapters\S3Adapter;
+use Xcart\App\Storage\Adapters\S3ZipAdapter;
 use Xcart\App\Template\TemplateManager;
 use Xcart\App\Storage\Storage;
 use Xcart\App\Storage\Adapters\LocalAdapter;
@@ -154,6 +155,9 @@ return array_replace_recursive([
                            'version' => 'latest',
                        ]
                    )
+               ],
+               's3zip' => [
+                   'class' => S3ZipAdapter::class,
                ],
                'zip' => [
                    'class' => LocalZipAdapter::class,

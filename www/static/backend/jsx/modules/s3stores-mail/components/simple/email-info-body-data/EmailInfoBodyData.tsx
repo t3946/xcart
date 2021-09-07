@@ -5,6 +5,7 @@ import moment from "moment";
 import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 import { EmailDto } from "../../../ts/types/email.type";
 import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
+import { replaceCidToImage } from "@s3stores-mail/utils/replace-cid-to-image";
 
 export const EmailInfoBodyData: React.FC<any> = () => {
   const { templateRef, emailInfo } = useContext(EmailThreadContext);
@@ -35,7 +36,7 @@ export const EmailInfoBodyData: React.FC<any> = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Iframe src={emailInfo.body} />
+      <Iframe src={replaceCidToImage(emailInfo.body, emailInfo.attachment)} />
     </div>
   );
 };

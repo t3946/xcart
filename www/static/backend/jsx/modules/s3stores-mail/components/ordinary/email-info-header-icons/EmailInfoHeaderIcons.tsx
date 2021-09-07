@@ -12,7 +12,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import LabelOutlinedIcon from "@material-ui/icons/LabelOutlined";
-import { EmailDto } from "@s3stores-mail/ts/types/email.type";
 import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 interface EmailInfoHeaderIcons {
   addLabel: { get: boolean; set: () => void };
@@ -41,7 +40,7 @@ export const EmailInfoHeaderIcons: React.FC<EmailInfoHeaderIcons> = ({
       />
       <IconConstruct
         onClick={() => {
-          editViewed();
+          editViewed(emailInfo);
         }}
         title={emailInfo.viewed ? "Make unviewed  " : "Make viewed"}
       >
