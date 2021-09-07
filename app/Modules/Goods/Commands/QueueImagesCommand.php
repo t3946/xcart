@@ -79,6 +79,8 @@ class QueueImagesCommand extends Command
                                 echo "Delete product images \n";
                                 echo "==============Queue data=============\n";
                                 print_r($data);
+                                echo "==============Deleted image data=============\n";
+                                print_r($image->getAttributes());
                                 echo "==============action=============\n";
                                 print_r($action);
                                 echo "==============End=============\n";
