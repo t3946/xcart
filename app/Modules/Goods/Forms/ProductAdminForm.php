@@ -61,8 +61,8 @@ class ProductAdminForm extends ModelForm
             ],
             'Categorization' => [
                 'distributor',
-                /*                'brand',
-                                'category',*/
+                'brand',
+                'category',
                 'main_category_id',
             ],
             'SEO options' => [
@@ -183,7 +183,7 @@ class ProductAdminForm extends ModelForm
                 'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
+                    'data-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
                 ],
             ],
             'brand' => [
@@ -191,7 +191,7 @@ class ProductAdminForm extends ModelForm
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
+                    'data-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
                 ],
             ],
             'category' => [
@@ -202,7 +202,7 @@ class ProductAdminForm extends ModelForm
                 }, $category->getBreadcrumbs()->get()))] : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('category'),
+                    'data-url' => (new ProductAdmin)->getSuggestionUrl('category'),
                 ],
                 'label' => 'Main category'
             ],
