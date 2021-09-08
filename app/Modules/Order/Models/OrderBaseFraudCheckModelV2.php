@@ -37,7 +37,7 @@ class OrderBaseFraudCheckModelV2 extends Model
     public static function getFields()
     {
         return [
-            'id' => [
+            'question_id' => [
                 'class' => AutoField::class,
             ],
             'additional_info' => [
@@ -49,7 +49,7 @@ class OrderBaseFraudCheckModelV2 extends Model
                 'field' => 'question_id',
                 'class' => ForeignField::class,
                 'modelClass' => BaseFraudCheckModelV2::class,
-                'link' => ['question_id' => 'id'],
+                'link' => ['question_id' => 'question_id'],
                 'null' => false,
             ],
             'order' => [
