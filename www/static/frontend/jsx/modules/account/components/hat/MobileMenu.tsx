@@ -5,6 +5,8 @@ import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { NavLink } from "react-router-dom";
 import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { route } from "@client/jsx/utils/AppData";
+
 
 const MobileMenu: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -30,7 +32,7 @@ const MobileMenu: React.FC<any> = () => {
     if (user) {
       return (
         <NavLink
-          to="/account/dashboard"
+          to={route("account:dashboard")}
           className="common-link text-decoration-none"
           exact={true}
           onClick={() => dispatch(hideAllMenu())}
@@ -42,7 +44,7 @@ const MobileMenu: React.FC<any> = () => {
 
     return (
       <NavLink
-        to="/account/login/"
+        to={route("account:login")}
         className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4"
         exact={true}
         onClick={() => dispatch(hideAllMenu())}
