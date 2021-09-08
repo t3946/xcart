@@ -45,12 +45,17 @@ if ($REQUEST_METHOD == "POST") {
         }
     } elseif (!empty($purchase_order_search_submit)) {
         $oPoPipeline = Xcart\POPipeline::getPOByNumber($purchase_order_number_search);
-        if (empty($oPoPipeline) || $oPoPipeline->getStatus() == Xcart\POPipeline::PO_STATUS_DROPED || !$oPoPipeline->getPOId()) {
+        $orderModel = \Modules\Order\Models\OrderModel::objects()->filter(['po_number' => $purchase_order_number_search])->all();
+        if (!$orderModel && (empty($oPoPipeline) || $oPoPipeline->getStatus() == Xcart\POPipeline::PO_STATUS_DROPED || !$oPoPipeline->getPOId())) {
             $top_message["content"] = sprintf(Xcart\POPipeline::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
             \Xcart\App\Main\Xcart::app()->request->redirect("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search#po_upload");
         } else {
-            $oOrder = $oPoPipeline->getOrderInstance();
+            if ($orderModel) {
+                $oOrder = $orderModel;
+            } else {
+                $oOrder = $oPoPipeline->getOrderInstance();
+            }
             if (!empty($oOrder)) {
                 $top_message["content"] = sprintf(Xcart\POPipeline::PO_LINK_ON_MODIFY, $purchase_order_number_search, $oOrder->getAdminUrl(), $oOrder->getDisplayOrderNumber());
                 $top_message["type"] = "I";
