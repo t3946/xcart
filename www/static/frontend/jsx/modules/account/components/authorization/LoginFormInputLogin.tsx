@@ -57,27 +57,38 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
+              <RBForm.Group
+                controlId="LoginFormLogin"
+                className={"px-12 px-sm-0"}
+              >
+                <RBForm.Label className={"form-input-label"}>
+                  Email or mobile phone number
+                </RBForm.Label>
+
+                <RBForm.Control
+                  ref={inputRef}
+                  type="text"
+                  name="login"
+                  value={values.login}
+                  onChange={handleChange}
+                  className={"form-input"}
+                  isInvalid={!!errors.login}
+                />
+
+                <RBForm.Control.Feedback type="invalid">
+                  {errors.login}
+                </RBForm.Control.Feedback>
+              </RBForm.Group>
+
+              <button
+                type="submit"
+                className="form-button login-form_submit-button"
+                disabled={isSubmitting}
+              >
+                continue
+              </button>
+
               <div className="px-12 px-sm-0">
-                <RBForm.Group controlId="LoginFormLogin">
-                  <RBForm.Label className={"form-input-label"}>
-                    Email or mobile phone number
-                  </RBForm.Label>
-
-                  <RBForm.Control
-                    ref={inputRef}
-                    type="text"
-                    name="login"
-                    value={values.login}
-                    onChange={handleChange}
-                    className={"form-input"}
-                    isInvalid={!!errors.login}
-                  />
-
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.login}
-                  </RBForm.Control.Feedback>
-                </RBForm.Group>
-
                 <p className={"auth-form-info"}>
                   By continuing, you agree to S3 Stores Inc{" "}
                   <a href="#" className="common-link">
@@ -104,7 +115,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                     Need help?
                   </a>
                   {showHelpInfo && (
-                    <div>
+                    <div className={"mt-1"}>
                       <a href="#" className="common-link">
                         Forgot your password?
                       </a>
@@ -116,14 +127,6 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                   )}
                 </p>
               </div>
-
-              <button
-                type="submit"
-                className="form-button login-form_submit-button"
-                disabled={isSubmitting}
-              >
-                continue
-              </button>
             </Form>
           );
         }}
