@@ -2,15 +2,22 @@ import React from "react";
 import LoginInputForm from "@client/modules/account/components/password-assistance/LoginInputForm";
 import OneTimePasswordInputForm from "@client/modules/account/components/password-assistance/OneTimePasswordInputForm";
 import ChangePasswordForm from "@client/modules/account/components/password-assistance/ChangePasswordForm";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { useHistory } from "react-router-dom";
+import { route } from "@client/jsx/utils/AppData";
 
 const PasswordAssistance: React.FC<any> = function () {
   const INPUT_LOGIN_MODE = 0;
   const INPUT_OTP_MODE = 1;
   const CHANGE_PASSWORD_MODE = 2;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
-  const [login, setLogin] = React.useState("alexander@s3stores.com");
+  const [login, setLogin] = React.useState("");
   const [oneTimePassword, setOneTimePassword] = React.useState();
   const [resetPasswordToken, setResetPasswordToken] = React.useState();
+  const user = useSelector((e: AccountStore) => e.user);
+
+  user && useHistory().push(route("account:dashboard"));
 
   function goToOTPInput(login) {
     setLogin(login);
