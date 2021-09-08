@@ -14,7 +14,7 @@ const LoginInputForm: React.FC<any> = function (props) {
   });
 
   const validationSchema = yup.object().shape({
-    login: yup.string(),
+    login: yup.string().required("Login is a required field"),
   });
 
   const initialState = {

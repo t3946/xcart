@@ -22,7 +22,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
-    one_time_password: yup.string(),
+    one_time_password: yup.string().required("OTP is a required field"),
   });
 
   const initialState = {
