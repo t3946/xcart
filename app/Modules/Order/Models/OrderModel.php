@@ -722,7 +722,7 @@ class OrderModel extends Model
             if (!is_null($fraud_result)) {
                 [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
                     'order_id' => $this->orderid,
-                    'question_id' => $fraud->id
+                    'question_id' => $fraud->question_id
                 ], [
                     'manual_action' => $manual_action,
                     'fraud_score' => $fraud_score,
