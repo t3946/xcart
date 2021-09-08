@@ -24,7 +24,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
   const validationSchema = yup.object().shape({
     password: yup
       .string()
-      .required("Password confirm required")
+      .required("Password is a required field")
       .min(6, "Password must be at least 6 characters")
       .max(32, "Password must be at most 32 characters"),
     confirmPassword: yup
@@ -42,7 +42,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
           resetPasswordToken,
         },
 
-        success: function (res) {
+        success: function () {
           history.push(route("account:login"));
         },
 
@@ -94,9 +94,12 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
                   isInvalid={!!errors.confirmPassword}
                   placeholder={"At least 6 characters"}
                 />
-                <RBForm.Text className={"auth-form-info_input-caption"}>
-                  {"Passwords must be at least 6 characters"}
-                </RBForm.Text>
+
+                {!errors.confirmPassword && (
+                  <RBForm.Text className={"auth-form-info_input-caption"}>
+                    {"Password must be at least 6 characters"}
+                  </RBForm.Text>
+                )}
 
                 <RBForm.Control.Feedback type="invalid">
                   {errors.confirmPassword}
