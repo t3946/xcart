@@ -18,7 +18,7 @@ const LoginInputForm: React.FC<any> = function (props) {
   });
 
   const initialState = {
-    login: "alexander@s3stores.com",
+    login: "",
   };
 
   function submit(values, actions) {
