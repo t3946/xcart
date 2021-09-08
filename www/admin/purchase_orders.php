@@ -45,7 +45,7 @@ if ($REQUEST_METHOD == "POST") {
         }
     } elseif (!empty($purchase_order_search_submit)) {
         $oPoPipeline = Xcart\POPipeline::getPOByNumber($purchase_order_number_search);
-        $orderModel = \Modules\Order\Models\OrderModel::objects()->filter(['po_number' => $purchase_order_number_search])->all();
+        $orderModel = \Modules\Order\Models\OrderModel::objects()->limit(1)->get(['po_number' => $purchase_order_number_search]);
         if (!$orderModel && (empty($oPoPipeline) || $oPoPipeline->getStatus() == Xcart\POPipeline::PO_STATUS_DROPED || !$oPoPipeline->getPOId())) {
             $top_message["content"] = sprintf(Xcart\POPipeline::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
