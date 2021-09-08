@@ -115,7 +115,7 @@ class OrderReconciliationHelper
                                'manufacturerid__in' => $distributors,
                                'cb_status__in' => [
                                    OrderStatusModel::ORDER_STATUS_COMPLETED,
-                                   OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO,
+                                   OrderStatusModel::ORDER_STATUS_UNPAID_PO,
                                    OrderStatusModel::ORDER_STATUS_FULLY_REFUND,
                                    OrderStatusModel::ORDER_STATUS_PARTIAL_REFUND,
                                    OrderStatusModel::ORDER_STATUS_PENDING_PARTIAL_REFUND,
