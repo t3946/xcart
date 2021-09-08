@@ -93,9 +93,13 @@ const LoginForm: React.FC<any> = () => {
   }
 
   return (
-    <div className="account-auth-form account_auth-form">
-      <h1 className="account-form-header">{headerTemplate()}</h1>
-      {formTemplate()}
+    <div className="account-auth-form-container">
+      <div className="account-auth-form account_auth-form">
+        <h1 className="account-form-header px-12 px-sm-0">
+          {headerTemplate()}
+        </h1>
+        {formTemplate()}
+      </div>
     </div>
   );
 };

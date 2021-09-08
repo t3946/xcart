@@ -69,14 +69,6 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
 
   return (
     <>
-      <p className={"auth-form-info d-flex justify-content-between mt-3 mb-3"}>
-        <span>{props.lastSentForm.login}</span>
-
-        <a href="#" onClick={props.goToInputLogin} className="common-link">
-          Change
-        </a>
-      </p>
-
       <Formik
         initialValues={initialState}
         validationSchema={validationSchema}
@@ -86,34 +78,52 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
-              <RBForm.Group controlId="LoginFormPassword">
-                <RBForm.Label className="d-flex justify-content-between align-items-center">
-                  <span className={"form-input-label"}>Password</span>
+              <div className="px-12 px-sm-0">
+                <p
+                  className={
+                    "auth-form-info d-flex justify-content-between mt-3 mb-3"
+                  }
+                >
+                  <span>{props.lastSentForm.login}</span>
 
-                  <Link
-                    to={route(
-                      "account:two-step-verification-recovery-password-assistance"
-                    )}
-                    className={"common-link auth-form-info"}
+                  <a
+                    href="#"
+                    onClick={props.goToInputLogin}
+                    className="common-link"
                   >
-                    Forgot your password?
-                  </Link>
-                </RBForm.Label>
+                    Change
+                  </a>
+                </p>
 
-                <RBForm.Control
-                  ref={inputRef}
-                  type="password"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  className={"form-input"}
-                  isInvalid={!!errors.password}
-                />
+                <RBForm.Group controlId="LoginFormPassword">
+                  <RBForm.Label className="d-flex justify-content-between align-items-center">
+                    <span className={"form-input-label"}>Password</span>
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.password}
-                </RBForm.Control.Feedback>
-              </RBForm.Group>
+                    <Link
+                      to={route(
+                        "account:two-step-verification-recovery-password-assistance"
+                      )}
+                      className={"common-link auth-form-info"}
+                    >
+                      Forgot your password?
+                    </Link>
+                  </RBForm.Label>
+
+                  <RBForm.Control
+                    ref={inputRef}
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!errors.password}
+                  />
+
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.password}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
+              </div>
 
               <button
                 type="submit"
@@ -123,7 +133,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                 sign-in
               </button>
 
-              <RBForm.Group className={"mb-0"}>
+              <RBForm.Group className={"mb-0 px-12 px-sm-0"}>
                 <input
                   name="rememberMe"
                   onChange={handleChange}

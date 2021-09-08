@@ -57,63 +57,65 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
-              <RBForm.Group controlId="LoginFormLogin">
-                <RBForm.Label className={"form-input-label"}>
-                  Email or mobile phone number
-                </RBForm.Label>
+              <div className="px-12 px-sm-0">
+                <RBForm.Group controlId="LoginFormLogin">
+                  <RBForm.Label className={"form-input-label"}>
+                    Email or mobile phone number
+                  </RBForm.Label>
 
-                <RBForm.Control
-                  ref={inputRef}
-                  type="text"
-                  name="login"
-                  value={values.login}
-                  onChange={handleChange}
-                  className={"form-input"}
-                  isInvalid={!!errors.login}
-                />
+                  <RBForm.Control
+                    ref={inputRef}
+                    type="text"
+                    name="login"
+                    value={values.login}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!errors.login}
+                  />
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.login}
-                </RBForm.Control.Feedback>
-              </RBForm.Group>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.login}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
 
-              <p className={"auth-form-info"}>
-                By continuing, you agree to S3 Stores Inc{" "}
-                <a href="#" className="common-link">
-                  Conditions of Use
-                </a>{" "}
-                and{" "}
-                <a href="#" className="common-link">
-                  Privacy Notice
-                </a>
-                .
-              </p>
+                <p className={"auth-form-info"}>
+                  By continuing, you agree to S3 Stores Inc{" "}
+                  <a href="#" className="common-link">
+                    Conditions of Use
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="common-link">
+                    Privacy Notice
+                  </a>
+                  .
+                </p>
 
-              <p className={"auth-form-info"}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowHelpInfo(!showHelpInfo);
-                  }}
-                  className={classnames("link-arrow common-link", {
-                    "link-arrow__to-top": showHelpInfo,
-                  })}
-                >
-                  Need help?
-                </a>
-                {showHelpInfo && (
-                  <div>
-                    <a href="#" className="common-link">
-                      Forgot your password?
-                    </a>
-                    <br />
-                    <a href="#" className="common-link">
-                      Other issues with Sign-In
-                    </a>
-                  </div>
-                )}
-              </p>
+                <p className={"auth-form-info"}>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowHelpInfo(!showHelpInfo);
+                    }}
+                    className={classnames("link-arrow common-link", {
+                      "link-arrow__to-top": showHelpInfo,
+                    })}
+                  >
+                    Need help?
+                  </a>
+                  {showHelpInfo && (
+                    <div>
+                      <a href="#" className="common-link">
+                        Forgot your password?
+                      </a>
+                      <br />
+                      <a href="#" className="common-link">
+                        Other issues with Sign-In
+                      </a>
+                    </div>
+                  )}
+                </p>
+              </div>
 
               <button
                 type="submit"

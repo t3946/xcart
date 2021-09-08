@@ -73,53 +73,55 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
       {({ isSubmitting, handleChange, values, errors }) => {
         return (
           <Form>
-            <h1 className="account-form-header">Change your password man</h1>
+            <div className="px-12 px-sm-0">
+              <h1 className="account-form-header">Change your password man</h1>
 
-            <p className="auth-form-info mb-12 mb-md-14 mb-lg-20">
-              We'll ask for this password whenever you Sign-In.
-            </p>
+              <p className="auth-form-info mb-12 mb-md-14 mb-lg-20">
+                We'll ask for this password whenever you Sign-In.
+              </p>
 
-            <RBForm.Group controlId="LoginFormPassword">
-              <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
-                Password
-              </RBForm.Label>
+              <RBForm.Group controlId="ChangePasswordPassword">
+                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
+                  Password
+                </RBForm.Label>
 
-              <RBForm.Control
-                type="password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={!!errors.confirmPassword}
-                placeholder={"At least 6 characters"}
-              />
-              <RBForm.Text className={"auth-form-info_input-caption"}>
-                {"Passwords must be at least 6 characters"}
-              </RBForm.Text>
+                <RBForm.Control
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  className={"form-input"}
+                  isInvalid={!!errors.confirmPassword}
+                  placeholder={"At least 6 characters"}
+                />
+                <RBForm.Text className={"auth-form-info_input-caption"}>
+                  {"Passwords must be at least 6 characters"}
+                </RBForm.Text>
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.confirmPassword}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
+                <RBForm.Control.Feedback type="invalid">
+                  {errors.confirmPassword}
+                </RBForm.Control.Feedback>
+              </RBForm.Group>
 
-            <RBForm.Group controlId="LoginFormPassword">
-              <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
-                Re-Enter password
-              </RBForm.Label>
+              <RBForm.Group controlId="ChangePasswordConfirmPassword">
+                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
+                  Re-Enter password
+                </RBForm.Label>
 
-              <RBForm.Control
-                type="password"
-                name="confirmPassword"
-                value={values.confirmPassword}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={!!errors.confirmPassword}
-              />
+                <RBForm.Control
+                  type="password"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  className={"form-input"}
+                  isInvalid={!!errors.confirmPassword}
+                />
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.confirmPassword}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
+                <RBForm.Control.Feedback type="invalid">
+                  {errors.confirmPassword}
+                </RBForm.Control.Feedback>
+              </RBForm.Group>
+            </div>
 
             <button
               type="submit"

@@ -52,33 +52,34 @@ const LoginInputForm: React.FC<any> = function (props) {
       {({ isSubmitting, handleChange, values, errors }) => {
         return (
           <Form>
-            <h1 className="account-form-header">Password Assistance</h1>
+            <div className="px-12 px-sm-0">
+              <h1 className="account-form-header">Password Assistance</h1>
 
-            <p className={"auth-form-info"}>
-              Enter the email address or mobile phone number associated with
-              your S3 Stores account.
-            </p>
+              <p className={"auth-form-info"}>
+                Enter the email address or mobile phone number associated with
+                your S3 Stores account.
+              </p>
 
-            <RBForm.Group controlId="LoginFormPassword">
-              <RBForm.Label className="form-input-label">
-                Email or mobile phone number
-              </RBForm.Label>
+              <RBForm.Group controlId="LoginFormPassword">
+                <RBForm.Label className="form-input-label">
+                  Email or mobile phone number
+                </RBForm.Label>
 
-              <RBForm.Control
-                ref={firstInputRef}
-                type="text"
-                name="login"
-                value={values.login}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={!!errors.login}
-              />
+                <RBForm.Control
+                  ref={firstInputRef}
+                  type="text"
+                  name="login"
+                  value={values.login}
+                  onChange={handleChange}
+                  className={"form-input"}
+                  isInvalid={!!errors.login}
+                />
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.login}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
-
+                <RBForm.Control.Feedback type="invalid">
+                  {errors.login}
+                </RBForm.Control.Feedback>
+              </RBForm.Group>
+            </div>
             <button
               type="submit"
               className="form-button mt-4"

@@ -65,159 +65,168 @@ const RegisterForm: React.FC<any> = () => {
   }
 
   return (
-    <div className="account-auth-form account_auth-form">
-      <h1 className="account-form-header">Create account</h1>
+    <div className="account-auth-form-container">
+      <div className="account-auth-form account_auth-form">
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={submit}
-        ref={formRef}
-      >
-        {({ isSubmitting, values, errors, touched, handleChange }) => (
-          <Form>
-            <RBForm.Group controlId="RegisterFormName">
-              <RBForm.Label className={"form-input-label"}>
-                Your Name
-              </RBForm.Label>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={submit}
+          ref={formRef}
+        >
+          {({ isSubmitting, values, errors, touched, handleChange }) => (
+            <Form>
+              <div className="px-12 px-sm-0">
+                <h1 className="account-form-header">Create account</h1>
 
-              <RBForm.Control
-                type="text"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={!!touched.name && !!errors.name}
-                isValid={touched.name && !errors.name}
-              />
+                <RBForm.Group controlId="RegisterFormName">
+                  <RBForm.Label className={"form-input-label"}>
+                    Your Name
+                  </RBForm.Label>
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.name}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
+                  <RBForm.Control
+                    type="text"
+                    name="name"
+                    value={values.name}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!touched.name && !!errors.name}
+                    isValid={touched.name && !errors.name}
+                  />
 
-            <RBForm.Group controlId="RegisterFormEmail">
-              <RBForm.Label className={"form-input-label"}>Email</RBForm.Label>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.name}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
 
-              <RBForm.Control
-                type="text"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={!!touched.email && !!errors.email}
-                isValid={touched.email && !errors.email}
-              />
+                <RBForm.Group controlId="RegisterFormEmail">
+                  <RBForm.Label className={"form-input-label"}>
+                    Email
+                  </RBForm.Label>
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.email}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
+                  <RBForm.Control
+                    type="text"
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!touched.email && !!errors.email}
+                    isValid={touched.email && !errors.email}
+                  />
 
-            <RBForm.Group controlId="RegisterFormPassword">
-              <RBForm.Label className={"form-input-label"}>
-                Password
-              </RBForm.Label>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.email}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
 
-              <RBForm.Control
-                type="password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={touched.password && !!errors.password}
-                isValid={touched.password && !errors.password}
-                placeholder={"At least 6 characters "}
-              />
+                <RBForm.Group controlId="RegisterFormPassword">
+                  <RBForm.Label className={"form-input-label"}>
+                    Password
+                  </RBForm.Label>
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.password}
-              </RBForm.Control.Feedback>
+                  <RBForm.Control
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={touched.password && !!errors.password}
+                    isValid={touched.password && !errors.password}
+                    placeholder={"At least 6 characters "}
+                  />
 
-              {!(touched.password && errors.password) && (
-                <RBForm.Text className={"auth-form-info_input-caption"}>
-                  {"Passwords must be at least 6 characters"}
-                </RBForm.Text>
-              )}
-            </RBForm.Group>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.password}
+                  </RBForm.Control.Feedback>
 
-            <RBForm.Group controlId="RegisterForm">
-              <RBForm.Label className={"form-input-label"}>
-                Re-Enter password
-              </RBForm.Label>
+                  {!(touched.password && errors.password) && (
+                    <RBForm.Text className={"auth-form-info_input-caption"}>
+                      {"Passwords must be at least 6 characters"}
+                    </RBForm.Text>
+                  )}
+                </RBForm.Group>
 
-              <RBForm.Control
-                type="password"
-                name="password_confirm"
-                value={values.password_confirm}
-                onChange={handleChange}
-                className={"form-input"}
-                isInvalid={
-                  touched.password_confirm && !!errors.password_confirm
-                }
-                isValid={touched.password_confirm && !errors.password_confirm}
-              />
+                <RBForm.Group controlId="RegisterForm">
+                  <RBForm.Label className={"form-input-label"}>
+                    Re-Enter password
+                  </RBForm.Label>
 
-              <RBForm.Control.Feedback type="invalid">
-                {errors.password_confirm}
-              </RBForm.Control.Feedback>
-            </RBForm.Group>
+                  <RBForm.Control
+                    type="password"
+                    name="password_confirm"
+                    value={values.password_confirm}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={
+                      touched.password_confirm && !!errors.password_confirm
+                    }
+                    isValid={touched.password_confirm && !errors.password_confirm}
+                  />
 
-            <button
-              type="submit"
-              className="form-button login-form_submit-button"
-              disabled={isSubmitting}
-            >
-              Create your account
-            </button>
-
-            <p className={"margin-0 auth-form-info"}>
-              By continuing, you agree to S3 Stores Inc{" "}
-              <a href="#" className="common-link">
-                Conditions of Use
-              </a>{" "}
-              and{" "}
-              <a href="#" className="common-link">
-                Privacy Notice
-              </a>
-              .
-            </p>
-
-            <div className="d-sm-none">
-              <div className="form-divider form-divider__with-content auth-form_divider">
-                <span className="form-divider-text">
-                  Already have an account?
-                </span>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.password_confirm}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
               </div>
 
-              <NavLink
-                to={route("account:login")}
-                exact={true}
-                className="form-button form-button__outline common-link"
+              <button
+                type="submit"
+                className="form-button login-form_submit-button"
+                disabled={isSubmitting}
               >
-                sign in
-              </NavLink>
-            </div>
+                Create your account
+              </button>
 
-            <div className="d-none d-sm-block">
-              <div className="form-divider auth-form_divider mb-0" />
+              <p className={"margin-0 auth-form-info px-12 px-sm-0"}>
+                By continuing, you agree to S3 Stores Inc{" "}
+                <a href="#" className="common-link">
+                  Conditions of Use
+                </a>{" "}
+                and{" "}
+                <a href="#" className="common-link">
+                  Privacy Notice
+                </a>
+                .
+              </p>
 
-              <p
-                className={"auth-form-info register-form_already-have-account"}
-              >
-                Already have an account?{" "}
+              <div className="d-sm-none">
+                <div className="form-divider form-divider__with-content auth-form_divider">
+                  <span className="form-divider-text">
+                    Already have an account?
+                  </span>
+                </div>
+
                 <NavLink
                   to={route("account:login")}
-                  className="common-link"
                   exact={true}
+                  className="form-button form-button__outline common-link"
                 >
-                  Sign-In
+                  sign in
                 </NavLink>
-              </p>
-            </div>
-          </Form>
-        )}
-      </Formik>
+              </div>
+
+              <div className="d-none d-sm-block">
+                <div className="form-divider auth-form_divider mb-0" />
+
+                <p
+                  className={
+                    "auth-form-info register-form_already-have-account"
+                  }
+                >
+                  Already have an account?{" "}
+                  <NavLink
+                    to={route("account:login")}
+                    className="common-link"
+                    exact={true}
+                  >
+                    Sign-In
+                  </NavLink>
+                </p>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

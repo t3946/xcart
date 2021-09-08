@@ -1,3 +1,11 @@
 .login-form_submit-button {
-    margin: rem-calc(11) 0 rem-calc(19) !important;
+    margin: rem-calc(26) 0 rem-calc(12);
+
+    @include breakpoint(md up) {
+        margin: rem-calc(23) 0 rem-calc(18);
+    }
+
+    @include breakpoint(lg up) {
+        margin: rem-calc(24) 0 rem-calc(19);
+    }
 }

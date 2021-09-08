@@ -27,7 +27,12 @@ class ResetPasswordApi extends FrontendController
          */
         [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
 
-        if ($is_new && APP_LOCAL === false) {
+        if (!$is_new && !$otp->isNew()) {
+            $otp->delete();
+            [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
+        }
+
+        if ($is_new && REALLY_APP_LOCAL !== true) {
             Xcart::app()->mail->raw(
                 $user->email,
                 'Password Assistance OTP',
@@ -36,9 +41,6 @@ class ResetPasswordApi extends FrontendController
                     'from' => 'helpdesk@s3stores.com',
                 ]
             );
-        } elseif (!$otp->isNew()) {
-            $otp->delete();
-            [$otp] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
         }
 
         $this->jsonResponse(['one_time_password' => $otp->toArray()]);

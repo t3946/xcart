@@ -42,21 +42,21 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
   }
 
   return (
-    <>
-      <p className={"auth-form-info"}>
-        For added security, please enter the One Time Password (OTP) generation
-        by your by Authenticator App
-      </p>
+    <Formik
+      initialValues={initialState}
+      validationSchema={validationSchema}
+      onSubmit={submit}
+      ref={React.useRef()}
+    >
+      {({ isSubmitting, handleChange, values, errors }) => {
+        return (
+          <Form>
+            <div className="px-12 px-sm-0">
+              <p className={"auth-form-info"}>
+                For added security, please enter the One Time Password (OTP)
+                generation by your by Authenticator App
+              </p>
 
-      <Formik
-        initialValues={initialState}
-        validationSchema={validationSchema}
-        onSubmit={submit}
-        ref={React.useRef()}
-      >
-        {({ isSubmitting, handleChange, values, errors }) => {
-          return (
-            <Form>
               <RBForm.Group controlId="LoginFormPassword">
                 <RBForm.Label className="d-flex justify-content-between align-items-center">
                   <span className={"form-input-label"}>Enter OTP </span>
@@ -98,26 +98,28 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
                   </div>
                 </RBForm.Label>
               </RBForm.Group>
+            </div>
 
-              <button
-                type="submit"
-                className="form-button mt-4 mb-3"
-                disabled={isSubmitting}
-              >
-                sign-in
-              </button>
+            <button
+              type="submit"
+              className="form-button mt-4 mb-3"
+              disabled={isSubmitting}
+            >
+              sign-in
+            </button>
 
+            <div className="px-12 px-sm-0">
               <Link
                 to={route("account:two-step-verification-recovery")}
                 className={"auth-form-info"}
               >
                 Two-step Verification account recovery
               </Link>
-            </Form>
-          );
-        }}
-      </Formik>
-    </>
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 
