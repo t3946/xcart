@@ -74,11 +74,6 @@ class ProductOptionsAdmin extends ListViewAdmin
         ];
     }
 
-    public function getCanSort(QuerySet $qs): bool
-    {
-        return true;
-    }
-
     public function getAllUrl()
     {
         if ($this->ownerPk->id) {

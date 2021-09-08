@@ -278,6 +278,10 @@ class BrandModel extends Model
 
         return $qs->order(['brand'])->all();
     }
+    public function __toString()
+    {
+        return $this->brand;
+    }
 
     /**
      * Recieve all brands and split alphabetically

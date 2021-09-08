@@ -137,6 +137,9 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductCategoriesModel::class,
                 'link' => ['productid' => 'productid'],
             ],
+            'forsale' => [
+                'class' => CharField::class,
+            ],
 
             'amazon_offer_model' => [
                 'class' => HasToOneField::class,
@@ -647,9 +650,12 @@ class ProductModel extends Model implements ICartItem
 
     public function getMainCategory(int $site_id = null):?CategoryModel
     {
+        if (!$this->pk) {
+            return null;
+        }
         $params  = [
             'products__through__main' => 'Y',
-            'products__through__productid' => $this->productid,
+            'products__through__productid' => $this->pk,
         ];
 
         if ($site_id) {

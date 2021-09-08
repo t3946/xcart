@@ -39,7 +39,7 @@ class ProductAdminForm extends ModelForm
         'filter_values',
         'images',
         'videos',
-		'detail_images'
+        'detail_images'
     ];
 
     public function getFieldsets()
@@ -61,8 +61,8 @@ class ProductAdminForm extends ModelForm
             ],
             'Categorization' => [
                 'distributor',
-                'brand',
-                'category',
+                /*                'brand',
+                                'category',*/
                 'main_category_id',
             ],
             'SEO options' => [
@@ -122,7 +122,7 @@ class ProductAdminForm extends ModelForm
                 'class' => EditorField::class,
                 'label' => 'Detailed description',
                 'required' => true,
-                'readonly' => $this->getInstance()->distributor->feed_fields->filter(['field_name' => 'fulldescr', new QOr(['locked' => 'Y', 'admin_lock' => 'Y'])])->count() > 0,
+                'readonly' => $this->getInstance()->pk && $this->getInstance()->distributor->feed_fields->filter(['field_name' => 'fulldescr', new QOr(['locked' => 'Y', 'admin_lock' => 'Y'])])->count() > 0,
                 'html' => [
                     'class' => 'tinymce-field',
                 ],
@@ -180,38 +180,19 @@ class ProductAdminForm extends ModelForm
             ],
             'distributor' => [
                 'class' => Select2Field::class,
+                'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'html' => [
-					'style' => 'width: 100%',
+                    'style' => 'width: 100%',
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
                 ],
-				'choices' => function () {
-					$options = [];
-					$distr = DistributorModel::objects()->order(['manufacturer'])->all();
-					/** @var DistributorModel $dist */
-					foreach ($distr as $dist) {
-						$options[$dist->manufacturerid] = $dist->manufacturer;
-					}
-
-					return $options;
-				},
             ],
             'brand' => [
                 'class' => Select2Field::class,
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'html' => [
-                	'style' => 'width: 100%',
+                    'style' => 'width: 100%',
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
                 ],
-//				'choices' => function () {
-//					$options = [];
-//					$brand_list = BrandModel::objects()->all();
-//					/** @var BrandModel $brand */
-//					foreach ($brand_list as $brand) {
-//						$options[$brand->brandid] = $brand->brand;
-//					}
-//
-//					return $options;
-//				},
             ],
             'category' => [
                 'class' => Select2Field::class,
@@ -220,7 +201,7 @@ class ProductAdminForm extends ModelForm
                     return $a['name'];
                 }, $category->getBreadcrumbs()->get()))] : [],
                 'html' => [
-					'style' => 'width: 100%',
+                    'style' => 'width: 100%',
                     'data-ajax-url' => (new ProductAdmin)->getSuggestionUrl('category'),
                 ],
                 'label' => 'Main category'

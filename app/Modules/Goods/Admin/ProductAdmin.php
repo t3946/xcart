@@ -4,8 +4,11 @@ namespace Modules\Goods\Admin;
 
 
 use Modules\Admin\Contrib\Admin;
+use Modules\Brand\Models\BrandModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Forms\ProductFilterForm;
 use Modules\Goods\Forms\ProductAdminForm;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
@@ -30,46 +33,46 @@ class ProductAdmin extends Admin
 	public function getListColumns()
 	{
 		return [
-//            'image',
-//            'productcode',
+            'image',
+            'productcode',
 			'product',
-//            'add_date',
-//            'forsale',
+            'add_date',
+            'forsale',
 		];
 	}
 
-//    public function getSuggestionColumns()
-//    {
-//        return [
-//            'brand' => [
-//                'class' => BrandModel::class,
-//                'columns' => [
-//                    'brand', 'pk'
-//                ],
-//                'filter' => [
-//                    'avail' => 'Y', 'parent__isnull' => true,
-//                ]
-//            ],
-//            'category' => [
-//                'class' => CategoryModel::class,
-//                'columns' => [
-//                    'category', 'pk'
-//                ],
-//                'filter' => [
-//                    'avail' => 'Y'
-//                ]
-//            ],
-//            'distributor' => [
-//                'class' => DistributorModel::class,
-//                'columns' => [
-//                    'manufacturer', 'pk'
-//                ],
-//                'filter' => [
-//                    'avail' => 'Y'
-//                ]
-//            ],
-//        ];
-//    }
+    public function getSuggestionColumns()
+    {
+        return [
+            'brand' => [
+                'class' => BrandModel::class,
+                'columns' => [
+                    'brand', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y', 'parent__isnull' => true,
+                ]
+            ],
+            'category' => [
+                'class' => CategoryModel::class,
+                'columns' => [
+                    'category', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y'
+                ]
+            ],
+            'distributor' => [
+                'class' => DistributorModel::class,
+                'columns' => [
+                    'manufacturer', 'pk'
+                ],
+                'filter' => [
+                    'avail' => 'Y'
+                ]
+            ],
+        ];
+    }
 
 	public static function getName()
 	{
@@ -87,20 +90,20 @@ class ProductAdmin extends Admin
 	public function getItemProperty(Model $item, $property)
 	{
 		/** @var ProductModel $image */
-//        if ($property === 'image') {
-//            return ($image = $item->getMainImage())
-//                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
-//                : '';
-//        }
+        if ($property === 'image') {
+            return ($image = $item->getMainImage())
+                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
+                : '';
+        }
 		if ($property === 'product') {
 			return "<a target='_blank' href='{$item->getAbsoluteUrl()}'>{$item->getFrontendName()}</a>";
 		}
-//        if ($property === 'forsale') {
-//            return $item->forsale === 'Y' ? 'Active' : 'Inactive';
-//        }
-//        if ($property === 'add_date') {
-//            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
-//        }
+        if ($property === 'forsale') {
+            return $item->forsale === 'Y' ? 'Active' : 'Inactive';
+        }
+/*        if ($property === 'add_date') {
+            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
+        }*/
 
 		return parent::getItemProperty($item, $property);
 	}
