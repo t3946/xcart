@@ -88,7 +88,12 @@ class ResetPasswordApi extends FrontendController
         /**
          * @var $one_time_password OneTimePasswordModel
          */
-        $one_time_password = OneTimePasswordModel::objects()->get(['one_time_password', $jwt_decoded->one_time_password]);
+        $one_time_password = OneTimePasswordModel::objects()->get(
+            [
+                'user_id' => $jwt_decoded->user->id,
+                'one_time_password' => $jwt_decoded->one_time_password,
+            ],
+        );
 
         if ($one_time_password->isOutdated()) {
             $this->jsonResponse(['errors' => ['otp' => 'outdated']]);
