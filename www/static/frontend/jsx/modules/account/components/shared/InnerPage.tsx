@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import classnames from "classnames";
 
-interface PropsDTO {
+interface PropsInterface {
   header?: ReactNode;
   hat?: ReactNode;
   body?: ReactNode;
@@ -13,7 +13,7 @@ interface PropsDTO {
   children?: any;
 }
 
-const InnerPage: React.FC<any> = function (props: PropsDTO) {
+const InnerPage: React.FC<PropsInterface> = function (props: PropsInterface) {
   function headerTemplate() {
     let headerClasses;
 
