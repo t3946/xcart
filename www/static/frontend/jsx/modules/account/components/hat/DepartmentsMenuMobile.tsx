@@ -9,19 +9,8 @@ import Card from "react-bootstrap/Card";
 import PlusIcon from "@client/modules/icon/components/font-awesome/plus/Light";
 import MinusIcon from "@client/modules/icon/components/font-awesome/minus/Light";
 import ChevronRightIcon from "@client/modules/icon/components/font-awesome/chevron-right/Light";
-import { hideAction as hide } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
-import { useDispatch } from "react-redux";
 
 const DepartmentsMenuMobile = (props: Record<any, any>): any => {
-  const dispatch = useDispatch();
-  const isVisibleShadowPanel = useSelector(
-    (e: Record<any, any>) => e.shadowPanel.isVisible
-  );
-
-  if (isVisibleShadowPanel === false) {
-    dispatch(hide());
-  }
-
   const departmentsMenu = useSelector(
     (e: StoreDto) => e.departmentsMenu.mobile
   );
@@ -33,6 +22,15 @@ const DepartmentsMenuMobile = (props: Record<any, any>): any => {
   const classes = {
     container: ["departments-menu-mobile", props.classes.container],
   };
+
+  const mainWrapper = document.getElementById("main_wrapper");
+  const shiftMainWrapperClass = "account-main-wrapper_main-wrapper-shifted";
+
+  if (isVisibleMenu) {
+    mainWrapper.classList.add(shiftMainWrapperClass);
+  } else {
+    mainWrapper.classList.remove(shiftMainWrapperClass);
+  }
 
   function ContextAwareToggle({ children, eventKey, index }) {
     const currentEventKey = React.useContext(AccordionContext);

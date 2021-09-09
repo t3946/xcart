@@ -44,7 +44,6 @@ import PasswordAssistance from "@client/modules/account/components/password-assi
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: AccountStore) => e.user);
-
   const isList = useSelector((e: AccountStore) => e.main.isList);
 
   useEffect(() => {

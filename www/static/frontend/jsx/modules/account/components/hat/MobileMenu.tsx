@@ -7,23 +7,18 @@ import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActio
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 
-
 const MobileMenu: React.FC<any> = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
-  const isVisible = useSelector((e: any) => e.mobileMenu.isMobileMenuVisible);
+  const mobileMenuIsVisible = useSelector(
+    (e: any) => e.mobileMenu.isMobileMenuVisible
+  );
 
   const classes = {
     menu: [
       "account-hat-dropdown-menu__mobile account-hat_mobile-menu",
       {
-        "d-none": !isVisible,
-      },
-    ],
-    panel: [
-      "background-panel",
-      {
-        "d-none": !isVisible,
+        "d-none": !mobileMenuIsVisible,
       },
     ],
   };
@@ -75,8 +70,6 @@ const MobileMenu: React.FC<any> = () => {
         </div>
         <SidebarMenu />
       </div>
-
-      <div className={classNames(classes.panel)} />
     </React.Fragment>
   );
 };

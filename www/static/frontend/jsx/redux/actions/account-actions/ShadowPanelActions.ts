@@ -3,6 +3,21 @@ export const showShadowPanelAction = (zIndex?: number): any => ({
   zIndex,
 });
 
-export const hideShadowPanelAction = (): any => ({
-  type: "HIDE_SHADOW",
+export const setVisibleShadowPanelAction = (isVisible: boolean): any => ({
+  type: "SET_VISIBLE_SHADOW",
+  isVisible,
+});
+
+export const subscribeShadowPanelAction = (subscriber: string): any => ({
+  type: "SUBSCRIBE",
+  subscriber,
+});
+
+export const subscriberUpdateShadowPanelAction = (
+  subscriber: string,
+  isVisible: boolean
+): any => ({
+  type: "SUBSCRIBER_UPDATE",
+  subscriber,
+  isVisible,
 });

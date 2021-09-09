@@ -8,21 +8,17 @@ import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import DepartmentsMenu from "./DepartmentsMenu";
-import {
-  showShadowPanelAction,
-  hideShadowPanelAction,
-} from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
+import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 
 const HatSearchLine = (): any => {
-  const user = useSelector((e: StoreDto) => e.user);
-  const shadowPanelIsVisible = useSelector(
-    (e: StoreDto) => e.shadowPanel.isVisible
-  );
-  const [isVisibleDepartmentsMenu, setIsVisibleDepartmentsMenu] =
-    React.useState(false);
   const dispatch = useDispatch();
-
-  setIsVisibleDepartmentsMenu(shadowPanelIsVisible);
+  const user = useSelector((e: StoreDto) => e.user);
+  const isVisibleDepartmentsMenu = useSelector(
+    (e: AccountStore) => e.departmentsMenuDesktop.isVisible
+  );
 
   function miniCartTemplate() {
     const labels = {
@@ -112,13 +108,15 @@ const HatSearchLine = (): any => {
   }
 
   function openDepartmentsMenu() {
-    setIsVisibleDepartmentsMenu(true);
-    dispatch(showShadowPanelAction());
+    HideAllMenu(dispatch);
+    dispatch(setVisibleShadowPanelAction(true));
+    dispatch(setDepartmentsMenuDesktopIsVisibleAction(true));
   }
 
   function closeDepartmentsMenu() {
-    setIsVisibleDepartmentsMenu(false);
-    dispatch(hideShadowPanelAction());
+    HideAllMenu(dispatch);
+    dispatch(setVisibleShadowPanelAction(false));
+    dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
   }
 
   return (
@@ -140,7 +138,9 @@ const HatSearchLine = (): any => {
               <div className="account-page-left-column account-page-left-column__departments-menu col pe-0">
                 <div className="category-menu-container">
                   <div
-                    className={classnames("category-menu category-menu__new", {"is-active": isVisibleDepartmentsMenu})}
+                    className={classnames("category-menu category-menu__new", {
+                      "is-active": isVisibleDepartmentsMenu,
+                    })}
                     onClick={toggleDepartmentsMenu}
                   >
                     <span className="menu-icon" />
