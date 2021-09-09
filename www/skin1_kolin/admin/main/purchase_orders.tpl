@@ -46,7 +46,7 @@
 
 <div id="po-tabs-container" style="display: none">
     <ul>
-        <li><a href="#po_check">PO# check</a></li>
+        <li><a href="#po_check">PO check</a></li>
         <li><a href="#po_upload">Upload PO</a></li>
         <li><a href="#pending_po">Pending entry POs</a></li>
         <li><a href="#po_pipeline_log">PO pipeline log</a></li>

@@ -1,4 +1,5 @@
 <span class='select-holder'>
+        <input type="hidden" name="{$name}"/>
         <select data-form='{$field->getForm()|get_class}' name="{$name}" id="{$id}_{$field->getForm()->getInstance()->pk}" {raw $html}>
             {if $field->empty}
                 <option {if !$field->getSelected()}selected="selected"{/if} value="{$field->empty}">{$field->empty}</option>

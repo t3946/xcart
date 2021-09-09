@@ -15,7 +15,7 @@ const SearchLine: React.FC<any> = function (props: any) {
     },
     {
       value: "order_po",
-      viewValue: "PO",
+      viewValue: "PO #",
     },
     {
       value: "zip",

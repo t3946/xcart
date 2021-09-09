@@ -206,6 +206,9 @@ class DropDownField extends Field
         }
 
         if ($this->multiple) {
+            if (!$this->empty) {
+                $selected = array_filter($selected);
+            }
             $this->_attributes['multiple'] = 'multiple';
         }
 

@@ -14,6 +14,8 @@ class CheckDepositedAdmin extends Admin
     public $createTemplate = 'deposited/_check_create.tpl';
     public $updateTemplate = 'deposited/_check_update.tpl';
 
+    public static $public = false;
+
     public function getListColumns()
     {
         return ['check_date', 'currency_model', 'total_deposit_amount', 'status'];
