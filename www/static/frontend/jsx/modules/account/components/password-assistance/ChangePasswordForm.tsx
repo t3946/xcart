@@ -29,6 +29,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
       .max(32, "Password must be at most 32 characters"),
     confirmPassword: yup
       .string()
+      .required("Password Confirm is a required field")
       .min(6, "Password must be at least 6 characters")
       .max(32, "Password must be at most 32 characters")
       .oneOf([yup.ref("password"), null], "Passwords must match"),
@@ -70,7 +71,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
       onSubmit={submit}
       ref={React.useRef()}
     >
-      {({ isSubmitting, handleChange, values, errors }) => {
+      {({ touched, isSubmitting, handleChange, values, errors }) => {
         return (
           <Form>
             <div className="px-12 px-sm-0">
@@ -91,18 +92,19 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
                   value={values.password}
                   onChange={handleChange}
                   className={"form-input"}
-                  isInvalid={!!errors.confirmPassword}
+                  isInvalid={!!touched.password && !!errors.password}
+                  isValid={touched.password && !errors.password}
                   placeholder={"At least 6 characters"}
                 />
 
-                {!errors.confirmPassword && (
+                {(!errors.password || !touched.password) && (
                   <RBForm.Text className={"auth-form-info_input-caption"}>
                     {"Password must be at least 6 characters"}
                   </RBForm.Text>
                 )}
 
                 <RBForm.Control.Feedback type="invalid">
-                  {errors.confirmPassword}
+                  {errors.password}
                 </RBForm.Control.Feedback>
               </RBForm.Group>
 
@@ -117,7 +119,10 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
                   value={values.confirmPassword}
                   onChange={handleChange}
                   className={"form-input"}
-                  isInvalid={!!errors.confirmPassword}
+                  isInvalid={
+                    !!touched.confirmPassword && !!errors.confirmPassword
+                  }
+                  isValid={touched.confirmPassword && !errors.confirmPassword}
                 />
 
                 <RBForm.Control.Feedback type="invalid">
