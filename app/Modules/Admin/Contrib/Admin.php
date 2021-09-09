@@ -461,7 +461,9 @@ abstract class Admin
                 if ($model_field instanceof ManyToManyField) {
                     $key = "{$model_field->getName()}__{$model_field->getRelatedModelPk()}";
                     if (is_array($value)) {
-                        $qs->filter(["{$key}__in" => $value]);
+                        if ($value = array_filter($value)) {
+                            $qs->filter(["{$key}__in" => $value]);
+                        }
                     } else {
                         $qs->filter([$key => $value]);
                     }
@@ -477,7 +479,9 @@ abstract class Admin
                 elseif ($model_field instanceof ForeignField) {
                     $key = "{$model_field->getName()}__{$model_field->getTo()}";
                     if (is_array($value)) {
-                        $qs->filter(["{$key}__in" => $value]);
+                        if ($value = array_filter($value)) {
+                            $qs->filter(["{$key}__in" => $value]);
+                        }
                     } else {
                         $qs->filter([$key => $value]);
                     }

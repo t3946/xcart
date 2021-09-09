@@ -74,8 +74,16 @@ class QueueImagesCommand extends Command
                                     );
                                 }
 
-                                $image->delete();
+                                ProductImageModel::objects()->delete(['image_id' => $image->pk]);
+
+                                echo "Delete product images \n";
+                                echo "==============Queue data=============\n";
+                                print_r($data);
+                                echo "==============Deleted image data=============\n";
+                                print_r($image->getAttributes());
+                                echo "==============action=============\n";
                                 print_r($action);
+                                echo "==============End=============\n";
                             }
                         }
                     }

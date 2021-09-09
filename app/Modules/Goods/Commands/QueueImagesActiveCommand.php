@@ -71,7 +71,7 @@ class QueueImagesActiveCommand extends Command
 
                         Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
 
-                        $image_by_link->delete();
+                        ProductImageModel::objects()->delete(['image_id' => $image_by_link->pk]);
 
                         $image_by_link = $image_by_hash;
                     }
